@@ -2,11 +2,29 @@ from django.views.generic import ListView
 from .models import Class, Subject, Chapter, Question, SubQuestion
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 from helloworld_project.settings import PROJECT_ROOT
 
 import json
 
 import os
+
+def print_user_name_view(request):
+	print(request.user)
+	print(request.META)
+	return JsonResponse({"message": "Hellow World!"})
+
+class HelloWorldView(APIView):
+	def get(self, request):
+		return Response({"message": "Hello World!"})
+
+@api_view(["GET"])
+def hello_world(request):
+	return Response({"message": "Hello World!"})
 
 # Create your views here.
 def indices_view(request):
