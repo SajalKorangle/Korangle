@@ -4,6 +4,7 @@ from django.db import models
 
 class Class(models.Model):
 	name = models.CharField(max_length=100)
+	orderNumber = models.PositiveIntegerField(default=100)
 
 	def __str__(self):
 		"""A string representation of the model."""

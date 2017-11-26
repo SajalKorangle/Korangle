@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from .models import Class, Subject, Chapter, Question, SubQuestion
+from .models import Class, Subject, Chapter, Question, SubQuestion, Paper, PaperElement
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 
@@ -7,24 +7,137 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
+from rest_framework_jwt.views import JSONWebTokenAPIView
+from rest_framework_jwt.serializers import JSONWebTokenSerializer
+
+from django.contrib.auth.models import User
+
 from helloworld_project.settings import PROJECT_ROOT
+
+from django.core.mail.message import EmailMessage
+
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 import json
 
 import os
 
+""" @api_view(['GET'])
 def print_user_name_view(request):
 	print(request.user)
 	print(request.META)
-	return JsonResponse({"message": "Hellow World!"})
+	return JsonResponse({"message": "Hello World of free ruler!"})
 
 class HelloWorldView(APIView):
 	def get(self, request):
-		return Response({"message": "Hello World!"})
+		print(request.user)
+		return Response({"message": "Hello World!"}) """
 
-@api_view(["GET"])
+class AuthenticationHandler():
+	def authenticate_and_login(username, response):
+		if 'token' in response.data:
+			user = User.objects.filter(username=username)
+			response.data['username'] = user[0].username
+			response.data['email'] = user[0].email
+		else:
+			response.data['username'] = 'invalidUsername'
+			response.data['email'] = 'invalidEmail'
+
+class LoginUserView(JSONWebTokenAPIView):
+	serializer_class = JSONWebTokenSerializer
+
+	# @request_processor(fields=['username'])
+	def post(self, request, *args, **kwargs):
+		username = request.data['username']
+		if username:
+			username = str(username).lower()
+			request.data['username'] = username
+		response = super().post(request)
+
+		print(response)
+
+		AuthenticationHandler.authenticate_and_login(
+				username=username,
+				response=response
+		)
+		return Response({"data": response.data})
+		# return APIResponse(data=response.data, status=status.HTTP_200_OK)
+
+class UserDetailsView(APIView):
+	def get(self, request):
+		userDetails = {}
+		print(request.user)
+		if request.user.is_authenticated:
+			userDetails['username'] = request.user.username
+			userDetails['email'] = request.user.email
+		return Response({"data": userDetails})
+
+class NewUserView(JSONWebTokenAPIView):
+	serializer_class = JSONWebTokenSerializer
+
+	def post(self, request, *args, **kwargs):
+
+		username = request.data['username']
+		password = request.data['password']
+		errResponse = {}
+
+		if username:
+			username = str(username).lower()
+			request.data['username'] = username
+		else:
+			errResponse['status'] = 'fail'
+			errResponse['message'] = 'Invalid Username'
+			return Response({'data': errResponse})
+
+		""" if email:
+			email = str(email).lower()
+			request.data['email'] = email
+		else:
+			errResponse['status'] = 'fail'
+			errResponse['message'] = 'Invalid Email Id'
+			return Response({'data': errResponse}) """
+
+		if User.objects.filter(username=username):
+			errResponse['status'] = 'fail'
+			errResponse['message'] = 'Username: ' + username + ' already exists'
+			return Response({'data': errResponse})
+
+		""" if User.objects.filter(email=email):
+			errResponse['status'] = 'fail'
+			errResponse['message'] = 'Email Id: ' + email + ' is already registered with some other account'
+			return Response({'data': errResponse}) """
+
+		if User.objects.create_user(username=username,password=password):
+			print('user created successfully')
+		else:
+			errResponse['status'] = 'fail'
+			errResponse['message'] = 'Account creation failed.'
+			return Response({'data': errResponse})
+
+		response = super().post(request)
+
+		response.data['username'] = username
+		response.data['status'] = 'success'
+		print(response)
+
+		""" AuthenticationHandler.authenticate_and_login(
+				username=username,
+				response=response
+		) """
+		return Response({"data": response.data})
+
+	""" def get(self, request):
+		username = 'tempuser3'
+		password = 'hars'
+		if User.objects.filter(username=username):
+			return Response({'data': 'Username: ' + username + ' already exists'})
+		newUser = User.objects.create_user(username=username,password=password)
+		print(username)
+		return Response({"data": username}) """
+
+""" @api_view(["GET"])
 def hello_world(request):
-	return Response({"message": "Hello World!"})
+	return Response({"message": "Hello World!"}) """
 
 # Create your views here.
 def indices_view(request):
@@ -231,3 +344,192 @@ def getString(parentString,startTag,endTag):
 	startIndex = parentString.find(startTag)
 	endIndex = parentString.find(endTag)
 	return parentString[startIndex+4:endIndex]
+
+@api_view(['GET'])
+def test_user_view(request):
+	print(request.user)
+	# email = EmailMessage( subject='Test Email', body='It\'s working', from_email='admin@qlib.co.in', to=['harshalagrawal03@gmail.com'])
+	""" email = EmailMessage( subject='Test Email', body='It\'s working', from_email='admin@qlib.co.in', to=['adminoskflsdf@qlib.co.in'])
+	checking = email.send()
+	print(checking) """
+	return JsonResponse({"data": "okay"})
+
+@api_view(['POST'])
+def save_paper(request):
+	paper = request.data['paper']
+	response = {}
+	errResponse = {}
+	errResponse['status'] = 'fail'
+	if paper['dbId'] == 0:
+		print('new paper')
+		newPaper = Paper.objects.create(parentUser = request.user,
+														showRollNumber=paper['showRollNumber'],
+														showCode=paper['showCode'],
+														code=paper['code'],
+														heading=paper['heading'],
+														time=paper['time'],
+														totalMarks=paper['totalMarks'])
+		paperElementCount = 1
+		for paperElement in paper['list']:
+			if paperElement['type'] == 'question':
+				newQuestion = PaperElement.objects.create(parentPaper=newPaper,
+																									elementDbId=paperElement['dbId'],
+																									elementContent=paperElement['content'],
+																									elementNumber=paperElementCount,
+																									elementType='question',
+																									elementMarks=paperElement['marks'])
+				paperElementCount += 1
+				for subQuestion in paperElement['list']:
+					newSubQuestion = PaperElement.objects.create(parentPaper=newPaper,
+																											elementDbId=subQuestion['dbId'],
+																											elementContent=subQuestion['content'],
+																											elementNumber=paperElementCount,
+																											elementType='subquestion',
+																											elementMarks=subQuestion['marks'])
+					paperElementCount += 1
+			elif paperElement['type'] == 'section':
+				newSection = PaperElement.objects.create(parentPaper=newPaper,
+																									elementContent=paperElement['content'],
+																									elementNumber=paperElementCount,
+																									elementType='section')
+				paperElementCount += 1
+			elif paperElement['type'] == 'or':
+				newOr = PaperElement.objects.create(parentPaper=newPaper,
+																						elementNumber=paperElementCount,
+																						elementType='or')
+				paperElementCount += 1
+			else:
+				print('Error -> Paper Element type: ' + paperElement['type'] + ' isn\'t valid.')
+		response['status'] = 'success'
+		response['paperDbId'] = newPaper.pk
+		response['message'] = 'Paper created successfully'
+		return JsonResponse({"data": response})
+	else:
+		print('old paper')
+		try:
+			oldPaper = Paper.objects.get(pk=paper['dbId'],parentUser=request.user)
+		except ObjectDoesNotExist:
+			errResponse['message'] = 'This paper doesn\'t exist for this user, contact site admin.'
+			return JsonResponse({"data": errResponse})
+		except MultipleObjectsReturned:
+			errResponse['message'] = 'Multiple papers of same type for this user, contact site admin.'
+			return JsonResponse({"data": errResponse})
+		except:
+			errResponse['message'] = 'Unknown Exception while accessing the paper, contact site admin.'
+			return JsonResponse({"data": errResponse})
+		oldPaper.showRollNumber = paper['showRollNumber']
+		oldPaper.showCode = paper['showCode']
+		oldPaper.code = paper['code']
+		oldPaper.heading = paper['heading']
+		oldPaper.time = paper['time']
+		oldPaper.totalMarks = paper['totalMarks']
+		oldPaper.save()
+		paperElementQuerySet = PaperElement.objects.filter(parentPaper=oldPaper).delete()
+		paperElementCount = 1
+		for paperElement in paper['list']:
+			if paperElement['type'] == 'question':
+				newQuestion = PaperElement.objects.create(parentPaper=oldPaper,
+																									elementDbId=paperElement['dbId'],
+																									elementContent=paperElement['content'],
+																									elementNumber=paperElementCount,
+																									elementType='question',
+																									elementMarks=paperElement['marks'])
+				paperElementCount += 1
+				for subQuestion in paperElement['list']:
+					newSubQuestion = PaperElement.objects.create(parentPaper=oldPaper,
+																											elementDbId=subQuestion['dbId'],
+																											elementContent=subQuestion['content'],
+																											elementNumber=paperElementCount,
+																											elementType='subquestion',
+																											elementMarks=subQuestion['marks'])
+					paperElementCount += 1
+			elif paperElement['type'] == 'section':
+				newSection = PaperElement.objects.create(parentPaper=oldPaper,
+																									elementContent=paperElement['content'],
+																									elementNumber=paperElementCount,
+																									elementType='section')
+				paperElementCount += 1
+			elif paperElement['type'] == 'or':
+				newOr = PaperElement.objects.create(parentPaper=oldPaper,
+																						elementNumber=paperElementCount,
+																						elementType='or')
+				paperElementCount += 1
+			else:
+				print('Error -> Paper Element type: ' + paperElement['type'] + ' isn\'t valid.')
+		response['status'] = 'success'
+		response['paperDbId'] = oldPaper.pk
+		response['message'] = 'Paper saved successfully'
+		return JsonResponse({"data": response})
+
+@api_view(['GET'])
+def get_paper_list(request):
+	user = request.user
+	paperList = []
+	for paper in user.paper_set.all():
+		tempPaper = {}
+		tempPaper['dbId'] = paper.pk
+		tempPaper['heading'] = paper.heading
+		tempPaper['time'] = paper.time
+		tempPaper['totalMarks'] = paper.totalMarks
+		tempPaper['totalQuestions'] = paper.paperelement_set.filter(elementType='question').count() - paper.paperelement_set.filter(elementType='or').count()
+		paperList.append(tempPaper)
+	return JsonResponse({"data": paperList})
+
+@api_view(['POST'])
+def get_paper(request):
+	response = {}
+	errResponse = {}
+	errResponse['status'] = 'fail'
+	try:
+		paper = Paper.objects.get(pk=request.data['paperDbId'],parentUser=request.user)
+	except ObjectDoesNotExist:
+		errResponse['message'] = 'This paper doesn\'t exist for this user, contact site admin.'
+		return JsonResponse({"data": errResponse})
+	except MultipleObjectsReturned:
+		errResponse['message'] = 'Multiple papers of same type for this user, contact site admin.'
+		return JsonResponse({"data": errResponse})
+	except:
+		errResponse['message'] = 'Unknown Exception while accessing the paper, contact site admin.'
+		return JsonResponse({"data": errResponse})
+
+	responsePaper = {}
+	responsePaper['dbId'] = request.data['paperDbId']
+	responsePaper['showRollNumber'] = paper.showRollNumber
+	responsePaper['showCode'] = paper.showCode
+	responsePaper['code'] = paper.code
+	responsePaper['heading'] = paper.heading
+	responsePaper['time'] = paper.time
+	responsePaper['totalMarks'] = paper.totalMarks
+	responsePaper['list'] = []
+
+	previousQuestion = {}
+
+	for paperElement in paper.paperelement_set.all().order_by('elementNumber'):
+		tempPaperElement = {}
+		if paperElement.elementType == 'question':
+			tempPaperElement['type'] = 'question'
+			tempPaperElement['dbId'] = paperElement.elementDbId
+			tempPaperElement['content'] = paperElement.elementContent
+			tempPaperElement['marks'] = paperElement.elementMarks
+			tempPaperElement['list'] = []
+			previousQuestion = tempPaperElement
+			responsePaper['list'].append(tempPaperElement)
+		elif paperElement.elementType == 'subquestion':
+			tempPaperElement['type'] = 'question'
+			tempPaperElement['dbId'] = paperElement.elementDbId
+			tempPaperElement['content'] = paperElement.elementContent
+			tempPaperElement['marks'] = paperElement.elementMarks
+			previousQuestion['list'].append(tempPaperElement)
+		elif paperElement.elementType == 'or':
+			tempPaperElement['type'] = 'or'
+			responsePaper['list'].append(tempPaperElement)
+		elif paperElement.elementType == 'section':
+			tempPaperElement['type'] = 'section'
+			tempPaperElement['content'] = paperElement.elementContent
+			responsePaper['list'].append(tempPaperElement)
+
+	response['status'] = 'success'
+	response['paper'] = responsePaper
+
+	return JsonResponse({'data': response})
+

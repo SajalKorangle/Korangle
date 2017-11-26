@@ -5,11 +5,13 @@ from django.core import serializers
 from helloworld_project.settings import PROJECT_ROOT
 from django.contrib.auth import authenticate, login, logout
 
+from django.db.models import Max
+
 import json
 
 import os
 
-def login_data_view(request):
+"""def login_data_view(request):
 	username = 'arnava'
 	password = 'harshal03'
 	user = authenticate(request, username=username, password=password)
@@ -33,17 +35,17 @@ def authentication_view(request):
 		return JsonResponse({'data':'authenticated'})
 	else:
 		print(request.user)
-		return JsonResponse({'data':'unauthenticated'})
+		return JsonResponse({'data':'unauthenticated'})"""
 
 def class_student_list_view(request):
-	queryset = Class.objects.all()
+	queryset = Class.objects.all().order_by('orderNumber')
 	classList = []
 	for level in queryset:
 		tempClass = {}
 		tempClass['name'] = level.name
 		tempClass['dbId'] = level.id
 		tempClass['studentList'] = []
-		for student in level.student_set.all():
+		for student in level.student_set.all().order_by('name'):
 			tempStudent = {}
 			tempStudent['name'] = student.name
 			tempStudent['dbId'] = student.id
@@ -52,7 +54,7 @@ def class_student_list_view(request):
 	return JsonResponse({'data':classList})
 
 def class_list_view(request):
-	queryset = Class.objects.all()
+	queryset = Class.objects.all().order_by('orderNumber')
 	classList = []
 	for level in queryset:
 		tempClass = {}
@@ -119,6 +121,8 @@ def student_data_view(request):
 		student_data['class'] = student_query[0].parentClass.name
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_query[0].totalFees
+		receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
+		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
 		for studentFeeEntry in student_query[0].fee_set.all():
 			tempStudentFeeEntry = {}
 			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
@@ -133,13 +137,44 @@ def student_data_view(request):
 		return JsonResponse({'data':'data'})
 
 def new_fee_receipt_view(request):
+	errResponse = {}
+	errResponse['status'] = 'fail'
 	if request.method == "POST":
+		response = {}
+		response['status'] = 'success'
 		fee_receipt = json.loads(request.body.decode('utf-8'))
+		if Fee.objects.filter(receiptNumber=fee_receipt['receiptNumber']):
+			errResponse['message'] = 'Failed: Receipt Number already exists'
+			return JsonResponse({'data': errResponse})
 		student_object = Student.objects.get(id=fee_receipt['studentDbId'])
-		fee_receipt_object = Fee.objects.update_or_create(receiptNumber=fee_receipt['receiptNumber'],amount=fee_receipt['amount'],remark=fee_receipt['remark'],parentStudent=student_object)
-		return JsonResponse({'data':'okay'})
+		fee_receipt_object = Fee.objects.create(receiptNumber=fee_receipt['receiptNumber'],amount=fee_receipt['amount'],remark=fee_receipt['remark'],parentStudent=student_object)
+		response['message'] = 'Fee submitted successfully'
+		student_data = {}
+		student_data['name'] = student_object.name
+		student_data['dbId'] = student_object.id
+		student_data['fathersName'] = student_object.fathersName
+		student_data['mobileNumber'] = student_object.mobileNumber
+		student_data['dateOfBirth'] = student_object.dateOfBirth
+		student_data['totalFees'] = student_object.totalFees
+		student_data['remark'] = student_object.remark
+		student_data['class'] = student_object.parentClass.name
+		student_data['feesList'] = []
+		student_data['feesDue'] = student_object.totalFees
+		receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
+		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
+		for studentFeeEntry in student_object.fee_set.all():
+			tempStudentFeeEntry = {}
+			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
+			tempStudentFeeEntry['amount'] = studentFeeEntry.amount
+			tempStudentFeeEntry['remark'] = studentFeeEntry.remark
+			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
+			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
+			student_data['feesDue'] -= studentFeeEntry.amount
+			student_data['feesList'].append(tempStudentFeeEntry)
+		response['studentData'] = student_data
+		return JsonResponse({'data': response})
 	else:
-		return JsonResponse({'data':'error'})
+		return JsonResponse({'data': errResponse})
 
 def fee_list_view(request):
 	if request.method == "POST":
