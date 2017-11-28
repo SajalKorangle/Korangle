@@ -67,7 +67,23 @@ def new_student_data_view(request):
 	if request.method == "POST":
 		student_data = json.loads(request.body.decode('utf-8'))
 		class_object = Class.objects.get(id=student_data['classDbId'])
-		student_object = Student.objects.update_or_create(name=student_data['name'],fathersName=student_data['fathersName'],mobileNumber=student_data['mobileNumber'],dateOfBirth=student_data['dateOfBirth'],totalFees=student_data['totalFees'],remark=student_data['remark'],parentClass=class_object)
+		student_object = Student(name=student_data['name'],fathersName=student_data['fathersName'],parentClass=class_object)
+		if student_data['mobileNumber']:
+			student_object = student_data['mobileNumber']
+		if student_data['dateOfBirth']:
+			student_object = student_data['dateOfBirth']
+		if student_data['totalFees']:
+			student_object = student_data['totalFees']
+		if student_data['remark']:
+			student_object = student_data['remark']
+		student_object.save()
+		'''student_object = Student.objects.create(name=student_data['name'],
+																						fathersName=student_data['fathersName'],
+																						mobileNumber=student_data['mobileNumber'],
+																						dateOfBirth=student_data['dateOfBirth'],
+																						totalFees=student_data['totalFees'],
+																						remark=student_data['remark'],
+																						parentClass=class_object)'''
 		return JsonResponse({'data':'okay'})
 	else:
 		return JsonResponse({'data':'error'})
