@@ -13,10 +13,10 @@ class Class(models.Model):
 class Student(models.Model):
 	name = models.CharField(max_length=100)
 	fathersName = models.CharField(max_length=100)
-	mobileNumber = models.IntegerField()
-	totalFees = models.IntegerField()
-	dateOfBirth = models.DateField()
-	remark = models.TextField(default='---')
+	mobileNumber = models.IntegerField(null=True)
+	totalFees = models.IntegerField(null=True)
+	dateOfBirth = models.DateField(null=True)
+	remark = models.TextField(null=True)
 	parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
 
 	def __str__(self):
