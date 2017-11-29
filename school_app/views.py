@@ -69,13 +69,13 @@ def new_student_data_view(request):
 		class_object = Class.objects.get(id=student_data['classDbId'])
 		student_object = Student(name=student_data['name'],fathersName=student_data['fathersName'],parentClass=class_object)
 		if student_data['mobileNumber']:
-			student_object = student_data['mobileNumber']
+			student_object.mobileNumber = student_data['mobileNumber']
 		if student_data['dateOfBirth']:
-			student_object = student_data['dateOfBirth']
+			student_object.dateOfBirth = student_data['dateOfBirth']
 		if student_data['totalFees']:
-			student_object = student_data['totalFees']
+			student_object.totalFees = student_data['totalFees']
 		if student_data['remark']:
-			student_object = student_data['remark']
+			student_object.remark = student_data['remark']
 		student_object.save()
 		'''student_object = Student.objects.create(name=student_data['name'],
 																						fathersName=student_data['fathersName'],
