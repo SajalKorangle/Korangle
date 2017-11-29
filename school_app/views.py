@@ -7,6 +7,12 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.db.models import Max
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+
 import json
 
 import os
@@ -121,6 +127,35 @@ def update_student_view(request):
 		return JsonResponse({'data':student_data})
 	else:
 		return JsonResponse({'data':'error'})
+
+@api_view(['POST'])
+def delete_student_view(request):
+	errResponse = {}
+	errResponse['status'] = 'fail'
+	response = {}
+	response['status'] = 'success'
+	if request.user.is_authenticated:
+		try:
+			student_object = Student.objects.get(pk=request.data['studentDbId'])
+		except ObjectDoesNotExist:
+			errResponse['message'] = 'This student doesn\'t exist for this user, contact site admin.'
+			return JsonResponse({"data": errResponse})
+		except MultipleObjectsReturned:
+			errResponse['message'] = 'Multiple students of same id, contact site admin.'
+			return JsonResponse({"data": errResponse})
+		except:
+			errResponse['message'] = 'Unknown Exception while accessing the paper, contact site admin.'
+			return JsonResponse({"data": errResponse})
+		Fee.objects.filter(parentStudent=student_object).delete()
+		Student.objects.filter(pk=request.data['studentDbId']).delete()
+		response['studentDbId'] = request.data['studentDbId']
+		response['message'] = 'Student Profile removed successfully.'
+		return JsonResponse({'data': response})
+	else:
+		errResponse['message'] = 'You are not authenticated to delete student profile'
+		return JsonResponse({'data': errResponse})
+
+
 
 def student_data_view(request):
 	student_data = {}

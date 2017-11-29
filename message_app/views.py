@@ -355,6 +355,30 @@ def test_user_view(request):
 	return JsonResponse({"data": "okay"})
 
 @api_view(['POST'])
+def delete_paper(request):
+	paperDbId = request.data['paperDbId']
+	response = {}
+	errResponse = {}
+	response['status'] = 'success'
+	errResponse['status'] = 'fail'
+	try:
+		oldPaper = Paper.objects.get(pk=paperDbId,parentUser=request.user)
+	except ObjectDoesNotExist:
+		errResponse['message'] = 'This paper either doesn\'t exist or is deleted from user\'s library.'
+		return JsonResponse({"data": errResponse})
+	except MultipleObjectsReturned:
+		errResponse['message'] = 'Multiple papers of same type for this user, contact site admin.'
+		return JsonResponse({"data": errResponse})
+	except:
+		errResponse['message'] = 'Unknown Exception while accessing the paper, contact site admin.'
+		return JsonResponse({"data": errResponse})
+	PaperElement.objects.filter(parentPaper=oldPaper).delete()
+	Paper.objects.filter(pk=paperDbId,parentUser=request.user).delete()
+	response['message'] = 'Paper deleted successfully'
+	response['paperDbId'] = paperDbId
+	return JsonResponse({'data': response})
+
+@api_view(['POST'])
 def save_paper(request):
 	paper = request.data['paper']
 	response = {}
@@ -409,7 +433,7 @@ def save_paper(request):
 		try:
 			oldPaper = Paper.objects.get(pk=paper['dbId'],parentUser=request.user)
 		except ObjectDoesNotExist:
-			errResponse['message'] = 'This paper doesn\'t exist for this user, contact site admin.'
+			errResponse['message'] = 'This paper either doesn\'t exist or is deleted from user\'s library.'
 			return JsonResponse({"data": errResponse})
 		except MultipleObjectsReturned:
 			errResponse['message'] = 'Multiple papers of same type for this user, contact site admin.'
