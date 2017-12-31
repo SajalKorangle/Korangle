@@ -238,6 +238,7 @@ def fee_list_view(request):
 			tempFee['amount'] = fee.amount
 			tempFee['generationDateTime'] = fee.generationDateTime
 			tempFee['studentName'] = fee.parentStudent.name
+			tempFee['fatherName'] = fee.parentStudent.fathersName
 			tempFee['className'] = fee.parentStudent.parentClass.name
 			tempFee['remark'] = fee.remark
 			fee_list.append(tempFee)
