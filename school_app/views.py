@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from .models import Class, Student, Fee
+from .models import Class, Student, Fee, Expense
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from helloworld_project.settings import PROJECT_ROOT
@@ -245,3 +245,36 @@ def fee_list_view(request):
 		return JsonResponse({'data':fee_list})
 	else:
 		return JsonResponse({'data':'error'})
+
+def new_expense_view(request):
+	errResponse = {}
+	errResponse['status'] = 'fail'
+	if request.method == "POST":
+		response = {}
+		response['status'] = 'success'
+		expense = json.loads(request.body.decode('utf-8'))
+		if Expense.objects.filter(voucherNumber=expense['voucherNumber']):
+			errResponse['message'] = 'Failed: Voucher Number already exists'
+			return JsonResponse({'data': errResponse})
+		expense_object = Expense.objects.create(voucherNumber=expense['voucherNumber'],amount=expense['amount'],remark=expense['remark'])
+		response['message'] = 'Expense submitted successfully'
+		return JsonResponse({'data': response})
+	else:
+		return JsonResponse({'data': errResponse})
+
+def expense_list_view(request):
+	if request.method == "POST":
+		expense_list = []
+		time_period = json.loads(request.body.decode('utf-8'))
+		expense_query = Expense.objects.filter(generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
+		for expense in expense_query:
+			tempExpense = {}
+			tempExpense['voucherNumber'] = expense.voucherNumber
+			tempExpense['amount'] = expense.amount
+			tempExpense['generationDateTime'] = expense.generationDateTime
+			tempExpense['remark'] = expense.remark
+			expense_list.append(tempExpense)
+		return JsonResponse({'data':expense_list})
+	else:
+		return JsonResponse({'data':'error'})
+
