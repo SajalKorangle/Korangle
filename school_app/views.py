@@ -43,31 +43,50 @@ def authentication_view(request):
 		print(request.user)
 		return JsonResponse({'data':'unauthenticated'})"""
 
+@api_view(['GET'])
 def class_student_list_view(request):
-	queryset = Class.objects.all().order_by('orderNumber')
-	classList = []
-	for level in queryset:
-		tempClass = {}
-		tempClass['name'] = level.name
-		tempClass['dbId'] = level.id
-		tempClass['studentList'] = []
-		for student in level.student_set.all().order_by('name'):
-			tempStudent = {}
-			tempStudent['name'] = student.name
-			tempStudent['dbId'] = student.id
-			tempClass['studentList'].append(tempStudent)
-		classList.append(tempClass)
-	return JsonResponse({'data':classList})
+	errResponse = {}
+	errResponse['status'] = 'fail'
+	response = {}
+	response['status'] = 'success'
+	if request.user.is_authenticated:
+		#queryset = Class.objects.all().order_by('orderNumber')
+		queryset = request.user.class_set.all().order_by('orderNumber')
+		classList = []
+		for level in queryset:
+			tempClass = {}
+			tempClass['name'] = level.name
+			tempClass['dbId'] = level.id
+			tempClass['studentList'] = []
+			for student in level.student_set.all().order_by('name'):
+				tempStudent = {}
+				tempStudent['name'] = student.name
+				tempStudent['dbId'] = student.id
+				tempClass['studentList'].append(tempStudent)
+			classList.append(tempClass)
+		return JsonResponse({'data':classList})
+	else:
+		return JsonResponse({'data':errResponse})
 
+@api_view(['GET'])
 def class_list_view(request):
-	queryset = Class.objects.all().order_by('orderNumber')
-	classList = []
-	for level in queryset:
-		tempClass = {}
-		tempClass['name'] = level.name
-		tempClass['dbId'] = level.id
-		classList.append(tempClass)
-	return JsonResponse({'data':classList})
+	errResponse = {}
+	errResponse['status'] = 'fail'
+	response = {}
+	response['status'] = 'success'
+	#print(request.user)
+	if request.user.is_authenticated:
+		queryset = request.user.class_set.all().order_by('orderNumber')
+		"""queryset = Class.objects.all().order_by('orderNumber')"""
+		classList = []
+		for level in queryset:
+			tempClass = {}
+			tempClass['name'] = level.name
+			tempClass['dbId'] = level.id
+			classList.append(tempClass)
+		return JsonResponse({'data':classList})
+	else:
+		return JsonResponse({'data':errResponse})
 
 def new_student_data_view(request):
 	if request.method == "POST":
@@ -227,11 +246,14 @@ def new_fee_receipt_view(request):
 	else:
 		return JsonResponse({'data': errResponse})
 
+@api_view(['POST'])
 def fee_list_view(request):
-	if request.method == "POST":
+	if request.user.is_authenticated:
 		fee_list = []
 		time_period = json.loads(request.body.decode('utf-8'))
-		fee_query = Fee.objects.filter(generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
+		#fee_query = Fee.objects.filter(generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
+		fee_query = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
+		#fee_query = request.user.class_set.student_set.fee_set.objects.filter(generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
 		for fee in fee_query:
 			tempFee = {}
 			tempFee['receiptNumber'] = fee.receiptNumber
@@ -246,27 +268,29 @@ def fee_list_view(request):
 	else:
 		return JsonResponse({'data':'error'})
 
+@api_view(['POST'])
 def new_expense_view(request):
 	errResponse = {}
 	errResponse['status'] = 'fail'
-	if request.method == "POST":
+	if request.user.is_authenticated:
 		response = {}
 		response['status'] = 'success'
 		expense = json.loads(request.body.decode('utf-8'))
-		if Expense.objects.filter(voucherNumber=expense['voucherNumber']):
+		if Expense.objects.filter(voucherNumber=expense['voucherNumber'],parentUser=request.user):
 			errResponse['message'] = 'Failed: Voucher Number already exists'
 			return JsonResponse({'data': errResponse})
-		expense_object = Expense.objects.create(voucherNumber=expense['voucherNumber'],amount=expense['amount'],remark=expense['remark'])
+		expense_object = Expense.objects.create(voucherNumber=expense['voucherNumber'],amount=expense['amount'],remark=expense['remark'],parentUser=request.user)
 		response['message'] = 'Expense submitted successfully'
 		return JsonResponse({'data': response})
 	else:
 		return JsonResponse({'data': errResponse})
 
+@api_view(['POST'])
 def expense_list_view(request):
-	if request.method == "POST":
+	if request.user.is_authenticated:
 		expense_list = []
 		time_period = json.loads(request.body.decode('utf-8'))
-		expense_query = Expense.objects.filter(generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
+		expense_query = Expense.objects.filter(generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'],parentUser=request.user)
 		for expense in expense_query:
 			tempExpense = {}
 			tempExpense['voucherNumber'] = expense.voucherNumber
