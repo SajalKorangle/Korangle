@@ -419,6 +419,7 @@ def save_paper(request):
 				paperElementCount += 1
 			elif paperElement['type'] == 'or':
 				newOr = PaperElement.objects.create(parentPaper=newPaper,
+																						elementContent=paperElement['content'],
 																						elementNumber=paperElementCount,
 																						elementType='or')
 				paperElementCount += 1
@@ -475,6 +476,7 @@ def save_paper(request):
 				paperElementCount += 1
 			elif paperElement['type'] == 'or':
 				newOr = PaperElement.objects.create(parentPaper=oldPaper,
+																									elementContent=paperElement['content'],
 																						elementNumber=paperElementCount,
 																						elementType='or')
 				paperElementCount += 1
@@ -546,6 +548,7 @@ def get_paper(request):
 			previousQuestion['list'].append(tempPaperElement)
 		elif paperElement.elementType == 'or':
 			tempPaperElement['type'] = 'or'
+			tempPaperElement['content'] = paperElement.elementContent
 			responsePaper['list'].append(tempPaperElement)
 		elif paperElement.elementType == 'section':
 			tempPaperElement['type'] = 'section'
