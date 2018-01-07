@@ -40,6 +40,13 @@ class Fee(models.Model):
 	generationDateTime = models.DateField(auto_now_add=True)
 	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
 
+class Concession(models.Model):
+	amount = models.IntegerField()
+	remark = models.TextField()
+	# generationDateTime = models.DateTimeField(auto_now_add=True, blank=True)
+	generationDateTime = models.DateField(auto_now_add=True)
+	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
+
 class Expense(models.Model):
 	voucherNumber = models.IntegerField()
 	amount = models.IntegerField()

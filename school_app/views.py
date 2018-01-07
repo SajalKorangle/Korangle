@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from .models import Class, Student, Fee, Expense
+from .models import Class, Student, Fee, Expense, Concession
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from helloworld_project.settings import PROJECT_ROOT
@@ -202,6 +202,15 @@ def student_data_view(request):
 			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
 			student_data['feesDue'] -= studentFeeEntry.amount
 			student_data['feesList'].append(tempStudentFeeEntry)
+		student_data['concessionList'] = []
+		for studentConcessionEntry in student_query[0].concession_set.all():
+			tempStudentConcessionEntry = {}
+			tempStudentConcessionEntry['amount'] = studentConcessionEntry.amount
+			tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
+			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
+			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
+			student_data['feesDue'] -= studentConcessionEntry.amount
+			student_data['concessionList'].append(tempStudentConcessionEntry)
 		return JsonResponse({'data':student_data})
 	else:
 		return JsonResponse({'data':'data'})
@@ -241,6 +250,15 @@ def new_fee_receipt_view(request):
 			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
 			student_data['feesDue'] -= studentFeeEntry.amount
 			student_data['feesList'].append(tempStudentFeeEntry)
+		student_data['concessionList'] = []
+		for studentConcessionEntry in student_object.concession_set.all():
+			tempStudentConcessionEntry = {}
+			tempStudentConcessionEntry['amount'] = studentConcessionEntry.amount
+			tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
+			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
+			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
+			student_data['feesDue'] -= studentConcessionEntry.amount
+			student_data['concessionList'].append(tempStudentConcessionEntry)
 		response['studentData'] = student_data
 		return JsonResponse({'data': response})
 	else:
@@ -299,6 +317,74 @@ def expense_list_view(request):
 			tempExpense['remark'] = expense.remark
 			expense_list.append(tempExpense)
 		return JsonResponse({'data':expense_list})
+	else:
+		return JsonResponse({'data':'error'})
+
+def new_concession_view(request):
+	errResponse = {}
+	errResponse['status'] = 'fail'
+	if request.method == "POST":
+		response = {}
+		response['status'] = 'success'
+		concession = json.loads(request.body.decode('utf-8'))
+		'''if Concession.objects.filter(receiptNumber=fee_receipt['receiptNumber']):
+			errResponse['message'] = 'Failed: Receipt Number already exists'
+			return JsonResponse({'data': errResponse})'''
+		student_object = Student.objects.get(id=concession['studentDbId'])
+		new_concession_object = Concession.objects.create(amount=concession['amount'],remark=concession['remark'],parentStudent=student_object)
+		response['message'] = 'Concession submitted successfully'
+		student_data = {}
+		student_data['name'] = student_object.name
+		student_data['dbId'] = student_object.id
+		student_data['fathersName'] = student_object.fathersName
+		student_data['mobileNumber'] = student_object.mobileNumber
+		student_data['dateOfBirth'] = student_object.dateOfBirth
+		student_data['totalFees'] = student_object.totalFees
+		student_data['remark'] = student_object.remark
+		student_data['class'] = student_object.parentClass.name
+		student_data['feesList'] = []
+		student_data['feesDue'] = student_object.totalFees
+		receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
+		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
+		for studentFeeEntry in student_object.fee_set.all():
+			tempStudentFeeEntry = {}
+			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
+			tempStudentFeeEntry['amount'] = studentFeeEntry.amount
+			tempStudentFeeEntry['remark'] = studentFeeEntry.remark
+			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
+			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
+			student_data['feesDue'] -= studentFeeEntry.amount
+			student_data['feesList'].append(tempStudentFeeEntry)
+		student_data['concessionList'] = []
+		for studentConcessionEntry in student_object.concession_set.all():
+			tempStudentConcessionEntry = {}
+			tempStudentConcessionEntry['amount'] = studentConcessionEntry.amount
+			tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
+			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
+			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
+			student_data['feesDue'] -= studentConcessionEntry.amount
+			student_data['concessionList'].append(tempStudentConcessionEntry)
+		response['studentData'] = student_data
+		return JsonResponse({'data': response})
+	else:
+		return JsonResponse({'data': errResponse})
+
+@api_view(['POST'])
+def concession_list_view(request):
+	if request.user.is_authenticated:
+		concession_list = []
+		time_period = json.loads(request.body.decode('utf-8'))
+		concession_query = Concession.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
+		for concession in concession_query:
+			tempConcession = {}
+			tempConcession['amount'] = concession.amount
+			tempConcession['generationDateTime'] = concession.generationDateTime
+			tempConcession['studentName'] = concession.parentStudent.name
+			tempConcession['fatherName'] = concession.parentStudent.fathersName
+			tempConcession['className'] = concession.parentStudent.parentClass.name
+			tempConcession['remark'] = concession.remark
+			concession_list.append(tempConcession)
+		return JsonResponse({'data':concession_list})
 	else:
 		return JsonResponse({'data':'error'})
 
