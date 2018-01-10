@@ -176,9 +176,11 @@ def delete_student_view(request):
 
 
 
+@api_view(['POST'])
 def student_data_view(request):
 	student_data = {}
-	if request.method == "POST":
+	#if request.method == "POST":
+	if request.user.is_authenticated:
 		received_json_data = json.loads(request.body.decode('utf-8'))
 		student_query = Student.objects.filter(id=received_json_data['dbId'])
 		student_data['name'] = student_query[0].name
@@ -191,8 +193,10 @@ def student_data_view(request):
 		student_data['class'] = student_query[0].parentClass.name
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_query[0].totalFees
-		receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
+		#receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
+		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user).aggregate(Max('receiptNumber'))
 		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
+		print(student_data['overAllLastFeeReceiptNumber'])
 		for studentFeeEntry in student_query[0].fee_set.all():
 			tempStudentFeeEntry = {}
 			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
@@ -215,10 +219,11 @@ def student_data_view(request):
 	else:
 		return JsonResponse({'data':'data'})
 
+@api_view(['POST'])
 def new_fee_receipt_view(request):
 	errResponse = {}
 	errResponse['status'] = 'fail'
-	if request.method == "POST":
+	if request.user.is_authenticated:
 		response = {}
 		response['status'] = 'success'
 		fee_receipt = json.loads(request.body.decode('utf-8'))
@@ -239,7 +244,7 @@ def new_fee_receipt_view(request):
 		student_data['class'] = student_object.parentClass.name
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_object.totalFees
-		receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
+		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user).aggregate(Max('receiptNumber'))
 		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
 		for studentFeeEntry in student_object.fee_set.all():
 			tempStudentFeeEntry = {}
@@ -320,6 +325,7 @@ def expense_list_view(request):
 	else:
 		return JsonResponse({'data':'error'})
 
+@api_view(['POST'])
 def new_concession_view(request):
 	errResponse = {}
 	errResponse['status'] = 'fail'
@@ -344,7 +350,7 @@ def new_concession_view(request):
 		student_data['class'] = student_object.parentClass.name
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_object.totalFees
-		receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
+		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user).aggregate(Max('receiptNumber'))
 		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
 		for studentFeeEntry in student_object.fee_set.all():
 			tempStudentFeeEntry = {}
