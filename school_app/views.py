@@ -101,6 +101,8 @@ def new_student_data_view(request):
 			student_object.totalFees = student_data['totalFees']
 		if student_data['remark']:
 			student_object.remark = student_data['remark']
+		if student_data['scholarNumber']:
+			student_object.scholarNumber = student_data['scholarNumber']
 		student_object.save()
 		'''student_object = Student.objects.create(name=student_data['name'],
 																						fathersName=student_data['fathersName'],
@@ -108,6 +110,7 @@ def new_student_data_view(request):
 																						dateOfBirth=student_data['dateOfBirth'],
 																						totalFees=student_data['totalFees'],
 																						remark=student_data['remark'],
+																						scholarNumber=student_data['scholarNumber'],
 																						parentClass=class_object)'''
 		return JsonResponse({'data':'okay'})
 	else:
@@ -123,6 +126,7 @@ def update_student_view(request):
 		updatedValues['dateOfBirth'] = student_data['dateOfBirth']
 		updatedValues['totalFees'] = student_data['totalFees']
 		updatedValues['remark'] = student_data['remark']
+		updatedValues['scholarNumber'] = student_data['scholarNumber']
 		student_object, created = Student.objects.update_or_create(defaults=updatedValues,id=student_data['dbId'])
 		student_data['name'] = student_object.name
 		student_data['dbId'] = student_object.id
@@ -131,6 +135,7 @@ def update_student_view(request):
 		student_data['dateOfBirth'] = student_object.dateOfBirth
 		student_data['totalFees'] = student_object.totalFees
 		student_data['remark'] = student_object.remark
+		student_data['scholarNumber'] = student_object.scholarNumber
 		student_data['class'] = student_object.parentClass.name
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_object.totalFees
@@ -190,6 +195,7 @@ def student_data_view(request):
 		student_data['dateOfBirth'] = student_query[0].dateOfBirth
 		student_data['totalFees'] = student_query[0].totalFees
 		student_data['remark'] = student_query[0].remark
+		student_data['scholarNumber'] = student_query[0].scholarNumber
 		student_data['class'] = student_query[0].parentClass.name
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_query[0].totalFees
@@ -241,6 +247,7 @@ def new_fee_receipt_view(request):
 		student_data['dateOfBirth'] = student_object.dateOfBirth
 		student_data['totalFees'] = student_object.totalFees
 		student_data['remark'] = student_object.remark
+		student_data['scholarNumber'] = student_object.scholarNumber
 		student_data['class'] = student_object.parentClass.name
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_object.totalFees
@@ -347,6 +354,7 @@ def new_concession_view(request):
 		student_data['dateOfBirth'] = student_object.dateOfBirth
 		student_data['totalFees'] = student_object.totalFees
 		student_data['remark'] = student_object.remark
+		student_data['scholarNumber'] = student_object.scholarNumber
 		student_data['class'] = student_object.parentClass.name
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_object.totalFees
