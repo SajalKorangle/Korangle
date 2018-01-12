@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 import { Student } from '../classes/student';
 import { Classs } from '../classes/classs';
@@ -12,6 +12,8 @@ import { NewStudentService } from '../services/new-student.service';
     providers: [ ClassListService, NewStudentService ],
 })
 export class NewStudentComponent implements OnInit {
+
+    @Input() user;
 
   newStudent: Student;
   selectedClass: Classs;

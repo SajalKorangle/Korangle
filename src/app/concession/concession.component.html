@@ -1,7 +1,7 @@
 <div class="main-content">
     <div class="container-fluid">
         <div class="card" style="min-height: 100%">
-            <div class="card-header" data-background-color="red">
+            <div class="card-header" [attr.data-background-color]="user.color">
                 <h4 class="title">List of Concession</h4>
             </div>
             <div class="card-content">
@@ -21,7 +21,7 @@
                     </div>
                     <div class="col-md-3">
                         <button type="button"
-                                class="btn btn-danger"
+                                class="btn btn-{{user.btn_color}}"
                                 (click)="getConcessionList();">Submit</button><br>
                     </div>
                 </div>

@@ -9,16 +9,16 @@
             <app-navbar class="hidden-md hidden-xl hidden-lg"></app-navbar>
             <!-- app-navbar></app-navbar -->
             <!-- router-outlet></router-outlet -->
-            <app-student *ngIf="user.appSection==='students'"></app-student>
-            <app-fees *ngIf="user.appSection==='fees'"></app-fees>
-            <app-expenses *ngIf="user.appSection==='expenses'"></app-expenses>
-            <app-concession *ngIf="user.appSection==='concession'"></app-concession>
-            <app-new-student *ngIf="user.appSection==='new_student'"></app-new-student>
+            <app-student *ngIf="user.appSection==='students'" [user]="user"></app-student>
+            <app-fees *ngIf="user.appSection==='fees'" [user]="user"></app-fees>
+            <app-expenses *ngIf="user.appSection==='expenses'" [user]="user"></app-expenses>
+            <app-concession *ngIf="user.appSection==='concession'" [user]="user"></app-concession>
+            <app-new-student *ngIf="user.appSection==='new_student'" [user]="user"></app-new-student>
             <!--<div *ngIf="isMaps('maps')"> <app-footer></app-footer> </div>-->
         </div>
     </div>
     <div *ngIf="!user.isAuthenticated" style="min-height: 100%;">
-        <login-form [user]="user"></login-form>
+        <app-login-form [user]="user"></app-login-form>
     </div>
 </div>
 <div class="wrapper showPrint">

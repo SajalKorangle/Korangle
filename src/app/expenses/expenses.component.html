@@ -2,7 +2,7 @@
     <div class="container-fluid">
 
         <div class="card" style="min-height: 100%">
-            <div class="card-header" data-background-color="red">
+            <div class="card-header" [attr.data-background-color]="user.color">
                 <h4 class="title">New expense</h4>
             </div>
             <div class="card-content">
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <button type="submit" class="btn btn-danger" (click)="submitExpense();">Submit</button>
+                        <button type="submit" class="btn btn-{{user.btn_color}}" (click)="submitExpense();">Submit</button>
                     </div>
                 </div>
 
@@ -35,7 +35,7 @@
         </div>
 
         <div class="card" style="min-height: 100%">
-            <div class="card-header" data-background-color="red">
+            <div class="card-header" [attr.data-background-color]="user.color">
                 <h4 class="title">List of Expenses</h4>
             </div>
             <div class="card-content">
@@ -55,12 +55,12 @@
                     </div>
                     <div class="col-md-3">
                         <button type="button"
-                                class="btn btn-danger"
+                                class="btn btn-{{user.btn_color}}"
                                 (click)="getExpenseList();">Submit</button><br>
                     </div>
                     <div class="col-md-3">
                         <button type="button"
-                                class="btn btn-danger"
+                                class="btn btn-{{user.btn_color}}"
                                 (click)="printExpenses();">Print</button><br>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                                 <td align="center">{{expenseEntry.generationDateTime}}</td>
                                 <td align="left">{{expenseEntry.remark}}</td>
                                 <!-- td align="center">
-                                    <button type="button"  class="btn btn-danger" (click)="printFeeReceipt(feeEntry)">Print</button>
+                                    <button type="button"  class="btn btn-{{user.btn_color}}" (click)="printFeeReceipt(feeEntry)">Print</button>
                                 </td -->
                             </tr>
                         </table>

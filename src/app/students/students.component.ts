@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { Student } from '../classes/student';
 import { Classs } from '../classes/classs';
@@ -20,6 +20,8 @@ import moment = require('moment');
     providers: [ ClassStudentListService, StudentService, NewFeeReceiptService, AuthenticationService, NewConcessionService ],
 })
 export class StudentComponent implements OnInit {
+
+    @Input() user;
 
   selectedStudent: Student;
   selectedClass: Classs;

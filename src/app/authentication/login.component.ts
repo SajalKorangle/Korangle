@@ -1,10 +1,10 @@
 import {Component, ElementRef, Input} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service'
-import {Router} from "@angular/router";
+// import {Router} from "@angular/router";
 import { User } from '../classes/user';
 
 @Component({
-    selector: 'login-form',
+    selector: 'app-login-form',
     providers: [AuthenticationService],
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
@@ -18,7 +18,7 @@ export class LoginComponent {
     password = '';
     isLoading = false;
 
-    constructor(private _service: AuthenticationService, private router: Router) {}
+    constructor(private _service: AuthenticationService) {}
 
     login() {
         // alert('login called');
@@ -33,13 +33,11 @@ export class LoginComponent {
         this._service.loginUserDetails(this.username, this.password).then( data => {
             if (data.username === 'invalidUsername') {
                 alert('Login failed');
-            }
-            else {
+            } else {
                 localStorage.setItem('schoolJWT', data.token);
-                this.user.username = data.username;
-                this.user.email = data.email;
                 this.user.jwt = data.token;
                 this.user.isAuthenticated = true;
+                this.user.initializeUser(data);
             }
         });
     }

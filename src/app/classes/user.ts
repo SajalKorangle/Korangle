@@ -12,7 +12,10 @@ export class User {
     email: string;
     isAuthenticated = false;
     jwt = '';
+
     color = 'red';
+    btn_color = 'danger';
+    imgSrc = '/assets/img/angular2-logo-red.png';
 
     appSection = 'students';
 
@@ -33,7 +36,7 @@ export class User {
         { path: 'student-list', title: 'Student List',  icon:'content_paste', class: '' }, */
     ];
 
-    authenticateUser(): boolean {
+    checkAuthentication(): boolean {
         this.jwt = localStorage.getItem('schoolJWT');
         if (this.jwt === null || this.jwt.length === 0) {
             this.isAuthenticated = false;
@@ -41,6 +44,20 @@ export class User {
         } else {
             this.isAuthenticated = true;
             return true;
+        }
+    }
+
+    initializeUser(data: any): void {
+        this.username = data.username;
+        this.email = data.email;
+        if (this.username === 'anupreet') {
+            this.color = 'indigo';
+            this.btn_color = 'primary';
+            this.imgSrc = '/assets/img/gears.gif';
+        } else {
+            this.color = 'red';
+            this.btn_color = 'danger';
+            this.imgSrc = '/assets/img/angular2-logo-red.png';
         }
     }
 }

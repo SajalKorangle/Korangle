@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { Concession } from '../classes/concession';
 import { EmitterService } from '../services/emitter.service';
@@ -11,6 +11,8 @@ import { ConcessionListService } from "../services/concession-list.service";
     providers: [ConcessionListService]
 })
 export class ConcessionComponent {
+
+    @Input() user;
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();

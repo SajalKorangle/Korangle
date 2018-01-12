@@ -2,7 +2,7 @@
     <div class="container-fluid">
 
         <div class="card" style="min-height: 100%">
-            <div class="card-header" data-background-color="red">
+            <div class="card-header" [attr.data-background-color]="user.color">
                 <h4 class="title">Student Profile</h4>
             </div>
             <div class="card-content">
@@ -107,9 +107,9 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-danger" (click)="updateProfile();">Update</button>
-                    <button type="submit" class="btn btn-danger" (click)="deleteProfile();">Delete</button>
-                    <!-- button type="submit" class="btn btn-danger" (click)="printTest();">Print Test</button -->
+                    <button type="submit" class="btn btn-{{user.btn_color}}" (click)="updateProfile();">Update</button>
+                    <button type="submit" class="btn btn-{{user.btn_color}}" (click)="deleteProfile();">Delete</button>
+                    <!-- button type="submit" class="btn btn-{{user.btn_color}}" (click)="printTest();">Print Test</button -->
                     <div class="clearfix"></div>
 
                 </ng-container>
@@ -122,7 +122,7 @@
         </div>
 
         <div *ngIf="!isLoading && selectedStudent && selectedStudent.fathersName !== undefined" class="card" style="min-height: 100%">
-            <div class="card-header" data-background-color="red">
+            <div class="card-header" [attr.data-background-color]="user.color">
                 <h4 class="title">Student Fee Records</h4>
             </div>
             <div class="card-content" id="forforfor">
@@ -155,7 +155,7 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-danger" (click)="submitFee();">Submit</button>
+                            <button type="submit" class="btn btn-{{user.btn_color}}" (click)="submitFee();">Submit</button>
                         </div>
                     </div>
 
@@ -179,7 +179,7 @@
                                     <td align="center">{{feeEntry.generationDateTime}}</td>
                                     <td align="left">{{feeEntry.remark}}</td>
                                     <td align="center">
-                                        <button type="button"  class="btn btn-danger" (click)="printFeeReceipt(feeEntry)">Print</button>
+                                        <button type="button"  class="btn btn-{{user.btn_color}}" (click)="printFeeReceipt(feeEntry)">Print</button>
                                     </td>
                                 </tr>
                             </table>
@@ -199,7 +199,7 @@
         </div>
 
         <div *ngIf="!isLoading && selectedStudent && selectedStudent.fathersName !== undefined" class="card" style="min-height: 100%">
-            <div class="card-header" data-background-color="red">
+            <div class="card-header" [attr.data-background-color]="user.color">
                 <h4 class="title">Student Concession Records</h4>
             </div>
             <div class="card-content" id="forforforfor">
@@ -220,7 +220,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <button type="submit" class="btn btn-danger" (click)="submitConcession();">Submit</button>
+                            <button type="submit" class="btn btn-{{user.btn_color}}" (click)="submitConcession();">Submit</button>
                         </div>
                     </div>
 

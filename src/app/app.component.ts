@@ -20,13 +20,9 @@ export class AppComponent implements OnInit {
 			  public location: Location) {}
 
   ngOnInit() {
-  	if (this.user.authenticateUser()) {
+  	if (this.user.checkAuthentication()) {
   		this.authenticationService.getUserDetails(this.user.jwt).then( data => {
-  			this.user.username = data.username;
-  			this.user.email = data.email;
-  			if (this.user.username === 'anupreet') {
-  				this.user.color = 'purple';
-			}
+  			this.user.initializeUser(data);
 		});
 	}
 		$.material.options.autofill = true;

@@ -1,7 +1,7 @@
 <div class="main-content">
     <div class="container-fluid">
         <div class="card" style="min-height: 100%">
-            <div class="card-header" data-background-color="red">
+            <div class="card-header" [attr.data-background-color]="user.color">
                 <h4 class="title">List of Fees Receipts</h4>
             </div>
             <div class="card-content">
@@ -21,12 +21,12 @@
                     </div>
                     <div class="col-md-3">
                         <button type="button"
-                                class="btn btn-danger"
+                                class="btn btn-{{user.btn_color}}"
                                 (click)="getFeeList();">Submit</button><br>
                     </div>
                     <div class="col-md-3">
                         <button type="button"
-                                class="btn btn-danger"
+                                class="btn btn-{{user.btn_color}}"
                                 (click)="printFeeRecords();">Print</button><br>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                                 <td align="center">{{feeEntry.className}}</td>
                                 <td align="left">{{feeEntry.remark}}</td>
                                 <td align="center">
-                                    <button type="button"  class="btn btn-danger" (click)="printFeeReceipt(feeEntry)">Print</button>
+                                    <button type="button"  class="btn btn-{{user.btn_color}}" (click)="printFeeReceipt(feeEntry)">Print</button>
                                 </td>
                             </tr>
                         </table>

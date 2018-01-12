@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { FeeListService } from '../services/fee-list.service';
 import { Fee } from '../classes/fee';
@@ -11,6 +11,8 @@ import {EmitterService} from '../services/emitter.service';
     providers: [FeeListService]
 })
 export class FeesComponent {
+
+    @Input() user;
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();

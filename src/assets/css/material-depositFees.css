@@ -653,6 +653,11 @@ h2.title {
   background-color: #9c27b0;
   box-shadow: 0 12px 20px -10px rgba(156, 39, 176, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(156, 39, 176, 0.2);
 }
+ .sidebar[data-color="indigo"] .nav li.active a,
+ .off-canvas-sidebar[data-color="indigo"] .nav li.active a {
+   background-color: #3F51B5;
+   box-shadow: 0 12px 20px -10px rgba(63, 81, 181, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(63, 81, 181, 0.2);
+ }
 
 .off-canvas-sidebar .nav > li > a,
 .off-canvas-sidebar .nav > li > a:hover {
@@ -1171,6 +1176,72 @@ h2.title {
   background-color: transparent;
   color: #f44336;
 }
+ .btn.btn-indigo,
+ .navbar .navbar-nav > li > a.btn.btn-indigo {
+   box-shadow: 0 2px 2px 0 rgba(63, 81, 181, 0.14), 0 3px 1px -2px rgba(63, 81, 181, 0.2), 0 1px 5px 0 rgba(63, 81, 181, 0.12);
+ }
+ .btn.btn-indigo, .btn.btn-indigo:hover, .btn.btn-indigo:focus, .btn.btn-indigo:active, .btn.btn-indigo.active, .btn.btn-indigo:active:focus, .btn.btn-indigo:active:hover, .btn.btn-indigo.active:focus, .btn.btn-indigo.active:hover, .open > .btn.btn-indigo.dropdown-toggle, .open > .btn.btn-indigo.dropdown-toggle:focus, .open > .btn.btn-indigo.dropdown-toggle:hover,
+ .navbar .navbar-nav > li > a.btn.btn-indigo,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:hover,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:active:focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:active:hover,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.active:focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.active:hover, .open >
+ .navbar .navbar-nav > li > a.btn.btn-indigo.dropdown-toggle, .open >
+ .navbar .navbar-nav > li > a.btn.btn-indigo.dropdown-toggle:focus, .open >
+ .navbar .navbar-nav > li > a.btn.btn-indigo.dropdown-toggle:hover {
+   background-color: #3F51B5;
+   color: #FFFFFF;
+ }
+ .btn.btn-indigo:focus, .btn.btn-indigo:active, .btn.btn-indigo:hover,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:hover {
+   box-shadow: 0 14px 26px -12px rgba(63, 81, 181, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(63, 81, 181, 0.2);
+ }
+ .btn.btn-indigo.disabled, .btn.btn-indigo.disabled:hover, .btn.btn-indigo.disabled:focus, .btn.btn-indigo.disabled.focus, .btn.btn-indigo.disabled:active, .btn.btn-indigo.disabled.active, .btn.btn-indigo:disabled, .btn.btn-indigo:disabled:hover, .btn.btn-indigo:disabled:focus, .btn.btn-indigo:disabled.focus, .btn.btn-indigo:disabled:active, .btn.btn-indigo:disabled.active, .btn.btn-indigo[disabled], .btn.btn-indigo[disabled]:hover, .btn.btn-indigo[disabled]:focus, .btn.btn-indigo[disabled].focus, .btn.btn-indigo[disabled]:active, .btn.btn-indigo[disabled].active, fieldset[disabled] .btn.btn-indigo, fieldset[disabled] .btn.btn-indigo:hover, fieldset[disabled] .btn.btn-indigo:focus, fieldset[disabled] .btn.btn-indigo.focus, fieldset[disabled] .btn.btn-indigo:active, fieldset[disabled] .btn.btn-indigo.active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.disabled,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.disabled:hover,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.disabled:focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.disabled.focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.disabled:active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.disabled.active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:disabled,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:disabled:hover,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:disabled:focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:disabled.focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:disabled:active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo:disabled.active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo[disabled],
+ .navbar .navbar-nav > li > a.btn.btn-indigo[disabled]:hover,
+ .navbar .navbar-nav > li > a.btn.btn-indigo[disabled]:focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo[disabled].focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo[disabled]:active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo[disabled].active, fieldset[disabled]
+.navbar .navbar-nav > li > a.btn.btn-indigo, fieldset[disabled]
+.navbar .navbar-nav > li > a.btn.btn-indigo:hover, fieldset[disabled]
+.navbar .navbar-nav > li > a.btn.btn-indigo:focus, fieldset[disabled]
+.navbar .navbar-nav > li > a.btn.btn-indigo.focus, fieldset[disabled]
+.navbar .navbar-nav > li > a.btn.btn-indigo:active, fieldset[disabled]
+.navbar .navbar-nav > li > a.btn.btn-indigo.active {
+   box-shadow: none;
+ }
+ .btn.btn-indigo.btn-simple,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.btn-simple {
+   background-color: transparent;
+   color: #3F51B5;
+   box-shadow: none;
+ }
+ .btn.btn-indigo.btn-simple:hover, .btn.btn-indigo.btn-simple:focus, .btn.btn-indigo.btn-simple:active,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.btn-simple:hover,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.btn-simple:focus,
+ .navbar .navbar-nav > li > a.btn.btn-indigo.btn-simple:active {
+   background-color: transparent;
+   color: #3F51B5;
+ }
 .btn.btn-white, .btn.btn-white:focus, .btn.btn-white:hover,
 .navbar .navbar-nav > li > a.btn.btn-white,
 .navbar .navbar-nav > li > a.btn.btn-white:focus,
@@ -1441,6 +1512,10 @@ h2.title {
 .btn-group.open > .dropdown-toggle.btn.btn-danger,
 .btn-group-vertical.open > .dropdown-toggle.btn.btn-danger {
   background-color: #f44336;
+}
+.btn-group.open > .dropdown-toggle.btn.btn-indigo,
+.btn-group-vertical.open > .dropdown-toggle.btn.btn-indigo {
+  background-color: #3F51B5;
 }
 .btn-group.open > .dropdown-toggle.btn.btn-rose,
 .btn-group-vertical.open > .dropdown-toggle.btn.btn-rose {
@@ -3803,6 +3878,11 @@ footer .btn {
   background: linear-gradient(60deg, #ab47bc, #8e24aa);
   box-shadow: 0 12px 20px -10px rgba(156, 39, 176, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(156, 39, 176, 0.2);
 }
+ .card [data-background-color="indigo"] {
+   /*background: linear-gradient(60deg, #5C6BC0, #3949AB);*/
+   background: linear-gradient(60deg, #3949AB, #5C6BC0);
+   box-shadow: 0 12px 20px -10px rgba(63, 81, 181, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(63, 81, 181, 0.2);
+ }
 .card [data-background-color="blue"] {
   background: linear-gradient(60deg, #26c6da, #00acc1);
   box-shadow: 0 12px 20px -10px rgba(0, 188, 212, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(0, 188, 212, 0.2);
