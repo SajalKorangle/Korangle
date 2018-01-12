@@ -1,0 +1,28 @@
+<table style="width: 100%">
+    <tr>
+        <td align="left">
+            Total Expense: {{ totalExpenses | currency:'INR':true:'1.1-1'}}
+        </td>
+        <td align="right">
+            Date: {{startDate}} to {{endDate}}
+        </td>
+    </tr>
+</table>
+<table cellpadding="10" class="table-content">
+    <style>
+        td { padding: 10px; }
+        tr { border-bottom: 1px solid gainsboro; }
+    </style>
+    <tr>
+        <td align="center">Voucher No.</td>
+        <td align="center">Amount</td>
+        <td align="center">Date</td>
+        <!-- td align="center">Remark</td -->
+    </tr>
+    <tr *ngFor="let expenseEntry of expenseList">
+        <td align="right">{{expenseEntry.voucherNumber}}</td>
+        <td align="right">{{expenseEntry.amount}}</td>
+        <td align="center">{{expenseEntry.generationDateTime}}</td>
+        <!-- td align="left">{{feeEntry.remark}}</td -->
+    </tr>
+</table>

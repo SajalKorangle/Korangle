@@ -1,0 +1,96 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card" style="min-height: 100vh">
+            <div class="card-header" data-background-color="red">
+                <h4 class="title">New Student</h4>
+            </div>
+            <div class="card-content">
+
+                <ng-container *ngIf="!isLoading">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Name</label>
+                                <input type="text" class="form-control" [(ngModel)]="newStudent.name">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Father's Name</label>
+                                <input type="text" class="form-control" [(ngModel)]="newStudent.fathersName">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Date of Birth</label>
+                                <input type="date" class="form-control" [(ngModel)]="newStudent.dateOfBirth">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Mobile Number</label>
+                                <input type="text" class="form-control" [(ngModel)]="newStudent.mobileNumber">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Total Fees</label>
+                                <input type="number" class="form-control" [(ngModel)]="newStudent.totalFees">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group form-black label-floating">
+                                Class:
+                                <select [(ngModel)]="selectedClass" style="margin-right: 15px">
+                                    <ng-container>
+                                        <option *ngFor = "let c of classList;" [ngValue]="c">{{c.name}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="this.username === 'anupreet'">
+                        <div class="col-md-4">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Scholar No.</label>
+                                <input type="text" class="form-control" [(ngModel)]="newStudent.scholarNumber">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <div class="form-group form-black label-floating">
+                                    <label class="control-label">Remark</label>
+                                    <textarea class="form-control" rows="3" [(ngModel)]="newStudent.remark"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger" (click)="createNewStudent()">Create Profile</button>
+                    <div class="clearfix"></div>
+
+                </ng-container>
+
+                <ng-container *ngIf="isLoading">
+                    <div class="row">
+                        <div class="col-sm-12 justify-content-center">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+                </ng-container>
+
+            </div>
+        </div>
+    </div>
+</div>

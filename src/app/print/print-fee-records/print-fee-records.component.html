@@ -1,0 +1,32 @@
+<table style="width: 100%">
+    <tr>
+        <td align="left">
+            Total Fees: {{totalFees | currency:'INR':true:'1.1-1'}}
+        </td>
+        <td align="right">
+            Date: {{startDate}} to {{endDate}}
+        </td>
+    </tr>
+</table>
+<table cellpadding="10" class="table-content">
+    <style>
+        td { padding: 10px; }
+        tr { border-bottom: 1px solid gainsboro; }
+    </style>
+    <tr>
+        <td align="center">Receipt No.</td>
+        <td align="center">Amount</td>
+        <td align="center">Date</td>
+        <td align="center">Name</td>
+        <td align="center">Class</td>
+        <!-- td align="center">Remark</td -->
+    </tr>
+    <tr *ngFor="let feeEntry of feesList">
+        <td align="right">{{feeEntry.receiptNumber}}</td>
+        <td align="right">{{feeEntry.amount}}</td>
+        <td align="center">{{feeEntry.generationDateTime}}</td>
+        <td align="center">{{feeEntry.studentName}}</td>
+        <td align="center">{{feeEntry.className}}</td>
+        <!-- td align="left">{{feeEntry.remark}}</td -->
+    </tr>
+</table>

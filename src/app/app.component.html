@@ -1,0 +1,26 @@
+<div class="wrapper hidePrint">
+    <div *ngIf="user.isAuthenticated">
+        <!-- div class="sidebar" data-color='red' data-image="" style="position: fixed" -->
+        <div class="sidebar" [attr.data-color]='user.color' data-image="" style="position: fixed">
+            <app-sidebar [user]="user"></app-sidebar>
+            <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
+        </div>
+        <div class="main-panel">
+            <app-navbar class="hidden-md hidden-xl hidden-lg"></app-navbar>
+            <!-- app-navbar></app-navbar -->
+            <!-- router-outlet></router-outlet -->
+            <app-student *ngIf="user.appSection==='students'"></app-student>
+            <app-fees *ngIf="user.appSection==='fees'"></app-fees>
+            <app-expenses *ngIf="user.appSection==='expenses'"></app-expenses>
+            <app-concession *ngIf="user.appSection==='concession'"></app-concession>
+            <app-new-student *ngIf="user.appSection==='new_student'"></app-new-student>
+            <!--<div *ngIf="isMaps('maps')"> <app-footer></app-footer> </div>-->
+        </div>
+    </div>
+    <div *ngIf="!user.isAuthenticated" style="min-height: 100%;">
+        <login-form [user]="user"></login-form>
+    </div>
+</div>
+<div class="wrapper showPrint">
+    <app-print></app-print>
+</div>

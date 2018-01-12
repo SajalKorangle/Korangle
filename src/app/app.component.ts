@@ -1,0 +1,47 @@
+import { Component, OnInit } from '@angular/core';
+import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { User } from './classes/user';
+import {AuthenticationService} from './services/authentication.service';
+import { EmitterService } from './services/emitter.service';
+
+declare const $: any;
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+	providers: [AuthenticationService, EmitterService ],
+})
+export class AppComponent implements OnInit {
+
+	private user = new User();
+
+  constructor(private authenticationService: AuthenticationService,
+			  public location: Location) {}
+
+  ngOnInit() {
+  	if (this.user.authenticateUser()) {
+  		this.authenticationService.getUserDetails(this.user.jwt).then( data => {
+  			this.user.username = data.username;
+  			this.user.email = data.email;
+  			if (this.user.username === 'anupreet') {
+  				this.user.color = 'purple';
+			}
+		});
+	}
+		$.material.options.autofill = true;
+		$.material.init();
+  }
+
+	isMaps(path){
+		let title = this.location.prepareExternalUrl(this.location.path());
+		title = title.slice( 1 );
+		if (path == title){
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
+}

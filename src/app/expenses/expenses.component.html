@@ -1,0 +1,111 @@
+<div class="main-content">
+    <div class="container-fluid">
+
+        <div class="card" style="min-height: 100%">
+            <div class="card-header" data-background-color="red">
+                <h4 class="title">New expense</h4>
+            </div>
+            <div class="card-content">
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Voucher No.</label>
+                            <input type="number" class="form-control" [(ngModel)]="newExpense.voucherNumber">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Amount</label>
+                            <input type="number" class="form-control" [(ngModel)]="newExpense.amount">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Remark</label>
+                            <input type="text" class="form-control" [(ngModel)]="newExpense.remark">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-danger" (click)="submitExpense();">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card" style="min-height: 100%">
+            <div class="card-header" data-background-color="red">
+                <h4 class="title">List of Expenses</h4>
+            </div>
+            <div class="card-content">
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Start Date</label>
+                            <input type="date" class="form-control" [(ngModel)]="startDate">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">End Date</label>
+                            <input type="date" class="form-control" [(ngModel)]="endDate">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button"
+                                class="btn btn-danger"
+                                (click)="getExpenseList();">Submit</button><br>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button"
+                                class="btn btn-danger"
+                                (click)="printExpenses();">Print</button><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        Total Expenses: {{totalExpenses | currency:'INR':true:'1.1-1'}}
+                    </div>
+                </div>
+
+                <div *ngIf="!isLoading" class="row">
+                    <div class="col-md-12">
+                        <table cellpadding="10" class="table-content">
+                            <style>
+                                td { padding: 10px; }
+                                tr { border-bottom: 1px solid gainsboro; }
+                            </style>
+                            <tr>
+                                <td align="center">Voucher No.</td>
+                                <td align="center">Amount</td>
+                                <td align="center">Date</td>
+                                <td align="center">Remark</td>
+                                <!-- td align="center">-</td -->
+                            </tr>
+                            <tr *ngFor="let expenseEntry of expenseList">
+                                <td align="right">{{expenseEntry.voucherNumber}}</td>
+                                <td align="right">{{expenseEntry.amount}}</td>
+                                <td align="center">{{expenseEntry.generationDateTime}}</td>
+                                <td align="left">{{expenseEntry.remark}}</td>
+                                <!-- td align="center">
+                                    <button type="button"  class="btn btn-danger" (click)="printFeeReceipt(feeEntry)">Print</button>
+                                </td -->
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="isLoading">
+                    <div style="width: 100%; margin-top: 10mm;" align="center">
+                        <div class="loader"></div>
+                    </div>
+                </ng-container>
+
+            </div>
+        </div>
+
+    </div>
+</div>
