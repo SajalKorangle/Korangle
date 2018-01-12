@@ -237,7 +237,7 @@ def new_fee_receipt_view(request):
 			errResponse['message'] = 'Failed: Receipt Number already exists'
 			return JsonResponse({'data': errResponse})
 		student_object = Student.objects.get(id=fee_receipt['studentDbId'])
-		fee_receipt_object = Fee.objects.create(receiptNumber=fee_receipt['receiptNumber'],amount=fee_receipt['amount'],remark=fee_receipt['remark'],parentStudent=student_object)
+		fee_receipt_object = Fee.objects.create(receiptNumber=fee_receipt['receiptNumber'],amount=fee_receipt['amount'],generationDateTime=fee_receipt['generationDateTime'],remark=fee_receipt['remark'],parentStudent=student_object)
 		response['message'] = 'Fee submitted successfully'
 		student_data = {}
 		student_data['name'] = student_object.name

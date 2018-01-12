@@ -38,7 +38,7 @@ class Fee(models.Model):
 	amount = models.IntegerField()
 	remark = models.TextField()
 	# generationDateTime = models.DateTimeField(auto_now_add=True, blank=True)
-	generationDateTime = models.DateField(auto_now_add=True)
+	generationDateTime = models.DateField()
 	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
 
 class Concession(models.Model):
