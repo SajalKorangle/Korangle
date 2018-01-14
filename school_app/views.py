@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from .models import Class, Student, Fee, Expense, Concession
+from .models import Class, Student, Fee, Expense, Concession, SubFee
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from helloworld_project.settings import PROJECT_ROOT
@@ -116,8 +116,9 @@ def new_student_data_view(request):
 	else:
 		return JsonResponse({'data':'error'})
 
+@api_view(['POST'])
 def update_student_view(request):
-	if request.method == "POST":
+	if request.user.is_authenticated:
 		student_data = json.loads(request.body.decode('utf-8'))
 		updatedValues = {}
 		updatedValues['name'] = student_data['name']
@@ -128,7 +129,7 @@ def update_student_view(request):
 		updatedValues['remark'] = student_data['remark']
 		updatedValues['scholarNumber'] = student_data['scholarNumber']
 		student_object, created = Student.objects.update_or_create(defaults=updatedValues,id=student_data['dbId'])
-		student_data['name'] = student_object.name
+		'''student_data['name'] = student_object.name
 		student_data['dbId'] = student_object.id
 		student_data['fathersName'] = student_object.fathersName
 		student_data['mobileNumber'] = student_object.mobileNumber
@@ -147,7 +148,8 @@ def update_student_view(request):
 			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
 			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
 			student_data['feesDue'] -= studentFeeEntry.amount
-			student_data['feesList'].append(tempStudentFeeEntry)
+			student_data['feesList'].append(tempStudentFeeEntry)'''
+		student_data = get_student_data(student_object,request.user)
 		return JsonResponse({'data':student_data})
 	else:
 		return JsonResponse({'data':'error'})
@@ -188,7 +190,7 @@ def student_data_view(request):
 	if request.user.is_authenticated:
 		received_json_data = json.loads(request.body.decode('utf-8'))
 		student_query = Student.objects.filter(id=received_json_data['dbId'])
-		student_data['name'] = student_query[0].name
+		'''student_data['name'] = student_query[0].name
 		student_data['dbId'] = student_query[0].id
 		student_data['fathersName'] = student_query[0].fathersName
 		student_data['mobileNumber'] = student_query[0].mobileNumber
@@ -202,7 +204,6 @@ def student_data_view(request):
 		#receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
 		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user).aggregate(Max('receiptNumber'))
 		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
-		print(student_data['overAllLastFeeReceiptNumber'])
 		for studentFeeEntry in student_query[0].fee_set.all():
 			tempStudentFeeEntry = {}
 			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
@@ -220,7 +221,8 @@ def student_data_view(request):
 			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
 			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
 			student_data['feesDue'] -= studentConcessionEntry.amount
-			student_data['concessionList'].append(tempStudentConcessionEntry)
+			student_data['concessionList'].append(tempStudentConcessionEntry)'''
+		student_data = get_student_data(student_query[0],request.user)
 		return JsonResponse({'data':student_data})
 	else:
 		return JsonResponse({'data':'data'})
@@ -238,8 +240,14 @@ def new_fee_receipt_view(request):
 			return JsonResponse({'data': errResponse})
 		student_object = Student.objects.get(id=fee_receipt['studentDbId'])
 		fee_receipt_object = Fee.objects.create(receiptNumber=fee_receipt['receiptNumber'],amount=fee_receipt['amount'],generationDateTime=fee_receipt['generationDateTime'],remark=fee_receipt['remark'],parentStudent=student_object)
+		if fee_receipt['tuitionFeeAmount'] != 0:
+			subFee_object = SubFee.objects.create(particular='TuitionFee', amount=fee_receipt['tuitionFeeAmount'], parentFee=fee_receipt_object)
+		if fee_receipt['lateFeeAmount'] != 0:
+			subFee_object = SubFee.objects.create(particular='LateFee', amount=fee_receipt['lateFeeAmount'], parentFee=fee_receipt_object)
+		if fee_receipt['cautionMoneyAmount'] != 0:
+			subFee_object = SubFee.objects.create(particular='CautionMoney', amount=fee_receipt['cautionMoneyAmount'], parentFee=fee_receipt_object)
 		response['message'] = 'Fee submitted successfully'
-		student_data = {}
+		'''student_data = {}
 		student_data['name'] = student_object.name
 		student_data['dbId'] = student_object.id
 		student_data['fathersName'] = student_object.fathersName
@@ -270,7 +278,8 @@ def new_fee_receipt_view(request):
 			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
 			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
 			student_data['feesDue'] -= studentConcessionEntry.amount
-			student_data['concessionList'].append(tempStudentConcessionEntry)
+			student_data['concessionList'].append(tempStudentConcessionEntry)'''
+		student_data = get_student_data(student_object,request.user)
 		response['studentData'] = student_data
 		return JsonResponse({'data': response})
 	else:
@@ -346,7 +355,7 @@ def new_concession_view(request):
 		student_object = Student.objects.get(id=concession['studentDbId'])
 		new_concession_object = Concession.objects.create(amount=concession['amount'],remark=concession['remark'],parentStudent=student_object)
 		response['message'] = 'Concession submitted successfully'
-		student_data = {}
+		'''student_data = {}
 		student_data['name'] = student_object.name
 		student_data['dbId'] = student_object.id
 		student_data['fathersName'] = student_object.fathersName
@@ -376,8 +385,9 @@ def new_concession_view(request):
 			tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
 			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
 			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
-			student_data['feesDue'] -= studentConcessionEntry.amount
-			student_data['concessionList'].append(tempStudentConcessionEntry)
+		student_data['feesDue'] -= studentConcessionEntry.amount
+		student_data['concessionList'].append(tempStudentConcessionEntry)'''
+		student_data = get_student_data(student_object, request.user)
 		response['studentData'] = student_data
 		return JsonResponse({'data': response})
 	else:
@@ -402,3 +412,54 @@ def concession_list_view(request):
 	else:
 		return JsonResponse({'data':'error'})
 
+def get_student_data(student_object, user):
+		student_data = {}
+		student_data['name'] = student_object.name
+		student_data['dbId'] = student_object.id
+		student_data['fathersName'] = student_object.fathersName
+		student_data['mobileNumber'] = student_object.mobileNumber
+		student_data['dateOfBirth'] = student_object.dateOfBirth
+		student_data['totalFees'] = student_object.totalFees
+		student_data['remark'] = student_object.remark
+		student_data['scholarNumber'] = student_object.scholarNumber
+		student_data['class'] = student_object.parentClass.name
+		student_data['feesList'] = []
+		student_data['feesDue'] = student_object.totalFees
+		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=user).aggregate(Max('receiptNumber'))
+		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
+		for studentFeeEntry in student_object.fee_set.all():
+			tempStudentFeeEntry = {}
+			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
+			tempStudentFeeEntry['amount'] = studentFeeEntry.amount
+			tempStudentFeeEntry['remark'] = studentFeeEntry.remark
+			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
+			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
+
+			tempStudentFeeEntry['tuitionFeeAmount'] = 0
+			tuitionFee = SubFee.objects.filter(parentFee=studentFeeEntry,particular='TuitionFee')
+			if tuitionFee:
+				tempStudentFeeEntry['tuitionFeeAmount'] = tuitionFee[0].amount
+
+			tempStudentFeeEntry['lateFeeAmount'] = 0
+			lateFee = SubFee.objects.filter(parentFee=studentFeeEntry,particular='LateFee')
+			if lateFee:
+				tempStudentFeeEntry['lateFeeAmount'] = lateFee[0].amount
+
+			tempStudentFeeEntry['cautionMoneyAmount'] = 0
+			cautionMoney = SubFee.objects.filter(parentFee=studentFeeEntry,particular='CautionMoney')
+			if cautionMoney:
+				tempStudentFeeEntry['cautionMoneyAmount'] = cautionMoney[0].amount
+
+			student_data['feesDue'] -= tempStudentFeeEntry['amount']
+			student_data['feesDue'] += tempStudentFeeEntry['lateFeeAmount']
+			student_data['feesList'].append(tempStudentFeeEntry)
+		student_data['concessionList'] = []
+		for studentConcessionEntry in student_object.concession_set.all():
+			tempStudentConcessionEntry = {}
+			tempStudentConcessionEntry['amount'] = studentConcessionEntry.amount
+			tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
+			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
+			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
+			student_data['feesDue'] -= studentConcessionEntry.amount
+			student_data['concessionList'].append(tempStudentConcessionEntry)
+		return student_data

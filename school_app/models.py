@@ -41,6 +41,11 @@ class Fee(models.Model):
 	generationDateTime = models.DateField()
 	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
 
+class SubFee(models.Model):
+	particular = models.TextField()
+	amount = models.IntegerField()
+	parentFee = models.ForeignKey(Fee, on_delete=models.PROTECT, default=0)
+
 class Concession(models.Model):
 	amount = models.IntegerField()
 	remark = models.TextField()
