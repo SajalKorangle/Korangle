@@ -30,7 +30,6 @@ export class StudentComponent implements OnInit {
   newConcession: Concession;
   // noStudentForSelectedClass = true;
   currentStudent: Student = new Student();
-  username: any;
 
   isLoading = false;
 
@@ -59,8 +58,10 @@ export class StudentComponent implements OnInit {
     ngOnInit(): void {
         this.newFeeReceipt = new Fee();
         this.newFeeReceipt.generationDateTime = moment(new Date()).format('YYYY-MM-DD');
-        console.log(this.newFeeReceipt.generationDateTime);
         this.newConcession = new Concession();
+        EmitterService.get('submit-new-fee-receipt').subscribe(value => {
+            this.submitFee();
+        });
         this.classStudentListService.getIndex().then(
             classStudentList => {
                 this.classList = [];
@@ -257,6 +258,10 @@ export class StudentComponent implements OnInit {
         fee.studentName = this.selectedStudent.name;
         fee.className =  this.selectedClass.name;
         EmitterService.get('print-fee-receipt').emit(fee);
+    }
+
+    createNewFeeReceipt(): void {
+        EmitterService.get('new-fee-receipt-modal').emit(this.newFeeReceipt);
     }
 
     /*checkAuthentication(): void {

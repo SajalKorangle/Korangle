@@ -25,6 +25,7 @@ import { StudentListComponent } from './student-list/student-list.component';*/
 import { StudentComponent } from './students/students.component';
 import { NewStudentComponent } from './new-student/new-student.component';
 import { LoginComponent } from './authentication/login.component';
+import { NewFeeReceiptComponent } from "./modal/new-fee-receipt/new-fee-receipt.component";
 import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
 import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
@@ -51,6 +52,7 @@ import { MoneyFormatPipe } from './pipes/money-format.pipe';
       StudentListComponent,*/
       StudentComponent,
       NewStudentComponent,
+      NewFeeReceiptComponent,
       LoginComponent,
       PrintFeeReceiptComponent,
       PrintFeeRecordsComponent,

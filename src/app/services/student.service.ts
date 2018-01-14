@@ -32,6 +32,8 @@ export class StudentService {
 
     updateStudentData(student: Student): Promise<Student> {
         const body = JSON.stringify(student);
+        const token = localStorage.getItem('schoolJWT');
+        this.headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.post(this.updateStudentUrl, body, {headers: this.headers})
             .toPromise()
             .then(response => {

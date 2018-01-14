@@ -10,6 +10,11 @@ export class Fee {
     fatherName: string;
     className: string;
 
+    /*Fee particulars*/
+    tuitionFeeAmount = 0;
+    lateFeeAmount = 0;
+    cautionMoneyAmount = 0;
+
     copy(fees: Fee) {
         this.dbId = fees.dbId;
         this.receiptNumber = fees.receiptNumber;
@@ -20,6 +25,16 @@ export class Fee {
         this.studentName = fees.studentName;
         this.fatherName = fees.fatherName;
         this.className = fees.className;
+
+        if (fees.tuitionFeeAmount !== undefined) {
+            this.tuitionFeeAmount = fees.tuitionFeeAmount;
+        }
+        if (fees.lateFeeAmount !== undefined) {
+            this.lateFeeAmount = fees.lateFeeAmount;
+        }
+        if (fees.cautionMoneyAmount !== undefined) {
+            this.cautionMoneyAmount = fees.cautionMoneyAmount;
+        }
     }
 
 }

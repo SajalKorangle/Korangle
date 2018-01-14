@@ -66,7 +66,7 @@
                         </div>
                     </div>
 
-                    <div class="row" *ngIf="this.username === 'anupreet'">
+                    <div class="row" *ngIf="user.username === 'anupreet'">
                         <div class="col-md-4">
                             <div class="form-group form-black label-floating">
                                 <label class="control-label">Scholar No.</label>
@@ -129,65 +129,81 @@
 
                 <!-- ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined" -->
 
-                    <div class="row">
-                        <div class="col-md-1">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Receipt No.</label>
-                                <input type="number" class="form-control" [(ngModel)]="newFeeReceipt.receiptNumber">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Amount</label>
-                                <input type="number" class="form-control" [(ngModel)]="newFeeReceipt.amount">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Date</label>
-                                <input type="date" class="form-control" [(ngModel)]="newFeeReceipt.generationDateTime">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Remark</label>
-                                <input type="text" class="form-control" [(ngModel)]="newFeeReceipt.remark">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-{{user.btn_color}}" (click)="submitFee();">Submit</button>
+                <div *ngIf='user.username!=="anupreet"' class="row">
+                    <div class="col-md-1">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Receipt No.</label>
+                            <input type="number" class="form-control" [(ngModel)]="newFeeReceipt.receiptNumber">
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Amount</label>
+                            <input type="number" class="form-control" [(ngModel)]="newFeeReceipt.amount">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Date</label>
+                            <input type="date" class="form-control" [(ngModel)]="newFeeReceipt.generationDateTime">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Remark</label>
+                            <input type="text" class="form-control" [(ngModel)]="newFeeReceipt.remark">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-{{user.btn_color}}" (click)="submitFee();">Submit</button>
+                    </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-8" *ngIf="selectedStudent.feesList.length > 0">
-                            <table cellpadding="10" class="table-content">
-                                <style>
-                                    td { padding: 10px; }
-                                    tr { border-bottom: 1px solid gainsboro; }
-                                </style>
-                                <tr>
-                                    <td align="center">Receipt No.</td>
-                                    <td align="center">Amount</td>
-                                    <td align="center">Date</td>
-                                    <td align="center">Remark</td>
-                                    <td align="center">-</td>
-                                </tr>
-                                <tr *ngFor="let feeEntry of selectedStudent.feesList">
-                                    <td align="right">{{feeEntry.receiptNumber}}</td>
-                                    <td align="right">{{feeEntry.amount}}</td>
-                                    <td align="center">{{feeEntry.generationDateTime}}</td>
-                                    <td align="left">{{feeEntry.remark}}</td>
-                                    <td align="center">
-                                        <button type="button"  class="btn btn-{{user.btn_color}}" (click)="printFeeReceipt(feeEntry)">Print</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div *ngIf="selectedStudent.feesList.length ==0">
-                            No Fee submitted yet
-                        </div>
+                <div class="row" *ngIf="user.username==='anupreet'">
+                    <div class="col-md-12">
+                        <button type="button"
+                                class="btn btn-{{user.btn_color}}"
+                                (click)="createNewFeeReceipt();">modal</button><br/>
                     </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-8" *ngIf="selectedStudent.feesList.length > 0">
+                        <table cellpadding="10" class="table-content">
+                            <style>
+                                td { padding: 10px; }
+                                tr { border-bottom: 1px solid gainsboro; }
+                            </style>
+                            <tr>
+                                <td align="center">Receipt No.</td>
+                                <td align="center">Amount</td>
+                                <td align="center">Date</td>
+                                <td align="center">Remark</td>
+                                <td align="center" *ngIf="user.username==='anupreet'">Bifurcation</td>
+                                <td align="center">-</td>
+                            </tr>
+                            <tr *ngFor="let feeEntry of selectedStudent.feesList">
+                                <td align="right">{{feeEntry.receiptNumber}}</td>
+                                <td align="right">{{feeEntry.amount}}</td>
+                                <td align="center">{{feeEntry.generationDateTime}}</td>
+                                <td align="left">{{feeEntry.remark}}</td>
+                                <td align="center" *ngIf="user.username==='anupreet'">
+                                    <span *ngIf="feeEntry.tuitionFeeAmount!==0">TutionFee: {{feeEntry.tuitionFeeAmount}},</span>
+                                    <span *ngIf="feeEntry.lateFeeAmount!==0">LateFee: {{feeEntry.lateFeeAmount}},</span>
+                                    <span *ngIf="feeEntry.cautionMoneyAmount!==0">CautionMoney: {{feeEntry.cautionMoneyAmount}},</span>
+                                </td>
+                                <td align="center">
+                                    <button type="button"  class="btn btn-{{user.btn_color}}" (click)="printFeeReceipt(feeEntry)">Print</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div *ngIf="selectedStudent.feesList.length ==0">
+                        No Fee submitted yet
+                    </div>
+                </div>
 
                 <!-- /ng-container>
 

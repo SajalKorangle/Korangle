@@ -18,7 +18,6 @@ export class NewStudentComponent implements OnInit {
   newStudent: Student;
   selectedClass: Classs;
   classList: Classs[];
-  username: any;
 
   isLoading = false;
 
