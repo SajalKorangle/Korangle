@@ -172,6 +172,7 @@ def delete_student_view(request):
 		except:
 			errResponse['message'] = 'Unknown Exception while accessing the paper, contact site admin.'
 			return JsonResponse({"data": errResponse})
+		SubFee.objects.filter(parentFee__parentStudent=student_object).delete()
 		Fee.objects.filter(parentStudent=student_object).delete()
 		Student.objects.filter(pk=request.data['studentDbId']).delete()
 		response['studentDbId'] = request.data['studentDbId']
