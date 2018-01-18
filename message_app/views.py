@@ -574,8 +574,8 @@ def print_booklet(request):
 		outfn = './helloworld_project/media/booklet.' + os.path.basename(inpfn)
 		ipages = PdfReader(inpfn).pages
 
-		blankPages = PdfReader('./message_app/pdf_files/onepage.pdf').pages
-		blankPage = blankPages.pop()
+		#blankPages = PdfReader('./message_app/pdf_files/onepage.pdf').pages
+		#blankPage = blankPages.pop()
 
 		pad_to = 4
 		'''if args.padding:
@@ -584,8 +584,8 @@ def print_booklet(request):
 				pad_to = 2'''
 
     # Make sure we have a correct number of sides
-		#ipages += [None]*(-len(ipages)%pad_to)
-		ipages += [blankPage]*(-len(ipages)%pad_to)
+		ipages += [None]*(-len(ipages)%pad_to)
+		#ipages += [blankPage]*(-len(ipages)%pad_to)
 
 		opages = []
 		while len(ipages) > 2:
