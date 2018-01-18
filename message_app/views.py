@@ -193,11 +193,7 @@ def questions_view(request):
 			indices.append(tempQuestion)
 	return JsonResponse({'data':indices})
 
-def insert_chapter_data(request):
-	"""data = Class(name = 'Class - III')
-	data.save()
-	classes = Class.objects.filter(name='Class - III')
-	data = Subject.objects.create(name = 'English',parentClass=classes[0])"""
+'''def insert_chapter_data(request):
 	chapters = ['The Fun They Had','The Road Not Taken','The Sound of Music','Wind','The Little Girl','Rain on the Roof','A Truly Beautiful Mind','The Lake Isle of Innisfree','The Snake and the Mirror','A Legend of the Northland','My Childhood','No Men Are Foreign','Packing','The Duck and the Kangaroo','Reach for the Top','On Killing a Tree','The Bond of Love','The Snake Trying','Kathmandu','A Slumber did My Spirit Seal','If I were you']
 	subject = Subject.objects.filter(name='English',parentClass__name='Class - IX')
 	for chapter in chapters:
@@ -248,7 +244,6 @@ def read_file_test(request):
 		else:
 			return JsonResponse({'data':'Error'})
 	return JsonResponse({'data':subject[0].name+"-"+subject[0].parentClass.name})
-	"""return JsonResponse({'data':len(data))})"""
 
 def update_database_backup(request):
 	classs = Class.objects.filter(name='Class - X')
@@ -343,16 +338,16 @@ def getSection(parentSection,startTag,endTag):
 def getString(parentString,startTag,endTag):
 	startIndex = parentString.find(startTag)
 	endIndex = parentString.find(endTag)
-	return parentString[startIndex+4:endIndex]
+	return parentString[startIndex+4:endIndex]'''
 
-@api_view(['GET'])
+'''@api_view(['GET'])
 def test_user_view(request):
 	print(request.user)
 	# email = EmailMessage( subject='Test Email', body='It\'s working', from_email='admin@qlib.co.in', to=['harshalagrawal03@gmail.com'])
 	""" email = EmailMessage( subject='Test Email', body='It\'s working', from_email='admin@qlib.co.in', to=['adminoskflsdf@qlib.co.in'])
 	checking = email.send()
 	print(checking) """
-	return JsonResponse({"data": "okay"})
+	return JsonResponse({"data": "okay"})'''
 
 @api_view(['POST'])
 def delete_paper(request):
@@ -559,4 +554,56 @@ def get_paper(request):
 	response['paper'] = responsePaper
 
 	return JsonResponse({'data': response})
+
+import pdfkit
+
+import os
+import argparse
+
+from .pdfrwmaster.pdfrw import PdfReader, PdfWriter, PageMerge
+
+@api_view(['POST'])
+def print_booklet(request):
+	if request.method == "POST":
+
+		#print(request.data['paper'])
+
+		pdfkit.from_string(request.data['paper'],'./helloworld_project/media/Gig.pdf')
+
+		inpfn = '.helloworld_project/media/Gig.pdf'
+		outfn = '.helloworld_project/media/booklet.' + os.path.basename(inpfn)
+		ipages = PdfReader(inpfn).pages
+
+		blankPages = PdfReader('./message_app/pdf_files/onepage.pdf').pages
+		blankPage = blankPages.pop()
+
+		pad_to = 4
+		'''if args.padding:
+				pad_to = 4
+		else:
+				pad_to = 2'''
+
+    # Make sure we have a correct number of sides
+		#ipages += [None]*(-len(ipages)%pad_to)
+		ipages += [blankPage]*(-len(ipages)%pad_to)
+
+		opages = []
+		while len(ipages) > 2:
+				opages.append(fixpage(ipages.pop(), ipages.pop(0)))
+				opages.append(fixpage(ipages.pop(0), ipages.pop()))
+
+		opages += ipages
+
+		PdfWriter(outfn).addpages(opages).write()
+
+		# blob = PdfReader('./message_app/pdf_files/booklet.Gig.pdf').pages
+
+		return JsonResponse({'data': 'media/booklet.Gig.pdf'})
+	else:
+		return JsonResponse({'data': 'error'})
+
+def fixpage(*pages):
+    result = PageMerge() + (x for x in pages if x is not None)
+    result[-1].x += result[0].w
+    return result.render()
 
