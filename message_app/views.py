@@ -570,8 +570,8 @@ def print_booklet(request):
 
 		pdfkit.from_string(request.data['paper'],'./helloworld_project/media/Gig.pdf')
 
-		inpfn = '.helloworld_project/media/Gig.pdf'
-		outfn = '.helloworld_project/media/booklet.' + os.path.basename(inpfn)
+		inpfn = './helloworld_project/media/Gig.pdf'
+		outfn = './helloworld_project/media/booklet.' + os.path.basename(inpfn)
 		ipages = PdfReader(inpfn).pages
 
 		blankPages = PdfReader('./message_app/pdf_files/onepage.pdf').pages
