@@ -5,7 +5,7 @@ import { Student } from '../classes/student';
 import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
-import {Constants} from "../classes/constants";
+import {Constants} from '../classes/constants';
 
 @Injectable()
 export class StudentService {

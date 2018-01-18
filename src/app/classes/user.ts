@@ -54,6 +54,9 @@ export class User {
             this.color = 'indigo';
             this.btn_color = 'primary';
             this.imgSrc = '/assets/img/gears.gif';
+        } else if (this.username === 'brightstarsalsalai') {
+            this.color = 'indigo';
+            this.btn_color = 'primary';
         } else {
             this.color = 'red';
             this.btn_color = 'danger';
