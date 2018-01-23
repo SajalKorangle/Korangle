@@ -29,6 +29,22 @@ class Student(models.Model):
 	remark = models.TextField(null=True)
 	parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
 
+	# new student profile data
+	motherName = models.TextField(null=True)
+	gender = models.TextField(null=True)
+	caste = models.TextField(null=True)
+	category = models.TextField(null=True)
+	religion = models.TextField(null=True)
+	fatherOccupation = models.TextField(null=True)
+	address = models.TextField(null=True)
+	familySSMID = models.IntegerField(null=True)
+	childSSMID = models.IntegerField(null=True)
+	bankName = models.TextField(null=True)
+	bankAccountNum = models.TextField(null=True)
+	aadharNum = models.IntegerField(null=True)
+	bloodGroup = models.TextField(null=True)
+	fatherAnnualIncome = models.TextField(null=True)
+
 	def __str__(self):
 		"""A string representation of the model."""
 		return self.parentClass.name+" --- "+self.name
