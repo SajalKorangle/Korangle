@@ -6,7 +6,7 @@ import { EmitterService } from '../../services/emitter.service';
 import set = Reflect.set;
 
 @Component({
-    selector: 'print-fee-receipt',
+    selector: 'app-print-fee-receipt',
     templateUrl: './print-fee-receipt.component.html',
     styleUrls: ['./print-fee-receipt.component.css'],
 })

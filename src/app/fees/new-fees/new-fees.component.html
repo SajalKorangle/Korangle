@@ -1,0 +1,212 @@
+<div class="main-content">
+    <div class="container-fluid">
+
+        <div class="card" style="min-height: 100%">
+            <div class="card-header" [attr.data-background-color]="user.color">
+                <h4 class="title">Submit Fee</h4>
+            </div>
+            <div class="card-content">
+
+                Class:
+                <select [ngModel]="selectedClass"
+                        (ngModelChange)="onChangeSelectedClass($event)"
+                        style="margin-right: 15px">
+                    <ng-container>
+                        <option *ngFor = "let c of classList;" [ngValue]="c">{{c.name}}</option>
+                    </ng-container>
+                </select>
+
+                Student:
+                <select [(ngModel)]="selectedStudent"
+                        (ngModelChange)="getStudentData()"
+                        style="margin-right: 15px">
+                    <ng-container *ngIf="selectedClass">
+                        <option *ngFor="let c of selectedClass.studentList" [ngValue] = "c">{{c.name}}</option>
+                    </ng-container>
+                </select>
+
+                <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Name</label>
+                                <input type="text"
+                                       class="form-control"
+                                       [ngModel]="selectedStudent.name" (ngModelChange)="currentStudent.name=$event;" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Father's Name</label>
+                                <input type="text"
+                                       class="form-control"
+                                       [ngModel]="selectedStudent.fathersName" (ngModelChange)="currentStudent.fathersName=$event" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Total Fees</label>
+                                <input type="number" class="form-control" [value]="selectedStudent.totalFees" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Fees Due</label>
+                                <input type="number" class="form-control" [value]="selectedStudent.feesDue" disabled>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row" *ngIf="selectedStudent.remark !== undefined && selectedStudent.remark !== ''">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <div class="form-group form-black label-floating">
+                                    <label class="control-label">Remark</label>
+                                    <textarea class="form-control" rows="3"
+                                              [ngModel]="selectedStudent.remark" (ngModelChange)="currentStudent.remark=$event" disabled></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf='user.username!=="anupreet"' class="row">
+                        <div class="col-md-2">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Receipt No.</label>
+                                <input type="number" class="form-control" [(ngModel)]="newFeeReceipt.receiptNumber">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Amount</label>
+                                <input type="number" class="form-control" [(ngModel)]="newFeeReceipt.amount">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Date</label>
+                                <input type="date" class="form-control" [(ngModel)]="newFeeReceipt.generationDateTime">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Remark</label>
+                                <input type="text" class="form-control" [(ngModel)]="newFeeReceipt.remark">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-{{user.btn_color}}" (click)="submitFee();">Submit</button>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="user.username==='anupreet'">
+                        <div class="col-md-12">
+                            <button type="button"
+                                    class="btn btn-{{user.btn_color}}"
+                                    (click)="createNewFeeReceipt();">modal</button><br/>
+                        </div>
+                    </div>
+
+                    <div *ngIf="selectedStudent.feesList.length === 0" class="row">
+                        <div class="col-md-12">
+                            **No Fee submitted yet
+                        </div>
+                    </div>
+
+                    <div *ngIf="selectedStudent.concessionList.length === 0" class="row">
+                        <div class="col-md-12">
+                            **No Concession records
+                        </div>
+                    </div>
+
+                </ng-container>
+
+                <ng-container *ngIf="selectedClass && !selectedStudent">
+                    <br/>No Students in this class
+                </ng-container>
+
+            </div>
+        </div>
+
+        <div *ngIf="!isLoading && selectedStudent && selectedStudent.feesList.length !== 0"
+             class="card" style="min-height: 100%">
+            <div class="card-header" [attr.data-background-color]="user.color">
+                <h4 class="title">Previous Fee Records</h4>
+            </div>
+            <div class="card-content" id="forforfor">
+                <div class="row">
+                    <div class="col-md-8" *ngIf="selectedStudent.feesList.length > 0">
+                        <table cellpadding="10" class="table-content">
+                            <style>
+                                td { padding: 10px; }
+                                tr { border-bottom: 1px solid gainsboro; }
+                            </style>
+                            <tr>
+                                <td align="center">Receipt No.</td>
+                                <td align="center">Amount</td>
+                                <td align="center">Date</td>
+                                <td align="center">Remark</td>
+                                <td align="center" *ngIf="user.username==='anupreet'">Bifurcation</td>
+                                <td align="center">-</td>
+                            </tr>
+                            <tr *ngFor="let feeEntry of selectedStudent.feesList">
+                                <td align="right">{{feeEntry.receiptNumber}}</td>
+                                <td align="right">{{feeEntry.amount}}</td>
+                                <td align="center">{{feeEntry.generationDateTime}}</td>
+                                <td align="left">{{feeEntry.remark}}</td>
+                                <td align="center" *ngIf="user.username==='anupreet'">
+                                    <span *ngIf="feeEntry.tuitionFeeAmount!==0">TutionFee: {{feeEntry.tuitionFeeAmount}},</span>
+                                    <span *ngIf="feeEntry.lateFeeAmount!==0">LateFee: {{feeEntry.lateFeeAmount}},</span>
+                                    <span *ngIf="feeEntry.cautionMoneyAmount!==0">CautionMoney: {{feeEntry.cautionMoneyAmount}},</span>
+                                </td>
+                                <td align="center">
+                                    <button type="button"  class="btn btn-{{user.btn_color}}" (click)="printFeeReceipt(feeEntry)">Print</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!isLoading && selectedStudent && selectedStudent.concessionList.length !== 0"
+             class="card" style="min-height: 100%">
+            <div class="card-header" [attr.data-background-color]="user.color">
+                <h4 class="title">Student Concession Records</h4>
+            </div>
+            <div class="card-content" id="forforforfor">
+                <div class="row">
+                    <div class="col-md-8" *ngIf="selectedStudent.concessionList.length > 0">
+                        <table cellpadding="10" class="table-content">
+                            <style>
+                                td { padding: 10px; }
+                                tr { border-bottom: 1px solid gainsboro; }
+                            </style>
+                            <tr>
+                                <td align="center">Amount</td>
+                                <td align="center">Date</td>
+                                <td align="center">Remark</td>
+                            </tr>
+                            <tr *ngFor="let concessionEntry of selectedStudent.concessionList">
+                                <td align="right">{{concessionEntry.amount}}</td>
+                                <td align="center">{{concessionEntry.generationDateTime}}</td>
+                                <td align="left">{{concessionEntry.remark}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-container *ngIf="isLoading">
+            <div style="width: 100%; margin-top: 10mm;" align="center">
+                <div class="loader" style="border-top: 8px solid {{user.color}}"></div>
+            </div>
+        </ng-container>
+
+    </div>
+</div>

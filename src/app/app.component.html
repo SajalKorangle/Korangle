@@ -9,11 +9,19 @@
             <app-navbar class="hidden-md hidden-xl hidden-lg"></app-navbar>
             <!-- app-navbar></app-navbar -->
             <!-- router-outlet></router-outlet -->
-            <app-student *ngIf="user.appSection==='students'" [user]="user"></app-student>
-            <app-fees *ngIf="user.appSection==='fees'" [user]="user"></app-fees>
+
+            <app-student-profile *ngIf="user.appSection==='student_profile'" [user]="user"></app-student-profile>
+
+            <app-new-fees *ngIf="user.appSection==='new_fees'" [user]="user"></app-new-fees>
+            <app-fees-list *ngIf="user.appSection==='fees_list'" [user]="user"></app-fees-list>
+
             <app-expenses *ngIf="user.appSection==='expenses'" [user]="user"></app-expenses>
-            <app-concession *ngIf="user.appSection==='concession'" [user]="user"></app-concession>
+
+            <app-new-concession *ngIf="user.appSection==='new_concession'" [user]="user"></app-new-concession>
+            <app-concession-list *ngIf="user.appSection==='concession_list'" [user]="user"></app-concession-list>
+
             <app-new-student *ngIf="user.appSection==='new_student'" [user]="user"></app-new-student>
+            <app-student-list *ngIf="user.appSection==='student_list'" [user]="user"></app-student-list>
             <!--<div *ngIf="isMaps('maps')"> <app-footer></app-footer> </div>-->
         </div>
     </div>

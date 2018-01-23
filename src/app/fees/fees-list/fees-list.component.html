@@ -61,7 +61,10 @@
                                 <td align="center">{{feeEntry.className}}</td>
                                 <td align="left">{{feeEntry.remark}}</td>
                                 <td align="center">
-                                    <button type="button"  class="btn btn-{{user.btn_color}}" (click)="printFeeReceipt(feeEntry)">Print</button>
+                                    <button type="button"
+                                            class="btn btn-{{user.btn_color}}"
+                                            style="padding: 8px 22px"
+                                            (click)="printFeeReceipt(feeEntry)">Print</button>
                                 </td>
                             </tr>
                         </table>

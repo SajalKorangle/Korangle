@@ -13,6 +13,7 @@ export class StudentService {
     private studentDataUrl = Constants.DJANGO_SERVER + 'student_data/';
     private updateStudentUrl = Constants.DJANGO_SERVER + 'update_student/';
     private deleteStudentUrl = Constants.DJANGO_SERVER + 'delete_student_view/';
+    private studentDataClassListUrl = Constants.DJANGO_SERVER + 'student_data_class_list/';
 
     private headers = new Headers({'Content-Type': 'application/json' });
 
@@ -45,6 +46,15 @@ export class StudentService {
         const body = { 'studentDbId': studentDbId };
         this.headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + localStorage.getItem('schoolJWT') });
         return this.http.post(this.deleteStudentUrl, body, {headers: this.headers})
+            .toPromise()
+            .then(response => {
+                return response.json().data;
+            }).catch(this.handleError);
+    }
+
+    getStudentDataClassList(): Promise<any> {
+        this.headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + localStorage.getItem('schoolJWT') });
+        return this.http.get(this.studentDataClassListUrl, {headers: this.headers})
             .toPromise()
             .then(response => {
                 return response.json().data;

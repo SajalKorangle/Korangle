@@ -1,25 +1,25 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Student } from '../classes/student';
-import { Classs } from '../classes/classs';
-import { Fee } from '../classes/fee';
-import { ClassStudentListService } from '../services/class-student-list.service';
-import { StudentService } from '../services/student.service';
-import { NewFeeReceiptService } from '../services/new-fee-receipt.service';
-import { AuthenticationService } from '../services/authentication.service';
-import {EmitterService} from '../services/emitter.service';
-import {NewConcessionService} from '../services/new-concession.service';
-import {Concession} from '../classes/concession';
+import { Student } from '../../classes/student';
+import { Classs } from '../../classes/classs';
+import { Fee } from '../../classes/fee';
+import { ClassStudentListService } from '../../services/class-student-list.service';
+import { StudentService } from '../../services/student.service';
+import { NewFeeReceiptService } from '../../services/new-fee-receipt.service';
+import { AuthenticationService } from '../../services/authentication.service';
+import {EmitterService} from '../../services/emitter.service';
+import {NewConcessionService} from '../../services/new-concession.service';
+import {Concession} from '../../classes/concession';
 
 import moment = require('moment');
 
 @Component({
-  selector: 'app-student',
-  templateUrl: './students.component.html',
-  styleUrls: ['./students.component.css'],
+  selector: 'app-student-profile',
+  templateUrl: './student-profile.component.html',
+  styleUrls: ['./student-profile.component.css'],
     providers: [ ClassStudentListService, StudentService, NewFeeReceiptService, AuthenticationService, NewConcessionService ],
 })
-export class StudentComponent implements OnInit {
+export class StudentProfileComponent implements OnInit {
 
     @Input() user;
 
@@ -30,6 +30,7 @@ export class StudentComponent implements OnInit {
   newConcession: Concession;
   // noStudentForSelectedClass = true;
   currentStudent: Student = new Student();
+  gender = 'Female';
 
   isLoading = false;
 
@@ -59,9 +60,6 @@ export class StudentComponent implements OnInit {
         this.newFeeReceipt = new Fee();
         this.newFeeReceipt.generationDateTime = moment(new Date()).format('YYYY-MM-DD');
         this.newConcession = new Concession();
-        EmitterService.get('submit-new-fee-receipt').subscribe(value => {
-            this.submitFee();
-        });
         this.classStudentListService.getIndex().then(
             classStudentList => {
                 this.classList = [];
@@ -119,88 +117,6 @@ export class StudentComponent implements OnInit {
                 this.isLoading = false;
             }
         );
-    }
-
-    submitFee(): void {
-        if (this.newFeeReceipt.receiptNumber === undefined || this.newFeeReceipt.receiptNumber === 0) {
-            alert('Receipt No. should be populated');
-            return;
-        }
-        if (this.newFeeReceipt.amount === undefined || this.newFeeReceipt.amount <= 0) {
-            alert('Amount should be populated');
-            return;
-        }
-        if (this.newFeeReceipt.generationDateTime === undefined) {
-            alert('Date should be populated');
-            return;
-        }
-        if (this.newFeeReceipt.remark === undefined) { this.newFeeReceipt.remark = ''; }
-        this.isLoading = true;
-        this.newFeeReceipt.studentDbId = this.selectedStudent.dbId;
-        this.newFeeReceiptService.submitStudentFees(this.newFeeReceipt).then(
-            data => {
-                this.isLoading = false;
-                if (data.status === 'success') {
-                    alert(data.message);
-                    const student = data.studentData;
-                    if (this.selectedStudent.dbId === student.dbId) {
-                        this.selectedStudent.copy(student);
-                        this.currentStudent.copyWithoutFeesAndConcession(student);
-                    }
-                    this.selectedStudent.feesList.forEach( fee => {
-                        if (fee.receiptNumber === this.newFeeReceipt.receiptNumber) {
-                            this.printFeeReceipt(fee);
-                        }
-                    });
-                    if (student.overAllLastFeeReceiptNumber === null || student.overAllLastFeeReceiptNumber === '') {
-                        student.overAllLastFeeReceiptNumber = 0;
-                    }
-                    this.newFeeReceipt.receiptNumber = student.overAllLastFeeReceiptNumber + 1;
-                    this.newFeeReceipt.amount = 0;
-                    this.newFeeReceipt.generationDateTime = moment(new Date()).format('YYYY-MM-DD');
-                    this.newFeeReceipt.remark = '';
-                } else {
-                    alert(data.message);
-                }
-            }, error => {
-                this.isLoading = false;
-                alert('Server error: Contact Admin');
-            }
-        );
-
-    }
-
-    submitConcession(): void {
-        if (this.newConcession.amount === undefined || this.newConcession.amount === 0) {
-            alert('Amount should be populated');
-            return;
-        }
-        if (this.newConcession.remark === undefined) { this.newConcession.remark = ''; }
-        this.isLoading = true;
-        this.newConcession.studentDbId = this.selectedStudent.dbId;
-        this.newConcessionService.submitStudentConcession(this.newConcession).then(
-            data => {
-                this.isLoading = false;
-                if (data.status === 'success') {
-                    alert(data.message);
-                    const student = data.studentData;
-                    if (this.selectedStudent.dbId === student.dbId) {
-                        this.selectedStudent.copy(student);
-                        this.currentStudent.copyWithoutFeesAndConcession(student);
-                    }
-                    if (student.overAllLastFeeReceiptNumber === null || student.overAllLastFeeReceiptNumber === '') {
-                        student.overAllLastFeeReceiptNumber = 0;
-                    }
-                    this.newFeeReceipt.receiptNumber = student.overAllLastFeeReceiptNumber + 1;
-                } else {
-                    alert(data.message);
-                }
-            }, error => {
-                this.isLoading = false;
-                alert('Server error: Contact Admin');
-            }
-        );
-
     }
 
     updateProfile(): void {

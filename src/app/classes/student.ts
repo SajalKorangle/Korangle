@@ -12,7 +12,26 @@ export class Student {
     totalFees: number;
     feesDue = 0;
     classDbId: number;
+    className: string;
     remark: string;
+
+    /* new student profile head */
+
+    motherName: string;
+    gender: string;
+    caste: string;
+    category: string;
+    religion: string;
+    fatherOccupation: string;
+    address: string;
+    childSSMID: number;
+    familySSMID: number;
+    bankName: string;
+    bankAccountNum: string;
+    aadharNum: number;
+    bloodGroup: string;
+    fatherAnnualIncome: string;
+
     feesList: Fee[] = [];
     concessionList: Concession[] = [];
 
@@ -27,6 +46,22 @@ export class Student {
         this.feesDue = student.feesDue;
         this.classDbId = student.classDbId;
         this.remark = student.remark;
+
+        /* new student profile head */
+        this.motherName = student.motherName;
+        this.gender = student.gender;
+        this.caste = student.caste;
+        this.category = student.category;
+        this.religion = student.religion;
+        this.fatherOccupation = student.fatherOccupation;
+        this.address = student.address;
+        this.familySSMID = student.familySSMID;
+        this.childSSMID = student.childSSMID;
+        this.bankName = student.bankName;
+        this.bankAccountNum = student.bankAccountNum;
+        this.aadharNum = student.aadharNum;
+        this.bloodGroup = student.bloodGroup;
+        this.fatherAnnualIncome = student.fatherAnnualIncome;
     }
 
     copy(student: Student) {

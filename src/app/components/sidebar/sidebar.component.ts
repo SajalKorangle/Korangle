@@ -34,6 +34,8 @@ export class SidebarComponent implements OnInit {
 
     @Input() user: User;
 
+    parentPath = '';
+
   menuItems: any[];
 
   constructor() { }
@@ -48,9 +50,20 @@ export class SidebarComponent implements OnInit {
       return true;
   };
 
-  activate(code: string) {
-      console.log(code);
-      this.user.appSection = code;
+  activate(section: any) {
+      // console.log(code);
+      if ( section.subsection.length === 0 ) {
+          this.user.appSection = section.path;
+          this.parentPath = section.path;
+      } else {
+          section.showSubsection = !section.showSubsection;
+      }
+  }
+
+  activateSubsection(subsection: any, section: any) {
+      console.log(subsection);
+      this.user.appSection = subsection.path;
+      this.parentPath = section.path;
   }
 
   logout() {

@@ -1,0 +1,186 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header" [attr.data-background-color]="user.color">
+                <h4 class="title">Student List</h4>
+                <p class="category">Get filtered list of student</p>
+            </div>
+            <div class="card-content table-responsive">
+
+                <!-- Class:
+                <select [(ngModel)]="selectedClass" style="margin-right: 15px">
+                    <ng-container>
+                        <option *ngFor = "let c of classList;" [ngValue]="c">{{c.name}}</option>
+                    </ng-container>
+                </select -->
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Class" [(ngModel)]="selectedClass">
+                        <mat-option *ngFor="let c of classList" [value]="c">{{c.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field style="float: right;">
+                    <mat-select placeholder="Which Columns">
+                        <mat-option> <mat-checkbox [(ngModel)]="showName" (click)="$event.stopPropagation();">Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showClassName" (click)="$event.stopPropagation();">Class Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showFathersName" (click)="$event.stopPropagation();">Father's Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showMobileNumber" (click)="$event.stopPropagation();">Mobile No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showScholarNumber" (click)="$event.stopPropagation();">Scholar No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showDateOfBirth" (click)="$event.stopPropagation();">Date of Birth</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showTotalFees" (click)="$event.stopPropagation();">Total Fees</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showFeesDue" (click)="$event.stopPropagation();">Fees Due</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showMotherName" (click)="$event.stopPropagation();">Mother's Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showGender" (click)="$event.stopPropagation();">Gender</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showCaste" (click)="$event.stopPropagation();">Caste</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showCategory" (click)="$event.stopPropagation();">Category</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showReligion" (click)="$event.stopPropagation();">Religion</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showFatherOccupation" (click)="$event.stopPropagation();">Father's Occupation</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showAddress" (click)="$event.stopPropagation();">Address</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showChildSSMID" (click)="$event.stopPropagation();">Child SSMID</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showFamilySSMID" (click)="$event.stopPropagation();">Family SSMID</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showBankName" (click)="$event.stopPropagation();">Bank Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showBankAccountNum" (click)="$event.stopPropagation();">Bank Acc. No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showAadharNum" (click)="$event.stopPropagation();">Aadhar No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showBloodGroup" (click)="$event.stopPropagation();">Blood Group</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showFatherAnnualIncome" (click)="$event.stopPropagation();">Father's Annual Income</mat-checkbox></mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- mat-checkbox [(ngModel)]="showMotherName" align="end">Mother's Name</mat-checkbox -->
+
+
+                <ng-container *ngIf="!isLoading">
+                    <table class="table table-hover">
+                        <thead class="text-{{user.btn_color}}">
+                            <tr>
+                                <!-- th *ngIf="showSerialNumber">S No.</th -->
+                                <th *ngIf="showName">Name</th>
+                                <th *ngIf="showClassName">Class Name</th>
+                                <th *ngIf="showFathersName">Father's Name</th>
+                                <th *ngIf="showMobileNumber">Mobile No.</th>
+                                <th *ngIf="showScholarNumber">Scholar No.</th>
+                                <th *ngIf="showDateOfBirth">Date of Birth</th>
+                                <th *ngIf="showTotalFees">Total Fees</th>
+                                <th *ngIf="showFeesDue">Fees Due</th>
+                                <th *ngIf="showMotherName">Mother's Name</th>
+                                <th *ngIf="showGender">Gender</th>
+                                <th *ngIf="showCaste">Caste</th>
+                                <th *ngIf="showCategory">Category</th>
+                                <th *ngIf="showReligion">Religion</th>
+                                <th *ngIf="showFatherOccupation">Father's Occupation</th>
+                                <th *ngIf="showAddress">Address</th>
+                                <th *ngIf="showChildSSMID">Child SSMID</th>
+                                <th *ngIf="showFamilySSMID">Family SSMID</th>
+                                <th *ngIf="showBankName">Bank Name</th>
+                                <th *ngIf="showBankAccountNum">Bank Acc. No.</th>
+                                <th *ngIf="showAadharNum">Aadhar No.</th>
+                                <th *ngIf="showBloodGroup">Blood Group</th>
+                                <th *ngIf="showFatherAnnualIncome">Father's Annual Income</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let student of studentList; let i = index;" [class.hidden]="showStudent(student)">
+                                <ng-container>
+                                    <!-- td *ngIf="showSerialNumber">{{i+1}}</td -->
+                                    <td *ngIf="showName">{{student.name}}</td>
+                                    <td *ngIf="showClassName">{{student.className}}</td>
+                                    <td *ngIf="showFathersName">{{student.fathersName}}</td>
+                                    <td *ngIf="showMobileNumber">{{student.mobileNumber}}</td>
+                                    <td *ngIf="showScholarNumber">{{student.scholarNumber}}</td>
+
+                                    <td *ngIf="showDateOfBirth">{{student.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
+                                    <td *ngIf="showTotalFees">{{student.totalFees}}</td>
+                                    <td *ngIf="showFeesDue">{{student.feesDue}}</td>
+                                    <td *ngIf="showMotherName">{{student.motherName}}</td>
+                                    <td *ngIf="showGender">{{student.gender}}</td>
+                                    <td *ngIf="showCaste">{{student.caste}}</td>
+                                    <td *ngIf="showCategory">{{student.category}}</td>
+                                    <td *ngIf="showReligion">{{student.religion}}</td>
+                                    <td *ngIf="showFatherOccupation">{{student.fatherOccupation}}</td>
+                                    <td *ngIf="showAddress">{{student.address}}</td>
+                                    <td *ngIf="showChildSSMID">{{student.childSSMID}}</td>
+                                    <td *ngIf="showFamilySSMID">{{student.familySSMID}}</td>
+                                    <td *ngIf="showBankName">{{student.bankName}}</td>
+                                    <td *ngIf="showBankAccountNum">{{student.bankAccountNum}}</td>
+                                    <td *ngIf="showAadharNum">{{student.aadharNum}}</td>
+                                    <td *ngIf="showBloodGroup">{{student.bloodGroup}}</td>
+                                    <td *ngIf="showFatherAnnualIncome">{{student.fatherAnnualIncome}}</td>
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+
+                <ng-container *ngIf="isLoading">
+                    <div style="width: 100%; margin-top: 10mm;" align="center">
+                        <div class="loader"></div>
+                    </div>
+                </ng-container>
+
+            </div>
+        </div>
+
+        <!-- div class="card card-plain">
+            <div class="card-header" data-background-color="red">
+                <h4 class="title">Table on Plain Background</h4>
+                <p class="category">Here is a subtitle for this table</p>
+            </div>
+            <div class="card-content table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Salary</th>
+                        <th>Country</th>
+                        <th>City</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Dakota Rice</td>
+                        <td>$36,738</td>
+                        <td>Niger</td>
+                        <td>Oud-Turnhout</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Minerva Hooper</td>
+                        <td>$23,789</td>
+                        <td>Curaçao</td>
+                        <td>Sinaai-Waas</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Sage Rodriguez</td>
+                        <td>$56,142</td>
+                        <td>Netherlands</td>
+                        <td>Baileux</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Philip Chaney</td>
+                        <td>$38,735</td>
+                        <td>Korea, South</td>
+                        <td>Overland Park</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Doris Greene</td>
+                        <td>$63,542</td>
+                        <td>Malawi</td>
+                        <td>Feldkirchen in Kärnten</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Mason Porter</td>
+                        <td>$78,615</td>
+                        <td>Chile</td>
+                        <td>Gloucester</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div -->
+
+    </div>
+</div>

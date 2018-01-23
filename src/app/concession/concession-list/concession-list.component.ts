@@ -1,16 +1,15 @@
 import { Component, Input } from '@angular/core';
 
-import { Concession } from '../classes/concession';
-import { EmitterService } from '../services/emitter.service';
-import { ConcessionListService } from "../services/concession-list.service";
+import { Concession } from '../../classes/concession';
+import { ConcessionListService } from '../../services/concession-list.service';
 
 @Component({
-  selector: 'app-concession',
-  templateUrl: './concession.component.html',
-  styleUrls: ['./concession.component.css'],
+  selector: 'app-concession-list',
+  templateUrl: './concession-list.component.html',
+  styleUrls: ['./concession-list.component.css'],
     providers: [ConcessionListService]
 })
-export class ConcessionComponent {
+export class ConcessionListComponent {
 
     @Input() user;
 

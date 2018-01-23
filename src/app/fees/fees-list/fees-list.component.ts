@@ -1,16 +1,16 @@
 import { Component, Input } from '@angular/core';
 
-import { FeeListService } from '../services/fee-list.service';
-import { Fee } from '../classes/fee';
-import {EmitterService} from '../services/emitter.service';
+import { FeeListService } from '../../services/fee-list.service';
+import { Fee } from '../../classes/fee';
+import {EmitterService} from '../../services/emitter.service';
 
 @Component({
-  selector: 'app-fees',
-  templateUrl: './fees.component.html',
-  styleUrls: ['./fees.component.css'],
+  selector: 'app-fees-list',
+  templateUrl: './fees-list.component.html',
+  styleUrls: ['./fees-list.component.css'],
     providers: [FeeListService]
 })
-export class FeesComponent {
+export class FeesListComponent {
 
     @Input() user;
 

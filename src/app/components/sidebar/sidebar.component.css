@@ -1,0 +1,50 @@
+.subsectionDiv {
+    margin: 10px 15px;
+    border-radius: 3px;
+    color: #3C4858;
+    padding-left: 15px;
+}
+.subsectionDiv:hover {
+    background: rgba(200, 200, 200, 0.2);
+    /*color: #3C4858;*/
+}
+/*.sidebar .nav p,
+.off-canvas-sidebar .nav p {
+    margin: 0;
+    line-height: 30px;
+    font-size: 14px;
+}*/
+div.active {
+    color: #FFFFFF;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+div.active i {
+    color: #FFFFFF;
+}
+div.active[data-color="info"]  {
+    background-color: #00bcd4;
+    box-shadow: 0 12px 20px -10px rgba(0, 188, 212, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(0, 188, 212, 0.2);
+}
+div.active[data-color="success"]  {
+    background-color: #4caf50;
+    box-shadow: 0 12px 20px -10px rgba(76, 175, 80, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(76, 175, 80, 0.2);
+}
+div.active[data-color="warning"]  {
+    background-color: #ff9800;
+    box-shadow: 0 12px 20px -10px rgba(255, 152, 0, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 152, 0, 0.2);
+}
+div.active[data-color="danger"]  {
+    background-color: #f44336;
+    box-shadow: 0 12px 20px -10px rgba(244, 67, 54, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(244, 67, 54, 0.2);
+}
+div.active[data-color="primary"]  {
+    background-color: #9c27b0;
+    box-shadow: 0 12px 20px -10px rgba(156, 39, 176, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(156, 39, 176, 0.2);
+}
+/*div.active[data-color="indigo"]  {
+    background-color: #3F51B5;
+    box-shadow: 0 12px 20px -10px rgba(63, 81, 181, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(63, 81, 181, 0.2);
+}*/
+
+

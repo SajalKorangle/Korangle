@@ -55,11 +55,42 @@
                     <p>{{menuItem.title}}</p>
                 </a>
             </li -->
-            <li [class.active]="route.path===user.appSection" *ngFor="let route of user.ROUTES" class="{{route.class}}">
-                <a (click)="activate(route.path);">
-                    <i class="material-icons">{{route.icon}}</i>
-                    <p>{{route.title}}</p>
+            <li [class.active]="section.path===user.appSection || section.path===parentPath"
+                *ngFor="let section of user.ROUTES" class="{{section.class}}"
+                style="border-bottom: 0.1px solid lightgrey;">
+                <!-- a (click)="activate(section);">
+                    <i class="material-icons">{{section.icon}}</i>
+                    <p>
+                        {{section.title}}
+                    </p>
+                </a -->
+                <a (click)="activate(section);">
+                    <i class="material-icons">{{section.icon}}</i>
+                    <p>
+                        {{section.title}}
+                        <i *ngIf="!section.showSubsection && section.subsection.length > 0" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                        <i *ngIf="section.showSubsection && section.subsection.length > 0" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                    </p>
                 </a>
+                <ng-container *ngIf="section.showSubsection">
+                    <div *ngFor="let subsection of section.subsection"
+                         [attr.data-color]="user.btn_color"
+                         [class.active]="subsection.path===user.appSection"
+                         class="subsectionDiv"
+                         (click)="activateSubsection(subsection,section);">
+                        <!-- i class="material-icons" style="color: transparent;">keyboard_arrow_down</i -->
+                        <i class="material-icons">remove</i>
+                        <p>{{subsection.title}}</p>
+                    </div>
+                </ng-container>
+                <!-- span *ngIf="route.path===user.appSection">
+                    <i *ngIf="route.path==user.appSection" class="material-icons" style="color: transparent">keyboard_arrow_down</i>
+                    <p *ngIf="route.path===user.appSection">Okay One</p>
+                </span>
+                <span *ngIf="route.path===user.appSection">
+                    <i *ngIf="route.path===user.appSection" class="material-icons" style="color: transparent">keyboard_arrow_up</i>
+                    <p *ngIf="route.path===user.appSection">Okay Two</p>
+                </span -->
             </li>
             <!-- li [class.active]="user.appSection==='new_student'">
                 <a (click)="activate('new_student');">
