@@ -16,7 +16,7 @@ export class NewStudentComponent implements OnInit {
     @Input() user;
 
   newStudent: Student;
-  selectedClass: Classs;
+  // selectedClass: Classs;
   classList: Classs[];
 
   isLoading = false;
@@ -38,7 +38,7 @@ export class NewStudentComponent implements OnInit {
                     tempClass.dbId = classs.dbId;
                     this.classList.push(tempClass);
                 });
-                this.selectedClass = this.classList[0];
+                // this.selectedClass = this.classList[0];
             }
         );
     }
@@ -64,13 +64,17 @@ export class NewStudentComponent implements OnInit {
             alert('Father\'s Name should be populated');
             return;
         }
+        if (this.newStudent.classDbId === undefined || this.newStudent.classDbId === 0 ) {
+            alert('Class should be selected');
+            return;
+        }
         if (this.newStudent.dateOfBirth === undefined) { this.newStudent.dateOfBirth = ''; }
         if (this.newStudent.mobileNumber === undefined) { this.newStudent.mobileNumber = 0; }
         if (this.newStudent.totalFees === undefined) { this.newStudent.totalFees = 0; }
         if (this.newStudent.remark === undefined) { this.newStudent.remark = ''; }
         if (this.newStudent.scholarNumber === undefined) { this.newStudent.scholarNumber = 0; }
         this.isLoading = true;
-        this.newStudent.classDbId = this.selectedClass.dbId;
+        // this.newStudent.classDbId = this.selectedClass.dbId;
         this.newStudentService.createNewStudent(this.newStudent).then(
             data => {
                 this.isLoading = false;
