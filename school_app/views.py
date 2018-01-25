@@ -103,15 +103,35 @@ def new_student_data_view(request):
 			student_object.remark = student_data['remark']
 		if student_data['scholarNumber']:
 			student_object.scholarNumber = student_data['scholarNumber']
+		if 'motherName' in student_data:
+			student_object.motherName = student_data['motherName']
+		if 'gender' in student_data:
+			student_object.gender = student_data['gender']
+		if 'caste' in student_data:
+			student_object.caste = student_data['caste']
+		if 'category' in student_data:
+			student_object.category = student_data['category']
+		if 'religion' in student_data:
+			student_object.religion = student_data['religion']
+		if 'fatherOccupation' in student_data:
+			student_object.fatherOccupation = student_data['fatherOccupation']
+		if 'address' in student_data:
+			student_object.address = student_data['address']
+		if 'familySSMID' in student_data:
+			student_object.familySSMID = student_data['familySSMID']
+		if 'childSSMID' in student_data:
+			student_object.childSSMID = student_data['childSSMID']
+		if 'bankName' in student_data:
+			student_object.bankName = student_data['bankName']
+		if 'bankAccountNum' in student_data:
+			student_object.bankAccountNum = student_data['bankAccountNum']
+		if 'aadharNum' in student_data:
+			student_object.aadharNum = student_data['aadharNum']
+		if 'bloodGroup' in student_data:
+			student_object.bloodGroup = student_data['bloodGroup']
+		if 'fatherAnnualIncome' in student_data:
+			student_object.fatherAnnualIncome = student_data['fatherAnnualIncome']
 		student_object.save()
-		'''student_object = Student.objects.create(name=student_data['name'],
-																						fathersName=student_data['fathersName'],
-																						mobileNumber=student_data['mobileNumber'],
-																						dateOfBirth=student_data['dateOfBirth'],
-																						totalFees=student_data['totalFees'],
-																						remark=student_data['remark'],
-																						scholarNumber=student_data['scholarNumber'],
-																						parentClass=class_object)'''
 		return JsonResponse({'data':'okay'})
 	else:
 		return JsonResponse({'data':'error'})
