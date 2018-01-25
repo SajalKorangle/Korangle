@@ -295,6 +295,22 @@ def fee_list_view(request):
 			tempFee = {}
 			tempFee['receiptNumber'] = fee.receiptNumber
 			tempFee['amount'] = fee.amount
+
+			tempFee['tuitionFeeAmount'] = 0
+			tuitionFee = SubFee.objects.filter(parentFee=fee,particular='TuitionFee')
+			if tuitionFee:
+				tempFee['tuitionFeeAmount'] = tuitionFee[0].amount
+
+			tempFee['lateFeeAmount'] = 0
+			lateFee = SubFee.objects.filter(parentFee=fee,particular='LateFee')
+			if lateFee:
+				tempFee['lateFeeAmount'] = lateFee[0].amount
+
+			tempFee['cautionMoneyAmount'] = 0
+			cautionMoney = SubFee.objects.filter(parentFee=fee,particular='CautionMoney')
+			if cautionMoney:
+				tempFee['cautionMoneyAmount'] = cautionMoney[0].amount
+
 			tempFee['generationDateTime'] = fee.generationDateTime
 			tempFee['studentName'] = fee.parentStudent.name
 			tempFee['fatherName'] = fee.parentStudent.fathersName
@@ -421,6 +437,7 @@ def get_student_data(student_object, user):
 		student_data['remark'] = student_object.remark
 		student_data['scholarNumber'] = student_object.scholarNumber
 		student_data['classDbId'] = student_object.parentClass.id
+		student_data['className'] = student_object.parentClass.name
 
 		# new student profile data
 		student_data['motherName'] = student_object.motherName
@@ -491,10 +508,10 @@ def student_data_class_list_view(request):
 
 		class_query = request.user.class_set.all().order_by('orderNumber')
 		classList = []
-		tempClass = {}
-		tempClass['name'] = 'All Classes'
-		tempClass['dbId'] = 0
-		classList.append(tempClass)
+		#tempClass = {}
+		#tempClass['name'] = 'All Classes'
+		#tempClass['dbId'] = 0
+		#classList.append(tempClass)
 		for classs in class_query:
 			tempClass = {}
 			tempClass['name'] = classs.name
