@@ -107,7 +107,7 @@
                         <div class="col-md-12">
                             <button type="button"
                                     class="btn btn-{{user.btn_color}}"
-                                    (click)="createNewFeeReceipt();">modal</button><br/>
+                                    (click)="createNewFeeReceipt();">Submit Fee</button><br/>
                         </div>
                     </div>
 
@@ -139,8 +139,11 @@
             </div>
             <div class="card-content" id="forforfor">
                 <div class="row">
-                    <div class="col-md-8" *ngIf="selectedStudent.feesList.length > 0">
-                        <table cellpadding="10" class="table-content">
+                    <div class="col-md-12">
+                        <app-fees-table-list [user]="user"
+                                             [feesList]="selectedStudent.feesList"
+                                             [whileSubmittingFee]="true"></app-fees-table-list>
+                        <!-- table cellpadding="10" class="table-content">
                             <style>
                                 td { padding: 10px; }
                                 tr { border-bottom: 1px solid gainsboro; }
@@ -150,7 +153,7 @@
                                 <td align="center">Amount</td>
                                 <td align="center">Date</td>
                                 <td align="center">Remark</td>
-                                <td align="center" *ngIf="user.username==='anupreet'">Bifurcation</td>
+                                <td align="center" *ngIf="user.complexFee">Bifurcation</td>
                                 <td align="center">-</td>
                             </tr>
                             <tr *ngFor="let feeEntry of selectedStudent.feesList">
@@ -158,16 +161,20 @@
                                 <td align="right">{{feeEntry.amount}}</td>
                                 <td align="center">{{feeEntry.generationDateTime}}</td>
                                 <td align="left">{{feeEntry.remark}}</td>
-                                <td align="center" *ngIf="user.username==='anupreet'">
+                                <td align="center" *ngIf="user.complexFee">
                                     <span *ngIf="feeEntry.tuitionFeeAmount!==0">TutionFee: {{feeEntry.tuitionFeeAmount}},</span>
                                     <span *ngIf="feeEntry.lateFeeAmount!==0">LateFee: {{feeEntry.lateFeeAmount}},</span>
                                     <span *ngIf="feeEntry.cautionMoneyAmount!==0">CautionMoney: {{feeEntry.cautionMoneyAmount}},</span>
                                 </td>
                                 <td align="center">
-                                    <button type="button"  class="btn btn-{{user.btn_color}}" (click)="printFeeReceipt(feeEntry)">Print</button>
+                                    <button type="button"
+                                            style="padding: 8px 11px"
+                                            class="btn btn-{{user.btn_color}}"
+                                            (click)="printFeeReceipt(feeEntry)">
+                                        <i class="material-icons">print</i></button>
                                 </td>
                             </tr>
-                        </table>
+                        </table -->
                     </div>
                 </div>
             </div>

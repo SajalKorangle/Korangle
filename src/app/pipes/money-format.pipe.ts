@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class MoneyFormatPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer){}
   transform(money) {
-		//console.log(html);
+		// console.log(html);
 		/*if(html == "" || html == null || html == "<div>&nbsp;</div>") {
 			return onEmpty;
 		}*/

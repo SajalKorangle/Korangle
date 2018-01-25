@@ -45,6 +45,7 @@ export class Student {
         this.totalFees = student.totalFees;
         this.feesDue = student.feesDue;
         this.classDbId = student.classDbId;
+        this.className = student.className;
         this.remark = student.remark;
 
         /* new student profile head */
@@ -70,6 +71,9 @@ export class Student {
         student.feesList.forEach( fees => {
             const tempFees = new Fee();
             tempFees.copy(fees);
+            tempFees.studentName = this.name;
+            tempFees.fatherName = this.fathersName;
+            tempFees.className = this.className;
             this.feesList.push(tempFees);
         });
         student.concessionList.forEach( concession => {

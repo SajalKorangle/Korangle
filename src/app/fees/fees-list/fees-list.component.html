@@ -39,37 +39,17 @@
 
                 <div *ngIf="!isLoading" class="row">
                     <div class="col-md-12">
-                        <table cellpadding="10" class="table-content">
-                            <style>
-                                td { padding: 10px; }
-                                tr { border-bottom: 1px solid gainsboro; }
-                            </style>
-                            <tr>
-                                <td align="center">Receipt No.</td>
-                                <td align="center">Amount</td>
-                                <td align="center">Date</td>
-                                <td align="center">Name</td>
-                                <td align="center">Class</td>
-                                <td align="center">Remark</td>
-                                <td align="center">-</td>
-                            </tr>
-                            <tr *ngFor="let feeEntry of feesList">
-                                <td align="right">{{feeEntry.receiptNumber}}</td>
-                                <td align="right">{{feeEntry.amount}}</td>
-                                <td align="center">{{feeEntry.generationDateTime}}</td>
-                                <td align="center">{{feeEntry.studentName}}</td>
-                                <td align="center">{{feeEntry.className}}</td>
-                                <td align="left">{{feeEntry.remark}}</td>
-                                <td align="center">
-                                    <button type="button"
-                                            class="btn btn-{{user.btn_color}}"
-                                            style="padding: 8px 22px"
-                                            (click)="printFeeReceipt(feeEntry)">Print</button>
-                                </td>
-                            </tr>
-                        </table>
+                        <app-fees-table-list [user]="user"
+                                             [feesList]="feesList"
+                                             [whileSubmittingFee]="false"></app-fees-table-list>
                     </div>
                 </div>
+
+                <!-- div *ngIf="!isLoading && feesList.length === 0" class="row">
+                    <div class="col-md-12">
+                        No Fees recorded b/w these dates.
+                    </div>
+                </div -->
 
                 <ng-container *ngIf="isLoading">
                     <div style="width: 100%; margin-top: 10mm;" align="center">

@@ -16,13 +16,16 @@ class Section {
 export class User {
 
     username: string;
+    schoolPrintName: string;
     email: string;
     isAuthenticated = false;
     jwt = '';
+    complexFee = false;
 
     color = 'red';
     btn_color = 'danger';
-    imgSrc = '/assets/img/angular2-logo-red.png';
+    // imgSrc = '/assets/img/angular2-logo-red.png';
+    imgSrc: string;
 
     appSection = 'students';
 
@@ -42,11 +45,11 @@ export class User {
             subsection: [
                 {
                     path: 'new_fees',
-                    title: 'New',
+                    title: 'Submit Fee',
                 },
                 {
                     path: 'fees_list',
-                    title: 'List',
+                    title: 'Previous Record',
                 }
             ] },
         { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false, subsection: [] },
@@ -54,11 +57,11 @@ export class User {
             subsection: [
                 {
                     path: 'new_concession',
-                    title: 'New',
+                    title: 'Give Concession',
                 },
                 {
                     path: 'concession_list',
-                    title: 'List',
+                    title: 'Previous Discounts',
                 }
             ] },
         { path: 'new_student', title: 'New Student', icon: 'person', class: '', showSubsection: false, subsection: [] },
@@ -102,17 +105,27 @@ export class User {
         if (this.username === 'anupreet') {
             this.color = 'indigo';
             this.btn_color = 'primary';
-            this.imgSrc = '/assets/img/gears.gif';
+            this.imgSrc = '/assets/img/anupreet_logo.png';
+            this.schoolPrintName = 'ANUPREET PVT ITI';
+            this.complexFee = true;
         } else if (this.username === 'brightstarsalsalai') {
             this.color = 'green';
             this.btn_color = 'warning';
+            this.imgSrc = '/assets/img/bright_logo.jpg';
+            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
+            this.complexFee = false;
         } else if (this.username === 'brighthindi') {
             this.color = 'indigo';
             this.btn_color = 'primary';
+            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
+            this.imgSrc = '/assets/img/bright_logo.jpg';
+            this.complexFee = false;
         } else {
             this.color = 'red';
             this.btn_color = 'danger';
-            this.imgSrc = '/assets/img/angular2-logo-red.png';
+            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
+            this.imgSrc = '/assets/img/bright_logo.jpg';
+            this.complexFee = false;
         }
         this.appSection = 'student_profile';
     }

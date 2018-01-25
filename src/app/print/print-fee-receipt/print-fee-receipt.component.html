@@ -1,10 +1,10 @@
-<div class="container-fluid" style="height: 100vh">
-    <h3 align="center">
-        Bright Star Higher Secondary School
-    </h3>
+<div *ngIf='!user.complexFee' class="container-fluid" style="height: 100vh">
+    <h4 align="center">
+        {{user.schoolPrintName}}
+    </h4>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
-            <img src="http://www.iitcounseling.in/brightstarlogo.png" align="center" style="width: 20%; height: 20%"/>
+            <img  [attr.src]="user.imgSrc" align="center" style="width: 20%; height: 20%"/>
         </div>
     </div>
     <h6 align="center">
@@ -26,7 +26,7 @@
     </div>
     <div class="row">
         <h6 class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            Student Name:
+            Name:
         </h6>
         <h6 class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
             {{feeReceipt.studentName}}
@@ -56,6 +56,14 @@
             {{feeReceipt.amount}}
         </h6>
     </div>
+    <div class="row">
+        <h6 class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            In Words:
+        </h6>
+        <h6 class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            {{feeReceipt.amount | amountInWords}} Only
+        </h6>
+    </div>
     <div class="row" style="margin-top: 100px; padding-right: 20px">
         <h6 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 
@@ -71,16 +79,136 @@
     </div>
 
 </div>
-<!-- div class="container-fluid">
+<div *ngIf="user.complexFee" class="container-fluid">
+    <h4 align="center" style="font-weight: bold; text-decoration: underline;">{{user.schoolPrintName}}</h4>
+    <h4 align="center" style="font-weight: bold;">RECEIPT</h4>
+
     <div class="row">
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <a href="#">About</a>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="left">
+            <table>
+                <tr>
+                    <td style="padding-right: 1mm;">
+                        Receipt No.
+                    </td>
+                    <td>
+                        :
+                    </td>
+                    <td style="text-decoration: underline; padding-left: 1mm;">
+                        {{feeReceipt.receiptNumber}}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 1mm;">
+                        Student's Name
+                    </td>
+                    <td>
+                        :
+                    </td>
+                    <td style="text-decoration: underline; padding-left: 1mm;">
+                        {{feeReceipt.studentName}}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 1mm;">
+                        Father's Name
+                    </td>
+                    <td>
+                        :
+                    </td>
+                    <td style="text-decoration: underline; padding-left: 1mm;">
+                        {{feeReceipt.fatherName}}
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <img src="https://www.google.ca/images/srpr/logo11w.png" style="width: 100px">
-        </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <a href="#myModal1" data-toggle="modal">SHARE</a>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="right">
+            <table>
+                <tr>
+                    <td style="padding-right: 1mm;">
+                        Date
+                    </td>
+                    <td>
+                        :
+                    </td>
+                    <td style="text-decoration: underline; padding-left: 1mm;">
+                        {{feeReceipt.generationDateTime | date:'dd/MM/yyyy'}}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 1mm;">
+                        Standard
+                    </td>
+                    <td>
+                        :
+                    </td>
+                    <td style="text-decoration: underline; padding-left: 1mm;">
+                        {{feeReceipt.className}}
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
-</div -->
+
+    <div class="row" style="border-top: 1px solid black; border-bottom: 1px solid black">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="left">
+            <b>Particulars</b>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="right">
+            <b>Amount</b>
+        </div>
+    </div>
+
+    <div *ngIf="feeReceipt.tuitionFeeAmount > 0" class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="left">
+            Tution Fee
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="right">
+            Rs. {{feeReceipt.tuitionFeeAmount}}
+        </div>
+    </div>
+
+    <div *ngIf="feeReceipt.lateFeeAmount > 0" class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="left">
+            Late Fee
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="right">
+            Rs. {{feeReceipt.lateFeeAmount}}
+        </div>
+    </div>
+
+    <div *ngIf="feeReceipt.cautionMoneyAmount > 0" class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="left">
+            Caution Money
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="right">
+            Rs. {{feeReceipt.cautionMoneyAmount}}
+        </div>
+    </div>
+
+    <div class="row" style="border-top: 1px solid black">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="left">
+            Total Amount
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="right">
+            Rs. {{feeReceipt.amount}}
+        </div>
+    </div>
+
+    Rs. in Words : <span style="text-decoration: underline">{{feeReceipt.amount | amountInWords}} Only</span>
+
+    <div class="row" style="margin-top: 100px; padding-right: 20px">
+        <h6 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+        </h6>
+        <h6 class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="right">
+            (Receiver's Signature)
+        </h6>
+    </div>
+    <div class="row footer" style="padding-left: 15px; padding-right: 15px;">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-top: 1px solid black;">
+            Fees once deposited will not be refunded in any circumstances
+        </div>
+    </div>
+
+
+</div>

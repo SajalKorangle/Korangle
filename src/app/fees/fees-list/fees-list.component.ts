@@ -39,6 +39,7 @@ export class FeesListComponent {
       this.isLoading = true;
       this.feeListService.getFeeList(this.startDate, this.endDate).then(
           feesList => {
+              console.log(feesList);
               // for (let i = 0; i < 10000; ++i ) { }
               this.totalFees = 0;
               this.isLoading = false;

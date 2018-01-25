@@ -169,16 +169,16 @@ export class StudentProfileComponent implements OnInit {
         });
     }
 
-    printFeeReceipt(fee: Fee): void {
+    /*printFeeReceipt(fee: Fee): void {
         fee.fatherName = this.selectedStudent.fathersName;
-        fee.studentName = this.selectedStudent.name;
+        fee.studentName ` = this.selectedStudent.name;
         fee.className =  this.selectedClass.name;
         EmitterService.get('print-fee-receipt').emit(fee);
     }
 
     createNewFeeReceipt(): void {
         EmitterService.get('new-fee-receipt-modal').emit(this.newFeeReceipt);
-    }
+    }*/
 
     /*checkAuthentication(): void {
         this.authenticationService.checkAuthentication().then(

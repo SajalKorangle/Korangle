@@ -4,14 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
-// import {MdTableModule} from '@angular/material';
-// import {MdRadioGroup, MdRadioButton} from "@angular/material";
-// import {MaterialModule} from '@angular/material';
-// import { MatRadioGroup, MatRadioButton } from '@angular/material';
 import { MatRadioModule } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material';
-// import { NoConflictStyleCompatibilityMode } from '@angular/material';
+import { MatTooltipModule } from '@angular/material';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
 
@@ -42,6 +39,7 @@ import { NewFeesComponent } from './fees/new-fees/new-fees.component';
 import { FeesListComponent } from './fees/fees-list/fees-list.component';
 import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
 import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
+import { FeesTableListComponent } from './fees/fees-table-list/fees-table-list.component';
 
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { ExpensesComponent } from './expenses/expenses.component';
@@ -51,6 +49,7 @@ import { ConcessionListComponent } from './concession/concession-list/concession
 
 import { PrintComponent } from './print/print.component';
 import { MoneyFormatPipe } from './pipes/money-format.pipe';
+import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
 
 @NgModule({
     declarations: [
@@ -59,6 +58,7 @@ import { MoneyFormatPipe } from './pipes/money-format.pipe';
         FeesListComponent,
         NewFeesComponent,
         NewFeeReceiptComponent,
+        FeesTableListComponent,
 
         ExpensesComponent,
 
@@ -77,6 +77,7 @@ import { MoneyFormatPipe } from './pipes/money-format.pipe';
         PrintExpensesComponent,
         PrintComponent,
         MoneyFormatPipe,
+        AmountInWordsPipe,
         // MdRadioGroup,
         // MdRadioButton,
     ],
@@ -87,24 +88,20 @@ import { MoneyFormatPipe } from './pipes/money-format.pipe';
         ComponentsModule,
         RouterModule,
         AppRoutingModule,
-        // MdTableModule,
         BrowserAnimationsModule,
         CdkTableModule,
+
         MatRadioModule,
         MatSelectModule,
         MatCheckboxModule,
-        // MaterialModule,
-        // NoConflictStyleCompatibilityMode,
+        MatTooltipModule,
     ],
     exports: [
         CdkTableModule,
         MatRadioModule,
         MatSelectModule,
         MatCheckboxModule,
-        // MdTableModule,
-        // MaterialModule,
-        // MdRadioGroup,
-        // MdRadioButton,
+        MatTooltipModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

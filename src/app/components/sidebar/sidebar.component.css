@@ -8,6 +8,13 @@
     background: rgba(200, 200, 200, 0.2);
     /*color: #3C4858;*/
 }
+.subsectionDiv {
+    cursor: pointer;
+}
+
+.nav li > a {
+    cursor: pointer;
+}
 /*.sidebar .nav p,
 .off-canvas-sidebar .nav p {
     margin: 0;

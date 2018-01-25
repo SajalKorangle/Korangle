@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Fee } from '../../classes/fee';
 
 import { EmitterService } from '../../services/emitter.service';
-import set = Reflect.set;
 
 @Component({
     selector: 'app-print-fee-receipt',
@@ -11,6 +10,8 @@ import set = Reflect.set;
     styleUrls: ['./print-fee-receipt.component.css'],
 })
 export class PrintFeeReceiptComponent implements OnInit {
+
+    @Input() user;
 
     feeReceipt: Fee;
 
@@ -20,7 +21,6 @@ export class PrintFeeReceiptComponent implements OnInit {
             this.feeReceipt.copy(value);
             setTimeout(() => {
                 window.print();
-                console.log('nice printing');
             });
         });
     }

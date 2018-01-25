@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { EmitterService } from '../services/emitter.service';
 
@@ -9,11 +9,12 @@ import { EmitterService } from '../services/emitter.service';
 })
 export class PrintComponent implements OnInit {
 
+    @Input() user;
+
     printType = 'feeReceipt';
 
     ngOnInit(): void {
         EmitterService.get('print-fee-receipt').subscribe( value => {
-            console.log('in print component');
             this.printType = 'feeReceipt';
             setTimeout(() => {
                 EmitterService.get('print-fee-receipt-component').emit(value);
