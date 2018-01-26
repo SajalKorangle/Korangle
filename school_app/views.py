@@ -451,8 +451,6 @@ def get_student_data(student_object, user):
 			tempStudentFeeEntry = {}
 			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
 			tempStudentFeeEntry['amount'] = studentFeeEntry.amount
-			print(tempStudentFeeEntry['amount'])
-			print(student_data['feesDue'])
 			tempStudentFeeEntry['remark'] = studentFeeEntry.remark
 			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
 			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
