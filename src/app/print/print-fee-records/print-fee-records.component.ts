@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Fee } from '../../classes/fee';
 
@@ -11,12 +11,14 @@ import moment = require("moment");
     templateUrl: './print-fee-records.component.html',
     styleUrls: ['./print-fee-records.component.css'],
 })
-export class PrintFeeRecordsComponent implements OnInit {
+export class PrintFeeRecordsComponent implements OnInit, OnDestroy {
 
     feesList: any;
     startDate: any;
     endDate: any;
     totalFees = 0;
+
+    printFeeRecordsComponentSubscription: any;
 
     ngOnInit(): void {
         EmitterService.get('print-fee-records-component').subscribe( value => {
@@ -29,6 +31,10 @@ export class PrintFeeRecordsComponent implements OnInit {
                 window.print();
             });
         });
+    }
+
+    ngOnDestroy(): void {
+        this.printFeeRecordsComponentSubscription.unsubscribe();
     }
 
 }

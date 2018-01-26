@@ -73,7 +73,7 @@
                         </div>
                     </div>
 
-                    <div *ngIf='user.username!=="anupreet"' class="row">
+                    <div *ngIf='!user.complexFee' class="row">
                         <div class="col-md-2">
                             <div class="form-group form-black label-floating">
                                 <label class="control-label">Receipt No.</label>
@@ -103,7 +103,7 @@
                         </div>
                     </div>
 
-                    <div class="row" *ngIf="user.username==='anupreet'">
+                    <div class="row" *ngIf="user.complexFee">
                         <div class="col-md-12">
                             <button type="button"
                                     class="btn btn-{{user.btn_color}}"

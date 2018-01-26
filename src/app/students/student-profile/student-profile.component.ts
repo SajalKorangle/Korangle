@@ -7,7 +7,6 @@ import { ClassStudentListService } from '../../services/class-student-list.servi
 import { StudentService } from '../../services/student.service';
 import { NewFeeReceiptService } from '../../services/new-fee-receipt.service';
 import { AuthenticationService } from '../../services/authentication.service';
-import {EmitterService} from '../../services/emitter.service';
 import {NewConcessionService} from '../../services/new-concession.service';
 import {Concession} from '../../classes/concession';
 
@@ -85,7 +84,7 @@ export class StudentProfileComponent implements OnInit {
         this.isLoading = true;
         this.studentService.getStudentData(this.selectedStudent.dbId).then(
             student => {
-                console.log(student);
+                // console.log(student);
                 this.isLoading = false;
                 const breakLoop = false;
                 if (this.selectedStudent.dbId === student.dbId) {

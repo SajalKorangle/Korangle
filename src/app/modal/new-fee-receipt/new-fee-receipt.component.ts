@@ -1,25 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
-import {NewFeeReceiptService} from '../../services/new-fee-receipt.service';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import {EmitterService} from '../../services/emitter.service';
 
 @Component({
     selector: 'app-new-fee-receipt-modal',
     templateUrl: './new-fee-receipt.component.html',
     styleUrls: ['./new-fee-receipt.component.css'],
-    providers: [NewFeeReceiptService]
 })
-export class NewFeeReceiptComponent implements OnInit {
+export class NewFeeReceiptComponent implements OnInit, OnDestroy {
 
     @Input() user;
     newFeeReceipt: any;
-
-    constructor(newFeeReceiptService: NewFeeReceiptService) { }
+    newFeeReceiptModalSubscription: any;
 
     ngOnInit(): void {
         EmitterService.get('new-fee-receipt-modal').subscribe(value => {
             this.newFeeReceipt = value;
             document.getElementById('openNewFeeReceiptModal').click();
         });
+    }
+
+    ngOnDestroy(): void {
+        this.newFeeReceiptModalSubscription.unsubscribe();
     }
 
     submitFeeReceipt(): void {

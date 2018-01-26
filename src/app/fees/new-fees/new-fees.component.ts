@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 import { Student } from '../../classes/student';
 import { Classs } from '../../classes/classs';
@@ -18,7 +18,7 @@ import moment = require('moment');
     styleUrls: ['./new-fees.component.css'],
     providers: [ ClassStudentListService, StudentService, NewFeeReceiptService, NewConcessionService ],
 })
-export class NewFeesComponent implements OnInit {
+export class NewFeesComponent implements OnInit, OnDestroy {
 
     @Input() user;
 
@@ -29,6 +29,7 @@ export class NewFeesComponent implements OnInit {
     newConcession: Concession;
     // noStudentForSelectedClass = true;
     currentStudent: Student = new Student();
+    submitNewFeeReceiptSubscription: any;
 
     isLoading = false;
 
@@ -57,7 +58,7 @@ export class NewFeesComponent implements OnInit {
         this.newFeeReceipt = new Fee();
         this.newFeeReceipt.generationDateTime = moment(new Date()).format('YYYY-MM-DD');
         this.newConcession = new Concession();
-        EmitterService.get('submit-new-fee-receipt').subscribe(value => {
+        this.submitNewFeeReceiptSubscription = EmitterService.get('submit-new-fee-receipt').subscribe(value => {
             this.submitFee();
         });
         this.classStudentListService.getIndex().then(
@@ -79,6 +80,10 @@ export class NewFeesComponent implements OnInit {
                 this.populateSelectStudent();
             }
         );
+    }
+
+    ngOnDestroy(): void {
+        this.submitNewFeeReceiptSubscription.unsubscribe();
     }
 
     getStudentData(): void {

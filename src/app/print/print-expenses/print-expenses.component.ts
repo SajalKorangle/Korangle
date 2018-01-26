@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Expense } from '../../classes/expense';
 
@@ -11,15 +11,17 @@ import moment = require("moment");
     templateUrl: './print-expenses.component.html',
     styleUrls: ['./print-expenses.component.css'],
 })
-export class PrintExpensesComponent implements OnInit {
+export class PrintExpensesComponent implements OnInit, OnDestroy {
 
     expenseList: any;
     startDate: any;
     endDate: any;
     totalExpense = 0;
 
+    printExpensesComponentSubscription: any;
+
     ngOnInit(): void {
-        EmitterService.get('print-expenses-component').subscribe( value => {
+        this.printExpensesComponentSubscription = EmitterService.get('print-expenses-component').subscribe( value => {
             this.expenseList = value['expenseList'];
             this.startDate = moment(value['startDate']).format('DD-MM-YYYY');
             this.endDate = moment(value['endDate']).format('DD-MM-YYYY');
@@ -28,6 +30,10 @@ export class PrintExpensesComponent implements OnInit {
                 window.print();
             });
         });
+    }
+
+    ngOnDestroy(): void {
+        this.printExpensesComponentSubscription.unsubscribe();
     }
 
 }

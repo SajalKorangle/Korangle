@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { User } from './classes/user';
 import {AuthenticationService} from './services/authentication.service';
-import { EmitterService } from './services/emitter.service';
 
 declare const $: any;
 
@@ -10,7 +9,7 @@ declare const $: any;
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-	providers: [AuthenticationService, EmitterService ],
+	providers: [AuthenticationService],
 })
 export class AppComponent implements OnInit {
 
