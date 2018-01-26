@@ -265,38 +265,6 @@ def new_fee_receipt_view(request):
 		if fee_receipt['cautionMoneyAmount'] != 0:
 			subFee_object = SubFee.objects.create(particular='CautionMoney', amount=fee_receipt['cautionMoneyAmount'], parentFee=fee_receipt_object)
 		response['message'] = 'Fee submitted successfully'
-		'''student_data = {}
-		student_data['name'] = student_object.name
-		student_data['dbId'] = student_object.id
-		student_data['fathersName'] = student_object.fathersName
-		student_data['mobileNumber'] = student_object.mobileNumber
-		student_data['dateOfBirth'] = student_object.dateOfBirth
-		student_data['totalFees'] = student_object.totalFees
-		student_data['remark'] = student_object.remark
-		student_data['scholarNumber'] = student_object.scholarNumber
-		student_data['class'] = student_object.parentClass.name
-		student_data['feesList'] = []
-		student_data['feesDue'] = student_object.totalFees
-		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user).aggregate(Max('receiptNumber'))
-		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
-		for studentFeeEntry in student_object.fee_set.all():
-			tempStudentFeeEntry = {}
-			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
-			tempStudentFeeEntry['amount'] = studentFeeEntry.amount
-			tempStudentFeeEntry['remark'] = studentFeeEntry.remark
-			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
-			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
-			student_data['feesDue'] -= studentFeeEntry.amount
-			student_data['feesList'].append(tempStudentFeeEntry)
-		student_data['concessionList'] = []
-		for studentConcessionEntry in student_object.concession_set.all():
-			tempStudentConcessionEntry = {}
-			tempStudentConcessionEntry['amount'] = studentConcessionEntry.amount
-			tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
-			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
-			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
-			student_data['feesDue'] -= studentConcessionEntry.amount
-			student_data['concessionList'].append(tempStudentConcessionEntry)'''
 		student_data = get_student_data(student_object,request.user)
 		response['studentData'] = student_data
 		return JsonResponse({'data': response})
@@ -483,6 +451,8 @@ def get_student_data(student_object, user):
 			tempStudentFeeEntry = {}
 			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
 			tempStudentFeeEntry['amount'] = studentFeeEntry.amount
+			print(tempStudentFeeEntry['amount'])
+			print(student_data['feesDue'])
 			tempStudentFeeEntry['remark'] = studentFeeEntry.remark
 			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
 			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id

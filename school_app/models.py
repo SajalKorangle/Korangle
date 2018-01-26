@@ -24,7 +24,7 @@ class Student(models.Model):
 	fathersName = models.CharField(max_length=100)
 	mobileNumber = models.IntegerField(null=True)
 	scholarNumber = models.TextField(null=True)
-	totalFees = models.IntegerField(null=True)
+	totalFees = models.IntegerField(default=0)
 	dateOfBirth = models.DateField(null=True)
 	remark = models.TextField(null=True)
 	parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
