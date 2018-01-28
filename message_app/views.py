@@ -562,7 +562,56 @@ import argparse
 
 from .pdfrwmaster.pdfrw import PdfReader, PdfWriter, PageMerge
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
 @api_view(['POST'])
+def get_booklet(request):
+	if request.user.is_authenticated:
+		print(request.FILES)
+		myfile = request.FILES['file']
+		fs = FileSystemStorage()
+
+		filename = request.user.username
+		try:
+			os.remove('./helloworld_project/media/'+filename+'.pdf')
+		except OSError:
+			pass
+
+		fs.save(filename+'.pdf',myfile)
+		
+		inpfn = './helloworld_project/media/'+filename+'.pdf'
+		outfn = './helloworld_project/media/'+filename+'.booklet.pdf'
+		ipages = PdfReader(inpfn).pages
+
+		blankPages = PdfReader('./helloworld_project/media/onepage.pdf').pages
+		blankPage = blankPages.pop()
+
+		pad_to = 4
+
+    # Make sure we have a correct number of sides
+		#ipages += [None]*(-len(ipages)%pad_to)
+		ipages += [blankPage]*(-len(ipages)%pad_to)
+
+		opages = []
+		while len(ipages) > 2:
+				opages.append(fixpage(ipages.pop(), ipages.pop(0)))
+				opages.append(fixpage(ipages.pop(0), ipages.pop()))
+
+		opages += ipages
+
+		PdfWriter(outfn).addpages(opages).write()
+
+		return JsonResponse({'data': 'media/'+filename+'.booklet.pdf'})
+	else:
+		return JsonResponse({'data': 'error'})
+
+def fixpage(*pages):
+    result = PageMerge() + (x for x in pages if x is not None)
+    result[-1].x += result[0].w
+    return result.render()
+
+'''@api_view(['POST'])
 def print_booklet(request):
 	if request.method == "POST":
 
@@ -578,10 +627,10 @@ def print_booklet(request):
 		blankPage = blankPages.pop()
 
 		pad_to = 4
-		'''if args.padding:
-				pad_to = 4
-		else:
-				pad_to = 2'''
+		#if args.padding:
+		#		pad_to = 4
+		#else:
+		#		pad_to = 2
 
     # Make sure we have a correct number of sides
 		#ipages += [None]*(-len(ipages)%pad_to)
@@ -600,10 +649,22 @@ def print_booklet(request):
 
 		return JsonResponse({'data': 'media/booklet.Gig.pdf'})
 	else:
-		return JsonResponse({'data': 'error'})
+		return JsonResponse({'data': 'error'})'''
 
-def fixpage(*pages):
-    result = PageMerge() + (x for x in pages if x is not None)
-    result[-1].x += result[0].w
-    return result.render()
-
+'''@api_view(['POST'])
+def print_paper(request):
+	if request.user.is_authenticated:
+		print(request.data['paper'])
+		paperHTML = '<html><head>'
+		paperHTML += '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">'
+		paperHTML += '<link rel="stylesheet" href="./paper.css">'
+		paperHTML += '<style>table { font-size: '+str(request.data['zoomPercent']*0.3)+'mm; } </style>'
+		paperHTML += '</head><body>'
+		paperHTML += request.data['paper'] + '</body>'
+		paperHTMLFileHandle = open('./helloworld_project/media/Qlib.html',"w")
+		paperHTMLFileHandle.write(paperHTML)
+		paperHTMLFileHandle.close()
+		pdfkit.from_file('./helloworld_project/media/Qlib.html','./helloworld_project/media/Qlib.pdf')
+		return JsonResponse({'data': 'media/Qlib.pdf'})
+	else:
+		return JsonResponse({'data': 'error'})'''

@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 
-from .views import indices_view, questions_view, LoginUserView, UserDetailsView, NewUserView, save_paper, get_paper_list, get_paper, delete_paper, print_booklet
+from .views import indices_view, questions_view, LoginUserView, UserDetailsView, NewUserView, save_paper, get_paper_list, get_paper, delete_paper, get_booklet
 
 urlpatterns = [
 	url(r'^indices/', indices_view),
@@ -15,5 +15,7 @@ urlpatterns = [
 	url(r'^get-paper-list/', get_paper_list),
 	url(r'^get-paper/', get_paper),
 	url(r'^delete-paper/', delete_paper),
-	url(r'^print-booklet/', print_booklet),
+	# url(r'^print-booklet/', print_booklet),
+	# url(r'^print-paper/', print_paper),
+	url(r'^get-booklet/', get_booklet),
 ]
