@@ -120,11 +120,17 @@ export class User {
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
             this.imgSrc = '/assets/img/bright_logo.jpg';
             this.complexFee = false;
-        } else {
+        } else if (this.username === 'brightstar') {
             this.color = 'red';
             this.btn_color = 'danger';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
             this.imgSrc = '/assets/img/bright_logo.jpg';
+            this.complexFee = false;
+        } else if (this.username === 'eklavya') {
+            this.color = 'indigo';
+            this.btn_color = 'primary';
+            this.imgSrc = '/assets/img/eklavya_logo.png';
+            this.schoolPrintName = 'Eklavya School';
             this.complexFee = false;
         }
         this.appSection = 'student_profile';
