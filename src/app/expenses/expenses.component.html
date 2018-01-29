@@ -98,14 +98,15 @@
                     </div>
                 </div>
 
-                <ng-container *ngIf="isLoading">
-                    <div style="width: 100%; margin-top: 10mm;" align="center">
-                        <div class="loader"></div>
-                    </div>
-                </ng-container>
-
-            </div>
         </div>
+        </div>
+
+        <ng-container *ngIf="isLoading">
+            <!-- div class="loader-container" align="center">
+                <div class="loader"></div>
+            </div -->
+            <app-loading-spinner></app-loading-spinner>
+        </ng-container>
 
     </div>
 </div>

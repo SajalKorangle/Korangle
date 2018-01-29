@@ -332,15 +332,13 @@
 
                 </ng-container>
 
-                <ng-container *ngIf="isLoading">
-                    <div class="row">
-                        <div class="col-sm-12 justify-content-center">
-                            <div class="loader"></div>
-                        </div>
-                    </div>
-                </ng-container>
-
             </div>
         </div>
+        <ng-container *ngIf="isLoading">
+            <!-- div class="loader-container" align="center">
+                <div class="loader"></div>
+            </div -->
+            <app-loading-spinner></app-loading-spinner>
+        </ng-container>
     </div>
 </div>

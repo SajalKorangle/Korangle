@@ -1,4 +1,4 @@
-<div class="main-content">
+<div class="main-cont   ent">
     <div class="container-fluid">
         <div class="card" style="min-height: 100%">
             <div class="card-header" [attr.data-background-color]="user.color">
@@ -22,12 +22,20 @@
                     <div class="col-md-3">
                         <button type="button"
                                 class="btn btn-{{user.btn_color}}"
-                                (click)="getFeeList();">Submit</button><br>
+                                style="padding: 12px 15px"
+                                matTooltip="Get all the receipts b/w start and end date"
+                                tooltip-position="right"
+                                (click)="getFeeList();">
+                            <!-- u>Get</u --><i class="material-icons">search</i></button><br>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" align="right">
                         <button type="button"
                                 class="btn btn-{{user.btn_color}}"
-                                (click)="printFeeRecords();">Print</button><br>
+                                style="padding: 12px 15px; margin-right: 17px;"
+                                matTooltip="Print the following list"
+                                tooltip-position="left"
+                                (click)="printFeeRecords();">
+                            Print<i class="material-icons" style="margin-left: 15px;">print</i></button><br>
                     </div>
                 </div>
 
@@ -51,13 +59,15 @@
                     </div>
                 </div -->
 
-                <ng-container *ngIf="isLoading">
-                    <div style="width: 100%; margin-top: 10mm;" align="center">
-                        <div class="loader"></div>
-                    </div>
-                </ng-container>
-
             </div>
         </div>
+
+        <ng-container *ngIf="isLoading">
+            <!-- div class="loader-container" align="center">
+                <div class="loader"></div>
+            </div -->
+            <app-loading-spinner></app-loading-spinner>
+        </ng-container>
+
     </div>
 </div>

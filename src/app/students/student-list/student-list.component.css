@@ -20,8 +20,8 @@
 }
 
 .loader {
-    border: 8px solid #FFFFFF; /* White */
-    border-top: 8px solid Red; /* Red */
+    border: 8px solid #FFFFFF;
+    border-top: 8px solid Red;
     border-radius: 50%;
     width: 120px;
     height: 120px;

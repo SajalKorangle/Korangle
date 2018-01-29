@@ -34,14 +34,14 @@ export class User {
             subsection: [
                 {
                     path: 'student_profile',
-                    title: 'Profile',
+                    title: 'Update Profile',
                 },
                 {
                     path: 'student_list',
-                    title: 'List',
+                    title: 'View All',
                 }
             ] },
-        { path: 'fees', title: 'Fees',  icon: 'dashboard', class: '', showSubsection: false,
+        { path: 'fees', title: 'Fees',  icon: 'receipt', class: '', showSubsection: false,
             subsection: [
                 {
                     path: 'new_fees',

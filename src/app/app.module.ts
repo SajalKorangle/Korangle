@@ -39,7 +39,9 @@ import { NewFeesComponent } from './fees/new-fees/new-fees.component';
 import { FeesListComponent } from './fees/fees-list/fees-list.component';
 import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
 import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
+
 import { FeesTableListComponent } from './fees/fees-table-list/fees-table-list.component';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { ExpensesComponent } from './expenses/expenses.component';
@@ -58,7 +60,9 @@ import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
         FeesListComponent,
         NewFeesComponent,
         NewFeeReceiptComponent,
+
         FeesTableListComponent,
+        LoadingSpinnerComponent,
 
         ExpensesComponent,
 

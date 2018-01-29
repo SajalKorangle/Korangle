@@ -210,9 +210,10 @@
         </div>
 
         <ng-container *ngIf="isLoading">
-            <div style="width: 100%; margin-top: 10mm;" align="center">
-                <div class="loader" style="border-top: 8px solid {{user.color}}"></div>
-            </div>
+            <!-- div class="loader-container" align="center">
+                <div class="loader"></div>
+            </div -->
+            <app-loading-spinner></app-loading-spinner>
         </ng-container>
 
     </div>
