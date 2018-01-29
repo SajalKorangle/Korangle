@@ -101,6 +101,8 @@ def new_student_data_view(request):
 			student_object.totalFees = student_data['totalFees']
 		if student_data['remark']:
 			student_object.remark = student_data['remark']
+		if student_data['rollNumber']:
+			student_object.rollNumber = student_data['rollNumber']
 		if student_data['scholarNumber']:
 			student_object.scholarNumber = student_data['scholarNumber']
 		if 'motherName' in student_data:
@@ -147,6 +149,7 @@ def update_student_view(request):
 		updatedValues['dateOfBirth'] = student_data['dateOfBirth']
 		updatedValues['totalFees'] = student_data['totalFees']
 		updatedValues['remark'] = student_data['remark']
+		updatedValues['rollNumber'] = student_data['rollNumber']
 		updatedValues['scholarNumber'] = student_data['scholarNumber']
 
 		# new student profile data
@@ -215,6 +218,7 @@ def student_data_view(request):
 		student_data['dateOfBirth'] = student_query[0].dateOfBirth
 		student_data['totalFees'] = student_query[0].totalFees
 		student_data['remark'] = student_query[0].remark
+		student_data['rollNumber'] = student_query[0].rollNumber
 		student_data['scholarNumber'] = student_query[0].scholarNumber
 		student_data['class'] = student_query[0].parentClass.name
 		student_data['feesList'] = []
@@ -365,6 +369,7 @@ def new_concession_view(request):
 		student_data['dateOfBirth'] = student_object.dateOfBirth
 		student_data['totalFees'] = student_object.totalFees
 		student_data['remark'] = student_object.remark
+		student_data['rollNumber'] = student_object.rollNumber
 		student_data['scholarNumber'] = student_object.scholarNumber
 		student_data['class'] = student_object.parentClass.name
 		student_data['feesList'] = []
@@ -423,6 +428,7 @@ def get_student_data(student_object, user):
 		student_data['dateOfBirth'] = student_object.dateOfBirth
 		student_data['totalFees'] = student_object.totalFees
 		student_data['remark'] = student_object.remark
+		student_data['rollNumber'] = student_object.rollNumber
 		student_data['scholarNumber'] = student_object.scholarNumber
 		student_data['classDbId'] = student_object.parentClass.id
 		student_data['className'] = student_object.parentClass.name
@@ -522,6 +528,7 @@ def get_student_profile(student_object, user):
 		student_data['dateOfBirth'] = student_object.dateOfBirth
 		student_data['totalFees'] = student_object.totalFees
 		student_data['remark'] = student_object.remark
+		student_data['rollNumber'] = student_object.rollNumber
 		student_data['scholarNumber'] = student_object.scholarNumber
 		student_data['classDbId'] = student_object.parentClass.id
 		student_data['className'] = student_object.parentClass.name
