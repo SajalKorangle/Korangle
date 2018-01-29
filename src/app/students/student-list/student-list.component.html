@@ -91,6 +91,7 @@
                         <mat-option> <mat-checkbox [(ngModel)]="showSerialNumber" (click)="$event.stopPropagation();">Serial No.</mat-checkbox></mat-option>
                         <mat-option> <mat-checkbox [(ngModel)]="showName" (click)="$event.stopPropagation();">Name</mat-checkbox></mat-option>
                         <mat-option> <mat-checkbox [(ngModel)]="showClassName" (click)="$event.stopPropagation();">Class Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="showRollNumber" (click)="$event.stopPropagation();">Roll No.</mat-checkbox></mat-option>
                         <mat-option> <mat-checkbox [(ngModel)]="showFathersName" (click)="$event.stopPropagation();">Father's Name</mat-checkbox></mat-option>
                         <mat-option> <mat-checkbox [(ngModel)]="showMobileNumber" (click)="$event.stopPropagation();">Mobile No.</mat-checkbox></mat-option>
                         <mat-option> <mat-checkbox [(ngModel)]="showScholarNumber" (click)="$event.stopPropagation();">Scholar No.</mat-checkbox></mat-option>
@@ -133,6 +134,7 @@
                                 <th [class.hidden]="!showSerialNumber">S No.</th>
                                 <th [class.hidden]="!showName">Name</th>
                                 <th [class.hidden]="!showClassName">Class Name</th>
+                                <th [class.hidden]="!showRollNumber">Roll No.</th>
                                 <th [class.hidden]="!showFathersName">Father's Name</th>
                                 <th [class.hidden]="!showMobileNumber">Mobile No.</th>
                                 <th [class.hidden]="!showScholarNumber">Scholar No.</th>
@@ -160,6 +162,7 @@
                                     <td [class.hidden]="!showSerialNumber">{{student.serialNumber}}.</td>
                                     <td [class.hidden]="!showName">{{student.name}}</td>
                                     <td [class.hidden]="!showClassName">{{student.className}}</td>
+                                    <td [class.hidden]="!showRollNumber">{{student.rollNumber}}</td>
                                     <td [class.hidden]="!showFathersName">{{student.fathersName}}</td>
                                     <td [class.hidden]="!showMobileNumber">{{student.mobileNumber}}</td>
                                     <td [class.hidden]="!showScholarNumber">{{student.scholarNumber}}</td>

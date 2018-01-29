@@ -17,6 +17,7 @@ export class StudentListComponent implements OnInit {
     showSerialNumber = true;
     showName = true;
     showClassName = true;
+    showRollNumber = false;
     showFathersName = true;
     showMobileNumber = true;
     showScholarNumber = false;

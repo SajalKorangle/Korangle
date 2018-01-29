@@ -74,8 +74,16 @@
                         </div>
                     </div>
 
-                    <!-- Scholar No., Mother's Name, Total Fees, Fees Due -->
+                    <!-- Roll No., Scholar No., Mother's Name, Total Fees -->
                     <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Roll No.</label>
+                                <input type="text"
+                                       class="form-control"
+                                       [ngModel]="selectedStudent.rollNumber" (ngModelChange)="currentStudent.rollNumber=$event">
+                            </div>
+                        </div>
                         <div class="col-md-3">
                             <div class="form-group form-black label-floating">
                                 <label class="control-label">Scholar No.</label>
@@ -99,12 +107,6 @@
                                        class="form-control"
                                        [ngModel]="selectedStudent.totalFees" (ngModelChange)="currentStudent.totalFees=$event">
                                 <!-- input type="number" class="form-control" [value]="selectedStudent.totalFees" disabled -->
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Fees Due</label>
-                                <input type="number" class="form-control" [value]="selectedStudent.feesDue" disabled>
                             </div>
                         </div>
                     </div>

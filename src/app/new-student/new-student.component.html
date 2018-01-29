@@ -1,6 +1,6 @@
 <div class="main-content">
     <div class="container-fluid">
-        <div class="card" style="min-height: 100vh">
+        <div class="card">
             <div class="card-header" [attr.data-background-color]="user.color">
                 <h4 class="title">New Student</h4>
             </div>
@@ -229,6 +229,18 @@
                                 <input type="text"
                                        class="form-control"
                                        [(ngModel)]="newStudent.fatherAnnualIncome">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Roll No. -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group form-black label-floating">
+                                <label class="control-label">Roll No.</label>
+                                <input type="text"
+                                       class="form-control"
+                                       [(ngModel)]="newStudent.rollNumber">
                             </div>
                         </div>
                     </div>

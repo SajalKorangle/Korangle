@@ -8,6 +8,7 @@ export class Student {
     fathersName: string;
     mobileNumber: number;
     dateOfBirth: any;
+    rollNumber: any;
     scholarNumber: any;
     totalFees: number;
     feesDue = 0;
@@ -41,6 +42,7 @@ export class Student {
         this.fathersName = student.fathersName;
         this.mobileNumber = student.mobileNumber;
         this.dateOfBirth = student.dateOfBirth;
+        this.rollNumber = student.rollNumber;
         this.scholarNumber = student.scholarNumber;
         this.totalFees = student.totalFees;
         this.feesDue = student.feesDue;
