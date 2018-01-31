@@ -101,10 +101,10 @@ def new_student_data_view(request):
 			student_object.totalFees = student_data['totalFees']
 		if student_data['remark']:
 			student_object.remark = student_data['remark']
-		if student_data['rollNumber']:
-			student_object.rollNumber = student_data['rollNumber']
 		if student_data['scholarNumber']:
 			student_object.scholarNumber = student_data['scholarNumber']
+		if 'rollNumber' in student_data:
+			student_object.rollNumber = student_data['rollNumber']
 		if 'motherName' in student_data:
 			student_object.motherName = student_data['motherName']
 		if 'gender' in student_data:
@@ -561,3 +561,4 @@ def get_student_profile(student_object, user):
 		for studentConcessionEntry in student_object.concession_set.all():
 			student_data['feesDue'] -= studentConcessionEntry.amount
 		return student_data
+

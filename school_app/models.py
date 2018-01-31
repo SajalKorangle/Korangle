@@ -19,6 +19,13 @@ class Class(models.Model):
 		return self.parentUser.username + " --- " + self.name
 		"""return self.name"""
 
+class Subject(models.Model):
+	name = models.TextField(default='')
+	parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
+
+	def __str__(self):
+		return self.name
+
 class Student(models.Model):
 	name = models.CharField(max_length=100)
 	fathersName = models.CharField(max_length=100)
@@ -81,3 +88,12 @@ class Expense(models.Model):
 	def __str__(self):
 		"""A string representation of the model."""
 		return self.parentUser.username + " --- " + self.remark[:50]
+
+class Marks(models.Model):
+	marks = models.DecimalField(decimal_places=2,max_digits=10,default=0)
+	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
+	parentSubject = models.ForeignKey(Subject, on_delete=models.PROTECT, default=0)
+
+	def __str__(self):
+		return self.parentStudent.name + " --- " + self.parentSubject.name + " --- " + self.marks
+
