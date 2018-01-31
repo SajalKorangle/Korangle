@@ -16,6 +16,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     printFeeReceiptSubscription: any;
     printFeeRecordsSubscription: any;
     printExpensesSubscription: any;
+    printMarksheetSubscription: any;
 
     ngOnInit(): void {
         this.printFeeReceiptSubscription = EmitterService.get('print-fee-receipt').subscribe( value => {
@@ -36,12 +37,19 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-expenses-component').emit(value);
             });
         });
+        this.printMarksheetSubscription = EmitterService.get('print-marksheet').subscribe( value => {
+            this.printType = 'marksheet';
+            setTimeout( () => {
+                EmitterService.get('print-marksheet-component').emit(value);
+            });
+        });
     }
 
     ngOnDestroy(): void {
         this.printFeeReceiptSubscription.unsubscribe();
         this.printFeeRecordsSubscription.unsubscribe();
         this.printExpensesSubscription.unsubscribe();
+        this.printMarksheetSubscription.unsubscribe();
     }
 
 }

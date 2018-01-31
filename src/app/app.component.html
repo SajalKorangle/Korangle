@@ -22,6 +22,8 @@
 
             <app-new-student *ngIf="user.appSection==='new_student'" [user]="user"></app-new-student>
             <app-student-list *ngIf="user.appSection==='student_list'" [user]="user"></app-student-list>
+
+            <app-marksheet *ngIf="user.appSection==='marksheet'" [user]="user"></app-marksheet>
             <!--<div *ngIf="isMaps('maps')"> <app-footer></app-footer> </div>-->
         </div>
     </div>

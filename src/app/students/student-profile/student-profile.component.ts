@@ -29,7 +29,6 @@ export class StudentProfileComponent implements OnInit {
   newConcession: Concession;
   // noStudentForSelectedClass = true;
   currentStudent: Student = new Student();
-  gender = 'Female';
 
   isLoading = false;
 

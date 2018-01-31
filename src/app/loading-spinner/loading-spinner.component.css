@@ -1,6 +1,7 @@
 .loader-container {
     width: 100%;
     margin-top: 50vh;
+    z-index: 1000;
 }
 .loader {
     border: 8px solid #FFFFFF; /* White */

@@ -8,6 +8,7 @@ import { MatRadioModule } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material';
 import { MatTooltipModule } from '@angular/material';
+import { MatMenuModule } from '@angular/material';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
@@ -49,9 +50,13 @@ import { ExpensesComponent } from './expenses/expenses.component';
 import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
 import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
 
+import { MarksheetComponent } from './marksheet/marksheet.component';
+import { PrintMarksheetComponent } from "./print/print-marksheet/print-marksheet.component";
+
 import { PrintComponent } from './print/print.component';
 import { MoneyFormatPipe } from './pipes/money-format.pipe';
 import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
+import { GradePipe } from "./pipes/grade.pipe";
 
 @NgModule({
     declarations: [
@@ -69,6 +74,8 @@ import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
         NewConcessionComponent,
         ConcessionListComponent,
 
+        MarksheetComponent,
+
         StudentProfileComponent,
         StudentListComponent,
 
@@ -79,9 +86,12 @@ import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
         PrintFeeReceiptComponent,
         PrintFeeRecordsComponent,
         PrintExpensesComponent,
+        PrintMarksheetComponent,
         PrintComponent,
+
         MoneyFormatPipe,
         AmountInWordsPipe,
+        GradePipe,
         // MdRadioGroup,
         // MdRadioButton,
     ],
@@ -99,6 +109,7 @@ import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
         MatSelectModule,
         MatCheckboxModule,
         MatTooltipModule,
+        MatMenuModule,
     ],
     exports: [
         CdkTableModule,
@@ -106,6 +117,7 @@ import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
         MatSelectModule,
         MatCheckboxModule,
         MatTooltipModule,
+        MatMenuModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

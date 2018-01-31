@@ -65,6 +65,7 @@ export class User {
                 }
             ] },
         { path: 'new_student', title: 'New Student', icon: 'person', class: '', showSubsection: false, subsection: [] },
+        { path: 'marksheet', title: 'Marksheet', icon: 'layers', class: '', showSubsection: false, subsection: [] },
         /*{ path: 'test_subsection', title: 'Section With Sub', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {
@@ -108,31 +109,74 @@ export class User {
             this.imgSrc = '/assets/img/anupreet_logo.png';
             this.schoolPrintName = 'ANUPREET PVT ITI';
             this.complexFee = true;
+            this.removeMarksheet();
         } else if (this.username === 'brightstarsalsalai') {
             this.color = 'green';
             this.btn_color = 'warning';
             this.imgSrc = '/assets/img/bright_logo.jpg';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
             this.complexFee = false;
+            this.removeMarksheet();
         } else if (this.username === 'brighthindi') {
             this.color = 'indigo';
             this.btn_color = 'primary';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
             this.imgSrc = '/assets/img/bright_logo.jpg';
             this.complexFee = false;
+            this.removeMarksheet();
         } else if (this.username === 'brightstar') {
             this.color = 'red';
             this.btn_color = 'danger';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
             this.imgSrc = '/assets/img/bright_logo.jpg';
             this.complexFee = false;
+            this.removeMarksheet();
         } else if (this.username === 'eklavya') {
             this.color = 'indigo';
             this.btn_color = 'primary';
             this.imgSrc = '/assets/img/eklavya_logo.png';
             this.schoolPrintName = 'Eklavya School';
             this.complexFee = false;
+            this.addMarksheet();
         }
         this.appSection = 'student_profile';
     }
+
+    addMarksheet(): void {
+        let marksheetCheck = false;
+        this.ROUTES.forEach(
+            section => {
+                if (section.path === 'marksheet') {
+                    marksheetCheck = true;
+                    return;
+                }
+            }
+        );
+        if (marksheetCheck) { return; } else {
+            const tempSection = new Section();
+            tempSection.path = 'marksheet';
+            tempSection.title = 'Marksheet';
+            tempSection.icon = 'layers';
+            tempSection.class = '';
+            tempSection.showSubsection = false;
+            tempSection.subsection = [];
+            this.ROUTES.push(tempSection);
+        }
+    }
+
+    removeMarksheet(): void {
+        let index = 0;
+        this.ROUTES.forEach(
+            section => {
+                if (section.path === 'marksheet') {
+                    return;
+                }
+                ++index;
+            }
+        );
+        if (this.ROUTES.length === index) { return; } else {
+            this.ROUTES.splice( index, 1);
+        }
+    }
+
 }

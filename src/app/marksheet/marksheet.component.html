@@ -1,0 +1,74 @@
+<div class="main-content">
+    <div class="container-fluid">
+
+        <div class="card" style="min-height: 100%">
+            <div class="card-header" [attr.data-background-color]="user.color">
+                <h4 class="title">Student Marks</h4>
+            </div>
+            <div class="card-content">
+
+                Class:
+                <select [ngModel]="selectedClass"
+                        (ngModelChange)="onChangeSelectedClass($event)"
+                        style="margin-right: 15px">
+                    <ng-container>
+                        <option *ngFor = "let c of classList;" [ngValue]="c">{{c.name}}</option>
+                    </ng-container>
+                </select>
+
+                Student:
+                <select [(ngModel)]="selectedStudent"
+                        (ngModelChange)="getStudentData()"
+                        style="margin-right: 15px">
+                    <ng-container *ngIf="selectedClass">
+                        <option *ngFor="let c of selectedClass.studentList" [ngValue] = "c">{{c.name}}</option>
+                    </ng-container>
+                </select>
+
+
+                <ng-container *ngIf="selectedStudent && marksheet && !isLoading">
+
+                    <!-- table>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Marks</th>
+                        </tr>
+                        <tr *ngFor="let marks of marksheet.marks">
+                            <td>{{marks.subjectName}}</td>
+                            <td>
+                                <input{{marks.subjectName}}</td>
+                        </tr>
+                    </table -->
+
+                    <div class="row">
+                        <div class="col-md-3"  *ngFor="let marks of marksheet.marks">
+                            <div class="form-group">
+                                <div class="form-group form-black label-floating">
+                                    <label class="control-label" style="color: black;">{{marks.subjectName}}</label>
+                                    <input type="number"
+                                           class="form-control"
+                                           (ngModelChange)="marks.marks=$event"
+                                           [ngModel]="marks.marks | number: '1.0-2'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-{{user.btn_color}}" (click)="updateStudentMarksheet()">Update</button>
+                    <button type="submit" class="btn btn-{{user.btn_color}}" (click)="printMarksheet()">Print</button>
+
+                </ng-container>
+
+                <ng-container *ngIf="selectedClass && !selectedStudent">
+                    <br/>No Students in this class
+                </ng-container>
+
+            </div>
+        </div>
+
+        <ng-container *ngIf="isLoading">
+            <app-loading-spinner></app-loading-spinner>
+        </ng-container>
+
+    </div>
+</div>
