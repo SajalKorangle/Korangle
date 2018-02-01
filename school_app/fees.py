@@ -13,7 +13,7 @@ def fee_list_view(request):
 	if request.user.is_authenticated:
 		fee_list = []
 		time_period = json.loads(request.body.decode('utf-8'))
-		fee_query = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate']).order_by('generationDateTime')
+		fee_query = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate']).order_by('generationDateTime','receiptNumber')
 		for fee in fee_query:
 			tempFee = {}
 			tempFee['receiptNumber'] = fee.receiptNumber
