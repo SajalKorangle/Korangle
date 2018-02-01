@@ -550,7 +550,7 @@ def get_student_profile(student_object, user):
 		student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome
 
 		student_data['feesDue'] = student_object.totalFees
-		for studentFeeEntry in student_object.fee_set.all():
+		for studentFeeEntry in student_object.fee_set.all().order_by('-generationDateTime'):
 			lateFeeAmount = 0
 			lateFee = SubFee.objects.filter(parentFee=studentFeeEntry,particular='LateFee')
 			if lateFee:
