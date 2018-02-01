@@ -1,7 +1,9 @@
 # greetings/urls.py
 from django.conf.urls import url
 
-from .views import student_data_view, class_student_list_view, class_list_view, new_student_data_view, new_fee_receipt_view, fee_list_view, update_student_view, delete_student_view, new_expense_view, expense_list_view, new_concession_view, concession_list_view, student_data_class_list_view 
+from .views import student_data_view, class_student_list_view, class_list_view, new_student_data_view, new_fee_receipt_view, update_student_view, delete_student_view, new_expense_view, expense_list_view, new_concession_view, concession_list_view, student_data_class_list_view 
+
+from .fees import fee_list_view
 
 from .marksheet import get_student_marksheet, update_student_marksheet, delete_student_marksheet
 

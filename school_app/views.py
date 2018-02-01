@@ -275,7 +275,7 @@ def new_fee_receipt_view(request):
 	else:
 		return JsonResponse({'data': errResponse})
 
-@api_view(['POST'])
+'''@api_view(['POST'])
 def fee_list_view(request):
 	if request.user.is_authenticated:
 		fee_list = []
@@ -311,7 +311,7 @@ def fee_list_view(request):
 			fee_list.append(tempFee)
 		return JsonResponse({'data':fee_list})
 	else:
-		return JsonResponse({'data':'error'})
+		return JsonResponse({'data':'error'})'''
 
 @api_view(['POST'])
 def new_expense_view(request):
