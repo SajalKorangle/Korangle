@@ -495,7 +495,7 @@ def student_data_class_list_view(request):
 	if request.user.is_authenticated:
 
 		student_list = []
-		student_query = Student.objects.filter(parentClass__parentUser=request.user).order_by('parentClass__orderNumber')
+		student_query = Student.objects.filter(parentClass__parentUser=request.user).order_by('parentClass__orderNumber', 'name')
 		for student in student_query:
 			tempStudent = get_student_profile(student, request.user)
 			student_list.append(tempStudent)
