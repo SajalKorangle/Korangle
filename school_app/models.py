@@ -95,5 +95,5 @@ class Marks(models.Model):
 	parentSubject = models.ForeignKey(Subject, on_delete=models.PROTECT, default=0)
 
 	def __str__(self):
-		return self.parentStudent.name + " --- " + self.parentSubject.name + " --- " + self.marks
+		return self.parentStudent.name + " --- " + self.parentSubject.name + " --- " + str(self.marks)
 

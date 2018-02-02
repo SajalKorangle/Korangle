@@ -55,7 +55,8 @@ def get_student_marksheet(request):
 			tempMarks['marks'] = 0
 			tempMarks['dbId'] = 0
 			marks = Marks.objects.filter(parentSubject=subject, parentStudent=student)
-			if marks[0]:
+			#if marks[0]:
+			if len(marks) > 0:
 				tempMarks['marks'] = marks[0].marks
 				tempMarks['dbId'] = marks[0].id
 			marksheet['marks'].append(tempMarks)
