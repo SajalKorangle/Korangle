@@ -39,46 +39,8 @@
                     </mat-select>
                 </mat-form-field>
 
-                <!-- Other Filters -->
-                <mat-form-field style="margin-right: 15px;">
-                    <mat-select placeholder="Filters">
-                        <mat-option>
-                            <mat-checkbox [(ngModel)]="scSelected"
-                                          style="margin-right: 5px;"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">SC,</mat-checkbox>
-                            <mat-checkbox [(ngModel)]="stSelected"
-                                          style="margin-right: 5px;"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">ST,</mat-checkbox>
-                            <mat-checkbox [(ngModel)]="obcSelected"
-                                          style="margin-right: 5px;"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">OBC,</mat-checkbox>
-                            <mat-checkbox [(ngModel)]="generalSelected"
-                                          style="margin-right: 5px;"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">Gen.</mat-checkbox>
-                        </mat-option>
-                        <mat-option>
-                            <mat-checkbox [(ngModel)]="maleSelected"
-                                          style="margin-right: 5px;"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">M</mat-checkbox>
-                            <mat-checkbox [(ngModel)]="femaleSelected"
-                                          style="margin-right: 5px;"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">F</mat-checkbox>
-                            <mat-checkbox [(ngModel)]="otherGenderSelected"
-                                          style="margin-right: 5px;"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">Other</mat-checkbox>
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
                 <!-- Column Filter -->
-                <mat-form-field style="float: right;">
+                <mat-form-field style="margin-right: 15px;">
                     <mat-select placeholder="Which Columns">
                         <mat-option>
                             <button class="btn"
@@ -123,8 +85,45 @@
                     </mat-select>
                 </mat-form-field>
 
+                <!-- Other Filters -->
+                <mat-form-field style="float: right;">
+                    <mat-select placeholder="Filters">
+                        <mat-option>
+                            <mat-checkbox [(ngModel)]="scSelected"
+                                          style="margin-right: 5px;"
+                                          (ngModelChange)="handleStudentDisplay()"
+                                          (click)="$event.stopPropagation();">SC,</mat-checkbox>
+                            <mat-checkbox [(ngModel)]="stSelected"
+                                          style="margin-right: 5px;"
+                                          (ngModelChange)="handleStudentDisplay()"
+                                          (click)="$event.stopPropagation();">ST,</mat-checkbox>
+                            <mat-checkbox [(ngModel)]="obcSelected"
+                                          style="margin-right: 5px;"
+                                          (ngModelChange)="handleStudentDisplay()"
+                                          (click)="$event.stopPropagation();">OBC,</mat-checkbox>
+                            <mat-checkbox [(ngModel)]="generalSelected"
+                                          style="margin-right: 5px;"
+                                          (ngModelChange)="handleStudentDisplay()"
+                                          (click)="$event.stopPropagation();">Gen.</mat-checkbox>
+                        </mat-option>
+                        <mat-option>
+                            <mat-checkbox [(ngModel)]="maleSelected"
+                                          style="margin-right: 5px;"
+                                          (ngModelChange)="handleStudentDisplay()"
+                                          (click)="$event.stopPropagation();">M</mat-checkbox>
+                            <mat-checkbox [(ngModel)]="femaleSelected"
+                                          style="margin-right: 5px;"
+                                          (ngModelChange)="handleStudentDisplay()"
+                                          (click)="$event.stopPropagation();">F</mat-checkbox>
+                            <mat-checkbox [(ngModel)]="otherGenderSelected"
+                                          style="margin-right: 5px;"
+                                          (ngModelChange)="handleStudentDisplay()"
+                                          (click)="$event.stopPropagation();">Other</mat-checkbox>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
-                <br><i>Showing {{displayStudentNumber}} out of {{studentList.length}} students</i>
+                <br><i>Selected {{displayStudentNumber}} out of {{studentList.length}} students</i>
 
                 <!-- Student Table List -->
                 <ng-container *ngIf="!isLoading">

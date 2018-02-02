@@ -45,11 +45,9 @@ export class StudentProfileComponent implements OnInit {
 
     populateSelectStudent(): void {
         if (this.selectedClass.studentList.length !== 0) {
-            // this.noStudentForSelectedClass = false;
             this.selectedStudent = this.selectedClass.studentList[0];
-            this.getStudentData();
+            // this.getStudentData();
         } else {
-            // this.noStudentForSelectedClass = true;
             this.selectedStudent = null;
         }
     }
@@ -165,6 +163,13 @@ export class StudentProfileComponent implements OnInit {
             this.isLoading = false;
             alert('Server Error: Contact admin');
         });
+    }
+
+    checkFieldChanged(selectedValue, currentValue): boolean {
+        if (selectedValue !== currentValue && !(selectedValue == null && currentValue === '')) {
+            return true;
+        }
+        return false;
     }
 
     /*printFeeReceipt(fee: Fee): void {

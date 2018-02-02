@@ -1,11 +1,11 @@
 <table class="table table-hover">
     <thead class="text-{{user.btn_color}}">
         <tr>
-            <th align="center">Receipt No.</th>
-            <th align="center" *ngIf="!whileSubmittingFee">Name</th>
-            <th align="center" *ngIf="!whileSubmittingFee">Class</th>
-            <th align="center">Amount</th>
-            <th align="center">Date</th>
+            <th>Receipt No.</th>
+            <th class="text-center" *ngIf="!whileSubmittingFee">Name</th>
+            <th class="text-center" *ngIf="!whileSubmittingFee">Class</th>
+            <th class="text-right">Amount</th>
+            <th class="text-center">Date</th>
             <th class="text-center">Remark</th>
             <th class="text-center" *ngIf="user.complexFee">Bifurcation</th>
             <th class="text-center">-</th>
@@ -13,11 +13,11 @@
     </thead>
     <tbody>
         <tr *ngFor="let feeEntry of feesList">
-            <td align="right">{{feeEntry.receiptNumber}}</td>
+            <td>{{feeEntry.receiptNumber}}</td>
             <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.studentName}}</td>
             <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.className}}</td>
-            <td align="right">{{feeEntry.amount}}</td>
-            <td align="center">{{feeEntry.generationDateTime}}</td>
+            <td style="padding-right: 15px;" align="right">{{feeEntry.amount}}</td>
+            <td align="center">{{feeEntry.generationDateTime | date: 'dd/MM/yyyy'}}</td>
             <td align="center">{{feeEntry.remark}}</td>
             <td align="center" *ngIf="user.complexFee">
                 <span *ngIf="feeEntry.tuitionFeeAmount!==0">TutionFee: {{feeEntry.tuitionFeeAmount}},</span>

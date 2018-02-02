@@ -14,16 +14,16 @@ export class StudentListComponent implements OnInit {
 
     @Input() user;
 
-    showSerialNumber = true;
-    showName = true;
-    showClassName = true;
+    showSerialNumber = false;
+    showName = false;
+    showClassName = false;
     showRollNumber = false;
-    showFathersName = true;
-    showMobileNumber = true;
+    showFathersName = false;
+    showMobileNumber = false;
     showScholarNumber = false;
     showDateOfBirth = false;
-    showTotalFees = true;
-    showFeesDue = true;
+    showTotalFees = false;
+    showFeesDue = false;
     showMotherName = false;
     showGender = false;
     showCaste = false;
@@ -40,15 +40,15 @@ export class StudentListComponent implements OnInit {
     showFatherAnnualIncome = false;
 
     /* Category Options */
-    scSelected = true;
-    stSelected = true;
-    obcSelected = true;
-    generalSelected = true;
+    scSelected = false;
+    stSelected = false;
+    obcSelected = false;
+    generalSelected = false;
 
     /* Gender Options */
-    maleSelected = true;
-    femaleSelected = true;
-    otherGenderSelected = true;
+    maleSelected = false;
+    femaleSelected = false;
+    otherGenderSelected = false;
 
     displayStudentNumber = 0;
 
@@ -73,15 +73,14 @@ export class StudentListComponent implements OnInit {
                 this.classList = data['classList'];
                 this.classList.forEach(
                     classs => {
-                        classs.selected = true;
+                        classs.selected = false;
                     }
                 );
                 let serialNumber = 0;
                 this.displayStudentNumber = 0;
                 this.studentList.forEach(
                     student => {
-                        student.show = true;
-                        ++this.displayStudentNumber;
+                        student.show = false;
                         student.serialNumber = ++serialNumber;
                         this.classList.forEach(
                             classs => {
@@ -142,6 +141,7 @@ export class StudentListComponent implements OnInit {
         this.showAadharNum = true;
         this.showBloodGroup = true;
         this.showFatherAnnualIncome = true;
+        this.showRollNumber = true;
     }
 
     unselectAllColumns(): void {
@@ -168,6 +168,7 @@ export class StudentListComponent implements OnInit {
         this.showAadharNum = false;
         this.showBloodGroup = false;
         this.showFatherAnnualIncome = false;
+        this.showRollNumber = false;
     }
 
     handleStudentDisplay(): void {
@@ -183,7 +184,8 @@ export class StudentListComponent implements OnInit {
                 }
 
                 /* Category Check */
-                if (!(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected)) {
+                if (!(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected)
+                        && !(!this.scSelected && !this.stSelected && !this.obcSelected && !this.generalSelected)) {
                     if (student.category === null || student.category === '') {
                         student.show = false;
                         return;
@@ -217,7 +219,8 @@ export class StudentListComponent implements OnInit {
                 }
 
                 /* Gender Check */
-                if (!(this.maleSelected && this.femaleSelected && this.otherGenderSelected)) {
+                if (!(this.maleSelected && this.femaleSelected && this.otherGenderSelected)
+                        && !(!this.maleSelected && !this.femaleSelected && !this.otherGenderSelected)) {
                     if (student.gender === null || student.gender === '') {
                         student.show = false;
                         return;

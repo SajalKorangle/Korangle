@@ -125,8 +125,10 @@ export class User {
             this.complexFee = false;
             this.removeMarksheet();
         } else if (this.username === 'brightstar') {
-            this.color = 'red';
-            this.btn_color = 'danger';
+            // this.color = 'red';
+            // this.btn_color = 'danger';
+            this.color = 'green';
+            this.btn_color = 'warning';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
             this.imgSrc = '/assets/img/bright_logo.jpg';
             this.complexFee = false;
