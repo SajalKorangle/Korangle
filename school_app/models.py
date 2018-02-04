@@ -67,7 +67,7 @@ class Fee(models.Model):
 
 class SubFee(models.Model):
 	particular = models.TextField()
-	amount = models.IntegerField()
+	amount = models.IntegerField(default=0)
 	parentFee = models.ForeignKey(Fee, on_delete=models.PROTECT, default=0)
 
 class Concession(models.Model):
