@@ -38,25 +38,27 @@ import { LoginComponent } from './authentication/login.component';
 import { NewFeeReceiptComponent } from './modal/new-fee-receipt/new-fee-receipt.component';
 import { NewFeesComponent } from './fees/new-fees/new-fees.component';
 import { FeesListComponent } from './fees/fees-list/fees-list.component';
-import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
-import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
 
 import { FeesTableListComponent } from './fees/fees-table-list/fees-table-list.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
-import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 
 import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
 import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
 
 import { MarksheetComponent } from './marksheet/marksheet.component';
-import { PrintMarksheetComponent } from "./print/print-marksheet/print-marksheet.component";
 
 import { PrintComponent } from './print/print.component';
+import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
+import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
+import { PrintMarksheetComponent } from './print/print-marksheet/print-marksheet.component';
+import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
+import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
+
 import { MoneyFormatPipe } from './pipes/money-format.pipe';
 import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
-import { GradePipe } from "./pipes/grade.pipe";
+import { GradePipe } from './pipes/grade.pipe';
 
 @NgModule({
     declarations: [
@@ -87,6 +89,7 @@ import { GradePipe } from "./pipes/grade.pipe";
         PrintFeeRecordsComponent,
         PrintExpensesComponent,
         PrintMarksheetComponent,
+        PrintStudentListComponent,
         PrintComponent,
 
         MoneyFormatPipe,

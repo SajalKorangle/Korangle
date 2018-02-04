@@ -21,7 +21,7 @@ export class PrintFeeRecordsComponent implements OnInit, OnDestroy {
     printFeeRecordsComponentSubscription: any;
 
     ngOnInit(): void {
-        EmitterService.get('print-fee-records-component').subscribe( value => {
+        this.printFeeRecordsComponentSubscription = EmitterService.get('print-fee-records-component').subscribe( value => {
             console.log('in print fee records component');
             this.feesList = value['feesList'];
             this.startDate = moment(value['startDate']).format('DD-MM-YYYY');

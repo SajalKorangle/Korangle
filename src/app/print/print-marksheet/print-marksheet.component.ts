@@ -17,7 +17,7 @@ export class PrintMarksheetComponent implements OnInit, OnDestroy {
     printMarksheetComponentSubscription: any;
 
     ngOnInit(): void {
-        EmitterService.get('print-marksheet-component').subscribe( value => {
+        this.printMarksheetComponentSubscription = EmitterService.get('print-marksheet-component').subscribe( value => {
             this.marksheet = value;
             this.totalMarks = 0.0;
             this.marksheet.marks.forEach(

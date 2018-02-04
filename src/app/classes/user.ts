@@ -140,6 +140,13 @@ export class User {
             this.schoolPrintName = 'Eklavya School';
             this.complexFee = false;
             this.addMarksheet();
+        } else if (this.username === 'demo') {
+            this.color = 'green';
+            this.btn_color = 'warning';
+            this.schoolPrintName = 'Demo School';
+            this.imgSrc = '/assets/img/angular2-logo-red.png';
+            this.complexFee = true;
+            this.removeMarksheet();
         }
         this.appSection = 'student_profile';
     }
@@ -182,3 +189,11 @@ export class User {
     }
 
 }
+
+/*
+    demo, user1234
+    brightstar, bright123
+    brighthindi, hindi123
+    eklavya, ashta123
+    anupreet, itisjp123
+ */

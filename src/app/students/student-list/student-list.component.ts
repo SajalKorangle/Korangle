@@ -2,24 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { Student } from '../../classes/student';
 import { Classs } from '../../classes/classs';
+import { EmitterService } from "../../services/emitter.service";
 import { StudentService } from '../../services/student.service';
 
-@Component({
-    selector: 'app-student-list',
-    templateUrl: './student-list.component.html',
-    styleUrls: ['./student-list.component.css'],
-    providers: [ StudentService ],
-})
-export class StudentListComponent implements OnInit {
-
-    @Input() user;
-
-    showSerialNumber = false;
-    showName = false;
+class ColumnFilter {
+    showSerialNumber = true;
+    showName = true;
     showClassName = false;
     showRollNumber = false;
-    showFathersName = false;
-    showMobileNumber = false;
+    showFathersName = true;
+    showMobileNumber = true;
     showScholarNumber = false;
     showDateOfBirth = false;
     showTotalFees = false;
@@ -30,7 +22,7 @@ export class StudentListComponent implements OnInit {
     showCategory = false;
     showReligion = false;
     showFatherOccupation = false;
-    showAddress = false;
+    showAddress = true;
     showChildSSMID = false;
     showFamilySSMID = false;
     showBankName = false;
@@ -38,6 +30,20 @@ export class StudentListComponent implements OnInit {
     showAadharNum = false;
     showBloodGroup = false;
     showFatherAnnualIncome = false;
+}
+
+@Component({
+    selector: 'app-student-list',
+    templateUrl: './student-list.component.html',
+    styleUrls: ['./student-list.component.css'],
+    providers: [ StudentService ],
+})
+
+export class StudentListComponent implements OnInit {
+
+    @Input() user;
+
+    columnFilter: ColumnFilter;
 
     /* Category Options */
     scSelected = false;
@@ -66,6 +72,7 @@ export class StudentListComponent implements OnInit {
 
     ngOnInit(): void {
         this.isLoading = true;
+        this.columnFilter = new ColumnFilter();
         this.studentService.getStudentDataClassList().then(
             data => {
                 this.isLoading = false;
@@ -99,6 +106,16 @@ export class StudentListComponent implements OnInit {
         );
     }
 
+    printStudentList(): void {
+        const value = {
+            studentList: this.studentList,
+            columnFilter: this.columnFilter
+        };
+        value.studentList = this.studentList;
+        value.columnFilter = this.columnFilter;
+        EmitterService.get('print-student-list').emit(value);
+    }
+
     unselectAllClasses(): void {
         this.classList.forEach(
             classs => {
@@ -118,57 +135,57 @@ export class StudentListComponent implements OnInit {
     }
 
     selectAllColumns(): void {
-        this.showSerialNumber = true;
-        this.showName = true;
-        this.showClassName = true;
-        this.showFathersName = true;
-        this.showMobileNumber = true;
-        this.showScholarNumber = true;
-        this.showDateOfBirth = true;
-        this.showTotalFees = true;
-        this.showFeesDue = true;
-        this.showMotherName = true;
-        this.showGender = true;
-        this.showCaste = true;
-        this.showCategory = true;
-        this.showReligion = true;
-        this.showFatherOccupation = true;
-        this.showAddress = true;
-        this.showChildSSMID = true;
-        this.showFamilySSMID = true;
-        this.showBankName = true;
-        this.showBankAccountNum = true;
-        this.showAadharNum = true;
-        this.showBloodGroup = true;
-        this.showFatherAnnualIncome = true;
-        this.showRollNumber = true;
+        this.columnFilter.showSerialNumber = true;
+        this.columnFilter.showName = true;
+        this.columnFilter.showClassName = true;
+        this.columnFilter.showFathersName = true;
+        this.columnFilter.showMobileNumber = true;
+        this.columnFilter.showScholarNumber = true;
+        this.columnFilter.showDateOfBirth = true;
+        this.columnFilter.showTotalFees = true;
+        this.columnFilter.showFeesDue = true;
+        this.columnFilter.showMotherName = true;
+        this.columnFilter.showGender = true;
+        this.columnFilter.showCaste = true;
+        this.columnFilter.showCategory = true;
+        this.columnFilter.showReligion = true;
+        this.columnFilter.showFatherOccupation = true;
+        this.columnFilter.showAddress = true;
+        this.columnFilter.showChildSSMID = true;
+        this.columnFilter.showFamilySSMID = true;
+        this.columnFilter.showBankName = true;
+        this.columnFilter.showBankAccountNum = true;
+        this.columnFilter.showAadharNum = true;
+        this.columnFilter.showBloodGroup = true;
+        this.columnFilter.showFatherAnnualIncome = true;
+        this.columnFilter.showRollNumber = true;
     }
 
     unselectAllColumns(): void {
-        this.showSerialNumber = false;
-        this.showName = false;
-        this.showClassName = false;
-        this.showFathersName = false;
-        this.showMobileNumber = false;
-        this.showScholarNumber = false;
-        this.showDateOfBirth = false;
-        this.showTotalFees = false;
-        this.showFeesDue = false;
-        this.showMotherName = false;
-        this.showGender = false;
-        this.showCaste = false;
-        this.showCategory = false;
-        this.showReligion = false;
-        this.showFatherOccupation = false;
-        this.showAddress = false;
-        this.showChildSSMID = false;
-        this.showFamilySSMID = false;
-        this.showBankName = false;
-        this.showBankAccountNum = false;
-        this.showAadharNum = false;
-        this.showBloodGroup = false;
-        this.showFatherAnnualIncome = false;
-        this.showRollNumber = false;
+        this.columnFilter.showSerialNumber = false;
+        this.columnFilter.showName = false;
+        this.columnFilter.showClassName = false;
+        this.columnFilter.showFathersName = false;
+        this.columnFilter.showMobileNumber = false;
+        this.columnFilter.showScholarNumber = false;
+        this.columnFilter.showDateOfBirth = false;
+        this.columnFilter.showTotalFees = false;
+        this.columnFilter.showFeesDue = false;
+        this.columnFilter.showMotherName = false;
+        this.columnFilter.showGender = false;
+        this.columnFilter.showCaste = false;
+        this.columnFilter.showCategory = false;
+        this.columnFilter.showReligion = false;
+        this.columnFilter.showFatherOccupation = false;
+        this.columnFilter.showAddress = false;
+        this.columnFilter.showChildSSMID = false;
+        this.columnFilter.showFamilySSMID = false;
+        this.columnFilter.showBankName = false;
+        this.columnFilter.showBankAccountNum = false;
+        this.columnFilter.showAadharNum = false;
+        this.columnFilter.showBloodGroup = false;
+        this.columnFilter.showFatherAnnualIncome = false;
+        this.columnFilter.showRollNumber = false;
     }
 
     handleStudentDisplay(): void {

@@ -10,7 +10,7 @@
 
                 <!-- Class Filter -->
                 <mat-form-field style="margin-right: 15px;">
-                    <mat-select placeholder="Class" style="width: 100%;">
+                    <mat-select placeholder="Select Class" style="width: 100%;">
                         <mat-option>
                             <button class="btn"
                                     style="padding: 4px 7px"
@@ -41,7 +41,7 @@
 
                 <!-- Column Filter -->
                 <mat-form-field style="margin-right: 15px;">
-                    <mat-select placeholder="Which Columns">
+                    <mat-select placeholder="Select Columns">
                         <mat-option>
                             <button class="btn"
                                     style="padding: 4px 7px"
@@ -50,30 +50,30 @@
                                     style="padding: 4px 7px"
                                     (click)="unselectAllColumns(); $event.stopPropagation();">Clear All</button>
                         </mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showSerialNumber" (click)="$event.stopPropagation();">Serial No.</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showName" (click)="$event.stopPropagation();">Name</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showClassName" (click)="$event.stopPropagation();">Class Name</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showRollNumber" (click)="$event.stopPropagation();">Roll No.</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showFathersName" (click)="$event.stopPropagation();">Father's Name</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showMobileNumber" (click)="$event.stopPropagation();">Mobile No.</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showScholarNumber" (click)="$event.stopPropagation();">Scholar No.</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showDateOfBirth" (click)="$event.stopPropagation();">Date of Birth</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showTotalFees" (click)="$event.stopPropagation();">Total Fees</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showFeesDue" (click)="$event.stopPropagation();">Fees Due</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showMotherName" (click)="$event.stopPropagation();">Mother's Name</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showGender" (click)="$event.stopPropagation();">Gender</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showCaste" (click)="$event.stopPropagation();">Caste</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showCategory" (click)="$event.stopPropagation();">Category</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showReligion" (click)="$event.stopPropagation();">Religion</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showFatherOccupation" (click)="$event.stopPropagation();">Father's Occupation</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showAddress" (click)="$event.stopPropagation();">Address</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showChildSSMID" (click)="$event.stopPropagation();">Child SSMID</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showFamilySSMID" (click)="$event.stopPropagation();">Family SSMID</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showBankName" (click)="$event.stopPropagation();">Bank Name</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showBankAccountNum" (click)="$event.stopPropagation();">Bank Acc. No.</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showAadharNum" (click)="$event.stopPropagation();">Aadhar No.</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showBloodGroup" (click)="$event.stopPropagation();">Blood Group</mat-checkbox></mat-option>
-                        <mat-option> <mat-checkbox [(ngModel)]="showFatherAnnualIncome" (click)="$event.stopPropagation();">Father's Annual Income</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation();">Serial No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation();">Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showClassName" (click)="$event.stopPropagation();">Class Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showRollNumber" (click)="$event.stopPropagation();">Roll No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showFathersName" (click)="$event.stopPropagation();">Father's Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation();">Mobile No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation();">Scholar No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showDateOfBirth" (click)="$event.stopPropagation();">Date of Birth</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showTotalFees" (click)="$event.stopPropagation();">Total Fees</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showFeesDue" (click)="$event.stopPropagation();">Fees Due</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showMotherName" (click)="$event.stopPropagation();">Mother's Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showGender" (click)="$event.stopPropagation();">Gender</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showCaste" (click)="$event.stopPropagation();">Caste</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showCategory" (click)="$event.stopPropagation();">Category</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showReligion" (click)="$event.stopPropagation();">Religion</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showFatherOccupation" (click)="$event.stopPropagation();">Father's Occupation</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation();">Address</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showChildSSMID" (click)="$event.stopPropagation();">Child SSMID</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showFamilySSMID" (click)="$event.stopPropagation();">Family SSMID</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showBankName" (click)="$event.stopPropagation();">Bank Name</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showBankAccountNum" (click)="$event.stopPropagation();">Bank Acc. No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showAadharNum" (click)="$event.stopPropagation();">Aadhar No.</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showBloodGroup" (click)="$event.stopPropagation();">Blood Group</mat-checkbox></mat-option>
+                        <mat-option> <mat-checkbox [(ngModel)]="columnFilter.showFatherAnnualIncome" (click)="$event.stopPropagation();">Father's Annual Income</mat-checkbox></mat-option>
                         <mat-option>
                             <button class="btn"
                                     style="padding: 4px 7px"
@@ -84,6 +84,14 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+
+                <button type="button"
+                        class="btn btn-{{user.btn_color}}"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Print the following list"
+                        tooltip-position="left"
+                        (click)="printStudentList();">
+                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
 
                 <!-- Other Filters -->
                 <mat-form-field style="float: right;">
@@ -130,58 +138,58 @@
                     <table class="table table-hover">
                         <thead class="text-{{user.btn_color}}">
                             <tr>
-                                <th [class.hidden]="!showSerialNumber">S No.</th>
-                                <th [class.hidden]="!showName">Name</th>
-                                <th [class.hidden]="!showClassName">Class Name</th>
-                                <th [class.hidden]="!showRollNumber">Roll No.</th>
-                                <th [class.hidden]="!showFathersName">Father's Name</th>
-                                <th [class.hidden]="!showMobileNumber">Mobile No.</th>
-                                <th [class.hidden]="!showScholarNumber">Scholar No.</th>
-                                <th [class.hidden]="!showDateOfBirth">Date of Birth</th>
-                                <th [class.hidden]="!showTotalFees">Total Fees</th>
-                                <th [class.hidden]="!showFeesDue">Fees Due</th>
-                                <th [class.hidden]="!showMotherName">Mother's Name</th>
-                                <th [class.hidden]="!showGender">Gender</th>
-                                <th [class.hidden]="!showCaste">Caste</th>
-                                <th [class.hidden]="!showCategory">Category</th>
-                                <th [class.hidden]="!showReligion">Religion</th>
-                                <th [class.hidden]="!showFatherOccupation">Father's Occupation</th>
-                                <th [class.hidden]="!showAddress">Address</th>
-                                <th [class.hidden]="!showChildSSMID">Child SSMID</th>
-                                <th [class.hidden]="!showFamilySSMID">Family SSMID</th>
-                                <th [class.hidden]="!showBankName">Bank Name</th>
-                                <th [class.hidden]="!showBankAccountNum">Bank Acc. No.</th>
-                                <th [class.hidden]="!showAadharNum">Aadhar No.</th>
-                                <th [class.hidden]="!showBloodGroup">Blood Group</th>
-                                <th [class.hidden]="!showFatherAnnualIncome">Father's Annual Income</th>                            </tr>
+                                <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+                                <th [class.hidden]="!columnFilter.showName">Name</th>
+                                <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
+                                <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
+                                <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
+                                <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
+                                <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
+                                <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
+                                <th [class.hidden]="!columnFilter.showTotalFees">Total Fees</th>
+                                <th [class.hidden]="!columnFilter.showFeesDue">Fees Due</th>
+                                <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
+                                <th [class.hidden]="!columnFilter.showGender">Gender</th>
+                                <th [class.hidden]="!columnFilter.showCaste">Caste</th>
+                                <th [class.hidden]="!columnFilter.showCategory">Category</th>
+                                <th [class.hidden]="!columnFilter.showReligion">Religion</th>
+                                <th [class.hidden]="!columnFilter.showFatherOccupation">Father's Occupation</th>
+                                <th [class.hidden]="!columnFilter.showAddress">Address</th>
+                                <th [class.hidden]="!columnFilter.showChildSSMID">Child SSMID</th>
+                                <th [class.hidden]="!columnFilter.showFamilySSMID">Family SSMID</th>
+                                <th [class.hidden]="!columnFilter.showBankName">Bank Name</th>
+                                <th [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
+                                <th [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
+                                <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
+                                <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>                            </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let student of studentList; let i = index;" [class.hidden]="!student.show">
                                 <ng-container>
-                                    <td [class.hidden]="!showSerialNumber">{{student.serialNumber}}.</td>
-                                    <td [class.hidden]="!showName">{{student.name}}</td>
-                                    <td [class.hidden]="!showClassName">{{student.className}}</td>
-                                    <td [class.hidden]="!showRollNumber">{{student.rollNumber}}</td>
-                                    <td [class.hidden]="!showFathersName">{{student.fathersName}}</td>
-                                    <td [class.hidden]="!showMobileNumber">{{student.mobileNumber}}</td>
-                                    <td [class.hidden]="!showScholarNumber">{{student.scholarNumber}}</td>
-                                    <td [class.hidden]="!showDateOfBirth">{{student.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
-                                    <td [class.hidden]="!showTotalFees">{{student.totalFees}}</td>
-                                    <td [class.hidden]="!showFeesDue">{{student.feesDue}}</td>
-                                    <td [class.hidden]="!showMotherName">{{student.motherName}}</td>
-                                    <td [class.hidden]="!showGender">{{student.gender}}</td>
-                                    <td [class.hidden]="!showCaste">{{student.caste}}</td>
-                                    <td [class.hidden]="!showCategory">{{student.category}}</td>
-                                    <td [class.hidden]="!showReligion">{{student.religion}}</td>
-                                    <td [class.hidden]="!showFatherOccupation">{{student.fatherOccupation}}</td>
-                                    <td [class.hidden]="!showAddress">{{student.address}}</td>
-                                    <td [class.hidden]="!showChildSSMID">{{student.childSSMID}}</td>
-                                    <td [class.hidden]="!showFamilySSMID">{{student.familySSMID}}</td>
-                                    <td [class.hidden]="!showBankName">{{student.bankName}}</td>
-                                    <td [class.hidden]="!showBankAccountNum">{{student.bankAccountNum}}</td>
-                                    <td [class.hidden]="!showAadharNum">{{student.aadharNum}}</td>
-                                    <td [class.hidden]="!showBloodGroup">{{student.bloodGroup}}</td>
-                                    <td [class.hidden]="!showFatherAnnualIncome">{{student.fatherAnnualIncome}}</td>                                </ng-container>
+                                    <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
+                                    <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
+                                    <td [class.hidden]="!columnFilter.showClassName">{{student.className}}</td>
+                                    <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
+                                    <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
+                                    <td [class.hidden]="!columnFilter.showMobileNumber">{{student.mobileNumber}}</td>
+                                    <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
+                                    <td [class.hidden]="!columnFilter.showDateOfBirth">{{student.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
+                                    <td [class.hidden]="!columnFilter.showTotalFees">{{student.totalFees}}</td>
+                                    <td [class.hidden]="!columnFilter.showFeesDue">{{student.feesDue}}</td>
+                                    <td [class.hidden]="!columnFilter.showMotherName">{{student.motherName}}</td>
+                                    <td [class.hidden]="!columnFilter.showGender">{{student.gender}}</td>
+                                    <td [class.hidden]="!columnFilter.showCaste">{{student.caste}}</td>
+                                    <td [class.hidden]="!columnFilter.showCategory">{{student.category}}</td>
+                                    <td [class.hidden]="!columnFilter.showReligion">{{student.religion}}</td>
+                                    <td [class.hidden]="!columnFilter.showFatherOccupation">{{student.fatherOccupation}}</td>
+                                    <td [class.hidden]="!columnFilter.showAddress">{{student.address}}</td>
+                                    <td [class.hidden]="!columnFilter.showChildSSMID">{{student.childSSMID}}</td>
+                                    <td [class.hidden]="!columnFilter.showFamilySSMID">{{student.familySSMID}}</td>
+                                    <td [class.hidden]="!columnFilter.showBankName">{{student.bankName}}</td>
+                                    <td [class.hidden]="!columnFilter.showBankAccountNum">{{student.bankAccountNum}}</td>
+                                    <td [class.hidden]="!columnFilter.showAadharNum">{{student.aadharNum}}</td>
+                                    <td [class.hidden]="!columnFilter.showBloodGroup">{{student.bloodGroup}}</td>
+                                    <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{student.fatherAnnualIncome}}</td>                                </ng-container>
                             </tr>
                         </tbody>
                     </table>
@@ -194,7 +202,7 @@
             <!-- div style="width: 100%; margin-top: 10mm;" align="center">
                 <div class="loader"></div>
             </div -->
-            <app-loading-spinner></app-loading-spinner>
+            <app-loading-spinner [user]="user"></app-loading-spinner>
         </ng-container>
 
     </div>
