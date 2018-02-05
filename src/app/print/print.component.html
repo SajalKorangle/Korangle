@@ -1,5 +1,14 @@
+
 <app-print-fee-receipt [user]="user" [class.hideThisComponent]="printType!='feeReceipt'"></app-print-fee-receipt>
-<print-fee-records [class.hideThisComponent]="printType!='feeRecords'"></print-fee-records>
-<print-expenses [class.hideThisComponent]="printType!='expenses'"></print-expenses>
+
+<print-fee-records [user]="user" [class.hideThisComponent]="printType!='feeRecords'"></print-fee-records>
+
+<print-expenses [user]="user" [class.hideThisComponent]="printType!='expenses'"></print-expenses>
+
 <app-print-marksheet [class.hideThisComponent]="printType!='marksheet'"></app-print-marksheet>
+
 <app-print-student-list [class.hideThisComponent]="printType!='studentList'"></app-print-student-list>
+
+<app-print-transfer-certificate [class.hideThisComponent]="printType!='transferCertificate'"></app-print-transfer-certificate>
+
+<app-print-new-fee-receipt [user]="user" [class.hideThisComponent]="printType!='newFeeReceipt'"></app-print-new-fee-receipt>

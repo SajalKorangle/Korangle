@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { Expense } from '../../classes/expense';
 
@@ -12,6 +12,8 @@ import moment = require("moment");
     styleUrls: ['./print-expenses.component.css'],
 })
 export class PrintExpensesComponent implements OnInit, OnDestroy {
+
+    @Input() user;
 
     expenseList: any;
     startDate: any;

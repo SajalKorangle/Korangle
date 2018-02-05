@@ -25,6 +25,7 @@
                     </ng-container>
                 </select>
 
+                <button type="submit" class="btn btn-{{user.btn_color}}" (click)="printTransferCertificate()">Print Transfer Certificate</button>
 
                 <ng-container *ngIf="selectedStudent && marksheet && !isLoading">
 
@@ -56,6 +57,8 @@
 
                     <button type="submit" class="btn btn-{{user.btn_color}}" (click)="updateStudentMarksheet()">Update</button>
                     <button type="submit" class="btn btn-{{user.btn_color}}" (click)="printMarksheet()">Print</button>
+                    <button type="submit" class="btn btn-{{user.btn_color}}" (click)="printTransferCertificate()">Print Transfer Certificate</button>
+                    <button type="submit" class="btn btn-{{user.btn_color}}" (click)="printNewFeeReceipt()">Print Fee Receipt</button>
 
                 </ng-container>
 

@@ -144,4 +144,11 @@ export class MarksheetComponent implements OnInit {
         );
     }
 
+    printTransferCertificate(): void {
+        EmitterService.get('print-transfer-certificate').emit(this.marksheet);
+    }
+
+    printNewFeeReceipt(): void {
+        EmitterService.get('print-new-fee-receipt').emit(this.marksheet);
+    }
 }

@@ -1,4 +1,44 @@
-<table style="width: 100%">
+<div class="container-fluid" style="width: 100%">
+    <div class="row">
+        <div class="col-xs-12" align="center">
+            <h4><u>{{user.schoolPrintName}}</u></h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" align="center">
+            <span style="font-weight: 400"><u>Fees List</u></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            Total Fees: {{totalFees | currency:'INR':true:'1.1-1'}}
+        </div>
+        <div class="col-xs-6" align="right">
+            Date: {{startDate}} to {{endDate}}
+        </div>
+    </div>
+</div>
+<table class="table table-hover">
+    <thead style="font-weight: 400">
+    <tr>
+        <th>Receipt No.</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Class</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let feeEntry of feesList">
+        <td>{{feeEntry.receiptNumber}}</td>
+        <td>{{feeEntry.amount}}</td>
+        <td>{{feeEntry.generationDateTime}}</td>
+        <td>{{feeEntry.studentName}}</td>
+        <td>{{feeEntry.className}}</td>
+    </tr>
+    </tbody>
+</table>
+<!-- table style="width: 100%">
     <tr>
         <td align="left">
             Total Fees: {{totalFees | currency:'INR':true:'1.1-1'}}
@@ -19,7 +59,7 @@
         <td align="center">Date</td>
         <td align="center">Name</td>
         <td align="center">Class</td>
-        <!-- td align="center">Remark</td -->
+        Remark was here
     </tr>
     <tr *ngFor="let feeEntry of feesList">
         <td align="right">{{feeEntry.receiptNumber}}</td>
@@ -27,6 +67,6 @@
         <td align="center">{{feeEntry.generationDateTime}}</td>
         <td align="center">{{feeEntry.studentName}}</td>
         <td align="center">{{feeEntry.className}}</td>
-        <!-- td align="left">{{feeEntry.remark}}</td -->
+        Remark was here
     </tr>
-</table>
+</table -->
