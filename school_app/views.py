@@ -194,8 +194,8 @@ def delete_student_view(request):
 			return JsonResponse({"data": errResponse})
 		SubFee.objects.filter(parentFee__parentStudent=student_object).delete()
 		Fee.objects.filter(parentStudent=student_object).delete()
-		Concession.object.filter(parentStudent=student_object).delete()
-		Marks.object.filter(parentStudent=student_object).delete()
+		Concession.objects.filter(parentStudent=student_object).delete()
+		Marks.objects.filter(parentStudent=student_object).delete()
 		Student.objects.filter(pk=request.data['studentDbId']).delete()
 		response['studentDbId'] = request.data['studentDbId']
 		response['message'] = 'Student Profile removed successfully.'
