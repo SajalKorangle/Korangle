@@ -147,7 +147,11 @@ def update_student_view(request):
 		updatedValues['fathersName'] = student_data['fathersName']
 		updatedValues['mobileNumber'] = student_data['mobileNumber']
 		updatedValues['dateOfBirth'] = student_data['dateOfBirth']
-		updatedValues['totalFees'] = student_data['totalFees']
+		if student_data['totalFees']:
+			updatedValues['totalFees'] = student_data['totalFees']
+		else:
+			updatedValues['totalFees'] = 0
+
 		updatedValues['remark'] = student_data['remark']
 		updatedValues['rollNumber'] = student_data['rollNumber']
 		updatedValues['scholarNumber'] = student_data['scholarNumber']
