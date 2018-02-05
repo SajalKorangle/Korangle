@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from .models import Class, Student, Fee, Expense, Concession, SubFee
+from .models import Class, Student, Fee, Expense, Concession, SubFee, Marks
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from helloworld_project.settings import PROJECT_ROOT
