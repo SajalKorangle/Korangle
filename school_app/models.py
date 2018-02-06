@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# from .model_custom_field import CustomImageField
+
 # Create your models here.
 
 def get_user():
@@ -96,4 +98,19 @@ class Marks(models.Model):
 
 	def __str__(self):
 		return self.parentStudent.name + " --- " + self.parentSubject.name + " --- " + str(self.marks)
+
+'''class School(models.Model):
+	parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=get_user)
+	name = models.TextField(null=True)
+	printName = models.TextField(null=True)
+	logo = CustomImageField(use_key=True, upload_to='tmp')
+	primaryThemeColor = models.TextField(null=True)
+	secondaryThemeColor = models.TextField(null=True)
+	complexFeeStructure = models.BooleanField(null=True)
+
+	def get_upload_to(self, attname):
+			return 'path/to/{0}'.format(self.id)
+
+	def __str__(self):
+		return self.printName'''
 

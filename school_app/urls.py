@@ -7,7 +7,10 @@ from .fees import fee_list_view
 
 from .marksheet import get_student_marksheet, update_student_marksheet, delete_student_marksheet
 
+from .user import LoginUserView, UserDetailsView
+
 urlpatterns = [
+
     url(r'^student_data/', student_data_view),
     url(r'^class_student_list/', class_student_list_view),
     url(r'^class_list/', class_list_view),
@@ -26,7 +29,11 @@ urlpatterns = [
 		url(r'^update_student_marksheet/', update_student_marksheet),
 		url(r'^delete_student_marksheet/', delete_student_marksheet),
 
+		url(r'^get-user-details/', UserDetailsView.as_view(), name="user_details"),
+		url(r'^login-user-details/', LoginUserView.as_view(), name="login_user_details"),
+
     # url(r'^authentication/', authentication_view),
     # url(r'^login/', login_data_view),
     # url(r'^logout/', logout_view),
+
 		]
