@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
   	if (this.user.checkAuthentication()) {
   		this.authenticationService.getUserDetails(this.user.jwt).then( data => {
-  			this.user.initializeUser(data);
+  			this.user.initializeUserData(data);
 		});
 	}
 		$.material.options.autofill = true;

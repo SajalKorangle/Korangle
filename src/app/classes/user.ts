@@ -1,6 +1,6 @@
 
-import { Concession } from "./concession";
-import {Constants} from "./constants";
+import { Concession } from './concession';
+import { Constants } from './constants';
 
 class SubSection {
     path: string;
@@ -16,19 +16,35 @@ class Section {
     subsection: SubSection[] = [];
 }
 
+/* For Future Usage
+
+class School {
+
+    name: string;
+    printName: string;
+    logo: string;
+    primaryThemeColor = 'red';
+    secondaryThemeColor = 'danger';
+    complexFeeStructure = false;
+
+}
+
+*/
+
 export class User {
 
     username: string;
-    schoolPrintName: string;
     email: string;
     isAuthenticated = false;
     jwt = '';
-    complexFee = false;
 
-    color = 'red';
-    btn_color = 'danger';
+    schoolPrintName: string; // School Profile
+    schoolLogo: string; // School Profile
+    color = 'red'; // School Profile
+    btn_color = 'danger'; // School Profile
+    complexFee = false; // School Profile
+
     // imgSrc = '/assets/img/angular2-logo-red.png';
-    imgSrc: string;
 
     appSection = 'students';
 
@@ -103,20 +119,24 @@ export class User {
         }
     }
 
-    initializeUser(data: any): void {
+    initializeSchoolData(data: any): void {
+
+    }
+
+    initializeUserData(data: any): void {
         this.username = data.username;
         this.email = data.email;
         if (this.username === 'anupreet') {
             this.color = 'indigo';
             this.btn_color = 'primary';
-            this.imgSrc = '/assets/img/anupreet_logo.png';
+            this.schoolLogo = '/assets/img/anupreet_logo.png';
             this.schoolPrintName = 'ANUPREET PVT ITI';
             this.complexFee = true;
             // this.removeMarksheet();
         } else if (this.username === 'brightstarsalsalai') {
             this.color = 'green';
             this.btn_color = 'warning';
-            this.imgSrc = '/assets/img/bright_logo.jpg';
+            this.schoolLogo = '/assets/img/bright_logo.jpg';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
             this.complexFee = false;
             // this.removeMarksheet();
@@ -124,7 +144,7 @@ export class User {
             this.color = 'indigo';
             this.btn_color = 'primary';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
-            this.imgSrc = '/assets/img/bright_logo.jpg';
+            this.schoolLogo = '/assets/img/bright_logo.jpg';
             this.complexFee = false;
             // this.removeMarksheet();
         } else if (this.username === 'brightstar') {
@@ -133,13 +153,13 @@ export class User {
             this.color = 'green';
             this.btn_color = 'warning';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
-            this.imgSrc = '/assets/img/bright_logo.jpg';
+            this.schoolLogo = '/assets/img/bright_logo.jpg';
             this.complexFee = false;
             // this.removeMarksheet();
         } else if (this.username === 'eklavya') {
             this.color = 'indigo';
             this.btn_color = 'primary';
-            this.imgSrc = '/assets/img/eklavya_logo.png';
+            this.schoolLogo = '/assets/img/eklavya_logo.png';
             this.schoolPrintName = 'Eklavya School';
             this.complexFee = false;
             // this.addMarksheet();
@@ -147,7 +167,7 @@ export class User {
             this.color = 'green';
             this.btn_color = 'warning';
             this.schoolPrintName = 'Demo School';
-            this.imgSrc = '/assets/img/angular2-logo-red.png';
+            this.schoolLogo = '/assets/img/angular2-logo-red.png';
             this.complexFee = true;
             // this.removeMarksheet();
         }
@@ -202,4 +222,4 @@ export class User {
     brighthindi, hindi123
     eklavya, ashta123
     anupreet, itisjp123
- */
+*/

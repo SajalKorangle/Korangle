@@ -9,8 +9,11 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class AuthenticationService {
 
-    private getUserDetailsUrl = Constants.DJANGO_SERVER_AUTH + 'get-user-details/';
-    private loginUserDetailsUrl = Constants.DJANGO_SERVER_AUTH + 'login-user-details/';
+    /*private getUserDetailsUrl = Constants.DJANGO_SERVER_AUTH + 'get-user-details/';
+    private loginUserDetailsUrl = Constants.DJANGO_SERVER_AUTH + 'login-user-details/';*/
+
+    private getUserDetailsUrl = Constants.DJANGO_SERVER + 'get-user-details/';
+    private loginUserDetailsUrl = Constants.DJANGO_SERVER + 'login-user-details/';
 
     private headers = new Headers({'Content-Type': 'application/json' });
 

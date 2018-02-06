@@ -116,6 +116,24 @@ export class StudentProfileComponent implements OnInit {
     }
 
     updateProfile(): void {
+        if (this.currentStudent.familySSMID
+            && this.currentStudent.familySSMID.toString().length !== 0
+            && this.currentStudent.familySSMID.toString().length !== 9) {
+            alert('Number of digits in Family SSMID should be 9');
+            return;
+        }
+        if (this.currentStudent.childSSMID
+            && this.currentStudent.childSSMID.toString().length !== 0
+            && this.currentStudent.childSSMID.toString().length !== 9) {
+            alert('Number of digits in Child SSMID should be 9');
+            return;
+        }
+        if (this.currentStudent.aadharNum
+            && this.currentStudent.aadharNum.toString().length !== 0
+            && this.currentStudent.aadharNum.toString().length !== 12) {
+            alert('Number of digits in Aadhar No. should be 12');
+            return;
+        }
         this.isLoading = true;
         this.studentService.updateStudentData(this.currentStudent).then(
             student => {

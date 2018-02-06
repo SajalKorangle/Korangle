@@ -18,26 +18,26 @@ export class LoginComponent {
     password = '';
     isLoading = false;
 
-    constructor(private _service: AuthenticationService) {}
+    constructor(private authenticationService: AuthenticationService) {}
 
     login() {
         // alert('login called');
-        /*if (!this._service.loginUserDetails(this.username, this.password)) {
-        // if (!this._service.login(this.username, this.password)) {
+        /*if (!this.authenticationService.loginUserDetails(this.username, this.password)) {
+        // if (!this.authenticationService.login(this.username, this.password)) {
             this.errorMsg = 'Failed to login';
         }
         else {
             // router to redirect
             this.router.navigate(['/students']);
         }*/
-        this._service.loginUserDetails(this.username, this.password).then( data => {
+        this.authenticationService.loginUserDetails(this.username, this.password).then( data => {
             if (data.username === 'invalidUsername') {
                 alert('Login failed');
             } else {
                 localStorage.setItem('schoolJWT', data.token);
                 this.user.jwt = data.token;
                 this.user.isAuthenticated = true;
-                this.user.initializeUser(data);
+                this.user.initializeUserData(data);
             }
         });
     }
