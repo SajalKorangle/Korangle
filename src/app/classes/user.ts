@@ -120,13 +120,18 @@ export class User {
     }
 
     initializeSchoolData(data: any): void {
-
+        this.schoolPrintName = data.schoolData.printName;
+        this.color = data.schoolData.primaryThemeColor;
+        this.btn_color = data.schoolData.secondaryThemeColor;
+        this.schoolLogo = Constants.DJANGO_SERVER_MEDIA + data.schoolData.logo;
+        this.complexFee = data.schoolData.complexFeeStructure;
     }
 
     initializeUserData(data: any): void {
         this.username = data.username;
         this.email = data.email;
-        if (this.username === 'anupreet') {
+        this.initializeSchoolData(data);
+        /*if (this.username === 'anupreet') {
             this.color = 'indigo';
             this.btn_color = 'primary';
             this.schoolLogo = '/assets/img/anupreet_logo.png';
@@ -148,8 +153,6 @@ export class User {
             this.complexFee = false;
             // this.removeMarksheet();
         } else if (this.username === 'brightstar') {
-            // this.color = 'red';
-            // this.btn_color = 'danger';
             this.color = 'green';
             this.btn_color = 'warning';
             this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
@@ -170,7 +173,7 @@ export class User {
             this.schoolLogo = '/assets/img/angular2-logo-red.png';
             this.complexFee = true;
             // this.removeMarksheet();
-        }
+        }*/
         if (Constants.DJANGO_SERVER === 'http://localhost:8000/school/') {
             this.addMarksheet();
         }
