@@ -118,7 +118,7 @@ export class StudentProfileComponent implements OnInit {
     updateProfile(): void {
         if (this.currentStudent.familySSMID
             && this.currentStudent.familySSMID.toString().length !== 0
-            && this.currentStudent.familySSMID.toString().length !== 9) {
+            && this.currentStudent.familySSMID.toString().length !== 8) {
             alert('Number of digits in Family SSMID should be 9');
             return;
         }
