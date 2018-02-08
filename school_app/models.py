@@ -43,8 +43,27 @@ class Student(models.Model):
 	motherName = models.TextField(null=True)
 	gender = models.TextField(null=True)
 	caste = models.TextField(null=True)
-	category = models.TextField(null=True)
-	religion = models.TextField(null=True)
+
+	category = models.TextField(null=True) # deprecated on 8th Feb 2018
+
+	CATEGORY = (
+		( 'SC', 'Scheduled Caste' ),
+		( 'ST', 'Scheduled Tribe' ),
+		( 'OBC', 'Other Backward Classes' ),
+		( 'Gen.', 'General' ),
+	)
+	newCategoryField = models.CharField(max_length=5, choices=CATEGORY, null=True)
+
+	religion = models.TextField(null=True) # deprecated on 8th Feb 2018
+
+	RELIGION = (
+		( 'Hinduism', 'Hinduism' ),
+		( 'Islam', 'Islam' ),
+		( 'Christianity', 'Christianity' ),
+		( 'Jainism', 'Jainism' ),
+	)
+	newReligionField = models.CharField(max_length=20, choices=RELIGION, null=True)
+
 	fatherOccupation = models.TextField(null=True)
 	address = models.TextField(null=True)
 	familySSMID = models.IntegerField(null=True)

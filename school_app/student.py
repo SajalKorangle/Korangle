@@ -53,10 +53,14 @@ def get_student_filtered_list(request):
 				tempStudent['gender'] = student.gender
 			if 'caste' in column_list:
 				tempStudent['caste'] = student.caste
+			'''if 'category' in column_list:
+				tempStudent['category'] = student.category'''
 			if 'category' in column_list:
-				tempStudent['category'] = student.category
+				tempStudent['category'] = student.newCategoryField
 			if 'religion' in column_list:
 				tempStudent['religion'] = student.religion
+			if 'religion' in column_list:
+				tempStudent['religion'] = student.newReligionField
 			if 'fatherOccupation' in column_list:
 				tempStudent['fatherOccupation'] = student.fatherOccupation
 			if 'address' in column_list:

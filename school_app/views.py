@@ -111,10 +111,14 @@ def new_student_data_view(request):
 			student_object.gender = student_data['gender']
 		if 'caste' in student_data:
 			student_object.caste = student_data['caste']
+		'''if 'category' in student_data:
+			student_object.category = student_data['category']'''
 		if 'category' in student_data:
-			student_object.category = student_data['category']
+			student_object.newCategoryField = student_data['category']
+		'''if 'religion' in student_data:
+			student_object.religion = student_data['religion']'''
 		if 'religion' in student_data:
-			student_object.religion = student_data['religion']
+			student_object.newReligionField = student_data['religion']
 		if 'fatherOccupation' in student_data:
 			student_object.fatherOccupation = student_data['fatherOccupation']
 		if 'address' in student_data:
@@ -160,8 +164,10 @@ def update_student_view(request):
 		updatedValues['motherName'] = student_data['motherName']
 		updatedValues['gender'] = student_data['gender']
 		updatedValues['caste'] = student_data['caste']
-		updatedValues['category'] = student_data['category']
-		updatedValues['religion'] = student_data['religion']
+		'''updatedValues['category'] = student_data['category']'''
+		updatedValues['newCategoryField'] = student_data['category']
+		'''updatedValues['religion'] = student_data['religion']'''
+		updatedValues['newReligionField'] = student_data['religion']
 		updatedValues['fatherOccupation'] = student_data['fatherOccupation']
 		updatedValues['address'] = student_data['address']
 		updatedValues['familySSMID'] = student_data['familySSMID']
@@ -443,8 +449,10 @@ def get_student_data(student_object, user):
 		student_data['motherName'] = student_object.motherName
 		student_data['gender'] = student_object.gender
 		student_data['caste'] = student_object.caste
-		student_data['category'] = student_object.category
-		student_data['religion'] = student_object.religion
+		'''student_data['category'] = student_object.category'''
+		student_data['category'] = student_object.newCategoryField
+		'''student_data['religion'] = student_object.religion'''
+		student_data['religion'] = student_object.newReligionField
 		student_data['fatherOccupation'] = student_object.fatherOccupation
 		student_data['address'] = student_object.address
 		student_data['familySSMID'] = student_object.familySSMID
@@ -543,8 +551,10 @@ def get_student_profile(student_object, user):
 		student_data['motherName'] = student_object.motherName
 		student_data['gender'] = student_object.gender
 		student_data['caste'] = student_object.caste
-		student_data['category'] = student_object.category
-		student_data['religion'] = student_object.religion
+		'''student_data['category'] = student_object.category'''
+		student_data['category'] = student_object.newCategoryField
+		'''student_data['religion'] = student_object.religion'''
+		student_data['religion'] = student_object.newReligionField
 		student_data['fatherOccupation'] = student_object.fatherOccupation
 		student_data['address'] = student_object.address
 		student_data['familySSMID'] = student_object.familySSMID
