@@ -207,7 +207,7 @@ export class StudentListComponent implements OnInit {
                         student.show = false;
                         return;
                     }
-                    switch (student.category) {
+                    /*switch (student.category) {
                         case 'Scheduled Caste':
                             if (!this.scSelected) {
                                 student.show = false;
@@ -227,6 +227,32 @@ export class StudentListComponent implements OnInit {
                             }
                             break;
                         case 'General':
+                            if (!this.generalSelected) {
+                                student.show = false;
+                                return;
+                            }
+                            break;
+                    }*/
+                    switch (student.category) {
+                        case 'SC':
+                            if (!this.scSelected) {
+                                student.show = false;
+                                return;
+                            }
+                            break;
+                        case 'ST':
+                            if (!this.stSelected) {
+                                student.show = false;
+                                return;
+                            }
+                            break;
+                        case 'OBC':
+                            if (!this.obcSelected) {
+                                student.show = false;
+                                return;
+                            }
+                            break;
+                        case 'Gen.':
                             if (!this.generalSelected) {
                                 student.show = false;
                                 return;
