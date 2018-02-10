@@ -139,7 +139,11 @@
                         <thead class="text-{{user.btn_color}}">
                             <tr>
                                 <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
-                                <th [class.hidden]="!columnFilter.showName">Name</th>
+                                <th [class.hidden]="!columnFilter.showName">
+                                    Name
+                                    <!-- i *ngIf='lockName' class="material-icons column" (click)="this.lockName=false;">lock</i>
+                                    <i *ngIf='!lockName' class="material-icons column" (click)="this.lockName=true;">lock_open</i -->
+                                </th>
                                 <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
                                 <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
                                 <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
@@ -167,7 +171,13 @@
                             <tr *ngFor="let student of studentList; let i = index;" [class.hidden]="!student.show">
                                 <ng-container>
                                     <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
-                                    <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
+                                    <td [class.hidden]="!columnFilter.showName">
+                                        {{student.name}}
+                                        <!-- input type="text"
+                                               class="customInput"
+                                               [disabled]="lockName"
+                                               [(ngModel)]="student.name" -->
+                                    </td>
                                     <td [class.hidden]="!columnFilter.showClassName">{{student.className}}</td>
                                     <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
                                     <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>

@@ -75,7 +75,7 @@ export class NewStudentComponent implements OnInit {
         if (this.newStudent.scholarNumber === undefined) { this.newStudent.scholarNumber = 0; }
         this.isLoading = true;
         // this.newStudent.classDbId = this.selectedClass.dbId;
-        this.newStudentService.createNewStudent(this.newStudent).then(
+        this.newStudentService.createNewStudent(this.newStudent, this.user.jwt).then(
             data => {
                 this.isLoading = false;
                 if (data === 'okay') {
@@ -85,6 +85,7 @@ export class NewStudentComponent implements OnInit {
                     alert('Student Profile creation Failed');
                 }
             }, error => {
+                this.isLoading = false;
                 alert('Server Error: Contact admin');
             }
         );

@@ -45,6 +45,9 @@ export class StudentListComponent implements OnInit {
 
     columnFilter: ColumnFilter;
 
+    /* Column Locks */
+    lockName = true;
+
     /* Category Options */
     scSelected = false;
     stSelected = false;
@@ -297,4 +300,11 @@ export class StudentListComponent implements OnInit {
         );
     }
 
+    /*toggleLock(): void {
+        if (this.lockName === 'lock') {
+            this.lockName = 'lock open';
+        } else {
+            this.lockName = 'lock';
+        }
+    }*/
 }

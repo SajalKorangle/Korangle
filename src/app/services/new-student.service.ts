@@ -16,8 +16,9 @@ export class NewStudentService {
 
     constructor(private http: Http) { }
 
-    createNewStudent(student: any): Promise<string> {
+    createNewStudent(student: any, token: any): Promise<string> {
         const body = JSON.stringify(student);
+        this.headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.post(this.newStudentUrl, body, {headers: this.headers})
             .toPromise()
             .then(response => {
