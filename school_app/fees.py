@@ -1,5 +1,5 @@
 
-from .models import Fee, SubFee
+from .models import Fee, SubFee, SessionClass, Session, Class
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
@@ -8,12 +8,17 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 import json
 
+from .session import get_current_session_object
+
+current_session_object = get_current_session_object()
+
 @api_view(['POST'])
 def fee_list_view(request):
 	if request.user.is_authenticated:
 		fee_list = []
 		time_period = json.loads(request.body.decode('utf-8'))
-		fee_query = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate']).order_by('generationDateTime','receiptNumber')
+		'''fee_query = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate']).order_by('generationDateTime','receiptNumber')'''
+		fee_query = Fee.objects.filter(parentStudent__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate']).order_by('generationDateTime','receiptNumber')
 		for fee in fee_query:
 			tempFee = {}
 			tempFee['receiptNumber'] = fee.receiptNumber
@@ -37,7 +42,8 @@ def fee_list_view(request):
 			tempFee['generationDateTime'] = fee.generationDateTime
 			tempFee['studentName'] = fee.parentStudent.name
 			tempFee['fatherName'] = fee.parentStudent.fathersName
-			tempFee['className'] = fee.parentStudent.parentClass.name
+			'''tempFee['className'] = fee.parentStudent.parentClass.name'''
+			tempFee['className'] = SessionClass.objects.filter(student=fee.parentStudent,parentSession=current_session_object)[0].parentClass.name
 			tempFee['remark'] = fee.remark
 			fee_list.append(tempFee)
 		return JsonResponse({'data':fee_list})

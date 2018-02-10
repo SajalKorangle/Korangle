@@ -1,9 +1,13 @@
 from django.views.generic import ListView
-from .models import Class, Student, Fee, Expense, Concession, SubFee, Marks
+from .models import Class, Student, Fee, Expense, Concession, SubFee, Marks, Session, SessionClass
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from helloworld_project.settings import PROJECT_ROOT
 from django.contrib.auth import authenticate, login, logout
+
+from .session import get_current_session_object
+
+current_session_object = get_current_session_object()
 
 from django.db.models import Max
 
@@ -53,16 +57,21 @@ def class_student_list_view(request):
 		#queryset = Class.objects.all().order_by('orderNumber')
 		queryset = request.user.class_set.all().order_by('orderNumber')
 		classList = []
-		for level in queryset:
+		for class_object in queryset:
 			tempClass = {}
-			tempClass['name'] = level.name
-			tempClass['dbId'] = level.id
+			tempClass['name'] = class_object.name
+			tempClass['dbId'] = class_object.id
 			tempClass['studentList'] = []
-			for student in level.student_set.all().order_by('name'):
-				tempStudent = {}
-				tempStudent['name'] = student.name
-				tempStudent['dbId'] = student.id
-				tempClass['studentList'].append(tempStudent)
+			session_class_queryset = SessionClass.objects.filter(parentSession=current_session_object,parentClass=class_object)
+			'''for student in class_object.student_set.all().order_by('name'):'''
+			if len(session_class_queryset) == 1:
+				for student in Student.objects.filter(sessionClass=session_class_queryset[0]):
+					tempStudent = {}
+					tempStudent['name'] = student.name
+					tempStudent['dbId'] = student.id
+					tempClass['studentList'].append(tempStudent)
+			else:
+				print('There should exist 1 session class per class')
 			classList.append(tempClass)
 		return JsonResponse({'data':classList})
 	else:
@@ -88,11 +97,15 @@ def class_list_view(request):
 	else:
 		return JsonResponse({'data':errResponse})
 
+@api_view(['POST'])
 def new_student_data_view(request):
-	if request.method == "POST":
+	'''if request.method == "POST":'''
+	if request.user.is_authenticated:
 		student_data = json.loads(request.body.decode('utf-8'))
 		class_object = Class.objects.get(id=student_data['classDbId'])
-		student_object = Student(name=student_data['name'],fathersName=student_data['fathersName'],parentClass=class_object)
+		session_class_queryset = SessionClass.objects.filter(parentSession=current_session_object,parentClass=class_object)
+		'''student_object = Student(name=student_data['name'],fathersName=student_data['fathersName'],parentClass=class_object)'''
+		student_object = Student(name=student_data['name'],fathersName=student_data['fathersName'],parentUser=request.user)
 		if student_data['mobileNumber']:
 			student_object.mobileNumber = student_data['mobileNumber']
 		if student_data['dateOfBirth']:
@@ -138,6 +151,12 @@ def new_student_data_view(request):
 		if 'fatherAnnualIncome' in student_data:
 			student_object.fatherAnnualIncome = student_data['fatherAnnualIncome']
 		student_object.save()
+
+		if len(session_class_queryset) > 0:
+			student_object.sessionClass.add(session_class_queryset[0])
+		else:
+			return JsonResponse({'data':'error'})
+
 		return JsonResponse({'data':'okay'})
 	else:
 		return JsonResponse({'data':'error'})
@@ -223,39 +242,6 @@ def student_data_view(request):
 	if request.user.is_authenticated:
 		received_json_data = json.loads(request.body.decode('utf-8'))
 		student_query = Student.objects.filter(id=received_json_data['dbId'])
-		'''student_data['name'] = student_query[0].name
-		student_data['dbId'] = student_query[0].id
-		student_data['fathersName'] = student_query[0].fathersName
-		student_data['mobileNumber'] = student_query[0].mobileNumber
-		student_data['dateOfBirth'] = student_query[0].dateOfBirth
-		student_data['totalFees'] = student_query[0].totalFees
-		student_data['remark'] = student_query[0].remark
-		student_data['rollNumber'] = student_query[0].rollNumber
-		student_data['scholarNumber'] = student_query[0].scholarNumber
-		student_data['class'] = student_query[0].parentClass.name
-		student_data['feesList'] = []
-		student_data['feesDue'] = student_query[0].totalFees
-		#receiptNumberMax = Fee.objects.all().aggregate(Max('receiptNumber'))
-		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user).aggregate(Max('receiptNumber'))
-		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
-		for studentFeeEntry in student_query[0].fee_set.all():
-			tempStudentFeeEntry = {}
-			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
-			tempStudentFeeEntry['amount'] = studentFeeEntry.amount
-			tempStudentFeeEntry['remark'] = studentFeeEntry.remark
-			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
-			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
-			student_data['feesDue'] -= studentFeeEntry.amount
-			student_data['feesList'].append(tempStudentFeeEntry)
-		student_data['concessionList'] = []
-		for studentConcessionEntry in student_query[0].concession_set.all():
-			tempStudentConcessionEntry = {}
-			tempStudentConcessionEntry['amount'] = studentConcessionEntry.amount
-			tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
-			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
-			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
-			student_data['feesDue'] -= studentConcessionEntry.amount
-			student_data['concessionList'].append(tempStudentConcessionEntry)'''
 		student_data = get_student_data(student_query[0],request.user)
 		return JsonResponse({'data':student_data})
 	else:
@@ -286,44 +272,6 @@ def new_fee_receipt_view(request):
 		return JsonResponse({'data': response})
 	else:
 		return JsonResponse({'data': errResponse})
-
-'''@api_view(['POST'])
-def fee_list_view(request):
-	if request.user.is_authenticated:
-		fee_list = []
-		time_period = json.loads(request.body.decode('utf-8'))
-		#fee_query = Fee.objects.filter(generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
-		fee_query = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
-		#fee_query = request.user.class_set.student_set.fee_set.objects.filter(generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
-		for fee in fee_query:
-			tempFee = {}
-			tempFee['receiptNumber'] = fee.receiptNumber
-			tempFee['amount'] = fee.amount
-
-			tempFee['tuitionFeeAmount'] = 0
-			tuitionFee = SubFee.objects.filter(parentFee=fee,particular='TuitionFee')
-			if tuitionFee:
-				tempFee['tuitionFeeAmount'] = tuitionFee[0].amount
-
-			tempFee['lateFeeAmount'] = 0
-			lateFee = SubFee.objects.filter(parentFee=fee,particular='LateFee')
-			if lateFee:
-				tempFee['lateFeeAmount'] = lateFee[0].amount
-
-			tempFee['cautionMoneyAmount'] = 0
-			cautionMoney = SubFee.objects.filter(parentFee=fee,particular='CautionMoney')
-			if cautionMoney:
-				tempFee['cautionMoneyAmount'] = cautionMoney[0].amount
-
-			tempFee['generationDateTime'] = fee.generationDateTime
-			tempFee['studentName'] = fee.parentStudent.name
-			tempFee['fatherName'] = fee.parentStudent.fathersName
-			tempFee['className'] = fee.parentStudent.parentClass.name
-			tempFee['remark'] = fee.remark
-			fee_list.append(tempFee)
-		return JsonResponse({'data':fee_list})
-	else:
-		return JsonResponse({'data':'error'})'''
 
 @api_view(['POST'])
 def new_expense_view(request):
@@ -367,45 +315,9 @@ def new_concession_view(request):
 		response = {}
 		response['status'] = 'success'
 		concession = json.loads(request.body.decode('utf-8'))
-		'''if Concession.objects.filter(receiptNumber=fee_receipt['receiptNumber']):
-			errResponse['message'] = 'Failed: Receipt Number already exists'
-			return JsonResponse({'data': errResponse})'''
 		student_object = Student.objects.get(id=concession['studentDbId'])
 		new_concession_object = Concession.objects.create(amount=concession['amount'],remark=concession['remark'],parentStudent=student_object)
 		response['message'] = 'Concession submitted successfully'
-		'''student_data = {}
-		student_data['name'] = student_object.name
-		student_data['dbId'] = student_object.id
-		student_data['fathersName'] = student_object.fathersName
-		student_data['mobileNumber'] = student_object.mobileNumber
-		student_data['dateOfBirth'] = student_object.dateOfBirth
-		student_data['totalFees'] = student_object.totalFees
-		student_data['remark'] = student_object.remark
-		student_data['rollNumber'] = student_object.rollNumber
-		student_data['scholarNumber'] = student_object.scholarNumber
-		student_data['class'] = student_object.parentClass.name
-		student_data['feesList'] = []
-		student_data['feesDue'] = student_object.totalFees
-		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=request.user).aggregate(Max('receiptNumber'))
-		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
-		for studentFeeEntry in student_object.fee_set.all():
-			tempStudentFeeEntry = {}
-			tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
-			tempStudentFeeEntry['amount'] = studentFeeEntry.amount
-			tempStudentFeeEntry['remark'] = studentFeeEntry.remark
-			tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
-			tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
-			student_data['feesDue'] -= studentFeeEntry.amount
-			student_data['feesList'].append(tempStudentFeeEntry)
-		student_data['concessionList'] = []
-		for studentConcessionEntry in student_object.concession_set.all():
-			tempStudentConcessionEntry = {}
-			tempStudentConcessionEntry['amount'] = studentConcessionEntry.amount
-			tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
-			tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
-			tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
-		student_data['feesDue'] -= studentConcessionEntry.amount
-		student_data['concessionList'].append(tempStudentConcessionEntry)'''
 		student_data = get_student_data(student_object, request.user)
 		response['studentData'] = student_data
 		return JsonResponse({'data': response})
@@ -417,14 +329,16 @@ def concession_list_view(request):
 	if request.user.is_authenticated:
 		concession_list = []
 		time_period = json.loads(request.body.decode('utf-8'))
-		concession_query = Concession.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
+		'''concession_query = Concession.objects.filter(parentStudent__parentClass__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])'''
+		concession_query = Concession.objects.filter(parentStudent__parentUser=request.user,generationDateTime__gte=time_period['startDate'],generationDateTime__lte=time_period['endDate'])
 		for concession in concession_query:
 			tempConcession = {}
 			tempConcession['amount'] = concession.amount
 			tempConcession['generationDateTime'] = concession.generationDateTime
 			tempConcession['studentName'] = concession.parentStudent.name
 			tempConcession['fatherName'] = concession.parentStudent.fathersName
-			tempConcession['className'] = concession.parentStudent.parentClass.name
+			'''tempConcession['className'] = concession.parentStudent.parentClass.name'''
+			tempConcession['className'] = SessionClass.objects.filter(student=concession.parentStudent,parentSession=current_session_object)[0].parentClass.name
 			tempConcession['remark'] = concession.remark
 			concession_list.append(tempConcession)
 		return JsonResponse({'data':concession_list})
@@ -442,8 +356,10 @@ def get_student_data(student_object, user):
 		student_data['remark'] = student_object.remark
 		student_data['rollNumber'] = student_object.rollNumber
 		student_data['scholarNumber'] = student_object.scholarNumber
-		student_data['classDbId'] = student_object.parentClass.id
-		student_data['className'] = student_object.parentClass.name
+		'''student_data['classDbId'] = student_object.parentClass.id
+		student_data['className'] = student_object.parentClass.name'''
+		student_data['classDbId'] = SessionClass.objects.filter(student=student_object,parentSession=current_session_object)[0].parentClass.id
+		student_data['className'] = SessionClass.objects.filter(student=student_object,parentSession=current_session_object)[0].parentClass.name
 
 		# new student profile data
 		student_data['motherName'] = student_object.motherName
@@ -465,7 +381,8 @@ def get_student_data(student_object, user):
 
 		student_data['feesList'] = []
 		student_data['feesDue'] = student_object.totalFees
-		receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=user).aggregate(Max('receiptNumber'))
+		'''receiptNumberMax = Fee.objects.filter(parentStudent__parentClass__parentUser=user).aggregate(Max('receiptNumber'))'''
+		receiptNumberMax = Fee.objects.filter(parentStudent__in=Student.objects.filter(parentUser=user)).aggregate(Max('receiptNumber'))
 		student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
 		for studentFeeEntry in student_object.fee_set.all():
 			tempStudentFeeEntry = {}
@@ -509,7 +426,8 @@ def student_data_class_list_view(request):
 	if request.user.is_authenticated:
 
 		student_list = []
-		student_query = Student.objects.filter(parentClass__parentUser=request.user).order_by('parentClass__orderNumber', 'name')
+		'''student_query = Student.objects.filter(parentClass__parentUser=request.user).order_by('parentClass__orderNumber', 'name')'''
+		student_query = Student.objects.filter(parentUser=request.user).annotate(orderNumber=Max('sessionClass__parentClass__orderNumber')).order_by('orderNumber', 'name')
 		for student in student_query:
 			tempStudent = get_student_profile(student, request.user)
 			student_list.append(tempStudent)
@@ -544,8 +462,10 @@ def get_student_profile(student_object, user):
 		student_data['remark'] = student_object.remark
 		student_data['rollNumber'] = student_object.rollNumber
 		student_data['scholarNumber'] = student_object.scholarNumber
-		student_data['classDbId'] = student_object.parentClass.id
-		student_data['className'] = student_object.parentClass.name
+		'''student_data['classDbId'] = student_object.parentClass.id
+		student_data['className'] = student_object.parentClass.name'''
+		student_data['classDbId'] = SessionClass.objects.filter(student=student_object,parentSession=current_session_object)[0].parentClass.id
+		student_data['className'] = SessionClass.objects.filter(student=student_object,parentSession=current_session_object)[0].parentClass.name
 
 		# new student profile data
 		student_data['motherName'] = student_object.motherName

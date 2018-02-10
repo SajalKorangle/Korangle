@@ -37,7 +37,12 @@ class Student(models.Model):
 	totalFees = models.IntegerField(default=0)
 	dateOfBirth = models.DateField(null=True)
 	remark = models.TextField(null=True)
-	parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
+
+	parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0) # deprecated on 9th 2018
+
+	sessionClass = models.ManyToManyField('SessionClass')
+
+	parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=0)
 
 	# new student profile data
 	motherName = models.TextField(null=True)
@@ -132,4 +137,18 @@ class School(models.Model):
 
 	def __str__(self):
 		return self.printName
+
+class Session(models.Model):
+	startDate = models.DateField()
+	endDate = models.DateField()
+
+	def __str__(self):
+		return str(self.startDate) + ' --- ' + str(self.endDate)
+
+class SessionClass(models.Model):
+	parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0)
+	parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
+
+	def __str__(self):
+		return str(self.parentSession.startDate) + ' --- ' + str(self.parentSession.endDate) + ' --- ' + self.parentClass.name
 

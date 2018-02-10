@@ -47,6 +47,8 @@ INSTALLED_APPS = [
 		'message_app',
 		'school_app',
 		'corsheaders',
+
+		'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -164,3 +166,17 @@ DEFAULT_FROM_EMAIL = 'admin@iitcounseling.in'
 EMAIL_HOST_USER = 'AKIAJALB2TZGPCWOEIQA'
 EMAIL_HOST_PASSWORD = 'AqtgnMQN6VuP6cz9KOOX85r1UUCAR7NpH4xychXFJTBr'
 EMAIL_PORT = 587
+
+import sys
+if 'test' in sys.argv:
+	print('testing okay')
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.sqlite3',
+			'USER': 'arnava',
+			'NAME': os.path.join(BASE_DIR, 'test_database'),
+			'TEST': {
+				'NAME': 'test_database',
+			},
+		},
+	}

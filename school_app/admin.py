@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Class, Student, Fee, Expense, Concession, SubFee, Subject, Marks, School
+from .models import Class, Student, Fee, Expense, Concession, SubFee, Subject, Marks, School, SessionClass, Session
 
 admin.site.register(Class)
 admin.site.register(Student)
@@ -13,3 +13,5 @@ admin.site.register(Concession)
 admin.site.register(Subject)
 admin.site.register(Marks)
 admin.site.register(School)
+admin.site.register(Session)
+admin.site.register(SessionClass)

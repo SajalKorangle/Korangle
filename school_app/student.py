@@ -1,5 +1,5 @@
 
-from .models import Class, Student
+from .models import Class, Student, Session, SessionClass
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
@@ -7,6 +7,10 @@ from rest_framework.decorators import api_view
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 import json
+
+from .session import get_current_session_object
+
+current_session_object = get_current_session_object()
 
 # Get Filtered Student List
 @api_view(['POST'])
@@ -23,8 +27,11 @@ def get_student_filtered_list(request):
 		classDbId_list = request.data['classDbIdList']
 		column_list = request.data['columnList']
 
-		student_query = Student.objects.filter(parentClass__parentUser=request.user,
-																						parentClass__pk__in=classDbId_list).order_by('parentClass__orderNumber', 'name')
+		'''student_query = Student.objects.filter(parentClass__parentUser=request.user,
+																						parentClass__pk__in=classDbId_list).order_by('parentClass__orderNumber', 'name')'''
+
+		student_query = Student.objects.filter(parentUser=request.user,
+																						sessionClass__parentClass__pk__in=classDbId_list).order_by('sessionClass__parentClass__orderNumber', 'name')
 
 		for student in student_query:
 			tempStudent = {}
@@ -45,8 +52,10 @@ def get_student_filtered_list(request):
 				tempStudent['dateOfBirth'] = student.dateOfBirth
 			if 'remark' in column_list:
 				tempStudent['remark'] = student.remark
+			'''if 'className' in column_list:
+				tempStudent['className'] = student.parentClass.className'''
 			if 'className' in column_list:
-				tempStudent['className'] = student.parentClass.className
+				tempStudent['className'] = SessionClass.objects.filter(student=student,parentSession=current_session_object)[0].parentClass.className
 			if 'motherName' in column_list:
 				tempStudent['motherName'] = student.motherName
 			if 'gender' in column_list:
