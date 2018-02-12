@@ -79,7 +79,7 @@
                         </div>
                         <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.mobileNumber,currentStudent.mobileNumber)">
                             <div class="form-group form-black label-floating">
-                                <label class="control-label">Mobile Number</label>
+                                <label class="control-label">Mobile Number<span *ngIf="checkLength(currentStudent.mobileNumber)"> - {{currentStudent.mobileNumber.length}}</span></label>
                                 <input type="text"
                                        class="form-control"
                                        [ngModel]="selectedStudent.mobileNumber" (ngModelChange)="currentStudent.mobileNumber=$event">
@@ -211,7 +211,7 @@
                     <div class="row">
                         <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.familySSMID,currentStudent.familySSMID)">
                             <div class="form-group form-black label-floating">
-                                <label class="control-label">Family SSMID</label>
+                                <label class="control-label">Family SSMID<span *ngIf="checkLength(currentStudent.familySSMID)"> - {{currentStudent.familySSMID.toString().length}}</span></label>
                                 <input type="number"
                                        class="form-control"
                                        [ngModel]="selectedStudent.familySSMID" (ngModelChange)="currentStudent.familySSMID=$event">
@@ -219,7 +219,7 @@
                         </div>
                         <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.childSSMID,currentStudent.childSSMID)">
                             <div class="form-group form-black label-floating">
-                                <label class="control-label">Child SSMID</label>
+                                <label class="control-label">Child SSMID<span *ngIf="checkLength(currentStudent.childSSMID)"> - {{currentStudent.childSSMID.toString().length}}</span></label>
                                 <input type="number"
                                        class="form-control"
                                        [ngModel]="selectedStudent.childSSMID" (ngModelChange)="currentStudent.childSSMID=$event">

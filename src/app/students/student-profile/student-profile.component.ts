@@ -190,6 +190,14 @@ export class StudentProfileComponent implements OnInit {
         return false;
     }
 
+    checkLength(value: any) {
+        if (value && value.toString().length > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    
     /*printFeeReceipt(fee: Fee): void {
         fee.fatherName = this.selectedStudent.fathersName;
         fee.studentName ` = this.selectedStudent.name;
