@@ -44,7 +44,11 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group form-black label-floating">
-                                <label class="control-label">Mobile Number</label>
+                                <label class="control-label">Mobile Number
+                                    <span *ngIf="checkLength(newStudent.mobileNumber)"
+                                          [class.fieldRight]="checkRight(newStudent.mobileNumber,10)">
+                                        - {{newStudent.mobileNumber.toString().length}}</span>
+                                </label>
                                 <input type="text"
                                        class="form-control"
                                        [(ngModel)]="newStudent.mobileNumber">
@@ -169,7 +173,11 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group form-black label-floating">
-                                <label class="control-label">Family SSMID</label>
+                                <label class="control-label">Family SSMID
+                                    <span *ngIf="checkLength(newStudent.familySSMID)"
+                                          [class.fieldRight]="checkRight(newStudent.familySSMID,8)">
+                                        - {{newStudent.familySSMID.toString().length}}</span>
+                                </label>
                                 <input type="number"
                                        class="form-control"
                                        [(ngModel)]="newStudent.familySSMID">
@@ -177,7 +185,11 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group form-black label-floating">
-                                <label class="control-label">Child SSMID</label>
+                                <label class="control-label">Child SSMID
+                                    <span *ngIf="checkLength(newStudent.childSSMID)"
+                                          [class.fieldRight]="checkRight(newStudent.childSSMID,9)">
+                                        - {{newStudent.childSSMID.toString().length}}</span>
+                                </label>
                                 <input type="number"
                                        class="form-control"
                                        [(ngModel)]="newStudent.childSSMID">
@@ -185,7 +197,11 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group form-black label-floating">
-                                <label class="control-label">Aadhar Number</label>
+                                <label class="control-label">Aadhar Number
+                                    <span *ngIf="checkLength(newStudent.aadharNum)"
+                                          [class.fieldRight]="checkRight(newStudent.aadharNum,12)">
+                                        - {{newStudent.aadharNum.toString().length}}</span>
+                                </label>
                                 <input type="number"
                                        class="form-control"
                                        [(ngModel)]="newStudent.aadharNum">

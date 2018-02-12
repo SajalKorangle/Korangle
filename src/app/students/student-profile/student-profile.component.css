@@ -36,3 +36,8 @@
 .fieldChanged {
 	background-color: #FFFFEA;
 }
+
+.fieldRight {
+	color: green;
+	font-weight: 400;
+}

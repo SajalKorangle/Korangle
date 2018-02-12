@@ -197,6 +197,12 @@ export class StudentProfileComponent implements OnInit {
         return false;
     }
 
+    checkRight(value: any, rightValue: number) {
+        if (value && value.toString().length === rightValue) {
+            return true;
+        }
+        return false;
+    }
     
     /*printFeeReceipt(fee: Fee): void {
         fee.fatherName = this.selectedStudent.fathersName;
