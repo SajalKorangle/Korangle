@@ -118,7 +118,8 @@ export class NewFeesComponent implements OnInit, OnDestroy {
                     .pipe(
                         startWith<string | StudentClass>(''),
                         map(value => typeof value === 'string' ? value : (value as StudentClass).studentName),
-                        map(studentName => studentName ? this.filter(studentName.toString()) : this.studentClassList.slice())
+                        map(studentName => this.filter(studentName.toString()))
+                        // map(studentName => studentName ? this.filter(studentName.toString()) : this.studentClassList.slice())
                     );
             }, error => {
                 this.isListLoading = false;
@@ -244,6 +245,9 @@ export class NewFeesComponent implements OnInit, OnDestroy {
     }
 
     filter(name: string): StudentClass[] {
+        if (name === '') {
+            return this.studentClassList.filter(studentClass => name !== '');
+        }
         return this.studentClassList.filter(studentClass =>
             studentClass.studentName.toLowerCase().indexOf(name.toLowerCase()) === 0);
     }
