@@ -10,7 +10,20 @@ import {EmitterService} from '../../services/emitter.service';
 import {NewConcessionService} from '../../services/new-concession.service';
 import {Concession} from '../../classes/concession';
 
+import {FormControl} from '@angular/forms';
+import {Observable} from 'rxjs/Observable';
+import { startWith } from 'rxjs/operators/startWith';
+import {map} from 'rxjs/operators/map';
+
 import moment = require('moment');
+import {error} from "util";
+
+export class StudentClass {
+    constructor(public studentName: string,
+                public studentDbId: number,
+                public className: string,
+                public classDbId: number) { }
+}
 
 @Component({
     selector: 'app-new-fees',
@@ -23,22 +36,33 @@ export class NewFeesComponent implements OnInit, OnDestroy {
     @Input() user;
 
     selectedStudent: Student;
-    selectedClass: Classs;
-    classList: Classs[];
+
+    // selectedClass: Classs;
+    // classList: Classs[];
+
     newFeeReceipt: Fee;
     newConcession: Concession;
+
     // noStudentForSelectedClass = true;
-    currentStudent: Student = new Student();
+    // currentStudent: Student = new Student();
+
     submitNewFeeReceiptSubscription: any;
 
+    studentClassList: StudentClass[];
+
+    myControl = new FormControl();
+    filteredStudentClassList: Observable<StudentClass[]>;
+
     isLoading = false;
+
+    isListLoading = false;
 
     constructor (private classStudentListService: ClassStudentListService,
                  private studentService: StudentService,
                  private newFeeReceiptService: NewFeeReceiptService,
                  private newConcessionService: NewConcessionService) { }
 
-    onChangeSelectedClass(selectedClass): void {
+    /*onChangeSelectedClass(selectedClass): void {
         this.selectedClass = selectedClass;
         this.populateSelectStudent();
     }
@@ -52,32 +76,52 @@ export class NewFeesComponent implements OnInit, OnDestroy {
             // this.noStudentForSelectedClass = true;
             this.selectedStudent = null;
         }
-    }
+    }*/
 
     ngOnInit(): void {
+        this.selectedStudent = new Student();
         this.newFeeReceipt = new Fee();
         this.newFeeReceipt.generationDateTime = moment(new Date()).format('YYYY-MM-DD');
         this.newConcession = new Concession();
         this.submitNewFeeReceiptSubscription = EmitterService.get('submit-new-fee-receipt').subscribe(value => {
             this.submitFee();
         });
+        this.isListLoading = true;
         this.classStudentListService.getIndex().then(
             classStudentList => {
-                this.classList = [];
+                this.isListLoading = false;
+                // this.classList = [];
+                this.studentClassList = [];
                 classStudentList.forEach( classs => {
-                    const tempClass = new Classs();
+                    /* const tempClass = new Classs();
                     tempClass.name = classs.name;
-                    tempClass.dbId = classs.dbId;
+                    tempClass.dbId = classs.dbId; */
                     classs.studentList.forEach( student => {
-                        const tempStudent = new Student();
+                        /* const tempStudent = new Student();
                         tempStudent.name = student.name;
                         tempStudent.dbId = student.dbId;
-                        tempClass.studentList.push(tempStudent);
+                        tempClass.studentList.push(tempStudent); */
+
+                        const tempStudentClass = new StudentClass(student.name, student.dbId, classs.name, classs.dbId);
+                        this.studentClassList.push(tempStudentClass);
+
                     });
-                    this.classList.push(tempClass);
+
+                    // this.classList.push(tempClass);
+
                 });
-                this.selectedClass = this.classList[0];
-                this.populateSelectStudent();
+
+                // this.selectedClass = this.classList[0];
+                // this.populateSelectStudent();
+
+                this.filteredStudentClassList = this.myControl.valueChanges
+                    .pipe(
+                        startWith<string | StudentClass>(''),
+                        map(value => typeof value === 'string' ? value : (value as StudentClass).studentName),
+                        map(studentName => studentName ? this.filter(studentName.toString()) : this.studentClassList.slice())
+                    );
+            }, error => {
+                this.isListLoading = false;
             }
         );
     }
@@ -86,43 +130,25 @@ export class NewFeesComponent implements OnInit, OnDestroy {
         this.submitNewFeeReceiptSubscription.unsubscribe();
     }
 
-    getStudentData(): void {
+    /*getStudentData(): void {
         this.isLoading = true;
         this.studentService.getStudentData(this.selectedStudent.dbId).then(
             student => {
-                // console.log(student);
                 this.isLoading = false;
                 const breakLoop = false;
                 if (this.selectedStudent.dbId === student.dbId) {
                     this.selectedStudent.copy(student);
                     this.currentStudent.copyWithoutFeesAndConcession(student);
                 }
-                // console.log(student);
                 if (student.overAllLastFeeReceiptNumber === null || student.overAllLastFeeReceiptNumber === '') {
                     student.overAllLastFeeReceiptNumber = 0;
                 }
                 this.newFeeReceipt.receiptNumber = student.overAllLastFeeReceiptNumber + 1;
-                // alert(this.newFeeReceipt.receiptNumber);
-                /*else {
-                    alert("Error: Select student again");
-                }*/
-                /*else {
-                    this.classList.forEach( classs => {
-                        classs.studentList.forEach( tempStudent => {
-                            if (tempStudent.dbId === student.dbId) {
-                                tempStudent.copy(student);
-                                breakLoop = true;
-                                return;
-                            }
-                        });
-                        if (breakLoop) { return; }
-                    });
-                }*/
             }, error => {
                 this.isLoading = false;
             }
         );
-    }
+    }*/
 
     submitFee(): void {
         if (this.newFeeReceipt.receiptNumber === undefined || this.newFeeReceipt.receiptNumber === 0) {
@@ -139,7 +165,7 @@ export class NewFeesComponent implements OnInit, OnDestroy {
         }
         if (this.newFeeReceipt.remark === undefined) { this.newFeeReceipt.remark = ''; }
         this.isLoading = true;
-        this.newFeeReceipt.studentDbId = this.selectedStudent.dbId;
+        this.newFeeReceipt.studentDbId = this.  selectedStudent.dbId;
         this.newFeeReceiptService.submitStudentFees(this.newFeeReceipt).then(
             data => {
                 this.isLoading = false;
@@ -148,7 +174,7 @@ export class NewFeesComponent implements OnInit, OnDestroy {
                     const student = data.studentData;
                     if (this.selectedStudent.dbId === student.dbId) {
                         this.selectedStudent.copy(student);
-                        this.currentStudent.copyWithoutFeesAndConcession(student);
+                        // this.currentStudent.copyWithoutFeesAndConcession(student);
                     }
                     this.selectedStudent.feesList.forEach( fee => {
                         if (fee.receiptNumber === this.newFeeReceipt.receiptNumber) {
@@ -189,7 +215,7 @@ export class NewFeesComponent implements OnInit, OnDestroy {
                     const student = data.studentData;
                     if (this.selectedStudent.dbId === student.dbId) {
                         this.selectedStudent.copy(student);
-                        this.currentStudent.copyWithoutFeesAndConcession(student);
+                        // this.currentStudent.copyWithoutFeesAndConcession(student);
                     }
                     if (student.overAllLastFeeReceiptNumber === null || student.overAllLastFeeReceiptNumber === '') {
                         student.overAllLastFeeReceiptNumber = 0;
@@ -209,12 +235,38 @@ export class NewFeesComponent implements OnInit, OnDestroy {
     printFeeReceipt(fee: Fee): void {
         fee.fatherName = this.selectedStudent.fathersName;
         fee.studentName = this.selectedStudent.name;
-        fee.className =  this.selectedClass.name;
+        fee.className =  this.selectedStudent.className;
         EmitterService.get('print-fee-receipt').emit(fee);
     }
 
     createNewFeeReceipt(): void {
         EmitterService.get('new-fee-receipt-modal').emit(this.newFeeReceipt);
+    }
+
+    filter(name: string): StudentClass[] {
+        return this.studentClassList.filter(studentClass =>
+            studentClass.studentName.toLowerCase().indexOf(name.toLowerCase()) === 0);
+    }
+
+    displayFn(studentClass?: StudentClass): string | undefined {
+        return studentClass ? studentClass.studentName + ', ' + studentClass.className : undefined;
+    }
+
+    getStudentFeeData(studentClass?: StudentClass): void {
+        this.isLoading = true;
+        this.studentService.getStudentData(studentClass.studentDbId).then(
+            student => {
+                this.isLoading = false;
+                const breakLoop = false;
+                this.selectedStudent.copy(student);
+                if (student.overAllLastFeeReceiptNumber === null || student.overAllLastFeeReceiptNumber === '') {
+                    student.overAllLastFeeReceiptNumber = 0;
+                }
+                this.newFeeReceipt.receiptNumber = student.overAllLastFeeReceiptNumber + 1;
+            }, error => {
+                this.isLoading = false;
+            }
+        );
     }
 
 }

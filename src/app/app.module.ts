@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
@@ -9,6 +9,9 @@ import { MatSelectModule } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material';
 import { MatTooltipModule } from '@angular/material';
 import { MatMenuModule } from '@angular/material';
+import { MatAutocompleteModule } from "@angular/material";
+import { MatFormFieldModule } from '@angular/material';
+import { MatInputModule } from '@angular/material';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
@@ -105,6 +108,7 @@ import { GradePipe } from './pipes/grade.pipe';
     imports: [
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
         ComponentsModule,
         RouterModule,
@@ -117,6 +121,9 @@ import { GradePipe } from './pipes/grade.pipe';
         MatCheckboxModule,
         MatTooltipModule,
         MatMenuModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        MatInputModule,
     ],
     exports: [
         CdkTableModule,
@@ -125,6 +132,9 @@ import { GradePipe } from './pipes/grade.pipe';
         MatCheckboxModule,
         MatTooltipModule,
         MatMenuModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        MatInputModule,
     ],
   providers: [],
   bootstrap: [AppComponent]
