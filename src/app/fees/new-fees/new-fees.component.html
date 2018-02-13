@@ -7,7 +7,7 @@
             </div>
             <div class="card-content">
 
-                Class:
+                <!-- Class:
                 <select [ngModel]="selectedClass"
                         (ngModelChange)="onChangeSelectedClass($event)"
                         style="margin-right: 15px">
@@ -25,6 +25,27 @@
                     </ng-container>
                 </select>
 
+                <br/ -->
+
+                <form class="example-form" *ngIf="!isListLoading">
+                    <mat-form-field class="example-full-width">
+                        <input type="text"
+                               placeholder="Type student name here...."
+                               aria-label="Student"
+                               matInput
+                               [formControl]="myControl"
+                               [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete"
+                                          (optionSelected)="getStudentFeeData($event.option.value)"
+                                          [displayWith]="displayFn">
+                            <mat-option *ngFor="let studentClass of filteredStudentClassList | async"
+                                        [value]="studentClass">
+                                {{ studentClass.studentName }}, {{ studentClass.className }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </form>
+
                 <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
 
                     <div class="row">
@@ -33,7 +54,7 @@
                                 <label class="control-label">Name</label>
                                 <input type="text"
                                        class="form-control"
-                                       [ngModel]="selectedStudent.name" (ngModelChange)="currentStudent.name=$event;" disabled>
+                                       [(ngModel)]="selectedStudent.name" disabled>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -41,7 +62,7 @@
                                 <label class="control-label">Father's Name</label>
                                 <input type="text"
                                        class="form-control"
-                                       [ngModel]="selectedStudent.fathersName" (ngModelChange)="currentStudent.fathersName=$event" disabled>
+                                       [ngModel]="selectedStudent.fathersName" disabled>
                             </div>
                         </div>
 
@@ -67,7 +88,7 @@
                                 <div class="form-group form-black label-floating">
                                     <label class="control-label">Remark</label>
                                     <textarea class="form-control" rows="3"
-                                              [ngModel]="selectedStudent.remark" (ngModelChange)="currentStudent.remark=$event" disabled></textarea>
+                                              [ngModel]="selectedStudent.remark" disabled></textarea>
                                 </div>
                             </div>
                         </div>
@@ -125,9 +146,9 @@
 
                 </ng-container>
 
-                <ng-container *ngIf="selectedClass && !selectedStudent">
+                <!-- ng-container *ngIf="selectedClass && !selectedStudent">
                     <br/>No Students in this class
-                </ng-container>
+                </ng-container -->
 
             </div>
         </div>
@@ -209,7 +230,7 @@
             </div>
         </div>
 
-        <ng-container *ngIf="isLoading">
+        <ng-container *ngIf="isLoading || isListLoading">
             <!-- div class="loader-container" align="center">
                 <div class="loader"></div>
             </div -->
