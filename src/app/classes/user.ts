@@ -123,7 +123,7 @@ export class User {
         this.schoolPrintName = data.schoolData.printName;
         this.color = data.schoolData.primaryThemeColor;
         this.btn_color = data.schoolData.secondaryThemeColor;
-        this.schoolLogo = Constants.DJANGO_SERVER_MEDIA + data.schoolData.logo;
+        this.schoolLogo = Constants.DJANGO_SERVER + data.schoolData.logo;
         this.complexFee = data.schoolData.complexFeeStructure;
     }
 
@@ -174,10 +174,24 @@ export class User {
             this.complexFee = true;
             // this.removeMarksheet();
         }*/
-        if (Constants.DJANGO_SERVER === 'http://localhost:8000/school/') {
+        if (Constants.DJANGO_SERVER === 'http://localhost:8000') {
             this.addMarksheet();
+            this.addPromoteStudent();
         }
         this.appSection = 'student_profile';
+    }
+
+    addPromoteStudent(): void {
+        this.ROUTES.forEach(
+            section => {
+                if (section.path === 'students') {
+                    const tempSubSection = new SubSection();
+                    tempSubSection.path = 'promote_students';
+                    tempSubSection.title = 'Promote';
+                    section.subsection.push(tempSubSection);
+                }
+            }
+        );
     }
 
     addMarksheet(): void {
@@ -225,4 +239,6 @@ export class User {
     brighthindi, hindi123
     eklavya, ashta123
     anupreet, itisjp123
+    sunrise, akodia123
+    madhav, lakhan123
 */

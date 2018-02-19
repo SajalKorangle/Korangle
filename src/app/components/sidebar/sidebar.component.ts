@@ -61,7 +61,7 @@ export class SidebarComponent implements OnInit {
   }
 
   activateSubsection(subsection: any, section: any) {
-      console.log(subsection);
+      // console.log(subsection);
       this.user.appSection = subsection.path;
       this.parentPath = section.path;
   }

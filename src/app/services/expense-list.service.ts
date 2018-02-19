@@ -10,9 +10,9 @@ import {Constants} from '../classes/constants';
 @Injectable()
 export class ExpenseListService {
 
-    private expenseListUrl = Constants.DJANGO_SERVER + 'expense_list/';
+    private expenseListUrl = Constants.DJANGO_SERVER + '/school/expense_list/';
 
-    private newExpenseUrl = Constants.DJANGO_SERVER + 'new_expense/';
+    private newExpenseUrl = Constants.DJANGO_SERVER + '/school/new_expense/';
 
     private headers = new Headers({'Content-Type': 'application/json' });
 

@@ -1,29 +1,25 @@
 import {Injectable} from '@angular/core';
 
-import { Classs } from '../classes/classs';
+import { Session } from '../classes/session';
 
 import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
-import {Constants} from "../classes/constants";
+import {Constants} from '../classes/constants';
 
 @Injectable()
-export class ClassStudentListService {
+export class SessionClassListService {
 
-    // private djangoServer = 'http://localhost:8000/';
-    private djangoServer = 'http://54.174.109.85:8000/';
-
-    private classStudentListUrl = Constants.DJANGO_SERVER + '/school/class_student_list/';
+    private sessionClassListUrl = Constants.DJANGO_SERVER + '/school/session_class_list/';
 
     constructor(private http: Http) { }
 
-    getIndex(): Promise<Classs[]> {
-        const token = localStorage.getItem('schoolJWT');
+    getSessionClassList(token: string): Promise<any[]> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
-        return this.http.get(this.classStudentListUrl, {headers: headers})
+        return this.http.get(this.sessionClassListUrl, {headers: headers})
             .toPromise()
             .then(response => {
-                return response.json().data as Classs[];
+                return response.json().data as any[];
             })
             .catch(this.handleError);
     }

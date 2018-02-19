@@ -4,7 +4,7 @@ import { Expense } from '../../classes/expense';
 
 import { EmitterService } from '../../services/emitter.service';
 import set = Reflect.set;
-import moment = require("moment");
+import moment = require('moment');
 
 @Component({
     selector: 'print-expenses',
@@ -18,7 +18,7 @@ export class PrintExpensesComponent implements OnInit, OnDestroy {
     expenseList: any;
     startDate: any;
     endDate: any;
-    totalExpense = 0;
+    totalExpenses = 0;
 
     printExpensesComponentSubscription: any;
 
@@ -27,7 +27,7 @@ export class PrintExpensesComponent implements OnInit, OnDestroy {
             this.expenseList = value['expenseList'];
             this.startDate = moment(value['startDate']).format('DD-MM-YYYY');
             this.endDate = moment(value['endDate']).format('DD-MM-YYYY');
-            this.totalExpense = value['totalConcession'];
+            this.totalExpenses = value['totalExpenses'];
             setTimeout(() => {
                 window.print();
             });

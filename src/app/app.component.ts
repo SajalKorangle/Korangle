@@ -13,7 +13,7 @@ declare const $: any;
 })
 export class AppComponent implements OnInit {
 
-	private user = new User();
+	public user = new User();
 
   constructor(private authenticationService: AuthenticationService,
 			  public location: Location) {}

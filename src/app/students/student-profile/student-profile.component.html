@@ -82,7 +82,7 @@
                                 <label class="control-label">Mobile Number
                                     <span *ngIf="checkLength(currentStudent.mobileNumber)"
                                           [class.fieldRight]="checkFieldChanged(selectedStudent.mobileNumber,currentStudent.mobileNumber) && checkRight(currentStudent.mobileNumber,10)">
-                                        - {{currentStudent.mobileNumber.length}}</span>
+                                        - {{currentStudent.mobileNumber.toString().length}}</span>
                                 </label>
                                 <input type="text"
                                        class="form-control"

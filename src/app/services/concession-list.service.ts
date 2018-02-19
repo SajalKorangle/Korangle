@@ -10,7 +10,7 @@ import {Constants} from '../classes/constants';
 @Injectable()
 export class ConcessionListService {
 
-    private concessionListUrl = Constants.DJANGO_SERVER + 'concession_list/';
+    private concessionListUrl = Constants.DJANGO_SERVER + '/school/concession_list/';
 
     private headers = new Headers({'Content-Type': 'application/json' });
 

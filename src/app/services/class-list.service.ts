@@ -10,7 +10,7 @@ import {Constants} from '../classes/constants';
 @Injectable()
 export class ClassListService {
 
-    private classStudentListUrl = Constants.DJANGO_SERVER + 'class_list/';
+    private classStudentListUrl = Constants.DJANGO_SERVER + '/school/class_list/';
 
     constructor(private http: Http) { }
 

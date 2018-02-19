@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+/*import { Component, OnInit } from '@angular/core';
 declare var $: any;
 @Component({
   selector: 'app-notifications',
@@ -30,3 +30,4 @@ export class NotificationsComponent implements OnInit {
   }
 
 }
+*/

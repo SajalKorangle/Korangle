@@ -18,7 +18,6 @@
 
                 Student:
                 <select [(ngModel)]="selectedStudent"
-                        (ngModelChange)="getStudentData()"
                         style="margin-right: 15px">
                     <ng-container *ngIf="selectedClass">
                         <option *ngFor="let c of selectedClass.studentList" [ngValue] = "c">{{c.name}}</option>

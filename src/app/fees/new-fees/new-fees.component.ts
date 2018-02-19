@@ -16,7 +16,7 @@ import { startWith } from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
 
 import moment = require('moment');
-import {error} from "util";
+// import {error} from "util";
 
 export class StudentClass {
     constructor(public studentName: string,
@@ -114,8 +114,7 @@ export class NewFeesComponent implements OnInit, OnDestroy {
                 // this.selectedClass = this.classList[0];
                 // this.populateSelectStudent();
 
-                this.filteredStudentClassList = this.myControl.valueChanges
-                    .pipe(
+                this.filteredStudentClassList = this.myControl.valueChanges.pipe(
                         startWith<string | StudentClass>(''),
                         map(value => typeof value === 'string' ? value : (value as StudentClass).studentName),
                         map(studentName => this.filter(studentName.toString()))

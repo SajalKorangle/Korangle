@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+/*import { Component, OnInit } from '@angular/core';
 
 declare const google: any;
 interface Marker {
@@ -51,3 +51,4 @@ export class MapsComponent implements OnInit {
   }
 
 }
+*/

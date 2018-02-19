@@ -9,7 +9,7 @@ import { MatSelectModule } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material';
 import { MatTooltipModule } from '@angular/material';
 import { MatMenuModule } from '@angular/material';
-import { MatAutocompleteModule } from "@angular/material";
+import { MatAutocompleteModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 
@@ -21,18 +21,9 @@ import { ComponentsModule } from './components/components.module';
 
 import { AppComponent } from './app.component';
 
-/*import { UserProfileComponent } from './user-profile/user-profile.component';
-import { TableListComponent } from './table-list/table-list.component';
-import { TypographyComponent } from './typography/typography.component';
-import { IconsComponent } from './icons/icons.component';
-import { MapsComponent } from './maps/maps.component';
-import { NotificationsComponent } from './notifications/notifications.component';
-import { UpgradeComponent } from './upgrade/upgrade.component';
-import { FeesReceiptsComponent } from './fees-receipts/fees-receipts.component';
-import { StudentListComponent } from './student-list/student-list.component';*/
-
 import { StudentProfileComponent } from './students/student-profile/student-profile.component';
 import { StudentListComponent } from './students/student-list/student-list.component';
+import { PromoteStudentComponent } from "./students/promote-student/promote-student.component";
 
 import { NewStudentComponent } from './new-student/new-student.component';
 
@@ -56,8 +47,8 @@ import { PrintComponent } from './print/print.component';
 import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
 import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
 import { PrintMarksheetComponent } from './print/print-marksheet/print-marksheet.component';
-import { PrintTransferCertificateComponent } from "./print/print-transfer-certificate/print-transfer-certificate.component";
-import { PrintNewFeeReceiptComponent } from "./print/print-new-fee-receipt/print-new-fee-receipt.component";
+import { PrintTransferCertificateComponent } from './print/print-transfer-certificate/print-transfer-certificate.component';
+import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print-new-fee-receipt.component';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 
@@ -85,6 +76,7 @@ import { GradePipe } from './pipes/grade.pipe';
 
         StudentProfileComponent,
         StudentListComponent,
+        PromoteStudentComponent,
 
         NewStudentComponent,
 

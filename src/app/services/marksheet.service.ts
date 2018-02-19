@@ -8,9 +8,9 @@ import {Constants} from '../classes/constants';
 @Injectable()
 export class MarksheetService {
 
-    private getStudentMarksheetUrl = Constants.DJANGO_SERVER + 'get_student_marksheet/';
-    private updateStudentMarksheetUrl = Constants.DJANGO_SERVER + 'update_student_marksheet/';
-    private deleteStudentMarksheetUrl = Constants.DJANGO_SERVER + 'delete_student_marksheet/';
+    private getStudentMarksheetUrl = Constants.DJANGO_SERVER + '/school/get_student_marksheet/';
+    private updateStudentMarksheetUrl = Constants.DJANGO_SERVER + '/school/update_student_marksheet/';
+    private deleteStudentMarksheetUrl = Constants.DJANGO_SERVER + '/school/delete_student_marksheet/';
 
     private headers = new Headers({'Content-Type': 'application/json' });
 

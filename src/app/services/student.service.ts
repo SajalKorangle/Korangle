@@ -10,11 +10,17 @@ import {Constants} from '../classes/constants';
 @Injectable()
 export class StudentService {
 
-    private studentDataUrl = Constants.DJANGO_SERVER + 'student_data/';
-    private updateStudentUrl = Constants.DJANGO_SERVER + 'update_student/';
-    private deleteStudentUrl = Constants.DJANGO_SERVER + 'delete_student_view/';
-    private studentDataClassListUrl = Constants.DJANGO_SERVER + 'student_data_class_list/';
+    /* school app */
+    private studentDataUrl = Constants.DJANGO_SERVER + '/school/student_data/';
+    private updateStudentUrl = Constants.DJANGO_SERVER + '/school/update_student/';
+    private deleteStudentUrl = Constants.DJANGO_SERVER + '/school/delete_student_view/';
+    private studentDataClassListUrl = Constants.DJANGO_SERVER + '/school/student_data_class_list/';
 
+    /* student app */
+    private studentListSessionClassWiseUrl = Constants.DJANGO_SERVER + '/student/student_list_session_class_wise/';
+    private promoteStudentListUrl = Constants.DJANGO_SERVER + '/student/promote_student_list/';
+
+    /* headers */
     private headers = new Headers({'Content-Type': 'application/json' });
 
     constructor(private http: Http) { }
@@ -64,6 +70,31 @@ export class StudentService {
     private handleError(error: any): Promise<any> {
         console.error('An error occurred', error); // for demo purposes only
         return Promise.reject(error.message || error);
+    }
+
+    getStudentListSessionClassWise(sessionDbId: number, classDbId: number, token: string): Promise<any> {
+        const body = { 'sessionDbId': sessionDbId, 'classDbId': classDbId };
+        this.headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        return this.http.post(this.studentListSessionClassWiseUrl, body, {headers: this.headers})
+            .toPromise()
+            .then(response => {
+                return response.json().data;
+            }).catch(this.handleError);
+    }
+
+    promoteStudentList(studentList: any,
+                       fromSessionDbId: number, fromClassDbId: number,
+                       toSessionDbId: number, toClassDbId: number,
+                       token: string) {
+        const body = { 'studentList': studentList,
+            'fromSessionDbId': fromSessionDbId, 'fromClassDbId': fromClassDbId,
+            'toSessionDbId': toSessionDbId, 'toClassDbId': toClassDbId};
+        this.headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        return this.http.post(this.promoteStudentListUrl, body, {headers: this.headers})
+            .toPromise()
+            .then(response => {
+                return response.json().data;
+            }).catch(this.handleError);
     }
 
 }
