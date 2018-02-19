@@ -131,49 +131,6 @@ export class User {
         this.username = data.username;
         this.email = data.email;
         this.initializeSchoolData(data);
-        /*if (this.username === 'anupreet') {
-            this.color = 'indigo';
-            this.btn_color = 'primary';
-            this.schoolLogo = '/assets/img/anupreet_logo.png';
-            this.schoolPrintName = 'ANUPREET PVT ITI';
-            this.complexFee = true;
-            // this.removeMarksheet();
-        } else if (this.username === 'brightstarsalsalai') {
-            this.color = 'green';
-            this.btn_color = 'warning';
-            this.schoolLogo = '/assets/img/bright_logo.jpg';
-            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
-            this.complexFee = false;
-            // this.removeMarksheet();
-        } else if (this.username === 'brighthindi') {
-            this.color = 'indigo';
-            this.btn_color = 'primary';
-            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
-            this.schoolLogo = '/assets/img/bright_logo.jpg';
-            this.complexFee = false;
-            // this.removeMarksheet();
-        } else if (this.username === 'brightstar') {
-            this.color = 'green';
-            this.btn_color = 'warning';
-            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
-            this.schoolLogo = '/assets/img/bright_logo.jpg';
-            this.complexFee = false;
-            // this.removeMarksheet();
-        } else if (this.username === 'eklavya') {
-            this.color = 'indigo';
-            this.btn_color = 'primary';
-            this.schoolLogo = '/assets/img/eklavya_logo.png';
-            this.schoolPrintName = 'Eklavya School';
-            this.complexFee = false;
-            // this.addMarksheet();
-        } else if (this.username === 'demo') {
-            this.color = 'green';
-            this.btn_color = 'warning';
-            this.schoolPrintName = 'Demo School';
-            this.schoolLogo = '/assets/img/angular2-logo-red.png';
-            this.complexFee = true;
-            // this.removeMarksheet();
-        }*/
         if (Constants.DJANGO_SERVER === 'http://localhost:8000') {
             this.addMarksheet();
             this.addPromoteStudent();

@@ -100,6 +100,7 @@
                                 <mat-select placeholder="Gender"
                                             [(ngModel)]="newStudent.gender"
                                            >
+                                    <mat-option>None</mat-option>
                                     <mat-option value="Male">Male</mat-option>
                                     <mat-option value="Female">Female</mat-option>
                                     <mat-option value="Other">Other</mat-option>
@@ -121,6 +122,7 @@
                                     <mat-option value="Scheduled Tribe">Scheduled Tribe</mat-option>
                                     <mat-option value="Other Backward Classes">Other Backward Classes</mat-option>
                                     <mat-option value="General">General</mat-option -->
+                                    <mat-option>None</mat-option>
                                     <mat-option value="SC">SC</mat-option>
                                     <mat-option value="ST">ST</mat-option>
                                     <mat-option value="OBC">OBC</mat-option>
@@ -139,9 +141,11 @@
                                 <mat-select placeholder="Religion"
                                             [(ngModel)]="newStudent.religion"
                                            >
+                                    <mat-option>None</mat-option>
                                     <mat-option value="Hinduism">Hinduism</mat-option>
                                     <mat-option value="Islam">Islam</mat-option>
                                     <mat-option value="Christianity">Christianity</mat-option>
+                                    <mat-option value="Jainism">Jainism</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
@@ -156,6 +160,7 @@
                                 <mat-select placeholder="Blood Group"
                                             [(ngModel)]="newStudent.bloodGroup"
                                            >
+                                    <mat-option>None</mat-option>
                                     <mat-option value="A -">A -</mat-option>
                                     <mat-option value="A +">A +</mat-option>
                                     <mat-option value="B -">B -</mat-option>

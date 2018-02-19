@@ -141,6 +141,7 @@
                                 <mat-select placeholder="Gender"
                                             [ngModel]="selectedStudent.gender"
                                             (ngModelChange)="currentStudent.gender=$event">
+                                    <mat-option>None</mat-option>
                                     <mat-option value="Male">Male</mat-option>
                                     <mat-option value="Female">Female</mat-option>
                                     <mat-option value="Other">Other</mat-option>
@@ -162,6 +163,7 @@
                                     <mat-option value="Scheduled Tribe">Scheduled Tribe</mat-option>
                                     <mat-option value="Other Backward Classes">Other Backward Classes</mat-option>
                                     <mat-option value="General">General</mat-option -->
+                                    <mat-option>None</mat-option>
                                     <mat-option value="SC">SC</mat-option>
                                     <mat-option value="ST">ST</mat-option>
                                     <mat-option value="OBC">OBC</mat-option>
@@ -180,6 +182,7 @@
                                 <mat-select placeholder="Religion"
                                             [ngModel]="selectedStudent.religion"
                                             (ngModelChange)="currentStudent.religion=$event">
+                                    <mat-option>None</mat-option>
                                     <mat-option value="Hinduism">Hinduism</mat-option>
                                     <mat-option value="Islam">Islam</mat-option>
                                     <mat-option value="Christianity">Christianity</mat-option>
@@ -198,6 +201,7 @@
                                 <mat-select placeholder="Blood Group"
                                             [ngModel]="selectedStudent.bloodGroup"
                                             (ngModelChange)="currentStudent.bloodGroup=$event">
+                                    <mat-option>None</mat-option>
                                     <mat-option value="A -">A -</mat-option>
                                     <mat-option value="A +">A +</mat-option>
                                     <mat-option value="B -">B -</mat-option>
