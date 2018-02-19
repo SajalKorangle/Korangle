@@ -10,7 +10,7 @@ import json
 
 from .session import get_current_session_object
 
-current_session_object = get_current_session_object()
+# current_session_object = get_current_session_object()
 
 # Get Filtered Student List
 @api_view(['POST'])
@@ -55,7 +55,7 @@ def get_student_filtered_list(request):
 			'''if 'className' in column_list:
 				tempStudent['className'] = student.parentClass.className'''
 			if 'className' in column_list:
-				tempStudent['className'] = SessionClass.objects.filter(student=student,parentSession=current_session_object)[0].parentClass.className
+				tempStudent['className'] = SessionClass.objects.filter(student=student,parentSession=get_current_session_object())[0].parentClass.className
 			if 'motherName' in column_list:
 				tempStudent['motherName'] = student.motherName
 			if 'gender' in column_list:

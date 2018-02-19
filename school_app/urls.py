@@ -1,7 +1,7 @@
 # greetings/urls.py
 from django.conf.urls import url
 
-from .views import student_data_view, class_student_list_view, class_list_view, new_student_data_view, new_fee_receipt_view, update_student_view, delete_student_view, new_expense_view, expense_list_view, new_concession_view, concession_list_view, student_data_class_list_view 
+from .views import student_data_view, class_student_list_view, class_list_view, new_student_data_view, new_fee_receipt_view, update_student_view, delete_student_view, new_expense_view, expense_list_view, new_concession_view, concession_list_view, student_data_class_list_view, get_session_class_list_view
 
 from .fees import fee_list_view
 
@@ -31,6 +31,8 @@ urlpatterns = [
 
 		url(r'^get-user-details/', UserDetailsView.as_view(), name="user_details"),
 		url(r'^login-user-details/', LoginUserView.as_view(), name="login_user_details"),
+
+		url(r'^session_class_list/', get_session_class_list_view),
 
     # url(r'^authentication/', authentication_view),
     # url(r'^login/', login_data_view),

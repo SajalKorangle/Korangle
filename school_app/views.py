@@ -7,8 +7,6 @@ from django.contrib.auth import authenticate, login, logout
 
 from .session import get_current_session_object
 
-current_session_object = get_current_session_object()
-
 from django.db.models import Max
 
 from rest_framework.views import APIView
@@ -62,7 +60,7 @@ def class_student_list_view(request):
 			tempClass['name'] = class_object.name
 			tempClass['dbId'] = class_object.id
 			tempClass['studentList'] = []
-			session_class_queryset = SessionClass.objects.filter(parentSession=current_session_object,parentClass=class_object)
+			session_class_queryset = SessionClass.objects.filter(parentSession=get_current_session_object(),parentClass=class_object)
 			'''for student in class_object.student_set.all().order_by('name'):'''
 			if len(session_class_queryset) == 1:
 				for student in Student.objects.filter(sessionClass=session_class_queryset[0]):
@@ -103,7 +101,7 @@ def new_student_data_view(request):
 	if request.user.is_authenticated:
 		student_data = json.loads(request.body.decode('utf-8'))
 		class_object = Class.objects.get(id=student_data['classDbId'])
-		session_class_queryset = SessionClass.objects.filter(parentSession=current_session_object,parentClass=class_object)
+		session_class_queryset = SessionClass.objects.filter(parentSession=get_current_session_object(),parentClass=class_object)
 		'''student_object = Student(name=student_data['name'],fathersName=student_data['fathersName'],parentClass=class_object)'''
 		student_object = Student(name=student_data['name'],fathersName=student_data['fathersName'],parentUser=request.user)
 		if student_data['mobileNumber']:
@@ -338,7 +336,7 @@ def concession_list_view(request):
 			tempConcession['studentName'] = concession.parentStudent.name
 			tempConcession['fatherName'] = concession.parentStudent.fathersName
 			'''tempConcession['className'] = concession.parentStudent.parentClass.name'''
-			tempConcession['className'] = SessionClass.objects.filter(student=concession.parentStudent,parentSession=current_session_object)[0].parentClass.name
+			tempConcession['className'] = SessionClass.objects.filter(student=concession.parentStudent,parentSession=get_current_session_object())[0].parentClass.name
 			tempConcession['remark'] = concession.remark
 			concession_list.append(tempConcession)
 		return JsonResponse({'data':concession_list})
@@ -358,8 +356,8 @@ def get_student_data(student_object, user):
 		student_data['scholarNumber'] = student_object.scholarNumber
 		'''student_data['classDbId'] = student_object.parentClass.id
 		student_data['className'] = student_object.parentClass.name'''
-		student_data['classDbId'] = SessionClass.objects.filter(student=student_object,parentSession=current_session_object)[0].parentClass.id
-		student_data['className'] = SessionClass.objects.filter(student=student_object,parentSession=current_session_object)[0].parentClass.name
+		student_data['classDbId'] = SessionClass.objects.filter(student=student_object,parentSession=get_current_session_object())[0].parentClass.id
+		student_data['className'] = SessionClass.objects.filter(student=student_object,parentSession=get_current_session_object())[0].parentClass.name
 
 		# new student profile data
 		student_data['motherName'] = student_object.motherName
@@ -464,8 +462,8 @@ def get_student_profile(student_object, user):
 		student_data['scholarNumber'] = student_object.scholarNumber
 		'''student_data['classDbId'] = student_object.parentClass.id
 		student_data['className'] = student_object.parentClass.name'''
-		student_data['classDbId'] = SessionClass.objects.filter(student=student_object,parentSession=current_session_object)[0].parentClass.id
-		student_data['className'] = SessionClass.objects.filter(student=student_object,parentSession=current_session_object)[0].parentClass.name
+		student_data['classDbId'] = SessionClass.objects.filter(student=student_object,parentSession=get_current_session_object())[0].parentClass.id
+		student_data['className'] = SessionClass.objects.filter(student=student_object,parentSession=get_current_session_object())[0].parentClass.name
 
 		# new student profile data
 		student_data['motherName'] = student_object.motherName
@@ -498,3 +496,11 @@ def get_student_profile(student_object, user):
 			student_data['feesDue'] -= studentConcessionEntry.amount
 		return student_data
 
+from .session import get_session_class_list
+@api_view(['GET'])
+def get_session_class_list_view(request):
+	if request.user.is_authenticated:
+		response = get_session_class_list(request.user)
+		return JsonResponse({'data': response})
+	else:
+		return JsonResponse({'data':'error'})

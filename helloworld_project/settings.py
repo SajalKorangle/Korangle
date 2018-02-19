@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 		'message_app',
 		'school_app',
+		'student_app',
 		'corsheaders',
 
 		'django_extensions',

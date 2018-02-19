@@ -141,6 +141,7 @@ class School(models.Model):
 class Session(models.Model):
 	startDate = models.DateField()
 	endDate = models.DateField()
+	name = models.TextField(default='',null=True)
 
 	def __str__(self):
 		return str(self.startDate) + ' --- ' + str(self.endDate)
