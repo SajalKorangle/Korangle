@@ -13,7 +13,7 @@ from .session import get_current_session_object
 # current_session_object = get_current_session_object()
 
 # Get Filtered Student List
-@api_view(['POST'])
+'''@api_view(['POST'])
 def get_student_filtered_list(request):
 
 	errResponse = {}
@@ -27,11 +27,7 @@ def get_student_filtered_list(request):
 		classDbId_list = request.data['classDbIdList']
 		column_list = request.data['columnList']
 
-		'''student_query = Student.objects.filter(parentClass__parentUser=request.user,
-																						parentClass__pk__in=classDbId_list).order_by('parentClass__orderNumber', 'name')'''
-
-		student_query = Student.objects.filter(parentUser=request.user,
-																						sessionClass__parentClass__pk__in=classDbId_list).order_by('sessionClass__parentClass__orderNumber', 'name')
+		student_query = Student.objects.filter(parentUser=request.user,sessionClass__parentClass__pk__in=classDbId_list).order_by('sessionClass__parentClass__orderNumber', 'name')
 
 		for student in student_query:
 			tempStudent = {}
@@ -52,8 +48,6 @@ def get_student_filtered_list(request):
 				tempStudent['dateOfBirth'] = student.dateOfBirth
 			if 'remark' in column_list:
 				tempStudent['remark'] = student.remark
-			'''if 'className' in column_list:
-				tempStudent['className'] = student.parentClass.className'''
 			if 'className' in column_list:
 				tempStudent['className'] = SessionClass.objects.filter(student=student,parentSession=get_current_session_object())[0].parentClass.className
 			if 'motherName' in column_list:
@@ -62,8 +56,6 @@ def get_student_filtered_list(request):
 				tempStudent['gender'] = student.gender
 			if 'caste' in column_list:
 				tempStudent['caste'] = student.caste
-			'''if 'category' in column_list:
-				tempStudent['category'] = student.category'''
 			if 'category' in column_list:
 				tempStudent['category'] = student.newCategoryField
 			if 'religion' in column_list:
@@ -108,5 +100,5 @@ def get_student_filtered_list(request):
 		response['classList'] = classList
 		return JsonResponse({'data':response})
 	else:
-		return JsonResponse({'data':'error'})
+		return JsonResponse({'data':'error'})'''
 

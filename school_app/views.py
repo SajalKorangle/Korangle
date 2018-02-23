@@ -69,7 +69,7 @@ def class_student_list_view(request):
 					tempStudent['dbId'] = student.id
 					tempClass['studentList'].append(tempStudent)
 			else:
-				print('There should exist 1 session class per class')
+				print('Error: There should exist 1 session class per class' + str(len(session_class_queryset)) + class_object.name)
 			classList.append(tempClass)
 		return JsonResponse({'data':classList})
 	else:
