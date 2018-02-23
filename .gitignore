@@ -6,3 +6,4 @@ db.sqlite3*
 copydatabasefromserver.sh
 test_database
 helloworld_project/media
+*.idea
