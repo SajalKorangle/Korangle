@@ -35,7 +35,7 @@ export class NewFeeReceiptComponent implements OnInit, OnDestroy {
             alert('Amount should be populated');
             return;
         }
-        if (this.newFeeReceipt.generationDateTime === undefined) {
+        if (this.newFeeReceipt.voucherDate === undefined) {
             alert('Date should be populated');
             return;
         }

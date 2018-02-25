@@ -4,6 +4,6 @@ export class Expense {
     voucherNumber: number;
     amount: number;
     remark: string;
-    generationDateTime: any;
+    voucherDate: any;
 
 }

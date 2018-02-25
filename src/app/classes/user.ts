@@ -43,6 +43,7 @@ export class User {
     color = 'red'; // School Profile
     btn_color = 'danger'; // School Profile
     complexFee = false; // School Profile
+    schoolDbId = 0;
 
     // imgSrc = '/assets/img/angular2-logo-red.png';
 
@@ -71,7 +72,17 @@ export class User {
                     title: 'Previous Record',
                 }
             ] },
-        { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false, subsection: [] },
+        { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false,
+            subsection: [
+                {
+                    path: 'new_expense',
+                    title: 'Submit Expense',
+                },
+                {
+                    path: 'expense_list',
+                    title: 'View Record',
+                }
+            ] },
         { path: 'concession', title: 'Concession', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {
@@ -125,6 +136,7 @@ export class User {
         this.btn_color = data.schoolData.secondaryThemeColor;
         this.schoolLogo = Constants.DJANGO_SERVER + data.schoolData.logo;
         this.complexFee = data.schoolData.complexFeeStructure;
+        this.schoolDbId = data.schoolData.dbId;
     }
 
     initializeUserData(data: any): void {
@@ -241,4 +253,5 @@ export class User {
     anupreet, itisjp123
     sunrise, akodia123
     madhav, lakhan123
+    talent, innovative123
 */

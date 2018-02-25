@@ -1,4 +1,6 @@
+/*
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
 
 import { IconsComponent } from './icons.component';
 
@@ -23,3 +25,4 @@ describe('IconsComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+*/

@@ -36,7 +36,9 @@ import { FeesListComponent } from './fees/fees-list/fees-list.component';
 import { FeesTableListComponent } from './fees/fees-table-list/fees-table-list.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
-import { ExpensesComponent } from './expenses/expenses.component';
+// import { ExpensesComponent } from './expenses/expenses.component';
+import { NewExpenseComponent } from './expenses/new-expense/new-expense.component';
+import { ExpenseListComponent } from './expenses/expense-list/expense-list.component';
 
 import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
 import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
@@ -67,7 +69,9 @@ import { GradePipe } from './pipes/grade.pipe';
         FeesTableListComponent,
         LoadingSpinnerComponent,
 
-        ExpensesComponent,
+        // ExpensesComponent,
+        NewExpenseComponent,
+        ExpenseListComponent,
 
         NewConcessionComponent,
         ConcessionListComponent,
