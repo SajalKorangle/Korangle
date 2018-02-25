@@ -6,12 +6,9 @@ from school_app.session import get_current_session_object
 # current_session_object = get_current_session_object()
 
 class StudentUpdateProfileTestCase(TestCase):
-	def setUp(self):
-		print('nothing to setup in Student Update Profile test')
 
 	# Constraint Check
 	def test_constraint_one_class_per_session(self):
-		print('test_one_class_per_session')
 		for user_object in User.objects.all():
 			for class_object in user_object.class_set.all().order_by('orderNumber'):
 				session_class_queryset = SessionClass.objects.filter(parentSession=get_current_session_object(),parentClass=class_object)

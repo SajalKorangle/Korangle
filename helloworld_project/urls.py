@@ -23,5 +23,6 @@ urlpatterns = [
 	url(r'^', include('message_app.urls')),
 	url(r'^school/', include('school_app.urls')),
 	url(r'^student/', include('student_app.urls')),
+	url(r'^expense/', include('expense_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

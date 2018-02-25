@@ -42,14 +42,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-		'rest_framework',
+	'rest_framework',
 
-		'message_app',
-		'school_app',
-		'student_app',
-		'corsheaders',
+	'message_app',
+	'school_app',
+	'student_app',
+    'expense_app',
 
-		'django_extensions',
+	'corsheaders',
+
+	'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -170,7 +172,6 @@ EMAIL_PORT = 587
 
 import sys
 if 'test' in sys.argv:
-	print('testing okay')
 	DATABASES = {
 		'default': {
 			'ENGINE': 'django.db.backends.sqlite3',

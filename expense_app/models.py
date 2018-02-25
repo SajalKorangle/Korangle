@@ -8,7 +8,7 @@ class Expense(models.Model):
 	voucherNumber = models.TextField()
 	amount = models.IntegerField()
 	remark = models.TextField()
-	voucherDate = models.DateField(auto_now_add=True)
+	voucherDate = models.DateField()
 	parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
 
 	def __str__(self):
