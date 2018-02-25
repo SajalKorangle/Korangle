@@ -101,7 +101,7 @@ export class ExpenseListComponent {
                   }
               });
 
-              if (this.dateLabels.length > 0 && this.displayEndDate !== this.displayStartDate) {
+              if (this.dateLabels.length > 1 && this.displayEndDate !== this.displayStartDate) {
                   setTimeout( () => {
                       const dataExpenseChart: any = {
                           /*labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
