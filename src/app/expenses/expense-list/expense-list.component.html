@@ -65,7 +65,10 @@
 
         <div class="card"
              style="min-height: 100%"
-             *ngIf="!isLoading && expenseList.length > 0 && (displayStartDate != displayEndDate)">
+             *ngIf="!isLoading &&
+                    expenseList.length > 0 &&
+                    (displayStartDate != displayEndDate) &&
+                    dateLabels.length > 1">
             <div class="card-content">
                 <div class="row">
                     Max Expense: {{maxTotalExpenseInADate | currency:'INR':true:'1.1-1'}}
