@@ -23,7 +23,6 @@ export class PrintFeeReceiptComponent implements OnInit, OnDestroy, AfterViewChe
         this.feeReceipt = new TempFee();
         this.printFeeReceiptComponentSubscription = EmitterService.get('print-fee-receipt-component').subscribe( value => {
             this.feeReceipt.copy(value);
-            alert(this.feeReceipt.fathersName);
             this.checkView = true;
         });
     }
