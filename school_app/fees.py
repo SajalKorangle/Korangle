@@ -1,16 +1,11 @@
 
-from .models import Fee, SubFee, SessionClass, Session, Class
+from .models import Fee, SubFee
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
-
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 import json
 
 from .session import get_current_session_object
-
-# current_session_object = get_current_session_object()
 
 @api_view(['POST'])
 def fee_list_view(request):
@@ -43,7 +38,10 @@ def fee_list_view(request):
 			tempFee['studentName'] = fee.parentStudent.name
 			tempFee['fatherName'] = fee.parentStudent.fathersName
 			'''tempFee['className'] = fee.parentStudent.parentClass.name'''
-			tempFee['className'] = SessionClass.objects.filter(student=fee.parentStudent,parentSession=get_current_session_object())[0].parentClass.name
+			'''tempFee['className'] = SessionClass.objects.filter(student=fee.parentStudent,parentSession=get_current_session_object())[0].parentClass.name'''
+			tempFee['className'] = fee.parentStudent.friendSection \
+				.get(parentClassSession__parentSession=get_current_session_object()) \
+				.parentClassSession.parentClass.name
 			tempFee['remark'] = fee.remark
 			fee_list.append(tempFee)
 		return JsonResponse({'data':fee_list})

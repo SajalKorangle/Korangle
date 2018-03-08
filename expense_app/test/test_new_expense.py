@@ -1,4 +1,4 @@
-from django.test import TestCase
+from parent_test import ParentTestCase
 from school_app.models import School
 
 from django.contrib.auth.models import User
@@ -10,7 +10,7 @@ from expense_app.handlers.new_expense import new_expense
 import datetime
 
 
-class NewExpenseTestCase(TestCase):
+class NewExpenseTestCase(ParentTestCase):
 
     # Method Check
     def test_new_expense(self):

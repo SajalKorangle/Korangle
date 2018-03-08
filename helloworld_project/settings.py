@@ -45,14 +45,19 @@ INSTALLED_APPS = [
 	'rest_framework',
 
 	'message_app',
+
 	'school_app',
-	'student_app',
+    'class_app',
+    'student_app',
     'expense_app',
+    'fee_app',
 
 	'corsheaders',
 
 	'django_extensions',
 ]
+
+SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E307']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -182,3 +187,28 @@ if 'test' in sys.argv:
 			},
 		},
 	}
+
+import subprocess
+command = 'git rev-parse --abbrev-ref HEAD'
+proc = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
+(out, err) = proc.communicate()
+current_branch = str(out).rstrip('\\n\'').lstrip('b\'')
+if current_branch != 'master':
+    print('Branch: '+current_branch)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'new_class_structure_db.sqlite3'),
+        }
+    }
+    if 'test' in sys.argv:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'USER': 'arnava',
+                'NAME': os.path.join(BASE_DIR, current_branch+'_test_database'),
+                'TEST': {
+                    'NAME': current_branch+'_test_database',
+                },
+            },
+        }

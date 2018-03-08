@@ -1,4 +1,4 @@
-from school_app.models import Student, Session, Class, SessionClass 
+from school_app.models import Student, SessionClass
 
 def get_student_list_session_class_wise(user, data):
 	sessionDbId = data['sessionDbId']

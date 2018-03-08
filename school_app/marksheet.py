@@ -11,9 +11,8 @@
 
 #import os
 
-from .models import Class, Student, Subject, Marks, SessionClass, Session
+from .models import Student, Subject, Marks
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -21,8 +20,6 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 import json
 
 from .session import get_current_session_object
-
-# current_session_object = get_current_session_object()
 
 # Get Student Marksheet by studentDbId
 @api_view(['POST'])
@@ -52,8 +49,8 @@ def get_student_marksheet(request):
 		marksheet['marks'] = []
 
 		'''subject_list = Subject.objects.filter(parentClass=student.parentClass)'''
-		subject_list = Subject.objects.filter(parentClass=SessionClass.objects.filter(student=student,parentSession=get_current_session_object())[0].parentClass)
-		for subject in subject_list:
+		# subject_list = Subject.objects.filter(parentClass=SessionClass.objects.filter(student=student,parentSession=get_current_session_object())[0].parentClass)
+		'''for subject in subject_list:
 			tempMarks = {}
 			tempMarks['subjectName'] = subject.name
 			tempMarks['subjectId'] = subject.id
@@ -64,7 +61,7 @@ def get_student_marksheet(request):
 			if len(marks) > 0:
 				tempMarks['marks'] = marks[0].marks
 				tempMarks['dbId'] = marks[0].id
-			marksheet['marks'].append(tempMarks)
+			marksheet['marks'].append(tempMarks)'''
 
 		return JsonResponse({'data': marksheet})
 
