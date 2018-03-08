@@ -7,26 +7,6 @@
             </div>
             <div class="card-content">
 
-                <!-- Class:
-                <select [ngModel]="selectedClass"
-                        (ngModelChange)="onChangeSelectedClass($event)"
-                        style="margin-right: 15px">
-                    <ng-container>
-                        <option *ngFor = "let c of classList;" [ngValue]="c">{{c.name}}</option>
-                    </ng-container>
-                </select>
-
-                Student:
-                <select [(ngModel)]="selectedStudent"
-                        (ngModelChange)="getStudentData()"
-                        style="margin-right: 15px">
-                    <ng-container *ngIf="selectedClass">
-                        <option *ngFor="let c of selectedClass.studentList" [ngValue] = "c">{{c.name}}</option>
-                    </ng-container>
-                </select>
-
-                <br/ -->
-
                 <form class="example-form" *ngIf="!isListLoading">
                     <mat-form-field class="example-full-width">
                         <input type="text"
@@ -38,9 +18,9 @@
                         <mat-autocomplete #auto="matAutocomplete"
                                           (optionSelected)="getStudentFeeData($event.option.value)"
                                           [displayWith]="displayFn">
-                            <mat-option *ngFor="let studentClass of filteredStudentClassList | async"
-                                        [value]="studentClass">
-                                {{ studentClass.studentName }}, {{ studentClass.className }}
+                            <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
+                                {{ student.name }}, {{ student.className }}
+                                <span *ngIf="student.sectionName && student.sectionName != ''">, {{student.sectionName}}</span>
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
@@ -146,10 +126,6 @@
 
                 </ng-container>
 
-                <!-- ng-container *ngIf="selectedClass && !selectedStudent">
-                    <br/>No Students in this class
-                </ng-container -->
-
             </div>
         </div>
 
@@ -161,41 +137,9 @@
             <div class="card-content" id="forforfor">
                 <div class="row">
                     <div class="col-md-12">
-                        <app-fees-table-list [user]="user"
-                                             [feesList]="selectedStudent.feesList"
-                                             [whileSubmittingFee]="true"></app-fees-table-list>
-                        <!-- table cellpadding="10" class="table-content">
-                            <style>
-                                td { padding: 10px; }
-                                tr { border-bottom: 1px solid gainsboro; }
-                            </style>
-                            <tr>
-                                <td align="center">Receipt No.</td>
-                                <td align="center">Amount</td>
-                                <td align="center">Date</td>
-                                <td align="center">Remark</td>
-                                <td align="center" *ngIf="user.complexFee">Bifurcation</td>
-                                <td align="center">-</td>
-                            </tr>
-                            <tr *ngFor="let feeEntry of selectedStudent.feesList">
-                                <td align="right">{{feeEntry.receiptNumber}}</td>
-                                <td align="right">{{feeEntry.amount}}</td>
-                                <td align="center">{{feeEntry.generationDateTime}}</td>
-                                <td align="left">{{feeEntry.remark}}</td>
-                                <td align="center" *ngIf="user.complexFee">
-                                    <span *ngIf="feeEntry.tuitionFeeAmount!==0">TutionFee: {{feeEntry.tuitionFeeAmount}},</span>
-                                    <span *ngIf="feeEntry.lateFeeAmount!==0">LateFee: {{feeEntry.lateFeeAmount}},</span>
-                                    <span *ngIf="feeEntry.cautionMoneyAmount!==0">CautionMoney: {{feeEntry.cautionMoneyAmount}},</span>
-                                </td>
-                                <td align="center">
-                                    <button type="button"
-                                            style="padding: 8px 11px"
-                                            class="btn btn-{{user.btn_color}}"
-                                            (click)="printFeeReceipt(feeEntry)">
-                                        <i class="material-icons">print</i></button>
-                                </td>
-                            </tr>
-                        </table -->
+                        <app-fees-table [user]="user"
+                                        [feesList]="selectedStudent.feesList"
+                                        [whileSubmittingFee]="true"></app-fees-table>
                     </div>
                 </div>
             </div>
@@ -204,7 +148,7 @@
         <div *ngIf="!isLoading && selectedStudent && selectedStudent.concessionList.length !== 0"
              class="card" style="min-height: 100%">
             <div class="card-header" [attr.data-background-color]="user.color">
-                <h4 class="title">Student Concession Records</h4>
+                <h4 class="title">Previous Concession</h4>
             </div>
             <div class="card-content" id="forforforfor">
                 <div class="row">
@@ -231,9 +175,6 @@
         </div>
 
         <ng-container *ngIf="isLoading || isListLoading">
-            <!-- div class="loader-container" align="center">
-                <div class="loader"></div>
-            </div -->
             <app-loading-spinner [user]="user"></app-loading-spinner>
         </ng-container>
 

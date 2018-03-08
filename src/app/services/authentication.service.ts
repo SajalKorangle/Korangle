@@ -43,7 +43,7 @@ export class AuthenticationService {
     }
 
     getUserDetails(token: string): Promise<any> {
-        console.log(token);
+        // console.log(token);
         this.headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.get(this.getUserDetailsUrl, {headers : this.headers})
             .toPromise()

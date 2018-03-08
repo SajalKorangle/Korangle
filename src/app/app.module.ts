@@ -12,6 +12,7 @@ import { MatMenuModule } from '@angular/material';
 import { MatAutocompleteModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
+import { MatIconModule } from '@angular/material';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
@@ -23,7 +24,7 @@ import { AppComponent } from './app.component';
 
 import { StudentProfileComponent } from './students/student-profile/student-profile.component';
 import { StudentListComponent } from './students/student-list/student-list.component';
-import { PromoteStudentComponent } from "./students/promote-student/promote-student.component";
+import { PromoteStudentComponent } from './students/promote-student/promote-student.component';
 
 import { NewStudentComponent } from './new-student/new-student.component';
 
@@ -33,7 +34,7 @@ import { NewFeeReceiptComponent } from './modal/new-fee-receipt/new-fee-receipt.
 import { NewFeesComponent } from './fees/new-fees/new-fees.component';
 import { FeesListComponent } from './fees/fees-list/fees-list.component';
 
-import { FeesTableListComponent } from './fees/fees-table-list/fees-table-list.component';
+import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 // import { ExpensesComponent } from './expenses/expenses.component';
@@ -66,7 +67,7 @@ import { GradePipe } from './pipes/grade.pipe';
         NewFeesComponent,
         NewFeeReceiptComponent,
 
-        FeesTableListComponent,
+        FeesTableComponent,
         LoadingSpinnerComponent,
 
         // ExpensesComponent,
@@ -131,6 +132,7 @@ import { GradePipe } from './pipes/grade.pipe';
         MatAutocompleteModule,
         MatFormFieldModule,
         MatInputModule,
+        MatIconModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

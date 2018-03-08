@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewChecked } from '@angular/core';
 
-import { Fee } from '../../classes/fee';
+import { TempFee } from '../../fees/classes/temp-fee';
 
 import { EmitterService } from '../../services/emitter.service';
 
@@ -9,21 +9,31 @@ import { EmitterService } from '../../services/emitter.service';
     templateUrl: './print-new-fee-receipt.component.html',
     styleUrls: ['./print-new-fee-receipt.component.css'],
 })
-export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy {
+export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     @Input() user;
 
-    feeReceipt: Fee;
+    feeReceipt: TempFee;
 
     printNewFeeReceiptComponentSubscription: any;
 
+    checkView = false;
+
     ngOnInit(): void {
-        this.feeReceipt = new Fee();
+        this.feeReceipt = new TempFee();
         this.printNewFeeReceiptComponentSubscription = EmitterService.get('print-new-fee-receipt-component').subscribe( value => {
+            this.feeReceipt.copy(value);
+            this.checkView = true;
+        });
+    }
+
+    ngAfterViewChecked(): void {
+        if(this.checkView) {
+            this.checkView = false;
             setTimeout(() => {
                 window.print();
             });
-        });
+        }
     }
 
     ngOnDestroy(): void {

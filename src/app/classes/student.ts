@@ -11,13 +11,9 @@ export class Student {
     rollNumber: any;
     scholarNumber: any;
     totalFees: number;
-    feesDue = 0;
-    classDbId: number;
-    className: string;
+    feesDue: number;
+    sectionDbId: number;
     remark: string;
-
-    /* new student profile head */
-
     motherName: string;
     gender: string;
     caste: string;
@@ -33,10 +29,8 @@ export class Student {
     bloodGroup: string;
     fatherAnnualIncome: string;
 
-    feesList: Fee[] = [];
-    concessionList: Concession[] = [];
+    copy(student: any) {
 
-    copyWithoutFeesAndConcession(student: Student) {
         this.name = student.name;
         this.dbId = student.dbId;
         this.fathersName = student.fathersName;
@@ -46,11 +40,8 @@ export class Student {
         this.scholarNumber = student.scholarNumber;
         this.totalFees = student.totalFees;
         this.feesDue = student.feesDue;
-        this.classDbId = student.classDbId;
-        this.className = student.className;
+        this.sectionDbId = student.sectionDbId;
         this.remark = student.remark;
-
-        /* new student profile head */
         this.motherName = student.motherName;
         this.gender = student.gender;
         this.caste = student.caste;
@@ -65,24 +56,7 @@ export class Student {
         this.aadharNum = student.aadharNum;
         this.bloodGroup = student.bloodGroup;
         this.fatherAnnualIncome = student.fatherAnnualIncome;
-    }
 
-    copy(student: Student) {
-        this.copyWithoutFeesAndConcession(student);
-        this.feesList = [];
-        student.feesList.forEach( fees => {
-            const tempFees = new Fee();
-            tempFees.copy(fees);
-            tempFees.studentName = this.name;
-            tempFees.fatherName = this.fathersName;
-            tempFees.className = this.className;
-            this.feesList.push(tempFees);
-        });
-        student.concessionList.forEach( concession => {
-            const tempConcession = new Concession();
-            tempConcession.copy(concession);
-            this.concessionList.push(tempConcession);
-        });
     }
 
 }

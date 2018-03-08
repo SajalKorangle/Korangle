@@ -1,9 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Student } from '../../classes/student';
-import { Classs } from '../../classes/classs';
-import { EmitterService } from "../../services/emitter.service";
-import { StudentService } from '../../services/student.service';
+import { EmitterService } from '../../services/emitter.service';
+import { StudentService } from '../../students/student.service';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -45,9 +43,6 @@ export class StudentListComponent implements OnInit {
 
     columnFilter: ColumnFilter;
 
-    /* Column Locks */
-    lockName = true;
-
     /* Category Options */
     scSelected = false;
     stSelected = false;
@@ -60,14 +55,9 @@ export class StudentListComponent implements OnInit {
     otherGenderSelected = false;
 
     displayStudentNumber = 0;
+    totalStudents = 0;
 
-    // classList: Classs[] = [];
-    // selectedClass: Classs;
-
-    // studentList: Student[] = [];
-
-    classList = [];
-    studentList = [];
+    classSectionStudentList = [];
 
     isLoading = false;
 
@@ -76,66 +66,62 @@ export class StudentListComponent implements OnInit {
     ngOnInit(): void {
         this.isLoading = true;
         this.columnFilter = new ColumnFilter();
-        this.studentService.getStudentDataClassList().then(
+        this.studentService.getStudentProfileListAndClassSectionList(this.user.jwt).then(
             data => {
+
+                console.log(data);
+
                 this.isLoading = false;
-                this.studentList = data['studentList'];
-                this.classList = data['classList'];
-                this.classList.forEach(
-                    classs => {
-                        classs.selected = false;
-                    }
-                );
-                let serialNumber = 0;
-                this.displayStudentNumber = 0;
-                this.studentList.forEach(
-                    student => {
-                        student.show = false;
-                        student.serialNumber = ++serialNumber;
-                        this.classList.forEach(
-                            classs => {
-                                if (student.classDbId === classs.dbId) {
-                                    student.classs = classs;
-                                }
-                            }
-                        );
-                    }
-                );
-                // this.selectedClass = this.classList[0];
-            }, error => {
-                this.isLoading = false;
-                alert('Server Error: Contact Admin');
+                this.classSectionStudentList = data;
+                this.classSectionStudentList.forEach( classs => {
+                    classs.sectionList.forEach( section => {
+                        section.selected = false;
+                        section.studentList.forEach( student => {
+                            student.show = false;
+                            ++this.totalStudents;
+                        });
+                    });
+                });
+
+                if (this.classSectionStudentList.length === 0) {
+                    alert('0 students present. You can add students from \'New Students\' section');
+                }
+
+                console.log('okay');
+
             }
         );
     }
 
     printStudentList(): void {
         const value = {
-            studentList: this.studentList,
+            classSectionStudentList: this.classSectionStudentList,
             columnFilter: this.columnFilter
         };
-        value.studentList = this.studentList;
-        value.columnFilter = this.columnFilter;
         EmitterService.get('print-student-list').emit(value);
-    }
+    };
 
     unselectAllClasses(): void {
-        this.classList.forEach(
+        this.classSectionStudentList.forEach(
             classs => {
-                classs.selected = false;
+                classs.sectionList.forEach( section => {
+                    section.selected = false;
+                });
             }
         );
         this.handleStudentDisplay();
-    }
+    };
 
     selectAllClasses(): void {
-        this.classList.forEach(
+        this.classSectionStudentList.forEach(
             classs => {
-                classs.selected = true;
+                classs.sectionList.forEach( section => {
+                    section.selected = true;
+                });
             }
         );
         this.handleStudentDisplay();
-    }
+    };
 
     selectAllColumns(): void {
         this.columnFilter.showSerialNumber = true;
@@ -162,7 +148,7 @@ export class StudentListComponent implements OnInit {
         this.columnFilter.showBloodGroup = true;
         this.columnFilter.showFatherAnnualIncome = true;
         this.columnFilter.showRollNumber = true;
-    }
+    };
 
     unselectAllColumns(): void {
         this.columnFilter.showSerialNumber = false;
@@ -189,122 +175,91 @@ export class StudentListComponent implements OnInit {
         this.columnFilter.showBloodGroup = false;
         this.columnFilter.showFatherAnnualIncome = false;
         this.columnFilter.showRollNumber = false;
-    }
+    };
 
     handleStudentDisplay(): void {
         let serialNumber = 0;
         this.displayStudentNumber = 0;
-        this.studentList.forEach(
-            student => {
-
-                /* Class Check */
-                if (student.classs.selected === false) {
-                    student.show = false;
-                    return;
-                }
-
-                /* Category Check */
-                if (!(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected)
-                        && !(!this.scSelected && !this.stSelected && !this.obcSelected && !this.generalSelected)) {
-                    if (student.category === null || student.category === '') {
+        this.classSectionStudentList.forEach( classs => {
+            classs.sectionList.forEach( section => {
+                if (section.selected === false) {
+                    section.studentList.forEach( student => {
                         student.show = false;
-                        return;
-                    }
-                    /*switch (student.category) {
-                        case 'Scheduled Caste':
-                            if (!this.scSelected) {
+                    });
+                } else {
+                    section.studentList.forEach( student => {
+
+                        /* Category Check */
+                        if (!(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected)
+                            && !(!this.scSelected && !this.stSelected && !this.obcSelected && !this.generalSelected)) {
+                            if (student.category === null || student.category === '') {
                                 student.show = false;
                                 return;
                             }
-                            break;
-                        case 'Scheduled Tribe':
-                            if (!this.stSelected) {
+                            switch (student.category) {
+                                case 'SC':
+                                    if (!this.scSelected) {
+                                        student.show = false;
+                                        return;
+                                    }
+                                    break;
+                                case 'ST':
+                                    if (!this.stSelected) {
+                                        student.show = false;
+                                        return;
+                                    }
+                                    break;
+                                case 'OBC':
+                                    if (!this.obcSelected) {
+                                        student.show = false;
+                                        return;
+                                    }
+                                    break;
+                                case 'Gen.':
+                                    if (!this.generalSelected) {
+                                        student.show = false;
+                                        return;
+                                    }
+                                    break;
+                            }
+                        }
+
+                        /* Gender Check */
+                        if (!(this.maleSelected && this.femaleSelected && this.otherGenderSelected)
+                            && !(!this.maleSelected && !this.femaleSelected && !this.otherGenderSelected)) {
+                            if (student.gender === null || student.gender === '') {
                                 student.show = false;
                                 return;
                             }
-                            break;
-                        case 'Other Backward Classes':
-                            if (!this.obcSelected) {
-                                student.show = false;
-                                return;
+                            switch (student.gender) {
+                                case 'Male':
+                                    if (!this.maleSelected) {
+                                        student.show = false;
+                                        return;
+                                    }
+                                    break;
+                                case 'Female':
+                                    if (!this.femaleSelected) {
+                                        student.show = false;
+                                        return;
+                                    }
+                                    break;
+                                case 'Other':
+                                    if (!this.otherGenderSelected) {
+                                        student.show = false;
+                                        return;
+                                    }
+                                    break;
                             }
-                            break;
-                        case 'General':
-                            if (!this.generalSelected) {
-                                student.show = false;
-                                return;
-                            }
-                            break;
-                    }*/
-                    switch (student.category) {
-                        case 'SC':
-                            if (!this.scSelected) {
-                                student.show = false;
-                                return;
-                            }
-                            break;
-                        case 'ST':
-                            if (!this.stSelected) {
-                                student.show = false;
-                                return;
-                            }
-                            break;
-                        case 'OBC':
-                            if (!this.obcSelected) {
-                                student.show = false;
-                                return;
-                            }
-                            break;
-                        case 'Gen.':
-                            if (!this.generalSelected) {
-                                student.show = false;
-                                return;
-                            }
-                            break;
-                    }
+                        }
+
+                        ++this.displayStudentNumber;
+                        student.show = true;
+                        student.serialNumber = ++serialNumber;
+                    });
                 }
+            });
+        });
+    };
 
-                /* Gender Check */
-                if (!(this.maleSelected && this.femaleSelected && this.otherGenderSelected)
-                        && !(!this.maleSelected && !this.femaleSelected && !this.otherGenderSelected)) {
-                    if (student.gender === null || student.gender === '') {
-                        student.show = false;
-                        return;
-                    }
-                    switch (student.gender) {
-                        case 'Male':
-                            if (!this.maleSelected) {
-                                student.show = false;
-                                return;
-                            }
-                            break;
-                        case 'Female':
-                            if (!this.femaleSelected) {
-                                student.show = false;
-                                return;
-                            }
-                            break;
-                        case 'Other':
-                            if (!this.otherGenderSelected) {
-                                student.show = false;
-                                return;
-                            }
-                            break;
-                    }
-                }
-
-                ++this.displayStudentNumber;
-                student.show = true;
-                student.serialNumber = ++serialNumber;
-            }
-        );
-    }
-
-    /*toggleLock(): void {
-        if (this.lockName === 'lock') {
-            this.lockName = 'lock open';
-        } else {
-            this.lockName = 'lock';
-        }
-    }*/
 }

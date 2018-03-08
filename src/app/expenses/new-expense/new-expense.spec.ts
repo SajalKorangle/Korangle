@@ -1,3 +1,4 @@
+/*
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
@@ -9,7 +10,7 @@ import { ComponentFixtureAutoDetect } from '@angular/core/testing';
 
 import { NewExpenseComponent } from './new-expense.component';
 import { LoadingSpinnerComponent } from '../../loading-spinner/loading-spinner.component';
-import {ExpenseService} from '../../services/expense.service';
+import {ExpenseService} from '../expense.service';
 import { User } from '../../classes/user';
 
 import 'rxjs/add/operator/toPromise';
@@ -75,3 +76,4 @@ describe('NewExpenseComponent (inline template)', () => {
     });
 
 });
+*/

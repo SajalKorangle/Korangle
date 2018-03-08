@@ -10,9 +10,6 @@ import {Constants} from "../classes/constants";
 @Injectable()
 export class ClassStudentListService {
 
-    // private djangoServer = 'http://localhost:8000/';
-    private djangoServer = 'http://54.174.109.85:8000/';
-
     private classStudentListUrl = Constants.DJANGO_SERVER + '/school/class_student_list/';
 
     constructor(private http: Http) { }

@@ -4,11 +4,11 @@ import { Fee } from '../../classes/fee';
 import {EmitterService} from '../../services/emitter.service';
 
 @Component({
-    selector: 'app-fees-table-list',
-    templateUrl: './fees-table-list.component.html',
-    styleUrls: ['./fees-table-list.component.css'],
+    selector: 'app-fees-table',
+    templateUrl: './fees-table.component.html',
+    styleUrls: ['./fees-table.component.css'],
 })
-export class FeesTableListComponent {
+export class FeesTableComponent {
 
     @Input() user;
     @Input() feesList;

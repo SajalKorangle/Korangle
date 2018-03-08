@@ -26,21 +26,34 @@
                                        [(ngModel)]="newStudent.fathersName">
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <!-- div class="form-group form-black label-floating">
-                                Class:
-                                <select [(ngModel)]="selectedClass" style="margin-right: 15px">
-                                    <ng-container>
-                                        <option *ngFor = "let c of classList;" [ngValue]="c">{{c.name}}</option>
-                                    </ng-container>
-                                </select>
-                            </div -->
-                            <mat-form-field style="width: 100%; margin-top: 23px;">
-                                <mat-select placeholder="Class"
-                                            [(ngModel)]="newStudent.classDbId">
-                                    <mat-option *ngFor = 'let c of classList;' [value]="c.dbId">{{c.name}}</mat-option>
+                        <div class="col-md-3" *ngIf="selectedClass">
+                            <mat-form-field style="margin-top: 23px;">
+                                <mat-select placeholder="Select Class"
+                                            #selectClassSection
+                                            [ngModel]="selectedClass"
+                                            (ngModelChange)="selectedClass=$event;">
+                                    <mat-option *ngFor = 'let classs of classSectionList;' [value]="classs">
+                                        {{classs.name}}
+                                        <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
+                                            , {{classs.selectedSection.name}}
+                                        </span>
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
+                            <button class="btn"
+                                    style="padding: 2px 11px; background-color: transparent;"
+                                    matTooltip="Choose Section (default: Section - A)"
+                                    mat-icon-button
+                                    [matMenuTriggerFor]="classSectionMenu">
+                                <i class="material-icons" style="color: black;">expand_more</i>
+                            </button>
+                            <mat-menu #classSectionMenu="matMenu">
+                                <button *ngFor="let section of selectedClass.sectionList"
+                                        mat-menu-item
+                                        (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
+                                    {{section.name}}
+                                </button>
+                            </mat-menu>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group form-black label-floating">
@@ -88,7 +101,6 @@
                                 <input type="number"
                                        class="form-control"
                                        [(ngModel)]="newStudent.totalFees">
-                                <!-- input type="number" class="form-control" [value]="newStudent.totalFees" disabled -->
                             </div>
                         </div>
                     </div>
@@ -107,20 +119,10 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
-                            <!-- div class="form-group form-black label-floating">
-                                <label class="control-label">Category</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.category">
-                            </div -->
                             <mat-form-field>
                                 <mat-select placeholder="Category"
                                             [(ngModel)]="newStudent.category"
                                            >
-                                    <!-- mat-option value="Scheduled Caste">Scheduled Caste</mat-option>
-                                    <mat-option value="Scheduled Tribe">Scheduled Tribe</mat-option>
-                                    <mat-option value="Other Backward Classes">Other Backward Classes</mat-option>
-                                    <mat-option value="General">General</mat-option -->
                                     <mat-option value="SC">SC</mat-option>
                                     <mat-option value="ST">ST</mat-option>
                                     <mat-option value="OBC">OBC</mat-option>
@@ -129,12 +131,6 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
-                            <!-- div class="form-group form-black label-floating">
-                                <label class="control-label">Religion</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.religion">
-                            </div -->
                             <mat-form-field>
                                 <mat-select placeholder="Religion"
                                             [(ngModel)]="newStudent.religion"
@@ -146,12 +142,6 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
-                            <!-- div class="form-group form-black label-floating">
-                                <label class="control-label">Blood Group</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.bloodGroup">
-                            </div -->
                             <mat-form-field>
                                 <mat-select placeholder="Blood Group"
                                             [(ngModel)]="newStudent.bloodGroup"
@@ -286,79 +276,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!--
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Name</label>
-                                <input type="text" class="form-control" [(ngModel)]="newStudent.name">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Father's Name</label>
-                                <input type="text" class="form-control" [(ngModel)]="newStudent.fathersName">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Date of Birth</label>
-                                <input type="date" class="form-control" [(ngModel)]="newStudent.dateOfBirth">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Mobile Number</label>
-                                <input type="text" class="form-control" [(ngModel)]="newStudent.mobileNumber">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Total Fees</label>
-                                <input type="number" class="form-control" [(ngModel)]="newStudent.totalFees">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group form-black label-floating">
-                                Class:
-                                <select [(ngModel)]="selectedClass" style="margin-right: 15px">
-                                    <ng-container>
-                                        <option *ngFor = "let c of classList;" [ngValue]="c">{{c.name}}</option>
-                                    </ng-container>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" *ngIf="user.username === 'anupreet'">
-                        <div class="col-md-4">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Scholar No.</label>
-                                <input type="text" class="form-control" [(ngModel)]="newStudent.scholarNumber">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <div class="form-group form-black label-floating">
-                                    <label class="control-label">Remark</label>
-                                    <textarea class="form-control" rows="3" [(ngModel)]="newStudent.remark"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    -->
 
                     <button type="submit" class="btn btn-{{user.btn_color}}" (click)="createNewStudent()">Create Profile</button>
 

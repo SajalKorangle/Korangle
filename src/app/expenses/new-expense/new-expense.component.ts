@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExpenseService } from '../../services/expense.service';
+import { ExpenseService } from '../expense.service';
 import { Expense } from '../../classes/expense';
 
 @Component({
@@ -57,6 +57,7 @@ export class NewExpenseComponent implements OnInit {
         this.expenseService.submitExpense(expenseData, this.user.jwt).then(
             data => {
                 this.isLoading = false;
+
                 const tempExpense = new Expense();
                 tempExpense.voucherNumber = data.voucherNumber;
                 tempExpense.voucherDate = data.voucherDate;
@@ -64,6 +65,9 @@ export class NewExpenseComponent implements OnInit {
                 tempExpense.remark = data.remark;
                 this.currentExpenseList.push(tempExpense);
                 this.totalExpenses += tempExpense.amount;
+
+                this.newExpense = new Expense();
+                this.newExpense.voucherDate = this.todaysDate();
             }, error => {
                 this.isLoading = false;
                 alert('Server error: Contact Admin');

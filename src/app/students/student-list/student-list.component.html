@@ -19,15 +19,15 @@
                                     style="padding: 4px 7px"
                                     (click)="unselectAllClasses(); $event.stopPropagation();">Clear All</button>
                         </mat-option>
-                        <mat-option *ngFor="let c of classList" style="width: 100%;">
-                            <mat-checkbox [(ngModel)]="c.selected"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">{{c.name}}</mat-checkbox>
-                            <!-- div style="margin: 0px; width: 100%"
-                                 [attr.data-color]="user.btn_color"
-                                 [class.selectedClassDiv]="c.selected"
-                                 (click)="c.selected=!c.selected;handleStudentDisplay();$event.stopPropagation();">{{c.name}}</div -->
-                        </mat-option>
+                        <ng-container *ngFor="let class of classSectionStudentList">
+                            <mat-option *ngFor="let section of class.sectionList" style="width: 100%;">
+                                <mat-checkbox [(ngModel)]="section.selected"
+                                              (ngModelChange)="handleStudentDisplay()"
+                                              (click)="$event.stopPropagation();">
+                                    {{class.name}}<span *ngIf="class.sectionList.length > 1">, {{section.name}}</span>
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
                         <mat-option>
                             <button class="btn"
                                     style="padding: 4px 7px"
@@ -131,7 +131,7 @@
                     </mat-select>
                 </mat-form-field>
 
-                <br><i>Selected {{displayStudentNumber}} out of {{studentList.length}} students</i>
+                <br><i>Selected {{displayStudentNumber}} out of {{totalStudents}} students</i>
 
                 <!-- Student Table List -->
                 <ng-container *ngIf="!isLoading">
@@ -139,11 +139,7 @@
                         <thead class="text-{{user.btn_color}}">
                             <tr>
                                 <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
-                                <th [class.hidden]="!columnFilter.showName">
-                                    Name
-                                    <!-- i *ngIf='lockName' class="material-icons column" (click)="this.lockName=false;">lock</i>
-                                    <i *ngIf='!lockName' class="material-icons column" (click)="this.lockName=true;">lock_open</i -->
-                                </th>
+                                <th [class.hidden]="!columnFilter.showName">Name</th>
                                 <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
                                 <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
                                 <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
@@ -165,42 +161,42 @@
                                 <th [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
                                 <th [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
                                 <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
-                                <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>                            </tr>
+                                <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let student of studentList; let i = index;" [class.hidden]="!student.show">
-                                <ng-container>
-                                    <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
-                                    <td [class.hidden]="!columnFilter.showName">
-                                        {{student.name}}
-                                        <!-- input type="text"
-                                               class="customInput"
-                                               [disabled]="lockName"
-                                               [(ngModel)]="student.name" -->
-                                    </td>
-                                    <td [class.hidden]="!columnFilter.showClassName">{{student.className}}</td>
-                                    <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
-                                    <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
-                                    <td [class.hidden]="!columnFilter.showMobileNumber">{{student.mobileNumber}}</td>
-                                    <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
-                                    <td [class.hidden]="!columnFilter.showDateOfBirth">{{student.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
-                                    <td [class.hidden]="!columnFilter.showTotalFees">{{student.totalFees}}</td>
-                                    <td [class.hidden]="!columnFilter.showFeesDue">{{student.feesDue}}</td>
-                                    <td [class.hidden]="!columnFilter.showMotherName">{{student.motherName}}</td>
-                                    <td [class.hidden]="!columnFilter.showGender">{{student.gender}}</td>
-                                    <td [class.hidden]="!columnFilter.showCaste">{{student.caste}}</td>
-                                    <td [class.hidden]="!columnFilter.showCategory">{{student.category}}</td>
-                                    <td [class.hidden]="!columnFilter.showReligion">{{student.religion}}</td>
-                                    <td [class.hidden]="!columnFilter.showFatherOccupation">{{student.fatherOccupation}}</td>
-                                    <td [class.hidden]="!columnFilter.showAddress">{{student.address}}</td>
-                                    <td [class.hidden]="!columnFilter.showChildSSMID">{{student.childSSMID}}</td>
-                                    <td [class.hidden]="!columnFilter.showFamilySSMID">{{student.familySSMID}}</td>
-                                    <td [class.hidden]="!columnFilter.showBankName">{{student.bankName}}</td>
-                                    <td [class.hidden]="!columnFilter.showBankAccountNum">{{student.bankAccountNum}}</td>
-                                    <td [class.hidden]="!columnFilter.showAadharNum">{{student.aadharNum}}</td>
-                                    <td [class.hidden]="!columnFilter.showBloodGroup">{{student.bloodGroup}}</td>
-                                    <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{student.fatherAnnualIncome}}</td>                                </ng-container>
-                            </tr>
+                            <ng-container *ngFor="let class of classSectionStudentList">
+                                <ng-container *ngFor="let section of class.sectionList">
+                                    <tr *ngFor="let student of section.studentList;" [class.hidden]="!student.show">
+                                        <ng-container>
+                                            <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
+                                            <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
+                                            <td [class.hidden]="!columnFilter.showClassName">{{class.name}}<span *ngIf="class.sectionList.length > 1">, {{section.name}}</span></td>
+                                            <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
+                                            <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
+                                            <td [class.hidden]="!columnFilter.showMobileNumber">{{student.mobileNumber}}</td>
+                                            <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
+                                            <td [class.hidden]="!columnFilter.showDateOfBirth">{{student.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
+                                            <td [class.hidden]="!columnFilter.showTotalFees">{{student.totalFees}}</td>
+                                            <td [class.hidden]="!columnFilter.showFeesDue">{{student.feesDue}}</td>
+                                            <td [class.hidden]="!columnFilter.showMotherName">{{student.motherName}}</td>
+                                            <td [class.hidden]="!columnFilter.showGender">{{student.gender}}</td>
+                                            <td [class.hidden]="!columnFilter.showCaste">{{student.caste}}</td>
+                                            <td [class.hidden]="!columnFilter.showCategory">{{student.category}}</td>
+                                            <td [class.hidden]="!columnFilter.showReligion">{{student.religion}}</td>
+                                            <td [class.hidden]="!columnFilter.showFatherOccupation">{{student.fatherOccupation}}</td>
+                                            <td [class.hidden]="!columnFilter.showAddress">{{student.address}}</td>
+                                            <td [class.hidden]="!columnFilter.showChildSSMID">{{student.childSSMID}}</td>
+                                            <td [class.hidden]="!columnFilter.showFamilySSMID">{{student.familySSMID}}</td>
+                                            <td [class.hidden]="!columnFilter.showBankName">{{student.bankName}}</td>
+                                            <td [class.hidden]="!columnFilter.showBankAccountNum">{{student.bankAccountNum}}</td>
+                                            <td [class.hidden]="!columnFilter.showAadharNum">{{student.aadharNum}}</td>
+                                            <td [class.hidden]="!columnFilter.showBloodGroup">{{student.bloodGroup}}</td>
+                                            <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{student.fatherAnnualIncome}}</td>
+                                        </ng-container>
+                                    </tr>
+                                </ng-container>
+                            </ng-container>
                         </tbody>
                     </table>
                 </ng-container>

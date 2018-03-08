@@ -1,9 +1,7 @@
 import { Student } from './student';
-import { Section } from './section';
 
-export class Classs {
+export class Section {
     dbId: number;
     name: string;
-    sectionList: Section[] = [];
     studentList: Student[] = [];
 }

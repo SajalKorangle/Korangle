@@ -1,44 +1,43 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import { Student } from '../classes/student';
-import { Classs } from '../classes/classs';
-import { ClassListService } from '../services/class-list.service';
-import { NewStudentService } from '../services/new-student.service';
+
+import { ClassService } from '../services/class.service';
+import { StudentService } from '../students/student.service';
 
 @Component({
   selector: 'app-new-student',
   templateUrl: './new-student.component.html',
   styleUrls: ['./new-student.component.css'],
-    providers: [ ClassListService, NewStudentService ],
+    providers: [ ClassService, StudentService ],
 })
+
 export class NewStudentComponent implements OnInit {
 
     @Input() user;
 
-  newStudent: Student;
-  // selectedClass: Classs;
-  classList: Classs[];
+    selectedClass: any;
 
-  isLoading = false;
+    newStudent: Student;
+    classSectionList = [];
 
-    constructor (private classListService: ClassListService,
-                 private newStudentService: NewStudentService) { }
+    isLoading = false;
+
+    constructor (private classService: ClassService,
+                 private studentService: StudentService) { }
 
     ngOnInit(): void {
         this.isLoading = true;
         this.newStudent = new Student();
         this.newStudent.dateOfBirth = this.todaysDate();
-        this.classListService.getClassList().then(
-            classStudentList => {
+        this.classService.getClassSectionList(this.user.jwt).then(
+            classSectionList => {
                 this.isLoading = false;
-                this.classList = [];
-                classStudentList.forEach( classs => {
-                    const tempClass = new Classs();
-                    tempClass.name = classs.name;
-                    tempClass.dbId = classs.dbId;
-                    this.classList.push(tempClass);
+                this.classSectionList = classSectionList;
+                this.classSectionList.forEach( classs => {
+                    classs.selectedSection = classs.sectionList[0];
                 });
-                // this.selectedClass = this.classList[0];
+                this.selectedClass = this.classSectionList[0];
             }
         );
     }
@@ -56,6 +55,7 @@ export class NewStudentComponent implements OnInit {
     }
 
     createNewStudent(): void {
+
         if (this.newStudent.name === undefined || this.newStudent.name === '') {
             alert('Name should be populated');
             return;
@@ -64,7 +64,8 @@ export class NewStudentComponent implements OnInit {
             alert('Father\'s Name should be populated');
             return;
         }
-        if (this.newStudent.classDbId === undefined || this.newStudent.classDbId === 0 ) {
+        this.newStudent.sectionDbId = this.selectedClass.selectedSection.dbId;
+        if (this.newStudent.sectionDbId === undefined || this.newStudent.sectionDbId === 0) {
             alert('Class should be selected');
             return;
         }
@@ -73,30 +74,19 @@ export class NewStudentComponent implements OnInit {
         if (this.newStudent.totalFees === undefined) { this.newStudent.totalFees = 0; }
         if (this.newStudent.remark === undefined) { this.newStudent.remark = ''; }
         if (this.newStudent.scholarNumber === undefined) { this.newStudent.scholarNumber = 0; }
+
         this.isLoading = true;
-        // this.newStudent.classDbId = this.selectedClass.dbId;
-        this.newStudentService.createNewStudent(this.newStudent, this.user.jwt).then(
+
+        this.studentService.createNewStudent(this.newStudent, this.user.jwt).then(
             data => {
                 this.isLoading = false;
-                if (data === 'okay') {
-                    alert('Student Profile created successfully');
-                    this.newStudent = new Student();
-                } else {
-                    alert('Student Profile creation Failed');
-                }
+                alert(data.message);
             }, error => {
                 this.isLoading = false;
                 alert('Server Error: Contact admin');
             }
         );
     }
-
-    /*checkFieldChanged(selectedValue, currentValue): boolean {
-        if (selectedValue !== currentValue && !(selectedValue == null && currentValue === '')) {
-            return true;
-        }
-        return false;
-    }*/
 
     checkLength(value: any) {
         if (value && value.toString().length > 0) {

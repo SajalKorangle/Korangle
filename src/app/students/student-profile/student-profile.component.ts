@@ -2,113 +2,85 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { Student } from '../../classes/student';
 import { Classs } from '../../classes/classs';
-import { Fee } from '../../classes/fee';
-import { ClassStudentListService } from '../../services/class-student-list.service';
-import { StudentService } from '../../services/student.service';
-import { NewFeeReceiptService } from '../../services/new-fee-receipt.service';
-import { AuthenticationService } from '../../services/authentication.service';
-import {NewConcessionService} from '../../services/new-concession.service';
-import {Concession} from '../../classes/concession';
+import { Section } from '../../classes/section';
 
-import moment = require('moment');
+import { StudentService } from '../../students/student.service';
 
 @Component({
   selector: 'app-student-profile',
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.css'],
-    providers: [ ClassStudentListService, StudentService, NewFeeReceiptService, AuthenticationService, NewConcessionService ],
+    providers: [ StudentService ],
 })
 export class StudentProfileComponent implements OnInit {
 
     @Input() user;
 
-  selectedStudent: Student;
-  selectedClass: Classs;
-  classList: Classs[];
-  newFeeReceipt: Fee;
-  newConcession: Concession;
-  // noStudentForSelectedClass = true;
-  currentStudent: Student = new Student();
+    selectedClass: Classs;
+    selectedSection: Section;
+    selectedStudent: Student;
 
-  isLoading = false;
+    classSectionStudentList: Classs[] = [];
 
-    constructor (private classStudentListService: ClassStudentListService,
-                 private studentService: StudentService,
-                 private newFeeReceiptService: NewFeeReceiptService,
-                 private newConcessionService: NewConcessionService,
-                 private authenticationService: AuthenticationService) { }
+    currentStudent: Student = new Student();
 
-    onChangeSelectedClass(selectedClass): void {
-        this.selectedClass = selectedClass;
-        this.populateSelectStudent();
+    isLoading = false;
+
+    constructor (private studentService: StudentService) { }
+
+    changeSelectedSectionToFirst(): void {
+        this.selectedSection = this.selectedClass.sectionList[0];
+        this.changeSelectedStudentToFirst();
     }
 
-    populateSelectStudent(): void {
-        if (this.selectedClass.studentList.length !== 0) {
-            this.selectedStudent = this.selectedClass.studentList[0];
-            // this.getStudentData();
-        } else {
-            this.selectedStudent = null;
-        }
+    changeSelectedStudentToFirst(): void {
+        this.selectedStudent = this.selectedSection.studentList[0];
+        this.currentStudent.copy(this.selectedStudent);
     }
 
     ngOnInit(): void {
-        this.newFeeReceipt = new Fee();
-        this.newFeeReceipt.generationDateTime = moment(new Date()).format('YYYY-MM-DD');
-        this.newConcession = new Concession();
-        this.classStudentListService.getIndex().then(
-            classStudentList => {
-                this.classList = [];
-                classStudentList.forEach( classs => {
+        this.studentService.getClassSectionStudentList(this.user.jwt).then(
+            classSectionStudentList => {
+                classSectionStudentList.forEach( classs => {
                     const tempClass = new Classs();
                     tempClass.name = classs.name;
                     tempClass.dbId = classs.dbId;
-                    classs.studentList.forEach( student => {
-                        const tempStudent = new Student();
-                        tempStudent.name = student.name;
-                        tempStudent.dbId = student.dbId;
-                        tempClass.studentList.push(tempStudent);
+                    classs.sectionList.forEach( section => {
+                        const tempSection = new Section();
+                        tempSection.name = section.name;
+                        tempSection.dbId = section.dbId;
+                        section.studentList.forEach( student => {
+                            const tempStudent = new Student();
+                            tempStudent.name = student.name;
+                            tempStudent.dbId = student.dbId;
+                            tempSection.studentList.push(tempStudent);
+                        });
+                        tempClass.sectionList.push(tempSection);
                     });
-                    this.classList.push(tempClass);
+                    this.classSectionStudentList.push(tempClass);
                 });
-                this.selectedClass = this.classList[0];
-                this.populateSelectStudent();
+                if (this.classSectionStudentList.length > 0) {
+                    this.selectedClass = this.classSectionStudentList[0];
+                    this.changeSelectedSectionToFirst();
+                } else {
+                    alert('Student needs to be added first, before profile updation');
+                }
+
             }
         );
     }
 
-    getStudentData(): void {
+    getStudentProfile(): void {
         this.isLoading = true;
-        this.studentService.getStudentData(this.selectedStudent.dbId).then(
+        this.studentService.getStudentProfile(this.selectedStudent.dbId, this.user.jwt).then(
             student => {
-                // console.log(student);
                 this.isLoading = false;
                 const breakLoop = false;
                 if (this.selectedStudent.dbId === student.dbId) {
+                    console.log(this.selectedStudent);
                     this.selectedStudent.copy(student);
-                    this.currentStudent.copyWithoutFeesAndConcession(student);
+                    this.currentStudent.copy(student);
                 }
-                // console.log(student);
-                if (student.overAllLastFeeReceiptNumber === null || student.overAllLastFeeReceiptNumber === '') {
-                    student.overAllLastFeeReceiptNumber = 0;
-                }
-                this.newFeeReceipt.receiptNumber = student.overAllLastFeeReceiptNumber + 1;
-                // alert(this.newFeeReceipt.receiptNumber);
-                /*else {
-                    alert("Error: Select student again");
-                }*/
-                /*else {
-                    this.classList.forEach( classs => {
-                        classs.studentList.forEach( tempStudent => {
-                            if (tempStudent.dbId === student.dbId) {
-                                tempStudent.copy(student);
-                                breakLoop = true;
-                                return;
-                            }
-                        });
-                        if (breakLoop) { return; }
-                    });
-                }*/
             }, error => {
                 this.isLoading = false;
             }
@@ -135,7 +107,7 @@ export class StudentProfileComponent implements OnInit {
             return;
         }
         this.isLoading = true;
-        this.studentService.updateStudentData(this.currentStudent).then(
+        this.studentService.updateStudentProfile(this.currentStudent, this.user.jwt).then(
             student => {
                 this.isLoading = false;
                 let breakLoop = false;
@@ -143,7 +115,7 @@ export class StudentProfileComponent implements OnInit {
                     this.selectedStudent.copy(student);
                     alert('Student updated successfully');
                 } else {
-                    this.classList.forEach( classs => {
+                    this.classSectionStudentList.forEach( classs => {
                         classs.studentList.forEach( tempStudent => {
                             if (tempStudent.dbId === student.dbId) {
                                 tempStudent.copy(student);
@@ -164,19 +136,47 @@ export class StudentProfileComponent implements OnInit {
             return;
         }
         this.isLoading = true;
-        this.studentService.deleteStudentProfile(this.currentStudent.dbId).then( data => {
+        this.studentService.deleteStudentProfile(this.currentStudent.dbId, this.user.jwt).then( data => {
             alert(data['message']);
             this.isLoading = false;
             let studentIndex = 0;
-            if (data['status'] === 'success') {
-                this.selectedClass.studentList.forEach( (student, index) => {
-                    if (student.dbId === data['studentDbId']) {
-                        studentIndex = index;
+            this.selectedSection.studentList.forEach( (student, index) => {
+                if (student.dbId === data['studentDbId']) {
+                    studentIndex = index;
+                }
+            });
+            this.selectedSection.studentList.splice(studentIndex, 1);
+            if (this.selectedSection.studentList.length > 0) {
+                this.changeSelectedStudentToFirst();
+            } else {
+                let sectionIndex = 0;
+                this.selectedClass.sectionList.forEach( (section, index) => {
+                    if (section.dbId === this.selectedSection.dbId) {
+                        sectionIndex = index;
                     }
                 });
+                this.selectedClass.sectionList.splice(sectionIndex, 1);
+                if (this.selectedClass.sectionList.length > 0) {
+                    this.changeSelectedSectionToFirst();
+                } else {
+                    let classIndex = 0;
+                    this.classSectionStudentList.forEach( (classs, index) => {
+                        if (classs.dbId === this.selectedClass.dbId) {
+                            classIndex = index;
+                        }
+                    });
+                    this.classSectionStudentList.splice(classIndex, 1);
+                    if (this.classSectionStudentList.length > 0) {
+                        this.selectedClass = this.classSectionStudentList[0];
+                        this.changeSelectedSectionToFirst();
+                    } else {
+                        alert('No students left, you can add more students from \'New Student\' section');
+                        this.selectedClass = null;
+                        this.selectedSection = null;
+                        this.selectedStudent = null;
+                    }
+                }
             }
-            this.selectedClass.studentList.splice(studentIndex, 1);
-            this.populateSelectStudent();
         }, error => {
             this.isLoading = false;
             alert('Server Error: Contact admin');
@@ -203,40 +203,5 @@ export class StudentProfileComponent implements OnInit {
         }
         return false;
     }
-    
-    /*printFeeReceipt(fee: Fee): void {
-        fee.fatherName = this.selectedStudent.fathersName;
-        fee.studentName ` = this.selectedStudent.name;
-        fee.className =  this.selectedClass.name;
-        EmitterService.get('print-fee-receipt').emit(fee);
-    }
-
-    createNewFeeReceipt(): void {
-        EmitterService.get('new-fee-receipt-modal').emit(this.newFeeReceipt);
-    }*/
-
-    /*checkAuthentication(): void {
-        this.authenticationService.checkAuthentication().then(
-            response => {
-                console.log(response);
-            }
-        );
-    }
-
-    login(): void {
-        this.authenticationService.login('arnava', 'harshal03').then(
-            response => {
-                console.log(response);
-            }
-        )
-    }
-
-    logout(): void {
-        this.authenticationService.logout().then(
-            response => {
-                console.log(response);
-            }
-        )
-    }*/
 
 }

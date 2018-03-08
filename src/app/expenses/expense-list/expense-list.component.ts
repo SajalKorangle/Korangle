@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import * as Chartist from 'chartist';
 
-import { ExpenseService} from '../../services/expense.service';
+import { ExpenseService} from '../expense.service';
 import { Expense } from '../../classes/expense';
 import {EmitterService} from '../../services/emitter.service';
 

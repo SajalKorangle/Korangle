@@ -254,4 +254,5 @@ export class User {
     sunrise, akodia123
     madhav, lakhan123
     talent, innovative123
+    vidhyamandir, smriti123
 */

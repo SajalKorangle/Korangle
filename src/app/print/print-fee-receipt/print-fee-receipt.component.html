@@ -37,7 +37,7 @@
             Father's Name:
         </h6>
         <h6 class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-            {{feeReceipt.fatherName}}
+            {{feeReceipt.fathersName}}
         </h6>
     </div>
     <div class="row">
@@ -46,6 +46,9 @@
         </h6>
         <h6 class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
             {{feeReceipt.className}}
+            <span *ngIf="feeReceipt.sectionName && feeReceipt.sectionName !== ''">
+                , {{feeReceipt.sectionName}}
+            </span>
         </h6>
     </div>
     <div class="row">
@@ -143,6 +146,9 @@
                     </td>
                     <td style="text-decoration: underline; padding-left: 1mm;">
                         {{feeReceipt.className}}
+                        <span *ngIf="feeReceipt.sectionName && feeReceipt.sectionName !== ''">
+                            , {{feeReceipt.sectionName}}
+                        </span>
                     </td>
                 </tr>
             </table>
