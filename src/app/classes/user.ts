@@ -137,7 +137,7 @@ export class User {
         this.email = data.email;
         this.initializeSchoolData(data);
         if (this.username !== 'eklavya') {
-            alert('removing marksheet');
+            // alert('removing marksheet');
             this.removeMarksheet();
         }
         this.appSection = 'student_profile';

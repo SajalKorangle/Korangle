@@ -135,7 +135,11 @@ export class UpdateMarksComponent implements OnInit {
 
         let error = false;
         this.currentStudent.resultList.forEach( result => {
-            if (result.marksObtained > this.getMaximumMarks(result.maximumMarksAllowedDbId)) {
+            if (result.marksObtained === null) {
+                alert('Marks obtained can not be empty');
+                error = true;
+                return;
+            } else if (result.marksObtained > this.getMaximumMarks(result.maximumMarksAllowedDbId)) {
                 alert(this.getSubjectName(result.subjectDbId) + ': ' + result.marksObtained + ' marks are greater than max. marks');
                 error = true;
                 return;

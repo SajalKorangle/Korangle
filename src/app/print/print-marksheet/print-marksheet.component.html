@@ -7,7 +7,7 @@
      font-weight: 800 !important"
      *ngIf="marksheet">
 
-    <img src="/assets/img/eklavya_logo.png"
+    <img src="{{user.schoolLogo}}"
          style="border-radius: 2px; position: absolute;
          top: 40px; left: 20px;
          width: 80px; height: 80px;"/>
@@ -53,6 +53,26 @@
     </div>
 
     <ng-container *ngIf="marksheet">
+
+        <!-- Roll No. , Scholar No. -->
+        <div class="row no-gutters">
+            <div class="col-xs-3 d-flex justify-content-start custom-padding"
+                 style="font-size: 14px;">
+                Roll No.<span style="float: right">:</span>
+            </div>
+            <div class="col-xs-5 d-flex justify-content-start custom-padding"
+                 style="font-size: 14px;">
+                <i>{{marksheet.studentProfile.rollNumber}}</i>
+            </div>
+            <div class="col-xs-2 d-flex justify-content-start custom-padding"
+                 style="font-size: 14px;">
+                Scholar No.<span style="float: right">:</span>
+            </div>
+            <div class="col-xs-2 d-flex justify-content-start custom-padding"
+                 style="font-size: 14px;">
+                <i>{{marksheet.studentProfile.scholarNumber}}</i>
+            </div>
+        </div>
 
         <!-- Student's Name , Contact No. -->
         <div class="row no-gutters">
