@@ -14,7 +14,8 @@ export class CommonServiceRequirements {
     public returnResponse(response: any): any {
         const jsonResponse = response.json().response;
         if (jsonResponse.status === 'success') {
-            return jsonResponse.data;
+            if (jsonResponse.data) return jsonResponse.data;
+            else return jsonResponse.message;
         } else if (jsonResponse.status === 'fail') {
             alert(jsonResponse.message);
             // return null;

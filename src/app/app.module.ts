@@ -37,14 +37,14 @@ import { FeesListComponent } from './fees/fees-list/fees-list.component';
 import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
-// import { ExpensesComponent } from './expenses/expenses.component';
 import { NewExpenseComponent } from './expenses/new-expense/new-expense.component';
 import { ExpenseListComponent } from './expenses/expense-list/expense-list.component';
 
 import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
 import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
 
-import { MarksheetComponent } from './marksheet/marksheet.component';
+import { UpdateMarksComponent } from './marksheet/update-marks/update-marks.component';
+import { MarksheetComponent } from './marksheet/print-marksheet/marksheet.component';
 
 import { PrintComponent } from './print/print.component';
 import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
@@ -77,6 +77,7 @@ import { GradePipe } from './pipes/grade.pipe';
         NewConcessionComponent,
         ConcessionListComponent,
 
+        UpdateMarksComponent,
         MarksheetComponent,
 
         StudentProfileComponent,

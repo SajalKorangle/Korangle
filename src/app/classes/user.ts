@@ -12,7 +12,7 @@ class Section {
     title: string;
     icon: string;
     class: string;
-    showSubsection: boolean;
+    showSubsection: boolean; // true when subsection is expanded and vice-versa
     subsection: SubSection[] = [];
 }
 
@@ -44,6 +44,8 @@ export class User {
     btn_color = 'danger'; // School Profile
     complexFee = false; // School Profile
     schoolDbId = 0;
+    schoolDiseCode = 0;
+    schoolAddress = '';
 
     // imgSrc = '/assets/img/angular2-logo-red.png';
 
@@ -94,29 +96,18 @@ export class User {
                     title: 'Previous Discounts',
                 }
             ] },
-        { path: 'new_student', title: 'New Student', icon: 'person', class: '', showSubsection: false, subsection: [] },
-        /*{ path: 'marksheet', title: 'Marksheet', icon: 'layers', class: '', showSubsection: false, subsection: [] },*/
-        /*{ path: 'test_subsection', title: 'Section With Sub', icon: 'dashboard', class: '', showSubsection: false,
+        { path: 'marksheet', title: 'Marksheet', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {
-                    path: 'subsection_one',
-                    title: 'Subsection One'
+                    path: 'update_marks',
+                    title: 'Update Marks',
                 },
                 {
-                    path: 'subsection_two',
-                    title: 'Subsection Two',
-                },
-            ]
-        },*/
-        /*{ path: 'user-profile', title: 'User Profile',  icon:'person', class: '' },
-        { path: 'table-list', title: 'Table List',  icon:'content_paste', class: '' },
-        { path: 'typography', title: 'Typography',  icon:'library_books', class: '' },
-        { path: 'icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-        { path: 'maps', title: 'Maps',  icon:'location_on', class: '' },
-        { path: 'notifications', title: 'Notifications',  icon:'notifications', class: '' },
-        { path: 'upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
-        { path: 'fees-receipts', title: 'Fees Receipts',  icon:'content_paste', class: '' },
-        { path: 'student-list', title: 'Student List',  icon:'content_paste', class: '' }, */
+                    path: 'print_marksheet',
+                    title: 'Print Marksheet',
+                }
+            ] },
+        { path: 'new_student', title: 'New Student', icon: 'person', class: '', showSubsection: false, subsection: [] },
     ];
 
     checkAuthentication(): boolean {
@@ -137,58 +128,17 @@ export class User {
         this.schoolLogo = Constants.DJANGO_SERVER + data.schoolData.logo;
         this.complexFee = data.schoolData.complexFeeStructure;
         this.schoolDbId = data.schoolData.dbId;
+        this.schoolDiseCode = data.schoolData.schoolDiseCode;
+        this.schoolAddress = data.schoolData.schoolAddress;
     }
 
     initializeUserData(data: any): void {
         this.username = data.username;
         this.email = data.email;
         this.initializeSchoolData(data);
-        /*if (this.username === 'anupreet') {
-            this.color = 'indigo';
-            this.btn_color = 'primary';
-            this.schoolLogo = '/assets/img/anupreet_logo.png';
-            this.schoolPrintName = 'ANUPREET PVT ITI';
-            this.complexFee = true;
-            // this.removeMarksheet();
-        } else if (this.username === 'brightstarsalsalai') {
-            this.color = 'green';
-            this.btn_color = 'warning';
-            this.schoolLogo = '/assets/img/bright_logo.jpg';
-            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
-            this.complexFee = false;
-            // this.removeMarksheet();
-        } else if (this.username === 'brighthindi') {
-            this.color = 'indigo';
-            this.btn_color = 'primary';
-            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
-            this.schoolLogo = '/assets/img/bright_logo.jpg';
-            this.complexFee = false;
-            // this.removeMarksheet();
-        } else if (this.username === 'brightstar') {
-            this.color = 'green';
-            this.btn_color = 'warning';
-            this.schoolPrintName = 'BRIGHTSTAR HIGHER SECONDARY SCHOOL';
-            this.schoolLogo = '/assets/img/bright_logo.jpg';
-            this.complexFee = false;
-            // this.removeMarksheet();
-        } else if (this.username === 'eklavya') {
-            this.color = 'indigo';
-            this.btn_color = 'primary';
-            this.schoolLogo = '/assets/img/eklavya_logo.png';
-            this.schoolPrintName = 'Eklavya School';
-            this.complexFee = false;
-            // this.addMarksheet();
-        } else if (this.username === 'demo') {
-            this.color = 'green';
-            this.btn_color = 'warning';
-            this.schoolPrintName = 'Demo School';
-            this.schoolLogo = '/assets/img/angular2-logo-red.png';
-            this.complexFee = true;
-            // this.removeMarksheet();
-        }*/
         if (Constants.DJANGO_SERVER === 'http://localhost:8000') {
-            this.addMarksheet();
-            this.addPromoteStudent();
+            // this.addMarksheet();
+            // this.addPromoteStudent();
         }
         this.appSection = 'student_profile';
     }
@@ -247,7 +197,7 @@ export class User {
 
 /*
     demo, user1234
-    brightstar, bright123
+    brightstar, 123brightstar
     brighthindi, hindi123
     eklavya, ashta123
     anupreet, itisjp123
@@ -255,4 +205,5 @@ export class User {
     madhav, lakhan123
     talent, innovative123
     vidhyamandir, smriti123
+    champion, 123champ
 */

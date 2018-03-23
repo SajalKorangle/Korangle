@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
 
 import { Marksheet } from '../../classes/marksheet';
 
@@ -9,30 +9,58 @@ import { EmitterService } from '../../services/emitter.service';
     templateUrl: './print-marksheet.component.html',
     styleUrls: ['./print-marksheet.component.css'],
 })
-export class PrintMarksheetComponent implements OnInit, OnDestroy {
+export class PrintMarksheetComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    marksheet: Marksheet;
-    totalMarks: number;
+    @Input() user;
+
+    marksheet: any;
+
+    viewChecked = true;
 
     printMarksheetComponentSubscription: any;
 
     ngOnInit(): void {
         this.printMarksheetComponentSubscription = EmitterService.get('print-marksheet-component').subscribe( value => {
             this.marksheet = value;
-            this.totalMarks = 0.0;
-            this.marksheet.marks.forEach(
-                marks => {
-                    this.totalMarks += Number(marks.marks);
-                }
-            );
-            setTimeout(() => {
-                window.print();
-            });
+            this.viewChecked = false;
         });
     }
 
     ngOnDestroy(): void {
         this.printMarksheetComponentSubscription.unsubscribe();
+        this.marksheet = null;
+    }
+
+    ngAfterViewChecked(): void {
+        if (this.viewChecked === false) {
+            this.viewChecked = true;
+            window.print();
+            this.marksheet = null;
+        }
+    }
+
+    getTotalMaximumMarks(marksheet: any) {
+        let totalMarks = 0;
+        marksheet.result.forEach( result => {
+            if (result.governmentSubject) {
+                totalMarks += result.maximumMarks;
+            }
+        });
+        return totalMarks;
+    }
+
+    getTotalMarksObtained(marksheet: any) {
+        let totalMarksObtained = 0;
+        marksheet.result.forEach( result => {
+            if (result.governmentSubject) {
+                totalMarksObtained += parseFloat(result.marksObtained);
+            }
+        });
+        return totalMarksObtained;
+    }
+
+    getPercentage(marksheet: any) {
+        return this.getTotalMarksObtained(marksheet)/this.getTotalMaximumMarks(marksheet)*100;
     }
 
 }

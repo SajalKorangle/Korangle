@@ -5,7 +5,7 @@
 
 <print-expenses [user]="user" [class.hideThisComponent]="printType!='expenses'"></print-expenses>
 
-<app-print-marksheet [class.hideThisComponent]="printType!='marksheet'"></app-print-marksheet>
+<app-print-marksheet [user]="user" [class.hideThisComponent]="printType!='marksheet'"></app-print-marksheet>
 
 <app-print-student-list [class.hideThisComponent]="printType!='studentList'"></app-print-student-list>
 
