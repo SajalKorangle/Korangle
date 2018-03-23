@@ -136,9 +136,9 @@ export class User {
         this.username = data.username;
         this.email = data.email;
         this.initializeSchoolData(data);
-        if (Constants.DJANGO_SERVER === 'http://localhost:8000') {
-            // this.addMarksheet();
-            // this.addPromoteStudent();
+        if (this.username !== 'eklavya') {
+            alert('removing marksheet');
+            this.removeMarksheet();
         }
         this.appSection = 'student_profile';
     }
@@ -179,17 +179,19 @@ export class User {
     }
 
     removeMarksheet(): void {
+        let count = -1;
         let index = 0;
         this.ROUTES.forEach(
             section => {
                 if (section.path === 'marksheet') {
+                    count = index;
                     return;
                 }
                 ++index;
             }
         );
-        if (this.ROUTES.length === index) { return; } else {
-            this.ROUTES.splice( index, 1);
+        if (count === -1) { return; } else {
+            this.ROUTES.splice( count, 1);
         }
     }
 
