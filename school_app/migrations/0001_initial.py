@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('orderNumber', models.PositiveIntegerField(default=100)),
-                ('parentUser', models.ForeignKey(default=school_app.models.get_user, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                ('parentUser', models.ForeignKey(default=school_app.model.models.get_user, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('amount', models.IntegerField()),
                 ('remark', models.TextField()),
                 ('generationDateTime', models.DateField(auto_now_add=True)),
-                ('parentUser', models.ForeignKey(default=school_app.models.get_user, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                ('parentUser', models.ForeignKey(default=school_app.model.models.get_user, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(

@@ -1,4 +1,4 @@
-from school_app.models import Fee, SubFee, Student
+from school_app.model.models import Fee, SubFee, Student
 
 from fee_app.handlers.common import get_student_fee_data
 

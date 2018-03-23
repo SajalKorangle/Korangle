@@ -17,7 +17,7 @@ urlpatterns += [
 ########## Fees List ##############
 from .views import fees_list_view
 urlpatterns += [
-	url(r'^fees_list', fees_list_view),
+	url(r'^fees_list/', fees_list_view),
 ]
 
 ########## New Concession ###########

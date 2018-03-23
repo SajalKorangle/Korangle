@@ -1,7 +1,9 @@
 
 # from class_app.handlers.new_student import get_class_section_list
 
-from school_app.models import Student, SubFee, Fee, Concession, Marks
+from school_app.model.models import Student, SubFee, Fee, Concession
+
+from student_app.models import StudentSection
 
 from student_app.handlers.common import get_student_profile
 
@@ -26,10 +28,10 @@ def get_class_section_student_list(user):
             tempSection['name'] = section_object.name
             tempSection['dbId'] = section_object.id
             tempSection['studentList'] = []
-            for student_object in Student.objects.filter(parentUser=user,friendSection=section_object).order_by('name'):
+            for student_section_object in StudentSection.objects.filter(parentStudent__parentUser=user,parentSection=section_object).order_by('parentStudent__name'):
                 tempStudent = {}
-                tempStudent['name'] = student_object.name
-                tempStudent['dbId'] = student_object.id
+                tempStudent['name'] = student_section_object.parentStudent.name
+                tempStudent['dbId'] = student_section_object.parentStudent.id
                 tempSection['studentList'].append(tempStudent)
             if len(tempSection['studentList']) > 0:
                 tempClass['sectionList'].append(tempSection)
@@ -80,6 +82,13 @@ def update_student(data):
 
     student_object.save()
 
+    if 'rollNumber' in data:
+        student_section_object = StudentSection.objects\
+            .get(parentStudent=student_object,
+                 parentSection__parentClassSession__parentSession=get_current_session_object())
+        student_section_object.rollNumber = data['rollNumber']
+        student_section_object.save()
+
     return common.get_student_profile(student_object)
 
 
@@ -89,7 +98,7 @@ def delete_student(data):
     SubFee.objects.filter(parentFee__parentStudent=student_object).delete()
     Fee.objects.filter(parentStudent=student_object).delete()
     Concession.objects.filter(parentStudent=student_object).delete()
-    Marks.objects.filter(parentStudent=student_object).delete()
+    StudentSection.objects.filter(parentStudent=student_object).delete()
     Student.objects.filter(pk=data['studentDbId']).delete()
 
     response = {}

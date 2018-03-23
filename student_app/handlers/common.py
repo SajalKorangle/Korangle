@@ -1,7 +1,7 @@
 
 from school_app.session import get_current_session_object
 
-from school_app.models import SubFee, Student, Fee
+from school_app.model.models import SubFee, Student, Fee
 
 from django.db.models import Max
 
@@ -10,6 +10,8 @@ def populate_student_field(student_object, fieldName, fieldValue):
         setattr(student_object, 'newCategoryField', fieldValue)
     elif fieldName == 'religion':
         setattr(student_object, 'newReligionField', fieldValue)
+    elif fieldName == 'rollNumber':
+        pass
     else:
         setattr(student_object, fieldName, fieldValue)
 
@@ -67,7 +69,7 @@ def get_student_profile(student_object):
     student_data['dateOfBirth'] = student_object.dateOfBirth
     student_data['totalFees'] = student_object.totalFees
     student_data['remark'] = student_object.remark
-    student_data['rollNumber'] = student_object.rollNumber
+    student_data['rollNumber'] = student_object.currentRollNumber
     student_data['scholarNumber'] = student_object.scholarNumber
     student_data['motherName'] = student_object.motherName
     student_data['gender'] = student_object.gender
@@ -84,11 +86,16 @@ def get_student_profile(student_object):
     student_data['bloodGroup'] = student_object.bloodGroup
     student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome
 
-    friendSection = student_object.friendSection.get(parentClassSession__parentSession=get_current_session_object())
+    '''friendSection = student_object.friendSection.get(parentClassSession__parentSession=get_current_session_object())
     student_data['sectionDbId'] = friendSection.id
     student_data['sectionName'] = friendSection.name
     student_data['classDbId'] = friendSection.parentClassSession.parentClass.id
-    student_data['className'] = friendSection.parentClassSession.parentClass.name
+    student_data['className'] = friendSection.parentClassSession.parentClass.name'''
+
+    student_data['sectionDbId'] = student_object.get_section_id(get_current_session_object())
+    student_data['sectionName'] = student_object.get_section_name(get_current_session_object())
+    student_data['className'] = student_object.get_class_id(get_current_session_object())
+    student_data['classDbId'] = student_object.get_class_name(get_current_session_object())
 
     student_data['feesDue'] = student_object.totalFees
     for studentFeeEntry in student_object.fee_set.all().order_by('-generationDateTime'):

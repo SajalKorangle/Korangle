@@ -1,5 +1,5 @@
 
-from school_app.models import Session
+from school_app.model.models import Session
 
 from school_app.session import get_current_session_object
 

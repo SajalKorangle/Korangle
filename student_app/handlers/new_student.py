@@ -1,9 +1,9 @@
 
-from class_app.models import Section
-
-from school_app.models import Student
+from school_app.model.models import Student
 
 from student_app.handlers.common import populate_student_field
+
+from student_app.models import StudentSection
 
 def create_new_student(data, user):
 
@@ -17,8 +17,11 @@ def create_new_student(data, user):
 
     student_object.save()
 
-    student_object.friendSection.add(Section.objects.get(id=data['sectionDbId']))
-    student_object.save()
+    # student_object.friendSection.add(Section.objects.get(id=data['sectionDbId']))
+    student_section_object = StudentSection(parentSection_id=data['sectionDbId'],parentStudent=student_object)
+    if 'rollNumber' in data:
+        student_section_object.rollNumber = data['rollNumber']
+    student_section_object.save()
 
     response = {}
     response['message'] = 'Student Profile created successfully'

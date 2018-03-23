@@ -2,8 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from parent_test import ParentTestCase
 
-from school_app.models import Fee, SubFee
-from school_app.session import get_current_session_object
+from school_app.model.models import Fee, SubFee
 
 from fee_app.handlers.fees_list import fees_list
 
@@ -58,8 +57,7 @@ class FeesListTestCase(ParentTestCase):
                 print('Error: Multiple Sub fee objects of same type, Fee Id: ' + str(fee_object))
                 return
 
-            className = fee_object.parentStudent.friendSection\
-                .get(parentClassSession__parentSession=get_current_session_object()).parentClassSession.parentClass.name
+            className = fee_object.className
 
             self.assertEqual(className, response[fees_list_length]['className'])
 

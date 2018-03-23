@@ -6,7 +6,7 @@ from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from django.contrib.auth.models import User
 
-from .models import School
+from school_app.model.models import School
 
 def get_school_data(user):
 	school_data = {}
@@ -22,6 +22,9 @@ def get_school_data(user):
 		school_data['secondaryThemeColor'] = school_objects[0].secondaryThemeColor
 		school_data['complexFeeStructure'] = school_objects[0].complexFeeStructure
 		school_data['dbId'] = school_objects[0].id
+		school_data['schoolDiseCode'] = school_objects[0].diseCode
+		school_data['schoolAddress'] = school_objects[0].address
+		print(school_data)
 	return school_data
 
 class AuthenticationHandler():

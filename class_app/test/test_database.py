@@ -2,7 +2,7 @@ from parent_test import ParentTestCase
 
 from class_app.models import Class, ClassSession, Section
 
-from school_app.models import Session
+from school_app.model.models import Session
 
 class DatabaseTestCase(ParentTestCase):
 

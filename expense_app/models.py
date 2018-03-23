@@ -1,5 +1,5 @@
 from django.db import models
-from school_app.models import School
+from school_app.model.models import School
 
 # Create your models here.
 
@@ -14,3 +14,6 @@ class Expense(models.Model):
 	def __str__(self):
 		"""A string representation of the model."""
 		return self.parentSchool.name + " --- " + self.remark[:50]
+
+	class Meta:
+		db_table = 'expense'

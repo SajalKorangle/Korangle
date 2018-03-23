@@ -26,5 +26,7 @@ urlpatterns = [
 	url(r'^expense/', include('expense_app.urls')),
 	url(r'^class/', include('class_app.urls')),
 	url(r'^fee/', include('fee_app.urls')),
+	url(r'^subjects/', include('subject_app.urls')),
+	url(r'^examinations/', include('examination_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

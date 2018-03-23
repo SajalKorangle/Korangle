@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from student_app.handlers.update_profile import get_class_section_student_list, get_student_profile, update_student, delete_student
 
-from school_app.models import Student
+from school_app.model.models import Student
 
 class UpdateProfileTestCase(ParentTestCase):
 
@@ -56,7 +56,7 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.totalFees,student_profile_data['totalFees'])
         self.assertEqual(student_object.remark,student_profile_data['remark'])
         self.assertEqual(student_object.scholarNumber,student_profile_data['scholarNumber'])
-        self.assertEqual(student_object.rollNumber,student_profile_data['rollNumber'])
+        self.assertEqual(student_object.currentRollNumber, student_profile_data['rollNumber'])
         self.assertEqual(student_object.motherName,student_profile_data['motherName'])
         self.assertEqual(student_object.gender,student_profile_data['gender'])
         self.assertEqual(student_object.caste,student_profile_data['caste'])
@@ -109,7 +109,7 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.totalFees,data['totalFees'])
         self.assertEqual(student_object.remark,data['remark'])
         self.assertEqual(student_object.scholarNumber,data['scholarNumber'])
-        self.assertEqual(student_object.rollNumber,data['rollNumber'])
+        self.assertEqual(student_object.currentRollNumber, data['rollNumber'])
         self.assertEqual(student_object.motherName,data['motherName'])
         self.assertEqual(student_object.gender,data['gender'])
         self.assertEqual(student_object.caste,data['caste'])

@@ -1,5 +1,5 @@
 from parent_test import ParentTestCase
-from school_app.models import School
+from school_app.model.models import School
 
 from django.contrib.auth.models import User
 

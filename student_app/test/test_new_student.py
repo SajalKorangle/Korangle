@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from student_app.handlers.new_student import create_new_student
 
-from school_app.models import Student
+from school_app.model.models import Student
 from school_app.session import get_current_session_object
 
 from class_app.models import Section
@@ -61,7 +61,7 @@ class NewStudentTestCase(ParentTestCase):
             self.assertEqual(student_object.totalFees,data['totalFees'])
             self.assertEqual(student_object.remark,data['remark'])
             self.assertEqual(student_object.scholarNumber,data['scholarNumber'])
-            self.assertEqual(student_object.rollNumber,data['rollNumber'])
+            self.assertEqual(student_object.currentRollNumber, data['rollNumber'])
             self.assertEqual(student_object.motherName,data['motherName'])
             self.assertEqual(student_object.gender,data['gender'])
             self.assertEqual(student_object.caste,data['caste'])
@@ -77,6 +77,5 @@ class NewStudentTestCase(ParentTestCase):
             self.assertEqual(student_object.bloodGroup,data['bloodGroup'])
             self.assertEqual(student_object.fatherAnnualIncome,data['fatherAnnualIncome'])
 
-            self.assertEqual(student_object.friendSection.get(parentClassSession__parentSession=get_current_session_object()).id,
-                             data['sectionDbId'])
+            self.assertEqual(student_object.get_section_id(get_current_session_object()),data['sectionDbId'])
 

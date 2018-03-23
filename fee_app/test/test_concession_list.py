@@ -1,7 +1,6 @@
 from parent_test import ParentTestCase
 
-from school_app.models import Concession
-from school_app.session import get_current_session_object
+from school_app.model.models import Concession
 
 from fee_app.handlers.concession_list import concession_list
 
@@ -28,8 +27,7 @@ class ConcessionListTestCase(ParentTestCase):
             self.assertEqual(concession_object.remark, response[concession_list_length]['remark'])
             self.assertEqual(concession_object.amount, response[concession_list_length]['amount'])
 
-            className = concession_object.parentStudent.friendSection\
-                .get(parentClassSession__parentSession=get_current_session_object()).parentClassSession.parentClass.name
+            className = concession_object.className
 
             self.assertEqual(className, response[concession_list_length]['className'])
 

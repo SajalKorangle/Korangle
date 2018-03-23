@@ -1,6 +1,6 @@
 from parent_test import ParentTestCase
 
-from school_app.models import Fee, SubFee, Student
+from school_app.model.models import Fee, SubFee, Student
 
 class DbValidityTestCase(ParentTestCase):
 

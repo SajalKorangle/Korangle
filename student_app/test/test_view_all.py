@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from student_app.handlers.view_all import get_class_section_student_profile_list
 
-from school_app.models import Student, SubFee
+from school_app.model.models import Student, SubFee
 from school_app.session import get_current_session_object
 
 class ViewAllTestCase(ParentTestCase):
@@ -43,7 +43,7 @@ class ViewAllTestCase(ParentTestCase):
                     self.assertEqual(student_data['dateOfBirth'],student_object.dateOfBirth)
                     self.assertEqual(student_data['totalFees'],student_object.totalFees)
                     self.assertEqual(student_data['remark'],student_object.remark)
-                    self.assertEqual(student_data['rollNumber'],student_object.rollNumber)
+                    self.assertEqual(student_data['rollNumber'], student_object.currentRollNumber)
                     self.assertEqual(student_data['scholarNumber'],student_object.scholarNumber)
                     self.assertEqual(student_data['motherName'],student_object.motherName)
                     self.assertEqual(student_data['gender'],student_object.gender)
@@ -60,11 +60,16 @@ class ViewAllTestCase(ParentTestCase):
                     self.assertEqual(student_data['bloodGroup'],student_object.bloodGroup)
                     self.assertEqual(student_data['fatherAnnualIncome'],student_object.fatherAnnualIncome)
 
-                    friendSection = student_object.friendSection.get(parentClassSession__parentSession=get_current_session_object())
+                    '''friendSection = student_object.friendSection.get(parentClassSession__parentSession=get_current_session_object())
                     self.assertEqual(student_data['sectionDbId'],friendSection.id)
                     self.assertEqual(student_data['sectionName'],friendSection.name)
                     self.assertEqual(student_data['classDbId'],friendSection.parentClassSession.parentClass.id)
-                    self.assertEqual(student_data['className'],friendSection.parentClassSession.parentClass.name)
+                    self.assertEqual(student_data['className'],friendSection.parentClassSession.parentClass.name)'''
+
+                    self.assertEqual(student_data['sectionDbId'],student_object.get_section_id(get_current_session_object()))
+                    self.assertEqual(student_data['sectionName'],student_object.get_section_name(get_current_session_object()))
+                    self.assertEqual(student_data['className'],student_object.get_class_id(get_current_session_object()))
+                    self.assertEqual(student_data['classDbId'],student_object.get_class_name(get_current_session_object()))
 
                     feesDue = student_object.totalFees
                     for studentFeeEntry in student_object.fee_set.all().order_by('-generationDateTime'):

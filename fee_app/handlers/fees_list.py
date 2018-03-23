@@ -1,5 +1,4 @@
-from school_app.models import Fee, SubFee
-from school_app.session import get_current_session_object
+from school_app.model.models import Fee, SubFee
 
 def fees_list(data, user):
     fee_list = []
@@ -13,7 +12,7 @@ def fees_list(data, user):
         tempFee['amount'] = fee_object.amount
         tempFee['generationDateTime'] = fee_object.generationDateTime
         tempFee['dbId'] = fee_object.id
-        tempFee['studentName'] = fee_object.parentStudent.name
+        tempFee['studentName'] = fee_object.studentName
         tempFee['remark'] = fee_object.remark
 
         tempFee['tuitionFeeAmount'] = 0
@@ -31,9 +30,10 @@ def fees_list(data, user):
         if cautionMoney:
             tempFee['cautionMoneyAmount'] = cautionMoney[0].amount
 
-        tempFee['className'] = fee_object.parentStudent.friendSection \
+        '''tempFee['className'] = fee_object.parentStudent.friendSection \
             .get(parentClassSession__parentSession=get_current_session_object()) \
-            .parentClassSession.parentClass.name
+            .parentClassSession.parentClass.name'''
+        tempFee['className'] = fee_object.className
         fee_list.append(tempFee)
 
     return fee_list

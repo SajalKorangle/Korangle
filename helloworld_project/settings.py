@@ -48,9 +48,11 @@ INSTALLED_APPS = [
 
 	'school_app',
     'class_app',
+    'subject_app',
     'student_app',
     'expense_app',
     'fee_app',
+    'examination_app',
 
 	'corsheaders',
 
@@ -198,7 +200,7 @@ if current_branch != 'master':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'new_class_structure_db.sqlite3'),
+            'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
         }
     }
     if 'test' in sys.argv:

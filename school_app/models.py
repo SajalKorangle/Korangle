@@ -1,18 +1,4 @@
-from django.db import models
-from django.contrib.auth.models import User
-
-from .model_custom_field import CustomImageField
-
-class Session(models.Model):
-	startDate = models.DateField()
-	endDate = models.DateField()
-	name = models.TextField(default='',null=True)
-
-	def __str__(self):
-		return str(self.startDate) + ' --- ' + str(self.endDate)
-
-
-from class_app.models import Section
+"""from django.contrib.auth.models import User
 
 def get_user():
 	if User.objects.filter(username='brightstar'):
@@ -20,38 +6,49 @@ def get_user():
 	else:
 		return 1
 
-'''class Class(models.Model):
-	name = models.CharField(max_length=100)
-	orderNumber = models.PositiveIntegerField(default=100)
-	parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=get_user)
+from django.db import models
+from django.contrib.auth.models import User
+
+from school_app.model_custom_field import CustomImageField
+
+class Session(models.Model):
+
+	startDate = models.DateField()
+	endDate = models.DateField()
+	name = models.TextField(default='',null=True)
+	orderNumber = models.IntegerField(default=0)
 
 	def __str__(self):
-		"""A string representation of the model."""
-		return self.parentUser.username + " --- " + self.name
-		"""return self.name"""'''
+		return str(self.startDate) + ' --- ' + str(self.endDate)
+
+	class Meta:
+		db_table = 'session'
 
 class Subject(models.Model):
+
 	name = models.TextField(default='')
 	# parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
 
 	def __str__(self):
 		return self.name
 
+	class Meta:
+		db_table = 'subject'
+
+from school_app.session import get_current_session_object, get_session_object
+
 class Student(models.Model):
+
 	name = models.CharField(max_length=100)
 	fathersName = models.CharField(max_length=100)
 	mobileNumber = models.IntegerField(null=True)
-	rollNumber = models.TextField(null=True)
+	# rollNumber = models.TextField(null=True)
 	scholarNumber = models.TextField(null=True)
 	totalFees = models.IntegerField(default=0)
 	dateOfBirth = models.DateField(null=True)
 	remark = models.TextField(null=True)
 
-	# parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0) # deprecated on 9th 2018
-
-	# sessionClass = models.ManyToManyField('SessionClass')
-
-	friendSection = models.ManyToManyField('class_app.Section')
+	# friendSection = models.ManyToManyField('class_app.Section')
 
 	parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=0)
 
@@ -60,8 +57,6 @@ class Student(models.Model):
 	gender = models.TextField(null=True)
 	caste = models.TextField(null=True)
 
-	# category = models.TextField(null=True) # deprecated on 8th Feb 2018
-
 	CATEGORY = (
 		( 'SC', 'Scheduled Caste' ),
 		( 'ST', 'Scheduled Tribe' ),
@@ -69,8 +64,6 @@ class Student(models.Model):
 		( 'Gen.', 'General' ),
 	)
 	newCategoryField = models.CharField(max_length=5, choices=CATEGORY, null=True)
-
-	# religion = models.TextField(null=True) # deprecated on 8th Feb 2018
 
 	RELIGION = (
 		( 'Hinduism', 'Hinduism' ),
@@ -91,10 +84,34 @@ class Student(models.Model):
 	fatherAnnualIncome = models.TextField(null=True)
 
 	def __str__(self):
-		"""A string representation of the model."""
-		return self.parentClass.name+" --- "+self.name
+		return self.parentUser.username+" --- "+self.name
+
+	@property
+	def rollNumber(self):
+		return self.studentsection_set\
+			.get(parentSection__parentClassSession__parentSession=get_current_session_object()).rollNumber
+
+	def get_section_id(self, session_object):
+		return self.studentsection_set\
+			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.id
+
+	def get_section_name(self, session_object):
+		return self.studentsection_set\
+			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.name
+
+	def get_class_id(self, session_object):
+		return self.studentsection_set\
+			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.id
+
+	def get_class_name(self, session_object):
+		return self.studentsection_set\
+			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.name
+
+	class Meta:
+		db_table = 'student'
 
 class Fee(models.Model):
+
 	receiptNumber = models.IntegerField()
 	amount = models.IntegerField()
 	remark = models.TextField()
@@ -102,19 +119,50 @@ class Fee(models.Model):
 	generationDateTime = models.DateField()
 	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
 
+	@property
+	def studentName(self):
+		return self.parentStudent.name
+
+	@property
+	def className(self):
+		return self.parentStudent.studentsection_set\
+			.get(parentSection__parentClassSession__parentSession=get_session_object(self.generationDateTime))\
+			.parentSection.parentClassSession.parentClass.name
+
+	class Meta:
+		db_table = 'fee'
+
 class SubFee(models.Model):
+
 	particular = models.TextField() # TutionFee, LateFee, CautionMoney
 	amount = models.IntegerField(default=0)
 	parentFee = models.ForeignKey(Fee, on_delete=models.PROTECT, default=0)
 
+	class Meta:
+		db_table = 'sub_fee'
+
 class Concession(models.Model):
+
 	amount = models.IntegerField()
 	remark = models.TextField()
 	# generationDateTime = models.DateTimeField(auto_now_add=True, blank=True)
 	generationDateTime = models.DateField(auto_now_add=True)
 	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
 
-class Expense(models.Model):
+	@property
+	def studentName(self):
+		return self.parentStudent.name
+
+	@property
+	def className(self):
+		return self.parentStudent.studentsection_set\
+			.get(parentSection__parentClassSession__parentSession=get_session_object(self.generationDateTime))\
+			.parentSection.parentClassSession.parentClass.name
+
+	class Meta:
+		db_table = 'concession'
+
+'''class Expense(models.Model):
 	voucherNumber = models.IntegerField()
 	amount = models.IntegerField()
 	remark = models.TextField()
@@ -123,18 +171,22 @@ class Expense(models.Model):
 	parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=get_user)
 
 	def __str__(self):
-		"""A string representation of the model."""
-		return self.parentUser.username + " --- " + self.remark[:50]
+		return self.parentUser.username + " --- " + self.remark[:50]'''
 
 class Marks(models.Model):
-	marks = models.DecimalField(decimal_places=2,max_digits=10,default=0)
-	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
-	parentSubject = models.ForeignKey(Subject, on_delete=models.PROTECT, default=0)
+
+	marks = models.DecimalField(decimal_places=2,max_digits=10,default=0, verbose_name='marks')
+	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
+	parentSubject = models.ForeignKey(Subject, on_delete=models.PROTECT, default=0, verbose_name='parentSubject')
 
 	def __str__(self):
 		return self.parentStudent.name + " --- " + self.parentSubject.name + " --- " + str(self.marks)
 
+	class Meta:
+		db_table = 'marks'
+
 class School(models.Model):
+
 	user = models.ManyToManyField(User)
 	name = models.TextField(null=True)
 	printName = models.TextField(null=True)
@@ -149,10 +201,17 @@ class School(models.Model):
 	def __str__(self):
 		return self.printName
 
-'''class SessionClass(models.Model):
-	parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0)
-	parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
+	class Meta:
+		db_table = 'school'
+
+class SchoolSession(models.Model):
+
+	parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
+	parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+	workingDays = models.IntegerField(default=0)
 
 	def __str__(self):
-		return str(self.parentSession.startDate) + ' --- ' + str(self.parentSession.endDate) + ' --- ' + self.parentClass.name'''
+		return self.parentSession.name + ' --- ' + self.parentSchool.name + ' --- ' + str(self.workingDays)
 
+	class Meta:
+		db_table = 'school_session'"""
