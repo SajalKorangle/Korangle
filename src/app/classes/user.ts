@@ -208,4 +208,7 @@ export class User {
     talent, innovative123
     vidhyamandir, smriti123
     champion, 123champ
+    sardarpatel, patelabc
+    talentshujalpur, talent123
+    ganeshsaraswati, 123ganesh
 */
