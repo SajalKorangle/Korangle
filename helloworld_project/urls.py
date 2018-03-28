@@ -18,15 +18,17 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
+api_version = 'v1.1/'
+
 urlpatterns = [
 	url(r'^admin/', admin.site.urls),
 	url(r'^', include('message_app.urls')),
-	url(r'^school/', include('school_app.urls')),
-	url(r'^student/', include('student_app.urls')),
-	url(r'^expense/', include('expense_app.urls')),
-	url(r'^class/', include('class_app.urls')),
-	url(r'^fee/', include('fee_app.urls')),
-	url(r'^subjects/', include('subject_app.urls')),
-	url(r'^examinations/', include('examination_app.urls')),
+	url(r'^'+api_version+'school/', include('school_app.urls')),
+	url(r'^'+api_version+'student/', include('student_app.urls')),
+	url(r'^'+api_version+'expense/', include('expense_app.urls')),
+	url(r'^'+api_version+'class/', include('class_app.urls')),
+	url(r'^'+api_version+'fee/', include('fee_app.urls')),
+	url(r'^'+api_version+'subjects/', include('subject_app.urls')),
+	url(r'^'+api_version+'examinations/', include('examination_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

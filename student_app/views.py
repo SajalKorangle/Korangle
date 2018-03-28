@@ -18,10 +18,12 @@ def get_success_response(data):
 ################ Update Profile ##################
 from .handlers.update_profile import get_class_section_student_list
 @api_view(['GET'])
-def get_class_section_student_list_view(request):
+def get_class_section_student_list_view(request, session_id):
 	if request.user.is_authenticated:
 		# data = json.loads(request.body.decode('utf-8'))
-		return JsonResponse({'response': get_success_response(get_class_section_student_list(request.user))})
+		data = {}
+		data['sessionDbId'] = session_id
+		return JsonResponse({'response': get_success_response(get_class_section_student_list(data, request.user))})
 	else:
 		return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
@@ -55,10 +57,11 @@ def delete_student_view(request):
 ############### View All #########################
 from .handlers.view_all import get_class_section_student_profile_list
 @api_view(['GET'])
-def get_student_profile_list_and_class_section_list_view(request):
+def get_student_profile_list_and_class_section_list_view(request, session_id):
 	if request.user.is_authenticated:
-		# data = json.loads(request.body.decode('utf-8'))
-		return JsonResponse({'response': get_success_response(get_class_section_student_profile_list(request.user))})
+		data = { }
+		data['sessionDbId'] = session_id
+		return JsonResponse({'response': get_success_response(get_class_section_student_profile_list(data, request.user))})
 	else:
 		return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 

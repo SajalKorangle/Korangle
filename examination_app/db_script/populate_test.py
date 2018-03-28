@@ -1,7 +1,7 @@
 
 from examination_app.db_script.constants import initialize_eklavya_test
 
-from school_app.session import get_current_session_object
+# from school_app.session import get_current_session_object
 
 import datetime
 

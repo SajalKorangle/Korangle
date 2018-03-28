@@ -14,6 +14,7 @@ def fees_list(data, user):
         tempFee['dbId'] = fee_object.id
         tempFee['studentName'] = fee_object.studentName
         tempFee['remark'] = fee_object.remark
+        tempFee['scholarNumber'] = fee_object.parentStudent.scholarNumber
 
         tempFee['tuitionFeeAmount'] = 0
         tuitionFee = SubFee.objects.filter(parentFee=fee_object, particular='TuitionFee')
@@ -30,9 +31,6 @@ def fees_list(data, user):
         if cautionMoney:
             tempFee['cautionMoneyAmount'] = cautionMoney[0].amount
 
-        '''tempFee['className'] = fee_object.parentStudent.friendSection \
-            .get(parentClassSession__parentSession=get_current_session_object()) \
-            .parentClassSession.parentClass.name'''
         tempFee['className'] = fee_object.className
         fee_list.append(tempFee)
 

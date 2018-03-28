@@ -28,7 +28,8 @@ def get_marksheet(data):
     response['sessionName'] = session_object.name
 
     studentProfile = {}
-    studentProfile['rollNumber'] = student_object.currentRollNumber
+    '''studentProfile['rollNumber'] = student_object.currentRollNumber'''
+    studentProfile['rollNumber'] = student_object.get_rollNumber(session_object)
     studentProfile['name'] = student_object.name
     studentProfile['fathersName'] = student_object.fathersName
     studentProfile['motherName'] = student_object.motherName

@@ -1,5 +1,5 @@
 from school_app.model.models import Concession
-from school_app.session import get_current_session_object
+# from school_app.session import get_current_session_object
 
 def concession_list(data, user):
     concession_list = []
@@ -12,10 +12,8 @@ def concession_list(data, user):
         tempConcession['amount'] = concession.amount
         tempConcession['generationDateTime'] = concession.generationDateTime
         tempConcession['studentName'] = concession.studentName
-        '''tempConcession['className'] = concession.parentStudent.friendSection \
-            .get(parentClassSession__parentSession=get_current_session_object()) \
-            .parentClassSession.parentClass.name'''
-        tempConcession['className'] = concession.className
+        tempConcession['scholarNumber'] = concession.parentStudent.scholarNumber
+        '''tempConcession['className'] = concession.className'''
         tempConcession['remark'] = concession.remark
         concession_list.append(tempConcession)
 

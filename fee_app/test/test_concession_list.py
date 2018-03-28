@@ -26,10 +26,11 @@ class ConcessionListTestCase(ParentTestCase):
             self.assertEqual(concession_object.generationDateTime, response[concession_list_length]['generationDateTime'])
             self.assertEqual(concession_object.remark, response[concession_list_length]['remark'])
             self.assertEqual(concession_object.amount, response[concession_list_length]['amount'])
+            self.assertEqual(concession_object.parentStudent.scholarNumber, response[concession_list_length]['scholarNumber'])
 
-            className = concession_object.className
+            # className = concession_object.className
 
-            self.assertEqual(className, response[concession_list_length]['className'])
+            # self.assertEqual(className, response[concession_list_length]['className'])
 
             concession_list_length += 1
 

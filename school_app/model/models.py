@@ -24,7 +24,7 @@ def get_user():
 	else:
 		return 1
 
-from school_app.session import get_current_session_object, get_session_object
+# from school_app.session import get_current_session_object, get_session_object
 
 class Student(models.Model):
 
@@ -76,10 +76,10 @@ class Student(models.Model):
 		"""A string representation of the model."""
 		return self.parentUser.username+" --- "+self.name
 
-	@property
+	'''@property
 	def currentRollNumber(self):
 		return self.studentsection_set\
-			.get(parentSection__parentClassSession__parentSession=get_current_session_object()).rollNumber
+			.get(parentSection__parentClassSession__parentSession=get_current_session_object()).rollNumber'''
 
 	def get_section_id(self, session_object):
 		return self.studentsection_set\
@@ -97,9 +97,19 @@ class Student(models.Model):
 		return self.studentsection_set\
 			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.name
 
+	def get_rollNumber(self, session_object):
+		return self.studentsection_set \
+			.get(parentSection__parentClassSession__parentSession=session_object).rollNumber
+
 	@property
 	def school(self):
 		return self.parentUser.school_set.filter()[0]
+
+	@property
+	def className(self):
+		return self.studentsection_set\
+			.get(parentSection__parentClassSession__parentSession=self.school.currentSession)\
+			.parentSection.parentClassSession.parentClass.name
 
 	class Meta:
 		db_table = 'student'
@@ -118,7 +128,8 @@ class Fee(models.Model):
 
 	@property
 	def className(self):
-		return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))
+		return self.parentStudent.className
+		'''return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))'''
 
 	class Meta:
 		db_table = 'fee'
@@ -146,7 +157,8 @@ class Concession(models.Model):
 
 	@property
 	def className(self):
-		return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))
+		return self.parentStudent.className
+		'''return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))'''
 
 	class Meta:
 		db_table = 'concession'
@@ -162,6 +174,7 @@ class School(models.Model):
 	complexFeeStructure = models.BooleanField(default=True)
 	address = models.TextField(null=True)
 	diseCode = models.TextField(null=True)
+	currentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='currentSession', default=1)
 
 	def get_upload_to(self, attname):
 			return 'school/id/{0}'.format(self.id)

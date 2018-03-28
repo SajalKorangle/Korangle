@@ -9,16 +9,20 @@ from student_app.handlers.common import get_student_profile
 
 from student_app.handlers import common
 
-from school_app.session import get_current_session_object
+# from school_app.session import get_current_session_object
+
+from school_app.model.models import Session
 
 from class_app.models import ClassSession, Section
 from student_app.handlers.common import populate_student_field
 
-def get_class_section_student_list(user):
+def get_class_section_student_list(data, user):
 
     class_section_student_list = []
 
-    for classSession_object in ClassSession.objects.filter(parentSession=get_current_session_object()).order_by('parentClass__orderNumber'):
+    session_object = Session.objects.get(id=data['sessionDbId'])
+
+    for classSession_object in ClassSession.objects.filter(parentSession=session_object).order_by('parentClass__orderNumber'):
         tempClass = {}
         tempClass['name'] = classSession_object.parentClass.name
         tempClass['dbId'] = classSession_object.parentClass.id
@@ -41,38 +45,10 @@ def get_class_section_student_list(user):
     return class_section_student_list
 
 def get_student_profile(data):
-    return common.get_student_profile(Student.objects.get(id=data['studentDbId']))
+    return common.get_student_profile(Student.objects.get(id=data['studentDbId']),
+                                      Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession)
 
 def update_student(data):
-    '''updatedValues = {}
-    updatedValues['name'] = data['name']
-    updatedValues['fathersName'] = data['fathersName']
-    updatedValues['mobileNumber'] = data['mobileNumber']
-    updatedValues['dateOfBirth'] = data['dateOfBirth']
-    if data['totalFees']:
-        updatedValues['totalFees'] = data['totalFees']
-    else:
-        updatedValues['totalFees'] = 0
-    updatedValues['remark'] = data['remark']
-    updatedValues['rollNumber'] = data['rollNumber']
-    updatedValues['scholarNumber'] = data['scholarNumber']
-    updatedValues['motherName'] = data['motherName']
-    updatedValues['gender'] = data['gender']
-    updatedValues['caste'] = data['caste']
-    updatedValues['newCategoryField'] = data['category']
-    updatedValues['newReligionField'] = data['religion']
-    updatedValues['fatherOccupation'] = data['fatherOccupation']
-    updatedValues['address'] = data['address']
-    updatedValues['familySSMID'] = data['familySSMID']
-    updatedValues['childSSMID'] = data['childSSMID']
-    updatedValues['bankAccountNum'] = data['bankAccountNum']
-    updatedValues['bankName'] = data['bankName']
-    updatedValues['aadharNum'] = data['aadharNum']
-    updatedValues['fatherAnnualIncome'] = data['fatherAnnualIncome']
-    updatedValues['bloodGroup'] = data['bloodGroup']
-
-    student_object, created = Student.objects.update_or_create(defaults=updatedValues, id=data['dbId'])
-    return get_student_profile(student_object)'''
 
     student_object = Student.objects.get(id=data['dbId'])
 
@@ -83,13 +59,17 @@ def update_student(data):
     student_object.save()
 
     if 'rollNumber' in data:
+        '''student_section_object = StudentSection.objects\
+            .get(parentStudent=student_object,
+                 parentSection__parentClassSession__parentSession=get_current_session_object())'''
         student_section_object = StudentSection.objects\
             .get(parentStudent=student_object,
-                 parentSection__parentClassSession__parentSession=get_current_session_object())
+                 parentSection_id=data['sectionDbId'])
         student_section_object.rollNumber = data['rollNumber']
         student_section_object.save()
 
-    return common.get_student_profile(student_object)
+    return common.get_student_profile(student_object,
+                                      Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession)
 
 
 def delete_student(data):

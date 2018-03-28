@@ -18,9 +18,10 @@ def get_success_response(data):
 
 from .handlers.new_student import get_class_section_list
 @api_view(['GET'])
-def get_class_section_list_view(request):
-	if request.user.is_authenticated:
-		# data = json.loads(request.body.decode('utf-8'))
-		return JsonResponse({'response': get_success_response(get_class_section_list())})
-	else:
-		return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+def get_class_section_list_view(request, session_id):
+    if request.user.is_authenticated:
+        data = {}
+        data['sessionDbId'] = session_id
+        return JsonResponse({'response': get_success_response(get_class_section_list(data))})
+    else:
+        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})

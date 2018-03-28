@@ -29,6 +29,7 @@ class FeesListTestCase(ParentTestCase):
             self.assertEqual(fee_object.generationDateTime, response[fees_list_length]['generationDateTime'])
             self.assertEqual(fee_object.remark, response[fees_list_length]['remark'])
             self.assertEqual(fee_object.amount, response[fees_list_length]['amount'])
+            self.assertEqual(fee_object.parentStudent.scholarNumber, response[fees_list_length]['scholarNumber'])
 
             try:
                 subFee_object = SubFee.objects.get(parentFee=fee_object, particular='TuitionFee')
@@ -57,9 +58,9 @@ class FeesListTestCase(ParentTestCase):
                 print('Error: Multiple Sub fee objects of same type, Fee Id: ' + str(fee_object))
                 return
 
-            className = fee_object.className
+            # className = fee_object.className
 
-            self.assertEqual(className, response[fees_list_length]['className'])
+            # self.assertEqual(className, response[fees_list_length]['className'])
 
             fees_list_length += 1
 

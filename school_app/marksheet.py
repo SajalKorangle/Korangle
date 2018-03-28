@@ -11,7 +11,7 @@
 
 #import os
 
-from .models import Student, Subject, Marks
+"""from .models import Student, Subject, Marks
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
@@ -160,3 +160,4 @@ def delete_student_marksheet(request):
 	else:
 		errResponse['message'] = 'User not authenticated'
 		return JsonResponse({'data': errResponse})
+"""

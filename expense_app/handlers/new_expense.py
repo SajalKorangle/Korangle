@@ -5,7 +5,7 @@ from django.db.models.functions import Substr
 
 from expense_app.models import Expense
 
-from school_app.session import get_current_session_object
+from school_app.session import get_session_object
 
 import datetime
 
@@ -22,9 +22,11 @@ def new_expense(data):
     if 'remark' not in data or data['remark'] is None:
         data['remark'] = ''
 
+    session_object = get_session_object(data['voucherDate'])
+
     last_voucher = Expense.objects.filter(parentSchool__id=schoolDbId,
-                                          voucherDate__gte=get_current_session_object().startDate,
-                                          voucherDate__lte=get_current_session_object().endDate)\
+                                          voucherDate__gte=session_object.startDate,
+                                          voucherDate__lte=session_object.endDate)\
         .aggregate(Max('voucherNumber'))
 
     new_voucher_number = ''

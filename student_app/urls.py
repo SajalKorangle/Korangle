@@ -7,7 +7,7 @@ urlpatterns = []
 ########## Update Profile #############
 from .views import get_class_section_student_list_view, get_student_profile_view, update_student_view, delete_student_view
 urlpatterns += [
-	url(r'^class_section_student_list/', get_class_section_student_list_view),
+	url(r'^class_section_student_list/sessions/(?P<session_id>[0-9]+)', get_class_section_student_list_view),
 	url(r'^get_student_profile/', get_student_profile_view),
 	url(r'^update_student_profile/', update_student_view),
 	url(r'^delete_student/', delete_student_view),
@@ -16,7 +16,7 @@ urlpatterns += [
 ########## View All ##############
 from .views import get_student_profile_list_and_class_section_list_view
 urlpatterns += [
-	url(r'^get_student_profile_list_and_class_section_list', get_student_profile_list_and_class_section_list_view),
+	url(r'^get_student_profile_list_and_class_section_list/sessions/(?P<session_id>[0-9]+)', get_student_profile_list_and_class_section_list_view),
 ]
 
 ########## New Student ###########

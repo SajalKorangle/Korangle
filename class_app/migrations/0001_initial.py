@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 
-from class_app.db_script.populateDatabaseFirst import populateDatabaseFirst
+# from class_app.db_script.populateDatabaseFirst import populateDatabaseFirst
 
 class Migration(migrations.Migration):
 

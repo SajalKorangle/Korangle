@@ -24,6 +24,8 @@ def get_school_data(user):
 		school_data['dbId'] = school_objects[0].id
 		school_data['schoolDiseCode'] = school_objects[0].diseCode
 		school_data['schoolAddress'] = school_objects[0].address
+		school_data['currentSessionDbId'] = school_objects[0].currentSession.id
+		school_data['name'] = school_objects[0].name
 		print(school_data)
 	return school_data
 

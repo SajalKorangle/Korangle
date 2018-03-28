@@ -1,5 +1,5 @@
 
-from .models import Fee, SubFee
+"""from .models import Fee, SubFee
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
@@ -48,3 +48,4 @@ def fee_list_view(request):
 	else:
 		return JsonResponse({'data':'error'})
 
+"""

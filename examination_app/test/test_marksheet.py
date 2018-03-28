@@ -35,7 +35,8 @@ class MarksheetTestCase(ParentTestCase):
         self.assertEqual(response['sectionName'], Section.objects.get(id=data['sectionDbId']).name)
         self.assertEqual(response['sessionName'], Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession.name)
 
-        self.assertEqual(response['studentProfile']['rollNumber'], student_object.currentRollNumber)
+        '''self.assertEqual(response['studentProfile']['rollNumber'], student_object.currentRollNumber)'''
+        self.assertEqual(response['studentProfile']['rollNumber'], student_object.get_rollNumber(Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession))
         self.assertEqual(response['studentProfile']['name'], student_object.name)
         self.assertEqual(response['studentProfile']['fathersName'], student_object.fathersName)
         self.assertEqual(response['studentProfile']['motherName'], student_object.motherName)
@@ -68,10 +69,14 @@ class MarksheetTestCase(ParentTestCase):
                          StudentSection.objects.get(parentStudent=student_object,
                                                     parentSection_id=data['sectionDbId']).attendance)
 
-        totalMaximumMarks = StudentTestResult.objects.filter(parentTest__parentSubject__governmentSubject=True)\
+        totalMaximumMarks = StudentTestResult.objects.filter(parentStudent_id=data['studentDbId'],
+                                                             parentTest__parentSection_id=data['sectionDbId'],
+                                                             parentTest__parentSubject__governmentSubject=True)\
             .aggregate(Sum('parentTest__parentMaximumMarks__marks'))['parentTest__parentMaximumMarks__marks__sum']
 
-        totalMarksObtained = StudentTestResult.objects.filter(parentTest__parentSubject__governmentSubject=True) \
+        totalMarksObtained = StudentTestResult.objects.filter(parentStudent_id=data['studentDbId'],
+                                                              parentTest__parentSection_id=data['sectionDbId'],
+                                                              parentTest__parentSubject__governmentSubject=True) \
             .aggregate(Sum('marksObtained'))['marksObtained__sum']
 
         overAllGradeValue = Grade.objects.get(parentMaximumMarksAllowed__marks=totalMaximumMarks,
@@ -97,7 +102,8 @@ class MarksheetTestCase(ParentTestCase):
         self.assertEqual(response['sectionName'], Section.objects.get(id=data['sectionDbId']).name)
         self.assertEqual(response['sessionName'], Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession.name)
 
-        self.assertEqual(response['studentProfile']['rollNumber'], student_object.currentRollNumber)
+        '''self.assertEqual(response['studentProfile']['rollNumber'], student_object.currentRollNumber)'''
+        self.assertEqual(response['studentProfile']['rollNumber'], student_object.get_rollNumber(Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession))
         self.assertEqual(response['studentProfile']['name'], student_object.name)
         self.assertEqual(response['studentProfile']['fathersName'], student_object.fathersName)
         self.assertEqual(response['studentProfile']['motherName'], student_object.motherName)
