@@ -30,7 +30,12 @@ export class NewStudentComponent implements OnInit {
         this.isLoading = true;
         this.newStudent = new Student();
         this.newStudent.dateOfBirth = this.todaysDate();
-        this.classService.getClassSectionList(this.user.jwt).then(
+
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+
+        this.classService.getClassSectionList(data, this.user.jwt).then(
             classSectionList => {
                 this.isLoading = false;
                 this.classSectionList = classSectionList;

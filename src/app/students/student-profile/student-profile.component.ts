@@ -39,7 +39,10 @@ export class StudentProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.studentService.getClassSectionStudentList(this.user.jwt).then(
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 classSectionStudentList.forEach( classs => {
                     const tempClass = new Classs();
@@ -72,7 +75,11 @@ export class StudentProfileComponent implements OnInit {
 
     getStudentProfile(): void {
         this.isLoading = true;
-        this.studentService.getStudentProfile(this.selectedStudent.dbId, this.user.jwt).then(
+        const data = {
+            studentDbId: this.selectedStudent.dbId,
+            sectionDbId: this.selectedSection.dbId,
+        }
+        this.studentService.getStudentProfile(data, this.user.jwt).then(
             student => {
                 this.isLoading = false;
                 const breakLoop = false;
@@ -107,6 +114,11 @@ export class StudentProfileComponent implements OnInit {
             return;
         }
         this.isLoading = true;
+        /*const data = {
+            student: Student,
+        }
+        data.student = new Student();
+        data.student.copy(this.currentStudent);*/
         this.studentService.updateStudentProfile(this.currentStudent, this.user.jwt).then(
             student => {
                 this.isLoading = false;

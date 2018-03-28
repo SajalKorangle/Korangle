@@ -27,8 +27,8 @@ export class FeeService extends CommonServiceRequirements {
     // Functions
 
     /* Common */
-    getStudentFeeData(studentDbId: any, token: any): Promise<any> {
-        return super.postData({'studentDbId': studentDbId}, token, this.getStudentFeeDataUrl);
+    getStudentFeeData(data: any, token: any): Promise<any> {
+        return super.postData(data, token, this.getStudentFeeDataUrl);
     }
 
     /* Submit Fee */

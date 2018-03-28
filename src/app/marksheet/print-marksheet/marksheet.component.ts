@@ -46,7 +46,10 @@ export class MarksheetComponent implements OnInit {
 
     ngOnInit(): void {
         this.isListLoading = true;
-        this.studentService.getClassSectionStudentList(this.user.jwt).then(
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 this.isListLoading = false;
                 classSectionStudentList.forEach( classs => {

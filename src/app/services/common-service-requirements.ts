@@ -28,7 +28,7 @@ export class CommonServiceRequirements {
 
     public postData(body: any, token: any, url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
-        return this.http.post(Constants.DJANGO_SERVER + url, body, {headers: headers})
+        return this.http.post(Constants.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -41,7 +41,7 @@ export class CommonServiceRequirements {
 
     public getData(token: any, url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
-        return this.http.get(Constants.DJANGO_SERVER + url, {headers: headers})
+        return this.http.get(Constants.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);

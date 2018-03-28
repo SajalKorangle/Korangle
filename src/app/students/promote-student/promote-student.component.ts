@@ -3,14 +3,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Session } from '../../classes/session';
 import { Classs } from '../../classes/classs';
 
-import { SessionClassListService } from '../../services/session-class-list.service';
-import { StudentService } from '../../services/student.service';
+// import { SessionClassListService } from '../../services/session-class-list.service';
+import { StudentService } from '../student.service';
 
 @Component({
   selector: 'app-promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ SessionClassListService, StudentService ],
+    providers: [ StudentService ],
 })
 export class PromoteStudentComponent implements OnInit {
 
@@ -27,8 +27,7 @@ export class PromoteStudentComponent implements OnInit {
     isLoading = false;
     isListLoading = false;
 
-    constructor (public sessionClassListService: SessionClassListService,
-                 public studentService: StudentService) { }
+    constructor (public studentService: StudentService) { }
 
     onChangeFromSession(selectedSession): void {
         this.fromSession = selectedSession;
@@ -74,7 +73,7 @@ export class PromoteStudentComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.isListLoading = true;
+        /*this.isListLoading = true;
         this.sessionClassListService.getSessionClassList(this.user.jwt).then(
             sessionClassList => {
                 this.isListLoading = false;
@@ -101,26 +100,15 @@ export class PromoteStudentComponent implements OnInit {
             }, error => {
                 this.isListLoading = false;
             }
-        );
+        );*/
     }
 
     getStudentList(session: any, classs: any): void {
-        this.isLoading = true;
+        /*this.isLoading = true;
         this.studentService.getStudentListSessionClassWise(session.dbId, classs.dbId, this.user.jwt).then(
             data => {
                 // console.log(data);
                 this.isLoading = false;
-                /*if (this.fromClass.dbId === data.classDbId) {
-                    this.fromClass.studentList = data.studentList;
-                } else {
-                    this.sessionList.forEach( session => {
-                        session.classList.forEach( classs => {
-                            if (classs.dbId === data.classDbId) {
-                                classs.studentList = data.studentList;
-                            }
-                        });
-                    });
-                }*/
                 this.sessionList.forEach( session => {
                     session.classList.forEach( classs => {
                         if (session.dbId === data.sessionDbId && classs.dbId === data.classDbId) {
@@ -134,9 +122,9 @@ export class PromoteStudentComponent implements OnInit {
             }, error => {
                 this.isLoading = false;
             }
-        );
+        );*/
     }
-
+/*
     promoteStudentList(): void {
         if (this.fromSession.dbId > this.toSession.dbId) {
             alert('Can not promote student to a previous session');
@@ -192,7 +180,7 @@ export class PromoteStudentComponent implements OnInit {
             }
         );
     }
-
+*/
     removeStudentList(): void {
         alert('Functionality is yet to be implemented');
     }

@@ -46,7 +46,10 @@ export class NewConcessionComponent implements OnInit {
         this.newConcession = new TempConcession();
         this.newConcession.generationDateTime = moment(new Date()).format('YYYY-MM-DD');
         this.isListLoading = true;
-        this.studentService.getClassSectionStudentList(this.user.jwt).then(
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 this.isListLoading = false;
                 classSectionStudentList.forEach( classs => {
@@ -109,10 +112,12 @@ export class NewConcessionComponent implements OnInit {
                         fee.fathersName = student.fathersName;
                         fee.className = student.className;
                         fee.sectionName = student.sectionName;
+                        fee.scholarNumber = student.scholarNumber;
                     });
                     student.concessionList.forEach(concession => {
                         concession.studentName = student.name;
                         concession.className = student.className;
+                        concession.scholarNumber = student.scholarNumber;
                     });
                     this.selectedStudent.copy(student);
                 }
@@ -123,7 +128,10 @@ export class NewConcessionComponent implements OnInit {
 
     getStudentFeeData(student?: TempStudent): void {
         this.isLoading = true;
-        this.feeService.getStudentFeeData(student.dbId, this.user.jwt).then(
+        const data = {
+            studentDbId: student.dbId,
+        };
+        this.feeService.getStudentFeeData(data, this.user.jwt).then(
             studentResponse => {
                 this.isLoading = false;
                 studentResponse.name = student.name;
@@ -131,7 +139,7 @@ export class NewConcessionComponent implements OnInit {
                 studentResponse.sectionName = student.sectionName;
                 studentResponse.feesList.forEach( fee => {
                     fee.studentName = student.name;
-                    fee.studentScholarNumber = studentResponse.scholarNumber;
+                    fee.scholarNumber = studentResponse.scholarNumber;
                     fee.fathersName = studentResponse.fathersName;
                     fee.className = student.className;
                     fee.sectionName = student.sectionName;

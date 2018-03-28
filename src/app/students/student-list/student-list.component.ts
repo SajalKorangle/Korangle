@@ -66,7 +66,10 @@ export class StudentListComponent implements OnInit {
     ngOnInit(): void {
         this.isLoading = true;
         this.columnFilter = new ColumnFilter();
-        this.studentService.getStudentProfileListAndClassSectionList(this.user.jwt).then(
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+        this.studentService.getStudentProfileListAndClassSectionList(data, this.user.jwt).then(
             data => {
 
                 console.log(data);

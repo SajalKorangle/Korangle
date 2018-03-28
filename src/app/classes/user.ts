@@ -38,6 +38,7 @@ export class User {
     isAuthenticated = false;
     jwt = '';
 
+    schoolName: string; // School Name (for sidebar)
     schoolPrintName: string; // School Profile
     schoolLogo: string; // School Profile
     color = 'red'; // School Profile
@@ -46,6 +47,7 @@ export class User {
     schoolDbId = 0;
     schoolDiseCode = 0;
     schoolAddress = '';
+    schoolCurrentSessionDbId: number;
 
     // imgSrc = '/assets/img/angular2-logo-red.png';
 
@@ -122,6 +124,7 @@ export class User {
     }
 
     initializeSchoolData(data: any): void {
+        this.schoolName = data.schoolData.name;
         this.schoolPrintName = data.schoolData.printName;
         this.color = data.schoolData.primaryThemeColor;
         this.btn_color = data.schoolData.secondaryThemeColor;
@@ -130,6 +133,7 @@ export class User {
         this.schoolDbId = data.schoolData.dbId;
         this.schoolDiseCode = data.schoolData.schoolDiseCode;
         this.schoolAddress = data.schoolData.schoolAddress;
+        this.schoolCurrentSessionDbId = data.schoolData.currentSessionDbId;
     }
 
     initializeUserData(data: any): void {
@@ -211,4 +215,5 @@ export class User {
     sardarpatel, patelabc
     talentshujalpur, talent123
     ganeshsaraswati, 123ganesh
+    bhagatsingh, bhagat123
 */

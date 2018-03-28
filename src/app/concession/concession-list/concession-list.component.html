@@ -43,14 +43,16 @@
                                 <td align="center">Amount</td>
                                 <td align="center">Date</td>
                                 <td align="center">Name</td>
-                                <td align="center">Class</td>
+                                <!-- td align="center">Class</td -->
+                                <td align="center">Scholar No.</td>
                                 <td align="center">Remark</td>
                             </tr>
                             <tr *ngFor="let concessionEntry of concessionList">
                                 <td align="right">{{concessionEntry.amount}}</td>
                                 <td align="center">{{concessionEntry.generationDateTime}}</td>
                                 <td align="center">{{concessionEntry.studentName}}</td>
-                                <td align="center">{{concessionEntry.className}}</td>
+                                <!-- td align="center">{{concessionEntry.className}}</td -->
+                                <td align="center">{{concessionEntry.scholarNumber}}</td>
                                 <td align="left">{{concessionEntry.remark}}</td>
                             </tr>
                         </table>

@@ -24,7 +24,7 @@ import { AppComponent } from './app.component';
 
 import { StudentProfileComponent } from './students/student-profile/student-profile.component';
 import { StudentListComponent } from './students/student-list/student-list.component';
-import { PromoteStudentComponent } from './students/promote-student/promote-student.component';
+// import { PromoteStudentComponent } from './students/promote-student/promote-student.component';
 
 import { NewStudentComponent } from './new-student/new-student.component';
 
@@ -82,7 +82,7 @@ import { GradePipe } from './pipes/grade.pipe';
 
         StudentProfileComponent,
         StudentListComponent,
-        PromoteStudentComponent,
+        // PromoteStudentComponent,
 
         NewStudentComponent,
 

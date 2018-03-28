@@ -15,13 +15,13 @@ export class StudentService extends CommonServiceRequirements {
     // Variables
 
     /* Update Profile */
-    private classSectionStudentListUrl = '/student/class_section_student_list/';
+    // private classSectionStudentListUrl = '/student/class_section_student_list/';
     private getStudentProfileUrl = '/student/get_student_profile/';
     private updateStudentProfileUrl = '/student/update_student_profile/';
     private deleteStudentUrl = '/student/delete_student/';
 
     /* View All */
-    private getStudentProfileListAndClassSectionListUrl = '/student/get_student_profile_list_and_class_section_list/';
+    // private getStudentProfileListAndClassSectionListUrl = '/student/get_student_profile_list_and_class_section_list/';
 
     /* New Student */
     private createNewStudentUrl = '/student/create_new_student/';
@@ -31,12 +31,13 @@ export class StudentService extends CommonServiceRequirements {
     // Functions
 
     /* Update Profile */
-    getClassSectionStudentList(token: any): Promise<any> {
-        return super.getData(token, this.classSectionStudentListUrl);
+    getClassSectionStudentList(data: any, token: any): Promise<any> {
+        const url = '/student/class_section_student_list/sessions/' + data.sessionDbId;
+        return super.getData(token, url);
     }
 
-    getStudentProfile(dbId: any, token: any): Promise<any> {
-        return super.postData({'studentDbId': dbId}, token, this.getStudentProfileUrl);
+    getStudentProfile(data: any, token: any): Promise<any> {
+        return super.postData(data, token, this.getStudentProfileUrl);
     }
 
     updateStudentProfile(student: Student, token: any): Promise<any> {
@@ -48,8 +49,9 @@ export class StudentService extends CommonServiceRequirements {
     }
 
     /* View All */
-    getStudentProfileListAndClassSectionList(token: any): Promise<any> {
-        return super.getData(token, this.getStudentProfileListAndClassSectionListUrl);
+    getStudentProfileListAndClassSectionList(data: any, token: any): Promise<any> {
+        const url = '/student/get_student_profile_list_and_class_section_list/sessions/' + data.sessionDbId;
+        return super.getData(token, url);
     }
 
     /* New Student */

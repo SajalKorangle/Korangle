@@ -48,7 +48,10 @@ export class UpdateMarksComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.studentService.getClassSectionStudentList(this.user.jwt).then(
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 this.isLoading = false;
                 classSectionStudentList.forEach( classs => {

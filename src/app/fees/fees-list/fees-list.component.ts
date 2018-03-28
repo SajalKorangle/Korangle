@@ -16,7 +16,8 @@ export class FeesListComponent {
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
-    feesList: Fee[] = [];
+    // feesList: Fee[] = [];
+    feesList = [];
     totalFees = 0;
     isLoading = false;
 

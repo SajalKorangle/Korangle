@@ -52,7 +52,10 @@ export class NewFeesComponent implements OnInit, OnDestroy {
             this.submitFee();
         });
         this.isListLoading = true;
-        this.studentService.getClassSectionStudentList(this.user.jwt).then(
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 this.isListLoading = false;
                 classSectionStudentList.forEach( classs => {
@@ -167,7 +170,10 @@ export class NewFeesComponent implements OnInit, OnDestroy {
 
     getStudentFeeData(student?: TempStudent): void {
         this.isLoading = true;
-        this.feeService.getStudentFeeData(student.dbId, this.user.jwt).then(
+        const data = {
+            studentDbId: student.dbId,
+        };
+        this.feeService.getStudentFeeData(data, this.user.jwt).then(
             studentResponse => {
                 this.isLoading = false;
                 studentResponse.name = student.name;
@@ -175,7 +181,7 @@ export class NewFeesComponent implements OnInit, OnDestroy {
                 studentResponse.sectionName = student.sectionName;
                 studentResponse.feesList.forEach( fee => {
                     fee.studentName = student.name;
-                    fee.studentScholarNumber = studentResponse.scholarNumber;
+                    fee.scholarNumber = studentResponse.scholarNumber;
                     fee.fathersName = studentResponse.fathersName;
                     fee.className = student.className;
                     fee.sectionName = student.sectionName;
@@ -184,6 +190,7 @@ export class NewFeesComponent implements OnInit, OnDestroy {
                     concession.studentName = student.name;
                     concession.className = student.className;
                     concession.sectionName = student.sectionName;
+                    concession.scholarNumber = student.scholarNumber;
                 });
                 this.selectedStudent.copy(studentResponse);
                 if (studentResponse.overAllLastFeeReceiptNumber === null || studentResponse.overAllLastFeeReceiptNumber === '') {
