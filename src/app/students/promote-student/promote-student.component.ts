@@ -1,3 +1,4 @@
+/*
 import { Component, Input, OnInit } from '@angular/core';
 
 import { Session } from '../../classes/session';
@@ -73,7 +74,7 @@ export class PromoteStudentComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        /*this.isListLoading = true;
+        this.isListLoading = true;
         this.sessionClassListService.getSessionClassList(this.user.jwt).then(
             sessionClassList => {
                 this.isListLoading = false;
@@ -100,11 +101,11 @@ export class PromoteStudentComponent implements OnInit {
             }, error => {
                 this.isListLoading = false;
             }
-        );*/
+        );
     }
 
     getStudentList(session: any, classs: any): void {
-        /*this.isLoading = true;
+        this.isLoading = true;
         this.studentService.getStudentListSessionClassWise(session.dbId, classs.dbId, this.user.jwt).then(
             data => {
                 // console.log(data);
@@ -122,9 +123,9 @@ export class PromoteStudentComponent implements OnInit {
             }, error => {
                 this.isLoading = false;
             }
-        );*/
+        );
     }
-/*
+
     promoteStudentList(): void {
         if (this.fromSession.dbId > this.toSession.dbId) {
             alert('Can not promote student to a previous session');
@@ -180,9 +181,10 @@ export class PromoteStudentComponent implements OnInit {
             }
         );
     }
-*/
+
     removeStudentList(): void {
         alert('Functionality is yet to be implemented');
     }
 
 }
+*/
