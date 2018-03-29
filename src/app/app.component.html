@@ -12,19 +12,21 @@
 
             <app-student-profile *ngIf="user.appSection==='student_profile'" [user]="user"></app-student-profile>
             <app-student-list *ngIf="user.appSection==='student_list'" [user]="user"></app-student-list>
-            <app-promote-student *ngIf="user.appSection==='promote_students'" [user]="user"></app-promote-student>
+            <!-- app-promote-student *ngIf="user.appSection==='promote_students'" [user]="user"></app-promote-student -->
 
             <app-new-fees *ngIf="user.appSection==='new_fees'" [user]="user"></app-new-fees>
             <app-fees-list *ngIf="user.appSection==='fees_list'" [user]="user"></app-fees-list>
 
-            <app-expenses *ngIf="user.appSection==='expenses'" [user]="user"></app-expenses>
+            <app-new-expense *ngIf="user.appSection==='new_expense'" [user]="user"></app-new-expense>
+            <app-expense-list *ngIf="user.appSection==='expense_list'" [user]="user"></app-expense-list>
 
             <app-new-concession *ngIf="user.appSection==='new_concession'" [user]="user"></app-new-concession>
             <app-concession-list *ngIf="user.appSection==='concession_list'" [user]="user"></app-concession-list>
 
             <app-new-student *ngIf="user.appSection==='new_student'" [user]="user"></app-new-student>
 
-            <app-marksheet *ngIf="user.appSection==='marksheet'" [user]="user"></app-marksheet>
+            <app-update-marks *ngIf="user.appSection==='update_marks'" [user]="user"></app-update-marks>
+            <app-marksheet *ngIf="user.appSection==='print_marksheet'" [user]="user"></app-marksheet>
             <!--<div *ngIf="isMaps('maps')"> <app-footer></app-footer> </div>-->
         </div>
     </div>

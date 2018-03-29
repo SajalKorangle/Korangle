@@ -9,11 +9,11 @@
 
                 Class:
                 <select [ngModel]="selectedClass"
-                        (ngModelChange)="onChangeSelectedClass($event)"
+                        (ngModelChange)="selectedClass=$event;changeSelectedSectionToFirst();"
                         style="margin-right: 15px">
-                    <ng-container>
-                        <option *ngFor = "let c of classList;" [ngValue]="c">{{c.name}}</option>
-                    </ng-container>
+                    <option *ngFor = "let class of classSectionStudentList;" [ngValue]="class">
+                        {{class.name}}
+                    </option>
                 </select>
                 <!-- mat-form-field *ngIf="selectedClass !== undefined" style="margin-right: 15px;">
                     <mat-select placeholder="Class" [ngModel]="selectedClass" (ngModelChange)="onChangeSelectedClass($event)">
@@ -21,14 +21,27 @@
                     </mat-select>
                 </mat-form-field -->
 
-                Student:
-                <select [ngModel]="selectedStudent"
-                        (ngModelChange)="selectedStudent=$event;currentStudent.copyWithoutFeesAndConcession(selectedStudent)"
-                        style="margin-right: 15px">
-                    <ng-container *ngIf="selectedClass">
-                        <option *ngFor="let c of selectedClass.studentList" [ngValue] = "c">{{c.name}}</option>
-                    </ng-container>
-                </select>
+                <span *ngIf='selectedClass' [class.hidden]="selectedClass.sectionList.length == 1">
+                    Section:
+                    <select [ngModel]="selectedSection"
+                            (ngModelChange)="selectedSection=$event;changeSelectedStudentToFirst();"
+                            style="margin-right: 15px">
+                        <option *ngFor = "let section of selectedClass.sectionList" [ngValue]="section">
+                            {{section.name}}
+                        </option>
+                    </select>
+                </span>
+
+                <span *ngIf="selectedSection">
+                    Student:
+                    <select [ngModel]="selectedStudent"
+                            (ngModelChange)="selectedStudent=$event;currentStudent.copy(selectedStudent)"
+                            style="margin-right: 15px">
+                        <option *ngFor="let student of selectedSection.studentList" [ngValue] = "student">
+                            {{student.name}}
+                        </option>
+                    </select>
+                </span>
                 <!-- mat-form-field *ngIf="selectedClass !== undefined && selectedClass.studentList.length > 0">
                     <mat-select placeholder="Student" [(ngModel)]="selectedStudent" (ngModelChange)="getStudentData()">
                         <mat-option *ngFor = "let c of selectedClass.studentList;" [value]="c">{{c.name}}</mat-option>
@@ -39,9 +52,9 @@
                         class="btn btn-{{user.btn_color}}"
                         style="padding: 3px 8px;"
                         [disabled]="!selectedStudent"
-                        (click)="getStudentData();">Get</button>
+                        (click)="getStudentProfile();">Get</button>
 
-                <span *ngIf="selectedClass" style="float: right; margin-top: 10px;"><i>{{selectedClass.studentList.length}} students</i></span>
+                <span *ngIf="selectedSection" style="float: right; margin-top: 10px;"><i>{{selectedSection.studentList.length}} students</i></span>
 
                 <div class="row">
                     <div class="col-md-12"

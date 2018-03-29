@@ -1,28 +1,37 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 
 
 import { EmitterService } from '../../services/emitter.service';
+import {viewClassName} from "@angular/compiler";
 
 @Component({
     selector: 'app-print-student-list',
     templateUrl: './print-student-list.component.html',
     styleUrls: ['./print-student-list.component.css'],
 })
-export class PrintStudentListComponent implements OnInit, OnDestroy {
+export class PrintStudentListComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    studentList: any;
+    // studentList: any;
+    classSectionStudentList: any;
     columnFilter: any;
+
+    viewChecked = true;
 
     printStudentListComponentSubscription: any;
 
     ngOnInit(): void {
         this.printStudentListComponentSubscription = EmitterService.get('print-student-list-component').subscribe( value => {
-            this.studentList = value['studentList'];
+            this.classSectionStudentList = value['classSectionStudentList'];
             this.columnFilter = value['columnFilter'];
-            setTimeout(() => {
-                window.print();
-            });
+            this.viewChecked = false;
         });
+    }
+
+    ngAfterViewChecked(): void {
+        if (this.viewChecked === false) {
+            this.viewChecked = true;
+            window.print();
+        }
     }
 
     ngOnDestroy(): void {

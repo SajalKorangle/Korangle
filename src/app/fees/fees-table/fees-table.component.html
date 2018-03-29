@@ -3,28 +3,30 @@
         <tr>
             <th>Receipt No.</th>
             <th class="text-center" *ngIf="!whileSubmittingFee">Name</th>
-            <th class="text-center" *ngIf="!whileSubmittingFee">Class</th>
+            <!-- th class="text-center" *ngIf="!whileSubmittingFee">Class</th -->
+            <th class="text-center" *ngIf="!whileSubmittingFee">Scholar No.</th>
             <th class="text-right">Amount</th>
             <th class="text-center">Date</th>
             <th class="text-center">Remark</th>
             <th class="text-center" *ngIf="user.complexFee">Bifurcation</th>
-            <th class="text-center">-</th>
+            <th class="text-center" *ngIf="whileSubmittingFee">-</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let feeEntry of feesList">
             <td>{{feeEntry.receiptNumber}}</td>
             <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.studentName}}</td>
-            <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.className}}</td>
+            <!-- td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.className}}</td -->
+            <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.scholarNumber}}</td>
             <td style="padding-right: 15px;" align="right">{{feeEntry.amount}}</td>
-            <td align="center">{{feeEntry.generationDateTime | date: 'dd/MM/yyyy'}}</td>
+            <td align="center">{{feeEntry.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
             <td align="center">{{feeEntry.remark}}</td>
             <td align="center" *ngIf="user.complexFee">
                 <span *ngIf="feeEntry.tuitionFeeAmount!==0">TutionFee: {{feeEntry.tuitionFeeAmount}},</span>
                 <span *ngIf="feeEntry.lateFeeAmount!==0">LateFee: {{feeEntry.lateFeeAmount}},</span>
                 <span *ngIf="feeEntry.cautionMoneyAmount!==0">CautionMoney: {{feeEntry.cautionMoneyAmount}},</span>
             </td>
-            <td align="center">
+            <td align="center" *ngIf="whileSubmittingFee">
                 <button type="button"
                         style="padding: 8px 11px; margin: 0px"
                         matTooltip="Print"

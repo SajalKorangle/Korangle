@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { FeeListService } from '../../services/fee-list.service';
+import { FeeService } from '../fee.service';
 import { Fee } from '../../classes/fee';
 import {EmitterService} from '../../services/emitter.service';
 
@@ -8,7 +8,7 @@ import {EmitterService} from '../../services/emitter.service';
   selector: 'app-fees-list',
   templateUrl: './fees-list.component.html',
   styleUrls: ['./fees-list.component.css'],
-    providers: [FeeListService]
+    providers: [FeeService]
 })
 export class FeesListComponent {
 
@@ -16,7 +16,8 @@ export class FeesListComponent {
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
-    feesList: Fee[] = [];
+    // feesList: Fee[] = [];
+    feesList = [];
     totalFees = 0;
     isLoading = false;
 
@@ -32,12 +33,16 @@ export class FeesListComponent {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private feeListService: FeeListService) { }
+    constructor(private feeService: FeeService) { }
 
     getFeeList(): void {
       this.feesList = [];
       this.isLoading = true;
-      this.feeListService.getFeeList(this.startDate, this.endDate).then(
+      const data = {
+          startDate: this.startDate,
+          endDate: this.endDate,
+      }
+      this.feeService.getFeesList(data, this.user.jwt).then(
           feesList => {
               console.log(feesList);
               // for (let i = 0; i < 10000; ++i ) { }

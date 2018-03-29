@@ -3,7 +3,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Fee } from '../../classes/fee';
 
 import { EmitterService } from '../../services/emitter.service';
-import set = Reflect.set;
+// import set = Reflect.set;
 import moment = require("moment");
 
 @Component({

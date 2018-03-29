@@ -6,9 +6,9 @@ export class Fee {
     studentDbId: number;
     remark: string;
     generationDateTime: any;
-    studentName: string;
+    /* studentName: string;
     fatherName: string;
-    className: string;
+    className: string; */
 
     /*Fee particulars*/
     tuitionFeeAmount = 0;
@@ -22,9 +22,9 @@ export class Fee {
         this.studentDbId = fees.studentDbId;
         this.remark = fees.remark;
         this.generationDateTime = fees.generationDateTime;
-        this.studentName = fees.studentName;
+        /* this.studentName = fees.studentName;
         this.fatherName = fees.fatherName;
-        this.className = fees.className;
+        this.className = fees.className; */
 
         if (fees.tuitionFeeAmount !== undefined) {
             this.tuitionFeeAmount = fees.tuitionFeeAmount;

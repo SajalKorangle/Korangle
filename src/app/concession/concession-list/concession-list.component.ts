@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
 
 import { Concession } from '../../classes/concession';
-import { ConcessionListService } from '../../services/concession-list.service';
+import { FeeService } from '../../fees/fee.service';
 
 @Component({
   selector: 'app-concession-list',
   templateUrl: './concession-list.component.html',
   styleUrls: ['./concession-list.component.css'],
-    providers: [ConcessionListService]
+    providers: [FeeService]
 })
 export class ConcessionListComponent {
 
@@ -31,12 +31,16 @@ export class ConcessionListComponent {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private concessionListService: ConcessionListService) { }
+    constructor(private feeService: FeeService) { }
 
     getConcessionList(): void {
       this.concessionList = [];
       this.isLoading = true;
-      this.concessionListService.getConcessionList(this.startDate, this.endDate).then(
+      const data = {
+          startDate: this.startDate,
+          endDate: this.endDate,
+      }
+      this.feeService.getConcessionList(data, this.user.jwt).then(
           concessionList => {
               // for (let i = 0; i < 10000; ++i ) { }
               this.totalConcession = 0;

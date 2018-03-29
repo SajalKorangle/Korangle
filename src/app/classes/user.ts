@@ -12,7 +12,7 @@ class Section {
     title: string;
     icon: string;
     class: string;
-    showSubsection: boolean;
+    showSubsection: boolean; // true when subsection is expanded and vice-versa
     subsection: SubSection[] = [];
 }
 
@@ -38,11 +38,16 @@ export class User {
     isAuthenticated = false;
     jwt = '';
 
+    schoolName: string; // School Name (for sidebar)
     schoolPrintName: string; // School Profile
     schoolLogo: string; // School Profile
     color = 'red'; // School Profile
     btn_color = 'danger'; // School Profile
     complexFee = false; // School Profile
+    schoolDbId = 0;
+    schoolDiseCode = 0;
+    schoolAddress = '';
+    schoolCurrentSessionDbId: number;
 
     // imgSrc = '/assets/img/angular2-logo-red.png';
 
@@ -71,7 +76,17 @@ export class User {
                     title: 'Previous Record',
                 }
             ] },
-        { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false, subsection: [] },
+        { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false,
+            subsection: [
+                {
+                    path: 'new_expense',
+                    title: 'Submit Expense',
+                },
+                {
+                    path: 'expense_list',
+                    title: 'View Record',
+                }
+            ] },
         { path: 'concession', title: 'Concession', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {
@@ -83,29 +98,18 @@ export class User {
                     title: 'Previous Discounts',
                 }
             ] },
-        { path: 'new_student', title: 'New Student', icon: 'person', class: '', showSubsection: false, subsection: [] },
-        /*{ path: 'marksheet', title: 'Marksheet', icon: 'layers', class: '', showSubsection: false, subsection: [] },*/
-        /*{ path: 'test_subsection', title: 'Section With Sub', icon: 'dashboard', class: '', showSubsection: false,
+        { path: 'marksheet', title: 'Marksheet', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {
-                    path: 'subsection_one',
-                    title: 'Subsection One'
+                    path: 'update_marks',
+                    title: 'Update Marks',
                 },
                 {
-                    path: 'subsection_two',
-                    title: 'Subsection Two',
-                },
-            ]
-        },*/
-        /*{ path: 'user-profile', title: 'User Profile',  icon:'person', class: '' },
-        { path: 'table-list', title: 'Table List',  icon:'content_paste', class: '' },
-        { path: 'typography', title: 'Typography',  icon:'library_books', class: '' },
-        { path: 'icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-        { path: 'maps', title: 'Maps',  icon:'location_on', class: '' },
-        { path: 'notifications', title: 'Notifications',  icon:'notifications', class: '' },
-        { path: 'upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
-        { path: 'fees-receipts', title: 'Fees Receipts',  icon:'content_paste', class: '' },
-        { path: 'student-list', title: 'Student List',  icon:'content_paste', class: '' }, */
+                    path: 'print_marksheet',
+                    title: 'Print Marksheet',
+                }
+            ] },
+        { path: 'new_student', title: 'New Student', icon: 'person', class: '', showSubsection: false, subsection: [] },
     ];
 
     checkAuthentication(): boolean {
@@ -120,20 +124,25 @@ export class User {
     }
 
     initializeSchoolData(data: any): void {
+        this.schoolName = data.schoolData.name;
         this.schoolPrintName = data.schoolData.printName;
         this.color = data.schoolData.primaryThemeColor;
         this.btn_color = data.schoolData.secondaryThemeColor;
         this.schoolLogo = Constants.DJANGO_SERVER + data.schoolData.logo;
         this.complexFee = data.schoolData.complexFeeStructure;
+        this.schoolDbId = data.schoolData.dbId;
+        this.schoolDiseCode = data.schoolData.schoolDiseCode;
+        this.schoolAddress = data.schoolData.schoolAddress;
+        this.schoolCurrentSessionDbId = data.schoolData.currentSessionDbId;
     }
 
     initializeUserData(data: any): void {
         this.username = data.username;
         this.email = data.email;
         this.initializeSchoolData(data);
-        if (Constants.DJANGO_SERVER === 'http://localhost:8000') {
-            this.addMarksheet();
-            this.addPromoteStudent();
+        if (this.username !== 'eklavya') {
+            // alert('removing marksheet');
+            this.removeMarksheet();
         }
         this.appSection = 'student_profile';
     }
@@ -174,17 +183,19 @@ export class User {
     }
 
     removeMarksheet(): void {
+        let count = -1;
         let index = 0;
         this.ROUTES.forEach(
             section => {
                 if (section.path === 'marksheet') {
+                    count = index;
                     return;
                 }
                 ++index;
             }
         );
-        if (this.ROUTES.length === index) { return; } else {
-            this.ROUTES.splice( index, 1);
+        if (count === -1) { return; } else {
+            this.ROUTES.splice( count, 1);
         }
     }
 
@@ -192,10 +203,17 @@ export class User {
 
 /*
     demo, user1234
-    brightstar, bright123
+    brightstar, 123brightstar
     brighthindi, hindi123
     eklavya, ashta123
     anupreet, itisjp123
     sunrise, akodia123
     madhav, lakhan123
+    talent, innovative123
+    vidhyamandir, smriti123
+    champion, 123champ
+    sardarpatel, patelabc
+    talentshujalpur, talent123
+    ganeshsaraswati, 123ganesh
+    bhagatsingh, bhagat123
 */

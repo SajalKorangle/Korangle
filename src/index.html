@@ -41,8 +41,12 @@
         @media print {
             .showPrint {
                 display: block;
+                -webkit-print-color-adjust: exact;
             }
             .hidePrint {
+                display: none;
+            }
+            .mat-tooltip {
                 display: none;
             }
         }

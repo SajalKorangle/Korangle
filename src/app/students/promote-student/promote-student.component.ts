@@ -1,16 +1,17 @@
+/*
 import { Component, Input, OnInit } from '@angular/core';
 
 import { Session } from '../../classes/session';
 import { Classs } from '../../classes/classs';
 
-import { SessionClassListService } from '../../services/session-class-list.service';
-import { StudentService } from '../../services/student.service';
+// import { SessionClassListService } from '../../services/session-class-list.service';
+import { StudentService } from '../student.service';
 
 @Component({
   selector: 'app-promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ SessionClassListService, StudentService ],
+    providers: [ StudentService ],
 })
 export class PromoteStudentComponent implements OnInit {
 
@@ -27,8 +28,7 @@ export class PromoteStudentComponent implements OnInit {
     isLoading = false;
     isListLoading = false;
 
-    constructor (public sessionClassListService: SessionClassListService,
-                 public studentService: StudentService) { }
+    constructor (public studentService: StudentService) { }
 
     onChangeFromSession(selectedSession): void {
         this.fromSession = selectedSession;
@@ -110,17 +110,6 @@ export class PromoteStudentComponent implements OnInit {
             data => {
                 // console.log(data);
                 this.isLoading = false;
-                /*if (this.fromClass.dbId === data.classDbId) {
-                    this.fromClass.studentList = data.studentList;
-                } else {
-                    this.sessionList.forEach( session => {
-                        session.classList.forEach( classs => {
-                            if (classs.dbId === data.classDbId) {
-                                classs.studentList = data.studentList;
-                            }
-                        });
-                    });
-                }*/
                 this.sessionList.forEach( session => {
                     session.classList.forEach( classs => {
                         if (session.dbId === data.sessionDbId && classs.dbId === data.classDbId) {
@@ -198,3 +187,4 @@ export class PromoteStudentComponent implements OnInit {
     }
 
 }
+*/

@@ -47,25 +47,16 @@
 
                 <div *ngIf="!isLoading" class="row">
                     <div class="col-md-12">
-                        <app-fees-table-list [user]="user"
-                                             [feesList]="feesList"
-                                             [whileSubmittingFee]="false"></app-fees-table-list>
+                        <app-fees-table [user]="user"
+                                        [feesList]="feesList"
+                                        [whileSubmittingFee]="false"></app-fees-table>
                     </div>
                 </div>
-
-                <!-- div *ngIf="!isLoading && feesList.length === 0" class="row">
-                    <div class="col-md-12">
-                        No Fees recorded b/w these dates.
-                    </div>
-                </div -->
 
             </div>
         </div>
 
         <ng-container *ngIf="isLoading">
-            <!-- div class="loader-container" align="center">
-                <div class="loader"></div>
-            </div -->
             <app-loading-spinner [user]="user"></app-loading-spinner>
         </ng-container>
 

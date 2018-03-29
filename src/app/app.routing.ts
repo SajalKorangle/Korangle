@@ -16,7 +16,7 @@ import { StudentListComponent } from './student-list/student-list.component';*/
 // import { StudentProfileComponent } from './students/students.component';
 import { NewStudentComponent } from './new-student/new-student.component';
 import { LoginComponent } from './authentication/login.component';
-import {ExpensesComponent} from './expenses/expenses.component';
+// import {ExpensesComponent} from './expenses/expenses.component';
 import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
 
 const routes: Routes = [
@@ -24,7 +24,7 @@ const routes: Routes = [
     { path: 'fees',      component: FeesListComponent },
     // { path: 'students', component: StudentComponent },
     { path: 'new_student', component: NewStudentComponent },
-    { path: 'expenses', component: ExpensesComponent },
+    // { path: 'expenses', component: ExpensesComponent },
     { path: 'concession', component: ConcessionListComponent },
     /*{ path: '',          redirectTo: 'students', pathMatch: 'full' },*/
 
