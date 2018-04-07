@@ -4,9 +4,11 @@ from django.contrib.auth.models import User
 
 from student_app.handlers.view_all import get_class_section_student_profile_list
 
-from school_app.model.models import Student, SubFee, Session
+from school_app.model.models import Session
 
-from student_app.models import StudentSection
+from student_app.models import Student, StudentSection
+
+from fee_app.models import SubFee
 
 class ViewAllTestCase(ParentTestCase):
 
@@ -65,11 +67,10 @@ class ViewAllTestCase(ParentTestCase):
                         self.assertEqual(student_data['aadharNum'],student_object.aadharNum)
                         self.assertEqual(student_data['bloodGroup'],student_object.bloodGroup)
                         self.assertEqual(student_data['fatherAnnualIncome'],student_object.fatherAnnualIncome)
-
-                        ''' self.assertEqual(student_data['sectionDbId'],student_object.get_section_id(get_current_session_object()))
-                        self.assertEqual(student_data['sectionName'],student_object.get_section_name(get_current_session_object()))
-                        self.assertEqual(student_data['className'],student_object.get_class_id(get_current_session_object()))
-                        self.assertEqual(student_data['classDbId'],student_object.get_class_name(get_current_session_object())) '''
+                        if student_object.currentBusStop is not None:
+                            self.assertEqual(student_data['busStopDbId'],student_object.busStopId)
+                        else:
+                            self.assertEqual(student_data['busStopDbId'],None)
 
                         self.assertEqual(student_data['sectionDbId'],student_object.get_section_id(session_object))
                         self.assertEqual(student_data['sectionName'],student_object.get_section_name(session_object))

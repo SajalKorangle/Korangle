@@ -1,64 +1,22 @@
 
-# from school_app.session import get_current_session_object
+from fee_app.models import SubFee
 
-from school_app.model.models import SubFee, Student, Fee
-
-from django.db.models import Max
+from school_app.model.models import BusStop
 
 def populate_student_field(student_object, fieldName, fieldValue):
     if fieldName == 'category':
         setattr(student_object, 'newCategoryField', fieldValue)
     elif fieldName == 'religion':
         setattr(student_object, 'newReligionField', fieldValue)
+    elif fieldName == 'busStopDbId':
+        if fieldValue is not None:
+            student_object.currentBusStop = BusStop.objects.get(id=fieldValue)
+        else:
+            student_object.currentBusStop = None
     elif fieldName == 'rollNumber':
         pass
     else:
         setattr(student_object, fieldName, fieldValue)
-
-'''def get_student_profile_with_fee(student_object, user):
-    student_data = get_student_profile(student_object)
-
-    student_data['feesList'] = []
-    student_data['feesDue'] = student_object.totalFees
-    receiptNumberMax = Fee.objects.filter(parentStudent__in=Student.objects.filter(parentUser=user)).aggregate(Max('receiptNumber'))
-    student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
-    for studentFeeEntry in student_object.fee_set.all():
-        tempStudentFeeEntry = {}
-        tempStudentFeeEntry['receiptNumber'] = studentFeeEntry.receiptNumber
-        tempStudentFeeEntry['amount'] = studentFeeEntry.amount
-        tempStudentFeeEntry['remark'] = studentFeeEntry.remark
-        tempStudentFeeEntry['generationDateTime'] = studentFeeEntry.generationDateTime
-        tempStudentFeeEntry['studentDbId'] = studentFeeEntry.parentStudent.id
-
-        tempStudentFeeEntry['tuitionFeeAmount'] = 0
-        tuitionFee = SubFee.objects.filter(parentFee=studentFeeEntry, particular='TuitionFee')
-        if tuitionFee:
-            tempStudentFeeEntry['tuitionFeeAmount'] = tuitionFee[0].amount
-
-        tempStudentFeeEntry['lateFeeAmount'] = 0
-        lateFee = SubFee.objects.filter(parentFee=studentFeeEntry, particular='LateFee')
-        if lateFee:
-            tempStudentFeeEntry['lateFeeAmount'] = lateFee[0].amount
-
-        tempStudentFeeEntry['cautionMoneyAmount'] = 0
-        cautionMoney = SubFee.objects.filter(parentFee=studentFeeEntry, particular='CautionMoney')
-        if cautionMoney:
-            tempStudentFeeEntry['cautionMoneyAmount'] = cautionMoney[0].amount
-
-        student_data['feesDue'] -= tempStudentFeeEntry['amount']
-        student_data['feesDue'] += tempStudentFeeEntry['lateFeeAmount']
-        student_data['feesList'].append(tempStudentFeeEntry)
-
-    student_data['concessionList'] = []
-    for studentConcessionEntry in student_object.concession_set.all():
-        tempStudentConcessionEntry = {}
-        tempStudentConcessionEntry['amount'] = studentConcessionEntry.amount
-        tempStudentConcessionEntry['remark'] = studentConcessionEntry.remark
-        tempStudentConcessionEntry['generationDateTime'] = studentConcessionEntry.generationDateTime
-        tempStudentConcessionEntry['studentDbId'] = studentConcessionEntry.parentStudent.id
-        student_data['feesDue'] -= studentConcessionEntry.amount
-        student_data['concessionList'].append(tempStudentConcessionEntry)
-    return student_data'''
 
 def get_student_profile(student_object, session_object):
     student_data = {}
@@ -85,16 +43,15 @@ def get_student_profile(student_object, session_object):
     student_data['aadharNum'] = student_object.aadharNum
     student_data['bloodGroup'] = student_object.bloodGroup
     student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome
+    if student_object.currentBusStop is not None:
+        student_data['busStopDbId'] = student_object.currentBusStop.id
+    else:
+        student_data['busStopDbId'] = None
 
     student_data['sectionDbId'] = student_object.get_section_id(session_object)
     student_data['sectionName'] = student_object.get_section_name(session_object)
     student_data['className'] = student_object.get_class_id(session_object)
     student_data['classDbId'] = student_object.get_class_name(session_object)
-
-    '''student_data['sectionDbId'] = student_object.get_section_id(student_object.school.currentSession)
-    student_data['sectionName'] = student_object.get_section_name(student_object.school.currentSession)
-    student_data['className'] = student_object.get_class_id(student_object.school.currentSession)
-    student_data['classDbId'] = student_object.get_class_name(student_object.school.currentSession)'''
 
     student_data['feesDue'] = student_object.totalFees
     for studentFeeEntry in student_object.fee_set.all().order_by('-generationDateTime'):

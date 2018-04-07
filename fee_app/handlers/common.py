@@ -1,4 +1,8 @@
-from school_app.model.models import Student, Fee, SubFee
+# from school_app.model.models import Student, Fee, SubFee
+
+from student_app.models import Student
+
+from fee_app.models import Fee, SubFee
 
 from django.db.models import Max
 

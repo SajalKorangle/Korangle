@@ -1,7 +1,7 @@
 
-from school_app.model.models import Student
+# from school_app.model.models import Student
 from class_app.models import Section
-from student_app.models import StudentSection
+from student_app.models import Student, StudentSection
 from examination_app.models import StudentTestResult, Grade
 
 from django.db.models import Sum

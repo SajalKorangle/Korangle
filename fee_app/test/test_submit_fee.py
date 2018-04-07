@@ -1,6 +1,6 @@
 from parent_test import ParentTestCase
 
-from school_app.model.models import Student
+from student_app.models import Student
 
 from fee_app.test.test_common import common_ground
 

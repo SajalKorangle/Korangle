@@ -194,7 +194,7 @@ import subprocess
 command = 'git rev-parse --abbrev-ref HEAD'
 proc = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
 (out, err) = proc.communicate()
-current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b'")
+current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b").lstrip("'")
 if current_branch != 'master':
     print('Branch: '+current_branch)
     DATABASES = {

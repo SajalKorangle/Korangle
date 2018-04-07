@@ -1,20 +1,13 @@
 
-# from class_app.handlers.new_student import get_class_section_list
+from fee_app.models import Fee, SubFee, Concession
 
-from school_app.model.models import Student, SubFee, Fee, Concession
-
-from student_app.models import StudentSection
-
-from student_app.handlers.common import get_student_profile
-
+from student_app.models import StudentSection, Student
 from student_app.handlers import common
-
-# from school_app.session import get_current_session_object
+from student_app.handlers.common import populate_student_field
 
 from school_app.model.models import Session
 
 from class_app.models import ClassSession, Section
-from student_app.handlers.common import populate_student_field
 
 def get_class_section_student_list(data, user):
 
@@ -59,9 +52,6 @@ def update_student(data):
     student_object.save()
 
     if 'rollNumber' in data:
-        '''student_section_object = StudentSection.objects\
-            .get(parentStudent=student_object,
-                 parentSection__parentClassSession__parentSession=get_current_session_object())'''
         student_section_object = StudentSection.objects\
             .get(parentStudent=student_object,
                  parentSection_id=data['sectionDbId'])

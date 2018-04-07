@@ -1,5 +1,5 @@
 
-from school_app.model.models import Student
+from student_app.models import Student
 
 from student_app.handlers.common import populate_student_field
 

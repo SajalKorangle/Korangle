@@ -22,6 +22,17 @@ def get_success_message(message):
     message_response['message'] = message
     return message_response
 
+################ Bus Stops ##################
+from .handlers.bus_stops import get_bus_stops
+@api_view(['GET'])
+def get_bus_stops_view(request, school_id):
+    if request.user.is_authenticated:
+        data = {}
+        data['schoolDbId'] = school_id
+        return JsonResponse({'response': get_success_response(get_bus_stops(data))})
+    else:
+        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
 ################ Working Days ##################
 from .handlers.working_days import get_working_days, create_working_days, update_working_days
 @api_view(['GET'])

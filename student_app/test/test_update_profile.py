@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 
 from student_app.handlers.update_profile import get_class_section_student_list, get_student_profile, update_student, delete_student
 
-from school_app.model.models import Student, Session
+from school_app.model.models import Session
 
-from student_app.models import StudentSection
+from student_app.models import Student, StudentSection
 
 from class_app.models import Section
 
@@ -69,7 +69,6 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.totalFees,student_profile_data['totalFees'])
         self.assertEqual(student_object.remark,student_profile_data['remark'])
         self.assertEqual(student_object.scholarNumber,student_profile_data['scholarNumber'])
-        ''' self.assertEqual(student_object.currentRollNumber, student_profile_data['rollNumber']) '''
         self.assertEqual(student_object.get_rollNumber(section_object.parentClassSession.parentSession), student_profile_data['rollNumber'])
         self.assertEqual(student_object.motherName,student_profile_data['motherName'])
         self.assertEqual(student_object.gender,student_profile_data['gender'])
@@ -85,6 +84,11 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.aadharNum,student_profile_data['aadharNum'])
         self.assertEqual(student_object.bloodGroup,student_profile_data['bloodGroup'])
         self.assertEqual(student_object.fatherAnnualIncome,student_profile_data['fatherAnnualIncome'])
+
+        if student_profile_data['busStopDbId'] is not None:
+            self.assertEqual(student_object.currentBusStop.id, student_profile_data['busStopDbId'])
+        else:
+            self.assertEqual(None, student_profile_data['busStopDbId'])
 
     def test_update_student(self):
 
@@ -118,6 +122,7 @@ class UpdateProfileTestCase(ParentTestCase):
         data['aadharNum'] = 123456789012
         data['bloodGroup'] = 'O +'
         data['fatherAnnualIncome'] = '15,000'
+        data['busStopDbId'] = None
 
         update_student(data)
 
@@ -143,6 +148,7 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.aadharNum,data['aadharNum'])
         self.assertEqual(student_object.bloodGroup,data['bloodGroup'])
         self.assertEqual(student_object.fatherAnnualIncome,data['fatherAnnualIncome'])
+        self.assertEqual(student_object.currentBusStop, None)
 
     def test_delete_student(self):
 

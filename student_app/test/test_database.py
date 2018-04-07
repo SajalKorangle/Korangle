@@ -1,8 +1,8 @@
 from parent_test import ParentTestCase
 
-from school_app.model.models import Session, Student
+from school_app.model.models import Session
 
-from class_app.models import Class
+from student_app.models import Student
 
 class DatabaseTestCase(ParentTestCase):
 

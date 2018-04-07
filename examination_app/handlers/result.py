@@ -1,7 +1,7 @@
 
-from school_app.model.models import Student, SchoolSession
+from school_app.model.models import SchoolSession
 from examination_app.models import StudentTestResult, Test
-from student_app.models import StudentSection
+from student_app.models import Student, StudentSection
 from class_app.models import Section
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,6 +13,8 @@ def get_section_student_result(data):
     response['studentDbId'] = data['studentDbId']
 
     student_object = Student.objects.get(id=data['studentDbId'])
+
+    school_object = student_object.parentUser.school_set.all()[0]
 
     response['scholarNumber'] = student_object.scholarNumber
 
@@ -33,7 +35,7 @@ def get_section_student_result(data):
         response['result'].append(tempResult)
 
     response['attendance'] = StudentSection.objects.get(parentStudent=student_object, parentSection_id=data['sectionDbId']).attendance
-    response['workingDays'] = SchoolSession.objects.get(parentSchool__name='EKLAVYA',
+    response['workingDays'] = SchoolSession.objects.get(parentSchool=school_object,
                                                         parentSession=Section.objects.get(id=data['sectionDbId'])
                                                         .parentClassSession.parentSession).workingDays
 

@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from parent_test import ParentTestCase
 
-from school_app.model.models import Fee, SubFee
+from fee_app.models import Fee, SubFee
 
 from fee_app.handlers.fees_list import fees_list
 

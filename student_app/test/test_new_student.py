@@ -4,14 +4,17 @@ from django.contrib.auth.models import User
 
 from student_app.handlers.new_student import create_new_student
 
-from school_app.model.models import Student, Session
-# from school_app.session import get_current_session_object
+from school_app.model.models import Session
+
+from student_app.models import Student
 
 from class_app.models import Section
 
 class NewStudentTestCase(ParentTestCase):
 
     def test_new_student(self):
+
+        user_object = User.objects.get(username='brightstar')
 
         data = {}
         data['name'] = 'Demo Student'
@@ -36,6 +39,7 @@ class NewStudentTestCase(ParentTestCase):
         data['aadharNum'] = 123456789012
         data['bloodGroup'] = 'O +'
         data['fatherAnnualIncome'] = '15,000'
+        data['busStopDbId'] = user_object.school_set.all()[0].busstop_set.all()[0].id
 
         session_object = Session.objects.all()[0]
 
@@ -44,8 +48,6 @@ class NewStudentTestCase(ParentTestCase):
                                                 name='Section - A')
 
         data['sectionDbId'] = section_object.id
-
-        user_object = User.objects.get(username='demo')
 
         response = create_new_student(data,user_object)
 
@@ -63,7 +65,6 @@ class NewStudentTestCase(ParentTestCase):
             self.assertEqual(student_object.totalFees,data['totalFees'])
             self.assertEqual(student_object.remark,data['remark'])
             self.assertEqual(student_object.scholarNumber,data['scholarNumber'])
-            '''self.assertEqual(student_object.currentRollNumber, data['rollNumber'])'''
             self.assertEqual(student_object.get_rollNumber(section_object.parentClassSession.parentSession), data['rollNumber'])
             self.assertEqual(student_object.motherName,data['motherName'])
             self.assertEqual(student_object.gender,data['gender'])
@@ -79,6 +80,7 @@ class NewStudentTestCase(ParentTestCase):
             self.assertEqual(student_object.aadharNum,data['aadharNum'])
             self.assertEqual(student_object.bloodGroup,data['bloodGroup'])
             self.assertEqual(student_object.fatherAnnualIncome,data['fatherAnnualIncome'])
+            self.assertEqual(student_object.currentBusStop.id, data['busStopDbId'])
 
             self.assertEqual(student_object.get_section_id(session_object),data['sectionDbId'])
 

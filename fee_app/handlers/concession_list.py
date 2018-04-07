@@ -1,5 +1,7 @@
-from school_app.model.models import Concession
+# from school_app.model.models import Concession
 # from school_app.session import get_current_session_object
+
+from fee_app.models import Concession
 
 def concession_list(data, user):
     concession_list = []

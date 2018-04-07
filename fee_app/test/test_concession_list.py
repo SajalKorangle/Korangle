@@ -1,6 +1,6 @@
 from parent_test import ParentTestCase
 
-from school_app.model.models import Concession
+from fee_app.models import Concession
 
 from fee_app.handlers.concession_list import concession_list
 

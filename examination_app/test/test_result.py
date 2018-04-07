@@ -1,10 +1,10 @@
 from parent_test import ParentTestCase
 
-from student_app.models import StudentSection, Student
+from student_app.models import StudentSection
 
 from class_app.models import Section
 
-from examination_app.models import StudentTestResult, Test
+from examination_app.models import StudentTestResult
 from school_app.model.models import SchoolSession
 
 from examination_app.handlers.result import get_section_student_result, create_student_result

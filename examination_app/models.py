@@ -2,7 +2,8 @@ from django.db import models
 
 # Create your models here.
 
-from school_app.model.models import School, Student
+from school_app.model.models import School
+from student_app.models import Student
 from class_app.models import Section
 from subject_app.models import Subject
 

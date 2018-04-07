@@ -1,4 +1,6 @@
-from school_app.model.models import Fee, SubFee
+# from school_app.model.models import Fee, SubFee
+
+from fee_app.models import Fee, SubFee
 
 def fees_list(data, user):
     fee_list = []

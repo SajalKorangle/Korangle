@@ -6,10 +6,10 @@ from examination_app.handlers.result import create_student_result
 
 from examination_app.test.common import preparingStudentTestResult, deletingStudentResult
 
-from school_app.model.models import Student, SchoolSession
+from school_app.model.models import SchoolSession
 from examination_app.models import StudentTestResult, Grade, MaximumMarksAllowed
 from class_app.models import Section
-from student_app.models import StudentSection
+from student_app.models import Student, StudentSection
 
 from django.db.models import Sum
 

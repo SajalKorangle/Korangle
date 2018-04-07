@@ -1,7 +1,5 @@
 
-from examination_app.db_script.constants import initialize_eklavya_test
-
-import datetime
+from examination_app.db_script.constants import initialize_bhagatsingh_test
 
 def populate_test(apps, schema_editor):
 
@@ -12,17 +10,16 @@ def populate_test(apps, schema_editor):
     Section = apps.get_model('class_app', 'Section')
     Session = apps.get_model('school_app', 'Session')
 
-    for test in initialize_eklavya_test:
+    for test in initialize_bhagatsingh_test:
 
-        today = datetime.date.today()
-        session_object = Session.objects.get(startDate__lte=today, endDate__gte=today)
+        session_object = Session.objects.get(name='Session 2017-18')
 
         subject_object = Subject.objects.get(name=test['subject'])
         section_object = Section.objects.get(parentClassSession__parentSession=session_object,
                                              parentClassSession__parentClass__name=test['className'],
                                              name='Section - A')
         maxMarks_object = MaximumMarksAllowed.objects.get(marks=test['marks'])
-        school_object = School.objects.get(name='EKLAVYA')
+        school_object = School.objects.get(user__username='bhagatsingh')
 
         test_object = Test(parentSubject=subject_object,
                            parentSection=section_object,

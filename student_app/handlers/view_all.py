@@ -35,9 +35,4 @@ def get_class_section_student_profile_list(data, user):
         if len(tempClass['sectionList']) > 0:
             class_section_student_profile_list.append(tempClass)
 
-    '''response = {}
-    response['studentList'] = student_profile_list
-    response['classSectionList'] = class_section_list'''
-
-
     return class_section_student_profile_list
