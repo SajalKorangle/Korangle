@@ -3,13 +3,14 @@ import {Component, Input, OnInit} from '@angular/core';
 import { Student } from '../classes/student';
 
 import { ClassService } from '../services/class.service';
+import { BusStopService } from '../services/bus-stop.service';
 import { StudentService } from '../students/student.service';
 
 @Component({
   selector: 'app-new-student',
   templateUrl: './new-student.component.html',
   styleUrls: ['./new-student.component.css'],
-    providers: [ ClassService, StudentService ],
+    providers: [ ClassService, BusStopService, StudentService ],
 })
 
 export class NewStudentComponent implements OnInit {
@@ -21,9 +22,12 @@ export class NewStudentComponent implements OnInit {
     newStudent: Student;
     classSectionList = [];
 
+    busStopList = [];
+
     isLoading = false;
 
     constructor (private classService: ClassService,
+                 private busStopService: BusStopService,
                  private studentService: StudentService) { }
 
     ngOnInit(): void {
@@ -45,6 +49,14 @@ export class NewStudentComponent implements OnInit {
                 this.selectedClass = this.classSectionList[0];
             }
         );
+
+        const dataForBusStop = {
+            schoolDbId: this.user.schoolDbId,
+        };
+
+        this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then( busStopList => {
+            this.busStopList = busStopList;
+        });
     }
 
     todaysDate(): string {
@@ -60,6 +72,10 @@ export class NewStudentComponent implements OnInit {
     }
 
     createNewStudent(): void {
+
+        if (this.newStudent.busStopDbId == 0) {
+            this.newStudent.busStopDbId = null;
+        }
 
         if (this.newStudent.name === undefined || this.newStudent.name === '') {
             alert('Name should be populated');
@@ -86,6 +102,8 @@ export class NewStudentComponent implements OnInit {
             data => {
                 this.isLoading = false;
                 alert(data.message);
+                // this.newStudent = new Student();
+                // this.newStudent.dateOfBirth = this.todaysDate();
             }, error => {
                 this.isLoading = false;
                 alert('Server Error: Contact admin');

@@ -308,6 +308,22 @@
                         </div>
                     </div>
 
+                    <!-- Bus Stop -->
+                    <div *ngIf="busStopList.length > 0" class="row">
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-select placeholder="Bus Stop"
+                                            [ngModel]="selectedStudent.busStopDbId"
+                                            (ngModelChange)="currentStudent.busStopDbId = $event">
+                                    <mat-option [value]=0>None</mat-option>
+                                    <mat-option *ngFor="let busStop of busStopList" [value]="busStop.dbId">
+                                        {{busStop.stopName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
                     <!-- Address, Remark -->
                     <div class="row">
                         <div class="col-md-6" [class.fieldChanged]="checkFieldChanged(selectedStudent.address,currentStudent.address)">

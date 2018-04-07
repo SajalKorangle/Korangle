@@ -97,7 +97,11 @@ export class MarksheetComponent implements OnInit {
 
     printMarksheet(): void {
         this.marksheet.nextClassName = this.nextClassName;
-        EmitterService.get('print-marksheet').emit(this.marksheet);
+        if (this.user.username === 'bhagatsingh') {
+            EmitterService.get('print-marksheet-second-format').emit(this.marksheet);
+        } else {
+            EmitterService.get('print-marksheet').emit(this.marksheet);
+        }
     }
 
     getStudentMarksheet(student?: StudentTest): void {

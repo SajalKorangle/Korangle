@@ -59,7 +59,7 @@
                         </div>
                     </div>
 
-                    <!-- Student's Name , Contact No. -->
+                    <!-- Student's Name , Aadhar No. -->
                     <div class="row no-gutters">
                         <div class="col-xs-3 d-flex justify-content-start custom-padding"
                              style="font-size: 14px;">
@@ -71,11 +71,11 @@
                         </div>
                         <div class="col-xs-2 d-flex justify-content-start custom-padding"
                              style="font-size: 14px;">
-                            Contact No.<span style="float: right">:</span>
+                            Aadhar No.<span style="float: right">:</span>
                         </div>
                         <div class="col-xs-2 d-flex justify-content-start custom-padding"
                              style="font-size: 14px;">
-                            <i>{{marksheet.studentProfile.mobileNumber}}</i>
+                            <i>{{marksheet.studentProfile.aadharNumber}}</i>
                         </div>
                     </div>
 
@@ -119,7 +119,7 @@
                         </div>
                     </div>
 
-                    <!-- Date of Birth , Category -->
+                    <!-- Date of Birth , Contact No. -->
                     <div class="row no-gutters">
                         <div class="col-xs-3 d-flex justify-content-start custom-padding"
                              style="font-size: 14px;">
@@ -129,18 +129,21 @@
                              style="font-size: 14px;">
                             <i>{{marksheet.studentProfile.dateOfBirth | date: 'dd/MM/yyyy' }}</i>
                         </div>
-                        <div class="col-xs-2 d-flex justify-content-start custom-padding"
+                        <div  *ngIf="user.schoolName == 'EKLAVYA'"
+                              class="col-xs-2 d-flex justify-content-start custom-padding"
                              style="font-size: 14px;">
-                            Aadhar No.<span style="float: right">:</span>
+                            Contact No.<span style="float: right">:</span>
                         </div>
-                        <div class="col-xs-2 d-flex justify-content-start custom-padding"
+                        <div  *ngIf="user.schoolName == 'EKLAVYA'"
+                              class="col-xs-2 d-flex justify-content-start custom-padding"
                              style="font-size: 14px;">
-                            <i>{{marksheet.studentProfile.aadharNumber}}</i>
+                            <i>{{marksheet.studentProfile.mobileNumber}}</i>
                         </div>
                     </div>
 
                     <!-- Address -->
-                    <div class="row no-gutters">
+                    <div  *ngIf="user.schoolName == 'EKLAVYA'"
+                          class="row no-gutters">
                         <div class="col-xs-3 d-flex custom-padding"
                              style="font-size: 14px;">
                             Address<span style="float: right">:</span>

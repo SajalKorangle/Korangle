@@ -140,7 +140,7 @@ export class User {
         this.username = data.username;
         this.email = data.email;
         this.initializeSchoolData(data);
-        if (this.username !== 'eklavya') {
+        if (this.username !== 'eklavya' && this.username !== 'bhagatsingh') {
             // alert('removing marksheet');
             this.removeMarksheet();
         }

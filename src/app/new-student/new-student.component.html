@@ -243,7 +243,7 @@
                         </div>
                     </div>
 
-                    <!-- Roll No. -->
+                    <!-- Roll No., Bus Stop -->
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group form-black label-floating">
@@ -252,6 +252,17 @@
                                        class="form-control"
                                        [(ngModel)]="newStudent.rollNumber">
                             </div>
+                        </div>
+                        <div *ngIf="busStopList.length > 0" class="col-md-3">
+                            <mat-form-field>
+                                <mat-select placeholder="Bus Stop"
+                                            [(ngModel)]="newStudent.busStopDbId">
+                                    <mat-option value=0>None</mat-option>
+                                    <mat-option *ngFor="let busStop of busStopList" value="{{busStop.dbId}}">
+                                        {{busStop.stopName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                     </div>
 

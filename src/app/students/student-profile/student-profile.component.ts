@@ -5,12 +5,13 @@ import { Classs } from '../../classes/classs';
 import { Section } from '../../classes/section';
 
 import { StudentService } from '../../students/student.service';
+import {BusStopService} from '../../services/bus-stop.service';
 
 @Component({
   selector: 'app-student-profile',
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.css'],
-    providers: [ StudentService ],
+    providers: [ StudentService, BusStopService ],
 })
 export class StudentProfileComponent implements OnInit {
 
@@ -24,9 +25,12 @@ export class StudentProfileComponent implements OnInit {
 
     currentStudent: Student = new Student();
 
+    busStopList = [];
+
     isLoading = false;
 
-    constructor (private studentService: StudentService) { }
+    constructor (private studentService: StudentService,
+                 private busStopService: BusStopService) { }
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
@@ -71,6 +75,14 @@ export class StudentProfileComponent implements OnInit {
 
             }
         );
+
+        const dataForBusStop = {
+            schoolDbId: this.user.schoolDbId,
+        }
+
+        this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then( busStopList => {
+            this.busStopList = busStopList;
+        });
     }
 
     getStudentProfile(): void {
@@ -78,15 +90,15 @@ export class StudentProfileComponent implements OnInit {
         const data = {
             studentDbId: this.selectedStudent.dbId,
             sectionDbId: this.selectedSection.dbId,
-        }
+        };
         this.studentService.getStudentProfile(data, this.user.jwt).then(
             student => {
                 this.isLoading = false;
                 const breakLoop = false;
                 if (this.selectedStudent.dbId === student.dbId) {
-                    console.log(this.selectedStudent);
                     this.selectedStudent.copy(student);
                     this.currentStudent.copy(student);
+                    console.log(this.selectedStudent);
                 }
             }, error => {
                 this.isLoading = false;
@@ -95,6 +107,9 @@ export class StudentProfileComponent implements OnInit {
     }
 
     updateProfile(): void {
+        if (this.currentStudent.busStopDbId == 0) {
+            this.currentStudent.busStopDbId = null;
+        }
         if (this.currentStudent.familySSMID
             && this.currentStudent.familySSMID.toString().length !== 0
             && this.currentStudent.familySSMID.toString().length !== 8) {
@@ -193,6 +208,20 @@ export class StudentProfileComponent implements OnInit {
             this.isLoading = false;
             alert('Server Error: Contact admin');
         });
+    }
+
+    getBusStopName(busStopDbId: any) {
+        let stopName = 'None';
+        if (busStopDbId !== null) {
+            this.busStopList.forEach(busStop => {
+                if (busStop.dbId == busStopDbId) {
+                    stopName = busStop.stopName;
+                    console.log(stopName);
+                    return;
+                }
+            });
+        }
+        return stopName;
     }
 
     checkFieldChanged(selectedValue, currentValue): boolean {

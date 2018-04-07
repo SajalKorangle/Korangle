@@ -29,6 +29,8 @@ export class Student {
     bloodGroup: string;
     fatherAnnualIncome: string;
 
+    busStopDbId: number;
+
     copy(student: any) {
 
         this.name = student.name;
@@ -56,6 +58,8 @@ export class Student {
         this.aadharNum = student.aadharNum;
         this.bloodGroup = student.bloodGroup;
         this.fatherAnnualIncome = student.fatherAnnualIncome;
+
+        this.busStopDbId = student.busStopDbId;
 
     }
 
