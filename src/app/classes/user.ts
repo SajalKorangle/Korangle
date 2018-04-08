@@ -48,6 +48,7 @@ export class User {
     schoolDiseCode = 0;
     schoolAddress = '';
     schoolCurrentSessionDbId: number;
+    schoolRegistrationNumber: string;
 
     // imgSrc = '/assets/img/angular2-logo-red.png';
 
@@ -134,13 +135,16 @@ export class User {
         this.schoolDiseCode = data.schoolData.schoolDiseCode;
         this.schoolAddress = data.schoolData.schoolAddress;
         this.schoolCurrentSessionDbId = data.schoolData.currentSessionDbId;
+        this.schoolRegistrationNumber = data.schoolData.registrationNumber;
     }
 
     initializeUserData(data: any): void {
         this.username = data.username;
         this.email = data.email;
         this.initializeSchoolData(data);
-        if (this.username !== 'eklavya' && this.username !== 'bhagatsingh') {
+        if (this.username !== 'eklavya'
+            && this.username !== 'bhagatsingh'
+            && this.username !== 'brightstarsalsalai') {
             // alert('removing marksheet');
             this.removeMarksheet();
         }

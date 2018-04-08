@@ -15,6 +15,8 @@ export class StudentTest extends Student {
     sectionDbId: number;
     showSectionName = false;
 
+    showScholarNumber = false;
+
     resultList: Result[];
     attendance: number;
 
@@ -25,6 +27,7 @@ export class StudentTest extends Student {
         this.scholarNumber = studentTest.scholarNumber;
         this.resultList = studentTest.resultList;
         this.attendance = studentTest.attendance;
+        this.showScholarNumber = studentTest.showScholarNumber;
     }
 
 }
