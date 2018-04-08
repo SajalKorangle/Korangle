@@ -36,3 +36,4 @@ initialize_eklavya_busstop = [
 initialize_champion_busstop = [
 	{ 'stopName': 'Shujalpur', 'kmDistance': '1', },
 ]
+

@@ -29,6 +29,7 @@ def get_class_section_student_list(data, user):
                 tempStudent = {}
                 tempStudent['name'] = student_section_object.parentStudent.name
                 tempStudent['dbId'] = student_section_object.parentStudent.id
+                tempStudent['scholarNumber'] = student_section_object.parentStudent.scholarNumber
                 tempSection['studentList'].append(tempStudent)
             if len(tempSection['studentList']) > 0:
                 tempClass['sectionList'].append(tempSection)
