@@ -2,54 +2,137 @@ from django.db import models
 
 # Create your models here.
 
+from school_app.model.models import School, Session
+
 from student_app.models import Student
 
-class Fee(models.Model):
+class FeeType(models.Model):
 
-	receiptNumber = models.IntegerField()
-	amount = models.IntegerField()
-	remark = models.TextField()
-	generationDateTime = models.DateField()
-	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
+    name = models.TextField(verbose_name='name')
 
-	@property
-	def studentName(self):
-		return self.parentStudent.name
+class FeeDefinition(models.Model):
 
-	@property
-	def className(self):
-		return self.parentStudent.className
-		'''return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))'''
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
+    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, verbose_name='parentFeeType')
 
-	class Meta:
-		db_table = 'fee'
+    orderNumber = models.IntegerField()
+    rteAllowed = models.BooleanField(null=False, default=False)
 
-class SubFee(models.Model):
+    FILTERTYPE = (
+        ('CLASS', 'Class'),
+        ('BUS STOP', 'Bus Stop'),
+        ('BOTH', 'Both'),
+        ('NONE', 'None')
+    )
+    filterType = models.CharField(max_length=9, choices=FILTERTYPE, null=False, default='NONE')
 
-	particular = models.TextField() # TutionFee, LateFee, CautionMoney
-	amount = models.IntegerField(default=0)
-	parentFee = models.ForeignKey(Fee, on_delete=models.PROTECT, default=0)
+    FREQUENCY = (
+        ('MONTHLY', 'Monthly'),
+        ('QUATERLY', 'Quaterly'),
+        ('ANNUALLY', 'Annually'),
+    )
+    frequency = models.CharField(max_length=10, choices=FREQUENCY, null=False, default='ANNUALLY')
 
-	class Meta:
-		db_table = 'sub_fee'
+    class Meta:
+        db_table = 'fee_definition'
+
+class SchoolFeeComponent(models.Model):
+
+    title = models.TextField(verbose_name='title')
+    amount = models.IntegerField(null=False, default=0, verbose_name='amount')
+    parentFeeDefinition = models.ForeignKey(FeeDefinition, on_delete=models.PROTECT, default=0, verbose_name='parentFeeDefinition')
+
+    class Meta:
+        db_table = 'school_fee_component'
+
+class StudentFeeComponent(models.Model):
+
+    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
+    parentSchoolFeeComponent = models.ForeignKey(SchoolFeeComponent, on_delete=models.PROTECT, default=0, verbose_name='parentSchoolFeeComponent')
+    amount = models.IntegerField(verbose_name='amount')
+    bySchoolrules = models.BooleanField(null=False, default=True, verbose_name='bySchoolRules')
+
+    class Meta:
+        db_table = 'student_fee_component'
+
+class FeeReceipt(models.Model):
+
+    receiptNumber = models.IntegerField(null=False, default=0, verbose_name='receiptNumber')
+    generationDateTime = models.DateTimeField(verbose_name='generationDateTime')
+    remark = models.TextField(null=True, verbose_name='remark')
+    cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
+    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
+
+    class Meta:
+        db_table = 'fee_receipt'
+
+class SubFeeReceipt(models.Model):
+
+    parentFeeReceipt = models.ForeignKey(FeeReceipt, models.PROTECT, default=0, verbose_name='parentFeeReceipt')
+    parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.PROTECT, default=0, verbose_name='parentStudentFeeComponent')
+    amount = models.IntegerField(null=False, default=0, verbose_name='amount')
+
+    class Meta:
+        db_table = 'sub_fee_receipt'
 
 class Concession(models.Model):
 
-	amount = models.IntegerField()
-	remark = models.TextField()
-	# generationDateTime = models.DateTimeField(auto_now_add=True, blank=True)
-	generationDateTime = models.DateField(auto_now_add=True)
-	parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
+    amount = models.IntegerField(verbose_name='amount')
+    remark = models.TextField(verbose_name='remark')
+    # generationDateTime = models.DateTimeField(auto_now_add=True, blank=True)
+    generationDateTime = models.DateField(auto_now_add=True, verbose_name='generationDate')
+    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
 
-	@property
-	def studentName(self):
-		return self.parentStudent.name
+    @property
+    def studentName(self):
+        return self.parentStudent.name
 
-	@property
-	def className(self):
-		return self.parentStudent.className
-		'''return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))'''
+    @property
+    def className(self):
+        return self.parentStudent.className
+        '''return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))'''
 
-	class Meta:
-		db_table = 'concession'
+    class Meta:
+        db_table = 'concession'
 
+class SubConcession(models.Model):
+    
+    parentConcession = models.ForeignKey(Concession, models.PROTECT, default=0, verbose_name='parentConcession')
+    parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.PROTECT, default=0, verbose_name='parentStudent')
+
+    amount = models.IntegerField()
+
+    class Meta:
+        db_table = 'sub_concession'
+
+# Old Models
+
+class Fee(models.Model):
+
+    receiptNumber = models.IntegerField()
+    amount = models.IntegerField()
+    remark = models.TextField()
+    generationDateTime = models.DateField()
+    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0)
+
+    @property
+    def studentName(self):
+        return self.parentStudent.name
+
+    @property
+    def className(self):
+        return self.parentStudent.className
+        '''return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))'''
+
+    class Meta:
+        db_table = 'fee'
+
+class SubFee(models.Model):
+
+    particular = models.TextField() # TutionFee, LateFee, CautionMoney
+    amount = models.IntegerField(default=0)
+    parentFee = models.ForeignKey(Fee, on_delete=models.PROTECT, default=0)
+
+    class Meta:
+        db_table = 'sub_fee'
