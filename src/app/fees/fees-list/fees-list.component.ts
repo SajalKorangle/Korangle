@@ -41,7 +41,7 @@ export class FeesListComponent {
       const data = {
           startDate: this.startDate,
           endDate: this.endDate,
-      }
+      };
       this.feeService.getFeesList(data, this.user.jwt).then(
           feesList => {
               console.log(feesList);

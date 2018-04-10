@@ -33,7 +33,7 @@ export class CommonServiceRequirements {
             .then(response => {
                 return this.returnResponse(response);
             }, error => {
-                alert('Server Error: Contact Admin');
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
             .catch(this.handleError);
@@ -46,7 +46,7 @@ export class CommonServiceRequirements {
             .then(response => {
                 return this.returnResponse(response);
             }, error => {
-                alert('Server Error: Contact Admin');
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
             .catch(this.handleError);
