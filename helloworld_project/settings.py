@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'student_app',
     'expense_app',
     'fee_app',
+    'fee_second_app',
     'examination_app',
 
 	'corsheaders',
