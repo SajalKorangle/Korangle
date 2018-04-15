@@ -9,6 +9,10 @@ from school_app.model.models import Session
 
 from class_app.models import ClassSession, Section
 
+from examination_app.models import StudentTestResult
+
+from fee_second_app.models import StudentFeeComponentMonthly, StudentFeeComponent, FeeReceipt, SubFeeReceipt, Concession, SubConcession
+
 def get_class_section_student_list(data, user):
 
     class_section_student_list = []
@@ -63,16 +67,28 @@ def update_student(data):
                                       Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession)
 
 
+from django.db.models import ProtectedError
+
 def delete_student(data):
 
-    student_object = Student.objects.get(id=data['studentDbId'])
-    SubFee.objects.filter(parentFee__parentStudent=student_object).delete()
+    '''SubFee.objects.filter(parentFee__parentStudent=student_object).delete()
     Fee.objects.filter(parentStudent=student_object).delete()
     Concession.objects.filter(parentStudent=student_object).delete()
-    StudentSection.objects.filter(parentStudent=student_object).delete()
-    Student.objects.filter(pk=data['studentDbId']).delete()
 
-    response = {}
-    response['studentDbId'] = data['studentDbId']
-    response['message'] = 'Student Profile removed successfully.'
-    return response
+    StudentTestResult.objects.filter(parentStudent=student_object).delete()
+
+    StudentSection.objects.filter(parentStudent=student_object).delete()'''
+
+    try:
+        Student.objects.filter(pk=data['studentDbId']).delete()
+
+        response = {}
+        response['studentDbId'] = data['studentDbId']
+        response['message'] = 'Student Profile removed successfully.'
+        return response
+    except ProtectedError:
+
+        response = {}
+        response['studentDbId'] = 0
+        response['message'] = 'Not able to delete Student Profile'
+        return response

@@ -71,6 +71,10 @@ class Student(models.Model):
 		return self.studentsection_set\
 			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.name
 
+	def get_class_object(self, session_object):
+		return self.studentsection_set.get(parentSection__parentClassSession__parentSession=session_object)\
+			.parentSection.parentClassSession.parentClass.id
+
 	def get_class_id(self, session_object):
 		return self.studentsection_set\
 			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.id

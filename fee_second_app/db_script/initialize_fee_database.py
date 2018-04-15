@@ -9,7 +9,7 @@ def initialize_fee_database(apps, schema_editor):
 def populate_fee_type(apps, schema_editor):
 
     FeeType = apps.get_model('fee_second_app', 'FeeType')
-    fee_type_object = FeeType(name='Fee 2017-18')
+    fee_type_object = FeeType(name='Annual Fee')
     fee_type_object.save()
 
 def populate_fee_structure(apps, schema_editor):
@@ -30,7 +30,7 @@ def populate_school_fee_structure(apps, schema_editor, schoolUser):
     session_object = Session.objects.get(name='Session 2017-18')
 
     FeeType = apps.get_model('fee_second_app', 'FeeType')
-    fee_type_object = FeeType.objects.get(name='Fee 2017-18')
+    fee_type_object = FeeType.objects.get(name='Annual Fee')
 
     fee_definition_object = FeeDefinition(parentSchool=school_object, parentSession=session_object,
                                           parentFeeType=fee_type_object, rteAllowed=True, orderNumber=1,
@@ -45,9 +45,9 @@ def populate_school_fee_structure(apps, schema_editor, schoolUser):
     Student = apps.get_model('student_app', 'Student')
     for student_object in Student.objects.filter(parentUser__username=schoolUser):
         student_fee_component_object = StudentFeeComponent(parentStudent=student_object,
-                                                             parentSchoolFeeComponent=school_fee_component_object,
-                                                             amount=student_object.totalFees,
-                                                             bySchoolRules=False)
+                                                           parentFeeDefinition=fee_definition_object,
+                                                           amount=student_object.totalFees,
+                                                           bySchoolRules=False)
         student_fee_component_object.save()
 
         Fee = apps.get_model('fee_app', 'Fee')
@@ -64,15 +64,15 @@ def populate_school_fee_structure(apps, schema_editor, schoolUser):
             SubFeeReceipt = apps.get_model('fee_second_app', 'SubFeeReceipt')
             sub_fee_receipt_object = SubFeeReceipt(parentFeeReceipt=fee_receipt_object,
                                                    parentStudentFeeComponent=student_fee_component_object,
-                                                   amount=fee_receipt_object.amount)
+                                                   amount=fee_object.amount)
             sub_fee_receipt_object.save()
 
         Concession = apps.get_model('fee_app', 'Concession')
         for concession_object in Concession.objects.filter(parentStudent=student_object):
 
             Concession_Second = apps.get_model('fee_second_app', 'Concession')
-            concession_second_object = Concession(remark=concession_object.remark,
-                                                  generationDateTime=get_datetime_from_date(concession_object.generationDateTime))
+            concession_second_object = Concession_Second(remark=concession_object.remark,
+                                                         generationDateTime=get_datetime_from_date(concession_object.generationDateTime))
             concession_second_object.save()
 
             SubConcession = apps.get_model('fee_second_app', 'SubConcession')

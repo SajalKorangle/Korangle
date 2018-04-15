@@ -28,6 +28,7 @@ urlpatterns = [
 	url(r'^'+api_version+'expense/', include('expense_app.urls')),
 	url(r'^'+api_version+'class/', include('class_app.urls')),
 	url(r'^'+api_version+'fee/', include('fee_app.urls')),
+	url(r'^'+api_version+'fee-second/', include('fee_second_app.urls')),
 	url(r'^'+api_version+'subjects/', include('subject_app.urls')),
 	url(r'^'+api_version+'examinations/', include('examination_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

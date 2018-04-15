@@ -157,6 +157,9 @@ class UpdateProfileTestCase(ParentTestCase):
         data = {}
         data['studentDbId'] = student_object.id
 
-        delete_student(data)
+        response = delete_student(data)
 
-        self.assertEqual(Student.objects.filter(id=data['studentDbId']).count(),0)
+        if response['studentDbId'] == 0:
+            self.assertEqual(Student.objects.filter(id=data['studentDbId']).count(),1)
+        else:
+            self.assertEqual(Student.objects.filter(id=data['studentDbId']).count(),0)
