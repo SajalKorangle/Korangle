@@ -17,6 +17,8 @@
             <app-new-fees *ngIf="user.appSection==='new_fees'" [user]="user"></app-new-fees>
             <app-fees-list *ngIf="user.appSection==='fees_list'" [user]="user"></app-fees-list>
 
+            <app-collect-fee *ngIf="user.appSection==='collect_fee'" [user]="user"></app-collect-fee>
+
             <app-new-expense *ngIf="user.appSection==='new_expense'" [user]="user"></app-new-expense>
             <app-expense-list *ngIf="user.appSection==='expense_list'" [user]="user"></app-expense-list>
 

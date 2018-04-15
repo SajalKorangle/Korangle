@@ -75,6 +75,10 @@ export class User {
                 {
                     path: 'fees_list',
                     title: 'Previous Record',
+                },
+                {
+                    path: 'collect_fee',
+                    title: 'Collect Fee',
                 }
             ] },
         { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false,

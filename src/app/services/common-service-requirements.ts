@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import { Constants } from '../classes/constants';
 
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -39,7 +39,7 @@ export class CommonServiceRequirements {
             .catch(this.handleError);
     }
 
-    public getData(token: any, url: any): Promise<any> {
+    public getData(token: any, url: any, params: URLSearchParams = null): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.get(Constants.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
             .toPromise()

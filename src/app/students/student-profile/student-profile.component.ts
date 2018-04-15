@@ -166,6 +166,11 @@ export class StudentProfileComponent implements OnInit {
         this.studentService.deleteStudentProfile(this.currentStudent.dbId, this.user.jwt).then( data => {
             alert(data['message']);
             this.isLoading = false;
+
+            if (data['studentDbId'] === 0) {
+                return;
+            }
+
             let studentIndex = 0;
             this.selectedSection.studentList.forEach( (student, index) => {
                 if (student.dbId === data['studentDbId']) {

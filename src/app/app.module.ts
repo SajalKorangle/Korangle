@@ -34,6 +34,8 @@ import { NewFeeReceiptComponent } from './modal/new-fee-receipt/new-fee-receipt.
 import { NewFeesComponent } from './fees/new-fees/new-fees.component';
 import { FeesListComponent } from './fees/fees-list/fees-list.component';
 
+import { CollectFeeComponent } from './fees-second/collect-fee/collect-fee.component';
+
 import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
@@ -60,13 +62,21 @@ import { MoneyFormatPipe } from './pipes/money-format.pipe';
 import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
 import { GradePipe } from './pipes/grade.pipe';
 
+/* Common Components */
+import {StudentFilterComponent} from './components/student-filter/student-filter.component';
+
 @NgModule({
     declarations: [
         AppComponent,
 
+        /* Common Components */
+        StudentFilterComponent,
+
         FeesListComponent,
         NewFeesComponent,
         NewFeeReceiptComponent,
+
+        CollectFeeComponent,
 
         FeesTableComponent,
         LoadingSpinnerComponent,
