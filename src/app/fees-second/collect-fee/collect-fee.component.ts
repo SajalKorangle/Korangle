@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { FeeService } from '../fee.service';
 
@@ -7,6 +7,7 @@ import { FeeService } from '../fee.service';
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
     providers: [ FeeService ],
+    changeDetection: ChangeDetectionStrategy.Default,
 })
 export class CollectFeeComponent {
 
@@ -16,11 +17,10 @@ export class CollectFeeComponent {
 
     studentFeeStatus: any;
 
-    totalPayment = 0;
-
     isLoading = false;
 
-    constructor (private feeService: FeeService) { }
+    constructor (private feeService: FeeService,
+                 private cd: ChangeDetectorRef) { }
 
     getStudentFeeStatus(student: any): void {
         const data = {
@@ -44,8 +44,7 @@ export class CollectFeeComponent {
                         }
                     });
                 });
-                this.totalPayment = 0;
-                console.log(studentFeeStatus);
+                // console.log(studentFeeStatus);
             }
         }, error => {
             this.isLoading = false;
@@ -53,26 +52,12 @@ export class CollectFeeComponent {
         });
     }
 
-    // Total Fee
-    populateTotalFee(): void {
+    // Student Payment & Fee
+    handleStudentPaymentChange(payment: number): void {
+        if (payment === null) payment = 0;
+        let amountLeft = payment;
         this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
-            let amountDue = this.totalSessionFeesDue(sessionFeeStatus);
-            if(amountDue > amountLeft) {
-                sessionFeeStatus.payment = amountLeft;
-                amountLeft = 0;
-                this.handleSessionPaymentChange(sessionFeeStatus);
-            } else {
-                sessionFeeStatus.payment = amountDue;
-                amountLeft -= amountDue;
-                this.handleSessionPaymentChange(sessionFeeStatus);
-            }
-        });
-    }
-
-    handleTotalPaymentChange(totalPayment: number): void {
-        let amountLeft = totalPayment;
-        this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
-            let amountDue = this.totalSessionFeesDue(sessionFeeStatus);
+            let amountDue = this.getSessionFeesDue(sessionFeeStatus);
             if(amountDue > amountLeft) {
                 this.handleSessionPaymentChange(sessionFeeStatus, amountLeft);
                 amountLeft = 0;
@@ -83,59 +68,112 @@ export class CollectFeeComponent {
         });
     }
 
-    totalFeesDue(): number {
-        let amountDue = 0;
-        this.studentFeeStatus.sessionFeeStatusList.forEach(sessionFeeStatus => {
-            amountDue += this.totalSessionFeesDue(sessionFeeStatus);
-        });
-        return amountDue;
-    }
-
-    // Session Fee
-    handleSessionPaymentChange(sessionFeeStatus: any, sessionPayment: number): void {
-        let amountLeft = sessionPayment;
-        sessionFeeStatus.componentList.forEach(component => {
-            let amountDue = this.totalComponentFeesDue(component);
-            if(amountDue > amountLeft) {
-                component.payment = amountLeft;
-                amountLeft = 0;
-                this.handleComponentPaymentChange(component);
-            } else {
-                component.payment = amountDue;
-                amountLeft -= amountDue;
-                this.handleComponentPaymentChange(component);
-            }
-        });
-        this.populateTotalFee();
-    }
-
-    totalSessionPayment(sessionFeeStatus: any): number {
+    getStudentPayment(): number {
         let payment = 0;
-
+        this.studentFeeStatus.sessionFeeStatusList.forEach(sessionFeeStatus => {
+            payment += this.getSessionPayment(sessionFeeStatus);
+        });
+        return payment;
     }
 
-    totalSessionFees(sessionFeeStatus: any): number {
+    getStudentTotalFee(): number {
         let amount = 0;
-        sessionFeeStatus.componentList.forEach(component => {
-            amount += this.totalComponentFees(component);
+        this.studentFeeStatus.sessionFeeStatusList.forEach(sessionFeeStatus => {
+            if (this.getSessionFeesDue(sessionFeeStatus) > 0) {
+                amount += this.getSessionTotalFee(sessionFeeStatus);
+            }
         });
         return amount;
     }
 
-    totalSessionFeesDue(sessionFeeStatus: any): number {
+    getStudentFeesDue(): number {
         let amountDue = 0;
-        sessionFeeStatus.componentList.forEach(component => {
-            amountDue += this.totalComponentFeesDue(component);
+        this.studentFeeStatus.sessionFeeStatusList.forEach(sessionFeeStatus => {
+            amountDue += this.getSessionFeesDue(sessionFeeStatus);
         });
         return amountDue;
     }
 
+    policeStudentPaymentInput(event: any): boolean {
+        if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
+            event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
+            event.key !== '8' && event.key !== '9') {
+            return false;
+        }
+        let studentFeesDue = this.getStudentFeesDue();
+        let payment = Number(event.srcElement.value+''+event.key);
+        if (payment > studentFeesDue) {
+            event.srcElement.value = studentFeesDue;
+            this.handleStudentPaymentChange(Number(event.srcElement.value));
+            return false;
+        }
+        return true;
+    }
 
-    // Component Fee
-    handleComponentPaymentChange(component: any): void {
-        let amountLeft = component.payment;
+
+    // Session Payment & Fee
+    handleSessionPaymentChange(sessionFeeStatus: any, payment: number): void {
+        if (payment === null) payment = 0;
+        let amountLeft = payment;
+        sessionFeeStatus.componentList.forEach(component => {
+            let amountDue = this.getComponentFeesDue(component);
+            if(amountDue > amountLeft) {
+                this.handleComponentPaymentChange(component, amountLeft);
+                amountLeft = 0;
+            } else {
+                amountLeft -= amountDue;
+                this.handleComponentPaymentChange(component, amountDue);
+            }
+        });
+    }
+
+    getSessionPayment(sessionFeeStatus: any): number {
+        let payment = 0;
+        sessionFeeStatus.componentList.forEach(component => {
+            payment += this.getComponentPayment(component);
+        });
+        return payment;
+    }
+
+    getSessionTotalFee(sessionFeeStatus: any): number {
+        let amount = 0;
+        sessionFeeStatus.componentList.forEach(component => {
+            amount += this.getComponentTotalFee(component);
+        });
+        return amount;
+    }
+
+    getSessionFeesDue(sessionFeeStatus: any): number {
+        let amountDue = 0;
+        sessionFeeStatus.componentList.forEach(component => {
+            amountDue += this.getComponentFeesDue(component);
+        });
+        return amountDue;
+    }
+
+    policeSessionPaymentInput(sessionFeeStatus: any, event: any): boolean {
+        if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
+            event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
+            event.key !== '8' && event.key !== '9') {
+            return false;
+        }
+        let sessionFeesDue = this.getSessionFeesDue(sessionFeeStatus);
+        let payment = Number(event.srcElement.value+''+event.key);
+        if (payment > sessionFeesDue) {
+            event.srcElement.value = sessionFeesDue;
+            this.handleSessionPaymentChange(sessionFeeStatus, Number(event.srcElement.value));
+            return false;
+        }
+        return true;
+    }
+
+
+    // Component Payment & Fee
+    handleComponentPaymentChange(component: any, payment: number): void {
+        if (payment === null) payment = 0;
+        let amountLeft = payment;
         if (component.frequency === 'ANNUALLY') {
-            // Nothing to do
+            component.payment = payment;
         } else if (component.frequency === 'MONTHLY') {
             component.monthList.forEach(componentMonthly => {
                 let amountDue = componentMonthly.amountDue;
@@ -150,7 +188,19 @@ export class CollectFeeComponent {
         }
     }
 
-    totalComponentFees(component: any): number {
+    getComponentPayment(component: any): number {
+        let payment = 0;
+        if (component.frequency === 'ANNUALLY') {
+            payment = component.payment;
+        } else if (component.frequency === 'MONTHLY') {
+            component.monthList.forEach( componentMonthly => {
+                payment += componentMonthly.payment;
+            });
+        }
+        return payment;
+    }
+
+    getComponentTotalFee(component: any): number {
         let amount = 0;
         if (component.frequency === 'ANNUALLY') {
             amount += component.amount;
@@ -162,7 +212,7 @@ export class CollectFeeComponent {
         return amount;
     }
 
-    totalComponentFeesDue(component: any): number {
+    getComponentFeesDue(component: any): number {
         let amountDue = 0;
         if (component.frequency === 'ANNUALLY') {
             amountDue += component.amountDue;
@@ -174,107 +224,23 @@ export class CollectFeeComponent {
         return amountDue;
     }
 
+    policeComponentPaymentInput(component: any, event: any): boolean {
+        if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
+            event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
+            event.key !== '8' && event.key !== '9') {
+            return false;
+        }
+        let componentFeesDue = this.getComponentFeesDue(component);
+        let payment = Number(event.srcElement.value+''+event.key);
+        if (payment > componentFeesDue) {
+            event.srcElement.value = componentFeesDue;
+            this.handleComponentPaymentChange(component, Number(event.srcElement.value));
+            return false;
+        }
+        return true;
+    }
+
+
     // Component Monthly Fee
-
-    /*submitFee(): void {
-        if (this.newFeeReceipt.receiptNumber === undefined || this.newFeeReceipt.receiptNumber === 0) {
-            alert('Receipt No. should be populated');
-            return;
-        }
-        if (this.newFeeReceipt.amount === undefined || this.newFeeReceipt.amount <= 0) {
-            alert('Amount should be populated');
-            return;
-        }
-        if (this.newFeeReceipt.generationDateTime === undefined) {
-            alert('Date should be populated');
-            return;
-        }
-        if (this.newFeeReceipt.remark === undefined) { this.newFeeReceipt.remark = ''; }
-        this.isLoading = true;
-        this.newFeeReceipt.studentDbId = this.selectedStudent.dbId;
-        this.feeService.submitFee(this.newFeeReceipt, this.user.jwt).then(
-            data => {
-                this.isLoading = false;
-                if (data.status === 'success') {
-                    alert(data.message);
-                    const student = data.studentData;
-                    if (this.selectedStudent.dbId === student.dbId) {
-                        student.name = this.selectedStudent.name;
-                        student.className = this.selectedStudent.className;
-                        student.sectionName = this.selectedStudent.sectionName;
-                        student.feesList.forEach( fee => {
-                            fee.studentName = student.name;
-                            fee.fathersName = student.fathersName;
-                            fee.className = student.className;
-                            fee.sectionName = student.sectionName;
-                        });
-                        student.concessionList.forEach( concession => {
-                            concession.studentName = student.name;
-                            concession.className = student.className;
-                        });
-                        this.selectedStudent.copy(student);
-                    }
-                    this.selectedStudent.feesList.forEach( fee => {
-                        if (fee.receiptNumber === this.newFeeReceipt.receiptNumber) {
-                            this.printFeeReceipt(fee);
-                        }
-                    });
-                    if (student.overAllLastFeeReceiptNumber === null || student.overAllLastFeeReceiptNumber === '') {
-                        student.overAllLastFeeReceiptNumber = 0;
-                    }
-                    this.newFeeReceipt.receiptNumber = student.overAllLastFeeReceiptNumber + 1;
-                    this.newFeeReceipt.amount = 0;
-                    this.newFeeReceipt.generationDateTime = moment(new Date()).format('YYYY-MM-DD');
-                    this.newFeeReceipt.remark = '';
-                } else if (data.status === 'fail') {
-                    alert(data.message);
-                } else {
-                    alert('Server Response not recognized: Contact Admin');
-                }
-            }
-        );
-
-    }*/
-
-    /*printFeeReceipt(fee: TempFee): void {
-        EmitterService.get('print-fee-receipt').emit(fee);
-    }*/
-
-    /*createNewFeeReceipt(): void {
-        EmitterService.get('new-fee-receipt-modal').emit(this.newFeeReceipt);
-    }*/
-
-    /*getStudentFeeData(student?: StudentExtended): void {
-        this.isLoading = true;
-        const data = {
-            studentDbId: student.dbId,
-        };
-        this.feeService.getStudentFeeData(data, this.user.jwt).then(
-            studentResponse => {
-                this.isLoading = false;
-                studentResponse.name = student.name;
-                studentResponse.className = student.className;
-                studentResponse.sectionName = student.sectionName;
-                studentResponse.feesList.forEach( fee => {
-                    fee.studentName = student.name;
-                    fee.scholarNumber = studentResponse.scholarNumber;
-                    fee.fathersName = studentResponse.fathersName;
-                    fee.className = student.className;
-                    fee.sectionName = student.sectionName;
-                });
-                studentResponse.concessionList.forEach( concession => {
-                    concession.studentName = student.name;
-                    concession.className = student.className;
-                    concession.sectionName = student.sectionName;
-                    concession.scholarNumber = student.scholarNumber;
-                });
-                this.selectedStudent.copy(studentResponse);
-                if (studentResponse.overAllLastFeeReceiptNumber === null || studentResponse.overAllLastFeeReceiptNumber === '') {
-                    studentResponse.overAllLastFeeReceiptNumber = 0;
-                }
-                this.newFeeReceipt.receiptNumber = studentResponse.overAllLastFeeReceiptNumber + 1;
-            }
-        );
-    }*/
 
 }
