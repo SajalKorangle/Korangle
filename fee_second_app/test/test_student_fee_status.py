@@ -8,7 +8,7 @@ from school_app.model.models import Session
 
 from fee_second_app.business.student_fee_status import get_student_fee_status, get_student_fee_status_by_session_id
 
-from fee_second_app.models import FeeDefinition, StudentFeeComponent, StudentFeeComponentMonthly, SubFeeReceipt, SubConcession
+from fee_second_app.models import FeeDefinition, StudentFeeComponent, StudentMonthlyFeeComponent, SubFeeReceipt, SubConcession
 
 class StudentFeeStatusTestCase(ParentTestCase):
 
@@ -79,7 +79,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
             elif student_fee_component_object.parentFeeDefinition.frequency == FeeDefinition.MONTHLY_FREQUENCY:
 
                 student_monthly_fee_component_queryset = \
-                    StudentFeeComponentMonthly.objects.filter(parentStudentFeeComponent=student_fee_component_object)
+                    StudentMonthlyFeeComponent.objects.filter(parentStudentFeeComponent=student_fee_component_object)
 
                 self.assertEqual(len(response['componentList'][indexCounter]['monthList']), student_monthly_fee_component_queryset.count())
 

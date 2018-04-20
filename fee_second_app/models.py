@@ -38,7 +38,7 @@ class Month(models.Model):
         ('FEBRUARY', 'February'),
         ('MARCH', 'March'),
     )
-    monthName = models.CharField(max_length=10, choices=MONTH, null=False, default=APRIL)
+    name = models.CharField(max_length=10, choices=MONTH, null=False, default=APRIL)
 
 class FeeType(models.Model):
     name = models.TextField(verbose_name='name', unique=True)
@@ -90,7 +90,7 @@ class SchoolFeeComponent(models.Model):
     class Meta:
         db_table = 'school_fee_component'
 
-class SchoolFeeComponentMonthly(models.Model):
+class SchoolMonthlyFeeComponent(models.Model):
 
     amount = models.IntegerField(null=False, default=0, verbose_name='amount')
     parentSchoolFeeComponent = models.ForeignKey(SchoolFeeComponent,
@@ -106,14 +106,14 @@ class SchoolFeeComponentMonthly(models.Model):
     class Meta:
         db_table = 'school_fee_component_monthly'
 
-class ClassBasedFee(models.Model):
+class ClassBasedFilter(models.Model):
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0)
     parentSchoolFeeComponent = models.ForeignKey(SchoolFeeComponent, on_delete=models.PROTECT, null=False, default=0)
 
     class Meta:
         db_table = 'class_based_fee'
 
-class BusStopBasedFee(models.Model):
+class BusStopBasedFilter(models.Model):
     parentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=False, default=0)
     parentSchoolFeeComponent = models.ForeignKey(SchoolFeeComponent, on_delete=models.PROTECT, null=False, default=0)
 
@@ -178,7 +178,7 @@ class StudentFeeComponent(models.Model):
     class Meta:
         db_table = 'student_fee_component'
 
-class StudentFeeComponentMonthly(models.Model):
+class StudentMonthlyFeeComponent(models.Model):
     amount = models.IntegerField(null=False, default=0, verbose_name='amount')
     parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent,
                                                   on_delete=models.PROTECT,
@@ -196,7 +196,7 @@ class StudentFeeComponentMonthly(models.Model):
         if schoolFeeComponent is None:
             return None
         else:
-            return SchoolFeeComponentMonthly.objects.get(parentSchoolFeeComponent=schoolFeeComponent,
+            return SchoolMonthlyFeeComponent.objects.get(parentSchoolFeeComponent=schoolFeeComponent,
                                                          parentMonth=self.parentMonth).amount
 
     @property

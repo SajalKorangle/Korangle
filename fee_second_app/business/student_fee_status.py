@@ -1,7 +1,7 @@
 
 from school_app.model.models import Session
 
-from fee_second_app.models import StudentFeeComponent, StudentFeeComponentMonthly, FeeDefinition
+from fee_second_app.models import StudentFeeComponent, StudentMonthlyFeeComponent, FeeDefinition
 
 def get_student_fee_status(data):
 
@@ -53,7 +53,7 @@ def get_student_fee_status_by_session_id(studentDbId, sessionDbId):
         elif student_fee_component_object.parentFeeDefinition.frequency == FeeDefinition.MONTHLY_FREQUENCY:
 
             temp_student_fee_component_status['monthList'] = []
-            for student_fee_component_monthly_object in StudentFeeComponentMonthly.objects.filter(
+            for student_fee_component_monthly_object in StudentMonthlyFeeComponent.objects.filter(
                     parentStudentFeeComponent=student_fee_component_object).order_by('parentMonth_id'):
 
                 temp_student_monthly_fee_status = {}

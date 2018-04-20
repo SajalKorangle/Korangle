@@ -11,7 +11,7 @@ from class_app.models import ClassSession, Section
 
 from examination_app.models import StudentTestResult
 
-from fee_second_app.models import StudentFeeComponentMonthly, StudentFeeComponent, FeeReceipt, SubFeeReceipt, Concession, SubConcession
+from fee_second_app.models import StudentMonthlyFeeComponent, StudentFeeComponent, FeeReceipt, SubFeeReceipt, Concession, SubConcession
 
 def get_class_section_student_list(data, user):
 
