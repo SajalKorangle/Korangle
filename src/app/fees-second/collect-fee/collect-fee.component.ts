@@ -2,6 +2,20 @@ import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@a
 
 import { FeeService } from '../fee.service';
 
+const APRIL = 'APRIL';
+const MAY = 'MAY';
+const JUNE = 'JUNE';
+const JULY = 'JULY';
+const AUGUST = 'AUGUST';
+const SEPTEMBER = 'SEPTEMBER';
+const OCTOBER = 'OCTOBER';
+const NOVEMBER = 'NOVEMBER';
+const DECEMBER = 'DECEMBER';
+const JANUARY = 'JANUARY';
+const FEBRUARY = 'FEBRUARY';
+const MARCH = 'MARCH';
+
+
 @Component({
     selector: 'app-collect-fee',
     templateUrl: './collect-fee.component.html',
@@ -9,6 +23,7 @@ import { FeeService } from '../fee.service';
     providers: [ FeeService ],
     changeDetection: ChangeDetectionStrategy.Default,
 })
+
 export class CollectFeeComponent {
 
     @Input() user;
@@ -44,7 +59,7 @@ export class CollectFeeComponent {
                         }
                     });
                 });
-                // console.log(studentFeeStatus);
+                console.log(studentFeeStatus);
             }
         }, error => {
             this.isLoading = false;
@@ -115,16 +130,36 @@ export class CollectFeeComponent {
     handleSessionPaymentChange(sessionFeeStatus: any, payment: number): void {
         if (payment === null) payment = 0;
         let amountLeft = payment;
+
+        // handle Annual Components
         sessionFeeStatus.componentList.forEach(component => {
-            let amountDue = this.getComponentFeesDue(component);
-            if(amountDue > amountLeft) {
-                this.handleComponentPaymentChange(component, amountLeft);
-                amountLeft = 0;
-            } else {
-                amountLeft -= amountDue;
-                this.handleComponentPaymentChange(component, amountDue);
+            if (component.frequency === 'ANNUALLY') {
+                let amountDue = this.getComponentFeesDue(component);
+                if(amountDue > amountLeft) {
+                    this.handleComponentPaymentChange(component, amountLeft);
+                    amountLeft = 0;
+                } else {
+                    amountLeft -= amountDue;
+                    this.handleComponentPaymentChange(component, amountDue);
+                }
             }
         });
+
+        // handle Monthly Components
+        for (let i=0; i<12; ++i) {
+            sessionFeeStatus.componentList.forEach(component => {
+                if (component.frequency === 'MONTHLY') {
+                    let amountDue = component.monthList[i].amountDue;
+                    if (amountDue > amountLeft) {
+                        component.monthList[i].payment = amountLeft;
+                        amountLeft = 0;
+                    } else {
+                        component.monthList[i].payment = amountDue;
+                        amountLeft -= amountDue;
+                    }
+                }
+            });
+        }
     }
 
     getSessionPayment(sessionFeeStatus: any): number {
@@ -194,7 +229,8 @@ export class CollectFeeComponent {
             payment = component.payment;
         } else if (component.frequency === 'MONTHLY') {
             component.monthList.forEach( componentMonthly => {
-                payment += componentMonthly.payment;
+                // payment += componentMonthly.payment;
+                payment += this.getComponentMonthlyPayment(componentMonthly);
             });
         }
         return payment;
@@ -206,7 +242,8 @@ export class CollectFeeComponent {
             amount += component.amount;
         } else if (component.frequency === 'MONTHLY') {
             component.monthList.forEach( componentMonthly => {
-                amount += componentMonthly.amount;
+                // amount += componentMonthly.amount;
+                amount += this.getComponentMonthlyTotalFee(componentMonthly);
             });
         }
         return amount;
@@ -218,7 +255,8 @@ export class CollectFeeComponent {
             amountDue += component.amountDue;
         } else if (component.frequency === 'MONTHLY') {
             component.monthList.forEach( componentMonthly => {
-                amountDue += componentMonthly.amountDue;
+                // amountDue += componentMonthly.amountDue;
+                amountDue += this.getComponentMonthlyFeesDue(componentMonthly);
             });
         }
         return amountDue;
@@ -242,5 +280,17 @@ export class CollectFeeComponent {
 
 
     // Component Monthly Fee
+    getComponentMonthlyPayment(componentMonthly: any): number {
+        return componentMonthly.payment;
+    }
+
+    getComponentMonthlyTotalFee(componentMonthly: any): number {
+        return componentMonthly.amount;
+    }
+
+    getComponentMonthlyFeesDue(componentMonthly: any): number {
+        return componentMonthly.amountDue;
+    }
+
 
 }

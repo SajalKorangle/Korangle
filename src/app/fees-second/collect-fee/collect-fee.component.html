@@ -35,6 +35,7 @@
                                 </tr>
                                 <ng-container *ngFor="let sessionFeeStatus of studentFeeStatus.sessionFeeStatusList; let i=index;">
                                     <ng-container *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
+                                        <!-- tr *ngIf="studentFeeStatus.sessionFeeStatusList.length > 1" -->
                                         <tr>
                                             <td>{{i+1}}.</td>
                                             <td colspan="2">{{sessionFeeStatus.sessionName}}</td>
@@ -47,19 +48,33 @@
                                             <td class="text-right">{{getSessionFeesDue(sessionFeeStatus)-getSessionPayment(sessionFeeStatus)}}</td>
                                             <td class="text-right">{{getSessionTotalFee(sessionFeeStatus)}}</td>
                                         </tr>
-                                        <tr *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
-                                            <td></td>
-                                            <td>{{i+1}}.</td>
-                                            <td>{{component.feeType}}</td>
-                                            <td class="text-right"><input class='paymentInput'
-                                                                          type="number" min="0"
-                                                                          [attr.max]="getComponentFeesDue(component)"
-                                                                          [ngModel]="getComponentPayment(component)==0?null:getComponentPayment(component)"
-                                                                          (keypress)="policeComponentPaymentInput(component, $event)"
-                                                                          (ngModelChange)="handleComponentPaymentChange(component, $event);"></td>
-                                            <td class="text-right">{{getComponentFeesDue(component)-getComponentPayment(component)}}</td>
-                                            <td class="text-right">{{getComponentTotalFee(component)}}</td>
-                                        </tr>
+                                        <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
+                                            <tr>
+                                                <td></td>
+                                                <td>{{i+1}}.</td>
+                                                <td>{{component.feeType}}</td>
+                                                <td class="text-right"><input class='paymentInput'
+                                                                              type="number" min="0"
+                                                                              [attr.max]="getComponentFeesDue(component)"
+                                                                              [ngModel]="getComponentPayment(component)==0?null:getComponentPayment(component)"
+                                                                              (keypress)="policeComponentPaymentInput(component, $event)"
+                                                                              (ngModelChange)="handleComponentPaymentChange(component, $event);"></td>
+                                                <td class="text-right">{{getComponentFeesDue(component)-getComponentPayment(component)}}</td>
+                                                <td class="text-right">{{getComponentTotalFee(component)}}</td>
+                                            </tr>
+                                            <ng-container *ngIf="component.frequency == 'MONTHLY'">
+                                                <ng-container *ngFor="let month of component.monthList">
+                                                    <tr *ngIf="getComponentMonthlyTotalFee(month)>0">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>{{month.month}}</td>
+                                                        <td class="text-right">{{getComponentMonthlyPayment(month)}}</td>
+                                                        <td class="text-right">{{getComponentMonthlyFeesDue(month)-getComponentMonthlyPayment(month)}}</td>
+                                                        <td class="text-right">{{getComponentMonthlyTotalFee(month)}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </ng-container>
+                                        </ng-container>
                                     </ng-container>
                                 </ng-container>
                             </tbody>
