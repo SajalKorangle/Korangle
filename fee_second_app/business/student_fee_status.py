@@ -57,7 +57,7 @@ def get_student_fee_status_by_session_id(studentDbId, sessionDbId):
                     parentStudentFeeComponent=student_fee_component_object).order_by('parentMonth_id'):
 
                 temp_student_monthly_fee_status = {}
-                temp_student_monthly_fee_status['month'] = student_fee_component_monthly_object.parentMonth.monthName
+                temp_student_monthly_fee_status['month'] = student_fee_component_monthly_object.parentMonth.name
                 temp_student_monthly_fee_status['amount'] = student_fee_component_monthly_object.amount
                 temp_student_monthly_fee_status['schoolAmount'] = student_fee_component_monthly_object.schoolAmount
                 temp_student_monthly_fee_status['amountDue'] = student_fee_component_monthly_object.amountDue

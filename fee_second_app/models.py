@@ -2,6 +2,8 @@ from django.db import models
 
 from django.db.models import Sum
 
+from django.core.exceptions import ObjectDoesNotExist
+
 # Create your models here.
 
 from school_app.model.models import School, Session, BusStop
@@ -9,6 +11,7 @@ from school_app.model.models import School, Session, BusStop
 from student_app.models import Student
 
 from class_app.models import Class
+
 
 class Month(models.Model):
 
@@ -111,14 +114,14 @@ class ClassBasedFilter(models.Model):
     parentSchoolFeeComponent = models.ForeignKey(SchoolFeeComponent, on_delete=models.PROTECT, null=False, default=0)
 
     class Meta:
-        db_table = 'class_based_fee'
+        db_table = 'class_based_filter'
 
 class BusStopBasedFilter(models.Model):
     parentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=False, default=0)
     parentSchoolFeeComponent = models.ForeignKey(SchoolFeeComponent, on_delete=models.PROTECT, null=False, default=0)
 
     class Meta:
-        db_table = 'bus_stop_based_fee'
+        db_table = 'bus_stop_based_filter'
 
 
 ##### Student Fees #####
@@ -136,16 +139,22 @@ class StudentFeeComponent(models.Model):
         session_object = self.parentFeeDefinition.parentSession
         if self.parentFeeDefinition.filterType == FeeDefinition.CLASS_BASED_FILTER:
             class_object = self.parentStudent.get_class_object(session_object)
-            schoolFeeComponent_object = ClassBasedFee.objects.filter(parentClass=class_object)\
-                .schoolfeecomponent_set\
-                .get(parentFeeDefinition=self.parentFeeDefinition)
-            return schoolFeeComponent_object
+            try:
+                schoolFeeComponent_object = ClassBasedFilter.objects.get(
+                    parentClass=class_object,
+                    parentSchoolFeeComponent__parentFeeDefinition=self.parentFeeDefinition).parentSchoolFeeComponent
+                return schoolFeeComponent_object
+            except ObjectDoesNotExist:
+                return None
         elif self.parentFeeDefinition.filterType == FeeDefinition.BUS_STOP_BASED_FILTER:
             busStop_object = self.parentStudent.currentBusStop
-            schoolFeeComponent_object = BusStopBasedFee.objects.filter(parentBusStop=busStop_object)\
-                .schoolfeecomponent_set\
-                .get(parentFeeDefinition=self.parentFeeDefinition)
-            return schoolFeeComponent_object
+            try:
+                schoolFeeComponent_object = BusStopBasedFilter.objects.get(
+                    parentBusStop=busStop_object,
+                    parentSchoolFeeComponent__parentFeeDefinition=self.parentFeeDefinition).parentSchoolFeeComponent
+                return schoolFeeComponent_object
+            except ObjectDoesNotExist:
+                return None
         elif self.parentFeeDefinition.filterType == FeeDefinition.CLASS_BUS_STOP_BASED_FILTER:
             class_object = self.parentStudent.get_class_object(session_object)
             busStop_object = self.parentStudent.currentBusStop

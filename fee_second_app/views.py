@@ -88,8 +88,18 @@ def fee_status_view(request, student_id, session_id):
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})"""
 
 ################# Fee Receipts ################
-from .business.fee_receipt import get_student_fee_receipt, create_fee_receipt, get_school_fee_receipt
-@api_view(['GET'])
+from .business.fee_receipt import create_fee_receipt, get_school_fee_receipt
+
+class StudentFeeReceiptView(APIView):
+
+    def post(self, request, student_id):
+        if request.user.is_authenticated:
+            data = json.loads(request.body.decode('utf-8'))
+            return JsonResponse({'response': get_success_response(create_fee_receipt(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+'''@api_view(['GET'])
 def student_fee_receipt_view(request, student_id):
     if request.user.is_authenticated:
         data = {}
@@ -105,7 +115,7 @@ def student_fee_receipt_view(request, student_id):
         data['studentDbId'] = student_id
         return JsonResponse({'response': get_success_response(create_fee_receipt(data))})
     else:
-        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 @api_view(['GET'])
 def school_fee_receipt_view(request, school_id):

@@ -6,6 +6,8 @@ from class_app.models import Section
 
 from django.contrib.auth.models import User
 
+from django.core.exceptions import ObjectDoesNotExist
+
 class Student(models.Model):
 
 	name = models.CharField(max_length=100)
@@ -73,15 +75,18 @@ class Student(models.Model):
 
 	def get_class_object(self, session_object):
 		return self.studentsection_set.get(parentSection__parentClassSession__parentSession=session_object)\
-			.parentSection.parentClassSession.parentClass.id
+			.parentSection.parentClassSession.parentClass
 
 	def get_class_id(self, session_object):
 		return self.studentsection_set\
 			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.id
 
 	def get_class_name(self, session_object):
-		return self.studentsection_set\
-			.get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.name
+		try:
+			return self.studentsection_set \
+				.get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.name
+		except ObjectDoesNotExist:
+			return None
 
 	def get_rollNumber(self, session_object):
 		return self.studentsection_set \

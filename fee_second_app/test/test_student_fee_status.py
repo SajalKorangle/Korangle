@@ -15,7 +15,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
     def test_get_student_fee_status_for_given_session(self):
 
         data = {}
-        data['studentDbId'] = Student.objects.all()[0].id
+        data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
         data['sessionDbId'] = Session.objects.all()[0].id
 
         response = get_student_fee_status(data)
@@ -26,7 +26,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
     def test_get_student_fee_status_for_all_sessions(self):
 
         data = {}
-        data['studentDbId'] = Student.objects.all()[0].id
+        data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
 
         response = get_student_fee_status(data)
 
@@ -46,7 +46,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
     def test_get_student_fee_status_by_session_id(self):
 
         data = {}
-        data['studentDbId'] = Student.objects.all()[0].id
+        data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
         data['sessionDbId'] = Session.objects.all()[0].id
 
         response = get_student_fee_status_by_session_id(data['studentDbId'], data['sessionDbId'])
@@ -86,7 +86,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
                 monthIndexCounter = 0
                 for student_monthly_fee_component_object in student_monthly_fee_component_queryset.order_by('parentMonth_id'):
                     self.assertEqual(response['componentList'][indexCounter]['monthList'][monthIndexCounter]['month'],
-                                     student_monthly_fee_component_object.parentMonth.monthName)
+                                     student_monthly_fee_component_object.parentMonth.name)
                     self.assertEqual(response['componentList'][indexCounter]['monthList'][monthIndexCounter]['amount'],
                                      student_monthly_fee_component_object.amount)
                     self.assertEqual(response['componentList'][indexCounter]['monthList'][monthIndexCounter]['schoolAmount'],
