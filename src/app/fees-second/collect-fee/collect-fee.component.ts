@@ -1,6 +1,10 @@
 import { Component, Input } from '@angular/core';
+import {style, state, trigger, animate, transition} from "@angular/animations";
+
 
 import { FeeService } from '../fee.service';
+
+import { EmitterService } from '../../services/emitter.service';
 
 const APRIL = 'APRIL';
 const MAY = 'MAY';
@@ -25,21 +29,15 @@ const MARCH = 'MARCH';
         trigger('rotate', [
             state('true', style({transform: 'rotate(0deg)'})),
             state('false', style({transform: 'rotate(180deg)'})),
-            transition('true => false', animate('400ms ease-out')),
-            transition('false => true', animate('400ms ease-in'))
+            transition('true => false', animate('800ms linear')),
+            transition('false => true', animate('800ms linear'))
         ]),
         trigger('slideDown', [
-            state('true', style({maxHeight: 200})),
-            state('false', style({maxHeight: 0, overflow: 'hidden'})),
-            transition('true => false', animate('800ms ease-out')),
-            transition('false => true', animate('800ms ease-in'))
-        ])/*,
-    trigger('fadeIn', [
-      state('true', style({background: this.user.color})),
-      state('false', style({background: 'none'})),
-      transition('true => false', animate('800ms ease-out')),
-      transition('false => true', animate('800ms ease-in'))
-    ])*/
+            state('true', style({height: '*'})),
+            state('false', style({height: 0, overflow: 'hidden'})),
+            transition('true => false', animate('800ms linear')),
+            transition('false => true', animate('800ms linear'))
+        ])
     ],
 })
 
@@ -68,6 +66,7 @@ export class CollectFeeComponent {
                 this.studentFeeStatus = studentFeeStatus;
                 this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
                     sessionFeeStatus.componentList.forEach( component => {
+                        component.showDetails = false;
                         if (component.frequency === 'ANNUALLY') {
                             component.payment = 0;
                         } else if ( component.frequency === 'MONTHLY') {
@@ -77,6 +76,7 @@ export class CollectFeeComponent {
                         }
                     });
                 });
+                this.studentFeeStatus.showDetails = false;
                 console.log(studentFeeStatus);
             }
         }, error => {
@@ -85,7 +85,81 @@ export class CollectFeeComponent {
         });
     }
 
+    generateFeeReceipt(): void {
+
+        let data = {
+            studentDbId: this.studentFeeStatus.studentDbId,
+            remark: 'testing',
+        };
+
+        data['subFeeReceiptList'] = [];
+
+        this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
+            sessionFeeStatus.componentList.forEach( component => {
+                let subReceipt = {
+                    componentDbId: component.dbId,
+                    // feeType: component.feeType,
+                    amount: this.getComponentPayment(component),
+                    frequency: component.frequency,
+                };
+                if (component.frequency === 'MONTHLY') {
+                    subReceipt['monthList'] = [];
+                    component.monthList.forEach( componentMonthly => {
+                        let subReceiptMonthly = {
+                            month: componentMonthly.month,
+                            amount: this.getComponentMonthlyPayment(componentMonthly),
+                        };
+                        subReceipt['monthList'].push(subReceiptMonthly);
+                    });
+                }
+                data['subFeeReceiptList'].push(subReceipt);
+            });
+        });
+
+        console.log(data);
+
+        this.isLoading = true;
+        this.feeService.createFeeReceipt(data, this.user.jwt).then( response => {
+            this.isLoading = false;
+            alert(response['message']);
+
+            this.studentFeeStatus = response['studentFeeStatus'];
+            this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
+                sessionFeeStatus.componentList.forEach( component => {
+                    component.showDetails = false;
+                    if (component.frequency === 'ANNUALLY') {
+                        component.payment = 0;
+                    } else if ( component.frequency === 'MONTHLY') {
+                        component.monthList.forEach( componentMonthly => {
+                            componentMonthly.payment = 0;
+                        });
+                    }
+                });
+            });
+            this.studentFeeStatus.showDetails = false;
+
+            this.printFeeReceipt(response['feeReceipt']);
+
+        }, error => {
+            this.isLoading = false;
+        });
+
+    }
+
+    printFeeReceipt(feeReceipt: any): void {
+        console.log(feeReceipt);
+        EmitterService.get('print-new-fee-receipt').emit(feeReceipt);
+    }
+
     // Student Payment & Fee
+    toggleStudentFeeDetails(): void {
+        if (this.studentFeeStatus.showDetails) {
+            this.studentFeeStatus.showDetails = false;
+        } else {
+            this.studentFeeStatus.showDetails = true;
+        }
+    }
+
     handleStudentPaymentChange(payment: number): void {
         if (payment === null) payment = 0;
         let amountLeft = payment;
@@ -222,6 +296,10 @@ export class CollectFeeComponent {
 
 
     // Component Payment & Fee
+    toggleComponentFeeDetails(component: any): void {
+        component.showDetails = !component.showDetails;
+    }
+
     handleComponentPaymentChange(component: any, payment: number): void {
         if (payment === null) payment = 0;
         let amountLeft = payment;

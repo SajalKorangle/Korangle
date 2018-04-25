@@ -9,16 +9,125 @@
 
                 <app-student-filter [user]="user" (onStudentSelected)="getStudentFeeStatus($event)"></app-student-filter>
 
-                <ng-container *ngIf="this.studentFeeStatus && !isLoading">
+                <ng-container *ngIf="studentFeeStatus && !isLoading">
 
                     <ng-container *ngIf="getStudentFeesDue()>0">
-                        <table class="table table-hover" style="font-weight: 800 !important;">
+                        <div class="row">
+                            <div class="col-md-2 col-md-offset-5">
+                                Payment
+                            </div>
+                            <div class="col-md-2">
+                                Due
+                            </div>
+                            <div class="col-md-2">
+                                Total
+                            </div>
+                        </div>
+                        <div class="row" style="font-weight: 800 !important;">
+                            <div class="col-md-5">
+                                {{selectedStudent.name}}
+                            </div>
+                            <div class="col-md-2">
+                                <input class='paymentInput'
+                                       type="number" min="0"
+                                       [attr.max]="getStudentFeesDue()"
+                                       [ngModel]="getStudentPayment()==0?null:getStudentPayment()"
+                                       (keypress)="policeStudentPaymentInput($event)"
+                                       (ngModelChange)="handleStudentPaymentChange($event);">
+                            </div>
+                            <div class="col-md-2">
+                                {{getStudentFeesDue()-getStudentPayment()}}
+                            </div>
+                            <div class="col-md-2">
+                                {{getStudentTotalFee()}}
+                            </div>
+                            <div class="col-md-1">
+                                <i class="material-icons"
+                                   [@rotate]="!studentFeeStatus.showDetails"
+                                   (click)="studentFeeStatus.showDetails = !studentFeeStatus.showDetails">keyboard_arrow_down</i>
+                            </div>
+                        </div>
+                        <div [@slideDown]="studentFeeStatus.showDetails">
+                            <ng-container *ngFor="let sessionFeeStatus of studentFeeStatus.sessionFeeStatusList; let i=index;">
+                                <ng-container  *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
+                                    <div class="row" style="font-weight: 500 !important;">
+                                        <div class="col-md-5">
+                                            {{i+1}}. {{sessionFeeStatus.sessionName}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input class='paymentInput'
+                                                   type="number" min="0"
+                                                   [attr.max]="getSessionFeesDue(sessionFeeStatus)"
+                                                   [ngModel]="getSessionPayment(sessionFeeStatus)==0?null:getSessionPayment(sessionFeeStatus)"
+                                                   (keypress)="policeSessionPaymentInput(sessionFeeStatus, $event)"
+                                                   (ngModelChange)="handleSessionPaymentChange(sessionFeeStatus, $event);">
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{getStudentFeesDue()-getStudentPayment()}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{getSessionTotalFee(sessionFeeStatus)}}
+                                        </div>
+                                    </div>
+                                    <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
+                                        <div class="row" style="font-weight: 500 !important;">
+                                            <div class="col-md-4 col-md-offset-1">
+                                                {{i+1}}. {{component.feeType}}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class='paymentInput'
+                                                       type="number" min="0"
+                                                       [attr.max]="getComponentFeesDue(component)"
+                                                       [ngModel]="getComponentPayment(component)==0?null:getComponentPayment(component)"
+                                                       (keypress)="policeComponentPaymentInput(component, $event)"
+                                                       (ngModelChange)="handleComponentPaymentChange(component, $event);">
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{getComponentFeesDue(component)-getComponentPayment(component)}}
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{getComponentTotalFee(component)}}
+                                            </div>
+                                            <div class="col-md-1">
+                                                <i class="material-icons"
+                                                   [@rotate]="!component.showDetails"
+                                                   (click)="component.showDetails = !component.showDetails">keyboard_arrow_down</i>
+                                            </div>
+                                        </div>
+                                        <div  [@slideDown]="component.showDetails">
+                                            <ng-container *ngIf="component.frequency == 'MONTHLY'">
+                                                <ng-container *ngFor="let month of component.monthList">
+                                                    <div class="row"
+                                                         *ngIf="getComponentMonthlyTotalFee(month)>0"
+                                                         style="font-weight: 300 !important;">
+                                                        <div class="col-md-3 col-md-offset-2">
+                                                            {{month.month}}
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{getComponentMonthlyPayment(month)}}
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{getComponentMonthlyFeesDue(month)-getComponentMonthlyPayment(month)}}
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{getComponentMonthlyTotalFee(month)}}
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                        <!-- table class="table table-hover" style="font-weight: 800 !important;">
                             <thead class="text-{{user.btn_color}}">
                                 <tr>
                                     <th colspan="3"></th>
                                     <th class="text-right" style="padding-right: 25px;">Payment</th>
                                     <th class="text-right">Due</th>
                                     <th class="text-right">Total</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -32,10 +141,12 @@
                                                                   (ngModelChange)="handleStudentPaymentChange($event);"></td>
                                     <td class="text-right">{{getStudentFeesDue()-getStudentPayment()}}</td>
                                     <td class="text-right">{{getStudentTotalFee()}}</td>
+                                    <td class="text-center"><i class="material-icons"
+                                                               [@rotate]="!studentFeeStatus.showDetails"
+                                                               (click)="toggleStudentFeeDetails();">keyboard_arrow_down</i></td>
                                 </tr>
                                 <ng-container *ngFor="let sessionFeeStatus of studentFeeStatus.sessionFeeStatusList; let i=index;">
                                     <ng-container *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
-                                        <!-- tr *ngIf="studentFeeStatus.sessionFeeStatusList.length > 1" -->
                                         <tr>
                                             <td>{{i+1}}.</td>
                                             <td colspan="2">{{sessionFeeStatus.sessionName}}</td>
@@ -47,6 +158,7 @@
                                                                           (ngModelChange)="handleSessionPaymentChange(sessionFeeStatus, $event);"></td>
                                             <td class="text-right">{{getSessionFeesDue(sessionFeeStatus)-getSessionPayment(sessionFeeStatus)}}</td>
                                             <td class="text-right">{{getSessionTotalFee(sessionFeeStatus)}}</td>
+                                            <td></td>
                                         </tr>
                                         <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
                                             <tr>
@@ -61,6 +173,7 @@
                                                                               (ngModelChange)="handleComponentPaymentChange(component, $event);"></td>
                                                 <td class="text-right">{{getComponentFeesDue(component)-getComponentPayment(component)}}</td>
                                                 <td class="text-right">{{getComponentTotalFee(component)}}</td>
+                                                <td></td>
                                             </tr>
                                             <ng-container *ngIf="component.frequency == 'MONTHLY'">
                                                 <ng-container *ngFor="let month of component.monthList">
@@ -71,6 +184,7 @@
                                                         <td class="text-right">{{getComponentMonthlyPayment(month)}}</td>
                                                         <td class="text-right">{{getComponentMonthlyFeesDue(month)-getComponentMonthlyPayment(month)}}</td>
                                                         <td class="text-right">{{getComponentMonthlyTotalFee(month)}}</td>
+                                                        <td></td>
                                                     </tr>
                                                 </ng-container>
                                             </ng-container>
@@ -78,7 +192,13 @@
                                     </ng-container>
                                 </ng-container>
                             </tbody>
-                        </table>
+                        </table -->
+                        <br/>
+                        <button class="btn btn-{{user.btn_color}}"
+                                (click)="generateFeeReceipt()"
+                                *ngIf="getStudentPayment()>0">
+                            Generate Receipt ({{getStudentPayment()}})
+                        </button>
                     </ng-container>
 
                     <ng-container *ngIf="getStudentTotalFee() === 0">
@@ -87,6 +207,9 @@
 
                 </ng-container>
 
+                <ng-container *ngIf="isLoading || isListLoading">
+                    <app-loading-spinner [user]="user"></app-loading-spinner>
+                </ng-container>
 
             </div>
         </div>

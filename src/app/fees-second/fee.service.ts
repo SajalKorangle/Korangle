@@ -13,4 +13,8 @@ export class FeeService extends CommonServiceRequirements {
         return super.getData(token, '/fee-second/student/' + data['studentDbId'] + '/fee-status');
     }
 
+    createFeeReceipt(data: any, token: string): Promise<any> {
+        return super.postData(data, token, '/fee-second/student/' + data['studentDbId'] + '/fee-receipts');
+    }
+
 }

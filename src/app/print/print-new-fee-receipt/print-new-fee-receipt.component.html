@@ -1,58 +1,43 @@
-<div class="container-fluid" style="height: 100vh;">
+<div class="container-fluid" style="height: 100vh;" *ngIf="feeReceipt">
 
-    <img src="/assets/img/eklavya_logo.png"
+    <img src="http://localhost:4200/assets/img/brightstar_akodia_english.jpg"
          style="border-radius: 2px; position: absolute;
          top: 28px; left: 14px;
          width: 56px; height: 56px;"/>
 
+    <img src="http://localhost:4200/assets/img/brightstar_akodia_english.jpg"
+         style="border-radius: 2px; position: absolute;
+         top: 260px; left: 95px;
+         width: 310px; height: 310px;
+         opacity: 0.05;
+         filter: grayscale(100%);
+         z-index: 10;"/>
+
     <!-- Reg. No. , Dise Code -->
     <div class="row " style="margin-top: 0px;">
         <div class="col-xs-6 d-flex custom-padding">
-            Reg. No. : 452060
+            Reg. No. : {{user.schoolRegistrationNumber}}
         </div>
         <div class="col-xs-6 d-flex custom-padding" align="end">
-            Dise code : 23220707704
+            Dise code : {{user.schoolDiseCode}}
         </div>
     </div>
-
-    <!-- img src="/assets/img/eklavya_logo.png"
-         style="border-radius: 2px; position: absolute;
-         top: 40px; right: 20px;
-         width: 80px; height: 80px;"/ -->
-
-    <!-- img src="../../../assets/img/eklavya_logo.png" style="width: 50px; height: 50px; float: left;"/ -->
 
     <!-- School Name -->
     <div class="row " style="margin-top: 8px;">
         <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px;">
             <span style="background-color: yellow; font-size: 24px">
-                EKLAVYA ACADEMY
+                {{user.schoolPrintName}}
             </span>
         </div>
     </div>
-
-    <!-- Logo -->
-    <!-- div class="row ">
-        <div class="col-xs-12" align="center">
-            <img src="../../../assets/img/eklavya_logo.png" style="width: 70px; height: 70px;"/>
-        </div>
-    </div -->
 
     <!-- Address -->
     <div class="row " style="margin-top: 0px;">
         <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px; font-size: 10px;">
-            Seminary Road, Ashta Dist. Sehore (M.P.)
+            {{user.schoolAddress}}
         </div>
     </div>
-
-    <!-- Regd. Declaration -->
-    <!-- div class="row " style="margin-top: 0px;">
-        <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px;">
-            <span style="font-size: 9px; padding: 0px;">
-                (Regd. and Recognised by M.P. Govt.)
-            </span>
-        </div>
-    </div -->
 
     <!-- School Transfer Certificate -->
     <div class="row " style="margin-top: 10px">
@@ -63,10 +48,10 @@
 
     <div class="row" style="margin-top: 5px;">
         <div class="col-xs-6">
-            Receipt No. : 1001
+            Receipt No. : {{feeReceipt.receiptNumber}}
         </div>
         <div class="col-xs-6" align="right">
-            Date: 12/12/2018
+            Date: {{feeReceipt.generationDateTime | date: 'dd/MM/yyyy'}}
         </div>
     </div>
     
@@ -75,8 +60,8 @@
         <div class="col-xs-4">
             Name <span style="float: right">:</span>
         </div>
-        <div class="col-xs-8" style="border-bottom: 1px solid black">
-            ANKIT THAKUR
+        <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+            <i>{{feeReceipt.studentName}}</i>
         </div>
     </div>
 
@@ -85,18 +70,18 @@
         <div class="col-xs-4">
             Father's Name <span style="float: right">:</span>
         </div>
-        <div class="col-xs-8" style="border-bottom: 1px solid black">
-            MR. SURENDRA THAKUR
+        <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+            <i>{{feeReceipt.studentFatherName}}</i>
         </div>
     </div>
 
     <!-- Scholar No, Standard -->
     <div class="row">
         <div class="col-xs-6">
-            Scholar No. : A234
+            Scholar No. : {{feeReceipt.studentScholarNumber}}
         </div>
         <div class="col-xs-6" align="right">
-            Standard : Class - 10
+            Standard : {{feeReceipt.studentClassName}}
         </div>
     </div>
 
@@ -113,8 +98,17 @@
         </div>
     </div>
 
-    <!-- Empty, Session Fee, Empty -->
-    <div class="row" style="margin-top: 5px;">
+    <div class="row" *ngFor="let subFeeReceipt of feeReceipt.subFeeReceiptList; let i=index;">
+        <div class="col-xs-2" align="center">{{i+1}}.</div>
+        <div class="col-xs-6">
+            {{subFeeReceipt.feeType}}
+            <i>{{getMonthRange(subFeeReceipt)}}</i>
+            ({{subFeeReceipt.sessionName.substr(subFeeReceipt.sessionName.length - 5)}})
+        </div>
+        <div class="col-xs-4" align="right">{{subFeeReceipt.amount}}</div>
+    </div>
+
+    <!-- div class="row" style="margin-top: 5px;">
         <div class="col-xs-2">
 
         </div>
@@ -126,7 +120,6 @@
         </div>
     </div>
 
-    <!-- Serial No. Value, Fee Head, Amount Value -->
     <div class="row">
         <div class="col-xs-2" align="center" >
             1.
@@ -139,7 +132,6 @@
         </div>
     </div>
 
-    <!-- Serial No. Value, Fee Head, Amount Value -->
     <div class="row ">
         <div class="col-xs-2" align="center" >
             2.
@@ -152,7 +144,6 @@
         </div>
     </div>
 
-    <!-- Serial No. Value, Fee Head, Amount Value -->
     <div class="row ">
         <div class="col-xs-2" align="center" >
             3.
@@ -165,7 +156,6 @@
         </div>
     </div>
 
-    <!-- Serial No. Value, Fee Head, Amount Value -->
     <div class="row ">
         <div class="col-xs-2"  align="center" >
             4.
@@ -178,28 +168,24 @@
         </div>
     </div>
 
-    <!-- Empty -->
     <div class="row ">
         <div class="col-xs-12"  align="center" >
             <span style="opacity: 0">4.</span>
         </div>
     </div>
 
-    <!-- Empty -->
     <div class="row ">
         <div class="col-xs-12"  align="center" >
             <span style="opacity: 0">4.</span>
         </div>
     </div>
 
-    <!-- Empty -->
     <div class="row ">
         <div class="col-xs-12"  align="center" >
             <span style="opacity: 0">4.</span>
         </div>
     </div>
 
-    <!-- Empty, Total, Empty -->
     <div class="row">
         <div class="col-xs-6"  align="center" >
 
@@ -212,7 +198,6 @@
         </div>
     </div>
 
-    <!-- Miscallaneous Fee -->
     <div class="row " style="margin-top: 5px;">
         <div class="col-xs-2">
 
@@ -225,7 +210,6 @@
         </div>
     </div>
 
-    <!-- Serial No. Value, Fee Head, Amount Value -->
     <div class="row ">
         <div class="col-xs-2" align="center" >
             1.
@@ -238,7 +222,6 @@
         </div>
     </div>
 
-    <!-- Serial No. Value, Fee Head, Amount Value -->
     <div class="row ">
         <div class="col-xs-2" align="center" >
             2.
@@ -251,7 +234,6 @@
         </div>
     </div>
 
-    <!-- Serial No. Value, Fee Head, Amount Value -->
     <div class="row ">
         <div class="col-xs-2" align="center" >
             3.
@@ -264,7 +246,6 @@
         </div>
     </div>
 
-    <!-- Serial No. Value, Fee Head, Amount Value -->
     <div class="row">
         <div class="col-xs-2"  align="center" >
             4.
@@ -277,50 +258,59 @@
         </div>
     </div>
 
-    <!-- Empty -->
     <div class="row ">
         <div class="col-xs-12"  align="center" >
             <span style="opacity: 0;">4.</span>
         </div>
     </div>
 
-    <!-- Empty -->
     <div class="row ">
         <div class="col-xs-12"  align="center" >
             <span style="opacity: 0">4.</span>
         </div>
     </div>
 
-    <!-- Empty -->
     <div class="row ">
         <div class="col-xs-12"  align="center" >
             <span style="opacity: 0">4.</span>
         </div>
-    </div>
+    </div -->
 
-    <!-- Grand Total, Grand Total Value -->
-    <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black">
-        <div class="col-xs-8">
-            <span style="font-weight: 400">Grand Total</span>
+    <div class="custom-padding" style="position: absolute; bottom: 40px; width: 100%;">
+        <!-- Total, Total Value -->
+        <div class="row" style=" border-bottom: 1px solid black; border-top: 1px solid black; width: 100%;">
+            <div class="col-xs-8">
+                <span style="font-weight: 400">Total Amount</span>
+            </div>
+            <div class="col-xs-4" align="right" >
+                <span style="font-weight: 400">Rs. {{getTotalFeeAmount()}}/-</span>
+            </div>
         </div>
-        <div class="col-xs-4" align="right" >
-            <span style="font-weight: 400">Rs. 4000/-</span>
-        </div>
-    </div>
 
-    <!-- Grand Total (in words) -->
-    <div class="row">
-        <div class="col-xs-12">
-            (In Words) : <i>FOUR THOUSAND</i> Only
+        <!-- Amount in words -->
+        <div class="row" style="width: 100%;">
+            <div class="col-xs-12">
+                Amount In Words : <i style="font-weight: 400">{{getTotalFeeAmount() | amountInWords}} Only</i>
+            </div>
         </div>
+
+        <div class="row" style="width: 100%;">
+            <div class="col-xs-6 custom-padding">
+                Mode of Payment: <i style="font-weight: 400;">Cash</i>
+            </div>
+        </div>
+
+        <div class="row" style="width: 100%;" *ngIf="feeReceipt.remark && feeReceipt.remark != ''">
+            <div class="col-xs-6 custom-padding">
+                Remark: <i style="font-weight: 400;">{{feeReceipt.remark}}</i>
+            </div>
+        </div>
+
     </div>
 
     <!-- Signature -->
-    <div class="row no-gutters" style="position: absolute; bottom: 10px; width: 100%;">
-        <div class="col-xs-6 custom-padding" style="padding-right: 20px">
-            Mode of Payment: <i>Checque</i>
-        </div>
-        <div class="col-xs-6 custom-padding" style="padding-right: 20px" align="end">
+    <div class="row no-gutters" style="position: absolute; bottom: 0px; width: 100%;">
+        <div class="col-xs-12 custom-padding" style="padding-right: 20px" align="end">
             (Receiver's Sign.)
         </div>
     </div>
