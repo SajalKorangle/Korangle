@@ -3,7 +3,8 @@ from parent_test import ParentTestCase
 from student_app.models import Student
 
 from fee_second_app.business.student_fee_status import get_student_fee_status
-from fee_second_app.business.fee_receipt import create_fee_receipt, get_fee_receipt_by_id
+from fee_second_app.business.fee_receipt import create_fee_receipt, get_fee_receipt_by_id, \
+    get_fee_receipt_list_by_student_id, get_fee_receipt_list_by_school_id
 
 from fee_second_app.models import FeeDefinition, FeeReceipt, SubFeeReceipt, SubFeeReceiptMonthly
 
@@ -27,6 +28,7 @@ class FeeReceiptTestCase(ParentTestCase):
         self.assertEqual(fee_receipt_response['receiptNumber'], fee_receipt_object.receiptNumber)
         self.assertEqual(fee_receipt_response['generationDateTime'], fee_receipt_object.generationDateTime)
         self.assertEqual(fee_receipt_response['remark'], fee_receipt_object.remark)
+        self.assertEqual(fee_receipt_response['cancelled'], fee_receipt_object.cancelled)
 
         sub_fee_receipt_queryset = SubFeeReceipt.objects.filter(parentFeeReceipt=fee_receipt_object).order_by('parentStudentFeeComponent__parentFeeDefinition__parentSession__orderNumber', 'parentStudentFeeComponent__parentFeeDefinition__orderNumber')
 
@@ -59,6 +61,49 @@ class FeeReceiptTestCase(ParentTestCase):
 
             index += 1
 
+    def test_get_fee_receipt_by_school_id(self):
+
+        fee_receipt_object = FeeReceipt.objects.all()[0]
+
+        user_object = fee_receipt_object.parentStudent.parentUser
+
+        request = {}
+        request['schoolDbId'] = user_object.school_set.all()[0].id
+        request['startDate'] = '2017-04-01'
+        request['endDate'] = '2018-05-31'
+
+        response = get_fee_receipt_list_by_school_id(request)
+
+        fee_receipt_queryset = FeeReceipt.objects.filter(parentStudent__parentUser=user_object,
+                                                         generationDateTime__gte=request['startDate']+' 00:00:00+00:00',
+                                                         generationDateTime__lte=request['endDate']+ ' 23:59:59+00:00').order_by('-generationDateTime')
+
+        self.assertEqual(len(response), fee_receipt_queryset.count())
+
+        index = 0
+        for fee_receipt_object in fee_receipt_queryset:
+
+            self.assertEqual(response[index]['dbId'], fee_receipt_object.id)
+
+            index += 1
+
+    def test_get_fee_receipt_list_by_student_id(self):
+
+        request = {}
+        request['studentDbId'] = FeeReceipt.objects.all()[0].parentStudent.id
+
+        response = get_fee_receipt_list_by_student_id(request)
+
+        fee_receipt_queryset = FeeReceipt.objects.filter(parentStudent_id=request['studentDbId']).order_by('-generationDateTime')
+
+        self.assertEqual(len(response), fee_receipt_queryset.count())
+
+        index = 0
+        for fee_receipt_object in fee_receipt_queryset:
+
+            self.assertEqual(response[index]['dbId'], fee_receipt_object.id)
+
+            index += 1
 
     def test_create_fee_receipt(self):
 

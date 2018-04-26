@@ -6,15 +6,21 @@ from fee_second_app.business.student_fee_status import get_student_fee_status
 
 from student_app.models import Student
 
+from school_app.model.models import School
+
 from django.db import transaction
 
 from django.db.models import Max
 
 def get_fee_receipt_by_id(data):
 
-    fee_receipt_response = {}
-
     fee_receipt_object = FeeReceipt.objects.get(id=data['dbId'])
+
+    return get_fee_receipt_by_object(fee_receipt_object)
+
+def get_fee_receipt_by_object(fee_receipt_object):
+
+    fee_receipt_response = {}
 
     fee_receipt_response['dbId'] = fee_receipt_object.id
 
@@ -26,6 +32,7 @@ def get_fee_receipt_by_id(data):
     fee_receipt_response['receiptNumber'] = fee_receipt_object.receiptNumber
     fee_receipt_response['generationDateTime'] = fee_receipt_object.generationDateTime
     fee_receipt_response['remark'] = fee_receipt_object.remark
+    fee_receipt_response['cancelled'] = fee_receipt_object.cancelled
 
     fee_receipt_response['subFeeReceiptList'] = []
 
@@ -53,6 +60,34 @@ def get_fee_receipt_by_id(data):
         fee_receipt_response['subFeeReceiptList'].append(sub_fee_receipt_response)
 
     return fee_receipt_response
+
+def get_fee_receipt_list_by_school_id(data):
+
+    startDate = data['startDate'] + ' 00:00:00+00:00'
+    endDate = data['endDate'] + ' 23:59:59+00:00'
+
+    user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
+
+    fee_receipt_list_response = []
+
+    for fee_receipt_object in FeeReceipt.objects.filter(parentStudent__parentUser=user_object,
+                                                        generationDateTime__gte=startDate,
+                                                        generationDateTime__lte=endDate).order_by('-generationDateTime'):
+
+        fee_receipt_list_response.append(get_fee_receipt_by_object(fee_receipt_object))
+
+    return fee_receipt_list_response
+
+def get_fee_receipt_list_by_student_id(data):
+
+    fee_receipt_list_response = []
+
+    for fee_receipt_object in FeeReceipt.objects.filter(parentStudent_id=data['studentDbId']).order_by('-generationDateTime'):
+
+        fee_receipt_response = get_fee_receipt_by_object(fee_receipt_object)
+        fee_receipt_list_response.append(fee_receipt_response)
+
+    return fee_receipt_list_response
 
 def create_fee_receipt(data):
 
