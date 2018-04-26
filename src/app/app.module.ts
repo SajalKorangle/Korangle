@@ -35,6 +35,8 @@ import { NewFeesComponent } from './fees/new-fees/new-fees.component';
 import { FeesListComponent } from './fees/fees-list/fees-list.component';
 
 import { CollectFeeComponent } from './fees-second/collect-fee/collect-fee.component';
+import {FeeReceiptListComponent} from './fees-second/fees-table/fee-receipt-list.component';
+import { TotalCollectionComponent } from './fees-second/total-collection/total-collection.component';
 
 import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
@@ -75,8 +77,10 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
         FeesListComponent,
         NewFeesComponent,
         NewFeeReceiptComponent,
+        FeeReceiptListComponent,
 
         CollectFeeComponent,
+        TotalCollectionComponent,
 
         FeesTableComponent,
         LoadingSpinnerComponent,

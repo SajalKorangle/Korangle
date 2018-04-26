@@ -64,6 +64,12 @@
 
                 <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
 
+                    <div class="row hidden-sm hidden-lg hidden-md">
+                        <div class="col-md-3">
+                            <a href="tel:{{selectedStudent.mobileNumber}}">Call Me</a>
+                        </div>
+                    </div>
+
                     <!-- Name, Father's Name, Mother's Name, Mobile Number -->
                     <div class="row">
                         <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.name,currentStudent.name)">

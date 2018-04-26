@@ -17,4 +17,15 @@ export class FeeService extends CommonServiceRequirements {
         return super.postData(data, token, '/fee-second/student/' + data['studentDbId'] + '/fee-receipts');
     }
 
+    getStudentFeeReceipts(data: any, token: string): Promise<any> {
+        return super.getData(token, '/fee-second/student/' + data['studentDbId'] + '/fee-receipts');
+    }
+
+    getSchoolFeeReceipts(data: any, token: string): Promise<any> {
+        return super.getData(token, '/fee-second/school/'
+            + data['schoolDbId']
+            + '/fee-receipts?startDate=' + data['startDate']
+            + '&endDate=' + data['endDate']);
+    }
+
 }

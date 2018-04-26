@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { User } from '../../classes/user';
+import {style, state, trigger, animate, transition} from "@angular/animations";
 
 declare const $: any;
 declare interface RouteInfo {
@@ -26,9 +27,24 @@ export const ROUTES: RouteInfo[] = [
 ];
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.css'],
+    animations: [
+        trigger('rotate', [
+            state('true', style({transform: 'rotate(0deg)'})),
+            state('false', style({transform: 'rotate(180deg)'})),
+            transition('true => false', animate('400ms ease-out')),
+            transition('false => true', animate('400ms ease-in'))
+        ]),
+        trigger('slideDown', [
+            state('true', style({maxHeight: 200})),
+            state('false', style({maxHeight: 0, overflow: 'hidden'})),
+            transition('true => false', animate('800ms ease-out')),
+            transition('false => true', animate('800ms ease-in'))
+        ]),
+    ],
+
 })
 export class SidebarComponent implements OnInit {
 

@@ -4,6 +4,8 @@ import {style, state, trigger, animate, transition} from "@angular/animations";
 
 import { FeeService } from '../fee.service';
 
+import { FeeReceipt } from '../classes/common-functionalities';
+
 import { EmitterService } from '../../services/emitter.service';
 
 const APRIL = 'APRIL';
@@ -49,15 +51,34 @@ export class CollectFeeComponent {
 
     studentFeeStatus: any;
 
+    feeReceiptList: any;
+
+    remark: string;
+
     isLoading = false;
 
     constructor (private feeService: FeeService) { }
 
-    getStudentFeeStatus(student: any): void {
+    getStudentFeeDetails(student: any): void {
         const data = {
             studentDbId: student.dbId,
         };
         this.selectedStudent = student;
+        this.getStudentFeeStatus(data);
+        this.getStudentFeeReceiptList(data);
+    }
+
+    getStudentFeeReceiptList(data): void {
+        this.feeReceiptList = null;
+        this.feeService.getStudentFeeReceipts(data, this.user.jwt).then( feeReceiptList => {
+            if (this.selectedStudent.dbId === data['studentDbId']) {
+                this.feeReceiptList = feeReceiptList;
+                console.log(this.feeReceiptList);
+            }
+        });
+    }
+
+    getStudentFeeStatus(data: any): void {
         this.isLoading = true;
         this.studentFeeStatus = null;
         this.feeService.getStudentFeeStatus(data, this.user.jwt).then( studentFeeStatus => {
@@ -76,8 +97,9 @@ export class CollectFeeComponent {
                         }
                     });
                 });
-                this.studentFeeStatus.showDetails = false;
-                console.log(studentFeeStatus);
+                this.studentFeeStatus.showDetails = true;
+                this.studentFeeStatus.showPreviousFeeDetails = false;
+                // console.log(studentFeeStatus);
             }
         }, error => {
             this.isLoading = false;
@@ -89,36 +111,39 @@ export class CollectFeeComponent {
 
         let data = {
             studentDbId: this.studentFeeStatus.studentDbId,
-            remark: 'testing',
+            remark: this.remark,
         };
 
         data['subFeeReceiptList'] = [];
 
         this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
             sessionFeeStatus.componentList.forEach( component => {
-                let subReceipt = {
-                    componentDbId: component.dbId,
-                    // feeType: component.feeType,
-                    amount: this.getComponentPayment(component),
-                    frequency: component.frequency,
-                };
-                if (component.frequency === 'MONTHLY') {
-                    subReceipt['monthList'] = [];
-                    component.monthList.forEach( componentMonthly => {
-                        let subReceiptMonthly = {
-                            month: componentMonthly.month,
-                            amount: this.getComponentMonthlyPayment(componentMonthly),
-                        };
-                        subReceipt['monthList'].push(subReceiptMonthly);
-                    });
+                if (this.getComponentPayment(component)) {
+                    let subReceipt = {
+                        componentDbId: component.dbId,
+                        // feeType: component.feeType,
+                        amount: this.getComponentPayment(component),
+                        frequency: component.frequency,
+                    };
+                    if (component.frequency === 'MONTHLY') {
+                        subReceipt['monthList'] = [];
+                        component.monthList.forEach( componentMonthly => {
+                            let subReceiptMonthly = {
+                                month: componentMonthly.month,
+                                amount: this.getComponentMonthlyPayment(componentMonthly),
+                            };
+                            subReceipt['monthList'].push(subReceiptMonthly);
+                        });
+                    }
+                    data['subFeeReceiptList'].push(subReceipt);
                 }
-                data['subFeeReceiptList'].push(subReceipt);
             });
         });
 
         console.log(data);
 
         this.isLoading = true;
+        this.remark = null;
         this.feeService.createFeeReceipt(data, this.user.jwt).then( response => {
             this.isLoading = false;
             alert(response['message']);
@@ -140,6 +165,8 @@ export class CollectFeeComponent {
 
             this.printFeeReceipt(response['feeReceipt']);
 
+            this.feeReceiptList.unshift(response['feeReceipt']);
+
         }, error => {
             this.isLoading = false;
         });
@@ -149,6 +176,20 @@ export class CollectFeeComponent {
     printFeeReceipt(feeReceipt: any): void {
         console.log(feeReceipt);
         EmitterService.get('print-new-fee-receipt').emit(feeReceipt);
+    }
+
+    showSessionFeesLine(): boolean {
+        let number = 0;
+        this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
+            if (this.getSessionFeesDue(sessionFeeStatus) > 0) {
+                number += 1;
+            }
+        });
+        return number > 1;
+    }
+
+    getFeeReceiptTotalAmount(feeReceipt: any): number {
+        return FeeReceipt.getFeeReceiptTotalAmount(feeReceipt);
     }
 
     // Student Payment & Fee
@@ -293,7 +334,6 @@ export class CollectFeeComponent {
         }
         return true;
     }
-
 
     // Component Payment & Fee
     toggleComponentFeeDetails(component: any): void {

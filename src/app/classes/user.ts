@@ -79,7 +79,11 @@ export class User {
                 {
                     path: 'collect_fee',
                     title: 'Collect Fee',
-                }
+                },
+                {
+                    path: 'total_fee_collection',
+                    title: 'Total Collection',
+                },
             ] },
         { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
