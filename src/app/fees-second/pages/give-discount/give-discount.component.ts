@@ -2,11 +2,9 @@ import { Component, Input } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 
-import { FeeService } from '../fee.service';
+import { FeeService } from '../../fee.service';
 
-import { FeeReceipt } from '../classes/common-functionalities';
-
-import { EmitterService } from '../../services/emitter.service';
+import { Concession } from '../../classes/common-functionalities';
 
 const APRIL = 'APRIL';
 const MAY = 'MAY';
@@ -23,9 +21,9 @@ const MARCH = 'MARCH';
 
 
 @Component({
-    selector: 'app-collect-fee',
-    templateUrl: './collect-fee.component.html',
-    styleUrls: ['./collect-fee.component.css'],
+    selector: 'app-give-discount',
+    templateUrl: './give-discount.component.html',
+    styleUrls: ['./give-discount.component.css'],
     providers: [ FeeService ],
     animations: [
         trigger('rotate', [
@@ -43,15 +41,19 @@ const MARCH = 'MARCH';
     ],
 })
 
-export class CollectFeeComponent {
+export class GiveDiscountComponent {
 
     @Input() user;
 
     selectedStudent: any;
 
-    studentFeeStatus: any;
+    studentFeeStatusList: any;
 
-    feeReceiptList: any;
+    showDetails: boolean;
+
+    showPreviousConcessionDetails: boolean;
+
+    concessionList: any;
 
     remark: string;
 
@@ -65,41 +67,41 @@ export class CollectFeeComponent {
         };
         this.selectedStudent = student;
         this.getStudentFeeStatus(data);
-        this.getStudentFeeReceiptList(data);
+        this.getStudentConcessionList(data);
     }
 
-    getStudentFeeReceiptList(data): void {
-        this.feeReceiptList = null;
-        this.feeService.getStudentFeeReceipts(data, this.user.jwt).then( feeReceiptList => {
+    getStudentConcessionList(data): void {
+        this.concessionList = null;
+        this.feeService.getStudentConcessionList(data, this.user.jwt).then(concessionList => {
             if (this.selectedStudent.dbId === data['studentDbId']) {
-                this.feeReceiptList = feeReceiptList;
-                console.log(this.feeReceiptList);
+                this.concessionList = concessionList;
+                console.log(this.concessionList);
             }
         });
     }
 
     getStudentFeeStatus(data: any): void {
         this.isLoading = true;
-        this.studentFeeStatus = null;
-        this.feeService.getStudentFeeStatus(data, this.user.jwt).then( studentFeeStatus => {
+        this.studentFeeStatusList = null;
+        this.feeService.getStudentFeeStatus(data, this.user.jwt).then( studentFeeStatusList => {
             this.isLoading = false;
-            if (this.selectedStudent.dbId === studentFeeStatus['studentDbId']) {
-                this.studentFeeStatus = studentFeeStatus;
-                this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
+            if (this.selectedStudent.dbId === data['studentDbId']) {
+                this.studentFeeStatusList = studentFeeStatusList;
+                this.studentFeeStatusList.forEach(sessionFeeStatus => {
                     sessionFeeStatus.componentList.forEach( component => {
                         component.showDetails = false;
                         if (component.frequency === 'ANNUALLY') {
-                            component.payment = 0;
+                            component.concession = 0;
                         } else if ( component.frequency === 'MONTHLY') {
                             component.monthList.forEach( componentMonthly => {
-                                componentMonthly.payment = 0;
+                                componentMonthly.concession = 0;
                             });
                         }
                     });
                 });
-                this.studentFeeStatus.showDetails = true;
-                this.studentFeeStatus.showPreviousFeeDetails = false;
-                // console.log(studentFeeStatus);
+                this.showDetails = true;
+                this.showPreviousConcessionDetails = false;
+                console.log(this.studentFeeStatusList);
             }
         }, error => {
             this.isLoading = false;
@@ -107,35 +109,35 @@ export class CollectFeeComponent {
         });
     }
 
-    generateFeeReceipt(): void {
+    generateConcession(): void {
 
         let data = {
-            studentDbId: this.studentFeeStatus.studentDbId,
-            remark: this.remark,
+            studentDbId: this.selectedStudent.dbId,
+            remark: (this.remark)?this.remark:null,
         };
 
-        data['subFeeReceiptList'] = [];
+        data['subConcessionList'] = [];
 
-        this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
+        this.studentFeeStatusList.forEach(sessionFeeStatus => {
             sessionFeeStatus.componentList.forEach( component => {
-                if (this.getComponentPayment(component)) {
-                    let subReceipt = {
+                if (this.getComponentConcession(component)) {
+                    let subConcession = {
                         componentDbId: component.dbId,
                         // feeType: component.feeType,
-                        amount: this.getComponentPayment(component),
+                        amount: this.getComponentConcession(component),
                         frequency: component.frequency,
                     };
                     if (component.frequency === 'MONTHLY') {
-                        subReceipt['monthList'] = [];
+                        subConcession['monthList'] = [];
                         component.monthList.forEach( componentMonthly => {
-                            let subReceiptMonthly = {
+                            let subConcessionMonthly = {
                                 month: componentMonthly.month,
-                                amount: this.getComponentMonthlyPayment(componentMonthly),
+                                amount: this.getComponentMonthlyConcession(componentMonthly),
                             };
-                            subReceipt['monthList'].push(subReceiptMonthly);
+                            subConcession['monthList'].push(subConcessionMonthly);
                         });
                     }
-                    data['subFeeReceiptList'].push(subReceipt);
+                    data['subConcessionList'].push(subConcession);
                 }
             });
         });
@@ -144,28 +146,26 @@ export class CollectFeeComponent {
 
         this.isLoading = true;
         this.remark = null;
-        this.feeService.createFeeReceipt(data, this.user.jwt).then( response => {
+        this.feeService.createConcession(data, this.user.jwt).then( response => {
             this.isLoading = false;
             alert(response['message']);
 
-            this.studentFeeStatus = response['studentFeeStatus'];
-            this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
+            this.studentFeeStatusList = response['studentFeeStatusList'];
+            this.studentFeeStatusList.forEach(sessionFeeStatus => {
                 sessionFeeStatus.componentList.forEach( component => {
                     component.showDetails = false;
                     if (component.frequency === 'ANNUALLY') {
-                        component.payment = 0;
+                        component.concession = 0;
                     } else if ( component.frequency === 'MONTHLY') {
                         component.monthList.forEach( componentMonthly => {
-                            componentMonthly.payment = 0;
+                            componentMonthly.concession = 0;
                         });
                     }
                 });
             });
-            this.studentFeeStatus.showDetails = false;
+            this.studentFeeStatusList.showDetails = false;
 
-            this.printFeeReceipt(response['feeReceipt']);
-
-            this.feeReceiptList.unshift(response['feeReceipt']);
+            this.concessionList.unshift(response['concession']);
 
         }, error => {
             this.isLoading = false;
@@ -173,14 +173,9 @@ export class CollectFeeComponent {
 
     }
 
-    printFeeReceipt(feeReceipt: any): void {
-        console.log(feeReceipt);
-        EmitterService.get('print-new-fee-receipt').emit(feeReceipt);
-    }
-
     showSessionFeesLine(): boolean {
         let number = 0;
-        this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
+        this.studentFeeStatusList.forEach(sessionFeeStatus => {
             if (this.getSessionFeesDue(sessionFeeStatus) > 0) {
                 number += 1;
             }
@@ -188,45 +183,49 @@ export class CollectFeeComponent {
         return number > 1;
     }
 
-    getFeeReceiptTotalAmount(feeReceipt: any): number {
-        return FeeReceipt.getFeeReceiptTotalAmount(feeReceipt);
+    getConcessionListTotalAmount(): number {
+        return Concession.getConcessionListTotalAmount(this.concessionList);
     }
 
-    // Student Payment & Fee
+    getConcessionTotalAmount(concession: any): number {
+        return Concession.getConcessionTotalAmount(concession);
+    }
+
+    // Student Concession & Fee
     toggleStudentFeeDetails(): void {
-        if (this.studentFeeStatus.showDetails) {
-            this.studentFeeStatus.showDetails = false;
+        if (this.studentFeeStatusList.showDetails) {
+            this.studentFeeStatusList.showDetails = false;
         } else {
-            this.studentFeeStatus.showDetails = true;
+            this.studentFeeStatusList.showDetails = true;
         }
     }
 
-    handleStudentPaymentChange(payment: number): void {
-        if (payment === null) payment = 0;
-        let amountLeft = payment;
-        this.studentFeeStatus.sessionFeeStatusList.forEach( sessionFeeStatus => {
+    handleStudentConcessionChange(concession: number): void {
+        if (concession === null) concession = 0;
+        let amountLeft = concession;
+        this.studentFeeStatusList.forEach(sessionFeeStatus => {
             let amountDue = this.getSessionFeesDue(sessionFeeStatus);
             if(amountDue > amountLeft) {
-                this.handleSessionPaymentChange(sessionFeeStatus, amountLeft);
+                this.handleSessionConcessionChange(sessionFeeStatus, amountLeft);
                 amountLeft = 0;
             } else {
-                this.handleSessionPaymentChange(sessionFeeStatus, amountDue);
+                this.handleSessionConcessionChange(sessionFeeStatus, amountDue);
                 amountLeft -= amountDue;
             }
         });
     }
 
-    getStudentPayment(): number {
-        let payment = 0;
-        this.studentFeeStatus.sessionFeeStatusList.forEach(sessionFeeStatus => {
-            payment += this.getSessionPayment(sessionFeeStatus);
+    getStudentConcession(): number {
+        let concession = 0;
+        this.studentFeeStatusList.forEach(sessionFeeStatus => {
+            concession += this.getSessionConcession(sessionFeeStatus);
         });
-        return payment;
+        return concession;
     }
 
     getStudentTotalFee(): number {
         let amount = 0;
-        this.studentFeeStatus.sessionFeeStatusList.forEach(sessionFeeStatus => {
+        this.studentFeeStatusList.forEach(sessionFeeStatus => {
             if (this.getSessionFeesDue(sessionFeeStatus) > 0) {
                 amount += this.getSessionTotalFee(sessionFeeStatus);
             }
@@ -236,44 +235,44 @@ export class CollectFeeComponent {
 
     getStudentFeesDue(): number {
         let amountDue = 0;
-        this.studentFeeStatus.sessionFeeStatusList.forEach(sessionFeeStatus => {
+        this.studentFeeStatusList.forEach(sessionFeeStatus => {
             amountDue += this.getSessionFeesDue(sessionFeeStatus);
         });
         return amountDue;
     }
 
-    policeStudentPaymentInput(event: any): boolean {
+    policeStudentConcessionInput(event: any): boolean {
         if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
             event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
             event.key !== '8' && event.key !== '9') {
             return false;
         }
         let studentFeesDue = this.getStudentFeesDue();
-        let payment = Number(event.srcElement.value+''+event.key);
-        if (payment > studentFeesDue) {
+        let concession = Number(event.srcElement.value+''+event.key);
+        if (concession > studentFeesDue) {
             event.srcElement.value = studentFeesDue;
-            this.handleStudentPaymentChange(Number(event.srcElement.value));
+            this.handleStudentConcessionChange(Number(event.srcElement.value));
             return false;
         }
         return true;
     }
 
 
-    // Session Payment & Fee
-    handleSessionPaymentChange(sessionFeeStatus: any, payment: number): void {
-        if (payment === null) payment = 0;
-        let amountLeft = payment;
+    // Session Concession & Fee
+    handleSessionConcessionChange(sessionFeeStatus: any, concession: number): void {
+        if (concession === null) concession = 0;
+        let amountLeft = concession;
 
         // handle Annual Components
         sessionFeeStatus.componentList.forEach(component => {
             if (component.frequency === 'ANNUALLY') {
                 let amountDue = this.getComponentFeesDue(component);
                 if(amountDue > amountLeft) {
-                    this.handleComponentPaymentChange(component, amountLeft);
+                    this.handleComponentConcessionChange(component, amountLeft);
                     amountLeft = 0;
                 } else {
                     amountLeft -= amountDue;
-                    this.handleComponentPaymentChange(component, amountDue);
+                    this.handleComponentConcessionChange(component, amountDue);
                 }
             }
         });
@@ -284,10 +283,10 @@ export class CollectFeeComponent {
                 if (component.frequency === 'MONTHLY') {
                     let amountDue = component.monthList[i].amountDue;
                     if (amountDue > amountLeft) {
-                        component.monthList[i].payment = amountLeft;
+                        component.monthList[i].concession = amountLeft;
                         amountLeft = 0;
                     } else {
-                        component.monthList[i].payment = amountDue;
+                        component.monthList[i].concession = amountDue;
                         amountLeft -= amountDue;
                     }
                 }
@@ -295,12 +294,12 @@ export class CollectFeeComponent {
         }
     }
 
-    getSessionPayment(sessionFeeStatus: any): number {
-        let payment = 0;
+    getSessionConcession(sessionFeeStatus: any): number {
+        let concession = 0;
         sessionFeeStatus.componentList.forEach(component => {
-            payment += this.getComponentPayment(component);
+            concession += this.getComponentConcession(component);
         });
-        return payment;
+        return concession;
     }
 
     getSessionTotalFee(sessionFeeStatus: any): number {
@@ -319,57 +318,57 @@ export class CollectFeeComponent {
         return amountDue;
     }
 
-    policeSessionPaymentInput(sessionFeeStatus: any, event: any): boolean {
+    policeSessionConcessionInput(sessionFeeStatus: any, event: any): boolean {
         if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
             event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
             event.key !== '8' && event.key !== '9') {
             return false;
         }
         let sessionFeesDue = this.getSessionFeesDue(sessionFeeStatus);
-        let payment = Number(event.srcElement.value+''+event.key);
-        if (payment > sessionFeesDue) {
+        let concession = Number(event.srcElement.value+''+event.key);
+        if (concession > sessionFeesDue) {
             event.srcElement.value = sessionFeesDue;
-            this.handleSessionPaymentChange(sessionFeeStatus, Number(event.srcElement.value));
+            this.handleSessionConcessionChange(sessionFeeStatus, Number(event.srcElement.value));
             return false;
         }
         return true;
     }
 
-    // Component Payment & Fee
+    // Component Concession & Fee
     toggleComponentFeeDetails(component: any): void {
         component.showDetails = !component.showDetails;
     }
 
-    handleComponentPaymentChange(component: any, payment: number): void {
-        if (payment === null) payment = 0;
-        let amountLeft = payment;
+    handleComponentConcessionChange(component: any, concession: number): void {
+        if (concession === null) concession = 0;
+        let amountLeft = concession;
         if (component.frequency === 'ANNUALLY') {
-            component.payment = payment;
+            component.concession = concession;
         } else if (component.frequency === 'MONTHLY') {
             component.monthList.forEach(componentMonthly => {
                 let amountDue = componentMonthly.amountDue;
                 if (amountDue > amountLeft) {
-                    componentMonthly.payment = amountLeft;
+                    componentMonthly.concession = amountLeft;
                     amountLeft = 0;
                 } else {
-                    componentMonthly.payment = amountDue;
+                    componentMonthly.concession = amountDue;
                     amountLeft -= amountDue;
                 }
             });
         }
     }
 
-    getComponentPayment(component: any): number {
-        let payment = 0;
+    getComponentConcession(component: any): number {
+        let concession = 0;
         if (component.frequency === 'ANNUALLY') {
-            payment = component.payment;
+            concession = component.concession;
         } else if (component.frequency === 'MONTHLY') {
             component.monthList.forEach( componentMonthly => {
-                // payment += componentMonthly.payment;
-                payment += this.getComponentMonthlyPayment(componentMonthly);
+                // concession += componentMonthly.concession;
+                concession += this.getComponentMonthlyConcession(componentMonthly);
             });
         }
-        return payment;
+        return concession;
     }
 
     getComponentTotalFee(component: any): number {
@@ -398,17 +397,17 @@ export class CollectFeeComponent {
         return amountDue;
     }
 
-    policeComponentPaymentInput(component: any, event: any): boolean {
+    policeComponentConcessionInput(component: any, event: any): boolean {
         if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
             event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
             event.key !== '8' && event.key !== '9') {
             return false;
         }
         let componentFeesDue = this.getComponentFeesDue(component);
-        let payment = Number(event.srcElement.value+''+event.key);
-        if (payment > componentFeesDue) {
+        let concession = Number(event.srcElement.value+''+event.key);
+        if (concession > componentFeesDue) {
             event.srcElement.value = componentFeesDue;
-            this.handleComponentPaymentChange(component, Number(event.srcElement.value));
+            this.handleComponentConcessionChange(component, Number(event.srcElement.value));
             return false;
         }
         return true;
@@ -416,8 +415,8 @@ export class CollectFeeComponent {
 
 
     // Component Monthly Fee
-    getComponentMonthlyPayment(componentMonthly: any): number {
-        return componentMonthly.payment;
+    getComponentMonthlyConcession(componentMonthly: any): number {
+        return componentMonthly.concession;
     }
 
     getComponentMonthlyTotalFee(componentMonthly: any): number {

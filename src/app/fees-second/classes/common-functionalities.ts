@@ -10,3 +10,23 @@ export class FeeReceipt {
     }
 
 }
+
+export class Concession {
+
+    static getConcessionListTotalAmount(concessionList: any): number {
+        let amount = 0;
+        concessionList.forEach(concession => {
+            amount += Concession.getConcessionTotalAmount(concession);
+        });
+        return amount;
+    }
+
+    static getConcessionTotalAmount(concession: any): number {
+        let amount = 0;
+        concession['subConcessionList'].forEach( subConcession => {
+            amount += subConcession.amount;
+        });
+        return amount;
+    }
+
+}

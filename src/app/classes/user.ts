@@ -68,14 +68,14 @@ export class User {
             ] },
         { path: 'fees', title: 'Fees',  icon: 'receipt', class: '', showSubsection: false,
             subsection: [
-                {
+                /*{
                     path: 'new_fees',
                     title: 'Submit Fee',
                 },
                 {
                     path: 'fees_list',
                     title: 'Previous Record',
-                },
+                },*/
                 {
                     path: 'collect_fee',
                     title: 'Collect Fee',
@@ -84,6 +84,22 @@ export class User {
                     path: 'total_fee_collection',
                     title: 'Total Collection',
                 },
+                {
+                    path: 'update_student_fees',
+                    title: 'Update Student Fees',
+                },
+                {
+                    path: 'give_discount',
+                    title: 'Give Discount',
+                },
+                {
+                    path: 'total_discount',
+                    title: 'Total Discount',
+                },
+                {
+                    path: 'set_school_fees',
+                    title: 'Set School Fees',
+                }
             ] },
         { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
@@ -96,7 +112,7 @@ export class User {
                     title: 'View Record',
                 }
             ] },
-        { path: 'concession', title: 'Concession', icon: 'dashboard', class: '', showSubsection: false,
+        /*{ path: 'concession', title: 'Concession', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {
                     path: 'new_concession',
@@ -106,7 +122,7 @@ export class User {
                     path: 'concession_list',
                     title: 'Previous Discounts',
                 }
-            ] },
+            ] },*/
         { path: 'marksheet', title: 'Marksheet', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {

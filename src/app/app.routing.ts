@@ -3,7 +3,7 @@ import { CommonModule, } from '@angular/common';
 import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
-import { FeesListComponent } from './fees/fees-list/fees-list.component';
+// import { FeesListComponent } from './fees/fees-list/fees-list.component';
 /*import { UserProfileComponent } from './user-profile/user-profile.component';
 import { TableListComponent } from './table-list/table-list.component';
 import { TypographyComponent } from './typography/typography.component';
@@ -17,15 +17,15 @@ import { StudentListComponent } from './student-list/student-list.component';*/
 import { NewStudentComponent } from './new-student/new-student.component';
 import { LoginComponent } from './authentication/login.component';
 // import {ExpensesComponent} from './expenses/expenses.component';
-import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
+// import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent},
-    { path: 'fees',      component: FeesListComponent },
+    // { path: 'fees',      component: FeesListComponent },
     // { path: 'students', component: StudentComponent },
     { path: 'new_student', component: NewStudentComponent },
     // { path: 'expenses', component: ExpensesComponent },
-    { path: 'concession', component: ConcessionListComponent },
+    // { path: 'concession', component: ConcessionListComponent },
     /*{ path: '',          redirectTo: 'students', pathMatch: 'full' },*/
 
     /*{ path: 'user-profile',   component: UserProfileComponent },

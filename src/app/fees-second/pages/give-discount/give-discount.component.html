@@ -1,0 +1,184 @@
+<div class="main-content">
+    <div class="container-fluid">
+
+        <div class="card" style="min-height: 100%">
+            <div class="card-header" [attr.data-background-color]="user.color">
+                <h4 class="title">Give Discount</h4>
+            </div>
+            <div class="card-content">
+
+                <app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter>
+
+                <ng-container *ngIf="studentFeeStatusList && !isLoading">
+
+                    <ng-container *ngIf="getStudentFeesDue()>0">
+                        <div class="row">
+                            <div class="col-md-2 col-md-offset-5">
+                                Concession
+                            </div>
+                            <div class="col-md-2">
+                                Due
+                            </div>
+                            <div class="col-md-2">
+                                Total
+                            </div>
+                        </div>
+                        <div class="row" style="font-weight: 800 !important;">
+                            <div class="col-md-5">
+                                {{selectedStudent.name}}
+                            </div>
+                            <div class="col-md-2">
+                                <input class='concessionInput'
+                                       type="number" min="0"
+                                       [attr.max]="getStudentFeesDue()"
+                                       [ngModel]="getStudentConcession()==0?null:getStudentConcession()"
+                                       (keypress)="policeStudentConcessionInput($event)"
+                                       (ngModelChange)="handleStudentConcessionChange($event);">
+                            </div>
+                            <div class="col-md-2">
+                                {{getStudentFeesDue()-getStudentConcession()}}
+                            </div>
+                            <div class="col-md-2">
+                                {{getStudentTotalFee()}}
+                            </div>
+                            <div class="col-md-1">
+                                <i class="material-icons"
+                                   [@rotate]="!showDetails"
+                                   (click)="showDetails = !showDetails">keyboard_arrow_down</i>
+                            </div>
+                        </div>
+                        <div [@slideDown]="showDetails">
+                            <ng-container *ngFor="let sessionFeeStatus of studentFeeStatusList; let i=index;">
+                                <ng-container  *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
+                                    <div class="row"
+                                         style="font-weight: 500 !important;"
+                                         *ngIf="showSessionFeesLine()">
+                                        <div class="col-md-5">
+                                            {{i+1}}. {{sessionFeeStatus.sessionName}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input class='concessionInput'
+                                                   type="number" min="0"
+                                                   [attr.max]="getSessionFeesDue(sessionFeeStatus)"
+                                                   [ngModel]="getSessionConcession(sessionFeeStatus)==0?null:getSessionConcession(sessionFeeStatus)"
+                                                   (keypress)="policeSessionConcessionInput(sessionFeeStatus, $event)"
+                                                   (ngModelChange)="handleSessionConcessionChange(sessionFeeStatus, $event);">
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{getStudentFeesDue()-getStudentConcession()}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{getSessionTotalFee(sessionFeeStatus)}}
+                                        </div>
+                                    </div>
+                                    <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
+                                        <div class="row" style="font-weight: 500 !important;">
+                                            <div class="col-md-4 col-md-offset-1">
+                                                {{i+1}}. {{component.feeType}}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class='concessionInput'
+                                                       type="number" min="0"
+                                                       [attr.max]="getComponentFeesDue(component)"
+                                                       [ngModel]="getComponentConcession(component)==0?null:getComponentConcession(component)"
+                                                       (keypress)="policeComponentConcessionInput(component, $event)"
+                                                       (ngModelChange)="handleComponentConcessionChange(component, $event);">
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{getComponentFeesDue(component)-getComponentConcession(component)}}
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{getComponentTotalFee(component)}}
+                                            </div>
+                                            <div class="col-md-1" *ngIf="component.frequency == 'MONTHLY'">
+                                                <i class="material-icons"
+                                                   [@rotate]="!component.showDetails"
+                                                   (click)="component.showDetails = !component.showDetails">keyboard_arrow_down</i>
+                                            </div>
+                                        </div>
+                                        <div  [@slideDown]="component.showDetails" *ngIf="component.frequency == 'MONTHLY'">
+                                            <ng-container *ngFor="let month of component.monthList">
+                                                <div class="row"
+                                                     *ngIf="getComponentMonthlyTotalFee(month)>0"
+                                                     style="font-weight: 300 !important;">
+                                                    <div class="col-md-3 col-md-offset-2">
+                                                        {{month.month}}
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        {{getComponentMonthlyConcession(month)}}
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        {{getComponentMonthlyFeesDue(month)-getComponentMonthlyConcession(month)}}
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        {{getComponentMonthlyTotalFee(month)}}
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                        <br/>
+                        <div class="row" *ngIf="getStudentConcession()>0">
+                            <div class="col-md-3">
+                                <div class="form-group form-black label-floating">
+                                    <label class="control-label">Remark</label>
+                                    <input type="text" class="form-control" [(ngModel)]="remark">
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <button class="btn btn-{{user.btn_color}}"
+                                        (click)="generateConcession()">
+                                    Give Concession ({{getStudentConcession()}})
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="getStudentTotalFee() === 0">
+                        **No Fees Due to give concession
+                    </ng-container>
+
+                    <ng-container *ngIf="concessionList">
+                        <div *ngIf="concessionList.length !== 0">
+                            <div class="row" style="font-weight: 800 !important;">
+                                <div class="col-md-11">
+                                    <!-- span *ngIf="!showPreviousFeeDetails">
+                                        Last Concession: <i>{{concessionList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>, Amount: <i>{{getConcessionTotalAmount(concessionList[0])}}</i>
+                                    </span>
+                                    <span *ngIf="showPreviousFeeDetails">Previous Concession Details</span -->
+                                    <span>Total discount given till now: <i>{{getConcessionListTotalAmount()}}</i></span>
+                                </div>
+                                <div class="col-md-1">
+                                    <i class="material-icons"
+                                       [@rotate]="!showPreviousConcessionDetails"
+                                       (click)="showPreviousConcessionDetails = !showPreviousConcessionDetails">keyboard_arrow_down</i>
+                                </div>
+                            </div>
+                            <div class="row" [@slideDown]="showPreviousConcessionDetails">
+                                <div class="col-md-12">
+                                    <app-discount-list [user]="user"
+                                                         [concessionList]="concessionList"
+                                                         [whileSubmittingConcession]="true"></app-discount-list>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="concessionList.length == 0">
+                            **No concession given yet
+                        </div>
+
+                    </ng-container>
+
+                </ng-container>
+
+                <ng-container *ngIf="isLoading || isListLoading">
+                    <app-loading-spinner [user]="user"></app-loading-spinner>
+                </ng-container>
+
+            </div>
+        </div>
+
+    </div>
+</div>

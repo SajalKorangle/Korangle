@@ -9,22 +9,53 @@ import { URLSearchParams } from '@angular/http';
 @Injectable()
 export class FeeService extends CommonServiceRequirements {
 
+    //Fee Type
+    getFeeTypeList(token: string): Promise<any> {
+        return super.getData(token, '/fee-second/fee-types');
+    }
+
+    // Student Fee Status
     getStudentFeeStatus(data: any, token: string): Promise<any> {
         return super.getData(token, '/fee-second/student/' + data['studentDbId'] + '/fee-status');
     }
 
+    updateStudentFeeStatus(data: any, token: string): Promise<any> {
+        return super.postData(data['studentFeeStatus'], token, '/fee-second/student/' + data['studentDbId'] + '/fee-status');
+    }
+
+    getStudentSessionFeeStatus(data: any, token: string): Promise<any> {
+        return super.getData(token, '/fee-second/student/' + data['studentDbId'] + '/fee-status?session_id=' + data['sessionDbId']);
+    }
+
+    // Fee Receipt
     createFeeReceipt(data: any, token: string): Promise<any> {
         return super.postData(data, token, '/fee-second/student/' + data['studentDbId'] + '/fee-receipts');
     }
 
-    getStudentFeeReceipts(data: any, token: string): Promise<any> {
+    getStudentFeeReceiptList(data: any, token: string): Promise<any> {
         return super.getData(token, '/fee-second/student/' + data['studentDbId'] + '/fee-receipts');
     }
 
-    getSchoolFeeReceipts(data: any, token: string): Promise<any> {
+    getSchoolFeeReceiptList(data: any, token: string): Promise<any> {
         return super.getData(token, '/fee-second/school/'
             + data['schoolDbId']
             + '/fee-receipts?startDate=' + data['startDate']
+            + '&endDate=' + data['endDate']);
+    }
+
+    // Concession
+    createConcession(data: any, token: string): Promise<any> {
+        return super.postData(data, token, '/fee-second/student/' + data['studentDbId'] + '/concessions');
+    }
+
+    getStudentConcessionList(data: any, token: string): Promise<any> {
+        return super.getData(token, '/fee-second/student/' + data['studentDbId'] + '/concessions');
+    }
+
+    getSchoolConcessionList(data: any, token: string): Promise<any> {
+        return super.getData(token, '/fee-second/school/'
+            + data['schoolDbId']
+            + '/concessions?startDate=' + data['startDate']
             + '&endDate=' + data['endDate']);
     }
 

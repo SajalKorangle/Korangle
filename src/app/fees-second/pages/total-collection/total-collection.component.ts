@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 
-import { FeeService } from '../fee.service';
+import { FeeService } from '../../fee.service';
 
-import { FeeReceipt } from '../classes/common-functionalities';
+import { FeeReceipt } from '../../classes/common-functionalities';
 
-import {EmitterService} from '../../services/emitter.service';
+import {EmitterService} from '../../../services/emitter.service';
 
 @Component({
   selector: 'app-total-collection',
@@ -47,7 +47,7 @@ export class TotalCollectionComponent {
         };
         this.isLoading = true;
         this.feeReceiptList = null;
-        this.feeService.getSchoolFeeReceipts(data, this.user.jwt).then(feeReceiptList => {
+        this.feeService.getSchoolFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
             this.isLoading = false;
             this.feeReceiptList = feeReceiptList;
             console.log(this.feeReceiptList);

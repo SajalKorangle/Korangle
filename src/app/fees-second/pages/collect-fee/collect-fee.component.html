@@ -9,7 +9,7 @@
 
                 <app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter>
 
-                <ng-container *ngIf="studentFeeStatus && !isLoading">
+                <ng-container *ngIf="studentFeeStatusList && !isLoading">
 
                     <ng-container *ngIf="getStudentFeesDue()>0">
                         <div class="row">
@@ -43,12 +43,12 @@
                             </div>
                             <div class="col-md-1">
                                 <i class="material-icons"
-                                   [@rotate]="!studentFeeStatus.showDetails"
-                                   (click)="studentFeeStatus.showDetails = !studentFeeStatus.showDetails">keyboard_arrow_down</i>
+                                   [@rotate]="!showDetails"
+                                   (click)="showDetails = !showDetails">keyboard_arrow_down</i>
                             </div>
                         </div>
-                        <div [@slideDown]="studentFeeStatus.showDetails">
-                            <ng-container *ngFor="let sessionFeeStatus of studentFeeStatus.sessionFeeStatusList; let i=index;">
+                        <div [@slideDown]="showDetails">
+                            <ng-container *ngFor="let sessionFeeStatus of studentFeeStatusList; let i=index;">
                                 <ng-container  *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
                                     <div class="row"
                                          style="font-weight: 500 !important;"
@@ -145,7 +145,7 @@
                                                                [@rotate]="!studentFeeStatus.showDetails"
                                                                (click)="toggleStudentFeeDetails();">keyboard_arrow_down</i></td>
                                 </tr>
-                                <ng-container *ngFor="let sessionFeeStatus of studentFeeStatus.sessionFeeStatusList; let i=index;">
+                                <ng-container *ngFor="let sessionFeeStatus of studentFeeStatusList; let i=index;">
                                     <ng-container *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
                                         <tr>
                                             <td>{{i+1}}.</td>
@@ -218,18 +218,18 @@
                         <div *ngIf="feeReceiptList.length !== 0">
                             <div class="row" style="font-weight: 800 !important;">
                                 <div class="col-md-11">
-                                    <span *ngIf="!studentFeeStatus.showPreviousFeeDetails">
+                                    <span *ngIf="!showPreviousFeeDetails">
                                         Last Receipt Date: <i>{{feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>, Amount: <i>{{getFeeReceiptTotalAmount(feeReceiptList[0])}}</i>
                                     </span>
-                                    <span *ngIf="studentFeeStatus.showPreviousFeeDetails">Previous Fee Details</span>
+                                    <span *ngIf="showPreviousFeeDetails">Previous Fee Details</span>
                                 </div>
                                 <div class="col-md-1">
                                     <i class="material-icons"
-                                       [@rotate]="!studentFeeStatus.showPreviousFeeDetails"
-                                       (click)="studentFeeStatus.showPreviousFeeDetails = !studentFeeStatus.showPreviousFeeDetails">keyboard_arrow_down</i>
+                                       [@rotate]="!showPreviousFeeDetails"
+                                       (click)="showPreviousFeeDetails = !showPreviousFeeDetails">keyboard_arrow_down</i>
                                 </div>
                             </div>
-                            <div class="row" [@slideDown]="studentFeeStatus.showPreviousFeeDetails">
+                            <div class="row" [@slideDown]="showPreviousFeeDetails">
                                 <div class="col-md-12">
                                     <app-fee-receipt-list [user]="user"
                                                           [feeReceiptList]="feeReceiptList"

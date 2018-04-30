@@ -1,0 +1,131 @@
+<div class="main-content">
+    <div class="container-fluid">
+
+        <div class="card" style="min-height: 100%">
+            <div class="card-header" [attr.data-background-color]="user.color">
+                <h4 class="title">Update Student Fees</h4>
+            </div>
+            <div class="card-content">
+
+                <app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter>
+
+                <ng-container *ngIf="studentFeeStatus && !isLoading">
+
+                    <!-- div class="row" style="font-weight: 500 !important;">
+                        <div class="col-md-3">
+                            FeeType
+                        </div>
+                        <div class="col-md-2">
+                            Paid/Exempted
+                        </div>
+                        <div class="col-md-2">
+                            School Fee
+                        </div>
+                        <div class="col-md-2">
+                            Student Fee Initial Value
+                        </div>
+                        <div class="col-md-2">
+                            Student Fee Final Value
+                        </div>
+                    </div>
+
+                    <ng-container *ngFor="let component of studentFeeStatus.componentList">
+                        <div class="row">
+                            <div class="col-md-3">{{component.feeType}}</div>
+                            <div class="col-md-2">{{getComponentTotalFeeInitialValue(component)-getComponentFeesDue(component)}}</div>
+                            <div class="col-md-2">{{getComponentSchoolTotalFee(component)}}</div>
+                            <div class="col-md-2">{{getComponentTotalFeeInitialValue(component)}}</div>
+                            <div class="col-md-2" *ngIf="component.frequency=='ANNUALLY'">
+                                <input class='paymentInput'
+                                       type="number"
+                                       [attr.min]="getComponentTotalFeeInitialValue(component)-getComponentFeesDue(component)"
+                                       [(ngModel)]="component.amount"
+                                       (blur)="policeComponentTotalFeeInput(component, $event)">
+                            </div>
+                        </div>
+                        <ng-container *ngIf="component.frequency=='MONTHLY'">
+                            <ng-container *ngFor="let monthlyComponent of component.monthList">
+                                <div class="row">
+                                    <div class="col-md-2 col-md-offset-1">{{monthlyComponent.month}}</div>
+                                    <div class="col-md-2">{{getComponentMonthlyTotalFeeInitialValue(monthlyComponent)-getComponentMonthlyFeesDue(monthlyComponent)}}</div>
+                                    <div class="col-md-2">{{getComponentMonthlySchoolTotalFee(monthlyComponent)}}</div>
+                                    <div class="col-md-2">{{getComponentMonthlyTotalFeeInitialValue(monthlyComponent)}}</div>
+                                    <div class="col-md-2">
+                                        <input class='paymentInput'
+                                               type="number"
+                                               [attr.min]="getComponentMonthlyTotalFeeInitialValue(monthlyComponent)-getComponentMonthlyFeesDue(monthlyComponent)"
+                                               [(ngModel)]="monthlyComponent.amount"
+                                               (blur)="policeComponentMonthlyTotalFeeInput(monthlyComponent, $event)">
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container -->
+
+                    <table class="table table-hover" style="font-weight: 800 !important;">
+                        <thead class="text-{{user.btn_color}}">
+                            <tr>
+                                <th colspan='2'>Fee Type</th>
+                                <th class="text-right">Paid & Exempted</th>
+                                <th class="text-right">SchoolFee</th>
+                                <th class="text-right">Student Fee Initial Value</th>
+                                <th class="text-right" style="padding-right: 25px;">Student Fee Final Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let component of studentFeeStatus.componentList">
+                                <tr [class.backgroundHighlight]="getComponentTotalFeeInitialValue(component)-getComponentTotalFeeFinalValue(component)">
+                                    <td colspan='2'>{{component.feeType}}</td>
+                                    <td class="text-right">{{getComponentTotalFeeInitialValue(component)-getComponentFeesDue(component)}}</td>
+                                    <td class="text-right">{{getComponentSchoolTotalFee(component)}}</td>
+                                    <td class="text-right">{{getComponentTotalFeeInitialValue(component)}}</td>
+                                    <td class="text-right" *ngIf="component.frequency=='ANNUALLY'">
+                                        <input class='paymentInput'
+                                               type="number"
+                                               [attr.min]="getComponentTotalFeeInitialValue(component)-getComponentFeesDue(component)"
+                                               [(ngModel)]="component.amount"
+                                               (blur)="policeComponentTotalFeeInput(component, $event)">
+                                    </td>
+                                    <td class="text-right" style="padding-right: 25px;" *ngIf="component.frequency=='MONTHLY'">
+                                        {{getComponentTotalFeeFinalValue(component)}}
+                                    </td>
+                                </tr>
+                                <ng-container *ngIf="component.frequency=='MONTHLY'">
+                                    <ng-container *ngFor="let monthlyComponent of component.monthList">
+                                        <tr [class.backgroundHighlight]="getComponentMonthlyTotalFeeInitialValue(monthlyComponent)-monthlyComponent.amount">
+                                            <td class="text-right"></td>
+                                            <td class="text-right">{{monthlyComponent.month}}</td>
+                                            <td class="text-right">{{getComponentMonthlyTotalFeeInitialValue(monthlyComponent)-getComponentMonthlyFeesDue(monthlyComponent)}}</td>
+                                            <td class="text-right">{{getComponentMonthlySchoolTotalFee(monthlyComponent)}}</td>
+                                            <td class="text-right">{{getComponentMonthlyTotalFeeInitialValue(monthlyComponent)}}</td>
+                                            <td class="text-right">
+                                                <input class='paymentInput'
+                                                       type="number"
+                                                       [attr.min]="getComponentMonthlyTotalFeeInitialValue(monthlyComponent)-getComponentMonthlyFeesDue(monthlyComponent)"
+                                                       [(ngModel)]="monthlyComponent.amount"
+                                                       (blur)="policeComponentMonthlyTotalFeeInput(monthlyComponent, $event)">
+                                            </td>
+                                         </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </tbody>
+                    </table>
+
+                    <button class="btn btn-{{user.btn_color}}"
+                            *ngIf="getStudentTotalFeeInitialValue()!=getStudentTotalFeeFinalValue()"
+                            (click)="updateStudentFees()">
+                        Update
+                    </button>
+
+                </ng-container>
+
+                <ng-container *ngIf="isLoading || isListLoading">
+                    <app-loading-spinner [user]="user"></app-loading-spinner>
+                </ng-container>
+
+            </div>
+        </div>
+
+    </div>
+</div>

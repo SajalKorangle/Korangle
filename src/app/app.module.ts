@@ -22,6 +22,7 @@ import { ComponentsModule } from './components/components.module';
 
 import { AppComponent } from './app.component';
 
+
 import { StudentProfileComponent } from './students/student-profile/student-profile.component';
 import { StudentListComponent } from './students/student-list/student-list.component';
 // import { PromoteStudentComponent } from './students/promote-student/promote-student.component';
@@ -30,22 +31,27 @@ import { NewStudentComponent } from './new-student/new-student.component';
 
 import { LoginComponent } from './authentication/login.component';
 
-import { NewFeeReceiptComponent } from './modal/new-fee-receipt/new-fee-receipt.component';
-import { NewFeesComponent } from './fees/new-fees/new-fees.component';
-import { FeesListComponent } from './fees/fees-list/fees-list.component';
+// import { NewFeeReceiptComponent } from './modal/new-fee-receipt/new-fee-receipt.component';
+// import { NewFeesComponent } from './fees/new-fees/new-fees.component';
+// import { FeesListComponent } from './fees/fees-list/fees-list.component';
 
-import { CollectFeeComponent } from './fees-second/collect-fee/collect-fee.component';
-import {FeeReceiptListComponent} from './fees-second/fees-table/fee-receipt-list.component';
-import { TotalCollectionComponent } from './fees-second/total-collection/total-collection.component';
+import { CollectFeeComponent } from './fees-second/pages/collect-fee/collect-fee.component';
+import {FeeReceiptListComponent} from './fees-second/components/fees-table/fee-receipt-list.component';
+import { TotalCollectionComponent } from './fees-second/pages/total-collection/total-collection.component';
+import { UpdateStudentFeesComponent } from './fees-second/pages/update-student-fees/update-student-fees.component';
+import { GiveDiscountComponent } from './fees-second/pages/give-discount/give-discount.component';
+import { DiscountListComponent } from './fees-second/components/discount-table/discount-list.component';
+import { TotalDiscountComponent } from './fees-second/pages/total-discount/total-discount.component';
+import { SetSchoolFeesComponent } from './fees-second/pages/set-school-fees/set-school-fees.component';
 
-import { FeesTableComponent } from './fees/fees-table/fees-table.component';
+// import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 import { NewExpenseComponent } from './expenses/new-expense/new-expense.component';
 import { ExpenseListComponent } from './expenses/expense-list/expense-list.component';
 
-import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
-import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
+// import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
+// import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
 
 import { UpdateMarksComponent } from './marksheet/update-marks/update-marks.component';
 import { MarksheetComponent } from './marksheet/print-marksheet/marksheet.component';
@@ -74,23 +80,29 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
         /* Common Components */
         StudentFilterComponent,
 
-        FeesListComponent,
-        NewFeesComponent,
-        NewFeeReceiptComponent,
+        // FeesListComponent,
+        // NewFeesComponent,
+        // NewFeeReceiptComponent,
+
         FeeReceiptListComponent,
+        DiscountListComponent,
 
         CollectFeeComponent,
         TotalCollectionComponent,
+        UpdateStudentFeesComponent,
+        GiveDiscountComponent,
+        TotalDiscountComponent,
+        SetSchoolFeesComponent,
 
-        FeesTableComponent,
+        // FeesTableComponent,
         LoadingSpinnerComponent,
 
         // ExpensesComponent,
         NewExpenseComponent,
         ExpenseListComponent,
 
-        NewConcessionComponent,
-        ConcessionListComponent,
+        // NewConcessionComponent,
+        // ConcessionListComponent,
 
         UpdateMarksComponent,
         MarksheetComponent,
