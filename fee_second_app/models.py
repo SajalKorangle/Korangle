@@ -61,25 +61,25 @@ class FeeDefinition(models.Model):
 
     CLASS_BASED_FILTER = 'CLASS'
     BUS_STOP_BASED_FILTER = 'BUS STOP'
-    CLASS_BUS_STOP_BASED_FILTER = 'BOTH'
+    CLASS_BUS_STOP_BASED_FILTER = 'CLASS AND BUS STOP'
     NO_FILTER = 'NONE'
     FILTERTYPE = (
         (CLASS_BASED_FILTER, 'Class'),
         (BUS_STOP_BASED_FILTER, 'Bus Stop'),
-        (CLASS_BUS_STOP_BASED_FILTER, 'Both'),
+        (CLASS_BUS_STOP_BASED_FILTER, 'Class & Bus Stop'),
         (NO_FILTER, 'None')
     )
     filterType = models.CharField(max_length=9, choices=FILTERTYPE, null=False, default=NO_FILTER)
 
     MONTHLY_FREQUENCY = 'MONTHLY'
     QUATERLY_FREQUENCY = 'QUATERLY'
-    ANNUALLY_FREQUENCY = 'ANNUALLY'
+    YEARLY_FREQUENCY = 'YEARLY'
     FREQUENCY = (
         (MONTHLY_FREQUENCY, 'Monthly'),
         (QUATERLY_FREQUENCY, 'Quaterly'),
-        (ANNUALLY_FREQUENCY, 'Annually'),
+        (YEARLY_FREQUENCY, 'Yearly'),
     )
-    frequency = models.CharField(max_length=10, choices=FREQUENCY, null=False, default=ANNUALLY_FREQUENCY)
+    frequency = models.CharField(max_length=10, choices=FREQUENCY, null=False, default=YEARLY_FREQUENCY)
 
     class Meta:
         db_table = 'fee_definition'
@@ -176,10 +176,10 @@ class StudentFeeComponent(models.Model):
 
     @property
     def amountDue(self):
-        amountPaid = SubFeeReceipt.objects.filter(parentStudentFeeComponent=self).aggregate(Sum('amount'))['amount__sum']
+        amountPaid = SubFeeReceipt.objects.filter(parentStudentFeeComponent=self, parentFeeReceipt__cancelled=False).aggregate(Sum('amount'))['amount__sum']
         if amountPaid is None:
             amountPaid = 0
-        amountExempted = SubConcession.objects.filter(parentStudentFeeComponent=self).aggregate(Sum('amount'))['amount__sum']
+        amountExempted = SubConcession.objects.filter(parentStudentFeeComponent=self, parentConcessionSecond__cancelled=False).aggregate(Sum('amount'))['amount__sum']
         if amountExempted is None:
             amountExempted = 0
         return self.amount-amountPaid-amountExempted
@@ -260,15 +260,17 @@ class SubFeeReceiptMonthly(models.Model):
 
 
 ##### Concession ######
-class Concession(models.Model):
-    remark = models.TextField(verbose_name='remark')
+class ConcessionSecond(models.Model):
+    remark = models.TextField(null=True, verbose_name='remark')
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
+    cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
+    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
 
     class Meta:
         db_table = 'concession_second'
 
 class SubConcession(models.Model):
-    parentConcession = models.ForeignKey(Concession, models.PROTECT, default=0, verbose_name='parentConcession')
+    parentConcessionSecond = models.ForeignKey(ConcessionSecond, models.PROTECT, default=0, verbose_name='parentConcessionSecond')
     parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.PROTECT, default=0,
                                                   verbose_name='parentStudent')
     amount = models.IntegerField()

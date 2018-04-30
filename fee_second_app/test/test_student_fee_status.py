@@ -6,51 +6,39 @@ from student_app.models import Student
 
 from school_app.model.models import Session
 
-from fee_second_app.business.student_fee_status import get_student_fee_status, get_student_fee_status_by_session_id
+from fee_second_app.business.student_fee_status import get_student_fee_status_list, get_student_fee_status, update_student_fee_status
 
 from fee_second_app.models import FeeDefinition, StudentFeeComponent, StudentMonthlyFeeComponent, SubFeeReceipt, SubConcession
 
 class StudentFeeStatusTestCase(ParentTestCase):
 
-    def test_get_student_fee_status_for_given_session(self):
-
-        data = {}
-        data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
-        data['sessionDbId'] = Session.objects.all()[0].id
-
-        response = get_student_fee_status(data)
-
-        self.assertEqual(response['studentDbId'], data['studentDbId'])
-        self.assertEqual('feeStatus' in response, True)
-
-    def test_get_student_fee_status_for_all_sessions(self):
+    def test_get_student_fee_status_list(self):
 
         data = {}
         data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
 
-        response = get_student_fee_status(data)
-
-        self.assertEqual(response['studentDbId'], data['studentDbId'])
+        response = get_student_fee_status_list(data)
 
         session_queryset = StudentFeeComponent.objects.filter(parentStudent_id=data['studentDbId'])\
                 .values('parentFeeDefinition__parentSession').distinct().order_by('parentFeeDefinition__parentSession__orderNumber')
 
-        self.assertEqual(len(response['sessionFeeStatusList']), session_queryset.count())
+        self.assertEqual(len(response), session_queryset.count())
 
         sessionIndexCounter = 0
         for session_value in session_queryset:
-            self.assertEqual(response['sessionFeeStatusList'][sessionIndexCounter]['sessionDbId'],
+            self.assertEqual(response[sessionIndexCounter]['sessionDbId'],
                              session_value['parentFeeDefinition__parentSession'])
             sessionIndexCounter += 1
 
-    def test_get_student_fee_status_by_session_id(self):
+    def test_get_student_fee_status(self):
 
         data = {}
         data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
         data['sessionDbId'] = Session.objects.all()[0].id
 
-        response = get_student_fee_status_by_session_id(data['studentDbId'], data['sessionDbId'])
+        response = get_student_fee_status(data)
 
+        self.assertEqual(response['studentDbId'], data['studentDbId'])
         self.assertEqual(response['sessionDbId'], data['sessionDbId'])
         self.assertEqual(response['sessionName'], Session.objects.get(id=data['sessionDbId']).name)
 
@@ -70,7 +58,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
 
             self.assertEqual(response['componentList'][indexCounter]['frequency'], student_fee_component_object.parentFeeDefinition.frequency)
 
-            if student_fee_component_object.parentFeeDefinition.frequency == FeeDefinition.ANNUALLY_FREQUENCY:
+            if student_fee_component_object.parentFeeDefinition.frequency == FeeDefinition.YEARLY_FREQUENCY:
 
                 self.assertEqual(response['componentList'][indexCounter]['amount'], student_fee_component_object.amount)
                 self.assertEqual(response['componentList'][indexCounter]['schoolAmount'], student_fee_component_object.schoolAmount)
@@ -96,3 +84,35 @@ class StudentFeeStatusTestCase(ParentTestCase):
                     monthIndexCounter += 1
 
             indexCounter += 1
+
+    def test_update_student_fee_status(self):
+
+        data = {}
+        data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
+        data['sessionDbId'] = Session.objects.get(name='Session 2018-19').id
+
+        student_fee_status = get_student_fee_status(data)
+
+        for student_fee_component in student_fee_status['componentList']:
+
+            if student_fee_component['frequency'] == FeeDefinition.YEARLY_FREQUENCY:
+                student_fee_component['amount'] += 1000
+            elif student_fee_component['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
+                for student_monthly_fee_component in student_fee_component['monthList']:
+                    student_monthly_fee_component['amount'] += 1000
+
+        student_fee_status_changed = update_student_fee_status(student_fee_status)
+
+        index = 0
+
+        for student_fee_component in student_fee_status['componentList']:
+
+            if student_fee_component['frequency'] == FeeDefinition.YEARLY_FREQUENCY:
+                self.assertEqual(student_fee_status_changed['componentList'][index]['amount'],student_fee_component['amount'])
+            elif student_fee_component['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
+                monthIndex = 0
+                for student_monthly_fee_component in student_fee_component['monthList']:
+                    self.assertEqual(student_fee_status_changed['componentList'][index]['monthList'][monthIndex]['amount'], student_monthly_fee_component['amount'])
+                    monthIndex += 1
+
+            index += 1

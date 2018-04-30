@@ -367,7 +367,7 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
 
     fee_definition_object = FeeDefinition(parentSchool=school_object, parentSession=session_object,
                                           parentFeeType=fee_type_object, rteAllowed=True, orderNumber=1,
-                                          filterType=fee_second_app.models.FeeDefinition.NO_FILTER, frequency=fee_second_app.models.FeeDefinition.ANNUALLY_FREQUENCY)
+                                          filterType=fee_second_app.models.FeeDefinition.NO_FILTER, frequency=fee_second_app.models.FeeDefinition.YEARLY_FREQUENCY)
     fee_definition_object.save()
 
     SchoolFeeComponent = apps.get_model('fee_second_app', 'SchoolFeeComponent')
@@ -388,10 +388,11 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
 
             FeeReceipt = apps.get_model('fee_second_app', 'FeeReceipt')
             fee_receipt_object = FeeReceipt(receiptNumber=fee_object.receiptNumber,
-                                            generationDateTime=get_datetime_from_date(fee_object.generationDateTime),
                                             remark=fee_object.remark,
                                             cancelled=False,
                                             parentStudent=student_object)
+            fee_receipt_object.save()
+            fee_receipt_object.generationDateTime = get_datetime_from_date(fee_object.generationDateTime)
             fee_receipt_object.save()
 
             SubFeeReceipt = apps.get_model('fee_second_app', 'SubFeeReceipt')
@@ -401,15 +402,16 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
             sub_fee_receipt_object.save()
 
         Concession = apps.get_model('fee_app', 'Concession')
+        Concession_Second = apps.get_model('fee_second_app', 'ConcessionSecond')
         for concession_object in Concession.objects.filter(parentStudent=student_object):
 
-            Concession_Second = apps.get_model('fee_second_app', 'Concession')
-            concession_second_object = Concession_Second(remark=concession_object.remark,
-                                                         generationDateTime=get_datetime_from_date(concession_object.generationDateTime))
+            concession_second_object = Concession_Second(remark=concession_object.remark, parentStudent=student_object)
+            concession_second_object.save()
+            concession_second_object.generationDateTime=get_datetime_from_date(concession_object.generationDateTime)
             concession_second_object.save()
 
             SubConcession = apps.get_model('fee_second_app', 'SubConcession')
-            sub_concession_object = SubConcession(parentConcession=concession_second_object,
+            sub_concession_object = SubConcession(parentConcessionSecond=concession_second_object,
                                                   parentStudentFeeComponent=student_fee_component_object,
                                                   amount=concession_object.amount)
             sub_concession_object.save()
@@ -420,4 +422,4 @@ from datetime import datetime
 
 def get_datetime_from_date(date):
 
-    datetime.combine(date, datetime.min.time())
+    return str(datetime.combine(date, datetime.min.time())) + '+00:00'

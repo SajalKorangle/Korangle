@@ -2,7 +2,7 @@ from parent_test import ParentTestCase
 
 from student_app.models import Student
 
-from fee_second_app.business.student_fee_status import get_student_fee_status
+from fee_second_app.business.student_fee_status import get_student_fee_status_list
 from fee_second_app.business.fee_receipt import create_fee_receipt, get_fee_receipt_by_id, \
     get_fee_receipt_list_by_student_id, get_fee_receipt_list_by_school_id
 
@@ -111,16 +111,16 @@ class FeeReceiptTestCase(ParentTestCase):
 
         student_fee_status_request = {}
         student_fee_status_request['studentDbId'] = student_object.id
-        student_fee_status_response = get_student_fee_status(student_fee_status_request)
+        student_fee_status_list_response = get_student_fee_status_list(student_fee_status_request)
 
         create_fee_receipt_request = {}
         create_fee_receipt_request['studentDbId'] = student_object.id
         create_fee_receipt_request['remark'] = 'testing'
         create_fee_receipt_request['subFeeReceiptList'] = []
 
-        for session_fee_status_response in student_fee_status_response['sessionFeeStatusList']:
+        for session_fee_status_response in student_fee_status_list_response:
             for component_fee_status_response in session_fee_status_response['componentList']:
-                if component_fee_status_response['frequency'] == FeeDefinition.ANNUALLY_FREQUENCY:
+                if component_fee_status_response['frequency'] == FeeDefinition.YEARLY_FREQUENCY:
                     if component_fee_status_response['amountDue'] > 0:
                         subFeeReceipt = {}
                         subFeeReceipt['amount'] = component_fee_status_response['amountDue']
@@ -149,11 +149,11 @@ class FeeReceiptTestCase(ParentTestCase):
 
         self.assertEqual(create_fee_receipt_response['message'], 'Fees submitted successfully')
 
-        student_fee_status_response = create_fee_receipt_response['studentFeeStatus']
+        student_fee_status_list_response = create_fee_receipt_response['studentFeeStatusList']
 
-        for session_fee_status_object in student_fee_status_response['sessionFeeStatusList']:
+        for session_fee_status_object in student_fee_status_list_response:
             for component_fee_status_object in session_fee_status_object['componentList']:
-                if component_fee_status_object['frequency'] == FeeDefinition.ANNUALLY_FREQUENCY:
+                if component_fee_status_object['frequency'] == FeeDefinition.YEARLY_FREQUENCY:
                     self.assertEqual(component_fee_status_object['amountDue'], 0)
                 elif component_fee_status_object['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
                         for component_fee_status_monthly_object in component_fee_status_object['monthList']:

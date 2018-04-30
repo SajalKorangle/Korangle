@@ -2,7 +2,7 @@
 from fee_second_app.models import FeeReceipt, SubFeeReceipt, SubFeeReceiptMonthly, \
     StudentFeeComponent, StudentMonthlyFeeComponent, FeeDefinition, Month
 
-from fee_second_app.business.student_fee_status import get_student_fee_status
+from fee_second_app.business.student_fee_status import get_student_fee_status_list
 
 from student_app.models import Student
 
@@ -12,11 +12,13 @@ from django.db import transaction
 
 from django.db.models import Max
 
+
 def get_fee_receipt_by_id(data):
 
     fee_receipt_object = FeeReceipt.objects.get(id=data['dbId'])
 
     return get_fee_receipt_by_object(fee_receipt_object)
+
 
 def get_fee_receipt_by_object(fee_receipt_object):
 
@@ -61,6 +63,7 @@ def get_fee_receipt_by_object(fee_receipt_object):
 
     return fee_receipt_response
 
+
 def get_fee_receipt_list_by_school_id(data):
 
     startDate = data['startDate'] + ' 00:00:00+00:00'
@@ -78,6 +81,7 @@ def get_fee_receipt_list_by_school_id(data):
 
     return fee_receipt_list_response
 
+
 def get_fee_receipt_list_by_student_id(data):
 
     fee_receipt_list_response = []
@@ -88,6 +92,7 @@ def get_fee_receipt_list_by_student_id(data):
         fee_receipt_list_response.append(fee_receipt_response)
 
     return fee_receipt_list_response
+
 
 def create_fee_receipt(data):
 
@@ -129,14 +134,6 @@ def create_fee_receipt(data):
     response = {}
     response['message'] = 'Fees submitted successfully'
     response['feeReceipt'] = get_fee_receipt_by_id({'dbId': fee_receipt_object.id})
-    response['studentFeeStatus'] = get_student_fee_status({'studentDbId': student_object.id})
+    response['studentFeeStatusList'] = get_student_fee_status_list({'studentDbId': student_object.id})
 
     return response
-
-def get_school_fee_receipt(data):
-
-    return ''
-
-def get_last_receipt_number(school_object):
-
-    return ''
