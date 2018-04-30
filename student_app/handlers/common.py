@@ -43,6 +43,7 @@ def get_student_profile(student_object, session_object):
     student_data['aadharNum'] = student_object.aadharNum
     student_data['bloodGroup'] = student_object.bloodGroup
     student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome
+    student_data['rte'] = student_object.rte
     if student_object.currentBusStop is not None:
         student_data['busStopDbId'] = student_object.currentBusStop.id
     else:

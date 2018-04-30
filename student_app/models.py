@@ -56,6 +56,14 @@ class Student(models.Model):
 
 	currentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=True, verbose_name='current_bus_stop')
 
+	RTE = (
+		('YES', 'Yes'),
+		('NO', 'No'),
+		('UNKNOWN', 'Unknown')
+	)
+
+	rte = models.CharField(max_length=10, choices=RTE, null=True)
+
 	def __str__(self):
 		"""A string representation of the model."""
 		return self.parentUser.username+" --- "+self.name
