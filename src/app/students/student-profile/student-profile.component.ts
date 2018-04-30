@@ -113,7 +113,7 @@ export class StudentProfileComponent implements OnInit {
         if (this.currentStudent.familySSMID
             && this.currentStudent.familySSMID.toString().length !== 0
             && this.currentStudent.familySSMID.toString().length !== 8) {
-            alert('Number of digits in Family SSMID should be 9');
+            alert('Number of digits in Family SSMID should be 8');
             return;
         }
         if (this.currentStudent.childSSMID
