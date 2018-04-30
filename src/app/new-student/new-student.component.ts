@@ -102,8 +102,8 @@ export class NewStudentComponent implements OnInit {
             data => {
                 this.isLoading = false;
                 alert(data.message);
-                // this.newStudent = new Student();
-                // this.newStudent.dateOfBirth = this.todaysDate();
+                this.newStudent = new Student();
+                this.newStudent.dateOfBirth = this.todaysDate();
             }, error => {
                 this.isLoading = false;
                 alert('Server Error: Contact admin');
