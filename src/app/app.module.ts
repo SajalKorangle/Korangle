@@ -36,13 +36,14 @@ import { LoginComponent } from './authentication/login.component';
 // import { FeesListComponent } from './fees/fees-list/fees-list.component';
 
 import { CollectFeeComponent } from './fees-second/pages/collect-fee/collect-fee.component';
-import {FeeReceiptListComponent} from './fees-second/components/fees-table/fee-receipt-list.component';
 import { TotalCollectionComponent } from './fees-second/pages/total-collection/total-collection.component';
 import { UpdateStudentFeesComponent } from './fees-second/pages/update-student-fees/update-student-fees.component';
 import { GiveDiscountComponent } from './fees-second/pages/give-discount/give-discount.component';
-import { DiscountListComponent } from './fees-second/components/discount-table/discount-list.component';
 import { TotalDiscountComponent } from './fees-second/pages/total-discount/total-discount.component';
 import { SetSchoolFeesComponent } from './fees-second/pages/set-school-fees/set-school-fees.component';
+import {FeeReceiptListComponent} from './fees-second/components/fees-table/fee-receipt-list.component';
+import { DiscountListComponent } from './fees-second/components/discount-table/discount-list.component';
+import { MonthlyAmountComponent } from './fees-second/components/monthly-amount/monthly-amount.component';
 
 // import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
@@ -86,6 +87,7 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
 
         FeeReceiptListComponent,
         DiscountListComponent,
+        MonthlyAmountComponent,
 
         CollectFeeComponent,
         TotalCollectionComponent,

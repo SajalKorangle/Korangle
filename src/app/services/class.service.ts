@@ -10,8 +10,12 @@ export class ClassService extends CommonServiceRequirements {
     // private classSectionListUrl = '/class/class_section_list/';
 
     getClassSectionList(data, token: any): Promise<any> {
-        const url = '/class/class_section_list/sessions/' + data.sessionDbId;
-        return super.getData(token, url);
+        return super.getData(token, '/class/class_section_list/sessions/' + data.sessionDbId);
+    }
+
+    getClassList(token: any): Promise<any> {
+        return super.getData(token, '/class/classes')
     }
 
 }
+

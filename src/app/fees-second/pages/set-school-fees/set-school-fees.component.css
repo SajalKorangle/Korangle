@@ -23,8 +23,8 @@
     font-weight: 800 !important;
 }*/
 
-.paymentInput {
-    width: 100%;
+input {
+    /*width: 100%;*/
     text-align: right;
     border-top: none;
     border-right: none;
@@ -60,6 +60,14 @@ i {
 
 .checkbox-margin {
     margin: 0 10px;
+}
+
+.hoverHighlight:hover {
+    background-color: lightgrey;
+}
+
+.hoverHighlight {
+    padding-top: 5px;
 }
 
 /*.example-form {
