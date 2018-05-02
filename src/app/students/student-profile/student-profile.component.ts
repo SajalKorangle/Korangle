@@ -7,6 +7,8 @@ import { Section } from '../../classes/section';
 import { StudentService } from '../../students/student.service';
 import {BusStopService} from '../../services/bus-stop.service';
 
+import { EmitterService } from '../../services/emitter.service';
+
 @Component({
   selector: 'app-student-profile',
   templateUrl: './student-profile.component.html',
@@ -243,6 +245,10 @@ export class StudentProfileComponent implements OnInit {
             return true;
         }
         return false;
+    }
+
+    printTCSecondFormat(): void {
+        EmitterService.get('print-transfer-certificate').emit('');
     }
 
 }

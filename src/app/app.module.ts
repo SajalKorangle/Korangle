@@ -52,6 +52,7 @@ import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-re
 import { PrintMarksheetComponent } from './print/print-marksheet/print-marksheet.component';
 import { PrintMarksheetSecondFormatComponent } from './print/print-marksheet-second-format/print-marksheet-second-format.component';
 import { PrintTransferCertificateComponent } from './print/print-transfer-certificate/print-transfer-certificate.component';
+import { PrintTransferCertificateSecondFormatComponent } from './print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component';
 import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print-new-fee-receipt.component';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
@@ -95,6 +96,7 @@ import { GradePipe } from './pipes/grade.pipe';
         PrintMarksheetComponent,
         PrintMarksheetSecondFormatComponent,
         PrintTransferCertificateComponent,
+        PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
         PrintNewFeeReceiptComponent,
         PrintComponent,
