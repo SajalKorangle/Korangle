@@ -1,30 +1,129 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
-@Pipe({name: 'amountInWords'})
-export class AmountInWordsPipe implements PipeTransform {
+
+
+@Pipe({name: 'dateInWords'})
+export class DateInWordsPipe implements PipeTransform {
     constructor(private sanitizer: DomSanitizer) {}
 
-    transform(amount: any) {
-        let amountInWords = '';
-        let tempAmount = amount;
+    transform(inputDate: any) {
 
-        /* Lacs */
-        amountInWords += ( Math.floor(tempAmount / 100000) > 0 ? this.getNumberInWords(Math.floor(tempAmount / 100000)) + ' Lacs ' : '' );
-        tempAmount = tempAmount % 100000;
+        let date = new Date(inputDate);
 
-        /* Thousand */
-        amountInWords += ( Math.floor(tempAmount / 1000) > 0 ? this.getNumberInWords(Math.floor(tempAmount / 1000)) + ' Thousand ' : '' );
-        tempAmount = tempAmount % 1000;
+        let dateInWords = '';
 
-        /* Hundred */
-        amountInWords += ( Math.floor(tempAmount / 100) > 0 ? this.getNumberInWords(Math.floor(tempAmount / 100)) + ' Hundred ' : '' );
-        tempAmount = tempAmount % 100;
+        dateInWords += this.getDate(date) + ' ';
+        dateInWords += this.getMonth(date) + ' ';
+        dateInWords += this.getYear(date);
 
-        /* Change */
-        amountInWords += this.getNumberInWords(tempAmount);
+        return dateInWords;
+    }
 
-        return amountInWords;
+    getDate(date: Date): string {
+        switch(date.getDate()) {
+            case 1:
+                return 'First';
+            case 2:
+                return 'Second';
+            case 3:
+                return 'Third';
+            case 4:
+                return 'Fourth';
+            case 5:
+                return 'Fifth';
+            case 6:
+                return 'Sixth';
+            case 7:
+                return 'Seventh';
+            case 8:
+                return 'Eighth';
+            case 9:
+                return 'Ninth';
+            case 10:
+                return 'Tenth';
+            case 11:
+                return 'Eleven';
+            case 12:
+                return 'Twelve';
+            case 13:
+                return 'Thirteen';
+            case 14:
+                return 'Fourteen';
+            case 15:
+                return 'Fifteen';
+            case 16:
+                return 'Sixteen';
+            case 17:
+                return 'Seventeen';
+            case 18:
+                return 'Eighteen';
+            case 19:
+                return 'Nineteen';
+            case 20:
+                return 'Twenty';
+            case 21:
+                return 'Twenty First';
+            case 22:
+                return 'Twenty Second';
+            case 23:
+                return 'Twenty Third';
+            case 24:
+                return 'Twenty Fourth';
+            case 25:
+                return 'Twenty Fifth';
+            case 26:
+                return 'Twenty Sixth';
+            case 27:
+                return 'Twenty Seventh';
+            case 28:
+                return 'Twenty Eighth';
+            case 29:
+                return 'Twenty Ninth';
+            case 30:
+                return 'Thirtieth';
+            case 31:
+                return 'Thirty First';
+        }
+        return '';
+    }
+
+    getMonth(date: Date): string {
+        switch(date.getMonth()) {
+            case 0:
+                return 'January';
+            case 1:
+                return 'February';
+            case 2:
+                return 'March';
+            case 3:
+                return 'April';
+            case 4:
+                return 'May';
+            case 5:
+                return 'June';
+            case 6:
+                return 'July';
+            case 7:
+                return 'August';
+            case 8:
+                return 'September';
+            case 9:
+                return 'October';
+            case 10:
+                return 'November';
+            case 11:
+                return 'December';
+        }
+        return '';
+    }
+
+    getYear(date: Date): string {
+        if (date.getFullYear() < 2000) {
+            return this.getNumberInWords(Math.floor(date.getFullYear()/100)) + ' ' + this.getNumberInWords(date.getFullYear()%100);
+        } else {
+            return 'Two Thousand ' + this.getNumberInWords(date.getFullYear()%100);
+        }
     }
 
     getNumberInWords(numerical: number): string {

@@ -5,6 +5,16 @@
      font-weight: 800 !important;"
      *ngIf="marksheet">
 
+    <!-- Reg. No. , Dise Code -->
+    <div class="row no-gutters">
+        <div class="col-xs-6 d-flex custom-padding">
+            Dise code : {{user.schoolDiseCode}}
+        </div>
+        <div class="col-xs-6 d-flex custom-padding" align="end">
+            Reg. No. : {{user.schoolRegistrationNumber}}
+        </div>
+    </div>
+
     <!-- Background Watermark -->
     <img src="{{user.schoolLogo}}"
          style="border-radius: 2px; position: absolute;
@@ -20,16 +30,6 @@
          opacity: 0.1;
          filter: grayscale(100%);
          z-index: 10;"/ -->
-
-    <!-- Reg. No. , Dise Code -->
-    <div class="row no-gutters">
-        <div class="col-xs-6 d-flex custom-padding">
-            Dise code : {{user.schoolDiseCode}}
-        </div>
-        <div class="col-xs-6 d-flex custom-padding" align="end">
-            Reg. No. : {{user.schoolRegistrationNumber}}
-        </div>
-    </div>
 
     <!-- School Name -->
     <svg viewBox="0 0 500 115" style="padding-top: 0px;">

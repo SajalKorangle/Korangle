@@ -22,10 +22,11 @@ import { ComponentsModule } from './components/components.module';
 
 import { AppComponent } from './app.component';
 
+//
 
-import { StudentProfileComponent } from './students/student-profile/student-profile.component';
-import { StudentListComponent } from './students/student-list/student-list.component';
-// import { PromoteStudentComponent } from './students/promote-student/promote-student.component';
+import { StudentProfileComponent } from './students/pages/student-profile/student-profile.component';
+import { StudentListComponent } from './students/pages/student-list/student-list.component';
+import { GenerateTcComponent } from './students/pages/generate-tc/generate-tc.component';
 
 import { NewStudentComponent } from './new-student/new-student.component';
 
@@ -63,12 +64,14 @@ import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-re
 import { PrintMarksheetComponent } from './print/print-marksheet/print-marksheet.component';
 import { PrintMarksheetSecondFormatComponent } from './print/print-marksheet-second-format/print-marksheet-second-format.component';
 import { PrintTransferCertificateComponent } from './print/print-transfer-certificate/print-transfer-certificate.component';
+import { PrintTransferCertificateSecondFormatComponent } from './students/print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component';
 import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print-new-fee-receipt.component';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 
 import { MoneyFormatPipe } from './pipes/money-format.pipe';
 import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
+import { DateInWordsPipe } from './pipes/date-in-words.pipe';
 import { GradePipe } from './pipes/grade.pipe';
 
 /* Common Components */
@@ -111,7 +114,7 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
 
         StudentProfileComponent,
         StudentListComponent,
-        // PromoteStudentComponent,
+        GenerateTcComponent,
 
         NewStudentComponent,
 
@@ -123,12 +126,14 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
         PrintMarksheetComponent,
         PrintMarksheetSecondFormatComponent,
         PrintTransferCertificateComponent,
+        PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
         PrintNewFeeReceiptComponent,
         PrintComponent,
 
         MoneyFormatPipe,
         AmountInWordsPipe,
+        DateInWordsPipe,
         GradePipe,
         // MdRadioGroup,
         // MdRadioButton,

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {EmitterService} from '../../services/emitter.service';
-import {StudentService} from '../../students/student.service';
+import {EmitterService} from '../../../services/emitter.service';
+import {StudentService} from '../../student.service';
 
 class ColumnFilter {
   showSerialNumber = true;
