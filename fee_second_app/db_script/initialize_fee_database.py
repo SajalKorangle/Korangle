@@ -32,40 +32,40 @@ def populate_month(apps, schema_editor):
 
     Month = apps.get_model('fee_second_app', 'Month')
 
-    month_object = Month(name=fee_second_app.models.Month.APRIL)
+    month_object = Month(name=fee_second_app.models.Month.APRIL, orderNumber=1)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.MAY)
+    month_object = Month(name=fee_second_app.models.Month.MAY, orderNumber=2)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.JUNE)
+    month_object = Month(name=fee_second_app.models.Month.JUNE, orderNumber=3)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.JULY)
+    month_object = Month(name=fee_second_app.models.Month.JULY, orderNumber=4)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.AUGUST)
+    month_object = Month(name=fee_second_app.models.Month.AUGUST, orderNumber=5)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.SEPTEMBER)
+    month_object = Month(name=fee_second_app.models.Month.SEPTEMBER, orderNumber=6)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.OCTOBER)
+    month_object = Month(name=fee_second_app.models.Month.OCTOBER, orderNumber=7)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.NOVEMBER)
+    month_object = Month(name=fee_second_app.models.Month.NOVEMBER, orderNumber=8)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.DECEMBER)
+    month_object = Month(name=fee_second_app.models.Month.DECEMBER, orderNumber=9)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.JANUARY)
+    month_object = Month(name=fee_second_app.models.Month.JANUARY, orderNumber=10)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.FEBRUARY)
+    month_object = Month(name=fee_second_app.models.Month.FEBRUARY, orderNumber=11)
     month_object.save()
 
-    month_object = Month(name=fee_second_app.models.Month.MARCH)
+    month_object = Month(name=fee_second_app.models.Month.MARCH, orderNumber=12)
     month_object.save()
 
 
@@ -108,8 +108,10 @@ def populate_champion_school_fee_structure(apps, schema_editor):
 
     fee_type_object = FeeType.objects.get(name='Tuition Fee')
     fee_definition_object = FeeDefinition(parentSchool=school_object, parentSession=session_object,
-                                          parentFeeType=fee_type_object, rteAllowed=False, orderNumber=1,
-                                          filterType=fee_second_app.models.FeeDefinition.CLASS_BASED_FILTER, frequency=fee_second_app.models.FeeDefinition.MONTHLY_FREQUENCY)
+                                          parentFeeType=fee_type_object, rte=False, orderNumber=1,
+                                          classFilter=True,
+                                          busStopFilter=False,
+                                          frequency=fee_second_app.models.FeeDefinition.MONTHLY_FREQUENCY)
     fee_definition_object.save()
 
     SchoolFeeComponent=apps.get_model('fee_second_app', 'SchoolFeeComponent')
@@ -136,8 +138,10 @@ def populate_champion_school_fee_structure(apps, schema_editor):
 
     fee_type_object = FeeType.objects.get(name='Vehicle Fee')
     fee_definition_object = FeeDefinition(parentSchool=school_object, parentSession=session_object,
-                                          parentFeeType=fee_type_object, rteAllowed=True, orderNumber=2,
-                                          filterType=fee_second_app.models.FeeDefinition.BUS_STOP_BASED_FILTER, frequency=fee_second_app.models.FeeDefinition.MONTHLY_FREQUENCY)
+                                          parentFeeType=fee_type_object, rte=True, orderNumber=2,
+                                          busStopFilter=True,
+                                          classFilter=False,
+                                          frequency=fee_second_app.models.FeeDefinition.MONTHLY_FREQUENCY)
     fee_definition_object.save()
 
     BusStop = apps.get_model('school_app', 'BusStop')
@@ -161,7 +165,8 @@ def populate_champion_student_fee_structure(apps, schema_editor, school_fee_comp
 
     for student_object in Student.objects.filter(parentUser__username='champion'):
 
-        if fee_definition_object.filterType == FeeDefinition.CLASS_BASED_FILTER:
+        # if fee_definition_object.filterType == FeeDefinition.CLASS_BASED_FILTER:
+        if fee_definition_object.classFilter == True:
 
             classDbId = student_app.models.Student.get_class_id(student_object, Session.objects.get(name='Session 2018-19'))
             if ClassBasedFilter.objects.filter(parentClass_id=classDbId, parentSchoolFeeComponent=school_fee_component_object).count()==1:
@@ -175,7 +180,8 @@ def populate_champion_student_fee_structure(apps, schema_editor, school_fee_comp
                 if fee_definition_object.frequency == FeeDefinition.MONTHLY_FREQUENCY:
                     populate_student_month_fees(apps, schema_editor, school_fee_component_object, student_fee_component_object)
 
-        elif fee_definition_object.filterType == FeeDefinition.BUS_STOP_BASED_FILTER:
+        # elif fee_definition_object.filterType == FeeDefinition.BUS_STOP_BASED_FILTER:
+        elif fee_definition_object.busStopFilter == True:
 
             if BusStopBasedFilter.objects.filter(parentBusStop=student_object.currentBusStop, parentSchoolFeeComponent=school_fee_component_object).count()==1:
 
@@ -366,8 +372,10 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
     fee_type_object = FeeType.objects.get(name='Annual Fee')
 
     fee_definition_object = FeeDefinition(parentSchool=school_object, parentSession=session_object,
-                                          parentFeeType=fee_type_object, rteAllowed=True, orderNumber=1,
-                                          filterType=fee_second_app.models.FeeDefinition.NO_FILTER, frequency=fee_second_app.models.FeeDefinition.YEARLY_FREQUENCY)
+                                          parentFeeType=fee_type_object, rte=True, orderNumber=1,
+                                          busStopFilter=False,
+                                          classFilter=False,
+                                          frequency=fee_second_app.models.FeeDefinition.YEARLY_FREQUENCY)
     fee_definition_object.save()
 
     SchoolFeeComponent = apps.get_model('fee_second_app', 'SchoolFeeComponent')

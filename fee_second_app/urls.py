@@ -10,15 +10,16 @@ urlpatterns += [
 
 
 ######### Fee Structure ###########
-from .views import fee_structure_view
+from .views import FeeStructureView
 urlpatterns += [
-    url(r'^school/(?P<school_id>[0-9]+)/session/(?P<session_id>[0-9]+)/fee-structure', fee_structure_view),
+    url(r'^school/(?P<school_id>[0-9]+)/fee-structures', FeeStructureView.as_view()),
 ]
 
 ######### School Fee Definition ##########
 from .views import FeeDefinitionView
 urlpatterns += [
     url(r'^school/(?P<school_id>[0-9]+)/fee-definitions', FeeDefinitionView.as_view()),
+    url(r'^fee-definitions/(?P<fee_definition_id>[0-9]+)', FeeDefinitionView.as_view()),
 ]
 
 ######### Student Fee Status ###########

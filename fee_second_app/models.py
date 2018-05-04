@@ -42,6 +42,7 @@ class Month(models.Model):
         ('MARCH', 'March'),
     )
     name = models.CharField(max_length=10, choices=MONTH, null=False, default=APRIL)
+    orderNumber = models.IntegerField()
 
 class FeeType(models.Model):
     name = models.TextField(verbose_name='name', unique=True)
@@ -57,9 +58,11 @@ class FeeDefinition(models.Model):
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, verbose_name='parentFeeType')
 
     orderNumber = models.IntegerField()
-    rteAllowed = models.BooleanField(null=False, default=False)
 
-    CLASS_BASED_FILTER = 'CLASS'
+    rte = models.BooleanField(null=False, default=False, verbose_name='rte_allowed')
+    onlyNewStudent = models.BooleanField(null=False, default=False, verbose_name='only_new_student')
+
+    '''CLASS_BASED_FILTER = 'CLASS'
     BUS_STOP_BASED_FILTER = 'BUS STOP'
     CLASS_BUS_STOP_BASED_FILTER = 'CLASS AND BUS STOP'
     NO_FILTER = 'NONE'
@@ -69,7 +72,11 @@ class FeeDefinition(models.Model):
         (CLASS_BUS_STOP_BASED_FILTER, 'Class & Bus Stop'),
         (NO_FILTER, 'None')
     )
-    filterType = models.CharField(max_length=9, choices=FILTERTYPE, null=False, default=NO_FILTER)
+    filterType = models.CharField(max_length=9, choices=FILTERTYPE, null=False, default=NO_FILTER)'''
+
+    classFilter = models.BooleanField(null=False, default=False, verbose_name='class_filter')
+
+    busStopFilter = models.BooleanField(null=False, default=False, verbose_name='bus_stop_filter')
 
     MONTHLY_FREQUENCY = 'MONTHLY'
     QUATERLY_FREQUENCY = 'QUATERLY'
@@ -83,6 +90,8 @@ class FeeDefinition(models.Model):
 
     class Meta:
         db_table = 'fee_definition'
+
+        unique_together = ('parentSchool', 'parentSession', 'parentFeeType')
 
 class SchoolFeeComponent(models.Model):
     title = models.TextField(verbose_name='title')
@@ -137,7 +146,7 @@ class StudentFeeComponent(models.Model):
     @property
     def schoolFeeComponent(self):
         session_object = self.parentFeeDefinition.parentSession
-        if self.parentFeeDefinition.filterType == FeeDefinition.CLASS_BASED_FILTER:
+        if self.parentFeeDefinition.classFilter == True & self.parentFeeDefinition.busStopFilter == False:
             class_object = self.parentStudent.get_class_object(session_object)
             try:
                 schoolFeeComponent_object = ClassBasedFilter.objects.get(
@@ -146,7 +155,7 @@ class StudentFeeComponent(models.Model):
                 return schoolFeeComponent_object
             except ObjectDoesNotExist:
                 return None
-        elif self.parentFeeDefinition.filterType == FeeDefinition.BUS_STOP_BASED_FILTER:
+        elif self.parentFeeDefinition.classFilter == False & self.parentFeeDefinition.busStopFilter == True:
             busStop_object = self.parentStudent.currentBusStop
             try:
                 schoolFeeComponent_object = BusStopBasedFilter.objects.get(
@@ -155,7 +164,7 @@ class StudentFeeComponent(models.Model):
                 return schoolFeeComponent_object
             except ObjectDoesNotExist:
                 return None
-        elif self.parentFeeDefinition.filterType == FeeDefinition.CLASS_BUS_STOP_BASED_FILTER:
+        elif self.parentFeeDefinition.classFilter == True & self.parentFeeDefinition.busStopFilter == True:
             class_object = self.parentStudent.get_class_object(session_object)
             busStop_object = self.parentStudent.currentBusStop
             for schoolFeeComponent_object in SchoolFeeComponent.objects.filter(parentFeeDefinition=self.parentFeeDefinition):
@@ -163,7 +172,7 @@ class StudentFeeComponent(models.Model):
                         & schoolFeeComponent_object.busstopbasedfee_set.filter(parentBusStop=busStop_object).count() == 1:
                     return schoolFeeComponent_object
             return None
-        elif self.parentFeeDefinition.filterType == FeeDefinition.NO_FILTER:
+        elif self.parentFeeDefinition.classFilter == False & self.parentFeeDefinition.busStopFilter == False:
             return SchoolFeeComponent.objects.get(parentFeeDefinition=self.parentFeeDefinition)
         return None
 
@@ -186,6 +195,8 @@ class StudentFeeComponent(models.Model):
 
     class Meta:
         db_table = 'student_fee_component'
+
+        unique_together = ('parentStudent', 'parentFeeDefinition')
 
 class StudentMonthlyFeeComponent(models.Model):
     amount = models.IntegerField(null=False, default=0, verbose_name='amount')
@@ -224,6 +235,8 @@ class StudentMonthlyFeeComponent(models.Model):
 
     class Meta:
         db_table = 'student_fee_component_monthly'
+
+        unique_together = ('parentStudentFeeComponent', 'parentMonth')
 
 
 ##### Receipts #######

@@ -3,6 +3,7 @@ from school_app.model.models import Session
 
 from fee_second_app.models import StudentFeeComponent, StudentMonthlyFeeComponent, FeeDefinition
 
+
 def get_student_fee_status_list(data):
 
     student_fee_status_list = []
@@ -48,7 +49,7 @@ def get_student_fee_status(data):
 
             temp_student_fee_component_status['monthList'] = []
             for student_fee_component_monthly_object in StudentMonthlyFeeComponent.objects.filter(
-                    parentStudentFeeComponent=student_fee_component_object).order_by('parentMonth_id'):
+                    parentStudentFeeComponent=student_fee_component_object).order_by('parentMonth__orderNumber'):
 
                 temp_student_monthly_fee_status = {}
                 temp_student_monthly_fee_status['month'] = student_fee_component_monthly_object.parentMonth.name
@@ -92,3 +93,4 @@ def update_student_fee_status(data):
     student_session_fee_status_response = get_student_fee_status(request)
 
     return student_session_fee_status_response
+

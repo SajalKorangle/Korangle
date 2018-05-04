@@ -36,47 +36,55 @@ class FeeTypeView(APIView):
 
 
 ################# Fee Structure #####################
-from .business.fee_structure import get_fee_structure, create_or_update_fee_structure
-@api_view(['GET'])
-def fee_structure_view(request, school_id, session_id):
-    if request.user.is_authenticated:
-        data = {}
-        data['schoolDbId'] = school_id
-        data['sessionDbId'] = session_id
-        return JsonResponse({'response': get_success_response(get_fee_structure(data))})
-    else:
-        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
-
-@api_view(['POST'])
-def fee_structure_view(request, school_id, session_id):
-    if request.user.is_authenticated:
-        data = json.loads(request.body.decode('utf-8'))
-        data['schoolDbId'] = school_id
-        data['sessionDbId'] = session_id
-        return JsonResponse({'response': get_success_response(create_or_update_fee_structure(data))})
-    else:
-        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+from .business.fee_structure import get_fee_structure
 
 
-################# School Fee Type ###################
-from .business.school_fee_definition import add_fee_definition, get_fee_definition_list_by_school_id
-
-
-class FeeDefinitionView(APIView):
+class FeeStructureView(APIView):
 
     def get(self, request, school_id):
         if request.user.is_authenticated:
             data = {}
             data['schoolDbId'] = school_id
             data['sessionDbId'] = request.GET['session_id']
-            return JsonResponse({'response': get_success_response(get_fee_definition_list_by_school_id(data))})
+            return JsonResponse({'response': get_success_response(get_fee_structure(data))})
         else:
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
-    def post(self, request):
+
+################# School Fee Definition ###################
+from .business.school_fee_definition import create_fee_definition, update_fee_definition, delete_fee_definition
+
+
+class FeeDefinitionView(APIView):
+
+    '''def get(self, request, school_id):
+        if request.user.is_authenticated:
+            data = {}
+            data['schoolDbId'] = school_id
+            data['sessionDbId'] = request.GET['session_id']
+            return JsonResponse({'response': get_success_response(get_fee_definition_list_by_school_id(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
+
+    def post(self, request, school_id):
         if request.user.is_authenticated:
             data = json.loads(request.body.decode('utf-8'))
-            return JsonResponse({'response': get_success_response(add_fee_definition(data))})
+            return JsonResponse({'response': get_success_response(create_fee_definition(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+    def put(self, request, fee_definition_id):
+        if request.user.is_authenticated:
+            data = json.loads(request.body.decode('utf-8'))
+            return JsonResponse({'response': get_success_response(update_fee_definition(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+    def delete(self, request, fee_definition_id):
+        if request.user.is_authenticated:
+            data = {}
+            data['dbId'] = fee_definition_id
+            return JsonResponse({'response': get_success_response(delete_fee_definition(data))})
         else:
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 

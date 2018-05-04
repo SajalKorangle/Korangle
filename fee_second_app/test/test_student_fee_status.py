@@ -72,7 +72,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
                 self.assertEqual(len(response['componentList'][indexCounter]['monthList']), student_monthly_fee_component_queryset.count())
 
                 monthIndexCounter = 0
-                for student_monthly_fee_component_object in student_monthly_fee_component_queryset.order_by('parentMonth_id'):
+                for student_monthly_fee_component_object in student_monthly_fee_component_queryset.order_by('parentMonth__orderNumber'):
                     self.assertEqual(response['componentList'][indexCounter]['monthList'][monthIndexCounter]['month'],
                                      student_monthly_fee_component_object.parentMonth.name)
                     self.assertEqual(response['componentList'][indexCounter]['monthList'][monthIndexCounter]['amount'],
