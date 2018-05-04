@@ -64,7 +64,11 @@ export class User {
                 {
                     path: 'student_list',
                     title: 'View All',
-                }
+                },
+                {
+                    path: 'generate_tc',
+                    title: 'Generate TC',
+                },
             ] },
         { path: 'fees', title: 'Fees',  icon: 'receipt', class: '', showSubsection: false,
             subsection: [
@@ -136,6 +140,9 @@ export class User {
         this.schoolAddress = data.schoolData.schoolAddress;
         this.schoolCurrentSessionDbId = data.schoolData.currentSessionDbId;
         this.schoolRegistrationNumber = data.schoolData.registrationNumber;
+        if (this.username === 'brightstar' || this.username === 'brighthindi' || this.username === 'brightstarsalsalai') {
+            this.schoolPrintName = 'Bright Star Hr. Sec. School';
+        }
     }
 
     initializeUserData(data: any): void {

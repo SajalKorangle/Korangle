@@ -1,13 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Student } from '../../classes/student';
-import { Classs } from '../../classes/classs';
-import { Section } from '../../classes/section';
+import { Student } from '../../../classes/student';
+import { Classs } from '../../../classes/classs';
+import { Section } from '../../../classes/section';
 
-import { StudentService } from '../../students/student.service';
-import {BusStopService} from '../../services/bus-stop.service';
-
-import { EmitterService } from '../../services/emitter.service';
+import { StudentService } from '../../student.service';
+import {BusStopService} from '../../../services/bus-stop.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -245,10 +243,6 @@ export class StudentProfileComponent implements OnInit {
             return true;
         }
         return false;
-    }
-
-    printTCSecondFormat(): void {
-        EmitterService.get('print-transfer-certificate').emit('');
     }
 
 }

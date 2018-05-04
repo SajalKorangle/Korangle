@@ -90,7 +90,7 @@ export class NewStudentComponent implements OnInit {
             alert('Class should be selected');
             return;
         }
-        if (this.newStudent.dateOfBirth === undefined) { this.newStudent.dateOfBirth = ''; }
+        if (this.newStudent.dateOfBirth === undefined) { this.newStudent.dateOfBirth = this.todaysDate(); }
         if (this.newStudent.mobileNumber === undefined) { this.newStudent.mobileNumber = 0; }
         if (this.newStudent.totalFees === undefined) { this.newStudent.totalFees = 0; }
         if (this.newStudent.remark === undefined) { this.newStudent.remark = ''; }

@@ -33,3 +33,14 @@ th {
 .fontHandle {
     font-size: 16px;
 }
+
+svg {
+    background-color: #333;
+    /*font-family: 'Luckiest Guy', cursive;*/
+    font-size: 35px;
+}
+
+path {
+    fill: transparent;
+}
+

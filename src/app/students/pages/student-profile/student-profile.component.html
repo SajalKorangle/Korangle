@@ -55,10 +55,6 @@
                 (click)="getStudentProfile();">Get
         </button>
 
-          <button type="button"
-                  (click)="printTCSecondFormat();"
-                  class="btn btn-{{user.btn_color}}">Transfer Certificate</button>
-
         <span *ngIf="selectedSection" style="float: right; margin-top: 10px;"><i>{{selectedSection.studentList.length}} students</i></span>
 
         <div class="row">
