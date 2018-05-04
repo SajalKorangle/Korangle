@@ -1,73 +1,66 @@
 
-import {AmountFrequency} from './amount-frequency';
+import {YEARLY} from './constants';
+import {SchoolFeeComponent} from './school-fee-component';
 
 export class FeeDefinition {
+
+    dbId: number = 0;
     feeType: string;
     feeTypeDbId: string;
-    filterType: string;
-    frequency: string;
-    rte: boolean;
 
-    amountFrequency: AmountFrequency = new AmountFrequency();
+    frequency: string = YEARLY;
 
-    classList: any;
+    receiptExist: boolean = false;
 
-    busStopList: any;
+    rte: boolean = true;
+    onlyNewStudent: boolean = false;
 
-    busStopClassList: any;
+    classFilter: boolean = false;
+    busStopFilter: boolean = false;
 
-    populateAllLists(classList: any, busStopList: any): void {
-        this.classList = [];
-        this.busStopList = [];
-        // this.busStopClassList = [];
+    schoolFeeComponentList = [];
 
-        classList.forEach(classs => {
-            let tempClass = {};
-            tempClass['name'] = classs.name;
-            tempClass['dbId'] = classs.dbId;
-            tempClass['amountFrequency'] = new AmountFrequency();
-            this.classList.push(tempClass);
-        });
+    fromServerObject(feeDefinition: any): void {
 
-        busStopList.forEach(busStop => {
-            let tempBusStop = {};
-            tempBusStop['stopName'] = busStop.stopName;
-            tempBusStop['dbId'] = busStop.dbId;
-            tempBusStop['amountFrequency'] = new AmountFrequency();
-            tempBusStop['showClassDetails'] = false;
-            tempBusStop['classList'] = [];
-            classList.forEach(classs => {
-                let tempClass = {};
-                tempClass['name'] = classs.name;
-                tempClass['dbId'] = classs.dbId;
-                tempClass['amountFrequency'] = new AmountFrequency();
-                tempBusStop['classList'].push(tempClass);
-            });
-            this.busStopList.push(tempBusStop);
-        });
+        this.dbId = feeDefinition.dbId;
+        this.feeType = feeDefinition.feeType;
+        this.feeTypeDbId = feeDefinition.feeTypeDbId;
+        this.frequency = feeDefinition.frequency;
+        this.receiptExist = feeDefinition.receiptExist;
+        this.rte = feeDefinition.rte;
+        this.onlyNewStudent = feeDefinition.onlyNewStudent;
+        this.classFilter = feeDefinition.classFilter;
+        this.busStopFilter = feeDefinition.busStopFilter;
+        this.schoolFeeComponentList = feeDefinition.schoolFeeComponentList;
+
+        /*this.schoolFeeComponentList = [];
+        if ( 'schoolFeeComponentList' in feeDefinition) {
+            feeDefinition.schoolFeeComponentList.forEach( schoolFeeComponent => {
+                let tempSchoolFeeComponent = new SchoolFeeComponent();
+                tempSchoolFeeComponent.fromServerObject(schoolFeeComponent);
+                this.schoolFeeComponentList.push(tempSchoolFeeComponent);
+            })
+        }*/
 
     }
 
-    handleItemMonthlyChange(event: any, item: any): void {
-        item.amountFrequency.showMonthDetails = true;
-        item.amountFrequency.aprilAmount = 0;
-        item.amountFrequency.mayAmount = 0;
-        item.amountFrequency.juneAmount = 0;
-        item.amountFrequency.julyAmount = event.target.value;
-        item.amountFrequency.augustAmount = event.target.value;
-        item.amountFrequency.septemberAmount = event.target.value;
-        item.amountFrequency.octoberAmount = event.target.value;
-        item.amountFrequency.novemberAmount = event.target.value;
-        item.amountFrequency.decemberAmount = event.target.value;
-        item.amountFrequency.januaryAmount = event.target.value;
-        item.amountFrequency.februaryAmount = event.target.value;
-        item.amountFrequency.marchAmount = event.target.value;
-    }
+    toServerObject(schoolDbId: number, sessionDbId: number): any {
 
-    handleBusStopClassYearlyChange(event: any, busStop: any): void {
-        busStop['classList'].forEach( classs => {
-            classs.amountFrequency.annualAmount = event.target.value;
-        });
+        let data = {
+            'dbId': this.dbId,
+            'schoolDbId': schoolDbId,
+            'sessionDbId': sessionDbId,
+            'feeType': this.feeType,
+            'feeTypeDbId': this.feeTypeDbId,
+            'frequency': this.frequency,
+            'rte': this.rte,
+            'onlyNewStudent': this.onlyNewStudent,
+            'classFilter': this.classFilter,
+            'busStopFilter': this.busStopFilter,
+        };
+
+        return data;
+
     }
 
 }

@@ -7,26 +7,37 @@
             </div>
             <div class="card-content">
 
-                <ng-container *ngIf="feeTypeList">
+                <ng-container *ngIf="feeTypeList && feeStructure && !isLoading">
 
-                    FeeType:
-                    <select [ngModel]="selectedFeeType"
-                            (ngModelChange)="selectedFeeType=$event;handleSelectedFeeTypeChange();"
-                            style="margin-right: 15px; margin-bottom: 10px;">
-                        <option *ngFor = "let feeType of feeTypeList;" [ngValue]="feeType">
-                            {{feeType.name}}
-                        </option>
-                    </select>
+                    <mat-form-field>
+                        <mat-select placeholder="Select Fee Type"
+                                    [ngModel]="selectedFeeType"
+                                    (ngModelChange)="selectedFeeType=$event; populateFeeDefinition();">
+                            <mat-option *ngFor="let feeType of feeTypeList" [value]="feeType">
+                                {{feeType.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
 
                     <ng-container *ngIf="currentFeeDefinition">
+
+                        <!-- Filters, Interval, RTE, Only New Student -->
                         <div class="row">
                             <div class="col-md-3">
                                 <mat-form-field>
-                                    <mat-select placeholder="Filter Type"
-                                                [ngModel]="currentFeeDefinition.filterType"
-                                                (ngModelChange)="currentFeeDefinition.filterType=$event;">
-                                        <mat-option *ngFor="let filterType of filterTypeList" [value]="filterType">
-                                            {{filterType}}
+                                    <mat-select placeholder="Select Filters"
+                                                [disabled]="currentFeeDefinition.schoolFeeComponentList.length > 0">
+                                        <mat-option style="width: 100%;">
+                                            <mat-checkbox [(ngModel)]="currentFeeDefinition.classFilter"
+                                                          (click)="$event.stopPropagation();">
+                                                Class
+                                            </mat-checkbox>
+                                        </mat-option>
+                                        <mat-option style="width: 100%;">
+                                            <mat-checkbox [(ngModel)]="currentFeeDefinition.busStopFilter"
+                                                          (click)="$event.stopPropagation();">
+                                                Bus Stop
+                                            </mat-checkbox>
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -35,7 +46,8 @@
                                 <mat-form-field>
                                     <mat-select placeholder="Fee Interval"
                                                 [ngModel]="currentFeeDefinition.frequency"
-                                                (ngModelChange)="currentFeeDefinition.frequency=$event">
+                                                (ngModelChange)="currentFeeDefinition.frequency=$event"
+                                                [disabled]="currentFeeDefinition.schoolFeeComponentList.length > 0">
                                         <mat-option *ngFor="let frequency of frequencyList" [value]="frequency">
                                             {{frequency}}
                                         </mat-option>
@@ -43,120 +55,179 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-md-3">
-                                <mat-checkbox class="checkbox-margin" [(ngModel)]="currentFeeDefinition.rte">RTE</mat-checkbox>
+                                <mat-checkbox class="checkbox-margin"
+                                              [disabled]="currentFeeDefinition.schoolFeeComponentList.length > 0"
+                                              [(ngModel)]="currentFeeDefinition.rte">
+                                    RTE
+                                </mat-checkbox>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-checkbox class="checkbox-margin"
+                                              [disabled]="currentFeeDefinition.schoolFeeComponentList.length > 0"
+                                              [(ngModel)]="currentFeeDefinition.onlyNewStudent">
+                                    Only New Student
+                                </mat-checkbox>
                             </div>
                         </div>
-                        <ng-container *ngIf="currentFeeDefinition.filterType=='NONE'">
-                            <ng-container *ngIf="currentFeeDefinition.frequency=='YEARLY'">
+
+                        <!-- Chosen Filters List -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                Filters:
+                                <i style="font-weight: 800;">
+                                    <span *ngIf="currentFeeDefinition.classFilter">Class</span>
+                                    <span *ngIf="currentFeeDefinition.classFilter && currentFeeDefinition.busStopFilter">,</span>
+                                    <span *ngIf="currentFeeDefinition.busStopFilter">Bus Stop</span>
+                                    <span *ngIf="!currentFeeDefinition.classFilter && !currentFeeDefinition.busStopFilter">None</span>
+                                </i>
+                            </div>
+                        </div>
+
+                        <!-- School Component -->
+                        <div *ngIf="currentFeeDefinition.dbId != 0" style="margin-top: 25px;">
+
+                            <!-- Selected School Component -->
+                            <mat-form-field *ngIf="currentFeeDefinition.classFilter || currentFeeDefinition.busStopFilter">
+                                <mat-select placeholder="Select Fee Declaration"
+                                            [ngModel]="selectedSchoolFeeComponent"
+                                            (ngModelChange)="populateSchoolFeeComponent($event);">
+                                    <mat-option [value]="New">New</mat-option>
+                                    <mat-option *ngFor="let schoolFeeComponent of currentFeeDefinition.schoolFeeComponentList"
+                                                [value]="schoolFeeComponent">
+                                        {{schoolFeeComponent.title}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div style="width: 100%" *ngIf="!currentFeeDefinition.classFilter && !currentFeeDefinition.busStopFilter">
+                                <span *ngIf="currentFeeDefinition.schoolFeeComponentList.length == 0"><i><b>New Fee Declaration</b></i></span>
+                                <span *ngIf="currentFeeDefinition.schoolFeeComponentList.length != 0">
+                                    Fee Declaration: <i><b>{{currentFeeDefinition.schoolFeeComponentList[0].title}}</b></i>
+                                </span>
+                            </div>
+
+                            <!-- School Component Space -->
+                            <div class="schoolComponentSpace" *ngIf="currentSchoolFeeComponent">
+
+                                <!--  Class Filters, Bus Stop filters -->
+                                <div class="row">
+                                    <div class="col-md-3" *ngIf="selectedFeeDefinition.classFilter">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Select Class"
+                                                        [disabled]="currentSchoolFeeComponent.dbId != 0">
+                                                <mat-option *ngFor="let class of classList">
+                                                    <mat-checkbox [(ngModel)]="class.selected"
+                                                                  (click)="$event.stopPropagation();">
+                                                        {{class.name}}
+                                                    </mat-checkbox>
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="selectedFeeDefinition.busStopFilter">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Select Bus Stop"
+                                                        [disabled]="currentSchoolFeeComponent.dbId != 0">
+                                                <mat-option *ngFor="let busStop of busStopList">
+                                                    <mat-checkbox [(ngModel)]="busStop.selected"
+                                                                  (click)="$event.stopPropagation();">
+                                                        {{busStop.stopName}}
+                                                    </mat-checkbox>
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <!-- Chosen Class Filters -->
+                                <div class="row" *ngIf="selectedFeeDefinition.classFilter">
+                                    <div class="col-md-12">
+                                        Class:
+                                        <i style="font-weight: 800;"
+                                           *ngFor="let class of currentSchoolFeeComponent.classList; let i=index;">
+                                            {{class.name}}
+                                            <span *ngIf="i!=currentSchoolFeeComponent.classList.length-1">,</span>
+                                        </i>
+                                    </div>
+                                </div>
+
+                                <!-- Chosen Bus Stop Filters -->
+                                <div class="row" *ngIf="selectedFeeDefinition.busStopFilter">
+                                    <div class="col-md-12">
+                                        Bus Stop:
+                                        <i style="font-weight: 800;"
+                                           *ngFor="let busStop of currentSchoolFeeComponent.busStopList; let i=index;">
+                                            {{busStop.stopName}}
+                                            <span *ngIf="i!=currentSchoolFeeComponent.busStopList.length-1">,</span>
+                                        </i>
+                                    </div>
+                                </div>
+
+                                <!-- Title, Annual Amount -->
                                 <div class="row">
                                     <div class="col-md-3">
+                                        <div class="form-group form-black label-floating">
+                                            <label class="control-label">Title</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   [(ngModel)]="currentSchoolFeeComponent.title">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="selectedFeeDefinition.frequency=='YEARLY'">
                                         <div class="form-group form-black label-floating">
                                             <label class="control-label">Annual Amount</label>
                                             <input type="number"
                                                    class="form-control"
                                                    min="0"
-                                                   [(ngModel)]="currentFeeDefinition.amountFrequency.annualAmount">
+                                                   [(ngModel)]="currentSchoolFeeComponent.amountFrequency.annualAmount">
                                         </div>
                                     </div>
                                 </div>
-                            </ng-container>
-                            <ng-container *ngIf="currentFeeDefinition.frequency=='MONTHLY'">
-                                <app-monthly-amount [amountFrequency]="currentFeeDefinition.amountFrequency"></app-monthly-amount>
-                            </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="currentFeeDefinition.filterType=='CLASS'"  >
-                            <ng-container *ngFor="let classs of currentFeeDefinition.classList">
-                                <div class="row hoverHighlight">
-                                    <div class="col-md-3">
-                                        <span style="font-weight: 800">{{classs.name}}</span>
-                                    </div>
-                                    <div class="col-md-3" *ngIf="currentFeeDefinition.frequency=='YEARLY'">
-                                        <input type="number" min="0" [(ngModel)]="classs.amountFrequency.annualAmount"/>
-                                    </div>
-                                    <div class="col-md-3" *ngIf="currentFeeDefinition.frequency=='MONTHLY'">
-                                        <input type="number" min="0" (change)="currentFeeDefinition.handleItemMonthlyChange($event, classs)" />
-                                    </div>
-                                    <div class="col-md-1 col-md-offset-5" *ngIf="currentFeeDefinition.frequency=='MONTHLY'">
-                                        <i class="material-icons"
-                                           [@rotate]="!classs.amountFrequency.showMonthDetails"
-                                           (click)="classs.amountFrequency.showMonthDetails = !classs.amountFrequency.showMonthDetails">keyboard_arrow_down</i>
-                                    </div>
-                                </div>
-                                <div *ngIf="currentFeeDefinition.frequency=='MONTHLY'" [@slideDown]="classs.amountFrequency.showMonthDetails">
-                                    <app-monthly-amount *ngIf="currentFeeDefinition.frequency=='MONTHLY'"
-                                                        [amountFrequency]="classs.amountFrequency"></app-monthly-amount>
-                                </div>
-                                <div class="clearfix"></div>
-                            </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="currentFeeDefinition.filterType=='BUS STOP'">
-                            <ng-container *ngFor="let busStop of currentFeeDefinition.busStopList">
-                                <div class="row hoverHighlight">
-                                    <div class="col-md-3">
-                                        <span style="font-weight: 800">{{busStop.stopName}}</span>
-                                    </div>
-                                    <div class="col-md-3" *ngIf="currentFeeDefinition.frequency=='YEARLY'">
-                                        <input type="number" min="0" [(ngModel)]="busStop.amountFrequency.annualAmount"/>
-                                    </div>
-                                    <div class="col-md-3" *ngIf="currentFeeDefinition.frequency=='MONTHLY'">
-                                        <input type="number" min="0" (change)="currentFeeDefinition.handleItemMonthlyChange($event, busStop)" />
-                                    </div>
-                                    <div class="col-md-1 col-md-offset-5" *ngIf="currentFeeDefinition.frequency=='MONTHLY'">
-                                        <i class="material-icons"
-                                           [@rotate]="!busStop.amountFrequency.showMonthDetails"
-                                           (click)="busStop.amountFrequency.showMonthDetails = !busStop.amountFrequency.showMonthDetails">keyboard_arrow_down</i>
-                                    </div>
-                                </div>
-                                <div *ngIf="currentFeeDefinition.frequency=='MONTHLY'" [@slideDown]="busStop.amountFrequency.showMonthDetails">
-                                    <app-monthly-amount *ngIf="currentFeeDefinition.frequency=='MONTHLY'"
-                                                        [amountFrequency]="busStop.amountFrequency"></app-monthly-amount>
-                                </div>
-                                <div class="clearfix"></div>
-                            </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="currentFeeDefinition.filterType=='CLASS AND BUS STOP'">
-                            <ng-container *ngFor="let busStop of currentFeeDefinition.busStopList">
-                                <div class="row hoverHighlight">
-                                    <div class="col-md-3">
-                                        <span style="font-weight: 800">{{busStop.stopName}}</span>
-                                    </div>
-                                    <div class="col-md-3" *ngIf="currentFeeDefinition.frequency=='YEARLY'">
-                                        <input type="number" min="0" value="0" (change)="currentFeeDefinition.handleBusStopClassYearlyChange($event, busStop);"/>
-                                    </div>
-                                    <div class="col-md-1"
-                                         [class.col-md-offset-8]="currentFeeDefinition.frequency=='MONTHLY'"
-                                         [class.col-md-offset-5]="currentFeeDefinition.frequency=='YEARLY'">
-                                        <i class="material-icons"
-                                           [@rotate]="!busStop.showClassDetails"
-                                           (click)="busStop.showClassDetails = !busStop.showClassDetails">keyboard_arrow_down</i>
-                                    </div>
-                                </div>
-                                <div *ngIf="busStop.showClassDetails">
-                                    <ng-container *ngFor="let classs of busStop.classList">
-                                        <div class="row hoverHighlight">
-                                            <div class="col-md-3">
-                                                <span style="font-weight: 800; padding-left: 40px;">{{classs.name}}</span>
-                                            </div>
-                                            <div class="col-md-3" *ngIf="currentFeeDefinition.frequency=='YEARLY'">
-                                                <input type="number" min="0" [(ngModel)]="classs.amountFrequency.annualAmount"/>
-                                            </div>
-                                            <div class="col-md-1 col-md-offset-7"
-                                                 *ngIf="currentFeeDefinition.frequency=='MONTHLY'">
-                                                <i class="material-icons"
-                                                   [@rotate]="!classs.amountFrequency.showMonthDetails"
-                                                   (click)="classs.amountFrequency.showMonthDetails = !classs.amountFrequency.showMonthDetails">keyboard_arrow_down</i>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="classs.amountFrequency.showMonthDetails && busStop.showClassDetails">
-                                            <app-monthly-amount *ngIf="currentFeeDefinition.frequency=='MONTHLY'"
-                                                                [amountFrequency]="classs.amountFrequency"></app-monthly-amount>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </ng-container>
-                                </div>
-                                <div class="clearfix"></div>
-                            </ng-container>
-                        </ng-container>
+
+                                <!-- Monthly Amount -->
+                                <ng-container *ngIf="selectedFeeDefinition.frequency=='MONTHLY'">
+                                    <app-monthly-amount [amountFrequency]="currentSchoolFeeComponent.amountFrequency"></app-monthly-amount>
+                                </ng-container>
+
+                                <div class="clearfix" style="margin-bottom: 25px;"></div>
+
+                                <!-- Add, Update, and Delete buttons for School Fee Component -->
+                                <button type="button"
+                                        class="btn btn-{{user.btn_color}}"
+                                        *ngIf="currentSchoolFeeComponent.dbId==0"
+                                        (click)="createSchoolFeeComponent()">Add</button>
+                                <button type="button"
+                                        class="btn btn-{{user.btn_color}}"
+                                        *ngIf="currentSchoolFeeComponent.dbId!=0"
+                                        (click)="updateSchoolFeeComponent()">Update</button>
+                                <button type="button"
+                                        class="btn btn-{{user.btn_color}}"
+                                        *ngIf="currentSchoolFeeComponent.dbId!=0"
+                                        (click)="deleteSchoolFeeComponent()">Delete</button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="clearfix" style="margin-bottom: 25px;"></div>
+
+                        <!-- Add, Update and Delete Buttons For Fee Definition -->
+                        <button type="button"
+                                class="btn btn-{{user.btn_color}}"
+                                *ngIf="currentFeeDefinition.dbId==0"
+                                (click)="createFeeDefinition()">Add</button>
+                        <button type="button"
+                                class="btn btn-{{user.btn_color}}"
+                                *ngIf="currentFeeDefinition.dbId!=0
+                                       && currentFeeDefinition.schoolFeeComponentList.length == 0
+                                       && !currentFeeDefinition.receiptExist"
+                                (click)="updateFeeDefinition()">Update</button>
+                        <button type="button"
+                                class="btn btn-{{user.btn_color}}"
+                                *ngIf="currentFeeDefinition.dbId!=0
+                                       && currentFeeDefinition.schoolFeeComponentList.length == 0
+                                       && !currentFeeDefinition.receiptExist"
+                                (click)="deleteFeeDefinition()">Delete</button>
+
                     </ng-container>
 
 

@@ -35,10 +35,5 @@ export const CLASS_BUS_STOP_BASED_FILTER = 'CLASS AND BUS STOP';
 export const NO_FILTER = 'NONE';
 
 // Frequency
-export const FREQUENCY_LIST = [
-    'YEARLY',
-    'MONTHLY',
-];
-
 export const YEARLY = 'YEARLY';
 export const MONTHLY = 'MONTHLY';

@@ -1,10 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
+// import 'rxjs/add/operator/toPromise';
+
 import { ClassService } from '../../../services/class.service';
 import { FeeService } from '../../fee.service';
 import {FeeDefinition} from '../../classes/fee-definition';
 import {BusStopService} from '../../../services/bus-stop.service';
+
+import { SchoolFeeComponent } from '../../classes/school-fee-component';
+
+import { FREQUENCY_LIST } from '../../classes/constants';
 
 @Component({
     selector: 'app-set-school-fees',
@@ -31,27 +37,23 @@ export class SetSchoolFeesComponent implements OnInit {
 
     @Input() user;
 
-    filterTypeList = [
-        'NONE',
-        'CLASS',
-        'BUS STOP',
-        'CLASS AND BUS STOP',
-    ];
-
-    frequencyList = [
-        'YEARLY',
-        'MONTHLY',
-    ];
-
     selectedFeeType: any;
+
+    frequencyList: any;
 
     classList: any;
 
     busStopList: any;
 
+    feeStructure: any;
+
     feeTypeList: any;
 
+    selectedFeeDefinition: any;
     currentFeeDefinition: FeeDefinition;
+
+    selectedSchoolFeeComponent: any;
+    currentSchoolFeeComponent: SchoolFeeComponent;
 
     isLoading = false;
 
@@ -60,30 +62,159 @@ export class SetSchoolFeesComponent implements OnInit {
                  private feeService: FeeService) { }
 
     ngOnInit(): void {
+
+        this.currentFeeDefinition = new FeeDefinition();
+        this.currentSchoolFeeComponent = new SchoolFeeComponent();
+
+        this.frequencyList = FREQUENCY_LIST;
+
         this.classService.getClassList(this.user.jwt).then( classList => {
-            this.classList = classList
+            this.classList = classList;
         });
-        const data = {
+
+        let data = {
             schoolDbId: this.user.schoolDbId,
         };
         this.busStopService.getBusStopList(data, this.user.jwt).then(busStopList => {
             this.busStopList = busStopList;
         });
-        this.feeService.getFeeTypeList(this.user.jwt).then(feeTypeList => {
-            this.feeTypeList = feeTypeList;
+
+        let feeStructureData = {
+            'schoolDbId': this.user.schoolDbId,
+            'sessionDbId': this.user.schoolCurrentSessionDbId,
+        };
+
+        this.isLoading = true;
+        Promise.all([
+            this.feeService.getFeeStructure(feeStructureData, this.user.jwt),
+            this.feeService.getFeeTypeList(this.user.jwt)]
+        ).then( value => {
+            this.isLoading = false;
+            this.feeStructure = value[0];
+            this.feeTypeList = value[1];
             this.selectedFeeType = this.feeTypeList[0];
-            this.handleSelectedFeeTypeChange();
+            this.populateFeeDefinition();
+        }, error => {
+            this.isLoading = false;
+        });
+
+    }
+
+    populateFeeDefinition(): void {
+
+        let check = true;
+
+        this.feeStructure.forEach(feeDefinition => {
+            if (feeDefinition.feeTypeDbId === this.selectedFeeType.dbId) {
+                this.selectedFeeDefinition = feeDefinition;
+                this.currentFeeDefinition.fromServerObject(feeDefinition);
+                if (feeDefinition.schoolFeeComponentList.length > 0) {
+                    this.populateSchoolFeeComponent(feeDefinition.schoolFeeComponentList[0]);
+                } else {
+                    this.populateSchoolFeeComponent(undefined);
+                }
+                check = false;
+                return;
+            }
+        });
+
+        if (check) {
+            this.currentFeeDefinition = new FeeDefinition();
+            this.selectedFeeDefinition = this.currentFeeDefinition;
+            this.currentFeeDefinition['feeTypeDbId'] = this.selectedFeeType.dbId;
+            this.currentFeeDefinition['feeType'] = this.selectedFeeType.name;
+        }
+
+    }
+
+    populateSchoolFeeComponent(event: any): void {
+        if (event === undefined) {
+            this.currentSchoolFeeComponent = new SchoolFeeComponent();
+            this.selectedSchoolFeeComponent = this.currentSchoolFeeComponent;
+        } else {
+            this.selectedSchoolFeeComponent = event;
+            this.currentSchoolFeeComponent.fromServerObject(event);
+        }
+    }
+
+
+    // Fee Definition Server Actions
+
+    createFeeDefinition(): void {
+        this.isLoading = true;
+        this.feeService.createFeeDefinition(this.currentFeeDefinition.toServerObject(this.user.schoolDbId, this.user.schoolCurrentSessionDbId),
+            this.user.jwt).then( response => {
+                this.isLoading = false;
+                alert(response['message']);
+                if (response['status'] === 'success') {
+                    response['feeDefinition']['schoolFeeComponentList'] = [];
+                    this.feeStructure.push(response['feeDefinition']);
+                }
+                this.populateFeeDefinition();
+        }, error => {
+                this.isLoading = false;
         });
     }
 
-    handleSelectedFeeTypeChange(): void {
-        this.currentFeeDefinition = new FeeDefinition();
-        this.currentFeeDefinition['feeTypeDbId'] = this.selectedFeeType.dbId;
-        this.currentFeeDefinition['feeType'] = this.selectedFeeType.name;
-        this.currentFeeDefinition['filterType'] = this.filterTypeList[0];
-        this.currentFeeDefinition['frequency'] = this.frequencyList[0];
-        this.currentFeeDefinition['rte'] = true;
-        this.currentFeeDefinition.populateAllLists(this.classList, this.busStopList);
+    updateFeeDefinition(): void {
+        this.isLoading = true;
+        this.feeService.updateFeeDefinition(this.currentFeeDefinition.toServerObject(this.user.schoolDbId, this.user.schoolCurrentSessionDbId),
+            this.user.jwt).then( response => {
+                this.isLoading = false;
+                alert(response['message']);
+                if (response['status'] === 'success') {
+                    response['feeDefinition']['schoolFeeComponentList'] = [];
+                    let index, count=0;
+                    this.feeStructure.forEach(feeDefinition => {
+                        if (feeDefinition.dbId === response['feeDefinition']['dbId']) {
+                            index = count;
+                        }
+                        ++count;
+                    });
+                    this.feeStructure.splice(index,1);
+                    this.feeStructure.push(response['feeDefinition']);
+                }
+                this.populateFeeDefinition();
+        }, error => {
+                this.isLoading = false;
+        });
+    }
+
+    deleteFeeDefinition(): void {
+        this.isLoading = true;
+        this.feeService.deleteFeeDefinition(this.currentFeeDefinition.toServerObject(this.user.schoolDbId, this.user.schoolCurrentSessionDbId),
+            this.user.jwt).then( response => {
+            this.isLoading = false;
+            alert(response['message']);
+            if (response['status'] === 'success') {
+                let index, count=0;
+                this.feeStructure.forEach(feeDefinition => {
+                    if (feeDefinition.dbId === response['feeDefinitionDbId']) {
+                        index = count;
+                    }
+                    ++count;
+                });
+                this.feeStructure.splice(index,1);
+            }
+            this.populateFeeDefinition();
+        }, error => {
+            this.isLoading = false;
+        });
+    }
+
+
+    // School Fee Component Server Actions
+
+    createSchoolFeeComponent(): void {
+        alert('Functionality yet to be implemented');
+    }
+
+    updateSchoolFeeComponent(): void {
+        alert('Functionality yet to be implemented');
+    }
+
+    deleteSchoolFeeComponent(): void {
+        alert('Functionality yet to be implemented');
     }
 
 }
