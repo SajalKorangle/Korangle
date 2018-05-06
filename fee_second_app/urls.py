@@ -22,6 +22,13 @@ urlpatterns += [
     url(r'^fee-definitions/(?P<fee_definition_id>[0-9]+)', FeeDefinitionView.as_view()),
 ]
 
+######### School Fee Component #########
+from .views import SchoolFeeComponentView
+urlpatterns += [
+    url(r'^fee-definition/(?P<fee_definition_id>[0-9]+)/school-fee-components', SchoolFeeComponentView.as_view()),
+    url(r'^school-fee-components/(?P<school_fee_component_id>[0-9]+)', SchoolFeeComponentView.as_view()),
+]
+
 ######### Student Fee Status ###########
 from .views import StudentFeeStatusView
 urlpatterns += [

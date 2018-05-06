@@ -52,19 +52,30 @@ class FeeStructureView(APIView):
 
 
 ################# School Fee Definition ###################
-from .business.school_fee_definition import create_fee_definition, update_fee_definition, delete_fee_definition
+from .business.school_fee_definition import create_fee_definition, update_fee_definition, delete_fee_definition,\
+    lock_fee_definition
+
+
+'''@api_view(['GET'])
+def lock_fee_definition_view(request, fee_definition_id):
+    print(fee_definition_id)
+    if request.user.is_authenticated:
+        data = {}
+        data['dbId'] = fee_definition_id
+        return JsonResponse({'response': get_success_response(lock_fee_definition(data))})
+    else:
+        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 
 class FeeDefinitionView(APIView):
 
-    '''def get(self, request, school_id):
+    def get(self, request, fee_definition_id):
         if request.user.is_authenticated:
             data = {}
-            data['schoolDbId'] = school_id
-            data['sessionDbId'] = request.GET['session_id']
-            return JsonResponse({'response': get_success_response(get_fee_definition_list_by_school_id(data))})
+            data['dbId'] = fee_definition_id
+            return JsonResponse({'response': get_success_response(lock_fee_definition(data))})
         else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
     def post(self, request, school_id):
         if request.user.is_authenticated:
@@ -85,6 +96,37 @@ class FeeDefinitionView(APIView):
             data = {}
             data['dbId'] = fee_definition_id
             return JsonResponse({'response': get_success_response(delete_fee_definition(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+
+################# School Fee Component ##############
+from .business.school_fee_component import create_school_fee_component, \
+    update_school_fee_component, delete_school_fee_component
+
+
+class SchoolFeeComponentView(APIView):
+
+    def post(self, request, fee_definition_id):
+        if request.user.is_authenticated:
+            data = json.loads(request.body.decode('utf-8'))
+            return JsonResponse({'response': get_success_response(create_school_fee_component(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+    def put(self, request, school_fee_component_id):
+        if request.user.is_authenticated:
+            data = json.loads(request.body.decode('utf-8'))
+            return JsonResponse({'response': get_success_response(update_school_fee_component(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+    def delete(self, request, school_fee_component_id):
+        if request.user.is_authenticated:
+            data = {
+                'dbId': school_fee_component_id,
+            }
+            return JsonResponse({'response': get_success_response(delete_school_fee_component(data))})
         else:
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 

@@ -1,47 +1,44 @@
 
-from fee_second_app.models import StudentFeeComponent, FeeDefinition, StudentMonthlyFeeComponent, Month
+from fee_second_app.models import FeeDefinition, StudentFeeComponent, StudentMonthlyFeeComponent, \
+    Month, SchoolMonthlyFeeComponent
 
 
-def create_student_fee_component(student_object, fee_definition_object):
+def create_student_fee_component(student_object, fee_definition_object, school_fee_component_object):
 
-    student_fee_component_object = StudentFeeComponent(parentStudent=student_object,
-                                                       parentFeeDefinition=fee_definition_object,
-                                                       amount=0,
-                                                       bySchoolRules=True,
-                                                       remark='')
-    student_fee_component_object.save()
+    if school_fee_component_object is None:
 
-    if fee_definition_object.frequency == FeeDefinition.MONTHLY_FREQUENCY:
+        if fee_definition_object.frequency == FeeDefinition.YEARLY_FREQUENCY:
+            student_fee_component_object = StudentFeeComponent(parentStudent=student_object,
+                                                               parentFeeDefinition=fee_definition_object,
+                                                               amount=0)
+            student_fee_component_object.save()
 
-        for month_object in Month.objects.all().order_by('orderNumber'):
+        elif fee_definition_object.frequency == FeeDefinition.MONTHLY_FREQUENCY:
+            student_fee_component_object = StudentFeeComponent(parentStudent=student_object,
+                                                               parentFeeDefinition=fee_definition_object)
+            student_fee_component_object.save()
+            for month_object in Month.objects.all():
+                student_monthly_fee_component_object = \
+                    StudentMonthlyFeeComponent(parentStudentFeeComponent=student_fee_component_object,
+                                               parentMonth=month_object)
+                student_monthly_fee_component_object.save()
 
-            student_monthly_fee_component_object = \
-                StudentMonthlyFeeComponent(parentStudentFeeComponent=student_fee_component_object,
-                                           parentMonth=month_object,
-                                           amount=0)
-            student_monthly_fee_component_object.save()
+    else:
 
+        if fee_definition_object.frequency == FeeDefinition.YEARLY_FREQUENCY:
+            student_fee_component_object = StudentFeeComponent(parentStudent=student_object,
+                                                               parentFeeDefinition=fee_definition_object,
+                                                               amount=school_fee_component_object.amount)
+            student_fee_component_object.save()
 
-def delete_student_fee_component(fee_definition_object):
-
-    for student_fee_component_object in StudentFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object):
-
-        delete_student_monthly_fee_component(student_fee_component_object)
-        student_fee_component_object.delete()
-
-
-def create_student_monthly_fee_component(student_fee_component_object):
-
-    for month_object in Month.objects.all().order_by('orderNumber'):
-
-        student_monthly_fee_component_object = \
-            StudentMonthlyFeeComponent(parentStudentFeeComponent=student_fee_component_object,
-                                       parentMonth=month_object,
-                                       amount=0)
-        student_monthly_fee_component_object.save()
-
-
-def delete_student_monthly_fee_component(student_fee_component_object):
-
-    StudentMonthlyFeeComponent.objects.filter(parentStudentFeeComponent=student_fee_component_object).delete()
-
+        elif fee_definition_object.frequency == FeeDefinition.MONTHLY_FREQUENCY:
+            student_fee_component_object = StudentFeeComponent(parentStudent=student_object,
+                                                               parentFeeDefinition=fee_definition_object)
+            student_fee_component_object.save()
+            for school_monthly_fee_component_object in \
+                    SchoolMonthlyFeeComponent.objects.filter(parentSchoolFeeComponent=school_fee_component_object):
+                student_monthly_fee_component_object = \
+                    StudentMonthlyFeeComponent(parentStudentFeeComponent=student_fee_component_object,
+                                               parentMonth=school_monthly_fee_component_object.parentMonth,
+                                               amount=school_monthly_fee_component_object.amount)
+                student_monthly_fee_component_object.save()

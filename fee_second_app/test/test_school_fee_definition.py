@@ -1,12 +1,20 @@
 
 from parent_test import ParentTestCase
 
-from fee_second_app.models import FeeDefinition, FeeType, StudentFeeComponent, SubFeeReceipt, StudentMonthlyFeeComponent
-from school_app.model.models import School, Session
-from student_app.models import StudentSection
+# Models
+from fee_second_app.models import FeeDefinition, FeeType, StudentFeeComponent, StudentMonthlyFeeComponent, BusStopBasedFilter
+from school_app.model.models import School, BusStop
+from student_app.models import StudentSection, Student
 
+# Business
 from fee_second_app.business.school_fee_definition import get_fee_definition_by_object, create_fee_definition, \
-    update_fee_definition, delete_fee_definition
+    update_fee_definition, delete_fee_definition, lock_fee_definition
+
+# Factories
+from fee_second_app.factories.fee_type import FeeTypeFactory
+from fee_second_app.factories.fee_definition import FeeDefinitionFactory
+from fee_second_app.factories.school_fee_component import SchoolFeeComponentFactory
+from student_app.factories.student import StudentFactory
 
 
 class FeeDefinitionTestCase(ParentTestCase):
@@ -17,7 +25,7 @@ class FeeDefinitionTestCase(ParentTestCase):
 
         response = get_fee_definition_by_object(fee_definition_object)
 
-        self.assertEqual(len(response), 11)
+        self.assertEqual(len(response), 12)
 
         self.assertEqual(response['dbId'], fee_definition_object.id)
         self.assertEqual(response['schoolDbId'], fee_definition_object.parentSchool_id)
@@ -29,11 +37,8 @@ class FeeDefinitionTestCase(ParentTestCase):
         self.assertEqual(response['classFilter'], fee_definition_object.classFilter)
         self.assertEqual(response['busStopFilter'], fee_definition_object.busStopFilter)
         self.assertEqual(response['frequency'], fee_definition_object.frequency)
-
-        if SubFeeReceipt.objects.filter(parentStudentFeeComponent__parentFeeDefinition=fee_definition_object).count():
-            self.assertEqual(response['receiptExist'], True)
-        else:
-            self.assertEqual(response['receiptExist'], False)
+        self.assertEqual(response['locked'], fee_definition_object.locked)
+        self.assertEqual(response['orderNumber'], fee_definition_object.orderNumber)
 
     def test_create_fee_definition(self):
 
@@ -54,20 +59,13 @@ class FeeDefinitionTestCase(ParentTestCase):
 
         create_fee_definition(data)
 
-        fee_definition_object = FeeDefinition.objects.get(parentSchool_id=data['schoolDbId'],
-                                                          parentSession_id=data['sessionDbId'],
-                                                          parentFeeType_id=data['feeTypeDbId'],
-                                                          rte=data['rte'],
-                                                          classFilter=data['classFilter'],
-                                                          busStopFilter=data['busStopFilter'],
-                                                          frequency=data['frequency'])
-
-        user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
-
-        for student_section_object in StudentSection.objects.filter(parentStudent__parentUser=user_object,parentSection__parentClassSession__parentSession_id=data['sessionDbId']):
-
-            StudentFeeComponent.objects.get(parentStudent=student_section_object.parentStudent,
-                                            parentFeeDefinition=fee_definition_object)
+        FeeDefinition.objects.get(parentSchool_id=data['schoolDbId'],
+                                  parentSession_id=data['sessionDbId'],
+                                  parentFeeType_id=data['feeTypeDbId'],
+                                  rte=data['rte'],
+                                  classFilter=data['classFilter'],
+                                  busStopFilter=data['busStopFilter'],
+                                  frequency=data['frequency'])
 
     def test_update_fee_definition(self):
 
@@ -96,37 +94,24 @@ class FeeDefinitionTestCase(ParentTestCase):
 
         update_fee_definition(data)
 
-        fee_definition_object = FeeDefinition.objects.get(id=data['dbId'],
-                                                          parentSchool_id=data['schoolDbId'],
-                                                          parentSession_id=data['sessionDbId'],
-                                                          parentFeeType_id=data['feeTypeDbId'],
-                                                          rte=data['rte'],
-                                                          classFilter=data['classFilter'],
-                                                          busStopFilter=data['busStopFilter'],
-                                                          frequency=data['frequency'])
-
-        user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
-
-        for student_section_object in StudentSection.objects.filter(parentStudent__parentUser=user_object,
-                                                                    parentSection__parentClassSession__parentSession_id=data['sessionDbId']):
-
-            student_fee_component_object = StudentFeeComponent.objects.get(parentStudent=student_section_object.parentStudent,
-                                                                           parentFeeDefinition=fee_definition_object)
-
-            if data['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
-                self.assertEqual(12, StudentMonthlyFeeComponent.objects.filter(
-                    parentStudentFeeComponent=student_fee_component_object).count())
-            if data['frequency'] == FeeDefinition.YEARLY_FREQUENCY:
-                self.assertEqual(0, StudentMonthlyFeeComponent.objects.filter(
-                    parentStudentFeeComponent=student_fee_component_object).count())
+        FeeDefinition.objects.get(id=data['dbId'],
+                                  parentSchool_id=data['schoolDbId'],
+                                  parentSession_id=data['sessionDbId'],
+                                  parentFeeType_id=data['feeTypeDbId'],
+                                  rte=data['rte'],
+                                  classFilter=data['classFilter'],
+                                  busStopFilter=data['busStopFilter'],
+                                  frequency=data['frequency'])
 
     def test_delete_fee_definition(self):
 
-        for student_fee_definition_object in StudentFeeComponent.objects.all():
+        fee_definition_object = FeeDefinitionFactory()
+
+        '''for student_fee_definition_object in StudentFeeComponent.objects.all():
 
             if student_fee_definition_object.subconcession_set.count() == 0 & student_fee_definition_object.subconcession_set.count() == 0:
 
-                fee_definition_object = student_fee_definition_object.parentFeeDefinition
+                fee_definition_object = student_fee_definition_object.parentFeeDefinition'''
 
         data = {
             'dbId': fee_definition_object.id
@@ -135,3 +120,51 @@ class FeeDefinitionTestCase(ParentTestCase):
         delete_fee_definition(data)
 
         self.assertEqual(0, FeeDefinition.objects.filter(id=data['dbId']).count())
+
+    def test_lock_fee_definition(self):
+
+        fee_definition_object_initial = FeeDefinitionFactory(rte=False, busStopFilter=False)
+
+        school_fee_component_object = SchoolFeeComponentFactory(parentFeeDefinition=fee_definition_object_initial)
+
+        StudentFactory(rte=Student.RTE_YES)
+
+        data = {
+            'dbId': fee_definition_object_initial.id
+        }
+
+        lock_fee_definition(data)
+
+        fee_definition_object = FeeDefinition.objects.get(id=data['dbId'])
+
+        self.assertEqual(fee_definition_object_initial.id, fee_definition_object.id)
+
+        user_object = fee_definition_object.parentSchool.user.all()[0]
+
+        student_fee_component_queryset = StudentFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object)
+
+        student_queryset = Student.objects.filter(parentUser=user_object)
+
+        self.assertEqual(student_fee_component_queryset.count(), student_queryset.count())
+
+        for student_fee_component_object in student_fee_component_queryset:
+            student_object = student_fee_component_object.parentStudent
+            student_section_object = \
+                StudentSection.objects.get(parentStudent=student_object,
+                                           parentSection__parentClassSession__parentSession=fee_definition_object.parentSession)
+            class_object = student_section_object.parentSection.parentClassSession.parentClass
+            if student_object.rte == Student.RTE_YES \
+                    or class_object.name != 'Class - 12':
+                if fee_definition_object.frequency == FeeDefinition.YEARLY_FREQUENCY:
+                    self.assertEqual(student_fee_component_object.amount, 0)
+                elif fee_definition_object.frequency == FeeDefinition.MONTHLY_FREQUENCY:
+                    for student_monthly_fee_component_object in \
+                            StudentMonthlyFeeComponent.objects.filter(parentStudentFeeComponent=student_fee_component_object):
+                        self.assertEqual(student_monthly_fee_component_object.amount, 0)
+            else:
+                if fee_definition_object.frequency == FeeDefinition.YEARLY_FREQUENCY:
+                    self.assertEqual(student_fee_component_object.amount, 1000)
+                elif fee_definition_object.frequency == FeeDefinition.MONTHLY_FREQUENCY:
+                    for student_monthly_fee_component_object in \
+                            StudentMonthlyFeeComponent.objects.filter(parentStudentFeeComponent=student_fee_component_object):
+                        self.assertEqual(student_monthly_fee_component_object.amount, 1000)

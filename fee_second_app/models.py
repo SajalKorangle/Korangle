@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from school_app.model.models import School, Session, BusStop
 
-from student_app.models import Student
+from student_app.models import Student, StudentSection
 
 from class_app.models import Class
 
@@ -46,6 +46,7 @@ class Month(models.Model):
 
 class FeeType(models.Model):
     name = models.TextField(verbose_name='name', unique=True)
+    orderNumber = models.IntegerField(verbose_name='orderNumber', default=0)
 
     class Meta:
         db_table = 'fee_type'
@@ -57,7 +58,7 @@ class FeeDefinition(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, verbose_name='parentFeeType')
 
-    orderNumber = models.IntegerField()
+    orderNumber = models.IntegerField(verbose_name='orderNumber', default=0)
 
     rte = models.BooleanField(null=False, default=False, verbose_name='rte_allowed')
     onlyNewStudent = models.BooleanField(null=False, default=False, verbose_name='only_new_student')
@@ -88,6 +89,8 @@ class FeeDefinition(models.Model):
     )
     frequency = models.CharField(max_length=10, choices=FREQUENCY, null=False, default=YEARLY_FREQUENCY)
 
+    locked = models.BooleanField(null=False, default=False, verbose_name='locked')
+
     class Meta:
         db_table = 'fee_definition'
 
@@ -101,6 +104,8 @@ class SchoolFeeComponent(models.Model):
 
     class Meta:
         db_table = 'school_fee_component'
+
+        unique_together = ('parentFeeDefinition', 'title')
 
 class SchoolMonthlyFeeComponent(models.Model):
 
@@ -138,7 +143,7 @@ class StudentFeeComponent(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
     parentFeeDefinition = models.ForeignKey(FeeDefinition, on_delete=models.PROTECT, default=0,
                                             verbose_name='parentFeeDefinition')
-    amount = models.IntegerField(verbose_name='amount')
+    amount = models.IntegerField(null=True, verbose_name='amount')
     bySchoolRules = models.BooleanField(null=False, default=True, verbose_name='bySchoolRules')
 
     remark = models.TextField()
@@ -146,52 +151,76 @@ class StudentFeeComponent(models.Model):
     @property
     def schoolFeeComponent(self):
         session_object = self.parentFeeDefinition.parentSession
-        if self.parentFeeDefinition.classFilter == True & self.parentFeeDefinition.busStopFilter == False:
-            class_object = self.parentStudent.get_class_object(session_object)
-            try:
-                schoolFeeComponent_object = ClassBasedFilter.objects.get(
-                    parentClass=class_object,
-                    parentSchoolFeeComponent__parentFeeDefinition=self.parentFeeDefinition).parentSchoolFeeComponent
-                return schoolFeeComponent_object
-            except ObjectDoesNotExist:
-                return None
-        elif self.parentFeeDefinition.classFilter == False & self.parentFeeDefinition.busStopFilter == True:
-            busStop_object = self.parentStudent.currentBusStop
-            try:
-                schoolFeeComponent_object = BusStopBasedFilter.objects.get(
-                    parentBusStop=busStop_object,
-                    parentSchoolFeeComponent__parentFeeDefinition=self.parentFeeDefinition).parentSchoolFeeComponent
-                return schoolFeeComponent_object
-            except ObjectDoesNotExist:
-                return None
-        elif self.parentFeeDefinition.classFilter == True & self.parentFeeDefinition.busStopFilter == True:
-            class_object = self.parentStudent.get_class_object(session_object)
-            busStop_object = self.parentStudent.currentBusStop
-            for schoolFeeComponent_object in SchoolFeeComponent.objects.filter(parentFeeDefinition=self.parentFeeDefinition):
-                if schoolFeeComponent_object.classbasedfee_set.filter(parentClass=class_object).count() == 1 \
-                        & schoolFeeComponent_object.busstopbasedfee_set.filter(parentBusStop=busStop_object).count() == 1:
-                    return schoolFeeComponent_object
+        fee_definition_object = self.parentFeeDefinition
+        student_object = self.parentStudent
+
+        # check rte constraint
+        if (fee_definition_object.rte is False) & (student_object.rte == Student.RTE_YES):
             return None
-        elif self.parentFeeDefinition.classFilter == False & self.parentFeeDefinition.busStopFilter == False:
-            return SchoolFeeComponent.objects.get(parentFeeDefinition=self.parentFeeDefinition)
-        return None
+
+        # check only new student constraint
+            # Need new field 'Admission session' in student profile for this to work
+
+        # find student fee component by defined filters
+
+        school_fee_component_queryset = SchoolFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object)
+
+        if fee_definition_object.classFilter:
+            student_section_object = StudentSection.objects.get(parentStudent=student_object,
+                                                                parentSection__parentClassSession__parentSession=session_object)
+            class_object = student_section_object.parentSection.parentClassSession.parentClass
+            for school_fee_component_object in school_fee_component_queryset:
+                if school_fee_component_object.classbasedfilter_set.filter(parentClass=class_object).count() == 0:
+                    school_fee_component_queryset = school_fee_component_queryset.exclude(id=school_fee_component_object.id)
+
+        if fee_definition_object.busStopFilter:
+            bus_stop_object = student_object.currentBusStop
+            for school_fee_component_object in school_fee_component_queryset:
+                if school_fee_component_object.busstopbasedfilter_set.filter(parentBusStop=bus_stop_object).count() == 0:
+                    school_fee_component_queryset = school_fee_component_queryset.exclude(id=school_fee_component_object.id)
+
+        if school_fee_component_queryset.count() == 0:
+            return None
+        elif school_fee_component_queryset.count() == 1:
+            return school_fee_component_queryset[0]
+        else:
+            raise ValueError('More than one school fee component for a student')
+            return None
 
     @property
     def schoolAmount(self):
         if self.schoolFeeComponent is None:
-            return None
+            return 0
         else:
             return self.schoolFeeComponent.amount
 
     @property
+    def amountPaid(self):
+        amountPaid = \
+        SubFeeReceipt.objects.filter(parentStudentFeeComponent=self, parentFeeReceipt__cancelled=False).aggregate(
+            Sum('amount'))['amount__sum']
+        if amountPaid is None:
+            return 0
+        return amountPaid
+
+    @property
+    def amountExempted(self):
+        amountExempted = SubConcession.objects.filter(parentStudentFeeComponent=self, parentConcessionSecond__cancelled=False).aggregate(Sum('amount'))['amount__sum']
+        if amountExempted is None:
+            return 0
+        return amountExempted
+
+
+    @property
     def amountDue(self):
-        amountPaid = SubFeeReceipt.objects.filter(parentStudentFeeComponent=self, parentFeeReceipt__cancelled=False).aggregate(Sum('amount'))['amount__sum']
+        return self.amount-self.amountPaid-self.amountExempted
+        '''amountPaid = SubFeeReceipt.objects.filter(parentStudentFeeComponent=self, parentFeeReceipt__cancelled=False).aggregate(Sum('amount'))['amount__sum']
         if amountPaid is None:
             amountPaid = 0
         amountExempted = SubConcession.objects.filter(parentStudentFeeComponent=self, parentConcessionSecond__cancelled=False).aggregate(Sum('amount'))['amount__sum']
         if amountExempted is None:
             amountExempted = 0
-        return self.amount-amountPaid-amountExempted
+        return self.amount-amountPaid-amountExempted'''
 
     class Meta:
         db_table = 'student_fee_component'
@@ -220,8 +249,27 @@ class StudentMonthlyFeeComponent(models.Model):
                                                          parentMonth=self.parentMonth).amount
 
     @property
-    def amountDue(self):
+    def amountPaid(self):
         amountPaid = SubFeeReceiptMonthly.objects.filter(
+            parentSubFeeReceipt__parentStudentFeeComponent=self.parentStudentFeeComponent,
+            parentMonth=self.parentMonth).aggregate(Sum('amount'))['amount__sum']
+        if amountPaid is None:
+            return 0
+        return amountPaid
+
+    @property
+    def amountExempted(self):
+        amountExempted = SubConcessionMonthly.objects.filter(
+            parentSubConcession__parentStudentFeeComponent=self.parentStudentFeeComponent,
+            parentMonth=self.parentMonth).aggregate(Sum('amount'))['amount__sum']
+        if amountExempted is None:
+            amountExempted = 0
+        return amountExempted
+
+    @property
+    def amountDue(self):
+        return self.amount-self.amountPaid-self.amountExempted
+        '''amountPaid = SubFeeReceiptMonthly.objects.filter(
             parentSubFeeReceipt__parentStudentFeeComponent=self.parentStudentFeeComponent,
             parentMonth=self.parentMonth).aggregate(Sum('amount'))['amount__sum']
         if amountPaid is None:
@@ -231,7 +279,7 @@ class StudentMonthlyFeeComponent(models.Model):
             parentMonth=self.parentMonth).aggregate(Sum('amount'))['amount__sum']
         if amountExempted is None:
             amountExempted = 0
-        return self.amount-amountPaid-amountExempted
+        return self.amount-amountPaid-amountExempted'''
 
     class Meta:
         db_table = 'student_fee_component_monthly'

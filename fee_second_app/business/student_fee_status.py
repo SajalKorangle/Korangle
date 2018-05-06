@@ -75,6 +75,7 @@ def update_student_fee_status(data):
             student_fee_component_object = StudentFeeComponent.objects.get(id=student_fee_component['dbId'])
 
             student_fee_component_object.amount = student_fee_component['amount']
+            # change bySchoolRules variable too if it is not matching school amount.
             student_fee_component_object.save()
 
         elif student_fee_component['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
@@ -84,6 +85,7 @@ def update_student_fee_status(data):
                 student_fee_component_monthly_object = StudentMonthlyFeeComponent.objects.get(parentMonth__name=student_monthly_fee_component['month'],
                                                                                               parentStudentFeeComponent_id=student_fee_component['dbId'])
                 student_fee_component_monthly_object.amount = student_monthly_fee_component['amount']
+                # change bySchoolRules variable too if it is not matching school amount.
                 student_fee_component_monthly_object.save()
 
         request = {}

@@ -72,16 +72,17 @@ def populate_month(apps, schema_editor):
 def populate_fee_type(apps, schema_editor):
 
     FeeType = apps.get_model('fee_second_app', 'FeeType')
-    fee_type_object = FeeType(name='Annual Fee')
+
+    fee_type_object = FeeType(name='Admission Fee', orderNumber=1)
     fee_type_object.save()
 
-
-    FeeType = apps.get_model('fee_second_app', 'FeeType')
-    fee_type_object = FeeType(name='Tuition Fee')
+    fee_type_object = FeeType(name='Annual Fee', orderNumber=2)
     fee_type_object.save()
 
-    FeeType = apps.get_model('fee_second_app', 'FeeType')
-    fee_type_object = FeeType(name='Vehicle Fee')
+    fee_type_object = FeeType(name='Vehicle Fee', orderNumber=3)
+    fee_type_object.save()
+
+    fee_type_object = FeeType(name='Tuition Fee', orderNumber=4)
     fee_type_object.save()
 
 
@@ -91,7 +92,7 @@ def populate_fee_structure(apps, schema_editor):
 
     populate_bright_fee_structure(apps, schema_editor, 'brighthindi')
 
-    populate_champion_school_fee_structure(apps, schema_editor)
+    # populate_champion_school_fee_structure(apps, schema_editor)
 
 
 def populate_champion_school_fee_structure(apps, schema_editor):
@@ -108,9 +109,10 @@ def populate_champion_school_fee_structure(apps, schema_editor):
 
     fee_type_object = FeeType.objects.get(name='Tuition Fee')
     fee_definition_object = FeeDefinition(parentSchool=school_object, parentSession=session_object,
-                                          parentFeeType=fee_type_object, rte=False, orderNumber=1,
+                                          parentFeeType=fee_type_object, rte=False, orderNumber=fee_type_object.orderNumber,
                                           classFilter=True,
                                           busStopFilter=False,
+                                          locked=True,
                                           frequency=fee_second_app.models.FeeDefinition.MONTHLY_FREQUENCY)
     fee_definition_object.save()
 
@@ -138,9 +140,10 @@ def populate_champion_school_fee_structure(apps, schema_editor):
 
     fee_type_object = FeeType.objects.get(name='Vehicle Fee')
     fee_definition_object = FeeDefinition(parentSchool=school_object, parentSession=session_object,
-                                          parentFeeType=fee_type_object, rte=True, orderNumber=2,
+                                          parentFeeType=fee_type_object, rte=True, orderNumber=fee_type_object.orderNumber,
                                           busStopFilter=True,
                                           classFilter=False,
+                                          locked=True,
                                           frequency=fee_second_app.models.FeeDefinition.MONTHLY_FREQUENCY)
     fee_definition_object.save()
 
@@ -372,9 +375,10 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
     fee_type_object = FeeType.objects.get(name='Annual Fee')
 
     fee_definition_object = FeeDefinition(parentSchool=school_object, parentSession=session_object,
-                                          parentFeeType=fee_type_object, rte=True, orderNumber=1,
+                                          parentFeeType=fee_type_object, rte=True, orderNumber=fee_type_object.orderNumber,
                                           busStopFilter=False,
                                           classFilter=False,
+                                          locked=True,
                                           frequency=fee_second_app.models.FeeDefinition.YEARLY_FREQUENCY)
     fee_definition_object.save()
 
