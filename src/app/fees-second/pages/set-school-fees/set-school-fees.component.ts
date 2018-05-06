@@ -64,7 +64,7 @@ export class SetSchoolFeesComponent implements OnInit {
     ngOnInit(): void {
 
         this.currentFeeDefinition = new FeeDefinition();
-        this.currentSchoolFeeComponent = new SchoolFeeComponent();
+        // this.currentSchoolFeeComponent = new SchoolFeeComponent(0);
 
         this.frequencyList = FREQUENCY_LIST;
 
@@ -91,6 +91,9 @@ export class SetSchoolFeesComponent implements OnInit {
         ).then( value => {
             this.isLoading = false;
             this.feeStructure = value[0];
+            console.log(this.feeStructure);
+            // this.feeStructure = Array.of(this.feeStructure);
+            // console.log(this.feeStructure);
             this.feeTypeList = value[1];
             this.selectedFeeType = this.feeTypeList[0];
             this.populateFeeDefinition();
@@ -106,8 +109,8 @@ export class SetSchoolFeesComponent implements OnInit {
 
         this.feeStructure.forEach(feeDefinition => {
             if (feeDefinition.feeTypeDbId === this.selectedFeeType.dbId) {
-                this.selectedFeeDefinition = feeDefinition;
                 this.currentFeeDefinition.fromServerObject(feeDefinition);
+                this.selectedFeeDefinition = feeDefinition;
                 if (feeDefinition.schoolFeeComponentList.length > 0) {
                     this.populateSchoolFeeComponent(feeDefinition.schoolFeeComponentList[0]);
                 } else {
@@ -129,11 +132,12 @@ export class SetSchoolFeesComponent implements OnInit {
 
     populateSchoolFeeComponent(event: any): void {
         if (event === undefined) {
-            this.currentSchoolFeeComponent = new SchoolFeeComponent();
+            this.currentSchoolFeeComponent = new SchoolFeeComponent(this.selectedFeeDefinition, this.classList, this.busStopList);
             this.selectedSchoolFeeComponent = this.currentSchoolFeeComponent;
         } else {
-            this.selectedSchoolFeeComponent = event;
+            this.currentSchoolFeeComponent = new SchoolFeeComponent(this.selectedFeeDefinition, this.classList, this.busStopList);
             this.currentSchoolFeeComponent.fromServerObject(event);
+            this.selectedSchoolFeeComponent = event;
         }
     }
 
@@ -206,15 +210,136 @@ export class SetSchoolFeesComponent implements OnInit {
     // School Fee Component Server Actions
 
     createSchoolFeeComponent(): void {
-        alert('Functionality yet to be implemented');
+
+        let data = this.currentSchoolFeeComponent.toServerObject();
+
+        if (this.selectedFeeDefinition.classFilter && data.classList.length === 0) {
+            alert('Atleast one class should be selected');
+            return;
+        }
+        if (this.selectedFeeDefinition.busStopFilter && data.busStopList.length === 0) {
+            alert('Atleast one bus stop should be selected');
+            return;
+        }
+        if (!data.title || data.title === '') {
+            alert('Title should be populated');
+            return;
+        }
+        let sameTitle = false;
+        this.selectedFeeDefinition.schoolFeeComponentList.every(schoolFeeComponent => {
+            if (schoolFeeComponent.title === data.title) {
+                sameTitle = true;
+                return false;
+            }
+            return true;
+        });
+        if (sameTitle) {
+            alert('Title: \''+data.title+'\' have already been used in this fee.');
+            return;
+        }
+
+        this.isLoading=true;
+        this.feeService.createSchoolFeeComponent(data,
+            this.user.jwt).then( response => {
+            this.isLoading = false;
+            alert('Fee Amount declared successfully');
+            this.feeStructure.every(feeDefinition => {
+                if (feeDefinition.dbId === response.feeDefinitionDbId){
+                    feeDefinition.schoolFeeComponentList.push(response);
+                    if (feeDefinition.feeTypeDbId === this.selectedFeeType.dbId) {
+                        this.populateFeeDefinition();
+                        this.populateSchoolFeeComponent(response);
+                    }
+                    return false;
+                }
+                return true;
+            });
+        }, error => {
+            this.isLoading = false;
+        });
     }
 
     updateSchoolFeeComponent(): void {
-        alert('Functionality yet to be implemented');
+
+        let data = this.currentSchoolFeeComponent.toServerObject();
+
+        if (!data.title || data.title === '') {
+            alert('Title should be populated');
+            return;
+        }
+        let sameTitle = false;
+        this.selectedFeeDefinition.schoolFeeComponentList.every(schoolFeeComponent => {
+            if (schoolFeeComponent.dbId !== data.dbId && schoolFeeComponent.title === data.title) {
+                sameTitle = true;
+                return false;
+            }
+            return true;
+        });
+        if (sameTitle) {
+            alert('Title: \''+data.title+'\' have already been used in this fee.');
+            return;
+        }
+
+        this.isLoading=true;
+        this.feeService.updateSchoolFeeComponent(data,
+            this.user.jwt).then( response => {
+            this.isLoading = false;
+            alert('Fee Amount updated successfully');
+            this.feeStructure.every(feeDefinition => {
+                if (feeDefinition.dbId === response.feeDefinitionDbId){
+                    feeDefinition.schoolFeeComponentList.every((schoolFeeComponent, index) => {
+                        if (schoolFeeComponent.dbId === response.dbId) {
+                            feeDefinition.schoolFeeComponentList.splice(index, 1);
+                            feeDefinition.schoolFeeComponentList.push(response);
+                            if (feeDefinition.feeTypeDbId === this.selectedFeeType.dbId) {
+                                this.populateFeeDefinition();
+                                this.populateSchoolFeeComponent(response);
+                            }
+                            return false;
+                        }
+                        return true;
+                    });
+                    return false;
+                }
+                return true;
+            });
+        }, error => {
+            this.isLoading = false;
+        });
     }
 
     deleteSchoolFeeComponent(): void {
-        alert('Functionality yet to be implemented');
+
+        let data = {
+            'dbId': this.currentSchoolFeeComponent.dbId,
+            'feeDefinitionDbId': this.currentSchoolFeeComponent.parentFeeDefinition.dbId,
+        };
+
+        this.isLoading=true;
+        this.feeService.deleteSchoolFeeComponent(data,
+            this.user.jwt).then( response => {
+            this.isLoading = false;
+            alert('Fee Amount declaration deleted successfully');
+            this.feeStructure.every(feeDefinition => {
+                if (feeDefinition.dbId === data.feeDefinitionDbId){
+                    feeDefinition.schoolFeeComponentList.every((schoolFeeComponent, index) => {
+                        if (schoolFeeComponent.dbId === response.dbId) {
+                            feeDefinition.schoolFeeComponentList.splice(index, 1);
+                            if (feeDefinition.feeTypeDbId === this.selectedFeeType.dbId) {
+                                this.populateFeeDefinition();
+                                this.populateSchoolFeeComponent(undefined);
+                            }
+                            return false;
+                        }
+                        return true;
+                    });
+                    return false;
+                }
+                return true;
+            });
+        }, error => {
+            this.isLoading = false;
+        });
     }
 
 }

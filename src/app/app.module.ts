@@ -45,6 +45,8 @@ import { SetSchoolFeesComponent } from './fees-second/pages/set-school-fees/set-
 import {FeeReceiptListComponent} from './fees-second/components/fees-table/fee-receipt-list.component';
 import { DiscountListComponent } from './fees-second/components/discount-table/discount-list.component';
 import { MonthlyAmountComponent } from './fees-second/components/monthly-amount/monthly-amount.component';
+import { FeeStructureComponent } from './fees-second/components/fee-structure/fee-structure.component';
+import { ApproveFeesComponent } from './fees-second/pages/approve-fees/approve-fees.component';
 
 // import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
@@ -91,6 +93,7 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
         FeeReceiptListComponent,
         DiscountListComponent,
         MonthlyAmountComponent,
+        FeeStructureComponent,
 
         CollectFeeComponent,
         TotalCollectionComponent,
@@ -98,6 +101,7 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
         GiveDiscountComponent,
         TotalDiscountComponent,
         SetSchoolFeesComponent,
+        ApproveFeesComponent,
 
         // FeesTableComponent,
         LoadingSpinnerComponent,

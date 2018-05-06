@@ -8,9 +8,11 @@ export class FeeDefinition {
     feeType: string;
     feeTypeDbId: string;
 
+    orderNumber: number;
+
     frequency: string = YEARLY;
 
-    receiptExist: boolean = false;
+    locked: boolean = false;
 
     rte: boolean = true;
     onlyNewStudent: boolean = false;
@@ -26,21 +28,12 @@ export class FeeDefinition {
         this.feeType = feeDefinition.feeType;
         this.feeTypeDbId = feeDefinition.feeTypeDbId;
         this.frequency = feeDefinition.frequency;
-        this.receiptExist = feeDefinition.receiptExist;
+        this.locked = feeDefinition.locked;
         this.rte = feeDefinition.rte;
         this.onlyNewStudent = feeDefinition.onlyNewStudent;
         this.classFilter = feeDefinition.classFilter;
         this.busStopFilter = feeDefinition.busStopFilter;
-        this.schoolFeeComponentList = feeDefinition.schoolFeeComponentList;
-
-        /*this.schoolFeeComponentList = [];
-        if ( 'schoolFeeComponentList' in feeDefinition) {
-            feeDefinition.schoolFeeComponentList.forEach( schoolFeeComponent => {
-                let tempSchoolFeeComponent = new SchoolFeeComponent();
-                tempSchoolFeeComponent.fromServerObject(schoolFeeComponent);
-                this.schoolFeeComponentList.push(tempSchoolFeeComponent);
-            })
-        }*/
+        this.orderNumber = feeDefinition.orderNumber;
 
     }
 

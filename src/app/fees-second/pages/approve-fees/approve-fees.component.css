@@ -58,17 +58,12 @@ i {
     height: 60px;
 }
 
-.checkbox-margin {
-    margin: 0 10px;
+.hoverHighlight:hover {
+    background-color: lightgrey;
 }
 
-.schoolComponentSpace {
-    width: 100%;
-    border-bottom: 1px solid lightgrey;
-    border-top: 1px solid lightgrey;
-    /*margin-top: 25px;*/
-    padding-top: 25px;
-    padding-bottom: 25px;
+.hoverHighlight {
+    padding-top: 5px;
 }
 
 /*.example-form {

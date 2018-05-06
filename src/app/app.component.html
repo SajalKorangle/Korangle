@@ -23,6 +23,7 @@
             <app-give-discount *ngIf="user.appSection==='give_discount'" [user]="user"></app-give-discount>
             <app-total-discount *ngIf="user.appSection==='total_discount'" [user]="user"></app-total-discount>
             <app-set-school-fees *ngIf="user.appSection==='set_school_fees'" [user]="user"></app-set-school-fees>
+            <app-approve-fees *ngIf="user.appSection==='approve_fees'" [user]="user"></app-approve-fees>
 
             <app-new-expense *ngIf="user.appSection==='new_expense'" [user]="user"></app-new-expense>
             <app-expense-list *ngIf="user.appSection==='expense_list'" [user]="user"></app-expense-list>

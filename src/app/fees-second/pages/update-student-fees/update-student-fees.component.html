@@ -35,7 +35,7 @@
                             <div class="col-md-2">{{getComponentTotalFeeInitialValue(component)-getComponentFeesDue(component)}}</div>
                             <div class="col-md-2">{{getComponentSchoolTotalFee(component)}}</div>
                             <div class="col-md-2">{{getComponentTotalFeeInitialValue(component)}}</div>
-                            <div class="col-md-2" *ngIf="component.frequency=='ANNUALLY'">
+                            <div class="col-md-2" *ngIf="component.frequency==this.frequencyList[0]">
                                 <input class='paymentInput'
                                        type="number"
                                        [attr.min]="getComponentTotalFeeInitialValue(component)-getComponentFeesDue(component)"
@@ -43,7 +43,7 @@
                                        (blur)="policeComponentTotalFeeInput(component, $event)">
                             </div>
                         </div>
-                        <ng-container *ngIf="component.frequency=='MONTHLY'">
+                        <ng-container *ngIf="component.frequency==this.frequencyList[1]">
                             <ng-container *ngFor="let monthlyComponent of component.monthList">
                                 <div class="row">
                                     <div class="col-md-2 col-md-offset-1">{{monthlyComponent.month}}</div>
@@ -79,18 +79,18 @@
                                     <td class="text-right">{{getComponentTotalFeeInitialValue(component)-getComponentFeesDue(component)}}</td>
                                     <td class="text-right">{{getComponentSchoolTotalFee(component)}}</td>
                                     <td class="text-right">{{getComponentTotalFeeInitialValue(component)}}</td>
-                                    <td class="text-right" *ngIf="component.frequency=='ANNUALLY'">
+                                    <td class="text-right" *ngIf="component.frequency==frequencyList[0]">
                                         <input class='paymentInput'
                                                type="number"
                                                [attr.min]="getComponentTotalFeeInitialValue(component)-getComponentFeesDue(component)"
                                                [(ngModel)]="component.amount"
                                                (blur)="policeComponentTotalFeeInput(component, $event)">
                                     </td>
-                                    <td class="text-right" style="padding-right: 25px;" *ngIf="component.frequency=='MONTHLY'">
+                                    <td class="text-right" style="padding-right: 25px;" *ngIf="component.frequency==frequencyList[1]">
                                         {{getComponentTotalFeeFinalValue(component)}}
                                     </td>
                                 </tr>
-                                <ng-container *ngIf="component.frequency=='MONTHLY'">
+                                <ng-container *ngIf="component.frequency==this.frequencyList[1]">
                                     <ng-container *ngFor="let monthlyComponent of component.monthList">
                                         <tr [class.backgroundHighlight]="getComponentMonthlyTotalFeeInitialValue(monthlyComponent)-monthlyComponent.amount">
                                             <td class="text-right"></td>

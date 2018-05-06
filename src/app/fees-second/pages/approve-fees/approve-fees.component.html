@@ -1,0 +1,97 @@
+<div class="main-content">
+    <div class="container-fluid">
+
+        <div class="card" style="min-height: 100%">
+            <div class="card-header" [attr.data-background-color]="user.color">
+                <h4 class="title">Set School Fees</h4>
+            </div>
+            <div class="card-content">
+
+                <ng-container *ngIf="selectedFeeDefinition && !isLoading">
+
+                    <mat-form-field>
+                        <mat-select placeholder="Select Fee Type"
+                                    [(ngModel)]="selectedFeeDefinition">
+                            <mat-option *ngFor="let feeDefinition of feeStructure" [value]="feeDefinition">
+                                {{feeDefinition.feeType}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <div class="clearfix" style="margin-top: 25px;"></div>
+
+                    <div class="row hoverHighlight" style="font-weight: 800">
+                        <div class="col-md-3">
+                            {{selectedFeeDefinition.feeType}}
+                        </div>
+                        <div class="col-md-3">
+                            {{selectedFeeDefinition.frequency}}
+                        </div>
+                        <div class="col-md-3">
+                            <span *ngIf="selectedFeeDefinition.rte">RTE, </span>
+                            <span *ngIf="selectedFeeDefinition.onlyNewStudent">Only New Student</span>
+                        </div>
+                    </div>
+                    <ng-container *ngFor="let schoolFeeComponent of selectedFeeDefinition.schoolFeeComponentList; let secondIndex=index">
+                        <div class="row hoverHighlight">
+                            <div class="col-md-3" style="padding-left: 40px;">
+                                {{schoolFeeComponent.title}}
+                            </div>
+                            <div class="col-md-3" *ngIf="selectedFeeDefinition.frequency==frequencyList[0]">
+                                {{schoolFeeComponent.amount}}
+                            </div>
+                        </div>
+                        <div *ngIf="selectedFeeDefinition.classFilter" class="row hoverHighlight">
+                            <div class="col-md-12" style="padding-left: 60px;">
+                                Class: <i *ngFor="let class of schoolFeeComponent.classList">{{class.name}},</i>
+                            </div>
+                        </div>
+                        <div *ngIf="selectedFeeDefinition.busStopFilter" class="row hoverHighlight">
+                            <div class="col-md-12" style="padding-left: 60px;">
+                                Bus Stop: <i *ngFor="let busStop of schoolFeeComponent.busStopList">{{busStop.stopName}}</i>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="selectedFeeDefinition.frequency==frequencyList[1]" class="row">
+                            <div class="row hoverHighlight" *ngFor="let month of schoolFeeComponent.monthList">
+                                <div class="col-md-3" style="padding-left: 80px;">
+                                    {{month.month}}
+                                </div>
+                                <div class="col-md-9">
+                                    {{month.amount}}
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+
+                    <div class="clearfix" style="margin-top: 25px;"></div>
+
+                    <!-- Lock Button For Fee Definition -->
+                    <button type="button"
+                            class="btn btn-{{user.btn_color}}"
+                            *ngIf="!selectedFeeDefinition.locked && selectedFeeDefinition.schoolFeeComponentList.length > 0"
+                            matTooltip="Fees once approved, will be locked and can not be changed again."
+                            (click)="lockFeeDefinition()">Approve & Lock</button>
+
+                    <span *ngIf="!selectedFeeDefinition.locked && selectedFeeDefinition.schoolFeeComponentList.length == 0">
+                        Declare atleast one amount before approving the fees.
+                    </span>
+
+                    <span *ngIf="selectedFeeDefinition.locked">
+                        This fee has already been approved and locked by administrator.
+                    </span>
+
+                </ng-container>
+
+                <span *ngIf="!selectedFeeDefinition && !isLoading">
+                    No Fees initialized to approve
+                </span>
+
+            </div>
+        </div>
+
+        <ng-container *ngIf="isLoading || isListLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </ng-container>
+
+    </div>
+</div>

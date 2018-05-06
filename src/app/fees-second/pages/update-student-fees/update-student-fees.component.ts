@@ -2,11 +2,9 @@ import { Component, Input } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 
+
 import { FeeService } from '../../fee.service';
-
-import { FeeReceipt } from '../../classes/common-functionalities';
-
-import { EmitterService } from '../../../services/emitter.service';
+import {FREQUENCY_LIST} from '../../classes/constants';
 
 const APRIL = 'APRIL';
 const MAY = 'MAY';
@@ -55,6 +53,8 @@ export class UpdateStudentFeesComponent {
 
     isLoading = false;
 
+    frequencyList = FREQUENCY_LIST;
+
     constructor (private feeService: FeeService) { }
 
     getStudentFeeDetails(student: any): void {
@@ -84,9 +84,9 @@ export class UpdateStudentFeesComponent {
     initializeStudentFeeStatus(studentFeeStatus: any): void {
         this.studentFeeStatus = studentFeeStatus;
         this.studentFeeStatus.componentList.forEach(component => {
-            if (component.frequency === 'ANNUALLY') {
+            if (component.frequency === this.frequencyList[0]) {
                 component.initialAmount = component.amount;
-            } else if (component.frequency === 'MONTHLY') {
+            } else if (component.frequency === this.frequencyList[1]) {
                 component.monthList.forEach( monthlyComponent => {
                     monthlyComponent.initialAmount = monthlyComponent.amount;
                 });
@@ -158,9 +158,9 @@ export class UpdateStudentFeesComponent {
     // Component Fee
     getComponentTotalFeeInitialValue(component: any): number {
         let amount = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === this.frequencyList[0]) {
             amount += component.initialAmount;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === this.frequencyList[1]) {
             component.monthList.forEach( componentMonthly => {
                 amount += this.getComponentMonthlyTotalFeeInitialValue(componentMonthly);
             });
@@ -170,9 +170,9 @@ export class UpdateStudentFeesComponent {
 
     getComponentTotalFeeFinalValue(component: any): number {
         let amount = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === this.frequencyList[0]) {
             amount += component.amount;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === this.frequencyList[1]) {
             component.monthList.forEach( componentMonthly => {
                 amount += this.getComponentMonthlyTotalFeeFinalValue(componentMonthly);
             });
@@ -182,9 +182,9 @@ export class UpdateStudentFeesComponent {
 
     getComponentSchoolTotalFee(component: any): number {
         let amount = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === this.frequencyList[0]) {
             amount += component.schoolAmount;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === this.frequencyList[1]) {
             component.monthList.forEach( componentMonthly => {
                 amount += this.getComponentMonthlySchoolTotalFee(componentMonthly);
             });
@@ -194,9 +194,9 @@ export class UpdateStudentFeesComponent {
 
     getComponentFeesDue(component: any): number {
         let amountDue = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === this.frequencyList[0]) {
             amountDue += component.amountDue;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === this.frequencyList[1]) {
             component.monthList.forEach( componentMonthly => {
                 // amountDue += componentMonthly.amountDue;
                 amountDue += this.getComponentMonthlyFeesDue(componentMonthly);

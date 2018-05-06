@@ -103,7 +103,11 @@ export class User {
                 {
                     path: 'set_school_fees',
                     title: 'Set School Fees',
-                }
+                },
+                {
+                    path: 'approve_fees',
+                    title: 'Approve Fees',
+                },
             ] },
         { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [

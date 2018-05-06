@@ -33,6 +33,24 @@ export class FeeService extends CommonServiceRequirements {
         return super.deleteData(token, '/fee-second/fee-definitions/' + data['dbId']);
     }
 
+    lockFeeDefinition(data: any, token: string): Promise<any> {
+        return super.getData(token, '/fee-second/fee-definitions/' + data['dbId']);
+    }
+
+    // School Fee Component
+    createSchoolFeeComponent(data: any, token: string): Promise<any> {
+        return super.postData(data, token,
+            '/fee-second/fee-definition/' + data['feeDefinitionDbId'] + '/school-fee-components');
+    }
+
+    updateSchoolFeeComponent(data: any, token: string): Promise<any> {
+        return super.putData(data, token, '/fee-second/school-fee-components/' + data['dbId']);
+    }
+
+    deleteSchoolFeeComponent(data: any, token: string): Promise<any> {
+        return super.deleteData(token,'/fee-second/school-fee-components/' + data['dbId']);
+    }
+
     // Student Fee Status
     getStudentFeeStatus(data: any, token: string): Promise<any> {
         return super.getData(token, '/fee-second/student/' + data['studentDbId'] + '/fee-status');
