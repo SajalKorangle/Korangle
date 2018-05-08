@@ -17,7 +17,9 @@ export class PrintComponent implements OnInit, OnDestroy {
     printFeeRecordsSubscription: any;
     printExpensesSubscription: any;
     printMarksheetSubscription: any;
+    printMarksheetSecondFormatSubscription: any;
     printTransferCertificateSubscription: any;
+    printTransferCertificateSecondFormatSubscription: any;
     printStudentListSubscription: any;
     printNewFeeReceiptSubscription: any;
 
@@ -46,6 +48,12 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-marksheet-component').emit(value);
             });
         });
+        this.printMarksheetSecondFormatSubscription = EmitterService.get('print-marksheet-second-format').subscribe( value => {
+            this.printType = 'marksheetSecondFormat';
+            setTimeout( () => {
+                EmitterService.get('print-marksheet-second-format-component').emit(value);
+            });
+        });
         this.printStudentListSubscription = EmitterService.get('print-student-list').subscribe( value => {
             this.printType = 'studentList';
             setTimeout( () => {
@@ -56,6 +64,12 @@ export class PrintComponent implements OnInit, OnDestroy {
             this.printType = 'transferCertificate';
             setTimeout( () => {
                 EmitterService.get('print-transfer-certificate-component').emit(value);
+            });
+        });
+        this.printTransferCertificateSecondFormatSubscription = EmitterService.get('print-transfer-certificate-second-format').subscribe( value => {
+            this.printType = 'transferCertificateSecondFormat';
+            setTimeout( () => {
+                EmitterService.get('print-transfer-certificate-second-format-component').emit(value);
             });
         });
         this.printFeeReceiptSubscription = EmitterService.get('print-new-fee-receipt').subscribe( value => {
@@ -71,6 +85,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printFeeRecordsSubscription.unsubscribe();
         this.printExpensesSubscription.unsubscribe();
         this.printMarksheetSubscription.unsubscribe();
+        this.printMarksheetSecondFormatSubscription.unsubscribe();
         this.printStudentListSubscription.unsubscribe();
         this.printNewFeeReceiptSubscription.unsubscribe();
     }

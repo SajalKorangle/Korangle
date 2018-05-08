@@ -1,31 +1,51 @@
 <div class="container-fluid"
      style="width: 100%; height: 100%;
-     border: 4px double blue;
+     border: 4px double #D32F2F;
      border-radius: 8px;
-     outline: 1px solid blue;
+     outline: 1px solid #D32F2F;
      outline-offset: -5px;
      font-weight: 800 !important"
      *ngIf="marksheet">
+
+    <!-- Background Watermark -->
+    <img src="{{user.schoolLogo}}"
+         style="border-radius: 2px; position: absolute;
+         top: 400px; left: 198px;
+         width: 350px; height: 350px;
+         opacity: 0.1;
+         filter: grayscale(100%);
+         z-index: 10;"/>
+    <!-- img src="http://localhost:4200/assets/img/eklavya_logo.png"
+         style="border-radius: 2px; position: absolute;
+         top: 400px; left: 198px;
+         width: 350px; height: 350px;
+         opacity: 0.1;
+         filter: grayscale(100%);
+         z-index: 10;"/ -->
 
     <img src="{{user.schoolLogo}}"
          style="border-radius: 2px; position: absolute;
          top: 40px; left: 20px;
          width: 80px; height: 80px;"/>
+    <!-- img src="http://localhost:4200/assets/img/eklavya_logo.png"
+         style="border-radius: 2px; position: absolute;
+         top: 40px; left: 20px;
+         width: 80px; height: 80px;"/ -->
 
     <!-- Reg. No. , Dise Code -->
     <div class="row no-gutters">
         <div class="col-xs-6 d-flex custom-padding">
             Dise code : {{user.schoolDiseCode}}
         </div>
-        <!-- div class="col-xs-6 d-flex custom-padding" align="end">
+        <div class="col-xs-6 d-flex custom-padding" align="end">
             Reg. No. : 20172/09
-        </div -->
+        </div>
     </div>
 
     <!-- School Name -->
     <div class="row no-gutters" style="margin-top: 20px;">
         <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
-            <span style="background-color: yellow; font-size: 35px">
+            <span style="font-size: 40px; color: #D32F2F !important;">
                 {{user.schoolPrintName}}
             </span>
         </div>
@@ -46,9 +66,9 @@
         <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
             <span style="font-size: 30px;">Progress Report</span><br/>
             <div style="height: 5px"></div>
-            <span style="font-size: 25px;">{{marksheet.className}}</span><br/>
-            <div style="height: 5px"></div>
             <span style="font-size: 20px">{{marksheet.sessionName}}</span>
+            <div style="height: 5px"></div>
+            <span style="font-size: 25px;">{{marksheet.className}}</span><br/>
         </div>
     </div>
 
@@ -74,7 +94,7 @@
             </div>
         </div>
 
-        <!-- Student's Name , Contact No. -->
+        <!-- Student's Name , Aadhar No. -->
         <div class="row no-gutters">
             <div class="col-xs-3 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
@@ -86,11 +106,11 @@
             </div>
             <div class="col-xs-2 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
-                Contact No.<span style="float: right">:</span>
+                Aadhar No.<span style="float: right">:</span>
             </div>
             <div class="col-xs-2 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
-                <i>{{marksheet.studentProfile.mobileNumber}}</i>
+                <i>{{marksheet.studentProfile.aadharNumber}}</i>
             </div>
         </div>
 
@@ -114,7 +134,7 @@
             </div>
         </div>
 
-        <!-- Mother's Name , SSMID -->
+        <!-- Mother's Name , SSSMID -->
         <div class="row no-gutters">
             <div class="col-xs-3 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
@@ -126,7 +146,7 @@
             </div>
             <div class="col-xs-2 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
-                SSMID<span style="float: right">:</span>
+                SSSMID<span style="float: right">:</span>
             </div>
             <div class="col-xs-2 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
@@ -134,7 +154,7 @@
             </div>
         </div>
 
-        <!-- Date of Birth , Category -->
+        <!-- Date of Birth , Contact No. -->
         <div class="row no-gutters">
             <div class="col-xs-3 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
@@ -142,20 +162,21 @@
             </div>
             <div class="col-xs-5 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
-                <i>{{marksheet.studentProfile.dateOfBirth}}</i>
+                <i>{{marksheet.studentProfile.dateOfBirth | date: 'dd/MM/yyyy'}}</i>
             </div>
             <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                 style="font-size: 14px;">
-                Aadhar No.<span style="float: right">:</span>
+                 style="font-size: 14px;" *ngIf="user.schoolName == 'EKLAVYA'">
+                Contact No.<span style="float: right">:</span>
             </div>
-            <div class="col-xs-2 d-flex justify-content-start custom-padding"
+            <div  *ngIf="user.schoolName == 'EKLAVYA'"
+                  class="col-xs-2 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
-                <i>{{marksheet.studentProfile.aadharNumber}}</i>
+                <i>{{marksheet.studentProfile.mobileNumber}}</i>
             </div>
         </div>
 
         <!-- Address -->
-        <div class="row no-gutters">
+        <div class="row no-gutters" *ngIf="user.schoolName == 'EKLAVYA'">
             <div class="col-xs-3 d-flex custom-padding"
                  style="font-size: 14px;">
                 Address<span style="float: right">:</span>
@@ -175,6 +196,72 @@
 
         <!-- Marksheet -->
         <div class="row no-gutters">
+            <div class="col-xs-12">
+                <table class="table updownBorder" style="font-size: 16px !important;">
+                    <tbody>
+                    <tr>
+                        <td class="upBorder leftBorder downBorder bold" style="padding: 5px" align="left"><b>Subject</b></td>
+                        <td class="upBorder downBorder bold" align="right"><b>Max. Marks</b></td>
+                        <td class="upBorder downBorder bold" align="right"><b>Marks Obt.</b></td>
+                        <td class="upBorder rightBorder downBorder bold" align="center"><b>Grade</b></td>
+                    </tr>
+                    <ng-container *ngFor="let result of marksheet.result; let i = index;">
+                        <tr *ngIf="result.governmentSubject">
+                            <td class="leftBorder" style="padding: 5px;">{{result.subjectName}}</td>
+                            <td style="padding: 5px; padding-right: 30px;" align="right">{{result.maximumMarks}}</td>
+                            <td style="padding: 5px; padding-right: 30px;" align="right">{{result.marksObtained | number: '1.0-2'}}</td>
+                            <td class="rightBorder" style="padding: 5px;" align="center">{{result.grade}}</td>
+                        </tr>
+                    </ng-container>
+                    <tr>
+                        <td class="updownBorder leftBorder bold" style="padding: 5px;">Total</td>
+                        <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getTotalMaximumMarks(marksheet)}}</td>
+                        <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getTotalMarksObtained(marksheet)}}</td>
+                        <td class="updownBorder rightBorder bold" style="padding: 5px;" align="center">{{marksheet.overAllGrade}}</td>
+                    </tr>
+                    <tr>
+                        <td class="downBorder bold"
+                            colspan="4"
+                            style="padding: 5px;">
+                            Total Marks In Words: {{ getTotalMarksObtained(marksheet) | amountInWords }}
+                            <!-- span style="float: right">Result: Pass</span -->
+                        </td>
+                    </tr>
+                    <ng-container *ngFor="let result of marksheet.result; let i = index;">
+                        <tr *ngIf="!result.governmentSubject">
+                            <td class="leftBorder" style="padding: 5px;">{{result.subjectName}}</td>
+                            <td style="padding: 5px; padding-right: 30px;" align="right">{{result.maximumMarks}}</td>
+                            <td style="padding: 5px; padding-right: 30px;" align="right">{{result.marksObtained | number: '1.0-2'}}</td>
+                            <td class="rightBorder" style="padding: 5px;" align="center">{{result.grade}}</td>
+                        </tr>
+                    </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Percentage, Grade, Attendance, Division -->
+        <div class="row no-gutters" style="font-size: 16px !important;">
+            <div class="col-xs-5 d-flex custom-padding">
+                Attendance - {{marksheet.attendance}}/{{marksheet.workingDays}}
+            </div>
+            <div class="col-xs-3 d-flex custom-padding">
+                Result: Pass
+            </div>
+            <div class="col-xs-4 custom-padding"  align="end">
+                Percentage - {{getPercentage(marksheet) | number: '1.0-2'}}%
+            </div>
+        </div>
+        <div class="row no-gutters"
+             style="font-size: 18px !important; margin-top: 10px;"
+             *ngIf="marksheet.nextClassName !== undefined && marksheet.nextClassName !== ''">
+            <div class="col-xs-12 custom-padding" align="center">
+                Promoted to {{marksheet.nextClassName}}
+            </div>
+        </div>
+
+        <!-- Old Marksheet -->
+        <!-- div class="row no-gutters">
             <div class="col-xs-12">
                 <table class="table updownBorder" style="font-size: 16px !important;">
                     <tbody>
@@ -211,48 +298,11 @@
                     </ng-container>
                     </tbody>
                 </table>
-                <!-- table class="table" style="font-size: 16px !important;">
-                    <tbody>
-                        <tr>
-                            <td class="upBorder leftBorder" style="padding: 5px" align="left"><b>Subject</b></td>
-                            <td class="upBorder" align="right"><b>Max. Marks</b></td>
-                            <td class="upBorder" align="right"><b>Marks Obt.</b></td>
-                            <td class="upBorder rightBorder" align="center"><b>Grade</b></td>
-                        </tr>
-                        <tr *ngFor="let marks of marksheet.marks; let i = index;">
-                            <td class="leftBorder" style="padding: 5px;">{{marks.subjectName}}</td>
-                            <td style="padding: 5px; padding-right: 30px;" align="right">220</td>
-                            <td style="padding: 5px; padding-right: 30px;" align="right">{{marks.marks | number: '1.0-2'}}</td>
-                            <td class="rightBorder" style="padding: 5px;" align="center">{{ marks.marks*100/220 | grade}}</td>
-                        </tr>
-                        <tr>
-                            <td class="updownBorder leftBorder" style="padding: 5px;">Total</td>
-                            <td class="updownBorder" style="padding: 5px; padding-right: 30px;" align="right">{{marksheet.marks.length*220}}</td>
-                            <td class="updownBorder" style="padding: 5px; padding-right: 30px;" align="right">{{totalMarks}}</td>
-                            <td class="updownBorder rightBorder" style="padding: 5px;" align="center">{{ (totalMarks*100)/(marksheet.marks.length*220) | grade}}</td>
-                        </tr>
-                        <tr>
-                            <td class="downBorder" colspan="4" style="padding: 5px;">Total Marks In Words: {{ totalMarks | amountInWords }}</td>
-                        </tr>
-                        <tr>
-                            <td class="leftBorder" style="padding: 5px;">Genral Study</td>
-                            <td style="padding: 5px; padding-right: 30px;" align="right">220</td>
-                            <td style="padding: 5px; padding-right: 30px;" align="right">185</td>
-                            <td class="rightBorder" style="padding: 5px;" align="center">-</td>
-                        </tr>
-                        <tr>
-                            <td class="downBorder leftBorder" style="padding: 5px;">Drawing</td>
-                            <td class="downBorder" style="padding: 5px; padding-right: 30px;" align="right">220</td>
-                            <td class="downBorder" style="padding: 5px; padding-right: 30px;" align="right">201</td>
-                            <td class="downBorder rightBorder" style="padding: 5px;" align="center">-</td>
-                        </tr>
-                    </tbody>
-                </table -->
             </div>
-        </div>
+        </div -->
 
-        <!-- Percentage, Grade, Attendance, Division -->
-        <div class="row no-gutters" style="font-size: 16px !important;">
+        <!-- Old Percentage, Grade, Attendance, Division -->
+        <!-- div class="row no-gutters" style="font-size: 16px !important;">
             <div class="col-xs-3 custom-padding">
                 Perc. - {{getPercentage(marksheet) | number: '1.0-2'}}%
             </div>
@@ -269,20 +319,6 @@
             <div class="col-xs-12 custom-padding" align="center">
                 Promoted to {{marksheet.nextClassName}}
             </div>
-        </div>
-        <!-- div class="row no-gutters" style="font-size: 16px !important;">
-            <div class="col-xs-3 custom-padding">
-                Perc. - {{(totalMarks*100)/(marksheet.marks.length*220) | number: '1.0-2'}}%
-            </div>
-            <div class="col-xs-2 d-flex custom-padding">
-                Grade - {{(totalMarks*100)/(marksheet.marks.length*220) | grade}}
-            </div>
-            <div class="col-xs-4 d-flex custom-padding" align="end">
-                Attendance - 192/224
-            </div>
-            <div class="col-xs-3 custom-padding" align="end">
-                Div. - First
-            </div>
         </div -->
 
     </ng-container>
@@ -294,7 +330,7 @@
             (Class Teacher's Signature)
         </div>
         <div class="col-xs-6 custom-padding" style="padding-right: 40px" align="end">
-            (Headmaster's Signature)
+            (Principal's Signature)
         </div>
     </div>
 

@@ -3,13 +3,14 @@ import {Component, Input, OnInit} from '@angular/core';
 import { Student } from '../classes/student';
 
 import { ClassService } from '../services/class.service';
+import { BusStopService } from '../services/bus-stop.service';
 import { StudentService } from '../students/student.service';
 
 @Component({
   selector: 'app-new-student',
   templateUrl: './new-student.component.html',
   styleUrls: ['./new-student.component.css'],
-    providers: [ ClassService, StudentService ],
+    providers: [ ClassService, BusStopService, StudentService ],
 })
 
 export class NewStudentComponent implements OnInit {
@@ -21,16 +22,24 @@ export class NewStudentComponent implements OnInit {
     newStudent: Student;
     classSectionList = [];
 
+    busStopList = [];
+
     isLoading = false;
 
     constructor (private classService: ClassService,
+                 private busStopService: BusStopService,
                  private studentService: StudentService) { }
 
     ngOnInit(): void {
         this.isLoading = true;
         this.newStudent = new Student();
         this.newStudent.dateOfBirth = this.todaysDate();
-        this.classService.getClassSectionList(this.user.jwt).then(
+
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+
+        this.classService.getClassSectionList(data, this.user.jwt).then(
             classSectionList => {
                 this.isLoading = false;
                 this.classSectionList = classSectionList;
@@ -40,6 +49,14 @@ export class NewStudentComponent implements OnInit {
                 this.selectedClass = this.classSectionList[0];
             }
         );
+
+        const dataForBusStop = {
+            schoolDbId: this.user.schoolDbId,
+        };
+
+        this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then( busStopList => {
+            this.busStopList = busStopList;
+        });
     }
 
     todaysDate(): string {
@@ -56,6 +73,14 @@ export class NewStudentComponent implements OnInit {
 
     createNewStudent(): void {
 
+        if (this.newStudent.busStopDbId == 0) {
+            this.newStudent.busStopDbId = null;
+        }
+
+        if (this.newStudent.admissionSessionDbId == 0) {
+            this.newStudent.admissionSessionDbId = null;
+        }
+
         if (this.newStudent.name === undefined || this.newStudent.name === '') {
             alert('Name should be populated');
             return;
@@ -69,7 +94,7 @@ export class NewStudentComponent implements OnInit {
             alert('Class should be selected');
             return;
         }
-        if (this.newStudent.dateOfBirth === undefined) { this.newStudent.dateOfBirth = ''; }
+        if (this.newStudent.dateOfBirth === undefined) { this.newStudent.dateOfBirth = this.todaysDate(); }
         if (this.newStudent.mobileNumber === undefined) { this.newStudent.mobileNumber = 0; }
         if (this.newStudent.totalFees === undefined) { this.newStudent.totalFees = 0; }
         if (this.newStudent.remark === undefined) { this.newStudent.remark = ''; }
@@ -81,6 +106,8 @@ export class NewStudentComponent implements OnInit {
             data => {
                 this.isLoading = false;
                 alert(data.message);
+                this.newStudent = new Student();
+                this.newStudent.dateOfBirth = this.todaysDate();
             }, error => {
                 this.isLoading = false;
                 alert('Server Error: Contact admin');

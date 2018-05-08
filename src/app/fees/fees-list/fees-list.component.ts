@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+/*import { Component, Input } from '@angular/core';
 
 import { FeeService } from '../fee.service';
 import { Fee } from '../../classes/fee';
@@ -16,7 +16,8 @@ export class FeesListComponent {
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
-    feesList: Fee[] = [];
+    // feesList: Fee[] = [];
+    feesList = [];
     totalFees = 0;
     isLoading = false;
 
@@ -40,7 +41,7 @@ export class FeesListComponent {
       const data = {
           startDate: this.startDate,
           endDate: this.endDate,
-      }
+      };
       this.feeService.getFeesList(data, this.user.jwt).then(
           feesList => {
               console.log(feesList);
@@ -71,3 +72,4 @@ export class FeesListComponent {
     }
 
 }
+*/

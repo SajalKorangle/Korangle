@@ -33,7 +33,7 @@
                             (ngModelChange)="selectedStudent=$event;currentStudent.copy(selectedStudent)"
                             style="margin-right: 15px">
                         <option *ngFor="let student of selectedSection.studentList" [ngValue] = "student">
-                            {{student.name}}
+                            {{student.name}} <span *ngIf="student.showScholarNumber"> ({{student.scholarNumber}})</span>
                         </option>
                     </select>
                 </span>

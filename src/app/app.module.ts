@@ -22,26 +22,40 @@ import { ComponentsModule } from './components/components.module';
 
 import { AppComponent } from './app.component';
 
-import { StudentProfileComponent } from './students/student-profile/student-profile.component';
-import { StudentListComponent } from './students/student-list/student-list.component';
-import { PromoteStudentComponent } from './students/promote-student/promote-student.component';
+//
+
+import { StudentProfileComponent } from './students/pages/student-profile/student-profile.component';
+import { StudentListComponent } from './students/pages/student-list/student-list.component';
+import { GenerateTcComponent } from './students/pages/generate-tc/generate-tc.component';
 
 import { NewStudentComponent } from './new-student/new-student.component';
 
 import { LoginComponent } from './authentication/login.component';
 
-import { NewFeeReceiptComponent } from './modal/new-fee-receipt/new-fee-receipt.component';
-import { NewFeesComponent } from './fees/new-fees/new-fees.component';
-import { FeesListComponent } from './fees/fees-list/fees-list.component';
+// import { NewFeeReceiptComponent } from './modal/new-fee-receipt/new-fee-receipt.component';
+// import { NewFeesComponent } from './fees/new-fees/new-fees.component';
+// import { FeesListComponent } from './fees/fees-list/fees-list.component';
 
-import { FeesTableComponent } from './fees/fees-table/fees-table.component';
+import { CollectFeeComponent } from './fees-second/pages/collect-fee/collect-fee.component';
+import { TotalCollectionComponent } from './fees-second/pages/total-collection/total-collection.component';
+import { UpdateStudentFeesComponent } from './fees-second/pages/update-student-fees/update-student-fees.component';
+import { GiveDiscountComponent } from './fees-second/pages/give-discount/give-discount.component';
+import { TotalDiscountComponent } from './fees-second/pages/total-discount/total-discount.component';
+import { SetSchoolFeesComponent } from './fees-second/pages/set-school-fees/set-school-fees.component';
+import {FeeReceiptListComponent} from './fees-second/components/fees-table/fee-receipt-list.component';
+import { DiscountListComponent } from './fees-second/components/discount-table/discount-list.component';
+import { MonthlyAmountComponent } from './fees-second/components/monthly-amount/monthly-amount.component';
+import { FeeStructureComponent } from './fees-second/components/fee-structure/fee-structure.component';
+import { ApproveFeesComponent } from './fees-second/pages/approve-fees/approve-fees.component';
+
+// import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 import { NewExpenseComponent } from './expenses/new-expense/new-expense.component';
 import { ExpenseListComponent } from './expenses/expense-list/expense-list.component';
 
-import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
-import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
+// import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
+// import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
 
 import { UpdateMarksComponent } from './marksheet/update-marks/update-marks.component';
 import { MarksheetComponent } from './marksheet/print-marksheet/marksheet.component';
@@ -50,39 +64,61 @@ import { PrintComponent } from './print/print.component';
 import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
 import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
 import { PrintMarksheetComponent } from './print/print-marksheet/print-marksheet.component';
+import { PrintMarksheetSecondFormatComponent } from './print/print-marksheet-second-format/print-marksheet-second-format.component';
 import { PrintTransferCertificateComponent } from './print/print-transfer-certificate/print-transfer-certificate.component';
+import { PrintTransferCertificateSecondFormatComponent } from './students/print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component';
 import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print-new-fee-receipt.component';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 
 import { MoneyFormatPipe } from './pipes/money-format.pipe';
 import { AmountInWordsPipe } from './pipes/amount-in-words.pipe';
+import { DateInWordsPipe } from './pipes/date-in-words.pipe';
 import { GradePipe } from './pipes/grade.pipe';
+
+/* Common Components */
+import {StudentFilterComponent} from './components/student-filter/student-filter.component';
 
 @NgModule({
     declarations: [
         AppComponent,
 
-        FeesListComponent,
-        NewFeesComponent,
-        NewFeeReceiptComponent,
+        /* Common Components */
+        StudentFilterComponent,
 
-        FeesTableComponent,
+        // FeesListComponent,
+        // NewFeesComponent,
+        // NewFeeReceiptComponent,
+
+        FeeReceiptListComponent,
+        DiscountListComponent,
+        MonthlyAmountComponent,
+        FeeStructureComponent,
+
+        CollectFeeComponent,
+        TotalCollectionComponent,
+        UpdateStudentFeesComponent,
+        GiveDiscountComponent,
+        TotalDiscountComponent,
+        SetSchoolFeesComponent,
+        ApproveFeesComponent,
+
+        // FeesTableComponent,
         LoadingSpinnerComponent,
 
         // ExpensesComponent,
         NewExpenseComponent,
         ExpenseListComponent,
 
-        NewConcessionComponent,
-        ConcessionListComponent,
+        // NewConcessionComponent,
+        // ConcessionListComponent,
 
         UpdateMarksComponent,
         MarksheetComponent,
 
         StudentProfileComponent,
         StudentListComponent,
-        PromoteStudentComponent,
+        GenerateTcComponent,
 
         NewStudentComponent,
 
@@ -92,13 +128,16 @@ import { GradePipe } from './pipes/grade.pipe';
         PrintFeeRecordsComponent,
         PrintExpensesComponent,
         PrintMarksheetComponent,
+        PrintMarksheetSecondFormatComponent,
         PrintTransferCertificateComponent,
+        PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
         PrintNewFeeReceiptComponent,
         PrintComponent,
 
         MoneyFormatPipe,
         AmountInWordsPipe,
+        DateInWordsPipe,
         GradePipe,
         // MdRadioGroup,
         // MdRadioButton,

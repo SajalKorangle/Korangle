@@ -46,7 +46,10 @@ export class MarksheetComponent implements OnInit {
 
     ngOnInit(): void {
         this.isListLoading = true;
-        this.studentService.getClassSectionStudentList(this.user.jwt).then(
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 this.isListLoading = false;
                 classSectionStudentList.forEach( classs => {
@@ -94,7 +97,11 @@ export class MarksheetComponent implements OnInit {
 
     printMarksheet(): void {
         this.marksheet.nextClassName = this.nextClassName;
-        EmitterService.get('print-marksheet').emit(this.marksheet);
+        if (this.user.username === 'bhagatsingh' || this.user.username === 'brightstarsalsalai') {
+            EmitterService.get('print-marksheet-second-format').emit(this.marksheet);
+        } else {
+            EmitterService.get('print-marksheet').emit(this.marksheet);
+        }
     }
 
     getStudentMarksheet(student?: StudentTest): void {

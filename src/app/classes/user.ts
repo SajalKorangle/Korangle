@@ -38,6 +38,7 @@ export class User {
     isAuthenticated = false;
     jwt = '';
 
+    schoolName: string; // School Name (for sidebar)
     schoolPrintName: string; // School Profile
     schoolLogo: string; // School Profile
     color = 'red'; // School Profile
@@ -46,6 +47,8 @@ export class User {
     schoolDbId = 0;
     schoolDiseCode = 0;
     schoolAddress = '';
+    schoolCurrentSessionDbId: number;
+    schoolRegistrationNumber: string;
 
     // imgSrc = '/assets/img/angular2-logo-red.png';
 
@@ -61,18 +64,50 @@ export class User {
                 {
                     path: 'student_list',
                     title: 'View All',
-                }
+                },
+                {
+                    path: 'generate_tc',
+                    title: 'Generate TC',
+                },
             ] },
         { path: 'fees', title: 'Fees',  icon: 'receipt', class: '', showSubsection: false,
             subsection: [
-                {
+                /*{
                     path: 'new_fees',
                     title: 'Submit Fee',
                 },
                 {
                     path: 'fees_list',
                     title: 'Previous Record',
-                }
+                },*/
+                {
+                    path: 'collect_fee',
+                    title: 'Collect Fee',
+                },
+                {
+                    path: 'total_fee_collection',
+                    title: 'Total Collection',
+                },
+                {
+                    path: 'update_student_fees',
+                    title: 'Update Student Fees',
+                },
+                {
+                    path: 'give_discount',
+                    title: 'Give Discount',
+                },
+                {
+                    path: 'total_discount',
+                    title: 'Total Discount',
+                },
+                {
+                    path: 'set_school_fees',
+                    title: 'Set School Fees',
+                },
+                {
+                    path: 'approve_fees',
+                    title: 'Approve Fees',
+                },
             ] },
         { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
@@ -85,7 +120,7 @@ export class User {
                     title: 'View Record',
                 }
             ] },
-        { path: 'concession', title: 'Concession', icon: 'dashboard', class: '', showSubsection: false,
+        /*{ path: 'concession', title: 'Concession', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {
                     path: 'new_concession',
@@ -95,7 +130,7 @@ export class User {
                     path: 'concession_list',
                     title: 'Previous Discounts',
                 }
-            ] },
+            ] },*/
         { path: 'marksheet', title: 'Marksheet', icon: 'dashboard', class: '', showSubsection: false,
             subsection: [
                 {
@@ -122,6 +157,7 @@ export class User {
     }
 
     initializeSchoolData(data: any): void {
+        this.schoolName = data.schoolData.name;
         this.schoolPrintName = data.schoolData.printName;
         this.color = data.schoolData.primaryThemeColor;
         this.btn_color = data.schoolData.secondaryThemeColor;
@@ -130,13 +166,20 @@ export class User {
         this.schoolDbId = data.schoolData.dbId;
         this.schoolDiseCode = data.schoolData.schoolDiseCode;
         this.schoolAddress = data.schoolData.schoolAddress;
+        this.schoolCurrentSessionDbId = data.schoolData.currentSessionDbId;
+        this.schoolRegistrationNumber = data.schoolData.registrationNumber;
+        if (this.username === 'brightstar' || this.username === 'brighthindi' || this.username === 'brightstarsalsalai') {
+            this.schoolPrintName = 'Bright Star Hr. Sec. School';
+        }
     }
 
     initializeUserData(data: any): void {
         this.username = data.username;
         this.email = data.email;
         this.initializeSchoolData(data);
-        if (this.username !== 'eklavya') {
+        if (this.username !== 'eklavya'
+            && this.username !== 'bhagatsingh'
+            && this.username !== 'brightstarsalsalai') {
             // alert('removing marksheet');
             this.removeMarksheet();
         }
@@ -195,6 +238,15 @@ export class User {
         }
     }
 
+    getSchoolCurrentSessionName(): string {
+        if (this.schoolCurrentSessionDbId==1) {
+            return 'Session 2017-18';
+        } else if (this.schoolCurrentSessionDbId==2) {
+            return 'Session 2018-19';
+        }
+        return '';
+    }
+
 }
 
 /*
@@ -211,4 +263,5 @@ export class User {
     sardarpatel, patelabc
     talentshujalpur, talent123
     ganeshsaraswati, 123ganesh
+    bhagatsingh, bhagat123
 */

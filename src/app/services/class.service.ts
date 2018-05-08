@@ -7,10 +7,15 @@ import { CommonServiceRequirements } from './common-service-requirements';
 @Injectable()
 export class ClassService extends CommonServiceRequirements {
 
-    private classSectionListUrl = '/class/class_section_list/';
+    // private classSectionListUrl = '/class/class_section_list/';
 
-    getClassSectionList(token: any): Promise<any> {
-        return super.getData(token, this.classSectionListUrl);
+    getClassSectionList(data, token: any): Promise<any> {
+        return super.getData(token, '/class/class_section_list/sessions/' + data.sessionDbId);
+    }
+
+    getClassList(token: any): Promise<any> {
+        return super.getData(token, '/class/classes')
     }
 
 }
+

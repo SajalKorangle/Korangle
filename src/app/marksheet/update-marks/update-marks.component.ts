@@ -48,7 +48,10 @@ export class UpdateMarksComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.studentService.getClassSectionStudentList(this.user.jwt).then(
+        const data = {
+            sessionDbId: this.user.schoolCurrentSessionDbId,
+        }
+        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 this.isLoading = false;
                 classSectionStudentList.forEach( classs => {
@@ -59,10 +62,17 @@ export class UpdateMarksComponent implements OnInit {
                         const tempSection = new Section();
                         tempSection.name = section.name;
                         tempSection.dbId = section.dbId;
+                        let prevStudent;
                         section.studentList.forEach( student => {
                             const tempStudent = new StudentTest();
                             tempStudent.name = student.name;
                             tempStudent.dbId = student.dbId;
+                            tempStudent.scholarNumber = student.scholarNumber;
+                            if (prevStudent !== undefined && prevStudent.name === tempStudent.name) {
+                                prevStudent.showScholarNumber = true;
+                                tempStudent.showScholarNumber = true;
+                            }
+                            prevStudent = tempStudent;
                             tempSection.studentList.push(tempStudent);
                         });
                         tempClass.sectionList.push(tempSection);

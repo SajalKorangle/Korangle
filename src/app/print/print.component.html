@@ -7,8 +7,12 @@
 
 <app-print-marksheet [user]="user" [class.hideThisComponent]="printType!='marksheet'"></app-print-marksheet>
 
+<app-print-marksheet-second-format [user]="user" [class.hideThisComponent]="printType!='marksheetSecondFormat'"></app-print-marksheet-second-format>
+
 <app-print-student-list [class.hideThisComponent]="printType!='studentList'"></app-print-student-list>
 
 <app-print-transfer-certificate [class.hideThisComponent]="printType!='transferCertificate'"></app-print-transfer-certificate>
+
+<app-print-transfer-certificate-second-format [user]="user" [class.hideThisComponent]="printType!='transferCertificateSecondFormat'"></app-print-transfer-certificate-second-format>
 
 <app-print-new-fee-receipt [user]="user" [class.hideThisComponent]="printType!='newFeeReceipt'"></app-print-new-fee-receipt>

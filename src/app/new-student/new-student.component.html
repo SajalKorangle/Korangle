@@ -1,117 +1,126 @@
 <div class="main-content">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header" [attr.data-background-color]="user.color">
-                <h4 class="title">New Student</h4>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header" [attr.data-background-color]="user.color">
+        <h4 class="title">New Student</h4>
+      </div>
+      <div class="card-content">
+
+        <ng-container *ngIf="!isLoading">
+
+          <!-- Name, Father's Name, Class, Mobile Number -->
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Name</label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.name">
+              </div>
             </div>
-            <div class="card-content">
-
-                <ng-container *ngIf="!isLoading">
-
-                    <!-- Name, Father's Name, Class, Mobile Number -->
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Name</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.name">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Father's Name</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.fathersName">
-                            </div>
-                        </div>
-                        <div class="col-md-3" *ngIf="selectedClass">
-                            <mat-form-field style="margin-top: 23px;">
-                                <mat-select placeholder="Select Class"
-                                            #selectClassSection
-                                            [ngModel]="selectedClass"
-                                            (ngModelChange)="selectedClass=$event;">
-                                    <mat-option *ngFor = 'let classs of classSectionList;' [value]="classs">
-                                        {{classs.name}}
-                                        <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Father's Name</label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.fathersName">
+              </div>
+            </div>
+            <div class="col-md-3" *ngIf="selectedClass">
+              <mat-form-field style="margin-top: 23px;">
+                <mat-select placeholder="Select Class"
+                            #selectClassSection
+                            [ngModel]="selectedClass"
+                            (ngModelChange)="selectedClass=$event;">
+                  <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
+                    {{classs.name}}
+                    <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
                                             , {{classs.selectedSection.name}}
                                         </span>
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <button class="btn"
-                                    style="padding: 2px 11px; background-color: transparent;"
-                                    matTooltip="Choose Section (default: Section - A)"
-                                    mat-icon-button
-                                    [matMenuTriggerFor]="classSectionMenu">
-                                <i class="material-icons" style="color: black;">expand_more</i>
-                            </button>
-                            <mat-menu #classSectionMenu="matMenu">
-                                <button *ngFor="let section of selectedClass.sectionList"
-                                        mat-menu-item
-                                        (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
-                                    {{section.name}}
-                                </button>
-                            </mat-menu>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Mobile Number
-                                    <span *ngIf="checkLength(newStudent.mobileNumber)"
-                                          [class.fieldRight]="checkRight(newStudent.mobileNumber,10)">
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button class="btn"
+                      style="padding: 2px 11px; background-color: transparent;"
+                      matTooltip="Choose Section (default: Section - A)"
+                      mat-icon-button
+                      [matMenuTriggerFor]="classSectionMenu">
+                <i class="material-icons" style="color: black;">expand_more</i>
+              </button>
+              <mat-menu #classSectionMenu="matMenu">
+                <button *ngFor="let section of selectedClass.sectionList"
+                        mat-menu-item
+                        (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
+                  {{section.name}}
+                </button>
+              </mat-menu>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Mobile Number
+                  <span *ngIf="checkLength(newStudent.mobileNumber)"
+                        [class.fieldRight]="checkRight(newStudent.mobileNumber,10)">
                                         - {{newStudent.mobileNumber.toString().length}}</span>
-                                </label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.mobileNumber">
-                            </div>
-                        </div>
-                    </div>
+                </label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.mobileNumber">
+              </div>
+            </div>
+          </div>
 
-                    <!-- Scholar No., Date of Birth, Mother's Name, Total Fees -->
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Date of Birth</label>
-                                <input type="date"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.dateOfBirth">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Scholar No.</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.scholarNumber">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Mother's Name</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.motherName">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Total Fees</label>
-                                <input type="number"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.totalFees">
-                            </div>
-                        </div>
-                    </div>
+          <!-- Date of Birth,  Mother's Name, Scholar No., Roll No. -->
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Date of Birth</label>
+                <input type="date"
+                       class="form-control"
+                       [(ngModel)]="newStudent.dateOfBirth">
+              </div>
+            </div>
+              <div class="col-md-3">
+                  <div class="form-group form-black label-floating">
+                      <label class="control-label">Mother's Name</label>
+                      <input type="text"
+                             class="form-control"
+                             [(ngModel)]="newStudent.motherName">
+                  </div>
+              </div>
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Scholar No.</label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.scholarNumber">
+              </div>
+            </div>
+              <div class="col-md-3">
+                  <div class="form-group form-black label-floating">
+                      <label class="control-label">Roll No.</label>
+                      <input type="text"
+                             class="form-control"
+                             [(ngModel)]="newStudent.rollNumber">
+                  </div>
+              </div>
+            <!-- div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Total Fees</label>
+                <input type="number"
+                       class="form-control"
+                       [(ngModel)]="newStudent.totalFees">
+              </div>
+            </div -->
+          </div>
 
-                    <!-- Gender, Category, Religion, Blood Group -->
+             <!-- Gender, Category, Religion, Blood Group -->
                     <div class="row">
                         <div class="col-md-3">
                             <mat-form-field>
                                 <mat-select placeholder="Gender"
                                             [(ngModel)]="newStudent.gender"
                                            >
+                                    <mat-option>None</mat-option>
                                     <mat-option value="Male">Male</mat-option>
                                     <mat-option value="Female">Female</mat-option>
                                     <mat-option value="Other">Other</mat-option>
@@ -123,6 +132,7 @@
                                 <mat-select placeholder="Category"
                                             [(ngModel)]="newStudent.category"
                                            >
+                                    <mat-option>None</mat-option>
                                     <mat-option value="SC">SC</mat-option>
                                     <mat-option value="ST">ST</mat-option>
                                     <mat-option value="OBC">OBC</mat-option>
@@ -135,9 +145,11 @@
                                 <mat-select placeholder="Religion"
                                             [(ngModel)]="newStudent.religion"
                                            >
+                                    <mat-option>None</mat-option>
                                     <mat-option value="Hinduism">Hinduism</mat-option>
                                     <mat-option value="Islam">Islam</mat-option>
                                     <mat-option value="Christianity">Christianity</mat-option>
+                                    <mat-option value="Jainism">Jainism</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
@@ -146,6 +158,7 @@
                                 <mat-select placeholder="Blood Group"
                                             [(ngModel)]="newStudent.bloodGroup"
                                            >
+                                    <mat-option>None</mat-option>
                                     <mat-option value="A -">A -</mat-option>
                                     <mat-option value="A +">A +</mat-option>
                                     <mat-option value="B -">B -</mat-option>
@@ -159,135 +172,158 @@
                         </div>
                     </div>
 
-                    <!-- Child SSMID, Family SSMID, Aadhar Number, Caste -->
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Family SSMID
-                                    <span *ngIf="checkLength(newStudent.familySSMID)"
-                                          [class.fieldRight]="checkRight(newStudent.familySSMID,8)">
+          <!-- Child SSMID, Family SSMID, Aadhar Number, Caste -->
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Family SSMID
+                  <span *ngIf="checkLength(newStudent.familySSMID)"
+                        [class.fieldRight]="checkRight(newStudent.familySSMID,8)">
                                         - {{newStudent.familySSMID.toString().length}}</span>
-                                </label>
-                                <input type="number"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.familySSMID">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Child SSMID
-                                    <span *ngIf="checkLength(newStudent.childSSMID)"
-                                          [class.fieldRight]="checkRight(newStudent.childSSMID,9)">
-                                        - {{newStudent.childSSMID.toString().length}}</span>
-                                </label>
-                                <input type="number"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.childSSMID">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Aadhar Number
-                                    <span *ngIf="checkLength(newStudent.aadharNum)"
-                                          [class.fieldRight]="checkRight(newStudent.aadharNum,12)">
-                                        - {{newStudent.aadharNum.toString().length}}</span>
-                                </label>
-                                <input type="number"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.aadharNum">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Caste</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.caste">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bank Name, Bank Account Number, Father's Occupation, Father's Annual Income -->
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Bank Name</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.bankName">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Bank Account Number</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.bankAccountNum">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Father's Occupation</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.fatherOccupation">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Father's Annual Income</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.fatherAnnualIncome">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Roll No. -->
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group form-black label-floating">
-                                <label class="control-label">Roll No.</label>
-                                <input type="text"
-                                       class="form-control"
-                                       [(ngModel)]="newStudent.rollNumber">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Address, Remark -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="form-group form-black label-floating">
-                                    <label class="control-label">Address</label>
-                                    <textarea class="form-control" rows="3"
-                                              [(ngModel)]="newStudent.address"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="form-group form-black label-floating">
-                                    <label class="control-label">Remark</label>
-                                    <textarea class="form-control" rows="3"
-                                              [(ngModel)]="newStudent.remark"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-{{user.btn_color}}" (click)="createNewStudent()">Create Profile</button>
-
-                </ng-container>
-
+                </label>
+                <input type="number"
+                       class="form-control"
+                       [(ngModel)]="newStudent.familySSMID">
+              </div>
             </div>
-        </div>
-        <ng-container *ngIf="isLoading">
-            <!-- div class="loader-container" align="center">
-                <div class="loader"></div>
-            </div -->
-            <app-loading-spinner [user]="user"></app-loading-spinner>
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Child SSMID
+                  <span *ngIf="checkLength(newStudent.childSSMID)"
+                        [class.fieldRight]="checkRight(newStudent.childSSMID,9)">
+                                        - {{newStudent.childSSMID.toString().length}}</span>
+                </label>
+                <input type="number"
+                       class="form-control"
+                       [(ngModel)]="newStudent.childSSMID">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Aadhar Number
+                  <span *ngIf="checkLength(newStudent.aadharNum)"
+                        [class.fieldRight]="checkRight(newStudent.aadharNum,12)">
+                                        - {{newStudent.aadharNum.toString().length}}</span>
+                </label>
+                <input type="number"
+                       class="form-control"
+                       [(ngModel)]="newStudent.aadharNum">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Caste</label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.caste">
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank Name, Bank Account Number, Father's Occupation, Father's Annual Income -->
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Bank Name</label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.bankName">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Bank Account Number</label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.bankAccountNum">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Father's Occupation</label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.fatherOccupation">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group form-black label-floating">
+                <label class="control-label">Father's Annual Income</label>
+                <input type="text"
+                       class="form-control"
+                       [(ngModel)]="newStudent.fatherAnnualIncome">
+              </div>
+            </div>
+          </div>
+
+          <!-- RTE, Bus Stop, Admission Session -->
+          <div class="row">
+            <div class="col-md-3">
+              <mat-form-field>
+                <mat-select placeholder="RTE"
+                            [(ngModel)]="newStudent.rte"
+                >
+                  <mat-option value="YES">Yes</mat-option>
+                  <mat-option value="NO">No</mat-option>
+                  <mat-option value="UNKNOWN">Unknown</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div *ngIf="busStopList.length > 0" class="col-md-3">
+              <mat-form-field>
+                <mat-select placeholder="Bus Stop"
+                            [(ngModel)]="newStudent.busStopDbId">
+                  <mat-option value=0>None</mat-option>
+                  <mat-option *ngFor="let busStop of busStopList" value="{{busStop.dbId}}">
+                    {{busStop.stopName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+              <div class="col-md-3">
+                  <mat-form-field>
+                      <mat-select placeholder="Admission Session"
+                                  [(ngModel)]="newStudent.admissionSessionDbId">
+                          <mat-option [value]=0>None</mat-option>
+                          <mat-option [value]="user.schoolCurrentSessionDbId">{{user.getSchoolCurrentSessionName()}}</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </div>
+          </div>
+
+          <!-- Address, Remark -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="form-group form-black label-floating">
+                  <label class="control-label">Address</label>
+                  <textarea class="form-control" rows="3"
+                            [(ngModel)]="newStudent.address"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="form-group form-black label-floating">
+                  <label class="control-label">Remark</label>
+                  <textarea class="form-control" rows="3"
+                            [(ngModel)]="newStudent.remark"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-{{user.btn_color}}" (click)="createNewStudent()">Create Profile</button>
+
         </ng-container>
+
+      </div>
     </div>
+    <ng-container *ngIf="isLoading">
+      <!-- div class="loader-container" align="center">
+          <div class="loader"></div>
+      </div -->
+      <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+  </div>
 </div>

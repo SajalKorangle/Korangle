@@ -12,16 +12,24 @@
 
             <app-student-profile *ngIf="user.appSection==='student_profile'" [user]="user"></app-student-profile>
             <app-student-list *ngIf="user.appSection==='student_list'" [user]="user"></app-student-list>
-            <app-promote-student *ngIf="user.appSection==='promote_students'" [user]="user"></app-promote-student>
+            <app-generate-tc *ngIf="user.appSection==='generate_tc'" [user]="user"></app-generate-tc>
 
-            <app-new-fees *ngIf="user.appSection==='new_fees'" [user]="user"></app-new-fees>
-            <app-fees-list *ngIf="user.appSection==='fees_list'" [user]="user"></app-fees-list>
+            <!-- app-new-fees *ngIf="user.appSection==='new_fees'" [user]="user"></app-new-fees>
+            <app-fees-list *ngIf="user.appSection==='fees_list'" [user]="user"></app-fees-list -->
+
+            <app-collect-fee *ngIf="user.appSection==='collect_fee'" [user]="user"></app-collect-fee>
+            <app-total-collection *ngIf="user.appSection==='total_fee_collection'" [user]="user"></app-total-collection>
+            <app-update-student-fees *ngIf="user.appSection==='update_student_fees'" [user]="user"></app-update-student-fees>
+            <app-give-discount *ngIf="user.appSection==='give_discount'" [user]="user"></app-give-discount>
+            <app-total-discount *ngIf="user.appSection==='total_discount'" [user]="user"></app-total-discount>
+            <app-set-school-fees *ngIf="user.appSection==='set_school_fees'" [user]="user"></app-set-school-fees>
+            <app-approve-fees *ngIf="user.appSection==='approve_fees'" [user]="user"></app-approve-fees>
 
             <app-new-expense *ngIf="user.appSection==='new_expense'" [user]="user"></app-new-expense>
             <app-expense-list *ngIf="user.appSection==='expense_list'" [user]="user"></app-expense-list>
 
-            <app-new-concession *ngIf="user.appSection==='new_concession'" [user]="user"></app-new-concession>
-            <app-concession-list *ngIf="user.appSection==='concession_list'" [user]="user"></app-concession-list>
+            <!-- app-new-concession *ngIf="user.appSection==='new_concession'" [user]="user"></app-new-concession>
+            <app-concession-list *ngIf="user.appSection==='concession_list'" [user]="user"></app-concession-list -->
 
             <app-new-student *ngIf="user.appSection==='new_student'" [user]="user"></app-new-student>
 
@@ -34,7 +42,7 @@
         <app-login-form [user]="user"></app-login-form>
     </div>
 </div>
-<app-new-fee-receipt-modal [user]="user"></app-new-fee-receipt-modal>
+<!-- app-new-fee-receipt-modal [user]="user"></app-new-fee-receipt-modal -->
 <div class="wrapper showPrint">
     <app-print [user]="user"></app-print>
 </div>

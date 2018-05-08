@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import { Constants } from '../classes/constants';
 
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -26,27 +26,53 @@ export class CommonServiceRequirements {
         }
     }
 
-    public postData(body: any, token: any, url: any): Promise<any> {
+    public deleteData(token: any, url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
-        return this.http.post(Constants.DJANGO_SERVER + url, body, {headers: headers})
+        return this.http.delete(Constants.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
             }, error => {
-                alert('Server Error: Contact Admin');
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
             .catch(this.handleError);
     }
 
-    public getData(token: any, url: any): Promise<any> {
+    public putData(body: any, token: any, url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
-        return this.http.get(Constants.DJANGO_SERVER + url, {headers: headers})
+        return this.http.put(Constants.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
             }, error => {
-                alert('Server Error: Contact Admin');
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                return null;
+            })
+            .catch(this.handleError);
+    }
+
+    public postData(body: any, token: any, url: any): Promise<any> {
+        const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        return this.http.post(Constants.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+            .toPromise()
+            .then(response => {
+                return this.returnResponse(response);
+            }, error => {
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                return null;
+            })
+            .catch(this.handleError);
+    }
+
+    public getData(token: any, url: any, params: URLSearchParams = null): Promise<any> {
+        const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        return this.http.get(Constants.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
+            .toPromise()
+            .then(response => {
+                return this.returnResponse(response);
+            }, error => {
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
             .catch(this.handleError);

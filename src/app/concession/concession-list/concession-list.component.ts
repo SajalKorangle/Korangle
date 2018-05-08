@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+/*import { Component, Input } from '@angular/core';
 
 import { Concession } from '../../classes/concession';
 import { FeeService } from '../../fees/fee.service';
@@ -55,17 +55,5 @@ export class ConcessionListComponent {
       );
     }
 
-    /*printFeeRecords(): void {
-        const emitValue = [];
-        emitValue['concessionList'] = this.concessionList;
-        emitValue['startDate'] = this.startDate;
-        emitValue['endDate'] = this.endDate;
-        emitValue['totalConcession'] = this.totalConcession;
-        EmitterService.get('print-fee-records').emit(emitValue);
-    }
-
-    printFeeReceipt(fee: Concession): void {
-        EmitterService.get('print-fee-receipt').emit(fee);
-    }*/
-
 }
+*/

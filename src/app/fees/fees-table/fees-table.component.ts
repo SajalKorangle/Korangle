@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+/*import { Component, Input } from '@angular/core';
 
 import { Fee } from '../../classes/fee';
 import {EmitterService} from '../../services/emitter.service';
@@ -19,3 +19,4 @@ export class FeesTableComponent {
     }
 
 }
+*/
