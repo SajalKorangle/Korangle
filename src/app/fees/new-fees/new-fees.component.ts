@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+/*import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 import { TempFee } from '../classes/temp-fee';
 import { TempStudent } from '../classes/temp-student';
@@ -202,3 +202,4 @@ export class NewFeesComponent implements OnInit, OnDestroy {
     }
 
 }
+*/

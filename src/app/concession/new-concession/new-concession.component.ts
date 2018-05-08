@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+/*import { Component, Input, OnInit } from '@angular/core';
 
 import { TempConcession } from '../../fees/classes/temp-concession';
 import { TempStudent } from '../../fees/classes/temp-student';
@@ -158,3 +158,4 @@ export class NewConcessionComponent implements OnInit {
     }
 
 }
+*/

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+/*import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import {EmitterService} from '../../services/emitter.service';
 
 @Component({
@@ -45,3 +45,4 @@ export class NewFeeReceiptComponent implements OnInit, OnDestroy {
     }
 
 }
+*/

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+/*import { Component, Input } from '@angular/core';
 
 import { FeeService } from '../fee.service';
 import { Fee } from '../../classes/fee';
@@ -72,3 +72,4 @@ export class FeesListComponent {
     }
 
 }
+*/
