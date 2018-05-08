@@ -32,6 +32,10 @@ import { NewStudentComponent } from './new-student/new-student.component';
 
 import { LoginComponent } from './authentication/login.component';
 
+// import { NewFeeReceiptComponent } from './modal/new-fee-receipt/new-fee-receipt.component';
+// import { NewFeesComponent } from './fees/new-fees/new-fees.component';
+// import { FeesListComponent } from './fees/fees-list/fees-list.component';
+
 import { CollectFeeComponent } from './fees-second/pages/collect-fee/collect-fee.component';
 import { TotalCollectionComponent } from './fees-second/pages/total-collection/total-collection.component';
 import { UpdateStudentFeesComponent } from './fees-second/pages/update-student-fees/update-student-fees.component';
@@ -44,15 +48,17 @@ import { MonthlyAmountComponent } from './fees-second/components/monthly-amount/
 import { FeeStructureComponent } from './fees-second/components/fee-structure/fee-structure.component';
 import { ApproveFeesComponent } from './fees-second/pages/approve-fees/approve-fees.component';
 
+// import { FeesTableComponent } from './fees/fees-table/fees-table.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 import { NewExpenseComponent } from './expenses/new-expense/new-expense.component';
 import { ExpenseListComponent } from './expenses/expense-list/expense-list.component';
 
+// import { NewConcessionComponent } from './concession/new-concession/new-concession.component';
+// import { ConcessionListComponent } from './concession/concession-list/concession-list.component';
+
 import { UpdateMarksComponent } from './marksheet/update-marks/update-marks.component';
 import { MarksheetComponent } from './marksheet/print-marksheet/marksheet.component';
-
-import { SchoolProfileComponent } from './school-profile/school-profile.component';
 
 import { PrintComponent } from './print/print.component';
 import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
@@ -115,8 +121,6 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
         GenerateTcComponent,
 
         NewStudentComponent,
-
-        SchoolProfileComponent,
 
         LoginComponent,
 
