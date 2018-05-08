@@ -117,13 +117,13 @@
             <span *ngIf="studentTcProfile.gender=='Male'">Master</span>
             <span *ngIf="studentTcProfile.gender=='Female'">Miss</span>
             {{studentTcProfile.name}}</b></i>
-            , scholar no. <i><b>{{studentTcProfile.scholarNumber}}</b></i>
             <span *ngIf="studentTcProfile.gender=='Male'">s/o</span>
             <span *ngIf="studentTcProfile.gender=='Female'">d/o</span>
             <i><b>Mr. {{studentTcProfile.fathersName}}</b></i>
             and <i><b>Mrs. {{studentTcProfile.motherName}}</b></i> residing at
-            <i><b> {{studentTcProfile.address}}</b></i> had taken admission in our school on
-            <i><b>{{studentTcProfile.admissionDate | date: 'dd/MM/yyyy'}}</b></i>
+            <i><b> {{studentTcProfile.address}}</b></i> had taken admission in our school,
+            with scholar no. <i><b>{{studentTcProfile.scholarNumber}}</b></i>,
+            on <i><b>{{studentTcProfile.admissionDate | date: 'dd/MM/yyyy'}}</b></i>
             and is leaving school on <i><b>{{studentTcProfile.leavingDate | date: 'dd/MM/yyyy'}}</b></i>
             because <i><b>{{studentTcProfile.leavingReason}}</b></i>.<br/><br/>
 
