@@ -4,7 +4,7 @@ from fee_second_app.factories.fee_definition import FeeDefinitionFactory
 
 from class_app.models import Class
 from school_app.model.models import BusStop
-from fee_second_app.models import Month
+from fee_second_app.models import Month, FeeDefinition
 
 
 class BusStopBasedFilterFactory(factory.django.DjangoModelFactory):
@@ -32,11 +32,10 @@ class SchoolMonthlyFeeComponentFactory(factory.django.DjangoModelFactory):
 class SchoolFeeComponentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'fee_second_app.SchoolFeeComponent'
-        django_get_or_create = ('parentFeeDefinition', 'title', 'amount')
+        django_get_or_create = ('parentFeeDefinition', 'title')
 
     parentFeeDefinition = factory.SubFactory(FeeDefinitionFactory)
     title = 'Test School Fee Component'
-    amount = 1000
 
     @factory.post_generation
     def classBasedFilter(self, create, extracted, **kwargs):
@@ -61,8 +60,11 @@ class SchoolFeeComponentFactory(factory.django.DjangoModelFactory):
         if not create:
             return
         else:
-            for month_object in Month.objects.all():
-                SchoolMonthlyFeeComponentFactory(
-                    parentSchoolFeeComponent=self,
-                    parentMonth=month_object)
+            if self.parentFeeDefinition.frequency == FeeDefinition.YEARLY_FREQUENCY:
+                amount = 1000
+            elif self.parentFeeDefinition.frequency == FeeDefinition.MONTHLY_FREQUENCY:
+                for month_object in Month.objects.all():
+                    SchoolMonthlyFeeComponentFactory(
+                        parentSchoolFeeComponent=self,
+                        parentMonth=month_object)
 

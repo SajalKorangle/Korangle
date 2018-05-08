@@ -74,8 +74,8 @@ class ConcessionTestCase(ParentTestCase):
         response = get_concession_list_by_school_id(request)
 
         concession_queryset = ConcessionSecond.objects.filter(parentStudent__parentUser=user_object,
-                                                         generationDateTime__gte=request['startDate']+' 00:00:00+00:00',
-                                                         generationDateTime__lte=request['endDate']+ ' 23:59:59+00:00').order_by('-generationDateTime')
+                                                         generationDateTime__gte=request['startDate']+' 00:00:00+05:30',
+                                                         generationDateTime__lte=request['endDate']+ ' 23:59:59+05:30').order_by('-generationDateTime')
 
         self.assertEqual(len(response), concession_queryset.count())
 

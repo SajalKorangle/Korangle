@@ -98,7 +98,7 @@ class FeeDefinition(models.Model):
 
 class SchoolFeeComponent(models.Model):
     title = models.TextField(verbose_name='title')
-    amount = models.IntegerField(null=False, default=0, verbose_name='amount')
+    amount = models.IntegerField(null=True, verbose_name='amount')
     parentFeeDefinition = models.ForeignKey(FeeDefinition, on_delete=models.PROTECT, default=0,
                                             verbose_name='parentFeeDefinition')
 
@@ -150,21 +150,26 @@ class StudentFeeComponent(models.Model):
 
     @property
     def schoolFeeComponent(self):
-        session_object = self.parentFeeDefinition.parentSession
         fee_definition_object = self.parentFeeDefinition
         student_object = self.parentStudent
 
         # check rte constraint
-        if (fee_definition_object.rte is False) & (student_object.rte == Student.RTE_YES):
+        if (fee_definition_object.rte is False) and (student_object.rte == Student.RTE_YES):
             return None
 
         # check only new student constraint
-            # Need new field 'Admission session' in student profile for this to work
+        if fee_definition_object.onlyNewStudent is True:
+            if (student_object.admissionSession is not None) \
+                    and (student_object.admissionSession.id != fee_definition_object.parentSession.id):
+                return None
+            if student_object.admissionSession is None:
+                return None
 
         # find student fee component by defined filters
 
         school_fee_component_queryset = SchoolFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object)
 
+        session_object = self.parentFeeDefinition.parentSession
         if fee_definition_object.classFilter:
             student_section_object = StudentSection.objects.get(parentStudent=student_object,
                                                                 parentSection__parentClassSession__parentSession=session_object)
@@ -214,13 +219,6 @@ class StudentFeeComponent(models.Model):
     @property
     def amountDue(self):
         return self.amount-self.amountPaid-self.amountExempted
-        '''amountPaid = SubFeeReceipt.objects.filter(parentStudentFeeComponent=self, parentFeeReceipt__cancelled=False).aggregate(Sum('amount'))['amount__sum']
-        if amountPaid is None:
-            amountPaid = 0
-        amountExempted = SubConcession.objects.filter(parentStudentFeeComponent=self, parentConcessionSecond__cancelled=False).aggregate(Sum('amount'))['amount__sum']
-        if amountExempted is None:
-            amountExempted = 0
-        return self.amount-amountPaid-amountExempted'''
 
     class Meta:
         db_table = 'student_fee_component'
@@ -302,7 +300,7 @@ class SubFeeReceipt(models.Model):
     parentFeeReceipt = models.ForeignKey(FeeReceipt, models.PROTECT, default=0, verbose_name='parentFeeReceipt')
     parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.PROTECT, default=0,
                                                   verbose_name='parentStudentFeeComponent')
-    amount = models.IntegerField(null=False, default=0, verbose_name='amount')
+    amount = models.IntegerField(null=True, verbose_name='amount')
 
     class Meta:
         db_table = 'sub_fee_receipt'
@@ -334,7 +332,7 @@ class SubConcession(models.Model):
     parentConcessionSecond = models.ForeignKey(ConcessionSecond, models.PROTECT, default=0, verbose_name='parentConcessionSecond')
     parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.PROTECT, default=0,
                                                   verbose_name='parentStudent')
-    amount = models.IntegerField()
+    amount = models.IntegerField(null=True, verbose_name='amount')
 
     class Meta:
         db_table = 'sub_concession'

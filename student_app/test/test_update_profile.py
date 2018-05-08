@@ -90,6 +90,11 @@ class UpdateProfileTestCase(ParentTestCase):
         else:
             self.assertEqual(None, student_profile_data['busStopDbId'])
 
+        if student_profile_data['admissionSessionDbId'] is not None:
+            self.assertEqual(student_object.currentBusStop.id, student_profile_data['admissionSessionDbId'])
+        else:
+            self.assertEqual(None, student_profile_data['admissionSessionDbId'])
+
     def test_update_student(self):
 
         student_section_object = StudentSection.objects.all()[0]
@@ -123,6 +128,7 @@ class UpdateProfileTestCase(ParentTestCase):
         data['bloodGroup'] = 'O +'
         data['fatherAnnualIncome'] = '15,000'
         data['busStopDbId'] = None
+        data['admissionDbId'] = None
 
         update_student(data)
 
@@ -149,6 +155,7 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.bloodGroup,data['bloodGroup'])
         self.assertEqual(student_object.fatherAnnualIncome,data['fatherAnnualIncome'])
         self.assertEqual(student_object.currentBusStop, None)
+        self.assertEqual(student_object.admissionSession, None)
 
     def test_delete_student(self):
 

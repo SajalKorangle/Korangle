@@ -33,7 +33,7 @@ def fees_list(data, user):
         if cautionMoney:
             tempFee['cautionMoneyAmount'] = cautionMoney[0].amount
 
-        tempFee['className'] = fee_object.className
+        # tempFee['className'] = fee_object.className
         fee_list.append(tempFee)
 
     return fee_list

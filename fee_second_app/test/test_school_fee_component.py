@@ -1,23 +1,41 @@
 
 from parent_test import ParentTestCase
 
+# Models
 from fee_second_app.models import SchoolFeeComponent, FeeDefinition, ClassBasedFilter, BusStopBasedFilter, \
     SchoolMonthlyFeeComponent, FeeType, Month, ClassBasedFilter, BusStopBasedFilter
 from class_app.models import Class
 from school_app.model.models import BusStop
 
+# Business
 from fee_second_app.business.school_fee_component import get_school_fee_component_by_object, \
-    create_school_fee_component, update_school_fee_component, delete_school_fee_component
+    create_school_fee_component, update_school_fee_component, delete_school_fee_component, \
+    get_school_fee_component_by_student_and_fee_defintion_object
 
+# Factories
 from fee_second_app.factories.fee_definition import FeeDefinitionFactory
 from fee_second_app.factories.school_fee_component import SchoolFeeComponentFactory
+from student_app.factories.student import StudentFactory
 
 
 class SchoolFeeComponentTestCase(ParentTestCase):
 
+    def test_get_school_fee_component_by_student_and_fee_definition_object(self):
+
+        school_fee_component_object = SchoolFeeComponentFactory()
+        student_object = StudentFactory()
+
+        school_fee_component_object_final = get_school_fee_component_by_student_and_fee_defintion_object(
+            student_object, school_fee_component_object.parentFeeDefinition
+        )
+
+        self.assertEqual(school_fee_component_object.id, school_fee_component_object_final.id)
+
+
     def test_get_school_fee_component_by_object(self):
 
-        school_fee_component_object = SchoolFeeComponent.objects.filter(parentFeeDefinition__frequency=FeeDefinition.MONTHLY_FREQUENCY)[0]
+        # school_fee_component_object = SchoolFeeComponent.objects.filter(parentFeeDefinition__frequency=FeeDefinition.MONTHLY_FREQUENCY)[0]
+        school_fee_component_object = SchoolFeeComponentFactory()
 
         school_fee_component_response = get_school_fee_component_by_object(school_fee_component_object)
 
@@ -49,7 +67,7 @@ class SchoolFeeComponentTestCase(ParentTestCase):
 
                 index += 1
 
-        self.assertEqual('busStop' in school_fee_component_response, school_fee_component_object.parentFeeDefinition.busStopFilter)
+        self.assertEqual('busStopList' in school_fee_component_response, school_fee_component_object.parentFeeDefinition.busStopFilter)
 
         if 'busStopList' in school_fee_component_response:
 
@@ -178,7 +196,6 @@ class SchoolFeeComponentTestCase(ParentTestCase):
                                                   parentMonth__name=month_data['month'])
 
             self.assertEqual(student_monthly_fee_component_object.amount, month_data['amount'])
-
 
     def test_delete_school_fee_component(self):
 

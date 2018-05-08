@@ -7,7 +7,8 @@ from .fees import fee_list_view
 
 from .marksheet import get_student_marksheet, update_student_marksheet, delete_student_marksheet'''
 
-from .views import get_working_days_view, create_working_days_view, update_working_days_view, get_bus_stops_view
+from .views import get_working_days_view, create_working_days_view, update_working_days_view, \
+	get_bus_stops_view, get_session_list_view
 
 from .user import LoginUserView, UserDetailsView
 
@@ -21,5 +22,7 @@ urlpatterns = [
 	url(r'^working-days/(?P<school_session_id>[0-9]+)', update_working_days_view),
 
 	url(r'^(?P<school_id>[0-9]+)/bus-stops', get_bus_stops_view),
+
+	url(r'^sessions', get_session_list_view),
 
 ]

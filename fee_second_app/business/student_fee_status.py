@@ -88,9 +88,9 @@ def update_student_fee_status(data):
                 # change bySchoolRules variable too if it is not matching school amount.
                 student_fee_component_monthly_object.save()
 
-        request = {}
-        request['studentDbId'] = data['studentDbId']
-        request['sessionDbId'] = student_session_fee_status['sessionDbId']
+    request = {}
+    request['studentDbId'] = data['studentDbId']
+    request['sessionDbId'] = student_session_fee_status['sessionDbId']
 
     student_session_fee_status_response = get_student_fee_status(request)
 

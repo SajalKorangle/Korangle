@@ -89,8 +89,13 @@ def populate_fee_type(apps, schema_editor):
 def populate_fee_structure(apps, schema_editor):
 
     populate_bright_fee_structure(apps, schema_editor, 'brightstar')
+    promote_bright_school(apps, schema_editor, 'brightstar')
 
     populate_bright_fee_structure(apps, schema_editor, 'brighthindi')
+    promote_bright_school(apps, schema_editor, 'brighthindi')
+
+    populate_bright_fee_structure(apps, schema_editor, 'brightstarsalsalai')
+    promote_bright_school(apps, schema_editor, 'brightstarsalsalai')
 
     # populate_champion_school_fee_structure(apps, schema_editor)
 
@@ -395,6 +400,9 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
                                                            bySchoolRules=False)
         student_fee_component_object.save()
 
+        if schoolUser == 'brighthindi':
+            continue
+
         Fee = apps.get_model('fee_app', 'Fee')
         for fee_object in Fee.objects.filter(parentStudent=student_object):
 
@@ -404,7 +412,8 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
                                             cancelled=False,
                                             parentStudent=student_object)
             fee_receipt_object.save()
-            fee_receipt_object.generationDateTime = get_datetime_from_date(fee_object.generationDateTime)
+            # fee_receipt_object.generationDateTime = get_datetime_from_date(fee_object.generationDateTime)
+            fee_receipt_object.generationDateTime = get_receipt_date_time(fee_object.generationDateTime)
             fee_receipt_object.save()
 
             SubFeeReceipt = apps.get_model('fee_second_app', 'SubFeeReceipt')
@@ -419,7 +428,8 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
 
             concession_second_object = Concession_Second(remark=concession_object.remark, parentStudent=student_object)
             concession_second_object.save()
-            concession_second_object.generationDateTime=get_datetime_from_date(concession_object.generationDateTime)
+            # concession_second_object.generationDateTime=get_datetime_from_date(concession_object.generationDateTime)
+            concession_second_object.generationDateTime=get_receipt_date_time(concession_object.generationDateTime)
             concession_second_object.save()
 
             SubConcession = apps.get_model('fee_second_app', 'SubConcession')
@@ -429,9 +439,83 @@ def populate_bright_fee_structure(apps, schema_editor, schoolUser):
             sub_concession_object.save()
 
 
-from datetime import datetime
+def promote_bright_school(apps, schema_editor, schoolUser):
+
+    StudentSection = apps.get_model('student_app', 'StudentSection')
+    Section = apps.get_model('class_app', 'Section')
+    Class = apps.get_model('class_app', 'Class')
+
+    School = apps.get_model('school_app', 'School')
+    school_object = School.objects.get(user__username=schoolUser)
+
+    Session = apps.get_model('school_app', 'Session')
+    session_object = Session.objects.get(name='Session 2018-19')
+
+    school_object.currentSession = session_object
+    school_object.save()
+
+    for student_section_object in \
+        StudentSection.objects.filter(parentStudent__parentUser__username=schoolUser,
+                                      parentSection__parentClassSession__parentSession__name='Session 2017-18'):
+
+        class_object = student_section_object.parentSection.parentClassSession.parentClass
+        section_object = student_section_object.parentSection
+
+        new_class_object = None
+        if class_object.name == 'Nursery':
+            new_class_object = Class.objects.get(name='L.K.G.')
+        elif class_object.name == 'L.K.G.':
+            new_class_object = Class.objects.get(name='U.K.G.')
+        elif class_object.name == 'U.K.G.':
+            new_class_object = Class.objects.get(name='Class - 1')
+        elif class_object.name == 'Class - 1':
+            new_class_object = Class.objects.get(name='Class - 2')
+        elif class_object.name == 'Class - 2':
+            new_class_object = Class.objects.get(name='Class - 3')
+        elif class_object.name == 'Class - 3':
+            new_class_object = Class.objects.get(name='Class - 4')
+        elif class_object.name == 'Class - 4':
+            new_class_object = Class.objects.get(name='Class - 5')
+        elif class_object.name == 'Class - 5':
+            new_class_object = Class.objects.get(name='Class - 6')
+        elif class_object.name == 'Class - 6':
+            new_class_object = Class.objects.get(name='Class - 7')
+        elif class_object.name == 'Class - 7':
+            new_class_object = Class.objects.get(name='Class - 8')
+        elif class_object.name == 'Class - 8':
+            new_class_object = Class.objects.get(name='Class - 9')
+        elif class_object.name == 'Class - 9':
+            new_class_object = Class.objects.get(name='Class - 10')
+        elif class_object.name == 'Class - 10':
+            continue
+        elif class_object.name == 'Class - 11':
+            new_class_object = Class.objects.get(name='Class - 2')
+        elif class_object.name == 'Class - 12':
+            continue
+
+        new_section_object = Section.objects.get(name=section_object.name,
+                                                 parentClassSession__parentClass=new_class_object,
+                                                 parentClassSession__parentSession__name='Session 2018-19')
+
+        promoted_student_section_object = StudentSection(parentStudent=student_section_object.parentStudent,
+                                                         parentSection=new_section_object,
+                                                         rollNumber=student_section_object.rollNumber)
+        promoted_student_section_object.save()
+
+
+from datetime import datetime, date
+
+
+def get_receipt_date_time(date):
+
+    fixed_date = datetime.today().date()
+
+    if date > fixed_date:
+        return get_datetime_from_date(fixed_date)
+    else:
+        return get_datetime_from_date(date)
 
 
 def get_datetime_from_date(date):
 
-    return str(datetime.combine(date, datetime.min.time())) + '+00:00'
+    return str(datetime.combine(date, datetime.min.time())) + '+05:30'

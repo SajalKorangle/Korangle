@@ -5,6 +5,9 @@ from student_app.handlers.common import populate_student_field
 
 from student_app.models import StudentSection
 
+from fee_second_app.business.initialize_student_fees import initialize_student_fees
+
+
 def create_new_student(data, user):
 
     student_object = Student()
@@ -22,6 +25,9 @@ def create_new_student(data, user):
     if 'rollNumber' in data:
         student_section_object.rollNumber = data['rollNumber']
     student_section_object.save()
+
+    initialize_student_fees(student_object, student_section_object.parentSection.parentClassSession.parentSession)
+
 
     response = {}
     response['message'] = 'Student Profile created successfully'

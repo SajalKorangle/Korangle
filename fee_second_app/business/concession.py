@@ -61,8 +61,8 @@ def get_concession_by_object(concession_object):
 
 def get_concession_list_by_school_id(data):
 
-    startDate = data['startDate'] + ' 00:00:00+00:00'
-    endDate = data['endDate'] + ' 23:59:59+00:00'
+    startDate = data['startDate'] + ' 00:00:00+05:30'
+    endDate = data['endDate'] + ' 23:59:59+05:30'
 
     user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
 
@@ -99,14 +99,20 @@ def create_concession(data):
     for subConcession in data['subConcessionList']:
 
         student_fee_component_object = StudentFeeComponent.objects.get(id=subConcession['componentDbId'])
-        if subConcession['amount'] > student_fee_component_object.amountDue:
-            subConcession['amount'] = student_fee_component_object.amountDue
         sub_concession_object = SubConcession(parentStudentFeeComponent=student_fee_component_object,
-                                               amount=subConcession['amount'],
                                                parentConcessionSecond=concession_object)
-        sub_concession_object.save()
 
-        if subConcession['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
+        if subConcession['frequency'] == FeeDefinition.YEARLY_FREQUENCY:
+
+            if subConcession['amount'] > student_fee_component_object.amountDue:
+                subConcession['amount'] = student_fee_component_object.amountDue
+            sub_concession_object.amount = subConcession['amount']
+
+            sub_concession_object.save()
+
+        elif subConcession['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
+
+            sub_concession_object.save()
 
             for subConcessionMonthly in subConcession['monthList']:
 

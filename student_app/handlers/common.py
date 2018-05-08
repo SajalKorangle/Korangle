@@ -1,13 +1,23 @@
 
 from fee_app.models import SubFee
 
-from school_app.model.models import BusStop
+from school_app.model.models import BusStop, Session
 
 def populate_student_field(student_object, fieldName, fieldValue):
     if fieldName == 'category':
         setattr(student_object, 'newCategoryField', fieldValue)
     elif fieldName == 'religion':
         setattr(student_object, 'newReligionField', fieldValue)
+    elif fieldName == 'dateOfBirth':
+        if fieldValue == '':
+            student_object.dateOfBirth = None
+        else:
+            student_object.dateOfBirth = fieldValue
+    elif fieldName == 'admissionSessionDbId':
+        if fieldValue is not None:
+            student_object.admissionSession = Session.objects.get(id=fieldValue)
+        else:
+            student_object.admissionSession = None
     elif fieldName == 'busStopDbId':
         if fieldValue is not None:
             student_object.currentBusStop = BusStop.objects.get(id=fieldValue)
@@ -44,10 +54,16 @@ def get_student_profile(student_object, session_object):
     student_data['bloodGroup'] = student_object.bloodGroup
     student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome
     student_data['rte'] = student_object.rte
+
     if student_object.currentBusStop is not None:
         student_data['busStopDbId'] = student_object.currentBusStop.id
     else:
         student_data['busStopDbId'] = None
+
+    if student_object.admissionSession is not None:
+        student_data['admissionSessionDbId'] = student_object.admissionSession.id
+    else:
+        student_data['admissionSessionDbId'] = None
 
     student_data['sectionDbId'] = student_object.get_section_id(session_object)
     student_data['sectionName'] = student_object.get_section_name(session_object)

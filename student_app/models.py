@@ -1,6 +1,6 @@
 from django.db import models
 
-from school_app.model.models import BusStop
+from school_app.model.models import BusStop, Session
 
 from class_app.models import Section
 
@@ -68,6 +68,8 @@ class Student(models.Model):
 
     rte = models.CharField(max_length=10, choices=RTE, null=True)
 
+    admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession')
+
     def __str__(self):
         """A string representation of the model."""
         return self.parentUser.username+" --- "+self.name
@@ -108,11 +110,11 @@ class Student(models.Model):
     def school(self):
         return self.parentUser.school_set.filter()[0]
 
-    @property
+    '''@property
     def className(self):
         return self.studentsection_set\
             .get(parentSection__parentClassSession__parentSession=self.school.currentSession)\
-            .parentSection.parentClassSession.parentClass.name
+            .parentSection.parentClassSession.parentClass.name'''
 
     class Meta:
         db_table = 'student'

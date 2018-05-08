@@ -1,11 +1,13 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from fee_second_app.models import FeeDefinition, SchoolFeeComponent
+# Models
+from fee_second_app.models import FeeDefinition, FeeType
+from student_app.models import StudentSection
 
-from student_app.models import StudentSection, Student
-
+# Business
 from fee_second_app.business.student_fee_component import create_student_fee_component
+from fee_second_app.business.school_fee_component import get_school_fee_component_by_student_and_fee_defintion_object
 
 
 '''def get_fee_definition_by_id(data):
@@ -52,10 +54,12 @@ def create_fee_definition(data):
 
     except ObjectDoesNotExist:
 
+        fee_type_object = FeeType.objects.get(id=data['feeTypeDbId'])
+
         fee_definition_object = FeeDefinition(parentSchool_id=data['schoolDbId'],
                                               parentSession_id=data['sessionDbId'],
                                               parentFeeType_id=data['feeTypeDbId'],
-                                              orderNumber=1,
+                                              orderNumber=fee_type_object.orderNumber,
                                               rte=data['rte'],
                                               onlyNewStudent=data['onlyNewStudent'],
                                               classFilter=data['classFilter'],
@@ -103,7 +107,7 @@ def delete_fee_definition(data):
     response = {}
     response['status'] = 'success'
     response['message'] = 'Fee deleted successfully'
-    response['feeDefinitionDbId'] = data['dbId']
+    response['feeDefinitionDbId'] = int(data['dbId'])
 
     return response
 
@@ -121,7 +125,12 @@ def lock_fee_definition(data):
 
         student_object = student_section_object.parentStudent
 
-        # check rte constraint
+        school_fee_component_object = \
+            get_school_fee_component_by_student_and_fee_defintion_object(student_object, fee_definition_object)
+
+        create_student_fee_component(student_object, fee_definition_object, school_fee_component_object)
+
+        '''# check rte constraint
         if (fee_definition_object.rte is False) & (student_object.rte == Student.RTE_YES):
             create_student_fee_component(student_object, fee_definition_object, None)
             continue
@@ -151,53 +160,9 @@ def lock_fee_definition(data):
             create_student_fee_component(student_object, fee_definition_object, school_fee_component_queryset[0])
         else:
             raise ValueError('More than one school fee component for a student')
-            return 'Error: Contact Admin'
+            return 'Error: Contact Admin'''
 
     fee_definition_object.locked = True
     fee_definition_object.save()
 
     return 'Fee locked successfully'
-
-
-    '''if fee_definition_object.classFilter is False & fee_definition_object.busStopFilter is False:
-        school_fee_component_object = SchoolFeeComponent.objects.get(parentFeeDefinition=fee_definition_object)
-        create_student_fee_component(student_object, fee_definition_object, school_fee_component_object)
-
-    elif fee_definition_object.classFilter is True & fee_definition_object.busStopFilter is False:
-        class_object = student_section_object.parentSection.parentClassSession.parentClass
-        for school_fee_component_object in SchoolFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object):
-            if school_fee_component_object.classbasedfilter_set.filter(parentClass=class_object).count() > 0:
-                create_student_fee_component(student_object, fee_definition_object, school_fee_component_object)
-                break
-
-    elif fee_definition_object.classFilter is False & fee_definition_object.busStopFilter is True:
-        bus_stop_object = student_object.currentBusStop
-        for school_fee_component_object in SchoolFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object):
-            if school_fee_component_object.busstopbasedfilter_set(parentBusStop=bus_stop_object).count() > 0:
-                create_student_fee_component(student_object, fee_definition_object, school_fee_component_object)
-                break
-
-    elif fee_definition_object.classFilter is True & fee_definition_object is True:
-        class_object = student_section_object.parentSection.parentClassSession.parentClass
-        bus_stop_object = student_object.currentBusStop
-        for school_fee_component_object in SchoolFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object):
-            if school_fee_component_object.classbasedfilter_set.filter(parentClass=class_object).count() > 0 & \
-                school_fee_component_object.busstopbasedfilter_set.fitler(parentBusStop=bus_stop_object).count() > 0:
-                create_student_fee_component(student_object, fee_definition_object, school_fee_component_object)
-                break'''
-
-    '''if updateStudentFeeComponent:
-        user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
-        session_object = Session.objects.get(id=data['sessionDbId'])
-
-        for student_section_object in \
-                StudentSection.objects.filter(parentStudent__parentUser=user_object,
-                                              parentSection__parentClassSession__parentSession=session_object):
-
-            student_fee_component_object = StudentFeeComponent.objects.get(parentStudent=student_section_object.parentStudent,
-                                                                           parentFeeDefinition=fee_definition_object)
-
-            if data['frequency'] == FeeDefinition.YEARLY_FREQUENCY:
-                delete_student_monthly_fee_component(student_fee_component_object)
-            elif data['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
-                create_student_monthly_fee_component(student_fee_component_object)'''

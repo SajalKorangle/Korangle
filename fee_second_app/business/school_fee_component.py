@@ -1,6 +1,49 @@
 
 from fee_second_app.models import ClassBasedFilter, BusStopBasedFilter, FeeDefinition, \
     SchoolMonthlyFeeComponent, SchoolFeeComponent, Month
+from student_app.models import Student, StudentSection
+
+
+def get_school_fee_component_by_student_and_fee_defintion_object(student_object, fee_definition_object):
+
+    # check rte constraint
+    if (fee_definition_object.rte is False) and (student_object.rte == Student.RTE_YES):
+        return None
+
+    # check only new student constraint
+    if fee_definition_object.onlyNewStudent is True:
+        if (student_object.admissionSession is not None) \
+                and (student_object.admissionSession.id != fee_definition_object.parentSession.id):
+            return None
+        if student_object.admissionSession is None:
+            return None
+
+    # find student fee component by defined filters
+    school_fee_component_queryset = SchoolFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object)
+
+    session_object = fee_definition_object.parentSession
+    if fee_definition_object.classFilter:
+        student_section_object = \
+            StudentSection.objects.get(parentStudent=student_object,
+                                       parentSection__parentClassSession__parentSession=session_object)
+        class_object = student_section_object.parentSection.parentClassSession.parentClass
+        for school_fee_component_object in school_fee_component_queryset:
+            if school_fee_component_object.classbasedfilter_set.filter(parentClass=class_object).count() == 0:
+                school_fee_component_queryset = school_fee_component_queryset.exclude(id=school_fee_component_object.id)
+
+    if fee_definition_object.busStopFilter:
+        bus_stop_object = student_object.currentBusStop
+        for school_fee_component_object in school_fee_component_queryset:
+            if school_fee_component_object.busstopbasedfilter_set.filter(parentBusStop=bus_stop_object).count() == 0:
+                school_fee_component_queryset = school_fee_component_queryset.exclude(id=school_fee_component_object.id)
+
+    if school_fee_component_queryset.count() == 0:
+        return None
+    elif school_fee_component_queryset.count() == 1:
+        return school_fee_component_queryset[0]
+    else:
+        raise ValueError('More than one school fee component for a student')
+        return None
 
 
 def get_school_fee_component_by_object(school_component_object):

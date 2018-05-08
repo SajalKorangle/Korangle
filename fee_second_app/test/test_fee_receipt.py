@@ -38,12 +38,13 @@ class FeeReceiptTestCase(ParentTestCase):
         for sub_fee_receipt_object in sub_fee_receipt_queryset:
 
             sub_fee_receipt_response = fee_receipt_response['subFeeReceiptList'][index]
-            self.assertEqual(sub_fee_receipt_response['amount'], sub_fee_receipt_object.amount)
             self.assertEqual(sub_fee_receipt_response['componentDbId'], sub_fee_receipt_object.parentStudentFeeComponent.id)
             self.assertEqual(sub_fee_receipt_response['feeType'], sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.parentFeeType.name)
             self.assertEqual(sub_fee_receipt_response['sessionName'], sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.parentSession.name)
             self.assertEqual(sub_fee_receipt_response['frequency'], sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.frequency)
 
+            if sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.frequency == FeeDefinition.YEARLY_FREQUENCY:
+                self.assertEqual(sub_fee_receipt_response['amount'], sub_fee_receipt_object.amount)
             if sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.frequency == FeeDefinition.MONTHLY_FREQUENCY:
 
                 sub_fee_receipt_monthly_queryset = SubFeeReceiptMonthly.objects.filter(parentSubFeeReceipt=sub_fee_receipt_object)
@@ -75,8 +76,8 @@ class FeeReceiptTestCase(ParentTestCase):
         response = get_fee_receipt_list_by_school_id(request)
 
         fee_receipt_queryset = FeeReceipt.objects.filter(parentStudent__parentUser=user_object,
-                                                         generationDateTime__gte=request['startDate']+' 00:00:00+00:00',
-                                                         generationDateTime__lte=request['endDate']+ ' 23:59:59+00:00').order_by('-generationDateTime')
+                                                         generationDateTime__gte=request['startDate']+' 00:00:00+05:30',
+                                                         generationDateTime__lte=request['endDate']+ ' 23:59:59+05:30').order_by('-generationDateTime')
 
         self.assertEqual(len(response), fee_receipt_queryset.count())
 

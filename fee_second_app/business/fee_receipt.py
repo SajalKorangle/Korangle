@@ -44,10 +44,11 @@ def get_fee_receipt_by_object(fee_receipt_object):
         sub_fee_receipt_response['feeType'] = sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.parentFeeType.name
         sub_fee_receipt_response['sessionName'] = sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.parentSession.name
         sub_fee_receipt_response['componentDbId'] = sub_fee_receipt_object.parentStudentFeeComponent.id
-        sub_fee_receipt_response['amount'] = sub_fee_receipt_object.amount
         sub_fee_receipt_response['frequency'] = sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.frequency
 
-        if sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.frequency == 'MONTHLY':
+        if sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.frequency == FeeDefinition.YEARLY_FREQUENCY:
+            sub_fee_receipt_response['amount'] = sub_fee_receipt_object.amount
+        elif sub_fee_receipt_object.parentStudentFeeComponent.parentFeeDefinition.frequency == FeeDefinition.MONTHLY_FREQUENCY:
 
             sub_fee_receipt_response['monthList'] = []
 
@@ -66,8 +67,8 @@ def get_fee_receipt_by_object(fee_receipt_object):
 
 def get_fee_receipt_list_by_school_id(data):
 
-    startDate = data['startDate'] + ' 00:00:00+00:00'
-    endDate = data['endDate'] + ' 23:59:59+00:00'
+    startDate = data['startDate'] + ' 00:00:00+05:30'
+    endDate = data['endDate'] + ' 23:59:59+05:30'
 
     user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
 
@@ -110,26 +111,33 @@ def create_fee_receipt(data):
     for subFeeReceipt in data['subFeeReceiptList']:
 
         student_fee_component_object = StudentFeeComponent.objects.get(id=subFeeReceipt['componentDbId'])
-        if subFeeReceipt['amount'] > student_fee_component_object.amountDue:
-            subFeeReceipt['amount'] = student_fee_component_object.amountDue
         sub_fee_receipt_object = SubFeeReceipt(parentStudentFeeComponent=student_fee_component_object,
-                                               amount=subFeeReceipt['amount'],
                                                parentFeeReceipt=fee_receipt_object)
-        sub_fee_receipt_object.save()
+        if subFeeReceipt['frequency'] == FeeDefinition.YEARLY_FREQUENCY:
 
-        if subFeeReceipt['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
+            if subFeeReceipt['amount'] > student_fee_component_object.amountDue:
+                subFeeReceipt['amount'] = student_fee_component_object.amountDue
+            sub_fee_receipt_object.amount = subFeeReceipt['amount']
+
+            sub_fee_receipt_object.save()
+
+        elif subFeeReceipt['frequency'] == FeeDefinition.MONTHLY_FREQUENCY:
+
+            sub_fee_receipt_object.save()
 
             for subFeeReceiptMonthly in subFeeReceipt['monthList']:
 
-                month_object = Month.objects.get(name=subFeeReceiptMonthly['month'])
-                amountDue = StudentMonthlyFeeComponent.objects.get(parentMonth=month_object,
-                                                                   parentStudentFeeComponent=sub_fee_receipt_object.parentStudentFeeComponent).amountDue
-                if subFeeReceiptMonthly['amount'] > amountDue:
-                    subFeeReceiptMonthly['amount'] = amountDue
-                sub_fee_receipt_monthly_object = SubFeeReceiptMonthly(parentSubFeeReceipt=sub_fee_receipt_object,
-                                                                      amount=subFeeReceiptMonthly['amount'],
-                                                                      parentMonth=month_object)
-                sub_fee_receipt_monthly_object.save()
+                if subFeeReceiptMonthly['amount'] > 0:
+
+                    month_object = Month.objects.get(name=subFeeReceiptMonthly['month'])
+                    amountDue = StudentMonthlyFeeComponent.objects.get(parentMonth=month_object,
+                                                                       parentStudentFeeComponent=sub_fee_receipt_object.parentStudentFeeComponent).amountDue
+                    if subFeeReceiptMonthly['amount'] > amountDue:
+                        subFeeReceiptMonthly['amount'] = amountDue
+                    sub_fee_receipt_monthly_object = SubFeeReceiptMonthly(parentSubFeeReceipt=sub_fee_receipt_object,
+                                                                          amount=subFeeReceiptMonthly['amount'],
+                                                                          parentMonth=month_object)
+                    sub_fee_receipt_monthly_object.save()
 
     response = {}
     response['message'] = 'Fees submitted successfully'
