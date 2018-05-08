@@ -143,6 +143,7 @@ export class User {
                 }
             ] },
         { path: 'new_student', title: 'New Student', icon: 'person', class: '', showSubsection: false, subsection: [] },
+        { path: 'school_profile', title: 'School Profile', icon: 'dashboard', class: '', showSubsection: false, subsection: [] },
     ];
 
     checkAuthentication(): boolean {

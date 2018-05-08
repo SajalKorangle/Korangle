@@ -42,3 +42,20 @@
 mat-form-field {
 	margin-top: 23px;
 }
+
+input {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid lightgrey;
+    width: 90%;
+    margin-left: 5px;
+}
+
+.row {
+    padding: 10px;
+}
+
+.row:hover {
+    background-color: lightgrey;
+}
