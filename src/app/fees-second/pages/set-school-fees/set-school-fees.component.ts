@@ -191,16 +191,17 @@ export class SetSchoolFeesComponent implements OnInit {
             this.isLoading = false;
             alert(response['message']);
             if (response['status'] === 'success') {
-                let index, count=0;
-                this.feeStructure.forEach(feeDefinition => {
+                let index=0;
+                this.feeStructure.every(feeDefinition => {
                     if (feeDefinition.dbId === response['feeDefinitionDbId']) {
-                        index = count;
+                        this.feeStructure.splice(index,1);
+                        this.populateFeeDefinition();
+                        return false;
                     }
-                    ++count;
+                    ++index;
+                    return true;
                 });
-                this.feeStructure.splice(index,1);
             }
-            this.populateFeeDefinition();
         }, error => {
             this.isLoading = false;
         });
@@ -222,7 +223,7 @@ export class SetSchoolFeesComponent implements OnInit {
             return;
         }
         if (!data.title || data.title === '') {
-            alert('Title should be populated');
+            alert('"Group Name" should be populated');
             return;
         }
         let sameTitle = false;
@@ -248,7 +249,9 @@ export class SetSchoolFeesComponent implements OnInit {
                     feeDefinition.schoolFeeComponentList.push(response);
                     if (feeDefinition.feeTypeDbId === this.selectedFeeType.dbId) {
                         this.populateFeeDefinition();
-                        this.populateSchoolFeeComponent(response);
+                        if (feeDefinition.busStopFilter || feeDefinition.classFilter) {
+                            this.populateSchoolFeeComponent(undefined);
+                        }
                     }
                     return false;
                 }

@@ -3,6 +3,8 @@ import { Component, OnInit, Input, OnDestroy, AfterViewChecked } from '@angular/
 // import { TempFee } from '../../fees/classes/temp-fee';
 
 import { EmitterService } from '../../services/emitter.service';
+import {FREQUENCY_LIST} from '../../fees-second/classes/constants';
+import {FeeReceipt} from '../../fees-second/classes/common-functionalities';
 
 @Component({
     selector: 'app-print-new-fee-receipt',
@@ -41,18 +43,18 @@ export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy, AfterView
         this.printNewFeeReceiptComponentSubscription.unsubscribe();
     }
 
-    getTotalFeeAmount(): number {
-        let amount = 0;
-        this.feeReceipt['subFeeReceiptList'].forEach( subFeeReceipt => {
-            amount += subFeeReceipt.amount;
-        });
-        return amount;
+    getSubFeeReceiptAmount(subFeeReceipt: any): number {
+        return FeeReceipt.getSubFeeReceiptAmount(subFeeReceipt);
+    }
+
+    getTotalFeeReceiptAmount(): number {
+        return FeeReceipt.getFeeReceiptTotalAmount(this.feeReceipt);
     }
 
     getMonthRange(subFeeReceipt: any): string {
-        if (subFeeReceipt.frequency !== 'MONTHLY') {
+        if (subFeeReceipt.frequency === FREQUENCY_LIST[0]) {
             return '';
-        } else {
+        } else if (subFeeReceipt.frequency === FREQUENCY_LIST[1]) {
             let startingMonth = '', endingMonth = '';
             subFeeReceipt['monthList'].forEach( month => {
                 if (month.amount > 0) {

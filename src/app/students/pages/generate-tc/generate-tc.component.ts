@@ -7,6 +7,7 @@ import { Section } from '../../../classes/section';
 import { StudentTcProfile } from '../../classes/student-tc-profile';
 
 import { StudentService } from '../../student.service';
+import { SchoolService } from '../../../services/school.service';
 
 import { EmitterService } from '../../../services/emitter.service';
 
@@ -14,7 +15,7 @@ import { EmitterService } from '../../../services/emitter.service';
   selector: 'app-generate-tc',
   templateUrl: './generate-tc.component.html',
   styleUrls: ['./generate-tc.component.css'],
-    providers: [ StudentService ],
+    providers: [ StudentService, SchoolService ],
 })
 export class GenerateTcComponent implements OnInit {
 
@@ -29,8 +30,13 @@ export class GenerateTcComponent implements OnInit {
     currentStudent: StudentTcProfile = new StudentTcProfile();
 
     isLoading = false;
+    isStudentListLoading = false;
 
-    constructor (private studentService: StudentService) { }
+    selectedSession: any;
+    sessionList: any;
+
+    constructor (private studentService: StudentService,
+                 private schoolService: SchoolService) { }
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
@@ -42,39 +48,63 @@ export class GenerateTcComponent implements OnInit {
         this.currentStudent.copy(this.selectedStudent);
     }
 
-    ngOnInit(): void {
-        const data = {
-            sessionDbId: this.user.schoolCurrentSessionDbId,
-        }
-        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
-            classSectionStudentList => {
-                classSectionStudentList.forEach( classs => {
-                    const tempClass = new Classs();
-                    tempClass.name = classs.name;
-                    tempClass.dbId = classs.dbId;
-                    classs.sectionList.forEach( section => {
-                        const tempSection = new Section();
-                        tempSection.name = section.name;
-                        tempSection.dbId = section.dbId;
-                        section.studentList.forEach( student => {
-                            const tempStudent = new Student();
-                            tempStudent.name = student.name;
-                            tempStudent.dbId = student.dbId;
-                            tempSection.studentList.push(tempStudent);
-                        });
-                        tempClass.sectionList.push(tempSection);
-                    });
-                    this.classSectionStudentList.push(tempClass);
-                });
-                if (this.classSectionStudentList.length > 0) {
-                    this.selectedClass = this.classSectionStudentList[0];
-                    this.changeSelectedSectionToFirst();
-                } else {
-                    alert('Student needs to be added first, before profile updation');
-                }
+    handleSessionChange(): void {
+        this.getStudentList(this.selectedSession.dbId);
+    }
 
+    ngOnInit(): void {
+        this.getSessionList();
+        this.getStudentList(this.user.schoolCurrentSessionDbId);
+    }
+
+    getSessionList(): void {
+        this.schoolService.getSessionList(this.user.jwt).then(sessionList => {
+            this.sessionList = sessionList;
+            this.sessionList.every(session => {
+                if (session.dbId === this.user.schoolCurrentSessionDbId) {
+                    this.selectedSession = session;
+                    return false;
+                }
+                return true;
+            });
+        });
+    }
+
+    getStudentList(sessionDbId: number): void {
+        const data = {
+            sessionDbId: sessionDbId,
+        };
+        this.isStudentListLoading = true;
+        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(classSectionStudentList => {
+            this.isStudentListLoading = false;
+            this.classSectionStudentList = [];
+            classSectionStudentList.forEach( classs => {
+                const tempClass = new Classs();
+                tempClass.name = classs.name;
+                tempClass.dbId = classs.dbId;
+                classs.sectionList.forEach( section => {
+                    const tempSection = new Section();
+                    tempSection.name = section.name;
+                    tempSection.dbId = section.dbId;
+                    section.studentList.forEach( student => {
+                        const tempStudent = new Student();
+                        tempStudent.name = student.name;
+                        tempStudent.dbId = student.dbId;
+                        tempSection.studentList.push(tempStudent);
+                    });
+                    tempClass.sectionList.push(tempSection);
+                });
+                this.classSectionStudentList.push(tempClass);
+            });
+            if (this.classSectionStudentList.length > 0) {
+                this.selectedClass = this.classSectionStudentList[0];
+                this.changeSelectedSectionToFirst();
+            } else {
+                alert('Student needs to be added first, before profile updation');
             }
-        );
+        }, error => {
+            this.isStudentListLoading = false;
+        });
     }
 
     getStudentProfile(): void {

@@ -32,6 +32,8 @@ export class Student {
 
     busStopDbId: number;
 
+    admissionSessionDbId: number;
+
     copy(student: any) {
 
         this.name = student.name;
@@ -62,6 +64,8 @@ export class Student {
         this.rte = student.rte;
 
         this.busStopDbId = student.busStopDbId;
+
+        this.admissionSessionDbId = student.admissionSessionDbId;
 
     }
 

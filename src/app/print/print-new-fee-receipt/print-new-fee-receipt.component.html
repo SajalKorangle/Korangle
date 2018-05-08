@@ -105,7 +105,7 @@
             <i>{{getMonthRange(subFeeReceipt)}}</i>
             ({{subFeeReceipt.sessionName.substr(subFeeReceipt.sessionName.length - 5)}})
         </div>
-        <div class="col-xs-4" align="right">{{subFeeReceipt.amount}}</div>
+        <div class="col-xs-4" align="right">{{getSubFeeReceiptAmount(subFeeReceipt)}}</div>
     </div>
 
     <!-- div class="row" style="margin-top: 5px;">
@@ -283,14 +283,14 @@
                 <span style="font-weight: 400">Total Amount</span>
             </div>
             <div class="col-xs-4" align="right" >
-                <span style="font-weight: 400">Rs. {{getTotalFeeAmount()}}/-</span>
+                <span style="font-weight: 400">Rs. {{getTotalFeeReceiptAmount()}}/-</span>
             </div>
         </div>
 
         <!-- Amount in words -->
         <div class="row" style="width: 100%;">
             <div class="col-xs-12">
-                Amount In Words : <i style="font-weight: 400">{{getTotalFeeAmount() | amountInWords}} Only</i>
+                Amount In Words : <i style="font-weight: 400">{{getTotalFeeReceiptAmount() | amountInWords}} Only</i>
             </div>
         </div>
 

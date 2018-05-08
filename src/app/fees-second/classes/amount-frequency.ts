@@ -3,7 +3,7 @@ import { MONTH_LIST } from './constants';
 
 export class AmountFrequency {
 
-    annualAmount: number = 0;
+    annualAmount: number = null;
     monthAmountList: any;
     showMonthDetails: boolean = false;
 
@@ -12,7 +12,7 @@ export class AmountFrequency {
         MONTH_LIST.forEach(month => {
             let tempMonth = {};
             tempMonth['month'] = month;
-            tempMonth['amount'] = 0;
+            tempMonth['amount'] = null;
             this.monthAmountList.push(tempMonth);
         });
     }
@@ -29,6 +29,14 @@ export class AmountFrequency {
 
     toServerObjectForMonth(): any {
         return this.monthAmountList;
+    }
+
+    getMonthTotal(): number {
+        let amount = 0;
+        this.monthAmountList.forEach(month => {
+            amount += month.amount;
+        });
+        return amount;
     }
 
 }

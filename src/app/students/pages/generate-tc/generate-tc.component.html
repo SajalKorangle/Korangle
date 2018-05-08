@@ -7,45 +7,57 @@
       </div>
       <div class="card-content">
 
-        Class:
-        <select [ngModel]="selectedClass"
-                (ngModelChange)="selectedClass=$event;changeSelectedSectionToFirst();"
-                style="margin-right: 15px">
-          <option *ngFor="let class of classSectionStudentList;" [ngValue]="class">
-            {{class.name}}
-          </option>
-        </select>
+          <ng-container *ngIf="!isStudentListLoading">
+              Class:
+              <select [ngModel]="selectedClass"
+                      (ngModelChange)="selectedClass=$event;changeSelectedSectionToFirst();"
+                      style="margin-right: 15px">
+                  <option *ngFor="let class of classSectionStudentList;" [ngValue]="class">
+                      {{class.name}}
+                  </option>
+              </select>
 
-        <span *ngIf='selectedClass' [class.hidden]="selectedClass.sectionList.length == 1">
+              <span *ngIf='selectedClass' [class.hidden]="selectedClass.sectionList.length == 1">
             Section:
             <select [ngModel]="selectedSection"
-                            (ngModelChange)="selectedSection=$event;changeSelectedStudentToFirst();"
-                            style="margin-right: 15px">
+                    (ngModelChange)="selectedSection=$event;changeSelectedStudentToFirst();"
+                    style="margin-right: 15px">
                         <option *ngFor="let section of selectedClass.sectionList" [ngValue]="section">
                             {{section.name}}
                         </option>
                     </select>
         </span>
 
-        <span *ngIf="selectedSection">
+              <span *ngIf="selectedSection">
             Student:
             <select [ngModel]="selectedStudent"
-                            (ngModelChange)="selectedStudent=$event;currentStudent.copy(selectedStudent)"
-                            style="margin-right: 15px">
+                    (ngModelChange)="selectedStudent=$event;currentStudent.copy(selectedStudent)"
+                    style="margin-right: 15px">
                         <option *ngFor="let student of selectedSection.studentList" [ngValue]="student">
                             {{student.name}}
                         </option>
                     </select>
         </span>
 
-        <button type="button"
-                class="btn btn-{{user.btn_color}}"
-                style="padding: 3px 8px;"
-                [disabled]="!selectedStudent"
-                (click)="getStudentProfile();">Get
-        </button>
+              <button type="button"
+                      class="btn btn-{{user.btn_color}}"
+                      style="padding: 3px 8px;"
+                      [disabled]="!selectedStudent"
+                      (click)="getStudentProfile();">Get
+              </button>
 
-        <span *ngIf="selectedSection" style="float: right; margin-top: 10px;"><i>{{selectedSection.studentList.length}} students</i></span>
+              <!-- span *ngIf="selectedSection" style="float: right; margin-top: 10px;"><i>{{selectedSection.studentList.length}} students</i></span -->
+
+              <span style="float: right; margin-top: 10px;" *ngIf="selectedSession">
+              <select [ngModel]="selectedSession"
+                      (ngModelChange)="selectedSession=$event;handleSessionChange();"
+                      style="margin-right: 15px">
+                  <option *ngFor="let session of sessionList;" [ngValue]="session">
+                      {{session.name}}
+                  </option>
+              </select>
+          </span>
+          </ng-container>
 
         <div class="row">
           <div class="col-md-12"
@@ -53,7 +65,7 @@
         </div>
 
 
-        <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
+        <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading && !isStudentListLoading">
 
 
             <div class="row" style="font-weight: 800;">
@@ -245,14 +257,14 @@
 
         </ng-container>
 
-        <ng-container *ngIf="selectedClass && !selectedStudent">
+        <ng-container *ngIf="selectedClass && !selectedStudent && !isStudentListLoading">
           <br/>No Students in this class
         </ng-container>
 
       </div>
     </div>
 
-    <ng-container *ngIf="isLoading">
+    <ng-container *ngIf="isLoading || isStudentListLoading">
       <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
 

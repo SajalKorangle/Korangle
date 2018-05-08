@@ -1,12 +1,12 @@
 
 import {AmountFrequency} from './amount-frequency';
-import {MONTHLY, YEARLY} from './constants';
+import {FREQUENCY_LIST} from './constants';
 
 export class SchoolFeeComponent {
 
     dbId: number = 0;
     parentFeeDefinition: any;
-    title: string;
+    title: string = null;
 
     amountFrequency: AmountFrequency = new AmountFrequency();
 
@@ -141,7 +141,7 @@ export class SchoolFeeComponent {
     fromServerObject(schoolFeeComponent: any): void {
         this.dbId = schoolFeeComponent.dbId;
         this.title = schoolFeeComponent.title;
-        if (this.parentFeeDefinition.frequency === MONTHLY) {
+        if (this.parentFeeDefinition.frequency === FREQUENCY_LIST[1]) {
             this.amountFrequency.monthAmountList = [];
             schoolFeeComponent.monthList.forEach(month => {
                 let tempMonth = {};
@@ -149,7 +149,7 @@ export class SchoolFeeComponent {
                 tempMonth['amount'] = month.amount;
                 this.amountFrequency.monthAmountList.push(tempMonth);
             });
-        } else if (this.parentFeeDefinition.frequency === YEARLY) {
+        } else if (this.parentFeeDefinition.frequency === FREQUENCY_LIST[0]) {
             this.amountFrequency.annualAmount = schoolFeeComponent.amount;
         }
         if (this.parentFeeDefinition.classFilter) {
@@ -170,7 +170,7 @@ export class SchoolFeeComponent {
             'feeDefinitionDbId': this.parentFeeDefinition.dbId,
             'title': this.title,
         };
-        if (this.parentFeeDefinition.frequency === MONTHLY) {
+        if (this.parentFeeDefinition.frequency === FREQUENCY_LIST[1]) {
             data['monthList'] = [];
             this.amountFrequency.monthAmountList.forEach( month => {
                 let tempMonth = {
@@ -179,7 +179,7 @@ export class SchoolFeeComponent {
                 };
                 data['monthList'].push(tempMonth);
             });
-        } else if (this.parentFeeDefinition.frequency === YEARLY) {
+        } else if (this.parentFeeDefinition.frequency === FREQUENCY_LIST[0]) {
             data['amount'] = (!this.amountFrequency.annualAmount?0:this.amountFrequency.annualAmount);
         }
         if (this.parentFeeDefinition.classFilter) {

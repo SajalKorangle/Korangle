@@ -76,7 +76,9 @@ export class ApproveFeesComponent implements OnInit {
             this.feeStructure.every(feeDefinition => {
                 if (feeDefinition.dbId === data['dbId']) {
                     feeDefinition.locked = true;
+                    return false;
                 }
+                return true;
             })
         }, error => {
             this.isLoading = false;

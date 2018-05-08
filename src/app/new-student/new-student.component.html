@@ -69,7 +69,7 @@
             </div>
           </div>
 
-          <!-- Scholar No., Date of Birth, Mother's Name, Total Fees -->
+          <!-- Date of Birth,  Mother's Name, Scholar No., Roll No. -->
           <div class="row">
             <div class="col-md-3">
               <div class="form-group form-black label-floating">
@@ -79,6 +79,14 @@
                        [(ngModel)]="newStudent.dateOfBirth">
               </div>
             </div>
+              <div class="col-md-3">
+                  <div class="form-group form-black label-floating">
+                      <label class="control-label">Mother's Name</label>
+                      <input type="text"
+                             class="form-control"
+                             [(ngModel)]="newStudent.motherName">
+                  </div>
+              </div>
             <div class="col-md-3">
               <div class="form-group form-black label-floating">
                 <label class="control-label">Scholar No.</label>
@@ -87,23 +95,24 @@
                        [(ngModel)]="newStudent.scholarNumber">
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-group form-black label-floating">
-                <label class="control-label">Mother's Name</label>
-                <input type="text"
-                       class="form-control"
-                       [(ngModel)]="newStudent.motherName">
+              <div class="col-md-3">
+                  <div class="form-group form-black label-floating">
+                      <label class="control-label">Roll No.</label>
+                      <input type="text"
+                             class="form-control"
+                             [(ngModel)]="newStudent.rollNumber">
+                  </div>
               </div>
-            </div>
-            <div class="col-md-3">
+            <!-- div class="col-md-3">
               <div class="form-group form-black label-floating">
                 <label class="control-label">Total Fees</label>
                 <input type="number"
                        class="form-control"
                        [(ngModel)]="newStudent.totalFees">
               </div>
-            </div>
+            </div -->
           </div>
+
              <!-- Gender, Category, Religion, Blood Group -->
                     <div class="row">
                         <div class="col-md-3">
@@ -247,16 +256,8 @@
             </div>
           </div>
 
-          <!-- Roll No., Bus Stop -->
+          <!-- RTE, Bus Stop, Admission Session -->
           <div class="row">
-            <div class="col-md-3">
-              <div class="form-group form-black label-floating">
-                <label class="control-label">Roll No.</label>
-                <input type="text"
-                       class="form-control"
-                       [(ngModel)]="newStudent.rollNumber">
-              </div>
-            </div>
             <div class="col-md-3">
               <mat-form-field>
                 <mat-select placeholder="RTE"
@@ -279,6 +280,15 @@
                 </mat-select>
               </mat-form-field>
             </div>
+              <div class="col-md-3">
+                  <mat-form-field>
+                      <mat-select placeholder="Admission Session"
+                                  [(ngModel)]="newStudent.admissionSessionDbId">
+                          <mat-option [value]=0>None</mat-option>
+                          <mat-option [value]="user.schoolCurrentSessionDbId">{{user.getSchoolCurrentSessionName()}}</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </div>
           </div>
 
           <!-- Address, Remark -->

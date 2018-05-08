@@ -72,7 +72,9 @@
                                         </div>
                                     </div>
                                     <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
-                                        <div class="row" style="font-weight: 500 !important;">
+                                        <div class="row"
+                                             *ngIf="getComponentTotalFee(component) != 0"
+                                             style="font-weight: 500 !important;">
                                             <div class="col-md-4 col-md-offset-1">
                                                 {{i+1}}. {{component.feeType}}
                                             </div>
@@ -90,13 +92,13 @@
                                             <div class="col-md-2">
                                                 {{getComponentTotalFee(component)}}
                                             </div>
-                                            <div class="col-md-1" *ngIf="component.frequency == 'MONTHLY'">
+                                            <div class="col-md-1" *ngIf="component.frequency == frequencyList[1]">
                                                 <i class="material-icons"
                                                    [@rotate]="!component.showDetails"
                                                    (click)="component.showDetails = !component.showDetails">keyboard_arrow_down</i>
                                             </div>
                                         </div>
-                                        <div  [@slideDown]="component.showDetails" *ngIf="component.frequency == 'MONTHLY'">
+                                        <div  [@slideDown]="component.showDetails" *ngIf="component.frequency == frequencyList[1]">
                                             <ng-container *ngFor="let month of component.monthList">
                                                 <div class="row"
                                                      *ngIf="getComponentMonthlyTotalFee(month)>0"

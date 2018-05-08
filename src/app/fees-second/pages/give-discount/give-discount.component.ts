@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
+import { FREQUENCY_LIST } from '../../classes/constants';
 
 import { FeeService } from '../../fee.service';
 
@@ -59,6 +60,8 @@ export class GiveDiscountComponent {
 
     isLoading = false;
 
+    frequencyList = FREQUENCY_LIST;
+
     constructor (private feeService: FeeService) { }
 
     getStudentFeeDetails(student: any): void {
@@ -90,9 +93,9 @@ export class GiveDiscountComponent {
                 this.studentFeeStatusList.forEach(sessionFeeStatus => {
                     sessionFeeStatus.componentList.forEach( component => {
                         component.showDetails = false;
-                        if (component.frequency === 'ANNUALLY') {
+                        if (component.frequency === FREQUENCY_LIST[0]) {
                             component.concession = 0;
-                        } else if ( component.frequency === 'MONTHLY') {
+                        } else if ( component.frequency === FREQUENCY_LIST[1]) {
                             component.monthList.forEach( componentMonthly => {
                                 componentMonthly.concession = 0;
                             });
@@ -123,11 +126,11 @@ export class GiveDiscountComponent {
                 if (this.getComponentConcession(component)) {
                     let subConcession = {
                         componentDbId: component.dbId,
-                        // feeType: component.feeType,
-                        amount: this.getComponentConcession(component),
                         frequency: component.frequency,
                     };
-                    if (component.frequency === 'MONTHLY') {
+                    if (component.feeReceipt === FREQUENCY_LIST[0]) {
+                        subConcession['amount'] = this.getComponentConcession(component);
+                    } else if (component.frequency === FREQUENCY_LIST[1]) {
                         subConcession['monthList'] = [];
                         component.monthList.forEach( componentMonthly => {
                             let subConcessionMonthly = {
@@ -154,9 +157,9 @@ export class GiveDiscountComponent {
             this.studentFeeStatusList.forEach(sessionFeeStatus => {
                 sessionFeeStatus.componentList.forEach( component => {
                     component.showDetails = false;
-                    if (component.frequency === 'ANNUALLY') {
+                    if (component.frequency === FREQUENCY_LIST[0]) {
                         component.concession = 0;
-                    } else if ( component.frequency === 'MONTHLY') {
+                    } else if ( component.frequency === FREQUENCY_LIST[1]) {
                         component.monthList.forEach( componentMonthly => {
                             componentMonthly.concession = 0;
                         });
@@ -265,7 +268,7 @@ export class GiveDiscountComponent {
 
         // handle Annual Components
         sessionFeeStatus.componentList.forEach(component => {
-            if (component.frequency === 'ANNUALLY') {
+            if (component.frequency === FREQUENCY_LIST[0]) {
                 let amountDue = this.getComponentFeesDue(component);
                 if(amountDue > amountLeft) {
                     this.handleComponentConcessionChange(component, amountLeft);
@@ -280,7 +283,7 @@ export class GiveDiscountComponent {
         // handle Monthly Components
         for (let i=0; i<12; ++i) {
             sessionFeeStatus.componentList.forEach(component => {
-                if (component.frequency === 'MONTHLY') {
+                if (component.frequency === FREQUENCY_LIST[1]) {
                     let amountDue = component.monthList[i].amountDue;
                     if (amountDue > amountLeft) {
                         component.monthList[i].concession = amountLeft;
@@ -342,9 +345,9 @@ export class GiveDiscountComponent {
     handleComponentConcessionChange(component: any, concession: number): void {
         if (concession === null) concession = 0;
         let amountLeft = concession;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === FREQUENCY_LIST[0]) {
             component.concession = concession;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === FREQUENCY_LIST[1]) {
             component.monthList.forEach(componentMonthly => {
                 let amountDue = componentMonthly.amountDue;
                 if (amountDue > amountLeft) {
@@ -360,9 +363,9 @@ export class GiveDiscountComponent {
 
     getComponentConcession(component: any): number {
         let concession = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === FREQUENCY_LIST[0]) {
             concession = component.concession;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === FREQUENCY_LIST[1]) {
             component.monthList.forEach( componentMonthly => {
                 // concession += componentMonthly.concession;
                 concession += this.getComponentMonthlyConcession(componentMonthly);
@@ -373,9 +376,9 @@ export class GiveDiscountComponent {
 
     getComponentTotalFee(component: any): number {
         let amount = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === FREQUENCY_LIST[0]) {
             amount += component.amount;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === FREQUENCY_LIST[1]) {
             component.monthList.forEach( componentMonthly => {
                 // amount += componentMonthly.amount;
                 amount += this.getComponentMonthlyTotalFee(componentMonthly);
@@ -386,9 +389,9 @@ export class GiveDiscountComponent {
 
     getComponentFeesDue(component: any): number {
         let amountDue = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === FREQUENCY_LIST[0]) {
             amountDue += component.amountDue;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === FREQUENCY_LIST[1]) {
             component.monthList.forEach( componentMonthly => {
                 // amountDue += componentMonthly.amountDue;
                 amountDue += this.getComponentMonthlyFeesDue(componentMonthly);

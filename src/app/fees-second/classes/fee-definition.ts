@@ -1,5 +1,5 @@
 
-import {YEARLY} from './constants';
+import {FREQUENCY_LIST} from './constants';
 import {SchoolFeeComponent} from './school-fee-component';
 
 export class FeeDefinition {
@@ -10,7 +10,7 @@ export class FeeDefinition {
 
     orderNumber: number;
 
-    frequency: string = YEARLY;
+    frequency: string = FREQUENCY_LIST[0];
 
     locked: boolean = false;
 

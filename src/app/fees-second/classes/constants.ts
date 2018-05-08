@@ -39,6 +39,3 @@ export const FREQUENCY_LIST = [
     'YEARLY',
     'MONTHLY',
 ];
-
-export const YEARLY = 'YEARLY';
-export const MONTHLY = 'MONTHLY';

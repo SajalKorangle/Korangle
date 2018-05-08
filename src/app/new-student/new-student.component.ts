@@ -77,6 +77,10 @@ export class NewStudentComponent implements OnInit {
             this.newStudent.busStopDbId = null;
         }
 
+        if (this.newStudent.admissionSessionDbId == 0) {
+            this.newStudent.admissionSessionDbId = null;
+        }
+
         if (this.newStudent.name === undefined || this.newStudent.name === '') {
             alert('Name should be populated');
             return;

@@ -13,6 +13,7 @@ import {BusStopService} from '../../../services/bus-stop.service';
   styleUrls: ['./student-profile.component.css'],
     providers: [ StudentService, BusStopService ],
 })
+
 export class StudentProfileComponent implements OnInit {
 
     @Input() user;
@@ -107,8 +108,12 @@ export class StudentProfileComponent implements OnInit {
     }
 
     updateProfile(): void {
+
         if (this.currentStudent.busStopDbId == 0) {
             this.currentStudent.busStopDbId = null;
+        }
+        if (this.currentStudent.admissionSessionDbId == 0) {
+            this.currentStudent.admissionSessionDbId = null;
         }
         if (this.currentStudent.familySSMID
             && this.currentStudent.familySSMID.toString().length !== 0
@@ -129,11 +134,6 @@ export class StudentProfileComponent implements OnInit {
             return;
         }
         this.isLoading = true;
-        /*const data = {
-            student: Student,
-        }
-        data.student = new Student();
-        data.student.copy(this.currentStudent);*/
         this.studentService.updateStudentProfile(this.currentStudent, this.user.jwt).then(
             student => {
                 this.isLoading = false;
@@ -248,6 +248,15 @@ export class StudentProfileComponent implements OnInit {
             return true;
         }
         return false;
+    }
+
+    getSessionName(dbId: number): string {
+        if (dbId=1) {
+            return 'Session 2017-18';
+        } else if (dbId=2) {
+            return 'Session 2018-19';
+        }
+        return '';
     }
 
 }

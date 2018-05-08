@@ -238,6 +238,15 @@ export class User {
         }
     }
 
+    getSchoolCurrentSessionName(): string {
+        if (this.schoolCurrentSessionDbId==1) {
+            return 'Session 2017-18';
+        } else if (this.schoolCurrentSessionDbId==2) {
+            return 'Session 2018-19';
+        }
+        return '';
+    }
+
 }
 
 /*

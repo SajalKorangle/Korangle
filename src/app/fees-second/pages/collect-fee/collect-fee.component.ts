@@ -7,6 +7,7 @@ import { FeeService } from '../../fee.service';
 import { FeeReceipt } from '../../classes/common-functionalities';
 
 import { EmitterService } from '../../../services/emitter.service';
+import {FREQUENCY_LIST} from '../../classes/constants';
 
 const APRIL = 'APRIL';
 const MAY = 'MAY';
@@ -61,6 +62,8 @@ export class CollectFeeComponent {
 
     isLoading = false;
 
+    frequencyList = FREQUENCY_LIST;
+
     constructor (private feeService: FeeService) { }
 
     getStudentFeeDetails(student: any): void {
@@ -92,9 +95,9 @@ export class CollectFeeComponent {
                 this.studentFeeStatusList.forEach(sessionFeeStatus => {
                     sessionFeeStatus.componentList.forEach( component => {
                         component.showDetails = false;
-                        if (component.frequency === 'ANNUALLY') {
+                        if (component.frequency === FREQUENCY_LIST[0]) {
                             component.payment = 0;
-                        } else if ( component.frequency === 'MONTHLY') {
+                        } else if ( component.frequency === FREQUENCY_LIST[1]) {
                             component.monthList.forEach( componentMonthly => {
                                 componentMonthly.payment = 0;
                             });
@@ -125,11 +128,12 @@ export class CollectFeeComponent {
                 if (this.getComponentPayment(component)) {
                     let subReceipt = {
                         componentDbId: component.dbId,
-                        // feeType: component.feeType,
-                        amount: this.getComponentPayment(component),
                         frequency: component.frequency,
                     };
-                    if (component.frequency === 'MONTHLY') {
+                    if (component.frequency === FREQUENCY_LIST[0]) {
+                        subReceipt['amount'] = this.getComponentPayment(component);
+                    }
+                    else if (component.frequency === FREQUENCY_LIST[1]) {
                         subReceipt['monthList'] = [];
                         component.monthList.forEach( componentMonthly => {
                             let subReceiptMonthly = {
@@ -156,9 +160,9 @@ export class CollectFeeComponent {
             this.studentFeeStatusList.forEach(sessionFeeStatus => {
                 sessionFeeStatus.componentList.forEach( component => {
                     component.showDetails = false;
-                    if (component.frequency === 'ANNUALLY') {
+                    if (component.frequency === FREQUENCY_LIST[0]) {
                         component.payment = 0;
-                    } else if ( component.frequency === 'MONTHLY') {
+                    } else if ( component.frequency === FREQUENCY_LIST[1]) {
                         component.monthList.forEach( componentMonthly => {
                             componentMonthly.payment = 0;
                         });
@@ -270,7 +274,7 @@ export class CollectFeeComponent {
 
         // handle Annual Components
         sessionFeeStatus.componentList.forEach(component => {
-            if (component.frequency === 'ANNUALLY') {
+            if (component.frequency === FREQUENCY_LIST[0]) {
                 let amountDue = this.getComponentFeesDue(component);
                 if(amountDue > amountLeft) {
                     this.handleComponentPaymentChange(component, amountLeft);
@@ -285,7 +289,7 @@ export class CollectFeeComponent {
         // handle Monthly Components
         for (let i=0; i<12; ++i) {
             sessionFeeStatus.componentList.forEach(component => {
-                if (component.frequency === 'MONTHLY') {
+                if (component.frequency === FREQUENCY_LIST[1]) {
                     let amountDue = component.monthList[i].amountDue;
                     if (amountDue > amountLeft) {
                         component.monthList[i].payment = amountLeft;
@@ -347,9 +351,9 @@ export class CollectFeeComponent {
     handleComponentPaymentChange(component: any, payment: number): void {
         if (payment === null) payment = 0;
         let amountLeft = payment;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === FREQUENCY_LIST[0]) {
             component.payment = payment;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === FREQUENCY_LIST[1]) {
             component.monthList.forEach(componentMonthly => {
                 let amountDue = componentMonthly.amountDue;
                 if (amountDue > amountLeft) {
@@ -365,9 +369,9 @@ export class CollectFeeComponent {
 
     getComponentPayment(component: any): number {
         let payment = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === FREQUENCY_LIST[0]) {
             payment = component.payment;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === FREQUENCY_LIST[1]) {
             component.monthList.forEach( componentMonthly => {
                 // payment += componentMonthly.payment;
                 payment += this.getComponentMonthlyPayment(componentMonthly);
@@ -378,9 +382,9 @@ export class CollectFeeComponent {
 
     getComponentTotalFee(component: any): number {
         let amount = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === FREQUENCY_LIST[0]) {
             amount += component.amount;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === FREQUENCY_LIST[1]) {
             component.monthList.forEach( componentMonthly => {
                 // amount += componentMonthly.amount;
                 amount += this.getComponentMonthlyTotalFee(componentMonthly);
@@ -391,9 +395,9 @@ export class CollectFeeComponent {
 
     getComponentFeesDue(component: any): number {
         let amountDue = 0;
-        if (component.frequency === 'ANNUALLY') {
+        if (component.frequency === FREQUENCY_LIST[0]) {
             amountDue += component.amountDue;
-        } else if (component.frequency === 'MONTHLY') {
+        } else if (component.frequency === FREQUENCY_LIST[1]) {
             component.monthList.forEach( componentMonthly => {
                 // amountDue += componentMonthly.amountDue;
                 amountDue += this.getComponentMonthlyFeesDue(componentMonthly);

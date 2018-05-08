@@ -121,7 +121,7 @@
             <span *ngIf="studentTcProfile.gender=='Male'">s/o</span>
             <span *ngIf="studentTcProfile.gender=='Female'">d/o</span>
             <i><b>Mr. {{studentTcProfile.fathersName}}</b></i>
-            (father) and <i><b>Mrs. {{studentTcProfile.motherName}}</b></i> (mother) residing at
+            and <i><b>Mrs. {{studentTcProfile.motherName}}</b></i> residing at
             <i><b> {{studentTcProfile.address}}</b></i> had taken admission in our school on
             <i><b>{{studentTcProfile.admissionDate | date: 'dd/MM/yyyy'}}</b></i>
             and is leaving school on <i><b>{{studentTcProfile.leavingDate | date: 'dd/MM/yyyy'}}</b></i>
@@ -141,7 +141,7 @@
             <span *ngIf="studentTcProfile.gender=='Female'">Her</span>
             nationality is <i><b>Indian</b></i>, mother tongue is <i><b>Hindi</b></i>, belongs to caste
             <i><b>{{studentTcProfile.caste}}</b></i>,
-            and category is <i><b>{{studentTcProfile.category}}</b></i> .<br/><br/>
+            and category is <i><b>{{studentTcProfile.category}}</b></i>.<br/><br/>
 
             <span *ngIf="studentTcProfile.gender=='Male'">He</span>
             <span *ngIf="studentTcProfile.gender=='Female'">She</span>
@@ -149,11 +149,14 @@
             <span *ngIf="studentTcProfile.gender=='Male'">he</span>
             <span *ngIf="studentTcProfile.gender=='Female'">she</span>
             passed, was<i><b>{{studentTcProfile.lastClassPassed}}</b></i>, with <i><b>English</b></i> medium.
-            <span *ngIf="studentTcProfile.gender=='Male'">His</span>
-            <span *ngIf="studentTcProfile.gender=='Female'">Her</span>
-            attendance in last class(<i><b>{{studentTcProfile.lastClassAttended}}</b></i>)
-            was <i><b>{{studentTcProfile.lastClassAttendance}}</b></i> days out of
-            <i><b>{{studentTcProfile.attendanceOutOf}}</b></i>.<br/><br/>
+            <ng-container *ngIf="studentTcProfile.lastClassAttendance && studentTcProfile.lastClassAttendance != ''">
+                <span *ngIf="studentTcProfile.gender=='Male'">His</span>
+                <span *ngIf="studentTcProfile.gender=='Female'">Her</span>
+                attendance in last class(<i><b>{{studentTcProfile.lastClassAttended}}</b></i>)
+                was <i><b>{{studentTcProfile.lastClassAttendance}}</b></i> days out of
+                <i><b>{{studentTcProfile.attendanceOutOf}}</b></i>.
+            </ng-container>
+            <br/><br/>
 
             <span *ngIf="studentTcProfile.gender=='Male'">He</span>
             <span *ngIf="studentTcProfile.gender=='Female'">She</span>

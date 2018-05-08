@@ -65,19 +65,11 @@
 
         <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
 
-<<<<<<< HEAD
-                    <div class="row hidden-sm hidden-lg hidden-md">
-                        <div class="col-md-3">
-                            <a href="tel:{{selectedStudent.mobileNumber}}">Call Me</a>
-                        </div>
-                    </div>
-=======
           <div class="row hidden-md hidden-lg hidden-sm">
             <div class="col-xs-3">
               <a href="tel:{{selectedStudent.mobileNumber}}">Call Me</a>
             </div>
           </div>
->>>>>>> master
 
           <!-- Name, Father's Name, Mother's Name, Mobile Number -->
           <div class="row">
@@ -122,7 +114,7 @@
             </div>
           </div>
 
-          <!-- Roll No., Scholar No., Date of Birth, Total Fees -->
+          <!-- Roll No., Scholar No., Date of Birth, Admission Session -->
           <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.rollNumber,currentStudent.rollNumber)">
@@ -151,16 +143,25 @@
                        [ngModel]="selectedStudent.dateOfBirth" (ngModelChange)="currentStudent.dateOfBirth=$event">
               </div>
             </div>
-            <div class="col-md-3"
+              <div class="col-md-3">
+                  <mat-form-field>
+                      <mat-select placeholder="Admission Session"
+                                  [ngModel]="selectedStudent.admissionSessionDbId"
+                                  (ngModelChange)="currentStudent.admissionSessionDbId=$event">
+                          <mat-option [value]=0>None</mat-option>
+                          <mat-option [value]="user.schoolCurrentSessionDbId">{{user.getSchoolCurrentSessionName()}}</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </div>
+            <!-- div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.totalFees,currentStudent.totalFees)">
               <div class="form-group form-black label-floating">
                 <label class="control-label">Total Fees</label>
                 <input type="number"
                        class="form-control"
                        [ngModel]="selectedStudent.totalFees" (ngModelChange)="currentStudent.totalFees=$event">
-                <!-- input type="number" class="form-control" [value]="selectedStudent.totalFees" disabled -->
               </div>
-            </div>
+            </div -->
           </div>
 
                     <!-- Gender, Category, Religion, Blood Group -->
@@ -344,7 +345,7 @@
             </div>
           </div>
 
-          <!-- Bus Stop -->
+          <!-- Bus Stop, RTE -->
           <div class="row">
             <div *ngIf="busStopList.length > 0" class="col-md-3">
               <mat-form-field>
@@ -359,12 +360,6 @@
               </mat-form-field>
             </div>
             <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.rte,currentStudent.rte)">
-              <!-- div class="form-group form-black label-floating">
-                  <label class="control-label">Blood Group</label>
-                  <input type="text"
-                         class="form-control"
-                         [ngModel]="selectedStudent.bloodGroup" (ngModelChange)="currentStudent.bloodGroup=$event">
-              </div -->
               <mat-form-field>
                 <mat-select placeholder="RTE"
                             [ngModel]="selectedStudent.rte"
