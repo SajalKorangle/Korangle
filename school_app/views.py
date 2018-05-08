@@ -2,6 +2,8 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
+from rest_framework.views import APIView
+
 import json
 
 def get_error_response(message):
@@ -21,6 +23,20 @@ def get_success_message(message):
     message_response['status'] = 'success'
     message_response['message'] = message
     return message_response
+
+
+################ School Profile ############
+from .handlers.school_profile import update_school_profile
+
+class SchoolProfileView(APIView):
+
+    def put(self, request, school_id):
+        if request.user.is_authenticated:
+            data = json.loads(request.body.decode('utf-8'))
+            return JsonResponse({'response': get_success_response(update_school_profile(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
 
 ################ Bus Stops ##################
 from .handlers.bus_stops import get_bus_stops
