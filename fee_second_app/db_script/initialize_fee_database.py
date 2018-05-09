@@ -489,7 +489,7 @@ def promote_bright_school(apps, schema_editor, schoolUser):
         elif class_object.name == 'Class - 10':
             continue
         elif class_object.name == 'Class - 11':
-            new_class_object = Class.objects.get(name='Class - 2')
+            new_class_object = Class.objects.get(name='Class - 12')
         elif class_object.name == 'Class - 12':
             continue
 

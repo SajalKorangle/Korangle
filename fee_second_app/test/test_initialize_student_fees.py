@@ -18,7 +18,7 @@ class InitializeStudentFeesTestCase(ParentTestCase):
 
     def test_initialize_student_fees_with_school_fee_component(self):
 
-        fee_definition_object = FeeDefinitionFactory()
+        fee_definition_object = FeeDefinitionFactory(locked=True)
         SchoolFeeComponentFactory(parentFeeDefinition=fee_definition_object)
         student_object = StudentFactory()
 
@@ -27,6 +27,7 @@ class InitializeStudentFeesTestCase(ParentTestCase):
         get_school_fee_component_by_student_and_fee_defintion_object(student_object, fee_definition_object)
 
         for fee_object in FeeDefinition.objects.filter(parentSession=fee_definition_object.parentSession,
-                                                                  parentSchool=fee_definition_object.parentSchool):
+                                                       parentSchool=fee_definition_object.parentSchool,
+                                                       locked=True):
             StudentFeeComponent.objects.filter(parentStudent=student_object,
                                                parentFeeDefinition=fee_object)

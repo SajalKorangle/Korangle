@@ -11,7 +11,9 @@ def initialize_student_fees(student_object, session_object):
 
     school_object = student_object.school
 
-    for fee_definition_object in FeeDefinition.objects.filter(parentSchool=school_object, parentSession=session_object):
+    for fee_definition_object in FeeDefinition.objects.filter(parentSchool=school_object,
+                                                              parentSession=session_object,
+                                                              locked=True):
 
         school_fee_component_object = \
             get_school_fee_component_by_student_and_fee_defintion_object(student_object, fee_definition_object)
