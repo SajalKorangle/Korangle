@@ -12,7 +12,7 @@
                 <ng-container *ngIf="studentFeeStatusList && !isLoading">
 
                     <ng-container *ngIf="getStudentFeesDue()>0">
-                        <div class="row">
+                        <div class="row hoverHighlight">
                             <div class="col-md-2 col-md-offset-5">
                                 Payment
                             </div>
@@ -23,7 +23,7 @@
                                 Total
                             </div>
                         </div>
-                        <div class="row" style="font-weight: 800 !important;">
+                        <div class="row hoverHighlight" style="font-weight: 800 !important;">
                             <div class="col-md-5">
                                 {{selectedStudent.name}}
                             </div>
@@ -50,7 +50,7 @@
                         <div [@slideDown]="showDetails">
                             <ng-container *ngFor="let sessionFeeStatus of studentFeeStatusList; let i=index;">
                                 <ng-container  *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
-                                    <div class="row"
+                                    <div class="row hoverHighlight"
                                          style="font-weight: 500 !important;"
                                          *ngIf="showSessionFeesLine()">
                                         <div class="col-md-5">
@@ -65,14 +65,14 @@
                                                    (ngModelChange)="handleSessionPaymentChange(sessionFeeStatus, $event);">
                                         </div>
                                         <div class="col-md-2">
-                                            {{getStudentFeesDue()-getStudentPayment()}}
+                                            {{getSessionFeesDue(sessionFeeStatus)-getSessionPayment(sessionFeeStatus)}}
                                         </div>
                                         <div class="col-md-2">
                                             {{getSessionTotalFee(sessionFeeStatus)}}
                                         </div>
                                     </div>
                                     <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
-                                        <div class="row"
+                                        <div class="row hoverHighlight"
                                              *ngIf="getComponentTotalFee(component) != 0"
                                              style="font-weight: 500 !important;">
                                             <div class="col-md-4 col-md-offset-1">
@@ -100,7 +100,7 @@
                                         </div>
                                         <div  [@slideDown]="component.showDetails" *ngIf="component.frequency == frequencyList[1]">
                                             <ng-container *ngFor="let month of component.monthList">
-                                                <div class="row"
+                                                <div class="row hoverHighlight"
                                                      *ngIf="getComponentMonthlyTotalFee(month)>0"
                                                      style="font-weight: 300 !important;">
                                                     <div class="col-md-3 col-md-offset-2">
@@ -142,6 +142,8 @@
                     <ng-container *ngIf="getStudentTotalFee() === 0">
                         **No Fees Due
                     </ng-container>
+
+                    <div style="margin-top: 25px; margin-bottom: 25px; border-bottom: 1px solid black"> </div>
 
                     <ng-container *ngIf="feeReceiptList">
                         <div *ngIf="feeReceiptList.length !== 0">

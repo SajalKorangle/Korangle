@@ -24,6 +24,9 @@ export class StudentTcProfile {
     leavingReason: string;
     admissionClass: string;
     lastClassPassed: string;
+
+    leavingMidSession: boolean = false;
+
     lastClassAttended: string;
     lastClassAttendance: number;
     attendanceOutOf: number;
