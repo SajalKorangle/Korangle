@@ -22,11 +22,60 @@
                     <!-- Fee  Definition -->
                     <ng-container *ngIf="selectedFeeDefinition && !selectedFeeDefinition.locked">
 
-                        <!-- Filters, Interval, RTE, Only New Student -->
+                        <!-- Class Based -->
+                        <!-- div class="row">
+                            <div class="col-md-12">
+                                <mat-checkbox [(ngModel)]="currentFeeDefinition.classFilter"
+                                              [disabled]="selectedFeeDefinition.schoolFeeComponentList.length > 0">
+                                    <span style="color: black">
+                                        "<i><b>{{selectedFeeDefinition.feeType}}</b></i>" is based on <i><b>Class</b></i>
+                                    </span>
+                                </mat-checkbox>
+                            </div>
+                        </div -->
+
+                        <!-- Bus Stop Based -->
+                        <!-- div class="row">
+                            <div class="col-md-12">
+                                <mat-checkbox [(ngModel)]="currentFeeDefinition.busStopFilter"
+                                              [disabled]="selectedFeeDefinition.schoolFeeComponentList.length > 0">
+                                    <span style="color: black">
+                                        "<i><b>{{selectedFeeDefinition.feeType}}</b></i>" is based on <i><b>Bus Stop</b></i>
+                                    </span>
+                                </mat-checkbox>
+                            </div>
+                        </div -->
+
+                        <!-- RTE -->
+                        <!-- div class="row">
+                            <div class="col-md-12">
+                                <mat-checkbox [(ngModel)]="currentFeeDefinition.rte"
+                                              style="font-weight: normal; color: black"
+                                              [disabled]="selectedFeeDefinition.schoolFeeComponentList.length > 0">
+                                    <span style="color: black">
+                                        <i><b>RTE</b></i> students are included in "<i><b>{{selectedFeeDefinition.feeType}}</b></i>"
+                                    </span>
+                                </mat-checkbox>
+                            </div>
+                        </div -->
+
+                        <!-- Only New Student -->
+                        <!-- div class="row">
+                            <div class="col-md-12">
+                                <mat-checkbox [(ngModel)]="currentFeeDefinition.onlyNewStudent"
+                                              [disabled]="selectedFeeDefinition.schoolFeeComponentList.length > 0">
+                                    <span style="color: black">
+                                        "<i><b>{{selectedFeeDefinition.feeType}}</b></i>" is  <i><b>only for New Students.</b></i>
+                                    </span>
+                                </mat-checkbox>
+                            </div>
+                        </div -->
+
+                        <!-- Interval -->
                         <div class="row">
                             <div class="col-md-3">
-                                <mat-form-field>
-                                    <mat-select placeholder="Select Filters"
+                                <mat-form-field matTooltip="To choose whether fee is divided based on class, bus stop or both">
+                                    <mat-select placeholder="Select Fee Division"
                                                 [disabled]="selectedFeeDefinition.schoolFeeComponentList.length > 0">
                                         <mat-option style="width: 100%;">
                                             <mat-checkbox [(ngModel)]="currentFeeDefinition.classFilter"
@@ -48,6 +97,7 @@
                                     <mat-select placeholder="Fee Interval"
                                                 [ngModel]="currentFeeDefinition.frequency"
                                                 (ngModelChange)="currentFeeDefinition.frequency=$event"
+                                                matTooltip="To choose whether fee is one time (YEARLY) or in installments (MONTHLY)"
                                                 [disabled]="selectedFeeDefinition.schoolFeeComponentList.length > 0">
                                         <mat-option *ngFor="let frequency of frequencyList" [value]="frequency">
                                             {{frequency}}
@@ -58,6 +108,7 @@
                             <div class="col-md-3">
                                 <mat-checkbox class="checkbox-margin"
                                               [disabled]="selectedFeeDefinition.schoolFeeComponentList.length > 0"
+                                              matTooltip="To also include RTE students with Non RTE Students"
                                               [(ngModel)]="currentFeeDefinition.rte">
                                     RTE
                                 </mat-checkbox>
@@ -65,6 +116,7 @@
                             <div class="col-md-3">
                                 <mat-checkbox class="checkbox-margin"
                                               [disabled]="selectedFeeDefinition.schoolFeeComponentList.length > 0"
+                                              matTooltip="To Exclude Old Students and include only New Students"
                                               [(ngModel)]="currentFeeDefinition.onlyNewStudent">
                                     Only New Student
                                 </mat-checkbox>
@@ -73,18 +125,27 @@
 
                         <!-- Chosen Filters List -->
                         <div class="row">
-                            <div class="col-md-12">
-                                Filters:
+                            <div class="col-md-6">
+                                Chosen Filters:
                                 <i style="font-weight: 800;">
-                                    <span *ngIf="currentFeeDefinition.classFilter">Class</span>
-                                    <span *ngIf="currentFeeDefinition.classFilter && currentFeeDefinition.busStopFilter">,</span>
-                                    <span *ngIf="currentFeeDefinition.busStopFilter">Bus Stop</span>
-                                    <span *ngIf="!currentFeeDefinition.classFilter && !currentFeeDefinition.busStopFilter">None</span>
+                                    <span *ngIf="currentFeeDefinition.classFilter">Class,</span>
+                                    <span *ngIf="currentFeeDefinition.busStopFilter">Bus Stop,</span>
+                                    <span *ngIf="currentFeeDefinition.rte">RTE,</span>
+                                    <span *ngIf="currentFeeDefinition.onlyNewStudent">Only New Student,</span>
+                                    {{currentFeeDefinition.frequency}}
+                                </i>
+                            </div>
+                            <div class="col-md-6" *ngIf="selectedFeeDefinition.dbId != 0">
+                                Prev Filters:
+                                <i style="font-weight: 800;">
+                                    <span *ngIf="selectedFeeDefinition.classFilter">Class,</span>
+                                    <span *ngIf="selectedFeeDefinition.busStopFilter">Bus Stop,</span>
+                                    <span *ngIf="selectedFeeDefinition.rte">RTE,</span>
+                                    <span *ngIf="selectedFeeDefinition.onlyNewStudent">Only New Student,</span>
+                                    {{selectedFeeDefinition.frequency}}
                                 </i>
                             </div>
                         </div>
-
-                        <div class="clearfix" style="margin-bottom: 25px;"></div>
 
                         <!-- Add, Update and Delete Buttons For Fee Definition -->
                         <button type="button"
@@ -101,6 +162,8 @@
                                 *ngIf="selectedFeeDefinition.dbId!=0
                                        && selectedFeeDefinition.schoolFeeComponentList.length == 0"
                                 (click)="deleteFeeDefinition()">Delete</button>
+
+                        <div class="clearfix" style="margin-bottom: 25px;"></div>
 
                         <!-- School Component -->
                         <div *ngIf="selectedFeeDefinition.dbId != 0" style="margin-top: 25px;">

@@ -1,9 +1,13 @@
 <div class="logo">
     <a href="" class="simple-text" disabled="true">
         <div class="logo-img">
-            <img [attr.src]="user.schoolLogo" style="border-radius: 2px;"/>
+            <img src="/assets/img/angular2-logo-red.png" style="border-radius: 2px;"/>
         </div>
-        {{user.schoolName}}
+        {{user.schoolName}}<br/>
+        <span style="margin-left: 60px;">
+            <span *ngIf="user.schoolCurrentSessionDbId==1">2017-18</span>
+            <span *ngIf="user.schoolCurrentSessionDbId==2">2018-19</span>
+        </span>
     </a>
 </div>
 <div class="sidebar-wrapper">
