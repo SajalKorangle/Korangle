@@ -69,6 +69,10 @@ export class User {
                     path: 'generate_tc',
                     title: 'Generate TC',
                 },
+                {
+                    path: 'promote_student',
+                    title: 'Promote Student',
+                },
             ] },
         { path: 'fees', title: 'Fees',  icon: 'receipt', class: '', showSubsection: false,
             subsection: [

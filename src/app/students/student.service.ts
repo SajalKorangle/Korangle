@@ -12,6 +12,19 @@ import { CommonServiceRequirements } from '../services/common-service-requiremen
 @Injectable()
 export class StudentService extends CommonServiceRequirements {
 
+    // Student Mini Profile
+    getStudentMiniProfileList(data, token): Promise<any> {
+        return super.getData(token, '/student/school/'
+            + data['schoolDbId'] + '/student-mini-profiles?session_id='
+            + data['sessionDbId']);
+    }
+
+    // Student Section
+    createStudentSectionList(data, token): Promise<any> {
+        return super.postData(data, token, '/student/student-sections/batch');
+    }
+
+
     // Variables
 
     /* Update Profile */

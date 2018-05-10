@@ -41,3 +41,7 @@
 	color: green;
 	font-weight: 400;
 }
+
+.highlightBackground {
+	background-color: lightgrey;
+}

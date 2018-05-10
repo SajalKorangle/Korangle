@@ -27,6 +27,7 @@ import { AppComponent } from './app.component';
 import { StudentProfileComponent } from './students/pages/student-profile/student-profile.component';
 import { StudentListComponent } from './students/pages/student-list/student-list.component';
 import { GenerateTcComponent } from './students/pages/generate-tc/generate-tc.component';
+import { PromoteStudentComponent } from './students/pages/promote-student/promote-student.component';
 
 import { NewStudentComponent } from './new-student/new-student.component';
 
@@ -113,6 +114,7 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
         StudentProfileComponent,
         StudentListComponent,
         GenerateTcComponent,
+        PromoteStudentComponent,
 
         NewStudentComponent,
 
