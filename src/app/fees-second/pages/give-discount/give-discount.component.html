@@ -65,7 +65,7 @@
                                                    (ngModelChange)="handleSessionConcessionChange(sessionFeeStatus, $event);">
                                         </div>
                                         <div class="col-md-2">
-                                            {{getStudentFeesDue()-getStudentConcession()}}
+                                            {{getSessionFeesDue(sessionFeeStatus)-getSessionConcession(sessionFeeStatus)}}
                                         </div>
                                         <div class="col-md-2">
                                             {{getSessionTotalFee(sessionFeeStatus)}}

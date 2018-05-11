@@ -93,6 +93,10 @@ export class User {
                     title: 'Total Collection',
                 },
                 {
+                    path: 'school_fee_record',
+                    title: 'School Record',
+                },
+                {
                     path: 'update_student_fees',
                     title: 'Update Student Fees',
                 },

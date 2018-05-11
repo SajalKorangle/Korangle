@@ -35,6 +35,7 @@ import { LoginComponent } from './authentication/login.component';
 
 import { CollectFeeComponent } from './fees-second/pages/collect-fee/collect-fee.component';
 import { TotalCollectionComponent } from './fees-second/pages/total-collection/total-collection.component';
+import { SchoolRecordComponent } from './fees-second/pages/school-record/school-record.component';
 import { UpdateStudentFeesComponent } from './fees-second/pages/update-student-fees/update-student-fees.component';
 import { GiveDiscountComponent } from './fees-second/pages/give-discount/give-discount.component';
 import { TotalDiscountComponent } from './fees-second/pages/total-discount/total-discount.component';
@@ -92,6 +93,7 @@ import {StudentFilterComponent} from './components/student-filter/student-filter
 
         CollectFeeComponent,
         TotalCollectionComponent,
+        SchoolRecordComponent,
         UpdateStudentFeesComponent,
         GiveDiscountComponent,
         TotalDiscountComponent,
