@@ -5,7 +5,6 @@ import {ClassService} from '../../../services/class.service';
 import {StudentFeeProfile} from '../../classes/student-fee-profile';
 
 class ColumnFilter {
-  showSerialNumber = true;
   showName = true;
   showClassName = true;
   showFathersName = true;
@@ -134,7 +133,7 @@ export class SchoolRecordComponent implements OnInit {
     });
   };
 
-  showSectionName(classs: any): any {
+  showSectionName(classs: any): boolean {
       let sectionLength = 0;
       classs.sectionList.every(section => {
           if (section.containsStudent) {
@@ -149,7 +148,7 @@ export class SchoolRecordComponent implements OnInit {
       return sectionLength > 1;
   }
 
-  getStudentDisplayList(): any {
+  /*getStudentDisplayList(): any {
       return this.studentFeeProfileList.filter((studentFeeProfile) => {
           if (studentFeeProfile.sectionObject.selected === true) {
               return true;
@@ -157,7 +156,7 @@ export class SchoolRecordComponent implements OnInit {
               return false;
           }
       });
-  }
+  }*/
 
   /*handleStudentDisplay(): void {
     let serialNumber = 0;

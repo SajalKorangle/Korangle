@@ -8,7 +8,7 @@
       </div>
       <div class="card-content table-responsive">
 
-        <ng-container *ngIf="!isLoading && classSectionList && studentFeeProfileList">
+        <ng-container *ngIf="!isLoading && classSectionList.length !== 0 && studentFeeProfileList.length !== 0">
 
           <!-- Class Filter -->
           <mat-form-field style="margin-right: 15px;">
@@ -110,14 +110,13 @@
             </mat-select>
           </mat-form-field>
 
-          <br><!-- i>Selected {{displayStudentNumber}} out of {{totalStudents}} students</i -->
+          <br>
 
           <!-- Student Table List -->
           <ng-container *ngIf="!isLoading">
             <table class="table table-hover">
               <thead class="text-{{user.btn_color}}">
               <tr>
-                <!-- th [class.hidden]="!columnFilter.showSerialNumber">S No.</th -->
                 <th [class.hidden]="!columnFilter.showName">Name</th>
                 <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
                 <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
@@ -132,10 +131,8 @@
               <tbody>
               <ng-container *ngFor="let student of studentFeeProfileList">
                 <tr [class.hidden]="!student.sectionObject.selected">
-                  <!-- td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td -->
                   <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
-                  <td [class.hidden]="!columnFilter.showClassName">{{student.className}}
-                    <!-- span *ngIf="showSectionName(class)">, {{section.name}}</span --></td>
+                  <td [class.hidden]="!columnFilter.showClassName">{{student.className}}</td>
                   <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
                   <td [class.hidden]="!columnFilter.showMobileNumber">
                     <span class="hidden-xs">{{student.mobileNumber}}</span>
