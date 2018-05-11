@@ -158,6 +158,22 @@ class StudentFeeStatusView(APIView):
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
+################# Student Fee Profile ################
+from .business.student_fee_profile import get_student_fee_profile_list_by_school_and_session_id
+
+
+class StudentFeeProfileView(APIView):
+
+    def get(self, request, school_id):
+        if request.user.is_authenticated:
+            data = {}
+            data['schoolDbId'] = school_id
+            data['sessionDbId'] = request.GET['session_id']
+            return JsonResponse({'response': get_success_response(get_student_fee_profile_list_by_school_and_session_id(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+
 ################# Fee Receipts ################
 from .business.fee_receipt import create_fee_receipt, get_fee_receipt_list_by_student_id, get_fee_receipt_list_by_school_id
 
