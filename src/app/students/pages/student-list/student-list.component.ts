@@ -12,8 +12,8 @@ class ColumnFilter {
   showMobileNumber = true;
   showScholarNumber = false;
   showDateOfBirth = false;
-  showTotalFees = false;
-  showFeesDue = false;
+  // showTotalFees = false;
+  // showFeesDue = false;
   showMotherName = false;
   showGender = false;
   showCaste = false;
