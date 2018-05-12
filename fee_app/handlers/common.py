@@ -21,7 +21,7 @@ def get_student_fee_data(data, user):
 
     student_data['feesList'] = []
     student_data['feesDue'] = student_object.totalFees
-    receiptNumberMax = Fee.objects.filter(parentStudent__in=Student.objects.filter(parentUser=user)).aggregate(Max('receiptNumber'))
+    receiptNumberMax = Fee.objects.filter(parentStudent__in=Student.objects.filter(parentSchool=user.school_set.all()[0])).aggregate(Max('receiptNumber'))
     student_data['overAllLastFeeReceiptNumber'] = receiptNumberMax['receiptNumber__max']
     for studentFeeEntry in student_object.fee_set.all().order_by('-generationDateTime', 'id'):
         tempStudentFeeEntry = {}

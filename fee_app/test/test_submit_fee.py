@@ -25,7 +25,7 @@ class SubmitFeeTestCase(ParentTestCase):
         data['remark'] = 'testing new fee receipt'
         data['tuitionFeeAmount'] = 1000
 
-        response = new_fee_receipt(data, student_object.parentUser)
+        response = new_fee_receipt(data, student_object.parentSchool.user.all()[0])
 
         self.assertEqual('success', response['status'])
         self.assertEqual('Fee submitted successfully', response['message'])

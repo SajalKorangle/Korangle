@@ -5,7 +5,9 @@ from fee_app.models import Fee, SubFee
 def fees_list(data, user):
     fee_list = []
 
-    for fee_object in Fee.objects.filter(parentStudent__parentUser=user,
+    school_object = user.school_set.all()[0]
+
+    for fee_object in Fee.objects.filter(parentStudent__parentSchool=school_object,
                                   generationDateTime__gte=data['startDate'],
                                   generationDateTime__lte=data['endDate']).order_by('generationDateTime',
                                                                                     'receiptNumber'):

@@ -6,7 +6,9 @@ from fee_app.models import Concession
 def concession_list(data, user):
     concession_list = []
 
-    for concession in Concession.objects.filter(parentStudent__parentUser=user,
+    school_object = user.school_set.all()[0]
+
+    for concession in Concession.objects.filter(parentStudent__parentSchool=school_object,
                                                 generationDateTime__gte=data['startDate'],
                                                 generationDateTime__lte=data['endDate']).order_by('generationDateTime', 'id'):
         tempConcession = {}

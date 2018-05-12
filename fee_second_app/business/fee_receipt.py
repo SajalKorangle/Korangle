@@ -30,7 +30,7 @@ def get_fee_receipt_by_object(fee_receipt_object):
     fee_receipt_response['studentName'] = fee_receipt_object.parentStudent.name
     fee_receipt_response['studentScholarNumber'] = fee_receipt_object.parentStudent.scholarNumber
     fee_receipt_response['studentFatherName'] = fee_receipt_object.parentStudent.fathersName
-    fee_receipt_response['studentClassName'] = fee_receipt_object.parentStudent.get_class_name(fee_receipt_object.parentStudent.school.currentSession)
+    fee_receipt_response['studentClassName'] = fee_receipt_object.parentStudent.get_class_name(fee_receipt_object.parentStudent.parentSchool.currentSession)
     fee_receipt_response['receiptNumber'] = fee_receipt_object.receiptNumber
     fee_receipt_response['generationDateTime'] = fee_receipt_object.generationDateTime
     fee_receipt_response['remark'] = fee_receipt_object.remark
@@ -70,11 +70,9 @@ def get_fee_receipt_list_by_school_id(data):
     startDate = data['startDate'] + ' 00:00:00+05:30'
     endDate = data['endDate'] + ' 23:59:59+05:30'
 
-    user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
-
     fee_receipt_list_response = []
 
-    for fee_receipt_object in FeeReceipt.objects.filter(parentStudent__parentUser=user_object,
+    for fee_receipt_object in FeeReceipt.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
                                                         generationDateTime__gte=startDate,
                                                         generationDateTime__lte=endDate).order_by('-generationDateTime'):
 
@@ -98,11 +96,11 @@ def get_fee_receipt_list_by_student_id(data):
 def create_fee_receipt(data):
 
     student_object = Student.objects.get(id=data['studentDbId'])
-    user_object = student_object.parentUser
+    school_object = student_object.parentSchool
 
     with transaction.atomic():
         new_receipt_number = 1
-        last_receipt_number = FeeReceipt.objects.filter(parentStudent__parentUser=user_object).aggregate(Max('receiptNumber'))['receiptNumber__max']
+        last_receipt_number = FeeReceipt.objects.filter(parentStudent__parentSchool=school_object).aggregate(Max('receiptNumber'))['receiptNumber__max']
         if last_receipt_number is not None:
             new_receipt_number = last_receipt_number + 1
         fee_receipt_object = FeeReceipt(receiptNumber=new_receipt_number, remark=data['remark'], parentStudent=student_object)

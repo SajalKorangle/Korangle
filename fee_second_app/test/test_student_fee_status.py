@@ -15,7 +15,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
     def test_get_student_fee_status_list(self):
 
         data = {}
-        data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
+        data['studentDbId'] = Student.objects.filter(parentSchool__name='Champion')[0].id
 
         response = get_student_fee_status_list(data)
 
@@ -33,7 +33,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
     def test_get_student_fee_status(self):
 
         data = {}
-        data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
+        data['studentDbId'] = Student.objects.filter(parentSchool__name='Champion')[0].id
         data['sessionDbId'] = Session.objects.all()[0].id
 
         response = get_student_fee_status(data)
@@ -88,7 +88,7 @@ class StudentFeeStatusTestCase(ParentTestCase):
     def test_update_student_fee_status(self):
 
         data = {}
-        data['studentDbId'] = Student.objects.filter(parentUser__username='champion')[0].id
+        data['studentDbId'] = Student.objects.filter(parentSchool__name='Champion')[0].id
         data['sessionDbId'] = Session.objects.get(name='Session 2018-19').id
 
         student_fee_status = get_student_fee_status(data)

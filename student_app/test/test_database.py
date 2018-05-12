@@ -24,4 +24,4 @@ class DatabaseTestCase(ParentTestCase):
 
     def test_one_user_per_student(self):
         for student_object in Student.objects.all():
-            self.assertIsNotNone(student_object.parentUser)
+            self.assertIsNotNone(student_object.parentSchool)

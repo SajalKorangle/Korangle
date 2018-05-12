@@ -18,7 +18,7 @@ class NewConcessionTestCase(ParentTestCase):
         data['amount'] = 1000
         data['remark'] = 'testing new concession'
 
-        response = new_concession(data, student_object.parentUser)
+        response = new_concession(data, student_object.parentSchool.user.all()[0])
 
         self.assertEqual('Concession submitted successfully', response['message'])
 

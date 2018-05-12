@@ -1,6 +1,6 @@
 from django.db import models
 
-from school_app.model.models import BusStop, Session
+from school_app.model.models import BusStop, Session, School
 
 from class_app.models import Section
 
@@ -20,9 +20,9 @@ class Student(models.Model):
     dateOfBirth = models.DateField(null=True)
     remark = models.TextField(null=True)
 
-    # friendSection = models.ManyToManyField('class_app.Section')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
 
-    parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=0)
+    # parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=0)
 
     # new student profile data
     motherName = models.TextField(null=True)
@@ -106,9 +106,9 @@ class Student(models.Model):
         return self.studentsection_set \
             .get(parentSection__parentClassSession__parentSession=session_object).rollNumber
 
-    @property
+    '''@property
     def school(self):
-        return self.parentUser.school_set.filter()[0]
+        return self.parentUser.school_set.filter()[0]'''
 
     '''@property
     def className(self):

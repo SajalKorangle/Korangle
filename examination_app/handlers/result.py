@@ -14,13 +14,13 @@ def get_section_student_result(data):
 
     student_object = Student.objects.get(id=data['studentDbId'])
 
-    school_object = student_object.parentUser.school_set.all()[0]
+    school_object = student_object.parentSchool
 
     response['scholarNumber'] = student_object.scholarNumber
 
     response['result'] = []
     for test_object in Test.objects.filter(parentSection_id=data['sectionDbId'],
-                                           parentSchool=student_object.school).order_by('parentSubject__orderNumber'):
+                                           parentSchool=student_object.parentSchool).order_by('parentSubject__orderNumber'):
         tempResult = {}
         tempResult['testDbId'] = test_object.id
         tempResult['subjectDbId'] = test_object.parentSubject.id

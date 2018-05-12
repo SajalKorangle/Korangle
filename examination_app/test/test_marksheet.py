@@ -60,7 +60,7 @@ class MarksheetTestCase(ParentTestCase):
 
             index += 1
 
-        school_session_object = SchoolSession.objects.get(parentSchool=student_object.school,
+        school_session_object = SchoolSession.objects.get(parentSchool=student_object.parentSchool,
                                                           parentSession=Section.objects.get(id=data['sectionDbId'])
                                                           .parentClassSession.parentSession)
 

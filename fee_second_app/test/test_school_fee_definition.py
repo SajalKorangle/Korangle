@@ -139,11 +139,9 @@ class FeeDefinitionTestCase(ParentTestCase):
 
         self.assertEqual(fee_definition_object_initial.id, fee_definition_object.id)
 
-        user_object = fee_definition_object.parentSchool.user.all()[0]
-
         student_fee_component_queryset = StudentFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object)
 
-        student_queryset = Student.objects.filter(parentUser=user_object)
+        student_queryset = Student.objects.filter(parentSchool=fee_definition_object.parentSchool)
 
         self.assertEqual(student_fee_component_queryset.count(), student_queryset.count())
 

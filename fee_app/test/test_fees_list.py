@@ -15,12 +15,14 @@ class FeesListTestCase(ParentTestCase):
         data['startDate'] = '2017-04-01'
         data['endDate'] = '2018-03-31'
 
-        user_object = Fee.objects.all()[0].parentStudent.parentUser
+        user_object = Fee.objects.all()[0].parentStudent.parentSchool.user.all()[0]
+
+        school_object = user_object.school_set.all()[0]
 
         response = fees_list(data, user_object)
 
         fees_list_length = 0
-        for fee_object in Fee.objects.filter(parentStudent__parentUser=user_object,
+        for fee_object in Fee.objects.filter(parentStudent__parentSchool=school_object,
                                              generationDateTime__gte=data['startDate'],
                                              generationDateTime__lte=data['endDate']).order_by('generationDateTime', 'receiptNumber'):
             self.assertEqual(fee_object.id, response[fees_list_length]['dbId'])

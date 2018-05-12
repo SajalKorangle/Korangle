@@ -17,7 +17,7 @@ def get_marksheet(data):
     response['studentDbId'] = data['studentDbId']
     response['sectionDbId'] = data['sectionDbId']
 
-    school_object = student_object.school
+    school_object = student_object.parentSchool
     '''response['schoolName'] = school_object.name
     response['schoolLogo'] = school_object.logo
     response['schoolAddress'] = school_object.address

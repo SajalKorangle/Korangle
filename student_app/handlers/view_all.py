@@ -13,6 +13,8 @@ def get_class_section_student_profile_list(data, user):
 
     # student_profile_list = []
 
+    school_object = user.school_set.all()[0]
+
     session_object = Session.objects.get(id=data['sessionDbId'])
 
     class_section_student_profile_list = []
@@ -27,7 +29,7 @@ def get_class_section_student_profile_list(data, user):
             tempSection['name'] = section_object.name
             tempSection['dbId'] = section_object.id
             tempSection['studentList'] = []
-            for student_section_object in StudentSection.objects.filter(parentStudent__parentUser=user,parentSection=section_object):
+            for student_section_object in StudentSection.objects.filter(parentStudent__parentSchool=school_object,parentSection=section_object):
                 tempSection['studentList'].append(get_student_profile(student_section_object.parentStudent,
                                                                       session_object))
             if len(tempSection['studentList']) > 0:

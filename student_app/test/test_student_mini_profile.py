@@ -43,10 +43,8 @@ class StudentMiniProfileTestCase(ParentTestCase):
 
         response = get_student_mini_profile_by_school_and_session_id(data)
 
-        user_object = school_object.user.all()[0]
-
         student_section_queryset = \
-            StudentSection.objects.filter(parentStudent__parentUser=user_object,
+            StudentSection.objects.filter(parentStudent__parentSchool=school_object,
                                           parentSection__parentClassSession__parentSession=session_object) \
             .order_by('parentSection__parentClassSession__parentClass__orderNumber', 'parentSection__orderNumber', 'parentStudent__name')
 

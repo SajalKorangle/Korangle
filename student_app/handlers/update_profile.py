@@ -15,6 +15,8 @@ from fee_second_app.models import StudentMonthlyFeeComponent, StudentFeeComponen
 
 def get_class_section_student_list(data, user):
 
+    school_object = user.school_set.all()[0]
+
     class_section_student_list = []
 
     session_object = Session.objects.get(id=data['sessionDbId'])
@@ -29,7 +31,8 @@ def get_class_section_student_list(data, user):
             tempSection['name'] = section_object.name
             tempSection['dbId'] = section_object.id
             tempSection['studentList'] = []
-            for student_section_object in StudentSection.objects.filter(parentStudent__parentUser=user,parentSection=section_object).order_by('parentStudent__name'):
+            for student_section_object in StudentSection.objects.filter(parentStudent__parentSchool=school_object,
+                                                                        parentSection=section_object).order_by('parentStudent__name'):
                 tempStudent = {}
                 tempStudent['name'] = student_section_object.parentStudent.name
                 tempStudent['dbId'] = student_section_object.parentStudent.id

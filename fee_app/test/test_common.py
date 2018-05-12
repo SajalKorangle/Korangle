@@ -94,7 +94,7 @@ class CommonTestCase(ParentTestCase):
 
         data['studentDbId'] = student_object.id
 
-        user_object = student_object.parentUser
+        user_object = student_object.parentSchool.user.all()[0]
 
         response = get_student_fee_data(data, user_object)
 
@@ -114,7 +114,7 @@ class CommonTestCase(ParentTestCase):
 
         data['studentDbId'] = student_object.id
 
-        user_object = student_object.parentUser
+        user_object = student_object.parentSchool.user.all()[0]
 
         response = get_student_fee_data(data, user_object)
 

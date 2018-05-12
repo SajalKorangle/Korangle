@@ -24,7 +24,7 @@ class ConcessionTestCase(ParentTestCase):
         self.assertEqual(concession_response['studentName'], concession_object.parentStudent.name)
         self.assertEqual(concession_response['studentScholarNumber'], concession_object.parentStudent.scholarNumber)
         self.assertEqual(concession_response['studentFatherName'], concession_object.parentStudent.fathersName)
-        self.assertEqual(concession_response['studentClassName'], concession_object.parentStudent.get_class_name(concession_object.parentStudent.school.currentSession))
+        self.assertEqual(concession_response['studentClassName'], concession_object.parentStudent.get_class_name(concession_object.parentStudent.parentSchool.currentSession))
         self.assertEqual(concession_response['generationDateTime'], concession_object.generationDateTime)
         self.assertEqual(concession_response['remark'], concession_object.remark)
         self.assertEqual(concession_response['cancelled'], concession_object.cancelled)
@@ -64,16 +64,17 @@ class ConcessionTestCase(ParentTestCase):
 
         concession_object = ConcessionSecond.objects.all()[0]
 
-        user_object = concession_object.parentStudent.parentUser
+        # user_object = concession_object.parentStudent.parentUser
+        school_object = concession_object.parentStudent.parentSchool
 
         request = {}
-        request['schoolDbId'] = user_object.school_set.all()[0].id
+        request['schoolDbId'] = school_object.id
         request['startDate'] = '2017-04-01'
         request['endDate'] = '2018-05-31'
 
         response = get_concession_list_by_school_id(request)
 
-        concession_queryset = ConcessionSecond.objects.filter(parentStudent__parentUser=user_object,
+        concession_queryset = ConcessionSecond.objects.filter(parentStudent__parentSchool=school_object,
                                                          generationDateTime__gte=request['startDate']+' 00:00:00+05:30',
                                                          generationDateTime__lte=request['endDate']+ ' 23:59:59+05:30').order_by('-generationDateTime')
 
@@ -106,7 +107,7 @@ class ConcessionTestCase(ParentTestCase):
 
     def test_create_concession(self):
 
-        student_object = Student.objects.filter(parentUser__username='champion')[0]
+        student_object = Student.objects.filter(parentSchool__name='Champion')[0]
 
         student_fee_status_request = {}
         student_fee_status_request['studentDbId'] = student_object.id

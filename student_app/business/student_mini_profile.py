@@ -23,12 +23,12 @@ def get_student_mini_profile(student_section_object):
 
 def get_student_mini_profile_by_school_and_session_id(data):
 
-    user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
+    # user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
 
     student_list = []
 
     for student_section_object in \
-        StudentSection.objects.filter(parentStudent__parentUser=user_object,
+        StudentSection.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
                                       parentSection__parentClassSession__parentSession_id=data['sessionDbId']) \
         .order_by('parentSection__parentClassSession__parentClass__orderNumber', 'parentSection__orderNumber', 'parentStudent__name') \
         .select_related('parentStudent', 'parentSection__parentClassSession__parentClass'):

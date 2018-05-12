@@ -116,11 +116,10 @@ def lock_fee_definition(data):
 
     fee_definition_object = FeeDefinition.objects.get(id=data['dbId'])
 
-    user_object = fee_definition_object.parentSchool.user.all()[0]
     session_object = fee_definition_object.parentSession
 
     for student_section_object in \
-            StudentSection.objects.filter(parentStudent__parentUser=user_object,
+            StudentSection.objects.filter(parentStudent__parentSchool=fee_definition_object.parentSchool,
                                           parentSection__parentClassSession__parentSession=session_object):
 
         student_object = student_section_object.parentStudent
@@ -129,38 +128,6 @@ def lock_fee_definition(data):
             get_school_fee_component_by_student_and_fee_defintion_object(student_object, fee_definition_object)
 
         create_student_fee_component(student_object, fee_definition_object, school_fee_component_object)
-
-        '''# check rte constraint
-        if (fee_definition_object.rte is False) & (student_object.rte == Student.RTE_YES):
-            create_student_fee_component(student_object, fee_definition_object, None)
-            continue
-
-        # check only new student constraint
-            # Need new field 'Admission session' in student profile for this to work
-
-        # find student fee component by defined filters
-
-        school_fee_component_queryset = SchoolFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object)
-
-        if fee_definition_object.classFilter:
-            class_object = student_section_object.parentSection.parentClassSession.parentClass
-            for school_fee_component_object in school_fee_component_queryset:
-                if school_fee_component_object.classbasedfilter_set.filter(parentClass=class_object).count() == 0:
-                    school_fee_component_queryset = school_fee_component_queryset.exclude(id=school_fee_component_object.id)
-
-        if fee_definition_object.busStopFilter:
-            bus_stop_object = student_object.currentBusStop
-            for school_fee_component_object in school_fee_component_queryset:
-                if school_fee_component_object.busstopbasedfilter_set.filter(parentBusStop=bus_stop_object).count() == 0:
-                    school_fee_component_queryset = school_fee_component_queryset.exclude(id=school_fee_component_object.id)
-
-        if school_fee_component_queryset.count() == 0:
-            create_student_fee_component(student_object, fee_definition_object, None)
-        elif school_fee_component_queryset.count() == 1:
-            create_student_fee_component(student_object, fee_definition_object, school_fee_component_queryset[0])
-        else:
-            raise ValueError('More than one school fee component for a student')
-            return 'Error: Contact Admin'''
 
     fee_definition_object.locked = True
     fee_definition_object.save()

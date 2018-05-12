@@ -35,7 +35,7 @@ def get_student_profile(student_object, session_object):
     student_data['fathersName'] = student_object.fathersName
     student_data['mobileNumber'] = student_object.mobileNumber
     student_data['dateOfBirth'] = student_object.dateOfBirth
-    student_data['totalFees'] = student_object.totalFees
+    # student_data['totalFees'] = student_object.totalFees
     student_data['remark'] = student_object.remark
     student_data['rollNumber'] = student_object.get_rollNumber(session_object)
     student_data['scholarNumber'] = student_object.scholarNumber
@@ -70,7 +70,7 @@ def get_student_profile(student_object, session_object):
     student_data['className'] = student_object.get_class_id(session_object)
     student_data['classDbId'] = student_object.get_class_name(session_object)
 
-    student_data['feesDue'] = student_object.totalFees
+    '''student_data['feesDue'] = student_object.totalFees
     for studentFeeEntry in student_object.fee_set.all().order_by('-generationDateTime'):
         lateFeeAmount = 0
         lateFee = SubFee.objects.filter(parentFee=studentFeeEntry, particular='LateFee')
@@ -80,6 +80,6 @@ def get_student_profile(student_object, session_object):
         student_data['feesDue'] -= studentFeeEntry.amount
         student_data['feesDue'] += lateFeeAmount
     for studentConcessionEntry in student_object.concession_set.all():
-        student_data['feesDue'] -= studentConcessionEntry.amount
+        student_data['feesDue'] -= studentConcessionEntry.amount'''
 
     return student_data

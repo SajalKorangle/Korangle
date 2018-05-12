@@ -4,9 +4,9 @@ from examination_app.models import Test, StudentTestResult
 
 def preparingStudentTestResult(number):
 
-    student_section_object = StudentSection.objects.filter(parentStudent__parentUser__username='eklavya')[0]
+    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA')[0]
 
-    school_object = student_section_object.parentStudent.parentUser.school_set.all()[0]
+    school_object = student_section_object.parentStudent.parentSchool
 
     data = {}
     data['studentDbId'] = student_section_object.parentStudent.id
@@ -26,7 +26,7 @@ def preparingStudentTestResult(number):
 
 def deletingStudentResult():
 
-    student_section_object = StudentSection.objects.filter(parentStudent__parentUser__username='eklavya')[0]
+    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA')[0]
 
     data = {}
     data['sectionDbId'] = student_section_object.parentSection.id
@@ -39,9 +39,9 @@ def deletingStudentResult():
 
 def deletingAndPreparingStudentResult():
 
-    student_section_object = StudentSection.objects.filter(parentStudent__parentUser__username='eklavya')[0]
+    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA')[0]
 
-    school_object = student_section_object.parentStudent.parentUser.school_set.all()[0]
+    school_object = student_section_object.parentStudent.parentSchool
 
     data = {}
     data['sectionDbId'] = student_section_object.parentSection.id

@@ -11,12 +11,10 @@ def get_student_fee_profile_list_by_school_and_session_id(data):
 
     student_fee_profile_list = []
 
-    user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
-
     session_object = Session.objects.get(id=data['sessionDbId'])
 
     for student_section_object in \
-            StudentSection.objects.filter(parentStudent__parentUser=user_object,
+            StudentSection.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
                                           parentSection__parentClassSession__parentSession=session_object) \
                     .order_by('parentStudent__name') \
                     .select_related('parentSection__parentClassSession__parentClass',

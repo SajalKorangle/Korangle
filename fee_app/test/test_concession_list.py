@@ -13,12 +13,14 @@ class ConcessionListTestCase(ParentTestCase):
         data['startDate'] = '2017-04-01'
         data['endDate'] = '2018-03-31'
 
-        user_object = Concession.objects.all()[0].parentStudent.parentUser
+        user_object = Concession.objects.all()[0].parentStudent.parentSchool.user.all()[0]
+
+        school_object = user_object.school_set.all()[0]
 
         response = concession_list(data, user_object)
 
         concession_list_length = 0
-        for concession_object in Concession.objects.filter(parentStudent__parentUser=user_object,
+        for concession_object in Concession.objects.filter(parentStudent__parentSchool=school_object,
                                              generationDateTime__gte=data['startDate'],
                                              generationDateTime__lte=data['endDate']).order_by('generationDateTime', 'id'):
             self.assertEqual(concession_object.id, response[concession_list_length]['dbId'])

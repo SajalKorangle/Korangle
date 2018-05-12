@@ -16,11 +16,10 @@ def create_new_student(data, user):
         if key != 'sectionDbId':
             populate_student_field(student_object, key, data[key])
 
-    student_object.parentUser = user
+    student_object.parentSchool = user.school_set.all()[0]
 
     student_object.save()
 
-    # student_object.friendSection.add(Section.objects.get(id=data['sectionDbId']))
     student_section_object = StudentSection(parentSection_id=data['sectionDbId'],parentStudent=student_object)
     if 'rollNumber' in data:
         student_section_object.rollNumber = data['rollNumber']

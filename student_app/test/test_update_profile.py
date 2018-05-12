@@ -46,7 +46,9 @@ class UpdateProfileTestCase(ParentTestCase):
 
                         student_count += 1
 
-            self.assertEqual(student_count, StudentSection.objects.filter(parentStudent__parentUser=user_object,
+            school_object = user_object.school_set.all()[0]
+
+            self.assertEqual(student_count, StudentSection.objects.filter(parentStudent__parentSchool=school_object,
                                                                           parentSection__parentClassSession__parentSession=session_object).count())
 
 
@@ -66,7 +68,7 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.fathersName,student_profile_data['fathersName'])
         self.assertEqual(student_object.mobileNumber,student_profile_data['mobileNumber'])
         self.assertEqual(student_object.dateOfBirth.__str__(),student_profile_data['dateOfBirth'].__str__())
-        self.assertEqual(student_object.totalFees,student_profile_data['totalFees'])
+        # self.assertEqual(student_object.totalFees,student_profile_data['totalFees'])
         self.assertEqual(student_object.remark,student_profile_data['remark'])
         self.assertEqual(student_object.scholarNumber,student_profile_data['scholarNumber'])
         self.assertEqual(student_object.get_rollNumber(section_object.parentClassSession.parentSession), student_profile_data['rollNumber'])

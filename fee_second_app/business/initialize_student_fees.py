@@ -9,7 +9,8 @@ from fee_second_app.business.student_fee_component import create_student_fee_com
 
 def initialize_student_fees(student_object, session_object):
 
-    school_object = student_object.school
+    # school_object = student_object.school
+    school_object = student_object.parentSchool
 
     for fee_definition_object in FeeDefinition.objects.filter(parentSchool=school_object,
                                                               parentSession=session_object,

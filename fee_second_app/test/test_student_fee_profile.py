@@ -17,18 +17,15 @@ class StudentFeeProfileTestCase(ParentTestCase):
 
     def test_student_fee_profile_list(self):
 
-        school_object = School.objects.get(name='BRIGHT STAR')
-        user_object = school_object.user.all()[0]
-
         data = {
-            'schoolDbId': school_object.id,
+            'schoolDbId': School.objects.get(name='BRIGHT STAR').id,
             'sessionDbId': Session.objects.get(name='Session 2018-19').id,
         }
 
         response = get_student_fee_profile_list_by_school_and_session_id(data)
 
         student_section_queryset = \
-            StudentSection.objects.filter(parentStudent__parentUser=user_object,
+            StudentSection.objects.filter(parentStudent__parentSchool=data['schoolDbId'],
                                           parentSection__parentClassSession__parentSession_id=data['sessionDbId']) \
             .order_by('parentStudent__name')
 
@@ -42,9 +39,8 @@ class StudentFeeProfileTestCase(ParentTestCase):
     def test_get_student_fee_profile(self):
 
         school_object = School.objects.get(name='BRIGHT STAR')
-        user_object = school_object.user.all()[0]
         busStop_object = BusStop.objects.filter(parentSchool=school_object)[0]
-        student_object = StudentFactory(currentBusStop=busStop_object, parentUser=user_object)
+        student_object = StudentFactory(currentBusStop=busStop_object, parentSchool=school_object)
 
         student_section_object = \
             StudentSection.objects.get(parentStudent=student_object,

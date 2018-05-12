@@ -18,12 +18,13 @@ class StudentSectionFactory(factory.django.DjangoModelFactory):
 class StudentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'student_app.Student'
-        django_get_or_create=('name', 'fathersName', 'parentUser', 'currentBusStop')
+        django_get_or_create=('name', 'fathersName', 'parentSchool', 'currentBusStop')
 
     name = 'dummy'
     fathersName = 'dummy'
 
-    parentUser = School.objects.get(name='BRIGHT STAR').user.all()[0]
+    # parentUser = School.objects.get(name='BRIGHT STAR').user.all()[0]
+    parentSchool = School.objects.get(name='BRIGHT STAR')
 
     currentBusStop = BusStop.objects.filter(parentSchool=School.objects.get(name='BRIGHT STAR'))[0]
 

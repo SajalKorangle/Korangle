@@ -26,7 +26,7 @@ def get_concession_by_object(concession_object):
     concession_response['studentName'] = concession_object.parentStudent.name
     concession_response['studentScholarNumber'] = concession_object.parentStudent.scholarNumber
     concession_response['studentFatherName'] = concession_object.parentStudent.fathersName
-    concession_response['studentClassName'] = concession_object.parentStudent.get_class_name(concession_object.parentStudent.school.currentSession)
+    concession_response['studentClassName'] = concession_object.parentStudent.get_class_name(concession_object.parentStudent.parentSchool.currentSession)
     concession_response['generationDateTime'] = concession_object.generationDateTime
     concession_response['remark'] = concession_object.remark
     concession_response['cancelled'] = concession_object.cancelled
@@ -64,11 +64,9 @@ def get_concession_list_by_school_id(data):
     startDate = data['startDate'] + ' 00:00:00+05:30'
     endDate = data['endDate'] + ' 23:59:59+05:30'
 
-    user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
-
     concession_list_response = []
 
-    for concession_object in ConcessionSecond.objects.filter(parentStudent__parentUser=user_object,
+    for concession_object in ConcessionSecond.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
                                                         generationDateTime__gte=startDate,
                                                         generationDateTime__lte=endDate).order_by('-generationDateTime'):
 
