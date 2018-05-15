@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+
+import { Router } from '@angular/router';
+
 import { User } from '../../classes/user';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
@@ -9,22 +12,6 @@ declare interface RouteInfo {
     icon: string;
     class: string;
 }
-export const ROUTES: RouteInfo[] = [
-    { path: 'students', title: 'Students',  icon: 'account_circle', class: '' },
-    { path: 'fees', title: 'Fees',  icon: 'dashboard', class: '' },
-    { path: 'expenses', title: 'Expenses', icon: 'dashboard', class: '' },
-    { path: 'concession', title: 'Concession', icon: 'dashboard', class: '' },
-    { path: 'new_student', title: 'New Student', icon: 'person', class: '' },
-    /*{ path: 'user-profile', title: 'User Profile',  icon:'person', class: '' },
-    { path: 'table-list', title: 'Table List',  icon:'content_paste', class: '' },
-    { path: 'typography', title: 'Typography',  icon:'library_books', class: '' },
-    { path: 'icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-    { path: 'maps', title: 'Maps',  icon:'location_on', class: '' },
-    { path: 'notifications', title: 'Notifications',  icon:'notifications', class: '' },
-    { path: 'upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
-    { path: 'fees-receipts', title: 'Fees Receipts',  icon:'content_paste', class: '' },
-    { path: 'student-list', title: 'Student List',  icon:'content_paste', class: '' }, */
-];
 
 @Component({
     selector: 'app-sidebar',
@@ -52,12 +39,10 @@ export class SidebarComponent implements OnInit {
 
     parentPath = '';
 
-  menuItems: any[];
-
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
-    this.menuItems = ROUTES.filter(menuItem => menuItem);
+      this.router.navigateByUrl('/');
   }
   isMobileMenu() {
       if ($(window).width() > 991) {
@@ -68,6 +53,13 @@ export class SidebarComponent implements OnInit {
 
   activate(section: any) {
       // console.log(code);
+      if (section.path === 'employee') {
+          this.user.appSection = section.path;
+          this.parentPath = section.path;
+          return;
+      } else {
+          this.router.navigateByUrl('/');
+      }
       if ( section.subsection.length === 0 ) {
           this.user.appSection = section.path;
           this.parentPath = section.path;

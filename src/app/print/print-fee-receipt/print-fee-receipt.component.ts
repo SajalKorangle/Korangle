@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewChecked } from '@angular/core';
 
-import { TempFee } from '../../fees/classes/temp-fee';
+// import { TempFee } from '../../fees/classes/temp-fee';
 
 import { EmitterService } from '../../services/emitter.service';
 
@@ -13,14 +13,15 @@ export class PrintFeeReceiptComponent implements OnInit, OnDestroy, AfterViewChe
 
     @Input() user;
 
-    feeReceipt: TempFee;
+    feeReceipt: any;
 
     printFeeReceiptComponentSubscription: any;
 
     checkView = false;
 
     ngOnInit(): void {
-        this.feeReceipt = new TempFee();
+        this.feeReceipt = {};
+        /*this.feeReceipt = new TempFee();*/
         this.printFeeReceiptComponentSubscription = EmitterService.get('print-fee-receipt-component').subscribe( value => {
             this.feeReceipt.copy(value);
             this.checkView = true;

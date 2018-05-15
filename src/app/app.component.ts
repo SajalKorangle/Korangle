@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+
 import { User } from './classes/user';
+import { DataStorage } from './classes/data-storage';
+
 import {AuthenticationService} from './services/authentication.service';
 
 declare const $: any;
@@ -19,6 +22,7 @@ export class AppComponent implements OnInit {
 			  public location: Location) {}
 
   ngOnInit() {
+      DataStorage.getInstance().setUser(this.user);
   	if (this.user.checkAuthentication()) {
   		this.authenticationService.getUserDetails(this.user.jwt).then( data => {
   			this.user.initializeUserData(data);

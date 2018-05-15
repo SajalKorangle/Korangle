@@ -8,7 +8,10 @@
         <div class="main-panel">
             <app-navbar class="hidden-md hidden-xl hidden-lg"></app-navbar>
             <!-- app-navbar></app-navbar -->
-            <!-- router-outlet></router-outlet -->
+            <router-outlet></router-outlet>
+            <!-- ng-container *ngIf="user.appSection==='employee'">
+                <router-outlet></router-outlet>
+            </ng-container -->
 
             <app-student-profile *ngIf="user.appSection==='student_profile'" [user]="user"></app-student-profile>
             <app-student-list *ngIf="user.appSection==='student_list'" [user]="user"></app-student-list>
