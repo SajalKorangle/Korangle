@@ -128,7 +128,7 @@ export class GiveDiscountComponent {
                         componentDbId: component.dbId,
                         frequency: component.frequency,
                     };
-                    if (component.feeReceipt === FREQUENCY_LIST[0]) {
+                    if (component.frequency === FREQUENCY_LIST[0]) {
                         subConcession['amount'] = this.getComponentConcession(component);
                     } else if (component.frequency === FREQUENCY_LIST[1]) {
                         subConcession['monthList'] = [];
