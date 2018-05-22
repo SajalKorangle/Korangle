@@ -72,7 +72,7 @@ class Student(models.Model):
 
     def __str__(self):
         """A string representation of the model."""
-        return self.parentUser.username+" --- "+self.name
+        return self.parentSchool.name+" --- "+self.name
 
     '''@property
     def currentRollNumber(self):

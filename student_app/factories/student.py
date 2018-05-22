@@ -8,11 +8,12 @@ from class_app.models import Section
 class StudentSectionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'student_app.StudentSection'
-        django_get_or_create=('parentStudent', 'parentSection')
+        django_get_or_create=('parentStudent', 'parentSection', 'rollNumber')
 
     parentSection = Section.objects.get(parentClassSession__parentClass__name='Class - 12',
                                         name='Section - A',
                                         parentClassSession__parentSession__name='Session 2017-18')
+    rollNumber = '123'
 
 
 class StudentFactory(factory.django.DjangoModelFactory):

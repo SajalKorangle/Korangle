@@ -13,9 +13,9 @@ from examination_app.models import StudentTestResult
 
 from fee_second_app.models import StudentMonthlyFeeComponent, StudentFeeComponent, FeeReceipt, SubFeeReceipt, ConcessionSecond, SubConcession
 
-def get_class_section_student_list(data, user):
+def get_class_section_student_list(data):
 
-    school_object = user.school_set.all()[0]
+    # school_object = user.school_set.all()[0]
 
     class_section_student_list = []
 
@@ -31,7 +31,7 @@ def get_class_section_student_list(data, user):
             tempSection['name'] = section_object.name
             tempSection['dbId'] = section_object.id
             tempSection['studentList'] = []
-            for student_section_object in StudentSection.objects.filter(parentStudent__parentSchool=school_object,
+            for student_section_object in StudentSection.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
                                                                         parentSection=section_object).order_by('parentStudent__name'):
                 tempStudent = {}
                 tempStudent['name'] = student_section_object.parentStudent.name

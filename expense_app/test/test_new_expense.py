@@ -18,7 +18,7 @@ class NewExpenseTestCase(ParentTestCase):
         expense = {}
         expense['remark'] = 'testing'
         expense['amount'] = 1000
-        expense['schoolDbId'] = School.objects.get(user=User.objects.get(username='demo')).id
+        expense['schoolDbId'] = School.objects.get(name='DEMO').id
 
         new_expense(expense)
 
@@ -33,7 +33,7 @@ class NewExpenseTestCase(ParentTestCase):
         expense['remark'] = 'testing'
         expense['amount'] = 2000
         # expense['voucherDate'] = datetime.datetime.today().strftime('%Y-%m-%d')
-        expense['schoolDbId'] = School.objects.get(user=User.objects.get(username='demo')).id
+        expense['schoolDbId'] = School.objects.get(name='DEMO').id
 
         new_expense(expense)
 

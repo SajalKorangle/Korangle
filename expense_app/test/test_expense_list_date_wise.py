@@ -16,7 +16,7 @@ class ExpenseListDateWiseTestCase(ParentTestCase):
     # Method Check
     def test_expense_list_date_wise(self):
 
-        schoolDbId = School.objects.get(user=User.objects.get(username='demo')).id
+        schoolDbId = School.objects.get(name='DEMO').id
 
         expense = {}
         expense['remark'] = 'testing'

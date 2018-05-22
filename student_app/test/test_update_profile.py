@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from student_app.handlers.update_profile import get_class_section_student_list, get_student_profile, update_student, delete_student
 
-from school_app.model.models import Session
+from school_app.model.models import Session, School
 
 from student_app.models import Student, StudentSection
 
@@ -16,12 +16,11 @@ class UpdateProfileTestCase(ParentTestCase):
 
         for session_object in Session.objects.all():
 
-            user_object = User.objects.get(username='demo')
-
             data = {}
             data['sessionDbId'] = session_object.id
+            data['schoolDbId'] = School.objects.get(name='BRIGHT STAR').id
 
-            response = get_class_section_student_list(data, user_object)
+            response = get_class_section_student_list(data)
 
             class_list = ['Class - 12', 'Class - 11', 'Class - 10', 'Class - 9', 'Class - 8', 'Class - 7', 'Class - 6', 'Class - 5', 'Class - 4', 'Class - 3', 'Class - 2', 'Class - 1', 'U.K.G.', 'L.K.G.', 'Nursery', 'Play Group']
 
@@ -46,7 +45,7 @@ class UpdateProfileTestCase(ParentTestCase):
 
                         student_count += 1
 
-            school_object = user_object.school_set.all()[0]
+            school_object = School.objects.get(name='BRIGHT STAR')
 
             self.assertEqual(student_count, StudentSection.objects.filter(parentStudent__parentSchool=school_object,
                                                                           parentSection__parentClassSession__parentSession=session_object).count())

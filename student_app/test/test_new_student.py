@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from student_app.handlers.new_student import create_new_student
 
-from school_app.model.models import Session
+from school_app.model.models import Session, School
 
 from student_app.models import Student
 
@@ -14,7 +14,7 @@ class NewStudentTestCase(ParentTestCase):
 
     def test_new_student(self):
 
-        user_object = User.objects.get(username='brightstar')
+        school_object = School.objects.get(name='BRIGHT STAR')
 
         data = {}
         data['name'] = 'Demo Student'
@@ -39,7 +39,7 @@ class NewStudentTestCase(ParentTestCase):
         data['aadharNum'] = 123456789012
         data['bloodGroup'] = 'O +'
         data['fatherAnnualIncome'] = '15,000'
-        data['busStopDbId'] = user_object.school_set.all()[0].busstop_set.all()[0].id
+        data['busStopDbId'] = school_object.busstop_set.all()[0].id
 
         session_object = Session.objects.all()[0]
 
@@ -51,7 +51,9 @@ class NewStudentTestCase(ParentTestCase):
 
         data['sectionDbId'] = section_object.id
 
-        response = create_new_student(data,user_object)
+        data['schoolDbId'] = school_object.id
+
+        response = create_new_student(data)
 
         self.assertEqual(response['message'], 'Student Profile created successfully')
 

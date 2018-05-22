@@ -1,7 +1,6 @@
 
 # Models
 from student_app.models import StudentSection
-from school_app.model.models import School
 
 
 def get_student_mini_profile(student_section_object):

@@ -1,5 +1,5 @@
 
-from class_app.models import ClassSession, Section
+'''from class_app.models import ClassSession, Section
 
 # from school_app.session import get_current_session_object
 
@@ -37,4 +37,4 @@ def get_class_section_student_profile_list(data, user):
         if len(tempClass['sectionList']) > 0:
             class_section_student_profile_list.append(tempClass)
 
-    return class_section_student_profile_list
+    return class_section_student_profile_list'''

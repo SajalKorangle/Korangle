@@ -1,4 +1,5 @@
-from parent_test import ParentTestCase
+
+'''from parent_test import ParentTestCase
 
 from django.contrib.auth.models import User
 
@@ -77,24 +78,10 @@ class ViewAllTestCase(ParentTestCase):
                         self.assertEqual(student_data['className'],student_object.get_class_id(session_object))
                         self.assertEqual(student_data['classDbId'],student_object.get_class_name(session_object))
 
-                        '''feesDue = student_object.totalFees
-                        for studentFeeEntry in student_object.fee_set.all().order_by('-generationDateTime'):
-                            lateFeeAmount = 0
-                            lateFee = SubFee.objects.filter(parentFee=studentFeeEntry, particular='LateFee')
-                            if lateFee:
-                                lateFeeAmount = lateFee[0].amount
-
-                            feesDue -= studentFeeEntry.amount
-                            feesDue += lateFeeAmount
-                        for studentConcessionEntry in student_object.concession_set.all():
-                            feesDue -= studentConcessionEntry.amount
-
-                        self.assertEqual(student_data['feesDue'], feesDue)'''
-
                         student_count += 1
 
             school_object = user_object.school_set.all()[0]
 
             self.assertEqual(student_count, StudentSection.objects.filter(parentStudent__parentSchool=school_object,
-                                                                          parentSection__parentClassSession__parentSession=session_object).count())
+                                                                          parentSection__parentClassSession__parentSession=session_object).count())'''
 

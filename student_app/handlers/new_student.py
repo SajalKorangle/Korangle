@@ -5,10 +5,12 @@ from student_app.handlers.common import populate_student_field
 
 from student_app.models import StudentSection
 
+from school_app.model.models import School
+
 from fee_second_app.business.initialize_student_fees import initialize_student_fees
 
 
-def create_new_student(data, user):
+def create_new_student(data):
 
     student_object = Student()
 
@@ -16,7 +18,7 @@ def create_new_student(data, user):
         if key != 'sectionDbId':
             populate_student_field(student_object, key, data[key])
 
-    student_object.parentSchool = user.school_set.all()[0]
+    student_object.parentSchool = School.objects.get(id=data['schoolDbId'])
 
     student_object.save()
 

@@ -20,12 +20,12 @@ def get_success_response(data):
 ################ Update Profile ##################
 from .handlers.update_profile import get_class_section_student_list
 @api_view(['GET'])
-def get_class_section_student_list_view(request, session_id):
+def get_class_section_student_list_view(request, school_id, session_id):
     if request.user.is_authenticated:
-        # data = json.loads(request.body.decode('utf-8'))
         data = {}
+        data['schoolDbId'] = school_id
         data['sessionDbId'] = session_id
-        return JsonResponse({'response': get_success_response(get_class_section_student_list(data, request.user))})
+        return JsonResponse({'response': get_success_response(get_class_section_student_list(data))})
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
@@ -57,7 +57,7 @@ def delete_student_view(request):
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 ############### View All #########################
-from .handlers.view_all import get_class_section_student_profile_list
+'''from .handlers.view_all import get_class_section_student_profile_list
 @api_view(['GET'])
 def get_student_profile_list_and_class_section_list_view(request, session_id):
     if request.user.is_authenticated:
@@ -65,7 +65,7 @@ def get_student_profile_list_and_class_section_list_view(request, session_id):
         data['sessionDbId'] = session_id
         return JsonResponse({'response': get_success_response(get_class_section_student_profile_list(data, request.user))})
     else:
-        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 ############### New Student ######################
 from .handlers.new_student import create_new_student
@@ -73,7 +73,7 @@ from .handlers.new_student import create_new_student
 def create_new_student_view(request):
     if request.user.is_authenticated:
         data = json.loads(request.body.decode('utf-8'))
-        return JsonResponse({'response': get_success_response(create_new_student(data,request.user))})
+        return JsonResponse({'response': get_success_response(create_new_student(data))})
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
@@ -89,6 +89,21 @@ def promote_student_list_view(request):
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
+
+############## Student Full Profile ##############
+from .business.student_full_profile import get_student_full_profile_by_school_and_session_id
+
+
+class StudentFullProfileView(APIView):
+
+    def get(self, request, school_id):
+        if request.user.is_authenticated:
+            data = {}
+            data['schoolDbId'] = school_id
+            data['sessionDbId'] = request.GET['session_id']
+            return JsonResponse({'response': get_success_response(get_student_full_profile_by_school_and_session_id(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
 ############## Student Mini Profile ##############

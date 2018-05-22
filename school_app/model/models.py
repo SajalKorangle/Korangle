@@ -26,7 +26,7 @@ def get_user():
 
 class School(models.Model):
 
-    user = models.ManyToManyField(User)
+    # user = models.ManyToManyField(User)
     name = models.TextField(null=True)
     printName = models.TextField(null=True)
     logo = CustomImageField(use_key=True, upload_to='tmp')
