@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
 
-import { Marksheet } from '../../classes/marksheet';
+import { ChangeDetectorRef } from '@angular/core';
 
 import { EmitterService } from '../../services/emitter.service';
 
@@ -9,6 +9,7 @@ import { EmitterService } from '../../services/emitter.service';
     templateUrl: './print-marksheet.component.html',
     styleUrls: ['./print-marksheet.component.css'],
 })
+
 export class PrintMarksheetComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     @Input() user;
@@ -18,6 +19,8 @@ export class PrintMarksheetComponent implements OnInit, OnDestroy, AfterViewChec
     viewChecked = true;
 
     printMarksheetComponentSubscription: any;
+
+    constructor(private cdRef:ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.printMarksheetComponentSubscription = EmitterService.get('print-marksheet-component').subscribe( value => {
@@ -36,6 +39,7 @@ export class PrintMarksheetComponent implements OnInit, OnDestroy, AfterViewChec
             this.viewChecked = true;
             window.print();
             this.marksheet = null;
+            this.cdRef.detectChanges();
         }
     }
 

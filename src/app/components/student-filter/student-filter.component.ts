@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 import { StudentExtended } from './student';
 
-import { StudentService } from '../../students/student.service';
+import { StudentService } from '../../modules/students/student.service';
 
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
@@ -37,7 +37,8 @@ export class StudentFilterComponent implements OnInit {
         this.selectedStudent = new StudentExtended();
         this.isLoading = true;
         const data = {
-            sessionDbId: this.user.schoolCurrentSessionDbId,
+            sessionDbId: this.user.activeSchool.currentSessionDbId,
+            schoolDbId: this.user.activeSchool.dbId,
         };
         this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {

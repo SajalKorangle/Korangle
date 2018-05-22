@@ -21,18 +21,9 @@ export class LoginComponent {
     constructor(private authenticationService: AuthenticationService) {}
 
     login() {
-        // alert('login called');
-        /*if (!this.authenticationService.loginUserDetails(this.username, this.password)) {
-        // if (!this.authenticationService.login(this.username, this.password)) {
-            this.errorMsg = 'Failed to login';
-        }
-        else {
-            // router to redirect
-            this.router.navigate(['/students']);
-        }*/
         this.authenticationService.loginUserDetails(this.username, this.password).then( data => {
             if (data.username === 'invalidUsername') {
-                alert('Login failed');
+                alert('Login failed: Invalid username or password');
             } else {
                 localStorage.setItem('schoolJWT', data.token);
                 this.user.jwt = data.token;

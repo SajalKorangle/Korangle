@@ -1,11 +1,11 @@
 <div class="container-fluid" style="height: 100vh;" *ngIf="feeReceipt">
 
-    <img src="http://localhost:4200/assets/img/brightstar_akodia_english.jpg"
+    <img src="{{user.activeSchool.logo}}"
          style="border-radius: 2px; position: absolute;
          top: 28px; left: 14px;
          width: 56px; height: 56px;"/>
 
-    <img src="http://localhost:4200/assets/img/brightstar_akodia_english.jpg"
+    <img src="{{user.activeSchool.logo}}"
          style="border-radius: 2px; position: absolute;
          top: 260px; left: 95px;
          width: 310px; height: 310px;
@@ -16,10 +16,10 @@
     <!-- Reg. No. , Dise Code -->
     <div class="row " style="margin-top: 0px;">
         <div class="col-xs-6 d-flex custom-padding">
-            Reg. No. : {{user.schoolRegistrationNumber}}
+            Reg. No. : {{user.activeSchool.registrationNumber}}
         </div>
         <div class="col-xs-6 d-flex custom-padding" align="end">
-            Dise code : {{user.schoolDiseCode}}
+            Dise code : {{user.activeSchool.diseCode}}
         </div>
     </div>
 
@@ -27,7 +27,7 @@
     <div class="row " style="margin-top: 8px;">
         <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px;">
             <span style="background-color: yellow; font-size: 24px">
-                {{user.schoolPrintName}}
+                {{user.activeSchool.printName}}
             </span>
         </div>
     </div>
@@ -35,7 +35,7 @@
     <!-- Address -->
     <div class="row " style="margin-top: 0px;">
         <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px; font-size: 10px;">
-            {{user.schoolAddress}}
+            {{user.activeSchool.address}}
         </div>
     </div>
 

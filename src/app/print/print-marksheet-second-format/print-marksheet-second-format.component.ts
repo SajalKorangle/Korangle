@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
 
+import { ChangeDetectorRef } from '@angular/core';
+
 import { EmitterService } from '../../services/emitter.service';
 
 @Component({
@@ -16,6 +18,8 @@ export class PrintMarksheetSecondFormatComponent implements OnInit, OnDestroy, A
     viewChecked = true;
 
     printMarksheetSecondFormatComponentSubscription: any;
+
+    constructor(private cdRef:ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.printMarksheetSecondFormatComponentSubscription = EmitterService.get('print-marksheet-second-format-component').subscribe( value => {
@@ -34,6 +38,7 @@ export class PrintMarksheetSecondFormatComponent implements OnInit, OnDestroy, A
             this.viewChecked = true;
             window.print();
             this.marksheet = null;
+            this.cdRef.detectChanges();
         }
     }
 

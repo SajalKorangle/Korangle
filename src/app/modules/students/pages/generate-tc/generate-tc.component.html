@@ -1,0 +1,152 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isStudentListLoading">
+        Class:
+        <select [ngModel]="selectedClass"
+                (ngModelChange)="selectedClass=$event;changeSelectedSectionToFirst();"
+                style="margin-right: 15px">
+            <option *ngFor="let class of classSectionStudentList;" [ngValue]="class">
+                {{class.name}}
+            </option>
+        </select>
+
+        <span *ngIf='selectedClass' [class.hidden]="selectedClass.sectionList.length == 1">
+            Section:
+            <select [ngModel]="selectedSection"
+                    (ngModelChange)="selectedSection=$event;changeSelectedStudentToFirst();"
+                    style="margin-right: 15px">
+                        <option *ngFor="let section of selectedClass.sectionList" [ngValue]="section">
+                            {{section.name}}
+                        </option>
+                    </select>
+        </span>
+
+        <span *ngIf="selectedSection">
+            Student:
+            <select [ngModel]="selectedStudent"
+                    (ngModelChange)="selectedStudent=$event;currentStudent.copy(selectedStudent)"
+                    style="margin-right: 15px">
+                        <option *ngFor="let student of selectedSection.studentList" [ngValue]="student">
+                            {{student.name}}
+                        </option>
+                    </select>
+        </span>
+
+        <button type="button"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="padding: 3px 8px;"
+                [disabled]="!selectedStudent"
+                (click)="getStudentProfile();">Get
+        </button>
+
+        <!-- span *ngIf="selectedSection" style="float: right; margin-top: 10px;"><i>{{selectedSection.studentList.length}} students</i></span -->
+
+        <span style="float: right; margin-top: 10px;" *ngIf="selectedSession">
+              <select [ngModel]="selectedSession"
+                      (ngModelChange)="selectedSession=$event;handleSessionChange();"
+                      style="margin-right: 15px">
+                  <option *ngFor="let session of sessionList;" [ngValue]="session">
+                      {{session.name}}
+                  </option>
+              </select>
+          </span>
+    </ng-container>
+
+    <div class="row">
+        <div class="col-md-12"
+             style="border-bottom: 1px solid lightgrey;"></div>
+    </div>
+
+
+    <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading && !isStudentListLoading">
+
+
+        <div class="row" style="font-weight: 800;">
+            <div class="col-md-3">
+                {{selectedStudent.name}}
+            </div>
+            <div class="col-md-3">
+                {{selectedStudent.fathersName}}
+            </div>
+            <div class="col-md-3">
+                {{selectedStudent.scholarNumber}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Certificate No.</div>
+            <div class="col-md-3"><input type="number" [(ngModel)]="currentStudent.certificateNumber"/></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Issue Date</div>
+            <div class="col-md-3"><input type="date" [(ngModel)]="currentStudent.issueDate" /></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Admission Date</div>
+            <div class="col-md-3"><input type="date" [(ngModel)]="currentStudent.admissionDate" /></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Leaving Date</div>
+            <div class="col-md-3"><input type="date" [(ngModel)]="currentStudent.leavingDate" /></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">is leaving school because</div>
+            <div class="col-md-6"><input type="text" [(ngModel)]="currentStudent.leavingReason" /></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Admission Class</div>
+            <div class="col-md-3"><input type="text" [(ngModel)]="currentStudent.admissionClass" /></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Last Class Passed</div>
+            <div class="col-md-3"><input type="text" [(ngModel)]="currentStudent.lastClassPassed" /></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <mat-checkbox [(ngModel)]="currentStudent.leavingMidSession">
+                    Student is leaving mid session.
+                </mat-checkbox>
+            </div>
+        </div>
+
+        <ng-container *ngIf="currentStudent.leavingMidSession">
+            <div class="row">
+                <div class="col-md-3">Last Class Attended</div>
+                <div class="col-md-3"><input type="text" [(ngModel)]="currentStudent.lastClassAttended" /></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">Attendance (in last class)</div>
+                <div class="col-md-3"><input type="number" [(ngModel)]="currentStudent.lastClassAttendance" /></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">Total working Days (till attendance)</div>
+                <div class="col-md-3"><input type="number" [(ngModel)]="currentStudent.attendanceOutOf" /></div>
+            </div>
+        </ng-container>
+
+        <button type="button"
+                (click)="printTCSecondFormat();"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Print T. C.</button>
+
+        <div class="clearfix"></div>
+
+    </ng-container>
+
+    <ng-container *ngIf="selectedClass && !selectedStudent && !isStudentListLoading">
+        <br/>No Students in this class
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading || isStudentListLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

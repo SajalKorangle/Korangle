@@ -1,101 +1,80 @@
 <div class="logo">
-    <a href="" class="simple-text" disabled="true">
-        <div class="logo-img">
-            <img src="/assets/img/angular2-logo-red.png" style="border-radius: 2px;"/>
+    <span style="margin-left: 10px;">Hi {{user.username}}!</span>
+    <a style="float: right; cursor: pointer;"
+       *ngIf="!user.activeModule"
+       (click)="logout()">Logout</a>
+    <br/>
+    <a class="simple-text" disabled="true" *ngIf="user.schoolList.length > 0">
+        <div class="logo-img" *ngIf="user.activeSchool">
+            <img src="{{user.activeSchool.logo}}" style="border-radius: 2px;"/>
         </div>
-        {{user.schoolName}}<br/>
-        <span style="margin-left: 60px;">
-            <span *ngIf="user.schoolCurrentSessionDbId==1">2017-18</span>
-            <span *ngIf="user.schoolCurrentSessionDbId==2">2018-19</span>
+
+        <ng-container *ngIf="user.schoolList.length>1">
+            <select [(ngModel)]="user.activeSchool"
+                    (ngModelChange)="handleSchoolChange()"
+                    style="padding: 0px; border: none; background-color: transparent;">
+                <option *ngFor="let school of user.schoolList;"
+                        [ngValue]="school">
+                    {{school.name}}
+                </option>
+            </select>
+        </ng-container>
+
+        <ng-container *ngIf="user.schoolList.length===1">
+            {{user.activeSchool.name}}
+        </ng-container>
+
+        <br/>
+
+        <span [class.sessionMargin68]="user.schoolList.length>1"
+              [class.sessionMargin60]="user.schoolList.length==1">
+            <span *ngIf="user.activeSchool.currentSessionDbId==1">2017-18</span>
+            <span *ngIf="user.activeSchool.currentSessionDbId==2">2018-19</span>
         </span>
+
     </a>
 </div>
+
 <div class="sidebar-wrapper">
 
-    <!-- form class="navbar-form navbar-right" role="search" *ngIf="isMobileMenu()">
-        <div class="form-group form-black is-empty">
-            <input type="text" class="form-control" placeholder="Search">
-            <span class="material-input"></span>
-        </div>
-        <button type="submit" class="btn btn-white btn-round btn-just-icon">
-            <i class="material-icons">search</i><div class="ripple-container"></div>
-        </button>
-    </form>
-
-    <ul class="nav nav-mobile-menu" *ngIf="isMobileMenu()">
-        <li>
-            <a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="material-icons">depositFees</i>
-                <p class="hidden-lg hidden-md">DepositFees</p>
-            </a>
-        </li>
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="material-icons">notifications</i>
-                <span class="notification">5</span>
-                <p class="hidden-lg hidden-md">Notifications</p>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a href="#">Mike John responded to your email</a></li>
-                <li><a href="#">You have 5 new tasks</a></li>
-                <li><a href="#">You're now friend with Andrew</a></li>
-                <li><a href="#">Another Notification</a></li>
-                <li><a href="#">Another One</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
-               <i class="material-icons">person</i>
-               <p class="hidden-lg hidden-md">Profile</p>
-            </a>
-        </li>
-    </ul -->
-
     <div class="nav-container">
-        <ul class="nav">
-            <ng-container *ngFor="let section of user.ROUTES">
-                <ng-container *ngIf="section.path != 'employee'">
-                    <li [class.active]="section.path===user.appSection || section.path===parentPath"
-                        class="{{section.class}}"
-                        style="border-bottom: 0.1px solid lightgrey;">
-                        <a (click)="activate(section);">
-                            <i class="material-icons">{{section.icon}}</i>
-                            <p>
-                                {{section.title}}
-                                <i *ngIf="!section.showSubsection && section.subsection.length > 0" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                                <i *ngIf="section.showSubsection && section.subsection.length > 0" class="material-icons" style="float: right;">keyboard_arrow_up</i>
-                            </p>
-                        </a>
-                        <ng-container *ngIf="section.showSubsection">
-                            <div *ngFor="let subsection of section.subsection"
-                                 [attr.data-color]="user.btn_color"
-                                 [class.active]="subsection.path===user.appSection"
-                                 class="subsectionDiv"
-                                 (click)="activateSubsection(subsection,section);">
-                                <!-- i class="material-icons" style="color: transparent;">keyboard_arrow_down</i -->
-                                <i class="material-icons">remove</i>
-                                <p>{{subsection.title}}</p>
-                            </div>
-                        </ng-container>
-                    </li>
-                </ng-container>
-                <ng-container *ngIf="section.path == 'employee'">
-                    <li routerLinkActive="active"
-                        style="border-bottom: 0.1px solid lightgrey;">
-                        <a  [routerLink]="section.path" (click)="activate(section);">
-                            <i class="material-icons">{{section.icon}}</i>
-                            <p>{{section.title}}</p>
-                        </a>
-                    </li>
-                </ng-container>
+
+        <ul class="nav" *ngIf="user.activeModule">
+
+            <ng-container *ngFor="let module of user.activeSchool.moduleList">
+                <li [class.active]="module.dbId === user.activeModule.dbId"
+                    [attr.data-color]='user.activeSchool.primaryThemeColor'
+                    style="border-bottom: 0.1px solid lightgrey;">
+                    <a (click)="module.showTaskList = !module.showTaskList;">
+                        <i class="material-icons">{{module.icon}}</i>
+                        <p>
+                            {{module.title}}
+                            <i *ngIf="!module.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                            <i *ngIf="module.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                        </p>
+                    </a>
+                    <ng-container *ngIf="module.showTaskList">
+                        <div *ngFor="let task of module.taskList"
+                             [attr.data-color]="user.activeSchool.secondaryThemeColor"
+                             [class.active]="task.dbId===user.activeTask.dbId"
+                             class="subsectionDiv"
+                             (click)="activateTask(task, module);">
+                            <i class="material-icons">remove</i>
+                            <p>{{task.title}}</p>
+                        </div>
+                    </ng-container>
+                </li>
             </ng-container>
+
             <li>
                 <a (click)="logout()">
                     <i class="material-icons">exit_to_app</i>
                     <p>Log out</p>
                 </a>
             </li>
+
         </ul>
+
     </div>
 
 </div>

@@ -1,0 +1,205 @@
+<div class="container-fluid"
+     *ngIf="studentTcProfile"
+     style="width: 100%; height: 100%;
+     border: 4px double blue;
+     border-radius: 8px;
+     outline: 1px solid blue;
+     outline-offset: -5px;
+     font-weight: 800 !important">
+
+    <!-- Reg. No. , Dise Code -->
+    <div class="row no-gutters">
+        <div class="col-xs-6 d-flex custom-padding">
+            Dise code : {{user.activeSchool.diseCode}}
+        </div>
+        <div class="col-xs-6 d-flex custom-padding" align="end">
+            Reg. No. : {{user.activeSchool.registrationNumber}}
+        </div>
+    </div>
+
+    <ng-container *ngIf="user.username=='eklavya' || user.username=='champion' || user.username=='madhav'">
+        <img src="{{user.activeSchool.logo}}"
+             style="border-radius: 2px; position: absolute;
+         top: 40px; left: 20px;
+         width: 80px; height: 80px;"/>
+
+        <!-- Background Watermark -->
+        <img src="{{user.activeSchool.logo}}"
+             style="border-radius: 2px; position: absolute;
+         top: 350px; left: 198px;
+         width: 350px; height: 350px;
+         opacity: 0.07;
+         filter: grayscale(100%);
+         z-index: 10;"/>
+
+        <!-- School Name -->
+        <div class="row no-gutters" style="margin-top: 20px;">
+            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <span style="background-color: yellow; font-size: 35px">
+                {{user.activeSchool.printName}}
+            </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="user.username=='brightstar'
+                            || user.username=='brighthindi'
+                            || user.username=='bhagatsingh'
+                            || user.username=='brightstarsalsalai'">
+        <!-- Background Watermark -->
+        <img src="{{user.activeSchool.logo}}"
+             style="border-radius: 2px; position: absolute;
+         top: 460px; left: 198px;
+         width: 350px; height: 350px;
+         opacity: 0.07;
+         filter: grayscale(100%);
+         z-index: 10;"/>
+
+        <!-- School Name -->
+        <svg viewBox="0 0 500 115" style="padding-top: 0px;">
+            <path id="curve" d="M43.2,125c4-6.1,70.5-96.8,193.6-95.6c136.3,1.2,205.8,85.3,220.1,97" />
+            <text>
+                <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle" fill="red">
+                    {{user.activeSchool.printName}}
+                </textPath>
+            </text>
+            <!-- image xlink:href="http://localhost:4200/assets/img/angular2-logo.png"
+                   x="210" y="45" width="80" height="80"/ -->
+        </svg>
+
+        <!-- School Logo -->
+        <img src="{{user.activeSchool.logo}}"
+             style="border-radius: 2px;
+                position: absolute; top: 100px; left: 324px;
+                opacity: 0.8;
+                width: 80px; height: 80px;"/>
+    </ng-container>
+
+    <!-- Address -->
+    <div class="row no-gutters">
+        <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <span   style="font-size: 15px">
+                {{user.activeSchool.address}}<br/>
+                (Regd. and Recognised by M.P. Govt.)
+            </span>
+        </div>
+    </div>
+
+    <!-- School Transfer Certificate -->
+    <div class="row no-gutters" style="margin-top: 70px;">
+        <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <span style="font-size: 30px;"><u>TRANSFER CERTIFICATE</u></span><br/>
+        </div>
+    </div>
+
+    <div class="row no-gutters">
+        <div class="col-xs-12" style="height: 45px;"></div>
+    </div>
+
+    <!-- Certificate No. , Date -->
+    <div class="row no-gutters">
+        <div class="col-xs-6 d-flex justify-content-start custom-padding fontHandle">
+            Certificate No. : {{studentTcProfile.certificateNumber}}
+        </div>
+        <div class="col-xs-6 d-flex justify-content-end custom-padding fontHandle" align="right">
+            Date : {{studentTcProfile.issueDate | date: 'dd/MM/yyyy'}}
+        </div>
+    </div>
+
+    <div class="row no-gutters">
+        <div class="col-xs-12" style="height: 45px;"></div>
+    </div>
+
+    <div class="row no-gutters" style="font-weight: normal !important; font-size: 16px;">
+        <div class="col-xs-12">
+
+            This is to certify that <i><b>
+            <span *ngIf="studentTcProfile.gender=='Male'">Master</span>
+            <span *ngIf="studentTcProfile.gender=='Female'">Miss</span>
+            {{studentTcProfile.name}}</b></i>
+            <span *ngIf="studentTcProfile.gender=='Male'">s/o</span>
+            <span *ngIf="studentTcProfile.gender=='Female'">d/o</span>
+            <i><b>Mr. {{studentTcProfile.fathersName}}</b></i>
+            and <i><b>Mrs. {{studentTcProfile.motherName}}</b></i> residing at
+            <i><b> {{studentTcProfile.address}}</b></i> had taken admission in our school,
+            with scholar no. <i><b>{{studentTcProfile.scholarNumber}}</b></i>,
+            <span *ngIf="!studentTcProfile.leavingMidSession"> in <i><b>{{studentTcProfile.admissionClass}}</b></i>,</span>
+            on <i><b>{{studentTcProfile.admissionDate | date: 'dd/MM/yyyy'}}</b></i>
+            and is leaving school on <i><b>{{studentTcProfile.leavingDate | date: 'dd/MM/yyyy'}}</b></i>
+            <span *ngIf="!studentTcProfile.leavingMidSession"> after passing
+                <i><b>{{studentTcProfile.lastClassPassed}}</b></i> with <i><b>English</b></i> medium,
+            </span>
+            because <i><b>{{studentTcProfile.leavingReason}}</b></i>.<br/><br/>
+
+            <span *ngIf="studentTcProfile.gender=='Male'">His</span>
+            <span *ngIf="studentTcProfile.gender=='Female'">Her</span>
+            date of birth is <i><b>{{studentTcProfile.dateOfBirth | date: 'dd/MM/yyyy'}}</b></i>
+            in words <i><b>{{studentTcProfile.dateOfBirth | dateInWords}}</b></i>.<br/><br/>
+
+            <span *ngIf="studentTcProfile.gender=='Male'">His</span>
+            <span *ngIf="studentTcProfile.gender=='Female'">Her</span>
+            aadhar no. is <i><b>{{studentTcProfile.aadharNum}}</b></i>
+            and sssmid is <i><b>{{studentTcProfile.childSSMID}}</b></i>.<br/><br/>
+
+            <span *ngIf="studentTcProfile.gender=='Male'">His</span>
+            <span *ngIf="studentTcProfile.gender=='Female'">Her</span>
+            nationality is <i><b>Indian</b></i>, mother tongue is <i><b>Hindi</b></i>, belongs to caste
+            <i><b>{{studentTcProfile.caste}}</b></i>,
+            and category is <i><b>{{studentTcProfile.category}}</b></i>.<br/><br/>
+
+            <ng-container *ngIf="studentTcProfile.leavingMidSession">
+                <span *ngIf="studentTcProfile.gender=='Male'">He</span>
+                <span *ngIf="studentTcProfile.gender=='Female'">She</span>
+                had taken admission in <i><b>{{studentTcProfile.admissionClass}}</b></i>. The last class,
+                <span *ngIf="studentTcProfile.gender=='Male'">he</span>
+                <span *ngIf="studentTcProfile.gender=='Female'">she</span>
+                passed, was<i><b>{{studentTcProfile.lastClassPassed}}</b></i>, with <i><b>English</b></i> medium.
+                <ng-container *ngIf="studentTcProfile.lastClassAttendance && studentTcProfile.lastClassAttendance != ''">
+                    <span *ngIf="studentTcProfile.gender=='Male'">His</span>
+                    <span *ngIf="studentTcProfile.gender=='Female'">Her</span>
+                    attendance in last class(<i><b>{{studentTcProfile.lastClassAttended}}</b></i>)
+                    was <i><b>{{studentTcProfile.lastClassAttendance}}</b></i> days out of
+                    <i><b>{{studentTcProfile.attendanceOutOf}}</b></i>.
+                </ng-container>
+                <br/><br/>
+            </ng-container>
+
+            <span *ngIf="studentTcProfile.gender=='Male'">He</span>
+            <span *ngIf="studentTcProfile.gender=='Female'">She</span>
+            has been <i><b>vaccinated and is safe from the agitation small pox</b></i>.<br/><br/>
+
+            <i><b>No Dues</b></i> are pending on
+            <span *ngIf="studentTcProfile.gender=='Male'">him</span>
+            <span *ngIf="studentTcProfile.gender=='Female'">her</span>
+            .<br/><br/>
+
+            <span *ngIf="studentTcProfile.gender=='Male'">His</span>
+            <span *ngIf="studentTcProfile.gender=='Female'">Her</span>
+            general conduct was <i><b>good</b></i> in school.<br/><br/>
+
+        </div>
+    </div>
+
+    <!-- Prepared By , Headmaster/Principal's Signature with Seal -->
+    <!-- div class="row no-gutters"
+         style="margin-top: 100px;">
+        <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-left: 30px">
+            <br/>(Prepared By)
+        </div>
+        <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-right: 40px" align="end">
+            <span style="text-align: center">Headmaster/Principal<br/>(Signature with Seal)</span>
+        </div>
+    </div -->
+    <div class="row no-gutters"
+         style="position: absolute; bottom: 100px; width: 100%;">
+        <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-left: 30px">
+            <br/>(Prepared By)
+        </div>
+        <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-right: 40px" align="end">
+            <span style="text-align: center">Headmaster/Principal<br/>(Signature with Seal)</span>
+        </div>
+    </div>
+
+
+
+</div>

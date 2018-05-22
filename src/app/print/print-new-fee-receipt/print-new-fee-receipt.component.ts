@@ -3,8 +3,8 @@ import { Component, OnInit, Input, OnDestroy, AfterViewChecked } from '@angular/
 // import { TempFee } from '../../fees/classes/temp-fee';
 
 import { EmitterService } from '../../services/emitter.service';
-import {FREQUENCY_LIST} from '../../fees-second/classes/constants';
-import {FeeReceipt} from '../../fees-second/classes/common-functionalities';
+import {FREQUENCY_LIST} from '../../modules/fees-second/classes/constants';
+import {FeeReceipt} from '../../modules/fees-second/classes/common-functionalities';
 
 @Component({
     selector: 'app-print-new-fee-receipt',

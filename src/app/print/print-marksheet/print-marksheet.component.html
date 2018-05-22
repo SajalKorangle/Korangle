@@ -8,34 +8,23 @@
      *ngIf="marksheet">
 
     <!-- Background Watermark -->
-    <img src="{{user.schoolLogo}}"
+    <img src="{{user.activeSchool.logo}}"
          style="border-radius: 2px; position: absolute;
          top: 400px; left: 198px;
          width: 350px; height: 350px;
          opacity: 0.1;
          filter: grayscale(100%);
          z-index: 10;"/>
-    <!-- img src="http://localhost:4200/assets/img/eklavya_logo.png"
-         style="border-radius: 2px; position: absolute;
-         top: 400px; left: 198px;
-         width: 350px; height: 350px;
-         opacity: 0.1;
-         filter: grayscale(100%);
-         z-index: 10;"/ -->
 
-    <img src="{{user.schoolLogo}}"
+    <img src="{{user.activeSchool.logo}}"
          style="border-radius: 2px; position: absolute;
          top: 40px; left: 20px;
          width: 80px; height: 80px;"/>
-    <!-- img src="http://localhost:4200/assets/img/eklavya_logo.png"
-         style="border-radius: 2px; position: absolute;
-         top: 40px; left: 20px;
-         width: 80px; height: 80px;"/ -->
 
     <!-- Reg. No. , Dise Code -->
     <div class="row no-gutters">
         <div class="col-xs-6 d-flex custom-padding">
-            Dise code : {{user.schoolDiseCode}}
+            Dise code : {{user.activeSchool.diseCode}}
         </div>
         <div class="col-xs-6 d-flex custom-padding" align="end">
             Reg. No. : 20172/09
@@ -46,7 +35,7 @@
     <div class="row no-gutters" style="margin-top: 20px;">
         <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
             <span style="font-size: 40px; color: #D32F2F !important;">
-                {{user.schoolPrintName}}
+                {{user.activeSchool.printName}}
             </span>
         </div>
     </div>
@@ -55,7 +44,7 @@
     <div class="row no-gutters">
         <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
             <span   style="font-size: 15px">
-                {{user.schoolAddress}}<br/>
+                {{user.activeSchool.address}}<br/>
                 (Regd. and Recognised by M.P. Govt.)
             </span>
         </div>
@@ -165,10 +154,10 @@
                 <i>{{marksheet.studentProfile.dateOfBirth | date: 'dd/MM/yyyy'}}</i>
             </div>
             <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                 style="font-size: 14px;" *ngIf="user.schoolName == 'EKLAVYA'">
+                 style="font-size: 14px;" *ngIf="user.activeSchool.name == 'EKLAVYA'">
                 Contact No.<span style="float: right">:</span>
             </div>
-            <div  *ngIf="user.schoolName == 'EKLAVYA'"
+            <div  *ngIf="user.activeSchool.name == 'EKLAVYA'"
                   class="col-xs-2 d-flex justify-content-start custom-padding"
                  style="font-size: 14px;">
                 <i>{{marksheet.studentProfile.mobileNumber}}</i>
@@ -176,7 +165,7 @@
         </div>
 
         <!-- Address -->
-        <div class="row no-gutters" *ngIf="user.schoolName == 'EKLAVYA'">
+        <div class="row no-gutters" *ngIf="user.activeSchool.name == 'EKLAVYA'">
             <div class="col-xs-3 d-flex custom-padding"
                  style="font-size: 14px;">
                 Address<span style="float: right">:</span>

@@ -1,54 +1,50 @@
 <div class="wrapper hidePrint">
+
     <div *ngIf="user.isAuthenticated">
-        <!-- div class="sidebar" data-color='red' data-image="" style="position: fixed" -->
-        <div class="sidebar" [attr.data-color]='user.color' data-image="" style="position: fixed">
+
+        <div class="sidebar" data-image="" style="position: fixed">
             <app-sidebar [user]="user"></app-sidebar>
             <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
         </div>
+
         <div class="main-panel">
+
             <app-navbar class="visible-xs"></app-navbar>
-            <!-- app-navbar></app-navbar -->
-            <router-outlet></router-outlet>
-            <!-- ng-container *ngIf="user.appSection==='employee'">
-                <router-outlet></router-outlet>
-            </ng-container -->
 
-            <app-student-profile *ngIf="user.appSection==='student_profile'" [user]="user"></app-student-profile>
-            <app-student-list *ngIf="user.appSection==='student_list'" [user]="user"></app-student-list>
-            <app-generate-tc *ngIf="user.appSection==='generate_tc'" [user]="user"></app-generate-tc>
-            <app-promote-student *ngIf="user.appSection==='promote_student'" [user]="user"></app-promote-student>
+            <div class="main-content">
+                <div class="container-fluid">
 
-            <!-- app-new-fees *ngIf="user.appSection==='new_fees'" [user]="user"></app-new-fees>
-            <app-fees-list *ngIf="user.appSection==='fees_list'" [user]="user"></app-fees-list -->
+                    <div class="card"
+                         *ngIf="user.activeModule"
+                         style="min-height: 100%">
+                        <div class="card-header" [attr.data-background-color]="user.activeSchool.primaryThemeColor">
+                            <h4 class="title hidden-xs">{{user.activeModule.title}} - {{user.activeTask.title}}</h4>
+                            <h4 class="title visible-xs">{{user.activeModule.title}}</h4>
+                        </div>
+                        <router-outlet></router-outlet>
+                    </div>
 
-            <app-collect-fee *ngIf="user.appSection==='collect_fee'" [user]="user"></app-collect-fee>
-            <app-total-collection *ngIf="user.appSection==='total_fee_collection'" [user]="user"></app-total-collection>
-            <app-school-fee-record *ngIf="user.appSection==='school_fee_record'" [user]="user"></app-school-fee-record>
-            <app-update-student-fees *ngIf="user.appSection==='update_student_fees'" [user]="user"></app-update-student-fees>
-            <app-give-discount *ngIf="user.appSection==='give_discount'" [user]="user"></app-give-discount>
-            <app-total-discount *ngIf="user.appSection==='total_discount'" [user]="user"></app-total-discount>
-            <app-set-school-fees *ngIf="user.appSection==='set_school_fees'" [user]="user"></app-set-school-fees>
-            <app-approve-fees *ngIf="user.appSection==='approve_fees'" [user]="user"></app-approve-fees>
+                    <ng-container *ngIf="user.username && !user.activeSchool">
+                        You are not attached to any of the schools yet!
+                    </ng-container>
 
-            <app-new-expense *ngIf="user.appSection==='new_expense'" [user]="user"></app-new-expense>
-            <app-expense-list *ngIf="user.appSection==='expense_list'" [user]="user"></app-expense-list>
+                    <mat-progress-bar *ngIf="user.isLazyLoading"  mode="indeterminate"></mat-progress-bar>
 
-            <!-- app-new-concession *ngIf="user.appSection==='new_concession'" [user]="user"></app-new-concession>
-            <app-concession-list *ngIf="user.appSection==='concession_list'" [user]="user"></app-concession-list -->
+                    <!-- ng-container *ngIf="user.isPageLoading">
+                        <app-loading-spinner [user]="user"></app-loading-spinner>
+                    </ng-container -->
 
-            <app-new-student *ngIf="user.appSection==='new_student'" [user]="user"></app-new-student>
+                </div>
+            </div>
 
-            <app-update-marks *ngIf="user.appSection==='update_marks'" [user]="user"></app-update-marks>
-            <app-marksheet *ngIf="user.appSection==='print_marksheet'" [user]="user"></app-marksheet>
-
-            <app-school-profile *ngIf="user.appSection==='school_profile'" [user]="user"></app-school-profile>
-
-            <!--<div *ngIf="isMaps('maps')"> <app-footer></app-footer> </div>-->
         </div>
+
     </div>
+
     <div *ngIf="!user.isAuthenticated" style="min-height: 100%;">
         <app-login-form [user]="user"></app-login-form>
     </div>
+
 </div>
 <!-- app-new-fee-receipt-modal [user]="user"></app-new-fee-receipt-modal -->
 <div class="wrapper showPrint">

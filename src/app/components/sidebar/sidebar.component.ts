@@ -1,17 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
 
-import { Router } from '@angular/router';
+import {Router, NavigationStart, NavigationEnd, NavigationCancel} from '@angular/router';
 
-import { User } from '../../classes/user';
+import { EmitterService } from '../../services/emitter.service';
+
+import {User} from '../../classes/user';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 declare const $: any;
-declare interface RouteInfo {
-    path: string;
-    title: string;
-    icon: string;
-    class: string;
-}
 
 @Component({
     selector: 'app-sidebar',
@@ -33,51 +29,59 @@ declare interface RouteInfo {
     ],
 
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterViewInit {
 
     @Input() user: User;
 
-    parentPath = '';
+    constructor(private router: Router) {
+    }
 
-  constructor(private router: Router) { }
+    ngOnInit() {
+        EmitterService.get('initialize-router').subscribe(value => {
+            if (this.user.activeModule) {
+                this.router.navigateByUrl(this.user.activeModule.path);
+            }
+        })
+    }
 
-  ngOnInit() {
-      this.router.navigateByUrl('/');
-  }
-  isMobileMenu() {
-      if ($(window).width() > 991) {
-          return false;
-      }
-      return true;
-  };
+    ngAfterViewInit() {
+        this.router.events
+            .subscribe((event) => {
+                if(event instanceof NavigationStart) {
+                    this.user.isLazyLoading = true;
+                }
+                else if (
+                    event instanceof NavigationEnd ||
+                    event instanceof NavigationCancel
+                ) {
+                    this.user.isLazyLoading = false;
+                }
+            });
+    }
 
-  activate(section: any) {
-      // console.log(code);
-      if (section.path === 'employee') {
-          this.user.appSection = section.path;
-          this.parentPath = section.path;
-          return;
-      } else {
-          this.router.navigateByUrl('/');
-      }
-      if ( section.subsection.length === 0 ) {
-          this.user.appSection = section.path;
-          this.parentPath = section.path;
-      } else {
-          section.showSubsection = !section.showSubsection;
-      }
-  }
+    isMobileMenu() {
+        if ($(window).width() > 991) {
+            return false;
+        }
+        return true;
+    };
 
-  activateSubsection(subsection: any, section: any) {
-      // console.log(subsection);
-      this.user.appSection = subsection.path;
-      this.parentPath = section.path;
-  }
+    activateTask(task: any, module: any) {
+        this.user.activateTask(task, module);
+        this.router.navigateByUrl(module.path);
+    }
 
-  logout() {
-      localStorage.setItem('schoolJWT', '');
-      this.user.jwt = '';
-      this.user.isAuthenticated = false;
-      // alert('log out called');
-  }
+    handleSchoolChange(): void {
+        this.router.navigateByUrl('');
+        setTimeout(()=>{
+            this.user.initializeTask();
+        });
+    }
+
+    logout() {
+        localStorage.setItem('schoolJWT', '');
+        this.user.isAuthenticated = false;
+        this.user.jwt = '';
+        this.user.emptyUserDetails();
+    }
 }

@@ -1,0 +1,61 @@
+<div class="card-content">
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group form-black label-floating">
+                <label class="control-label">Start Date</label>
+                <input type="date" class="form-control" [(ngModel)]="startDate">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-black label-floating">
+                <label class="control-label">End Date</label>
+                <input type="date" class="form-control" [(ngModel)]="endDate">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <button type="button"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px"
+                    matTooltip="Get all the receipts b/w start and end date"
+                    tooltip-position="right"
+                    (click)="getSchoolFeeReceiptList();">
+                <!-- u>Get</u --><i class="material-icons">search</i></button><br>
+        </div>
+        <!-- div class="col-md-3" align="right">
+            <button type="button"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px; margin-right: 17px;"
+                    matTooltip="Print the following list"
+                    tooltip-position="left"
+                    (click)="printFeeRecords();">
+                Print<i class="material-icons" style="margin-left: 15px;">print</i></button><br>
+        </div -->
+    </div>
+
+    <ng-container *ngIf="!isLoading && feeReceiptList">
+        <ng-container *ngIf="feeReceiptList.length>0">
+            <div class="row">
+                <div class="col-md-12">
+                    Total Fees: {{getSchoolFeeTotalAmount() | currency:'INR':true:'1.1-1'}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <app-fee-receipt-list [user]="user"
+                                          [feeReceiptList]="feeReceiptList"
+                                          [whileSubmittingFee]="false"></app-fee-receipt-list>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="feeReceiptList.length==0">
+            No Fees submitted b/w {{startDate | date: 'dd - MMM - yyyy'}} to {{endDate | date: 'dd - MMM - yyyy'}}
+        </ng-container>
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

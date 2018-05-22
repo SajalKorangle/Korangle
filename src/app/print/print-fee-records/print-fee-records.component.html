@@ -1,7 +1,7 @@
-<div class="container-fluid" style="width: 100%">
+<div *ngIf='user.activeSchool' class="container-fluid" style="width: 100%">
     <div class="row">
         <div class="col-xs-12" align="center">
-            <h4><u>{{user.schoolPrintName}}</u></h4>
+            <h4><u>{{user.activeSchool.printName}}</u></h4>
         </div>
     </div>
     <div class="row">

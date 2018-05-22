@@ -1,0 +1,22 @@
+<table class="table table-hover">
+    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+        <tr>
+            <th class="text-left">S No.</th>
+            <th class="text-center" *ngIf="!whileSubmittingConcession">Name</th>
+            <th class="text-center" *ngIf="!whileSubmittingConcession">Scholar No.</th>
+            <th class="text-right">Amount</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Remark</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let concession of concessionList; let i=index;">
+            <td align="left">{{i+1}}</td>
+            <td align="center" *ngIf="!whileSubmittingConcession">{{concession.studentName}}</td>
+            <td align="center" *ngIf="!whileSubmittingConcession">{{concession.studentScholarNumber}}</td>
+            <td style="padding-right: 15px;" align="right">{{getConcessionTotalAmount(concession)}}</td>
+            <td align="center">{{concession.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
+            <td align="center">{{concession.remark}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -34,6 +34,8 @@ export class Student {
 
     admissionSessionDbId: number;
 
+    schoolDbId: number;
+
     copy(student: any) {
 
         this.name = student.name;

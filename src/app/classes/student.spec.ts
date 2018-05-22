@@ -43,8 +43,6 @@ describe( 'copy' , () => {
         expect(tempStudent.dateOfBirth).toBe(student.dateOfBirth);
         expect(tempStudent.rollNumber).toBe(student.rollNumber);
         expect(tempStudent.scholarNumber).toBe(student.scholarNumber);
-        expect(tempStudent.totalFees).toBe(student.totalFees);
-        expect(tempStudent.feesDue).toBe(student.feesDue);
         expect(tempStudent.sectionDbId).toBe(student.sectionDbId);
         expect(tempStudent.remark).toBe(student.remark);
         expect(tempStudent.motherName).toBe(student.motherName);
