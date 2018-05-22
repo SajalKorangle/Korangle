@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewChecked } from '@angular/core';
 
-// import { TempFee } from '../../fees/classes/temp-fee';
+import { ChangeDetectorRef } from '@angular/core';
 
 import { EmitterService } from '../../services/emitter.service';
 import {FREQUENCY_LIST} from '../../modules/fees-second/classes/constants';
@@ -21,6 +21,8 @@ export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy, AfterView
 
     checkView = false;
 
+    constructor(private cdRef: ChangeDetectorRef) {}
+
     ngOnInit(): void {
         // this.feeReceipt = new TempFee();
         this.printNewFeeReceiptComponentSubscription = EmitterService.get('print-new-fee-receipt-component').subscribe( value => {
@@ -33,9 +35,9 @@ export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy, AfterView
     ngAfterViewChecked(): void {
         if(this.checkView) {
             this.checkView = false;
-            setTimeout(() => {
-                window.print();
-            });
+            window.print();
+            this.feeReceipt = null;
+            this.cdRef.detectChanges();
         }
     }
 

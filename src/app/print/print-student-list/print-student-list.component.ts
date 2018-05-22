@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 
+import { ChangeDetectorRef } from '@angular/core';
 
 import { EmitterService } from '../../services/emitter.service';
 import {viewClassName} from "@angular/compiler";
@@ -11,17 +12,19 @@ import {viewClassName} from "@angular/compiler";
 })
 export class PrintStudentListComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    // studentList: any;
-    classSectionStudentList: any;
+    studentList: any;
+    // classSectionStudentList: any;
     columnFilter: any;
 
     viewChecked = true;
 
     printStudentListComponentSubscription: any;
 
+    constructor(private cdRef: ChangeDetectorRef) { }
+
     ngOnInit(): void {
         this.printStudentListComponentSubscription = EmitterService.get('print-student-list-component').subscribe( value => {
-            this.classSectionStudentList = value['classSectionStudentList'];
+            this.studentList = value['studentList'];
             this.columnFilter = value['columnFilter'];
             this.viewChecked = false;
         });
@@ -31,6 +34,9 @@ export class PrintStudentListComponent implements OnInit, OnDestroy, AfterViewCh
         if (this.viewChecked === false) {
             this.viewChecked = true;
             window.print();
+            this.studentList = null;
+            this.columnFilter = null;
+            this.cdRef.detectChanges();
         }
     }
 

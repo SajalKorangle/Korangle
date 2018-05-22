@@ -134,12 +134,12 @@ export class ViewAllComponent implements OnInit {
     }
 
     printStudentList(): void {
-        alert('Functionality needs to be implemented once again');
-        /*const value = {
-            classSectionStudentList: this.classSectionStudentList,
+        // alert('Functionality needs to be implemented once again');
+        const value = {
+            studentList: this.studentFullProfileList,
             columnFilter: this.columnFilter
         };
-        EmitterService.get('print-student-list').emit(value);*/
+        EmitterService.get('print-student-list').emit(value);
     };
 
     unselectAllClasses(): void {
