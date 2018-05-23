@@ -52,15 +52,20 @@ export class FeeService extends CommonServiceRequirements {
     }
 
     // Student Fee Profile
+    getStudentFeeProfile(data: any, token: string): Promise<any> {
+        return super.getData(token, '/fee-second/student/'
+            + data['studentDbId'] + '/student-fee-profiles?session_id=' + data['sessionDbId']);
+    }
+
     getStudentFeeProfileList(data: any, token: string): Promise<any> {
         return super.getData(token, '/fee-second/school/'
             + data['schoolDbId'] + '/student-fee-profiles?session_id=' + data['sessionDbId']);
     }
 
     // Student Fee Status
-    getStudentFeeStatus(data: any, token: string): Promise<any> {
+    /*getStudentFeeStatus(data: any, token: string): Promise<any> {
         return super.getData(token, '/fee-second/student/' + data['studentDbId'] + '/fee-status');
-    }
+    }*/
 
     updateStudentFeeStatus(data: any, token: string): Promise<any> {
         return super.postData(data['studentFeeStatus'], token, '/fee-second/student/' + data['studentDbId'] + '/fee-status');

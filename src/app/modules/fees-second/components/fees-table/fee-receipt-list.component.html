@@ -1,7 +1,7 @@
 <table class="table table-hover">
     <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
         <tr>
-            <th *ngIf="whileSubmittingFee">Receipt No.</th>
+            <th>Receipt No.</th>
             <th class="text-center" *ngIf="!whileSubmittingFee">Name</th>
             <th class="text-center" *ngIf="!whileSubmittingFee">Scholar No.</th>
             <th class="text-right">Amount</th>
@@ -12,7 +12,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let feeEntry of feeReceiptList">
-            <td *ngIf="whileSubmittingFee">{{feeEntry.receiptNumber}}</td>
+            <td>{{feeEntry.receiptNumber}}</td>
             <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.studentName}}</td>
             <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.studentScholarNumber}}</td>
             <td style="padding-right: 15px;" align="right">{{getFeeReceiptTotalAmount(feeEntry)}}</td>

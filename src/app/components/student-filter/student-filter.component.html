@@ -10,8 +10,11 @@
                           (optionSelected)="getStudentFeeData($event.option.value)"
                           [displayWith]="displayFn">
             <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
+                {{displayFn(student)}}
+                <!--
                 {{ student.name }}, {{ student.currentClassName }}
                 <span *ngIf="student.currentSectionName && student.currentSectionName != ''">, {{student.currentSectionName}}</span>
+                -->
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>

@@ -48,6 +48,8 @@ export class GiveDiscountComponent {
 
     selectedStudent: any;
 
+    studentFeeProfile: any;
+
     studentFeeStatusList: any;
 
     showDetails: boolean;
@@ -86,10 +88,12 @@ export class GiveDiscountComponent {
     getStudentFeeStatus(data: any): void {
         this.isLoading = true;
         this.studentFeeStatusList = null;
-        this.feeService.getStudentFeeStatus(data, this.user.jwt).then( studentFeeStatusList => {
+        data['sessionDbId'] = this.user.activeSchool.currentSessionDbId;
+        this.feeService.getStudentFeeProfile(data, this.user.jwt).then( studentFeeProfile => {
             this.isLoading = false;
             if (this.selectedStudent.dbId === data['studentDbId']) {
-                this.studentFeeStatusList = studentFeeStatusList;
+                this.studentFeeProfile = studentFeeProfile;
+                this.studentFeeStatusList = studentFeeProfile['sessionFeeStatusList'];
                 this.studentFeeStatusList.forEach(sessionFeeStatus => {
                     sessionFeeStatus.componentList.forEach( component => {
                         component.showDetails = false;

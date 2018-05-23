@@ -94,13 +94,13 @@ export class User {
     brighthindi, hindi123
     eklavya, ashta123
     anupreet, itisjp123
-    sunrise, akodia123
     madhav, lakhan123
     talent, innovative123
-    vidhyamandir, smriti123
     champion, 123champ
-    sardarpatel, patelabc
-    talentshujalpur, talent123
-    ganeshsaraswati, 123ganesh
     bhagatsingh, bhagat123
+    nainish, akodia123
+    devendra, 12345dev
+    praveen, praveen5678
+    prajapati, patipraja1
+    rahul, tailor123
 */

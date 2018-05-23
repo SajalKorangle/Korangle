@@ -2,10 +2,59 @@
 
     <app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter>
 
-    <ng-container *ngIf="studentFeeStatusList && !isLoading">
+    <ng-container *ngIf="studentFeeProfile && studentFeeStatusList && !isLoading">
+
+        <div style="margin-top: 30px"></div>
+
+        <div class="row" style="font-size: 16px;">
+            <div class="col-md-2">
+                Name
+            </div>
+            <div class="col-md-4">
+                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.name}}</span>
+            </div>
+            <div class="col-md-2">
+                Scholar No.
+            </div>
+            <div class="col-md-4">
+                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.scholarNumber}}</span>
+            </div>
+        </div>
+
+        <div class="row" style="font-size: 16px;">
+            <div class="col-md-2">
+                Father's Name
+            </div>
+            <div class="col-md-4">
+                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.fathersName}}</span>
+            </div>
+            <div class="col-md-2">
+                Class Name
+            </div>
+            <div class="col-md-4">
+                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.className}}</span>
+            </div>
+        </div>
+
+        <div class="row" style="font-size: 16px; border-bottom: 1px solid black; padding-bottom: 30px;">
+            <div class="col-md-2" *ngIf="studentFeeProfile.stopName">
+                BusStop
+            </div>
+            <div class="col-md-4" *ngIf="studentFeeProfile.stopName">
+                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.stopName}}</span>
+            </div>
+            <div class="col-md-2" *ngIf="studentFeeProfile.rte">
+                RTE
+            </div>
+            <div class="col-md-4" *ngIf="studentFeeProfile.rte">
+                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.rte}}</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px"></div>
 
         <ng-container *ngIf="getStudentFeesDue()>0">
-            <div class="row hoverHighlight">
+            <div class="row hoverHighlight" style="font-size: 16px;">
                 <div class="col-md-2 col-md-offset-5">
                     Payment
                 </div>
@@ -16,7 +65,7 @@
                     Total
                 </div>
             </div>
-            <div class="row hoverHighlight" style="font-weight: 800 !important;">
+            <div class="row hoverHighlight" style="font-size: 16px; font-weight: 800 !important;">
                 <div class="col-md-5">
                     {{selectedStudent.name}}
                 </div>
@@ -44,7 +93,7 @@
                 <ng-container *ngFor="let sessionFeeStatus of studentFeeStatusList; let i=index;">
                     <ng-container  *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
                         <div class="row hoverHighlight"
-                             style="font-weight: 500 !important;"
+                             style="font-size: 16px; font-weight: 500 !important;"
                              *ngIf="showSessionFeesLine()">
                             <div class="col-md-5">
                                 {{i+1}}. {{sessionFeeStatus.sessionName}}
@@ -67,7 +116,7 @@
                         <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
                             <div class="row hoverHighlight"
                                  *ngIf="getComponentTotalFee(component) != 0"
-                                 style="font-weight: 500 !important;">
+                                 style="font-size: 16px; font-weight: 500 !important;">
                                 <div class="col-md-4 col-md-offset-1">
                                     {{i+1}}. {{component.feeType}}
                                 </div>
@@ -95,7 +144,7 @@
                                 <ng-container *ngFor="let month of component.monthList">
                                     <div class="row hoverHighlight"
                                          *ngIf="getComponentMonthlyTotalFee(month)>0"
-                                         style="font-weight: 300 !important;">
+                                         style="font-size: 16px; font-weight: 300 !important;">
                                         <div class="col-md-3 col-md-offset-2">
                                             {{month.month}}
                                         </div>
