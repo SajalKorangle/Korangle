@@ -24,6 +24,15 @@ def get_student_fee_profile_list_by_school_and_session_id(data):
     return student_fee_profile_list
 
 
+def get_student_fee_profile(data):
+
+    student_section_object = \
+        StudentSection.objects.get(parentStudent_id=data['studentDbId'],
+                                   parentSection__parentClassSession__parentSession_id=data['sessionDbId'])
+
+    return get_student_fee_profile_by_student_section_object(student_section_object)
+
+
 def get_student_fee_profile_by_student_section_object(student_section_object):
 
     student_fee_profile_response = dict()

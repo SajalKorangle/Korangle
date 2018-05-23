@@ -10,7 +10,7 @@ from student_app.models import StudentSection
 
 # Business
 from fee_second_app.business.student_fee_profile import get_student_fee_profile_by_student_section_object, \
-    get_student_fee_profile_list_by_school_and_session_id
+    get_student_fee_profile_list_by_school_and_session_id, get_student_fee_profile
 
 
 class StudentFeeProfileTestCase(ParentTestCase):
@@ -37,6 +37,26 @@ class StudentFeeProfileTestCase(ParentTestCase):
             index += 1
 
     def test_get_student_fee_profile(self):
+
+        school_object = School.objects.get(name='BRIGHT STAR')
+        busStop_object = BusStop.objects.filter(parentSchool=school_object)[0]
+        student_object = StudentFactory(currentBusStop=busStop_object, parentSchool=school_object)
+
+        student_section_object = \
+            StudentSection.objects.get(parentStudent=student_object,
+                                       parentSection__parentClassSession__parentSession__name='Session 2017-18')
+
+        data = {
+            'studentDbId': student_section_object.parentStudent.id,
+            'sessionDbId': student_section_object.parentSection.parentClassSession.parentSession.id,
+        }
+
+        response = get_student_fee_profile(data)
+
+        self.assertEqual(response['dbId'], student_section_object.parentStudent.id)
+        self.assertEqual(response['sectionDbId'], student_section_object.parentSection.id)
+
+    def test_get_student_fee_profile_by_student_section_object(self):
 
         school_object = School.objects.get(name='BRIGHT STAR')
         busStop_object = BusStop.objects.filter(parentSchool=school_object)[0]

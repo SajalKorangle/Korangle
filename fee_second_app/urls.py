@@ -35,10 +35,11 @@ urlpatterns += [
     url(r'^student/(?P<student_id>[0-9]+)/fee-status', StudentFeeStatusView.as_view()),
 ]
 
-######### School Fee Status ###########
-from .views import StudentFeeProfileView
+######### Student Fee Profile ###########
+from .views import StudentFeeProfileListView, StudentFeeProfileView
 urlpatterns += [
-    url(r'^school/(?P<school_id>[0-9]+)/student-fee-profiles', StudentFeeProfileView.as_view()),
+    url(r'^school/(?P<school_id>[0-9]+)/student-fee-profiles', StudentFeeProfileListView.as_view()),
+    url(r'^student/(?P<student_id>[0-9]+)/student-fee-profiles', StudentFeeProfileView.as_view()),
 ]
 
 ######### Fee Receipts ###########
