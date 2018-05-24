@@ -4,27 +4,40 @@
             <!-- div class="card-header" data-background-color="red">
                 <h4 class="title">Student Profile</h4>
             </div -->
-            <div class="card-content" style="padding-top: 20vh">
+            <div class="card-content" style="padding-top: 25vh">
 
                 <div class="row">
-                    <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
-                        <div class="form-group form-black label-floating">
+                    <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"
+                         align="center">
+                        <!-- div class="form-group form-black label-floating">
                             <label class="control-label">Username</label>
                             <input type="text"
                                    class="form-control"
                                    [(ngModel)]="username">
-                        </div>
+                        </div -->
+                        <mat-form-field class="example-full-width">
+                            <input matInput
+                                   type="text"
+                                   placeholder="Username"
+                                   [(ngModel)]="username">
+                        </mat-form-field>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
-                        <div class="form-group form-black label-floating">
+                    <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" align="center">
+                        <!-- div class="form-group form-black label-floating">
                             <label class="control-label">Password</label>
                             <input type="password"
                                    class="form-control"
                                    [(ngModel)]="password">
-                        </div>
+                        </div -->
+                        <mat-form-field class="example-full-width">
+                            <input matInput
+                                   type="password"
+                                   placeholder="Password"
+                                   [(ngModel)]="password">
+                        </mat-form-field>
                     </div>
                 </div>
 
@@ -35,7 +48,35 @@
                 </div>
                 <div class="clearfix"></div>
 
+                <!-- div class="col-sm-6 col-sm-offset-4">
+                    <div class="card card-register">
+                        <h3 class="title">Welcome</h3>
+                        <form class="register-form">
+                            <label>Username</label>
+                            <input type="text" class="form-control" placeholder="Email">
+
+                            <label>Password</label>
+                            <input type="password" class="form-control" placeholder="Password">
+                            <button class="btn btn-success btn-block btn-round">Login</button>
+                        </form>
+                        <div class="forgot">
+                            <a href="#">Forgot password?</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-md-offset-5 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+                        <a href="https://msg91.com/startups/?utm_source=startup-banner">
+                            <img src="https://msg91.com/images/startups/msg91Badge.png"
+                                 width="4" height="3" title="MSG91 - SMS for Startups"
+                                 alt="Bulk SMS - MSG91">
+                        </a>
+                    </div>
+                </div -->
+
             </div>
+
             <ng-container *ngIf="isLoading">
                 <!-- div class="loader-container" align="center">
                     <div class="loader"></div>
