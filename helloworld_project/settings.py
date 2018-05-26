@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'fee_second_app',
     'examination_app',
     'team_app',
+    'employee_app',
+    'enquiry_app',
 
 	'corsheaders',
 

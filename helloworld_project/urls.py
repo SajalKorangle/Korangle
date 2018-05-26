@@ -32,5 +32,7 @@ urlpatterns = [
 	url(r'^'+api_version+'subjects/', include('subject_app.urls')),
 	url(r'^'+api_version+'examinations/', include('examination_app.urls')),
 	url(r'^'+api_version+'team/', include('team_app.urls')),
+	url(r'^'+api_version+'employee/', include('employee_app.urls')),
+    url(r'^'+api_version+'enquiry/', include('enquiry_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -40,7 +40,10 @@ def get_school_data_by_object(school_object, user_object):
     school_data['registrationNumber'] = school_object.registrationNumber
     school_data['moduleList'] = []
 
-    for access_object in Access.objects.filter(parentSchool=school_object).select_related('parentModule'):
+    for access_object in \
+            Access.objects.filter(parentSchool=school_object)\
+                    .order_by('parentModule__orderNumber')\
+                    .select_related('parentModule'):
         tempModule = {}
         tempModule['dbId'] = access_object.parentModule.id
         tempModule['path'] = access_object.parentModule.path
