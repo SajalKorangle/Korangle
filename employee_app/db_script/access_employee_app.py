@@ -1,13 +1,11 @@
 
+from team_app.db_script.populate_app import populate_in_all_schools_and_users
+
 
 def access_employee_app(apps, schema_editor):
 
     Module = apps.get_model('team_app', 'Module')
     Task = apps.get_model('team_app', 'Task')
-    Access = apps.get_model('team_app', 'Access')
-    Permission = apps.get_model('team_app', 'Permission')
-    School = apps.get_model('school_app', 'School')
-    User = apps.get_model('auth', 'User')
 
     module_object = Module(path='employees',
                            title='Employees',
@@ -23,25 +21,9 @@ def access_employee_app(apps, schema_editor):
     task_object_three = Task(path='add_employee', title='Add Employee', orderNumber=3, parentModule=module_object)
     task_object_three.save()
 
-    school_object = School.objects.get(name='B. Salsalai')
+    task_list = []
+    task_list.append(task_object_one)
+    task_list.append(task_object_two)
+    task_list.append(task_object_three)
 
-    access_object = Access(parentModule=module_object,
-                           parentSchool=school_object)
-    access_object.save()
-
-    user_object = User.objects.get(username='nainish')
-
-    permission_object = Permission(parentTask=task_object_one,
-                                   parentSchool=school_object,
-                                   parentUser=user_object)
-    permission_object.save()
-
-    permission_object = Permission(parentTask=task_object_two,
-                                   parentSchool=school_object,
-                                   parentUser=user_object)
-    permission_object.save()
-
-    permission_object = Permission(parentTask=task_object_three,
-                                   parentSchool=school_object,
-                                   parentUser=user_object)
-    permission_object.save()
+    populate_in_all_schools_and_users(module_object, apps, task_list)
