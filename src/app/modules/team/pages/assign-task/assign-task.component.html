@@ -28,7 +28,7 @@
                 <span style="font-weight: 800">{{module.title}}</span><br/>
                 <ng-container *ngFor="let task of module.taskList">
                     <mat-checkbox [(ngModel)]="task.selected"
-                                  [disabled]="user.username === selectedMember.username && task.path === 'give_permission'">
+                                  [disabled]="user.username === selectedMember.username && module.path === 'team'">
                         {{task.title}}<br/>
                     </mat-checkbox><br/>
                 </ng-container>

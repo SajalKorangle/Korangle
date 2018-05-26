@@ -1,0 +1,71 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <!-- Enquirer's Name, Student Name, Class, Mobile Number -->
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="Enquirer's Name"
+                           [(ngModel)]="newEnquiry.enquirerName">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="Student Name"
+                           [(ngModel)]="newEnquiry.studentName">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <mat-select placeholder="Select Class"
+                                [(ngModel)]="newEnquiry.parentClass">
+                        <mat-option *ngFor='let classs of classList;' [value]="classs.dbId">
+                            {{classs.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="number"
+                           placeholder="Mobile Number"
+                           [(ngModel)]="newEnquiry.mobileNumber">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Address, Remark -->
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <textarea matInput
+                              rows="4"
+                              placeholder="Address"
+                              [(ngModel)]="newEnquiry.address"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <textarea matInput
+                              rows="4"
+                              placeholder="Remark"
+                              [(ngModel)]="newEnquiry.remark"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="createEnquiry()">Add Enquiry</button>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

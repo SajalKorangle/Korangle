@@ -57,10 +57,10 @@
           </button>
         </mat-option>
 
-        <!-- mat-option>
+        <mat-option>
           <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation();">Serial No.
           </mat-checkbox>
-        </mat-option -->
+        </mat-option>
         <mat-option>
           <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation();">Name</mat-checkbox>
         </mat-option>
@@ -117,6 +117,7 @@
       <table class="table table-hover">
         <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
         <tr>
+          <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
           <th [class.hidden]="!columnFilter.showName">Name</th>
           <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
           <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
@@ -129,8 +130,9 @@
         </tr>
         </thead>
         <tbody>
-        <ng-container *ngFor="let student of studentFeeProfileList">
+        <ng-container *ngFor="let student of getFilteredStudentFeeProfileList(); let i=index;">
           <tr [class.hidden]="!student.sectionObject.selected">
+            <td [class.hidden]="!columnFilter.showSerialNumber">{{i+1}}.</td>
             <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
             <td [class.hidden]="!columnFilter.showClassName">{{student.className}}</td>
             <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>

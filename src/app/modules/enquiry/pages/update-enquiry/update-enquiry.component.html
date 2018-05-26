@@ -1,0 +1,104 @@
+<div class="card-content">
+
+    <form class="example-form" *ngIf="enquiryList">
+        <mat-form-field class="example-full-width">
+            <input type="text"
+                   placeholder="Type student name here...."
+                   aria-label="Student"
+                   matInput
+                   [formControl]="myControl"
+                   [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete"
+                              (optionSelected)="getEnquiry($event.option.value)"
+                              [displayWith]="displayFn">
+                <mat-option *ngFor="let enquiry of filteredEnquiryList | async" [value]="enquiry">
+                    {{displayFn(enquiry)}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+
+
+    <ng-container *ngIf="selectedEnquiry && !isLoading">
+
+        <div class="row hidden-md hidden-lg hidden-sm">
+            <div class="col-xs-3">
+                <a href="tel:{{selectedEnquiry.mobileNumber}}">Call Me</a>
+            </div>
+        </div>
+
+        <!-- Enquirer's Name, Student Name, Class, Mobile Number -->
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="Enquirer's Name"
+                           (ngModelChange)="currentEnquiry.enquirerName=$event"
+                           [ngModel]="selectedEnquiry.enquirerName">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="Student Name"
+                           (ngModelChange)="currentEnquiry.studentName=$event"
+                           [ngModel]="selectedEnquiry.studentName">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <mat-select placeholder="Select Class"
+                                [ngModel]="getClass(selectedEnquiry.parentClass)"
+                                (ngModelChange)="currentEnquiry.parentClass=$event.dbId;">
+                        <mat-option *ngFor='let classs of classList;' [value]="classs">
+                            {{classs.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="number"
+                           placeholder="Mobile Number"
+                           (ngModelChange)="currentEnquiry.mobileNumber=$event"
+                           [ngModel]="selectedEnquiry.mobileNumber">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Address, Remark -->
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <textarea matInput
+                              rows="4"
+                              placeholder="Address"
+                              (ngModelChange)="currentEnquiry.address=$event"
+                              [ngModel]="selectedEnquiry.address"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <textarea matInput
+                              rows="4"
+                              placeholder="Remark"
+                              (ngModelChange)="currentEnquiry.remark=$event"
+                              [ngModel]="selectedEnquiry.remark"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateEnquiry();">Update</button>
+        <div class="clearfix"></div>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+

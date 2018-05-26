@@ -5,6 +5,7 @@ import {ClassService} from '../../../../services/class.service';
 import {StudentFeeProfile} from '../../classes/student-fee-profile';
 
 class ColumnFilter {
+    showSerialNumber = true;
     showName = true;
     showClassName = true;
     showFathersName = true;
@@ -79,6 +80,16 @@ export class SchoolRecordComponent implements OnInit {
             studentFeeProfile['sectionObject'] = this.getSectionObject(studentFeeProfile.sectionDbId);
             studentFeeProfile['totalFees'] = StudentFeeProfile.getStudentTotalFee(studentFeeProfile);
             studentFeeProfile['feesDue'] = StudentFeeProfile.getStudentFeesDue(studentFeeProfile);
+        });
+    }
+
+    getFilteredStudentFeeProfileList(): any {
+        return this.studentFeeProfileList.filter(student => {
+            if (student.sectionObject.selected) {
+                return true;
+            } else {
+                return false;
+            }
         });
     }
 

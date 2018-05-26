@@ -24,6 +24,14 @@ const routes: Routes = [
         loadChildren: 'app/modules/fees-second/fee.module#FeeModule',
     },
     {
+        path: 'employees',
+        loadChildren: 'app/modules/employee/employee.module#EmployeeModule',
+    },
+    {
+        path: 'enquiries',
+        loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule',
+    },
+    {
         path: 'team',
         loadChildren: 'app/modules/team/team.module#TeamModule',
     },
