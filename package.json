@@ -19,7 +19,7 @@
     "@angular/core": "^5.2.11",
     "@angular/forms": "^5.2.11",
     "@angular/http": "^5.2.11",
-    "@angular/material": "^5.2.4",
+    "@angular/material": "^5.2.5",
     "@angular/platform-browser": "^5.2.11",
     "@angular/platform-browser-dynamic": "^5.2.11",
     "@angular/platform-server": "^5.2.11",
@@ -41,7 +41,7 @@
     "zone.js": "0.8.12"
   },
   "devDependencies": {
-    "@angular/cli": "1.4.2",
+    "@angular/cli": "^1.7.4",
     "@angular/compiler-cli": "^5.2.11",
     "@types/jasmine": "2.5.38",
     "@types/node": "6.0.73",
