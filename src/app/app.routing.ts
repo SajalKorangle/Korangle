@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/fees-second/fee.module#FeeModule',
     },
     {
+        path: 'sms',
+        loadChildren: 'app/modules/sms/sms.module#SmsModule',
+    },
+    {
         path: 'employees',
         loadChildren: 'app/modules/employee/employee.module#EmployeeModule',
     },
