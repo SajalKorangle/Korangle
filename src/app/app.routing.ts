@@ -36,6 +36,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule',
     },
     {
+        path: 'vehicle',
+        loadChildren: 'app/modules/vehicle/vehicle.module#VehicleModule',
+    },
+    {
         path: 'team',
         loadChildren: 'app/modules/team/team.module#TeamModule',
     },
