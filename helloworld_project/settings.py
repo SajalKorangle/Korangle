@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'employee_app',
     'enquiry_app',
     'sms_app',
+    'vehicle_app',
 
 	'corsheaders',
 

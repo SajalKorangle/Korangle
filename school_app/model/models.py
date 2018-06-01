@@ -5,6 +5,7 @@ from school_app.model_custom_field import CustomImageField
 
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class Session(models.Model):
 
     startDate = models.DateField()
@@ -18,11 +19,13 @@ class Session(models.Model):
     class Meta:
         db_table = 'session'
 
+
 def get_user():
     if User.objects.filter(username='brightstar'):
         return User.objects.filter(username='brightstar')[0].id
     else:
         return 1
+
 
 class School(models.Model):
 
@@ -54,6 +57,7 @@ class School(models.Model):
     class Meta:
         db_table = 'school'
 
+
 class SchoolSession(models.Model):
 
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='parentSession')
@@ -66,6 +70,7 @@ class SchoolSession(models.Model):
     class Meta:
         db_table = 'school_session'
         unique_together = ( 'parentSession', 'parentSchool' )
+
 
 class BusStop(models.Model):
 
