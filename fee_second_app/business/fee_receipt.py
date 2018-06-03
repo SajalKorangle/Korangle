@@ -6,8 +6,6 @@ from fee_second_app.business.student_fee_status import get_student_fee_status_li
 
 from student_app.models import Student
 
-from school_app.model.models import School
-
 from django.db import transaction
 
 from django.db.models import Max
@@ -35,6 +33,11 @@ def get_fee_receipt_by_object(fee_receipt_object):
     fee_receipt_response['generationDateTime'] = fee_receipt_object.generationDateTime
     fee_receipt_response['remark'] = fee_receipt_object.remark
     fee_receipt_response['cancelled'] = fee_receipt_object.cancelled
+
+    if fee_receipt_object.parentReceiver is None:
+        fee_receipt_response['parentReceiver'] = None
+    else:
+        fee_receipt_response['parentReceiver'] = fee_receipt_object.parentReceiver.id
 
     fee_receipt_response['subFeeReceiptList'] = []
 
@@ -81,6 +84,23 @@ def get_fee_receipt_list_by_school_id(data):
     return fee_receipt_list_response
 
 
+def get_fee_receipt_list_by_school_user_id(data):
+
+    startDate = data['startDate'] + ' 00:00:00+05:30'
+    endDate = data['endDate'] + ' 23:59:59+05:30'
+
+    fee_receipt_list_response = []
+
+    for fee_receipt_object in FeeReceipt.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
+                                                        parentReceiver_id=data['parentReceiver'],
+                                                        generationDateTime__gte=startDate,
+                                                        generationDateTime__lte=endDate).order_by('-generationDateTime'):
+
+        fee_receipt_list_response.append(get_fee_receipt_by_object(fee_receipt_object))
+
+    return fee_receipt_list_response
+
+
 def get_fee_receipt_list_by_student_id(data):
 
     fee_receipt_list_response = []
@@ -103,8 +123,14 @@ def create_fee_receipt(data):
         last_receipt_number = FeeReceipt.objects.filter(parentStudent__parentSchool=school_object).aggregate(Max('receiptNumber'))['receiptNumber__max']
         if last_receipt_number is not None:
             new_receipt_number = last_receipt_number + 1
-        fee_receipt_object = FeeReceipt(receiptNumber=new_receipt_number, remark=data['remark'], parentStudent=student_object)
+        fee_receipt_object = FeeReceipt(receiptNumber=new_receipt_number,
+                                        remark=data['remark'],
+                                        parentStudent=student_object)
         fee_receipt_object.save()
+
+        if 'parentReceiver' in data:
+            fee_receipt_object.parentReceiver_id = data['parentReceiver']
+            fee_receipt_object.save()
 
     for subFeeReceipt in data['subFeeReceiptList']:
 

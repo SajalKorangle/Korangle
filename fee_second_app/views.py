@@ -188,7 +188,8 @@ class StudentFeeProfileView(APIView):
 
 
 ################# Fee Receipts ################
-from .business.fee_receipt import create_fee_receipt, get_fee_receipt_list_by_student_id, get_fee_receipt_list_by_school_id
+from .business.fee_receipt import create_fee_receipt, get_fee_receipt_list_by_student_id, \
+    get_fee_receipt_list_by_school_id, get_fee_receipt_list_by_school_user_id
 
 
 class StudentFeeReceiptView(APIView):
@@ -223,7 +224,12 @@ class SchoolFeeReceiptView(APIView):
                 data['endDate'] = request.GET['endDate']
             else:
                 data['endDate'] = datetime.date
-            return JsonResponse({'response': get_success_response(get_fee_receipt_list_by_school_id(data))})
+
+            if 'parentReceiver' in request.GET:
+                data['parentReceiver'] = request.GET['parentReceiver']
+                return JsonResponse({'response': get_success_response(get_fee_receipt_list_by_school_user_id(data))})
+            else:
+                return JsonResponse({'response': get_success_response(get_fee_receipt_list_by_school_id(data))})
         else:
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 

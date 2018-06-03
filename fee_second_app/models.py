@@ -12,6 +12,8 @@ from student_app.models import Student, StudentSection
 
 from class_app.models import Class
 
+from django.contrib.auth.models import User
+
 
 class Month(models.Model):
 
@@ -43,6 +45,7 @@ class Month(models.Model):
     )
     name = models.CharField(max_length=10, choices=MONTH, null=False, default=APRIL)
     orderNumber = models.IntegerField()
+
 
 class FeeType(models.Model):
     name = models.TextField(verbose_name='name', unique=True)
@@ -96,6 +99,7 @@ class FeeDefinition(models.Model):
 
         unique_together = ('parentSchool', 'parentSession', 'parentFeeType')
 
+
 class SchoolFeeComponent(models.Model):
     title = models.TextField(verbose_name='title')
     amount = models.IntegerField(null=True, verbose_name='amount')
@@ -106,6 +110,7 @@ class SchoolFeeComponent(models.Model):
         db_table = 'school_fee_component'
 
         unique_together = ('parentFeeDefinition', 'title')
+
 
 class SchoolMonthlyFeeComponent(models.Model):
 
@@ -123,12 +128,14 @@ class SchoolMonthlyFeeComponent(models.Model):
     class Meta:
         db_table = 'school_fee_component_monthly'
 
+
 class ClassBasedFilter(models.Model):
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0)
     parentSchoolFeeComponent = models.ForeignKey(SchoolFeeComponent, on_delete=models.PROTECT, null=False, default=0)
 
     class Meta:
         db_table = 'class_based_filter'
+
 
 class BusStopBasedFilter(models.Model):
     parentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=False, default=0)
@@ -225,6 +232,7 @@ class StudentFeeComponent(models.Model):
 
         unique_together = ('parentStudent', 'parentFeeDefinition')
 
+
 class StudentMonthlyFeeComponent(models.Model):
     amount = models.IntegerField(null=False, default=0, verbose_name='amount')
     parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent,
@@ -293,8 +301,11 @@ class FeeReceipt(models.Model):
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
     parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
 
+    parentReceiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='parentReceiver')
+
     class Meta:
         db_table = 'fee_receipt'
+
 
 class SubFeeReceipt(models.Model):
     parentFeeReceipt = models.ForeignKey(FeeReceipt, models.PROTECT, default=0, verbose_name='parentFeeReceipt')
@@ -304,6 +315,7 @@ class SubFeeReceipt(models.Model):
 
     class Meta:
         db_table = 'sub_fee_receipt'
+
 
 class SubFeeReceiptMonthly(models.Model):
     parentSubFeeReceipt = models.ForeignKey(SubFeeReceipt, models.PROTECT, default=0, verbose_name='parentSubFeeReceipt')
@@ -325,8 +337,11 @@ class ConcessionSecond(models.Model):
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
     parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
 
+    parentReceiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='parentReceiver')
+
     class Meta:
         db_table = 'concession_second'
+
 
 class SubConcession(models.Model):
     parentConcessionSecond = models.ForeignKey(ConcessionSecond, models.PROTECT, default=0, verbose_name='parentConcessionSecond')
@@ -336,6 +351,7 @@ class SubConcession(models.Model):
 
     class Meta:
         db_table = 'sub_concession'
+
 
 class SubConcessionMonthly(models.Model):
     parentSubConcession = models.ForeignKey(SubConcession, models.PROTECT, default=0, verbose_name='parentSubConcession')

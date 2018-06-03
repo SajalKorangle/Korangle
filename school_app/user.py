@@ -53,8 +53,9 @@ def get_school_data_by_object(school_object, user_object):
         for permission_object in \
                 Permission.objects.filter(parentUser=user_object,
                                           parentSchool=school_object,
-                                          parentTask__parentModule=access_object.parentModule) \
-                .select_related('parentTask'):
+                                          parentTask__parentModule=access_object.parentModule)\
+                    .order_by('parentTask__orderNumber') \
+                    .select_related('parentTask'):
             tempTask = {}
             tempTask['dbId'] = permission_object.parentTask.id
             tempTask['path'] = permission_object.parentTask.path
@@ -95,6 +96,7 @@ class AuthenticationHandler():
         if 'token' in response.data:
             user = User.objects.filter(username=username)
             response.data['username'] = user[0].username
+            response.data['id'] = user[0].id
             response.data['email'] = user[0].email
             # response.data['schoolData'] = get_school_data(user[0])
             response.data['schoolList'] = get_school_list(user[0])
@@ -131,6 +133,7 @@ class UserDetailsView(APIView):
         if request.user.is_authenticated:
             userDetails['username'] = request.user.username
             userDetails['email'] = request.user.email
+            userDetails['id'] = request.user.id
             # userDetails['schoolData'] = get_school_data(request.user)
             userDetails['schoolList'] = get_school_list(request.user)
         return Response({"data": userDetails})

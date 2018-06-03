@@ -9,9 +9,6 @@ from school_app.model.models import Session
 
 from class_app.models import ClassSession, Section
 
-from examination_app.models import StudentTestResult
-
-from fee_second_app.models import StudentMonthlyFeeComponent, StudentFeeComponent, FeeReceipt, SubFeeReceipt, ConcessionSecond, SubConcession
 
 def get_class_section_student_list(data):
 
