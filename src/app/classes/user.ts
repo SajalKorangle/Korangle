@@ -5,6 +5,7 @@ import { EmitterService } from '../services/emitter.service';
 
 export class User {
 
+    id: number;
     username: string;
     email: string;
     isAuthenticated = false;
@@ -22,6 +23,7 @@ export class User {
 
     emptyUserDetails(): void {
         this.username = null;
+        this.id = null;
         this.email = null;
         this.isAuthenticated = false;
         this.jwt = '';
@@ -55,6 +57,7 @@ export class User {
 
     initializeUserData(data: any): void {
         console.log(data);
+        this.id = data.id;
         this.username = data.username;
         this.email = data.email;
         this.initializeSchoolList(data.schoolList);

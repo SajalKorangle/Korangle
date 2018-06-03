@@ -1,19 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { FeeService } from '../../fee.service';
-import { TeamService } from '../../../team/team.service';
 
 import { FeeReceipt } from '../../classes/common-functionalities';
 
 import {EmitterService} from '../../../../services/emitter.service';
 
 @Component({
-  selector: 'app-total-collection',
-  templateUrl: './total-collection.component.html',
-  styleUrls: ['./total-collection.component.css'],
-    providers: [FeeService, TeamService]
+  selector: 'my-collection',
+  templateUrl: './my-collection.component.html',
+  styleUrls: ['./my-collection.component.css'],
+    providers: [FeeService]
 })
-export class TotalCollectionComponent implements OnInit {
+export class MyCollectionComponent {
 
     @Input() user;
 
@@ -23,10 +22,6 @@ export class TotalCollectionComponent implements OnInit {
     // feesList = [];
 
     feeReceiptList: any;
-    filteredFeeReceiptList: any;
-
-    selectedMember: any;
-    memberList = [];
 
     isLoading = false;
 
@@ -42,65 +37,29 @@ export class TotalCollectionComponent implements OnInit {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private feeService: FeeService,
-                private teamService: TeamService) { }
-
-    ngOnInit(): void {
-        let data = {
-            schoolDbId: this.user.activeSchool.dbId,
-        };
-        this.teamService.getSchoolMemberList(data, this.user.jwt).then(memberList => {
-            this.memberList = memberList;
-            let member = {
-                username: 'All',
-            };
-            this.memberList.push(member);
-            this.selectedMember = member;
-        });
-    }
+    constructor(private feeService: FeeService) { }
 
     getSchoolFeeReceiptList(): void {
         const data = {
             startDate: this.startDate,
             endDate: this.endDate,
             schoolDbId: this.user.activeSchool.dbId,
+            parentReceiver: this.user.id,
         };
         this.isLoading = true;
         this.feeReceiptList = null;
         this.feeService.getSchoolFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
             this.isLoading = false;
             this.feeReceiptList = feeReceiptList;
-            this.populateFilteredFeeReceiptList();
             console.log(this.feeReceiptList);
         }, error => {
             this.isLoading = false;
         });
     }
 
-    populateFilteredFeeReceiptList(): void {
-
-        if (!this.feeReceiptList) {
-            return;
-        }
-
-        if (!this.selectedMember || this.selectedMember.username === 'All') {
-            this.filteredFeeReceiptList = this.feeReceiptList;
-            return;
-        }
-
-        this.filteredFeeReceiptList = this.feeReceiptList.filter(feeReceipt => {
-            if (feeReceipt.parentReceiver === this.selectedMember.userDbId) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-    }
-
     getSchoolFeeTotalAmount(): number {
         let amount = 0;
-        this.filteredFeeReceiptList.forEach( feeReceipt => {
+        this.feeReceiptList.forEach( feeReceipt => {
             amount += FeeReceipt.getFeeReceiptTotalAmount(feeReceipt);
         });
         return amount;

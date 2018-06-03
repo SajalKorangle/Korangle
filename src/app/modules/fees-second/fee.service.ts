@@ -85,10 +85,14 @@ export class FeeService extends CommonServiceRequirements {
     }
 
     getSchoolFeeReceiptList(data: any, token: string): Promise<any> {
-        return super.getData(token, '/fee-second/school/'
+        let url = '/fee-second/school/'
             + data['schoolDbId']
             + '/fee-receipts?startDate=' + data['startDate']
-            + '&endDate=' + data['endDate']);
+            + '&endDate=' + data['endDate'];
+        if ('parentReceiver' in data) {
+            url += '&parentReceiver=' + data['parentReceiver'];
+        }
+        return super.getData(token, url);
     }
 
     // Concession

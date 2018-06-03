@@ -123,6 +123,7 @@ export class CollectFeeComponent {
         let data = {
             studentDbId: this.selectedStudent.dbId,
             remark: (this.remark)?this.remark:null,
+            parentReceiver: this.user.id,
         };
 
         data['subFeeReceiptList'] = [];

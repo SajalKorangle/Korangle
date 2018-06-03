@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { FeeService } from '../../fee.service';
+import { TeamService } from '../../../team/team.service';
 
 import { Concession } from '../../classes/common-functionalities';
 
@@ -8,9 +9,9 @@ import { Concession } from '../../classes/common-functionalities';
   selector: 'app-total-discount',
   templateUrl: './total-discount.component.html',
   styleUrls: ['./total-discount.component.css'],
-    providers: [FeeService]
+    providers: [FeeService, TeamService]
 })
-export class TotalDiscountComponent {
+export class TotalDiscountComponent implements OnInit {
 
     @Input() user;
 
@@ -18,6 +19,10 @@ export class TotalDiscountComponent {
     endDate = this.todaysDate();
 
     concessionList: any;
+    filteredConcessionList: any;
+
+    selectedMember: any;
+    memberList = [];
 
     isLoading = false;
 
@@ -33,7 +38,22 @@ export class TotalDiscountComponent {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private feeService: FeeService) { }
+    constructor(private feeService: FeeService,
+                private teamService: TeamService) { }
+
+    ngOnInit(): void {
+        let data = {
+            schoolDbId: this.user.activeSchool.dbId,
+        };
+        this.teamService.getSchoolMemberList(data, this.user.jwt).then(memberList => {
+            this.memberList = memberList;
+            let member = {
+                username: 'All',
+            };
+            this.memberList.push(member);
+            this.selectedMember = member;
+        });
+    }
 
     getSchoolConcessionList(): void {
         const data = {
@@ -46,10 +66,32 @@ export class TotalDiscountComponent {
         this.feeService.getSchoolConcessionList(data, this.user.jwt).then(concessionList => {
             this.isLoading = false;
             this.concessionList = concessionList;
+            this.populateFilteredConcessionList();
             console.log(this.concessionList);
         }, error => {
             this.isLoading = false;
         });
+    }
+
+    populateFilteredConcessionList(): void {
+
+        if (!this.concessionList) {
+            return;
+        }
+
+        if (!this.selectedMember || this.selectedMember.username === 'All') {
+            this.filteredConcessionList = this.concessionList;
+            return;
+        }
+
+        this.filteredConcessionList = this.concessionList.filter(concession => {
+            if (concession.parentReceiver === this.selectedMember.userDbId) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
     }
 
     getSchoolConcessionListTotalAmount(): number {

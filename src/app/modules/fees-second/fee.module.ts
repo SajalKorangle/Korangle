@@ -6,6 +6,7 @@ import { FeeComponent } from './fee.component';
 
 import { ApproveFeesComponent } from './pages/approve-fees/approve-fees.component';
 import { CollectFeeComponent } from './pages/collect-fee/collect-fee.component';
+import { MyCollectionComponent } from './pages/my-collection/my-collection.component';
 import { GiveDiscountComponent } from './pages/give-discount/give-discount.component';
 import { SchoolRecordComponent } from './pages/school-record/school-record.component';
 import { SetSchoolFeesComponent } from './pages/set-school-fees/set-school-fees.component';
@@ -29,6 +30,7 @@ import {FeeRoutingModule} from './fee.routing';
 
         ApproveFeesComponent,
         CollectFeeComponent,
+        MyCollectionComponent,
         GiveDiscountComponent,
         SchoolRecordComponent,
         SetSchoolFeesComponent,

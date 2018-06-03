@@ -19,20 +19,8 @@
                     style="padding: 12px 15px"
                     matTooltip="Get all the receipts b/w start and end date"
                     tooltip-position="right"
-                    (click)="getSchoolConcessionList();">
+                    (click)="getSchoolFeeReceiptList();">
                 <!-- u>Get</u --><i class="material-icons">search</i></button><br>
-        </div>
-        <div class="col-md-3"
-             align="right"
-             style="margin-top: 15px;"
-             *ngIf="selectedMember">
-            <select [ngModel]="selectedMember"
-                    (ngModelChange)="selectedMember=$event;populateFilteredConcessionList();"
-                    style="margin-right: 15px">
-                <option *ngFor="let member of memberList;" [ngValue]="member">
-                    {{member.username}}
-                </option>
-            </select>
         </div>
         <!-- div class="col-md-3" align="right">
             <button type="button"
@@ -45,27 +33,24 @@
         </div -->
     </div>
 
-    <ng-container *ngIf="!isLoading && filteredConcessionList">
-        <ng-container *ngIf="filteredConcessionList.length>0">
+    <ng-container *ngIf="!isLoading && feeReceiptList">
+        <ng-container *ngIf="feeReceiptList.length>0">
             <div class="row">
                 <div class="col-md-12">
-                    Total Fees: {{getSchoolConcessionListTotalAmount() | currency:'INR':true:'1.1-1'}}
+                    Total Fees: {{getSchoolFeeTotalAmount() | currency:'INR':true:'1.1-1'}}
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <app-discount-list [user]="user"
-                                       [concessionList]="filteredConcessionList"
-                                       [whileSubmittingConcession]="false"></app-discount-list>
+                    <app-fee-receipt-list [user]="user"
+                                          [feeReceiptList]="feeReceiptList"
+                                          [whileSubmittingFee]="false"></app-fee-receipt-list>
                 </div>
             </div>
         </ng-container>
-        <ng-container *ngIf="filteredConcessionList.length==0">
-            No discount given b/w {{startDate | date: 'dd - MMM - yyyy'}} to {{endDate | date: 'dd - MMM - yyyy'}}
-            <ng-container *ngIf="selectedMember">
-                <span *ngIf="selectedMember.username != 'All'">by {{selectedMember.username}}</span>
-            </ng-container>
+        <ng-container *ngIf="feeReceiptList.length==0">
+            No Fees collected b/w {{startDate | date: 'dd - MMM - yyyy'}} to {{endDate | date: 'dd - MMM - yyyy'}} by me.
         </ng-container>
     </ng-container>
 

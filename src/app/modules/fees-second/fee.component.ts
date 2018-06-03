@@ -3,6 +3,7 @@ import {DataStorage} from '../../classes/data-storage';
 
 @Component({
     template: '<app-collect-fee *ngIf="user.activeTask.path===\'collect_fee\'" [user]="user"></app-collect-fee>' +
+    '<my-collection *ngIf="user.activeTask.path===\'my_collection\'" [user]="user"></my-collection>' +
     '<app-total-collection *ngIf="user.activeTask.path===\'total_collection\'" [user]="user"></app-total-collection>' +
     '<app-school-fee-record *ngIf="user.activeTask.path===\'school_fee_record\'" [user]="user"></app-school-fee-record>' +
     '<app-update-student-fees *ngIf="user.activeTask.path===\'update_student_fees\'" [user]="user"></app-update-student-fees>' +
