@@ -33,3 +33,11 @@ from .views import SendSMSView
 urlpatterns += [
 	url(r'^send-sms', SendSMSView.as_view()),
 ]
+
+
+######## Msg Club Delivery Report ###############
+from .views import MsgClubDeliveryReportView
+
+urlpatterns += [
+	url(r'^msg-club-delivery-report', MsgClubDeliveryReportView.as_view()),
+]

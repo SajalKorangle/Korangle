@@ -5,6 +5,8 @@ from sms_app.business.sms import create_sms
 from sms_app.business.sms_count import get_sms_count
 from school_app.model.models import School
 
+import json
+
 
 def send_sms(data):
 
@@ -23,7 +25,7 @@ def send_sms(data):
         'parentSchool': data['parentSchool'],
     }
 
-    create_sms(sms_data)
+    # create_sms(sms_data)
 
     school_object = School.objects.get(id=data['parentSchool'])
 
@@ -64,6 +66,11 @@ def send_sms(data):
     response = requests.request("GET", url, headers=headers, params=querystring)
 
     print('Response: ' + response.text)
+
+    if 'response' in response.text:
+        sms_data['requestId'] = json.loads(response.text)['response']
+
+    create_sms(sms_data)
 
     f = open('sms_file', 'a+')
     f.write("'{0}'\n'{1}'\n'{2}'\n".format(response.text, data['estimatedCount'], data['message'].encode('utf-8')))

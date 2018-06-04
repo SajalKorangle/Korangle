@@ -47,6 +47,25 @@ class SendSMSView(APIView):
         return send_sms(data)
 
 
+############## Msg Club Delivery Report ##############
+from .business.msg_club_delivery_report import handle_msg_club_delivery_report, get_msg_club_delivery_report_list
+
+
+class MsgClubDeliveryReportView(APIView):
+
+    @user_permission
+    def get(request):
+        data = {
+            'requestId': request.GET['requestId'],
+        }
+        return get_msg_club_delivery_report_list(data)
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return handle_msg_club_delivery_report(data)
+
+
 ############## SMS Purchase ##############
 from .business.sms_purchase import get_sms_purchase_list
 
