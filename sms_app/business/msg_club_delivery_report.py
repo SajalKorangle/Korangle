@@ -23,6 +23,7 @@ def get_msg_club_delivery_report_list(data):
 
 def handle_msg_club_delivery_report(data):
     for status in data:
+        print(status)
         report = {
             'requestId': status['requestId'],
             'mobileNumber': int(status['mobileNumber'][2:]),
@@ -31,6 +32,7 @@ def handle_msg_club_delivery_report(data):
             'deliveredDateTime': status['deliveredDateTime'] + "+05:30",
             'senderId': status['senderId'],
         }
+        print(report)
         create_msg_club_delivery_report(report)
 
 
@@ -39,6 +41,7 @@ def create_msg_club_delivery_report(data):
     msg_club_delivery_report_object = MsgClubDeliveryReportModelSerializer(data=data)
     if msg_club_delivery_report_object.is_valid():
         msg_club_delivery_report_object.save()
+        print('Msg Club Delivery Report recorded successfully')
         return 'Msg Club Delivery Report recorded successfully'
     else:
         print('Msg Club Delivery Report recording failed')

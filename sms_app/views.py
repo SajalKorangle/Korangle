@@ -1,4 +1,5 @@
 from decorators import user_permission
+from rest_framework.decorators import api_view
 
 from rest_framework.views import APIView
 
@@ -60,9 +61,12 @@ class MsgClubDeliveryReportView(APIView):
         }
         return get_msg_club_delivery_report_list(data)
 
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        return handle_msg_club_delivery_report(data)
+@api_view(['POST'])
+def handle_msg_club_delivery_report_view(self, request):
+    print('okay')
+    data = json.loads(request.body.decode('utf-8'))
+    print(data)
+    return handle_msg_club_delivery_report(data)
 
 
 ############## SMS Purchase ##############
