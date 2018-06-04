@@ -141,9 +141,10 @@ class FeeDefinitionTestCase(ParentTestCase):
 
         student_fee_component_queryset = StudentFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object)
 
-        student_queryset = Student.objects.filter(parentSchool=fee_definition_object.parentSchool)
+        student_section_queryset = StudentSection.objects.filter(parentStudent__parentSchool=fee_definition_object.parentSchool,
+                                                                 parentSection__parentClassSession__parentSession=fee_definition_object_initial.parentSession)
 
-        self.assertEqual(student_fee_component_queryset.count(), student_queryset.count())
+        self.assertEqual(student_fee_component_queryset.count(), student_section_queryset.count())
 
         for student_fee_component_object in student_fee_component_queryset:
             student_object = student_fee_component_object.parentStudent
