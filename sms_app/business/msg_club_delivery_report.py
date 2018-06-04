@@ -31,7 +31,23 @@ def handle_msg_club_delivery_report(data):
             'deliveredDateTime': status['deliveredDateTime'] + "+05:30",
             'senderId': status['senderId'],
         }
-        create_msg_club_delivery_report(report)
+        queryset = MsgClubDeliveryReport.objects.filter(requestId=report['requestId'], mobileNumber=report['mobileNumber'])
+        if queryset.count() > 0:
+            report['id'] = queryset[0].id
+            update_msg_club_delivery_report(report)
+        else:
+            create_msg_club_delivery_report(report)
+
+
+def update_msg_club_delivery_report(data):
+
+    object = MsgClubDeliveryReportModelSerializer(MsgClubDeliveryReport.objects.get(id=data['id']),data=data)
+    if object.is_valid():
+        object.save()
+        return 'Msg Club Delivery Report updated successfully'
+    else:
+        print('Msg Club Delivery Report updation failed')
+        return 'Msg Club Delivery Report updation failed'
 
 
 def create_msg_club_delivery_report(data):
@@ -39,7 +55,6 @@ def create_msg_club_delivery_report(data):
     msg_club_delivery_report_object = MsgClubDeliveryReportModelSerializer(data=data)
     if msg_club_delivery_report_object.is_valid():
         msg_club_delivery_report_object.save()
-        print('Msg Club Delivery Report recorded successfully')
         return 'Msg Club Delivery Report recorded successfully'
     else:
         print('Msg Club Delivery Report recording failed')
