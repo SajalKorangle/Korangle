@@ -60,8 +60,7 @@ class MsgClubDeliveryReportView(APIView):
         }
         return get_msg_club_delivery_report_list(data)
 
-    @user_permission
-    def post(request):
+    def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
         return handle_msg_club_delivery_report(data)
 
