@@ -23,7 +23,6 @@ def get_msg_club_delivery_report_list(data):
 
 def handle_msg_club_delivery_report(data):
     for status in data:
-        print(status)
         report = {
             'requestId': status['requestId'],
             'mobileNumber': int(status['mobileNumber'][2:]),
@@ -32,7 +31,6 @@ def handle_msg_club_delivery_report(data):
             'deliveredDateTime': status['deliveredDateTime'] + "+05:30",
             'senderId': status['senderId'],
         }
-        print(report)
         create_msg_club_delivery_report(report)
 
 
