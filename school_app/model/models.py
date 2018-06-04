@@ -39,8 +39,8 @@ class School(models.Model):
     address = models.TextField(null=True)
     diseCode = models.TextField(null=True)
     currentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='currentSession', default=1)
-    
     registrationNumber = models.TextField(null=False, default='426/13.01.1993')
+    smsId = models.CharField(max_length=10, null=False, default='KORNGL', verbose_name='smsId')
 
     def get_upload_to(self, attname):
             return 'school/id/{0}'.format(self.id)

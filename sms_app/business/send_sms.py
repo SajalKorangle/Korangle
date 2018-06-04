@@ -3,6 +3,7 @@ import requests
 
 from sms_app.business.sms import create_sms
 from sms_app.business.sms_count import get_sms_count
+from school_app.model.models import School
 
 
 def send_sms(data):
@@ -24,6 +25,8 @@ def send_sms(data):
 
     create_sms(sms_data)
 
+    school_object = School.objects.get(id=data['parentSchool'])
+
     # Msg Club
 
     url = "http://msg.msgclub.net/rest/services/sendSMS/sendGroupSms"
@@ -31,7 +34,7 @@ def send_sms(data):
     querystring = {
         "AUTH_KEY": "fbe5746e5505757b176a1cf914110c3",
         "message": data['message'],
-        "senderId": "DEMOOS",
+        "senderId": school_object.smsId,
         "routeId": "1",
         "mobileNos": data['mobileNumberList'],
         "smsContentType": data['smsContentType'],
@@ -44,7 +47,7 @@ def send_sms(data):
     querystring = {
         "authkey": "195270AI0dFV3oYHGC5a6b5eb5",
         "message": data['message'],
-        "sender": "KORNGL",
+        "sender": school_object.smsId,
         "route": "4",
         "mobiles": data['mobileNumberList'],
         "country": "91",
