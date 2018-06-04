@@ -203,12 +203,12 @@ export class SendSmsComponent implements OnInit {
         let data = {
             'parentSchool': this.user.activeSchool.dbId,
             'smsContentType': smsContentType,
-            'estimatedCount': this.getSMSCount(),
+            'estimatedCount': this.getSMSCount()*this.getMobileNumberList(),
             'message': this.message,
             'mobileNumberList': mobileNumberList,
         };
 
-        if (!confirm('Please confirm that you are sending ' + this.getSMSCount() + ' SMS.')) {
+        if (!confirm('Please confirm that you are sending ' + (this.getSMSCount()*this.getMobileNumberList()) + ' SMS.')) {
             return;
         }
 
