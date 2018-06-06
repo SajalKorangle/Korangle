@@ -3,6 +3,24 @@ from student_app.models import StudentSection
 
 from fee_second_app.business.initialize_student_fees import initialize_student_fees
 
+from rest_framework import serializers
+
+
+class StudentSectionModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentSection
+        fields = '__all__'
+
+
+def update_student_section(data):
+
+    student_section_object = StudentSectionModelSerializer(StudentSection.objects.get(id=data['id']), data=data)
+    if student_section_object.is_valid():
+        student_section_object.save()
+        return {'status': 'success', 'message': 'Class updated successfully'}
+    else:
+        return {'status': 'failure', 'message': 'Class updation failed'}
+
 
 def create_student_section_list(data):
 

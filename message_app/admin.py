@@ -1,4 +1,4 @@
-from django.contrib import admin
+'''from django.contrib import admin
 
 from .models import Class, Subject, Chapter, Question, SubQuestion, Paper, PaperElement
 
@@ -8,4 +8,4 @@ admin.site.register(Chapter)
 admin.site.register(Question)
 admin.site.register(SubQuestion)
 admin.site.register(Paper)
-admin.site.register(PaperElement)
+admin.site.register(PaperElement)'''

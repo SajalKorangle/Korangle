@@ -1,4 +1,4 @@
-from django.db import models
+"""from django.db import models
 
 # Create your models here.
 
@@ -19,7 +19,6 @@ class Fee(models.Model):
     @property
     def className(self):
         return self.parentStudent.className
-        '''return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))'''
 
     class Meta:
         db_table = 'fee'
@@ -48,8 +47,7 @@ class Concession(models.Model):
     @property
     def className(self):
         return self.parentStudent.className
-        '''return self.parentStudent.get_class_name(get_session_object(self.generationDateTime))'''
 
     class Meta:
-        db_table = 'concession'
+        db_table = 'concession'"""
 

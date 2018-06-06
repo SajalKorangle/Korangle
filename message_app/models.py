@@ -1,4 +1,4 @@
-from django.db import models
+'''from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -81,5 +81,5 @@ class PaperElement(models.Model):
 	elementMarks = models.FloatField(default=0)
 
 	def __str__(self):
-		return self.parentPaper.heading[:10] + " --- " + self.elementType + " --- " + self.elementContent[:30]
+		return self.parentPaper.heading[:10] + " --- " + self.elementType + " --- " + self.elementContent[:30]'''
 

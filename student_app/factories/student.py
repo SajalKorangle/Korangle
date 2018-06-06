@@ -5,17 +5,6 @@ from school_app.model.models import School, BusStop
 from class_app.models import Section
 
 
-class StudentSectionFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'student_app.StudentSection'
-        django_get_or_create=('parentStudent', 'parentSection', 'rollNumber')
-
-    parentSection = Section.objects.get(parentClassSession__parentClass__name='Class - 12',
-                                        name='Section - A',
-                                        parentClassSession__parentSession__name='Session 2017-18')
-    rollNumber = '123'
-
-
 class StudentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'student_app.Student'
@@ -35,4 +24,16 @@ class StudentFactory(factory.django.DjangoModelFactory):
             return
         else:
             StudentSectionFactory(parentStudent=self)
+
+
+class StudentSectionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'student_app.StudentSection'
+        django_get_or_create=('parentStudent', 'parentSection', 'rollNumber')
+
+    parentStudent = factory.SubFactory(StudentFactory)
+    parentSection = Section.objects.get(parentClassSession__parentClass__name='Class - 12',
+                                        name='Section - A',
+                                        parentClassSession__parentSession__name='Session 2017-18')
+    rollNumber = '123'
 

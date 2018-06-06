@@ -17,4 +17,4 @@ install:
   - "pip install zlib || true"
   - "pip install unittest2 || true"
 # command to run tests
-script: "cd tests; /usr/bin/env PYTHONPATH=. py.test"
+script: "cd tests; /usr/bin/env PYTHONPATH=. py.test_student"

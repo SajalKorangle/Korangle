@@ -1,7 +1,7 @@
 #! /usr/bin/env python2
 """
 Put old (good) results in ramdisk/reference,
-then generate new (unknown) test results in ramdisk/tmp_results,
+then generate new (unknown) test_student results in ramdisk/tmp_results,
 THEN SWITCH BACK TO KNOWN GOOD SYSTEM, and finally:
 
 run this to update any checksums in expected.txt where both versions

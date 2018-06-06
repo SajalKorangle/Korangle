@@ -1,6 +1,4 @@
 
-from fee_app.models import Fee, SubFee, Concession
-
 from student_app.models import StudentSection, Student
 from student_app.handlers import common
 from student_app.handlers.common import populate_student_field
@@ -9,10 +7,10 @@ from school_app.model.models import Session
 
 from class_app.models import ClassSession, Section
 
+from django.db.models import ProtectedError
+
 
 def get_class_section_student_list(data):
-
-    # school_object = user.school_set.all()[0]
 
     class_section_student_list = []
 
@@ -42,9 +40,11 @@ def get_class_section_student_list(data):
 
     return class_section_student_list
 
+
 def get_student_profile(data):
     return common.get_student_profile(Student.objects.get(id=data['studentDbId']),
                                       Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession)
+
 
 def update_student(data):
 
@@ -67,17 +67,7 @@ def update_student(data):
                                       Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession)
 
 
-from django.db.models import ProtectedError
-
 def delete_student(data):
-
-    '''SubFee.objects.filter(parentFee__parentStudent=student_object).delete()
-    Fee.objects.filter(parentStudent=student_object).delete()
-    Concession.objects.filter(parentStudent=student_object).delete()
-
-    StudentTestResult.objects.filter(parentStudent=student_object).delete()
-
-    StudentSection.objects.filter(parentStudent=student_object).delete()'''
 
     try:
         Student.objects.filter(pk=data['studentDbId']).delete()

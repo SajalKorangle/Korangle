@@ -73,7 +73,7 @@ class TestOnePdf(unittest.TestCase):
         hash = '------no-file-generated---------'
         expects = expected.results[hashkey]
 
-        # If the test has been deliberately skipped,
+        # If the test_student has been deliberately skipped,
         # we are done.  Otherwise, execute it even
         # if we don't know about it yet, so we have
         # results to compare.

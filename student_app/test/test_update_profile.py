@@ -10,6 +10,7 @@ from student_app.models import Student, StudentSection
 
 from class_app.models import Section
 
+
 class UpdateProfileTestCase(ParentTestCase):
 
     def test_get_class_section_student_list(self):

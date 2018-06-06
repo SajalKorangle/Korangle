@@ -1,7 +1,6 @@
 
-from fee_app.models import SubFee
-
 from school_app.model.models import BusStop, Session
+
 
 def populate_student_field(student_object, fieldName, fieldValue):
     if fieldName == 'category':
@@ -27,6 +26,7 @@ def populate_student_field(student_object, fieldName, fieldValue):
         pass
     else:
         setattr(student_object, fieldName, fieldValue)
+
 
 def get_student_profile(student_object, session_object):
     student_data = {}
@@ -69,17 +69,5 @@ def get_student_profile(student_object, session_object):
     student_data['sectionName'] = student_object.get_section_name(session_object)
     student_data['className'] = student_object.get_class_id(session_object)
     student_data['classDbId'] = student_object.get_class_name(session_object)
-
-    '''student_data['feesDue'] = student_object.totalFees
-    for studentFeeEntry in student_object.fee_set.all().order_by('-generationDateTime'):
-        lateFeeAmount = 0
-        lateFee = SubFee.objects.filter(parentFee=studentFeeEntry, particular='LateFee')
-        if lateFee:
-            lateFeeAmount = lateFee[0].amount
-
-        student_data['feesDue'] -= studentFeeEntry.amount
-        student_data['feesDue'] += lateFeeAmount
-    for studentConcessionEntry in student_object.concession_set.all():
-        student_data['feesDue'] -= studentConcessionEntry.amount'''
 
     return student_data

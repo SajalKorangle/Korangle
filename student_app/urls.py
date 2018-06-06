@@ -13,24 +13,11 @@ urlpatterns += [
     url(r'^delete_student/', delete_student_view),
 ]
 
-########## View All ##############
-'''from .views import get_student_profile_list_and_class_section_list_view
-urlpatterns += [
-    url(r'^get_student_profile_list_and_class_section_list/sessions/(?P<session_id>[0-9]+)', get_student_profile_list_and_class_section_list_view),
-]'''
-
 ########## New Student ###########
 from .views import create_new_student_view
 urlpatterns += [
     url(r'^create_new_student/', create_new_student_view),
 ]
-
-######### Promote Student #########
-'''from .views import promote_student_list_view
-urlpatterns += [
-        url(r'^promote_student_list/', promote_student_list_view),
-]'''
-
 
 ####################################
 ####### Trying Rest Api Below ######
@@ -49,7 +36,8 @@ urlpatterns += [
 ]
 
 ######## Student Section ###########
-from .views import StudentSectionListView
+from .views import StudentSectionListView, StudentSectionView
 urlpatterns += [
+    url(r'^student-sections/(?P<student_section_id>[0-9]+)', StudentSectionView.as_view()),
     url(r'^student-sections/batch', StudentSectionListView.as_view()),
 ]

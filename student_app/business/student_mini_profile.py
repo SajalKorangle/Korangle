@@ -16,13 +16,12 @@ def get_student_mini_profile(student_section_object):
     student_response['className'] = student_section_object.parentSection.parentClassSession.parentClass.name
     student_response['sectionName'] = student_section_object.parentSection.name
     student_response['sectionDbId'] = student_section_object.parentSection.id
+    student_response['studentSectionDbId'] = student_section_object.id
 
     return student_response
 
 
 def get_student_mini_profile_by_school_and_session_id(data):
-
-    # user_object = School.objects.get(id=data['schoolDbId']).user.all()[0]
 
     student_list = []
 
