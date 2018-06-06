@@ -26,6 +26,10 @@ export class StudentService extends CommonServiceRequirements {
     }
 
     // Student Section
+    updateStudentSection(data, token): Promise<any> {
+        return super.putData(data, token, '/student/student-sections/' + data['id']);
+    }
+
     createStudentSectionList(data, token): Promise<any> {
         return super.postData(data, token, '/student/student-sections/batch');
     }

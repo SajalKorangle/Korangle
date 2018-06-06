@@ -1,90 +1,126 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import { StudentExtended } from './student';
-
 import { StudentService } from '../../modules/students/student.service';
+import {SchoolService} from '../../services/school.service';
 
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import { startWith } from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
 
 @Component({
-    selector: 'app-student-filter',
+    selector: 'student-filter',
     templateUrl: './student-filter.component.html',
     styleUrls: ['./student-filter.component.css'],
-    providers: [ StudentService ],
+    providers: [ StudentService, SchoolService ],
 })
 
 export class StudentFilterComponent implements OnInit {
 
     @Input() user;
 
-    @Output() onStudentSelected = new EventEmitter<StudentExtended>();
+    @Output() onStudentSelected = new EventEmitter<any>();
 
-    selectedStudent: StudentExtended;
+    @Output() onStudentLoading = new EventEmitter<boolean>();
+
+    @Output() onSessionChange = new EventEmitter<boolean>();
 
     myControl = new FormControl();
 
-    studentList: StudentExtended[] = [];
-    filteredStudentList: Observable<Array<StudentExtended>>;
+    studentList = [];
+    filteredStudentList: any;
+
+    selectedSession: any;
+    sessionList: any;
 
     isLoading = false;
 
-    constructor (private studentService: StudentService) { }
+    constructor (private studentService: StudentService,
+                 private schoolService: SchoolService) { }
 
     ngOnInit(): void {
-        this.selectedStudent = new StudentExtended();
-        this.isLoading = true;
-        const data = {
+        this.handleOnStudentLoading(true);
+        const request_student_data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
         };
-        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
-            classSectionStudentList => {
-                this.isLoading = false;
-                classSectionStudentList.forEach( classs => {
-                    classs.sectionList.forEach( section => {
-                        section.studentList.forEach( student => {
-                            const tempStudent = new StudentExtended();
-                            tempStudent.copy(student);
-                            tempStudent.currentClassName = classs.name;
-                            if (classs.sectionList.length > 1) {
-                                tempStudent.currentSectionName = section.name;
-                            }
-                            this.studentList.push(tempStudent);
-                        });
-                    });
-                });
-                this.filteredStudentList = this.myControl.valueChanges.pipe(
-                    startWith<String | StudentExtended>(''),
-                    map(value => typeof value === 'string' ? value: (value as StudentExtended).name),
-                    map(name => this.filter(name.toString()))
-                )
-            }, error => {
-                this.isLoading = false;
+        const request_class_section_data = {
+            sessionDbId: this.user.activeSchool.currentSessionDbId,
+        };
+        Promise.all([
+            this.schoolService.getSessionList(this.user.jwt),
+            this.studentService.getStudentMiniProfileList(request_student_data, this.user.jwt),
+        ]).then(value => {
+            this.handleOnStudentLoading(false);
+            this.populateSessionList(value[0]);
+            this.populateStudentList(value[1]);
+        });
+    }
+
+    populateSessionList(sessionList: any): void {
+        this.sessionList = sessionList;
+        this.sessionList.every(session => {
+            if (session.dbId === this.user.activeSchool.currentSessionDbId) {
+                this.selectedSession = session;
+                return false;
             }
+            return true;
+        });
+    }
+
+    populateStudentList(studentList: any): void {
+        this.studentList = studentList;
+        this.filteredStudentList = this.myControl.valueChanges.pipe(
+            map(value => typeof value === 'string' ? value: (value as any).name),
+            map(name => this.filter(name.toString()))
         );
     }
 
-    filter(name: string): any {
-        if (name === '') {
+    filter(value: string): any {
+        if (value === null || value === '') {
             return [];
         }
-        return this.studentList.filter( student => student.name.toLowerCase().indexOf(name.toLowerCase()) === 0 );
+        return this.studentList.filter( student => {
+            if (student.name.toLowerCase().indexOf(value.toLowerCase()) === 0) {
+                return true;
+            } else if (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) === 0) {
+                return true;
+            }
+            return false;
+        });
     }
 
-    displayFn(student?: StudentExtended) {
+    displayFn(student?: any) {
         if (student) {
-            return student.name + ', ' + student.currentClassName
-                + ((student.currentSectionName && student.currentSectionName !== '')? ', ' + student.currentSectionName: '');
+            return student.name
+                + (student.scholarNumber? ' (' + student.scholarNumber + ')': '')
+                + ', ' + student.className
+                + ', ' + student.sectionName;
         } else {
             return '';
         }
     }
 
-    getStudentFeeData(student?: StudentExtended): void {
+    handleStudentSelection(student: any): void {
         this.onStudentSelected.emit(student);
+    }
+
+    handleOnStudentLoading(value: boolean): void {
+        this.isLoading = value;
+        this.onStudentLoading.emit(value);
+    }
+
+    handleSessionChange(): void {
+        this.studentList = [];
+        this.handleOnStudentLoading(true);
+        this.handleStudentSelection(null);
+        this.onSessionChange.emit(this.selectedSession);
+        const request_student_data = {
+            sessionDbId: this.selectedSession.dbId,
+            schoolDbId: this.user.activeSchool.dbId,
+        };
+        this.studentService.getStudentMiniProfileList(request_student_data, this.user.jwt).then( studentList => {
+            this.handleOnStudentLoading(false);
+            this.populateStudentList(studentList);
+        });
     }
 
 }

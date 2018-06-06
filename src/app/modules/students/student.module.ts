@@ -5,6 +5,7 @@ import { ComponentsModule } from '../../components/components.module';
 import { StudentComponent } from './student.component';
 
 import { AddStudentComponent } from './pages/add-student/add-student.component';
+import { ChangeClassComponent } from './pages/change-class/change-class.component';
 import { GenerateTcComponent } from './pages/generate-tc/generate-tc.component';
 import { PromoteStudentComponent } from './pages/promote-student/promote-student.component';
 import { UpdateProfileComponent } from './pages/update-profile/update-profile.component';
@@ -18,6 +19,7 @@ import {StudentRoutingModule} from './student.routing';
         StudentComponent,
 
         AddStudentComponent,
+        ChangeClassComponent,
         GenerateTcComponent,
         PromoteStudentComponent,
         UpdateProfileComponent,

@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, Route } from '@angular/router';
+import { PreloadAllModules, PreloadingStrategy } from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+
+import {DataStorage} from './classes/data-storage';
 
 const routes: Routes = [
     {
@@ -45,14 +50,42 @@ const routes: Routes = [
     },
 ];
 
+export class CustomPreload implements PreloadingStrategy {
+    preload(route: Route, load: Function): Observable<any> {
+        let user = DataStorage.getInstance().getUser();
+        let result = false;
+        user.schoolList.every(school => {
+            school.moduleList.every( module => {
+                if (module.path === route.path) {
+                    result = true;
+                    return false;
+                }
+                return true;
+            });
+            if (result) {
+                return false;
+            }
+            return true;
+        });
+        return result ? load() : Observable.of(null);
+    }
+}
+
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(
+        routes,
+        {preloadingStrategy: CustomPreload}
+    )
   ],
   exports: [
       CommonModule,
       RouterModule,
   ],
+    providers: [
+        CustomPreload,
+    ]
 })
+
 export class AppRoutingModule { }

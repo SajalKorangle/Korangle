@@ -19,6 +19,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+import { StudentFilterOldComponent } from './student-filter-old/student-filter.component';
 import { StudentFilterComponent } from './student-filter/student-filter.component';
 
 // Pipes
@@ -34,6 +35,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         NavbarComponent,
         SidebarComponent,
         LoadingSpinnerComponent,
+        StudentFilterOldComponent,
         StudentFilterComponent,
 
         AmountInWordsPipe,
@@ -64,6 +66,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         NavbarComponent,
         SidebarComponent,
         LoadingSpinnerComponent,
+        StudentFilterOldComponent,
         StudentFilterComponent,
 
         AmountInWordsPipe,

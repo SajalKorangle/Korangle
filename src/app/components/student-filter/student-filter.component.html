@@ -1,21 +1,32 @@
-<form class="example-form" *ngIf="!isLoading">
-    <mat-form-field class="example-full-width">
-        <input type="text"
-               placeholder="Type student name here...."
-               aria-label="Student"
-               matInput
-               [formControl]="myControl"
-               [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete"
-                          (optionSelected)="getStudentFeeData($event.option.value)"
-                          [displayWith]="displayFn">
-            <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
-                {{displayFn(student)}}
-                <!--
-                {{ student.name }}, {{ student.currentClassName }}
-                <span *ngIf="student.currentSectionName && student.currentSectionName != ''">, {{student.currentSectionName}}</span>
-                -->
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-</form>
+<div class="row">
+    <div class="col-md-9">
+        <form class="example-form" *ngIf="!isLoading">
+            <mat-form-field class="example-full-width">
+                <input type="text"
+                       placeholder="Student Name, Scholar No."
+                       aria-label="Student"
+                       matInput
+                       [formControl]="myControl"
+                       [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete"
+                                  (optionSelected)="handleStudentSelection($event.option.value)"
+                                  [displayWith]="displayFn">
+                    <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
+                        {{displayFn(student)}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </form>
+    </div>
+    <div class="col-md-3" *ngIf="selectedSession">
+        <mat-form-field>
+            <mat-select placeholder="Select Session"
+                        [ngModel]="selectedSession"
+                        (ngModelChange)="selectedSession=$event;handleSessionChange();">
+                <mat-option *ngFor='let session of sessionList;' [value]="session">
+                    {{session.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>

@@ -6,6 +6,7 @@ import {DataStorage} from '../../classes/data-storage';
     '<view-all *ngIf="user.activeTask.path===\'view_all\'" [user]="user"></view-all>' +
     '<generate-tc *ngIf="user.activeTask.path===\'generate_tc\'" [user]="user"></generate-tc>' +
     '<promote-student *ngIf="user.activeTask.path===\'promote_student\'" [user]="user"></promote-student>' +
+    '<change-class *ngIf="user.activeTask.path===\'change_class\'" [user]="user"></change-class>' +
     '<add-student *ngIf="user.activeTask.path===\'add_student\'" [user]="user"></add-student>',
 })
 

@@ -1,0 +1,21 @@
+<form class="example-form" *ngIf="!isLoading">
+    <mat-form-field class="example-full-width">
+        <input type="text"
+               placeholder="Type student name here...."
+               aria-label="Student"
+               matInput
+               [formControl]="myControl"
+               [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete"
+                          (optionSelected)="getStudentFeeData($event.option.value)"
+                          [displayWith]="displayFn">
+            <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
+                {{displayFn(student)}}
+                <!--
+                {{ student.name }}, {{ student.currentClassName }}
+                <span *ngIf="student.currentSectionName && student.currentSectionName != ''">, {{student.currentSectionName}}</span>
+                -->
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>
