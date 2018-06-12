@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
 
+import { ChangeDetectorRef } from '@angular/core';
+
 import { EmitterService } from '../../../../services/emitter.service';
 import {StudentTcProfile} from '../../classes/student-tc-profile';
 
@@ -18,6 +20,8 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
 
     printTransferCertificateSecondFormatComponentSubscription: any;
 
+    constructor(private cdRef: ChangeDetectorRef) { }
+
     ngOnInit(): void {
         this.printTransferCertificateSecondFormatComponentSubscription = EmitterService.get('print-transfer-certificate-second-format-component').subscribe( value => {
             this.studentTcProfile = value;
@@ -30,6 +34,7 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
             this.viewChecked = true;
             window.print();
             this.studentTcProfile = null;
+            this.cdRef.detectChanges();
         }
     }
 

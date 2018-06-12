@@ -7,7 +7,8 @@ import {DataStorage} from '../../classes/data-storage';
     '<generate-tc *ngIf="user.activeTask.path===\'generate_tc\'" [user]="user"></generate-tc>' +
     '<promote-student *ngIf="user.activeTask.path===\'promote_student\'" [user]="user"></promote-student>' +
     '<change-class *ngIf="user.activeTask.path===\'change_class\'" [user]="user"></change-class>' +
-    '<add-student *ngIf="user.activeTask.path===\'add_student\'" [user]="user"></add-student>',
+    '<add-student *ngIf="user.activeTask.path===\'add_student\'" [user]="user"></add-student>' +
+    '<upload-list *ngIf="user.activeTask.path===\'upload_list\'" [user]="user"></upload-list>',
 })
 
 export class StudentComponent implements OnInit {

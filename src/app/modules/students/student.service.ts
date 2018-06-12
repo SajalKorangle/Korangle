@@ -18,6 +18,11 @@ export class StudentService extends CommonServiceRequirements {
         return super.getData(token, url);
     }
 
+    createStudentFullProfileBatch(data: any, token: any): Promise<any> {
+        const url = '/student/student-full-profiles/batch';
+        return super.postData(data, token, url);
+    }
+
     // Student Mini Profile
     getStudentMiniProfileList(data, token): Promise<any> {
         return super.getData(token, '/student/school/'

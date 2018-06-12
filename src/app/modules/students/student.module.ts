@@ -10,6 +10,7 @@ import { GenerateTcComponent } from './pages/generate-tc/generate-tc.component';
 import { PromoteStudentComponent } from './pages/promote-student/promote-student.component';
 import { UpdateProfileComponent } from './pages/update-profile/update-profile.component';
 import { ViewAllComponent } from './pages/view-all/view-all.component';
+import { UploadListComponent } from './pages/upload_list/upload-list.component';
 
 import {StudentRoutingModule} from './student.routing';
 
@@ -24,6 +25,7 @@ import {StudentRoutingModule} from './student.routing';
         PromoteStudentComponent,
         UpdateProfileComponent,
         ViewAllComponent,
+        UploadListComponent,
 
     ],
 
