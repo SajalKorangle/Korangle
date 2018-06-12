@@ -32,3 +32,23 @@ def create_student_section_list(data):
 
         initialize_student_fees(student_section_object.parentStudent,
                                 student_section_object.parentSection.parentClassSession.parentSession)
+
+
+def create_student_section(data):
+
+    student_section_serializer = StudentSectionModelSerializer(data=data)
+    if student_section_serializer.is_valid():
+        student_section_serializer.save()
+        student_section_object = StudentSection.objects.get(id=student_section_serializer.data['id'])
+        initialize_student_fees(student_section_object.parentStudent,
+                                student_section_object.parentSection.parentClassSession.parentSession)
+        return {
+            'status': 'success',
+            'message': 'Student added in class successfully',
+        }
+    else:
+        print(student_section_serializer.errors)
+        return {
+            'status': 'failure',
+            'message': 'Student addition in class failed',
+        }

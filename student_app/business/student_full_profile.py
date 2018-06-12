@@ -1,6 +1,57 @@
 
 # Models
-from student_app.models import StudentSection
+from student_app.models import StudentSection, Student
+
+# business
+from student_app.business.student_section import create_student_section
+
+
+from rest_framework import serializers
+
+
+class StudentModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = '__all__'
+
+
+def create_student_full_profile(student):
+
+    student_object = StudentModelSerializer(data=student)
+    if student_object.is_valid():
+        student_object.save()
+        student_section_data = {
+            'parentStudent': student_object.data['id'],
+            'parentSection': student['parentSection'],
+        }
+        response = create_student_section(student_section_data)
+        if response['status'] == 'success':
+            return {
+                'status': 'success',
+                'message': 'Student Profile created successfully',
+            }
+        else:
+            return response
+    else:
+        print(student_object.errors)
+        return {
+            'status': 'failure',
+            'message': 'Student Profile creation failed',
+        }
+
+
+def create_student_full_profile_list(data):
+
+    success_number = 0
+
+    for student in data:
+        response = create_student_full_profile(student)
+        if response['status'] == 'success':
+            success_number += 1
+
+    return {
+        'message': 'Added ' + str(success_number) + ' students in school'
+    }
 
 
 def get_student_full_profile(student_section_object):

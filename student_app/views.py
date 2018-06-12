@@ -75,10 +75,15 @@ def create_new_student_view(request):
 
 
 ############## Student Full Profile ##############
-from .business.student_full_profile import get_student_full_profile_by_school_and_session_id
+from .business.student_full_profile import get_student_full_profile_by_school_and_session_id, create_student_full_profile_list
 
 
-class StudentFullProfileView(APIView):
+class StudentFullProfileListView(APIView):
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_student_full_profile_list(data)
 
     def get(self, request, school_id):
         if request.user.is_authenticated:

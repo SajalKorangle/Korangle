@@ -44,14 +44,14 @@ INSTALLED_APPS = [
 
 	'rest_framework',
 
-	'message_app',
+	# 'message_app',
 
 	'school_app',
     'class_app',
     'subject_app',
     'student_app',
     'expense_app',
-    'fee_app',
+    # 'fee_app',
     'fee_second_app',
     'examination_app',
     'team_app',

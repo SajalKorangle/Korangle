@@ -7,5 +7,5 @@ copydatabasefromserver.sh
 test_database
 helloworld_project/media
 *.idea
-message_app/.*
 staticpages/.*
+./sms_file

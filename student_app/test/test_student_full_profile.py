@@ -3,17 +3,104 @@ from parent_test import ParentTestCase
 
 # Business
 from student_app.business.student_full_profile import get_student_full_profile, \
-    get_student_full_profile_by_school_and_session_id
+    get_student_full_profile_by_school_and_session_id, create_student_full_profile, create_student_full_profile_list
 
 # Factories
 from student_app.factories.student import StudentFactory
+from school_app.factory.school import SchoolFactory
+from vehicle_app.factory.bus_stop import BusStopFactory
 
 # Models
-from student_app.models import StudentSection
+from student_app.models import StudentSection, Student
 from school_app.model.models import School, Session
+from class_app.models import Section
 
 
 class StudentFullProfileTestCase(ParentTestCase):
+
+    def test_create_student_profile_list(self):
+
+        school_object = SchoolFactory()
+        bus_stop_object = BusStopFactory(parentSchool=school_object)
+
+        section_object = Section.objects.get(parentClassSession__parentSession__name='Session 2017-18',
+                                             parentClassSession__parentClass__name='Class - 12',
+                                             name='Section - A')
+
+        data = {}
+        data['name'] = 'Demo Student'
+        data['fathersName'] = 'Father Name'
+        data['mobileNumber'] = 9898955441
+        data['dateOfBirth'] = '2007-04-01'
+        data['remark'] = 'okay nice'
+        data['scholarNumber'] = 'A234'
+        data['rollNumber'] = '123'
+        data['motherName'] = 'Mother Name'
+        data['gender'] = 'Male'
+        data['caste'] = 'Goyal'
+        data['category'] = 'SC'
+        data['religion'] = 'Jainism'
+        data['fatherOccupation'] = 'Farmer'
+        data['address'] = 'Hadlay, Akodiya'
+        data['familySSMID'] = 12345678
+        data['childSSMID'] = 1234556789
+        data['bankName'] = 'State Bank Of India'
+        data['bankAccountNum'] = 'SBI0000342342'
+        data['aadharNum'] = 123456789012
+        data['bloodGroup'] = 'O +'
+        data['fatherAnnualIncome'] = '15,000'
+        data['currentBusStop'] = bus_stop_object.id
+        data['parentSchool'] = school_object.id
+        data['parentSection'] = section_object.id
+
+        data_list = []
+        data_list.append(data)
+        data_list.append(data)
+        data_list.append(data)
+
+        response = create_student_full_profile_list(data_list)
+
+        self.assertEqual(response['message'], 'Added 3 students in school')
+
+    def test_create_student_profile(self):
+
+        school_object = SchoolFactory()
+        bus_stop_object = BusStopFactory(parentSchool=school_object)
+
+        section_object = Section.objects.get(parentClassSession__parentSession__name='Session 2017-18',
+                                             parentClassSession__parentClass__name='Class - 12',
+                                             name='Section - A')
+
+        data = {}
+        data['name'] = 'Demo Student'
+        data['fathersName'] = 'Father Name'
+        data['mobileNumber'] = 9898955441
+        data['dateOfBirth'] = '2007-04-01'
+        data['remark'] = 'okay nice'
+        data['scholarNumber'] = 'A234'
+        data['rollNumber'] = '123'
+        data['motherName'] = 'Mother Name'
+        data['gender'] = 'Male'
+        data['caste'] = 'Goyal'
+        data['category'] = 'SC'
+        data['religion'] = 'Jainism'
+        data['fatherOccupation'] = 'Farmer'
+        data['address'] = 'Hadlay, Akodiya'
+        data['familySSMID'] = 12345678
+        data['childSSMID'] = 1234556789
+        data['bankName'] = 'State Bank Of India'
+        data['bankAccountNum'] = 'SBI0000342342'
+        data['aadharNum'] = 123456789012
+        data['bloodGroup'] = 'O +'
+        data['fatherAnnualIncome'] = '15,000'
+        data['currentBusStop'] = bus_stop_object.id
+        data['parentSchool'] = school_object.id
+        data['parentSection'] = section_object.id
+
+        response = create_student_full_profile(data)
+
+        Student.objects.get(parentSchool=school_object, currentBusStop=bus_stop_object, name=data['name'])
+
 
     def test_get_student_full_profile(self):
 
