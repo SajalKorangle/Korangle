@@ -8,4 +8,5 @@ test_database
 helloworld_project/media
 *.idea
 staticpages/.*
-./sms_file
+sms_file
+backupdb
