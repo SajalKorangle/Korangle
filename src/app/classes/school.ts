@@ -15,7 +15,10 @@ export class School {
     currentSessionDbId: number;
     registrationNumber: string;
 
+    role: string;
+
     moduleList = [];
+    studentList = [];
 
     fromServerObject(schoolData: any) {
         this.dbId = schoolData.dbId;
@@ -32,10 +35,18 @@ export class School {
         this.address = schoolData.schoolAddress;
         this.currentSessionDbId = schoolData.currentSessionDbId;
         this.registrationNumber = schoolData.registrationNumber;
+
+        this.role = schoolData.role;
+
         this.moduleList = schoolData.moduleList;
         this.moduleList.forEach(module => {
             module.showTaskList = false;
         });
+
+        this.studentList = schoolData.studentList;
+        /*this.studentList.forEach(student => {
+            student.showStudentList = false;
+        });*/
     }
 
 }

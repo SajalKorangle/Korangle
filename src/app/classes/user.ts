@@ -10,6 +10,9 @@ export class User {
     email: string;
     isAuthenticated = false;
     jwt = '';
+    // route = '';
+
+    section: any;
 
     activeSchool: any;
 
@@ -33,6 +36,7 @@ export class User {
         this.activeModule = null;
         this.isLazyLoading = false;
         this.isPageLoading = false;
+        this.section = null;
     }
 
     checkAuthentication(): boolean {
@@ -77,16 +81,35 @@ export class User {
     }
 
     initializeTask(): void {
-        if (this.activeSchool.moduleList.length > 0) {
+        console.log(this.activeSchool.role);
+        if (this.activeSchool.role === 'Parent') {
+            this.section = {
+                route: '',
+            };
+        } else if (this.activeSchool.role === 'Employee') {
             this.activeModule = this.activeSchool.moduleList[0];
             this.activeTask = this.activeModule.taskList[0];
+            this.section = {
+                route: this.activeModule.path,
+                subsection: this.activeTask.path,
+            };
         }
         EmitterService.get('initialize-router').emit('');
     }
 
-    activateTask(task: any, module: any): void {
-        this.activeTask = task;
-        this.activeModule = module;
+    handleSectionChange(task: any, module: any): void {
+        if (this.activeSchool.role === 'Parent') {
+            this.section = {
+                route: '',
+            };
+        } else if (this.activeSchool.role === 'Employee') {
+            this.activeModule = module;
+            this.activeTask = task;
+            this.section = {
+                route: this.activeModule.path,
+                subsection: this.activeTask.path,
+            };
+        }
     }
 
 }
