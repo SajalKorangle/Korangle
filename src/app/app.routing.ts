@@ -9,6 +9,10 @@ import {DataStorage} from './classes/data-storage';
 
 const routes: Routes = [
     {
+        path: 'parent',
+        loadChildren: 'app/modules/parent/parent.module#ParentModule',
+    },
+    {
         path: 'students',
         loadChildren: 'app/modules/students/student.module#StudentModule',
     },
@@ -62,6 +66,9 @@ export class CustomPreload implements PreloadingStrategy {
                 }
                 return true;
             });
+            if (school.studentList.length > 0 && route.path === 'parent') {
+                result = true;
+            }
             if (result) {
                 return false;
             }

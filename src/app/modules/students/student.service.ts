@@ -13,6 +13,11 @@ import { CommonServiceRequirements } from '../../services/common-service-require
 export class StudentService extends CommonServiceRequirements {
 
     // Student Full Profile
+    getStudentFullProfile(data: any, token: any): Promise<any> {
+        const url = '/student/student-full-profiles/' + data['studentDbId'] + '?session_id=' + data.sessionDbId;
+        return super.getData(token, url);
+    }
+
     getStudentFullProfileList(data: any, token: any): Promise<any> {
         const url = '/student/school/' + data['schoolDbId'] + '/student-full-profiles?session_id=' + data.sessionDbId;
         return super.getData(token, url);

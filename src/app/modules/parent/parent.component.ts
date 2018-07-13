@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {DataStorage} from '../../classes/data-storage';
 
 @Component({
-    template: '<update-profile *ngIf="user.section.subRoute===\'update_profile\'" [user]="user"></update-profile>',
+    template: '<view-profile *ngIf="user.section.subRoute===\'view_profile\'" [user]="user"></view-profile>' +
+    '<view-fee *ngIf="user.section.subRoute===\'view_fee\'" [user]="user"></view-fee>',
 })
 
-export class SchoolComponent implements OnInit {
+export class ParentComponent implements OnInit {
 
     user: any;
 

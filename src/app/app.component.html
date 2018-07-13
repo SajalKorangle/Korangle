@@ -9,17 +9,17 @@
 
         <div class="main-panel">
 
-            <app-navbar class="visible-xs"></app-navbar>
+            <app-navbar [user]="user" class="visible-sm visible-xs"></app-navbar>
 
             <div class="main-content">
                 <div class="container-fluid">
 
                     <div class="card"
-                         *ngIf="user.activeModule"
+                         *ngIf="user.section"
                          style="min-height: 100%">
-                        <div class="card-header" [attr.data-background-color]="user.activeSchool.primaryThemeColor">
-                            <h4 class="title hidden-xs">{{user.activeModule.title}} - {{user.activeTask.title}}</h4>
-                            <h4 class="title visible-xs">{{user.activeModule.title}}</h4>
+                        <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="user.activeSchool.primaryThemeColor">
+                            <h4 class="title hidden-xs">{{user.section.title}} - {{user.section.subTitle}}</h4>
+                            <h4 class="title visible-xs">{{user.section.title}}</h4>
                         </div>
                         <router-outlet></router-outlet>
                     </div>

@@ -1,13 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 
-import { FeeService } from '../../fee.service';
+import { FeeService } from '../../fees-second/fee.service';
 
-import { FeeReceipt } from '../../classes/common-functionalities';
+import { FeeReceipt } from '../../fees-second/classes/common-functionalities';
 
-import { EmitterService } from '../../../../services/emitter.service';
-import {FREQUENCY_LIST} from '../../classes/constants';
+import { Concession } from '../../fees-second/classes/common-functionalities';
+
+/*import { EmitterService } from '../../../../services/emitter.service';
+import { FREQUENCY_LIST } from '../../classes/constants';*/
+
+import { FREQUENCY_LIST } from '../../fees-second/classes/constants';
 
 const APRIL = 'APRIL';
 const MAY = 'MAY';
@@ -24,9 +28,9 @@ const MARCH = 'MARCH';
 
 
 @Component({
-    selector: 'app-collect-fee',
-    templateUrl: './collect-fee.component.html',
-    styleUrls: ['./collect-fee.component.css'],
+    selector: 'view-fee',
+    templateUrl: './view-fee.component.html',
+    styleUrls: ['./view-fee.component.css'],
     providers: [ FeeService ],
     animations: [
         trigger('rotate', [
@@ -44,11 +48,9 @@ const MARCH = 'MARCH';
     ],
 })
 
-export class CollectFeeComponent {
+export class ViewFeeComponent implements OnInit {
 
     @Input() user;
-
-    selectedStudent: any;
 
     studentFeeProfile: any;
 
@@ -58,7 +60,11 @@ export class CollectFeeComponent {
 
     showPreviousFeeDetails: boolean;
 
+    showPreviousConcessionDetails: boolean;
+
     feeReceiptList: any;
+
+    concessionList: any;
 
     remark: string;
 
@@ -68,22 +74,38 @@ export class CollectFeeComponent {
 
     constructor (private feeService: FeeService) { }
 
-    getStudentFeeDetails(student: any): void {
+    ngOnInit(): void {
+        const data = {
+            studentDbId: this.user.section.student.id,
+        };
+        // this.selectedStudent = this.user.activeSchool.section.student;
+        this.getStudentFeeProfile(data);
+        this.getStudentFeeReceiptList(data);
+        this.getStudentConcessionList(data);
+    }
+
+    /*getStudentFeeDetails(student: any): void {
         const data = {
             studentDbId: student.dbId,
         };
         this.selectedStudent = student;
         this.getStudentFeeProfile(data);
         this.getStudentFeeReceiptList(data);
+    }*/
+
+    getStudentConcessionList(data): void {
+        this.concessionList = null;
+        this.feeService.getStudentConcessionList(data, this.user.jwt).then(concessionList => {
+            this.concessionList = concessionList;
+            console.log(this.concessionList);
+        });
     }
 
     getStudentFeeReceiptList(data): void {
         this.feeReceiptList = null;
         this.feeService.getStudentFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
-            if (this.selectedStudent.dbId === data['studentDbId']) {
-                this.feeReceiptList = feeReceiptList;
-                console.log(this.feeReceiptList);
-            }
+            this.feeReceiptList = feeReceiptList;
+            console.log(this.feeReceiptList);
         });
     }
 
@@ -93,32 +115,31 @@ export class CollectFeeComponent {
         data['sessionDbId'] = this.user.activeSchool.currentSessionDbId;
         this.feeService.getStudentFeeProfile(data, this.user.jwt).then( studentFeeProfile => {
             this.isLoading = false;
-            if (this.selectedStudent.dbId === data['studentDbId']) {
-                this.studentFeeProfile = studentFeeProfile;
-                this.studentFeeStatusList = studentFeeProfile['sessionFeeStatusList'];
-                this.studentFeeStatusList.forEach(sessionFeeStatus => {
-                    sessionFeeStatus.componentList.forEach( component => {
-                        component.showDetails = false;
-                        if (component.frequency === FREQUENCY_LIST[0]) {
-                            component.payment = 0;
-                        } else if ( component.frequency === FREQUENCY_LIST[1]) {
-                            component.monthList.forEach( componentMonthly => {
-                                componentMonthly.payment = 0;
-                            });
-                        }
-                    });
+            this.studentFeeProfile = studentFeeProfile;
+            this.studentFeeStatusList = studentFeeProfile['sessionFeeStatusList'];
+            this.studentFeeStatusList.forEach(sessionFeeStatus => {
+                sessionFeeStatus.componentList.forEach( component => {
+                    component.showDetails = false;
+                    if (component.frequency === FREQUENCY_LIST[0]) {
+                        component.payment = 0;
+                    } else if ( component.frequency === FREQUENCY_LIST[1]) {
+                        component.monthList.forEach( componentMonthly => {
+                            componentMonthly.payment = 0;
+                        });
+                    }
                 });
-                this.showDetails = true;
-                this.showPreviousFeeDetails = false;
-                console.log(this.studentFeeStatusList);
-            }
+            });
+            this.showDetails = true;
+            this.showPreviousFeeDetails = false;
+            this.showPreviousConcessionDetails = false;
+            console.log(this.studentFeeStatusList);
         }, error => {
             this.isLoading = false;
             alert('error');
         });
     }
 
-    generateFeeReceipt(): void {
+    /* generateFeeReceipt(): void {
 
         let data = {
             studentDbId: this.selectedStudent.dbId,
@@ -176,7 +197,7 @@ export class CollectFeeComponent {
             });
             this.studentFeeStatusList.showDetails = false;
 
-            this.printFeeReceipt(response['feeReceipt']);
+            // this.printFeeReceipt(response['feeReceipt']);
 
             this.feeReceiptList.unshift(response['feeReceipt']);
 
@@ -184,13 +205,15 @@ export class CollectFeeComponent {
             this.isLoading = false;
         });
 
-    }
+    } */
 
-    printFeeReceipt(feeReceipt: any): void {
+    /*printFeeReceipt(feeReceipt: any): void {
         console.log(feeReceipt);
-        if (window.screen.width >= 992) {
-            EmitterService.get('print-new-fee-receipt').emit(feeReceipt);
-        }
+        EmitterService.get('print-new-fee-receipt').emit(feeReceipt);
+    }*/
+
+    getConcessionListTotalAmount(): number {
+        return Concession.getConcessionListTotalAmount(this.concessionList);
     }
 
     showSessionFeesLine(): boolean {

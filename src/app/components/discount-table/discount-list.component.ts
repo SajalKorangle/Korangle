@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import {Concession} from '../../classes/common-functionalities';
+import {Concession} from '../../modules/fees-second/classes/common-functionalities';
 
 @Component({
     selector: 'app-discount-list',

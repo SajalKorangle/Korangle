@@ -7,7 +7,7 @@
 
     <ng-container *ngIf="selectedStudent && !isLoading && !isStudentListLoading">
 
-        <div class="row" style="font-size: 16px;">
+        <div class="row hidden-xs hidden-sm" style="font-size: 16px;">
             <div class="col-md-2">
                 Name
             </div>
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div class="row" style="font-size: 16px;">
+        <div class="row hidden-xs hidden-sm" style="font-size: 16px;">
             <div class="col-md-2">
                 Father's Name
             </div>
@@ -34,6 +34,36 @@
             </div>
             <div class="col-md-4">
                 : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.className}}, {{selectedStudent.sectionName}}</span>
+            </div>
+        </div>
+
+        <div class="row visible-xs visible-sm" style="font-size: 16px;">
+            <div class="col-xs-12">
+                Name: <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.name}}</span>
+            </div>
+        </div>
+
+        <div class="row visible-xs visible-sm" style="font-size: 16px;">
+            <div class="col-xs-12">
+                Scholar No. : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.scholarNumber}}</span>
+            </div>
+        </div>
+
+        <div class="row visible-xs visible-sm" style="font-size: 16px;">
+            <div class="col-xs-12">
+                Father's Name:
+                <span style="font-weight: 600; margin-left: 5px;">
+                    {{selectedStudent.fathersName}}
+                </span>
+            </div>
+        </div>
+
+        <div class="row visible-xs visible-sm" style="font-size: 16px;">
+            <div class="col-xs-12">
+                Class Name:
+                <span style="font-weight: 600; margin-left: 5px;">
+                    {{selectedStudent.className}}, {{selectedStudent.sectionName}}
+                </span>
             </div>
         </div>
 
@@ -70,6 +100,7 @@
         </div>
 
         <br/>
+
         <button type="submit"
                 *ngIf="!(selectedClass.name === selectedStudent.className
                         && selectedClass.selectedSection.name === selectedStudent.sectionName)"

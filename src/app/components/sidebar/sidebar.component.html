@@ -1,7 +1,7 @@
 <div class="logo">
-    <span style="margin-left: 10px;">Hi {{user.username}}!</span>
+    <span style="margin-left: 10px;">Hi {{user.displayName}}!</span>
     <a style="float: right; cursor: pointer;"
-       *ngIf="!user.activeModule"
+       *ngIf="!user.section"
        (click)="logout()">Logout</a>
     <br/>
     <a class="simple-text" disabled="true" *ngIf="user.schoolList.length > 0">
@@ -62,10 +62,56 @@
 
         <ul class="nav" *ngIf="user.activeSchool">
 
+            <!-- Parent -->
             <ng-container *ngIf="user.activeSchool.role==='Parent'">
-                <li [class.active]=""></li>
+
+                <!-- Multiple Students -->
+                <ng-container *ngIf="user.activeSchool.studentList.length > 1">
+                    <ng-container  *ngFor="let student of user.activeSchool.studentList">
+                        <li [class.active]="student.name === user.section.title"
+                            [attr.data-color]='user.activeSchool.primaryThemeColor'
+                            style="border-bottom: 0.1px solid lightgrey;">
+                            <a (click)="student.showTaskList = !student.showTaskList;">
+                                <i class="material-icons">account_circle</i>
+                                <p>
+                                    {{student.name}}
+                                    <i *ngIf="!student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                                    <i *ngIf="student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                                </p>
+                            </a>
+                            <ng-container *ngIf="student.showTaskList">
+                                <div *ngFor="let task of student.taskList"
+                                     [attr.data-color]="user.activeSchool.secondaryThemeColor"
+                                     [class.active]="student.name===user.section.title && task.title===user.section.subTitle"
+                                     class="subsectionDiv"
+                                     (click)="changePage(task, student);">
+                                    <i class="material-icons">remove</i>
+                                    <p>{{task.title}}</p>
+                                </div>
+                            </ng-container>
+                        </li>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Single Student -->
+                <ng-container *ngIf="user.activeSchool.studentList.length === 1">
+                    <ng-container  *ngFor="let task of user.activeSchool.studentList[0].taskList">
+                        <li [class.active]="user.activeSchool.studentList[0].name === user.section.route"
+                            [attr.data-color]='user.activeSchool.primaryThemeColor'
+                            style="border-bottom: 0.1px solid lightgrey;">
+                            <a (click)="changePage(task, user.activeSchool.studentList[0]);">
+                                <i class="material-icons">{{task.icon}}</i>
+                                <p>
+                                    {{task.title}}
+                                </p>
+                            </a>
+                        </li>
+                    </ng-container>
+                </ng-container>
+
             </ng-container>
 
+            <!-- Employee -->
             <ng-container *ngIf="user.section && user.activeSchool.role==='Employee'">
                 <ng-container *ngFor="let module of user.activeSchool.moduleList">
                     <li [class.active]="module.path === user.section.route"
@@ -82,9 +128,9 @@
                         <ng-container *ngIf="module.showTaskList">
                             <div *ngFor="let task of module.taskList"
                                  [attr.data-color]="user.activeSchool.secondaryThemeColor"
-                                 [class.active]="task.path===user.section.subsection"
+                                 [class.active]="module.path===user.section.route && task.title===user.section.subTitle"
                                  class="subsectionDiv"
-                                 (click)="activateTask(task, module);">
+                                 (click)="changePage(task, module);">
                                 <i class="material-icons">remove</i>
                                 <p>{{task.title}}</p>
                             </div>

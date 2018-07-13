@@ -22,6 +22,9 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 import { StudentFilterOldComponent } from './student-filter-old/student-filter.component';
 import { StudentFilterComponent } from './student-filter/student-filter.component';
 
+import { FeeReceiptListComponent } from './fees-table/fee-receipt-list.component';
+import { DiscountListComponent } from './discount-table/discount-list.component';
+
 // Pipes
 
 import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
@@ -37,6 +40,8 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         LoadingSpinnerComponent,
         StudentFilterOldComponent,
         StudentFilterComponent,
+        FeeReceiptListComponent,
+        DiscountListComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -68,6 +73,8 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         LoadingSpinnerComponent,
         StudentFilterOldComponent,
         StudentFilterComponent,
+        FeeReceiptListComponent,
+        DiscountListComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,

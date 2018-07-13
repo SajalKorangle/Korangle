@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
-import {EmitterService} from '../../../../services/emitter.service';
-import {FeeReceipt} from '../../classes/common-functionalities';
+import {EmitterService} from '../../services/emitter.service';
+import {FeeReceipt} from '../../modules/fees-second/classes/common-functionalities';
 
 @Component({
     selector: 'app-fee-receipt-list',

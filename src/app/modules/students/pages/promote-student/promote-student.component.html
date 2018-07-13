@@ -5,9 +5,9 @@
         <!-- Session, Class, Section Headings Selection -->
         <div class="row">
 
-            <div class="col-md-6">
+            <div class="col-sm-6">
 
-                <span style="font-weight: 800; font-size: 16px;">Session 2017-18</span><br/>
+                <span class="visible-xs">From: </span><span style="font-weight: 800; font-size: 16px;">Session 2017-18</span><br/>
 
                 Class:
                 <select [ngModel]="fromSelectedClass"
@@ -19,28 +19,32 @@
                 </select>
 
                 <span *ngIf='fromSelectedClass' [class.hidden]="fromSelectedClass.sectionList.length == 1">
-                        Section:
-                        <select [ngModel]="fromSelectedSection"
-                                (ngModelChange)="fromSelectedSection=$event;handleFromSelectedSectionChange()"
-                                style="margin-right: 15px">
-                            <option *ngFor="let section of fromSelectedClass.sectionList" [ngValue]="section">
-                                {{section.name}}
-                            </option>
-                        </select>
-                      </span> <br/>
-                <button class="btn"
+                    <div class="visible-xs" style="margin-top: 10px;"></div>
+                    Section:
+                    <select [ngModel]="fromSelectedSection"
+                            (ngModelChange)="fromSelectedSection=$event;handleFromSelectedSectionChange()"
+                            style="margin-right: 15px">
+                        <option *ngFor="let section of fromSelectedClass.sectionList" [ngValue]="section">
+                            {{section.name}}
+                        </option>
+                    </select>
+                </span> <br/>
+
+                <button class="btn hidden-xs"
                         style="padding: 4px 7px"
                         (click)="selectAllStudentsFromList(); $event.stopPropagation();">Select All
                 </button>
-                <button class="btn"
+                <button class="btn hidden-xs"
                         style="padding: 4px 7px"
                         (click)="clearAllStudentsFromList(); $event.stopPropagation();">Clear All
                 </button>
             </div>
 
-            <div class="col-md-6" *ngIf="toSelectedClass">
+            <div class="visible-xs" style="margin-top:10px; margin-bottom: 10px; border: 1px solid black"></div>
 
-                <span style="font-weight: 800; font-size: 16px;">Session 2018-19</span><br/>
+            <div class="col-sm-6" *ngIf="toSelectedClass">
+
+                <span class="visible-xs">To: </span><span style="font-weight: 800; font-size: 16px;">Session 2018-19</span><br/>
 
 
                 <mat-form-field style="margin-top: 23px;">
@@ -73,12 +77,27 @@
 
             </div>
 
+            <div class="visible-xs" style="margin-bottom: 10px; border: 1px solid black"></div>
+
+        </div>
+
+        <div class="row visible-xs">
+            <div class="col-sm-6">
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="selectAllStudentsFromList(); $event.stopPropagation();">Select All
+                </button>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="clearAllStudentsFromList(); $event.stopPropagation();">Clear All
+                </button>
+            </div>
         </div>
 
         <!-- Student List -->
         <div class="row">
 
-            <div class="col-md-6" style="border-right: 1px solid black">
+            <div class="col-sm-6" style="border-right: 1px solid black">
                 <ng-container *ngFor="let student of fromSelectedSection.studentList">
                     <div [class.highlightBackground]="inToList(student.dbId)"
                          style="width: 100%">
@@ -90,38 +109,40 @@
                 </ng-container>
             </div>
 
-            <div class="col-md-6" style="border-left: 1px solid black">
+            <div class="col-sm-6 hidden-xs" style="border-left: 1px solid black">
                 <ng-container *ngFor="let student of getFilteredToStudentList()">
                     <span>{{student.name}}, {{student.scholarNumber}}</span><br/>
                 </ng-container>
             </div>
+
+            <div class="visible-xs" style="margin-top: 10px; margin-bottom: 10px; border: 1px solid black"></div>
 
         </div>
 
         <!-- Selected Session, Class, Section Headings -->
         <div class="row">
 
-            <div class="col-md-6">
+            <div class="col-xs-6">
 
-                From:
+                From: <br class="visible-xs"/>
                 <span style="font-weight: 800; font-size: 16px;">
-                          Session 2017-18, {{fromSelectedClass.name}}
-                          <ng-container *ngIf="fromSelectedClass.sectionList.length != 1">
-                              , {{fromSelectedSection.name}}
-                          </ng-container>
-                      </span>
+                      Session 2017-18, <br class="visible-xs"/> {{fromSelectedClass.name}}
+                      <ng-container *ngIf="fromSelectedClass.sectionList.length != 1">
+                          , {{fromSelectedSection.name}}
+                      </ng-container>
+                </span>
 
             </div>
 
-            <div class="col-md-6" *ngIf="toSelectedClass">
+            <div class="col-xs-6" *ngIf="toSelectedClass">
 
-                To:
+                To: <br class="visible-xs"/>
                 <span style="font-weight: 800; font-size: 16px;">
-                          Session 2018-19, {{toSelectedClass.name}}
-                          <ng-container *ngIf="toSelectedClass.selectedSection.name != 'Section - A'">
-                              , {{toSelectedClass.selectedSection.name}}
-                          </ng-container>
-                      </span>
+                    Session 2018-19, <br class="visible-xs"/> {{toSelectedClass.name}}
+                    <ng-container *ngIf="toSelectedClass.selectedSection.name != 'Section - A'">
+                      , {{toSelectedClass.selectedSection.name}}
+                    </ng-container>
+                </span>
 
             </div>
 

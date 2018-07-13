@@ -10,6 +10,7 @@ export class User {
     email: string;
     isAuthenticated = false;
     jwt = '';
+    displayName: string;
     // route = '';
 
     section: any;
@@ -18,22 +19,18 @@ export class User {
 
     schoolList: School[] = [];
 
-    activeTask: any;
-    activeModule: any;
-
     isLazyLoading: boolean = false;
     isPageLoading: boolean = false;
 
     emptyUserDetails(): void {
         this.username = null;
+        this.displayName = null;
         this.id = null;
         this.email = null;
         this.isAuthenticated = false;
         this.jwt = '';
         this.activeSchool = null;
         this.schoolList = [];
-        this.activeTask = null;
-        this.activeModule = null;
         this.isLazyLoading = false;
         this.isPageLoading = false;
         this.section = null;
@@ -63,6 +60,7 @@ export class User {
         console.log(data);
         this.id = data.id;
         this.username = data.username;
+        this.displayName = data.displayName;
         this.email = data.email;
         this.initializeSchoolList(data.schoolList);
         if (this.schoolList.length > 0) {
@@ -81,33 +79,29 @@ export class User {
     }
 
     initializeTask(): void {
-        console.log(this.activeSchool.role);
         if (this.activeSchool.role === 'Parent') {
-            this.section = {
-                route: '',
-            };
+            this.populateSection(this.activeSchool.studentList[0].taskList[0], this.activeSchool.studentList[0]);
         } else if (this.activeSchool.role === 'Employee') {
-            this.activeModule = this.activeSchool.moduleList[0];
-            this.activeTask = this.activeModule.taskList[0];
-            this.section = {
-                route: this.activeModule.path,
-                subsection: this.activeTask.path,
-            };
+            this.populateSection(this.activeSchool.moduleList[0].taskList[0], this.activeSchool.moduleList[0]);
         }
         EmitterService.get('initialize-router').emit('');
     }
 
-    handleSectionChange(task: any, module: any): void {
+    populateSection(task: any, module: any): void {
         if (this.activeSchool.role === 'Parent') {
             this.section = {
-                route: '',
+                route: 'parent',
+                subRoute: task.path,
+                title: module.name,
+                subTitle: task.title,
+                student: module,
             };
         } else if (this.activeSchool.role === 'Employee') {
-            this.activeModule = module;
-            this.activeTask = task;
             this.section = {
-                route: this.activeModule.path,
-                subsection: this.activeTask.path,
+                route: module.path,
+                subRoute: task.path,
+                title: module.title,
+                subTitle: task.title,
             };
         }
     }

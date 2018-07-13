@@ -14,8 +14,6 @@ import { TotalCollectionComponent } from './pages/total-collection/total-collect
 import { TotalDiscountComponent } from './pages/total-discount/total-discount.component';
 import { UpdateStudentFeesComponent } from './pages/update-student-fees/update-student-fees.component';
 
-import {FeeReceiptListComponent} from './components/fees-table/fee-receipt-list.component';
-import { DiscountListComponent } from './components/discount-table/discount-list.component';
 import { MonthlyAmountComponent } from './components/monthly-amount/monthly-amount.component';
 import { FeeStructureComponent } from './components/fee-structure/fee-structure.component';
 
@@ -38,8 +36,8 @@ import {FeeRoutingModule} from './fee.routing';
         TotalDiscountComponent,
         UpdateStudentFeesComponent,
 
-        FeeReceiptListComponent,
-        DiscountListComponent,
+        // FeeReceiptListComponent,
+        // DiscountListComponent,
         MonthlyAmountComponent,
         FeeStructureComponent,
 

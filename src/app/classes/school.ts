@@ -44,9 +44,21 @@ export class School {
         });
 
         this.studentList = schoolData.studentList;
-        /*this.studentList.forEach(student => {
-            student.showStudentList = false;
-        });*/
+        this.studentList.forEach(student => {
+            student.showTaskList = false;
+            student.taskList = [
+                {
+                    title: 'Profile',
+                    path: 'view_profile',
+                    icon: 'account_circle',
+                },
+                {
+                    title: 'Fees',
+                    path: 'view_fee',
+                    icon: 'receipt',
+                },
+            ];
+        });
     }
 
 }

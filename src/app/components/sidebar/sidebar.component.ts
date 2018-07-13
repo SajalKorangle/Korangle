@@ -39,10 +39,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         EmitterService.get('initialize-router').subscribe(value => {
             this.router.navigateByUrl(this.user.section.route);
-            /*if (this.user.activeModule) {
-                this.router.navigateByUrl(this.user.route);
-            }*/
-        })
+        });
     }
 
     ngAfterViewInit() {
@@ -67,9 +64,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         return true;
     };
 
-    handlePageChange(task: any, module: any) {
-        this.user.handleSectionChange(task, module);
-        this.router.navigateByUrl(module.path);
+    changePage(task: any, module: any) {
+        this.user.populateSection(task, module);
+        this.router.navigateByUrl(this.user.section.route);
     }
 
     handleSchoolChange(): void {

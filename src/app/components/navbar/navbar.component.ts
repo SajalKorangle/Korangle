@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, Input } from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 @Component({
@@ -7,6 +7,8 @@ import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common'
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+
+    @Input() user;
 
     location: Location;
     private toggleButton: any;
@@ -25,10 +27,11 @@ export class NavbarComponent implements OnInit {
     sidebarOpen() {
         const toggleButton = this.toggleButton;
         const body = document.getElementsByTagName('body')[0];
-        setTimeout(function(){
+        /*setTimeout(function(){
             toggleButton.classList.add('toggled');
-        }, 500);
+        }, 500);*/
         body.classList.add('nav-open');
+        toggleButton.classList.add('toggled');
 
         this.sidebarVisible = true;
     };
