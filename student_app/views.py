@@ -75,7 +75,18 @@ def create_new_student_view(request):
 
 
 ############## Student Full Profile ##############
-from .business.student_full_profile import get_student_full_profile_by_school_and_session_id, create_student_full_profile_list
+from .business.student_full_profile import get_student_full_profile_by_school_and_session_id, \
+    create_student_full_profile_list, get_student_full_profile_by_session_id
+
+
+class StudentFullProfileView(APIView):
+
+    @user_permission
+    def get(request, student_id):
+        data = {}
+        data['studentDbId'] = student_id
+        data['sessionDbId'] = request.GET['session_id']
+        return get_student_full_profile_by_session_id(data)
 
 
 class StudentFullProfileListView(APIView):

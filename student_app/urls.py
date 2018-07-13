@@ -24,8 +24,9 @@ urlpatterns += [
 ####################################
 
 ######## Student Full Profile ######
-from .views import StudentFullProfileListView
+from .views import StudentFullProfileListView, StudentFullProfileView
 urlpatterns += [
+    url(r'^student-full-profiles/(?P<student_id>[0-9]+)', StudentFullProfileView.as_view()),
     url(r'^student-full-profiles/batch', StudentFullProfileListView.as_view()),
     url(r'^school/(?P<school_id>[0-9]+)/student-full-profiles', StudentFullProfileListView.as_view()),
 ]

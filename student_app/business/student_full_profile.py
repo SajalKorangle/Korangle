@@ -101,6 +101,15 @@ def get_student_full_profile(student_section_object):
     return student_data
 
 
+def get_student_full_profile_by_session_id(data):
+
+    student_section_object = \
+        StudentSection.objects.get(parentStudent_id=data['studentDbId'],
+                                   parentSection__parentClassSession__parentSession_id=data['sessionDbId'])
+
+    return get_student_full_profile(student_section_object)
+
+
 def get_student_full_profile_by_school_and_session_id(data):
 
     student_list = []
