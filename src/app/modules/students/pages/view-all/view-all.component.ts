@@ -374,7 +374,7 @@ export class ViewAllComponent implements OnInit {
         (this.columnFilter.showFamilySSMID)? studentDisplay.push(student.familySSMID): '';
         (this.columnFilter.showBankName)? studentDisplay.push(student.bankName): '';
         (this.columnFilter.showBankAccountNum)? studentDisplay.push(student.bankAccountNum): '';
-        (this.columnFilter.showAadharNum)? studentDisplay.push(student.aadharNum): '';
+        (this.columnFilter.showAadharNum)? studentDisplay.push(student.aadharNum.toString()): '';
         (this.columnFilter.showBloodGroup)? studentDisplay.push(student.bloodGroup): '';
         (this.columnFilter.showFatherAnnualIncome)? studentDisplay.push(student.fatherAnnualIncome): '';
         (this.columnFilter.showRTE)? studentDisplay.push(student.rte): '';
