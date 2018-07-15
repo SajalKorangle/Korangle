@@ -4,6 +4,8 @@ import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
 import {StudentService} from '../../student.service';
 
+import * as XLSX from 'xlsx';
+
 class ColumnFilter {
     showSerialNumber = true;
     showName = true;
@@ -275,4 +277,108 @@ export class ViewAllComponent implements OnInit {
 
     };
 
+    downloadList(): void {
+
+        let template: any;
+
+        template = [
+
+            this.getHeaderValues(),
+
+            /*SECTION_VALUES,
+
+            ADMISSION_SESSION_VALUES,
+
+            GENDER_VALUES,
+
+            CATEGORY_VALUES,
+
+            RELIGION_VALUES,
+
+            BLOOD_GROUP_VALUES,
+
+            RTE_VALUES,
+
+            ['Bus Stop Values'].concat(this.busStopList.map(a => a.stopName)),
+
+            ['Date Format', 'dd-mm-yyyy or dd/mm/yyyy'],
+
+            HEADERS,*/
+
+        ];
+
+        this.studentFullProfileList.forEach(student => {
+            if (student.show) {
+                template.push(this.getStudentDisplayInfo(student));
+            }
+        });
+
+        /* generate worksheet */
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
+
+        /* generate workbook and add the worksheet */
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        /* save to file */
+        XLSX.writeFile(wb, 'korangle_students.csv');
+    }
+
+    getHeaderValues(): any {
+        let headerValues = [];
+        (this.columnFilter.showSerialNumber)? headerValues.push('Serial No.'): '';
+        (this.columnFilter.showName)? headerValues.push('Name'): '';
+        (this.columnFilter.showClassName)? headerValues.push('Class Name'): '';
+        (this.columnFilter.showRollNumber)? headerValues.push('Roll Number'): '';
+        (this.columnFilter.showFathersName)? headerValues.push('Father\'s Name'): '';
+        (this.columnFilter.showMobileNumber)? headerValues.push('Mobile No.'): '';
+        (this.columnFilter.showScholarNumber)? headerValues.push('Scholar No.'): '';
+        (this.columnFilter.showDateOfBirth)? headerValues.push('Date of Birth'): '';
+        (this.columnFilter.showMotherName)? headerValues.push('Mother\'s Name'): '';
+        (this.columnFilter.showGender)? headerValues.push('Gender'): '';
+        (this.columnFilter.showCaste)? headerValues.push('Caste'): '';
+        (this.columnFilter.showCategory)? headerValues.push('Category'): '';
+        (this.columnFilter.showReligion)? headerValues.push('Religion'): '';
+        (this.columnFilter.showFatherOccupation)? headerValues.push('Father\'s Occupation'): '';
+        (this.columnFilter.showAddress)? headerValues.push('Address'): '';
+        (this.columnFilter.showChildSSMID)? headerValues.push('Child SSMID'): '';
+        (this.columnFilter.showFamilySSMID)? headerValues.push('Family SSMID'): '';
+        (this.columnFilter.showBankName)? headerValues.push('Bank Name'): '';
+        (this.columnFilter.showBankAccountNum)? headerValues.push('Bank Account No.'): '';
+        (this.columnFilter.showAadharNum)? headerValues.push('Aadhar No.'): '';
+        (this.columnFilter.showBloodGroup)? headerValues.push('Blood Group'): '';
+        (this.columnFilter.showFatherAnnualIncome)? headerValues.push('Father\'s Annual Income'): '';
+        (this.columnFilter.showRTE)? headerValues.push('RTE'): '';
+
+        return headerValues;
+    }
+
+    getStudentDisplayInfo(student: any): any {
+        let studentDisplay = [];
+        (this.columnFilter.showSerialNumber)? studentDisplay.push(student.serialNumber): '';
+        (this.columnFilter.showName)? studentDisplay.push(student.name): '';
+        (this.columnFilter.showClassName)? studentDisplay.push(student.className): '';
+        (this.columnFilter.showRollNumber)? studentDisplay.push(student.rollNumber): '';
+        (this.columnFilter.showFathersName)? studentDisplay.push(student.fathersName): '';
+        (this.columnFilter.showMobileNumber)? studentDisplay.push(student.mobileNumber): '';
+        (this.columnFilter.showScholarNumber)? studentDisplay.push(student.scholarNumber): '';
+        (this.columnFilter.showDateOfBirth)? studentDisplay.push(student.dateOfBirth): '';
+        (this.columnFilter.showMotherName)? studentDisplay.push(student.motherName): '';
+        (this.columnFilter.showGender)? studentDisplay.push(student.gender): '';
+        (this.columnFilter.showCaste)? studentDisplay.push(student.caste): '';
+        (this.columnFilter.showCategory)? studentDisplay.push(student.category): '';
+        (this.columnFilter.showReligion)? studentDisplay.push(student.religion): '';
+        (this.columnFilter.showFatherOccupation)? studentDisplay.push(student.fatherOccupation): '';
+        (this.columnFilter.showAddress)? studentDisplay.push(student.address): '';
+        (this.columnFilter.showChildSSMID)? studentDisplay.push(student.childSSMID): '';
+        (this.columnFilter.showFamilySSMID)? studentDisplay.push(student.familySSMID): '';
+        (this.columnFilter.showBankName)? studentDisplay.push(student.bankName): '';
+        (this.columnFilter.showBankAccountNum)? studentDisplay.push(student.bankAccountNum): '';
+        (this.columnFilter.showAadharNum)? studentDisplay.push(student.aadharNum): '';
+        (this.columnFilter.showBloodGroup)? studentDisplay.push(student.bloodGroup): '';
+        (this.columnFilter.showFatherAnnualIncome)? studentDisplay.push(student.fatherAnnualIncome): '';
+        (this.columnFilter.showRTE)? studentDisplay.push(student.rte): '';
+
+        return studentDisplay;
+    }
 }
