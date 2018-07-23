@@ -28,6 +28,9 @@ export class TotalCollectionComponent implements OnInit {
     selectedMember: any;
     memberList = [];
 
+    selectedFeeType: any;
+    feeTypeList = [];
+
     isLoading = false;
 
     todaysDate(): string {
@@ -57,6 +60,15 @@ export class TotalCollectionComponent implements OnInit {
             this.memberList.push(member);
             this.selectedMember = member;
         });
+        this.feeService.getFeeTypeList(this.user.jwt).then(feeTypeList => {
+            this.feeTypeList = feeTypeList;
+            let feeType = {
+                dbId: 0,
+                name: 'All',
+            };
+            this.feeTypeList.push(feeType);
+            this.selectedFeeType = feeType;
+        });
     }
 
     getSchoolFeeReceiptList(): void {
@@ -71,7 +83,6 @@ export class TotalCollectionComponent implements OnInit {
             this.isLoading = false;
             this.feeReceiptList = feeReceiptList;
             this.populateFilteredFeeReceiptList();
-            console.log(this.feeReceiptList);
         }, error => {
             this.isLoading = false;
         });
@@ -101,7 +112,7 @@ export class TotalCollectionComponent implements OnInit {
     getSchoolFeeTotalAmount(): number {
         let amount = 0;
         this.filteredFeeReceiptList.forEach( feeReceipt => {
-            amount += FeeReceipt.getFeeReceiptTotalAmount(feeReceipt);
+            amount += FeeReceipt.getFeeReceiptTotalAmount(feeReceipt, this.selectedFeeType.name);
         });
         return amount;
     }

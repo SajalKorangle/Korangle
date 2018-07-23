@@ -15,10 +15,12 @@ export class FeeReceipt {
         return amount;
     }
 
-    static getFeeReceiptTotalAmount(feeReceipt: any): number {
+    static getFeeReceiptTotalAmount(feeReceipt: any, feeType: any = 'All'): number {
         let amount = 0;
         feeReceipt['subFeeReceiptList'].forEach( subFeeReceipt => {
-            amount += FeeReceipt.getSubFeeReceiptAmount(subFeeReceipt);
+            if (feeType === 'All' || subFeeReceipt.feeType === feeType) {
+                amount += FeeReceipt.getSubFeeReceiptAmount(subFeeReceipt);
+            }
         });
         return amount;
     }
