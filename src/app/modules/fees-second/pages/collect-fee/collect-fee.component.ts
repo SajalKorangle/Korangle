@@ -4,7 +4,7 @@ import {style, state, trigger, animate, transition} from "@angular/animations";
 
 import { FeeService } from '../../fee.service';
 
-import { FeeReceipt } from '../../classes/common-functionalities';
+import {Concession, FeeReceipt} from '../../classes/common-functionalities';
 
 import { EmitterService } from '../../../../services/emitter.service';
 import {FREQUENCY_LIST} from '../../classes/constants';
@@ -60,6 +60,10 @@ export class CollectFeeComponent {
 
     feeReceiptList: any;
 
+    showPreviousConcessionDetails: boolean;
+
+    concessionList: any;
+
     remark: string;
 
     isLoading = false;
@@ -75,6 +79,7 @@ export class CollectFeeComponent {
         this.selectedStudent = student;
         this.getStudentFeeProfile(data);
         this.getStudentFeeReceiptList(data);
+        this.getStudentConcessionList(data);
     }
 
     getStudentFeeReceiptList(data): void {
@@ -82,9 +87,21 @@ export class CollectFeeComponent {
         this.feeService.getStudentFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
             if (this.selectedStudent.dbId === data['studentDbId']) {
                 this.feeReceiptList = feeReceiptList;
-                console.log(this.feeReceiptList);
             }
         });
+    }
+
+    getStudentConcessionList(data): void {
+        this.concessionList = null;
+        this.feeService.getStudentConcessionList(data, this.user.jwt).then(concessionList => {
+            if (this.selectedStudent.dbId === data['studentDbId']) {
+                this.concessionList = concessionList;
+            }
+        });
+    }
+
+    getConcessionListTotalAmount(): number {
+        return Concession.getConcessionListTotalAmount(this.concessionList);
     }
 
     getStudentFeeProfile(data: any): void {
@@ -110,6 +127,7 @@ export class CollectFeeComponent {
                 });
                 this.showDetails = true;
                 this.showPreviousFeeDetails = false;
+                this.showPreviousConcessionDetails = false;
                 console.log(this.studentFeeStatusList);
             }
         }, error => {

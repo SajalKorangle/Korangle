@@ -216,6 +216,38 @@
 
         </ng-container>
 
+        <div style="margin-top: 25px; margin-bottom: 25px; border-bottom: 1px solid black"> </div>
+
+        <ng-container *ngIf="concessionList">
+            <div *ngIf="concessionList.length !== 0">
+                <div class="row" style="font-weight: 800 !important;">
+                    <div class="col-md-11">
+                        <!-- span *ngIf="!showPreviousFeeDetails">
+                            Last Concession: <i>{{concessionList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>, Amount: <i>{{getConcessionTotalAmount(concessionList[0])}}</i>
+                        </span>
+                        <span *ngIf="showPreviousFeeDetails">Previous Concession Details</span -->
+                        <span>Total discount given till now: <i>{{getConcessionListTotalAmount()}}</i></span>
+                    </div>
+                    <div class="col-md-1">
+                        <i class="material-icons"
+                           [@rotate]="!showPreviousConcessionDetails"
+                           (click)="showPreviousConcessionDetails = !showPreviousConcessionDetails">keyboard_arrow_down</i>
+                    </div>
+                </div>
+                <div class="row" [@slideDown]="showPreviousConcessionDetails">
+                    <div class="col-md-12">
+                        <app-discount-list [user]="user"
+                                           [concessionList]="concessionList"
+                                           [whileSubmittingConcession]="true"></app-discount-list>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="concessionList.length == 0">
+                **No concession given yet
+            </div>
+
+        </ng-container>
+
     </ng-container>
 
     <ng-container *ngIf="isLoading">

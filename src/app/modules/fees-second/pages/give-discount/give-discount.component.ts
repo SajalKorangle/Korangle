@@ -5,7 +5,7 @@ import { FREQUENCY_LIST } from '../../classes/constants';
 
 import { FeeService } from '../../fee.service';
 
-import { Concession } from '../../classes/common-functionalities';
+import {Concession, FeeReceipt} from '../../classes/common-functionalities';
 
 const APRIL = 'APRIL';
 const MAY = 'MAY';
@@ -54,6 +54,10 @@ export class GiveDiscountComponent {
 
     showDetails: boolean;
 
+    showPreviousFeeDetails: boolean;
+
+    feeReceiptList: any;
+
     showPreviousConcessionDetails: boolean;
 
     concessionList: any;
@@ -72,7 +76,21 @@ export class GiveDiscountComponent {
         };
         this.selectedStudent = student;
         this.getStudentFeeStatus(data);
+        this.getStudentFeeReceiptList(data);
         this.getStudentConcessionList(data);
+    }
+
+    getStudentFeeReceiptList(data): void {
+        this.feeReceiptList = null;
+        this.feeService.getStudentFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
+            if (this.selectedStudent.dbId === data['studentDbId']) {
+                this.feeReceiptList = feeReceiptList;
+            }
+        });
+    }
+
+    getFeeReceiptTotalAmount(feeReceipt: any): number {
+        return FeeReceipt.getFeeReceiptTotalAmount(feeReceipt);
     }
 
     getStudentConcessionList(data): void {
@@ -80,7 +98,6 @@ export class GiveDiscountComponent {
         this.feeService.getStudentConcessionList(data, this.user.jwt).then(concessionList => {
             if (this.selectedStudent.dbId === data['studentDbId']) {
                 this.concessionList = concessionList;
-                console.log(this.concessionList);
             }
         });
     }
@@ -107,6 +124,7 @@ export class GiveDiscountComponent {
                     });
                 });
                 this.showDetails = true;
+                this.showPreviousFeeDetails = false;
                 this.showPreviousConcessionDetails = false;
                 console.log(this.studentFeeStatusList);
             }
