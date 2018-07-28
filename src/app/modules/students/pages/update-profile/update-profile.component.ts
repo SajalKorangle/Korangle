@@ -135,7 +135,7 @@ export class UpdateProfileComponent implements OnInit {
             return;
         }
         this.isLoading = true;
-        this.studentService.updateStudentProfile(this.currentStudent, this.user.jwt).then(
+        this.studentService.updateStudentProfileOld(this.currentStudent, this.user.jwt).then(
             student => {
                 this.isLoading = false;
                 let breakLoop = false;

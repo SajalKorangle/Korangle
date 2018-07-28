@@ -4,7 +4,7 @@ import { Student } from '../../../../classes/student';
 import { Classs } from '../../../../classes/classs';
 import { Section } from '../../../../classes/section';
 
-import { StudentTcProfile } from '../../classes/student-tc-profile';
+import { TransferCertificate } from '../../classes/transfer-certificate';
 
 import { StudentService } from '../../student.service';
 import { SchoolService } from '../../../../services/school.service';
@@ -17,6 +17,7 @@ import { EmitterService } from '../../../../services/emitter.service';
   styleUrls: ['./generate-tc.component.css'],
     providers: [ StudentService, SchoolService ],
 })
+
 export class GenerateTcComponent implements OnInit {
 
     @Input() user;
@@ -25,9 +26,13 @@ export class GenerateTcComponent implements OnInit {
     selectedSection: Section;
     selectedStudent: Student;
 
+    selectedTransferCertificate: TransferCertificate = new TransferCertificate();
+
+    currentTransferCertificate: TransferCertificate = new TransferCertificate();
+
     classSectionStudentList: Classs[] = [];
 
-    currentStudent: StudentTcProfile = new StudentTcProfile();
+    showDetails: boolean = false;
 
     isLoading = false;
     isStudentListLoading = false;
@@ -45,7 +50,8 @@ export class GenerateTcComponent implements OnInit {
 
     changeSelectedStudentToFirst(): void {
         this.selectedStudent = this.selectedSection.studentList[0];
-        this.currentStudent.copy(this.selectedStudent);
+        // this.currentTransferCertificate.copy(this.selectedStudent);
+        this.showDetails = false;
     }
 
     handleSessionChange(): void {
@@ -91,6 +97,7 @@ export class GenerateTcComponent implements OnInit {
                         const tempStudent = new Student();
                         tempStudent.name = student.name;
                         tempStudent.dbId = student.dbId;
+                        tempStudent.parentTransferCertificate = student.parentTransferCertificate;
                         tempSection.studentList.push(tempStudent);
                     });
                     tempClass.sectionList.push(tempSection);
@@ -110,18 +117,113 @@ export class GenerateTcComponent implements OnInit {
 
     getStudentProfile(): void {
         this.isLoading = true;
-        const data = {
+        const student_data = {
             studentDbId: this.selectedStudent.dbId,
             sectionDbId: this.selectedSection.dbId,
         };
-        this.studentService.getStudentProfile(data, this.user.jwt).then(
-            student => {
+        if (this.selectedStudent.parentTransferCertificate) {
+            const transfer_certificate_data = {
+                id: this.selectedStudent.parentTransferCertificate,
+            };
+            Promise.all([
+                this.studentService.getStudentProfile(student_data, this.user.jwt),
+                this.studentService.getTransferCertificate(transfer_certificate_data, this.user.jwt),
+            ]).then(value => {
                 this.isLoading = false;
-                const breakLoop = false;
-                if (this.selectedStudent.dbId === student.dbId) {
-                    this.selectedStudent.copy(student);
-                    this.currentStudent.copy(student);
-                    console.log(this.selectedStudent);
+                if (this.selectedStudent.dbId === value[0].dbId) {
+                    this.selectedStudent.copy(value[0]);
+                }
+                if (this.selectedStudent.parentTransferCertificate === value[1].id) {
+                    this.selectedTransferCertificate.copy(value[1]);
+                    this.currentTransferCertificate.copy(value[1]);
+                }
+                this.showDetails = true;
+            }, error => {
+                this.isLoading = false;
+            });
+        } else {
+            this.studentService.getStudentProfile(student_data, this.user.jwt).then(
+                student => {
+                    this.isLoading = false;
+                    if (this.selectedStudent.dbId === student.dbId) {
+                        this.selectedStudent.copy(student);
+                        this.selectedTransferCertificate.clean();
+                        this.currentTransferCertificate.clean();
+                    }
+                    this.showDetails = true;
+                }, error => {
+                    this.isLoading = false;
+                }
+            );
+        }
+    }
+
+    isValidCertificate(): boolean {
+        if (this.currentTransferCertificate.certificateNumber == null) {
+            alert('Certificate Number field should be filled');
+            return false;
+        }
+        if (this.currentTransferCertificate.issueDate == null) {
+            alert('Issue Date field should be filled');
+            return false;
+        }
+        if (this.currentTransferCertificate.admissionDate == null) {
+            alert('Admission Date field should be filled');
+            return false;
+        }
+        if (this.currentTransferCertificate.leavingDate == null) {
+            alert('Leaving Date field should be filled');
+            return false;
+        }
+        if (this.currentTransferCertificate.leavingReason == null) {
+            alert('Leaving Reason field should be filled');
+            return false;
+        }
+        if (this.currentTransferCertificate.lastClassPassed == null) {
+            alert('Last Class passed field should be filled');
+            return false;
+        }
+        if (this.currentTransferCertificate.leavingMidSession == null) {
+            alert('Leaving Mid Session field should be filled');
+            return false;
+        }
+        if (this.currentTransferCertificate.admissionClass == null) {
+            alert('Admission Class should be filled');
+            return false;
+        }
+        return true;
+    }
+
+    generateTC(): void {
+        if (!this.isValidCertificate()) {
+            return;
+        }
+        this.isLoading = true;
+        let selectedStudentId = this.selectedStudent.dbId;
+        this.studentService.createTransferCertificate(this.currentTransferCertificate, this.user.jwt).then(
+            response => {
+                // alert(response.message);
+                if (response.id !== 0) {
+                    const data = {
+                        id: selectedStudentId,
+                        parentTransferCertificate: response.id,
+                    };
+                    this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
+                        response => {
+                            this.isLoading = false;
+                            if (response.status === 'success') {
+                                alert('Transfer Certificate generated successfully');
+                                this.currentTransferCertificate.id = data.parentTransferCertificate;
+                                this.selectedTransferCertificate.copy(this.currentTransferCertificate);
+                                this.printTCSecondFormat();
+                            } else {
+                                alert('Failed to link generated transfer certificate to student, Contact Admin');
+                            }
+                        }
+                    );
+                } else {
+                    this.isLoading = false;
+                    alert('Failed to generate Transfer Certificate');
                 }
             }, error => {
                 this.isLoading = false;
@@ -129,8 +231,28 @@ export class GenerateTcComponent implements OnInit {
         );
     }
 
+    updateTC(): void {
+        if (!this.isValidCertificate()) {
+            return;
+        }
+        this.isLoading = true;
+        this.studentService.updateTransferCertificate(this.currentTransferCertificate, this.user.jwt).then(
+            response => {
+                this.isLoading = false;
+                alert(response.message);
+                this.selectedTransferCertificate.copy(this.currentTransferCertificate);
+            }, error => {
+                this.isLoading = false;
+            }
+        );
+    }
+
     printTCSecondFormat(): void {
-        EmitterService.get('print-transfer-certificate-second-format').emit(this.currentStudent);
+        const value = {
+            studentProfile: this.selectedStudent,
+            transferCertificate: this.selectedTransferCertificate,
+        };
+        EmitterService.get('print-transfer-certificate-second-format').emit(value);
     }
 
 }

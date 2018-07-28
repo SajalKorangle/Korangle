@@ -24,7 +24,7 @@
         <span *ngIf="selectedSection">
             Student:
             <select [ngModel]="selectedStudent"
-                    (ngModelChange)="selectedStudent=$event;currentStudent.copy(selectedStudent)"
+                    (ngModelChange)="selectedStudent=$event;this.showDetails=false;"
                     style="margin-right: 15px">
                         <option *ngFor="let student of selectedSection.studentList" [ngValue]="student">
                             {{student.name}}
@@ -58,7 +58,8 @@
     </div>
 
 
-    <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading && !isStudentListLoading">
+    <!-- ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading && !isStudentListLoading" -->
+    <ng-container *ngIf="showDetails==true && !isLoading && !isStudentListLoading">
 
 
         <div class="row" style="font-weight: 800;">
@@ -75,65 +76,118 @@
 
         <div class="row">
             <div class="col-md-3">Certificate No.</div>
-            <div class="col-md-3"><input type="number" [(ngModel)]="currentStudent.certificateNumber"/></div>
+            <div class="col-md-3">
+                <input type="number"
+                       [ngModel]="selectedTransferCertificate.certificateNumber"
+                       (ngModelChange)="currentTransferCertificate.certificateNumber=$event"/>
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Issue Date</div>
-            <div class="col-md-3"><input type="date" [(ngModel)]="currentStudent.issueDate" /></div>
+            <div class="col-md-3">
+                <input type="date"
+                       [ngModel]="selectedTransferCertificate.issueDate"
+                       (ngModelChange)="currentTransferCertificate.issueDate=$event"/>
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Admission Date</div>
-            <div class="col-md-3"><input type="date" [(ngModel)]="currentStudent.admissionDate" /></div>
+            <div class="col-md-3">
+                <input type="date"
+                       [ngModel]="selectedTransferCertificate.admissionDate"
+                       (ngModelChange)="currentTransferCertificate.admissionDate=$event"/>
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Leaving Date</div>
-            <div class="col-md-3"><input type="date" [(ngModel)]="currentStudent.leavingDate" /></div>
+            <div class="col-md-3">
+                <input type="date"
+                       [ngModel]="selectedTransferCertificate.leavingDate"
+                       (ngModelChange)="currentTransferCertificate.leavingDate=$event"/>
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">is leaving school because</div>
-            <div class="col-md-6"><input type="text" [(ngModel)]="currentStudent.leavingReason" /></div>
+            <div class="col-md-6">
+                <input type="text"
+                       [ngModel]="selectedTransferCertificate.leavingReason"
+                       (ngModelChange)="currentTransferCertificate.leavingReason=$event"/>
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Admission Class</div>
-            <div class="col-md-3"><input type="text" [(ngModel)]="currentStudent.admissionClass" /></div>
+            <div class="col-md-3">
+                <input type="text"
+                       [ngModel]="selectedTransferCertificate.admissionClass"
+                       (ngModelChange)="currentTransferCertificate.admissionClass=$event"/>
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Last Class Passed</div>
-            <div class="col-md-3"><input type="text" [(ngModel)]="currentStudent.lastClassPassed" /></div>
+            <div class="col-md-3">
+                <input type="text"
+                       [ngModel]="selectedTransferCertificate.lastClassPassed"
+                       (ngModelChange)="currentTransferCertificate.lastClassPassed=$event"/>
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-12">
-                <mat-checkbox [(ngModel)]="currentStudent.leavingMidSession">
+                <mat-checkbox
+                        [ngModel]="selectedTransferCertificate.leavingMidSession"
+                        (ngModelChange)="currentTransferCertificate.leavingMidSession=$event">
                     Student is leaving mid session.
                 </mat-checkbox>
             </div>
         </div>
 
-        <ng-container *ngIf="currentStudent.leavingMidSession">
+        <ng-container *ngIf="currentTransferCertificate.leavingMidSession">
             <div class="row">
                 <div class="col-md-3">Last Class Attended</div>
-                <div class="col-md-3"><input type="text" [(ngModel)]="currentStudent.lastClassAttended" /></div>
+                <div class="col-md-3">
+                    <input type="text"
+                           [ngModel]="selectedTransferCertificate.lastClassAttended"
+                           (ngModelChange)="currentTransferCertificate.lastClassattended=$event" />
+                </div>
             </div>
 
             <div class="row">
                 <div class="col-md-3">Attendance (in last class)</div>
-                <div class="col-md-3"><input type="number" [(ngModel)]="currentStudent.lastClassAttendance" /></div>
+                <div class="col-md-3">
+                    <input type="number"
+                           [ngModel]="selectedTransferCertificate.lastClassAttendance"
+                           (ngModelChange)="currentTransferCertificate.lastClassAttendance=$event" />
+                </div>
             </div>
 
             <div class="row">
                 <div class="col-md-3">Total working Days (till attendance)</div>
-                <div class="col-md-3"><input type="number" [(ngModel)]="currentStudent.attendanceOutOf" /></div>
+                <div class="col-md-3">
+                    <input type="number"
+                           [ngModel]="selectedTransferCertificate.attendanceOutOf"
+                           (ngModelChange)="currentTransferCertificate.attendanceOutOf=$event" />
+                </div>
             </div>
         </ng-container>
 
         <button type="button"
+                *ngIf="!selectedTransferCertificate.id"
+                (click)="generateTC();"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Generate T. C.</button>
+
+        <button type="button"
+                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
+                (click)="updateTC();"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Update T.C.</button>
+
+        <button type="button"
+                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
                 (click)="printTCSecondFormat();"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Print T. C.</button>
 

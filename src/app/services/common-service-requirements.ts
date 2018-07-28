@@ -52,6 +52,19 @@ export class CommonServiceRequirements {
             .catch(this.handleError);
     }
 
+    public patchData(body: any, token: any, url: any): Promise<any> {
+        const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        return this.http.patch(Constants.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+            .toPromise()
+            .then(response => {
+                return this.returnResponse(response);
+            }, error => {
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                return null;
+            })
+            .catch(this.handleError);
+    }
+
     public postData(body: any, token: any, url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.post(Constants.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
