@@ -3,7 +3,9 @@ from parent_test import ParentTestCase
 
 # Business
 from student_app.business.student_full_profile import get_student_full_profile, \
-    get_student_full_profile_by_school_and_session_id, create_student_full_profile, create_student_full_profile_list
+    get_student_full_profile_by_school_and_session_id, create_student_full_profile, \
+    create_student_full_profile_list, update_student_full_profile, partially_update_student_full_profile, \
+    StudentModelSerializer
 
 # Factories
 from student_app.factories.student import StudentFactory
@@ -17,6 +19,34 @@ from class_app.models import Section
 
 
 class StudentFullProfileTestCase(ParentTestCase):
+
+    def test_partially_update_student_profile(self):
+
+        student_object = StudentFactory()
+
+        student_serializer = StudentModelSerializer(student_object)
+
+        data = {}
+        data['id'] = student_serializer.data['id']
+        data['name'] = 'Wow Wow'
+
+        partially_update_student_full_profile(data)
+
+        self.assertEqual(Student.objects.get(id=student_serializer.data['id']).name, data['name'])
+
+    def test_update_student_profile(self):
+
+        student_object = StudentFactory()
+
+        student_serializer = StudentModelSerializer(student_object)
+
+        data = student_serializer.data
+
+        data['name'] = 'Wow Wow'
+
+        update_student_full_profile(data)
+
+        self.assertEqual(Student.objects.get(id=student_serializer.data['id']).name, data['name'])
 
     def test_create_student_profile_list(self):
 
@@ -131,7 +161,7 @@ class StudentFullProfileTestCase(ParentTestCase):
 
         response = get_student_full_profile(student_section_object)
 
-        self.assertEqual(len(response), 29)
+        self.assertEqual(len(response), 30)
 
         self.assertEqual(response['name'], student_object.name)
         self.assertEqual(response['dbId'], student_object.id)
@@ -156,6 +186,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         self.assertEqual(response['bloodGroup'],student_object.bloodGroup)
         self.assertEqual(response['fatherAnnualIncome'],student_object.fatherAnnualIncome)
         self.assertEqual(response['rte'],student_object.rte)
+        self.assertEqual(response['parentTransferCertificate'],student_object.parentTransferCertificate)
         self.assertEqual(response['className'], student_section_object.parentSection.parentClassSession.parentClass.name)
         self.assertEqual(response['sectionName'], student_section_object.parentSection.name)
         self.assertEqual(response['sectionDbId'], student_section_object.parentSection.id)

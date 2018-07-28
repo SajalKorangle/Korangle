@@ -15,6 +15,38 @@ class StudentModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+def partially_update_student_full_profile(data):
+
+    student_profile_serializer = StudentModelSerializer(Student.objects.get(id=data['id']), data=data, partial=True)
+    if student_profile_serializer.is_valid():
+        student_profile_serializer.save()
+        return {
+            'status': 'success',
+            'message': 'Student Profile updated successfully',
+        }
+    else:
+        return {
+            'status': 'failure',
+            'message': 'Student Profile updation failed',
+        }
+
+
+def update_student_full_profile(data):
+
+    student_profile_serializer = StudentModelSerializer(Student.objects.get(id=data['id']), data=data)
+    if student_profile_serializer.is_valid():
+        student_profile_serializer.save()
+        return {
+            'status': 'success',
+            'message': 'Student Profile updated successfully',
+        }
+    else:
+        return {
+            'status': 'failure',
+            'message': 'Student Profile updation failed',
+        }
+
+
 def create_student_full_profile(student):
 
     student_object = StudentModelSerializer(data=student)
@@ -82,6 +114,7 @@ def get_student_full_profile(student_section_object):
     student_data['bloodGroup'] = student_object.bloodGroup
     student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome
     student_data['rte'] = student_object.rte
+    student_data['parentTransferCertificate'] = student_object.parentTransferCertificate_id
 
     if student_object.currentBusStop is not None:
         student_data['busStopDbId'] = student_object.currentBusStop.id

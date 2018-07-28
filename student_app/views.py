@@ -75,7 +75,21 @@ def create_new_student_view(request):
 
 
 ############## Student Full Profile ##############
-from .business.student_full_profile import get_student_full_profile_by_school_and_session_id, create_student_full_profile_list
+from .business.student_full_profile import get_student_full_profile_by_school_and_session_id, \
+    create_student_full_profile_list, update_student_full_profile, partially_update_student_full_profile
+
+
+class StudentFullProfileView(APIView):
+
+    @user_permission
+    def put(request, student_id):
+        data = json.loads(request.body.decode('utf-8'))
+        return update_student_full_profile(data)
+
+    @user_permission
+    def patch(request, student_id):
+        data = json.loads(request.body.decode('utf-8'))
+        return partially_update_student_full_profile(data)
 
 
 class StudentFullProfileListView(APIView):
@@ -132,3 +146,27 @@ class StudentSectionListView(APIView):
             return JsonResponse({'response': get_success_response(create_student_section_list(data))})
         else:
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+
+############ Transfer Certificate #################
+from .business.transfer_certificate import create_transfer_certificate, \
+    get_transfer_certificate, update_transfer_certificate
+
+
+class TransferCertificateView(APIView):
+
+    @user_permission
+    def get(request, transfer_certificate_id):
+        data = {}
+        data['id'] = transfer_certificate_id
+        return get_transfer_certificate(data)
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_transfer_certificate(data)
+
+    @user_permission
+    def put(request, transfer_certificate_id):
+        data = json.loads(request.body.decode('utf-8'))
+        return update_transfer_certificate(data)

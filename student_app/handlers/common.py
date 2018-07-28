@@ -54,6 +54,7 @@ def get_student_profile(student_object, session_object):
     student_data['bloodGroup'] = student_object.bloodGroup
     student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome
     student_data['rte'] = student_object.rte
+    student_data['parentTransferCertificate'] = student_object.parentTransferCertificate_id
 
     if student_object.currentBusStop is not None:
         student_data['busStopDbId'] = student_object.currentBusStop.id

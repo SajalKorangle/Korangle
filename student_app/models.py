@@ -9,20 +9,35 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 
+class TransferCertificate(models.Model):
+
+    certificateNumber = models.IntegerField(null=False)
+    issueDate = models.DateField(null=False)
+    admissionDate = models.DateField(null=False)
+    leavingDate = models.DateField(null=False)
+    leavingReason = models.TextField(null=False)
+    admissionClass = models.TextField(null=False)
+    lastClassPassed = models.TextField(null=False)
+    leavingMidSession = models.BooleanField(default=False)
+    lastClassAttended = models.TextField(null=True)
+    lastClassAttendance = models.IntegerField(null=True)
+    attendanceOutOf = models.IntegerField(null=True)
+
+    class Meta:
+        db_table = 'student_transfer_certificate'
+
+
 class Student(models.Model):
 
     name = models.CharField(max_length=100)
     fathersName = models.CharField(max_length=100)
     mobileNumber = models.IntegerField(null=True)
-    # rollNumber = models.TextField(null=True)
     scholarNumber = models.TextField(null=True)
     totalFees = models.IntegerField(default=0)
     dateOfBirth = models.DateField(null=True)
     remark = models.TextField(null=True)
 
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
-
-    # parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=0)
 
     # new student profile data
     motherName = models.TextField(null=True)
@@ -70,6 +85,9 @@ class Student(models.Model):
 
     admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession')
 
+    parentTransferCertificate = \
+        models.ForeignKey(TransferCertificate, on_delete=models.PROTECT, null=True, verbose_name='parentTransferCertificate')
+
     def __str__(self):
         """A string representation of the model."""
         return self.parentSchool.name+" --- "+self.name
@@ -106,20 +124,8 @@ class Student(models.Model):
         return self.studentsection_set \
             .get(parentSection__parentClassSession__parentSession=session_object).rollNumber
 
-    '''@property
-    def school(self):
-        return self.parentUser.school_set.filter()[0]'''
-
-    '''@property
-    def className(self):
-        return self.studentsection_set\
-            .get(parentSection__parentClassSession__parentSession=self.school.currentSession)\
-            .parentSection.parentClassSession.parentClass.name'''
-
     class Meta:
         db_table = 'student'
-
-# Create your models here.
 
 
 class StudentSection(models.Model):
