@@ -71,7 +71,7 @@
             <div class="col-md-3 visible-sm visible-xs" align="center">
 
                 <img *ngIf="selectedStudent.profileImage"
-                     src="http://localhost:8000{{selectedStudent.profileImage}}"
+                     src="{{selectedStudent.profileImage}}"
                      style="width: 50%">
 
                 <img *ngIf="!selectedStudent.profileImage"
@@ -79,6 +79,16 @@
                      style="width: 50%"/>
 
                 <br/>
+
+                <input type='file'
+                       (change)="onImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #imageInput>
+
+                <a (click)="imageInput.click()"
+                   style="cursor: pointer">Select & Upload Image</a>
 
             </div>
 
@@ -164,9 +174,9 @@
                        multiple="false"
                        style="display: none"
                        accept="image/*"
-                       #imageInput>
+                       #imageInputTwo>
 
-                <a (click)="imageInput.click()"
+                <a (click)="imageInputTwo.click()"
                    style="cursor: pointer">Select & Upload Image</a>
 
             </div>
