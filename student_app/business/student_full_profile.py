@@ -91,6 +91,10 @@ def get_student_full_profile(student_section_object):
     student_object = student_section_object.parentStudent
 
     student_data = {}
+    if student_object.profileImage:
+        student_data['profileImage'] = student_object.profileImage.url
+    else:
+        student_data['profileImage'] = None
     student_data['name'] = student_object.name
     student_data['dbId'] = student_object.id
     student_data['fathersName'] = student_object.fathersName

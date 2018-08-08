@@ -44,6 +44,12 @@ urlpatterns += [
     url(r'^student-sections/batch', StudentSectionListView.as_view()),
 ]
 
+######## Profile Image ############
+from .views import ProfileImageView
+urlpatterns += [
+    url(r'^(?P<student_id>[0-9]+)/profile-image', ProfileImageView.as_view()),
+]
+
 ######## Transfer certificate ######
 from .views import TransferCertificateView
 urlpatterns += [

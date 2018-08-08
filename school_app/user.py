@@ -29,6 +29,8 @@ def get_school_data_by_object(school_object, user_object):
         school_data['logo'] = school_object.logo.url
     else:
         school_data['logo'] = ''
+    school_data['profileImage'] = school_object.profileImage.url
+    school_data['mobileNumber'] = school_object.mobileNumber
     school_data['primaryThemeColor'] = school_object.primaryThemeColor
     school_data['secondaryThemeColor'] = school_object.secondaryThemeColor
     school_data['complexFeeStructure'] = school_object.complexFeeStructure
@@ -66,29 +68,6 @@ def get_school_data_by_object(school_object, user_object):
 
     print(school_data['name'])
     return school_data
-
-
-'''def get_school_data(user):
-    school_data = {}
-    school_objects = School.objects.filter(user=user)
-    if len(school_objects) > 0:
-        school_data['name'] = school_objects[0].name
-        school_data['printName'] = school_objects[0].printName
-        if school_objects[0].logo:
-            school_data['logo'] = school_objects[0].logo.url
-        else:
-            school_data['logo'] = ''
-        school_data['primaryThemeColor'] = school_objects[0].primaryThemeColor
-        school_data['secondaryThemeColor'] = school_objects[0].secondaryThemeColor
-        school_data['complexFeeStructure'] = school_objects[0].complexFeeStructure
-        school_data['dbId'] = school_objects[0].id
-        school_data['schoolDiseCode'] = school_objects[0].diseCode
-        school_data['schoolAddress'] = school_objects[0].address
-        school_data['currentSessionDbId'] = school_objects[0].currentSession.id
-        school_data['name'] = school_objects[0].name
-        school_data['registrationNumber'] = school_objects[0].registrationNumber
-        print(school_data)
-    return school_data'''
 
 
 class AuthenticationHandler():

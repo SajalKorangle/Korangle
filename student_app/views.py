@@ -148,6 +148,23 @@ class StudentSectionListView(APIView):
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
+############ Profile Image ########################
+from .business.profile_image import update_profile_image
+from django.core.files.storage import FileSystemStorage
+
+
+class ProfileImageView(APIView):
+
+    @user_permission
+    def post(request, student_id):
+        return update_profile_image(request.FILES['myFile'], student_id)
+        '''if request.method == 'POST' and request.FILES['myFile']:
+            myfile = request.FILES['myFile']
+            fs = FileSystemStorage()
+            fs.save(myfile.name, myfile)
+            return {'response': 'okay'}
+        return {'response': 'error'}'''
+
 ############ Transfer Certificate #################
 from .business.transfer_certificate import create_transfer_certificate, \
     get_transfer_certificate, update_transfer_certificate
