@@ -26,6 +26,18 @@
             </div>
         </div>
 
+        <!-- Mobile Number -->
+        <div class="row">
+            <div class="col-md-3">
+                Mobile No.
+            </div>
+            <div class="col-md-3">
+                :<input type="number"
+                        [ngModel]="user.activeSchool.mobileNumber"
+                        (ngModelChange)="currentMobileNumber=$event"/>
+            </div>
+        </div>
+
         <!-- Dise Code -->
         <div class="row">
             <div class="col-md-3">

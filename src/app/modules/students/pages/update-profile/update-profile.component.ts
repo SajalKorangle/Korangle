@@ -260,4 +260,32 @@ export class UpdateProfileComponent implements OnInit {
         return '';
     }
 
+    onImageSelect(evt: any): void {
+        let image = evt.target.files[0];
+
+        if (image.size > 512000) {
+            alert("Image size should be less than 512kb");
+            return;
+        }
+
+        if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+            alert("Image type should be either jpg, jpeg, or png");
+            return;
+        }
+
+        let data = {
+            id: this.selectedStudent.dbId,
+        };
+        this.isLoading = true;
+        this.studentService.uploadProfileImage(evt.target.files[0], data, this.user.jwt).then( response => {
+            this.isLoading = false;
+            alert(response.message);
+            if (response.status === 'success') {
+                this.selectedStudent.profileImage = response.url + '?random+\=' + Math.random();
+            }
+        }, error => {
+            this.isLoading = false;
+        });
+    }
+
 }

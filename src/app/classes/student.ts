@@ -3,6 +3,8 @@ import {Concession} from "./concession";
 
 export class Student {
 
+    profileImage: string;
+
     name: string;
     dbId: number;
     fathersName: string;
@@ -39,6 +41,8 @@ export class Student {
     parentTransferCertificate: number;
 
     copy(student: any) {
+
+        this.profileImage = student.profileImage;
 
         this.name = student.name;
         this.dbId = student.dbId;

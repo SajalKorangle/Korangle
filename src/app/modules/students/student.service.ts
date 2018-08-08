@@ -12,6 +12,12 @@ import { CommonServiceRequirements } from '../../services/common-service-require
 @Injectable()
 export class StudentService extends CommonServiceRequirements {
 
+    // Profile Image
+    uploadProfileImage(file: any, data: any, token: any): Promise<any> {
+        const url = '/student/' + data['id'] + '/profile-image';
+        return super.fileData(file, token, url);
+    }
+
     // Student Full Profile
     getStudentFullProfileList(data: any, token: any): Promise<any> {
         const url = '/student/school/' + data['schoolDbId'] + '/student-full-profiles?session_id=' + data.sessionDbId;

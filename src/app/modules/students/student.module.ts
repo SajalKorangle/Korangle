@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ComponentsModule } from '../../components/components.module';
 
 import { StudentComponent } from './student.component';
@@ -11,6 +12,7 @@ import { PromoteStudentComponent } from './pages/promote-student/promote-student
 import { UpdateProfileComponent } from './pages/update-profile/update-profile.component';
 import { ViewAllComponent } from './pages/view-all/view-all.component';
 import { UploadListComponent } from './pages/upload_list/upload-list.component';
+import { ICardsComponent } from './pages/i-cards/i-cards.component';
 
 import {StudentRoutingModule} from './student.routing';
 
@@ -26,6 +28,7 @@ import {StudentRoutingModule} from './student.routing';
         UpdateProfileComponent,
         ViewAllComponent,
         UploadListComponent,
+        ICardsComponent,
 
     ],
 
@@ -33,6 +36,7 @@ import {StudentRoutingModule} from './student.routing';
 
         ComponentsModule,
         StudentRoutingModule,
+        NgxDatatableModule,
 
     ],
     exports: [

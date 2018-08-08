@@ -78,6 +78,21 @@ export class CommonServiceRequirements {
             .catch(this.handleError);
     }
 
+    public fileData(file: any, token: any, url: any): Promise<any> {
+        const headers = new Headers({'Authorization' : 'JWT ' + token, 'Accept': 'application/json' });
+        let uploadData = new FormData();
+        uploadData.append('myFile', file);
+        return this.http.post(Constants.DJANGO_SERVER + Constants.api_version + url, uploadData, {headers: headers})
+            .toPromise()
+            .then(response => {
+                return this.returnResponse(response);
+            }, error => {
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                return null;
+            })
+            .catch(this.handleError);
+    }
+
     public getData(token: any, url: any, params?: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.get(Constants.DJANGO_SERVER + Constants.api_version + url, {headers: headers})

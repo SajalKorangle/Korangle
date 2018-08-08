@@ -17,6 +17,7 @@ export class UpdateProfileComponent implements OnInit {
 
     currentName: any;
     currentPrintName: any;
+    currentMobileNumber: any;
     currentRegistrationNumber: any;
     currentDiseCode: any;
     currentAddress: any;
@@ -32,6 +33,7 @@ export class UpdateProfileComponent implements OnInit {
 
         this.currentName = this.user.activeSchool.name;
         this.currentPrintName = this.user.activeSchool.printName;
+        this.currentMobileNumber = this.user.activeSchool.mobileNumber;
         this.currentRegistrationNumber = this.user.activeSchool.registrationNumber;
         this.currentDiseCode = this.user.activeSchool.diseCode;
         this.currentAddress = this.user.activeSchool.address;
@@ -60,6 +62,7 @@ export class UpdateProfileComponent implements OnInit {
             'dbId': this.user.activeSchool.dbId,
             'name': this.currentName,
             'printName': this.currentPrintName,
+            'mobileNumber': this.currentMobileNumber,
             'registrationNumber': this.currentRegistrationNumber,
             'diseCode': this.currentDiseCode,
             'address': this.currentAddress,
@@ -71,6 +74,7 @@ export class UpdateProfileComponent implements OnInit {
             this.isLoading = false;
             this.user.activeSchool.name = schoolProfile.name;
             this.user.activeSchool.printName = schoolProfile.printName;
+            this.user.activeSchool.mobileNumber = schoolProfile.mobileNumber;
             this.user.activeSchool.registrationNumber = schoolProfile.registrationNumber;
             this.user.activeSchool.diseCode = schoolProfile.diseCode;
             this.user.activeSchool.address = schoolProfile.address;

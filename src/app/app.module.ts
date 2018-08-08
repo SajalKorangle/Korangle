@@ -20,6 +20,7 @@ import { PrintTransferCertificateSecondFormatComponent } from './modules/student
 import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print-new-fee-receipt.component';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
+import { PrintICardsComponent } from './modules/students/print/print-i-card/print-i-cards.component';
 
 @NgModule({
     declarations: [
@@ -36,6 +37,7 @@ import { PrintStudentListComponent } from './print/print-student-list/print-stud
         PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
         PrintNewFeeReceiptComponent,
+        PrintICardsComponent,
         PrintComponent,
 
     ],
