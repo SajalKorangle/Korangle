@@ -73,7 +73,7 @@
                 <!-- Name -->
                 <div class="row no-gutters" style="font-size: 45px; padding-left: 20px;">
                     <div class="col-xs-12">
-                        <span style="color: darkblue !important;">{{studentProfile.name}}</span>
+                        <span style="color: darkblue !important;">{{ studentProfile.name | titlecase }}</span>
                     </div>
                 </div>
 
@@ -81,7 +81,7 @@
                 <div class="row no-gutters" style="font-size: 30px; margin-top: 30px; padding-left: 20px;">
                     <div class="col-xs-12">
                         <div style="font-size: 20px; margin-bottom: 7px;"><i>Father's Name</i></div>
-                        {{studentProfile.fathersName}}
+                        {{ studentProfile.fathersName | titlecase}}
                     </div>
                     <!-- div class="col-xs-5">
                         Father's Name:
@@ -147,7 +147,7 @@
                 <div class="row no-gutters" style="font-size: 30px; margin-top: 20px; padding-left: 20px;">
                     <div class="col-xs-12">
                         <div style="font-size: 20px; margin-bottom: 7px;"><i>Address</i></div>
-                        {{studentProfile.address}}
+                        {{ studentProfile.address | titlecase}}
                     </div>
                 </div>
 

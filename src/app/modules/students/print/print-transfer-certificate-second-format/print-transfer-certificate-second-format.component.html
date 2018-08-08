@@ -116,12 +116,12 @@
             This is to certify that <i><b>
             <span *ngIf="studentProfile.gender=='Male'">Master</span>
             <span *ngIf="studentProfile.gender=='Female'">Miss</span>
-            {{studentProfile.name}}</b></i>
+            {{ studentProfile.name | titlecase }}</b></i>
             <span *ngIf="studentProfile.gender=='Male'">s/o</span>
             <span *ngIf="studentProfile.gender=='Female'">d/o</span>
-            <i><b>Mr. {{studentProfile.fathersName}}</b></i>
-            and <i><b>Mrs. {{studentProfile.motherName}}</b></i> residing at
-            <i><b> {{studentProfile.address}}</b></i> had taken admission in our school,
+            <i><b>Mr. {{ studentProfile.fathersName | titlecase }}</b></i>
+            and <i><b>Mrs. {{ studentProfile.motherName | titlecase }}</b></i> residing at
+            <i><b> {{ studentProfile.address | titlecase }}</b></i> had taken admission in our school,
             with scholar no. <i><b>{{studentProfile.scholarNumber}}</b></i>,
             <span *ngIf="!transferCertificate.leavingMidSession"> in <i><b>{{transferCertificate.admissionClass}}</b></i>,</span>
             on <i><b>{{transferCertificate.admissionDate | date: 'dd/MM/yyyy'}}</b></i>
