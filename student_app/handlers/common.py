@@ -22,7 +22,7 @@ def populate_student_field(student_object, fieldName, fieldValue):
             student_object.currentBusStop = BusStop.objects.get(id=fieldValue)
         else:
             student_object.currentBusStop = None
-    elif fieldName == 'rollNumber' or fieldName == 'profileImage':
+    elif fieldName == 'rollNumber' or fieldName == 'parentTransferCertificate' or fieldName == 'profileImage':
         pass
     else:
         setattr(student_object, fieldName, fieldValue)
