@@ -29,6 +29,7 @@ export class School {
         } else {
             this.logo = Constants.DJANGO_SERVER + schoolData.logo;
         }
+        this.mobileNumber = schoolData.mobileNumber;
         this.profileImage = schoolData.profileImage;
         this.primaryThemeColor = schoolData.primaryThemeColor;
         this.secondaryThemeColor = schoolData.secondaryThemeColor;

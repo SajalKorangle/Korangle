@@ -29,11 +29,6 @@ export class StudentService extends CommonServiceRequirements {
         return super.postData(data, token, url);
     }
 
-    updateStudentFullProfile(data: any, token: any): Promise<any> {
-        const url = '/student/student-full-profiles/' + data['id'];
-        return super.putData(data, token, url);
-    }
-
     partiallyUpdateStudentFullProfile(data: any, token: any): Promise<any> {
         const url = '/student/student-full-profiles/' + data['id'];
         return super.patchData(data, token, url);

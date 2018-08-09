@@ -47,7 +47,7 @@ export class UpdateProfileComponent implements OnInit {
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
-        }
+        };
         this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 classSectionStudentList.forEach( classs => {
@@ -80,7 +80,7 @@ export class UpdateProfileComponent implements OnInit {
 
         const dataForBusStop = {
             schoolDbId: this.user.activeSchool.dbId,
-        }
+        };
 
         this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then( busStopList => {
             this.busStopList = busStopList;
@@ -260,16 +260,20 @@ export class UpdateProfileComponent implements OnInit {
         return '';
     }
 
-    onImageSelect(evt: any): void {
+    async onImageSelect(evt: any) {
         let image = evt.target.files[0];
-
-        if (image.size > 512000) {
-            alert("Image size should be less than 512kb");
-            return;
-        }
 
         if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
             alert("Image type should be either jpg, jpeg, or png");
+            return;
+        }
+
+        while (image.size > 512000) {
+            image = await this.resizeImage(image);
+        }
+
+        if (image.size > 512000) {
+            alert('Image size should be less than 512kb');
             return;
         }
 
@@ -277,7 +281,7 @@ export class UpdateProfileComponent implements OnInit {
             id: this.selectedStudent.dbId,
         };
         this.isLoading = true;
-        this.studentService.uploadProfileImage(evt.target.files[0], data, this.user.jwt).then( response => {
+        this.studentService.uploadProfileImage(image, data, this.user.jwt).then( response => {
             this.isLoading = false;
             alert(response.message);
             if (response.status === 'success') {
@@ -285,6 +289,46 @@ export class UpdateProfileComponent implements OnInit {
             }
         }, error => {
             this.isLoading = false;
+        });
+    }
+
+    resizeImage(file:File):Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            let image = new Image();
+            image.src = URL.createObjectURL(file);
+            image.onload = () => {
+                let width = image.width;
+                let height = image.height;
+
+                let maxWidth = image.width/2;
+                let maxHeight = image.height/2;
+
+                // if (width <= maxWidth && height <= maxHeight) {
+                //     resolve(file);
+                // }
+
+                let newWidth;
+                let newHeight;
+
+                if (width > height) {
+                    newHeight = height * (maxWidth / width);
+                    newWidth = maxWidth;
+                } else {
+                    newWidth = width * (maxHeight / height);
+                    newHeight = maxHeight;
+                }
+
+                let canvas = document.createElement('canvas');
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+
+                let context = canvas.getContext('2d');
+
+                context.drawImage(image, 0, 0, newWidth, newHeight);
+
+                canvas.toBlob(resolve, file.type);
+            };
+            image.onerror = reject;
         });
     }
 
