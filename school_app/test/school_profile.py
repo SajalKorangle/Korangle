@@ -36,6 +36,7 @@ class SchoolProfileTestCase(ParentTestCase):
             'dbId': school_object.id,
             'name': 'New Name',
             'printName': 'New Print Name',
+            'mobileNumber': 7999951154,
             'diseCode': 'New Dise Code',
             'address': 'New Address',
             'registrationNumber': 'New Registration Number',
@@ -48,6 +49,7 @@ class SchoolProfileTestCase(ParentTestCase):
 
         self.assertEqual(new_school_object.name, data['name'])
         self.assertEqual(new_school_object.printName, data['printName'])
+        self.assertEqual(new_school_object.mobileNumber, data['mobileNumber'])
         self.assertEqual(new_school_object.diseCode, data['diseCode'])
         self.assertEqual(new_school_object.address, data['address'])
         self.assertEqual(new_school_object.registrationNumber, data['registrationNumber'])

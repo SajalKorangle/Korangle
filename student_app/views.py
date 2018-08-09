@@ -76,15 +76,10 @@ def create_new_student_view(request):
 
 ############## Student Full Profile ##############
 from .business.student_full_profile import get_student_full_profile_by_school_and_session_id, \
-    create_student_full_profile_list, update_student_full_profile, partially_update_student_full_profile
+    create_student_full_profile_list, partially_update_student_full_profile
 
 
 class StudentFullProfileView(APIView):
-
-    @user_permission
-    def put(request, student_id):
-        data = json.loads(request.body.decode('utf-8'))
-        return update_student_full_profile(data)
 
     @user_permission
     def patch(request, student_id):

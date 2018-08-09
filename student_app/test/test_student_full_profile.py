@@ -4,7 +4,7 @@ from parent_test import ParentTestCase
 # Business
 from student_app.business.student_full_profile import get_student_full_profile, \
     get_student_full_profile_by_school_and_session_id, create_student_full_profile, \
-    create_student_full_profile_list, update_student_full_profile, partially_update_student_full_profile, \
+    create_student_full_profile_list, partially_update_student_full_profile, \
     StudentModelSerializer
 
 # Factories
@@ -31,20 +31,6 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['name'] = 'Wow Wow'
 
         partially_update_student_full_profile(data)
-
-        self.assertEqual(Student.objects.get(id=student_serializer.data['id']).name, data['name'])
-
-    def test_update_student_profile(self):
-
-        student_object = StudentFactory()
-
-        student_serializer = StudentModelSerializer(student_object)
-
-        data = student_serializer.data
-
-        data['name'] = 'Wow Wow'
-
-        update_student_full_profile(data)
 
         self.assertEqual(Student.objects.get(id=student_serializer.data['id']).name, data['name'])
 
@@ -161,11 +147,12 @@ class StudentFullProfileTestCase(ParentTestCase):
 
         response = get_student_full_profile(student_section_object)
 
-        self.assertEqual(len(response), 30)
+        self.assertEqual(len(response), 31)
 
         self.assertEqual(response['name'], student_object.name)
         self.assertEqual(response['dbId'], student_object.id)
         self.assertEqual(response['fathersName'], student_object.fathersName)
+        self.assertEqual(response['profileImage'], None)
         self.assertEqual(response['mobileNumber'], student_object.mobileNumber)
         self.assertEqual(response['dateOfBirth'].__str__(),student_object.dateOfBirth)
         self.assertEqual(response['remark'],student_object.remark)

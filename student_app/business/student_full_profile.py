@@ -31,22 +31,6 @@ def partially_update_student_full_profile(data):
         }
 
 
-def update_student_full_profile(data):
-
-    student_profile_serializer = StudentModelSerializer(Student.objects.get(id=data['id']), data=data)
-    if student_profile_serializer.is_valid():
-        student_profile_serializer.save()
-        return {
-            'status': 'success',
-            'message': 'Student Profile updated successfully',
-        }
-    else:
-        return {
-            'status': 'failure',
-            'message': 'Student Profile updation failed',
-        }
-
-
 def create_student_full_profile(student):
 
     student_object = StudentModelSerializer(data=student)
