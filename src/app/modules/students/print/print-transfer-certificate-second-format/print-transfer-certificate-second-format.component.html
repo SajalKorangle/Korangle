@@ -1,205 +1,218 @@
-<div class="container-fluid"
-     *ngIf="studentProfile"
-     style="width: 100%; height: 100%;
-     border: 4px double blue;
-     border-radius: 8px;
-     outline: 1px solid blue;
-     outline-offset: -5px;
-     font-weight: 800 !important">
+<ng-container *ngFor="let item of ' '.repeat(numberOfCopies).split(''); let i = index;">
 
-    <!-- Reg. No. , Dise Code -->
-    <div class="row no-gutters">
-        <div class="col-xs-6 d-flex custom-padding">
-            Dise code : {{user.activeSchool.diseCode}}
-        </div>
-        <div class="col-xs-6 d-flex custom-padding" align="end">
-            Reg. No. : {{user.activeSchool.registrationNumber}}
-        </div>
-    </div>
+    <div class="container-fluid"
+         *ngIf="studentProfile"
+         style="width: 100%; height: 100%;
+         border: 4px double blue;
+         border-radius: 8px;
+         outline: 1px solid blue;
+         outline-offset: -5px;
+         position: relative;
+         font-weight: 800 !important">
 
-    <ng-container *ngIf="user.username=='eklavya' || user.username=='champion' || user.username=='madhav'">
-        <img src="{{user.activeSchool.profileImage}}"
-             style="border-radius: 2px; position: absolute;
+        <!-- Reg. No. , Dise Code -->
+        <div class="row no-gutters">
+            <div class="col-xs-6 d-flex custom-padding">
+                Dise code : {{user.activeSchool.diseCode}}
+            </div>
+            <div class="col-xs-6 d-flex custom-padding" align="end">
+                Reg. No. : {{user.activeSchool.registrationNumber}}
+            </div>
+        </div>
+
+        <ng-container *ngIf="user.username=='eklavya' || user.username=='champion' || user.username=='madhav'">
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px; position: absolute;
          top: 40px; left: 20px;
          width: 80px; height: 80px;"/>
 
-        <!-- Background Watermark -->
-        <img src="{{user.activeSchool.profileImage}}"
-             style="border-radius: 2px; position: absolute;
+            <!-- Background Watermark -->
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px; position: absolute;
          top: 350px; left: 198px;
          width: 350px; height: 350px;
          opacity: 0.07;
          filter: grayscale(100%);
          z-index: 10;"/>
 
-        <!-- School Name -->
-        <div class="row no-gutters" style="margin-top: 20px;">
-            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <!-- School Name -->
+            <div class="row no-gutters" style="margin-top: 20px;">
+                <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
             <span style="background-color: yellow; font-size: 35px">
                 {{user.activeSchool.printName}}
             </span>
+                </div>
             </div>
-        </div>
-    </ng-container>
+        </ng-container>
 
-    <ng-container *ngIf="user.username=='nainish'
+        <ng-container *ngIf="user.username=='nainish'
                             || user.username=='praveen'
                             || user.username=='bhagatsingh'
                             || user.username=='devendra'">
-        <!-- Background Watermark -->
-        <img src="{{user.activeSchool.profileImage}}"
-             style="border-radius: 2px; position: absolute;
+            <!-- Background Watermark -->
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px; position: absolute;
          top: 460px; left: 198px;
          width: 350px; height: 350px;
          opacity: 0.07;
          filter: grayscale(100%);
          z-index: 10;"/>
 
-        <!-- School Name -->
-        <svg viewBox="0 0 500 115" style="padding-top: 0px;">
-            <path id="curve" d="M43.2,125c4-6.1,70.5-96.8,193.6-95.6c136.3,1.2,205.8,85.3,220.1,97" />
-            <text>
-                <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle" fill="red">
-                    {{user.activeSchool.printName}}
-                </textPath>
-            </text>
-            <!-- image xlink:href="http://localhost:4200/assets/img/angular2-logo.png"
-                   x="210" y="45" width="80" height="80"/ -->
-        </svg>
+            <!-- School Name -->
+            <svg viewBox="0 0 500 115" style="padding-top: 0px;">
+                <path id="curve" d="M43.2,125c4-6.1,70.5-96.8,193.6-95.6c136.3,1.2,205.8,85.3,220.1,97" />
+                <text>
+                    <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle" fill="red">
+                        {{user.activeSchool.printName}}
+                    </textPath>
+                </text>
+                <!-- image xlink:href="http://localhost:4200/assets/img/angular2-logo.png"
+                       x="210" y="45" width="80" height="80"/ -->
+            </svg>
 
-        <!-- School Logo -->
-        <img src="{{user.activeSchool.profileImage}}"
-             style="border-radius: 2px;
+            <!-- School Logo -->
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px;
                 position: absolute; top: 100px; left: 324px;
                 opacity: 0.8;
                 width: 80px; height: 80px;"/>
-    </ng-container>
+        </ng-container>
 
-    <!-- Address -->
-    <div class="row no-gutters">
-        <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+        <!-- Address -->
+        <div class="row no-gutters">
+            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
             <span   style="font-size: 15px">
                 {{user.activeSchool.address}}<br/>
                 (Regd. and Recognised by M.P. Govt.)
             </span>
+            </div>
         </div>
-    </div>
 
-    <!-- School Transfer Certificate -->
-    <div class="row no-gutters" style="margin-top: 70px;">
-        <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
-            <span style="font-size: 30px;"><u>TRANSFER CERTIFICATE</u></span><br/>
+        <!-- School Transfer Certificate -->
+        <div class="row no-gutters" style="margin-top: 70px;">
+            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+                <span style="font-size: 30px;"><u>TRANSFER CERTIFICATE</u></span><br/>
+            </div>
         </div>
-    </div>
 
-    <div class="row no-gutters">
-        <div class="col-xs-12" style="height: 45px;"></div>
-    </div>
-
-    <!-- Certificate No. , Date -->
-    <div class="row no-gutters">
-        <div class="col-xs-6 d-flex justify-content-start custom-padding fontHandle">
-            Certificate No. : {{transferCertificate.certificateNumber}}
+        <div class="row no-gutters">
+            <div class="col-xs-12" style="height: 45px;"></div>
         </div>
-        <div class="col-xs-6 d-flex justify-content-end custom-padding fontHandle" align="right">
-            Date : {{transferCertificate.issueDate | date: 'dd/MM/yyyy'}}
+
+        <!-- Certificate No. , Date -->
+        <div class="row no-gutters">
+            <div class="col-xs-6 d-flex justify-content-start custom-padding fontHandle">
+                Certificate No. : {{transferCertificate.certificateNumber}}
+            </div>
+            <div class="col-xs-6 d-flex justify-content-end custom-padding fontHandle" align="right">
+                Date : {{transferCertificate.issueDate | date: 'dd/MM/yyyy'}}
+            </div>
         </div>
-    </div>
 
-    <div class="row no-gutters">
-        <div class="col-xs-12" style="height: 45px;"></div>
-    </div>
+        <div class="row no-gutters">
+            <div class="col-xs-12" style="height: 45px;"></div>
+        </div>
 
-    <div class="row no-gutters" style="font-weight: normal !important; font-size: 16px;">
-        <div class="col-xs-12">
+        <div class="row no-gutters" style="font-weight: normal !important; font-size: 16px;">
+            <div class="col-xs-12">
 
-            This is to certify that <i><b>
-            <span *ngIf="studentProfile.gender=='Male'">Master</span>
-            <span *ngIf="studentProfile.gender=='Female'">Miss</span>
-            {{ studentProfile.name | titlecase }}</b></i>
-            <span *ngIf="studentProfile.gender=='Male'">s/o</span>
-            <span *ngIf="studentProfile.gender=='Female'">d/o</span>
-            <i><b>Mr. {{ studentProfile.fathersName | titlecase }}</b></i>
-            and <i><b>Mrs. {{ studentProfile.motherName | titlecase }}</b></i> residing at
-            <i><b> {{ studentProfile.address | titlecase }}</b></i> had taken admission in our school,
-            with scholar no. <i><b>{{studentProfile.scholarNumber}}</b></i>,
-            <span *ngIf="!transferCertificate.leavingMidSession"> in <i><b>{{transferCertificate.admissionClass}}</b></i>,</span>
-            on <i><b>{{transferCertificate.admissionDate | date: 'dd/MM/yyyy'}}</b></i>
-            and is leaving school on <i><b>{{transferCertificate.leavingDate | date: 'dd/MM/yyyy'}}</b></i>
-            <span *ngIf="!transferCertificate.leavingMidSession"> after passing
+                This is to certify that <i><b>
+                <span *ngIf="studentProfile.gender=='Male'">Master</span>
+                <span *ngIf="studentProfile.gender=='Female'">Miss</span>
+                {{ studentProfile.name | titlecase }}</b></i>
+                <span *ngIf="studentProfile.gender=='Male'">s/o</span>
+                <span *ngIf="studentProfile.gender=='Female'">d/o</span>
+                <i><b>Mr. {{ studentProfile.fathersName | titlecase }}</b></i>
+                and <i><b>Mrs. {{ studentProfile.motherName | titlecase }}</b></i> residing at
+                <i><b> {{ studentProfile.address | titlecase }}</b></i> had taken admission in our school,
+                with scholar no. <i><b>{{studentProfile.scholarNumber}}</b></i>,
+                <span *ngIf="!transferCertificate.leavingMidSession"> in <i><b>{{transferCertificate.admissionClass}}</b></i>,</span>
+                on <i><b>{{transferCertificate.admissionDate | date: 'dd/MM/yyyy'}}</b></i>
+                and is leaving school on <i><b>{{transferCertificate.leavingDate | date: 'dd/MM/yyyy'}}</b></i>
+                <span *ngIf="!transferCertificate.leavingMidSession"> after passing
                 <i><b>{{transferCertificate.lastClassPassed}}</b></i> with <i><b>English</b></i> medium,
             </span>
-            because <i><b>{{transferCertificate.leavingReason}}</b></i>.<br/><br/>
+                because <i><b>{{transferCertificate.leavingReason}}</b></i>.<br/><br/>
 
-            <span *ngIf="studentProfile.gender=='Male'">His</span>
-            <span *ngIf="studentProfile.gender=='Female'">Her</span>
-            date of birth is <i><b>{{studentProfile.dateOfBirth | date: 'dd/MM/yyyy'}}</b></i>
-            in words <i><b>{{studentProfile.dateOfBirth | dateInWords}}</b></i>.<br/><br/>
+                <span *ngIf="studentProfile.gender=='Male'">His</span>
+                <span *ngIf="studentProfile.gender=='Female'">Her</span>
+                date of birth is <i><b>{{studentProfile.dateOfBirth | date: 'dd/MM/yyyy'}}</b></i>
+                in words <i><b>{{studentProfile.dateOfBirth | dateInWords}}</b></i>.<br/><br/>
 
-            <span *ngIf="studentProfile.gender=='Male'">His</span>
-            <span *ngIf="studentProfile.gender=='Female'">Her</span>
-            aadhar no. is <i><b>{{studentProfile.aadharNum}}</b></i>
-            and sssmid is <i><b>{{studentProfile.childSSMID}}</b></i>.<br/><br/>
+                <span *ngIf="studentProfile.gender=='Male'">His</span>
+                <span *ngIf="studentProfile.gender=='Female'">Her</span>
+                aadhar no. is <i><b>{{studentProfile.aadharNum}}</b></i>
+                and sssmid is <i><b>{{studentProfile.childSSMID}}</b></i>.<br/><br/>
 
-            <span *ngIf="studentProfile.gender=='Male'">His</span>
-            <span *ngIf="studentProfile.gender=='Female'">Her</span>
-            nationality is <i><b>Indian</b></i>, mother tongue is <i><b>Hindi</b></i>, belongs to caste
-            <i><b>{{studentProfile.caste}}</b></i>,
-            and category is <i><b>{{studentProfile.category}}</b></i>.<br/><br/>
+                <span *ngIf="studentProfile.gender=='Male'">His</span>
+                <span *ngIf="studentProfile.gender=='Female'">Her</span>
+                nationality is <i><b>Indian</b></i>, mother tongue is <i><b>Hindi</b></i>, belongs to caste
+                <i><b>{{studentProfile.caste}}</b></i>,
+                and category is <i><b>{{studentProfile.category}}</b></i>.<br/><br/>
 
-            <ng-container *ngIf="transferCertificate.leavingMidSession">
+                <ng-container *ngIf="transferCertificate.leavingMidSession">
+                    <span *ngIf="studentProfile.gender=='Male'">He</span>
+                    <span *ngIf="studentProfile.gender=='Female'">She</span>
+                    had taken admission in <i><b>{{transferCertificate.admissionClass}}</b></i>. The last class,
+                    <span *ngIf="studentProfile.gender=='Male'">he</span>
+                    <span *ngIf="studentProfile.gender=='Female'">she</span>
+                    passed, was<i><b>{{transferCertificate.lastClassPassed}}</b></i>, with <i><b>English</b></i> medium.
+                    <ng-container *ngIf="transferCertificate.lastClassAttendance && transferCertificate.lastClassAttendance != ''">
+                        <span *ngIf="studentProfile.gender=='Male'">His</span>
+                        <span *ngIf="studentProfile.gender=='Female'">Her</span>
+                        attendance in last class(<i><b>{{transferCertificate.lastClassAttended}}</b></i>)
+                        was <i><b>{{transferCertificate.lastClassAttendance}}</b></i> days out of
+                        <i><b>{{transferCertificate.attendanceOutOf}}</b></i>.
+                    </ng-container>
+                    <br/><br/>
+                </ng-container>
+
                 <span *ngIf="studentProfile.gender=='Male'">He</span>
                 <span *ngIf="studentProfile.gender=='Female'">She</span>
-                had taken admission in <i><b>{{transferCertificate.admissionClass}}</b></i>. The last class,
-                <span *ngIf="studentProfile.gender=='Male'">he</span>
-                <span *ngIf="studentProfile.gender=='Female'">she</span>
-                passed, was<i><b>{{transferCertificate.lastClassPassed}}</b></i>, with <i><b>English</b></i> medium.
-                <ng-container *ngIf="transferCertificate.lastClassAttendance && transferCertificate.lastClassAttendance != ''">
-                    <span *ngIf="studentProfile.gender=='Male'">His</span>
-                    <span *ngIf="studentProfile.gender=='Female'">Her</span>
-                    attendance in last class(<i><b>{{transferCertificate.lastClassAttended}}</b></i>)
-                    was <i><b>{{transferCertificate.lastClassAttendance}}</b></i> days out of
-                    <i><b>{{transferCertificate.attendanceOutOf}}</b></i>.
-                </ng-container>
-                <br/><br/>
-            </ng-container>
+                has been <i><b>vaccinated and is safe from the agitation small pox</b></i>.<br/><br/>
 
-            <span *ngIf="studentProfile.gender=='Male'">He</span>
-            <span *ngIf="studentProfile.gender=='Female'">She</span>
-            has been <i><b>vaccinated and is safe from the agitation small pox</b></i>.<br/><br/>
+                <i><b>No Dues</b></i> are pending on
+                <span *ngIf="studentProfile.gender=='Male'">him</span>
+                <span *ngIf="studentProfile.gender=='Female'">her</span>
+                .<br/><br/>
 
-            <i><b>No Dues</b></i> are pending on
-            <span *ngIf="studentProfile.gender=='Male'">him</span>
-            <span *ngIf="studentProfile.gender=='Female'">her</span>
-            .<br/><br/>
+                <span *ngIf="studentProfile.gender=='Male'">His</span>
+                <span *ngIf="studentProfile.gender=='Female'">Her</span>
+                general conduct was <i><b>good</b></i> in school.<br/><br/>
 
-            <span *ngIf="studentProfile.gender=='Male'">His</span>
-            <span *ngIf="studentProfile.gender=='Female'">Her</span>
-            general conduct was <i><b>good</b></i> in school.<br/><br/>
-
+            </div>
         </div>
+
+        <!-- Prepared By , Headmaster/Principal's Signature with Seal -->
+        <!-- div class="row no-gutters"
+             style="margin-top: 100px;">
+            <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-left: 30px">
+                <br/>(Prepared By)
+            </div>
+            <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-right: 40px" align="end">
+                <span style="text-align: center">Headmaster/Principal<br/>(Signature with Seal)</span>
+            </div>
+        </div -->
+        <div class="row no-gutters"
+             style="position: absolute; bottom: 100px; width: 100%;">
+            <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-left: 30px">
+                <br/>(Prepared By)
+            </div>
+            <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-right: 40px" align="end">
+                <span style="text-align: center">Headmaster/Principal<br/>(Signature with Seal)</span>
+            </div>
+        </div>
+
+        <div *ngIf="i===1"
+             class="row no-gutters"
+             style="position: absolute; bottom: 20px; width: 100%">
+            <div class="col-xs-12 signatureFontHandle" align="center">
+                <span style="border: 0.5px solid black; border-radius: 10px; padding: 2px 8px; background-color: #EEEEEE !important;">School Copy</span>
+            </div>
+        </div>
+
+        <div *ngIf="numberOfCopies===2" style="page-break-after: always"></div>
+
     </div>
 
-    <!-- Prepared By , Headmaster/Principal's Signature with Seal -->
-    <!-- div class="row no-gutters"
-         style="margin-top: 100px;">
-        <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-left: 30px">
-            <br/>(Prepared By)
-        </div>
-        <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-right: 40px" align="end">
-            <span style="text-align: center">Headmaster/Principal<br/>(Signature with Seal)</span>
-        </div>
-    </div -->
-    <div class="row no-gutters"
-         style="position: absolute; bottom: 100px; width: 100%;">
-        <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-left: 30px">
-            <br/>(Prepared By)
-        </div>
-        <div class="col-xs-6 custom-padding signatureFontHandle" style="padding-right: 40px" align="end">
-            <span style="text-align: center">Headmaster/Principal<br/>(Signature with Seal)</span>
-        </div>
-    </div>
-
-
-
-</div>
+</ng-container>

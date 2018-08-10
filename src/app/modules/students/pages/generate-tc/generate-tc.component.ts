@@ -37,6 +37,8 @@ export class GenerateTcComponent implements OnInit {
     isLoading = false;
     isStudentListLoading = false;
 
+    twoCopies = false;
+
     selectedSession: any;
     sessionList: any;
 
@@ -251,6 +253,7 @@ export class GenerateTcComponent implements OnInit {
         const value = {
             studentProfile: this.selectedStudent,
             transferCertificate: this.selectedTransferCertificate,
+            twoCopies: this.twoCopies,
         };
         EmitterService.get('print-transfer-certificate-second-format').emit(value);
     }

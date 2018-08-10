@@ -20,6 +20,8 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
 
     transferCertificate: TransferCertificate = new TransferCertificate();
 
+    numberOfCopies = 1;
+
     printTransferCertificateSecondFormatComponentSubscription: any;
 
     constructor(private cdRef: ChangeDetectorRef) { }
@@ -28,6 +30,11 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
         this.printTransferCertificateSecondFormatComponentSubscription = EmitterService.get('print-transfer-certificate-second-format-component').subscribe( value => {
             this.studentProfile = value.studentProfile;
             this.transferCertificate.copy(value.transferCertificate);
+            if(value.twoCopies) {
+                this.numberOfCopies = 2;
+            } else {
+                this.numberOfCopies = 1;
+            }
             this.viewChecked = false;
         });
     }
@@ -38,6 +45,7 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
             window.print();
             this.studentProfile = null;
             this.transferCertificate.clean();
+            this.numberOfCopies = 1;
             this.cdRef.detectChanges();
         }
     }
