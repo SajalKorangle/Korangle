@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 
+import { MatExpansionModule } from '@angular/material';
+import { MatSortModule } from '@angular/material';
+
 import { ComponentsModule } from '../../components/components.module';
 
 import { FeeComponent } from './fee.component';
@@ -49,6 +52,9 @@ import {FeeRoutingModule} from './fee.routing';
 
         FeeRoutingModule,
         ComponentsModule,
+
+        MatExpansionModule,
+        MatSortModule,
 
     ],
     exports: [

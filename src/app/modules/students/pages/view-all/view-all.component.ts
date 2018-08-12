@@ -383,4 +383,5 @@ export class ViewAllComponent implements OnInit {
 
         return studentDisplay;
     }
+
 }
