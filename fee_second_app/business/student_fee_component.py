@@ -2,6 +2,8 @@
 from fee_second_app.models import FeeDefinition, StudentFeeComponent, StudentMonthlyFeeComponent, \
     Month, SchoolMonthlyFeeComponent
 
+from fee_second_app.business.student_fee_dues import update_student_fee_dues
+
 
 def create_student_fee_component(student_object, fee_definition_object, school_fee_component_object):
 
@@ -42,3 +44,5 @@ def create_student_fee_component(student_object, fee_definition_object, school_f
                                                parentMonth=school_monthly_fee_component_object.parentMonth,
                                                amount=school_monthly_fee_component_object.amount)
                 student_monthly_fee_component_object.save()
+
+    update_student_fee_dues(student_object)

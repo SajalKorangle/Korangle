@@ -364,3 +364,14 @@ class SubConcessionMonthly(models.Model):
 
     class Meta:
         db_table = 'sub_concession_monthly'
+
+
+####### Student Fee Dues - Redundant Data ##########
+class StudentFeeDues(models.Model):
+
+    parentStudent = models.ForeignKey(Student, models.PROTECT, default=0, verbose_name='parentStudent')
+    amount = models.IntegerField(default=0, verbose_name='amount')
+
+    class Meta:
+        db_table = 'student_fee_dues'
+

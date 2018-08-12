@@ -4,6 +4,8 @@ from fee_second_app.models import FeeReceipt, SubFeeReceipt, SubFeeReceiptMonthl
 
 from fee_second_app.business.student_fee_status import get_student_fee_status_list
 
+from fee_second_app.business.student_fee_dues import update_student_fee_dues
+
 from student_app.models import Student
 
 from django.db import transaction
@@ -162,6 +164,8 @@ def create_fee_receipt(data):
                                                                           amount=subFeeReceiptMonthly['amount'],
                                                                           parentMonth=month_object)
                     sub_fee_receipt_monthly_object.save()
+
+    update_student_fee_dues(student_object)
 
     response = {}
     response['message'] = 'Fees submitted successfully'

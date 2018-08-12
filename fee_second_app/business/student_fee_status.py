@@ -1,7 +1,8 @@
-
+import fee_second_app
 from school_app.model.models import Session
 
 from fee_second_app.models import StudentFeeComponent, StudentMonthlyFeeComponent, FeeDefinition
+from student_app.models import Student
 
 
 def get_student_fee_status_list(data):
@@ -87,6 +88,8 @@ def update_student_fee_status(data):
                 student_fee_component_monthly_object.amount = student_monthly_fee_component['amount']
                 # change bySchoolRules variable too if it is not matching school amount.
                 student_fee_component_monthly_object.save()
+
+    fee_second_app.business.student_fee_dues.update_student_fee_dues(Student.objects.get(id=data['studentDbId']))
 
     request = {}
     request['studentDbId'] = data['studentDbId']
