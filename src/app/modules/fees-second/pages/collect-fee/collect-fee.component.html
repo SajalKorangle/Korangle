@@ -1,7 +1,9 @@
 <div class="card-content">
 
     <!-- app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter -->
-    <student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></student-filter>
+    <student-filter [user]="user"
+                    (onSessionChange)="populateSelectedSession($event)"
+                    (onStudentSelected)="getStudentFeeDetails($event)"></student-filter>
 
     <ng-container *ngIf="selectedStudent && studentFeeProfile && studentFeeStatusList && !isLoading">
 

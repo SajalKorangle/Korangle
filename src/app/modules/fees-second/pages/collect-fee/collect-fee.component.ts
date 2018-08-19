@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 
@@ -44,7 +44,7 @@ const MARCH = 'MARCH';
     ],
 })
 
-export class CollectFeeComponent {
+export class CollectFeeComponent implements OnInit {
 
     @Input() user;
 
@@ -70,7 +70,13 @@ export class CollectFeeComponent {
 
     frequencyList = FREQUENCY_LIST;
 
+    selectedSessionDbId: number;
+
     constructor (private feeService: FeeService) { }
+
+    ngOnInit(): void {
+        this.selectedSessionDbId = this.user.activeSchool.currentSessionDbId;
+    }
 
     getStudentFeeDetails(student: any): void {
         this.selectedStudent = student;
@@ -84,6 +90,10 @@ export class CollectFeeComponent {
         this.getStudentFeeProfile(data);
         this.getStudentFeeReceiptList(data);
         this.getStudentConcessionList(data);
+    }
+
+    populateSelectedSession(session: any): void {
+        this.selectedSessionDbId = session.dbId;
     }
 
     getStudentFeeReceiptList(data): void {
@@ -111,7 +121,7 @@ export class CollectFeeComponent {
     getStudentFeeProfile(data: any): void {
         this.isLoading = true;
         this.studentFeeStatusList = null;
-        data['sessionDbId'] = this.user.activeSchool.currentSessionDbId;
+        data['sessionDbId'] = this.selectedSessionDbId;
         this.feeService.getStudentFeeProfile(data, this.user.jwt).then( studentFeeProfile => {
             this.isLoading = false;
             if (this.selectedStudent.dbId === data['studentDbId']) {
