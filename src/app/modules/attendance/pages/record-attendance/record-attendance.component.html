@@ -1,0 +1,40 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <table class="table table-hover">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th>S No.</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Roll No.</th>
+                <th>Father's Name</th>
+                <th>Scholar No.</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let student of getFilteredStudentList(); let i=index;">
+                <tr>
+                    <td>{{i+1}}.</td>
+                    <td>{{student.name}}</td>
+                    <td>{{student.status}}</td>
+                    <td>{{student.rollNumber}}</td>
+                    <td>{{student.fathersName}}</td>
+                    <td>{{student.scholarNumber}}</td>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="updateAttendance()">Update</button>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

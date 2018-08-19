@@ -97,7 +97,7 @@ export class User {
     brighthindi, hindi123
     eklavya, ashta123
     anupreet, itisjp123
-    madhav, lakhan123
+    madhav, lakhan1508
     talent, innovative123
     champion, 123champ
     bhagatsingh, bhagat123
