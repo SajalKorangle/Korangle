@@ -1,0 +1,63 @@
+from django.shortcuts import render
+
+from decorators import user_permission
+
+from rest_framework.views import APIView
+
+import json
+
+
+############## Student Attendance ##############
+from .business.student_attendance \
+    import create_or_update_student_attendance_list, get_student_attendance_list
+
+
+class StudentAttendanceListView(APIView):
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_or_update_student_attendance_list(data)
+
+    @user_permission
+    def get(request):
+        data = {
+            'studentList': request.GET['studentList'],
+            'startDate': request.GET['startDate'],
+            'endDate': request.GET['endDate'],
+        }
+        return get_student_attendance_list(data)
+
+    @user_permission
+    def put(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_or_update_student_attendance_list(data)
+
+
+############## Attendance Permission ##############
+from .business.attendance_permission \
+    import get_attendance_permission_list, create_attendance_permission, delete_attendance_permission
+
+
+class AttendancePermissionView(APIView):
+
+    @user_permission
+    def get(request):
+        data = {
+            'parentUser': request.GET['parentUser'],
+            'parentSchool': request.GET['parentSchool'],
+            'sessionId': request.GET['sessionId'],
+        }
+        return get_attendance_permission_list(data)
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_attendance_permission(data)
+
+    @user_permission
+    def delete(request, attendance_permission_id):
+        data = {
+            'id': attendance_permission_id
+        }
+        return delete_attendance_permission(data)

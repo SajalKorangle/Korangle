@@ -4,6 +4,7 @@ from school_app.model.models import Session
 
 # Create your models here.
 
+
 class Class(models.Model):
     name = models.TextField()
     orderNumber = models.IntegerField(default=0)
@@ -15,6 +16,7 @@ class Class(models.Model):
     class Meta:
         db_table = 'class'
 
+
 class ClassSession(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0)
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
@@ -24,6 +26,7 @@ class ClassSession(models.Model):
 
     class Meta:
         db_table = 'class_session'
+
 
 class Section(models.Model):
     name = models.TextField()
