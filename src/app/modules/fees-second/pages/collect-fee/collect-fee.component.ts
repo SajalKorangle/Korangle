@@ -73,6 +73,10 @@ export class CollectFeeComponent {
     constructor (private feeService: FeeService) { }
 
     getStudentFeeDetails(student: any): void {
+        this.selectedStudent = student;
+        if (student === null) {
+            return;
+        }
         const data = {
             studentDbId: student.dbId,
         };
