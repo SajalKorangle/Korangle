@@ -140,7 +140,9 @@ export class ViewAllComponent implements OnInit {
     printStudentList(): void {
         // alert('Functionality needs to be implemented once again');
         const value = {
-            studentList: this.studentFullProfileList,
+            studentList: this.studentFullProfileList.filter(student => {
+                return student.show
+            }),
             columnFilter: this.columnFilter
         };
         EmitterService.get('print-student-list').emit(value);
