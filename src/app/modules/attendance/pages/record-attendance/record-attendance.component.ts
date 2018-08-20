@@ -29,6 +29,28 @@ export class RecordAttendanceComponent implements OnInit {
 
     ngOnInit(): void {
 
+        let request_attendance_permission_list_data = {
+            parentUser: this.user.id,
+            parentSchool: this.user.activeSchool.dbId,
+            sessionId: this.user.activeSchool.currentSessionDbId,
+        };
+
+        let request_student_data = {
+            schoolDbId: this.user.activeSchool.dbId,
+            sessionDbId: this.user.activeSchool.currentSessionDbId,
+        };
+
+        this.isLoading = true;
+
+        Promise.all([
+            this.attendanceService.getAttendancePermissionList(request_attendance_permission_list_data, this.user.jwt),
+            this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
+        ]).then(value => {
+            this.isLoading = false;
+        }, error => {
+            this.isLoading = false;
+        });
+
     }
 
 }
