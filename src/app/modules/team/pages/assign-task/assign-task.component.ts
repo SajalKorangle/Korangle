@@ -3,7 +3,7 @@ import {Component, Input, OnInit } from '@angular/core';
 import { TeamService } from '../../team.service';
 
 import {FormControl} from '@angular/forms';
-import {map} from 'rxjs/operators/map';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'assign-task',

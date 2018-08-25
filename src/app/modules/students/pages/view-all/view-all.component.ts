@@ -289,26 +289,6 @@ export class ViewAllComponent implements OnInit {
 
             this.getHeaderValues(),
 
-            /*SECTION_VALUES,
-
-            ADMISSION_SESSION_VALUES,
-
-            GENDER_VALUES,
-
-            CATEGORY_VALUES,
-
-            RELIGION_VALUES,
-
-            BLOOD_GROUP_VALUES,
-
-            RTE_VALUES,
-
-            ['Bus Stop Values'].concat(this.busStopList.map(a => a.stopName)),
-
-            ['Date Format', 'dd-mm-yyyy or dd/mm/yyyy'],
-
-            HEADERS,*/
-
         ];
 
         this.studentFullProfileList.forEach(student => {

@@ -5,4 +5,4 @@ preparePackage.sh
 brightstar.tar.gz
 brightstar/
 src/src.iml
-
+.DS_Store

@@ -4,7 +4,7 @@ import { Constants } from '../classes/constants';
 
 import { Headers, Http, RequestOptions } from '@angular/http';
 
-import 'rxjs/add/operator/toPromise';
+
 
 @Injectable()
 export class CommonServiceRequirements {

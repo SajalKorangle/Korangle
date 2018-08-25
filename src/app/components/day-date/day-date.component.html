@@ -1,0 +1,14 @@
+<mat-form-field>
+    <input matInput
+           [matDatepicker]="picker"
+           (dateChange)="onDateChanged($event);"
+           placeholder="Choose a date"
+           [formControl]="date"
+           disabled>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker disabled="false"></mat-datepicker>
+</mat-form-field>
+
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

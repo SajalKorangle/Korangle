@@ -6,10 +6,10 @@ import { TeamService } from '../../../team/team.service';
 
 import { ClassService } from '../../../../services/class.service';
 
-import 'rxjs/add/operator/toPromise';
+
 
 import {FormControl} from '@angular/forms';
-import {map} from 'rxjs/operators/map';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'give-permissions',

@@ -39,7 +39,7 @@
 	font-weight: 400;
 }
 
-mat-form-field {
+/*mat-form-field {
 	margin-top: 15px;
 	width: 100%;
 }
@@ -53,4 +53,4 @@ mat-form-field mat-select {
 mat-form-field input[type='date'] {
 	padding-top: 2px;
 	padding-bottom: 1px;
-}
+}*/

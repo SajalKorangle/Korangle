@@ -5,7 +5,7 @@ import { TeamService } from '../../team.service';
 import {FormControl} from '@angular/forms';
 // import {Observable} from 'rxjs/Observable';
 // import { startWith } from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators/map';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'remove-member',

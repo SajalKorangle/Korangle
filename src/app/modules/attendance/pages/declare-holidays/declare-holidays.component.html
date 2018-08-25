@@ -1,175 +1,85 @@
 <div class="card-content">
 
-    <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="classSectionStudentList && !isLoading">
 
-        <!-- Name, Father's Name, Mother's Name, Mobile Number -->
         <div class="row">
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Name"
-                           [(ngModel)]="newEmployee.name">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Father's Name"
-                           [(ngModel)]="newEmployee.fatherName">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Mother's Name"
-                           [(ngModel)]="newEmployee.motherName">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="number"
-                           placeholder="Mobile Number"
-                           [(ngModel)]="newEmployee.mobileNumber">
-                </mat-form-field>
-            </div>
-        </div>
+            <div class="col-md-2">
+                <!-- Class Filter -->
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Select Class" style="width: 100%;">
 
-        <!-- Date of Birth, Gender, Aadhar Number, Passport Number -->
-        <div class="row">
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="date"
-                           placeholder="Date of Birth"
-                           [(ngModel)]="newEmployee.dateOfBirth">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <mat-select placeholder="Gender"
-                                [(ngModel)]="newEmployee.gender">
-                        <mat-option>None</mat-option>
-                        <mat-option value="Male">Male</mat-option>
-                        <mat-option value="Female">Female</mat-option>
-                        <mat-option value="Other">Other</mat-option>
+                        <mat-option>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="selectAllClasses(); $event.stopPropagation();">Select All
+                            </button>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
+                            </button>
+                        </mat-option>
+
+                        <ng-container *ngFor="let class of classSectionStudentList">
+                            <ng-container *ngFor="let section of class.sectionList">
+                                <mat-option style="width: 100%;">
+                                    <mat-checkbox [(ngModel)]="section.selected"
+                                                  (click)="$event.stopPropagation();">
+                                        {{class.name}}<span *ngIf="class.sectionList.length>1">, {{section.name}}</span>
+                                    </mat-checkbox>
+                                </mat-option>
+                            </ng-container>
+                        </ng-container>
+
+                        <mat-option>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="selectAllClasses(); $event.stopPropagation();">Select All
+                            </button>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
+                            </button>
+                        </mat-option>
+
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="number"
-                           placeholder="Aadhar Number"
-                           [(ngModel)]="newEmployee.aadharNumber">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Passport Number"
-                           [(ngModel)]="newEmployee.passportNumber">
-                </mat-form-field>
+            <div class="col-md-10" style="padding-top: 16px;">
+                <b>{{getSelectedClasses()}}</b>
             </div>
         </div>
 
-        <!-- Employee Number, Job Title, Qualification, Date of Joining -->
         <div class="row">
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Employee Number"
-                           [(ngModel)]="newEmployee.employeeNumber">
+            <div class="col-md-2">
+                <!-- Date -->
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Date or Range"
+                                [(ngModel)]="by"
+                                style="width: 100%;">
+                        <mat-option value="date">Date</mat-option>
+                        <mat-option value="range">Range</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Job Title"
-                           [(ngModel)]="newEmployee.currentPost">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Qualification"
-                           [(ngModel)]="newEmployee.qualification">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="date"
-                           placeholder="Date of Joining"
-                           [(ngModel)]="newEmployee.dateOfJoining">
-                </mat-form-field>
+            <div class="col-md-10">
+                <ng-container *ngIf="by==='date'">
+                    <day-date (onDateSelected)="onDateSelected($event)"></day-date>
+                </ng-container>
+                <ng-container *ngIf="by==='range'">
+                    <span style="margin-left: 10px; margin-right: 5px;">From:</span><day-date (onDateSelected)="onStartDateSelected($event)"></day-date>
+                    <span style="margin-left: 10px; margin-right: 5px;">To:</span><day-date (onDateSelected)="onEndDateSelected($event)"></day-date>
+                </ng-container>
             </div>
         </div>
 
-        <!-- Bank Name, Bank Account Number, EPF Account No. , Pan Number -->
-        <div class="row">
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Bank Name"
-                           [(ngModel)]="newEmployee.bankName">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Bank Account Number"
-                           [(ngModel)]="newEmployee.bankAccountNumber">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="EPF Account No."
-                           [(ngModel)]="newEmployee.epfAccountNumber">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Pan Number"
-                           [(ngModel)]="newEmployee.panNumber">
-                </mat-form-field>
-            </div>
-        </div>
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="declareHoliday()">Declare</button>
 
-        <!-- Address, Remark -->
-        <div class="row">
-            <div class="col-md-6">
-                <mat-form-field>
-                    <textarea matInput
-                              rows="4"
-                              placeholder="Address"
-                              [(ngModel)]="newEmployee.address"></textarea>
-                </mat-form-field>
-            </div>
-            <div class="col-md-6">
-                <mat-form-field>
-                    <textarea matInput
-                              rows="4"
-                              placeholder="Remark"
-                              [(ngModel)]="newEmployee.remark"></textarea>
-                </mat-form-field>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="createNewEmployee()">Create Profile</button>
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="margin-left: 30px;"
+                (click)="deleteAttendance()">Delete All Records</button>
 
     </ng-container>
 

@@ -4,7 +4,7 @@ import { Student } from '../../classes/student';
 
 // import { Headers, Http } from '@angular/http';
 
-import 'rxjs/add/operator/toPromise';
+
 // import {Constants} from '../classes/constants';
 
 import { CommonServiceRequirements } from '../../services/common-service-requirements';

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import 'rxjs/add/operator/toPromise';
+
 
 import { CommonServiceRequirements } from '../../services/common-service-requirements';
 
@@ -13,11 +13,18 @@ export class AttendanceService extends CommonServiceRequirements {
         return super.postData(data, token, url);
     }
 
-    getAttendance(data: any, token: any): Promise<any> {
+    getAttendanceList(data: any, token: any): Promise<any> {
         const url = '/attendance/student-attendances?startDate='
             + data['startDate'] + '&endDate=' + data['endDate']
-            + '&studentList=' + data['studentList'];
+            + '&studentIdList=' + data['studentIdList'];
         return super.getData(token, url);
+    }
+
+    deleteAttendance(data: any, token: any): Promise<any> {
+        const url = '/attendance/student-attendances?startDate='
+            + data['startDate'] + '&endDate=' + data['endDate']
+            + '&studentIdList=' + data['studentIdList'];
+        return super.deleteData(token, url);
     }
 
     // Attendance Permission

@@ -21,6 +21,7 @@ import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 import { PrintICardsComponent } from './modules/students/print/print-i-card/print-i-cards.component';
+import { PrintStudentAttendanceListComponent } from './modules/attendance/print/print-student-attendance-list/print-student-attendance-list.component';
 
 @NgModule({
     declarations: [
@@ -38,6 +39,7 @@ import { PrintICardsComponent } from './modules/students/print/print-i-card/prin
         PrintStudentListComponent,
         PrintNewFeeReceiptComponent,
         PrintICardsComponent,
+        PrintStudentAttendanceListComponent,
         PrintComponent,
 
     ],
