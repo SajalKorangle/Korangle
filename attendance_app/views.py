@@ -9,7 +9,7 @@ import json
 
 ############## Student Attendance ##############
 from .business.student_attendance \
-    import create_or_update_student_attendance_list, get_student_attendance_list
+    import create_or_update_student_attendance_list, get_student_attendance_list, delete_student_attendance_list
 
 
 class StudentAttendanceListView(APIView):
@@ -22,11 +22,20 @@ class StudentAttendanceListView(APIView):
     @user_permission
     def get(request):
         data = {
-            'studentList': request.GET['studentList'],
+            'studentIdList': request.GET['studentIdList'],
             'startDate': request.GET['startDate'],
             'endDate': request.GET['endDate'],
         }
         return get_student_attendance_list(data)
+
+    @user_permission
+    def delete(request):
+        data = {
+            'studentIdList': request.GET['studentIdList'],
+            'startDate': request.GET['startDate'],
+            'endDate': request.GET['endDate'],
+        }
+        return delete_student_attendance_list(data)
 
     @user_permission
     def put(request):

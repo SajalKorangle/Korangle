@@ -15,12 +15,13 @@ class StudentAttendance(models.Model):
     PRESENT_ATTENDANCE_STATUS = 'PRESENT'
     ATTENDANCE_STATUS = (
         (ABSENT_ATTENDANCE_STATUS, 'Absent'),
+        (PRESENT_ATTENDANCE_STATUS, 'Present'),
         (HOLIDAY_ATTENDANCE_STATUS, 'Holiday'),
     )
 
     parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT,
                                       null=False, default=0, verbose_name='parentStudent')
-    dateOfAttendance = models.DateField(null=False, auto_now_add=True, verbose_name='dateOfAttendance')
+    dateOfAttendance = models.DateField(null=False, verbose_name='dateOfAttendance', default='2011-01-01')
     status = models.CharField(max_length=10, choices=ATTENDANCE_STATUS, null=False, default=PRESENT_ATTENDANCE_STATUS)
 
     class Meta:

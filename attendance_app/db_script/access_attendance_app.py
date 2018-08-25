@@ -20,24 +20,14 @@ def access_attendance_app(apps, schema_editor):
             'orderNumber' : 1,
         },
         {
-            'path' : 'view_class_attendance',
-            'title' : 'View Class Atten.',
-            'orderNumber' : 2,
-        },
-        {
-            'path': 'view_student_attendance',
-            'title': 'View Student Atten.',
-            'orderNumber': 3,
-        },
-        {
             'path': 'declare_holidays',
             'title': 'Declare Holidays',
-            'orderNumber': 4,
+            'orderNumber': 2,
         },
         {
             'path': 'give_permissions',
             'title': 'Give Permissions',
-            'orderNumber': 5,
+            'orderNumber': 3,
         },
     ]
 

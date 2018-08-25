@@ -1,4 +1,6 @@
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from attendance_app.models import StudentAttendance
 
 from rest_framework import serializers
@@ -14,7 +16,7 @@ def get_student_attendance_list(data):
 
     student_attendance_list = []
 
-    for student_id in data['studentList']:
+    for student_id in data['studentIdList'].split(','):
         for student_attendance_object in \
                 StudentAttendance.objects.filter(parentStudent_id=student_id,
                                                  dateOfAttendance__gte=data['startDate'],
@@ -28,24 +30,22 @@ def get_student_attendance_list(data):
 def create_or_update_student_attendance_list(data):
 
     for student_attendance_data in data:
+
         student_attendance_object, created = \
-            StudentAttendance.get_or_create(parentStudent=student_attendance_data['parentStudent'],
-                                            dateOfAttendance=student_attendance_data['dateOfAttendance'])
+            StudentAttendance.objects.get_or_create(parentStudent_id=student_attendance_data['parentStudent'],
+                                                    dateOfAttendance=student_attendance_data['dateOfAttendance'])
         student_attendance_object.status = student_attendance_data['status']
         student_attendance_object.save()
 
     return 'Student Attendance recorded successfully'
 
 
-"""def update_student_attendance_list(data):
+def delete_student_attendance_list(data):
 
-    for student_attendance_data in data:
-        student_attendance_serializer = \
-            StudentAttendanceModelSerializer(StudentAttendance.objects.get(id=student_attendance_data['id']),
-                                             data=student_attendance_data)
-        if student_attendance_serializer.is_valid():
-            student_attendance_serializer.save()
-        else:
-            return 'Student Attendance updation failed'
+    for student_id in data['studentIdList'].split(','):
+        StudentAttendance.objects.filter(parentStudent_id=student_id,
+                                         dateOfAttendance__gte=data['startDate'],
+                                         dateOfAttendance__lte=data['endDate']).delete()
 
-    return 'Student Attendance updated successfully'"""
+    return 'Student Attendance Record deleted Successfully'
+
