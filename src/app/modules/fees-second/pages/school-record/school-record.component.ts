@@ -91,6 +91,16 @@ export class SchoolRecordComponent implements OnInit {
         });
     }
 
+    getFilteredStudentTotalFeeDues(): any {
+        let totalFeeDues = 0;
+        this.studentFeeDuesList.forEach(student => {
+            if (student.sectionObject.selected) {
+                totalFeeDues += student.feesDue;
+            }
+        });
+        return totalFeeDues;
+    }
+
     getFilteredStudentFeeDuesList(): any {
         return this.studentFeeDuesList.filter(student => {
             if (student.sectionObject.selected) {

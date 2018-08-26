@@ -228,6 +228,19 @@
                               (click)="$event.stopPropagation();">Other
                 </mat-checkbox>
             </mat-option>
+            <mat-option>
+                Admission:
+                <mat-checkbox [(ngModel)]="newAdmission"
+                              style="margin-right: 5px;"
+                              (ngModelChange)="handleStudentDisplay()"
+                              (click)="$event.stopPropagation();">New
+                </mat-checkbox>
+                <mat-checkbox [(ngModel)]="oldAdmission"
+                              style="margin-right: 5px;"
+                              (ngModelChange)="handleStudentDisplay()"
+                              (click)="$event.stopPropagation();">Old
+                </mat-checkbox>
+            </mat-option>
         </mat-select>
     </mat-form-field>
 

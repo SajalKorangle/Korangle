@@ -56,6 +56,10 @@ export class ViewAllComponent implements OnInit {
     femaleSelected = false;
     otherGenderSelected = false;
 
+    /* Admission Session Options */
+    newAdmission = true;
+    oldAdmission = true;
+
     displayStudentNumber = 0;
 
     // classSectionStudentList = [];
@@ -271,6 +275,17 @@ export class ViewAllComponent implements OnInit {
                         }
                         break;
                 }
+            }
+
+            /* Admission Filter Check */
+            if (!this.newAdmission
+                && student.admissionSessionDbId === this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
+            } else if (!this.oldAdmission
+                && student.admissionSessionDbId !== this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
             }
 
             ++this.displayStudentNumber;
