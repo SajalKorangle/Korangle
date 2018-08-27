@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { EmitterService } from '../../services/emitter.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,6 +21,9 @@ export class NavbarComponent implements OnInit {
     ngOnInit(){
       const navbar: HTMLElement = this.element.nativeElement;
       this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
+      EmitterService.get('close-sidebar').subscribe(value => {
+          this.sidebarClose();
+      });
     }
 
     sidebarOpen() {

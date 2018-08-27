@@ -68,7 +68,12 @@ export class StudentFilterComponent implements OnInit {
     }
 
     populateStudentList(studentList: any): void {
-        this.studentList = studentList;
+        this.studentList = studentList.filter(student => {
+            if (student.parentTransferCertificate) {
+                return false;
+            }
+            return true;
+        });
         this.filteredStudentList = this.myControl.valueChanges.pipe(
             map(value => typeof value === 'string' ? value: (value as any).name),
             map(name => this.filter(name.toString()))
