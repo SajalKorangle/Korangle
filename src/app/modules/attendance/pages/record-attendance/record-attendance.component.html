@@ -72,6 +72,7 @@
             <tr>
                 <th>S No.</th>
                 <th>Student</th>
+                <th *ngIf="by==='month'">Abs./Total</th>
                 <ng-container *ngFor="let date of getDateList()">
                     <th style="text-align: center" *ngIf="by==='month'">{{date.getDate()}}</th>
                     <th style="text-align: center" *ngIf="by==='date'">Attendance</th>
@@ -87,6 +88,9 @@
                         <ng-container *ngIf="student.scholarNumber">
                             ({{student.scholarNumber}})
                         </ng-container>
+                    </td>
+                    <td *ngIf="by==='month'">
+                        {{getStudentRecord(student)}}
                     </td>
                     <ng-container *ngFor="let attendance of student.attendanceStatusList">
                         <td align="center">

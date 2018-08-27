@@ -11,7 +11,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let feeEntry of feeReceiptList">
+        <tr *ngFor="let feeEntry of feeReceiptList | slice:0:number">
             <td>{{feeEntry.receiptNumber}}</td>
             <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.studentName}}</td>
             <td align="center" *ngIf="!whileSubmittingFee">{{feeEntry.studentScholarNumber}}</td>
@@ -30,3 +30,11 @@
         </tr>
     </tbody>
 </table>
+<ng-container *ngIf="feeReceiptList.length>3">
+    <u *ngIf="number<feeReceiptList.length"
+       style="color: deepskyblue; cursor: pointer"
+       (click)="increaseNumber()">
+        Show More
+    </u>
+    Total Receipts: {{feeReceiptList.length}}
+</ng-container>

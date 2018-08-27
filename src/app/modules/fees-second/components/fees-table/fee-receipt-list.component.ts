@@ -18,12 +18,18 @@ export class FeeReceiptListComponent {
         name: 'All',
     };
 
+    number = 3;
+
     printFeeReceipt(fee: any): void {
         EmitterService.get('print-new-fee-receipt').emit(fee);
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
         return FeeReceipt.getFeeReceiptTotalAmount(feeReceipt, this.feeType.name);
+    }
+
+    increaseNumber(): void {
+        this.number += 3;
     }
 
 }

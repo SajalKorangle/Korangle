@@ -8,6 +8,7 @@ import {Concession, FeeReceipt} from '../../classes/common-functionalities';
 
 import { EmitterService } from '../../../../services/emitter.service';
 import {FREQUENCY_LIST} from '../../classes/constants';
+import {Student} from '../../../../classes/student';
 
 const APRIL = 'APRIL';
 const MAY = 'MAY';
@@ -473,5 +474,8 @@ export class CollectFeeComponent implements OnInit {
         return componentMonthly.amountDue;
     }
 
+    getThumbnail(student: any): any {
+        return Student.getThumbnail(student);
+    }
 
 }

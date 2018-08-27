@@ -9,48 +9,71 @@
 
         <div style="margin-top: 30px"></div>
 
-        <div class="row" style="font-size: 16px;">
-            <div class="col-md-2">
-                Name
-            </div>
-            <div class="col-md-4">
-                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.name}}</span>
-            </div>
-            <div class="col-md-2">
-                Scholar No.
-            </div>
-            <div class="col-md-4">
-                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.scholarNumber}}</span>
-            </div>
-        </div>
+        <div class="row" style="border-bottom: 1px solid black; padding-bottom: 30px;">
+            <div class="col-md-10">
 
-        <div class="row" style="font-size: 16px;">
-            <div class="col-md-2">
-                Father's Name
-            </div>
-            <div class="col-md-4">
-                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.fathersName}}</span>
-            </div>
-            <div class="col-md-2">
-                Class Name
-            </div>
-            <div class="col-md-4">
-                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.className}}</span>
-            </div>
-        </div>
+                <div class="row" style="font-size: 16px;">
+                    <div class="col-md-2">
+                        Name
+                    </div>
+                    <div class="col-md-5">
+                        : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.name}}</span>
+                    </div>
+                    <div class="col-md-2">
+                        Scholar No.
+                    </div>
+                    <div class="col-md-3">
+                        : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.scholarNumber}}</span>
+                    </div>
+                </div>
 
-        <div class="row" style="font-size: 16px; border-bottom: 1px solid black; padding-bottom: 30px;">
-            <div class="col-md-2" *ngIf="studentFeeProfile.stopName">
-                BusStop
+                <div class="row" style="font-size: 16px;">
+                    <div class="col-md-2">
+                        Father's Name
+                    </div>
+                    <div class="col-md-5">
+                        : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.fathersName}}</span>
+                    </div>
+                    <div class="col-md-2">
+                        Class Name
+                    </div>
+                    <div class="col-md-3">
+                        : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.className}}</span>
+                    </div>
+                </div>
+
+                <div class="row" style="font-size: 16px;">
+                    <div class="col-md-2" *ngIf="studentFeeProfile.stopName">
+                        BusStop
+                    </div>
+                    <div class="col-md-5" *ngIf="studentFeeProfile.stopName">
+                        : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.stopName}}</span>
+                    </div>
+                    <div class="col-md-2" *ngIf="studentFeeProfile.rte">
+                        RTE
+                    </div>
+                    <div class="col-md-3" *ngIf="studentFeeProfile.rte">
+                        : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.rte}}</span>
+                    </div>
+                </div>
+
+                <div class="row" style="font-size: 16px;">
+                    <div class="col-md-2" *ngIf="studentFeeProfile.address">
+                        Address
+                    </div>
+                    <div class="col-md-10" *ngIf="studentFeeProfile.address">
+                        : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.address}}</span>
+                    </div>
+                </div>
+
             </div>
-            <div class="col-md-4" *ngIf="studentFeeProfile.stopName">
-                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.stopName}}</span>
-            </div>
-            <div class="col-md-2" *ngIf="studentFeeProfile.rte">
-                RTE
-            </div>
-            <div class="col-md-4" *ngIf="studentFeeProfile.rte">
-                : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.rte}}</span>
+            <div class="col-md-2">
+                <img *ngIf="studentFeeProfile.profileImage"
+                     style="width: 50%"
+                     src="{{getThumbnail(studentFeeProfile)}}">
+                <img *ngIf="!studentFeeProfile.profileImage"
+                     style="width: 50%"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
             </div>
         </div>
 

@@ -12,6 +12,12 @@
                                   (optionSelected)="handleStudentSelection($event.option.value)"
                                   [displayWith]="displayFn">
                     <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
+                        <img *ngIf="student.profileImage"
+                             style="width: 10%"
+                             src="{{getThumbnail(student)}}">
+                        <img *ngIf="!student.profileImage"
+                             style="width: 10%"
+                             src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
                         {{displayFn(student)}}
                     </mat-option>
                 </mat-autocomplete>

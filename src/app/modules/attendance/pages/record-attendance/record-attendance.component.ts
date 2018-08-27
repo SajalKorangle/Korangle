@@ -442,4 +442,18 @@ export class RecordAttendanceComponent implements OnInit {
         }
         return count;
     }
+
+    getStudentRecord(student: any): any {
+        let absentCount = 0, totalCount = 0;
+        student.attendanceStatusList.forEach(attendanceStatus => {
+            if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
+                totalCount += 1;
+            } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
+                absentCount += 1;
+                totalCount += 1;
+            }
+        });
+        return absentCount + '/' + totalCount;
+    }
+
 }

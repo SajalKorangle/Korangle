@@ -5,6 +5,7 @@ import {SchoolService} from '../../services/school.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
+import {Student} from '../../classes/student';
 
 @Component({
     selector: 'student-filter',
@@ -121,6 +122,10 @@ export class StudentFilterComponent implements OnInit {
             this.handleOnStudentLoading(false);
             this.populateStudentList(studentList);
         });
+    }
+
+    getThumbnail(student: any): any {
+        return Student.getThumbnail(student);
     }
 
 }
