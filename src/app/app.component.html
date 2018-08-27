@@ -15,8 +15,7 @@
                 <div class="container-fluid">
 
                     <div class="card"
-                         *ngIf="user.activeModule"
-                         style="min-height: 100%">
+                         *ngIf="user.activeModule">
                         <div class="card-header" [attr.data-background-color]="user.activeSchool.primaryThemeColor">
                             <h4 class="title hidden-xs">{{user.activeModule.title}} - {{user.activeTask.title}}</h4>
                             <h4 class="title visible-xs">{{user.activeModule.title}}</h4>
