@@ -18,6 +18,11 @@ def get_student_mini_profile(student_section_object):
     else:
         student_response['profileImage'] = None
 
+    if student_object.parentTransferCertificate:
+        student_response['parentTransferCertificate'] = student_object.parentTransferCertificate.id
+    else:
+        student_response['parentTransferCertificate'] = None
+
     student_response['className'] = student_section_object.parentSection.parentClassSession.parentClass.name
     student_response['sectionName'] = student_section_object.parentSection.name
     student_response['sectionDbId'] = student_section_object.parentSection.id
