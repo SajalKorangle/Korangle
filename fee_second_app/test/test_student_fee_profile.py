@@ -68,13 +68,18 @@ class StudentFeeProfileTestCase(ParentTestCase):
 
         response = get_student_fee_profile_by_student_section_object(student_section_object)
 
-        self.assertEqual(len(response), 11)
+        self.assertEqual(len(response), 13)
 
         self.assertEqual(student_object.name, response['name'])
         self.assertEqual(student_object.id, response['dbId'])
         self.assertEqual(student_object.fathersName, response['fathersName'])
         self.assertEqual(student_object.scholarNumber, response['scholarNumber'])
         self.assertEqual(student_object.mobileNumber, response['mobileNumber'])
+        self.assertEqual(student_object.address, response['address'])
+        if student_object.profileImage:
+            self.assertEqual(student_object.profileImage.url, response['profileImage'])
+        else:
+            self.assertEqual(None, response['profileImage'])
         self.assertEqual(student_object.currentBusStop.stopName, response['stopName'])
         self.assertEqual(student_object.rte, response['rte'])
         self.assertEqual(student_section_object.parentSection.id, response['sectionDbId'])

@@ -13,6 +13,11 @@ def get_student_mini_profile(student_section_object):
     student_response['fathersName'] = student_object.fathersName
     student_response['dbId'] = student_object.id
 
+    if student_object.profileImage:
+        student_response['profileImage'] = student_object.profileImage.url
+    else:
+        student_response['profileImage'] = None
+
     student_response['className'] = student_section_object.parentSection.parentClassSession.parentClass.name
     student_response['sectionName'] = student_section_object.parentSection.name
     student_response['sectionDbId'] = student_section_object.parentSection.id
