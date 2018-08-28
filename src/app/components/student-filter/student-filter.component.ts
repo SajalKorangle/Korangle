@@ -4,7 +4,8 @@ import { StudentService } from '../../modules/students/student.service';
 import {SchoolService} from '../../services/school.service';
 
 import {FormControl} from '@angular/forms';
-import {map} from 'rxjs/operators/map';
+import {map} from 'rxjs/operators';
+import {Student} from '../../classes/student';
 
 @Component({
     selector: 'student-filter',
@@ -67,7 +68,12 @@ export class StudentFilterComponent implements OnInit {
     }
 
     populateStudentList(studentList: any): void {
-        this.studentList = studentList;
+        this.studentList = studentList.filter(student => {
+            if (student.parentTransferCertificate) {
+                return false;
+            }
+            return true;
+        });
         this.filteredStudentList = this.myControl.valueChanges.pipe(
             map(value => typeof value === 'string' ? value: (value as any).name),
             map(name => this.filter(name.toString()))
@@ -121,6 +127,10 @@ export class StudentFilterComponent implements OnInit {
             this.handleOnStudentLoading(false);
             this.populateStudentList(studentList);
         });
+    }
+
+    getThumbnail(student: any): any {
+        return Student.getThumbnail(student);
     }
 
 }

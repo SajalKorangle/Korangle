@@ -1,13 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 
 import { FeeService } from '../../fee.service';
 
-import { FeeReceipt } from '../../classes/common-functionalities';
+import {Concession, FeeReceipt} from '../../classes/common-functionalities';
 
 import { EmitterService } from '../../../../services/emitter.service';
 import {FREQUENCY_LIST} from '../../classes/constants';
+import {Student} from '../../../../classes/student';
 
 const APRIL = 'APRIL';
 const MAY = 'MAY';
@@ -44,7 +45,7 @@ const MARCH = 'MARCH';
     ],
 })
 
-export class CollectFeeComponent {
+export class CollectFeeComponent implements OnInit {
 
     @Input() user;
 
@@ -60,21 +61,40 @@ export class CollectFeeComponent {
 
     feeReceiptList: any;
 
+    showPreviousConcessionDetails: boolean;
+
+    concessionList: any;
+
     remark: string;
 
     isLoading = false;
 
     frequencyList = FREQUENCY_LIST;
 
+    selectedSessionDbId: number;
+
     constructor (private feeService: FeeService) { }
 
+    ngOnInit(): void {
+        this.selectedSessionDbId = this.user.activeSchool.currentSessionDbId;
+    }
+
     getStudentFeeDetails(student: any): void {
+        this.selectedStudent = student;
+        if (student === null) {
+            return;
+        }
         const data = {
             studentDbId: student.dbId,
         };
         this.selectedStudent = student;
         this.getStudentFeeProfile(data);
         this.getStudentFeeReceiptList(data);
+        this.getStudentConcessionList(data);
+    }
+
+    populateSelectedSession(session: any): void {
+        this.selectedSessionDbId = session.dbId;
     }
 
     getStudentFeeReceiptList(data): void {
@@ -82,15 +102,27 @@ export class CollectFeeComponent {
         this.feeService.getStudentFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
             if (this.selectedStudent.dbId === data['studentDbId']) {
                 this.feeReceiptList = feeReceiptList;
-                console.log(this.feeReceiptList);
             }
         });
+    }
+
+    getStudentConcessionList(data): void {
+        this.concessionList = null;
+        this.feeService.getStudentConcessionList(data, this.user.jwt).then(concessionList => {
+            if (this.selectedStudent.dbId === data['studentDbId']) {
+                this.concessionList = concessionList;
+            }
+        });
+    }
+
+    getConcessionListTotalAmount(): number {
+        return Concession.getConcessionListTotalAmount(this.concessionList);
     }
 
     getStudentFeeProfile(data: any): void {
         this.isLoading = true;
         this.studentFeeStatusList = null;
-        data['sessionDbId'] = this.user.activeSchool.currentSessionDbId;
+        data['sessionDbId'] = this.selectedSessionDbId;
         this.feeService.getStudentFeeProfile(data, this.user.jwt).then( studentFeeProfile => {
             this.isLoading = false;
             if (this.selectedStudent.dbId === data['studentDbId']) {
@@ -110,6 +142,7 @@ export class CollectFeeComponent {
                 });
                 this.showDetails = true;
                 this.showPreviousFeeDetails = false;
+                this.showPreviousConcessionDetails = false;
                 console.log(this.studentFeeStatusList);
             }
         }, error => {
@@ -443,5 +476,8 @@ export class CollectFeeComponent {
         return componentMonthly.amountDue;
     }
 
+    getThumbnail(student: any): any {
+        return Student.getThumbnail(student);
+    }
 
 }

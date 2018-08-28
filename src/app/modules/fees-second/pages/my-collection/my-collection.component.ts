@@ -51,7 +51,6 @@ export class MyCollectionComponent {
         this.feeService.getSchoolFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
             this.isLoading = false;
             this.feeReceiptList = feeReceiptList;
-            console.log(this.feeReceiptList);
         }, error => {
             this.isLoading = false;
         });

@@ -7,9 +7,8 @@ import {EmitterService} from '../../../services/emitter.service';
 import {StudentTest} from '../classes/student-test';
 
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import { startWith } from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators/map';
+import {Observable} from 'rxjs';
+import { startWith , map} from 'rxjs/operators';
 
 import moment = require('moment');
 

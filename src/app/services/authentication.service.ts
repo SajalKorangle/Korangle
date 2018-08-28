@@ -4,7 +4,7 @@ import { Headers, Http } from '@angular/http';
 
 import { Constants } from '../classes/constants';
 
-import 'rxjs/add/operator/toPromise';
+
 
 @Injectable()
 export class AuthenticationService {

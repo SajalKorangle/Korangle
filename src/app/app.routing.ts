@@ -1,9 +1,10 @@
+
+import {of as observableOf, Observable} from 'rxjs';
 import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule, Route } from '@angular/router';
 import { PreloadAllModules, PreloadingStrategy } from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+
 
 import {DataStorage} from './classes/data-storage';
 
@@ -19,6 +20,10 @@ const routes: Routes = [
     {
         path: 'school',
         loadChildren: 'app/modules/school/school.module#SchoolModule',
+    },
+    {
+        path: 'attendance',
+        loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule',
     },
     {
         path: 'marksheet',
@@ -74,7 +79,7 @@ export class CustomPreload implements PreloadingStrategy {
             }
             return true;
         });
-        return result ? load() : Observable.of(null);
+        return result ? load() : observableOf(null);
     }
 }
 

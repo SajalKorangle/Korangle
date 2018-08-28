@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import 'rxjs/add/operator/toPromise';
+
 
 import { CommonServiceRequirements } from '../../services/common-service-requirements';
 
@@ -60,6 +60,12 @@ export class FeeService extends CommonServiceRequirements {
     getStudentFeeProfileList(data: any, token: string): Promise<any> {
         return super.getData(token, '/fee-second/school/'
             + data['schoolDbId'] + '/student-fee-profiles?session_id=' + data['sessionDbId']);
+    }
+
+    // Student Fee Dues
+    getStudentFeeDuesList(data: any, token: string): Promise<any> {
+        return super.getData(token, '/fee-second/school/'
+            + data['schoolDbId'] + '/student-fee-dues?session_id=' + data['sessionDbId']);
     }
 
     // Student Fee Status

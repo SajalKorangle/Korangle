@@ -1,0 +1,105 @@
+<div class="card-content">
+
+    <ng-container *ngIf="memberList && memberList.length>0">
+
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+                <input type="text"
+                       placeholder="Type member name here...."
+                       aria-label="Member"
+                       matInput
+                       [formControl]="myControl"
+                       [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete"
+                                  (optionSelected)="getMemberAttendancePermissionList($event.option.value)"
+                                  [displayWith]="displayFn">
+                    <mat-option *ngFor="let member of filteredMemberList | async" [value]="member">
+                        {{ member.username }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </form>
+
+        <ng-container *ngIf="selectedMember && !isLoading">
+
+            <span style="font-weight: 800; font-size: 20px">{{selectedMember.username | titlecase}}</span><br/>
+
+            <div class="row" *ngFor="let attendancePermission of selectedMemberAttendancePermissionList">
+                <div class="col-md-3">
+                    {{showClassSectionName(attendancePermission.parentSection)}}
+                </div>
+                <div class="col-md-3">
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="deleteAttendancePermission(attendancePermission)">Delete</button>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-3" *ngIf="selectedClass">
+                    <mat-form-field style="margin-top: 23px;">
+                        <mat-select placeholder="Select Class"
+                                    #selectClassSection
+                                    [ngModel]="selectedClass"
+                                    (ngModelChange)="selectedClass=$event;">
+                            <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
+                                {{classs.name}}
+                                <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
+                                            , {{classs.selectedSection.name}}
+                                        </span>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button class="btn"
+                            style="padding: 2px 11px; background-color: transparent;"
+                            matTooltip="Choose Section (default: Section - A)"
+                            mat-icon-button
+                            [matMenuTriggerFor]="classSectionMenu">
+                        <i class="material-icons" style="color: black;">expand_more</i>
+                    </button>
+                    <mat-menu #classSectionMenu="matMenu">
+                        <button *ngFor="let section of selectedClass.sectionList"
+                                mat-menu-item
+                                (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
+                            {{section.name}}
+                        </button>
+                    </mat-menu>
+                </div>
+
+                <div class="col-md-3" *ngIf="showAddButton()">
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="addAttendancePermission()">Add</button>
+                </div>
+
+            </div>
+
+            <!-- ng-container *ngFor="let module of moduleList">
+                <span style="font-weight: 800">{{module.title}}</span><br/>
+                <ng-container *ngFor="let task of module.taskList">
+                    <mat-checkbox [(ngModel)]="task.selected"
+                                  [disabled]="user.username === selectedMember.username && module.path === 'team'">
+                        {{task.title}}<br/>
+                    </mat-checkbox><br/>
+                </ng-container>
+            </ng-container>
+
+            <button type="button"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="updatePermissions()">Update
+            </button>
+            <button type="button"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="initializeModulePermissions()">Refresh
+            </button -->
+
+        </ng-container>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

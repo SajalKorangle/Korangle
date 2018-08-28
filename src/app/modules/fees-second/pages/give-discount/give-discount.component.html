@@ -1,6 +1,7 @@
 <div class="card-content">
 
-    <app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter>
+    <!-- app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter -->
+    <student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></student-filter>
 
     <ng-container *ngIf="studentFeeProfile && studentFeeStatusList && !isLoading">
 
@@ -181,6 +182,37 @@
 
         <ng-container *ngIf="getStudentTotalFee() === 0">
             **No Fees Due to give concession
+        </ng-container>
+
+        <div style="margin-top: 25px; margin-bottom: 25px; border-bottom: 1px solid black"> </div>
+
+        <ng-container *ngIf="feeReceiptList">
+            <div *ngIf="feeReceiptList.length !== 0">
+                <div class="row" style="font-weight: 800 !important;">
+                    <div class="col-md-11">
+                                    <span *ngIf="!showPreviousFeeDetails">
+                                        Last Receipt Date: <i>{{feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>, Amount: <i>{{getFeeReceiptTotalAmount(feeReceiptList[0])}}</i>
+                                    </span>
+                        <span *ngIf="showPreviousFeeDetails">Previous Fee Details</span>
+                    </div>
+                    <div class="col-md-1">
+                        <i class="material-icons"
+                           [@rotate]="!showPreviousFeeDetails"
+                           (click)="showPreviousFeeDetails = !showPreviousFeeDetails">keyboard_arrow_down</i>
+                    </div>
+                </div>
+                <div class="row" [@slideDown]="showPreviousFeeDetails">
+                    <div class="col-md-12">
+                        <app-fee-receipt-list [user]="user"
+                                              [feeReceiptList]="feeReceiptList"
+                                              [whileSubmittingFee]="true"></app-fee-receipt-list>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="feeReceiptList.length == 0">
+                **No fees submitted yet
+            </div>
+
         </ng-container>
 
         <div style="margin-top: 25px; margin-bottom: 25px; border-bottom: 1px solid black"> </div>

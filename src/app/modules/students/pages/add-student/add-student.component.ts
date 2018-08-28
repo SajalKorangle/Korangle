@@ -37,7 +37,7 @@ export class AddStudentComponent implements OnInit {
 
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
-        }
+        };
 
         this.classService.getClassSectionList(data, this.user.jwt).then(
             classSectionList => {

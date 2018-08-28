@@ -4,13 +4,19 @@ import { Student } from '../../classes/student';
 
 // import { Headers, Http } from '@angular/http';
 
-import 'rxjs/add/operator/toPromise';
+
 // import {Constants} from '../classes/constants';
 
 import { CommonServiceRequirements } from '../../services/common-service-requirements';
 
 @Injectable()
 export class StudentService extends CommonServiceRequirements {
+
+    // Profile Image
+    uploadProfileImage(file: any, data: any, token: any): Promise<any> {
+        const url = '/student/' + data['id'] + '/profile-image';
+        return super.fileData(file, token, url);
+    }
 
     // Student Full Profile
     getStudentFullProfile(data: any, token: any): Promise<any> {
@@ -28,6 +34,11 @@ export class StudentService extends CommonServiceRequirements {
         return super.postData(data, token, url);
     }
 
+    partiallyUpdateStudentFullProfile(data: any, token: any): Promise<any> {
+        const url = '/student/student-full-profiles/' + data['id'];
+        return super.patchData(data, token, url);
+    }
+
     // Student Mini Profile
     getStudentMiniProfileList(data, token): Promise<any> {
         return super.getData(token, '/student/school/'
@@ -42,6 +53,19 @@ export class StudentService extends CommonServiceRequirements {
 
     createStudentSectionList(data, token): Promise<any> {
         return super.postData(data, token, '/student/student-sections/batch');
+    }
+
+    // Transfer Certificate
+    getTransferCertificate(data, token): Promise<any> {
+        return super.getData(token, '/student/transfer-certificates/' + data['id']);
+    }
+
+    createTransferCertificate(data, token): Promise<any> {
+        return super.postData(data, token, '/student/transfer-certificates');
+    }
+
+    updateTransferCertificate(data, token): Promise<any> {
+        return super.putData(data, token, '/student/transfer-certificates/' + data['id']);
     }
 
 
@@ -73,7 +97,7 @@ export class StudentService extends CommonServiceRequirements {
         return super.postData(data, token, this.getStudentProfileUrl);
     }
 
-    updateStudentProfile(student: Student, token: any): Promise<any> {
+    updateStudentProfileOld(student: Student, token: any): Promise<any> {
         return super.postData(JSON.stringify(student), token, this.updateStudentProfileUrl);
     }
 

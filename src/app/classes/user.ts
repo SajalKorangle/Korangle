@@ -114,7 +114,7 @@ export class User {
     brighthindi, hindi123
     eklavya, ashta123
     anupreet, itisjp123
-    madhav, lakhan123
+    madhav, lakhan1508
     talent, innovative123
     champion, 123champ
     bhagatsingh, bhagat123
@@ -123,4 +123,16 @@ export class User {
     praveen, praveen5678
     prajapati, patipraja1
     rahul, tailor123
+
+    For Madhav School
+    madhav, lakhan1508 - Lakhan Parmar
+    8269392567, ramesh123 - Babita Malviya
+    8889873644, 123tularam - Deepika
+    8889135386, singh123 - Doli Mewada
+    9644137409, thakur456 - Laxmi Thakur
+    9669868163, sharma789 - Nilam Sharma
+    7879023147, pooja567 - Pooja Malviya
+    8964048545, singh678 - Ramdayal Malviya
+    9826316017, dhangarsantosh - Santosh Dhangar
+    8120232064, singhgajraj - Trapti Chadar
 */

@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 import { ChangeDetectorRef } from '@angular/core';
 
 import { EmitterService } from '../../../../services/emitter.service';
-import {StudentTcProfile} from '../../classes/student-tc-profile';
+import { TransferCertificate } from '../../classes/transfer-certificate';
 
 @Component({
     selector: 'app-print-transfer-certificate-second-format',
@@ -16,7 +16,11 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
 
     viewChecked = true;
 
-    studentTcProfile: StudentTcProfile;
+    studentProfile: any;
+
+    transferCertificate: TransferCertificate = new TransferCertificate();
+
+    numberOfCopies = 1;
 
     printTransferCertificateSecondFormatComponentSubscription: any;
 
@@ -24,7 +28,13 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
 
     ngOnInit(): void {
         this.printTransferCertificateSecondFormatComponentSubscription = EmitterService.get('print-transfer-certificate-second-format-component').subscribe( value => {
-            this.studentTcProfile = value;
+            this.studentProfile = value.studentProfile;
+            this.transferCertificate.copy(value.transferCertificate);
+            if(value.twoCopies) {
+                this.numberOfCopies = 2;
+            } else {
+                this.numberOfCopies = 1;
+            }
             this.viewChecked = false;
         });
     }
@@ -33,14 +43,17 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
         if (this.viewChecked === false) {
             this.viewChecked = true;
             window.print();
-            this.studentTcProfile = null;
+            this.studentProfile = null;
+            this.transferCertificate.clean();
+            this.numberOfCopies = 1;
             this.cdRef.detectChanges();
         }
     }
 
     ngOnDestroy(): void {
         this.printTransferCertificateSecondFormatComponentSubscription.unsubscribe();
-        this.studentTcProfile = null;
+        this.studentProfile = null;
+        this.transferCertificate.clean();
     }
 
 }

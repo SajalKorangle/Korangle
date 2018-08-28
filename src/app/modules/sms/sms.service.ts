@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import 'rxjs/add/operator/toPromise';
+
 import { URLSearchParams } from '@angular/http';
 
 import { CommonServiceRequirements } from '../../services/common-service-requirements';

@@ -55,14 +55,13 @@
             (click)="getStudentProfile();">Get
     </button>
 
-    <span *ngIf="selectedSection"
-          style="float: right; margin-top: 10px;">
+    <span *ngIf="selectedSection" style="float: right; margin-top: 10px;">
         <i>{{selectedSection.studentList.length}} students</i>
     </span>
 
     <div class="row">
         <div class="col-md-12"
-             style="border-bottom: 1px solid lightgrey; margin-top: 10px;"></div>
+             style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px;"></div>
     </div>
 
 
@@ -74,34 +73,125 @@
             </div>
         </div>
 
-        <!-- Name, Father's Name, Mother's Name, Mobile Number -->
         <div class="row">
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.name,currentStudent.name)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Name</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.name" (ngModelChange)="currentStudent.name=$event;">
-                </div>
+
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+
+                <img *ngIf="selectedStudent.profileImage"
+                     src="{{selectedStudent.profileImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!selectedStudent.profileImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+                <br/>
+
+                <input type='file'
+                       (change)="onImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #imageInput>
+
+                <a (click)="imageInput.click()"
+                   style="cursor: pointer">Select & Upload Image</a>
+
             </div>
-            <div class="col-md-3"
-                 [class.fieldChanged]="checkFieldChanged(selectedStudent.fathersName,currentStudent.fathersName)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Father's Name</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.fathersName" (ngModelChange)="currentStudent.fathersName=$event">
+
+            <div class="col-md-9">
+
+                <!-- Name, Father's Name, Mother's Name -->
+                <div class="row">
+                    <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedStudent.name,currentStudent.name)">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="selectedStudent.name" (ngModelChange)="currentStudent.name=$event;">
+                        </div>
+                    </div>
+                    <div class="col-md-4"
+                         [class.fieldChanged]="checkFieldChanged(selectedStudent.fathersName,currentStudent.fathersName)">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Father's Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="selectedStudent.fathersName" (ngModelChange)="currentStudent.fathersName=$event">
+                        </div>
+                    </div>
+                    <div class="col-md-4"
+                         [class.fieldChanged]="checkFieldChanged(selectedStudent.motherName,currentStudent.motherName)">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Mother's Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="selectedStudent.motherName" (ngModelChange)="currentStudent.motherName=$event">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3"
-                 [class.fieldChanged]="checkFieldChanged(selectedStudent.motherName,currentStudent.motherName)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Mother's Name</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.motherName" (ngModelChange)="currentStudent.motherName=$event">
+
+                <!-- Roll No., Scholar No., Date of Birth -->
+                <div class="row">
+                    <div class="col-md-4"
+                         [class.fieldChanged]="checkFieldChanged(selectedStudent.rollNumber,currentStudent.rollNumber)">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Roll No.</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="selectedStudent.rollNumber" (ngModelChange)="currentStudent.rollNumber=$event">
+                        </div>
+                    </div>
+                    <div class="col-md-4"
+                         [class.fieldChanged]="checkFieldChanged(selectedStudent.scholarNumber,currentStudent.scholarNumber)">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Scholar No.</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="selectedStudent.scholarNumber" (ngModelChange)="currentStudent.scholarNumber=$event">
+                        </div>
+                    </div>
+                    <div class="col-md-4"
+                         [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfBirth,currentStudent.dateOfBirth)">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Date of Birth</label>
+                            <input type="date"
+                                   class="form-control"
+                                   [ngModel]="selectedStudent.dateOfBirth" (ngModelChange)="currentStudent.dateOfBirth=$event">
+                        </div>
+                    </div>
                 </div>
+
             </div>
+
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+
+                <img *ngIf="selectedStudent.profileImage"
+                     src="{{selectedStudent.profileImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!selectedStudent.profileImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+                <br/>
+
+                <input type='file'
+                       (change)="onImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #imageInputTwo>
+
+                <a (click)="imageInputTwo.click()"
+                   style="cursor: pointer">Select & Upload Image</a>
+
+            </div>
+
+        </div>
+
+        <!-- Mobile Number, Admission Session, Bus Stop, RTE -->
+        <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.mobileNumber,currentStudent.mobileNumber)">
                 <div class="form-group form-black label-floating">
@@ -115,37 +205,6 @@
                            [ngModel]="selectedStudent.mobileNumber" (ngModelChange)="currentStudent.mobileNumber=$event">
                 </div>
             </div>
-        </div>
-
-        <!-- Roll No., Scholar No., Date of Birth, Admission Session -->
-        <div class="row">
-            <div class="col-md-3"
-                 [class.fieldChanged]="checkFieldChanged(selectedStudent.rollNumber,currentStudent.rollNumber)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Roll No.</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.rollNumber" (ngModelChange)="currentStudent.rollNumber=$event">
-                </div>
-            </div>
-            <div class="col-md-3"
-                 [class.fieldChanged]="checkFieldChanged(selectedStudent.scholarNumber,currentStudent.scholarNumber)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Scholar No.</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.scholarNumber" (ngModelChange)="currentStudent.scholarNumber=$event">
-                </div>
-            </div>
-            <div class="col-md-3"
-                 [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfBirth,currentStudent.dateOfBirth)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Date of Birth</label>
-                    <input type="date"
-                           class="form-control"
-                           [ngModel]="selectedStudent.dateOfBirth" (ngModelChange)="currentStudent.dateOfBirth=$event">
-                </div>
-            </div>
             <div class="col-md-3">
                 <mat-form-field style="margin-top: 22px; width: 100%;">
                     <mat-select placeholder="Admission Session"
@@ -156,15 +215,29 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <!-- div class="col-md-3"
-                 [class.fieldChanged]="checkFieldChanged(selectedStudent.totalFees,currentStudent.totalFees)">
-              <div class="form-group form-black label-floating">
-                <label class="control-label">Total Fees</label>
-                <input type="number"
-                       class="form-control"
-                       [ngModel]="selectedStudent.totalFees" (ngModelChange)="currentStudent.totalFees=$event">
-              </div>
-            </div -->
+            <div *ngIf="busStopList.length > 0" class="col-md-3">
+                <mat-form-field style="margin-top: 22px; width: 100%;">
+                    <mat-select placeholder="Bus Stop"
+                                [ngModel]="selectedStudent.busStopDbId"
+                                (ngModelChange)="currentStudent.busStopDbId = $event">
+                        <mat-option [value]=0>None</mat-option>
+                        <mat-option *ngFor="let busStop of busStopList" [value]="busStop.dbId">
+                            {{busStop.stopName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.rte,currentStudent.rte)">
+                <mat-form-field style="margin-top: 22px; width: 100%;">
+                    <mat-select placeholder="RTE"
+                                [ngModel]="selectedStudent.rte"
+                                (ngModelChange)="currentStudent.rte=$event">
+                        <mat-option value="YES">Yes</mat-option>
+                        <mat-option value="NO">No</mat-option>
+                        <mat-option value="UNKNOWN">Unknown</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
 
         <!-- Gender, Category, Religion, Blood Group -->
@@ -176,7 +249,7 @@
                            class="form-control"
                            [ngModel]="selectedStudent.gender" (ngModelChange)="currentStudent.gender=$event">
                 </div -->
-                <mat-form-field>
+                <mat-form-field style="margin-top: 22px; width: 100%;">
                     <mat-select placeholder="Gender"
                                 [ngModel]="selectedStudent.gender"
                                 (ngModelChange)="currentStudent.gender=$event">
@@ -194,7 +267,7 @@
                            class="form-control"
                            [ngModel]="selectedStudent.category" (ngModelChange)="currentStudent.category=$event">
                 </div -->
-                <mat-form-field>
+                <mat-form-field style="margin-top: 22px; width: 100%;">
                     <mat-select placeholder="Category"
                                 [ngModel]="selectedStudent.category"
                                 (ngModelChange)="currentStudent.category=$event">
@@ -217,7 +290,7 @@
                            class="form-control"
                            [ngModel]="selectedStudent.religion" (ngModelChange)="currentStudent.religion=$event">
                 </div -->
-                <mat-form-field>
+                <mat-form-field style="margin-top: 22px; width: 100%;">
                     <mat-select placeholder="Religion"
                                 [ngModel]="selectedStudent.religion"
                                 (ngModelChange)="currentStudent.religion=$event">
@@ -236,7 +309,7 @@
                            class="form-control"
                            [ngModel]="selectedStudent.bloodGroup" (ngModelChange)="currentStudent.bloodGroup=$event">
                 </div -->
-                <mat-form-field>
+                <mat-form-field style="margin-top: 22px; width: 100%;">
                     <mat-select placeholder="Blood Group"
                                 [ngModel]="selectedStudent.bloodGroup"
                                 (ngModelChange)="currentStudent.bloodGroup=$event">
@@ -352,33 +425,6 @@
                            [ngModel]="selectedStudent.fatherAnnualIncome"
                            (ngModelChange)="currentStudent.fatherAnnualIncome=$event">
                 </mat-form-field -->
-            </div>
-        </div>
-
-        <!-- Bus Stop, RTE -->
-        <div class="row">
-            <div *ngIf="busStopList.length > 0" class="col-md-3">
-                <mat-form-field>
-                    <mat-select placeholder="Bus Stop"
-                                [ngModel]="selectedStudent.busStopDbId"
-                                (ngModelChange)="currentStudent.busStopDbId = $event">
-                        <mat-option [value]=0>None</mat-option>
-                        <mat-option *ngFor="let busStop of busStopList" [value]="busStop.dbId">
-                            {{busStop.stopName}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.rte,currentStudent.rte)">
-                <mat-form-field>
-                    <mat-select placeholder="RTE"
-                                [ngModel]="selectedStudent.rte"
-                                (ngModelChange)="currentStudent.rte=$event">
-                        <mat-option value="YES">Yes</mat-option>
-                        <mat-option value="NO">No</mat-option>
-                        <mat-option value="UNKNOWN">Unknown</mat-option>
-                    </mat-select>
-                </mat-form-field>
             </div>
         </div>
 

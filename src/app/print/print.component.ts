@@ -22,6 +22,8 @@ export class PrintComponent implements OnInit, OnDestroy {
     printTransferCertificateSecondFormatSubscription: any;
     printStudentListSubscription: any;
     printNewFeeReceiptSubscription: any;
+    printICardsSubscription: any;
+    printStudentAttendanceListSubscription: any;
 
     ngOnInit(): void {
         this.printFeeReceiptSubscription = EmitterService.get('print-fee-receipt').subscribe( value => {
@@ -78,6 +80,19 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-new-fee-receipt-component').emit(value);
             });
         });
+        this.printICardsSubscription = EmitterService.get('print-i-cards').subscribe(value => {
+            this.printType = 'iCards';
+            setTimeout(()=> {
+                EmitterService.get('print-i-cards-component').emit(value);
+            });
+        });
+        this.printStudentAttendanceListSubscription =
+            EmitterService.get('print-student-attendance-list').subscribe( value => {
+                this.printType = 'studentAttendanceList';
+                setTimeout( () => {
+                    EmitterService.get('print-student-attendance-list-component').emit(value);
+                });
+        });
     }
 
     ngOnDestroy(): void {
@@ -88,6 +103,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printMarksheetSecondFormatSubscription.unsubscribe();
         this.printStudentListSubscription.unsubscribe();
         this.printNewFeeReceiptSubscription.unsubscribe();
+        this.printICardsSubscription.unsubscribe();
     }
 
 }

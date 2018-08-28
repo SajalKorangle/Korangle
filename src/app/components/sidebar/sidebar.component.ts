@@ -67,6 +67,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     changePage(task: any, module: any) {
         this.user.populateSection(task, module);
         this.router.navigateByUrl(this.user.section.route);
+        EmitterService.get('close-sidebar').emit();
     }
 
     handleSchoolChange(): void {

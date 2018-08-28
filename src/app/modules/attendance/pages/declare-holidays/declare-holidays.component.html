@@ -1,0 +1,90 @@
+<div class="card-content">
+
+    <ng-container *ngIf="classSectionStudentList && !isLoading">
+
+        <div class="row">
+            <div class="col-md-2">
+                <!-- Class Filter -->
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Select Class" style="width: 100%;">
+
+                        <mat-option>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="selectAllClasses(); $event.stopPropagation();">Select All
+                            </button>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
+                            </button>
+                        </mat-option>
+
+                        <ng-container *ngFor="let class of classSectionStudentList">
+                            <ng-container *ngFor="let section of class.sectionList">
+                                <mat-option style="width: 100%;">
+                                    <mat-checkbox [(ngModel)]="section.selected"
+                                                  (click)="$event.stopPropagation();">
+                                        {{class.name}}<span *ngIf="class.sectionList.length>1">, {{section.name}}</span>
+                                    </mat-checkbox>
+                                </mat-option>
+                            </ng-container>
+                        </ng-container>
+
+                        <mat-option>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="selectAllClasses(); $event.stopPropagation();">Select All
+                            </button>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
+                            </button>
+                        </mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-10" style="padding-top: 16px;">
+                <b>{{getSelectedClasses()}}</b>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <!-- Date -->
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Date or Range"
+                                [(ngModel)]="by"
+                                style="width: 100%;">
+                        <mat-option value="date">Date</mat-option>
+                        <mat-option value="range">Range</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-10">
+                <ng-container *ngIf="by==='date'">
+                    <day-date (onDateSelected)="onDateSelected($event)"></day-date>
+                </ng-container>
+                <ng-container *ngIf="by==='range'">
+                    <span style="margin-left: 10px; margin-right: 5px;">From:</span><day-date (onDateSelected)="onStartDateSelected($event)"></day-date>
+                    <span style="margin-left: 10px; margin-right: 5px;">To:</span><day-date (onDateSelected)="onEndDateSelected($event)"></day-date>
+                </ng-container>
+            </div>
+        </div>
+
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="declareHoliday()">Declare</button>
+
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="margin-left: 30px;"
+                (click)="deleteAttendance()">Delete All Records</button>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

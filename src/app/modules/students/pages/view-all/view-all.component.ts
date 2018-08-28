@@ -4,6 +4,8 @@ import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
 import {StudentService} from '../../student.service';
 
+import * as XLSX from 'xlsx';
+
 class ColumnFilter {
     showSerialNumber = true;
     showName = true;
@@ -54,6 +56,10 @@ export class ViewAllComponent implements OnInit {
     femaleSelected = false;
     otherGenderSelected = false;
 
+    /* Admission Session Options */
+    newAdmission = true;
+    oldAdmission = true;
+
     displayStudentNumber = 0;
 
     // classSectionStudentList = [];
@@ -103,7 +109,9 @@ export class ViewAllComponent implements OnInit {
     }
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
-        this.studentFullProfileList = studentFullProfileList;
+        this.studentFullProfileList = studentFullProfileList.filter( student => {
+            return student.parentTransferCertificate == null;
+        });
         this.studentFullProfileList.forEach(studentFullProfile => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
@@ -136,7 +144,9 @@ export class ViewAllComponent implements OnInit {
     printStudentList(): void {
         // alert('Functionality needs to be implemented once again');
         const value = {
-            studentList: this.studentFullProfileList,
+            studentList: this.studentFullProfileList.filter(student => {
+                return student.show
+            }),
             columnFilter: this.columnFilter
         };
         EmitterService.get('print-student-list').emit(value);
@@ -267,6 +277,17 @@ export class ViewAllComponent implements OnInit {
                 }
             }
 
+            /* Admission Filter Check */
+            if (!this.newAdmission
+                && student.admissionSessionDbId === this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
+            } else if (!this.oldAdmission
+                && student.admissionSessionDbId !== this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
+            }
+
             ++this.displayStudentNumber;
             student.show = true;
             student.serialNumber = ++serialNumber;
@@ -274,5 +295,90 @@ export class ViewAllComponent implements OnInit {
         });
 
     };
+
+    downloadList(): void {
+
+        let template: any;
+
+        template = [
+
+            this.getHeaderValues(),
+
+        ];
+
+        this.studentFullProfileList.forEach(student => {
+            if (student.show) {
+                template.push(this.getStudentDisplayInfo(student));
+            }
+        });
+
+        /* generate worksheet */
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
+
+        /* generate workbook and add the worksheet */
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        /* save to file */
+        XLSX.writeFile(wb, 'korangle_students.csv');
+    }
+
+    getHeaderValues(): any {
+        let headerValues = [];
+        (this.columnFilter.showSerialNumber)? headerValues.push('Serial No.'): '';
+        (this.columnFilter.showName)? headerValues.push('Name'): '';
+        (this.columnFilter.showClassName)? headerValues.push('Class Name'): '';
+        (this.columnFilter.showRollNumber)? headerValues.push('Roll Number'): '';
+        (this.columnFilter.showFathersName)? headerValues.push('Father\'s Name'): '';
+        (this.columnFilter.showMobileNumber)? headerValues.push('Mobile No.'): '';
+        (this.columnFilter.showScholarNumber)? headerValues.push('Scholar No.'): '';
+        (this.columnFilter.showDateOfBirth)? headerValues.push('Date of Birth'): '';
+        (this.columnFilter.showMotherName)? headerValues.push('Mother\'s Name'): '';
+        (this.columnFilter.showGender)? headerValues.push('Gender'): '';
+        (this.columnFilter.showCaste)? headerValues.push('Caste'): '';
+        (this.columnFilter.showCategory)? headerValues.push('Category'): '';
+        (this.columnFilter.showReligion)? headerValues.push('Religion'): '';
+        (this.columnFilter.showFatherOccupation)? headerValues.push('Father\'s Occupation'): '';
+        (this.columnFilter.showAddress)? headerValues.push('Address'): '';
+        (this.columnFilter.showChildSSMID)? headerValues.push('Child SSMID'): '';
+        (this.columnFilter.showFamilySSMID)? headerValues.push('Family SSMID'): '';
+        (this.columnFilter.showBankName)? headerValues.push('Bank Name'): '';
+        (this.columnFilter.showBankAccountNum)? headerValues.push('Bank Account No.'): '';
+        (this.columnFilter.showAadharNum)? headerValues.push('Aadhar No.'): '';
+        (this.columnFilter.showBloodGroup)? headerValues.push('Blood Group'): '';
+        (this.columnFilter.showFatherAnnualIncome)? headerValues.push('Father\'s Annual Income'): '';
+        (this.columnFilter.showRTE)? headerValues.push('RTE'): '';
+
+        return headerValues;
+    }
+
+    getStudentDisplayInfo(student: any): any {
+        let studentDisplay = [];
+        (this.columnFilter.showSerialNumber)? studentDisplay.push(student.serialNumber): '';
+        (this.columnFilter.showName)? studentDisplay.push(student.name): '';
+        (this.columnFilter.showClassName)? studentDisplay.push(student.className): '';
+        (this.columnFilter.showRollNumber)? studentDisplay.push(student.rollNumber): '';
+        (this.columnFilter.showFathersName)? studentDisplay.push(student.fathersName): '';
+        (this.columnFilter.showMobileNumber)? studentDisplay.push(student.mobileNumber): '';
+        (this.columnFilter.showScholarNumber)? studentDisplay.push(student.scholarNumber): '';
+        (this.columnFilter.showDateOfBirth)? studentDisplay.push(student.dateOfBirth): '';
+        (this.columnFilter.showMotherName)? studentDisplay.push(student.motherName): '';
+        (this.columnFilter.showGender)? studentDisplay.push(student.gender): '';
+        (this.columnFilter.showCaste)? studentDisplay.push(student.caste): '';
+        (this.columnFilter.showCategory)? studentDisplay.push(student.category): '';
+        (this.columnFilter.showReligion)? studentDisplay.push(student.religion): '';
+        (this.columnFilter.showFatherOccupation)? studentDisplay.push(student.fatherOccupation): '';
+        (this.columnFilter.showAddress)? studentDisplay.push(student.address): '';
+        (this.columnFilter.showChildSSMID)? studentDisplay.push(student.childSSMID): '';
+        (this.columnFilter.showFamilySSMID)? studentDisplay.push(student.familySSMID): '';
+        (this.columnFilter.showBankName)? studentDisplay.push(student.bankName): '';
+        (this.columnFilter.showBankAccountNum)? studentDisplay.push(student.bankAccountNum): '';
+        (this.columnFilter.showAadharNum)? studentDisplay.push(student.aadharNum.toString()): '';
+        (this.columnFilter.showBloodGroup)? studentDisplay.push(student.bloodGroup): '';
+        (this.columnFilter.showFatherAnnualIncome)? studentDisplay.push(student.fatherAnnualIncome): '';
+        (this.columnFilter.showRTE)? studentDisplay.push(student.rte): '';
+
+        return studentDisplay;
+    }
 
 }

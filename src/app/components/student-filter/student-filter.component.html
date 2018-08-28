@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-9">
         <form class="example-form" *ngIf="!isLoading">
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="example-full-width" floatPlaceholder="never">
                 <input type="text"
                        placeholder="Student Name, Scholar No."
                        aria-label="Student"
@@ -12,6 +12,12 @@
                                   (optionSelected)="handleStudentSelection($event.option.value)"
                                   [displayWith]="displayFn">
                     <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
+                        <img *ngIf="student.profileImage"
+                             style="width: 10%"
+                             src="{{getThumbnail(student)}}">
+                        <img *ngIf="!student.profileImage"
+                             style="width: 10%"
+                             src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
                         {{displayFn(student)}}
                     </mat-option>
                 </mat-autocomplete>

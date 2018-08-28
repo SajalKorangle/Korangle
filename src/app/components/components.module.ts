@@ -11,8 +11,12 @@ import { MatAutocompleteModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 import { MatProgressBarModule } from '@angular/material';
+import { MatDatepickerModule } from '@angular/material';
+import { MatNativeDateModule } from '@angular/material';
+
 
 import {CdkTableModule} from '@angular/cdk/table';
+
 
 // import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -21,6 +25,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { StudentFilterOldComponent } from './student-filter-old/student-filter.component';
 import { StudentFilterComponent } from './student-filter/student-filter.component';
+import { MonthDateComponent } from './month-date/month-date.component';
+import { DayDateComponent } from './day-date/day-date.component';
 
 import { FeeReceiptListComponent } from './fees-table/fee-receipt-list.component';
 import { DiscountListComponent } from './discount-table/discount-list.component';
@@ -34,6 +40,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
 
 @NgModule({
     declarations: [
+
         // FooterComponent,
         NavbarComponent,
         SidebarComponent,
@@ -42,6 +49,8 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         StudentFilterComponent,
         FeeReceiptListComponent,
         DiscountListComponent,
+        MonthDateComponent,
+        DayDateComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -50,6 +59,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
 
     ],
     imports: [
+
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -65,8 +75,12 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         MatFormFieldModule,
         MatInputModule,
         MatProgressBarModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+
     ],
     exports: [
+
         // FooterComponent,
         NavbarComponent,
         SidebarComponent,
@@ -75,6 +89,8 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         StudentFilterComponent,
         FeeReceiptListComponent,
         DiscountListComponent,
+        MonthDateComponent,
+        DayDateComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -96,6 +112,8 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         MatFormFieldModule,
         MatInputModule,
         MatProgressBarModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
 
     ]
 })
