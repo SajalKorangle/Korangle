@@ -59,10 +59,14 @@ INSTALLED_APPS = [
     'enquiry_app',
     'sms_app',
     'vehicle_app',
+    'attendance_app',
 
 	'corsheaders',
 
 	'django_extensions',
+
+    'storages',
+
 ]
 
 SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E307']
@@ -161,6 +165,20 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 ENV_PATH = os.path.abspath(os.path.dirname(__file__))
 MEDIA_ROOT = os.path.join(ENV_PATH, 'media/')
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'korangle'
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_SECURE_URLS = False # to use http instead of https
+
+# the next monkey patch is necessary if you use dots in the bucket name
+import ssl
+if hasattr(ssl, '_create_unverified_context'):
+   ssl._create_default_https_context = ssl._create_unverified_context
+
 
 CORS_ORIGIN_ALLOW_ALL = True
 

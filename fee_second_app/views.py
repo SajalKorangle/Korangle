@@ -272,3 +272,21 @@ class SchoolConcessionView(APIView):
             return JsonResponse({'response': get_success_response(get_concession_list_by_school_id(data))})
         else:
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+
+################# Student Fee Dues ################
+from .business.student_fee_dues \
+    import get_student_fee_dues_list_by_school_and_session_id
+
+
+class StudentFeeDuesListView(APIView):
+
+    def get(self, request, school_id):
+        if request.user.is_authenticated:
+            data = {}
+            data['schoolDbId'] = school_id
+            data['sessionDbId'] = request.GET['session_id']
+            return JsonResponse({'response': get_success_response(get_student_fee_dues_list_by_school_and_session_id(data))})
+        else:
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+

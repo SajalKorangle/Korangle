@@ -125,6 +125,8 @@ def get_school_data_by_object(school_object):
         school_data['logo'] = school_object.logo.url
     else:
         school_data['logo'] = ''
+    school_data['profileImage'] = school_object.profileImage.url
+    school_data['mobileNumber'] = school_object.mobileNumber
     school_data['primaryThemeColor'] = school_object.primaryThemeColor
     school_data['secondaryThemeColor'] = school_object.secondaryThemeColor
     school_data['complexFeeStructure'] = school_object.complexFeeStructure

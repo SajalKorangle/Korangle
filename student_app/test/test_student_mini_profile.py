@@ -27,6 +27,14 @@ class StudentMiniProfileTestCase(ParentTestCase):
         self.assertEqual(response['dbId'], student_object.id)
         self.assertEqual(response['fathersName'], student_object.fathersName)
         self.assertEqual(response['scholarNumber'], student_object.scholarNumber)
+        if student_object.profileImage:
+            self.assertEqual(response['profileImage'], student_object.profileImage.url)
+        else:
+            self.assertEqual(response['profileImage'], None)
+        if student_object.parentTransferCertificate:
+            self.assertEqual(response['parentTransferCertificate'], student_object.parentTransferCertificate.id)
+        else:
+            self.assertEqual(response['parentTransferCertificate'], None)
         self.assertEqual(response['className'], student_section_object.parentSection.parentClassSession.parentClass.name)
         self.assertEqual(response['sectionName'], student_section_object.parentSection.name)
         self.assertEqual(response['sectionDbId'], student_section_object.parentSection.id)

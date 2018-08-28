@@ -29,6 +29,7 @@ urlpatterns += [
     url(r'^student-full-profiles/(?P<student_id>[0-9]+)', StudentFullProfileView.as_view()),
     url(r'^student-full-profiles/batch', StudentFullProfileListView.as_view()),
     url(r'^school/(?P<school_id>[0-9]+)/student-full-profiles', StudentFullProfileListView.as_view()),
+    url(r'^student-full-profiles/(?P<student_id>[0-9]+)', StudentFullProfileView.as_view()),
 ]
 
 ######## Student Mini Profile ######
@@ -42,4 +43,17 @@ from .views import StudentSectionListView, StudentSectionView
 urlpatterns += [
     url(r'^student-sections/(?P<student_section_id>[0-9]+)', StudentSectionView.as_view()),
     url(r'^student-sections/batch', StudentSectionListView.as_view()),
+]
+
+######## Profile Image ############
+from .views import ProfileImageView
+urlpatterns += [
+    url(r'^(?P<student_id>[0-9]+)/profile-image', ProfileImageView.as_view()),
+]
+
+######## Transfer certificate ######
+from .views import TransferCertificateView
+urlpatterns += [
+    url(r'^transfer-certificates/(?P<transfer_certificate_id>[0-9]+)', TransferCertificateView.as_view()),
+    url(r'^transfer-certificates', TransferCertificateView.as_view()),
 ]

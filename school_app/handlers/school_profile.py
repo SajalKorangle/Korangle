@@ -2,13 +2,6 @@
 from school_app.model.models import School, Session
 
 
-'''def get_school_profile_by_id(data):
-    
-    school_object = School.objects.get(id=data['dbId'])
-    
-    return get_school_profile_by_object(school_object)'''
-
-
 def get_school_profile_by_object(school_object):
 
     school_profile_response = {}
@@ -20,6 +13,7 @@ def get_school_profile_by_object(school_object):
     school_profile_response['address'] = school_object.address
     school_profile_response['registrationNumber'] = school_object.registrationNumber
     school_profile_response['currentSessionDbId'] = school_object.currentSession.id
+    school_profile_response['mobileNumber'] = school_object.mobileNumber
 
     return school_profile_response
 
@@ -33,6 +27,7 @@ def update_school_profile(data):
     school_object.diseCode = data['diseCode']
     school_object.address = data['address']
     school_object.registrationNumber = data['registrationNumber']
+    school_object.mobileNumber = data['mobileNumber']
 
     school_object.currentSession = Session.objects.get(id=data['currentSessionDbId'])
 

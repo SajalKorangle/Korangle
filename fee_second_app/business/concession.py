@@ -4,9 +4,9 @@ from fee_second_app.models import ConcessionSecond, SubConcession, SubConcession
 
 from fee_second_app.business.student_fee_status import get_student_fee_status_list
 
-from student_app.models import Student
+from fee_second_app.business.student_fee_dues import update_student_fee_dues
 
-from school_app.model.models import School
+from student_app.models import Student
 
 
 def get_concession_by_id(data):
@@ -132,6 +132,8 @@ def create_concession(data):
                                                                       amount=subConcessionMonthly['amount'],
                                                                       parentMonth=month_object)
                 sub_concession_monthly_object.save()
+
+    update_student_fee_dues(student_object)
 
     response = {}
     response['message'] = 'Concession given successfully'

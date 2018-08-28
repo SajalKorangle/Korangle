@@ -22,7 +22,7 @@ def populate_student_field(student_object, fieldName, fieldValue):
             student_object.currentBusStop = BusStop.objects.get(id=fieldValue)
         else:
             student_object.currentBusStop = None
-    elif fieldName == 'rollNumber':
+    elif fieldName == 'rollNumber' or fieldName == 'parentTransferCertificate' or fieldName == 'profileImage':
         pass
     else:
         setattr(student_object, fieldName, fieldValue)
@@ -30,6 +30,10 @@ def populate_student_field(student_object, fieldName, fieldValue):
 
 def get_student_profile(student_object, session_object):
     student_data = {}
+    if student_object.profileImage:
+        student_data['profileImage'] = student_object.profileImage.url
+    else:
+        student_data['profileImage'] = None
     student_data['name'] = student_object.name
     student_data['dbId'] = student_object.id
     student_data['fathersName'] = student_object.fathersName
@@ -54,6 +58,7 @@ def get_student_profile(student_object, session_object):
     student_data['bloodGroup'] = student_object.bloodGroup
     student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome
     student_data['rte'] = student_object.rte
+    student_data['parentTransferCertificate'] = student_object.parentTransferCertificate_id
 
     if student_object.currentBusStop is not None:
         student_data['busStopDbId'] = student_object.currentBusStop.id
