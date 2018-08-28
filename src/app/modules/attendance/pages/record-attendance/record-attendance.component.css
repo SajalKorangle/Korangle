@@ -54,3 +54,9 @@ mat-form-field input[type='date'] {
 	padding-top: 2px;
 	padding-bottom: 1px;
 }*/
+
+.card-content {
+	display: block;
+	max-height: 88vh;
+	overflow: scroll;
+}

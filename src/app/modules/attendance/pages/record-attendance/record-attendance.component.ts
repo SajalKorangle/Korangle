@@ -456,4 +456,12 @@ export class RecordAttendanceComponent implements OnInit {
         return absentCount + '/' + totalCount;
     }
 
+    getMatTooltip(student: any, attendance: any): any {
+        let dateStr = this.formatDate(attendance.date.toString(), '');
+        dateStr = dateStr.substr(dateStr.length-2,2);
+        return student.name
+            + ', '
+            + dateStr;
+    }
+
 }
