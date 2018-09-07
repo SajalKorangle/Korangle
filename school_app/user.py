@@ -28,6 +28,7 @@ def get_student_data(student_object):
     student_data['id'] = student_object.id
     student_data['name'] = student_object.name
     student_data['fathersName'] = student_object.fathersName
+    student_data['profileImage'] = student_object.profileImage.url
 
     return student_data
 
