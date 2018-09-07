@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'sms_app',
     'vehicle_app',
     'attendance_app',
+    'user_app',
 
 	'corsheaders',
 

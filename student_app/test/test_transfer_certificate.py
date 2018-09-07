@@ -20,7 +20,7 @@ class TransferCertificateProfileTestCase(ParentTestCase):
         data = {
             'certificateNumber': 123,
             'issueDate': '2008-01-01',
-            'admissionDate': '2008-01-01',
+            # 'admissionDate': '2008-01-01',
             'leavingDate': '2008-01-01',
             'leavingReason': 'he is moving to a different city',
             'admissionClass': 'Class - 1',

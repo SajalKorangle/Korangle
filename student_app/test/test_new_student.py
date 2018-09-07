@@ -45,6 +45,8 @@ class NewStudentTestCase(ParentTestCase):
 
         data['admissionSessionDbId'] = session_object.id
 
+        data['dateOfAdmission'] = '2011-04-15'
+
         section_object = Section.objects.get(parentClassSession__parentSession=session_object,
                                                 parentClassSession__parentClass__name='Class - 12',
                                                 name='Section - A')
@@ -86,6 +88,7 @@ class NewStudentTestCase(ParentTestCase):
             self.assertEqual(student_object.fatherAnnualIncome,data['fatherAnnualIncome'])
             self.assertEqual(student_object.currentBusStop.id, data['busStopDbId'])
             self.assertEqual(student_object.admissionSession.id, data['admissionSessionDbId'])
+            self.assertEqual(student_object.dateOfAdmission.__str__(),data['dateOfAdmission'])
 
             self.assertEqual(student_object.get_section_id(session_object),data['sectionDbId'])
 

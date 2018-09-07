@@ -55,6 +55,15 @@ class School(models.Model):
     registrationNumber = models.TextField(null=False, default='426/13.01.1993')
     smsId = models.CharField(max_length=10, null=False, default='KORNGL', verbose_name='smsId')
 
+    ENGLISH = 'ENGLISH'
+    HINDI = 'HINDI'
+    MEDIUM = (
+        (ENGLISH, 'English'),
+        (HINDI, 'Hindi'),
+    )
+    medium = models.CharField(max_length=15, choices=MEDIUM, null=False, default=ENGLISH)
+
+
     def get_upload_to(self, attname):
             return 'school/id/{0}'.format(self.id)
 

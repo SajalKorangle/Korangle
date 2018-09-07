@@ -137,6 +137,8 @@ def get_school_data_by_object(school_object):
     school_data['name'] = school_object.name
     school_data['registrationNumber'] = school_object.registrationNumber
 
+    school_data['medium'] = school_object.medium
+
     school_data['moduleList'] = []
     school_data['studentList'] = []
 
@@ -148,11 +150,6 @@ class AuthenticationHandler():
         if 'token' in response.data:
             user = User.objects.filter(username=username)
             response.data.update(get_user_details(user[0]))
-            '''response.data['username'] = user[0].username
-            response.data['firstName'] = user[0].first_name
-            response.data['id'] = user[0].id
-            response.data['email'] = user[0].email
-            response.data['schoolList'] = get_school_list(user[0])'''
         else:
             response.data['username'] = 'invalidUsername'
             response.data['email'] = 'invalidEmail'
@@ -186,11 +183,6 @@ class UserDetailsView(APIView):
         print(request.user)
         if request.user.is_authenticated:
             userDetails = get_user_details(request.user)
-            '''userDetails['username'] = request.user.username
-            userDetails['firstName'] = request.user.first_name
-            userDetails['email'] = request.user.email
-            userDetails['id'] = request.user.id
-            userDetails['schoolList'] = get_school_list(request.user)'''
         return Response({"data": userDetails})
 
 
@@ -198,7 +190,9 @@ def get_user_details(user_object):
 
     response = {
         'username': user_object.username,
-        'displayName': user_object.first_name,
+        # 'displayName': user_object.first_name,
+        'first_name': user_object.first_name,
+        'last_name': user_object.last_name,
         'email': user_object.email,
         'id': user_object.id,
         'schoolList': get_school_list(user_object),

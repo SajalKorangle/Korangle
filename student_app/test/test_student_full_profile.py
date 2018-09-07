@@ -48,6 +48,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['fathersName'] = 'Father Name'
         data['mobileNumber'] = 9898955441
         data['dateOfBirth'] = '2007-04-01'
+        data['dateOfAdmission'] = '2011-04-15'
         data['remark'] = 'okay nice'
         data['scholarNumber'] = 'A234'
         data['rollNumber'] = '123'
@@ -92,6 +93,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['fathersName'] = 'Father Name'
         data['mobileNumber'] = 9898955441
         data['dateOfBirth'] = '2007-04-01'
+        data['dateOfAdmission'] = '2011-04-15'
         data['remark'] = 'okay nice'
         data['scholarNumber'] = 'A234'
         data['rollNumber'] = '123'
@@ -141,13 +143,14 @@ class StudentFullProfileTestCase(ParentTestCase):
             aadharNum=123456789012,
             bloodGroup='O +',
             fatherAnnualIncome='15,000',
+            dateOfAdmission='2011-04-15',
         )
 
         student_section_object = StudentSection.objects.get(parentStudent=student_object)
 
         response = get_student_full_profile(student_section_object)
 
-        self.assertEqual(len(response), 31)
+        self.assertEqual(len(response), 32)
 
         self.assertEqual(response['name'], student_object.name)
         self.assertEqual(response['dbId'], student_object.id)
@@ -190,6 +193,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         else:
             self.assertEqual(response['admissionSessionDbId'], None)
 
+        self.assertEqual(response['dateOfAdmission'].__str__(),student_object.dateOfAdmission)
 
     def test_get_student_full_profile_by_school_and_session_id(self):
 

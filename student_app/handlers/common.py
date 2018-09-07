@@ -12,6 +12,11 @@ def populate_student_field(student_object, fieldName, fieldValue):
             student_object.dateOfBirth = None
         else:
             student_object.dateOfBirth = fieldValue
+    elif fieldName == 'dateOfAdmission':
+        if fieldValue == '':
+            student_object.dateOfAdmission = None
+        else:
+            student_object.dateOfAdmission = fieldValue
     elif fieldName == 'admissionSessionDbId':
         if fieldValue is not None:
             student_object.admissionSession = Session.objects.get(id=fieldValue)
@@ -69,6 +74,8 @@ def get_student_profile(student_object, session_object):
         student_data['admissionSessionDbId'] = student_object.admissionSession.id
     else:
         student_data['admissionSessionDbId'] = None
+
+    student_data['dateOfAdmission'] = student_object.dateOfAdmission
 
     student_data['sectionDbId'] = student_object.get_section_id(session_object)
     student_data['sectionName'] = student_object.get_section_name(session_object)

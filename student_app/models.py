@@ -20,7 +20,7 @@ class TransferCertificate(models.Model):
 
     certificateNumber = models.IntegerField(null=False)
     issueDate = models.DateField(null=False)
-    admissionDate = models.DateField(null=False)
+    # admissionDate = models.DateField(null=False)
     leavingDate = models.DateField(null=False)
     leavingReason = models.TextField(null=False)
     admissionClass = models.TextField(null=False)
@@ -93,6 +93,7 @@ class Student(models.Model):
     rte = models.CharField(max_length=10, choices=RTE, null=True)
 
     admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession')
+    dateOfAdmission = models.DateField(null=True, verbose_name='dateOfAdmission')
 
     parentTransferCertificate = \
         models.ForeignKey(TransferCertificate, on_delete=models.PROTECT, null=True, verbose_name='parentTransferCertificate')
