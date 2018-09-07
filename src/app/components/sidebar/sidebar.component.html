@@ -72,9 +72,12 @@
                             [attr.data-color]='user.activeSchool.primaryThemeColor'
                             style="border-bottom: 0.1px solid lightgrey;">
                             <a (click)="student.showTaskList = !student.showTaskList;">
-                                <i class="material-icons">account_circle</i>
+                                <i *ngIf="!student.profileImage" class="material-icons">account_circle</i>
+                                <i><img *ngIf="student.profileImage"
+                                     style="width: 35px; height: 35px;"
+                                     src="{{getThumbnail(student)}}"></i>
                                 <p>
-                                    {{student.name}}
+                                    {{student.name | titlecase}}
                                     <i *ngIf="!student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
                                     <i *ngIf="student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
                                 </p>
@@ -86,7 +89,7 @@
                                      class="subsectionDiv"
                                      (click)="changePage(task, student);">
                                     <i class="material-icons">remove</i>
-                                    <p>{{task.title}}</p>
+                                    <p>{{task.title | titlecase}}</p>
                                 </div>
                             </ng-container>
                         </li>
@@ -102,7 +105,7 @@
                             <a (click)="changePage(task, user.activeSchool.studentList[0]);">
                                 <i class="material-icons">{{task.icon}}</i>
                                 <p>
-                                    {{task.title}}
+                                    {{task.title | titlecase}}
                                 </p>
                             </a>
                         </li>

@@ -6,6 +6,7 @@ import { EmitterService } from '../../services/emitter.service';
 
 import {User} from '../../classes/user';
 import {style, state, trigger, animate, transition} from "@angular/animations";
+import {Student} from '../../classes/student';
 
 declare const $: any;
 
@@ -111,4 +112,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this.user.jwt = '';
         this.user.emptyUserDetails();
     }
+
+    getThumbnail(student: any): any {
+        return Student.getThumbnail(student);
+    }
+
 }

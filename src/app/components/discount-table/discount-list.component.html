@@ -6,7 +6,7 @@
             <th class="text-center" *ngIf="!whileSubmittingConcession">Scholar No.</th>
             <th class="text-right">Amount</th>
             <th class="text-center">Date</th>
-            <th class="text-center">Remark</th>
+            <th class="text-center" class="hidden-sm hidden-xs">Remark</th>
         </tr>
     </thead>
     <tbody>
@@ -16,7 +16,7 @@
             <td align="center" *ngIf="!whileSubmittingConcession">{{concession.studentScholarNumber}}</td>
             <td style="padding-right: 15px;" align="right">{{getConcessionTotalAmount(concession)}}</td>
             <td align="center">{{concession.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
-            <td align="center">{{concession.remark}}</td>
+            <td align="center" class="hidden-sm hidden-xs">{{concession.remark}}</td>
         </tr>
     </tbody>
 </table>
