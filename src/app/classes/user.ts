@@ -7,10 +7,14 @@ export class User {
 
     id: number;
     username: string;
+
+    first_name: string;
+    last_name: string;
+
     email: string;
     isAuthenticated = false;
     jwt = '';
-    displayName: string;
+    // displayName: string;
     // route = '';
 
     section: any;
@@ -24,7 +28,9 @@ export class User {
 
     emptyUserDetails(): void {
         this.username = null;
-        this.displayName = null;
+        // this.displayName = null;
+        this.first_name = null;
+        this.last_name = null;
         this.id = null;
         this.email = null;
         this.isAuthenticated = false;
@@ -60,7 +66,9 @@ export class User {
         console.log(data);
         this.id = data.id;
         this.username = data.username;
-        this.displayName = data.displayName;
+        this.first_name = data.first_name;
+        this.last_name = data.last_name;
+        // this.displayName = data.displayName;
         this.email = data.email;
         this.initializeSchoolList(data.schoolList);
         if (this.schoolList.length > 0) {
@@ -88,7 +96,14 @@ export class User {
     }
 
     populateSection(task: any, module: any): void {
-        if (this.activeSchool.role === 'Parent') {
+        if (module.path === 'user-settings') {
+            this.section = {
+                route: module.path,
+                subRoute: task.path,
+                title: module.title,
+                subTitle: task.title,
+            };
+        } else if (this.activeSchool.role === 'Parent') {
             this.section = {
                 route: 'parent',
                 subRoute: task.path,
@@ -130,9 +145,23 @@ export class User {
     8889873644, 123tularam - Deepika
     8889135386, singh123 - Doli Mewada
     9644137409, thakur456 - Laxmi Thakur
-    9669868163, sharma789 - Nilam Sharma
+    9669868163, sharmanilam - Nilam Sharma
     7879023147, pooja567 - Pooja Malviya
     8964048545, singh678 - Ramdayal Malviya
     9826316017, dhangarsantosh - Santosh Dhangar
     8120232064, singhgajraj - Trapti Chadar
+
+    For Bright Star - English Medium
+    9009437033, sajjan033 - Babita Parmar
+    9713237866, siddi786 - Farhin Siddiqui
+    8871812147, neelam567 -	Neelam Rajpal
+    9424876356, rathinirmala - Nirmala Rathi
+    6262710136, jagdish136 - Rani Patidar
+    9977331033, laxmi033 - SANDEEP RATHORE
+    8871940877, 887sandhya - Sandhya Thakur
+    9630629276, satish276 - Satish Sharma
+    7987792104, umashankar - Shikha Kushwah
+    9753319449, sharma944 - Shriya Sharma
+    8962600526, rajpal005 - Simran Rajpal
+
 */

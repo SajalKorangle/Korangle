@@ -1,0 +1,49 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <!-- First Name -->
+        <div class="row">
+            <div class="col-md-3">
+                First Name
+            </div>
+            <div class="col-md-3">
+                :<input type="text"
+                        [(ngModel)]="first_name" />
+            </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="row">
+            <div class="col-md-3">
+                Last Name
+            </div>
+            <div class="col-md-3">
+                :<input type="text"
+                        [(ngModel)]="last_name" />
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div class="row">
+            <div class="col-md-3">
+                Email
+            </div>
+            <div class="col-md-3">
+                :<input type="email"
+                        [(ngModel)]="email" />
+            </div>
+        </div>
+
+        <button type="button"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="updateProfile()">Update</button>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+

@@ -21,7 +21,9 @@ export class LoginComponent {
     constructor(private authenticationService: AuthenticationService) {}
 
     login() {
+        this.isLoading = true;
         this.authenticationService.loginUserDetails(this.username, this.password).then( data => {
+            this.isLoading = false;
             if (data.username === 'invalidUsername') {
                 alert('Login failed: Invalid username or password');
             } else {

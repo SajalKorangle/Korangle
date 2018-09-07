@@ -35,6 +35,7 @@ export class Student {
     busStopDbId: number;
 
     admissionSessionDbId: number;
+    dateOfAdmission: any;
 
     schoolDbId: number;
 
@@ -74,6 +75,7 @@ export class Student {
         this.busStopDbId = student.busStopDbId;
 
         this.admissionSessionDbId = student.admissionSessionDbId;
+        this.dateOfAdmission = student.dateOfAdmission;
 
         this.parentTransferCertificate = student.parentTransferCertificate;
 

@@ -10,6 +10,10 @@ import {DataStorage} from './classes/data-storage';
 
 const routes: Routes = [
     {
+        path: 'user-settings',
+        loadChildren: 'app/modules/user-settings/user-settings.module#UserSettingsModule',
+    },
+    {
         path: 'parent',
         loadChildren: 'app/modules/parent/parent.module#ParentModule',
     },
@@ -61,6 +65,9 @@ const routes: Routes = [
 
 export class CustomPreload implements PreloadingStrategy {
     preload(route: Route, load: Function): Observable<any> {
+        if (route.path === 'settings') {
+            return load();
+        }
         let user = DataStorage.getInstance().getUser();
         let result = false;
         user.schoolList.every(school => {
@@ -88,7 +95,9 @@ export class CustomPreload implements PreloadingStrategy {
     CommonModule,
     RouterModule.forRoot(
         routes,
-        {preloadingStrategy: CustomPreload}
+        {
+            preloadingStrategy: CustomPreload
+        }
     )
   ],
   exports: [

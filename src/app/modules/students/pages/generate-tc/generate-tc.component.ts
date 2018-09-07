@@ -169,10 +169,6 @@ export class GenerateTcComponent implements OnInit {
             alert('Issue Date field should be filled');
             return false;
         }
-        if (this.currentTransferCertificate.admissionDate == null) {
-            alert('Admission Date field should be filled');
-            return false;
-        }
         if (this.currentTransferCertificate.leavingDate == null) {
             alert('Leaving Date field should be filled');
             return false;

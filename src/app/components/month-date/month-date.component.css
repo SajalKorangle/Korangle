@@ -20,3 +20,7 @@ input:disabled {
     color: black;
 }
 
+.biggerFont {
+    font-size: 20px;
+}
+

@@ -13,6 +13,8 @@ import { MatInputModule } from '@angular/material';
 import { MatProgressBarModule } from '@angular/material';
 import { MatDatepickerModule } from '@angular/material';
 import { MatNativeDateModule } from '@angular/material';
+import { MatExpansionModule } from '@angular/material';
+import { MatSortModule } from '@angular/material';
 
 
 import {CdkTableModule} from '@angular/cdk/table';
@@ -27,6 +29,7 @@ import { StudentFilterOldComponent } from './student-filter-old/student-filter.c
 import { StudentFilterComponent } from './student-filter/student-filter.component';
 import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateComponent } from './day-date/day-date.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 import { FeeReceiptListComponent } from './fees-table/fee-receipt-list.component';
 import { DiscountListComponent } from './discount-table/discount-list.component';
@@ -51,6 +54,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         DiscountListComponent,
         MonthDateComponent,
         DayDateComponent,
+        CalendarComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -77,6 +81,8 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         MatProgressBarModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatExpansionModule,
+        MatSortModule,
 
     ],
     exports: [
@@ -91,6 +97,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         DiscountListComponent,
         MonthDateComponent,
         DayDateComponent,
+        CalendarComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -114,6 +121,8 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         MatProgressBarModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatExpansionModule,
+        MatSortModule,
 
     ]
 })

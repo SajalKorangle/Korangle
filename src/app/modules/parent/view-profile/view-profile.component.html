@@ -2,35 +2,103 @@
 
     <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
 
-        <!-- Name, Father's Name, Mother's Name, Mobile Number -->
+
         <div class="row">
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Name</label>
-                    <input type="text"
-                           class="form-control"
-                           disabled
-                           [ngModel]="selectedStudent.name">
-                </div>
+
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+
+                <img *ngIf="selectedStudent.profileImage"
+                     src="{{selectedStudent.profileImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!selectedStudent.profileImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
             </div>
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Father's Name</label>
-                    <input type="text"
-                           class="form-control"
-                           disabled
-                           [ngModel]="selectedStudent.fathersName">
+
+            <div class="col-md-9">
+
+                <!-- Name, Father's Name, Mother's Name -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   disabled
+                                   [ngModel]="selectedStudent.name">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Father's Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   disabled
+                                   [ngModel]="selectedStudent.fathersName">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Mother's Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   disabled
+                                   [ngModel]="selectedStudent.motherName">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Mother's Name</label>
-                    <input type="text"
-                           class="form-control"
-                           disabled
-                           [ngModel]="selectedStudent.motherName">
+
+                <!-- Roll No., Scholar No., Date of Birth -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Roll No.</label>
+                            <input type="text"
+                                   class="form-control"
+                                   disabled
+                                   [ngModel]="selectedStudent.rollNumber">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Scholar No.</label>
+                            <input type="text"
+                                   class="form-control"
+                                   disabled
+                                   [ngModel]="selectedStudent.scholarNumber">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Date of Birth</label>
+                            <input type="date"
+                                   class="form-control"
+                                   disabled
+                                   [ngModel]="selectedStudent.dateOfBirth">
+                        </div>
+                    </div>
                 </div>
+
             </div>
+
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+
+                <img *ngIf="selectedStudent.profileImage"
+                     src="{{selectedStudent.profileImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!selectedStudent.profileImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+            </div>
+
+        </div>
+
+        <!-- Mobile Number, Admission Session, Bus Stop, RTE -->
+        <div class="row">
             <div class="col-md-3">
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Mobile Number</label>
@@ -40,35 +108,31 @@
                            [ngModel]="selectedStudent.mobileNumber">
                 </div>
             </div>
-        </div>
-
-        <!-- Roll No., Scholar No., Date of Birth, Admission Session -->
-        <div class="row">
             <div class="col-md-3">
                 <div class="form-group form-black label-floating">
-                    <label class="control-label">Roll No.</label>
+                    <label class="control-label">Admission Session</label>
                     <input type="text"
                            class="form-control"
                            disabled
-                           [ngModel]="selectedStudent.rollNumber">
+                           [ngModel]="selectedStudent.admissionSessionDbId">
+                </div>
+            </div>
+            <div *ngIf="busStopList.length > 0" class="col-md-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">BusStop</label>
+                    <input type="text"
+                           class="form-control"
+                           disabled
+                           [ngModel]="getBusStopName(selectedStudent.busStopDbId)">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group form-black label-floating">
-                    <label class="control-label">Scholar No.</label>
+                    <label class="control-label">RTE</label>
                     <input type="text"
                            class="form-control"
                            disabled
-                           [ngModel]="selectedStudent.scholarNumber">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Date of Birth</label>
-                    <input type="date"
-                           class="form-control"
-                           disabled
-                           [ngModel]="selectedStudent.dateOfBirth">
+                           [ngModel]="selectedStudent.rte">
                 </div>
             </div>
         </div>
@@ -193,24 +257,15 @@
             </div>
         </div>
 
-        <!-- Bus Stop, RTE -->
+        <!-- Date Of Admission -->
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group form-black label-floating">
-                    <label class="control-label">Bus Stop</label>
-                    <input type="text"
+                    <label class="control-label">Date of Admission</label>
+                    <input type="date"
                            class="form-control"
                            disabled
-                           [ngModel]="getBusStopName(selectedStudent.busStopDbId)">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">RTE</label>
-                    <input type="text"
-                           class="form-control"
-                           disabled
-                           [ngModel]="selectedStudent.rte">
+                           [ngModel]="selectedStudent.dateOfAdmission">
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 <div class="wrapper hidePrint">
 
-    <div *ngIf="user.isAuthenticated">
+    <div *ngIf="user.isAuthenticated" class="pageDiv">
 
         <div class="sidebar" data-image="" style="position: fixed">
             <app-sidebar [user]="user"></app-sidebar>
@@ -9,7 +9,7 @@
 
         <div class="main-panel">
 
-            <app-navbar [user]="user" class="visible-sm visible-xs"></app-navbar>
+            <app-navbar *ngIf="user.activeSchool" [user]="user" class="visible-sm visible-xs"></app-navbar>
 
             <div class="main-content">
                 <div class="container-fluid">

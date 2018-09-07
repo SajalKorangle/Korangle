@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 
@@ -32,31 +32,17 @@ const MARCH = 'MARCH';
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
     providers: [ FeeService ],
-    animations: [
-        trigger('rotate', [
-            state('true', style({transform: 'rotate(0deg)'})),
-            state('false', style({transform: 'rotate(180deg)'})),
-            transition('true => false', animate('800ms linear')),
-            transition('false => true', animate('800ms linear'))
-        ]),
-        trigger('slideDown', [
-            state('true', style({height: '*'})),
-            state('false', style({height: 0, overflow: 'hidden'})),
-            transition('true => false', animate('800ms linear')),
-            transition('false => true', animate('800ms linear'))
-        ])
-    ],
 })
 
-export class ViewFeeComponent implements OnInit {
+export class ViewFeeComponent implements OnInit, OnChanges {
 
     @Input() user;
+
+    @Input() studentId;
 
     studentFeeProfile: any;
 
     studentFeeStatusList: any;
-
-    showDetails: boolean;
 
     showPreviousFeeDetails: boolean;
 
@@ -74,7 +60,24 @@ export class ViewFeeComponent implements OnInit {
 
     constructor (private feeService: FeeService) { }
 
+    ngOnChanges(): void {
+        this.ngOnInit();
+    }
+
+    initializeData(): void {
+        this.studentFeeProfile = null;
+        this.studentFeeStatusList = null;
+        this.showPreviousFeeDetails = null;
+        this.showPreviousConcessionDetails = null;
+        this.feeReceiptList = null;
+        this.concessionList = null;
+        this.remark = null;
+        this.isLoading = false;
+        this.frequencyList = FREQUENCY_LIST;
+    }
+
     ngOnInit(): void {
+        this.initializeData();
         const data = {
             studentDbId: this.user.section.student.id,
         };
@@ -119,7 +122,6 @@ export class ViewFeeComponent implements OnInit {
             this.studentFeeStatusList = studentFeeProfile['sessionFeeStatusList'];
             this.studentFeeStatusList.forEach(sessionFeeStatus => {
                 sessionFeeStatus.componentList.forEach( component => {
-                    component.showDetails = false;
                     if (component.frequency === FREQUENCY_LIST[0]) {
                         component.payment = 0;
                     } else if ( component.frequency === FREQUENCY_LIST[1]) {
@@ -129,7 +131,6 @@ export class ViewFeeComponent implements OnInit {
                     }
                 });
             });
-            this.showDetails = true;
             this.showPreviousFeeDetails = false;
             this.showPreviousConcessionDetails = false;
             console.log(this.studentFeeStatusList);
@@ -138,79 +139,6 @@ export class ViewFeeComponent implements OnInit {
             alert('error');
         });
     }
-
-    /* generateFeeReceipt(): void {
-
-        let data = {
-            studentDbId: this.selectedStudent.dbId,
-            remark: (this.remark)?this.remark:null,
-            parentReceiver: this.user.id,
-        };
-
-        data['subFeeReceiptList'] = [];
-
-        this.studentFeeStatusList.forEach(sessionFeeStatus => {
-            sessionFeeStatus.componentList.forEach( component => {
-                if (this.getComponentPayment(component)) {
-                    let subReceipt = {
-                        componentDbId: component.dbId,
-                        frequency: component.frequency,
-                    };
-                    if (component.frequency === FREQUENCY_LIST[0]) {
-                        subReceipt['amount'] = this.getComponentPayment(component);
-                    }
-                    else if (component.frequency === FREQUENCY_LIST[1]) {
-                        subReceipt['monthList'] = [];
-                        component.monthList.forEach( componentMonthly => {
-                            let subReceiptMonthly = {
-                                month: componentMonthly.month,
-                                amount: this.getComponentMonthlyPayment(componentMonthly),
-                            };
-                            subReceipt['monthList'].push(subReceiptMonthly);
-                        });
-                    }
-                    data['subFeeReceiptList'].push(subReceipt);
-                }
-            });
-        });
-
-        console.log(data);
-
-        this.isLoading = true;
-        this.remark = null;
-        this.feeService.createFeeReceipt(data, this.user.jwt).then( response => {
-            this.isLoading = false;
-            alert(response['message']);
-
-            this.studentFeeStatusList = response['studentFeeStatusList'];
-            this.studentFeeStatusList.forEach(sessionFeeStatus => {
-                sessionFeeStatus.componentList.forEach( component => {
-                    component.showDetails = false;
-                    if (component.frequency === FREQUENCY_LIST[0]) {
-                        component.payment = 0;
-                    } else if ( component.frequency === FREQUENCY_LIST[1]) {
-                        component.monthList.forEach( componentMonthly => {
-                            componentMonthly.payment = 0;
-                        });
-                    }
-                });
-            });
-            this.studentFeeStatusList.showDetails = false;
-
-            // this.printFeeReceipt(response['feeReceipt']);
-
-            this.feeReceiptList.unshift(response['feeReceipt']);
-
-        }, error => {
-            this.isLoading = false;
-        });
-
-    } */
-
-    /*printFeeReceipt(feeReceipt: any): void {
-        console.log(feeReceipt);
-        EmitterService.get('print-new-fee-receipt').emit(feeReceipt);
-    }*/
 
     getConcessionListTotalAmount(): number {
         return Concession.getConcessionListTotalAmount(this.concessionList);
@@ -231,13 +159,6 @@ export class ViewFeeComponent implements OnInit {
     }
 
     // Student Payment & Fee
-    toggleStudentFeeDetails(): void {
-        if (this.studentFeeStatusList.showDetails) {
-            this.studentFeeStatusList.showDetails = false;
-        } else {
-            this.studentFeeStatusList.showDetails = true;
-        }
-    }
 
     handleStudentPaymentChange(payment: number): void {
         if (payment === null) payment = 0;
@@ -374,9 +295,6 @@ export class ViewFeeComponent implements OnInit {
     }
 
     // Component Payment & Fee
-    toggleComponentFeeDetails(component: any): void {
-        component.showDetails = !component.showDetails;
-    }
 
     handleComponentPaymentChange(component: any, payment: number): void {
         if (payment === null) payment = 0;

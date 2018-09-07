@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
 import { StudentService } from '../../students/student.service';
 import {BusStopService} from '../../../services/bus-stop.service';
@@ -10,9 +10,11 @@ import {BusStopService} from '../../../services/bus-stop.service';
     providers: [ StudentService, BusStopService ],
 })
 
-export class ViewProfileComponent implements OnInit {
+export class ViewProfileComponent implements OnInit, OnChanges {
 
     @Input() user;
+
+    @Input() studentId;
 
     selectedStudent: any;
 
@@ -23,7 +25,17 @@ export class ViewProfileComponent implements OnInit {
     constructor (private studentService: StudentService,
                  private busStopService: BusStopService) { }
 
+    ngOnChanges(): void {
+        this.ngOnInit();
+    }
+
     ngOnInit(): void {
+        this.selectedStudent = null;
+
+        this.busStopList = [];
+
+        this.isLoading = false;
+
         this.getStudentProfile();
 
         const dataForBusStop = {

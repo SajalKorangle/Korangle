@@ -17,6 +17,8 @@ export class School {
     currentSessionDbId: number;
     registrationNumber: string;
 
+    medium: string;
+
     role: string;
 
     moduleList = [];
@@ -41,6 +43,8 @@ export class School {
         this.currentSessionDbId = schoolData.currentSessionDbId;
         this.registrationNumber = schoolData.registrationNumber;
 
+        this.medium = schoolData.medium;
+
         this.role = schoolData.role;
 
         this.moduleList = schoolData.moduleList;
@@ -62,6 +66,11 @@ export class School {
                     path: 'view_fee',
                     icon: 'receipt',
                 },
+                {
+                    title: 'Attendance',
+                    path: 'view_attendance',
+                    icon: 'account_circle',
+                }
             ];
         });
     }

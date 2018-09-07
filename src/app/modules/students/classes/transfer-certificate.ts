@@ -4,7 +4,7 @@ export class TransferCertificate {
     id: number;
     certificateNumber: number;
     issueDate: any;
-    admissionDate: any;
+    // admissionDate: any;
     leavingDate: any;
     leavingReason: string;
     admissionClass: string;
@@ -20,7 +20,7 @@ export class TransferCertificate {
         this.id = transferCertificate.id;
         this.certificateNumber = transferCertificate.certificateNumber;
         this.issueDate = transferCertificate.issueDate;
-        this.admissionDate = transferCertificate.admissionDate;
+        // this.admissionDate = transferCertificate.admissionDate;
         this.leavingDate = transferCertificate.leavingDate;
         this.leavingReason = transferCertificate.leavingReason;
         this.admissionClass = transferCertificate.admissionClass;
@@ -35,7 +35,7 @@ export class TransferCertificate {
         this.id = null;
         this.certificateNumber = null;
         this.issueDate = null;
-        this.admissionDate = null;
+        // this.admissionDate = null;
         this.leavingDate = null;
         this.leavingReason = null;
         this.admissionClass = null;

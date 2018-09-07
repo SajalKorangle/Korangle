@@ -1,6 +1,7 @@
 import {Component, Input, OnInit } from '@angular/core';
 
 import { SchoolService } from '../../../../services/school.service';
+import {MEDIUM_LIST} from '../../../../classes/constants/medium';
 
 @Component({
   selector: 'update-profile',
@@ -13,14 +14,18 @@ export class UpdateProfileComponent implements OnInit {
 
     @Input() user;
 
+    mediumList = MEDIUM_LIST;
+
     isLoading = false;
 
     currentName: any;
     currentPrintName: any;
     currentMobileNumber: any;
     currentRegistrationNumber: any;
+    currentMedium: any;
     currentDiseCode: any;
     currentAddress: any;
+
     currentWorkingSession: any;
     selectedWorkingSession: any;
 
@@ -35,6 +40,7 @@ export class UpdateProfileComponent implements OnInit {
         this.currentPrintName = this.user.activeSchool.printName;
         this.currentMobileNumber = this.user.activeSchool.mobileNumber;
         this.currentRegistrationNumber = this.user.activeSchool.registrationNumber;
+        this.currentMedium = this.user.activeSchool.medium;
         this.currentDiseCode = this.user.activeSchool.diseCode;
         this.currentAddress = this.user.activeSchool.address;
 
@@ -64,11 +70,11 @@ export class UpdateProfileComponent implements OnInit {
             'printName': this.currentPrintName,
             'mobileNumber': this.currentMobileNumber,
             'registrationNumber': this.currentRegistrationNumber,
+            'medium': this.currentMedium,
             'diseCode': this.currentDiseCode,
             'address': this.currentAddress,
             'currentSessionDbId': this.currentWorkingSession.dbId,
         };
-        console.log(data);
         this.isLoading = true;
         this.schoolService.updateSchoolProfile(data, this.user.jwt).then(schoolProfile => {
             this.isLoading = false;
@@ -76,6 +82,7 @@ export class UpdateProfileComponent implements OnInit {
             this.user.activeSchool.printName = schoolProfile.printName;
             this.user.activeSchool.mobileNumber = schoolProfile.mobileNumber;
             this.user.activeSchool.registrationNumber = schoolProfile.registrationNumber;
+            this.user.activeSchool.medium = schoolProfile.medium;
             this.user.activeSchool.diseCode = schoolProfile.diseCode;
             this.user.activeSchool.address = schoolProfile.address;
             this.user.activeSchool.currentSessionDbId = schoolProfile.currentSessionDbId;

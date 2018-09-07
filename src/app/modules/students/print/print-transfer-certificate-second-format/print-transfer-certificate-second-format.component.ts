@@ -4,6 +4,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 import { EmitterService } from '../../../../services/emitter.service';
 import { TransferCertificate } from '../../classes/transfer-certificate';
+import {MEDIUM_LIST} from '../../../../classes/constants/medium';
 
 @Component({
     selector: 'app-print-transfer-certificate-second-format',
@@ -13,6 +14,8 @@ import { TransferCertificate } from '../../classes/transfer-certificate';
 export class PrintTransferCertificateSecondFormatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     @Input() user;
+
+    mediumList = MEDIUM_LIST;
 
     viewChecked = true;
 

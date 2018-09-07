@@ -1,5 +1,5 @@
 <div class="logo">
-    <span style="margin-left: 10px;">Hi {{user.displayName}}!</span>
+    <span style="margin-left: 10px;">Hi {{user.first_name}}!</span>
     <a style="float: right; cursor: pointer;"
        *ngIf="!user.section"
        (click)="logout()">Logout</a>
@@ -139,6 +139,31 @@
                 </ng-container>
             </ng-container>
 
+            <!-- User Settings -->
+            <li [class.active]="settings.path === user.section.route"
+                [attr.data-color]='user.activeSchool.primaryThemeColor'
+                style="border-bottom: 0.1px solid lightgrey;">
+                <a (click)="settings.showTaskList = !settings.showTaskList;">
+                    <i class="material-icons">{{settings.icon}}</i>
+                    <p>
+                        {{settings.title}}
+                        <i *ngIf="!settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                        <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                    </p>
+                </a>
+                <ng-container *ngIf="settings.showTaskList">
+                    <div *ngFor="let task of settings.taskList"
+                         [attr.data-color]="user.activeSchool.secondaryThemeColor"
+                         [class.active]="settings.path===user.section.route && task.title===user.section.subTitle"
+                         class="subsectionDiv"
+                         (click)="changePage(task, settings);">
+                        <i class="material-icons">remove</i>
+                        <p>{{task.title}}</p>
+                    </div>
+                </ng-container>
+            </li>
+
+            <!-- Logout -->
             <li style="margin-bottom: 80px;">
                 <a (click)="logout()">
                     <i class="material-icons">exit_to_app</i>

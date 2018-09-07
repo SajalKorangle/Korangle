@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter, OnInit } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -48,6 +48,10 @@ export const MY_FORMATS = {
 })
 export class MonthDateComponent implements OnInit {
 
+    @Input() showButton = false;
+    @Input() user;
+    @Input() biggerFont;
+
     @Output() onMonthSelected = new EventEmitter<any>();
 
 
@@ -66,6 +70,7 @@ export class MonthDateComponent implements OnInit {
     chosenMonthHandler(normlizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
         const ctrlValue = this.date.value;
         ctrlValue.month(normlizedMonth.month());
+        ctrlValue.year(normlizedMonth.year());
         this.date.setValue(ctrlValue);
         datepicker.close();
         this.onMonthSelected.emit(this.date.value._d);

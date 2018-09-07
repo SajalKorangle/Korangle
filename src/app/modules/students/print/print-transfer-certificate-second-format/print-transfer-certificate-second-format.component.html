@@ -127,10 +127,13 @@
                 <i><b> {{ studentProfile.address | titlecase }}</b></i> had taken admission in our school,
                 with scholar no. <i><b>{{studentProfile.scholarNumber}}</b></i>,
                 <span *ngIf="!transferCertificate.leavingMidSession"> in <i><b>{{transferCertificate.admissionClass}}</b></i>,</span>
-                on <i><b>{{transferCertificate.admissionDate | date: 'dd/MM/yyyy'}}</b></i>
+                on <i><b>{{studentProfile.dateOfAdmission | date: 'dd/MM/yyyy'}}</b></i>
                 and is leaving school on <i><b>{{transferCertificate.leavingDate | date: 'dd/MM/yyyy'}}</b></i>
                 <span *ngIf="!transferCertificate.leavingMidSession"> after passing
-                <i><b>{{transferCertificate.lastClassPassed}}</b></i> with <i><b>English</b></i> medium,
+                <i><b>{{transferCertificate.lastClassPassed}}</b></i> with <i>
+                    <b *ngIf="user.activeSchool.medium===mediumList[0]">English</b>
+                    <b *ngIf="user.activeSchool.medium===mediumList[1]">Hindi</b>
+                    </i> medium,
             </span>
                 because <i><b>{{transferCertificate.leavingReason}}</b></i>.<br/><br/>
 
@@ -156,7 +159,10 @@
                     had taken admission in <i><b>{{transferCertificate.admissionClass}}</b></i>. The last class,
                     <span *ngIf="studentProfile.gender=='Male'">he</span>
                     <span *ngIf="studentProfile.gender=='Female'">she</span>
-                    passed, was<i><b>{{transferCertificate.lastClassPassed}}</b></i>, with <i><b>English</b></i> medium.
+                    passed, was<i><b>{{transferCertificate.lastClassPassed}}</b></i>, with <i>
+                    <b *ngIf="user.activeSchool.medium===mediumList[0]">English</b>
+                    <b *ngIf="user.activeSchool.medium===mediumList[1]">Hindi</b>
+                    </i> medium.
                     <ng-container *ngIf="transferCertificate.lastClassAttendance && transferCertificate.lastClassAttendance != ''">
                         <span *ngIf="studentProfile.gender=='Male'">His</span>
                         <span *ngIf="studentProfile.gender=='Female'">Her</span>

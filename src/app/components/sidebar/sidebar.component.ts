@@ -33,6 +33,27 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
     @Input() user: User;
 
+    settings = {
+        path: 'user-settings',
+        title: 'Settings',
+        icon: 'settings',
+        showTaskList: false,
+        taskList: [
+            {
+                path: 'update_profile',
+                title: 'Update Profile',
+            },
+            {
+                path: 'change_password',
+                title: 'Change Password',
+            },
+            {
+                path: 'contact_us',
+                title: 'Contact Us',
+            }
+        ],
+    };
+
     constructor(private router: Router) {
     }
 

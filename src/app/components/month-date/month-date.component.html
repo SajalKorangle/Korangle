@@ -3,6 +3,8 @@
            [matDatepicker]="dp"
            placeholder="Month and Year"
            [formControl]="date"
+           [class.biggerFont]="biggerFont"
+           (click)="dp.open()"
            disabled>
     <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
     <mat-datepicker #dp
@@ -13,6 +15,12 @@
                     disabled="false">
     </mat-datepicker>
 </mat-form-field>
+<br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
+<button type="submit" *ngIf="showButton"
+        style="padding: 3px 8px;"
+        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+        (click)="dp.open()">Choose Month</button>
+
 
 
 <!-- Copyright 2018 Google Inc. All Rights Reserved.
