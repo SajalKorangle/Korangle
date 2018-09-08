@@ -25,4 +25,5 @@ nav[data-color="indigo"] {
 
 .icon-bar {
     border-color: white;
+    outline: 1px solid transparent;
 }
