@@ -16,6 +16,7 @@ export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy, AfterView
     @Input() user;
 
     feeReceipt: any;
+    sectionName: any;
 
     printNewFeeReceiptComponentSubscription: any;
 
@@ -27,7 +28,8 @@ export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy, AfterView
         // this.feeReceipt = new TempFee();
         this.printNewFeeReceiptComponentSubscription = EmitterService.get('print-new-fee-receipt-component').subscribe( value => {
             // this.feeReceipt.copy(value);
-            this.feeReceipt = value;
+            this.feeReceipt = value['feeReceipt'];
+            this.sectionName = value['sectionName'];
             this.checkView = true;
         });
     }
@@ -37,6 +39,7 @@ export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy, AfterView
             this.checkView = false;
             window.print();
             this.feeReceipt = null;
+            this.sectionName = null;
             this.cdRef.detectChanges();
         }
     }

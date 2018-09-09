@@ -13,10 +13,6 @@ export class DiscountListComponent {
     @Input() concessionList;
     @Input() whileSubmittingConcession;
 
-    /*printFeeReceipt(fee: any): void {
-        EmitterService.get('print-new-fee-receipt').emit(fee);
-    }*/
-
     getConcessionTotalAmount(concession: any): number {
         return Concession.getConcessionTotalAmount(concession);
     }

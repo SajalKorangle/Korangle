@@ -38,7 +38,11 @@
                         Class Name
                     </div>
                     <div class="col-md-3">
-                        : <span style="font-weight: 600; margin-left: 5px;">{{studentFeeProfile.className}}</span>
+                        :
+                        <span style="font-weight: 600; margin-left: 5px;">
+                            {{studentFeeProfile.className}}
+                            <ng-container *ngIf="sectionName">, {{sectionName}}</ng-container>
+                        </span>
                     </div>
                 </div>
 
@@ -271,6 +275,7 @@
 
                     <app-fee-receipt-list [user]="user"
                                           [feeReceiptList]="feeReceiptList"
+                                          [sectionName]="sectionName"
                                           [whileSubmittingFee]="true"></app-fee-receipt-list>
 
                 </mat-expansion-panel>

@@ -74,10 +74,28 @@ export class StudentFilterComponent implements OnInit {
             }
             return true;
         });
+        this.studentList.forEach(student => {
+            student.showSectionName = this.showSectionName(student.className);
+        });
         this.filteredStudentList = this.myControl.valueChanges.pipe(
             map(value => typeof value === 'string' ? value: (value as any).name),
             map(name => this.filter(name.toString()))
         );
+    }
+
+    showSectionName(className: any): boolean {
+        let result = false;
+        this.studentList.every(student => {
+            if (student.className === className && student.sectionName !== 'Section - A') {
+                result = true;
+            }
+            if (result) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+        return result;
     }
 
     filter(value: string): any {
@@ -99,7 +117,7 @@ export class StudentFilterComponent implements OnInit {
             return student.name
                 + (student.scholarNumber? ' (' + student.scholarNumber + ')': '')
                 + ', ' + student.className
-                + ', ' + student.sectionName;
+                + (student.showSectionName ? ', ' + student.sectionName : '');
         } else {
             return '';
         }

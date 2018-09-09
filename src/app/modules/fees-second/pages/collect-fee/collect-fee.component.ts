@@ -73,6 +73,8 @@ export class CollectFeeComponent implements OnInit {
 
     selectedSessionDbId: number;
 
+    sectionName: boolean;
+
     constructor (private feeService: FeeService) { }
 
     ngOnInit(): void {
@@ -87,6 +89,7 @@ export class CollectFeeComponent implements OnInit {
         const data = {
             studentDbId: student.dbId,
         };
+        this.sectionName = (student.showSectionName?student.sectionName:null);
         this.selectedStudent = student;
         this.getStudentFeeProfile(data);
         this.getStudentFeeReceiptList(data);
@@ -222,7 +225,11 @@ export class CollectFeeComponent implements OnInit {
     printFeeReceipt(feeReceipt: any): void {
         console.log(feeReceipt);
         if (window.screen.width >= 992) {
-            EmitterService.get('print-new-fee-receipt').emit(feeReceipt);
+            let data = {
+                'sectionName': this.sectionName,
+                'feeReceipt': feeReceipt,
+            };
+            EmitterService.get('print-new-fee-receipt').emit(data);
         }
     }
 

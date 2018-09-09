@@ -17,11 +17,16 @@ export class FeeReceiptListComponent {
         dbId: 0,
         name: 'All',
     };
+    @Input() sectionName;
 
     number = 3;
 
     printFeeReceipt(fee: any): void {
-        EmitterService.get('print-new-fee-receipt').emit(fee);
+        let data = {
+            'sectionName': this.sectionName,
+            'feeReceipt': fee,
+        };
+        EmitterService.get('print-new-fee-receipt').emit(data);
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
