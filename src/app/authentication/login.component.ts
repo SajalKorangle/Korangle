@@ -32,6 +32,8 @@ export class LoginComponent {
                 this.user.isAuthenticated = true;
                 this.user.initializeUserData(data);
             }
+        }, error => {
+            this.isLoading = false;
         });
     }
 

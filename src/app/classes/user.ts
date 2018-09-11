@@ -136,7 +136,6 @@ export class User {
     nainish, akodia123
     devendra, 12345dev
     praveen, praveen5678
-    prajapati, patipraja1
     rahul, tailor123
 
     For Madhav School
@@ -163,5 +162,6 @@ export class User {
     7987792104, umashankar - Shikha Kushwah
     9753319449, sharma944 - Shriya Sharma
     8962600526, rajpal005 - Simran Rajpal
+    9926503752, patipraja1 - Prajapati Sir
 
 */
