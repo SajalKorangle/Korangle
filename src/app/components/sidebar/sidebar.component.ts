@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 
 import {Router, NavigationStart, NavigationEnd, NavigationCancel} from '@angular/router';
 
@@ -30,7 +30,7 @@ declare const $: any;
     ],
 
 })
-export class SidebarComponent implements OnInit, AfterViewInit {
+export class SidebarComponent implements OnInit {
 
     @Input() user: User;
 
@@ -59,12 +59,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        EmitterService.get('initialize-router').subscribe(value => {
-            this.router.navigateByUrl(this.user.section.route);
-        });
-    }
-
-    ngAfterViewInit() {
         this.router.events
             .subscribe((event) => {
                 if(event instanceof NavigationStart) {
@@ -77,6 +71,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                     this.user.isLazyLoading = false;
                 }
             });
+        EmitterService.get('initialize-router').subscribe(value => {
+            this.router.navigateByUrl(this.user.section.route);
+        });
+        if (this.user.section) {
+            this.router.navigateByUrl(this.user.section.route);
+        }
     }
 
     isMobileMenu() {
