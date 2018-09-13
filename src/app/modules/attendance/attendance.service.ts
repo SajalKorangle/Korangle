@@ -8,22 +8,42 @@ import { CommonServiceRequirements } from '../../services/common-service-require
 export class AttendanceService extends CommonServiceRequirements {
 
     // Student Attendance
-    recordAttendance(data: any, token: any): Promise<any> {
+    recordStudentAttendance(data: any, token: any): Promise<any> {
         const url = '/attendance/student-attendances/batch';
         return super.postData(data, token, url);
     }
 
-    getAttendanceList(data: any, token: any): Promise<any> {
+    getStudentAttendanceList(data: any, token: any): Promise<any> {
         const url = '/attendance/student-attendances?startDate='
             + data['startDate'] + '&endDate=' + data['endDate']
             + '&studentIdList=' + data['studentIdList'];
         return super.getData(token, url);
     }
 
-    deleteAttendance(data: any, token: any): Promise<any> {
+    deleteStudentAttendance(data: any, token: any): Promise<any> {
         const url = '/attendance/student-attendances?startDate='
             + data['startDate'] + '&endDate=' + data['endDate']
             + '&studentIdList=' + data['studentIdList'];
+        return super.deleteData(token, url);
+    }
+
+    // Employee Attendance
+    recordEmployeeAttendance(data: any, token: any): Promise<any> {
+        const url = '/attendance/employee-attendances/batch';
+        return super.postData(data, token, url);
+    }
+
+    getEmployeeAttendanceList(data: any, token: any): Promise<any> {
+        const url = '/attendance/employee-attendances?startDate='
+            + data['startDate'] + '&endDate=' + data['endDate']
+            + '&employeeIdList=' + data['employeeIdList'];
+        return super.getData(token, url);
+    }
+
+    deleteEmployeeAttendance(data: any, token: any): Promise<any> {
+        const url = '/attendance/employee-attendances?startDate='
+            + data['startDate'] + '&endDate=' + data['endDate']
+            + '&employeeIdList=' + data['employeeIdList'];
         return super.deleteData(token, url);
     }
 

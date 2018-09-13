@@ -159,7 +159,7 @@ export class RecordAttendanceComponent implements OnInit {
         this.isLoading = true;
         this.showStudentList = true;
 
-        this.attendanceService.getAttendanceList(data, this.user.jwt).then(attendanceList => {
+        this.attendanceService.getStudentAttendanceList(data, this.user.jwt).then(attendanceList => {
             this.isLoading = false;
             this.populateStudentAttendanceList(attendanceList);
         }, error => {
@@ -219,7 +219,7 @@ export class RecordAttendanceComponent implements OnInit {
         }
 
         this.isLoading = true;
-        this.attendanceService.recordAttendance(data, this.user.jwt).then(response => {
+        this.attendanceService.recordStudentAttendance(data, this.user.jwt).then(response => {
             this.isLoading = false;
             alert(response);
         }, error => {

@@ -280,7 +280,12 @@ export class SendSmsComponent implements OnInit {
     }
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
-        this.studentFullProfileList = studentFullProfileList;
+        this.studentFullProfileList = studentFullProfileList.filter(student => {
+            if(student.parentTransferCertificate) {
+                return false;
+            }
+            return true;
+        });
         this.studentFullProfileList.forEach(studentFullProfile => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;

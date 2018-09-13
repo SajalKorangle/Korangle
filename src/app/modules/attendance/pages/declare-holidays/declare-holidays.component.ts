@@ -3,12 +3,13 @@ import {Component, Input, OnInit } from '@angular/core';
 import { AttendanceService } from '../../attendance.service';
 import {StudentService} from '../../../students/student.service';
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
+import {EmployeeService} from '../../../employee/employee.service';
 
 @Component({
   selector: 'declare-holidays',
   templateUrl: './declare-holidays.component.html',
   styleUrls: ['./declare-holidays.component.css'],
-    providers: [ AttendanceService, StudentService ],
+    providers: [ AttendanceService, StudentService, EmployeeService ],
 })
 
 export class DeclareHolidaysComponent implements OnInit {
@@ -16,6 +17,7 @@ export class DeclareHolidaysComponent implements OnInit {
     @Input() user;
 
     classSectionStudentList = [];
+    employeeList = [];
 
     by = 'date';
 
@@ -25,7 +27,8 @@ export class DeclareHolidaysComponent implements OnInit {
     isLoading = false;
 
     constructor (private attendanceService: AttendanceService,
-                 private studentService: StudentService) { }
+                 private studentService: StudentService,
+                 private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
 
@@ -34,17 +37,30 @@ export class DeclareHolidaysComponent implements OnInit {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
         };
 
+        const request_employee_data = {
+            parentSchool: this.user.activeSchool.dbId,
+        };
+
         this.isLoading = true;
 
         Promise.all([
             this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
+            this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
             this.initializeClassSectionStudentList(value[0]);
+            this.initializeEmployeeList(value[1]);
         }, error => {
             this.isLoading = false;
         });
 
+    }
+
+    initializeEmployeeList(employeeList: any): void {
+        this.employeeList = employeeList;
+        this.employeeList.forEach(employee => {
+            employee.selected = false;
+        });
     }
 
     initializeClassSectionStudentList(classSectionStudentList: any): void {
@@ -82,23 +98,21 @@ export class DeclareHolidaysComponent implements OnInit {
     }
 
     // Server Handling - 1
-    declareHoliday(): void {
-
-        let data = this.prepareStudentAttendanceStatusListData();
-
-        if (data.length === 0) {
-            alert('Nothing to update');
-            return;
-        }
-
-        this.isLoading = true;
-        this.attendanceService.recordAttendance(data, this.user.jwt).then(response => {
-            this.isLoading = false;
-            alert(response);
-        }, error => {
-            this.isLoading = false;
+    prepareEmployeeAttendanceStatusListData(): any {
+        let employeeAttendanceStatusListData = [];
+        this.employeeList.forEach(employee => {
+            if (employee.selected) {
+                this.getDateList().forEach(date => {
+                    let tempData = {
+                        parentEmployee: employee.id,
+                        dateOfAttendance: this.formatDate(date.toString(), ''),
+                        status: ATTENDANCE_STATUS_LIST[2],
+                    };
+                    employeeAttendanceStatusListData.push(tempData);
+                });
+            }
         });
-
+        return employeeAttendanceStatusListData;
     }
 
     prepareStudentAttendanceStatusListData(): any {
@@ -122,6 +136,28 @@ export class DeclareHolidaysComponent implements OnInit {
         return studentAttendanceStatusListData;
     }
 
+    declareHoliday(): void {
+
+        let student_data = this.prepareStudentAttendanceStatusListData();
+        let employee_data = this.prepareEmployeeAttendanceStatusListData();
+
+        if (student_data.length === 0 && employee_data.length === 0) {
+            alert('Nothing to update');
+            return;
+        }
+
+        this.isLoading = true;
+        Promise.all([
+            this.attendanceService.recordStudentAttendance(student_data, this.user.jwt),
+            this.attendanceService.recordEmployeeAttendance(employee_data, this.user.jwt)
+        ]).then(response => {
+            this.isLoading = false;
+            alert('Holidays recorded successfully');
+        }, error => {
+            this.isLoading = false;
+        });
+
+    }
 
     // Server Handling - 2
     getStudentIdList(): any {
@@ -138,29 +174,48 @@ export class DeclareHolidaysComponent implements OnInit {
         return studentIdList;
     }
 
+    getEmployeeIdList(): any {
+        let employeeIdList = [];
+        this.employeeList.forEach(employee => {
+            if(employee.selected) {
+                employeeIdList.push(employee.id);
+            }
+        });
+        return employeeIdList;
+    }
+
     deleteAttendance(): void {
 
-        if (!confirm('Are you sure, you want to delete all the attendance records for selected classes and dates')) {
+        if (!confirm('Are you sure, you want to delete all the attendance records for selected persons and dates')) {
             return;
         }
 
         let studentList = this.getStudentIdList();
+        let employeeList = this.getEmployeeIdList();
 
-        if (studentList.length === 0) {
+        if (studentList.length === 0 && employeeList.length === 0) {
             alert('Nothing to delete');
             return;
         }
 
-        let data = {
+        let student_data = {
             studentIdList: studentList,
+            startDate: this.startDate,
+            endDate: this.endDate,
+        };
+        let employee_data = {
+            employeeIdList: employeeList,
             startDate: this.startDate,
             endDate: this.endDate,
         };
 
         this.isLoading = true;
-        this.attendanceService.deleteAttendance(data, this.user.jwt).then(response => {
+        Promise.all([
+            this.attendanceService.deleteStudentAttendance(student_data, this.user.jwt),
+            this.attendanceService.deleteEmployeeAttendance(employee_data, this.user.jwt),
+        ]).then(value => {
             this.isLoading = false;
-            alert(response);
+            alert('All records for the selected dates are deleted');
         }, error => {
             this.isLoading = false;
         });
@@ -168,6 +223,33 @@ export class DeclareHolidaysComponent implements OnInit {
     }
 
     // Called from Html files
+    unselectAllEmployees(): void {
+        this.employeeList.forEach(employee => {
+            employee.selected = false;
+        });
+    };
+
+    selectAllEmployees(): void {
+        this.employeeList.forEach(employee => {
+            employee.selected = true;
+        });
+    };
+
+    getSelectedEmployees(): any {
+        let all = true;
+        let selectedEmployees = '';
+        this.employeeList.forEach(employee => {
+                if (employee.selected) {
+                    selectedEmployees += employee.name + ', ';
+                } else {
+                    all = false;
+                }
+        });
+        return (all ?
+            'All Employees Selected' : (selectedEmployees.length > 0) ?
+                selectedEmployees.substr(0, selectedEmployees.length-2) : 'No Employee Selected');
+    }
+
     unselectAllClasses(): void {
         this.classSectionStudentList.forEach(
             classs => {
@@ -201,8 +283,8 @@ export class DeclareHolidaysComponent implements OnInit {
             });
         });
         return (all ?
-            'All' : (selectedClasses.length > 0) ?
-                selectedClasses.substr(0, selectedClasses.length-2) : '');
+            'All Classes Selected' : (selectedClasses.length > 0) ?
+                selectedClasses.substr(0, selectedClasses.length-2) : 'No Class Selected');
     }
 
     onDateSelected(event: any): void {

@@ -7,6 +7,7 @@ import { AttendanceComponent } from './attendance.component';
 import { DeclareHolidaysComponent } from './pages/declare-holidays/declare-holidays.component';
 import { GivePermissionsComponent } from './pages/give-permissions/give-permissions.component';
 import { RecordAttendanceComponent } from './pages/record-attendance/record-attendance.component';
+import { RecordEmployeeAttendanceComponent } from './pages/record-employee-attendance/record-employee-attendance.component';
 
 import { AttendanceRoutingModule } from './attendance.routing';
 
@@ -20,6 +21,7 @@ import { AttendanceService } from './attendance.service';
         DeclareHolidaysComponent,
         GivePermissionsComponent,
         RecordAttendanceComponent,
+        RecordEmployeeAttendanceComponent,
 
     ],
 

@@ -1,6 +1,6 @@
 <div class="card-content">
 
-    <ng-container *ngIf="classSectionStudentList && !isLoading">
+    <ng-container *ngIf="classSectionStudentList && employeeList && !isLoading">
 
         <div class="row">
             <div class="col-md-2">
@@ -46,6 +46,52 @@
             </div>
             <div class="col-md-10" style="padding-top: 16px;">
                 <b>{{getSelectedClasses()}}</b>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <!-- Employee Filter -->
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Select Employees" style="width: 100%;">
+
+                        <mat-option>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="selectAllEmployees(); $event.stopPropagation();">Select All
+                            </button>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="unselectAllEmployees(); $event.stopPropagation();">Clear All
+                            </button>
+                        </mat-option>
+
+                        <ng-container *ngFor="let employee of employeeList">
+                            <mat-option style="width: 100%;">
+                                <mat-checkbox [(ngModel)]="employee.selected"
+                                              (click)="$event.stopPropagation();">
+                                    {{employee.name | titlecase}}
+                                    <ng-container *ngIf="employee.employeeNumber">({{employee.employeeNumber}})</ng-container>
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
+
+                        <mat-option>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="selectAllEmployees(); $event.stopPropagation();">Select All
+                            </button>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="unselectAllEmployees(); $event.stopPropagation();">Clear All
+                            </button>
+                        </mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-10" style="padding-top: 16px;">
+                <b>{{getSelectedEmployees()}}</b>
             </div>
         </div>
 

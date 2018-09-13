@@ -7,6 +7,8 @@
             <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
         </div>
 
+        <mat-progress-bar *ngIf="user.isLazyLoading"  mode="indeterminate"></mat-progress-bar>
+
         <div class="main-panel">
 
             <app-navbar *ngIf="user.activeSchool" [user]="user" class="visible-sm visible-xs"></app-navbar>
@@ -27,8 +29,6 @@
                     <ng-container *ngIf="user.username && !user.activeSchool">
                         You are not attached to any of the schools yet!
                     </ng-container>
-
-                    <mat-progress-bar *ngIf="user.isLazyLoading"  mode="indeterminate"></mat-progress-bar>
 
                     <!-- ng-container *ngIf="user.isPageLoading">
                         <app-loading-spinner [user]="user"></app-loading-spinner>

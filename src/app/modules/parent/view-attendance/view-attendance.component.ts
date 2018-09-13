@@ -74,7 +74,7 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
         this.isLoading = true;
         this.showCalendar = false;
 
-        this.attendanceService.getAttendanceList(data, this.user.jwt).then(attendanceList => {
+        this.attendanceService.getStudentAttendanceList(data, this.user.jwt).then(attendanceList => {
             this.isLoading = false;
             this.attendanceStatusList = attendanceList;
             this.showCalendar = true;

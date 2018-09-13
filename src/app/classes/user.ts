@@ -149,6 +149,7 @@ export class User {
     8964048545, singh678 - Ramdayal Malviya
     9826316017, dhangarsantosh - Santosh Dhangar
     8120232064, singhgajraj - Trapti Chadar
+    9039903877, sangeeta77 - Sangeeta Sharma
 
     For Bright Star - English Medium
     9009437033, sajjan033 - Babita Parmar
