@@ -4,7 +4,7 @@ from examination_app.models import Test, StudentTestResult
 
 def preparingStudentTestResult(number):
 
-    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA')[0]
+    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA ACADEMY')[0]
 
     school_object = student_section_object.parentStudent.parentSchool
 
@@ -26,7 +26,7 @@ def preparingStudentTestResult(number):
 
 def deletingStudentResult():
 
-    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA')[0]
+    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA ACADEMY')[0]
 
     data = {}
     data['sectionDbId'] = student_section_object.parentSection.id
@@ -39,7 +39,7 @@ def deletingStudentResult():
 
 def deletingAndPreparingStudentResult():
 
-    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA')[0]
+    student_section_object = StudentSection.objects.filter(parentStudent__parentSchool__name='EKLAVYA ACADEMY')[0]
 
     school_object = student_section_object.parentStudent.parentSchool
 

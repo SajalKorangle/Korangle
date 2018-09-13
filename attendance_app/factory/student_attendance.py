@@ -3,7 +3,7 @@ import factory
 
 from student_app.factories.student import StudentFactory
 
-from attendance_app.models import StudentAttendance
+from attendance_app.models import ABSENT_ATTENDANCE_STATUS
 
 
 class StudentAttendanceFactory(factory.DjangoModelFactory):
@@ -12,4 +12,4 @@ class StudentAttendanceFactory(factory.DjangoModelFactory):
         django_get_or_create = ('parentStudent', 'status')
 
     parentStudent = factory.SubFactory(StudentFactory)
-    status = StudentAttendance.ABSENT_ATTENDANCE_STATUS
+    status = ABSENT_ATTENDANCE_STATUS

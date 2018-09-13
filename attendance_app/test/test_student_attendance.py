@@ -3,7 +3,8 @@ from attendance_app.business.student_attendance import get_student_attendance_li
 from attendance_app.factory.student_attendance import StudentAttendanceFactory
 from parent_test import ParentTestCase
 
-from attendance_app.models import StudentAttendance
+from attendance_app.models import StudentAttendance, ABSENT_ATTENDANCE_STATUS, \
+    PRESENT_ATTENDANCE_STATUS
 
 from student_app.factories.student import StudentFactory
 
@@ -34,7 +35,7 @@ class StudentAttendanceTestCase(ParentTestCase):
         for response_data in response:
             response_data['parentStudent'] = student_list[index].id
             response_data['dateOfAttenance'] = '2011-01-01'
-            response_data['status'] = StudentAttendance.ABSENT_ATTENDANCE_STATUS
+            response_data['status'] = ABSENT_ATTENDANCE_STATUS
 
     def test_create_or_update_student_attendance_list(self):
 
@@ -45,12 +46,12 @@ class StudentAttendanceTestCase(ParentTestCase):
             {
                 'parentStudent': student_object_one.id,
                 'dateOfAttendance': '2016-01-01',
-                'status': StudentAttendance.PRESENT_ATTENDANCE_STATUS
+                'status': PRESENT_ATTENDANCE_STATUS
             },
             {
                 'parentStudent': student_object_two.id,
                 'dateOfAttendance': '2016-01-01',
-                 'status': StudentAttendance.PRESENT_ATTENDANCE_STATUS
+                 'status': PRESENT_ATTENDANCE_STATUS
             }
         ]
 

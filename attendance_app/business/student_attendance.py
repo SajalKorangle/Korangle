@@ -1,6 +1,4 @@
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from attendance_app.models import StudentAttendance
 
 from rest_framework import serializers
