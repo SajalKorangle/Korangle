@@ -24,7 +24,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     @Input() user;
 
-    employeeList = [];
+    employeeList: any;
 
     by = 'date';
 
