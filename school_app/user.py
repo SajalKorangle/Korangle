@@ -6,11 +6,8 @@ from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from django.contrib.auth.models import User
 
-from school_app.model.models import School
-from team_app.models import Member, Access, Module, Permission
+from team_app.models import Member, Access, Permission
 from student_app.models import Student, StudentSection
-
-from student_app.business.student_mini_profile import get_student_mini_profile
 
 
 def get_data_from_school_list(schoolList, schoolDbId):
