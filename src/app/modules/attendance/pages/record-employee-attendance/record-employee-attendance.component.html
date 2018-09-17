@@ -67,7 +67,7 @@
                     <ng-container *ngFor="let attendance of employee.attendanceStatusList">
                         <td align="center">
                             <button type="submit"
-                                    style="padding: 3px 8px;"
+                                    style="padding: 3px 8px; text-transform: none;"
                                     class="{{getButtonClass(attendance.status)}}"
                                     [disabled]="attendance.status===attendanceStatusList[2]"
                                     (click)="changeEmployeeAttendanceStatus(attendance)"
@@ -109,7 +109,7 @@
             <i class="material-icons">save_alt</i>
         </button>
 
-        <br/>A: Absent, P: Present, H: Holiday, N: Not Recorded <br/>
+        <br/>A: Absent, P: Present, H: Holiday, h: Half Day, N: Not Recorded <br/>
 
     </ng-container>
 

@@ -325,6 +325,9 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     getButtonClass(status: any): any {
         let classs = "btn";
         switch (status) {
+            case ATTENDANCE_STATUS_LIST[3]:
+                classs += " btn-info";
+                break;
             case ATTENDANCE_STATUS_LIST[2]:
                 classs += " btn-warning";
                 break;
@@ -342,6 +345,9 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
         let result = 'N';
         if (status) {
             result = status.substring(0,1);
+        }
+        if (status === ATTENDANCE_STATUS_LIST[3]) {
+            result = result.toLowerCase();
         }
         return result;
     }
@@ -375,6 +381,9 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
                 totalCount += 1;
             } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
                 absentCount += 1;
+                totalCount += 1;
+            } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[3]) {
+                absentCount += 0.5;
                 totalCount += 1;
             }
         });

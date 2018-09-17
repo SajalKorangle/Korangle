@@ -337,7 +337,7 @@ export class RecordAttendanceComponent implements OnInit {
         }
         let nextCounter = (counter+1)%ATTENDANCE_STATUS_LIST.length;
         if (nextCounter === 2) {
-            nextCounter = (nextCounter+1)%ATTENDANCE_STATUS_LIST.length;
+            nextCounter = (nextCounter+2)%ATTENDANCE_STATUS_LIST.length;
         }
         temp.status = ATTENDANCE_STATUS_LIST[nextCounter];
     }
