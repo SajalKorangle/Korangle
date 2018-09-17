@@ -2,26 +2,34 @@
 
     <ng-container *ngIf="employeeList">
 
-        <select [ngModel]="by"
-                (ngModelChange)="handleModeChange($event);"
-                style="margin-right: 15px; margin-bottom: 20px;">
-            <option value="date">Date</option>
-            <option value="month">Month</option>
-        </select>
+        <ng-container *ngIf="employeeList.length>0">
 
-        <ng-container *ngIf="by==='date'">
-            <day-date (onDateSelected)="onDateSelected($event)"></day-date>
+            <select [ngModel]="by"
+                    (ngModelChange)="handleModeChange($event);"
+                    style="margin-right: 15px; margin-bottom: 20px;">
+                <option value="date">Date</option>
+                <option value="month">Month</option>
+            </select>
+
+            <ng-container *ngIf="by==='date'">
+                <day-date (onDateSelected)="onDateSelected($event)"></day-date>
+            </ng-container>
+
+            <ng-container *ngIf="by==='month'">
+                <month-date (onMonthSelected)="onMonthSelected($event)"></month-date>
+            </ng-container>
+
+            <br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
+            <button type="submit"
+                    style="padding: 3px 8px;"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="getEmployeesAttendanceStatusList()">Get</button>
+
         </ng-container>
 
-        <ng-container *ngIf="by==='month'">
-            <month-date (onMonthSelected)="onMonthSelected($event)"></month-date>
+        <ng-container *ngIf="employeeList.length===0">
+            No employees exist to record attendance.
         </ng-container>
-
-        <br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
-        <button type="submit"
-                style="padding: 3px 8px;"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="getEmployeesAttendanceStatusList()">Get</button>
 
     </ng-container>
 
