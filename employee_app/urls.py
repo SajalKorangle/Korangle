@@ -18,3 +18,24 @@ urlpatterns += [
 	url(r'^school/(?P<school_id>[0-9]+)/employee-mini-profiles', EmployeeMiniProfileView.as_view()),
 ]
 
+
+######## Employee Session Details ###############
+from .views import EmployeeSessionDetailListView, EmployeeSessionDetailView
+
+urlpatterns += [
+	url(r'^employee-session-details/(?P<employee_id>[0-9]+)', EmployeeSessionDetailView.as_view()),
+	url(r'^employee-session-details', EmployeeSessionDetailView.as_view()),
+	url(r'^(?P<employee_id>[0-9]+)/employee-session-details', EmployeeSessionDetailView.as_view()),
+	url(r'^school/(?P<school_id>[0-9]+)/employee-session-details', EmployeeSessionDetailListView.as_view()),
+]
+
+
+######## Employee Permission ###############
+from .views import EmployeePermissionView, EmployeePermissionListView
+
+urlpatterns += [
+	url(r'^(?P<employee_id>[0-9]+)/employee-permissions', EmployeePermissionListView.as_view()),
+	url(r'^employee-permissions/(?P<employee_permission_id>[0-9]+)', EmployeePermissionView.as_view()),
+	url(r'^employee-permissions', EmployeePermissionView.as_view()),
+]
+

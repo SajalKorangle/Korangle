@@ -36,10 +36,10 @@ def get_fee_receipt_by_object(fee_receipt_object):
     fee_receipt_response['remark'] = fee_receipt_object.remark
     fee_receipt_response['cancelled'] = fee_receipt_object.cancelled
 
-    if fee_receipt_object.parentReceiver is None:
-        fee_receipt_response['parentReceiver'] = None
+    if fee_receipt_object.parentEmployee is None:
+        fee_receipt_response['parentEmployee'] = None
     else:
-        fee_receipt_response['parentReceiver'] = fee_receipt_object.parentReceiver.id
+        fee_receipt_response['parentEmployee'] = fee_receipt_object.parentEmployee.id
 
     fee_receipt_response['subFeeReceiptList'] = []
 
@@ -86,15 +86,14 @@ def get_fee_receipt_list_by_school_id(data):
     return fee_receipt_list_response
 
 
-def get_fee_receipt_list_by_school_user_id(data):
+def get_fee_receipt_list_by_employee_id(data):
 
     startDate = data['startDate'] + ' 00:00:00+05:30'
     endDate = data['endDate'] + ' 23:59:59+05:30'
 
     fee_receipt_list_response = []
 
-    for fee_receipt_object in FeeReceipt.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
-                                                        parentReceiver_id=data['parentReceiver'],
+    for fee_receipt_object in FeeReceipt.objects.filter(parentEmployee_id=data['parentEmployee'],
                                                         generationDateTime__gte=startDate,
                                                         generationDateTime__lte=endDate).order_by('-generationDateTime'):
 
@@ -130,8 +129,8 @@ def create_fee_receipt(data):
                                         parentStudent=student_object)
         fee_receipt_object.save()
 
-        if 'parentReceiver' in data:
-            fee_receipt_object.parentReceiver_id = data['parentReceiver']
+        if 'parentEmployee' in data:
+            fee_receipt_object.parentEmployee_id = data['parentEmployee']
             fee_receipt_object.save()
 
     for subFeeReceipt in data['subFeeReceiptList']:

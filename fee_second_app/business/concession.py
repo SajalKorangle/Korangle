@@ -31,10 +31,10 @@ def get_concession_by_object(concession_object):
     concession_response['remark'] = concession_object.remark
     concession_response['cancelled'] = concession_object.cancelled
 
-    if concession_object.parentReceiver is None:
-        concession_response['parentReceiver'] = None
+    if concession_object.parentEmployee is None:
+        concession_response['parentEmployee'] = None
     else:
-        concession_response['parentReceiver'] = concession_object.parentReceiver.id
+        concession_response['parentEmployee'] = concession_object.parentEmployee.id
 
     concession_response['subConcessionList'] = []
 
@@ -99,8 +99,8 @@ def create_concession(data):
     concession_object = ConcessionSecond(remark=data['remark'], parentStudent=student_object)
     concession_object.save()
 
-    if 'parentReceiver' in data:
-        concession_object.parentReceiver_id = data['parentReceiver']
+    if 'parentEmployee' in data:
+        concession_object.parentEmployee_id = data['parentEmployee']
         concession_object.save()
 
     for subConcession in data['subConcessionList']:

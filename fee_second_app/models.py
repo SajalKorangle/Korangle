@@ -12,6 +12,8 @@ from student_app.models import Student, StudentSection
 
 from class_app.models import Class
 
+from employee_app.models import Employee
+
 from django.contrib.auth.models import User
 
 
@@ -301,7 +303,9 @@ class FeeReceipt(models.Model):
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
     parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
 
-    parentReceiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='parentReceiver')
+    # parentReceiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='parentReceiver')
+
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, verbose_name='parentEmployee')
 
     class Meta:
         db_table = 'fee_receipt'
@@ -337,7 +341,9 @@ class ConcessionSecond(models.Model):
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
     parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
 
-    parentReceiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='parentReceiver')
+    # parentReceiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='parentReceiver')
+
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, verbose_name='parentEmployee')
 
     class Meta:
         db_table = 'concession_second'

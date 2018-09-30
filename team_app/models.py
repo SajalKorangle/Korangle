@@ -49,7 +49,7 @@ class Access(models.Model):
         unique_together = ('parentSchool', 'parentModule')
 
 
-class Permission(models.Model):
+'''class Permission(models.Model):
 
     parentTask = models.ForeignKey(Task, on_delete=models.PROTECT, null=False, verbose_name='parentTask', default=0)
     parentUser = models.ForeignKey(User, on_delete=models.PROTECT, null=False, verbose_name='parentUser', default=0)
@@ -73,5 +73,5 @@ class Member(models.Model):
 
     class Meta:
         db_table = 'member'
-        unique_together = ('parentUser', 'parentSchool')
+        unique_together = ('parentUser', 'parentSchool')'''
 

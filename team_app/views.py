@@ -38,7 +38,7 @@ class UserView(APIView):
 
 
 ########### Permission ###########
-from .business.permission import get_school_member_permission_list, update_permissions
+'''from .business.permission import get_school_member_permission_list, update_permissions
 
 
 class PermissionView(APIView):
@@ -62,7 +62,7 @@ class PermissionView(APIView):
             data['permissionList'] = json.loads(request.body.decode('utf-8'))
             return JsonResponse({'response': get_success_response(update_permissions(data))})
         else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 
 ########### Module ###########
@@ -82,7 +82,7 @@ class ModuleView(APIView):
 
 
 ########### Member ###########
-from .business.member import get_school_member_list, create_member, delete_member
+'''from .business.member import get_school_member_list, create_member, delete_member
 
 
 class MemberView(APIView):
@@ -110,4 +110,4 @@ class MemberView(APIView):
             }
             return JsonResponse({'response': get_success_response(delete_member(data))})
         else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''

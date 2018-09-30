@@ -27,6 +27,11 @@ class EmployeeAttendance(models.Model):
     dateOfAttendance = models.DateField(null=False, verbose_name='dateOfAttendance', default='2011-01-01')
     status = models.CharField(max_length=10, choices=ATTENDANCE_STATUS, null=False, default=PRESENT_ATTENDANCE_STATUS)
 
+    class Meta:
+
+        db_table = 'employee_attendance'
+        unique_together = ('parentEmployee', 'dateOfAttendance')
+
 
 class StudentAttendance(models.Model):
 
@@ -38,20 +43,42 @@ class StudentAttendance(models.Model):
     class Meta:
 
         db_table = 'student_attendance'
-
         unique_together = ('parentStudent', 'dateOfAttendance')
+
+
+PENDING_LEAVE_STATUS = 'PENDING'
+APPROVED_LEAVE_STATUS = 'APPROVED'
+CANCELED_LEAVE_STATUS = 'CANCELED'
+LEAVE_STATUS = (
+    (PENDING_LEAVE_STATUS, 'Pending'),
+    (APPROVED_LEAVE_STATUS, 'Approved'),
+    (CANCELED_LEAVE_STATUS, 'Canceled'),
+)
+
+
+class EmployeeAppliedLeave(models.Model):
+
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT,
+                                       null=False, default=0, verbose_name='parentEmployee')
+    dateOfLeave = models.DateField(null=False, verbose_name='dateOfLeave', default='2011-01-01')
+    status = models.CharField(max_length=10, choices=LEAVE_STATUS, null=False, default=PENDING_LEAVE_STATUS)
+    halfDay = models.BooleanField(null=False, default=False, verbose_name='halfDay')
+    paidLeave = models.BooleanField(null=False, default=True, verbose_name='paidLeave')
+
+    class Meta:
+
+        db_table = 'employee_applied_leave'
+        unique_together = ('parentEmployee', 'dateOfLeave')
 
 
 class AttendancePermission(models.Model):
 
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT,
-                                     null=False, default=0, verbose_name='parentSchool')
-    parentUser = models.ForeignKey(User, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentUser')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentEmployee')
+
     parentSection = models.ForeignKey(Section, on_delete=models.PROTECT,
                                       null=False, default=0, verbose_name='parentSection')
 
     class Meta:
 
         db_table = 'attendance_permission'
-
-        unique_together = ('parentSchool', 'parentUser', 'parentSection')
+        unique_together = ('parentEmployee', 'parentSection')

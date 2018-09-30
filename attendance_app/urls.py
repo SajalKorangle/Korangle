@@ -20,6 +20,15 @@ urlpatterns += [
 ]
 
 
+######## Employee Applied Leave ###############
+from .views import EmployeeAppliedLeaveListView
+
+urlpatterns += [
+    url(r'^employee-applied-leaves/batch', EmployeeAppliedLeaveListView.as_view()),
+    url(r'^employee-applied-leaves', EmployeeAppliedLeaveListView.as_view()),
+]
+
+
 ####### Attendance Permission #############
 from .views import AttendancePermissionView
 

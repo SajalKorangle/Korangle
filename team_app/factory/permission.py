@@ -1,5 +1,5 @@
 
-import factory
+'''import factory
 
 from school_app.factory.school import SchoolFactory
 
@@ -11,3 +11,4 @@ class PermissionFactory(factory.django.DjangoModelFactory):
 
     parentSchool = SchoolFactory()
 
+'''

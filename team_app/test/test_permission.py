@@ -1,5 +1,5 @@
 
-from parent_test import ParentTestCase
+'''from parent_test import ParentTestCase
 
 # Factories
 from school_app.factory.school import SchoolFactory
@@ -76,4 +76,4 @@ class PermissionTestCase(ParentTestCase):
             for task_object in Task.objects.filter(parentModule=module).order_by('orderNumber'):
                 self.assertEqual(response[index]['taskDbId'], task_object.id)
                 index += 1
-
+'''

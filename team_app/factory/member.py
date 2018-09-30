@@ -1,5 +1,5 @@
 
-import factory
+'''import factory
 
 from school_app.factory.school import SchoolFactory
 
@@ -9,3 +9,4 @@ class MemberFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ('parentSchool', 'parentUser')
 
     parentSchool = factory.SubFactory(SchoolFactory)
+'''

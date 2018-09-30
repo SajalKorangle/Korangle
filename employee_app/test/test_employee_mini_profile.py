@@ -25,7 +25,7 @@ class EmployeeMiniProfileTestCase(ParentTestCase):
 
         response = get_employee_mini_profile_list(data)
 
-        self.assertEqual(len(response), 3)
+        self.assertEqual(len(response), 4)
 
         index = 0
         for employee in employee_list:
@@ -34,4 +34,5 @@ class EmployeeMiniProfileTestCase(ParentTestCase):
             self.assertEqual(employee_response['id'], employee.id)
             self.assertEqual(employee_response['name'], employee.name)
             self.assertEqual(employee_response['employeeNumber'], employee.employeeNumber)
+            self.assertEqual(employee_response['mobileNumber'], employee.mobileNumber)
             index += 1

@@ -49,21 +49,18 @@ urlpatterns += [
 ]
 
 ######### Fee Receipts ###########
-from .views import StudentFeeReceiptView, SchoolFeeReceiptView
-urlpatterns += [
-    url(r'^student/(?P<student_id>[0-9]+)/fee-receipts', StudentFeeReceiptView.as_view()),
-]
+from .views import StudentFeeReceiptView, SchoolFeeReceiptView, EmployeeFeeReceiptView
 
 urlpatterns += [
+    url(r'^student/(?P<student_id>[0-9]+)/fee-receipts', StudentFeeReceiptView.as_view()),
     url(r'^school/(?P<school_id>[0-9]+)/fee-receipts', SchoolFeeReceiptView.as_view()),
+    url(r'^employee/(?P<employee_id>[0-9]+)/fee-receipts', EmployeeFeeReceiptView.as_view()),
 ]
 
 ######### Concession ###########
 from .views import StudentConcessionView, SchoolConcessionView
-urlpatterns += [
-    url(r'^student/(?P<student_id>[0-9]+)/concessions', StudentConcessionView.as_view()),
-]
 
 urlpatterns += [
+    url(r'^student/(?P<student_id>[0-9]+)/concessions', StudentConcessionView.as_view()),
     url(r'^school/(?P<school_id>[0-9]+)/concessions', SchoolConcessionView.as_view()),
 ]

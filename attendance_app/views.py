@@ -37,10 +37,10 @@ class StudentAttendanceListView(APIView):
         }
         return delete_student_attendance_list(data)
 
-    @user_permission
+    '''@user_permission
     def put(request):
         data = json.loads(request.body.decode('utf-8'))
-        return create_or_update_student_attendance_list(data)
+        return create_or_update_student_attendance_list(data)'''
 
 
 ############## Employee Attendance ##############
@@ -73,10 +73,46 @@ class EmployeeAttendanceListView(APIView):
         }
         return delete_employee_attendance_list(data)
 
+    '''@user_permission
+    def put(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_or_update_employee_attendance_list(data)'''
+
+
+############## Employee Applied Leave ##############
+from .business.employee_applied_leave \
+    import get_employee_applied_leave_list, create_employee_applied_leave_list, update_employee_applied_leave_list
+
+
+class EmployeeAppliedLeaveListView(APIView):
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_employee_applied_leave_list(data)
+
+    @user_permission
+    def get(request):
+        data = {
+            'employeeIdList': request.GET['employeeIdList'],
+            'startDate': request.GET['startDate'],
+            'endDate': request.GET['endDate'],
+        }
+        return get_employee_applied_leave_list(data)
+
     @user_permission
     def put(request):
         data = json.loads(request.body.decode('utf-8'))
-        return create_or_update_employee_attendance_list(data)
+        return update_employee_applied_leave_list(data)
+
+    '''@user_permission
+    def delete(request):
+        data = {
+            'employeeIdList': request.GET['employeeIdList'],
+            'startDate': request.GET['startDate'],
+            'endDate': request.GET['endDate'],
+        }
+        return delete_employee_attendance_list(data)'''
 
 
 ############## Attendance Permission ##############
@@ -89,8 +125,7 @@ class AttendancePermissionView(APIView):
     @user_permission
     def get(request):
         data = {
-            'parentUser': request.GET['parentUser'],
-            'parentSchool': request.GET['parentSchool'],
+            'parentEmployee': request.GET['parentEmployee'],
             'sessionId': request.GET['sessionId'],
         }
         return get_attendance_permission_list(data)

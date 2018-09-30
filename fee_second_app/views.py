@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+from decorators import user_permission
 
 from rest_framework.views import APIView
 
@@ -189,7 +190,7 @@ class StudentFeeProfileView(APIView):
 
 ################# Fee Receipts ################
 from .business.fee_receipt import create_fee_receipt, get_fee_receipt_list_by_student_id, \
-    get_fee_receipt_list_by_school_id, get_fee_receipt_list_by_school_user_id
+    get_fee_receipt_list_by_school_id, get_fee_receipt_list_by_employee_id
 
 
 class StudentFeeReceiptView(APIView):
@@ -225,13 +226,26 @@ class SchoolFeeReceiptView(APIView):
             else:
                 data['endDate'] = datetime.date
 
-            if 'parentReceiver' in request.GET:
-                data['parentReceiver'] = request.GET['parentReceiver']
-                return JsonResponse({'response': get_success_response(get_fee_receipt_list_by_school_user_id(data))})
-            else:
-                return JsonResponse({'response': get_success_response(get_fee_receipt_list_by_school_id(data))})
+            return JsonResponse({'response': get_success_response(get_fee_receipt_list_by_school_id(data))})
         else:
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+
+class EmployeeFeeReceiptView(APIView):
+
+    @user_permission
+    def get(request, employee_id):
+        data = {}
+        data['parentEmployee'] = employee_id
+        if 'startDate' in request.GET:
+            data['startDate'] = request.GET['startDate']
+        else:
+            data['startDate'] = '2016-04-01'
+        if 'endDate' in request.GET:
+            data['endDate'] = request.GET['endDate']
+        else:
+            data['endDate'] = datetime.date
+        return get_fee_receipt_list_by_employee_id(data)
 
 ################# Concessions ################
 from .business.concession import create_concession, get_concession_list_by_student_id, get_concession_list_by_school_id

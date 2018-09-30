@@ -14,10 +14,10 @@ class SubFeeReceiptFactory(factory.django.DjangoModelFactory):
 class FeeReceiptFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'fee_second_app.FeeReceipt'
-        django_get_or_create = ('cancelled', 'remark', 'parentReceiver', 'parentStudent')
+        django_get_or_create = ('cancelled', 'remark', 'parentEmployee', 'parentStudent')
 
     parentStudent = factory.SubFactory(StudentFactory)
-    parentReceiver = User.objects.all()[0]
+    parentEmployee = parentStudent.parentSchool.employee_set.all()[0]
     remark = 'testing'
     cancelled = False
 

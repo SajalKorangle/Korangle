@@ -1,5 +1,5 @@
 
-from team_app.models import Member, Permission
+'''from team_app.models import Member, Permission
 from django.contrib.auth.models import User
 
 from .permission import update_permissions
@@ -51,3 +51,4 @@ def get_school_member_list(data):
         member_list.append(tempMember)
 
     return member_list
+'''

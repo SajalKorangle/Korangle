@@ -1,6 +1,6 @@
 
 # Models
-from team_app.models import Permission
+'''from team_app.models import Permission
 from school_app.model.models import School
 from django.contrib.auth.models import User
 
@@ -41,3 +41,4 @@ def update_permissions(data):
         permission_object.save()
 
     return 'Permissions updated successfully'
+'''

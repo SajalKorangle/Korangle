@@ -29,7 +29,7 @@ class ConcessionTestCase(ParentTestCase):
         self.assertEqual(concession_response['generationDateTime'], concession_object.generationDateTime)
         self.assertEqual(concession_response['remark'], concession_object.remark)
         self.assertEqual(concession_response['cancelled'], concession_object.cancelled)
-        self.assertEqual(concession_response['parentReceiver'], concession_object.parentReceiver)
+        self.assertEqual(concession_response['parentEmployee'], concession_object.parentEmployee_id)
 
         sub_concession_queryset = SubConcession.objects.filter(parentConcessionSecond=concession_object).order_by('parentStudentFeeComponent__parentFeeDefinition__parentSession__orderNumber', 'parentStudentFeeComponent__parentFeeDefinition__orderNumber')
 
@@ -109,9 +109,8 @@ class ConcessionTestCase(ParentTestCase):
 
     def test_create_concession(self):
 
-        user_object = User.objects.get(username='champion')
-
         student_object = Student.objects.filter(parentSchool__name='Champion')[0]
+        employee_object = student_object.parentSchool.employee_set.all()[0]
 
         student_fee_status_request = {}
         student_fee_status_request['studentDbId'] = student_object.id
@@ -120,7 +119,7 @@ class ConcessionTestCase(ParentTestCase):
         create_concession_request = {}
         create_concession_request['studentDbId'] = student_object.id
         create_concession_request['remark'] = 'testing'
-        create_concession_request['parentReceiver'] = user_object.id
+        create_concession_request['parentEmployee'] = employee_object.id
         create_concession_request['subConcessionList'] = []
 
         for session_fee_status_response in student_fee_status_list_response:
@@ -152,7 +151,7 @@ class ConcessionTestCase(ParentTestCase):
 
         create_concession_response = create_concession(create_concession_request)
 
-        self.assertEqual(create_concession_response['concession']['parentReceiver'], user_object.id)
+        self.assertEqual(create_concession_response['concession']['parentEmployee'], employee_object.id)
 
         self.assertEqual(create_concession_response['message'], 'Concession given successfully')
 

@@ -6,8 +6,11 @@ from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from django.contrib.auth.models import User
 
-from team_app.models import Member, Access, Permission
-from student_app.models import Student, StudentSection
+from django.db.models import F
+
+from team_app.models import Access
+from student_app.models import StudentSection
+from employee_app.models import Employee, EmployeePermission
 
 
 def get_data_from_school_list(schoolList, schoolDbId):
@@ -37,9 +40,25 @@ def get_school_list(user):
 
     school_list = []
 
+    # Mobile Number User
+    # if user.username.isdigit():
+
     # Parent User
-    if user.username.isdigit():
-        for student_object in Student.objects.filter(mobileNumber=user.username):
+    for student_section_object in \
+        StudentSection.objects.filter(parentStudent__mobileNumber=user.username,
+            parentSection__parentClassSession__parentSession=F('parentStudent__parentSchool__currentSession')) \
+            .select_related('parentStudent__parentSchool'):
+
+        school_data = get_data_from_school_list(school_list, student_section_object.parentStudent.parentSchool_id)
+
+        if school_data is None:
+            school_data = get_school_data_by_object(student_section_object.parentStudent.parentSchool)
+            school_list.append(school_data)
+
+        school_data['studentList'].append(get_student_data(student_section_object.parentStudent))
+        school_data['role'] = 'Parent'
+
+        '''for student_object in Student.objects.filter(mobileNumber=user.username).select_related('parentSchool'):
 
             school_data = get_data_from_school_list(school_list, student_object.parentSchool_id)
 
@@ -68,26 +87,95 @@ def get_school_list(user):
                     continue
 
                 school_data['role'] = 'Parent'
-                school_data['studentList'].append(get_student_data(student_object))
+                school_data['studentList'].append(get_student_data(student_object))'''
+
+    # Employee User
+    for employee_object in Employee.objects.filter(mobileNumber=user.username).select_related('parentSchool'):
+
+        school_data = get_data_from_school_list(school_list, employee_object.parentSchool_id)
+
+        if school_data is None:
+            school_data = get_school_data_by_object(employee_object.parentSchool)
+            school_list.append(school_data)
+
+        school_data['role'] = 'Employee'
+        school_data['employeeId'] = employee_object.id
+        school_data['moduleList'] = get_employee_school_module_list(employee_object)
 
     # Team Member
-    for member_object in Member.objects.filter(parentUser=user):
+    '''for member_object in Member.objects.filter(parentUser=user):
 
         school_data = get_data_from_school_list(school_list, member_object.parentSchool_id)
 
         if school_data is None:
             school_data = get_school_data_by_object(member_object.parentSchool)
-            school_data['moduleList'] = get_user_module_list(member_object.parentSchool, user)
-            school_data['role'] = 'Employee'
             school_list.append(school_data)
-        else:
-            school_data['role'] = 'Employee'
-            school_data['moduleList'] = get_user_module_list(member_object.parentSchool, user)
+
+        school_data['role'] = 'Employee'
+        school_data['moduleList'] = get_user_module_list(member_object.parentSchool, user)'''
 
     return school_list
 
 
-def get_user_module_list(school_object, user_object):
+def get_employee_school_module_list(employee_object):
+
+    moduleList = []
+
+    school_object = employee_object.parentSchool
+
+    for access_object in \
+            Access.objects.filter(parentSchool=school_object)\
+                    .order_by('parentModule__orderNumber')\
+                    .select_related('parentModule'):
+        tempModule = {}
+        tempModule['dbId'] = access_object.parentModule.id
+        tempModule['path'] = access_object.parentModule.path
+        tempModule['title'] = access_object.parentModule.title
+        tempModule['icon'] = access_object.parentModule.icon
+        tempModule['taskList'] = []
+        for permission_object in \
+                EmployeePermission.objects.filter(parentEmployee=employee_object,
+                                                  parentTask__parentModule=access_object.parentModule)\
+                    .order_by('parentTask__orderNumber') \
+                    .select_related('parentTask'):
+            tempTask = {}
+            tempTask['dbId'] = permission_object.parentTask.id
+            tempTask['path'] = permission_object.parentTask.path
+            tempTask['title'] = permission_object.parentTask.title
+            tempModule['taskList'].append(tempTask)
+        if len(tempModule['taskList']) > 0:
+            moduleList.append(tempModule)
+
+    '''jobModule = {
+        'dbId': None,
+        'path': 'job',
+        'title': 'Job Details',
+        'icon': None,
+        'taskList': [
+            {
+                'dbId': None,
+                'path': 'view_profile',
+                'title': 'View Profile',
+            },
+            {
+                'dbId': None,
+                'path': 'view_attendance',
+                'title': 'View Attendance',
+            },
+            {
+                'dbId': None,
+                'path': 'apply_leave',
+                'title': 'Apply Leave',
+            }
+        ]
+    }
+    
+    moduleList.append(jobModule)'''
+
+    return moduleList
+
+
+'''def get_user_module_list(school_object, user_object):
 
     moduleList = []
 
@@ -115,7 +203,7 @@ def get_user_module_list(school_object, user_object):
         if len(tempModule['taskList']) > 0:
             moduleList.append(tempModule)
 
-    return moduleList
+    return moduleList'''
 
 
 def get_school_data_by_object(school_object):
@@ -139,6 +227,8 @@ def get_school_data_by_object(school_object):
     school_data['registrationNumber'] = school_object.registrationNumber
 
     school_data['medium'] = school_object.medium
+
+    school_data['employeeId'] = None
 
     school_data['moduleList'] = []
     school_data['studentList'] = []

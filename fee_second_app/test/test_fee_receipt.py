@@ -6,7 +6,7 @@ from school_app.model.models import School
 
 from fee_second_app.business.student_fee_status import get_student_fee_status_list
 from fee_second_app.business.fee_receipt import create_fee_receipt, get_fee_receipt_by_id, \
-    get_fee_receipt_list_by_student_id, get_fee_receipt_list_by_school_id, get_fee_receipt_list_by_school_user_id
+    get_fee_receipt_list_by_student_id, get_fee_receipt_list_by_school_id, get_fee_receipt_list_by_employee_id
 
 from fee_second_app.models import FeeDefinition, FeeReceipt, SubFeeReceipt, SubFeeReceiptMonthly
 
@@ -32,7 +32,7 @@ class FeeReceiptTestCase(ParentTestCase):
         self.assertEqual(fee_receipt_response['generationDateTime'], fee_receipt_object.generationDateTime)
         self.assertEqual(fee_receipt_response['remark'], fee_receipt_object.remark)
         self.assertEqual(fee_receipt_response['cancelled'], fee_receipt_object.cancelled)
-        self.assertEqual(fee_receipt_response['parentReceiver'], fee_receipt_object.parentReceiver_id)
+        self.assertEqual(fee_receipt_response['parentEmployee'], fee_receipt_object.parentEmployee_id)
 
         sub_fee_receipt_queryset = SubFeeReceipt.objects.filter(parentFeeReceipt=fee_receipt_object).order_by('parentStudentFeeComponent__parentFeeDefinition__parentSession__orderNumber', 'parentStudentFeeComponent__parentFeeDefinition__orderNumber')
 
@@ -92,26 +92,23 @@ class FeeReceiptTestCase(ParentTestCase):
 
             index += 1
 
-    def test_get_fee_receipt_by_school_user_id(self):
-
-        user_object = User.objects.get(username='nainish')
+    def test_get_fee_receipt_by_employee_id(self):
 
         school_object = School.objects.get(name='B. Salsalai')
+        employee_object = school_object.employee_set.all()[0]
 
         fee_receipt_object = FeeReceipt.objects.filter(parentStudent__parentSchool=school_object)[0]
-        fee_receipt_object.parentReceiver_id = user_object.id
+        fee_receipt_object.parentEmployee_id = employee_object.id
         fee_receipt_object.save()
 
         request = {}
-        request['parentReceiver'] = user_object.id
-        request['schoolDbId'] = school_object.id
+        request['parentEmployee'] = employee_object.id
         request['startDate'] = '2017-04-01'
         request['endDate'] = '2018-05-31'
 
-        response = get_fee_receipt_list_by_school_user_id(request)
+        response = get_fee_receipt_list_by_employee_id(request)
 
-        fee_receipt_queryset = FeeReceipt.objects.filter(parentStudent__parentSchool=school_object,
-                                                         parentReceiver_id=request['parentReceiver'],
+        fee_receipt_queryset = FeeReceipt.objects.filter(parentEmployee_id=request['parentEmployee'],
                                                          generationDateTime__gte=request['startDate']+' 00:00:00+05:30',
                                                          generationDateTime__lte=request['endDate']+ ' 23:59:59+05:30').order_by('-generationDateTime')
 
@@ -144,9 +141,8 @@ class FeeReceiptTestCase(ParentTestCase):
 
     def test_create_fee_receipt(self):
 
-        user_object = User.objects.get(username='champion')
-
         student_object = Student.objects.filter(parentSchool__name='Champion')[0]
+        employee_object = student_object.parentSchool.employee_set.all()[0]
 
         student_fee_status_request = {}
         student_fee_status_request['studentDbId'] = student_object.id
@@ -155,7 +151,7 @@ class FeeReceiptTestCase(ParentTestCase):
         create_fee_receipt_request = {}
         create_fee_receipt_request['studentDbId'] = student_object.id
         create_fee_receipt_request['remark'] = 'testing'
-        create_fee_receipt_request['parentReceiver'] = user_object.id
+        create_fee_receipt_request['parentEmployee'] = employee_object.id
         create_fee_receipt_request['subFeeReceiptList'] = []
 
         for session_fee_status_response in student_fee_status_list_response:
@@ -187,7 +183,7 @@ class FeeReceiptTestCase(ParentTestCase):
 
         create_fee_receipt_response = create_fee_receipt(create_fee_receipt_request)
 
-        self.assertEqual(create_fee_receipt_response['feeReceipt']['parentReceiver'], user_object.id)
+        self.assertEqual(create_fee_receipt_response['feeReceipt']['parentEmployee'], employee_object.id)
 
         self.assertEqual(create_fee_receipt_response['message'], 'Fees submitted successfully')
 
