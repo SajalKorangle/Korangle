@@ -19,7 +19,7 @@
                     style="padding: 12px 15px"
                     matTooltip="Get all the receipts b/w start and end date"
                     tooltip-position="right"
-                    (click)="getSchoolFeeReceiptList();">
+                    (click)="getEmployeeFeeReceiptList();">
                 <!-- u>Get</u --><i class="material-icons">search</i></button><br>
         </div>
         <!-- div class="col-md-3" align="right">
@@ -37,7 +37,7 @@
         <ng-container *ngIf="feeReceiptList.length>0">
             <div class="row">
                 <div class="col-md-12">
-                    Total Fees: {{getSchoolFeeTotalAmount() | currency:'INR':true:'1.1-1'}}
+                    Total Fees: {{getEmployeeFeeTotalAmount() | currency:'INR':true:'1.1-1'}}
                 </div>
             </div>
 

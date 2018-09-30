@@ -21,6 +21,8 @@ export class School {
 
     role: string;
 
+    employeeId: number;
+
     moduleList = [];
     studentList = [];
 
@@ -47,7 +49,32 @@ export class School {
 
         this.role = schoolData.role;
 
+        this.employeeId = schoolData.employeeId;
+
         this.moduleList = schoolData.moduleList;
+        this.moduleList.push({
+            'dbId': null,
+            'path': 'job',
+            'title': 'Job Details',
+            'icon': 'work',
+            'taskList': [
+                {
+                    'dbId': null,
+                    'path': 'view_profile',
+                    'title': 'View Profile',
+                },
+                {
+                    'dbId': null,
+                    'path': 'view_attendance',
+                    'title': 'View Attendance',
+                },
+                {
+                    'dbId': null,
+                    'path': 'apply_leave',
+                    'title': 'Apply Leave',
+                }
+            ]
+        });
         this.moduleList.forEach(module => {
             module.showTaskList = false;
         });

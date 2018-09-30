@@ -47,11 +47,28 @@ export class AttendanceService extends CommonServiceRequirements {
         return super.deleteData(token, url);
     }
 
+    // Employee Applied Leave
+    recordEmployeeAppliedLeaveList(data: any, token: any): Promise<any> {
+        const url = '/attendance/employee-applied-leaves/batch';
+        return super.postData(data, token, url);
+    }
+
+    updateEmployeeAppliedLeaveList(data: any, token: any): Promise<any> {
+        const url = '/attendance/employee-applied-leaves/batch';
+        return super.putData(data, token, url);
+    }
+
+    getEmployeeAppliedLeaveList(data: any, token: any): Promise<any> {
+        const url = '/attendance/employee-applied-leaves?startDate='
+            + data['startDate'] + '&endDate=' + data['endDate']
+            + '&employeeIdList=' + data['employeeIdList'];
+        return super.getData(token, url);
+    }
+
     // Attendance Permission
     getAttendancePermissionList(data: any, token: any): Promise<any> {
-        const url = '/attendance/attendance-permissions?parentSchool='
-            + data['parentSchool'] + '&parentUser=' + data['parentUser']
-            + '&sessionId=' + data['sessionId'];
+        const url = '/attendance/attendance-permissions?parentEmployee='
+            + data['parentEmployee'] + '&sessionId=' + data['sessionId'];
         return super.getData(token, url);
     }
 

@@ -13,6 +13,9 @@ export class AddEmployeeComponent implements OnInit {
     @Input() user;
 
     newEmployee: any;
+    newEmployeeSessionDetail: any;
+
+    employeeList = [];
 
     isLoading = false;
 
@@ -20,6 +23,13 @@ export class AddEmployeeComponent implements OnInit {
 
     ngOnInit(): void {
         this.newEmployee = {};
+        this.newEmployeeSessionDetail = {};
+        let data = {
+            parentSchool: this.user.activeSchool.dbId,
+        };
+        this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
+            this.employeeList = employeeList;
+        });
     }
 
     createNewEmployee(): void {
@@ -40,6 +50,21 @@ export class AddEmployeeComponent implements OnInit {
 
         if (this.newEmployee.dateOfJoininig === undefined || this.newEmployee.dateOfJoining === '') {
             this.newEmployee.dateOfJoining = null;
+        }
+
+        if (this.newEmployee.mobileNumber === undefined || this.newEmployee.mobileNumber === '') {
+            this.newEmployee.mobileNumber = null;
+        } else {
+            let selectedEmployee = null;
+            this.employeeList.forEach(employee => {
+                if (employee.mobileNumber === this.newEmployee.mobileNumber) {
+                    selectedEmployee = employee;
+                }
+            });
+            if (selectedEmployee) {
+                alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
+                return;
+            }
         }
 
         this.newEmployee.parentSchool = this.user.activeSchool.dbId;

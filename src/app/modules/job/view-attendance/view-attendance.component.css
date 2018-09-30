@@ -36,7 +36,7 @@
 
 .background-color-yellow {
     color: white;
-    background-color: yellow;
+    background-color: lightgreen;
 }
 
 .background-color-white {
@@ -66,6 +66,11 @@
 .attStatus {
     font-size: 16px;
 }
+
+
+/*.halfDay {
+    text-decoration: line-through;
+}*/
 
 .unselectable {
     -webkit-user-select: none;  /* Chrome all / Safari all */

@@ -19,8 +19,10 @@ export class UpdateProfileComponent implements OnInit {
     filteredEmployeeList: any;
 
     selectedEmployeeProfile: any;
-
     currentEmployeeProfile: any;
+
+    selectedEmployeeSessionProfile: any;
+    currentEmployeeSessionProfile: any;
 
     myControl = new FormControl();
 
@@ -31,6 +33,7 @@ export class UpdateProfileComponent implements OnInit {
     ngOnInit(): void {
 
         this.currentEmployeeProfile = {};
+        this.currentEmployeeSessionProfile = {};
 
         const data = {
             parentSchool: this.user.activeSchool.dbId,
@@ -67,8 +70,29 @@ export class UpdateProfileComponent implements OnInit {
             id: employee.id,
         };
 
+        const session_data = {
+            sessionId: this.user.activeSchool.currentSessionDbId,
+            parentEmployee: employee.id,
+        };
+
         this.isLoading = true;
-        this.employeeService.getEmployeeProfile(data, this.user.jwt).then( employeeProfile => {
+        Promise.all([
+            this.employeeService.getEmployeeProfile(data, this.user.jwt),
+            this.employeeService.getEmployeeSessionDetail(session_data, this.user.jwt),
+        ]).then(value => {
+            this.isLoading = false;
+            this.selectedEmployeeProfile = value[0];
+            Object.keys(this.selectedEmployeeProfile).forEach(key => {
+                this.currentEmployeeProfile[key] = this.selectedEmployeeProfile[key];
+            });
+            this.selectedEmployeeSessionProfile = value[1];
+            Object.keys(this.selectedEmployeeSessionProfile).forEach(key => {
+                this.currentEmployeeSessionProfile[key] = this.selectedEmployeeSessionProfile[key];
+            });
+        }, error => {
+            this.isLoading = false;
+        });
+        /*this.employeeService.getEmployeeProfile(data, this.user.jwt).then( employeeProfile => {
             this.isLoading = false;
             this.selectedEmployeeProfile = employeeProfile;
             Object.keys(this.selectedEmployeeProfile).forEach(key => {
@@ -76,7 +100,7 @@ export class UpdateProfileComponent implements OnInit {
             });
         }, error => {
             this.isLoading = false;
-        });
+        });*/
 
     }
 
@@ -100,10 +124,39 @@ export class UpdateProfileComponent implements OnInit {
             this.currentEmployeeProfile.dateOfJoining = null;
         }
 
-        let id = this.currentEmployeeProfile.id;
+        if (this.currentEmployeeProfile.mobileNumber === undefined || this.currentEmployeeProfile.mobileNumber === '') {
+            this.currentEmployeeProfile.mobileNumber = null;
+        } else {
+            let selectedEmployee = null;
+            this.employeeList.forEach(employee => {
+                if (employee.mobileNumber === this.currentEmployeeProfile.mobileNumber
+                    && employee.id !== this.currentEmployeeProfile.id) {
+                    selectedEmployee = employee;
+                }
+            });
+            if (selectedEmployee) {
+                alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
+                return;
+            }
+        }
 
         this.isLoading = true;
-        this.employeeService.updateEmployeeProfile(this.currentEmployeeProfile, this.user.jwt).then(message => {
+        Promise.all([
+            this.employeeService.updateEmployeeProfile(this.currentEmployeeProfile, this.user.jwt),
+            (this.currentEmployeeSessionProfile.id==null?
+                this.employeeService.createEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
+                    :this.employeeService.updateEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
+            )
+        ]).then(value => {
+            this.isLoading = false;
+            alert('Employee profile updated successfully');
+            this.selectedEmployeeProfile = this.currentEmployeeProfile;
+            this.selectedEmployeeSessionProfile = this.currentEmployeeSessionProfile;
+        }, error => {
+            this.isLoading = false;
+        });
+
+        /*this.employeeService.updateEmployeeProfile(this.currentEmployeeProfile, this.user.jwt).then(message => {
             this.isLoading = false;
             alert(message);
             if (this.selectedEmployeeProfile.id === id) {
@@ -111,7 +164,7 @@ export class UpdateProfileComponent implements OnInit {
             }
         }, error => {
             this.isLoading = false;
-        });
+        });*/
 
     }
 

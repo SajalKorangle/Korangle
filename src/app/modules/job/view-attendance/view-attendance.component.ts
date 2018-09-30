@@ -60,13 +60,13 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
         this.startDate = this.formatDate(event, 'firstDate');
         this.endDate = this.formatDate(event, 'lastDate');
         this.showCalendar = false;
-        this.getStudentAttendanceStatusList();
+        this.getEmployeeAttendanceStatusList();
     }
 
-    getStudentAttendanceStatusList(): void {
+    getEmployeeAttendanceStatusList(): void {
 
         let data = {
-            studentIdList: [this.studentId],
+            employeeIdList: [this.user.activeSchool.employeeId],
             startDate: this.startDate,
             endDate: this.endDate,
         };
@@ -74,7 +74,7 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
         this.isLoading = true;
         this.showCalendar = false;
 
-        this.attendanceService.getStudentAttendanceList(data, this.user.jwt).then(attendanceList => {
+        this.attendanceService.getEmployeeAttendanceList(data, this.user.jwt).then(attendanceList => {
             this.isLoading = false;
             this.attendanceStatusList = attendanceList;
             this.showCalendar = true;
@@ -88,13 +88,15 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
     getDateColor(date: any): any {
         let result = '';
         this.attendanceStatusList.every(attendanceStatus => {
-            if(attendanceStatus.dateOfAttendance === this.formatDate(date.mDate.toString(),'')) {
+            if(attendanceStatus.dateOfAttendance === this.formatDate(date.toString(),'')) {
                 if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
                     result = 'green';
                 } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
                     result = 'red';
                 } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[2]) {
                     result = 'orange';
+                } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[3]) {
+                    result = 'yellow';
                 }
                 return false;
             }
@@ -102,6 +104,20 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
         });
         return result;
     }
+
+    /*isHalfDay(date: any): boolean {
+        let result = false;
+        this.attendanceStatusList.every(attendanceStatus => {
+            if(attendanceStatus.dateOfAttendance === this.formatDate(date.toString(),'')) {
+                if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[3]) {
+                    result = true;
+                }
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }*/
 
     // generate the calendar grid
     generateCalendar(): void {

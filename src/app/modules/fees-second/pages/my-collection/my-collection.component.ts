@@ -4,8 +4,6 @@ import { FeeService } from '../../fee.service';
 
 import { FeeReceipt } from '../../classes/common-functionalities';
 
-import {EmitterService} from '../../../../services/emitter.service';
-
 @Component({
   selector: 'my-collection',
   templateUrl: './my-collection.component.html',
@@ -39,16 +37,15 @@ export class MyCollectionComponent {
 
     constructor(private feeService: FeeService) { }
 
-    getSchoolFeeReceiptList(): void {
+    getEmployeeFeeReceiptList(): void {
         const data = {
             startDate: this.startDate,
             endDate: this.endDate,
-            schoolDbId: this.user.activeSchool.dbId,
-            parentReceiver: this.user.id,
+            parentEmployee: this.user.activeSchool.employeeId,
         };
         this.isLoading = true;
         this.feeReceiptList = null;
-        this.feeService.getSchoolFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
+        this.feeService.getEmployeeFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
             this.isLoading = false;
             this.feeReceiptList = feeReceiptList;
         }, error => {
@@ -56,7 +53,7 @@ export class MyCollectionComponent {
         });
     }
 
-    getSchoolFeeTotalAmount(): number {
+    getEmployeeFeeTotalAmount(): number {
         let amount = 0;
         this.feeReceiptList.forEach( feeReceipt => {
             amount += FeeReceipt.getFeeReceiptTotalAmount(feeReceipt);

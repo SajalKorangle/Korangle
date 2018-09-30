@@ -8,6 +8,7 @@ import { DeclareHolidaysComponent } from './pages/declare-holidays/declare-holid
 import { GivePermissionsComponent } from './pages/give-permissions/give-permissions.component';
 import { RecordAttendanceComponent } from './pages/record-attendance/record-attendance.component';
 import { RecordEmployeeAttendanceComponent } from './pages/record-employee-attendance/record-employee-attendance.component';
+import { ApproveLeaveComponent } from './pages/approve-leave/approve-leave.component';
 
 import { AttendanceRoutingModule } from './attendance.routing';
 
@@ -22,6 +23,7 @@ import { AttendanceService } from './attendance.service';
         GivePermissionsComponent,
         RecordAttendanceComponent,
         RecordEmployeeAttendanceComponent,
+        ApproveLeaveComponent,
 
     ],
 

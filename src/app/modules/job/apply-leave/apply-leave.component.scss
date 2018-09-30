@@ -1,0 +1,162 @@
+@import "../../../../assets/sass/md/variables";
+@import "../../../../assets/sass/md/typography";
+@import "../../../../assets/sass/md/colors";
+
+$dayBase: 5vw;
+
+@media screen and (max-width: 991px) {
+  $dayBase: 12vw;
+}
+
+@media screen and (min-width: 992px) {
+  $dayBase: 5vw;
+}
+
+$cloud: lightgrey;
+$base: $dayBase / 5;
+$seafoam: green;
+$light-blue-grey: lightBlue;
+$concrete: grey;
+
+
+.calendar {
+  display: block;
+  @media screen and (max-width: 991px) {
+    width: $dayBase * 7 * (12/5);
+  }
+  @media screen and (min-width: 992px) {
+    width: $dayBase * 7;
+  }
+  /*margin: 0 auto;*/
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .calendar-navs {
+    background-color: $cloud;
+  }
+
+  .month-nav {
+    @media screen and (max-width: 991px) {
+      padding: $base * (12/5);
+      font-size: ($dayBase * 2 * 12) / (3 * 5);
+    }
+    @media screen and (min-width: 992px) {
+      padding: $base;
+      font-size: ($dayBase * 2) / 3;
+    }
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .year-nav {
+    padding: $base;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: 'Montserrat';
+    @media screen and (max-width: 991px) {
+      font-size: ($dayBase * 3 * 12) / (4 * 5);
+    }
+    @media screen and (min-width: 992px) {
+      font-size: ($dayBase * 3) / 4;
+    }
+  }
+
+  .month-grid {
+    .day-names {
+      display: flex;
+      flex-direction: row;
+      /*background: $concrete;*/
+      border-bottom-right-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+    .weeks {
+      display: flex;
+      flex-direction: column;
+    }
+    .week {
+      display: flex;
+      flex-direction: row;
+    }
+    .week-date,
+    .day-name {
+      @media screen and (max-width: 991px) {
+        padding: $base * (12/5);
+        width: $dayBase * (12/5);
+        font-size: ($dayBase * 12) / (3 * 5);
+      }
+      @media screen and (min-width: 992px) {
+        padding: $base;
+        width: $dayBase;
+        font-size: ($dayBase) / 3;
+      }
+      text-align: center;
+      display: block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .week-date {
+      @media screen and (max-width: 991px) {
+        height: $dayBase * (12/5);
+      }
+      @media screen and (min-width: 992px) {
+        height: $dayBase;
+      }
+      position: relative;
+
+      .date-text {
+        z-index: 10;
+        @media screen and (max-width: 991px) {
+          font-size: ( $dayBase * 12 ) / ( 3 * 5 );
+        }
+        @media screen and (min-width: 992px) {
+          font-size: $dayBase / 3;
+        }
+        font-family: 'Montserrat', sans-serif;
+      }
+
+      .date-sup-text {
+        z-index: 10;
+        @media screen and (max-width: 991px) {
+          font-size: ( $dayBase * 6 ) / ( 3 * 5 );
+        }
+        @media screen and (min-width: 992px) {
+          font-size: $dayBase / 6;
+        }
+        font-family: 'Montserrat', sans-serif;
+      }
+
+      &::after {
+        content: '';
+        @media screen and (max-width: 991px) {
+          height: $dayBase * 0.9 * ( 12 / 5);
+          width: $dayBase * 0.9 * ( 12 / 5);
+        }
+        @media screen and (min-width: 992px) {
+          height: $dayBase * 0.9;
+          width: $dayBase * 0.9;
+        }
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        transition: background-color 150ms linear, color 150ms linear;
+        z-index: 1;
+      }
+
+      &.disabled {
+        color: $light-blue-grey;
+      }
+    }
+
+    .today {
+      font-weight: bold;
+    }
+  }
+}

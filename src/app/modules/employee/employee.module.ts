@@ -7,6 +7,7 @@ import { EmployeeComponent } from './employee.component';
 import { AddEmployeeComponent } from './pages/add-employee/add-employee.component';
 import { ViewAllComponent } from './pages/view-all/view-all.component';
 import { UpdateProfileComponent } from './pages/update-profile/update-profile.component';
+import { AssignTaskComponent } from './pages/assign-task/assign-task.component';
 
 import { EmployeeRoutingModule } from './employee.routing';
 
@@ -20,6 +21,7 @@ import { EmployeeService } from './employee.service';
         AddEmployeeComponent,
         ViewAllComponent,
         UpdateProfileComponent,
+        AssignTaskComponent,
 
     ],
 

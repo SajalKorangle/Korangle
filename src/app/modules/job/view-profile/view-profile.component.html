@@ -1,6 +1,6 @@
 <div class="card-content">
 
-    <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="selectedEmployee && !isLoading">
 
         <!-- Name, Father's Name, Mother's Name, Mobile Number -->
         <div class="row">
@@ -9,7 +9,8 @@
                     <input matInput
                            type="text"
                            placeholder="Name"
-                           [(ngModel)]="newEmployee.name">
+                           disabled
+                           [ngModel]="selectedEmployee.name">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -17,7 +18,8 @@
                     <input matInput
                            type="text"
                            placeholder="Father's Name"
-                           [(ngModel)]="newEmployee.fatherName">
+                           disabled
+                           [ngModel]="selectedEmployee.fatherName">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -25,7 +27,8 @@
                     <input matInput
                            type="text"
                            placeholder="Mother's Name"
-                           [(ngModel)]="newEmployee.motherName">
+                           disabled
+                           [ngModel]="selectedEmployee.motherName">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -33,7 +36,8 @@
                     <input matInput
                            type="number"
                            placeholder="Mobile Number"
-                           [(ngModel)]="newEmployee.mobileNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.mobileNumber">
                 </mat-form-field>
             </div>
         </div>
@@ -45,18 +49,17 @@
                     <input matInput
                            type="date"
                            placeholder="Date of Birth"
-                           [(ngModel)]="newEmployee.dateOfBirth">
+                           disabled
+                           [ngModel]="selectedEmployee.dateOfBirth">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <mat-select placeholder="Gender"
-                                [(ngModel)]="newEmployee.gender">
-                        <mat-option>None</mat-option>
-                        <mat-option value="Male">Male</mat-option>
-                        <mat-option value="Female">Female</mat-option>
-                        <mat-option value="Other">Other</mat-option>
-                    </mat-select>
+                    <input matInput
+                           type="text"
+                           placeholder="Gender"
+                           disabled
+                           [ngModel]="selectedEmployee.gender">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -64,7 +67,8 @@
                     <input matInput
                            type="number"
                            placeholder="Aadhar Number"
-                           [(ngModel)]="newEmployee.aadharNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.aadharNumber">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -72,7 +76,8 @@
                     <input matInput
                            type="text"
                            placeholder="Passport Number"
-                           [(ngModel)]="newEmployee.passportNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.passportNumber">
                 </mat-form-field>
             </div>
         </div>
@@ -84,7 +89,8 @@
                     <input matInput
                            type="text"
                            placeholder="Employee Number"
-                           [(ngModel)]="newEmployee.employeeNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.employeeNumber">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -92,7 +98,8 @@
                     <input matInput
                            type="text"
                            placeholder="Job Title"
-                           [(ngModel)]="newEmployee.currentPost">
+                           disabled
+                           [ngModel]="selectedEmployee.currentPost">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -100,7 +107,8 @@
                     <input matInput
                            type="text"
                            placeholder="Qualification"
-                           [(ngModel)]="newEmployee.qualification">
+                           disabled
+                           [ngModel]="selectedEmployee.qualification">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -108,7 +116,8 @@
                     <input matInput
                            type="date"
                            placeholder="Date of Joining"
-                           [(ngModel)]="newEmployee.dateOfJoining">
+                           disabled
+                           [ngModel]="selectedEmployee.dateOfJoining">
                 </mat-form-field>
             </div>
         </div>
@@ -120,7 +129,8 @@
                     <input matInput
                            type="text"
                            placeholder="Bank Name"
-                           [(ngModel)]="newEmployee.bankName">
+                           disabled
+                           [ngModel]="selectedEmployee.bankName">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -128,7 +138,8 @@
                     <input matInput
                            type="text"
                            placeholder="Bank Account Number"
-                           [(ngModel)]="newEmployee.bankAccountNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.bankAccountNumber">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -136,7 +147,8 @@
                     <input matInput
                            type="text"
                            placeholder="EPF Account No."
-                           [(ngModel)]="newEmployee.epfAccountNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.epfAccountNumber">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -144,35 +156,39 @@
                     <input matInput
                            type="text"
                            placeholder="Pan Number"
-                           [(ngModel)]="newEmployee.panNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.panNumber">
                 </mat-form-field>
             </div>
         </div>
 
-        <!-- Monthly Salary, Paid Leaves -->
+        <!-- Monthly Salary -->
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
                            type="number"
                            placeholder="Monthly Salary"
-                           [(ngModel)]="newEmployee.monthlySalary">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="number"
-                           placeholder="Paid Leave"
-                           [(ngModel)]="newEmployeeSessionDetail.paidLeaveNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.monthlySalary">
                 </mat-form-field>
             </div>
             <!-- div class="col-md-3">
                 <mat-form-field>
                     <input matInput
                            type="text"
+                           placeholder="Bank Account Number"
+                           disabled
+                           [ngModel]="selectedEmployee.bankAccountNumber">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
                            placeholder="EPF Account No."
-                           [(ngModel)]="newEmployee.epfAccountNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.epfAccountNumber">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -180,7 +196,8 @@
                     <input matInput
                            type="text"
                            placeholder="Pan Number"
-                           [(ngModel)]="newEmployee.panNumber">
+                           disabled
+                           [ngModel]="selectedEmployee.panNumber">
                 </mat-form-field>
             </div -->
         </div>
@@ -192,7 +209,8 @@
                     <textarea matInput
                               rows="4"
                               placeholder="Address"
-                              [(ngModel)]="newEmployee.address"></textarea>
+                              disabled
+                              [ngModel]="selectedEmployee.address"></textarea>
                 </mat-form-field>
             </div>
             <div class="col-md-6">
@@ -200,12 +218,13 @@
                     <textarea matInput
                               rows="4"
                               placeholder="Remark"
-                              [(ngModel)]="newEmployee.remark"></textarea>
+                              disabled
+                              [ngModel]="selectedEmployee.remark"></textarea>
                 </mat-form-field>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="createNewEmployee()">Create Profile</button>
+        <div class="clearfix"></div>
 
     </ng-container>
 
@@ -214,3 +233,4 @@
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
+

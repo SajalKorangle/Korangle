@@ -25,12 +25,12 @@
         <div class="col-md-3"
              align="right"
              style="margin-top: 15px;"
-             *ngIf="selectedMember">
-            <select [ngModel]="selectedMember"
-                    (ngModelChange)="selectedMember=$event;populateFilteredConcessionList();"
+             *ngIf="selectedEmployee">
+            <select [ngModel]="selectedEmployee"
+                    (ngModelChange)="selectedEmployee=$event;populateFilteredConcessionList();"
                     style="margin-right: 15px">
-                <option *ngFor="let member of memberList;" [ngValue]="member">
-                    {{member.username}}
+                <option *ngFor="let employee of employeeList;" [ngValue]="employee">
+                    {{employee.name}}
                 </option>
             </select>
         </div>
@@ -63,8 +63,8 @@
         </ng-container>
         <ng-container *ngIf="filteredConcessionList.length==0">
             No discount given b/w {{startDate | date: 'dd - MMM - yyyy'}} to {{endDate | date: 'dd - MMM - yyyy'}}
-            <ng-container *ngIf="selectedMember">
-                <span *ngIf="selectedMember.username != 'All'">by {{selectedMember.username}}</span>
+            <ng-container *ngIf="selectedEmployee">
+                <span *ngIf="selectedEmployee.mobileNumber != 'All'">by {{selectedEmployee.name}}</span>
             </ng-container>
         </ng-container>
     </ng-container>

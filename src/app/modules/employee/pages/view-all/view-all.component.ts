@@ -21,6 +21,7 @@ class ColumnFilter {
     showBankName = false;
     showBankAccountNumber = false;
     showEpfAccountNumber = false;
+    showMonthlySalary = false;
     showRemark = false;
 }
 
