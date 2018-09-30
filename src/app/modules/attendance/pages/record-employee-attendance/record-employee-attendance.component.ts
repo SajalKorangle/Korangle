@@ -216,6 +216,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
         if (this.by === 'date') {
             headerValues.push('Attendance');
         } else {
+            headerValues.push('Abs./Total');
             this.getDateList().forEach(date => {
                 headerValues.push(date.getDate());
             });
@@ -229,6 +230,9 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
         employeeDisplay.push(index+1);
         employeeDisplay.push(employee.name);
         employeeDisplay.push(employee.employeeNumber);
+        if (this.by === 'month') {
+            employeeDisplay.push(this.getEmployeeRecord(employee));
+        }
         employee.attendanceStatusList.forEach(attendanceStatus => {
             employeeDisplay.push(this.getButtonString(attendanceStatus.status));
         });
