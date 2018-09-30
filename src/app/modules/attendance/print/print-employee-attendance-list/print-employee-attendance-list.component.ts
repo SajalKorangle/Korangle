@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 import { ChangeDetectorRef } from '@angular/core';
 
 import { EmitterService } from '../../../../services/emitter.service';
+import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
 
 @Component({
     selector: 'print-employee-attendance-list',
@@ -69,6 +70,22 @@ export class PrintEmployeeAttendanceListComponent implements OnInit, OnDestroy, 
             result = status.substring(0,1);
         }
         return result;
+    }
+
+    getEmployeeRecord(employee: any): any {
+        let absentCount = 0, totalCount = 0;
+        employee.attendanceStatusList.forEach(attendanceStatus => {
+            if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
+                totalCount += 1;
+            } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
+                absentCount += 1;
+                totalCount += 1;
+            } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[3]) {
+                absentCount += 0.5;
+                totalCount += 1;
+            }
+        });
+        return absentCount + '/' + totalCount;
     }
 
 }

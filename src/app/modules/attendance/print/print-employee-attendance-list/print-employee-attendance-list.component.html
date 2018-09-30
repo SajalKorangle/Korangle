@@ -3,6 +3,7 @@
     <tr>
         <th>S No.</th>
         <th>Employee</th>
+        <th *ngIf="by==='month'">A/T</th>
         <ng-container *ngFor="let date of getDateList()">
             <th style="text-align: center" *ngIf="by==='month'">{{date.getDate()}}</th>
             <th style="text-align: center" *ngIf="by==='date'">Attendance</th>
@@ -19,6 +20,7 @@
                     ({{employee.employeeNumber}})
                 </ng-container>
             </td>
+            <td *ngIf="by==='month'">{{getEmployeeRecord(employee)}}</td>
             <ng-container *ngFor="let attendance of employee.attendanceStatusList">
                 <td align="center">
                     {{getStatus(attendance.status)}}
