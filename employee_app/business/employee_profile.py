@@ -22,10 +22,13 @@ def get_employee_profile_list(data):
 
 def create_employee_profile(data):
 
-    employee_object = EmployeeModelSerializer(data=data)
-    if employee_object.is_valid():
-        employee_object.save()
-        return 'Employee Profile created successfully'
+    employee_serializer = EmployeeModelSerializer(data=data)
+    if employee_serializer.is_valid():
+        employee_serializer.save()
+        return {
+            'id': employee_serializer.data['id'],
+            'message': 'Employee Profile created successfully',
+        }
     else:
         return 'Employee Profile creation failed'
 
