@@ -71,10 +71,18 @@ export class AddEmployeeComponent implements OnInit {
 
         this.isLoading = true;
 
-        this.employeeService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(message => {
-                this.isLoading = false;
-                alert(message);
-                this.newEmployee = {};
+        this.employeeService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
+                let post_data = {
+                    parentEmployee: response.id,
+                    parentSession: this.user.activeSchool.currentSessionDbId,
+                    paidLeaveNumber: this.newEmployeeSessionDetail.paidLeaveNumber,
+                };
+                this.employeeService.createEmployeeSessionDetail(post_data, this.user.jwt).then(response => {
+                    this.isLoading = false;
+                    alert('Employee Profile Created Successfully');
+                    this.newEmployee = {};
+                    this.newEmployeeSessionDetail = {};
+                });
             }, error => {
                 this.isLoading = false;
                 alert('Server Error: Contact admin');
