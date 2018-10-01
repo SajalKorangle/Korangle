@@ -22,7 +22,8 @@
             </td>
             <td *ngIf="by==='month'">{{getEmployeeRecord(employee)}}</td>
             <ng-container *ngFor="let attendance of employee.attendanceStatusList">
-                <td align="center">
+                <td align="center"
+                    class="{{getTextClass(attendance.status)}}">
                     {{getStatus(attendance.status)}}
                 </td>
             </ng-container>

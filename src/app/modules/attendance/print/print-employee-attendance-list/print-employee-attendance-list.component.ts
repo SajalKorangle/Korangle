@@ -68,6 +68,9 @@ export class PrintEmployeeAttendanceListComponent implements OnInit, OnDestroy, 
         let result = 'N';
         if (status) {
             result = status.substring(0,1);
+            if (status === ATTENDANCE_STATUS_LIST[3]) {
+                result = result.toLowerCase();
+            }
         }
         return result;
     }
@@ -86,6 +89,25 @@ export class PrintEmployeeAttendanceListComponent implements OnInit, OnDestroy, 
             }
         });
         return absentCount + '/' + totalCount;
+    }
+
+    getTextClass(status: any): any {
+        let classs = "";
+        switch (status) {
+            case ATTENDANCE_STATUS_LIST[3]:
+                classs += "text-info";
+                break;
+            case ATTENDANCE_STATUS_LIST[2]:
+                classs += "text-warning";
+                break;
+            case ATTENDANCE_STATUS_LIST[1]:
+                classs += "text-danger";
+                break;
+            case ATTENDANCE_STATUS_LIST[0]:
+                classs += "text-success";
+                break;
+        }
+        return classs;
     }
 
 }
