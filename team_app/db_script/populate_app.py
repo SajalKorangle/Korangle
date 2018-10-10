@@ -1,5 +1,19 @@
 
 
+def populate_in_all_schools(module_object, apps, task_list):
+
+    School = apps.get_model('school_app', 'School')
+    Access = apps.get_model('team_app', 'Access')
+    Member = apps.get_model('team_app', 'Member')
+    Permission = apps.get_model('team_app', 'Permission')
+
+    for school_object in School.objects.all():
+
+        access_object = Access(parentModule=module_object,
+                               parentSchool=school_object)
+        access_object.save()
+
+
 def populate_in_all_schools_and_users(module_object, apps, task_list):
 
     School = apps.get_model('school_app', 'School')
