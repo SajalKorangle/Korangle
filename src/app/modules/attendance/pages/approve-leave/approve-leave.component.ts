@@ -97,7 +97,7 @@ export class ApproveLeaveComponent implements OnInit {
             }
         });
         employee.originalAppliedLeaveList.forEach(appliedLeave => {
-            if (appliedLeave.paid) {
+            if (appliedLeave.paidLeave) {
                 result -= 1;
             }
         });

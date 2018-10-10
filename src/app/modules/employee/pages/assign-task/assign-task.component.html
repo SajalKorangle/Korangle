@@ -30,8 +30,11 @@
                     <mat-checkbox [ngModel]="task.employeePermissionId !== null"
                                   (ngModelChange)="updateEmployeePermission(task)"
                                   [disabled]="isDisabled(module,task)">
-                        {{task.title}}<br/>
-                    </mat-checkbox><br/>
+                        {{task.title}}
+                        <br/>
+                    </mat-checkbox>
+                    <div *ngIf="task.permissionLoading" class="loader-custom"></div>
+                    <br/>
                 </ng-container>
             </ng-container>
 

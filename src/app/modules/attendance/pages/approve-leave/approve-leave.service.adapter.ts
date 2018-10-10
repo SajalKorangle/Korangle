@@ -124,7 +124,7 @@ export class ApproveLeaveServiceAdapter {
         let appliedLeaveList = [];
         employee.modifiedAppliedLeaveList.forEach((appliedLeave, index) => {
             if (employee.originalAppliedLeaveList[index].status !== appliedLeave.status ||
-                employee.originalAppliedLeaveList[index].paid !== appliedLeave.paid) {
+                employee.originalAppliedLeaveList[index].paidLeave !== appliedLeave.paidLeave) {
                 appliedLeaveList.push(appliedLeave);
             }
         });

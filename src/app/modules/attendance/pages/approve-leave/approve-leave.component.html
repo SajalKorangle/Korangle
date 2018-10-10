@@ -72,10 +72,10 @@
                                         <button type="submit"
                                                 style="padding: 3px 8px; text-transform: none;"
                                                 class="btn"
-                                                [class.btn-success]="appliedLeave.paid"
-                                                [class.btn-danger]="!appliedLeave.paid"
-                                                (click)="appliedLeave.paid = !appliedLeave.paid">
-                                            {{paidOrUnpaid(appliedLeave.paid)}}
+                                                [class.btn-success]="appliedLeave.paidLeave"
+                                                [class.btn-danger]="!appliedLeave.paidLeave"
+                                                (click)="appliedLeave.paidLeave = !appliedLeave.paidLeave">
+                                            {{paidOrUnpaid(appliedLeave.paidLeave)}}
                                         </button>
                                     </span>
                                             <span *ngIf="appliedLeave.status !== leave_status_list[1]">
