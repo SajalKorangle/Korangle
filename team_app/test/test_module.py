@@ -7,8 +7,6 @@ from team_app.factory.module import ModuleFactory
 from team_app.factory.access import AccessFactory
 
 # Models
-from django.contrib.auth.models import User
-from team_app.models import Member
 
 # Business
 from team_app.business.module import get_school_module_list, get_module_by_object

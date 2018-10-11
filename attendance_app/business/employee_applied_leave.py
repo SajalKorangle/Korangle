@@ -14,8 +14,6 @@ def get_employee_applied_leave_list(data):
 
     employee_applied_leave_list = []
 
-    print(data)
-
     for employee_id in data['employeeIdList'].split(','):
         for employee_applied_leave_object in \
                 EmployeeAppliedLeave.objects.filter(parentEmployee_id=employee_id,
@@ -23,8 +21,6 @@ def get_employee_applied_leave_list(data):
                                                     dateOfLeave__lte=data['endDate'])\
                         .order_by('dateOfLeave'):
             employee_applied_leave_list.append(EmployeeAppliedLeaveModelSerializer(employee_applied_leave_object).data)
-
-    print(employee_applied_leave_list)
 
     return employee_applied_leave_list
 

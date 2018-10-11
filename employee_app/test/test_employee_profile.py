@@ -32,12 +32,13 @@ class EmployeeProfileTestCase(ParentTestCase):
 
         self.assertEqual(len(response), 3)
 
-        index = 0
         for employee in employee_list:
-            employee_response = response[index]
             self.assertEqual(employee.parentSchool.id, school_object.id)
-            self.assertEqual(employee_response['id'], employee.id)
-            index += 1
+            result = False
+            for employee_response in response:
+                if employee_response['id'] == employee.id:
+                    result = True
+            self.assertEqual(result, True)
 
     def test_create_employee_profile(self):
 
@@ -47,6 +48,7 @@ class EmployeeProfileTestCase(ParentTestCase):
             'name': 'Dummy',
             'fatherName': 'Dummy Father',
             'parentSchool': school_object.id,
+            'mobileNumber': 7999951154,
         }
 
         create_employee_profile(data)
