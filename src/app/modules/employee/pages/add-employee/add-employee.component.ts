@@ -54,6 +54,8 @@ export class AddEmployeeComponent implements OnInit {
 
         if (this.newEmployee.mobileNumber === undefined || this.newEmployee.mobileNumber === '') {
             this.newEmployee.mobileNumber = null;
+            alert('Mobile number is required');
+            return;
         } else {
             let selectedEmployee = null;
             this.employeeList.forEach(employee => {

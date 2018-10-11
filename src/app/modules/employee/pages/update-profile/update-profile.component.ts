@@ -126,6 +126,8 @@ export class UpdateProfileComponent implements OnInit {
 
         if (this.currentEmployeeProfile.mobileNumber === undefined || this.currentEmployeeProfile.mobileNumber === '') {
             this.currentEmployeeProfile.mobileNumber = null;
+            alert('Mobile number is required.');
+            return;
         } else {
             let selectedEmployee = null;
             this.employeeList.forEach(employee => {
