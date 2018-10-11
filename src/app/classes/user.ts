@@ -6,7 +6,7 @@ import { EmitterService } from '../services/emitter.service';
 export class User {
 
     id: number;
-    username: string;
+    username: number;
 
     first_name: string;
     last_name: string;
@@ -124,22 +124,20 @@ export class User {
 }
 
 /*
-    demo, user1234
-    brightstar, 123brightstar
-    brighthindi, hindi123
-    eklavya, ashta123
-    anupreet, itisjp123
-    madhav, lakhan1508
-    talent, innovative123
-    champion, 123champ
-    bhagatsingh, bhagat123
-    nainish, akodia123
-    devendra, 12345dev
-    praveen, praveen5678
-    rahul, tailor123
+    demo, user1234 - 9425921504
+    eklavya, ashta123 - 9907056160
+    anupreet, itisjp123 - 9425083104
+    madhav, lakhan1508 - 7898373639
+    talent, innovative123 - 9754683181
+    champion, 123champ - 8770176906
+    bhagatsingh, bhagat123 - 7974252055
+    nainish, akodia123 - 9926085773
+    devendra, 12345dev - 7692947706
+    praveen, praveen5678 - 9039720764
+    rahul, tailor123 - 9584256522
 
     For Madhav School
-    madhav, lakhan1508 - Lakhan Parmar
+    madhav, lakhan1508 - Lakhan Parmar - 7898373639
     8269392567, ramesh123 - Babita Malviya
     8889873644, 123tularam - Deepika
     8889135386, singh123 - Doli Mewada

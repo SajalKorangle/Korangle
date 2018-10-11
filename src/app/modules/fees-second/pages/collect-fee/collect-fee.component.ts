@@ -159,7 +159,7 @@ export class CollectFeeComponent implements OnInit {
         let data = {
             studentDbId: this.selectedStudent.dbId,
             remark: (this.remark)?this.remark:null,
-            parentReceiver: this.user.id,
+            parentEmployee: this.user.activeSchool.employeeId,
         };
 
         data['subFeeReceiptList'] = [];

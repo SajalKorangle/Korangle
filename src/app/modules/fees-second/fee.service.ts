@@ -95,9 +95,14 @@ export class FeeService extends CommonServiceRequirements {
             + data['schoolDbId']
             + '/fee-receipts?startDate=' + data['startDate']
             + '&endDate=' + data['endDate'];
-        if ('parentReceiver' in data) {
-            url += '&parentReceiver=' + data['parentReceiver'];
-        }
+        return super.getData(token, url);
+    }
+
+    getEmployeeFeeReceiptList(data: any, token: string): Promise<any> {
+        let url = '/fee-second/employee/'
+            + data['parentEmployee']
+            + '/fee-receipts?startDate=' + data['startDate']
+            + '&endDate=' + data['endDate'];
         return super.getData(token, url);
     }
 

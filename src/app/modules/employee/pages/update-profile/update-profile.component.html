@@ -19,7 +19,7 @@
     </form>
 
 
-    <ng-container *ngIf="selectedEmployeeProfile && !isLoading">
+    <ng-container *ngIf="selectedEmployeeProfile && selectedEmployeeSessionProfile && !isLoading">
 
         <div class="row hidden-md hidden-lg hidden-sm">
             <div class="col-xs-3">
@@ -188,6 +188,55 @@
                            [ngModel]="selectedEmployeeProfile.panNumber">
                 </mat-form-field>
             </div>
+        </div>
+
+        <!-- Monthly Salary -->
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="number"
+                           placeholder="Monthly Salary"
+                           (ngModelChange)="currentEmployeeProfile.monthlySalary=$event"
+                           [ngModel]="selectedEmployeeProfile.monthlySalary">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="number"
+                           placeholder="Paid Leaves"
+                           (ngModelChange)="currentEmployeeSessionProfile.paidLeaveNumber=$event"
+                           [ngModel]="selectedEmployeeSessionProfile.paidLeaveNumber">
+                </mat-form-field>
+            </div>
+            <!-- div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="Bank Account Number"
+                           (ngModelChange)="currentEmployeeProfile.bankAccountNumber=$event"
+                           [ngModel]="selectedEmployeeProfile.bankAccountNumber">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="EPF Account No."
+                           (ngModelChange)="currentEmployeeProfile.epfAccountNumber=$event"
+                           [ngModel]="selectedEmployeeProfile.epfAccountNumber">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="Pan Number"
+                           (ngModelChange)="currentEmployeeProfile.panNumber=$event"
+                           [ngModel]="selectedEmployeeProfile.panNumber">
+                </mat-form-field>
+            </div -->
         </div>
 
         <!-- Address, Remark -->

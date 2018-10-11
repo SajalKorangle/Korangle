@@ -10,6 +10,14 @@ import {DataStorage} from './classes/data-storage';
 
 const routes: Routes = [
     {
+        path: 'salary',
+        loadChildren: 'app/modules/salary/salary.module#SalaryModule',
+    },
+    {
+        path: 'job',
+        loadChildren: 'app/modules/job/job.module#JobModule',
+    },
+    {
         path: 'user-settings',
         loadChildren: 'app/modules/user-settings/user-settings.module#UserSettingsModule',
     },

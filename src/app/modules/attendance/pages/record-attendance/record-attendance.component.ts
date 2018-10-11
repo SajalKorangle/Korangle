@@ -57,8 +57,7 @@ export class RecordAttendanceComponent implements OnInit {
     ngOnInit(): void {
 
         let request_attendance_permission_list_data = {
-            parentUser: this.user.id,
-            parentSchool: this.user.activeSchool.dbId,
+            parentEmployee: this.user.activeSchool.employeeId,
             sessionId: this.user.activeSchool.currentSessionDbId,
         };
 

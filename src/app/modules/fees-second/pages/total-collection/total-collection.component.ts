@@ -1,17 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { FeeService } from '../../fee.service';
-import { TeamService } from '../../../team/team.service';
 
 import { FeeReceipt } from '../../classes/common-functionalities';
 
-import {EmitterService} from '../../../../services/emitter.service';
+import {EmployeeService} from '../../../employee/employee.service';
 
 @Component({
   selector: 'app-total-collection',
   templateUrl: './total-collection.component.html',
   styleUrls: ['./total-collection.component.css'],
-    providers: [FeeService, TeamService]
+    providers: [FeeService, EmployeeService]
 })
 export class TotalCollectionComponent implements OnInit {
 
@@ -25,8 +24,8 @@ export class TotalCollectionComponent implements OnInit {
     feeReceiptList: any;
     filteredFeeReceiptList: any;
 
-    selectedMember: any;
-    memberList = [];
+    selectedEmployee: any;
+    employeeList = [];
 
     selectedFeeType: any;
     feeTypeList = [];
@@ -46,19 +45,22 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     constructor(private feeService: FeeService,
-                private teamService: TeamService) { }
+                private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
         let data = {
-            schoolDbId: this.user.activeSchool.dbId,
+            parentSchool: this.user.activeSchool.dbId,
         };
-        this.teamService.getSchoolMemberList(data, this.user.jwt).then(memberList => {
-            this.memberList = memberList;
-            let member = {
-                username: 'All',
+        this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
+            this.employeeList = employeeList;
+            let employee = {
+                id: 0,
+                name: 'All',
+                mobileNumber: 'All',
+                employeeNumber: null,
             };
-            this.memberList.push(member);
-            this.selectedMember = member;
+            this.employeeList.push(employee);
+            this.selectedEmployee = employee;
         });
         this.feeService.getFeeTypeList(this.user.jwt).then(feeTypeList => {
             this.feeTypeList = feeTypeList;
@@ -94,13 +96,13 @@ export class TotalCollectionComponent implements OnInit {
             return;
         }
 
-        if (!this.selectedMember || this.selectedMember.username === 'All') {
+        if (!this.selectedEmployee || this.selectedEmployee.mobileNumber === 'All') {
             this.filteredFeeReceiptList = this.feeReceiptList;
             return;
         }
 
         this.filteredFeeReceiptList = this.feeReceiptList.filter(feeReceipt => {
-            if (feeReceipt.parentReceiver === this.selectedMember.userDbId) {
+            if (feeReceipt.parentEmployee === this.selectedEmployee.id) {
                 return true;
             } else {
                 return false;

@@ -34,4 +34,41 @@ export class EmployeeService extends CommonServiceRequirements {
         return super.getData(token, url);
     }
 
+    // Employee Session Details
+    createEmployeeSessionDetail(data: any, token: any): Promise<any> {
+        const url = '/employee/employee-session-details';
+        return super.postData(data, token, url);
+    }
+
+    updateEmployeeSessionDetail(data: any, token: any): Promise<any> {
+        const url = '/employee/employee-session-details/' + data['id'];
+        return super.postData(data, token, url);
+    }
+
+    getEmployeeSessionDetail(data: any, token: any): Promise<any> {
+        const url = '/employee/' + data['parentEmployee'] + '/employee-session-details?sessionId=' + data['sessionId'];
+        return super.getData(token, url);
+    }
+
+    getEmployeeSessionDetailList(data: any, token: any): Promise<any> {
+        const url = '/employee/school/' + data['parentSchool'] + '/employee-session-details?sessionId=' + data['sessionId'];
+        return super.getData(token, url);
+    }
+
+    // Employee Permission
+    getEmployeePermissionList(data: any, token: any): Promise<any> {
+        const url = '/employee/' + data['parentEmployee'] + '/employee-permissions';
+        return super.getData(token, url)
+    }
+
+    addEmployeePermission(data: any, token: any): Promise<any> {
+        const url = '/employee/employee-permissions';
+        return super.postData(data, token, url);
+    }
+
+    deleteEmployeePermission(data: any, token: any): Promise<any> {
+        const url = '/employee/employee-permissions/' + data['id'];
+        return super.deleteData(token, url);
+    }
+
 }

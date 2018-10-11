@@ -19,6 +19,30 @@
     height: 100%;
 }
 
+.background-color-green {
+    color: white;
+    background-color: #4caf50;
+}
+
+.background-color-red {
+    color: white;
+    background-color: red;
+}
+
+.background-color-orange {
+    color: white;
+    background-color: orange;
+}
+
+.background-color-yellow {
+    color: white;
+    background-color: yellow;
+}
+
+.background-color-white {
+    background-color: white;
+}
+
 .text-color-green {
     color: #4caf50;
 }
@@ -41,4 +65,11 @@
 
 .attStatus {
     font-size: 16px;
+}
+
+.unselectable {
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
 }

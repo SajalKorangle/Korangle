@@ -1,15 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { FeeService } from '../../fee.service';
-import { TeamService } from '../../../team/team.service';
 
 import { Concession } from '../../classes/common-functionalities';
+import {EmployeeService} from '../../../employee/employee.service';
 
 @Component({
   selector: 'app-total-discount',
   templateUrl: './total-discount.component.html',
   styleUrls: ['./total-discount.component.css'],
-    providers: [FeeService, TeamService]
+    providers: [FeeService, EmployeeService]
 })
 export class TotalDiscountComponent implements OnInit {
 
@@ -21,8 +21,8 @@ export class TotalDiscountComponent implements OnInit {
     concessionList: any;
     filteredConcessionList: any;
 
-    selectedMember: any;
-    memberList = [];
+    selectedEmployee: any;
+    employeeList = [];
 
     isLoading = false;
 
@@ -39,19 +39,22 @@ export class TotalDiscountComponent implements OnInit {
     }
 
     constructor(private feeService: FeeService,
-                private teamService: TeamService) { }
+                private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
         let data = {
-            schoolDbId: this.user.activeSchool.dbId,
+            parentSchool: this.user.activeSchool.dbId,
         };
-        this.teamService.getSchoolMemberList(data, this.user.jwt).then(memberList => {
-            this.memberList = memberList;
-            let member = {
-                username: 'All',
+        this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
+            this.employeeList = employeeList;
+            let employee = {
+                id: 0,
+                name: 'All',
+                mobileNumber: 'All',
+                employeeNumber: null,
             };
-            this.memberList.push(member);
-            this.selectedMember = member;
+            this.employeeList.push(employee);
+            this.selectedEmployee = employee;
         });
     }
 
@@ -79,13 +82,13 @@ export class TotalDiscountComponent implements OnInit {
             return;
         }
 
-        if (!this.selectedMember || this.selectedMember.username === 'All') {
+        if (!this.selectedEmployee || this.selectedEmployee.mobileNumber === 'All') {
             this.filteredConcessionList = this.concessionList;
             return;
         }
 
         this.filteredConcessionList = this.concessionList.filter(concession => {
-            if (concession.parentReceiver === this.selectedMember.userDbId) {
+            if (concession.parentEmployee === this.selectedEmployee.id) {
                 return true;
             } else {
                 return false;

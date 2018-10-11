@@ -2,50 +2,49 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { AttendanceService } from '../../attendance.service';
 
-import { TeamService } from '../../../team/team.service';
-
 import { ClassService } from '../../../../services/class.service';
 
 
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
+import {EmployeeService} from '../../../employee/employee.service';
 
 @Component({
   selector: 'give-permissions',
   templateUrl: './give-permissions.component.html',
   styleUrls: ['./give-permissions.component.css'],
-    providers: [ TeamService, AttendanceService, ClassService ],
+    providers: [ EmployeeService, AttendanceService, ClassService ],
 })
 
 export class GivePermissionsComponent implements OnInit {
 
     @Input() user;
 
-    memberList = [];
+    employeeList = [];
     moduleList = [];
 
     selectedClass: any;
 
     classSectionList = [];
 
-    filteredMemberList: any;
+    filteredEmployeeList: any;
 
     myControl = new FormControl();
 
-    selectedMember: any;
-    selectedMemberAttendancePermissionList: any;
+    selectedEmployee: any;
+    selectedEmployeeAttendancePermissionList: any;
 
     isLoading = false;
 
-    constructor (private teamService: TeamService,
+    constructor (private employeeService: EmployeeService,
                  private attendanceService: AttendanceService,
                  private classService: ClassService) { }
 
     ngOnInit() {
 
-        let request_member_data = {
-            schoolDbId: this.user.activeSchool.dbId,
+        let request_employee_data = {
+            parentSchool: this.user.activeSchool.dbId,
         };
 
         const request_class_data = {
@@ -55,11 +54,11 @@ export class GivePermissionsComponent implements OnInit {
         this.isLoading = true;
 
         Promise.all([
-            this.teamService.getSchoolMemberList(request_member_data, this.user.jwt),
+            this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
             this.classService.getClassSectionList(request_class_data, this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
-            this.initializeMemberList(value[0]);
+            this.initializeEmployeeList(value[0]);
             this.initializeClassSectionList(value[1]);
         }, error => {
             this.isLoading = false;
@@ -67,10 +66,10 @@ export class GivePermissionsComponent implements OnInit {
 
     }
 
-    initializeMemberList(memberList: any): void {
-        this.memberList = memberList;
-        this.filteredMemberList = this.myControl.valueChanges.pipe(
-            map(value => typeof value === 'string' ? value: (value as any).username),
+    initializeEmployeeList(employeeList: any): void {
+        this.employeeList = employeeList;
+        this.filteredEmployeeList = this.myControl.valueChanges.pipe(
+            map(value => typeof value === 'string' ? value: (value as any).name),
             map(value => this.filter(value))
         );
     }
@@ -87,30 +86,29 @@ export class GivePermissionsComponent implements OnInit {
         if (value === '') {
             return [];
         }
-        return this.memberList.filter( member => member.username.toLowerCase().indexOf(value.toLowerCase()) === 0 );
+        return this.employeeList.filter(employee => employee.name.toLowerCase().indexOf(value.toLowerCase()) === 0 );
     }
 
-    displayFn(member?: any) {
-        if (member) {
-            return member.username;
+    displayFn(employee?: any) {
+        if (employee) {
+            return employee.name;
         } else {
             return '';
         }
     }
 
-    getMemberAttendancePermissionList(member: any): void {
+    getEmployeeAttendancePermissionList(employee: any): void {
 
         let data = {
-            parentSchool: this.user.activeSchool.dbId,
-            parentUser: member.userDbId,
+            parentEmployee: employee.id,
             sessionId: this.user.activeSchool.currentSessionDbId,
         };
-        this.selectedMember = member;
-        this.selectedMemberAttendancePermissionList = null;
+        this.selectedEmployee = employee;
+        this.selectedEmployeeAttendancePermissionList = null;
         this.isLoading = true;
         this.attendanceService.getAttendancePermissionList(data, this.user.jwt).then( attendancePermissionList => {
             this.isLoading = false;
-            this.selectedMemberAttendancePermissionList = attendancePermissionList;
+            this.selectedEmployeeAttendancePermissionList = attendancePermissionList;
         }, error => {
             this.isLoading = false;
         });
@@ -119,7 +117,7 @@ export class GivePermissionsComponent implements OnInit {
 
     showAddButton(): boolean {
         let result = true;
-        this.selectedMemberAttendancePermissionList.every(attendancePermission => {
+        this.selectedEmployeeAttendancePermissionList.every(attendancePermission => {
             if (attendancePermission.parentSection === this.selectedClass.selectedSection.dbId) {
                 result = false;
                 return false;
@@ -150,8 +148,7 @@ export class GivePermissionsComponent implements OnInit {
     addAttendancePermission(): void {
 
         let data = {
-            parentUser: this.selectedMember.userDbId,
-            parentSchool: this.user.activeSchool.dbId,
+            parentEmployee: this.selectedEmployee.id,
             parentSection: this.selectedClass.selectedSection.dbId,
         };
 
@@ -160,7 +157,7 @@ export class GivePermissionsComponent implements OnInit {
         this.attendanceService.giveAttendancePermission(data, this.user.jwt).then(result => {
             alert(result.message);
             if (result.status === 'success') {
-                this.selectedMemberAttendancePermissionList.push(result.data);
+                this.selectedEmployeeAttendancePermissionList.push(result.data);
             }
             this.isLoading = false;
         }, error => {
@@ -189,14 +186,14 @@ export class GivePermissionsComponent implements OnInit {
 
     removeFromAttendancePermissionList(id: number): void {
         let index = 0;
-        this.selectedMemberAttendancePermissionList.every(attendancePermission => {
+        this.selectedEmployeeAttendancePermissionList.every(attendancePermission => {
             if (attendancePermission.id === id) {
                 return false;
             }
             ++index;
             return true;
         });
-        this.selectedMemberAttendancePermissionList.splice(index, 1);
+        this.selectedEmployeeAttendancePermissionList.splice(index, 1);
     }
 
 }

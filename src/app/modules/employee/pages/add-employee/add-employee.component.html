@@ -149,6 +149,42 @@
             </div>
         </div>
 
+        <!-- Monthly Salary, Paid Leaves -->
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="number"
+                           placeholder="Monthly Salary"
+                           [(ngModel)]="newEmployee.monthlySalary">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="number"
+                           placeholder="Paid Leave"
+                           [(ngModel)]="newEmployeeSessionDetail.paidLeaveNumber">
+                </mat-form-field>
+            </div>
+            <!-- div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="EPF Account No."
+                           [(ngModel)]="newEmployee.epfAccountNumber">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="Pan Number"
+                           [(ngModel)]="newEmployee.panNumber">
+                </mat-form-field>
+            </div -->
+        </div>
+
         <!-- Address, Remark -->
         <div class="row">
             <div class="col-md-6">

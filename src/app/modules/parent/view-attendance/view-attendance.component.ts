@@ -86,7 +86,7 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
     }
 
     getDateColor(date: any): any {
-        let result = 'blue';
+        let result = '';
         this.attendanceStatusList.every(attendanceStatus => {
             if(attendanceStatus.dateOfAttendance === this.formatDate(date.mDate.toString(),'')) {
                 if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
