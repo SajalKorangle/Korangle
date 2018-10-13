@@ -132,7 +132,7 @@ export class User {
     champion, 123champ - 8770176906
     bhagatsingh, bhagat123 - 7974252055
     nainish, akodia123 - 9926085773
-    devendra, 12345dev - 7692947706
+    devendra, 12345dev - 9926718657
     praveen, praveen5678 - 9039720764
     rahul, tailor123 - 9584256522
 
