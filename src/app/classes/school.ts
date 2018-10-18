@@ -77,7 +77,12 @@ export class School {
                         'dbId': null,
                         'path': 'apply_leave',
                         'title': 'Apply Leave',
-                    }
+                    },
+                    {
+                        'dbId': null,
+                        'path': 'view_payment',
+                        'title': 'View Payment',
+                    },
                 ]
             });
             this.moduleList.forEach(module => {

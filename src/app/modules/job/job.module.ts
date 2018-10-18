@@ -7,6 +7,7 @@ import { JobComponent } from './job.component';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
 import { ViewAttendanceComponent } from './view-attendance/view-attendance.component';
 import { ApplyLeaveComponent } from './apply-leave/apply-leave.component';
+import { ViewPaymentComponent } from './view-payment/view-payment.component';
 
 import { JobRoutingModule } from './job.routing';
 
@@ -18,6 +19,7 @@ import { JobRoutingModule } from './job.routing';
         ViewProfileComponent,
         ViewAttendanceComponent,
         ApplyLeaveComponent,
+        ViewPaymentComponent,
 
     ],
 

@@ -13,8 +13,6 @@ export class ViewProfileComponent implements OnInit {
 
     @Input() user;
 
-    @Input() employeeId;
-
     selectedEmployee: any;
 
     busStopList = [];

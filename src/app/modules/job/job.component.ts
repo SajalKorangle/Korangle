@@ -4,6 +4,7 @@ import {DataStorage} from '../../classes/data-storage';
 @Component({
     template: '<view-profile *ngIf="user.section.subRoute===\'view_profile\'" [user]="user"></view-profile>' +
     '<view-attendance *ngIf="user.section.subRoute===\'view_attendance\'" [user]="user"></view-attendance>' +
+    '<view-payment *ngIf="user.section.subRoute===\'view_payment\'" [user]="user"></view-payment>' +
     '<apply-leave *ngIf="user.section.subRoute===\'apply_leave\'" [user]="user"></apply-leave>',
 })
 
