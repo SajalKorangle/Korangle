@@ -40,7 +40,7 @@ export class RecordPaymentServiceAdapter {
 
         this.vm.isLoading = true;
         Promise.all([
-            this.vm.salaryService.getPayslipList(request_payslip_data, this.vm.user.jwt),
+            this.vm.salaryService.getEmployeePayslips(request_payslip_data, this.vm.user.jwt),
             this.vm.salaryService.getEmployeePaymentList(request_payment_data, this.vm.user.jwt),
         ]).then(value => {
             console.log(value);

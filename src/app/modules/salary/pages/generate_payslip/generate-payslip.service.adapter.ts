@@ -98,8 +98,8 @@ export class GeneratePayslipServiceAdapter {
         this.vm.employeeDetails['numberOfUnannouncedAbsents'] = numberofUnannouncedAbsents;
         this.vm.employeeDetails['payslip'] = value[3];
         if(this.vm.employeeDetails.monthlySalary) {
-            this.vm.employeeDetails.estimatedSalary = Math.round(this.vm.employeeDetails.monthlySalary * (1 - ((numberOfUnpaidLeaves+numberofUnannouncedAbsents)/numberOfWorkingDays)));
-            this.vm.employeeDetails.amountDeductedPerUnpaidDay = Math.round(this.vm.employeeDetails.monthlySalary/numberOfWorkingDays);
+            this.vm.employeeDetails.estimatedSalary = Math.round(this.vm.employeeDetails.monthlySalary * (1 - ((numberOfUnpaidLeaves+numberofUnannouncedAbsents)/30)));
+            this.vm.employeeDetails.amountDeductedPerUnpaidDay = Math.round(this.vm.employeeDetails.monthlySalary/30);
         } else {
             this.vm.employeeDetails.estimatedSalary = 0;
             this.vm.employeeDetails.amountDeductedPerUnpaidDay = 0;

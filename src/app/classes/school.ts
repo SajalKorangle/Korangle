@@ -17,6 +17,8 @@ export class School {
     currentSessionDbId: number;
     registrationNumber: string;
 
+    headerSize: string;
+
     medium: string;
 
     role: string;
@@ -44,6 +46,8 @@ export class School {
         this.address = schoolData.schoolAddress;
         this.currentSessionDbId = schoolData.currentSessionDbId;
         this.registrationNumber = schoolData.registrationNumber;
+
+        this.headerSize = schoolData.headerSize;
 
         this.medium = schoolData.medium;
 

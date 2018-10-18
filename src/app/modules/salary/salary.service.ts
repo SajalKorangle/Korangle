@@ -8,7 +8,12 @@ import { CommonServiceRequirements } from '../../services/common-service-require
 export class SalaryService extends CommonServiceRequirements {
 
     // Payslip
-    getPayslipList(data: any, token: any): Promise<any> {
+    getSchoolPayslips(data: any, token: any): Promise<any> {
+        let url = '/salary/payslips/school/' + data['parentSchool'];
+        return super.getData(token, url);
+    }
+
+    getEmployeePayslips(data: any, token: any): Promise<any> {
         let url = '/salary/payslips/employee/' + data['parentEmployee'];
         return super.getData(token, url);
     }
@@ -39,6 +44,11 @@ export class SalaryService extends CommonServiceRequirements {
     }
 
     // Employee Payment
+    getSchoolEmployeePaymentList(data: any, token: any): Promise<any> {
+        let url = '/salary/employee-payments/school/'+data['parentSchool'];
+        return super.getData(token, url);
+    }
+
     getEmployeePaymentList(data: any, token: any): Promise<any> {
         let url = '/salary/employee-payments/employee/'+data['parentEmployee'];
         return super.getData(token, url);
@@ -53,73 +63,5 @@ export class SalaryService extends CommonServiceRequirements {
         const url = '/salary/employee-payments/' + data['id'];
         return super.deleteData(token, url);
     }
-
-    // Employee Payment
-
-    /*
-    // Employee Profile
-    createEmployeeProfile(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-profiles';
-        return super.postData(data, token, url);
-    }
-
-    getEmployeeProfile(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-profiles/' + data['id'];
-        return super.getData(token, url);
-    }
-
-    getEmployeeProfileList(data: any, token: any): Promise<any> {
-        const url = '/employee/school/' + data['parentSchool'] + '/employee-profiles';
-        return super.getData(token, url);
-    }
-
-    updateEmployeeProfile(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-profiles/' + data['id'];
-        return super.putData(data, token, url);
-    }
-
-    // Employee Mini Profile
-    getEmployeeMiniProfileList(data: any, token: any): Promise<any> {
-        const url = '/employee/school/' + data['parentSchool'] + '/employee-mini-profiles';
-        return super.getData(token, url);
-    }
-
-    // Employee Session Details
-    createEmployeeSessionDetail(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-session-details';
-        return super.postData(data, token, url);
-    }
-
-    updateEmployeeSessionDetail(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-session-details/' + data['id'];
-        return super.postData(data, token, url);
-    }
-
-    getEmployeeSessionDetail(data: any, token: any): Promise<any> {
-        const url = '/employee/' + data['parentEmployee'] + '/employee-session-details?sessionId=' + data['sessionId'];
-        return super.getData(token, url);
-    }
-
-    getEmployeeSessionDetailList(data: any, token: any): Promise<any> {
-        const url = '/employee/school/' + data['parentSchool'] + '/employee-session-details?sessionId=' + data['sessionId'];
-        return super.getData(token, url);
-    }
-
-    // Employee Permission
-    getEmployeePermissionList(data: any, token: any): Promise<any> {
-        const url = '/employee/' + data['parentEmployee'] + '/employee-permissions';
-        return super.getData(token, url)
-    }
-
-    addEmployeePermission(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-permissions';
-        return super.postData(data, token, url);
-    }
-
-    deleteEmployeePermission(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-permissions/' + data['id'];
-        return super.deleteData(token, url);
-    }
-    */
 
 }

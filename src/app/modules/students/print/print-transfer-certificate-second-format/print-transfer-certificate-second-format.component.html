@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <ng-container *ngIf="user.username=='eklavya' || user.username=='champion' || user.username=='madhav'">
+        <ng-container *ngIf="user.activeSchool.headerSize==='SMALL'">
             <img src="{{user.activeSchool.profileImage}}"
                  style="border-radius: 2px; position: absolute;
          top: 40px; left: 20px;
@@ -45,10 +45,7 @@
             </div>
         </ng-container>
 
-        <ng-container *ngIf="user.username=='nainish'
-                            || user.username=='praveen'
-                            || user.username=='bhagatsingh'
-                            || user.username=='devendra'">
+        <ng-container *ngIf="user.activeSchool.headerSize==='BIG'">
             <!-- Background Watermark -->
             <img src="{{user.activeSchool.profileImage}}"
                  style="border-radius: 2px; position: absolute;

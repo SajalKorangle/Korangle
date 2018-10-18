@@ -8,6 +8,7 @@ import { SalaryService } from './salary.service';
 
 import { GeneratePayslipComponent } from './pages/generate_payslip/generate-payslip.component';
 import { RecordPaymentComponent } from './pages/record_payment/record-payment.component';
+import { ViewRecordComponent } from './pages/view_record/view-record.component';
 
 @NgModule({
     declarations: [
@@ -15,6 +16,7 @@ import { RecordPaymentComponent } from './pages/record_payment/record-payment.co
         SalaryComponent,
         GeneratePayslipComponent,
         RecordPaymentComponent,
+        ViewRecordComponent,
 
     ],
 
