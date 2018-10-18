@@ -63,6 +63,14 @@ class School(models.Model):
     )
     medium = models.CharField(max_length=15, choices=MEDIUM, null=False, default=ENGLISH)
 
+    HEADER_SIZE_BIG = 'BIG'
+    HEADER_SIZE_SMALL = 'SMALL'
+    HEADER_SIZE = (
+        (HEADER_SIZE_BIG, 'Big'),
+        (HEADER_SIZE_SMALL, 'Small'),
+    )
+    headerSize = models.CharField(max_length=15, choices=HEADER_SIZE, null=False, default=HEADER_SIZE_SMALL)
+
 
     def get_upload_to(self, attname):
             return 'school/id/{0}'.format(self.id)

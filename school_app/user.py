@@ -225,6 +225,7 @@ def get_school_data_by_object(school_object):
     school_data['currentSessionDbId'] = school_object.currentSession.id
     school_data['name'] = school_object.name
     school_data['registrationNumber'] = school_object.registrationNumber
+    school_data['headerSize'] = school_object.headerSize
 
     school_data['medium'] = school_object.medium
 

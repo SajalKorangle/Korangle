@@ -4,16 +4,43 @@ from parent_test import ParentTestCase
 # Factory
 from salary_app.factory.employee_payment import EmployeePaymentFactory
 from employee_app.factory.employee import EmployeeFactory
+from school_app.factory.school import SchoolFactory
 
 # Business
-from salary_app.business.employee_payment \
-    import get_employee_payment_list, create_employee_payment, delete_employee_payment
+from salary_app.business.employee_payment import get_employee_payment_list, create_employee_payment, \
+    delete_employee_payment, get_school_employee_payment_list
 
 # Model
 from salary_app.models import EmployeePayment
 
 
 class EmployeePaymentTestCase(ParentTestCase):
+
+    def test_get_school_employee_payment_list(self):
+
+        school_object = SchoolFactory()
+
+        employee_object_one = EmployeeFactory(parentSchool=school_object)
+        employee_object_two = EmployeeFactory(parentSchool=school_object)
+
+        employee_payment_list = []
+
+        employee_payment_list.append(EmployeePaymentFactory(parentEmployee=employee_object_one, amount=1000))
+        employee_payment_list.append(EmployeePaymentFactory(parentEmployee=employee_object_two, amount=2000))
+
+        data = {
+            'parentSchool': school_object.id,
+        }
+
+        response = get_school_employee_payment_list(data)
+
+        self.assertEqual(len(response), 2)
+
+        index = 0
+        for employee_payment in employee_payment_list:
+            employee_payment_response = response[index]
+            self.assertEqual(employee_payment_response['id'], employee_payment.id)
+            index += 1
 
     def test_get_employee_payment_list(self):
 

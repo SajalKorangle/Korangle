@@ -10,6 +10,18 @@ class EmployeePaymentModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+def get_school_employee_payment_list(data):
+
+    employee_payment_list = []
+
+    for employee_payment_object in \
+            EmployeePayment.objects.filter(parentEmployee__parentSchool_id=data['parentSchool'])\
+                    .order_by('dateOfPayment'):
+        employee_payment_list.append(EmployeePaymentModelSerializer(employee_payment_object).data)
+
+    return employee_payment_list
+
+
 def get_employee_payment_list(data):
 
     employee_payment_list = []

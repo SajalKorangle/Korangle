@@ -10,6 +10,18 @@ class PayslipModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+def get_school_payslip_list(data):
+
+    payslip_list = []
+
+    for payslip_object in \
+            Payslip.objects.filter(parentEmployee__parentSchool_id=data['parentSchool'])\
+                    .order_by('dateOfGeneration'):
+        payslip_list.append(PayslipModelSerializer(payslip_object).data)
+
+    return payslip_list
+
+
 def get_payslip_list(data):
 
     payslip_list = []
