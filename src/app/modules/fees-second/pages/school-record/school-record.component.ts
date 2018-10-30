@@ -73,7 +73,7 @@ export class SchoolRecordComponent implements OnInit {
         this.classSectionList = classSectionList;
         this.classSectionList.forEach(classs => {
             classs.sectionList.forEach(section => {
-                section.selected = false;
+                section.selected = true;
                 section.containsStudent = false;
             });
         });
@@ -94,7 +94,7 @@ export class SchoolRecordComponent implements OnInit {
     getFilteredStudentTotalFeeDues(): any {
         let totalFeeDues = 0;
         this.studentFeeDuesList.forEach(student => {
-            if (student.sectionObject.selected) {
+            if (student.sectionObject.selected && student.parentTransferCertificate === null) {
                 totalFeeDues += student.feesDue;
             }
         });
@@ -103,7 +103,7 @@ export class SchoolRecordComponent implements OnInit {
 
     getFilteredStudentFeeDuesList(): any {
         return this.studentFeeDuesList.filter(student => {
-            if (student.sectionObject.selected) {
+            if (student.sectionObject.selected && student.parentTransferCertificate === null) {
                 return true;
             } else {
                 return false;
