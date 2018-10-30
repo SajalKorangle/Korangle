@@ -10,3 +10,4 @@ helloworld_project/media
 staticpages/.*
 sms_file
 backupdb
+copydatabase.sh
