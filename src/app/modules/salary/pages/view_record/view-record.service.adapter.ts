@@ -23,7 +23,9 @@ export class ViewRecordServiceAdapter {
             this.vm.salaryService.getSchoolEmployeePaymentList(data, this.vm.user.jwt),
         ]).then(value => {
             console.log(value);
-            this.vm.employeeList = value[0];
+            this.vm.employeeList = value[0].filter(employee => {
+                return employee.dateOfLeaving===null;
+            });
             this.vm.employeeList.forEach(employee => {
                 employee['recordList'] = [];
                 employee['number'] = 5;

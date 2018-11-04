@@ -54,7 +54,9 @@ export class ViewAllComponent implements OnInit {
         this.isLoading = true;
         this.employeeService.getEmployeeProfileList(data, this.user.jwt).then(employeeProfileList => {
             this.isLoading = false;
-            this.employeeProfileList = employeeProfileList;
+            this.employeeProfileList = employeeProfileList.filter(employee => {
+                return employee.dateOfLeaving === null;
+            });
         }, error => {
             this.isLoading = false;
         });

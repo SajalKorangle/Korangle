@@ -66,7 +66,9 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     }
 
     initializeEmployeeList(employeeList: any): void {
-        this.employeeList = employeeList;
+        this.employeeList = employeeList.filter(employee => {
+            return employee.dateOfLeaving===null;
+        });
     }
 
 

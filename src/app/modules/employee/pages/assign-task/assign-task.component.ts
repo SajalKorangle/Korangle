@@ -78,7 +78,9 @@ export class AssignTaskComponent implements OnInit {
         if (value === '') {
             return [];
         }
-        return this.employeeList.filter(employee => employee.name.toLowerCase().indexOf(value.toLowerCase()) === 0 );
+        return this.employeeList.filter(employee => {
+            return employee.name.toLowerCase().indexOf(value.toLowerCase()) === 0 && employee.dateOfLeaving === null;
+        });
     }
 
     displayFn(employee?: any) {

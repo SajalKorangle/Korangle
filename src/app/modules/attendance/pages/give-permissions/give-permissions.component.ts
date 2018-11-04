@@ -67,7 +67,9 @@ export class GivePermissionsComponent implements OnInit {
     }
 
     initializeEmployeeList(employeeList: any): void {
-        this.employeeList = employeeList;
+        this.employeeList = employeeList.filter(employee => {
+            return employee.dateOfLeaving===null;
+        });
         this.filteredEmployeeList = this.myControl.valueChanges.pipe(
             map(value => typeof value === 'string' ? value: (value as any).name),
             map(value => this.filter(value))

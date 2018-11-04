@@ -296,7 +296,9 @@ export class SendSmsComponent implements OnInit {
     }
 
     initializeEmployeeProfileList(employeeProfileList: any): void {
-        this.employeeProfileList = employeeProfileList;
+        this.employeeProfileList = employeeProfileList.filter(employee => {
+            return employee.dateOfLeaving===null;
+        });
         this.employeeProfileList.forEach(employee => {
             employee['selected'] = false;
             employee['validMobileNumber'] = this.isMobileNumberValid(employee.mobileNumber);

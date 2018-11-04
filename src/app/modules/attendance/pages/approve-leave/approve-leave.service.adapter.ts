@@ -29,7 +29,9 @@ export class ApproveLeaveServiceAdapter {
             this.vm.employeeService.getEmployeeMiniProfileList(request_employee_mini_profile_data, this.vm.user.jwt),
             this.vm.employeeService.getEmployeeSessionDetailList(request_employee_session_details_data, this.vm.user.jwt),
         ]).then(value => {
-            this.vm.employeeMiniProfileList = value[0];
+            this.vm.employeeMiniProfileList = value[0].filter(employee => {
+                return employee.dateOfLeaving===null;
+            });
             this.vm.employeeSessionList = value[1];
             let data = {
                 employeeIdList: this.getEmployeeIdList(),

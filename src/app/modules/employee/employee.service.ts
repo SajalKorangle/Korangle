@@ -42,7 +42,7 @@ export class EmployeeService extends CommonServiceRequirements {
 
     updateEmployeeSessionDetail(data: any, token: any): Promise<any> {
         const url = '/employee/employee-session-details/' + data['id'];
-        return super.postData(data, token, url);
+        return super.putData(data, token, url);
     }
 
     getEmployeeSessionDetail(data: any, token: any): Promise<any> {

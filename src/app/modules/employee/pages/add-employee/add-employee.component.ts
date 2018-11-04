@@ -52,6 +52,10 @@ export class AddEmployeeComponent implements OnInit {
             this.newEmployee.dateOfJoining = null;
         }
 
+        if (this.newEmployee.dateOfLeaving === undefined || this.newEmployee.dateOfLeaving === '') {
+            this.newEmployee.dateOfLeaving = null;
+        }
+
         if (this.newEmployee.mobileNumber === undefined || this.newEmployee.mobileNumber === '') {
             this.newEmployee.mobileNumber = null;
             alert('Mobile number is required');
