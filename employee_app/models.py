@@ -63,6 +63,9 @@ class Employee(models.Model):
     # Monthly Salary
     monthlySalary = models.IntegerField(null=True)
 
+    # Joining Date
+    dateOfLeaving = models.DateField(null=True)
+
     # School Id
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
 

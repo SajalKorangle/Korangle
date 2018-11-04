@@ -12,6 +12,7 @@ def get_employee_mini_profile_list(data):
             'name': employee_object.name,
             'employeeNumber': employee_object.employeeNumber,
             'mobileNumber': employee_object.mobileNumber,
+            'dateOfLeaving': employee_object.dateOfLeaving,
         }
         employee_list.append(tempEmployee)
 

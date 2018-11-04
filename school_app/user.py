@@ -90,7 +90,7 @@ def get_school_list(user):
                 school_data['studentList'].append(get_student_data(student_object))'''
 
     # Employee User
-    for employee_object in Employee.objects.filter(mobileNumber=user.username).select_related('parentSchool'):
+    for employee_object in Employee.objects.filter(mobileNumber=user.username,dateOfLeaving=None).select_related('parentSchool'):
 
         school_data = get_data_from_school_list(school_list, employee_object.parentSchool_id)
 

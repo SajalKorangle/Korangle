@@ -35,4 +35,5 @@ class EmployeeMiniProfileTestCase(ParentTestCase):
             self.assertEqual(employee_response['name'], employee.name)
             self.assertEqual(employee_response['employeeNumber'], employee.employeeNumber)
             self.assertEqual(employee_response['mobileNumber'], employee.mobileNumber)
+            self.assertEqual(employee_response['dateOfLeaving'], employee.dateOfLeaving)
             index += 1
