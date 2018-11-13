@@ -64,7 +64,10 @@ export class ViewAllComponent implements OnInit {
 
     // classSectionStudentList = [];
 
-    classSectionList = [];
+    // classSectionList = [];
+    classList = [];
+    sectionList = [];
+
     studentFullProfileList = [];
 
     isLoading = false;
@@ -86,19 +89,22 @@ export class ViewAllComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
+            // this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
+            this.classService.getClassList(this.user.jwt),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
+            this.classService.getSectionList(this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
-            this.initializeClassSectionList(value[0]);
+            this.initializeClassList(value[0]);
             this.initializeStudentFullProfileList(value[1]);
+            this.initializeSectionList(value[2]);
         }, error => {
             this.isLoading = false;
         });
 
     }
 
-    initializeClassSectionList(classSectionList: any): void {
+    /*initializeClassSectionList(classSectionList: any): void {
         this.classSectionList = classSectionList;
         this.classSectionList.forEach(classs => {
             classs.sectionList.forEach(section => {
@@ -106,6 +112,14 @@ export class ViewAllComponent implements OnInit {
                 section.containsStudent = false;
             });
         });
+    }*/
+
+    initializeClassList(classList: any): void {
+        this.classList = classList;
+    }
+
+    initializeSectionList(sectionList: any): void {
+        this.sectionList = sectionList;
     }
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {

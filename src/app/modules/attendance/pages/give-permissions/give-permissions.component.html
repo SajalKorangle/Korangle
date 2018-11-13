@@ -26,7 +26,8 @@
 
             <div class="row" *ngFor="let attendancePermission of selectedEmployeeAttendancePermissionList">
                 <div class="col-md-3">
-                    {{showClassSectionName(attendancePermission.parentSection)}}
+                    {{showClassName(attendancePermission.parentClass)}},
+                    {{showSectionName(attendancePermission.parentDivision)}}
                 </div>
                 <div class="col-md-3">
                     <button type="submit"
@@ -43,25 +44,25 @@
                                     #selectClassSection
                                     [ngModel]="selectedClass"
                                     (ngModelChange)="selectedClass=$event;">
-                            <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
-                                {{classs.name}}
-                                <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
+                            <mat-option *ngFor='let classs of classList;' [value]="classs">
+                                {{classs.name}}, {{selectedSection.name}}
+                                <!-- span *ngIf="classs.dbId != classs.sectionList[0].dbId">
                                             , {{classs.selectedSection.name}}
-                                        </span>
+                                        </span -->
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button class="btn"
                             style="padding: 2px 11px; background-color: transparent;"
-                            matTooltip="Choose Section (default: Section - A)"
+                            matTooltip="Choose Section"
                             mat-icon-button
                             [matMenuTriggerFor]="classSectionMenu">
                         <i class="material-icons" style="color: black;">expand_more</i>
                     </button>
                     <mat-menu #classSectionMenu="matMenu">
-                        <button *ngFor="let section of selectedClass.sectionList"
+                        <button *ngFor="let section of sectionList"
                                 mat-menu-item
-                                (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
+                                (click)="selectClassSection.open(); selectClassSection.close(); selectedSection=section">
                             {{section.name}}
                         </button>
                     </mat-menu>

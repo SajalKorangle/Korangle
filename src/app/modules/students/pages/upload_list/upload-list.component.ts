@@ -152,8 +152,12 @@ export class UploadListComponent implements OnInit {
 
     busStopList: any;
 
-    classSectionList = [];
+    // classSectionList = [];
     sessionList = [];
+
+    classList = [];
+    sectionList = [];
+
 
     selectedSession: any;
 
@@ -178,13 +182,15 @@ export class UploadListComponent implements OnInit {
         this.isLoading = true;
         Promise.all([
             this.vehicleService.getBusStopList(request_bus_stop_data, this.user.jwt),
-            this.classService.getClassSectionList(request_class_data, this.user.jwt),
+            this.classService.getClassList(this.user.jwt),
             this.schoolService.getSessionList(this.user.jwt),
+            this.classService.getSectionList(this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
             this.busStopList = value[0];
-            this.classSectionList = value[1];
+            this.classList = value[1];
             this.populateSessionList(value[2]);
+            this.sectionList = value[3];
             this.initializeTemplate();
         }, error => {
             this.isLoading = false;
@@ -202,7 +208,7 @@ export class UploadListComponent implements OnInit {
         });
     }
 
-    handleSessionChange(): void {
+    /*handleSessionChange(): void {
         this.studentList = null;
         let request_class_data = {
             sessionDbId: this.selectedSession.dbId,
@@ -214,7 +220,7 @@ export class UploadListComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
-    }
+    }*/
 
     initializeTemplate(): void {
         this.template = [
@@ -527,7 +533,7 @@ export class UploadListComponent implements OnInit {
             'name': student[0],
             'fathersName': student[1],
             'motherName': student[2],
-            'parentSection': this.getParentSection(student[3], student[4]),
+            'parentDivision': this.getParentSection(student[4]),
             'mobileNumber': parseInt(student[5]),
             'rollNumber': student[6],
             'scholarNumber': student[7],
@@ -550,6 +556,8 @@ export class UploadListComponent implements OnInit {
             'address': student[24],
             'remark': student[25],
             'parentSchool': this.user.activeSchool.dbId,
+            'parentClass': this.getParentClass(student[3]),
+            'parentSession': this.selectedSession.dbId,
         };
         return data;
     }
@@ -635,7 +643,7 @@ export class UploadListComponent implements OnInit {
 
     }
 
-    getParentSection(className: any, sectionName: any): any {
+    /*getParentSection(className: any, sectionName: any): any {
         if (sectionName === undefined) {
             sectionName = 'Section - A';
         }
@@ -649,6 +657,49 @@ export class UploadListComponent implements OnInit {
                     }
                     return true;
                 });
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }*/
+
+    getParentSection(sectionName: any): any {
+        if (sectionName === undefined) {
+            sectionName = 'Section - A';
+        }
+        let result = null;
+        this.sectionList.every(section => {
+            if (section.name === sectionName) {
+                result = section.id;
+                return false;
+            }
+            return true;
+        });
+        /*this.classSectionList.every(classs => {
+            if (classs.name === className) {
+                classs.sectionList.every(section => {
+                    if (section.name === sectionName) {
+                        result = section.dbId;
+                        return false;
+                    }
+                    return true;
+                });
+                return false;
+            }
+            return true;
+        });*/
+        return result;
+    }
+
+    getParentClass(className: any): any {
+        if (className === undefined) {
+            className = 'Class - 12';
+        }
+        let result = null;
+        this.classList.every(classs => {
+            if (classs.name === className) {
+                result = classs.dbId;
                 return false;
             }
             return true;

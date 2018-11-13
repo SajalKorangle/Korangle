@@ -14,7 +14,11 @@ export class ClassService extends CommonServiceRequirements {
     }
 
     getClassList(token: any): Promise<any> {
-        return super.getData(token, '/class/classes')
+        return super.getData(token, '/class/classes');
+    }
+
+    getSectionList(token: any): Promise<any> {
+        return super.getData(token, '/class/sections');
     }
 
 }

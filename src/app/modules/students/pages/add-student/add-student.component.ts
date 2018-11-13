@@ -18,9 +18,13 @@ export class AddStudentComponent implements OnInit {
     @Input() user;
 
     selectedClass: any;
+    selectedSection: any;
 
     newStudent: Student;
-    classSectionList = [];
+
+    // classSectionList = [];
+    classList = [];
+    sectionList = [];
 
     busStopList = [];
 
@@ -39,7 +43,17 @@ export class AddStudentComponent implements OnInit {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
         };
 
-        this.classService.getClassSectionList(data, this.user.jwt).then(
+        Promise.all([
+            this.classService.getClassList(this.user.jwt),
+            this.classService.getSectionList(this.user.jwt),
+        ]).then(value => {
+            this.classList = value[0];
+            this.sectionList = value[1];
+            this.selectedClass = this.classList[0];
+            this.selectedSection = this.sectionList[0];
+        });
+
+        /*this.classService.getClassSectionList(data, this.user.jwt).then(
             classSectionList => {
                 this.isLoading = false;
                 this.classSectionList = classSectionList;
@@ -48,7 +62,7 @@ export class AddStudentComponent implements OnInit {
                 });
                 this.selectedClass = this.classSectionList[0];
             }
-        );
+        );*/
 
         const dataForBusStop = {
             schoolDbId: this.user.activeSchool.dbId,
@@ -89,7 +103,12 @@ export class AddStudentComponent implements OnInit {
             alert('Father\'s Name should be populated');
             return;
         }
-        this.newStudent.sectionDbId = this.selectedClass.selectedSection.dbId;
+        this.newStudent.classDbId = this.selectedClass.dbId;
+        if (this.newStudent.classDbId === undefined || this.newStudent.classDbId === 0) {
+            alert('Class should be selected');
+            return;
+        }
+        this.newStudent.sectionDbId = this.selectedSection.dbId;
         if (this.newStudent.sectionDbId === undefined || this.newStudent.sectionDbId === 0) {
             alert('Class should be selected');
             return;
@@ -101,6 +120,8 @@ export class AddStudentComponent implements OnInit {
         if (this.newStudent.scholarNumber === undefined) { this.newStudent.scholarNumber = 0; }
 
         this.newStudent.schoolDbId = this.user.activeSchool.dbId;
+
+        this.newStudent.sessionDbId = this.user.activeSchool.currentSessionDbId;
 
         this.isLoading = true;
 

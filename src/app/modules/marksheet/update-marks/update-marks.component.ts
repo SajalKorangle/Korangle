@@ -51,7 +51,7 @@ export class UpdateMarksComponent implements OnInit {
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
-        }
+        };
         this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 this.isLoading = false;
@@ -108,6 +108,8 @@ export class UpdateMarksComponent implements OnInit {
         const data = {
             studentDbId: this.selectedStudent.dbId,
             sectionDbId: this.selectedSection.dbId,
+            classDbId: this.selectedClass.dbId,
+            sessionDbId: this.user.activeSchool.currentSessionDbId,
         };
         this.marksheetService.getMarksUrl(data, this.user.jwt).then(
             data => {
@@ -140,6 +142,8 @@ export class UpdateMarksComponent implements OnInit {
         let data = {
             studentDbId: this.selectedStudent.dbId,
             sectionDbId: this.selectedSection.dbId,
+            classDbId: this.selectedClass.dbId,
+            sessionDbId: this.user.activeSchool.currentSessionDbId,
             result: [],
             attendance: this.currentStudent.attendance,
         };

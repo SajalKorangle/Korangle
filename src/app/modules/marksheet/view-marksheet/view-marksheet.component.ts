@@ -45,7 +45,7 @@ export class ViewMarksheetComponent implements OnInit {
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
-        }
+        };
         this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
             classSectionStudentList => {
                 this.isListLoading = false;
@@ -56,6 +56,7 @@ export class ViewMarksheetComponent implements OnInit {
                             // studentTest.copyTest(student);
                             studentTest.copy(student);
                             studentTest.className = classs.name;
+                            studentTest.classDbId = classs.dbId;
                             studentTest.sectionName = section.name;
                             studentTest.sectionDbId = section.dbId;
                             if (classs.sectionList.length > 1) {
@@ -106,6 +107,8 @@ export class ViewMarksheetComponent implements OnInit {
         const data = {
             studentDbId: student.dbId,
             sectionDbId: student.sectionDbId,
+            classDbId: student.classDbId,
+            sessionDbId: this.user.activeSchool.currentSessionDbId,
         };
         this.marksheetService.getStudentMarksheet(data, this.user.jwt).then(
             marksheet => {

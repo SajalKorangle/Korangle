@@ -41,6 +41,9 @@ export class Student {
 
     parentTransferCertificate: number;
 
+    classDbId: number;
+    sessionDbId: number;
+
     copy(student: any) {
 
         this.profileImage = student.profileImage;
@@ -78,6 +81,9 @@ export class Student {
         this.dateOfAdmission = student.dateOfAdmission;
 
         this.parentTransferCertificate = student.parentTransferCertificate;
+
+        this.classDbId = student.classDbId;
+        this.sessionDbId = student.sessionDbId;
 
     }
 

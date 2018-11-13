@@ -11,6 +11,7 @@ class Result {
 export class StudentTest extends Student {
 
     className: string;
+    classDbId: number;
     sectionName: string;
     sectionDbId: number;
     showSectionName = false;
@@ -22,6 +23,7 @@ export class StudentTest extends Student {
 
     copyTest(studentTest: any) {
         this.className = studentTest.className;
+        this.classDbId = studentTest.classDbId;
         this.sectionName = studentTest.sectionName;
         this.sectionDbId = studentTest.sectionDbId;
         this.scholarNumber = studentTest.scholarNumber;

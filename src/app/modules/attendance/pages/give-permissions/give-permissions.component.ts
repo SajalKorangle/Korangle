@@ -25,8 +25,12 @@ export class GivePermissionsComponent implements OnInit {
     moduleList = [];
 
     selectedClass: any;
+    selectedSection: any;
 
-    classSectionList = [];
+    classList = [];
+    sectionList = [];
+
+    // classSectionList = [];
 
     filteredEmployeeList: any;
 
@@ -55,11 +59,15 @@ export class GivePermissionsComponent implements OnInit {
 
         Promise.all([
             this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
-            this.classService.getClassSectionList(request_class_data, this.user.jwt),
+            // this.classService.getClassSectionList(request_class_data, this.user.jwt),
+            this.classService.getClassList(this.user.jwt),
+            this.classService.getSectionList(this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
             this.initializeEmployeeList(value[0]);
-            this.initializeClassSectionList(value[1]);
+            this.initializeClassList(value[1]);
+            this.initializeSectionList(value[2]);
+            // this.initializeClassSectionList(value[1]);
         }, error => {
             this.isLoading = false;
         });
@@ -76,13 +84,23 @@ export class GivePermissionsComponent implements OnInit {
         );
     }
 
-    initializeClassSectionList(classSectionList: any): void {
+    initializeClassList(classList: any): void {
+        this.classList = classList;
+        this.selectedClass = this.classList[0];
+    }
+
+    initializeSectionList(sectionList: any): void {
+        this.sectionList = sectionList;
+        this.selectedSection = this.sectionList[0];
+    }
+
+    /*initializeClassSectionList(classSectionList: any): void {
         this.classSectionList = classSectionList;
         this.classSectionList.forEach( classs => {
             classs.selectedSection = classs.sectionList[0];
         });
         this.selectedClass = this.classSectionList[0];
-    }
+    }*/
 
     filter(value: any): any {
         if (value === '') {
@@ -120,7 +138,8 @@ export class GivePermissionsComponent implements OnInit {
     showAddButton(): boolean {
         let result = true;
         this.selectedEmployeeAttendancePermissionList.every(attendancePermission => {
-            if (attendancePermission.parentSection === this.selectedClass.selectedSection.dbId) {
+            if (attendancePermission.parentDivision === this.selectedSection.id
+                && attendancePermission.parentClass === this.selectedClass.dbId) {
                 result = false;
                 return false;
             }
@@ -129,7 +148,7 @@ export class GivePermissionsComponent implements OnInit {
         return result;
     }
 
-    showClassSectionName(sectionDbId: number): any {
+    /*showClassSectionName(sectionDbId: number): any {
         let result = '';
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
@@ -145,13 +164,40 @@ export class GivePermissionsComponent implements OnInit {
             return true;
         });
         return result;
+    }*/
+
+    showClassName(classDbId: number): any {
+        let result = '';
+        this.classList.every(classs => {
+            if(classs.dbId === classDbId) {
+                result = classs.name;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    showSectionName(sectionDbId: number): any {
+        let result = '';
+        this.sectionList.every(section => {
+            if (section.id === sectionDbId) {
+                result = section.name;
+                return false;
+            }
+            return true;
+        });
+        return result;
     }
 
     addAttendancePermission(): void {
 
         let data = {
             parentEmployee: this.selectedEmployee.id,
-            parentSection: this.selectedClass.selectedSection.dbId,
+            parentSession: this.user.activeSchool.currentSessionDbId,
+            parentClass: this.selectedClass.dbId,
+            parentDivision: this.selectedSection.id,
+            // parentSection: this.selectedClass.selectedSection.dbId,
         };
 
         this.isLoading = true;

@@ -134,6 +134,8 @@ export class UpdateProfileComponent implements OnInit {
             alert('Number of digits in Aadhar No. should be 12');
             return;
         }
+        this.currentStudent.classDbId = this.selectedClass.dbId;
+        this.currentStudent.sessionDbId = this.user.activeSchool.currentSessionDbId;
         this.isLoading = true;
         this.studentService.updateStudentProfileOld(this.currentStudent, this.user.jwt).then(
             student => {
