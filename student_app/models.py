@@ -2,7 +2,7 @@ from django.db import models
 
 from school_app.model.models import BusStop, Session, School
 
-from class_app.models import Section
+from class_app.models import Section, Class, Division
 
 from django.contrib.auth.models import User
 
@@ -109,30 +109,30 @@ class Student(models.Model):
 
     def get_section_id(self, session_object):
         return self.studentsection_set\
-            .get(parentSection__parentClassSession__parentSession=session_object).parentSection.id
+            .get(parentSession=session_object).parentDivision.id
 
     def get_section_name(self, session_object):
         return self.studentsection_set\
-            .get(parentSection__parentClassSession__parentSession=session_object).parentSection.name
+            .get(parentSession=session_object).parentDivision.name
 
     def get_class_object(self, session_object):
-        return self.studentsection_set.get(parentSection__parentClassSession__parentSession=session_object)\
-            .parentSection.parentClassSession.parentClass
+        return self.studentsection_set.get(parentSession=session_object)\
+            .parentClass
 
     def get_class_id(self, session_object):
         return self.studentsection_set\
-            .get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.id
+            .get(parentSession=session_object).parentClass.id
 
     def get_class_name(self, session_object):
         try:
             return self.studentsection_set \
-                .get(parentSection__parentClassSession__parentSession=session_object).parentSection.parentClassSession.parentClass.name
+                .get(parentSession=session_object).parentClass.name
         except ObjectDoesNotExist:
             return None
 
     def get_rollNumber(self, session_object):
         return self.studentsection_set \
-            .get(parentSection__parentClassSession__parentSession=session_object).rollNumber
+            .get(parentSession=session_object).rollNumber
 
     def save(self, profileImageUpdation = False, *args, **kwargs):
         super(Student, self).save(*args, **kwargs)
@@ -197,9 +197,16 @@ class Student(models.Model):
 class StudentSection(models.Model):
 
     parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
-    parentSection = models.ForeignKey(Section, on_delete=models.PROTECT, default=0, verbose_name='parentSection')
+    '''parentSection = models.ForeignKey(Section, on_delete=models.PROTECT, default=0, verbose_name='parentSection')'''
+
+    parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentClass')
+    parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
+
     rollNumber = models.TextField(null=True)
     attendance = models.IntegerField(null=True)
 
     class Meta:
         db_table = 'student_section'
+        unique_together = ('parentStudent', 'parentClass', 'parentSession')
+        unique_together = ('parentStudent', 'parentDivision', 'parentSession')

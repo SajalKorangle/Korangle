@@ -43,3 +43,15 @@ class Section(models.Model):
 
     class Meta:
         db_table = 'section'
+
+
+class Division(models.Model):
+    name = models.TextField()
+    orderNumber = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'division'
+

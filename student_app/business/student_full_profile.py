@@ -38,7 +38,10 @@ def create_student_full_profile(student):
         student_object.save()
         student_section_data = {
             'parentStudent': student_object.data['id'],
-            'parentSection': student['parentSection'],
+            'parentDivision': student['parentDivision'],
+            'parentClass': student['parentClass'],
+            'parentSession': student['parentSession'],
+            'rollNumber': student['rollNumber'],
         }
         response = create_student_section(student_section_data)
         if response['status'] == 'success':
@@ -116,10 +119,12 @@ def get_student_full_profile(student_section_object):
 
     student_data['dateOfAdmission'] = student_object.dateOfAdmission
 
-    student_data['sectionDbId'] = student_section_object.parentSection.id
-    student_data['sectionName'] = student_section_object.parentSection.name
-    student_data['className'] = student_section_object.parentSection.parentClassSession.parentClass.name
-    student_data['classDbId'] = student_section_object.parentSection.parentClassSession.parentClass.id
+    # student_data['sectionDbId'] = student_section_object.parentSection.id
+    # student_data['sectionName'] = student_section_object.parentSection.name
+    student_data['sectionDbId'] = student_section_object.parentDivision.id
+    student_data['sectionName'] = student_section_object.parentDivision.name
+    student_data['className'] = student_section_object.parentClass.name
+    student_data['classDbId'] = student_section_object.parentClass.id
 
     return student_data
 
@@ -128,7 +133,7 @@ def get_student_full_profile_by_session_id(data):
 
     student_section_object = \
         StudentSection.objects.get(parentStudent_id=data['studentDbId'],
-                                   parentSection__parentClassSession__parentSession_id=data['sessionDbId'])
+                                   parentSession_id=data['sessionDbId'])
 
     return get_student_full_profile(student_section_object)
 
@@ -139,9 +144,9 @@ def get_student_full_profile_by_school_and_session_id(data):
 
     for student_section_object in \
         StudentSection.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
-                                      parentSection__parentClassSession__parentSession_id=data['sessionDbId']) \
-        .order_by('parentSection__parentClassSession__parentClass__orderNumber', 'parentSection__orderNumber', 'parentStudent__name') \
-        .select_related('parentStudent', 'parentSection__parentClassSession__parentClass'):
+                                      parentSession_id=data['sessionDbId']) \
+        .order_by('parentClass__orderNumber', 'parentDivision__orderNumber', 'parentStudent__name') \
+        .select_related('parentStudent', 'parentClass', 'parentDivision'):
 
         student_list.append(get_student_full_profile(student_section_object))
 

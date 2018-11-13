@@ -26,12 +26,23 @@ def create_student_section_list(data):
 
     for student_data in data['studentList']:
 
-        student_section_object = StudentSection(parentStudent_id=student_data['dbId'],
-                                                parentSection_id=data['sectionDbId'])
+        data = {
+            'parentStudent': student_data['dbId'],
+            'parentDivision': data['sectionDbId'],
+            'parentClass': student_data['classDbId'],
+            'parentSession': student_data['parentSession'],
+            'rollNumber': None,
+        }
+
+        create_student_section(data)
+
+        '''student_section_object = StudentSection(parentStudent_id=student_data['dbId'],
+                                                parentDivision_id=data['sectionDbId'],
+                                                parentClass_id=)
         student_section_object.save()
 
         initialize_student_fees(student_section_object.parentStudent,
-                                student_section_object.parentSection.parentClassSession.parentSession)
+                                student_section_object.parentSession)'''
 
 
 def create_student_section(data):
@@ -41,7 +52,7 @@ def create_student_section(data):
         student_section_serializer.save()
         student_section_object = StudentSection.objects.get(id=student_section_serializer.data['id'])
         initialize_student_fees(student_section_object.parentStudent,
-                                student_section_object.parentSection.parentClassSession.parentSession)
+                                student_section_object.parentSession)
         return {
             'status': 'success',
             'message': 'Student added in class successfully',

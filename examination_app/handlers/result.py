@@ -19,7 +19,9 @@ def get_section_student_result(data):
     response['scholarNumber'] = student_object.scholarNumber
 
     response['result'] = []
-    for test_object in Test.objects.filter(parentSection_id=data['sectionDbId'],
+    for test_object in Test.objects.filter(parentDivision_id=data['sectionDbId'],
+                                           parentClass_id=data['classDbId'],
+                                           parentSession_id=data['sessionDbId'],
                                            parentSchool=student_object.parentSchool).order_by('parentSubject__orderNumber'):
         tempResult = {}
         tempResult['testDbId'] = test_object.id
@@ -34,7 +36,10 @@ def get_section_student_result(data):
 
         response['result'].append(tempResult)
 
-    response['attendance'] = StudentSection.objects.get(parentStudent=student_object, parentSection_id=data['sectionDbId']).attendance
+    response['attendance'] = StudentSection.objects.get(parentStudent=student_object,
+                                                        parentClass_id=data['classDbId'],
+                                                        parentSession_id=data['sessionDbId'],
+                                                        parentDivision_id=data['sectionDbId']).attendance
     response['workingDays'] = SchoolSession.objects.get(parentSchool=school_object,
                                                         parentSession=Section.objects.get(id=data['sectionDbId'])
                                                         .parentClassSession.parentSession).workingDays
@@ -59,7 +64,9 @@ def create_student_result(data):
 
 
     student_section_object = StudentSection.objects.get(parentStudent=student_object,
-                                                        parentSection_id=data['sectionDbId'])
+                                                        parentClass_id=data['classDbId'],
+                                                        parentSession_id=data['sessionDbId'],
+                                                        parentDivision_id=data['sectionDbId'])
     student_section_object.attendance = data['attendance']
     student_section_object.save()
 

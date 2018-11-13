@@ -3,15 +3,16 @@ import factory
 
 from employee_app.factory.employee import EmployeeFactory
 
-from class_app.models import Section
+from class_app.models import Division, Class
+from school_app.model.models import Session
 
 
 class AttendancePermissionFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'attendance_app.AttendancePermission'
-        django_get_or_create = ('parentEmployee', 'parentSection')
+        django_get_or_create = ('parentEmployee', 'parentSession', 'parentDivision', 'parentClass')
 
     parentEmployee = factory.SubFactory(EmployeeFactory)
-    parentSection = Section.objects.get(name='Section - A',
-                                        parentClassSession__parentClass__name='Class - 12',
-                                        parentClassSession__parentSession__name='Session 2017-18')
+    parentDivision = Division.objects.get(name='Section - A')
+    parentClass = Class.objects.get(name='Class - 12')
+    parentSession = Session.objects.get(name='Session 2017-18')

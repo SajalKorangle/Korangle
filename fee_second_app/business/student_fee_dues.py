@@ -14,9 +14,9 @@ def get_student_fee_dues_list_by_school_and_session_id(data):
 
     for student_section_object in \
             StudentSection.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
-                                          parentSection__parentClassSession__parentSession=session_object) \
+                                          parentSession=session_object) \
                     .order_by('parentStudent__name') \
-                    .select_related('parentSection__parentClassSession__parentClass',
+                    .select_related('parentClass', 'parentDivision',
                                     'parentStudent__currentBusStop'):
         student_fee_dues_list.append(get_student_fee_dues(student_section_object))
 
@@ -39,9 +39,10 @@ def get_student_fee_dues(student_section_object):
     else:
         student_fee_dues_response['stopName'] = busStop.stopName
 
-    student_fee_dues_response['className'] = student_section_object.parentSection.parentClassSession.parentClass.name
-    student_fee_dues_response['sectionName'] = student_section_object.parentSection.name
-    student_fee_dues_response['sectionDbId'] = student_section_object.parentSection.id
+    student_fee_dues_response['className'] = student_section_object.parentClass.name
+    student_fee_dues_response['classDbId'] = student_section_object.parentClass.id
+    student_fee_dues_response['sectionName'] = student_section_object.parentDivision.name
+    student_fee_dues_response['sectionDbId'] = student_section_object.parentDivision.id
     student_fee_dues_response['rte'] = student_section_object.parentStudent.rte
 
     parentTransferCertificate = student_section_object.parentStudent.parentTransferCertificate

@@ -4,8 +4,9 @@ from django.db import models
 
 from employee_app.models import Employee
 from student_app.models import Student
-from school_app.model.models import School
+from school_app.model.models import School, Session
 from class_app.models import Section
+from class_app.models import Division, Class
 from django.contrib.auth.models import User
 
 ABSENT_ATTENDANCE_STATUS = 'ABSENT'
@@ -75,10 +76,17 @@ class AttendancePermission(models.Model):
 
     parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentEmployee')
 
-    parentSection = models.ForeignKey(Section, on_delete=models.PROTECT,
-                                      null=False, default=0, verbose_name='parentSection')
+    '''parentSection = models.ForeignKey(Section, on_delete=models.PROTECT,
+                                      null=False, default=0, verbose_name='parentSection')'''
+
+    parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT,
+                                       null=False, default=0, verbose_name='parentDivision')
+    parentClass = models.ForeignKey(Class, on_delete=models.PROTECT,
+                                    null=False, default=0, verbose_name='parentClass')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT,
+                                      null=False, default=0, verbose_name='parentSession')
 
     class Meta:
 
         db_table = 'attendance_permission'
-        unique_together = ('parentEmployee', 'parentSection')
+        unique_together = ('parentEmployee', 'parentDivision', 'parentClass', 'parentSession')

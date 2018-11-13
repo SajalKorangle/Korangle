@@ -1,6 +1,7 @@
 
 # from school_app.model.models import Student
-from class_app.models import Section
+from school_app.model.models import Session
+from class_app.models import Section, Division, Class
 from student_app.models import Student, StudentSection
 from examination_app.models import StudentTestResult, Grade
 
@@ -9,8 +10,9 @@ from django.db.models import Sum
 def get_marksheet(data):
 
     student_object = Student.objects.get(id=data['studentDbId'])
-    section_object = Section.objects.get(id=data['sectionDbId'])
-    session_object = section_object.parentClassSession.parentSession
+    section_object = Division.objects.get(id=data['sectionDbId'])
+    class_object = Class.objects.get(id=data['classDbId'])
+    session_object = Session.objects.get(id=data['sessionDbId'])
 
     response = {}
 
@@ -23,7 +25,7 @@ def get_marksheet(data):
     response['schoolAddress'] = school_object.address
     response['schoolDiseCode'] = school_object.diseCode'''
 
-    response['className'] = section_object.className
+    response['className'] = class_object.name
     response['sectionName'] = section_object.name
     response['sessionName'] = session_object.name
 
@@ -44,7 +46,9 @@ def get_marksheet(data):
 
     response['result'] = []
     for student_result_object in StudentTestResult.objects.filter(parentStudent=student_object,
-                                                                  parentTest__parentSection=section_object)\
+                                                                  parentTest__parentDivision=section_object,
+                                                                  parentTest__parentClass=class_object,
+                                                                  parentTest__parentSession=session_object)\
             .order_by('parentTest__parentSubject__orderNumber'):
         subject_object = student_result_object.subject
         studentResult = {}
@@ -59,20 +63,27 @@ def get_marksheet(data):
         return response
 
     response['workingDays'] = school_object.workingDays(session_object)
-    response['attendance'] = StudentSection.objects.get(parentStudent=student_object, parentSection=section_object).attendance
-    response['overAllGrade'] = get_overall_grade(student_object,section_object)
+    response['attendance'] = StudentSection.objects.get(parentStudent=student_object,
+                                                        parentDivision=section_object,
+                                                        parentClass=class_object,
+                                                        parentSession=session_object).attendance
+    response['overAllGrade'] = get_overall_grade(student_object,section_object, class_object, session_object)
 
     return response
 
-def get_overall_grade(student_object, section_object):
+def get_overall_grade(student_object, section_object, class_object, session_object):
 
     totalMaximumMarks = StudentTestResult.objects.filter(parentStudent=student_object,
-                                                         parentTest__parentSection=section_object,
+                                                         parentTest__parentDivsion=section_object,
+                                                         parentTest__parentClass=class_object,
+                                                         parentTest__parentSession=session_object,
                                                          parentTest__parentSubject__governmentSubject=True)\
         .aggregate(Sum('parentTest__parentMaximumMarks__marks'))['parentTest__parentMaximumMarks__marks__sum']
 
     totalMarksObtained = StudentTestResult.objects.filter(parentStudent=student_object,
-                                                         parentTest__parentSection=section_object,
+                                                         parentTest__parentDivsion=section_object,
+                                                         parentTest__parentClass=class_object,
+                                                         parentTest__parentSession=session_object,
                                                          parentTest__parentSubject__governmentSubject=True)\
         .aggregate(Sum('marksObtained'))['marksObtained__sum']
 

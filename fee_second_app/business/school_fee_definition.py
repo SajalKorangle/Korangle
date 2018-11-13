@@ -120,7 +120,7 @@ def lock_fee_definition(data):
 
     for student_section_object in \
             StudentSection.objects.filter(parentStudent__parentSchool=fee_definition_object.parentSchool,
-                                          parentSection__parentClassSession__parentSession=session_object):
+                                          parentSession=session_object):
 
         student_object = student_section_object.parentStudent
 

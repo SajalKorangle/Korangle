@@ -16,8 +16,8 @@ def get_attendance_permission_list(data):
 
     for attendance_permission_object in \
             AttendancePermission.objects.filter(parentEmployee_id=data['parentEmployee'],
-                                                parentSection__parentClassSession__parentSession_id=data['sessionId']) \
-                    .order_by('parentSection__parentClassSession__parentClass__orderNumber','parentSection__orderNumber'):
+                                                parentSession_id=data['sessionId']) \
+                    .order_by('parentClass__orderNumber','parentDivision__orderNumber'):
         attendance_permission_list.append(AttendancePermissionModelSerializer(attendance_permission_object).data)
 
     return attendance_permission_list

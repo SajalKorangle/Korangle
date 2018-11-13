@@ -1,9 +1,9 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
-from rest_framework.views import APIView
+from decorators import user_permission
 
-import json
+from rest_framework.views import APIView
 
 def get_error_response(message):
     error_response = {}
@@ -37,3 +37,14 @@ def get_class_section_list_view(request, session_id):
         return JsonResponse({'response': get_success_response(get_class_section_list(data))})
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+
+############## Section ##############
+from .business.section import get_section_list
+
+
+class SectionListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_section_list()

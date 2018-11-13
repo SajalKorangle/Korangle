@@ -15,19 +15,22 @@ def create_new_student(data):
     student_object = Student()
 
     for key in data:
-        if key != 'sectionDbId':
+        if key != 'sectionDbId' and key != 'classDbId' and key != 'sessionDbId':
             populate_student_field(student_object, key, data[key])
 
     student_object.parentSchool = School.objects.get(id=data['schoolDbId'])
 
     student_object.save()
 
-    student_section_object = StudentSection(parentSection_id=data['sectionDbId'],parentStudent=student_object)
+    student_section_object = StudentSection(parentClass_id=data['classDbId'],
+                                            parentDivision_id=data['sectionDbId'],
+                                            parentStudent=student_object,
+                                            parentSession_id=data['sessionDbId'])
     if 'rollNumber' in data:
         student_section_object.rollNumber = data['rollNumber']
     student_section_object.save()
 
-    initialize_student_fees(student_object, student_section_object.parentSection.parentClassSession.parentSession)
+    initialize_student_fees(student_object, student_section_object.parentSession)
 
 
     response = {}

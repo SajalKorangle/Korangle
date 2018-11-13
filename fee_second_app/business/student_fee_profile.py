@@ -15,9 +15,9 @@ def get_student_fee_profile_list_by_school_and_session_id(data):
 
     for student_section_object in \
             StudentSection.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
-                                          parentSection__parentClassSession__parentSession=session_object) \
+                                          parentSession=session_object) \
                     .order_by('parentStudent__name') \
-                    .select_related('parentSection__parentClassSession__parentClass',
+                    .select_related('parentClass', 'parentDivision',
                                     'parentStudent__currentBusStop'):
         student_fee_profile_list.append(get_student_fee_profile_by_student_section_object(student_section_object))
 
@@ -28,7 +28,7 @@ def get_student_fee_profile(data):
 
     student_section_object = \
         StudentSection.objects.get(parentStudent_id=data['studentDbId'],
-                                   parentSection__parentClassSession__parentSession_id=data['sessionDbId'])
+                                   parentSession_id=data['sessionDbId'])
 
     return get_student_fee_profile_by_student_section_object(student_section_object)
 
@@ -55,9 +55,10 @@ def get_student_fee_profile_by_student_section_object(student_section_object):
     else:
         student_fee_profile_response['stopName'] = busStop.stopName
 
-    student_fee_profile_response['className'] = student_section_object.parentSection.parentClassSession.parentClass.name
-    student_fee_profile_response['sectionName'] = student_section_object.parentSection.name
-    student_fee_profile_response['sectionDbId'] = student_section_object.parentSection.id
+    student_fee_profile_response['className'] = student_section_object.parentClass.name
+    student_fee_profile_response['classDbId'] = student_section_object.parentClass.id
+    student_fee_profile_response['sectionName'] = student_section_object.parentDivision.name
+    student_fee_profile_response['sectionDbId'] = student_section_object.parentDivision.id
     student_fee_profile_response['rte'] = student_section_object.parentStudent.rte
 
     student_fee_profile_response['sessionFeeStatusList'] = \

@@ -46,7 +46,7 @@ def get_school_list(user):
     # Parent User
     for student_section_object in \
         StudentSection.objects.filter(parentStudent__mobileNumber=user.username,
-            parentSection__parentClassSession__parentSession=F('parentStudent__parentSchool__currentSession')) \
+            parentSession=F('parentStudent__parentSchool__currentSession')) \
             .select_related('parentStudent__parentSchool'):
 
         school_data = get_data_from_school_list(school_list, student_section_object.parentStudent.parentSchool_id)
@@ -67,7 +67,7 @@ def get_school_list(user):
 
                 student_section_queryset = \
                     StudentSection.objects.filter(parentStudent_id=student_object.id,
-                                                  parentSection__parentClassSession__parentSession_id=school_data[
+                                                  parentSession_id=school_data[
                                                       'currentSessionDbId'])
 
                 if student_section_queryset.count() == 0:
@@ -80,7 +80,7 @@ def get_school_list(user):
 
                 student_section_queryset = \
                     StudentSection.objects.filter(parentStudent_id=student_object.id,
-                                                  parentSection__parentClassSession__parentSession_id=school_data[
+                                                  parentSession_id=school_data[
                                                       'currentSessionDbId'])
 
                 if student_section_queryset.count() == 0:
