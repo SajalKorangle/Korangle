@@ -7,6 +7,7 @@ import { UserSettingsComponent } from './user-settings.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
+import { CreateSchoolComponent } from './create-school/create-school.component';
 
 import { UserSettingsRoutingModule } from './user-settings.routing';
 
@@ -18,6 +19,7 @@ import { UserSettingsRoutingModule } from './user-settings.routing';
         UpdateProfileComponent,
         ChangePasswordComponent,
         ContactUsComponent,
+        CreateSchoolComponent,
 
     ],
 

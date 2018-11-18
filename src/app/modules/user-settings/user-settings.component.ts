@@ -4,6 +4,7 @@ import {DataStorage} from '../../classes/data-storage';
 @Component({
     template: '<update-profile *ngIf="user.section.subRoute===\'update_profile\'" [user]="user"></update-profile>' +
     '<change-password *ngIf="user.section.subRoute===\'change_password\'" [user]="user"></change-password>' +
+    '<create-school *ngIf="user.section.subRoute===\'create_school\'" [user]="user"></create-school>' +
     '<contact-us *ngIf="user.section.subRoute===\'contact_us\'" [user]="user"></contact-us>',
 })
 

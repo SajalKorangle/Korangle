@@ -7,7 +7,7 @@ export class School {
     dbId = 0;
     name: string; // School Name (for sidebar)
     printName: string;
-    logo: string;
+    //logo: string;
     profileImage: string;
     mobileNumber: number;
     primaryThemeColor = 'red';
@@ -32,12 +32,12 @@ export class School {
         this.dbId = schoolData.dbId;
         this.name = schoolData.name;
         this.printName = schoolData.printName;
-        if (Constants.DJANGO_SERVER === 'http://localhost:8000') {
+        /*if (Constants.DJANGO_SERVER === 'http://localhost:8000') {
             // this.logo = 'http://54.174.109.85:8000' + schoolData.logo;
             this.logo = schoolData.logo;
         } else {
             this.logo = Constants.DJANGO_SERVER + schoolData.logo;
-        }
+        }*/
         this.mobileNumber = schoolData.mobileNumber;
         this.profileImage = schoolData.profileImage;
         this.primaryThemeColor = schoolData.primaryThemeColor;

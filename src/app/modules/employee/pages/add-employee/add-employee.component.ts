@@ -48,7 +48,7 @@ export class AddEmployeeComponent implements OnInit {
             this.newEmployee.dateOfBirth = null;
         }
 
-        if (this.newEmployee.dateOfJoininig === undefined || this.newEmployee.dateOfJoining === '') {
+        if (this.newEmployee.dateOfJoining === undefined || this.newEmployee.dateOfJoining === '') {
             this.newEmployee.dateOfJoining = null;
         }
 
@@ -77,6 +77,7 @@ export class AddEmployeeComponent implements OnInit {
 
         this.isLoading = true;
 
+        console.log(this.newEmployee);
         this.employeeService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
                 let post_data = {
                     parentEmployee: response.id,
