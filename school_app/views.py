@@ -1,4 +1,6 @@
 
+from decorators import user_permission
+
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
@@ -27,8 +29,15 @@ def get_success_message(message):
 
 ################ School Profile ############
 from .handlers.school_profile import update_school_profile
+from .business.school_profile import create_school_profile
+
 
 class SchoolProfileView(APIView):
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_school_profile(data)
 
     def put(self, request, school_id):
         if request.user.is_authenticated:

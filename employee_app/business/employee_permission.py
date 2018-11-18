@@ -38,6 +38,15 @@ def create_employee_permission(data):
         }
 
 
+def create_employee_permission_list(data):
+
+    print("okay")
+    print(data)
+    for employee_permission_data in data:
+        print(create_employee_permission(employee_permission_data))
+    return 'Employee Permissions given successfully'
+
+
 def delete_employee_permission(data):
 
     EmployeePermission.objects.get(id=data['id']).delete()

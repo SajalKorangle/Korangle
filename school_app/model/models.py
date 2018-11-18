@@ -40,7 +40,7 @@ class School(models.Model):
     name = models.TextField(null=True)
     printName = models.TextField(null=True)
 
-    logo = CustomImageField(use_key=True, upload_to='tmp')
+    # logo = CustomImageField(use_key=True, upload_to='tmp')
 
     profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True)
 
@@ -48,7 +48,7 @@ class School(models.Model):
 
     primaryThemeColor = models.TextField(null=True)
     secondaryThemeColor = models.TextField(null=True)
-    complexFeeStructure = models.BooleanField(default=True)
+    complexFeeStructure = models.BooleanField(default=False)
     address = models.TextField(null=True)
     diseCode = models.TextField(null=True)
     currentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='currentSession', default=1)

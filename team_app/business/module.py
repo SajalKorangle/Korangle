@@ -1,5 +1,13 @@
 
-from team_app.models import Access, Task
+from team_app.models import Access, Task, Module
+
+from rest_framework import serializers
+
+
+class ModuleModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = '__all__'
 
 
 def get_module_by_object(module_object):
@@ -31,5 +39,25 @@ def get_school_module_list(data):
             .order_by('parentModule__orderNumber').select_related('parentModule'):
 
         module_list.append(get_module_by_object(access_object.parentModule))
+
+    return module_list
+
+
+def get_latest_module_list():
+
+    module_list = []
+
+    for module_object in Module.objects.all().exclude(path='marksheet'):
+        module_list.append(ModuleModelSerializer(module_object).data)
+
+    return module_list
+
+
+def get_module_list():
+
+    module_list = []
+
+    for module_object in Module.objects.all():
+        module_list.append(ModuleModelSerializer(module_object).data)
 
     return module_list
