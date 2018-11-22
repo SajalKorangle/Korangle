@@ -1,5 +1,9 @@
 <div class="card-content">
 
+    <student-filter [user]="user"
+                    (onSessionChange)="populateSelectedSession($event)"
+                    (onStudentSelected)="getStudentProfileTwo($event)"></student-filter>
+
     Class:
     <select [ngModel]="selectedClass"
             (ngModelChange)="selectedClass=$event;changeSelectedSectionToFirst();"

@@ -64,7 +64,7 @@ export class ViewAllComponent implements OnInit {
 
     // classSectionStudentList = [];
 
-    // classSectionList = [];
+    classSectionList = [];
     classList = [];
     sectionList = [];
 

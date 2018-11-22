@@ -25,7 +25,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
-import { StudentFilterOldComponent } from './student-filter-old/student-filter.component';
+// import { StudentFilterOldComponent } from './student-filter-old/student-filter.component';
 import { StudentFilterComponent } from './student-filter/student-filter.component';
 import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateComponent } from './day-date/day-date.component';
@@ -48,7 +48,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         NavbarComponent,
         SidebarComponent,
         LoadingSpinnerComponent,
-        StudentFilterOldComponent,
+        // StudentFilterOldComponent,
         StudentFilterComponent,
         FeeReceiptListComponent,
         DiscountListComponent,
@@ -91,7 +91,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         NavbarComponent,
         SidebarComponent,
         LoadingSpinnerComponent,
-        StudentFilterOldComponent,
+        // StudentFilterOldComponent,
         StudentFilterComponent,
         FeeReceiptListComponent,
         DiscountListComponent,

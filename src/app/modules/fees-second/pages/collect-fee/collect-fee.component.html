@@ -1,6 +1,5 @@
 <div class="card-content">
 
-    <!-- app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter -->
     <student-filter [user]="user"
                     (onSessionChange)="populateSelectedSession($event)"
                     (onStudentSelected)="getStudentFeeDetails($event)"></student-filter>

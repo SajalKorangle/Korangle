@@ -334,4 +334,12 @@ export class UpdateProfileComponent implements OnInit {
         });
     }
 
+    populateSelectedSession(): void {
+        alert('okay');
+    }
+
+    getStudentProfileTwo(evt: any): void {
+        alert('okay two');
+    }
+
 }
