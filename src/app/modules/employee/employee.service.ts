@@ -66,6 +66,11 @@ export class EmployeeService extends CommonServiceRequirements {
         return super.postData(data, token, url);
     }
 
+    addEmployeePermissionList(data: any, token: any): Promise<any> {
+        const url = '/employee/employee-permissions/batch';
+        return super.postData(data, token, url);
+    }
+
     deleteEmployeePermission(data: any, token: any): Promise<any> {
         const url = '/employee/employee-permissions/' + data['id'];
         return super.deleteData(token, url);

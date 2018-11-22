@@ -7,6 +7,6 @@ export class Constants {
 
     // public static DJANGO_SERVER = 'http://18.209.33.171:8000';
 
-    public static api_version = '/v1.2';
+    public static api_version = '/v1.3';
 
 }

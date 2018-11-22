@@ -15,4 +15,8 @@ export class SchoolService extends CommonServiceRequirements {
         return super.putData(data, token, '/school/' + data['dbId']);
     }
 
+    createSchoolProfile(data: any, token: any): Promise<any> {
+        return super.postData(data, token, '/school/school-profile');
+    }
+
 }
