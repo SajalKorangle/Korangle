@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 
 from rest_framework.views import APIView
 
+from decorators import user_permission
+
 import json
 
 def get_error_response(message):
@@ -37,36 +39,8 @@ class UserView(APIView):
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
-########### Permission ###########
-'''from .business.permission import get_school_member_permission_list, update_permissions
-
-
-class PermissionView(APIView):
-
-    def get(self, request, school_id, user_id):
-        if request.user.is_authenticated:
-            data = {
-                'schoolDbId': school_id,
-                'userDbId': user_id,
-            }
-            return JsonResponse({'response': get_success_response(get_school_member_permission_list(data))})
-        else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
-
-    def put(self, request, school_id, user_id):
-        if request.user.is_authenticated:
-            data = {
-                'schoolDbId': school_id,
-                'userDbId': user_id,
-            }
-            data['permissionList'] = json.loads(request.body.decode('utf-8'))
-            return JsonResponse({'response': get_success_response(update_permissions(data))})
-        else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
-
-
 ########### Module ###########
-from .business.module import get_school_module_list
+from .business.module import get_school_module_list, get_latest_module_list, get_module_list
 
 
 class ModuleView(APIView):
@@ -81,33 +55,34 @@ class ModuleView(APIView):
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
-########### Member ###########
-'''from .business.member import get_school_member_list, create_member, delete_member
+class ModuleListView(APIView):
 
-
-class MemberView(APIView):
-
-    def get(self, request, school_id):
-        if request.user.is_authenticated:
-            data = {
-                'schoolDbId': school_id,
-            }
-            return JsonResponse({'response': get_success_response(get_school_member_list(data))})
+    @user_permission
+    def get(request):
+        if 'latest' in request.GET:
+            return get_latest_module_list()
         else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+            return get_module_list()
 
-    def post(self, request, school_id):
-        if request.user.is_authenticated:
-            data = json.loads(request.body.decode('utf-8'))
-            return JsonResponse({'response': get_success_response(create_member(data))})
-        else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
-    def delete(self, request, member_id):
-        if request.user.is_authenticated:
-            data = {
-                'dbId': member_id,
-            }
-            return JsonResponse({'response': get_success_response(delete_member(data))})
-        else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
+########### Access ###########
+from .business.access import create_access_batch
+
+
+class AccessListView(APIView):
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_access_batch(data)
+
+
+########### Task ###########
+from .business.task import get_task_list
+
+
+class TaskListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_task_list()

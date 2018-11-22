@@ -210,11 +210,17 @@ def get_school_data_by_object(school_object):
     school_data = {}
     school_data['name'] = school_object.name
     school_data['printName'] = school_object.printName
+    """
     if school_object.logo:
         school_data['logo'] = school_object.logo.url
     else:
         school_data['logo'] = ''
-    school_data['profileImage'] = school_object.profileImage.url
+    """
+    # school_data['profileImage'] = school_object.profileImage.url
+    if school_object.profileImage:
+        school_data['profileImage'] = school_object.profileImage.url
+    else:
+        school_data['profileImage'] = "https://korangleplus.s3.amazonaws.com/schools/18/main.png"
     school_data['mobileNumber'] = school_object.mobileNumber
     school_data['primaryThemeColor'] = school_object.primaryThemeColor
     school_data['secondaryThemeColor'] = school_object.secondaryThemeColor

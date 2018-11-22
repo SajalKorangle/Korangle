@@ -25,6 +25,7 @@ urlpatterns = [
 
 	url(r'^sessions', get_session_list_view),
 
-	url(r'^(?P<school_id>[0-9]+)', SchoolProfileView.as_view())
+	url(r'^(?P<school_id>[0-9]+)', SchoolProfileView.as_view()),
+	url(r'^school-profile', SchoolProfileView.as_view()),
 
 ]

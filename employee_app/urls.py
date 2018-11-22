@@ -36,6 +36,7 @@ from .views import EmployeePermissionView, EmployeePermissionListView
 urlpatterns += [
 	url(r'^(?P<employee_id>[0-9]+)/employee-permissions', EmployeePermissionListView.as_view()),
 	url(r'^employee-permissions/(?P<employee_permission_id>[0-9]+)', EmployeePermissionView.as_view()),
+	url(r'^employee-permissions/batch', EmployeePermissionListView.as_view()),
 	url(r'^employee-permissions', EmployeePermissionView.as_view()),
 ]
 

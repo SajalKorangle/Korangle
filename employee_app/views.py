@@ -127,7 +127,8 @@ class EmployeeSessionDetailListView(APIView):
 
 
 ############## Employee Permission ##############
-from .business.employee_permission import get_employee_permission_list, create_employee_permission, delete_employee_permission
+from .business.employee_permission import get_employee_permission_list, \
+    create_employee_permission, delete_employee_permission, create_employee_permission_list
 
 
 class EmployeePermissionView(APIView):
@@ -153,3 +154,9 @@ class EmployeePermissionListView(APIView):
             'parentEmployee': employee_id,
         }
         return get_employee_permission_list(data)
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        print("okay one")
+        return create_employee_permission_list(data)
