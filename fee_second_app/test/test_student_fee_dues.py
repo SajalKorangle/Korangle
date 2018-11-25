@@ -26,7 +26,7 @@ class StudentFeeDuesTestCase(ParentTestCase):
 
         student_section_queryset = \
             StudentSection.objects.filter(parentStudent__parentSchool=data['schoolDbId'],
-                                          parentSection__parentClassSession__parentSession_id=data['sessionDbId']) \
+                                          parentSession_id=data['sessionDbId']) \
             .order_by('parentStudent__name')
 
         self.assertEqual(len(response), student_section_queryset.count())
@@ -43,13 +43,13 @@ class StudentFeeDuesTestCase(ParentTestCase):
 
         student_section_object = \
             StudentSection.objects.filter(parentStudent__parentSchool=school_object,
-                                       parentSection__parentClassSession__parentSession__name='Session 2017-18')[0]
+                                       parentSession__name='Session 2017-18')[0]
 
         student_object = student_section_object.parentStudent
 
         response = get_student_fee_dues(student_section_object)
 
-        self.assertEqual(len(response), 12)
+        self.assertEqual(len(response), 13)
 
         self.assertEqual(student_object.name, response['name'])
         self.assertEqual(student_object.id, response['dbId'])
@@ -62,9 +62,9 @@ class StudentFeeDuesTestCase(ParentTestCase):
             self.assertEqual(student_section_object.parentStudent.currentBusStop.stopName,
                              response['stopName'])
         self.assertEqual(student_object.rte, response['rte'])
-        self.assertEqual(student_section_object.parentSection.id, response['sectionDbId'])
-        self.assertEqual(student_section_object.parentSection.name, response['sectionName'])
-        self.assertEqual(student_section_object.parentSection.parentClassSession.parentClass.name, response['className'])
+        self.assertEqual(student_section_object.parentDivision.id, response['sectionDbId'])
+        self.assertEqual(student_section_object.parentDivision.name, response['sectionName'])
+        self.assertEqual(student_section_object.parentClass.name, response['className'])
         if student_section_object.parentStudent.parentTransferCertificate is None:
             self.assertEqual(None, response['parentTransferCertificate'])
         else:

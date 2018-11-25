@@ -79,7 +79,7 @@ def get_student_profile(student_object, session_object):
 
     student_data['sectionDbId'] = student_object.get_section_id(session_object)
     student_data['sectionName'] = student_object.get_section_name(session_object)
-    student_data['className'] = student_object.get_class_id(session_object)
-    student_data['classDbId'] = student_object.get_class_name(session_object)
+    student_data['className'] = student_object.get_class_name(session_object)
+    student_data['classDbId'] = student_object.get_class_id(session_object)
 
     return student_data

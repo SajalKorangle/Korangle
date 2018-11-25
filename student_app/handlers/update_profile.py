@@ -5,7 +5,7 @@ from student_app.handlers.common import populate_student_field
 
 from school_app.model.models import Session
 
-from class_app.models import ClassSession, Section, Class, Division
+from class_app.models import Class, Division
 
 from django.db.models import ProtectedError
 
@@ -41,35 +41,12 @@ def get_class_section_student_list(data):
         if len(tempClass['sectionList']) > 0:
             class_section_student_list.append(tempClass)
 
-    '''for classSession_object in ClassSession.objects.filter(parentSession=session_object).order_by('parentClass__orderNumber'):
-        tempClass = {}
-        tempClass['name'] = classSession_object.parentClass.name
-        tempClass['dbId'] = classSession_object.parentClass.id
-        tempClass['sectionList'] = []
-        for section_object in Section.objects.filter(parentClassSession=classSession_object).order_by('orderNumber'):
-            tempSection = {}
-            tempSection['name'] = section_object.name
-            tempSection['dbId'] = section_object.id
-            tempSection['studentList'] = []
-            for student_section_object in StudentSection.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
-                                                                        parentSection=section_object).order_by('parentStudent__name'):
-                tempStudent = {}
-                tempStudent['name'] = student_section_object.parentStudent.name
-                tempStudent['dbId'] = student_section_object.parentStudent.id
-                tempStudent['scholarNumber'] = student_section_object.parentStudent.scholarNumber
-                tempStudent['parentTransferCertificate'] = student_section_object.parentStudent.parentTransferCertificate_id
-                tempSection['studentList'].append(tempStudent)
-            if len(tempSection['studentList']) > 0:
-                tempClass['sectionList'].append(tempSection)
-        if len(tempClass['sectionList']) > 0:
-            class_section_student_list.append(tempClass)'''
-
     return class_section_student_list
 
 
 def get_student_profile(data):
     return common.get_student_profile(Student.objects.get(id=data['studentDbId']),
-                                      Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession)
+                                      Session.objects.get(id=data['sessionDbId']))
 
 
 def update_student(data):

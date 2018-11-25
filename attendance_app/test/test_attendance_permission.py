@@ -12,7 +12,7 @@ from attendance_app.business.attendance_permission \
 # Model
 from attendance_app.models import AttendancePermission
 from school_app.model.models import Session
-from class_app.models import Section
+from class_app.models import Division, Class
 from django.contrib.auth.models import User
 
 
@@ -26,15 +26,15 @@ class AttendancePermissionTestCase(ParentTestCase):
 
         attendance_permission_list.append(
             AttendancePermissionFactory(parentEmployee=employee_object,
-                                        parentSection=Section.objects.get(name='Section - A',
-                                                                          parentClassSession__parentClass__name='Class - 12',
-                                                                          parentClassSession__parentSession__name='Session 2017-18')))
+                                        parentDivision=Division.objects.get(name='Section - A'),
+                                        parentClass=Class.objects.get(name='Class - 12'),
+                                        parentSession=Session.objects.get(name='Session 2017-18')))
 
         attendance_permission_list.append(
             AttendancePermissionFactory(parentEmployee=employee_object,
-                                        parentSection=Section.objects.get(name='Section - B',
-                                                                          parentClassSession__parentClass__name='Class - 12',
-                                                                          parentClassSession__parentSession__name='Session 2017-18')))
+                                        parentDivision=Division.objects.get(name='Section - B'),
+                                        parentClass=Class.objects.get(name='Class - 12'),
+                                        parentSession=Session.objects.get(name='Session 2017-18')))
 
         data = {
             'parentEmployee': employee_object.id,
@@ -54,19 +54,23 @@ class AttendancePermissionTestCase(ParentTestCase):
     def test_create_attendance_permission(self):
 
         employee_object = EmployeeFactory()
-        seciton_object = Section.objects.get(name='Section - A',
-                                             parentClassSession__parentClass__name='Class - 12',
-                                             parentClassSession__parentSession__name='Session 2017-18')
+        division_object = Division.objects.get(name='Section - A')
+        class_object = Class.objects.get(name='Class - 12')
+        session_object = Session.objects.get(name='Session 2017-18')
 
         data = {
             'parentEmployee': employee_object.id,
-            'parentSection': seciton_object.id,
+            'parentDivision': division_object.id,
+            'parentClass': class_object.id,
+            'parentSession': session_object.id,
         }
 
         create_attendance_permission(data)
 
         AttendancePermission.objects.get(parentEmployee_id=data['parentEmployee'],
-                                         parentSection_id=data['parentSection'])
+                                         parentClass_id=data['parentClass'],
+                                         parentDivision_id=data['parentDivision'],
+                                         parentSession_id=data['parentSession'])
 
     def test_delete_attendance_permission(self):
 

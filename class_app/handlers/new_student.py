@@ -1,17 +1,29 @@
 
-from class_app.models import Class, ClassSession, Section
+from class_app.models import Class, Division
 
 # from school_app.session import get_current_session_object
 
 from school_app.model.models import Session
 
+
 def get_class_section_list(data):
 
     class_section_list = []
 
-    session_object = Session.objects.get(id=data['sessionDbId'])
+    for class_object in Class.objects.all().order_by('orderNumber'):
+        tempClass = {}
+        tempClass['name'] = class_object.name
+        tempClass['dbId'] = class_object.id
+        tempClass['sectionList'] = []
+        for section_object in Division.objects.all().order_by('orderNumber'):
+            tempSection = {}
+            tempSection['name'] = section_object.name
+            tempSection['dbId'] = section_object.id
+            tempSection['studentList'] = []
+            tempClass['sectionList'].append(tempSection)
+        class_section_list.append(tempClass)
 
-    for classSession_object in ClassSession.objects.filter(parentSession=session_object):
+    '''for classSession_object in ClassSession.objects.filter(parentSession=session_object):
         tempClass = {}
         tempClass['name'] = classSession_object.parentClass.name
         tempClass['dbId'] = classSession_object.parentClass.id
@@ -21,6 +33,6 @@ def get_class_section_list(data):
             tempSection['name'] = section_object.name
             tempSection['dbId'] = section_object.id
             tempClass['sectionList'].append(tempSection)
-        class_section_list.append(tempClass)
+        class_section_list.append(tempClass)'''
 
     return class_section_list

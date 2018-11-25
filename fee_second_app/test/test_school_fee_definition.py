@@ -142,7 +142,7 @@ class FeeDefinitionTestCase(ParentTestCase):
         student_fee_component_queryset = StudentFeeComponent.objects.filter(parentFeeDefinition=fee_definition_object)
 
         student_section_queryset = StudentSection.objects.filter(parentStudent__parentSchool=fee_definition_object.parentSchool,
-                                                                 parentSection__parentClassSession__parentSession=fee_definition_object_initial.parentSession)
+                                                                 parentSession=fee_definition_object_initial.parentSession)
 
         self.assertEqual(student_fee_component_queryset.count(), student_section_queryset.count())
 
@@ -150,8 +150,8 @@ class FeeDefinitionTestCase(ParentTestCase):
             student_object = student_fee_component_object.parentStudent
             student_section_object = \
                 StudentSection.objects.get(parentStudent=student_object,
-                                           parentSection__parentClassSession__parentSession=fee_definition_object.parentSession)
-            class_object = student_section_object.parentSection.parentClassSession.parentClass
+                                           parentSession=fee_definition_object.parentSession)
+            class_object = student_section_object.parentClass
             if student_object.rte == Student.RTE_YES \
                     or class_object.name != 'Class - 12':
                 if fee_definition_object.frequency == FeeDefinition.YEARLY_FREQUENCY:

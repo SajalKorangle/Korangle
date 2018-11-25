@@ -10,7 +10,7 @@ class DatabaseTestCase(ParentTestCase):
         for session_object in Session.objects.all():
             for student_object in Student.objects.all():
                 self.assertLessEqual(student_object.studentsection_set
-                                     .filter(parentSection__parentClassSession__parentSession=session_object).count(),1)
+                                     .filter(parentSession=session_object).count(),1)
 
     '''def test_atmost_one_section_per_class(self):
         for class_object in Class.objects.all():

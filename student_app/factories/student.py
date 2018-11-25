@@ -1,8 +1,8 @@
 
 import factory
 
-from school_app.model.models import School, BusStop
-from class_app.models import Section
+from school_app.model.models import School, BusStop, Session
+from class_app.models import Division, Class
 
 
 class StudentFactory(factory.django.DjangoModelFactory):
@@ -29,11 +29,11 @@ class StudentFactory(factory.django.DjangoModelFactory):
 class StudentSectionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'student_app.StudentSection'
-        django_get_or_create=('parentStudent', 'parentSection', 'rollNumber')
+        django_get_or_create=('parentStudent', 'parentDivision', 'parentClass', 'parentSession', 'rollNumber')
 
     parentStudent = factory.SubFactory(StudentFactory)
-    parentSection = Section.objects.get(parentClassSession__parentClass__name='Class - 12',
-                                        name='Section - A',
-                                        parentClassSession__parentSession__name='Session 2017-18')
+    parentDivision = Division.objects.get(name='Section - A')
+    parentClass = Class.objects.get(name='Class - 12')
+    parentSession = Session.objects.get(name='Session 2017-18')
     rollNumber = '123'
 

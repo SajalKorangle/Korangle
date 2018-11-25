@@ -26,15 +26,15 @@ def create_student_section_list(data):
 
     for student_data in data['studentList']:
 
-        data = {
+        student_section = {
             'parentStudent': student_data['dbId'],
             'parentDivision': data['sectionDbId'],
-            'parentClass': student_data['classDbId'],
-            'parentSession': student_data['parentSession'],
+            'parentClass': data['classDbId'],
+            'parentSession': data['parentSession'],
             'rollNumber': None,
         }
 
-        create_student_section(data)
+        create_student_section(student_section)
 
         '''student_section_object = StudentSection(parentStudent_id=student_data['dbId'],
                                                 parentDivision_id=data['sectionDbId'],

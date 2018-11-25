@@ -6,12 +6,13 @@ from examination_app.handlers.result import create_student_result
 
 from examination_app.test.common import preparingStudentTestResult, deletingStudentResult
 
-from school_app.model.models import SchoolSession
-from examination_app.models import StudentTestResult, Grade, MaximumMarksAllowed
-from class_app.models import Section
+from school_app.model.models import SchoolSession, Session
+from examination_app.models import StudentTestResult, Grade
+from class_app.models import Division
 from student_app.models import Student, StudentSection
 
 from django.db.models import Sum
+
 
 class MarksheetTestCase(ParentTestCase):
 
@@ -23,6 +24,8 @@ class MarksheetTestCase(ParentTestCase):
 
         data = {}
         data['sectionDbId'] = dataone['sectionDbId']
+        data['sessionDbId'] = dataone['sessionDbId']
+        data['classDbId'] = dataone['classDbId']
         data['studentDbId'] = dataone['studentDbId']
 
         response = get_marksheet(data)
@@ -31,12 +34,12 @@ class MarksheetTestCase(ParentTestCase):
 
         self.assertEqual(response['sectionDbId'], data['sectionDbId'])
         self.assertEqual(response['studentDbId'], data['studentDbId'])
-        self.assertEqual(response['className'], student_object.get_class_name(Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession))
-        self.assertEqual(response['sectionName'], Section.objects.get(id=data['sectionDbId']).name)
-        self.assertEqual(response['sessionName'], Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession.name)
+        self.assertEqual(response['className'], student_object.get_class_name(Session.objects.get(id=data['sessionDbId'])))
+        self.assertEqual(response['sectionName'], Division.objects.get(id=data['sectionDbId']).name)
+        self.assertEqual(response['sessionName'], Session.objects.get(id=data['sessionDbId']).name)
 
         '''self.assertEqual(response['studentProfile']['rollNumber'], student_object.currentRollNumber)'''
-        self.assertEqual(response['studentProfile']['rollNumber'], student_object.get_rollNumber(Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession))
+        self.assertEqual(response['studentProfile']['rollNumber'], student_object.get_rollNumber(Session.objects.get(id=data['sessionDbId'])))
         self.assertEqual(response['studentProfile']['name'], student_object.name)
         self.assertEqual(response['studentProfile']['fathersName'], student_object.fathersName)
         self.assertEqual(response['studentProfile']['motherName'], student_object.motherName)
@@ -49,7 +52,9 @@ class MarksheetTestCase(ParentTestCase):
 
         index = 0
         for student_test_result_object in StudentTestResult.objects.filter(parentStudent_id=data['studentDbId'],
-                                                                           parentTest__parentSection_id=data['sectionDbId'])\
+                                                                           parentTest__parentDivision_id=data['sectionDbId'],
+                                                                           parentTest__parentClass_id=data['classDbId'],
+                                                                           parentTest__parentSession_id=data['sessionDbId'])\
             .order_by('parentTest__parentSubject__orderNumber'):
 
             self.assertEqual(response['result'][index]['subjectName'], student_test_result_object.parentTest.parentSubject.name)
@@ -61,21 +66,26 @@ class MarksheetTestCase(ParentTestCase):
             index += 1
 
         school_session_object = SchoolSession.objects.get(parentSchool=student_object.parentSchool,
-                                                          parentSession=Section.objects.get(id=data['sectionDbId'])
-                                                          .parentClassSession.parentSession)
+                                                          parentSession=Session.objects.get(id=data['sessionDbId']))
 
         self.assertEqual(response['workingDays'], school_session_object.workingDays)
         self.assertEqual(response['attendance'],
                          StudentSection.objects.get(parentStudent=student_object,
-                                                    parentSection_id=data['sectionDbId']).attendance)
+                                                    parentClass_id=data['classDbId'],
+                                                    parentSession_id=data['sessionDbId'],
+                                                    parentDivision_id=data['sectionDbId']).attendance)
 
         totalMaximumMarks = StudentTestResult.objects.filter(parentStudent_id=data['studentDbId'],
-                                                             parentTest__parentSection_id=data['sectionDbId'],
+                                                             parentTest__parentDivision_id=data['sectionDbId'],
+                                                             parentTest__parentSession_id=data['sessionDbId'],
+                                                             parentTest__parentClass_id=data['classDbId'],
                                                              parentTest__parentSubject__governmentSubject=True)\
             .aggregate(Sum('parentTest__parentMaximumMarks__marks'))['parentTest__parentMaximumMarks__marks__sum']
 
         totalMarksObtained = StudentTestResult.objects.filter(parentStudent_id=data['studentDbId'],
-                                                              parentTest__parentSection_id=data['sectionDbId'],
+                                                              parentTest__parentDivision_id=data['sectionDbId'],
+                                                              parentTest__parentSession_id=data['sessionDbId'],
+                                                              parentTest__parentClass_id=data['classDbId'],
                                                               parentTest__parentSubject__governmentSubject=True) \
             .aggregate(Sum('marksObtained'))['marksObtained__sum']
 
@@ -98,12 +108,12 @@ class MarksheetTestCase(ParentTestCase):
 
         self.assertEqual(response['sectionDbId'], data['sectionDbId'])
         self.assertEqual(response['studentDbId'], data['studentDbId'])
-        self.assertEqual(response['className'], student_object.get_class_name(Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession))
-        self.assertEqual(response['sectionName'], Section.objects.get(id=data['sectionDbId']).name)
-        self.assertEqual(response['sessionName'], Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession.name)
+        self.assertEqual(response['className'], student_object.get_class_name(Session.objects.get(id=data['sessionDbId'])))
+        self.assertEqual(response['sectionName'], Division.objects.get(id=data['sectionDbId']).name)
+        self.assertEqual(response['sessionName'], Session.objects.get(id=data['sessionDbId']).name)
 
         '''self.assertEqual(response['studentProfile']['rollNumber'], student_object.currentRollNumber)'''
-        self.assertEqual(response['studentProfile']['rollNumber'], student_object.get_rollNumber(Section.objects.get(id=data['sectionDbId']).parentClassSession.parentSession))
+        self.assertEqual(response['studentProfile']['rollNumber'], student_object.get_rollNumber(Session.objects.get(id=data['sessionDbId'])))
         self.assertEqual(response['studentProfile']['name'], student_object.name)
         self.assertEqual(response['studentProfile']['fathersName'], student_object.fathersName)
         self.assertEqual(response['studentProfile']['motherName'], student_object.motherName)

@@ -8,8 +8,6 @@ from school_app.model.models import Session, School
 
 from student_app.models import Student, StudentSection
 
-from class_app.models import Section
-
 
 class UpdateProfileTestCase(ParentTestCase):
 
@@ -49,7 +47,7 @@ class UpdateProfileTestCase(ParentTestCase):
             school_object = School.objects.get(name='BRIGHT STAR')
 
             self.assertEqual(student_count, StudentSection.objects.filter(parentStudent__parentSchool=school_object,
-                                                                          parentSection__parentClassSession__parentSession=session_object).count())
+                                                                          parentSession=session_object).count())
 
 
     def test_get_student_profile(self):
@@ -57,12 +55,14 @@ class UpdateProfileTestCase(ParentTestCase):
         data = {}
         student_section_object = StudentSection.objects.all()[0]
         data['studentDbId'] = student_section_object.parentStudent.id
-        data['sectionDbId'] = student_section_object.parentSection.id
+        data['sectionDbId'] = student_section_object.parentDivision.id
+        data['sessionDbId'] = student_section_object.parentSession.id
+        data['classDbId'] = student_section_object.parentClass.id
 
         student_profile_data = get_student_profile(data)
 
         student_object = Student.objects.get(id=data['studentDbId'])
-        section_object = Section.objects.get(id=data['sectionDbId'])
+        # section_object = Section.objects.get(id=data['sectionDbId'])
 
         self.assertEqual(student_object.name,student_profile_data['name'])
         self.assertEqual(student_object.fathersName,student_profile_data['fathersName'])
@@ -72,7 +72,7 @@ class UpdateProfileTestCase(ParentTestCase):
         # self.assertEqual(student_object.totalFees,student_profile_data['totalFees'])
         self.assertEqual(student_object.remark,student_profile_data['remark'])
         self.assertEqual(student_object.scholarNumber,student_profile_data['scholarNumber'])
-        self.assertEqual(student_object.get_rollNumber(section_object.parentClassSession.parentSession), student_profile_data['rollNumber'])
+        self.assertEqual(student_object.get_rollNumber(Session.objects.get(id=data['sessionDbId'])), student_profile_data['rollNumber'])
         self.assertEqual(student_object.motherName,student_profile_data['motherName'])
         self.assertEqual(student_object.gender,student_profile_data['gender'])
         self.assertEqual(student_object.caste,student_profile_data['caste'])
@@ -103,7 +103,9 @@ class UpdateProfileTestCase(ParentTestCase):
         student_section_object = StudentSection.objects.all()[0]
 
         student_object = student_section_object.parentStudent
-        section_object = student_section_object.parentSection
+        class_object = student_section_object.parentClass
+        division_object = student_section_object.parentDivision
+        session_object = student_section_object.parentSession
 
         data = {}
         data['dbId'] = student_object.id
@@ -116,7 +118,7 @@ class UpdateProfileTestCase(ParentTestCase):
         data['remark'] = 'okay nice'
         data['scholarNumber'] = 'A234'
         data['rollNumber'] = '123'
-        data['sectionDbId'] = section_object.id
+        data['sectionDbId'] = division_object.id
         data['motherName'] = 'Mother Name'
         data['gender'] = 'Male'
         data['caste'] = 'Goyal'
@@ -133,6 +135,8 @@ class UpdateProfileTestCase(ParentTestCase):
         data['fatherAnnualIncome'] = '15,000'
         data['busStopDbId'] = None
         data['admissionDbId'] = None
+        data['classDbId'] = class_object.id
+        data['sessionDbId'] = session_object.id
 
         update_student(data)
 
@@ -144,7 +148,7 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.totalFees,data['totalFees'])
         self.assertEqual(student_object.remark,data['remark'])
         self.assertEqual(student_object.scholarNumber,data['scholarNumber'])
-        self.assertEqual(student_object.get_rollNumber(section_object.parentClassSession.parentSession), data['rollNumber'])
+        self.assertEqual(student_object.get_rollNumber(session_object), data['rollNumber'])
         self.assertEqual(student_object.motherName,data['motherName'])
         self.assertEqual(student_object.gender,data['gender'])
         self.assertEqual(student_object.caste,data['caste'])

@@ -15,7 +15,7 @@ from vehicle_app.factory.bus_stop import BusStopFactory
 # Models
 from student_app.models import StudentSection, Student
 from school_app.model.models import School, Session
-from class_app.models import Section
+from class_app.models import Division, Class
 
 
 class StudentFullProfileTestCase(ParentTestCase):
@@ -39,9 +39,9 @@ class StudentFullProfileTestCase(ParentTestCase):
         school_object = SchoolFactory()
         bus_stop_object = BusStopFactory(parentSchool=school_object)
 
-        section_object = Section.objects.get(parentClassSession__parentSession__name='Session 2017-18',
-                                             parentClassSession__parentClass__name='Class - 12',
-                                             name='Section - A')
+        division_object = Division.objects.get(name='Section - A')
+        class_object = Class.objects.get(name='Class - 12')
+        session_object = Session.objects.get(name='Session 2017-18')
 
         data = {}
         data['name'] = 'Demo Student'
@@ -68,7 +68,9 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['fatherAnnualIncome'] = '15,000'
         data['currentBusStop'] = bus_stop_object.id
         data['parentSchool'] = school_object.id
-        data['parentSection'] = section_object.id
+        data['parentDivision'] = division_object.id
+        data['parentClass'] = class_object.id
+        data['parentSession'] = session_object.id
 
         data_list = []
         data_list.append(data)
@@ -84,9 +86,9 @@ class StudentFullProfileTestCase(ParentTestCase):
         school_object = SchoolFactory()
         bus_stop_object = BusStopFactory(parentSchool=school_object)
 
-        section_object = Section.objects.get(parentClassSession__parentSession__name='Session 2017-18',
-                                             parentClassSession__parentClass__name='Class - 12',
-                                             name='Section - A')
+        division_object = Division.objects.get(name='Section - A')
+        class_object = Class.objects.get(name='Class - 12')
+        session_object = Session.objects.get(name='Session 2017-18')
 
         data = {}
         data['name'] = 'Demo Student'
@@ -113,7 +115,10 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['fatherAnnualIncome'] = '15,000'
         data['currentBusStop'] = bus_stop_object.id
         data['parentSchool'] = school_object.id
-        data['parentSection'] = section_object.id
+        data['parentDivision'] = division_object.id
+        data['parentClass'] = class_object.id
+        data['parentSession'] = session_object.id
+
 
         response = create_student_full_profile(data)
 
@@ -177,10 +182,10 @@ class StudentFullProfileTestCase(ParentTestCase):
         self.assertEqual(response['fatherAnnualIncome'],student_object.fatherAnnualIncome)
         self.assertEqual(response['rte'],student_object.rte)
         self.assertEqual(response['parentTransferCertificate'],student_object.parentTransferCertificate)
-        self.assertEqual(response['className'], student_section_object.parentSection.parentClassSession.parentClass.name)
-        self.assertEqual(response['sectionName'], student_section_object.parentSection.name)
-        self.assertEqual(response['sectionDbId'], student_section_object.parentSection.id)
-        self.assertEqual(response['classDbId'], student_section_object.parentSection.parentClassSession.parentClass.id)
+        self.assertEqual(response['className'], student_section_object.parentClass.name)
+        self.assertEqual(response['sectionName'], student_section_object.parentDivision.name)
+        self.assertEqual(response['sectionDbId'], student_section_object.parentDivision.id)
+        self.assertEqual(response['classDbId'], student_section_object.parentClass.id)
 
 
         if student_object.currentBusStop is not None:
@@ -209,8 +214,8 @@ class StudentFullProfileTestCase(ParentTestCase):
 
         student_section_queryset = \
             StudentSection.objects.filter(parentStudent__parentSchool=school_object,
-                                          parentSection__parentClassSession__parentSession=session_object) \
-            .order_by('parentSection__parentClassSession__parentClass__orderNumber', 'parentSection__orderNumber', 'parentStudent__name')
+                                          parentSession=session_object) \
+            .order_by('parentClass__orderNumber', 'parentDivision__orderNumber', 'parentStudent__name')
 
         self.assertEqual(len(response), student_section_queryset.count())
 

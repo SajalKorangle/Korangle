@@ -4,8 +4,9 @@ from django.db import models
 
 from school_app.model.models import School, Session
 from student_app.models import Student
-from class_app.models import Section, Class, Division
+from class_app.models import Class, Division
 from subject_app.models import Subject
+
 
 class MaximumMarksAllowed(models.Model):
 
@@ -15,6 +16,7 @@ class MaximumMarksAllowed(models.Model):
     class Meta:
         db_table = 'maximum_marks_allowed'
         ordering = ['orderNumber']
+
 
 class Grade(models.Model):
 
@@ -40,10 +42,10 @@ class Grade(models.Model):
         ordering = ['value']
         unique_together = ('parentMaximumMarksAllowed', 'maximumMarks', 'minimumMarks')
 
+
 class Test(models.Model):
 
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool', default=0)
-    '''parentSection = models.ForeignKey(Section, on_delete=models.PROTECT, null=False, verbose_name='parentSection', default=0)'''
 
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, verbose_name='parentClass', default=0)
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, verbose_name='parentDivision', default=0)
@@ -56,6 +58,7 @@ class Test(models.Model):
         db_table = 'test'
         ordering = ['parentSubject__orderNumber']
         unique_together = ('parentSchool', 'parentClass', 'parentDivision', 'parentSession', 'parentSubject')
+
 
 class StudentTestResult(models.Model):
 

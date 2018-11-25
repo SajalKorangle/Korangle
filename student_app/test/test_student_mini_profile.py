@@ -35,9 +35,9 @@ class StudentMiniProfileTestCase(ParentTestCase):
             self.assertEqual(response['parentTransferCertificate'], student_object.parentTransferCertificate.id)
         else:
             self.assertEqual(response['parentTransferCertificate'], None)
-        self.assertEqual(response['className'], student_section_object.parentSection.parentClassSession.parentClass.name)
-        self.assertEqual(response['sectionName'], student_section_object.parentSection.name)
-        self.assertEqual(response['sectionDbId'], student_section_object.parentSection.id)
+        self.assertEqual(response['className'], student_section_object.parentClass.name)
+        self.assertEqual(response['sectionName'], student_section_object.parentDivision.name)
+        self.assertEqual(response['sectionDbId'], student_section_object.parentDivision.id)
 
     def test_get_student_mini_profile_by_school_and_session_id(self):
 
@@ -53,8 +53,8 @@ class StudentMiniProfileTestCase(ParentTestCase):
 
         student_section_queryset = \
             StudentSection.objects.filter(parentStudent__parentSchool=school_object,
-                                          parentSection__parentClassSession__parentSession=session_object) \
-            .order_by('parentSection__parentClassSession__parentClass__orderNumber', 'parentSection__orderNumber', 'parentStudent__name')
+                                          parentSession=session_object) \
+            .order_by('parentClass__orderNumber', 'parentDivision__orderNumber', 'parentStudent__name')
 
         self.assertEqual(len(response), student_section_queryset.count())
 

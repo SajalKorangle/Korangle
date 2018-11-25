@@ -1,7 +1,7 @@
 
 # from school_app.model.models import Student
 from school_app.model.models import Session
-from class_app.models import Section, Division, Class
+from class_app.models import Division, Class
 from student_app.models import Student, StudentSection
 from examination_app.models import StudentTestResult, Grade
 
@@ -67,25 +67,26 @@ def get_marksheet(data):
                                                         parentDivision=section_object,
                                                         parentClass=class_object,
                                                         parentSession=session_object).attendance
-    response['overAllGrade'] = get_overall_grade(student_object,section_object, class_object, session_object)
+    response['overAllGrade'] = get_overall_grade(student_object, section_object, class_object, session_object)
 
     return response
 
+
 def get_overall_grade(student_object, section_object, class_object, session_object):
 
-    totalMaximumMarks = StudentTestResult.objects.filter(parentStudent=student_object,
-                                                         parentTest__parentDivsion=section_object,
-                                                         parentTest__parentClass=class_object,
-                                                         parentTest__parentSession=session_object,
-                                                         parentTest__parentSubject__governmentSubject=True)\
-        .aggregate(Sum('parentTest__parentMaximumMarks__marks'))['parentTest__parentMaximumMarks__marks__sum']
+    queryset = StudentTestResult.objects.filter(parentStudent=student_object,
+                                                parentTest__parentClass=class_object,
+                                                parentTest__parentSession=session_object,
+                                                parentTest__parentDivision=section_object,
+                                                parentTest__parentSubject__governmentSubject=True)
+    totalMaximumMarks = queryset.aggregate(Sum('parentTest__parentMaximumMarks__marks'))['parentTest__parentMaximumMarks__marks__sum']
 
-    totalMarksObtained = StudentTestResult.objects.filter(parentStudent=student_object,
-                                                         parentTest__parentDivsion=section_object,
-                                                         parentTest__parentClass=class_object,
-                                                         parentTest__parentSession=session_object,
-                                                         parentTest__parentSubject__governmentSubject=True)\
-        .aggregate(Sum('marksObtained'))['marksObtained__sum']
+    querysetTwo = StudentTestResult.objects.filter(parentStudent=student_object,
+                                                   parentTest__parentClass=class_object,
+                                                   parentTest__parentDivision=section_object,
+                                                   parentTest__parentSession=session_object,
+                                                   parentTest__parentSubject__governmentSubject=True)
+    totalMarksObtained = querysetTwo.aggregate(Sum('marksObtained'))['marksObtained__sum']
 
     return Grade.objects.get(parentMaximumMarksAllowed__marks=totalMaximumMarks,
                              maximumMarks__gte=totalMarksObtained,

@@ -3,7 +3,6 @@ import factory
 
 from employee_app.factory.employee import EmployeeFactory
 from attendance_app.models import PENDING_LEAVE_STATUS
-from class_app.models import Section
 
 
 class EmployeeAppliedLeaveFactory(factory.DjangoModelFactory):

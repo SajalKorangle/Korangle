@@ -2,10 +2,10 @@ from parent_test import ParentTestCase
 
 from student_app.models import StudentSection
 
-from class_app.models import Section
+from class_app.models import Division
 
 from examination_app.models import StudentTestResult
-from school_app.model.models import SchoolSession
+from school_app.model.models import SchoolSession, Session
 
 from examination_app.handlers.result import get_section_student_result, create_student_result
 
@@ -22,11 +22,12 @@ class ResultTestCase(ParentTestCase):
         self.assertEqual(response['sectionDbId'], data['sectionDbId'])
         self.assertEqual(response['studentDbId'], data['studentDbId'])
         self.assertEqual(response['attendance'], StudentSection.objects.get(parentStudent_id=data['studentDbId'],
-                                                                            parentSection_id=data['sectionDbId']).attendance)
+                                                                            parentClass_id=data['classDbId'],
+                                                                            parentSession_id=data['sessionDbId'],
+                                                                            parentDivision_id=data['sectionDbId']).attendance)
         self.assertEqual(response['workingDays'],
                          SchoolSession.objects.get(parentSchool__name='EKLAVYA ACADEMY',
-                                                   parentSession=Section.objects.get(id=data['sectionDbId'])
-                                                   .parentClassSession.parentSession).workingDays)
+                                                   parentSession=Session.objects.get(id=data['sessionDbId'])).workingDays)
 
         for result_object in response['result']:
             self.assertEqual(result_object['marksObtained'], None)
@@ -46,10 +47,11 @@ class ResultTestCase(ParentTestCase):
         self.assertEqual(response['attendance'], data['attendance'])
         self.assertEqual(response['workingDays'],
                          SchoolSession.objects.get(parentSchool__name='EKLAVYA ACADEMY',
-                                                   parentSession=Section.objects.get(id=data['sectionDbId'])
-                                                   .parentClassSession.parentSession).workingDays)
+                                                   parentSession=Session.objects.get(id=data['sessionDbId'])).workingDays)
         self.assertEqual(len(response['result']),
-                         StudentTestResult.objects.filter(parentTest__parentSection_id=data['sectionDbId'],
+                         StudentTestResult.objects.filter(parentTest__parentDivision_id=data['sectionDbId'],
+                                                          parentTest__parentClass_id=data['classDbId'],
+                                                          parentTest__parentSession_id=data['sessionDbId'],
                                                           parentStudent_id=data['studentDbId']).count())
 
         for result_object in response['result']:
@@ -72,10 +74,11 @@ class ResultTestCase(ParentTestCase):
         self.assertEqual(response['attendance'], data['attendance'])
         self.assertEqual(response['workingDays'],
                          SchoolSession.objects.get(parentSchool__name='EKLAVYA ACADEMY',
-                                                   parentSession=Section.objects.get(id=data['sectionDbId'])
-                                                   .parentClassSession.parentSession).workingDays)
+                                                   parentSession=Session.objects.get(id=data['sessionDbId'])).workingDays)
         self.assertEqual(len(data['result']),
-                         StudentTestResult.objects.filter(parentTest__parentSection_id=data['sectionDbId'],
+                         StudentTestResult.objects.filter(parentTest__parentDivision_id=data['sectionDbId'],
+                                                          parentTest__parentClass_id=data['classDbId'],
+                                                          parentTest__parentSession_id=data['sessionDbId'],
                                                           parentStudent_id=data['studentDbId']).count())
 
         for result_object in data['result']:
@@ -102,10 +105,11 @@ class ResultTestCase(ParentTestCase):
         self.assertEqual(response['attendance'], data['attendance'])
         self.assertEqual(response['workingDays'],
                          SchoolSession.objects.get(parentSchool__name='EKLAVYA ACADEMY',
-                                                   parentSession=Section.objects.get(id=data['sectionDbId'])
-                                                   .parentClassSession.parentSession).workingDays)
+                                                   parentSession=Session.objects.get(id=data['sessionDbId'])).workingDays)
         self.assertEqual(len(data['result']),
-                         StudentTestResult.objects.filter(parentTest__parentSection_id=data['sectionDbId'],
+                         StudentTestResult.objects.filter(parentTest__parentDivision_id=data['sectionDbId'],
+                                                          parentTest__parentClass_id=data['classDbId'],
+                                                          parentTest__parentSession_id=data['sessionDbId'],
                                                           parentStudent_id=data['studentDbId']).count())
 
         for result_object in data['result']:

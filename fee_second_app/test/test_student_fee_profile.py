@@ -15,27 +15,6 @@ from fee_second_app.business.student_fee_profile import get_student_fee_profile_
 
 class StudentFeeProfileTestCase(ParentTestCase):
 
-    '''def test_student_fee_profile_list_by_school_and_session_id(self):
-
-        data = {
-            'schoolDbId': School.objects.get(name='BRIGHT STAR').id,
-            'sessionDbId': Session.objects.get(name='Session 2018-19').id,
-        }
-
-        response = get_student_fee_profile_list_by_school_and_session_id(data)
-
-        student_section_queryset = \
-            StudentSection.objects.filter(parentStudent__parentSchool=data['schoolDbId'],
-                                          parentSection__parentClassSession__parentSession_id=data['sessionDbId']) \
-            .order_by('parentStudent__name')
-
-        self.assertEqual(len(response), student_section_queryset.count())
-
-        index = 0
-        for student_section_object in student_section_queryset:
-            self.assertEqual(response[index]['dbId'], student_section_object.parentStudent.id)
-            index += 1'''
-
     def test_get_student_fee_profile(self):
 
         school_object = School.objects.get(name='BRIGHT STAR')
@@ -44,17 +23,17 @@ class StudentFeeProfileTestCase(ParentTestCase):
 
         student_section_object = \
             StudentSection.objects.get(parentStudent=student_object,
-                                       parentSection__parentClassSession__parentSession__name='Session 2017-18')
+                                       parentSession__name='Session 2017-18')
 
         data = {
             'studentDbId': student_section_object.parentStudent.id,
-            'sessionDbId': student_section_object.parentSection.parentClassSession.parentSession.id,
+            'sessionDbId': student_section_object.parentSession.id,
         }
 
         response = get_student_fee_profile(data)
 
         self.assertEqual(response['dbId'], student_section_object.parentStudent.id)
-        self.assertEqual(response['sectionDbId'], student_section_object.parentSection.id)
+        self.assertEqual(response['sectionDbId'], student_section_object.parentDivision.id)
 
     def test_get_student_fee_profile_by_student_section_object(self):
 
@@ -64,11 +43,11 @@ class StudentFeeProfileTestCase(ParentTestCase):
 
         student_section_object = \
             StudentSection.objects.get(parentStudent=student_object,
-                                       parentSection__parentClassSession__parentSession__name='Session 2017-18')
+                                       parentSession__name='Session 2017-18')
 
         response = get_student_fee_profile_by_student_section_object(student_section_object)
 
-        self.assertEqual(len(response), 13)
+        self.assertEqual(len(response), 14)
 
         self.assertEqual(student_object.name, response['name'])
         self.assertEqual(student_object.id, response['dbId'])
@@ -82,7 +61,7 @@ class StudentFeeProfileTestCase(ParentTestCase):
             self.assertEqual(None, response['profileImage'])
         self.assertEqual(student_object.currentBusStop.stopName, response['stopName'])
         self.assertEqual(student_object.rte, response['rte'])
-        self.assertEqual(student_section_object.parentSection.id, response['sectionDbId'])
-        self.assertEqual(student_section_object.parentSection.name, response['sectionName'])
-        self.assertEqual(student_section_object.parentSection.parentClassSession.parentClass.name, response['className'])
+        self.assertEqual(student_section_object.parentDivision.id, response['sectionDbId'])
+        self.assertEqual(student_section_object.parentDivision.name, response['sectionName'])
+        self.assertEqual(student_section_object.parentClass.name, response['className'])
         self.assertEqual('sessionFeeStatusList' in response, True)

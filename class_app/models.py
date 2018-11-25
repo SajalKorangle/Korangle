@@ -16,7 +16,7 @@ class Class(models.Model):
     class Meta:
         db_table = 'class'
 
-
+'''
 class ClassSession(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0)
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0)
@@ -43,7 +43,7 @@ class Section(models.Model):
 
     class Meta:
         db_table = 'section'
-
+'''
 
 class Division(models.Model):
     name = models.TextField()

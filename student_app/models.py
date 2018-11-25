@@ -2,7 +2,7 @@ from django.db import models
 
 from school_app.model.models import BusStop, Session, School
 
-from class_app.models import Section, Class, Division
+from class_app.models import Class, Division
 
 from django.contrib.auth.models import User
 
@@ -102,11 +102,6 @@ class Student(models.Model):
         """A string representation of the model."""
         return self.parentSchool.name+" --- "+self.name
 
-    '''@property
-    def currentRollNumber(self):
-        return self.studentsection_set\
-            .get(parentSection__parentClassSession__parentSession=get_current_session_object()).rollNumber'''
-
     def get_section_id(self, session_object):
         return self.studentsection_set\
             .get(parentSession=session_object).parentDivision.id
@@ -197,7 +192,6 @@ class Student(models.Model):
 class StudentSection(models.Model):
 
     parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
-    '''parentSection = models.ForeignKey(Section, on_delete=models.PROTECT, default=0, verbose_name='parentSection')'''
 
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentClass')
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision')

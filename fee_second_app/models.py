@@ -181,8 +181,8 @@ class StudentFeeComponent(models.Model):
         session_object = self.parentFeeDefinition.parentSession
         if fee_definition_object.classFilter:
             student_section_object = StudentSection.objects.get(parentStudent=student_object,
-                                                                parentSection__parentClassSession__parentSession=session_object)
-            class_object = student_section_object.parentSection.parentClassSession.parentClass
+                                                                parentSession=session_object)
+            class_object = student_section_object.parentClass
             for school_fee_component_object in school_fee_component_queryset:
                 if school_fee_component_object.classbasedfilter_set.filter(parentClass=class_object).count() == 0:
                     school_fee_component_queryset = school_fee_component_queryset.exclude(id=school_fee_component_object.id)

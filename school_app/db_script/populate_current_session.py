@@ -3,8 +3,6 @@ from django.contrib.auth.models import User
 
 from school_app.model.models import Session
 
-from class_app.models import Section
-
 from django.db.models import Q
 
 def populate_current_session(apps, schema_editor):

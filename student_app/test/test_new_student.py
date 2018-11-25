@@ -8,7 +8,7 @@ from school_app.model.models import Session, School
 
 from student_app.models import Student
 
-from class_app.models import Section
+from class_app.models import Division, Class
 
 class NewStudentTestCase(ParentTestCase):
 
@@ -47,11 +47,16 @@ class NewStudentTestCase(ParentTestCase):
 
         data['dateOfAdmission'] = '2011-04-15'
 
-        section_object = Section.objects.get(parentClassSession__parentSession=session_object,
-                                                parentClassSession__parentClass__name='Class - 12',
-                                                name='Section - A')
+        # section_object = Section.objects.get(parentClassSession__parentSession=session_object,
+        #                                        parentClassSession__parentClass__name='Class - 12',
+        #                                         name='Section - A')
 
-        data['sectionDbId'] = section_object.id
+        division_object = Division.objects.get(name='Section - A')
+        class_object = Class.objects.get(name='Class - 12')
+
+        data['sectionDbId'] = division_object.id
+        data['classDbId'] = class_object.id
+        data['sessionDbId'] = session_object.id
 
         data['schoolDbId'] = school_object.id
 
@@ -71,7 +76,7 @@ class NewStudentTestCase(ParentTestCase):
             self.assertEqual(student_object.totalFees,data['totalFees'])
             self.assertEqual(student_object.remark,data['remark'])
             self.assertEqual(student_object.scholarNumber,data['scholarNumber'])
-            self.assertEqual(student_object.get_rollNumber(section_object.parentClassSession.parentSession), data['rollNumber'])
+            self.assertEqual(student_object.get_rollNumber(session_object), data['rollNumber'])
             self.assertEqual(student_object.motherName,data['motherName'])
             self.assertEqual(student_object.gender,data['gender'])
             self.assertEqual(student_object.caste,data['caste'])
