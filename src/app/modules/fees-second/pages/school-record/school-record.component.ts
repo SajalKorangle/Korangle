@@ -85,7 +85,7 @@ export class SchoolRecordComponent implements OnInit {
         });*/
         this.studentFeeDuesList = studentFeeDuesList;
         this.studentFeeDuesList.forEach(studentFeeDues => {
-            studentFeeDues['sectionObject'] = this.getSectionObject(studentFeeDues.sectionDbId);
+            studentFeeDues['sectionObject'] = this.getSectionObject(studentFeeDues.classDbId, studentFeeDues.sectionDbId);
             studentFeeDues['studentFeeProfile'] = null;
             studentFeeDues['show'] = true;
         });
@@ -111,11 +111,11 @@ export class SchoolRecordComponent implements OnInit {
         });
     }
 
-    getSectionObject(sectionDbId: number): any {
+    getSectionObject(classDbId: number, sectionDbId: number): any {
         let sectionObject = null;
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId) {
+                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;

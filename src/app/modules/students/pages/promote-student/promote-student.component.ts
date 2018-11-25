@@ -19,10 +19,7 @@ export class PromoteStudentComponent implements OnInit {
     fromClassSectionStudentList = [];
 
     toSelectedClass: any;
-    toSelectedSection: any;
-    // toClassSectionList = [];
-    toClassList = [];
-    toSectionList = [];
+    toClassSectionList = [];
     toStudentList = [];
 
     isLoading = false;
@@ -58,39 +55,26 @@ export class PromoteStudentComponent implements OnInit {
         };
         this.isLoading = true;
         Promise.all([
-            // this.classService.getClassSectionList(class_section_list_request_data, this.user.jwt),
-            this.classService.getClassList(this.user.jwt),
+            this.classService.getClassSectionList(class_section_list_request_data, this.user.jwt),
             this.studentService.getStudentMiniProfileList(student_mini_profile_list_request_data, this.user.jwt),
             this.studentService.getClassSectionStudentList(class_section_student_list_request_data, this.user.jwt),
-            this.classService.getSectionList(this.user.jwt),
         ]).then( value => {
             this.isLoading = false;
             console.log(value);
-            this.initializeToClassList(value[0]);
+            this.initializeToList(value[0]);
             this.toStudentList = value[1];
             this.initializeFromList(value[2]);
-            this.initializeToSectionList(value[3]);
         }, error => {
             this.isLoading = false;
         });
     }
 
-    /*initializeToList(classSectionList: any): void {
+    initializeToList(classSectionList: any): void {
         this.toClassSectionList = classSectionList;
         this.toClassSectionList.forEach( classs => {
             classs.selectedSection = classs.sectionList[0];
         });
         this.toSelectedClass = this.toClassSectionList[0];
-    }*/
-
-    initializeToClassList(classList: any): void {
-        this.toClassList = classList;
-        this.toSelectedClass = this.toClassList[0];
-    }
-
-    initializeToSectionList(sectionList: any): void {
-        this.toSectionList = sectionList;
-        this.toSelectedSection = this.toSectionList[0];
     }
 
     initializeFromList(classSectionStudentList: any): void {
@@ -105,15 +89,15 @@ export class PromoteStudentComponent implements OnInit {
 
     promoteStudent(): void {
         let index = 0;
-        this.toClassList.every( classs => {
+        this.toClassSectionList.every( classs => {
             if (classs.name === this.fromSelectedClass.name) {
                 return false;
             }
             ++index;
             return true;
         });
-        if (this.toClassList[index].dbId !== this.toSelectedClass.dbId
-            && ( (index > 0 && this.toClassList[index-1].dbId !== this.toSelectedClass.dbId)
+        if (this.toClassSectionList[index].dbId !== this.toSelectedClass.dbId
+            && ( (index > 0 && this.toClassSectionList[index-1].dbId !== this.toSelectedClass.dbId)
                     || index === 0) ) {
             alert('Can\'t promote from ' + this.fromSelectedClass.name + ' to ' + this.toSelectedClass.name);
             return;
@@ -125,10 +109,11 @@ export class PromoteStudentComponent implements OnInit {
         }
         let data = {
             classDbId: this.toSelectedClass.dbId,
-            sectionDbId: this.toSelectedSection.dbId,
+            sectionDbId: this.toSelectedClass.selectedSection.dbId,
             studentList: studentPromotionList,
             parentSession: 2,
         };
+        console.log(data);
         this.isLoading = true;
         this.studentService.createStudentSectionList(data, this.user.jwt).then(message => {
             this.isLoading = false;

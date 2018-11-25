@@ -121,7 +121,7 @@ export class GenerateTcComponent implements OnInit {
         this.isLoading = true;
         const student_data = {
             studentDbId: this.selectedStudent.dbId,
-            sectionDbId: this.selectedSection.dbId,
+            sessionDbId: this.selectedSession.dbId,
         };
         if (this.selectedStudent.parentTransferCertificate) {
             const transfer_certificate_data = {

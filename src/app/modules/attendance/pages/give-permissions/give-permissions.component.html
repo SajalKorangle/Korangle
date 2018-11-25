@@ -26,8 +26,7 @@
 
             <div class="row" *ngFor="let attendancePermission of selectedEmployeeAttendancePermissionList">
                 <div class="col-md-3">
-                    {{showClassName(attendancePermission.parentClass)}},
-                    {{showSectionName(attendancePermission.parentDivision)}}
+                    {{showClassSectionName(attendancePermission.parentClass, attendancePermission.parentDivision)}}
                 </div>
                 <div class="col-md-3">
                     <button type="submit"

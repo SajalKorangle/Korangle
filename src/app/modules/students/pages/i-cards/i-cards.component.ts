@@ -146,18 +146,18 @@ export class ICardsComponent implements OnInit {
             return student.parentTransferCertificate == null;
         });
         this.studentFullProfileList.forEach(studentFullProfile => {
-            studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.sectionDbId);
+            studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
             studentFullProfile['selected'] = false;
         });
         this.handleStudentDisplay();
     }
 
-    getSectionObject(sectionDbId: number): any {
+    getSectionObject(classDbId: number, sectionDbId: number): any {
         let sectionObject = null;
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId) {
+                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;

@@ -1,9 +1,5 @@
 <div class="card-content">
 
-    <student-filter [user]="user"
-                    (onSessionChange)="populateSelectedSession($event)"
-                    (onStudentSelected)="getStudentProfileTwo($event)"></student-filter>
-
     Class:
     <select [ngModel]="selectedClass"
             (ngModelChange)="selectedClass=$event;changeSelectedSectionToFirst();"
@@ -12,11 +8,6 @@
             {{class.name}}
         </option>
     </select>
-    <!-- mat-form-field *ngIf="selectedClass !== undefined" style="margin-right: 15px;">
-        <mat-select placeholder="Class" [ngModel]="selectedClass" (ngModelChange)="onChangeSelectedClass($event)">
-            <mat-option *ngFor = "let c of classList;" [value]="c">{{c.name}}</mat-option>
-        </mat-select>
-    </mat-form-field -->
 
     <div class="visible-xs visible-sm" style="margin-top: 10px;"></div>
 
@@ -44,11 +35,6 @@
             </option>
         </select>
     </span>
-    <!-- mat-form-field *ngIf="selectedClass !== undefined && selectedClass.studentList.length > 0">
-        <mat-select placeholder="Student" [(ngModel)]="selectedStudent" (ngModelChange)="getStudentData()">
-            <mat-option *ngFor = "let c of selectedClass.studentList;" [value]="c">{{c.name}}</mat-option>
-        </mat-select>
-    </mat-form-field -->
 
     <div class="visible-xs visible-sm" style="margin-top: 10px;"></div>
 

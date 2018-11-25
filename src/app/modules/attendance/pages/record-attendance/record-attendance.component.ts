@@ -88,7 +88,7 @@ export class RecordAttendanceComponent implements OnInit {
                 sectionList: [],
             };
             classs.sectionList.forEach( section => {
-                if (this.classSectionInPermissionList(section.dbId, attendancePermissionList)) {
+                if (this.classSectionInPermissionList(classs.dbId, section.dbId, attendancePermissionList)) {
                     let tempSection = {
                         name: section.name,
                         dbId: section.dbId,
@@ -119,10 +119,10 @@ export class RecordAttendanceComponent implements OnInit {
         }
     }
 
-    classSectionInPermissionList(dbId: number, attendancePermissionList: any): boolean {
+    classSectionInPermissionList(classDbId: number, sectionDbId: number, attendancePermissionList: any): boolean {
         let result = false;
         attendancePermissionList.every(item => {
-            if (item.parentSection === dbId) {
+            if (item.parentDivision === sectionDbId && item.parentClass === classDbId) {
                 result = true;
                 return false;
             }

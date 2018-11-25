@@ -17,6 +17,8 @@ export class ChangeClassComponent implements OnInit {
 
     selectedStudent: any;
 
+    selectedSessionDbId: any;
+
     selectedClass: any;
     classSectionList = [];
 
@@ -30,6 +32,7 @@ export class ChangeClassComponent implements OnInit {
         const data = {
             sessionDbId : this.user.activeSchool.currentSessionDbId,
         };
+        this.selectedSessionDbId = this.user.activeSchool.currentSessionDbId;
         this.downloadClassSectionList(data);
     }
 
@@ -37,6 +40,7 @@ export class ChangeClassComponent implements OnInit {
         const data = {
             sessionDbId : session.dbId,
         };
+        this.selectedSessionDbId = session.dbId;
         this.downloadClassSectionList(data);
     }
 
@@ -58,8 +62,10 @@ export class ChangeClassComponent implements OnInit {
     changeClassSection(): void {
         let data = {
             id: this.selectedStudent.studentSectionDbId,
-            parentSection: this.selectedClass.selectedSection.dbId,
+            parentDivision: this.selectedClass.selectedSection.dbId,
             parentStudent: this.selectedStudent.dbId,
+            parentClass: this.selectedClass.dbId,
+            parentSession: this.selectedSessionDbId,
         };
         let studentDbId = this.selectedStudent.dbId;
         this.isLoading = true;

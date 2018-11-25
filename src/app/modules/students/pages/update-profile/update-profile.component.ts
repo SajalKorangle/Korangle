@@ -91,7 +91,7 @@ export class UpdateProfileComponent implements OnInit {
         this.isLoading = true;
         const data = {
             studentDbId: this.selectedStudent.dbId,
-            sectionDbId: this.selectedSection.dbId,
+            sessionDbId: this.user.activeSchool.currentSessionDbId
         };
         this.studentService.getStudentProfile(data, this.user.jwt).then(
             student => {
@@ -134,7 +134,7 @@ export class UpdateProfileComponent implements OnInit {
             alert('Number of digits in Aadhar No. should be 12');
             return;
         }
-        this.currentStudent.classDbId = this.selectedClass.dbId;
+        // this.currentStudent.classDbId = this.selectedClass.dbId;
         this.currentStudent.sessionDbId = this.user.activeSchool.currentSessionDbId;
         this.isLoading = true;
         this.studentService.updateStudentProfileOld(this.currentStudent, this.user.jwt).then(
@@ -332,14 +332,6 @@ export class UpdateProfileComponent implements OnInit {
             };
             image.onerror = reject;
         });
-    }
-
-    populateSelectedSession(): void {
-        alert('okay');
-    }
-
-    getStudentProfileTwo(evt: any): void {
-        alert('okay two');
     }
 
 }

@@ -89,22 +89,19 @@ export class ViewAllComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            // this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
-            this.classService.getClassList(this.user.jwt),
+            this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
-            this.classService.getSectionList(this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
-            this.initializeClassList(value[0]);
+            this.initializeClassSectionList(value[0]);
             this.initializeStudentFullProfileList(value[1]);
-            this.initializeSectionList(value[2]);
         }, error => {
             this.isLoading = false;
         });
 
     }
 
-    /*initializeClassSectionList(classSectionList: any): void {
+    initializeClassSectionList(classSectionList: any): void {
         this.classSectionList = classSectionList;
         this.classSectionList.forEach(classs => {
             classs.sectionList.forEach(section => {
@@ -112,32 +109,32 @@ export class ViewAllComponent implements OnInit {
                 section.containsStudent = false;
             });
         });
-    }*/
+    }
 
-    initializeClassList(classList: any): void {
+    /*initializeClassList(classList: any): void {
         this.classList = classList;
     }
 
     initializeSectionList(sectionList: any): void {
         this.sectionList = sectionList;
-    }
+    }*/
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
         this.studentFullProfileList = studentFullProfileList.filter( student => {
             return student.parentTransferCertificate == null;
         });
         this.studentFullProfileList.forEach(studentFullProfile => {
-            studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.sectionDbId);
+            studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
         });
         this.handleStudentDisplay();
     }
 
-    getSectionObject(sectionDbId: number): any {
+    getSectionObject(classDbId: any, sectionDbId: number): any {
         let sectionObject = null;
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId) {
+                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;

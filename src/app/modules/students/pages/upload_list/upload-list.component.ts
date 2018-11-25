@@ -518,6 +518,7 @@ export class UploadListComponent implements OnInit {
         this.studentList.forEach(student => {
             student_list.push(this.getServerRequest(student));
         });
+        console.log(student_list);
         this.isLoading = true;
         this.studentService.createStudentFullProfileBatch(student_list, this.user.jwt).then(response => {
             this.isLoading = false;
@@ -559,6 +560,11 @@ export class UploadListComponent implements OnInit {
             'parentClass': this.getParentClass(student[3]),
             'parentSession': this.selectedSession.dbId,
         };
+        Object.keys(data).forEach(keys => {
+            if (data[keys] === undefined) {
+                data[keys] = null;
+            }
+        });
         return data;
     }
 
