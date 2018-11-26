@@ -541,12 +541,12 @@ export class UploadListComponent implements OnInit {
             'dateOfBirth': this.getDate(student[8]),
             'admissionSession': this.getSession(student[9]),
             'gender': student[10],
-            'category': student[11],
-            'religion': student[12],
+            'newCategoryField': student[11],
+            'newReligionField': student[12],
             'bloodGroup': student[13],
             'familySSMID': parseInt(student[14]),
             'childSSMID': parseInt(student[15]),
-            'aadharNumber': parseInt(student[16]),
+            'aadharNum': parseInt(student[16]),
             'caste': student[17],
             'bankName': student[18],
             'bankAccountNumber': student[19],
@@ -601,11 +601,11 @@ export class UploadListComponent implements OnInit {
         let result = null;
 
         if (inputText === null || inputText === undefined) {
-            return true;
+            return result;
         }
 
         if (typeof inputText !== 'string') {
-            return false;
+            return result;
         }
 
         let dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}|\d{2})$/;
