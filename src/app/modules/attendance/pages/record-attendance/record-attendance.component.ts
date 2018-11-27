@@ -137,7 +137,7 @@ export class RecordAttendanceComponent implements OnInit {
         let studentIdList = [];
         this.classSectionStudentList.forEach(classs => {
             classs.sectionList.forEach(section => {
-                if (this.selectedSection.dbId === section.dbId) {
+                if (this.selectedSection.dbId === section.dbId && classs.dbId === this.selectedClass.dbId) {
                     section.studentList.forEach(student => {
                         studentIdList.push(student.dbId);
                     });
@@ -171,7 +171,7 @@ export class RecordAttendanceComponent implements OnInit {
         this.studentAttendanceStatusList = [];
         this.classSectionStudentList.forEach(classs => {
             classs.sectionList.forEach(section => {
-                if (this.selectedSection.dbId === section.dbId) {
+                if (this.selectedSection.dbId === section.dbId && classs.dbId === this.selectedClass.dbId) {
                     section.studentList.forEach(student => {
                         let tempItem = {
                             dbId: student.dbId,

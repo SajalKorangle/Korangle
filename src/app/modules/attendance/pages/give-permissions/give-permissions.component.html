@@ -43,8 +43,8 @@
                                     #selectClassSection
                                     [ngModel]="selectedClass"
                                     (ngModelChange)="selectedClass=$event;">
-                            <mat-option *ngFor='let classs of classList;' [value]="classs">
-                                {{classs.name}}, {{selectedSection.name}}
+                            <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
+                                {{classs.name}}, {{classs.selectedSection.name}}
                                 <!-- span *ngIf="classs.dbId != classs.sectionList[0].dbId">
                                             , {{classs.selectedSection.name}}
                                         </span -->
@@ -59,9 +59,9 @@
                         <i class="material-icons" style="color: black;">expand_more</i>
                     </button>
                     <mat-menu #classSectionMenu="matMenu">
-                        <button *ngFor="let section of sectionList"
+                        <button *ngFor="let section of selectedClass.sectionList"
                                 mat-menu-item
-                                (click)="selectClassSection.open(); selectClassSection.close(); selectedSection=section">
+                                (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
                             {{section.name}}
                         </button>
                     </mat-menu>
