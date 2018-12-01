@@ -1,0 +1,68 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <div class="row">
+            <div class="col-md-9" *ngIf="examinationList.length > 0">
+                <mat-form-field>
+                    <mat-select placeholder="Select Examination"
+                                [ngModel]="selectedExamination"
+                                [disabled]="isLoading"
+                                (ngModelChange)="selectedExamination=$event;">
+                        <mat-option *ngFor='let examination of examinationList;' [value]="examination">
+                            {{examination.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                    <mat-select placeholder="Change to -"
+                                #selectClassSection
+                                [ngModel]="selectedExamination.selectedClass"
+                                (ngModelChange)="selectedExamination.selectedClass=$event;">
+                        <mat-option *ngFor='let classs of selectedExamination.classList;' [value]="classs">
+                            {{classs.name}}, {{classs.selectedSection.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button class="btn"
+                        style="padding: 2px 11px; background-color: transparent;"
+                        matTooltip="Choose Section (default: Section - A)"
+                        mat-icon-button
+                        [matMenuTriggerFor]="classSectionMenu">
+                    <i class="material-icons" style="color: black;">expand_more</i>
+                </button>
+                <mat-menu #classSectionMenu="matMenu">
+                    <button *ngFor="let section of selectedExamination.selectedClass.sectionList"
+                            mat-menu-item
+                            (click)="selectClassSection.open();
+                             selectClassSection.close();
+                             selectedExamination.selectedClass.selectedSection=section;">
+                        {{section.name}}
+                    </button>
+                </mat-menu>
+
+                <button type="submit"
+                        *ngIf="selectedExamination.selectedClass.selectedSection.studentList.length > 0"
+                        style="margin-left: 20px;"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="printHallTicket()">Generate</button>
+
+                <ng-container *ngIf="selectedExamination.selectedClass.selectedSection.studentList.length === 0">
+                    <br/>
+                    No Student presents in this class.
+                </ng-container>
+
+            </div>
+            <div class="col-md-9" *ngIf="examinationList.length === 0">
+                No Examination created yet!
+            </div>
+        </div>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

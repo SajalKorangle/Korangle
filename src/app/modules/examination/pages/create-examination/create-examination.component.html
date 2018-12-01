@@ -1,0 +1,43 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <div class="row" *ngFor="let examination of examinationList; let i=index;">
+            <div class="col-md-4">
+                {{(i+1)}}.
+                <input type="text"
+                       [(ngModel)]="examination.newName" [disabled]="examination.updating"/>
+            </div>
+            <div class="col-md-4">
+                <button type="submit"
+                        *ngIf="examination.newName !== examination.name"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        style="padding: 3px 8px;"
+                        (click)="serviceAdapter.updateExamination(examination)">Update</button>
+                <div *ngIf="examination.updating" class="loader-custom"></div>
+            </div>
+        </div>
+
+        <br/><br/><br/>
+
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text"
+                       placeholder="Type examination name here ...."
+                       [(ngModel)]="examinationNameToBeAdded"/>
+            </div>
+            <div class="col-md-3">
+                <button type="submit"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        style="padding: 3px 8px;"
+                        (click)="serviceAdapter.createExamination()">Add</button>
+            </div>
+        </div>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

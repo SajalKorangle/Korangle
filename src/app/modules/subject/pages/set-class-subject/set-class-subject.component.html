@@ -1,0 +1,88 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isSessionLoading">
+
+        <div class="row">
+            <div class="col-md-4">
+                <mat-form-field style="margin-top: 23px;">
+                    <mat-select placeholder="Change to -"
+                                #selectClassSection
+                                [ngModel]="selectedClass"
+                                (ngModelChange)="selectedClass=$event;">
+                        <mat-option *ngFor='let classs of classSectionSubjectList;' [value]="classs">
+                            {{classs.name}}, {{classs.selectedSection.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button class="btn"
+                        style="padding: 2px 11px; background-color: transparent;"
+                        matTooltip="Choose Section (default: Section - A)"
+                        mat-icon-button
+                        [matMenuTriggerFor]="classSectionMenu">
+                    <i class="material-icons" style="color: black;">expand_more</i>
+                </button>
+                <mat-menu #classSectionMenu="matMenu">
+                    <button *ngFor="let section of selectedClass.sectionList"
+                            mat-menu-item
+                            (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
+                        {{section.name}}
+                    </button>
+                </mat-menu>
+            </div>
+            <div class="col-md-8" align="end">
+                <mat-form-field>
+                    <mat-select placeholder="Select Session"
+                                [ngModel]="selectedSession"
+                                disabled="true"
+                                (ngModelChange)="selectedSession=$event;serviceAdapter.handleSessionChange();">
+                        <mat-option *ngFor='let session of sessionList;' [value]="session">
+                            {{session.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <ng-container *ngIf="!isLoading">
+
+            <div class="row hoverHighlight"
+                 *ngFor="let subject of selectedClass.selectedSection.subjectList">
+                <div class="col-md-3">
+                    {{getSubjectName(subject)}}
+                </div>
+                <div class="col-md-3">
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="padding: 3px 8px;"
+                            (click)="serviceAdapter.removeSubject(subject)">Remove</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Select Subject"
+                                    [ngModel]="selectedSubject"
+                                    (ngModelChange)="selectedSubject=$event">
+                            <mat-option *ngFor='let subject of getFilteredSubjectList();' [value]="subject">
+                                {{subject.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="serviceAdapter.addSubject()">Add</button>
+                </div>
+            </div>
+
+        </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading || isSessionLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

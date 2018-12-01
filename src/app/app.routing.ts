@@ -10,6 +10,14 @@ import {DataStorage} from './classes/data-storage';
 
 const routes: Routes = [
     {
+        path: 'examinations',
+        loadChildren: 'app/modules/examination/examination.module#ExaminationModule',
+    },
+    {
+        path: 'subjects',
+        loadChildren: 'app/modules/subject/subject.module#SubjectModule',
+    },
+    {
         path: 'salary',
         loadChildren: 'app/modules/salary/salary.module#SalaryModule',
     },

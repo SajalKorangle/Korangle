@@ -28,6 +28,7 @@
         <mat-form-field>
             <mat-select placeholder="Select Session"
                         [ngModel]="selectedSession"
+                        [disabled]="!sessionChange"
                         (ngModelChange)="selectedSession=$event;handleSessionChange();">
                 <mat-option *ngFor='let session of sessionList;' [value]="session">
                     {{session.name}}

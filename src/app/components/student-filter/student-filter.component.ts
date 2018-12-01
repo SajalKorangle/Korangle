@@ -18,6 +18,8 @@ export class StudentFilterComponent implements OnInit {
 
     @Input() user;
 
+    @Input() sessionChange = true;
+
     @Output() onStudentSelected = new EventEmitter<any>();
 
     @Output() onStudentLoading = new EventEmitter<boolean>();
