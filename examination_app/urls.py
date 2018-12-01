@@ -15,3 +15,20 @@ urlpatterns += [
     url(r'^result$', create_student_result_view),
 
 ]
+
+
+from examination_app.views import ExaminationListView, ExaminationView
+
+urlpatterns += [
+    url(r'^examinations/batch', ExaminationListView.as_view()),
+    url(r'^examinations', ExaminationView.as_view()),
+]
+
+
+from examination_app.views import TestListView, TestView
+
+urlpatterns += [
+    url(r'^tests/batch', TestListView.as_view()),
+    url(r'^tests/(?P<test_id>[0-9]+)', TestView.as_view()),
+    url(r'^tests', TestView.as_view()),
+]

@@ -11,3 +11,4 @@ staticpages/.*
 sms_file
 backupdb
 copydatabase.sh
+prev_db

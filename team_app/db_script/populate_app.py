@@ -4,14 +4,21 @@ def populate_in_all_schools(module_object, apps, task_list):
 
     School = apps.get_model('school_app', 'School')
     Access = apps.get_model('team_app', 'Access')
-    Member = apps.get_model('team_app', 'Member')
-    Permission = apps.get_model('team_app', 'Permission')
+    EmployeePermission = apps.get_model('employee_app', 'EmployeePermission')
 
     for school_object in School.objects.all():
 
         access_object = Access(parentModule=module_object,
                                parentSchool=school_object)
         access_object.save()
+
+        for employee_permission_object in EmployeePermission.objects.filter(parentEmployee__parentSchool=school_object,
+                                                                            parentTask__title='Assign Task',
+                                                                            parentTask__parentModule__title='Employees'):
+            for task_object in task_list:
+                permission_object = EmployeePermission(parentEmployee=employee_permission_object.parentEmployee,
+                                                       parentTask=task_object)
+                permission_object.save()
 
 
 def populate_in_all_schools_and_users(module_object, apps, task_list):

@@ -39,5 +39,6 @@ urlpatterns = [
     url(r'^'+api_version+'attendance/', include('attendance_app.urls')),
     url(r'^'+api_version+'salary/', include('salary_app.urls')),
     url(r'^'+api_version+'user/', include('user_app.urls')),
+	url(r'^'+api_version+'subject/', include('subject_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

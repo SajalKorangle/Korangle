@@ -29,6 +29,8 @@ def get_student_mini_profile(student_section_object):
     student_response['sectionDbId'] = student_section_object.parentDivision.id
     student_response['studentSectionDbId'] = student_section_object.id
 
+    student_response['rollNumber'] = student_section_object.rollNumber
+
     return student_response
 
 

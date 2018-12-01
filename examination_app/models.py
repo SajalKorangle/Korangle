@@ -5,7 +5,7 @@ from django.db import models
 from school_app.model.models import School, Session
 from student_app.models import Student
 from class_app.models import Class, Division
-from subject_app.models import Subject
+from subject_app.models import Subject, SubjectSecond
 
 
 class MaximumMarksAllowed(models.Model):
@@ -83,9 +83,44 @@ class StudentTestResult(models.Model):
                                          minimumMarks__lte=self.marksObtained)
         return grade_object.value
 
-
     class Meta:
         db_table = 'student_test_result'
         ordering = ['parentTest__parentSubject__orderNumber']
         unique_together = ('parentStudent', 'parentTest')
 
+
+class Examination(models.Model):
+
+    name = models.TextField(null=False, default='-', verbose_name='name')
+    parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
+    parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'examination'
+        unique_together = ('name', 'parentSchool', 'parentSession')
+
+
+TEST_TYPE = (
+    ('Oral', 'Oral'),
+    ('Written', 'Written'),
+    ('Theory', 'Theory'),
+    ('Practical', 'Practical'),
+)
+
+
+class TestSecond(models.Model):
+
+    parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
+    parentSubject = models.ForeignKey(SubjectSecond, models.PROTECT, null=False, default=0, verbose_name='parentSubject')
+    parentClass = models.ForeignKey(Class, models.PROTECT, null=False, default=0, verbose_name='parentClass')
+    parentDivision = models.ForeignKey(Division, models.PROTECT, null=False, default=0, verbose_name='parentDivision')
+    startTime = models.DateTimeField(null=False, verbose_name='startTime')
+    endTime = models.DateTimeField(null=False, verbose_name='endTime')
+    testType = models.CharField(max_length=10, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
+
+    class Meta:
+        db_table = 'test_second'
+        unique_together = ('parentExamination', 'parentSubject', 'parentClass', 'parentDivision', 'testType')
