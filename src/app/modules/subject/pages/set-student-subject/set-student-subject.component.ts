@@ -47,6 +47,10 @@ export class SetStudentSubjectComponent implements OnInit {
         // this.serviceAdapter.initializeAdapter(this);
     }
 
+    populateSelectedSession(item: any): void {
+        this.selectedSession = item;
+    }
+
     /*getFilteredSubjectList(): void {
         this.filteredSubjectList = [];
         this.subjectList.forEach(subject => {
