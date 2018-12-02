@@ -96,7 +96,8 @@ export class GenerateHallTicketServiceAdapter {
                     tempSection['studentList'] = [];
                     this.studentSectionList.forEach(student => {
                         if (student.classDbId === classs.dbId
-                            && student.sectionDbId === section.id) {
+                            && student.sectionDbId === section.id
+                            && student.parentTransferCertificate == null) {
                             let tempStudent = {};
                             Object.keys(student).forEach(key => {
                                 tempStudent[key] = student[key];
