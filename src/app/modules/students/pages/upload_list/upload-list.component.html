@@ -1,56 +1,62 @@
 <div class="card-content table-responsive hidden-xs hidden-sm">
 
-    <div class="row">
-        <div class="col-md-3">
-            <input type='file' (change)="onFileChange($event)" multiple="false">
-        </div>
-        <div class="col-md-3">
-            <button type="button"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    style="padding: 12px 15px; margin-right: 17px;"
-                    matTooltip="Download Template"
-                    tooltip-position="left"
-                    (click)="export();">
-                Template<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
-        </div>
-        <div class="col-md-6" align="end" *ngIf="selectedSession">
-            <mat-form-field>
-                <mat-select placeholder="Select Session"
-                            [ngModel]="selectedSession"
-                            (ngModelChange)="selectedSession=$event;">
-                    <mat-option *ngFor='let session of sessionList;' [value]="session">
-                        {{session.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
+    <ng-container *ngIf="!isLoading">
 
-    <br><i *ngIf="studentList">Displaying {{studentList.length}} students</i>
+        <div class="row">
+            <div class="col-md-3">
+                <input type='file' (change)="onFileChange($event)" multiple="false">
+            </div>
+            <div class="col-md-3">
+                <button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Download Template"
+                        tooltip-position="left"
+                        (click)="export();">
+                    Template<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+            </div>
+            <div class="col-md-6" align="end" *ngIf="selectedSession">
+                <mat-form-field>
+                    <mat-select placeholder="Select Session"
+                                [ngModel]="selectedSession"
+                                (ngModelChange)="selectedSession=$event;">
+                        <mat-option *ngFor='let session of sessionList;' [value]="session">
+                            {{session.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
 
-    <table class="table table-hover" *ngIf="studentList">
-        <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-        <tr>
-            <th *ngFor="let header of headers">{{header}}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let row of studentList">
-            <td *ngFor="let val of row">
-                {{val}}
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <br><i *ngIf="studentList">Displaying {{studentList.length}} students</i>
+        <br><i *ngIf="errorList.length>0">{{getNumberOfErrors()}}: errors</i>
 
-    <button type="button"
-            *ngIf="studentList && studentList.length>0"
-            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-            style="padding: 12px 15px; margin-right: 17px;"
-            matTooltip="Upload Student List"
-            tooltip-position="left"
-            (click)="uploadStudentList();">
-        Student List<i class="material-icons" style="margin-left: 15px;">cloud_upload</i></button>
+        <table class="table table-hover" *ngIf="studentList">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th *ngFor="let header of headers">{{header}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let row of studentList; let rowIndex=index;">
+                <td *ngFor="let val of row; let columnIndex=index;"
+                    [class.redBackground]="isErrorCell(rowIndex, columnIndex)">
+                    {{val}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button type="button"
+                *ngIf="studentList && studentList.length>0 && errorList.length === 0"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="padding: 12px 15px; margin-right: 17px;"
+                matTooltip="Upload Student List"
+                tooltip-position="left"
+                (click)="uploadStudentList();">
+            Student List<i class="material-icons" style="margin-left: 15px;">cloud_upload</i></button>
+
+    </ng-container>
 
 </div>
 

@@ -9,35 +9,65 @@ import * as XLSX from 'xlsx';
 
 type AOA = any[][];
 
-// Headers
-const HEADERS = [
-    '*Name', // 0
-    '*Father\'s Name', // 1
-    'Mother\'s Name', // 2
-    '*Class', // 3
-    'Section', // 4
-    'Mobile Number', // 5
-    'Roll No.', // 6
-    'Scholar No.', // 7
-    'Date of Birth', // 8
-    'Admission Session', // 9
-    'Gender', // 10
-    'Category', // 11
-    'Religion', // 12
-    'Blood Group', // 13
-    'Family SSMID', // 14
-    'Child SSMID', // 15
-    'Aadhar Number', // 16
-    'Caste', // 17
-    'Bank Name', // 18
-    'Bank Account Number', // 19
-    'Father\'s Occupation', // 20
-    'Father\'s Annual Income', // 21
-    'Bus Stop', // 22
-    'RTE', // 23
-    'Address', // 24
-    'Remark', // 25
-];
+// Constants
+const NAME = 0;
+const FATHER_NAME = 1;
+const MOTHER_NAME = 2;
+const CLASS = 3;
+const SECTION = 4;
+const MOBILE_NUMBER = 5;
+const ROLL_NUMBER = 6;
+const SCHOLAR_NUMBER = 7;
+const DATE_OF_BIRTH = 8;
+const ADMISSION_SESSION = 9;
+const DATE_OF_ADMISSION = 10;
+const GENDER = 11;
+const CATEGORY = 12;
+const RELIGION = 13;
+const BLOOD_GROUP = 14;
+const FAMILY_SSMID = 15;
+const CHILD_SSMID = 16;
+const AADHAR_NUMBER = 17;
+const CASTE = 18;
+const BANK_NAME = 19;
+const BANK_ACCOUNT_NUMBER = 20;
+const FATHER_OCCUPATION = 21;
+const FATHER_ANNUAL_INCOME = 22;
+const BUS_STOP = 23;
+const RTE = 24;
+const ADDRESS = 25;
+const REMARK = 26;
+
+// HEADERS
+const HEADERS = [];
+
+HEADERS[NAME] = '*Name';
+HEADERS[FATHER_NAME] = '*Father\'s Name';
+HEADERS[MOTHER_NAME] = 'Mother\'s Name';
+HEADERS[CLASS] = '*Class';
+HEADERS[SECTION] = 'Section';
+HEADERS[MOBILE_NUMBER] = 'Mobile Number';
+HEADERS[ROLL_NUMBER] = 'Roll No.';
+HEADERS[SCHOLAR_NUMBER] = 'Scholar No.';
+HEADERS[DATE_OF_BIRTH] = 'Date of Birth';
+HEADERS[ADMISSION_SESSION] = 'Admission Session';
+HEADERS[DATE_OF_ADMISSION] = 'Date of Admission';
+HEADERS[GENDER] = 'Gender';
+HEADERS[CATEGORY] = 'Category';
+HEADERS[RELIGION] = 'Religion';
+HEADERS[BLOOD_GROUP] = 'Blood Group';
+HEADERS[FAMILY_SSMID] = 'Family SSMID';
+HEADERS[CHILD_SSMID] = 'Child SSMID';
+HEADERS[AADHAR_NUMBER] = 'Aadhar Number';
+HEADERS[CASTE] = 'Caste';
+HEADERS[BANK_NAME] = 'Bank Name';
+HEADERS[BANK_ACCOUNT_NUMBER] = 'Bank Account Number';
+HEADERS[FATHER_OCCUPATION] = 'Father\'s Occupation';
+HEADERS[FATHER_ANNUAL_INCOME] = 'Father\'s Annual Income';
+HEADERS[BUS_STOP] = 'Bus Stop';
+HEADERS[RTE] = 'RTE';
+HEADERS[ADDRESS] = 'Address';
+HEADERS[REMARK] = 'Remark';
 
 // Class Values
 const CLASS_VALUES = [
@@ -163,7 +193,9 @@ export class UploadListComponent implements OnInit {
 
     studentList: any;
 
-    fillerRows: any;
+    numberOfFillerRows: any;
+
+    errorList = [];
 
     isLoading = false;
 
@@ -208,20 +240,6 @@ export class UploadListComponent implements OnInit {
         });
     }
 
-    /*handleSessionChange(): void {
-        this.studentList = null;
-        let request_class_data = {
-            sessionDbId: this.selectedSession.dbId,
-        };
-        this.isLoading = true;
-        this.classService.getClassSectionList(request_class_data, this.user.jwt).then(classSectionList => {
-            this.isLoading = false;
-            this.classSectionList = classSectionList;
-        }, error => {
-            this.isLoading = false;
-        });
-    }*/
-
     initializeTemplate(): void {
         this.template = [
 
@@ -249,7 +267,7 @@ export class UploadListComponent implements OnInit {
 
         ];
 
-        this.fillerRows = 11;
+        this.numberOfFillerRows = 11;
     }
 
     onFileChange(evt: any) {
@@ -291,7 +309,8 @@ export class UploadListComponent implements OnInit {
 
     validateAndPopulateData(): void {
         this.studentList = null;
-        let checkFailed = false;
+        this.errorList = [];
+        /*let checkFailed = false;
         this.data.every((student, index) => {
             if (index >= this.fillerRows && !this.validateStudent(student, index)) {
                 checkFailed = true;
@@ -301,117 +320,118 @@ export class UploadListComponent implements OnInit {
         });
         if (checkFailed) {
             return;
-        }
-        this.studentList = this.data.slice(this.fillerRows);
+        }*/
+        this.data.forEach((student, index) => {
+            if (index >= this.numberOfFillerRows) {
+                let errorColumnList = this.validateStudent(student, index);
+                if (errorColumnList.length > 0) {
+                    this.errorList.push({
+                        'row': index-this.numberOfFillerRows,
+                        'column': errorColumnList,
+                    });
+                }
+            }
+        });
+        this.studentList = this.data.slice(this.numberOfFillerRows);
     }
 
-    validateStudent(student: any, index: number): boolean {
+    validateStudent(student: any, index: number): any {
 
         let rowNumber = index+1;
 
+        let errorColumnList = [];
+
         // Check Name
-        if (student[0] === undefined || student[0].length < 3) {
-            alert('Row Number: ' + (rowNumber) +', invalid student\'s name');
-            return false;
+        if (student[NAME] === undefined || student[NAME].length < 3) {
+            errorColumnList.push(NAME);
         }
 
         // Check Father's Name
-        if (student[1] === undefined || student[1].length < 3) {
-            alert('Row Number: ' + (rowNumber) +', invalid father\'s name');
-            return false;
+        if (student[FATHER_NAME] === undefined || student[FATHER_NAME].length < 3) {
+            errorColumnList.push(FATHER_NAME);
         }
 
         // Check Mother's Name
-        if (student[2] !== undefined && student[2].length < 3) {
-            alert('Row Number: ' + (rowNumber) +', invalid mother\'s name');
-            return false;
+        if (student[MOTHER_NAME] !== undefined && student[MOTHER_NAME].length < 3) {
+            errorColumnList.push(MOTHER_NAME);
         }
 
         // Check Class
-        if (CLASS_VALUES.indexOf(student[3]) === -1) {
-            alert('Row Number: ' + (rowNumber) +', invalid class name');
-            return false;
+        if (CLASS_VALUES.indexOf(student[CLASS]) === -1) {
+            errorColumnList.push(CLASS);
         }
 
         // Check Section
-        if (student[4] !== undefined && SECTION_VALUES.indexOf(student[4]) === -1) {
-            alert('Row Number: ' + (rowNumber) +', invalid section name');
-            return false;
+        if (student[SECTION] !== undefined && SECTION_VALUES.indexOf(student[SECTION]) === -1) {
+            errorColumnList.push(SECTION);
         }
 
         // Check Mobile Number
-        if (!this.undefinedOrNumberLength(student[5], 10)) {
-            alert('Row Number: ' + (rowNumber) +', invalid mobile number');
-            return false;
+        if (!this.undefinedOrNumberLength(student[MOBILE_NUMBER], 10)) {
+            errorColumnList.push(MOBILE_NUMBER);
         }
 
         // Check Date of Birth
-        if (!this.validateDate(student[8])) {
-            alert('Row Number: ' + (rowNumber) +', invalid date of birth');
-            return false;
+        if (!this.validateDate(student[DATE_OF_BIRTH])) {
+            errorColumnList.push(DATE_OF_BIRTH);
+        }
+
+        // Check Date of Admission
+        if (!this.validateDate(student[DATE_OF_ADMISSION])) {
+            errorColumnList.push(DATE_OF_ADMISSION);
         }
 
         // Check Admission Session
-        if (student[9] !== undefined && ADMISSION_SESSION_VALUES.indexOf(student[9]) === -1) {
-            alert('Row Number: ' + (rowNumber) +', invalid admission Session');
-            return false;
+        if (student[ADMISSION_SESSION] !== undefined && ADMISSION_SESSION_VALUES.indexOf(student[ADMISSION_SESSION]) === -1) {
+            errorColumnList.push(ADMISSION_SESSION);
         }
 
         // Check Gender
-        if (student[10] !== undefined && GENDER_VALUES.indexOf(student[10]) === -1) {
-            alert('Row Number: ' + (rowNumber) +', invalid gender');
-            return false;
+        if (student[GENDER] !== undefined && GENDER_VALUES.indexOf(student[GENDER]) === -1) {
+            errorColumnList.push(GENDER);
         }
 
         // Check Category
-        if (student[11] !== undefined && CATEGORY_VALUES.indexOf(student[11]) === -1) {
-            alert('Row Number: ' + (rowNumber) + ', invalid category');
-            return false;
+        if (student[CATEGORY] !== undefined && CATEGORY_VALUES.indexOf(student[CATEGORY]) === -1) {
+            errorColumnList.push(CATEGORY);
         }
 
         // Check Religion
-        if (student[12] !== undefined && RELIGION_VALUES.indexOf(student[12]) === -1) {
-            alert('Row Number: ' + (rowNumber) + ', invalid religion');
-            return false;
+        if (student[RELIGION] !== undefined && RELIGION_VALUES.indexOf(student[RELIGION]) === -1) {
+            errorColumnList.push(RELIGION);
         }
 
         // Check Blood Group
-        if (student[13] !== undefined && BLOOD_GROUP_VALUES.indexOf(student[13]) === -1) {
-            alert('Row Number: ' + (rowNumber) + ', invalid blood group');
-            return false;
+        if (student[BLOOD_GROUP] !== undefined && BLOOD_GROUP_VALUES.indexOf(student[BLOOD_GROUP]) === -1) {
+            errorColumnList.push(BLOOD_GROUP);
         }
 
         // Check Family SSMID
-        if (!this.undefinedOrNumberLength(student[14], 8)) {
-            alert('Row Number: ' + (rowNumber) + ', invalid family ssmid');
-            return false;
+        if (!this.undefinedOrNumberLength(student[FAMILY_SSMID], 8)) {
+            errorColumnList.push(FAMILY_SSMID);
         }
 
         // Check Child SSMID
-        if (!this.undefinedOrNumberLength(student[15], 9)) {
-            alert('Row Number: ' + (rowNumber) + ', invalid child ssmid');
-            return false;
+        if (!this.undefinedOrNumberLength(student[CHILD_SSMID], 9)) {
+            errorColumnList.push(CHILD_SSMID);
         }
 
         // Check Aadhar Number
-        if (!this.undefinedOrNumberLength(student[16], 12)) {
-            alert('Row Number: ' + (rowNumber) + ', invalid aadhar number');
-            return false;
+        if (!this.undefinedOrNumberLength(student[AADHAR_NUMBER], 12)) {
+            errorColumnList.push(AADHAR_NUMBER);
         }
 
         // Check Bus Stop
-        if (student[22] !== undefined && this.busStopList.map(a => a.stopName).indexOf(student[22]) === -1) {
-            alert('Row Number: ' + (rowNumber) + ', invalid bus stop');
-            return false;
+        if (student[BUS_STOP] !== undefined && this.busStopList.map(a => a.stopName).indexOf(student[BUS_STOP]) === -1) {
+            errorColumnList.push(BUS_STOP);
         }
 
         // Check RTE
-        if (student[23] !== undefined && RTE_VALUES.indexOf(student[23]) === -1) {
-            alert('Row Number: ' + (rowNumber) + ', invalid rte value');
-            return false;
+        if (student[RTE] !== undefined && RTE_VALUES.indexOf(student[RTE]) === -1) {
+            errorColumnList.push(RTE);
         }
 
-        return true;
+        return errorColumnList;
 
     }
 
@@ -465,7 +485,6 @@ export class UploadListComponent implements OnInit {
             {
                 if (dd>ListofDays[mm-1])
                 {
-                    alert('Days: Invalid date format!');
                     return false;
                 }
             }
@@ -478,12 +497,10 @@ export class UploadListComponent implements OnInit {
                 }
                 if ((lyear==false) && (dd>=29))
                 {
-                    alert('Non Leap Year: Invalid date format!');
                     return false;
                 }
                 if ((lyear==true) && (dd>29))
                 {
-                    alert('Leap Year: Invalid date format!');
                     return false;
                 }
             }
@@ -491,7 +508,6 @@ export class UploadListComponent implements OnInit {
         }
         else
         {
-            alert("Date: Invalid date format!");
             return false;
         }
 
@@ -531,33 +547,34 @@ export class UploadListComponent implements OnInit {
 
     getServerRequest(student: any): any {
         let data = {
-            'name': student[0],
-            'fathersName': student[1],
-            'motherName': student[2],
-            'parentDivision': this.getParentSection(student[4]),
-            'mobileNumber': parseInt(student[5]),
-            'rollNumber': student[6],
-            'scholarNumber': student[7],
-            'dateOfBirth': this.getDate(student[8]),
-            'admissionSession': this.getSession(student[9]),
-            'gender': student[10],
-            'newCategoryField': student[11],
-            'newReligionField': student[12],
-            'bloodGroup': student[13],
-            'familySSMID': parseInt(student[14]),
-            'childSSMID': parseInt(student[15]),
-            'aadharNum': parseInt(student[16]),
-            'caste': student[17],
-            'bankName': student[18],
-            'bankAccountNumber': student[19],
-            'fatherOccupation': student[20],
-            'fatherAnnualIncome': student[21],
-            'currentBusStop': this.getBusStop(student[22]),
-            'rte': student[23],
-            'address': student[24],
-            'remark': student[25],
+            'name': student[NAME],
+            'fathersName': student[FATHER_NAME],
+            'motherName': student[MOTHER_NAME],
+            'parentDivision': this.getParentSection(student[SECTION]),
+            'mobileNumber': parseInt(student[MOBILE_NUMBER]),
+            'rollNumber': student[ROLL_NUMBER],
+            'scholarNumber': student[SCHOLAR_NUMBER],
+            'dateOfBirth': this.getDate(student[DATE_OF_BIRTH]),
+            'admissionSession': this.getSession(student[ADMISSION_SESSION]),
+            'dateOfAdmission': this.getDate(student[DATE_OF_ADMISSION]),
+            'gender': student[GENDER],
+            'newCategoryField': student[CATEGORY],
+            'newReligionField': student[RELIGION],
+            'bloodGroup': student[BLOOD_GROUP],
+            'familySSMID': parseInt(student[FAMILY_SSMID]),
+            'childSSMID': parseInt(student[CHILD_SSMID]),
+            'aadharNum': parseInt(student[AADHAR_NUMBER]),
+            'caste': student[CASTE],
+            'bankName': student[BANK_NAME],
+            'bankAccountNumber': student[BANK_ACCOUNT_NUMBER],
+            'fatherOccupation': student[FATHER_OCCUPATION],
+            'fatherAnnualIncome': student[FATHER_ANNUAL_INCOME],
+            'currentBusStop': this.getBusStop(student[BUS_STOP]),
+            'rte': student[RTE],
+            'address': student[ADDRESS],
+            'remark': student[REMARK],
             'parentSchool': this.user.activeSchool.dbId,
-            'parentClass': this.getParentClass(student[3]),
+            'parentClass': this.getParentClass(student[CLASS]),
             'parentSession': this.selectedSession.dbId,
         };
         Object.keys(data).forEach(keys => {
@@ -649,27 +666,6 @@ export class UploadListComponent implements OnInit {
 
     }
 
-    /*getParentSection(className: any, sectionName: any): any {
-        if (sectionName === undefined) {
-            sectionName = 'Section - A';
-        }
-        let result = null;
-        this.classSectionList.every(classs => {
-            if (classs.name === className) {
-                classs.sectionList.every(section => {
-                    if (section.name === sectionName) {
-                        result = section.dbId;
-                        return false;
-                    }
-                    return true;
-                });
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }*/
-
     getParentSection(sectionName: any): any {
         if (sectionName === undefined) {
             sectionName = 'Section - A';
@@ -682,19 +678,6 @@ export class UploadListComponent implements OnInit {
             }
             return true;
         });
-        /*this.classSectionList.every(classs => {
-            if (classs.name === className) {
-                classs.sectionList.every(section => {
-                    if (section.name === sectionName) {
-                        result = section.dbId;
-                        return false;
-                    }
-                    return true;
-                });
-                return false;
-            }
-            return true;
-        });*/
         return result;
     }
 
@@ -706,6 +689,33 @@ export class UploadListComponent implements OnInit {
         this.classList.every(classs => {
             if (classs.name === className) {
                 result = classs.dbId;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    getNumberOfErrors(): number {
+        let numberOfErrors = 0;
+        this.errorList.forEach(row => {
+            numberOfErrors += row.column.length;
+        });
+        console.log(numberOfErrors);
+        return numberOfErrors;
+    }
+
+    isErrorCell(rowIndex: number, columnIndex: number): boolean {
+        let result = false;
+        this.errorList.every(item => {
+            if (item.row === rowIndex) {
+                item.column.every(itemTwo => {
+                    if (itemTwo === columnIndex) {
+                        result = true;
+                        return false;
+                    }
+                    return true;
+                });
                 return false;
             }
             return true;
