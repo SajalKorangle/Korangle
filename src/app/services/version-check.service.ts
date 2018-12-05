@@ -28,14 +28,16 @@ export class VersionCheckService {
     private checkVersion(url) {
         // timestamp these requests to invalidate caches
         this.http.get(url + '?t=' + new Date().getTime())
-            .first()
-            .subscribe(
+            .toPromise()
+            .then(
                 (response: any) => {
                     const hash = response.hash;
                     const hashChanged = this.hasHashChanged(this.currentHash, hash);
 
                     // If new version, do something
                     if (hashChanged) {
+                        location.assign('www.korangle.com');
+                        location.reload(true);
                         // ENTER YOUR CODE TO DO SOMETHING UPON VERSION CHANGE
                         // for an example: location.reload();
                     }

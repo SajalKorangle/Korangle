@@ -11,7 +11,7 @@ import {environment} from '../environments/environment.prod';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [ AuthenticationService ],
+    providers: [ AuthenticationService, VersionCheckService ],
 })
 export class AppComponent implements OnInit {
 
