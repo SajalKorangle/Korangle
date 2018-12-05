@@ -4,6 +4,8 @@ import { User } from './classes/user';
 import { DataStorage } from './classes/data-storage';
 
 import {AuthenticationService} from './services/authentication.service';
+import {VersionCheckService} from './services/version-check.service';
+import {environment} from '../environments/environment.prod';
 
 @Component({
     selector: 'app-root',
@@ -15,9 +17,11 @@ export class AppComponent implements OnInit {
 
 	public user = new User();
 
-    constructor(private authenticationService: AuthenticationService) {}
+    constructor(private authenticationService: AuthenticationService,
+                private versionCheckService: VersionCheckService) {}
 
     ngOnInit() {
+
         DataStorage.getInstance().setUser(this.user);
         // localStorage.setItem('schoolJWT', '');
         if (this.user.checkAuthentication()) {
@@ -30,6 +34,9 @@ export class AppComponent implements OnInit {
                 }
             });
         }
+
+        this.versionCheckService.initVersionCheck(environment.versionCheckURL);
+
     }
 
 }
