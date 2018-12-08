@@ -566,7 +566,7 @@ export class UploadListComponent implements OnInit {
             'aadharNum': parseInt(student[AADHAR_NUMBER]),
             'caste': student[CASTE],
             'bankName': student[BANK_NAME],
-            'bankAccountNumber': student[BANK_ACCOUNT_NUMBER],
+            'bankAccountNum': student[BANK_ACCOUNT_NUMBER],
             'fatherOccupation': student[FATHER_OCCUPATION],
             'fatherAnnualIncome': student[FATHER_ANNUAL_INCOME],
             'currentBusStop': this.getBusStop(student[BUS_STOP]),
