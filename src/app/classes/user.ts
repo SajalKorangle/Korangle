@@ -124,43 +124,6 @@ export class User {
 }
 
 /*
-    demo, user1234 - 9425921504
-    eklavya, ashta123 - 9907056160
-    anupreet, itisjp123 - 9425083104
-    madhav, lakhan1508 - 7898373639
-    talent, innovative123 - 9754683181
-    champion, 123champ - 8770176906
-    bhagatsingh, bhagat123 - 7974252055
-    nainish, akodia123 - 9926085773
-    devendra, 12345dev - 9926718657
-    praveen, praveen5678 - 9039720764
-    rahul, tailor123 - 9584256522
-
-    For Madhav School
-    madhav, lakhan1508 - Lakhan Parmar - 7898373639
-    8269392567, ramesh123 - Babita Malviya
-    8889873644, 123tularam - Deepika
-    8889135386, singh123 - Doli Mewada
-    9644137409, thakur456 - Laxmi Thakur
-    9669868163, sharmanilam - Nilam Sharma
-    7879023147, pooja567 - Pooja Malviya
-    8964048545, singh678 - Ramdayal Malviya
-    9826316017, dhangarsantosh - Santosh Dhangar
-    8120232064, singhgajraj - Trapti Chadar
-    9039903877, sangeeta77 - Sangeeta Sharma
-
-    For Bright Star - English Medium
-    9009437033, sajjan033 - Babita Parmar
-    9713237866, siddi786 - Farhin Siddiqui
-    8871812147, neelam567 -	Neelam Rajpal
-    9424876356, rathinirmala - Nirmala Rathi
-    6262710136, jagdish136 - Rani Patidar
-    9977331033, laxmi033 - SANDEEP RATHORE
-    8871940877, 887sandhya - Sandhya Thakur
-    9630629276, satish276 - Satish Sharma
-    7987792104, umashankar - Shikha Kushwah
-    9753319449, sharma944 - Shriya Sharma
-    8962600526, rajpal005 - Simran Rajpal
-    9926503752, patipraja1 - Prajapati Sir
-
+    9926085773
+    9926718657
 */
