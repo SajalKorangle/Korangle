@@ -24,6 +24,7 @@ import { PrintICardsComponent } from './modules/students/print/print-i-card/prin
 import { PrintHallTicketComponent } from './modules/examination/print/print-hall-ticket/print-hall-ticket.component';
 import { PrintStudentAttendanceListComponent } from './modules/attendance/print/print-student-attendance-list/print-student-attendance-list.component';
 import { PrintEmployeeAttendanceListComponent } from './modules/attendance/print/print-employee-attendance-list/print-employee-attendance-list.component';
+import {PrintEmployeeListComponent} from './print/print-employee-list/print-employee-list.component';
 
 @NgModule({
     declarations: [
@@ -39,6 +40,7 @@ import { PrintEmployeeAttendanceListComponent } from './modules/attendance/print
         PrintTransferCertificateComponent,
         PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
+        PrintEmployeeListComponent,
         PrintNewFeeReceiptComponent,
         PrintICardsComponent,
         PrintHallTicketComponent,

@@ -120,6 +120,22 @@
         </mat-select>
     </mat-form-field>
 
+    <button type="button"
+            class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-sm hidden-xs"
+            style="padding: 12px 15px; margin-right: 17px;"
+            matTooltip="Print the following list"
+            tooltip-position="left"
+            (click)="printEmployeeList();">
+        Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
+
+    <button type="button"
+            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+            style="padding: 12px 15px; margin-right: 17px;"
+            matTooltip="Download the following list"
+            tooltip-position="left"
+            (click)="downloadList();">
+        Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+
     <br><i>Displaying {{employeeProfileList.length}} employee<span *ngIf="employeeProfileList.length>1">s</span></i>
 
     <!-- Employee Table List -->

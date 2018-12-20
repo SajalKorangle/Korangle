@@ -1,6 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import { EmployeeService } from '../../employee.service';
+import {EmitterService} from '../../../../services/emitter.service';
+
+import * as XLSX from 'xlsx';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -74,5 +77,91 @@ export class ViewAllComponent implements OnInit {
             this.columnFilter[key] = false;
         });
     };
+
+    printEmployeeList(): void {
+        const value = {
+            employeeList: this.employeeProfileList,
+            columnFilter: this.columnFilter
+        };
+        EmitterService.get('print-employee-list').emit(value);
+    };
+
+    downloadList(): void {
+
+        let template: any;
+
+        template = [
+
+            this.getHeaderValues(),
+
+        ];
+
+        this.employeeProfileList.forEach(employee => {
+            template.push(this.getEmployeeDisplayInfo(employee));
+        });
+
+        /* generate worksheet */
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
+
+        /* generate workbook and add the worksheet */
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        /* save to file */
+        XLSX.writeFile(wb, 'korangle_employees.csv');
+    }
+
+    getHeaderValues(): any {
+        let headerValues = [];
+        (this.columnFilter.showName)? headerValues.push('Name'): '';
+        (this.columnFilter.showEmployeeNumber)? headerValues.push('Employee Number'): '';
+        (this.columnFilter.showFatherName)? headerValues.push('Father\'s Name'): '';
+        (this.columnFilter.showMobileNumber)? headerValues.push('Mobile No.'): '';
+        (this.columnFilter.showDateOfBirth)? headerValues.push('Date of Birth'): '';
+        (this.columnFilter.showMotherName)? headerValues.push('Mother\'s Name'): '';
+        (this.columnFilter.showGender)? headerValues.push('Gender'): '';
+        (this.columnFilter.showAadharNumber)? headerValues.push('Aadhar No.'): '';
+        (this.columnFilter.showPassportNumber)? headerValues.push('Passport No.'): '';
+        (this.columnFilter.showQualification)? headerValues.push('Qualification'): '';
+        (this.columnFilter.showCurrentPost)? headerValues.push('Current Post'): '';
+        (this.columnFilter.showDateOfJoining)? headerValues.push('Date of Joining'): '';
+        (this.columnFilter.showPanNumber)? headerValues.push('Pan Number'): '';
+        (this.columnFilter.showGender)? headerValues.push('Gender'): '';
+        (this.columnFilter.showAddress)? headerValues.push('Address'): '';
+        (this.columnFilter.showBankName)? headerValues.push('Bank Name'): '';
+        (this.columnFilter.showBankAccountNumber)? headerValues.push('Bank Account Number'): '';
+        (this.columnFilter.showEpfAccountNumber)? headerValues.push('Epf Account Number'): '';
+        (this.columnFilter.showMonthlySalary)? headerValues.push('Monthly Salary'): '';
+        (this.columnFilter.showRemark)? headerValues.push('Remark'): '';
+
+        return headerValues;
+    }
+
+    getEmployeeDisplayInfo(employee: any): any {
+        let employeeDisplay = [];
+
+        (this.columnFilter.showName)? employeeDisplay.push(employee.name): '';
+        (this.columnFilter.showEmployeeNumber)? employeeDisplay.push(employee.employeeNumber): '';
+        (this.columnFilter.showFatherName)? employeeDisplay.push(employee.fatherName): '';
+        (this.columnFilter.showMobileNumber)? employeeDisplay.push(employee.mobileNumber): '';
+        (this.columnFilter.showDateOfBirth)? employeeDisplay.push(employee.dateOfBirth): '';
+        (this.columnFilter.showMotherName)? employeeDisplay.push(employee.motherName): '';
+        (this.columnFilter.showGender)? employeeDisplay.push(employee.gender): '';
+        (this.columnFilter.showAadharNumber)? employeeDisplay.push(employee.aadharNumber): '';
+        (this.columnFilter.showPassportNumber)? employeeDisplay.push(employee.passportNumber): '';
+        (this.columnFilter.showQualification)? employeeDisplay.push(employee.qualification): '';
+        (this.columnFilter.showCurrentPost)? employeeDisplay.push(employee.currentPost): '';
+        (this.columnFilter.showDateOfJoining)? employeeDisplay.push(employee.dateOfJoining): '';
+        (this.columnFilter.showPanNumber)? employeeDisplay.push(employee.panNumber): '';
+        (this.columnFilter.showGender)? employeeDisplay.push(employee.gender): '';
+        (this.columnFilter.showAddress)? employeeDisplay.push(employee.address): '';
+        (this.columnFilter.showBankName)? employeeDisplay.push(employee.bankName): '';
+        (this.columnFilter.showBankAccountNumber)? employeeDisplay.push(employee.bankAccountNumber): '';
+        (this.columnFilter.showEpfAccountNumber)? employeeDisplay.push(employee.epfAccountNumber): '';
+        (this.columnFilter.showMonthlySalary)? employeeDisplay.push(employee.monthlySalary): '';
+        (this.columnFilter.showRemark)? employeeDisplay.push(employee.remark): '';
+
+        return employeeDisplay;
+    }
 
 }
