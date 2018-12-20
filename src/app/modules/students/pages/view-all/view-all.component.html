@@ -241,6 +241,24 @@
                                       (click)="$event.stopPropagation();">Old
                         </mat-checkbox>
                     </mat-option>
+                    <mat-option>
+                        RTE:
+                        <mat-checkbox [(ngModel)]="yesRTE"
+                                      style="margin-right: 5px;"
+                                      (ngModelChange)="handleStudentDisplay()"
+                                      (click)="$event.stopPropagation();">Yes
+                        </mat-checkbox>
+                        <mat-checkbox [(ngModel)]="noRTE"
+                                      style="margin-right: 5px;"
+                                      (ngModelChange)="handleStudentDisplay()"
+                                      (click)="$event.stopPropagation();">No
+                        </mat-checkbox>
+                        <mat-checkbox [(ngModel)]="unknownRTE"
+                                      style="margin-right: 5px;"
+                                      (ngModelChange)="handleStudentDisplay()"
+                                      (click)="$event.stopPropagation();">Unknown
+                        </mat-checkbox>
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
 

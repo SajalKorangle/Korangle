@@ -60,6 +60,11 @@ export class ViewAllComponent implements OnInit {
     newAdmission = true;
     oldAdmission = true;
 
+    /* RTE Options */
+    yesRTE = true;
+    noRTE = true;
+    unknownRTE = true;
+
     displayStudentNumber = 0;
 
     // classSectionStudentList = [];
@@ -295,6 +300,18 @@ export class ViewAllComponent implements OnInit {
                 return;
             } else if (!this.oldAdmission
                 && student.admissionSessionDbId !== this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
+            }
+
+            /* RTE Filter Check */
+            if (!this.yesRTE && student.rte === "YES") {
+                student.show = false;
+                return;
+            } else if (!this.noRTE && student.rte === "NO") {
+                student.show = false;
+                return;
+            } else if (!this.unknownRTE && (student.rte === null || student.rte === undefined)) {
                 student.show = false;
                 return;
             }
