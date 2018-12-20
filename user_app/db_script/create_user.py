@@ -15,12 +15,10 @@ def create_user(apps, schema_editor):
                 if 1000000000 < student_object.mobileNumber <  9999999999:
                     if User.objects.filter(username=student_object.mobileNumber).count() == 0:
                         counter += 1
-                        print(str(counter))
                         user = User.objects.create_user(username=student_object.mobileNumber,
                                                         password=student_object.mobileNumber,
                                                         first_name=student_object.fathersName)
 
-    print('---')
 
     for employee_object in Employee.objects.all():
         if employee_object.mobileNumber is not None:
@@ -28,7 +26,6 @@ def create_user(apps, schema_editor):
                 if 1000000000 < employee_object.mobileNumber <  9999999999:
                     if User.objects.filter(username=employee_object.mobileNumber).count() == 0:
                         counter += 1
-                        print(str(counter))
                         user = User.objects.create_user(username=employee_object.mobileNumber,
                                                         password=employee_object.mobileNumber,
                                                         first_name=employee_object.name)
