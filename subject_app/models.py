@@ -1,6 +1,7 @@
 from django.db import models
 
 from school_app.model.models import School, Session
+from employee_app.models import Employee
 from class_app.models import Class, Division
 from student_app.models import Student
 
@@ -37,9 +38,12 @@ class ClassSubject(models.Model):
 
     parentSubject = models.ForeignKey(SubjectSecond, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSubject')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSchool')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentEmployee')
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentClass')
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
+    mainSubject = models.BooleanField(null=False, default=True, verbose_name='mainSubject')
+    onlyGrade = models.BooleanField(null=False, default=False, verbose_name='onlyGrade')
 
     class Meta:
         db_table = 'class_subject'

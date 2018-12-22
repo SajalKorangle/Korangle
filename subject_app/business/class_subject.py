@@ -20,6 +20,16 @@ def create_class_subject(data):
         return 'Subject addition in class failed'
 
 
+def update_class_subject(data):
+
+    class_subject_serializer = ClassSubjectModelSerializer(ClassSubject.objects.get(id=data['id']), data=data)
+    if class_subject_serializer.is_valid():
+        class_subject_serializer.save()
+        return 'Class Subject updated successfully'
+    else:
+        return 'Class Subject updation failed'
+
+
 def delete_class_subject(data):
 
     ClassSubject.objects.get(id=data).delete()

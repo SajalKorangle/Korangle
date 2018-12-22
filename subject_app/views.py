@@ -44,7 +44,7 @@ class SubjectListView(APIView):
 
 
 ######### ClassSubjectView #############
-from subject_app.business.class_subject import create_class_subject, delete_class_subject
+from subject_app.business.class_subject import create_class_subject, update_class_subject, delete_class_subject
 
 
 class ClassSubjectView(APIView):
@@ -53,6 +53,11 @@ class ClassSubjectView(APIView):
     def post(request):
         data = json.loads(request.body.decode('utf-8'))
         return create_class_subject(data)
+
+    @user_permission
+    def put(request, class_subject_id):
+        data = json.loads(request.body.decode('utf-8'))
+        return update_class_subject(data)
 
     @user_permission
     def delete(request, class_subject_id):
