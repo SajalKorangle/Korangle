@@ -117,15 +117,44 @@ class TestListView(APIView):
 
     @user_permission
     def get(request):
-        if 'schoolId' in request.GET and 'sessionId' in request.GET:
-            data = {
-                'schoolId': request.GET['schoolId'],
-                'sessionId': request.GET['sessionId'],
-            }
-        elif 'examinationId' in request.GET and 'classId' in request.GET and 'sectionId' in request.GET:
-            data = {
-                'examinationId': request.GET['examinationId'],
-                'classId': request.GET['classId'],
-                'sectionId': request.GET['sectionId'],
-            }
-        return get_test_list(data)
+        if 'examinationList' in request.GET:
+            return get_test_list(request.GET)
+        else:
+            if 'schoolId' in request.GET and 'sessionId' in request.GET:
+                data = {
+                    'schoolId': request.GET['schoolId'],
+                    'sessionId': request.GET['sessionId'],
+                }
+            elif 'examinationId' in request.GET and 'classId' in request.GET and 'sectionId' in request.GET:
+                data = {
+                    'examinationId': request.GET['examinationId'],
+                    'classId': request.GET['classId'],
+                    'sectionId': request.GET['sectionId'],
+                }
+            return get_test_list(data)
+
+
+########### Student Test #############
+from examination_app.business.student_test import get_student_test_list, create_student_test_list,\
+    delete_student_test_list, update_student_test_list
+
+
+class StudentTestListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_student_test_list(request.GET)
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_student_test_list(data)
+
+    @user_permission
+    def put(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return update_student_test_list(data)
+
+    @user_permission
+    def delete(request, student_test_id_list):
+        return delete_student_test_list(student_test_id_list)

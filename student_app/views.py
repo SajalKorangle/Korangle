@@ -130,7 +130,7 @@ class StudentMiniProfileView(APIView):
 
 
 ############# Student Section #####################
-from .business.student_section import create_student_section_list, update_student_section
+from .business.student_section import create_student_section_list, update_student_section, get_student_section_list
 
 
 class StudentSectionView(APIView):
@@ -142,6 +142,10 @@ class StudentSectionView(APIView):
 
 
 class StudentSectionListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_student_section_list(request.GET)
 
     def post(self, request):
         if request.user.is_authenticated:

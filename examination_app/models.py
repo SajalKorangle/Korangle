@@ -120,7 +120,21 @@ class TestSecond(models.Model):
     startTime = models.DateTimeField(null=False, verbose_name='startTime')
     endTime = models.DateTimeField(null=False, verbose_name='endTime')
     testType = models.CharField(max_length=10, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
+    maximumMarks = models.PositiveIntegerField(null=False, verbose_name='maximumMarks', default=100)
 
     class Meta:
         db_table = 'test_second'
         unique_together = ('parentExamination', 'parentSubject', 'parentClass', 'parentDivision', 'testType')
+
+
+class StudentTest(models.Model):
+
+    parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
+    parentSubject = models.ForeignKey(SubjectSecond, models.PROTECT, null=False, default=0, verbose_name='parentSubject')
+    parentStudent = models.ForeignKey(Student, models.PROTECT, null=False, default=0, verbose_name='parentStudent')
+    testType = models.CharField(max_length=10, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
+    marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
+
+    class Meta:
+        db_table = 'student_test'
+        unique_together = ('parentExamination', 'parentSubject', 'parentStudent', 'testType')

@@ -12,6 +12,42 @@ class StudentSectionModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+def get_student_section_list(data):
+
+    student_section_query = StudentSection.objects.all()
+
+    if data['studentList'] != '':
+        student_list = data['studentList'].split(',')
+        student_section_query = student_section_query.filter(parentStudent__in=student_list)
+
+    if data['sessionList'] != '':
+        session_list = data['sessionList'].split(',')
+        student_section_query = student_section_query.filter(parentSession__in=session_list)
+
+    if data['classList'] != '':
+        class_list = data['classList'].split(',')
+        student_section_query = student_section_query.filter(parentClass__in=class_list)
+
+    if data['sectionList'] != '':
+        section_list = data['sectionList'].split(',')
+        student_section_query = student_section_query.filter(parentDivision__in=section_list)
+
+    if data['rollNumberList'] != '':
+        roll_number_list = data['rollNumberList'].split(',')
+        student_section_query = student_section_query.filter(rollNumber__in=roll_number_list)
+
+    if data['attendanceList'] != '':
+        attendance_list = data['attendanceList'].split(',')
+        student_section_query = student_section_query.filter(attendance__in=attendance_list)
+
+    student_section_list = []
+
+    for student_object in student_section_query:
+        student_section_list.append(StudentSectionModelSerializer(student_object).data)
+
+    return student_section_list
+
+
 def update_student_section(data):
 
     student_section_object = StudentSectionModelSerializer(StudentSection.objects.get(id=data['id']), data=data)

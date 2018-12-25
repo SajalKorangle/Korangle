@@ -32,3 +32,11 @@ urlpatterns += [
     url(r'^tests/(?P<test_id>[0-9]+)', TestView.as_view()),
     url(r'^tests', TestView.as_view()),
 ]
+
+
+from examination_app.views import StudentTestListView
+
+urlpatterns += [
+    url(r'^student-tests/batch/(?P<student_test_id_list>[0-9,]+)', StudentTestListView.as_view()),
+    url(r'^student-tests/batch', StudentTestListView.as_view()),
+]

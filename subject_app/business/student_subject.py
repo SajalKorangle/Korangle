@@ -28,12 +28,24 @@ def get_student_subject_list(data):
 
     student_subject_list = []
 
+    student_subject_query = StudentSubject.objects.all()
+
+    if 'studentList' in data:
+        if data['studentList'] != '':
+            student_subject_query = student_subject_query.filter(parentStudent__in=data['studentList'].split(','))
+
+        if data['subjectList'] != '':
+            student_subject_query = student_subject_query.filter(parentSubject__in=data['subjectList'].split(','))
+
+        if data['sessionList'] != '':
+            student_subject_query = student_subject_query.filter(parentSession__in=data['sessionList'].split(','))
+
     if 'studentId' in data:
-        student_subject_query = StudentSubject.objects.filter(parentSession_id=data['sessionId'],
-                                                              parentStudent_id=data['studentId'])
-    else:
-        student_subject_query = StudentSubject.objects.filter(parentSession_id=data['sessionId'],
-                                                              parentStudent__parentSchool_id=data['schoolId'])
+        student_subject_query = student_subject_query.filter(parentSession_id=data['sessionId'],
+                                                            parentStudent_id=data['studentId'])
+    elif 'schoolId' in data:
+        student_subject_query = student_subject_query.filter(parentSession_id=data['sessionId'],
+                                                            parentStudent__parentSchool_id=data['schoolId'])
 
     for student_subject_object in student_subject_query:
         student_subject_list.append(StudentSubjectModelSerializer(student_subject_object).data)
@@ -57,5 +69,4 @@ def delete_student_subject_list(data):
         StudentSubject.objects.get(id=student_subject_id).delete()
 
     return 'Subject removed from multiple students successfully'
-
 

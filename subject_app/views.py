@@ -72,15 +72,18 @@ class ClassSubjectListView(APIView):
 
     @user_permission
     def get(request):
-        data = {}
-        data['sessionId'] = request.GET['sessionId']
-        if 'classId' in request.GET and 'sectionId' in request.GET:
-            data['classId'] = request.GET['classId']
-            data['sectionId'] = request.GET['sectionId']
-            data['schoolId'] = request.GET['schoolId']
+        if 'subjectList' in request.GET:
+            return get_class_subject_list(request.GET)
         else:
-            data['schoolId'] = request.GET['schoolId']
-        return get_class_subject_list(data)
+            data = {}
+            data['sessionId'] = request.GET['sessionId']
+            if 'classId' in request.GET and 'sectionId' in request.GET:
+                data['classId'] = request.GET['classId']
+                data['sectionId'] = request.GET['sectionId']
+                data['schoolId'] = request.GET['schoolId']
+            else:
+                data['schoolId'] = request.GET['schoolId']
+            return get_class_subject_list(data)
 
 
 
@@ -109,12 +112,15 @@ class StudentSubjectListView(APIView):
     @user_permission
     def get(request):
         data = {}
-        data['sessionId'] = request.GET['sessionId']
-        if 'studentId' in request.GET:
-            data['studentId'] = request.GET['studentId']
+        if 'studentList' in request.GET:
+            return get_student_subject_list(request.GET)
         else:
-            data['schoolId'] = request.GET['schoolId']
-        return get_student_subject_list(data)
+            data['sessionId'] = request.GET['sessionId']
+            if 'studentId' in request.GET:
+                data['studentId'] = request.GET['studentId']
+            else:
+                data['schoolId'] = request.GET['schoolId']
+            return get_student_subject_list(data)
 
     @user_permission
     def post(request):
