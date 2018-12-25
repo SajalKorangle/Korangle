@@ -41,8 +41,6 @@ def create_student_test_list(data):
 
     return_data = []
 
-    print(data)
-
     for student_test_data in data:
         return_data.append(create_student_test(student_test_data))
 
