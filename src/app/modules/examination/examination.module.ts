@@ -11,6 +11,8 @@ import { GenerateHallTicketComponent } from './pages/generate-hall-ticket/genera
 import { ExaminationRoutingModule } from './examination.routing';
 
 import { ExaminationService } from '../../services/examination.service';
+import {UpdateMarksComponent} from './pages/update-marks/update-marks.component';
+import {PrintMarksheetComponent} from './pages/print-marksheet/print-marksheet.component';
 
 @NgModule({
     declarations: [
@@ -20,6 +22,8 @@ import { ExaminationService } from '../../services/examination.service';
         CreateExaminationComponent,
         CreateTestComponent,
         GenerateHallTicketComponent,
+        UpdateMarksComponent,
+        PrintMarksheetComponent,
 
     ],
 

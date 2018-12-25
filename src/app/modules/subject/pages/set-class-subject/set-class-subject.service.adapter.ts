@@ -15,6 +15,7 @@ export class SetClassSubjectServiceAdapter {
     studentSectionList: any;
     subjectList: any;
     sessionList: any;
+    employeeList: any;
 
     classSectionStudentSubjectList: any;
 
@@ -42,6 +43,10 @@ export class SetClassSubjectServiceAdapter {
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        let request_employee_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+        };
+
         Promise.all([
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
@@ -50,6 +55,7 @@ export class SetClassSubjectServiceAdapter {
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.schoolService.getSessionList(this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
+            this.vm.employeeService.getEmployeeMiniProfileList(request_employee_data, this.vm.user.jwt),
         ]).then( value => {
             this.classList = value[0];
             this.sectionList = value[1];
@@ -58,13 +64,21 @@ export class SetClassSubjectServiceAdapter {
             this.studentSectionList = value[4];
             this.sessionList = value[5];
             this.subjectList = value[6];
+            this.employeeList = value[7];
             this.populateClassSectionSubjectList();
             this.populateSessionListAndSelectedSession();
             this.populateSubjectList();
             this.populateClassSectionStudentSubjectList();
+            this.populateEmployeeList();
             this.vm.isSessionLoading =false;
         }, error => {
             this.vm.isSessionLoading = false;
+        });
+    }
+
+    populateEmployeeList(): void {
+        this.vm.employeeList = this.employeeList.filter(employee => {
+            return employee.dateOfLeaving === null;
         });
     }
 
@@ -85,19 +99,37 @@ export class SetClassSubjectServiceAdapter {
                 this.classSubjectList.forEach(classSubject => {
                     if (classSubject.parentClass === tempClass['dbId']
                         && classSubject.parentDivision === tempSection['id']) {
+
                         let tempSubject = {};
+
                         Object.keys(classSubject).forEach(key => {
                             tempSubject[key] = classSubject[key];
                         });
+                        tempSubject['newEmployee'] = this.getEmployee(tempSubject['parentEmployee']);
+                        tempSubject['newMainSubject'] = tempSubject['mainSubject'];
+                        tempSubject['newOnlyGrade'] = tempSubject['onlyGrade'];
+
                         tempSection['subjectList'].push(tempSubject);
                     }
                 });
                 tempClass['sectionList'].push(tempSection);
             });
-            tempClass['selectedSection'] = tempClass['sectionList'][0]
+            tempClass['selectedSection'] = tempClass['sectionList'][0];
             this.vm.classSectionSubjectList.push(tempClass);
         });
         this.vm.selectedClass = this.vm.classSectionSubjectList[0];
+    }
+
+    getEmployee(employeeId: number): any {
+        let result = null;
+        this.employeeList.every(employee => {
+            if (employee.id === employeeId) {
+                result = employee;
+                return false;
+            }
+            return true;
+        });
+        return result;
     }
 
     populateSessionListAndSelectedSession(): void {
@@ -126,18 +158,24 @@ export class SetClassSubjectServiceAdapter {
                 Object.keys(section).forEach(key => {
                     tempSection[key] = section[key];
                 });
-                tempSection['subjectList'] = [];
+                // tempSection['subjectList'] = [];
                 tempSection['studentList'] = [];
-                this.classSubjectList.forEach(classSubject => {
+                /*this.classSubjectList.forEach(classSubject => {
                     if (classSubject.parentClass === tempClass['dbId']
                         && classSubject.parentDivision === tempSection['id']) {
+
                         let tempSubject = {};
+
                         Object.keys(classSubject).forEach(key => {
                             tempSubject[key] = classSubject[key];
                         });
+                        tempSubject['newEmployee'] = tempSubject['parentEmployee'];
+                        tempSubject['newMainSubject'] = tempSubject['mainSubject'];
+                        tempSubject['newOnlyGrade'] = tempSubject['onlyGrade'];
+
                         tempSection['subjectList'].push(tempSubject);
                     }
-                });
+                });*/
                 this.studentSectionList.forEach(studentSection => {
                     if (studentSection.classDbId === tempClass['dbId']
                         && studentSection.sectionDbId === tempSection['id']) {
@@ -177,6 +215,11 @@ export class SetClassSubjectServiceAdapter {
             return;
         }
 
+        if (this.vm.selectedEmployee === null) {
+            alert('Employee should be selected');
+            return;
+        }
+
         this.vm.isLoading = true;
 
         let class_subject_data = {
@@ -185,6 +228,9 @@ export class SetClassSubjectServiceAdapter {
             'parentSession': this.vm.selectedSession.dbId,
             'parentSubject': this.vm.selectedSubject.id,
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentEmployee': this.vm.selectedEmployee.id,
+            'mainSubject': this.vm.mainSubject,
+            'onlyGrade': this.vm.onlyGrade,
         };
 
         let student_subject_data = this.prepareStudentSubjectDataToAdd();
@@ -244,7 +290,7 @@ export class SetClassSubjectServiceAdapter {
             if (classs.dbId === classSubject.parentClass) {
                 classs.sectionList.every(section => {
                     if (section.id === classSubject.parentDivision) {
-                        section['subjectList'].push(classSubject);
+                        // section['subjectList'].push(classSubject);
                         section['studentList'].forEach(student => {
                             studentSubjectList.every(studentSubject => {
                                 if (student.dbId === studentSubject.parentStudent) {
@@ -269,7 +315,17 @@ export class SetClassSubjectServiceAdapter {
             if (classs.dbId === classSubject.parentClass) {
                 classs.sectionList.every(section => {
                     if (section.id === classSubject.parentDivision) {
-                        section['subjectList'].push(classSubject);
+
+                        let tempSubject = {};
+
+                        Object.keys(classSubject).forEach(key => {
+                            tempSubject[key] = classSubject[key];
+                        });
+                        tempSubject['newEmployee'] = this.getEmployee(tempSubject['parentEmployee']);
+                        tempSubject['newMainSubject'] = tempSubject['mainSubject'];
+                        tempSubject['newOnlyGrade'] = tempSubject['onlyGrade'];
+
+                        section['subjectList'].push(tempSubject);
                         return false;
                     }
                     return true;
@@ -333,12 +389,12 @@ export class SetClassSubjectServiceAdapter {
             if (classs.dbId === classId) {
                 classs.sectionList.every(section => {
                     if (section.id === sectionId) {
-                        section['subjectList'] = section['subjectList'].filter(subject => {
+                        /*section['subjectList'] = section['subjectList'].filter(subject => {
                             if (subject.parentSubject === subjectId) {
                                 return false;
                             }
                             return true;
-                        });
+                        });*/
                         section['studentList'].forEach(student => {
                             student['subjectList'] = student['subjectList'].filter(subject => {
                                 if (subject.parentSubject === subjectId) {
@@ -376,6 +432,41 @@ export class SetClassSubjectServiceAdapter {
             }
             return true;
         })
+    }
+
+
+    // Update Subject
+    updateSubject(subject: any): void {
+
+        let data = {
+            'id': subject.id,
+            'parentClass': subject.parentClass,
+            'parentDivision': subject.parentDivision,
+            'parentSession': subject.parentSession,
+            'parentSubject': subject.parentSubject,
+            'parentSchool': subject.parentSchool,
+            'parentEmployee': subject.newEmployee.id,
+            'mainSubject': subject.newMainSubject,
+            'onlyGrade': subject.newOnlyGrade,
+        };
+
+        this.vm.isLoading = true;
+
+        Promise.all([
+            this.vm.subjectService.updateClassSubject(data, this.vm.user.jwt),
+        ]).then(value => {
+            alert('Subject updated in class successfully');
+            // this.addSubjectInClassSectionSubjectList(value[0]);
+            // this.addSubjectInClassSectionStudentSubjectList(value[0], value[1]);
+            // this.vm.selectedSubject = null;
+            subject.parentEmployee = subject.newEmployee.id;
+            subject.mainSubject = subject.newMainSubject;
+            subject.onlyGrade = subject.newOnlyGrade;
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
     }
 
 }

@@ -55,6 +55,17 @@ export class StudentService extends CommonServiceRequirements {
         return super.postData(data, token, '/student/student-sections/batch');
     }
 
+    /*getStudentSectionList(data, token): Promise<any> {
+        let url = '/student/student-sections/batch' +
+            '?studentList='+data['studentList'].join() +
+            '&classList='+data['classList'].join() +
+            '&sectionList='+data['sectionList'].join() +
+            '&sessionList='+data['sessionList'].join() +
+            '&rollNumberList='+data['rollNumberList'].join() +
+            '&attendanceList='+data['attendanceList'].join();
+        return super.getData(token, url);
+    }*/
+
     // Transfer Certificate
     getTransferCertificate(data, token): Promise<any> {
         return super.getData(token, '/student/transfer-certificates/' + data['id']);

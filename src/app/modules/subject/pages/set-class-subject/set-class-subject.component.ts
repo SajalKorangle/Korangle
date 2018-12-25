@@ -7,12 +7,13 @@ import { SchoolService } from '../../../../services/school.service';
 
 
 import { SetClassSubjectServiceAdapter } from './set-class-subject.service.adapter';
+import {EmployeeService} from '../../../employee/employee.service';
 
 @Component({
     selector: 'set-class-subject',
     templateUrl: './set-class-subject.component.html',
     styleUrls: ['./set-class-subject.component.css'],
-    providers: [ SubjectService, ClassService, StudentService, SchoolService ],
+    providers: [ SubjectService, ClassService, StudentService, SchoolService, EmployeeService ],
 })
 
 export class SetClassSubjectComponent implements OnInit {
@@ -26,6 +27,9 @@ export class SetClassSubjectComponent implements OnInit {
 
     selectedSession: any;
     selectedSubject = null;
+    selectedEmployee = null;
+    mainSubject = true;
+    onlyGrade = false;
 
     selectedClass: any;
     classSectionSubjectList: any;
@@ -34,10 +38,13 @@ export class SetClassSubjectComponent implements OnInit {
     filteredSubjectList: any;
     sessionList: any;
 
+    employeeList: any;
+
     constructor(public subjectService: SubjectService,
                 public classService: ClassService,
                 public studentService: StudentService,
-                public schoolService: SchoolService) {}
+                public schoolService: SchoolService,
+                public employeeService: EmployeeService) {}
 
     ngOnInit(): void {
         this.serviceAdapter = new SetClassSubjectServiceAdapter();
@@ -73,6 +80,15 @@ export class SetClassSubjectComponent implements OnInit {
             return true;
         });
         return result;
+    }
+
+    isSubjectUpdateDisabled(subject: any): boolean {
+        if (subject.newEmployee.id !== subject.parentEmployee
+            || subject.newMainSubject !== subject.mainSubject
+            || subject.newOnlyGrade !== subject.onlyGrade) {
+            return false;
+        }
+        return true;
     }
 
 }
