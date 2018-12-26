@@ -41,17 +41,17 @@ class Student(models.Model):
     name = models.CharField(max_length=100)
     fathersName = models.CharField(max_length=100)
     mobileNumber = models.IntegerField(null=True)
-    scholarNumber = models.TextField(null=True)
+    scholarNumber = models.TextField(null=True, blank=True)
     totalFees = models.IntegerField(default=0)
     dateOfBirth = models.DateField(null=True)
-    remark = models.TextField(null=True)
+    remark = models.TextField(null=True, blank=True)
 
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
 
     # new student profile data
-    motherName = models.TextField(null=True)
-    gender = models.TextField(null=True)
-    caste = models.TextField(null=True)
+    motherName = models.TextField(null=True, blank=True)
+    gender = models.TextField(null=True, blank=True)
+    caste = models.TextField(null=True, blank=True)
 
     CATEGORY = (
         ( 'SC', 'Scheduled Caste' ),
@@ -70,14 +70,14 @@ class Student(models.Model):
     newReligionField = models.CharField(max_length=20, choices=RELIGION, null=True)
 
     fatherOccupation = models.TextField(null=True)
-    address = models.TextField(null=True)
+    address = models.TextField(null=True, blank=True)
     familySSMID = models.IntegerField(null=True)
     childSSMID = models.IntegerField(null=True)
-    bankName = models.TextField(null=True)
-    bankAccountNum = models.TextField(null=True)
+    bankName = models.TextField(null=True, blank=True)
+    bankAccountNum = models.TextField(null=True, blank=True)
     aadharNum = models.IntegerField(null=True)
-    bloodGroup = models.TextField(null=True)
-    fatherAnnualIncome = models.TextField(null=True)
+    bloodGroup = models.TextField(null=True, blank=True)
+    fatherAnnualIncome = models.TextField(null=True, blank=True)
 
     currentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=True, verbose_name='current_bus_stop')
 
