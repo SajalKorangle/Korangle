@@ -51,13 +51,17 @@ export class ViewMarksServiceAdapter {
         ]).then(value => {
 
             this.examinationList = value[0];
-
-            if (this.examinationList.length === 0) {
-                return;
-            }
+            this.vm.examinationList = this.examinationList;
 
             this.student_full_profile = value[1];
             this.subjectList = value[2];
+
+            this.vm.selectedStudent = value[1];
+
+            if (this.examinationList.length === 0) {
+                this.vm.isLoading = false;
+                return;
+            }
 
             let request_class_subject_data = {
                 'subjectList': [],
@@ -95,14 +99,14 @@ export class ViewMarksServiceAdapter {
                 'marksObtainedList': [],
             };
 
+            console.log('okay');
+
             Promise.all([
                 this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
                 this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
                 this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt),
                 this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
             ]).then(value2 => {
-
-                this.vm.selectedStudent = value[1];
 
                 this.classSubjectList = value2[0];
                 this.studentSubjectList = value2[1];
@@ -132,7 +136,6 @@ export class ViewMarksServiceAdapter {
     }
 
     populateStudentMarksList(): void {
-        this.vm.examinationList = this.examinationList;
 
         this.vm.examinationList.forEach(examination => {
 
