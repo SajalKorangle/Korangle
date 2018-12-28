@@ -15,6 +15,9 @@ class Employee(models.Model):
     # Mother's Name
     motherName = models.CharField(max_length=100, null=True)
 
+    # Spouse's Name
+    spouseName = models.CharField(max_length=100, null=True)
+
     # Date of Birth
     dateOfBirth = models.DateField(null=True)
 
