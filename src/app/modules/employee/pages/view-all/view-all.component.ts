@@ -10,6 +10,7 @@ class ColumnFilter {
     showName = true;
     showEmployeeNumber = false;
     showFatherName = true;
+    showSpouseName = false;
     showMobileNumber = true;
     showDateOfBirth = false;
     showMotherName = false;
@@ -81,7 +82,7 @@ export class ViewAllComponent implements OnInit {
     printEmployeeList(): void {
         const value = {
             employeeList: this.employeeProfileList,
-            columnFilter: this.columnFilter
+            columnFilter: this.columnFilter,
         };
         EmitterService.get('print-employee-list').emit(value);
     };
@@ -116,6 +117,7 @@ export class ViewAllComponent implements OnInit {
         (this.columnFilter.showName)? headerValues.push('Name'): '';
         (this.columnFilter.showEmployeeNumber)? headerValues.push('Employee Number'): '';
         (this.columnFilter.showFatherName)? headerValues.push('Father\'s Name'): '';
+        (this.columnFilter.showSpouseName)? headerValues.push('Spouse\'s Name'): '';
         (this.columnFilter.showMobileNumber)? headerValues.push('Mobile No.'): '';
         (this.columnFilter.showDateOfBirth)? headerValues.push('Date of Birth'): '';
         (this.columnFilter.showMotherName)? headerValues.push('Mother\'s Name'): '';
@@ -143,6 +145,7 @@ export class ViewAllComponent implements OnInit {
         (this.columnFilter.showName)? employeeDisplay.push(employee.name): '';
         (this.columnFilter.showEmployeeNumber)? employeeDisplay.push(employee.employeeNumber): '';
         (this.columnFilter.showFatherName)? employeeDisplay.push(employee.fatherName): '';
+        (this.columnFilter.showSpouseName)? employeeDisplay.push(employee.spouseName): '';
         (this.columnFilter.showMobileNumber)? employeeDisplay.push(employee.mobileNumber): '';
         (this.columnFilter.showDateOfBirth)? employeeDisplay.push(employee.dateOfBirth): '';
         (this.columnFilter.showMotherName)? employeeDisplay.push(employee.motherName): '';

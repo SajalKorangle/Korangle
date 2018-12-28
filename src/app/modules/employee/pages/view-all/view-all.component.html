@@ -32,6 +32,11 @@
                 </mat-checkbox>
             </mat-option>
             <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showSpouseName" (click)="$event.stopPropagation();">Spouse's
+                    Name
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
                 <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation();">Mobile No.
                 </mat-checkbox>
             </mat-option>
@@ -147,6 +152,7 @@
                 <th [class.hidden]="!columnFilter.showName">Name</th>
                 <th [class.hidden]="!columnFilter.showEmployeeNumber">Employee No.</th>
                 <th [class.hidden]="!columnFilter.showFatherName">Father's Name</th>
+                <th [class.hidden]="!columnFilter.showSpouseName">Spouse's Name</th>
                 <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
                 <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
                 <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
@@ -173,6 +179,7 @@
                         <td [class.hidden]="!columnFilter.showName">{{employee.name}}</td>
                         <td [class.hidden]="!columnFilter.showEmployeeNumber">{{employee.employeeNumber}}</td>
                         <td [class.hidden]="!columnFilter.showFatherName">{{employee.fatherName}}</td>
+                        <td [class.hidden]="!columnFilter.showSpouseName">{{employee.spouseName}}</td>
                         <td [class.hidden]="!columnFilter.showMobileNumber">{{employee.mobileNumber}}</td>
                         <td [class.hidden]="!columnFilter.showDateOfBirth">
                             {{employee.dateOfBirth | date: 'dd - MMM - yyyy'}}

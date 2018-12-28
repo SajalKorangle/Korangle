@@ -25,7 +25,6 @@ export class PrintEmployeeListComponent implements OnInit, OnDestroy, AfterViewC
         this.printEmployeeListComponentSubscription = EmitterService.get('print-employee-list-component').subscribe( value => {
             this.employeeList = value['employeeList'];
             this.columnFilter = value['columnFilter'];
-            console.log(this.employeeList);
             this.viewChecked = false;
         });
     }

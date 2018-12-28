@@ -108,6 +108,11 @@ export class School {
                     title: 'Attendance',
                     path: 'view_attendance',
                     icon: 'account_circle',
+                },
+                {
+                    title: 'Marks',
+                    path: 'view_marks',
+                    icon: 'receipt',
                 }
             ];
         });

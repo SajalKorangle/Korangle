@@ -92,15 +92,6 @@ export class UpdateProfileComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
-        /*this.employeeService.getEmployeeProfile(data, this.user.jwt).then( employeeProfile => {
-            this.isLoading = false;
-            this.selectedEmployeeProfile = employeeProfile;
-            Object.keys(this.selectedEmployeeProfile).forEach(key => {
-                this.currentEmployeeProfile[key] = this.selectedEmployeeProfile[key];
-            });
-        }, error => {
-            this.isLoading = false;
-        });*/
 
     }
 
@@ -161,16 +152,6 @@ export class UpdateProfileComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
-
-        /*this.employeeService.updateEmployeeProfile(this.currentEmployeeProfile, this.user.jwt).then(message => {
-            this.isLoading = false;
-            alert(message);
-            if (this.selectedEmployeeProfile.id === id) {
-                this.selectedEmployeeProfile = this.currentEmployeeProfile;
-            }
-        }, error => {
-            this.isLoading = false;
-        });*/
 
     }
 

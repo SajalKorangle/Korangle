@@ -190,7 +190,7 @@
             </div>
         </div>
 
-        <!-- Monthly Salary -->
+        <!-- Monthly Salary, Paid Leaves, Date of Leaving -->
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
@@ -219,33 +219,15 @@
                            [ngModel]="selectedEmployeeProfile.dateOfLeaving">
                 </mat-form-field>
             </div>
-            <!-- div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Bank Account Number"
-                           (ngModelChange)="currentEmployeeProfile.bankAccountNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.bankAccountNumber">
-                </mat-form-field>
-            </div>
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
                            type="text"
-                           placeholder="EPF Account No."
-                           (ngModelChange)="currentEmployeeProfile.epfAccountNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.epfAccountNumber">
+                           placeholder="Spouse's Name"
+                           (ngModelChange)="currentEmployeeProfile.spouseName=$event"
+                           [ngModel]="selectedEmployeeProfile.spouseName">
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Pan Number"
-                           (ngModelChange)="currentEmployeeProfile.panNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.panNumber">
-                </mat-form-field>
-            </div -->
         </div>
 
         <!-- Address, Remark -->
