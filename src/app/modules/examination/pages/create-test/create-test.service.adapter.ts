@@ -297,6 +297,7 @@ export class CreateTestServiceAdapter {
                     'parentStudent': item.parentStudent,
                     'parentExamination': this.vm.selectedExamination.id,
                     'parentSubject': item.parentSubject,
+                    'testType': this.vm.selectedTestType,
                     'marksObtained': 0,
                 };
                 student_test_list.push(tempData);
