@@ -47,11 +47,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAllColumns(); $event.stopPropagation();">Select All
+                                (click)="showAllColumns(); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
+                                (click)="hideAllColumns(); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
                     <mat-option>
@@ -160,11 +160,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAllColumns(); $event.stopPropagation();">Select All
+                                (click)="showAllColumns(); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
+                                (click)="hideAllColumns(); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
                 </mat-select>
@@ -255,69 +255,26 @@
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
-                    <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
-                    <th [class.hidden]="!columnFilter.showName">Name</th>
-                    <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
-                    <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
-                    <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
-                    <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
-                    <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
-                    <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
-                    <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
-                    <th [class.hidden]="!columnFilter.showGender">Gender</th>
-                    <th [class.hidden]="!columnFilter.showCaste">Caste</th>
-                    <th [class.hidden]="!columnFilter.showCategory">Category</th>
-                    <th [class.hidden]="!columnFilter.showReligion">Religion</th>
-                    <th [class.hidden]="!columnFilter.showFatherOccupation">Father's Occupation</th>
-                    <th [class.hidden]="!columnFilter.showAddress">Address</th>
-                    <th [class.hidden]="!columnFilter.showChildSSMID">Child SSMID</th>
-                    <th [class.hidden]="!columnFilter.showFamilySSMID">Family SSMID</th>
-                    <th [class.hidden]="!columnFilter.showBankName">Bank Name</th>
-                    <th [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
-                    <th [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
-                    <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
-                    <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
-                    <th [class.hidden]="!columnFilter.showRTE">RTE</th>
+									<th *ngFor="let column of COLUMNHANDLES" [class.hidden]="!column.show">
+											{{column.name}}
+									</th>
                 </tr>
                 </thead>
                 <tbody>
                 <ng-container *cdkVirtualFor="let student of studentFullProfileList">
                     <tr [class.hidden]="!student.show">
-                        <ng-container>
-                            <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
-                            <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
-                            <td [class.hidden]="!columnFilter.showClassName">{{student.className}}
-                                <!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->
-                            </td>
-                            <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
-                            <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
-                            <td [class.hidden]="!columnFilter.showMobileNumber" class="hidden-xs hidden-sm">
-                                {{student.mobileNumber}}
-                            </td>
-                            <td [class.hidden]="!columnFilter.showMobileNumber" class="visible-xs visible-sm">
-                                <a href="tel:{{student.mobileNumber}}">Call Me</a>
-                            </td>
-                            <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
-                            <td [class.hidden]="!columnFilter.showDateOfBirth">
-                                {{student.dateOfBirth | date: 'dd/MM/yyyy'}}
-                            </td>
-                            <td [class.hidden]="!columnFilter.showMotherName">{{student.motherName}}</td>
-                            <td [class.hidden]="!columnFilter.showGender">{{student.gender}}</td>
-                            <td [class.hidden]="!columnFilter.showCaste">{{student.caste}}</td>
-                            <td [class.hidden]="!columnFilter.showCategory">{{student.category}}</td>
-                            <td [class.hidden]="!columnFilter.showReligion">{{student.religion}}</td>
-                            <td [class.hidden]="!columnFilter.showFatherOccupation">{{student.fatherOccupation}}</td>
-                            <td [class.hidden]="!columnFilter.showAddress">{{student.address}}</td>
-                            <td [class.hidden]="!columnFilter.showChildSSMID">{{student.childSSMID}}</td>
-                            <td [class.hidden]="!columnFilter.showFamilySSMID">{{student.familySSMID}}</td>
-                            <td [class.hidden]="!columnFilter.showBankName">{{student.bankName}}</td>
-                            <td [class.hidden]="!columnFilter.showBankAccountNum">{{student.bankAccountNum}}</td>
-                            <td [class.hidden]="!columnFilter.showAadharNum">{{student.aadharNum}}</td>
-                            <td [class.hidden]="!columnFilter.showBloodGroup">{{student.bloodGroup}}</td>
-                            <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{student.fatherAnnualIncome}}
-                            </td>
-                            <td [class.hidden]="!columnFilter.showRTE">{{student.rte}}</td>
-                        </ng-container>
+                        <td *ngFor="let column of COLUMNHANDLES" [class.hidden]="!column.show" [attr.id]="column.fieldName+student.dbId">
+                            <ng-container *ngIf="column.inputType===null">
+                                {{student[column.key]}}
+                            </ng-container>
+                            <input [attr.type]="column.inputType"
+                                         class="customInput"
+                                         [class.hidden]="!column.showLock"
+                                         [disabled]="column.locked"
+                                         (blur)="updateStudentField(column.fieldName,student, $event.target)"
+                                         [ngModel]="student[column.fieldName]"/>
+                            <span [class.hidden]="column.showLock">{{student[column.fieldName]}}</span>
+                        </td>
                     </tr>
                 </ng-container>
                 </tbody>

@@ -32,6 +32,58 @@ class ColumnFilter {
     showRTE = false;
 }
 
+class ColumnHandle {
+    name: any;
+    key: any;
+    inputType: string;
+    show: boolean;
+		selectedList: any;
+
+    constructor(name, key, inputType, show, selectedList) {
+        this.name = name;
+        this.key = key;
+        this.inputType = inputType;
+        this.show = show;
+				this.selectedList = selectedList;
+    }
+}
+
+const GENDER_LIST = [
+ 'Male',
+ 'Female',
+ 'Other',
+];
+
+const CATEGORY_LIST = [
+ 	'SC',
+	'ST',
+	'OBC',
+	'Gen.',
+];
+
+const RTE_LIST = [
+	'YES',
+	'NO',
+];
+
+const BLOOD_GROUP_LIST = [
+	'A -',
+	'A +',
+	'B -',
+	'B +',
+	'AB -',
+	'AB +',
+	'O -',
+	'O +',
+];
+
+const RELIGION_LIST = [
+	'Hinduism',
+	'Islam',
+	'Jainism',
+	'Christianity',
+];
+
 @Component({
     selector: 'update-all',
     templateUrl: './update-all.component.html',
@@ -44,6 +96,33 @@ export class UpdateAllComponent implements OnInit {
     @Input() user;
 
     columnFilter: ColumnFilter;
+
+    COLUMNHANDLES: ColumnHandle[] = [
+        // value, key, inputType, show, selectedList
+        new ColumnHandle('S No.', 'serialNumber', 'number', true, ''), // 0
+        new ColumnHandle('Name', 'name', 'text', true, ''), // 1
+        new ColumnHandle('Class Name', 'className', null, true, ''), // 2
+        new ColumnHandle('Roll No.', 'rollNumber', 'number', false, ''), // 3
+        new ColumnHandle('Father\'s Name', 'fathersName', 'text', true, ''), // 4
+        new ColumnHandle('Mobile No.', 'mobileNumber', 'number', true, ''), // 5
+        new ColumnHandle('Scholar No.', 'scholarNumber', 'number', false, ''), // 6
+        new ColumnHandle('Date of Birth', 'dateOfBirth', 'date', false, ''), // 7
+        new ColumnHandle('Mother\'s Name', 'motherName', 'text', false, ''), // 10
+        new ColumnHandle('Gender', 'gender', 'list', false, GENDER_LIST), // 11
+        new ColumnHandle('Caste', 'caste', 'text', false, ''), // 12
+        new ColumnHandle('Category', 'category', 'list', false, CATEGORY_LIST), // 13
+        new ColumnHandle('Religion', 'religion', 'list', false, RELIGION_LIST), // 14
+        new ColumnHandle('Father\'s Occupation', 'fatherOccupation', 'text', false, ''), // 15
+        new ColumnHandle('Address', 'address', 'text', true, ''), // 16
+        new ColumnHandle('Child SSMID', 'childSSMID', 'number', false, ''), // 17
+        new ColumnHandle('Family SSMID', 'familySSMID', 'number', false, ''), // 18
+        new ColumnHandle('Bank Name', 'bankName', 'text', false, ''), // 19
+        new ColumnHandle('Bank Acc. No.', 'bankAccounNum', 'text', false, ''), // 20
+        new ColumnHandle('Aadhar No.', 'aadharNum', 'number', false, ''), // 21
+        new ColumnHandle('Blood Group', 'bloodGroup', 'list', false, BLOOD_GROUP_LIST), // 22
+        new ColumnHandle('Father\'s Annual Income', 'fatherAnnualIncome', 'text', false, ''), // 23
+        new ColumnHandle('RTE', 'rte', 'list', false, RTE_LIST),
+    ];
 
     /* Category Options */
     scSelected = false;
