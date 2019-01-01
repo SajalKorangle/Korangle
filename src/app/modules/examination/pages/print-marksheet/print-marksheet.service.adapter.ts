@@ -48,7 +48,7 @@ export class PrintMarksheetServiceAdapter {
             'subjectList': [],
             'classList': [],
             'sectionList': [],
-            'employeeList': [this.vm.user.activeSchool.employeeId],
+            'employeeList': [],
             'schoolList': [this.vm.user.activeSchool.dbId],
             'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             'mainSubject': [],
@@ -68,6 +68,8 @@ export class PrintMarksheetServiceAdapter {
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentFullProfileList(request_student_mini_profile_data, this.vm.user.jwt),
         ]).then(value => {
+
+            console.log(value);
 
             this.examinationList = value[0];
             this.classList = value[1];
@@ -293,6 +295,7 @@ export class PrintMarksheetServiceAdapter {
         };
 
         this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt).then(value2 => {
+            console.log(value2);
             this.populateStudentList(value2);
             this.vm.showTestDetails = true;
             this.vm.isLoading = false;
