@@ -9,6 +9,7 @@ import {DataStorage} from '../../classes/data-storage';
     '<change-class *ngIf="user.section.subRoute===\'change_class\'" [user]="user"></change-class>' +
     '<add-student *ngIf="user.section.subRoute===\'add_student\'" [user]="user"></add-student>' +
     '<upload-list *ngIf="user.section.subRoute===\'upload_list\'" [user]="user"></upload-list>' +
+    '<update-all *ngIf="user.section.subRoute===\'update_all\'" [user]="user"></update-all>' +
     '<i-cards *ngIf="user.section.subRoute===\'i_cards\'" [user]="user"></i-cards>',
 })
 

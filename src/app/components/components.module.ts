@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 import { MatRadioModule } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
@@ -83,6 +84,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         MatNativeDateModule,
         MatExpansionModule,
         MatSortModule,
+        ScrollDispatchModule,
 
     ],
     exports: [
@@ -123,6 +125,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         MatNativeDateModule,
         MatExpansionModule,
         MatSortModule,
+        ScrollDispatchModule,
 
     ]
 })
