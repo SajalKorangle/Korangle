@@ -63,6 +63,14 @@ i.material-icons.column {
     width: 100%;
 }
 
+.customInput:enabled {
+    border-bottom: 1px solid lightgrey;
+}
+
+.customInput:focus {
+    background-color: white;
+}
+
 .example-viewport {
     height: 75vh;
     width: 75vw;
@@ -72,3 +80,27 @@ i.material-icons.column {
 /*.example-item {
     height: 50px;
 }*/
+
+.updatingField {
+    animation: colorchange infinite 15s; /* animation-name followed by duration in seconds*/
+    /* you could also use milliseconds (ms) or something like 2.5s */
+    -webkit-animation: colorchange infinite 15s; /* Chrome and Safari */
+}
+
+@keyframes colorchange
+{
+    0%   {background: lightpink;}
+    25%  {background: lightyellow;}
+    50%  {background: lightblue;}
+    75%  {background: lightgreen;}
+    100% {background: lightpink;}
+}
+
+@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
+{
+    0%   {background: lightpink;}
+    25%  {background: lightyellow;}
+    50%  {background: lightblue;}
+    75%  {background: lightgreen;}
+    100% {background: lightpink;}
+}

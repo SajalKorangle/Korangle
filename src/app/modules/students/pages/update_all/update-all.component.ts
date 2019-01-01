@@ -4,47 +4,21 @@ import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
 import {StudentService} from '../../student.service';
 
-import * as XLSX from 'xlsx';
-
-class ColumnFilter {
-    showSerialNumber = true;
-    showName = true;
-    showClassName = false;
-    showRollNumber = false;
-    showFathersName = true;
-    showMobileNumber = true;
-    showScholarNumber = false;
-    showDateOfBirth = false;
-    showMotherName = false;
-    showGender = false;
-    showCaste = false;
-    showCategory = false;
-    showReligion = false;
-    showFatherOccupation = false;
-    showAddress = true;
-    showChildSSMID = false;
-    showFamilySSMID = false;
-    showBankName = false;
-    showBankAccountNum = false;
-    showAadharNum = false;
-    showBloodGroup = false;
-    showFatherAnnualIncome = false;
-    showRTE = false;
-}
+import { ChangeDetectorRef } from '@angular/core';
 
 class ColumnHandle {
     name: any;
     key: any;
     inputType: string;
     show: boolean;
-		selectedList: any;
+    list: any;
 
-    constructor(name, key, inputType, show, selectedList) {
+    constructor(name, key, inputType, show, list) {
         this.name = name;
         this.key = key;
         this.inputType = inputType;
         this.show = show;
-				this.selectedList = selectedList;
+        this.list = list;
     }
 }
 
@@ -95,14 +69,12 @@ export class UpdateAllComponent implements OnInit {
 
     @Input() user;
 
-    columnFilter: ColumnFilter;
-
     COLUMNHANDLES: ColumnHandle[] = [
         // value, key, inputType, show, selectedList
-        new ColumnHandle('S No.', 'serialNumber', 'number', true, ''), // 0
+        new ColumnHandle('S No.', 'serialNumber', null, true, ''), // 0
         new ColumnHandle('Name', 'name', 'text', true, ''), // 1
         new ColumnHandle('Class Name', 'className', null, true, ''), // 2
-        new ColumnHandle('Roll No.', 'rollNumber', 'number', false, ''), // 3
+        new ColumnHandle('Roll No.', 'rollNumber', null, false, ''), // 3
         new ColumnHandle('Father\'s Name', 'fathersName', 'text', true, ''), // 4
         new ColumnHandle('Mobile No.', 'mobileNumber', 'number', true, ''), // 5
         new ColumnHandle('Scholar No.', 'scholarNumber', 'number', false, ''), // 6
@@ -157,11 +129,10 @@ export class UpdateAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentService,
-                private classService: ClassService) { }
+                private classService: ClassService,
+                private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
-
-        this.columnFilter = new ColumnFilter();
 
         const student_full_profile_request_data = {
             schoolDbId: this.user.activeSchool.dbId,
@@ -194,14 +165,6 @@ export class UpdateAllComponent implements OnInit {
             });
         });
     }
-
-    /*initializeClassList(classList: any): void {
-        this.classList = classList;
-    }
-
-    initializeSectionList(sectionList: any): void {
-        this.sectionList = sectionList;
-    }*/
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
         this.studentFullProfileList = studentFullProfileList.filter( student => {
@@ -258,17 +221,17 @@ export class UpdateAllComponent implements OnInit {
         this.handleStudentDisplay();
     };
 
-    selectAllColumns(): void {
-        Object.keys(this.columnFilter).forEach((key) => {
-            this.columnFilter[key] = true;
+    showAllColumns(): void {
+        this.COLUMNHANDLES.forEach(item => {
+            item.show = true;
         });
-    };
+    }
 
-    unSelectAllColumns(): void {
-        Object.keys(this.columnFilter).forEach((key) => {
-            this.columnFilter[key] = false;
+    hideAllColumns(): void {
+        this.COLUMNHANDLES.forEach(item => {
+            item.show = false;
         });
-    };
+    }
 
     showSectionName(classs: any): boolean {
         let sectionLength = 0;
@@ -390,10 +353,49 @@ export class UpdateAllComponent implements OnInit {
 
         });
 
+        this.cdRef.detectChanges();
     };
 
-    updateStudentField(): void {
+    getStudentFullProfileList(): any {
+        return this.studentFullProfileList.filter(item => {
+            return item.show;
+        });
+    }
 
+    updateStudentField(key: any, student: any, newValue: any, inputType: any): void {
+        console.log(newValue);
+        // return;
+        if (student[key] !== newValue) {
+            // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
+            // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
+            const data = {
+                id: student['dbId'],
+            };
+            data[key] = newValue;
+            document.getElementById(key + student.dbId).classList.add('updatingField');
+            if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
+                (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = true;
+            } else if (inputType === 'list') {
+
+            }
+            this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
+                response => {
+                    if (response.status === 'success') {
+                        student[key] = newValue;
+                        document.getElementById(key + student.dbId).classList.remove('updatingField');
+                        if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
+                            (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = false;
+                        } else if (inputType === 'list') {
+
+                        }
+                    } else {
+                        alert('Not able to update ' + key + ' for value: ' + newValue);
+                    }
+                }, error => {
+                    alert('Server Error: Contact Admin');
+                }
+            );
+        }
     }
 
 }
