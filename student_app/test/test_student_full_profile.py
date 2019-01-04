@@ -62,6 +62,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['familySSMID'] = 12345678
         data['childSSMID'] = 1234556789
         data['bankName'] = 'State Bank Of India'
+        data['bankIfscCode'] = 'SBI1000000'
         data['bankAccountNum'] = 'SBI0000342342'
         data['aadharNum'] = 123456789012
         data['bloodGroup'] = 'O +'
@@ -109,6 +110,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['familySSMID'] = 12345678
         data['childSSMID'] = 1234556789
         data['bankName'] = 'State Bank Of India'
+        data['bankIfscCode'] = 'SBI100000'
         data['bankAccountNum'] = 'SBI0000342342'
         data['aadharNum'] = 123456789012
         data['bloodGroup'] = 'O +'
@@ -144,6 +146,7 @@ class StudentFullProfileTestCase(ParentTestCase):
             familySSMID=12345678,
             childSSMID=123456789,
             bankName='State Bank Of India',
+            bankIfscCode='SBI100000',
             bankAccountNum='SBI0000342342',
             aadharNum=123456789012,
             bloodGroup='O +',
@@ -155,7 +158,7 @@ class StudentFullProfileTestCase(ParentTestCase):
 
         response = get_student_full_profile(student_section_object)
 
-        self.assertEqual(len(response), 32)
+        self.assertEqual(len(response), 33)
 
         self.assertEqual(response['name'], student_object.name)
         self.assertEqual(response['dbId'], student_object.id)
@@ -176,6 +179,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         self.assertEqual(response['familySSMID'],student_object.familySSMID)
         self.assertEqual(response['childSSMID'],student_object.childSSMID)
         self.assertEqual(response['bankName'],student_object.bankName)
+        self.assertEqual(response['bankIfscCode'],student_object.bankIfscCode)
         self.assertEqual(response['bankAccountNum'],student_object.bankAccountNum)
         self.assertEqual(response['aadharNum'],student_object.aadharNum)
         self.assertEqual(response['bloodGroup'],student_object.bloodGroup)
