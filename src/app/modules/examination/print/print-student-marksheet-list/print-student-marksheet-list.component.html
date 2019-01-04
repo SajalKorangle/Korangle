@@ -163,7 +163,7 @@
                 </div>
 
                 <!-- Marksheet Heading -->
-                <div class="row no-gutters" style="margin-top: 50px; margin-bottom: 50px;">
+                <div class="row no-gutters" style="margin-top: 25px; margin-bottom: 25px;">
                     <div class="col-xs-12" align="center">
                         <span style="font-size: 25px;">External / Internal Valuation</span>
                     </div>
@@ -250,7 +250,7 @@
 
                                 <td class="downBorder bold" align="center"><b>Practical</b></td>
                                 <td class="downBorder bold" align="center"><b>Theory</b></td>
-                                <td class="downBorder rightBorderLight bold" align="çenter"><b>Total</b></td>
+                                <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
 
                                 <td class="downBorder bold" align="center"><b>Practical</b></td>
                                 <td class="downBorder bold" align="center"><b>Theory</b></td>
@@ -263,13 +263,13 @@
 
                                     <td class="leftBorder rightBorderLight" style="padding: 5px;">{{subject.name}}</td>
 
-                                    <td align="center">{{getSubjectOralMaxMarks(subject)}}</td>
-                                    <td align="center">{{getSubjectWrittenMaxMarks(subject)}}</td>
-                                    <td class="rightBorderLight" align="center">{{getSubjectTotalMaxMarks(subject)}}</td>
+                                    <td style="padding: 5px;" align="center">{{getSubjectOralMaxMarks(subject)}}</td>
+                                    <td style="padding: 5px;" align="center">{{getSubjectWrittenMaxMarks(subject)}}</td>
+                                    <td style="padding: 5px;" class="rightBorderLight" align="center">{{getSubjectTotalMaxMarks(subject)}}</td>
 
-                                    <td align="center">{{getSubjectOralMarksObtained(subject)}}</td>
-                                    <td align="center">{{getSubjectWrittenMarksObtained(subject)}}</td>
-                                    <td class="rightBorderLight" align="center"  >{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
+                                    <td style="padding: 5px;" align="center">{{getSubjectOralMarksObtained(subject)}}</td>
+                                    <td style="padding: 5px;" align="center">{{getSubjectWrittenMarksObtained(subject)}}</td>
+                                    <td style="padding: 5px;" class="rightBorderLight" align="center"  >{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
 
                                     <td class="rightBorder" style="padding: 5px;" align="center">{{getSubjectGrade(subject)}}</td>
                                 </tr>
@@ -277,13 +277,13 @@
 
                                     <td class="leftBorder rightBorderLight" style="padding: 5px;">{{subject.name}}</td>
 
-                                    <td align="center">{{getSubjectPracticalMaxMarks(subject)}}</td>
-                                    <td align="center">{{getSubjectTheoryMaxMarks(subject)}}</td>
-                                    <td class="rightBorderLight" align="center">{{getSubjectTotalMaxMarks(subject)}}</td>
+                                    <td style="padding: 5px;" align="center">{{getSubjectPracticalMaxMarks(subject)}}</td>
+                                    <td style="padding: 5px;" align="center">{{getSubjectTheoryMaxMarks(subject)}}</td>
+                                    <td style="padding: 5px;" class="rightBorderLight" align="center">{{getSubjectTotalMaxMarks(subject)}}</td>
 
-                                    <td align="center">{{getSubjectPracticalMarksObtained(subject)}}</td>
-                                    <td align="center">{{getSubjectTheoryMarksObtained(subject)}}</td>
-                                    <td class="rightBorderLight" align="center">{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
+                                    <td style="padding: 5px;" align="center">{{getSubjectPracticalMarksObtained(subject)}}</td>
+                                    <td style="padding: 5px;" align="center">{{getSubjectTheoryMarksObtained(subject)}}</td>
+                                    <td style="padding: 5px;" class="rightBorderLight" align="center">{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
 
                                     <td class="rightBorder" style="padding: 5px;" align="center">{{getSubjectGrade(subject)}}</td>
                                 </tr>
