@@ -30,13 +30,14 @@ const CHILD_SSMID = 16;
 const AADHAR_NUMBER = 17;
 const CASTE = 18;
 const BANK_NAME = 19;
-const BANK_ACCOUNT_NUMBER = 20;
-const FATHER_OCCUPATION = 21;
-const FATHER_ANNUAL_INCOME = 22;
-const BUS_STOP = 23;
-const RTE = 24;
-const ADDRESS = 25;
-const REMARK = 26;
+const Bank_IFSC_CODE = 20;
+const BANK_ACCOUNT_NUMBER = 21;
+const FATHER_OCCUPATION = 22;
+const FATHER_ANNUAL_INCOME = 23;
+const BUS_STOP = 24;
+const RTE = 25;
+const ADDRESS = 26;
+const REMARK = 27;
 
 // HEADERS
 const HEADERS = [];
@@ -61,6 +62,7 @@ HEADERS[CHILD_SSMID] = 'Child SSMID';
 HEADERS[AADHAR_NUMBER] = 'Aadhar Number';
 HEADERS[CASTE] = 'Caste';
 HEADERS[BANK_NAME] = 'Bank Name';
+HEADERS[Bank_IFSC_CODE] = 'Bank Ifsc Code';
 HEADERS[BANK_ACCOUNT_NUMBER] = 'Bank Account Number';
 HEADERS[FATHER_OCCUPATION] = 'Father\'s Occupation';
 HEADERS[FATHER_ANNUAL_INCOME] = 'Father\'s Annual Income';
@@ -566,6 +568,7 @@ export class UploadListComponent implements OnInit {
             'aadharNum': parseInt(student[AADHAR_NUMBER]),
             'caste': student[CASTE],
             'bankName': student[BANK_NAME],
+            'bankIfscCode': student[Bank_IFSC_CODE],
             'bankAccountNum': student[BANK_ACCOUNT_NUMBER],
             'fatherOccupation': student[FATHER_OCCUPATION],
             'fatherAnnualIncome': student[FATHER_ANNUAL_INCOME],

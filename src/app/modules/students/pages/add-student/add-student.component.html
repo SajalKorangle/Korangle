@@ -214,43 +214,7 @@
             </div>
         </div>
 
-        <!-- Bank Name, Bank Account Number, Father's Occupation, Father's Annual Income -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Bank Name</label>
-                    <input type="text"
-                           class="form-control"
-                           [(ngModel)]="newStudent.bankName">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Bank Account Number</label>
-                    <input type="text"
-                           class="form-control"
-                           [(ngModel)]="newStudent.bankAccountNum">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Father's Occupation</label>
-                    <input type="text"
-                           class="form-control"
-                           [(ngModel)]="newStudent.fatherOccupation">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Father's Annual Income</label>
-                    <input type="text"
-                           class="form-control"
-                           [(ngModel)]="newStudent.fatherAnnualIncome">
-                </div>
-            </div>
-        </div>
-
-        <!-- RTE, Bus Stop, Admission Session -->
+        <!-- RTE, Bus Stop, Admission Session, Date of Admission -->
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
@@ -289,6 +253,54 @@
                     <input type="date"
                            class="form-control"
                            [(ngModel)]="newStudent.dateOfAdmission">
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Name, Bank Account Number, Bank Ifsc Code -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Bank Name</label>
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="newStudent.bankName">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Bank Account Number</label>
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="newStudent.bankAccountNum">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Bank Ifsc Code</label>
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="newStudent.bankIfscCode">
+                </div>
+            </div>
+        </div>
+
+        <!-- Father's Occupation, Father's Annual Income -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Father's Occupation</label>
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="newStudent.fatherOccupation">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Father's Annual Income</label>
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="newStudent.fatherAnnualIncome">
                 </div>
             </div>
         </div>

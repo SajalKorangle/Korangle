@@ -368,7 +368,7 @@
             </div>
         </div>
 
-        <!-- Bank Name, Bank Account Number, Father's Occupation, Father's Annual Income -->
+        <!-- Bank Name, Bank Account Number, Bank Ifsc Code -->
         <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.bankName,currentStudent.bankName)">
@@ -389,6 +389,20 @@
                            (ngModelChange)="currentStudent.bankAccountNum=$event">
                 </div>
             </div>
+            <div class="col-md-3"
+                 [class.fieldChanged]="checkFieldChanged(selectedStudent.bankIfscCode,currentStudent.bankIfscCode)">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Bank Ifsc Code</label>
+                    <input type="text"
+                           class="form-control"
+                           [ngModel]="selectedStudent.bankIfscCode"
+                           (ngModelChange)="currentStudent.bankIfscCode=$event">
+                </div>
+            </div>
+        </div>
+
+        <!-- Father's Occupation, Father's Annual Income, Date Of Admission -->
+        <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.fatherOccupation,currentStudent.fatherOccupation)">
                 <div class="form-group form-black label-floating">
@@ -416,10 +430,6 @@
                            (ngModelChange)="currentStudent.fatherAnnualIncome=$event">
                 </mat-form-field -->
             </div>
-        </div>
-
-        <!-- Date Of Admission -->
-        <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfAdmission,currentStudent.dateOfAdmission)">
                 <div class="form-group form-black label-floating">

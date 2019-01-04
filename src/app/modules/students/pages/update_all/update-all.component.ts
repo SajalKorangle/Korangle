@@ -89,11 +89,12 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Child SSMID', 'childSSMID', 'number', false, ''), // 17
         new ColumnHandle('Family SSMID', 'familySSMID', 'number', false, ''), // 18
         new ColumnHandle('Bank Name', 'bankName', 'text', false, ''), // 19
-        new ColumnHandle('Bank Acc. No.', 'bankAccounNum', 'text', false, ''), // 20
-        new ColumnHandle('Aadhar No.', 'aadharNum', 'number', false, ''), // 21
-        new ColumnHandle('Blood Group', 'bloodGroup', 'list', false, BLOOD_GROUP_LIST), // 22
-        new ColumnHandle('Father\'s Annual Income', 'fatherAnnualIncome', 'text', false, ''), // 23
-        new ColumnHandle('RTE', 'rte', 'list', false, RTE_LIST),
+        new ColumnHandle('Bank Ifsc Code', 'bankIfscCode', 'text', false, ''), // 20
+        new ColumnHandle('Bank Acc. No.', 'bankAccounNum', 'text', false, ''), // 21
+        new ColumnHandle('Aadhar No.', 'aadharNum', 'number', false, ''), // 22
+        new ColumnHandle('Blood Group', 'bloodGroup', 'list', false, BLOOD_GROUP_LIST), // 23
+        new ColumnHandle('Father\'s Annual Income', 'fatherAnnualIncome', 'text', false, ''), // 24
+        new ColumnHandle('RTE', 'rte', 'list', false, RTE_LIST), // 25
     ];
 
     /* Category Options */

@@ -134,6 +134,10 @@
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showBankIfscCode" (click)="$event.stopPropagation();">Bank Ifsc Code
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
                         <mat-checkbox [(ngModel)]="columnFilter.showBankAccountNum" (click)="$event.stopPropagation();">Bank
                             Acc.
                             No.
@@ -288,6 +292,7 @@
                 <th [class.hidden]="!columnFilter.showChildSSMID">Child SSMID</th>
                 <th [class.hidden]="!columnFilter.showFamilySSMID">Family SSMID</th>
                 <th [class.hidden]="!columnFilter.showBankName">Bank Name</th>
+                <th [class.hidden]="!columnFilter.showBankIfscCode">Bank Ifsc Code</th>
                 <th [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
                 <th [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
                 <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
@@ -326,6 +331,7 @@
                         <td [class.hidden]="!columnFilter.showChildSSMID">{{student.childSSMID}}</td>
                         <td [class.hidden]="!columnFilter.showFamilySSMID">{{student.familySSMID}}</td>
                         <td [class.hidden]="!columnFilter.showBankName">{{student.bankName}}</td>
+                        <td [class.hidden]="!columnFilter.showBankIfscCode">{{student.bankIfscCode}}</td>
                         <td [class.hidden]="!columnFilter.showBankAccountNum">{{student.bankAccountNum}}</td>
                         <td [class.hidden]="!columnFilter.showAadharNum">{{student.aadharNum}}</td>
                         <td [class.hidden]="!columnFilter.showBloodGroup">{{student.bloodGroup}}</td>

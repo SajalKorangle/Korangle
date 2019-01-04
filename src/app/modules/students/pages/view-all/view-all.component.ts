@@ -25,6 +25,7 @@ class ColumnFilter {
     showChildSSMID = false;
     showFamilySSMID = false;
     showBankName = false;
+    showBankIfscCode = false;
     showBankAccountNum = false;
     showAadharNum = false;
     showBloodGroup = false;
@@ -373,6 +374,7 @@ export class ViewAllComponent implements OnInit {
         headerValues.push((this.columnFilter.showChildSSMID)? 'Child SSMID': '');
         headerValues.push((this.columnFilter.showFamilySSMID)? 'Family SSMID': '');
         headerValues.push((this.columnFilter.showBankName)? 'Bank Name': '');
+        headerValues.push((this.columnFilter.showBankIfscCode)? 'Bank Ifsc Code': '');
         headerValues.push((this.columnFilter.showBankAccountNum)? 'Bank Account No.': '');
         headerValues.push((this.columnFilter.showAadharNum)? 'Aadhar No.': '');
         headerValues.push((this.columnFilter.showBloodGroup)? 'Blood Group': '');
@@ -402,6 +404,7 @@ export class ViewAllComponent implements OnInit {
         studentDisplay.push((this.columnFilter.showChildSSMID)? student.childSSMID: '');
         studentDisplay.push((this.columnFilter.showFamilySSMID)? student.familySSMID: '');
         studentDisplay.push((this.columnFilter.showBankName)? student.bankName: '');
+        studentDisplay.push((this.columnFilter.showBankIfscCode)? student.bankIfscCode: '');
         studentDisplay.push((this.columnFilter.showBankAccountNum)? student.bankAccountNum: '');
         studentDisplay.push((this.columnFilter.showAadharNum && student.aadharNum)?student.aadharNum.toString(): '');
         studentDisplay.push((this.columnFilter.showBloodGroup)? student.bloodGroup: '');

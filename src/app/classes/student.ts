@@ -26,6 +26,7 @@ export class Student {
     childSSMID: number;
     familySSMID: number;
     bankName: string;
+    bankIfscCode: string;
     bankAccountNum: string;
     aadharNum: number;
     bloodGroup: string;
@@ -69,6 +70,7 @@ export class Student {
         this.familySSMID = student.familySSMID;
         this.childSSMID = student.childSSMID;
         this.bankName = student.bankName;
+        this.bankIfscCode = student.bankIfscCode;
         this.bankAccountNum = student.bankAccountNum;
         this.aadharNum = student.aadharNum;
         this.bloodGroup = student.bloodGroup;
