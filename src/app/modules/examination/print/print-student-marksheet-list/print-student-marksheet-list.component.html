@@ -60,7 +60,7 @@
             <!-- Progress Report, Class, Session -->
             <div class="row no-gutters" style="margin-top: 10px">
                 <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
-                    <span style="font-size: 30px;">Marsksheet</span><br/>
+                    <span style="font-size: 30px;">Marksheet</span><br/>
                     <div style="height: 5px"></div>
                     <span style="font-size: 20px">{{examination.name}}</span>
                     <div style="height: 5px"></div>
@@ -72,113 +72,92 @@
 
                 <!-- Roll No. , Scholar No. -->
                 <div class="row no-gutters">
-                    <div class="col-xs-3 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         Roll No.<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-5 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-4 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{student.rollNumber}}</i>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         Scholar No.<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-2 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{student.scholarNumber}}</i>
                     </div>
                 </div>
 
                 <!-- Student's Name , Aadhar No. -->
                 <div class="row no-gutters">
-                    <div class="col-xs-3 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         Student's Name<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-5 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-4 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{ student.name | titlecase }}</i>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         Aadhar No.<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-2 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{student.aadharNumber}}</i>
                     </div>
                 </div>
 
                 <!-- Father's Name , Category -->
                 <div class="row no-gutters">
-                    <div class="col-xs-3 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         Father's Name<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-5 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-4 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{ student.fathersName | titlecase }}</i>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         Category<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-2 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{student.category}}</i>
                     </div>
                 </div>
 
                 <!-- Mother's Name , SSSMID -->
                 <div class="row no-gutters">
-                    <div class="col-xs-3 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         Mother's Name<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-5 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-4 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{ student.motherName | titlecase }}</i>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         SSSMID<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-2 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{student.childSSMID}}</i>
                     </div>
                 </div>
 
                 <!-- Date of Birth , Contact No. -->
                 <div class="row no-gutters">
-                    <div class="col-xs-3 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo">
                         Date of birth<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-5 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-4 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{student.dateOfBirth | date: 'dd/MM/yyyy'}}</i>
                     </div>
-                    <div class="col-xs-2 d-flex justify-content-start custom-padding"
-                         style="font-size: 14px;" *ngIf="user.activeSchool.name == 'EKLAVYA'">
+                    <div class="col-xs-3 d-flex justify-content-start custom-padding studentInfo"
+                         *ngIf="user.activeSchool.name == 'EKLAVYA'">
                         Contact No.<span style="float: right">:</span>
                     </div>
                     <div  *ngIf="user.activeSchool.name == 'EKLAVYA'"
-                          class="col-xs-2 d-flex justify-content-start custom-padding"
-                          style="font-size: 14px;">
+                          class="col-xs-2 d-flex justify-content-start custom-padding studentInfo">
                         <i>{{student.mobileNumber}}</i>
                     </div>
                 </div>
 
                 <!-- Address -->
                 <div class="row no-gutters" *ngIf="user.activeSchool.name == 'EKLAVYA'">
-                    <div class="col-xs-3 d-flex custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-3 d-flex custom-padding studentInfo">
                         Address<span style="float: right">:</span>
                     </div>
-                    <div class="col-xs-9 d-flex custom-padding"
-                         style="font-size: 14px;">
+                    <div class="col-xs-9 d-flex custom-padding studentInfo">
                         <i>{{ student.address | titlecase }}</i>
                     </div>
                 </div>
