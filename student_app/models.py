@@ -74,6 +74,7 @@ class Student(models.Model):
     familySSMID = models.IntegerField(null=True)
     childSSMID = models.IntegerField(null=True)
     bankName = models.TextField(null=True, blank=True)
+    bankIfscCode = models.TextField(null=True, blank=True)
     bankAccountNum = models.TextField(null=True, blank=True)
     aadharNum = models.IntegerField(null=True)
     bloodGroup = models.TextField(null=True, blank=True)

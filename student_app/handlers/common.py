@@ -58,6 +58,7 @@ def get_student_profile(student_object, session_object):
     student_data['familySSMID'] = student_object.familySSMID
     student_data['childSSMID'] = student_object.childSSMID
     student_data['bankName'] = student_object.bankName
+    student_data['bankIfscCode'] = student_object.bankIfscCode
     student_data['bankAccountNum'] = student_object.bankAccountNum
     student_data['aadharNum'] = student_object.aadharNum
     student_data['bloodGroup'] = student_object.bloodGroup
