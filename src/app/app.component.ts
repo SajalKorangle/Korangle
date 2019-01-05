@@ -26,9 +26,11 @@ export class AppComponent implements OnInit {
         // localStorage.setItem('schoolJWT', '');
         if (this.user.checkAuthentication()) {
             this.authenticationService.getUserDetails(this.user.jwt).then( data => {
-                if (data === '') {
+                if (data === 'failed') {
+                    console.log('authentication failed');
                     this.user.isAuthenticated = false;
                     this.user.jwt = '';
+                    localStorage.setItem('schoolJWT', '');
                 } else {
                     this.user.initializeUserData(data);
                 }

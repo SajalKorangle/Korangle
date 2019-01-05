@@ -33,6 +33,8 @@ export class AuthenticationService {
             .toPromise()
             .then(response => {
                 return response.json().data;
+            }, error => {
+                return 'failed';
             });
     }
 
