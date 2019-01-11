@@ -55,7 +55,7 @@ export class School {
 
         this.employeeId = schoolData.employeeId;
 
-        if (schoolData.moduleList.length > 0) {
+        //if (schoolData.moduleList.length > 0) {
             this.moduleList = schoolData.moduleList;
             this.moduleList.push({
                 'dbId': null,
@@ -88,7 +88,7 @@ export class School {
             this.moduleList.forEach(module => {
                 module.showTaskList = false;
             });
-        }
+        //}
 
         this.studentList = schoolData.studentList;
         this.studentList.forEach(student => {
