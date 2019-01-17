@@ -8,7 +8,7 @@ from school_app.factory.school import SchoolFactory
 
 # Business
 from salary_app.business.payslip \
-    import get_payslip, get_payslip_list, create_payslip, delete_payslip, update_payslip, get_school_payslip_list
+    import get_payslip, get_employee_payslip_list, create_payslip, delete_payslip, update_payslip, get_school_payslip_list
 
 # Model
 from salary_app.models import Payslip
@@ -73,7 +73,7 @@ class PayslipTestCase(ParentTestCase):
             'parentEmployee': employee_object.id,
         }
 
-        response = get_payslip_list(data)
+        response = get_employee_payslip_list(data)
 
         self.assertEqual(len(response), 2)
 

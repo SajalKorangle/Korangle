@@ -10,6 +10,36 @@ class PayslipModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+def get_payslip_list(data):
+
+    payslip_query = Payslip.objects.all()
+
+    if 'employeeList' in data and data['employeeList'] != '':
+        payslip_query = payslip_query.filter(parentEmployee__in=data['employeeList'].split(','))
+
+    if 'amountList' in data and data['amountList'] != '':
+        payslip_query = payslip_query.filter(amount__in=data['amountList'].split(','))
+
+    if 'monthList' in data and data['monthList'] != '':
+        payslip_query = payslip_query.filter(month__in=data['monthList'].split(','))
+
+    if 'yearList' in data and data['yearList'] != '':
+        payslip_query = payslip_query.filter(year__in = data['yearList'].split(','))
+
+    if 'dateOfGenerationList' in data and data['dateOfGenerationList'] != '':
+        payslip_query = payslip_query.filter(dateOfGeneration__in = data['dateOfGenerationList'].split(','))
+
+    if 'remarkList' in data and data['remarkList'] != '':
+        payslip_query = payslip_query.filter(remark__in = data['remarkList'].split(','))
+
+    payslip_list = []
+
+    for payslip_object in payslip_query:
+        payslip_list.append(PayslipModelSerializer(payslip_object).data)
+
+    return payslip_list
+
+
 def get_school_payslip_list(data):
 
     payslip_list = []
@@ -22,7 +52,7 @@ def get_school_payslip_list(data):
     return payslip_list
 
 
-def get_payslip_list(data):
+def get_employee_payslip_list(data):
 
     payslip_list = []
 

@@ -7,7 +7,7 @@ import json
 
 ############## Payslip ##############
 from .business.payslip import get_payslip, create_payslip, update_payslip, delete_payslip, \
-    get_payslip_list, get_school_payslip_list
+    get_employee_payslip_list, get_school_payslip_list, get_payslip_list
 
 
 class PayslipView(APIView):
@@ -41,14 +41,21 @@ class PayslipView(APIView):
         return delete_payslip(data)
 
 
-class PayslipListView(APIView):
+class EmployeePayslipListView(APIView):
 
     @user_permission
     def get(request, employee_id):
         data = {
             'parentEmployee': employee_id,
         }
-        return get_payslip_list(data)
+        return get_employee_payslip_list(data)
+
+
+class PayslipListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_payslip_list(request.GET)
 
 
 class SchoolPayslipsView(APIView):
