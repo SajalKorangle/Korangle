@@ -26,6 +26,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     printICardsSubscription: any;
     printHallTicketSubscription: any;
     printStudentMarksheetListSubscription: any;
+    printSalarySheetSubscription: any;
     printStudentAttendanceListSubscription: any;
     printEmployeeAttendanceListSubscription: any;
 
@@ -108,6 +109,12 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-student-marksheet-list-component').emit(value);
             });
         });
+        this.printSalarySheetSubscription = EmitterService.get('print-salary-sheet').subscribe(value => {
+            this.printType = 'salarySheet';
+            setTimeout(()=> {
+                EmitterService.get('print-salary-sheet-component').emit(value);
+            });
+        });
         this.printStudentAttendanceListSubscription =
             EmitterService.get('print-student-attendance-list').subscribe( value => {
                 this.printType = 'studentAttendanceList';
@@ -136,6 +143,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printICardsSubscription.unsubscribe();
         this.printHallTicketSubscription.unsubscribe();
         this.printStudentMarksheetListSubscription.unsubscribe();
+        this.printSalarySheetSubscription.unsubscribe();
         this.printStudentAttendanceListSubscription.unsubscribe();
         this.printEmployeeAttendanceListSubscription.unsubscribe();
     }

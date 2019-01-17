@@ -51,13 +51,19 @@ export class MonthDateComponent implements OnInit {
     @Input() showButton = false;
     @Input() user;
     @Input() biggerFont;
+    @Input() previousMonth = false;
 
     @Output() onMonthSelected = new EventEmitter<any>();
 
 
-    date = new FormControl({value: moment(), disabled: true});
+    date: any;
 
     ngOnInit(): void {
+        if (this.previousMonth) {
+            this.date = new FormControl({value: moment().subtract(1, 'months').endOf('month'), disabled: true});
+        } else {
+            this.date = new FormControl({value: moment(), disabled: true});
+        }
         this.onMonthSelected.emit(this.date.value._d);
     }
 

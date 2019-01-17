@@ -28,6 +28,15 @@ export class SalaryService extends CommonServiceRequirements {
         return super.getData(token, url);
     }
 
+    getPayslipList(data: any, token: any): Promise<any> {
+        let url = '/salary/payslips/batch?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
+        // url.replace("&", "?");
+        return super.getData(token, url);
+    }
+
     createPayslip(data: any, token: any): Promise<any> {
         const url = '/salary/payslips';
         return super.postData(data, token, url);
