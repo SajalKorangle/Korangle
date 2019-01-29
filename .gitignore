@@ -3,6 +3,7 @@ node_modules/
 school.iml
 preparePackage.sh
 brightstar.tar.gz
+brightstar.zip
 brightstar/
 src/src.iml
 .DS_Store
