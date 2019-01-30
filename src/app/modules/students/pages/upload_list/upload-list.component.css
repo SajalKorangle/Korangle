@@ -66,3 +66,13 @@ i.material-icons.column {
 .redBackground {
     background-color: red;
 }
+
+.yellowBackground {
+    background-color: yellow;
+}
+
+.card-content {
+    display: block;
+    max-height: 88vh;
+    overflow: scroll;
+}

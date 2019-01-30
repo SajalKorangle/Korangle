@@ -28,8 +28,21 @@
             </div>
         </div>
 
-        <br><i *ngIf="studentList">Displaying {{studentList.length}} students</i>
-        <br><i *ngIf="errorList.length>0">{{getNumberOfErrors()}}: errors</i>
+        <ng-container *ngIf="studentList">
+            <br>
+            <i>Displaying {{studentList.length}} students</i>
+            <ng-container *ngIf="errorList.length > 0">
+                <br>
+                <i>{{getNumberOfErrors()}} cells with errors</i>
+                <span class="redBackground" style="margin-left: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </ng-container>
+            <ng-container *ngIf="deletedList.length>0">
+                <br>
+                <i>{{getNumberOfDeletedCells()}} cells deleted</i>
+                <span class="yellowBackground" style="margin-left: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </ng-container>
+        </ng-container>
+
 
         <table class="table table-hover" *ngIf="studentList">
             <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
@@ -40,7 +53,8 @@
             <tbody>
             <tr *ngFor="let row of studentList; let rowIndex=index;">
                 <td *ngFor="let val of row; let columnIndex=index;"
-                    [class.redBackground]="isErrorCell(rowIndex, columnIndex)">
+                    [class.redBackground]="isErrorCell(rowIndex, columnIndex)"
+                    [class.yellowBackground]="isDeletedCell(rowIndex, columnIndex)">
                     {{val}}
                 </td>
             </tr>

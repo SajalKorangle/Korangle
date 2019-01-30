@@ -198,6 +198,7 @@ export class UploadListComponent implements OnInit {
     numberOfFillerRows: any;
 
     errorList = [];
+    deletedList = [];
 
     isLoading = false;
 
@@ -323,13 +324,22 @@ export class UploadListComponent implements OnInit {
         if (checkFailed) {
             return;
         }*/
+
         this.data.forEach((student, index) => {
             if (index >= this.numberOfFillerRows) {
-                let errorColumnList = this.validateStudent(student, index);
+                let dualList = this.validateStudent(student, index);
+                let errorColumnList = dualList[0];
+                let deletedColumnList = dualList[1];
                 if (errorColumnList.length > 0) {
                     this.errorList.push({
                         'row': index-this.numberOfFillerRows,
                         'column': errorColumnList,
+                    });
+                }
+                if (deletedColumnList.length > 0) {
+                    this.deletedList.push({
+                        'row': index-this.numberOfFillerRows,
+                        'column': deletedColumnList,
                     });
                 }
             }
@@ -337,103 +347,159 @@ export class UploadListComponent implements OnInit {
         this.studentList = this.data.slice(this.numberOfFillerRows);
     }
 
+    trimCell(student: any, column: any): void {
+        if (typeof student[column] === "string") {
+            student[column] = student[column].trim();
+        }
+    }
+
+    toCamelCase(student: any, column: any): void {
+        if (typeof student[column] === "string" && student[column].length > 2) {
+            student[column] = student[column].charAt(0).toUpperCase() + student[column].substr(1).toLowerCase();
+        }
+    }
+
     validateStudent(student: any, index: number): any {
 
         let rowNumber = index+1;
 
+        let dualList = [];
+
         let errorColumnList = [];
+        let deletedColumnList = [];
 
         // Check Name
+        this.trimCell(student, NAME);
         if (student[NAME] === undefined || student[NAME].length < 3) {
             errorColumnList.push(NAME);
         }
 
         // Check Father's Name
+        this.trimCell(student, FATHER_NAME);
         if (student[FATHER_NAME] === undefined || student[FATHER_NAME].length < 3) {
             errorColumnList.push(FATHER_NAME);
         }
 
         // Check Mother's Name
+        this.trimCell(student, MOTHER_NAME);
         if (student[MOTHER_NAME] !== undefined && student[MOTHER_NAME].length < 3) {
             errorColumnList.push(MOTHER_NAME);
         }
 
         // Check Class
+        this.trimCell(student, CLASS);
+        this.toCamelCase(student, CLASS);
         if (CLASS_VALUES.indexOf(student[CLASS]) === -1) {
             errorColumnList.push(CLASS);
         }
 
         // Check Section
+        this.trimCell(student, SECTION);
         if (student[SECTION] !== undefined && SECTION_VALUES.indexOf(student[SECTION]) === -1) {
             errorColumnList.push(SECTION);
         }
 
         // Check Mobile Number
+        this.trimCell(student, MOBILE_NUMBER);
         if (!this.undefinedOrNumberLength(student[MOBILE_NUMBER], 10)) {
-            errorColumnList.push(MOBILE_NUMBER);
+            student[MOBILE_NUMBER] = null;
+            deletedColumnList.push(MOBILE_NUMBER);
         }
 
         // Check Date of Birth
+        this.trimCell(student, DATE_OF_BIRTH);
         if (!this.validateDate(student[DATE_OF_BIRTH])) {
             errorColumnList.push(DATE_OF_BIRTH);
         }
 
         // Check Date of Admission
+        this.trimCell(student, DATE_OF_ADMISSION);
         if (!this.validateDate(student[DATE_OF_ADMISSION])) {
             errorColumnList.push(DATE_OF_ADMISSION);
         }
 
         // Check Admission Session
+        this.trimCell(student, ADMISSION_SESSION);
+        this.toCamelCase(student, ADMISSION_SESSION);
         if (student[ADMISSION_SESSION] !== undefined && ADMISSION_SESSION_VALUES.indexOf(student[ADMISSION_SESSION]) === -1) {
             errorColumnList.push(ADMISSION_SESSION);
         }
 
         // Check Gender
+        this.trimCell(student, GENDER);
+        this.toCamelCase(student, GENDER);
         if (student[GENDER] !== undefined && GENDER_VALUES.indexOf(student[GENDER]) === -1) {
             errorColumnList.push(GENDER);
         }
 
         // Check Category
-        if (student[CATEGORY] !== undefined && CATEGORY_VALUES.indexOf(student[CATEGORY]) === -1) {
-            errorColumnList.push(CATEGORY);
+        this.trimCell(student, CATEGORY);
+        if (student[CATEGORY] !== undefined) {
+            student[CATEGORY] = student[CATEGORY].toUpperCase();
+            if (student[CATEGORY] === "GEN.") {
+                this.toCamelCase(student, CATEGORY);
+            }
+            if (CATEGORY_VALUES.indexOf(student[CATEGORY]) === -1) {
+                errorColumnList.push(CATEGORY);
+            }
         }
 
         // Check Religion
+        this.trimCell(student, RELIGION);
+        this.toCamelCase(student, RELIGION);
         if (student[RELIGION] !== undefined && RELIGION_VALUES.indexOf(student[RELIGION]) === -1) {
             errorColumnList.push(RELIGION);
         }
 
         // Check Blood Group
-        if (student[BLOOD_GROUP] !== undefined && BLOOD_GROUP_VALUES.indexOf(student[BLOOD_GROUP]) === -1) {
-            errorColumnList.push(BLOOD_GROUP);
+        this.trimCell(student, BLOOD_GROUP);
+        if (student[BLOOD_GROUP] !== undefined) {
+            student[BLOOD_GROUP] = student[BLOOD_GROUP].toUpperCase();
+            if (BLOOD_GROUP_VALUES.indexOf(student[BLOOD_GROUP]) === -1) {
+                errorColumnList.push(BLOOD_GROUP);
+            }
         }
 
         // Check Family SSMID
+        this.trimCell(student, FAMILY_SSMID);
         if (!this.undefinedOrNumberLength(student[FAMILY_SSMID], 8)) {
-            errorColumnList.push(FAMILY_SSMID);
+            student[FAMILY_SSMID] = null;
+            deletedColumnList.push(FAMILY_SSMID);
         }
 
         // Check Child SSMID
+        this.trimCell(student, CHILD_SSMID);
         if (!this.undefinedOrNumberLength(student[CHILD_SSMID], 9)) {
-            errorColumnList.push(CHILD_SSMID);
+            student[CHILD_SSMID] = null;
+            deletedColumnList.push(CHILD_SSMID);
         }
 
         // Check Aadhar Number
+        this.trimCell(student, AADHAR_NUMBER);
         if (!this.undefinedOrNumberLength(student[AADHAR_NUMBER], 12)) {
-            errorColumnList.push(AADHAR_NUMBER);
+            student[AADHAR_NUMBER] = null;
+            deletedColumnList.push(AADHAR_NUMBER);
         }
 
         // Check Bus Stop
+        this.trimCell(student, BUS_STOP);
         if (student[BUS_STOP] !== undefined && this.busStopList.map(a => a.stopName).indexOf(student[BUS_STOP]) === -1) {
             errorColumnList.push(BUS_STOP);
         }
 
         // Check RTE
-        if (student[RTE] !== undefined && RTE_VALUES.indexOf(student[RTE]) === -1) {
-            errorColumnList.push(RTE);
+        this.trimCell(student, RTE);
+        if (student[RTE] !== undefined) {
+            student[RTE] = student[RTE].toUpperCase();
+            if (RTE_VALUES.indexOf(student[RTE]) === -1) {
+                errorColumnList.push(RTE);
+            }
         }
 
-        return errorColumnList;
+        dualList.push(errorColumnList);
+        dualList.push(deletedColumnList);
+
+        return dualList;
 
     }
 
@@ -708,9 +774,36 @@ export class UploadListComponent implements OnInit {
         return numberOfErrors;
     }
 
+    getNumberOfDeletedCells(): number {
+        let numberOfDeletedCells = 0;
+        this.deletedList.forEach(row => {
+            numberOfDeletedCells += row.column.length;
+        });
+        console.log(numberOfDeletedCells);
+        return numberOfDeletedCells;
+    }
+
     isErrorCell(rowIndex: number, columnIndex: number): boolean {
         let result = false;
         this.errorList.every(item => {
+            if (item.row === rowIndex) {
+                item.column.every(itemTwo => {
+                    if (itemTwo === columnIndex) {
+                        result = true;
+                        return false;
+                    }
+                    return true;
+                });
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    isDeletedCell(rowIndex: number, columnIndex: number): boolean {
+        let result = false;
+        this.deletedList.every(item => {
             if (item.row === rowIndex) {
                 item.column.every(itemTwo => {
                     if (itemTwo === columnIndex) {
