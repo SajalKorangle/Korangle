@@ -82,6 +82,8 @@ export class User {
             return 'Session 2017-18';
         } else if (this.activeSchool.currentSessionDbId==2) {
             return 'Session 2018-19';
+        } else if (this.activeSchool.currentSessionDbId==3) {
+            return 'Session 2019-20';
         }
         return '';
     }

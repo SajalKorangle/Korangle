@@ -258,6 +258,8 @@ export class UpdateProfileComponent implements OnInit {
             return 'Session 2017-18';
         } else if (dbId=2) {
             return 'Session 2018-19';
+        } else if (dbId=3) {
+            return 'Session 2019-20';
         }
         return '';
     }

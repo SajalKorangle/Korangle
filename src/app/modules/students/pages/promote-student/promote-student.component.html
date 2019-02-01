@@ -7,7 +7,7 @@
 
             <div class="col-sm-6">
 
-                <span class="visible-xs">From: </span><span style="font-weight: 800; font-size: 16px;">Session 2017-18</span><br/>
+                <span class="visible-xs">From: </span><span style="font-weight: 800; font-size: 16px;">{{getFromSessionName()}}</span><br/>
 
                 Class:
                 <select [ngModel]="fromSelectedClass"
@@ -44,7 +44,7 @@
 
             <div class="col-sm-6" *ngIf="toSelectedClass">
 
-                <span class="visible-xs">To: </span><span style="font-weight: 800; font-size: 16px;">Session 2018-19</span><br/>
+                <span class="visible-xs">To: </span><span style="font-weight: 800; font-size: 16px;">{{getToSessionName()}}</span><br/>
 
 
                 <mat-form-field style="margin-top: 23px;">
@@ -126,7 +126,7 @@
 
                 From: <br class="visible-xs"/>
                 <span style="font-weight: 800; font-size: 16px;">
-                      Session 2017-18, <br class="visible-xs"/> {{fromSelectedClass.name}}
+                      {{getFromSessionName()}}, <br class="visible-xs"/> {{fromSelectedClass.name}}
                       <ng-container *ngIf="fromSelectedClass.sectionList.length != 1">
                           , {{fromSelectedSection.name}}
                       </ng-container>
@@ -138,7 +138,7 @@
 
                 To: <br class="visible-xs"/>
                 <span style="font-weight: 800; font-size: 16px;">
-                    Session 2018-19, <br class="visible-xs"/> {{toSelectedClass.name}}
+                    {{getToSessionName()}}, <br class="visible-xs"/> {{toSelectedClass.name}}
                     <ng-container *ngIf="toSelectedClass.selectedSection.name != 'Section - A'">
                       , {{toSelectedClass.selectedSection.name}}
                     </ng-container>

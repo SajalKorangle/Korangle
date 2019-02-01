@@ -36,6 +36,7 @@ export class PromoteStudentComponent implements OnInit {
         this.fromSelectedSection.studentList.forEach(student => {
             student.selected = false;
             student.className = this.fromSelectedClass.name;
+            student.classDbId = this.fromSelectedClass.dbId;
             student.sectionName = this.fromSelectedSection.name;
             student.sectionDbId = this.fromSelectedSection.dbId;
         });
@@ -43,14 +44,14 @@ export class PromoteStudentComponent implements OnInit {
 
     ngOnInit(): void {
         const class_section_list_request_data = {
-            sessionDbId : 2,
+            sessionDbId : this.user.activeSchool.currentSessionDbId+1,
         };
         const student_mini_profile_list_request_data = {
             schoolDbId: this.user.activeSchool.dbId,
-            sessionDbId: 2,
+            sessionDbId: this.user.activeSchool.currentSessionDbId+1,
         };
         const class_section_student_list_request_data = {
-            sessionDbId: 1,
+            sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
         };
         this.isLoading = true;
@@ -62,7 +63,12 @@ export class PromoteStudentComponent implements OnInit {
             this.isLoading = false;
             console.log(value);
             this.initializeToList(value[0]);
-            this.toStudentList = value[1];
+            this.toStudentList = value[1].filter(item => {
+                if (item.parentTransferCertificate === null) {
+                    return true;
+                }
+                return false;
+            });
             this.initializeFromList(value[2]);
         }, error => {
             this.isLoading = false;
@@ -79,6 +85,16 @@ export class PromoteStudentComponent implements OnInit {
 
     initializeFromList(classSectionStudentList: any): void {
         this.fromClassSectionStudentList = classSectionStudentList;
+        this.fromClassSectionStudentList.forEach(classs => {
+            classs.sectionList.forEach(section => {
+                section.studentList = section.studentList.filter(student => {
+                    if (student.parentTransferCertificate === null) {
+                        return true;
+                    }
+                    return false;
+                });
+            });
+        });
         if (this.fromClassSectionStudentList.length > 0) {
             this.fromSelectedClass = this.fromClassSectionStudentList[0];
             this.handleFromSelectedClassChange();
@@ -111,7 +127,7 @@ export class PromoteStudentComponent implements OnInit {
             classDbId: this.toSelectedClass.dbId,
             sectionDbId: this.toSelectedClass.selectedSection.dbId,
             studentList: studentPromotionList,
-            parentSession: 2,
+            parentSession: this.user.activeSchool.currentSessionDbId+1,
         };
         console.log(data);
         this.isLoading = true;
@@ -119,7 +135,7 @@ export class PromoteStudentComponent implements OnInit {
             this.isLoading = false;
             alert('Students Promoted Successfully');
             data.studentList.forEach( student => {
-                this.addInToList(student, data['sectionDbId']);
+                this.addInToList(student, data['sectionDbId'], data['classDbId']);
             });
         }, error => {
             this.isLoading = false;
@@ -146,16 +162,18 @@ export class PromoteStudentComponent implements OnInit {
 
     getFilteredToStudentList(): any {
         return this.toStudentList.filter((student) => {
-            if (student.sectionDbId === this.toSelectedClass.selectedSection.dbId) {
+            if (student.sectionDbId === this.toSelectedClass.selectedSection.dbId &&
+                student.classDbId === this.toSelectedClass.dbId) {
                 return true;
             }
             return false;
         });
     }
 
-    addInToList(student: any, sectionDbId: any): void {
+    addInToList(student: any, sectionDbId: any, classDbId: any): void {
         student.selected = false;
         student.sectionDbId = sectionDbId;
+        student.classDbId = classDbId;
         this.toStudentList.push(student);
     }
 
@@ -171,6 +189,30 @@ export class PromoteStudentComponent implements OnInit {
         this.fromSelectedSection.studentList.forEach(student => {
             student.selected = false;
         });
+    }
+
+    getFromSessionName(): any {
+        switch (this.user.activeSchool.currentSessionDbId) {
+            case 1:
+                return "Session 2017-18";
+            case 2:
+                return "Session 2018-19";
+            case 3:
+                return "Session 2019-20";
+        }
+        return "-";
+    }
+
+    getToSessionName(): any {
+        switch (this.user.activeSchool.currentSessionDbId+1) {
+            case 1:
+                return "Session 2017-18";
+            case 2:
+                return "Session 2018-19";
+            case 3:
+                return "Session 2019-20";
+        }
+        return "-";
     }
 
 }

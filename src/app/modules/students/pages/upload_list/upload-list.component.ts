@@ -112,6 +112,7 @@ const ADMISSION_SESSION_VALUES = [
     'Admission Session Values',
     'Session 2017-18',
     'Session 2018-19',
+    'Session 2019-20',
 ];
 
 // Gender Values
