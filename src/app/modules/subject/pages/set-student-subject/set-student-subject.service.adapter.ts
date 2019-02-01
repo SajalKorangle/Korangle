@@ -108,43 +108,51 @@ export class SetStudentSubjectServiceAdapter {
         return result;
     }
 
-    // Add or remove Student Subject
-    updateStudentSubject(item: any): void {
+    // Update Student Subjects and Tests
+    updateStudentSubjectAndTests(item: any): void {
         item.updating = true;
 
         if (item.studentSubjectId === null) {
-
-            let data = {
-                parentStudent: this.vm.selectedStudent.dbId,
-                parentSession: this.vm.selectedSession.dbId,
-                parentSubject: item.subjectId,
-            };
-
-            this.vm.subjectService.createStudentSubject(data, this.vm.user.jwt).then(value => {
-                item.studentSubjectId = value.id;
-                item.updating = false;
-            });
-
+            this.addStudentSubjectAndTests(item);
         } else {
-
-            let data = item.studentSubjectId;
-
-            this.vm.subjectService.deleteStudentSubject(data, this.vm.user.jwt).then(value => {
-                item.studentSubjectId = null;
-
-                if (item.classSubjectId === null) {
-                    this.vm.studentClassAllSubjectList = this.vm.studentClassAllSubjectList.filter( itemTwo => {
-                        if (itemTwo.subjectId === item.subjectId) {
-                            return false;
-                        }
-                        return true;
-                    });
-                }
-
-                item.updating = false;
-            });
-
+            this.removeStudentSubjectAndTests(item);
         }
+
+    }
+
+    addStudentSubjectAndTests(item: any): void {
+
+        let subject_data = {
+            parentStudent: this.vm.selectedStudent.dbId,
+            parentSession: this.vm.selectedSession.dbId,
+            parentSubject: item.subjectId,
+        };
+
+        this.vm.subjectService.createStudentSubject(subject_data, this.vm.user.jwt).then(value => {
+            item.studentSubjectId = value.id;
+            item.updating = false;
+        });
+
+    }
+
+    removeStudentSubjectAndTests(item: any): void {
+
+        let subject_data = item.studentSubjectId;
+
+        this.vm.subjectService.deleteStudentSubject(subject_data, this.vm.user.jwt).then(value => {
+            item.studentSubjectId = null;
+
+            if (item.classSubjectId === null) {
+                this.vm.studentClassAllSubjectList = this.vm.studentClassAllSubjectList.filter( itemTwo => {
+                    if (itemTwo.subjectId === item.subjectId) {
+                        return false;
+                    }
+                    return true;
+                });
+            }
+
+            item.updating = false;
+        });
 
     }
 

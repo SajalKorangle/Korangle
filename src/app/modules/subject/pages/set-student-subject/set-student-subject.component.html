@@ -8,7 +8,7 @@
     <ng-container *ngIf="!isLoading">
         <ng-container *ngFor="let item of studentClassAllSubjectList">
             <mat-checkbox [ngModel]="item.studentSubjectId !== null"
-                          (ngModelChange)="serviceAdapter.updateStudentSubject(item)"
+                          (ngModelChange)="serviceAdapter.updateStudentSubjectAndTests(item)"
                           [disabled]="item.updating">
                 {{item.subjectName}} <ng-container *ngIf="item.classSubjectId===null">(Subject not mentioned in class)</ng-container>
                 <br/>
