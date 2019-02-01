@@ -3,7 +3,7 @@
     <student-filter [user]="user"
                     [sessionChange]="false"
                     (onSessionChange)="populateSelectedSession($event)"
-                    (onStudentSelected)="serviceAdapter.getStudentSubjects($event)"></student-filter>
+                    (onStudentSelected)="serviceAdapter.getStudentAndClassSubjectsAndTests($event)"></student-filter>
 
     <ng-container *ngIf="!isLoading">
         <ng-container *ngFor="let item of studentClassAllSubjectList">

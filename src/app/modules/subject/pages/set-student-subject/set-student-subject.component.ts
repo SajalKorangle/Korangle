@@ -7,12 +7,13 @@ import { SchoolService } from '../../../../services/school.service';
 
 
 import { SetStudentSubjectServiceAdapter } from './set-student-subject.service.adapter';
+import {ExaminationService} from '../../../../services/examination.service';
 
 @Component({
     selector: 'set-student-subject',
     templateUrl: './set-student-subject.component.html',
     styleUrls: ['./set-student-subject.component.css'],
-    providers: [ SubjectService, ClassService, StudentService, SchoolService ],
+    providers: [ SubjectService, ClassService, StudentService, SchoolService, ExaminationService ],
 })
 
 export class SetStudentSubjectComponent implements OnInit {
@@ -33,7 +34,8 @@ export class SetStudentSubjectComponent implements OnInit {
     constructor(public subjectService: SubjectService,
                 public classService: ClassService,
                 public studentService: StudentService,
-                public schoolService: SchoolService) {}
+                public schoolService: SchoolService,
+                public examinationService: ExaminationService) {}
 
     ngOnInit(): void {
         this.serviceAdapter = new SetStudentSubjectServiceAdapter();
