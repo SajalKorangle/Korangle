@@ -388,7 +388,7 @@ export class UploadListComponent implements OnInit {
 
         // Check Class
         this.trimCell(student, CLASS);
-        this.toCamelCase(student, CLASS);
+        // this.toCamelCase(student, CLASS);
         if (CLASS_VALUES.indexOf(student[CLASS]) === -1) {
             errorColumnList.push(CLASS);
         }
