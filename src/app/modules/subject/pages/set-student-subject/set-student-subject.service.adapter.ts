@@ -9,8 +9,12 @@ export class SetStudentSubjectServiceAdapter {
 
     // Data
     subjectList: any;
+    examinationList: any;
+
     classSubjectList: any;
     studentSubjectList: any;
+    classTestList: any;
+    studentTestList: any;
 
 
     initializeAdapter(vm: SetStudentSubjectComponent): void {
@@ -20,14 +24,24 @@ export class SetStudentSubjectServiceAdapter {
     // initialize data
     initializeData(): void {
 
-        this.vm.subjectService.getSubjectList(this.vm.user.jwt).then(value => {
-            this.subjectList = value;
+
+        let request_examination_data = {
+            'schoolId': this.vm.user.activeSchool.dbId,
+            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        Promise.all([
+            this.vm.subjectService.getSubjectList(this.vm.user.jwt),
+            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+        ]).then(value => {
+            this.subjectList = value[0];
+            this.examinationList = value[1];
         });
 
     }
 
-    // Get Student & Class Subjects
-    getStudentSubjects(student: any): void {
+    // Get Student & Class Subjects & Tests
+    getStudentAndClassSubjectsAndTests(student: any): void {
 
         this.vm.selectedStudent = student;
         if (student === null) {
@@ -35,6 +49,11 @@ export class SetStudentSubjectServiceAdapter {
         }
 
         this.vm.isLoading = true;
+
+        this.studentSubjectList = [];
+        this.classSubjectList = [];
+        this.studentTestList = [];
+        this.classTestList = [];
 
         const request_student_subject_data = {
             studentId: student.dbId,
@@ -48,17 +67,51 @@ export class SetStudentSubjectServiceAdapter {
             sessionId: this.vm.selectedSession.dbId,
         };
 
+        const request_student_test_data = {
+            'studentList': [student.dbId],
+            'subjectList': [],
+            'examinationList': this.prepareExaminationList(),
+            'testTypeList': [],
+            'marksObtainedList': [],
+        };
+
+        let request_class_test_data = {
+            'examinationList': this.prepareExaminationList(),
+            'subjectList': [],
+            'classList': [student.classDbId],
+            'sectionList': [student.sectionDbId],
+            'startTimeList': [],
+            'endTimeList': [],
+            'testTypeList': [],
+            'maximumMarksList': [],
+        };
+
         Promise.all([
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
+            this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
+            this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt),
         ]).then(value => {
             this.studentSubjectList = value[0];
             this.classSubjectList = value[1];
+            this.studentTestList = value[2];
+            this.classTestList = value[3];
             this.populateStudentClassAllSubjectList(value[1], value[0]);
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
         });
+    }
+
+    prepareExaminationList(): any {
+        let id_list = [];
+        this.examinationList.forEach(item => {
+            id_list.push(item.id);
+        });
+        if (id_list.length === 0) {
+            id_list.push(0);
+        }
+        return id_list;
     }
 
     populateStudentClassAllSubjectList(classSubjectList, studentSubjectList): void {
@@ -108,44 +161,99 @@ export class SetStudentSubjectServiceAdapter {
         return result;
     }
 
-    // Add or remove Student Subject
-    updateStudentSubject(item: any): void {
+    // Update Student Subjects and Tests
+    updateStudentSubjectAndTests(item: any): void {
         item.updating = true;
 
         if (item.studentSubjectId === null) {
-
-            let data = {
-                parentStudent: this.vm.selectedStudent.dbId,
-                parentSession: this.vm.selectedSession.dbId,
-                parentSubject: item.subjectId,
-            };
-
-            this.vm.subjectService.createStudentSubject(data, this.vm.user.jwt).then(value => {
-                item.studentSubjectId = value.id;
-                item.updating = false;
-            });
-
+            this.addStudentSubjectAndTests(item);
         } else {
-
-            let data = item.studentSubjectId;
-
-            this.vm.subjectService.deleteStudentSubject(data, this.vm.user.jwt).then(value => {
-                item.studentSubjectId = null;
-
-                if (item.classSubjectId === null) {
-                    this.vm.studentClassAllSubjectList = this.vm.studentClassAllSubjectList.filter( itemTwo => {
-                        if (itemTwo.subjectId === item.subjectId) {
-                            return false;
-                        }
-                        return true;
-                    });
-                }
-
-                item.updating = false;
-            });
-
+            this.removeStudentSubjectAndTests(item);
         }
 
+    }
+
+    addStudentSubjectAndTests(item: any): void {
+
+        let student_subject_data = {
+            parentStudent: this.vm.selectedStudent.dbId,
+            parentSession: this.vm.selectedSession.dbId,
+            parentSubject: item.subjectId,
+        };
+
+        let student_test_data = this.prepareStudentTestDataToAdd(item.subjectId);
+
+        Promise.all([
+            this.vm.subjectService.createStudentSubject(student_subject_data, this.vm.user.jwt),
+            this.vm.examinationService.createStudentTestList(student_test_data, this.vm.user.jwt),
+        ]).then(value => {
+            item.studentSubjectId = value[0].id;
+            value[1].forEach(itemTwo => {
+                this.studentTestList.push(itemTwo);
+            });
+            item.updating = false;
+        });
+
+    }
+
+    prepareStudentTestDataToAdd(subjectId: any): any {
+        let data_list = [];
+        this.classTestList.forEach(item => {
+            if (item.parentSubject === subjectId) {
+                let data = {
+                    'parentExamination': item.parentExamination,
+                    'parentSubject': item.parentSubject,
+                    'parentStudent': this.vm.selectedStudent.dbId,
+                    'testType': item.testType,
+                    'marksObtained': 0,
+                };
+                data_list.push(data);
+            }
+        });
+        return data_list
+    }
+
+    removeStudentSubjectAndTests(item: any): void {
+
+        let subject_data = item.studentSubjectId;
+
+        let student_test_data = this.prepareStudentTestDataToRemove(item.subjectId);
+
+        Promise.all([
+            this.vm.subjectService.deleteStudentSubject(subject_data, this.vm.user.jwt),
+            this.vm.examinationService.deleteStudentTestList(student_test_data, this.vm.user.jwt),
+        ]).then(value => {
+            item.studentSubjectId = null;
+
+            if (item.classSubjectId === null) {
+                this.vm.studentClassAllSubjectList = this.vm.studentClassAllSubjectList.filter( itemTwo => {
+                    if (itemTwo.subjectId === item.subjectId) {
+                        return false;
+                    }
+                    return true;
+                });
+            }
+
+            this.studentTestList = this.studentTestList.filter(itemTwo => {
+                if (itemTwo.parentSubject === item.subjectId) {
+                    return false;
+                }
+                return true;
+            });
+
+            item.updating = false;
+        });
+
+    }
+
+    prepareStudentTestDataToRemove(subjectId: any): any {
+        let id_list = [];
+        this.studentTestList.forEach(item => {
+            if (item.parentSubject === subjectId) {
+                id_list.push(item.id);
+            }
+        });
+        return id_list.join();
     }
 
 }
