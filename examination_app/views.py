@@ -98,7 +98,7 @@ class ExaminationListView(APIView):
 
 
 ########### Test #############
-from examination_app.business.test import get_test_list, create_test, delete_test
+from examination_app.business.test import get_test_list, create_test, delete_test, update_test
 
 
 class TestView(APIView):
@@ -107,6 +107,11 @@ class TestView(APIView):
     def post(request):
         data = json.loads(request.body.decode('utf-8'))
         return create_test(data)
+
+    @user_permission
+    def put(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return update_test(data)
 
     @user_permission
     def delete(request, test_id):

@@ -60,3 +60,13 @@ def delete_test(test_id):
 
     TestSecond.objects.get(id=test_id).delete()
     return 'Test deleted successfully'
+
+
+def update_test(data):
+
+    test_serializer = TestModelSerializer(TestSecond.objects.get(id=data['id']), data=data)
+    if test_serializer.is_valid():
+        test_serializer.save()
+        return test_serializer.data
+    else:
+        return 'Test updation failed'
