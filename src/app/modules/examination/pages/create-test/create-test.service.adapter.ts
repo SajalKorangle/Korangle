@@ -122,7 +122,7 @@ export class CreateTestServiceAdapter {
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
         ]).then(value => {
 
-            console.log(value);
+            // console.log(value);
 
             let student_id_list = this.getStudentIdListForSelectedItems();
 
@@ -307,7 +307,7 @@ export class CreateTestServiceAdapter {
     }
 
     getDateTime(selectedDate: any, selectedTime: any): any {
-        return selectedDate+' '+selectedTime+':00+05:30';
+        return selectedDate+'T'+selectedTime+':00+05:30';
     }
 
     addTestToTestList(test: any): void {
@@ -317,7 +317,20 @@ export class CreateTestServiceAdapter {
         });
         tempTest['subjectName'] = this.getSubjectName(test.parentSubject) + ((test.testType!=null)?' - '+test.testType:'');
         tempTest['onlyGrade'] = this.isOnlyGrade(test.parentSubject);
+        tempTest['newDate'] = this.vm.formatDate(test.startTime, '');
+        tempTest['newStartTime'] = this.extractTime(test.startTime);
+        tempTest['newEndTime'] = this.extractTime(test.endTime);
+        tempTest['newMaximumMarks'] = test.maximumMarks;
         this.vm.selectedExamination.selectedClass.selectedSection.testList.push(tempTest);
+    }
+
+    extractTime(dateStr: any): any {
+        let d = new Date(dateStr);
+
+        let hour = '' + d.getHours();
+        let minute = '' + d.getMinutes();
+
+        return hour+":"+minute;
     }
 
     getSubjectName(subjectId: any): any {
@@ -411,7 +424,42 @@ export class CreateTestServiceAdapter {
 
     // Update Test
     updateTest(test: any): void {
-        alert('Functionality yet to be implemented');
+
+        if (test.newDate === null) {
+            alert('Date should be selected');
+            return;
+        }
+
+        if ((!test.newMaximumMarks || test.newMaximumMarks < 1)) {
+            alert('Invalid Maximum Marks');
+            return;
+        }
+
+        this.vm.isLoading = true;
+
+        let data = {
+            'id': test.id,
+            'parentExamination': test.parentExamination,
+            'parentClass': test.parentClass,
+            'parentDivision': test.parentDivision,
+            'parentSubject': test.parentSubject,
+            'startTime': this.getDateTime(test.newDate, test.newStartTime),
+            'endTime': this.getDateTime(test.newDate, test.newEndTime),
+            'testType': test.testType,
+            'maximumMarks': test.newMaximumMarks,
+        };
+
+        Promise.all([
+            this.vm.examinationService.updateTest(data, this.vm.user.jwt),
+        ]).then(value => {
+            test.startTime = value[0].startTime;
+            test.endTime = value[0].endTime;
+            test.maximumMarks = value[0].maximumMarks;
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
     }
 
 }

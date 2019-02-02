@@ -50,6 +50,10 @@ export class ExaminationService extends CommonServiceRequirements {
         return super.postData(data, token, '/examinations/tests');
     }
 
+    updateTest(data: any, token: any): Promise<any> {
+        return super.putData(data, token, '/examinations/tests');
+    }
+
     deleteTest(testId: any, token: any): Promise<any> {
         return super.deleteData(token, '/examinations/tests/'+testId);
     }

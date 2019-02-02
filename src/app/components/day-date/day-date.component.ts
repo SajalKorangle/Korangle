@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter, OnInit } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from "@angular/material";
@@ -31,12 +31,19 @@ const moment = _moment;
 })
 export class DayDateComponent implements OnInit {
 
+    @Input() initialValue = null;
+
     @Output() onDateSelected = new EventEmitter<any>();
 
 
     date = new FormControl({value: new Date(), disabled: true});
 
     ngOnInit(): void {
+
+        if (this.initialValue) {
+            this.date = new FormControl({value: this.initialValue, disabled: true});
+        }
+
         this.onDateSelected.emit(this.date.value);
     }
 

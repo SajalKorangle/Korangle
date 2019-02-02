@@ -66,9 +66,10 @@
                         <th>S No.</th>
                         <th>Subject</th>
                         <th>Date</th>
-                        <th>Time</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
                         <th>Max. Marks</th>
-                        <!-- th>-</th -->
+                        <th>-</th>
                         <th>-</th>
                     </tr>
                     </thead>
@@ -76,16 +77,28 @@
                     <tr *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList; let i=index;">
                         <td>{{(i+1)}}.</td>
                         <td>{{test.subjectName}}</td>
-                        <td>{{test.startTime | date: 'dd - MMM - yyyy'}}</td>
-                        <td>{{test.startTime | date: 'hh:mm a'}} - {{test.endTime | date: 'hh:mm a'}}</td>
-                        <td *ngIf="test.onlyGrade">A</td>
-                        <td *ngIf="!test.onlyGrade">{{test.maximumMarks}}</td>
-                        <!-- td>
+                        <td>
+                            <day-date [initialValue]="getTestDate(test)"
+                                      (onDateSelected)="onTestDateUpdation(test, $event)">
+
+                            </day-date>
+                        </td>
+                        <td>
+                            <input type="time" [(ngModel)]="test.newStartTime"/>
+                        </td>
+                        <td>
+                            <input type="time" [(ngModel)]="test.newEndTime"/>
+                        </td>
+                        <td>
+                            <input type="number" [(ngModel)]="test.newMaximumMarks"/>
+                        </td>
+                        <td>
                             <button type="submit"
                                     style="padding: 3px 8px;"
                                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                    [disabled]="isTestUpdateDisabled(test)"
                                     (click)="serviceAdapter.updateTest(test);">Update</button>
-                        </td -->
+                        </td>
                         <td>
                             <button type="submit"
                                     style="padding: 3px 8px;"
