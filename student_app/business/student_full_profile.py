@@ -86,6 +86,7 @@ def get_student_full_profile(student_section_object):
     student_data['dbId'] = student_object.id
     student_data['fathersName'] = student_object.fathersName
     student_data['mobileNumber'] = student_object.mobileNumber
+    student_data['secondMobileNumber'] = student_object.secondMobileNumber
     student_data['dateOfBirth'] = student_object.dateOfBirth
     student_data['remark'] = student_object.remark
     student_data['rollNumber'] = student_section_object.rollNumber

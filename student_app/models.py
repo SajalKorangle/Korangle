@@ -41,6 +41,7 @@ class Student(models.Model):
     name = models.CharField(max_length=100)
     fathersName = models.CharField(max_length=100)
     mobileNumber = models.IntegerField(null=True)
+    secondMobileNumber = models.IntegerField(null=True)
     scholarNumber = models.TextField(null=True, blank=True)
     totalFees = models.IntegerField(default=0)
     dateOfBirth = models.DateField(null=True)

@@ -49,13 +49,14 @@ class StudentFeeDuesTestCase(ParentTestCase):
 
         response = get_student_fee_dues(student_section_object)
 
-        self.assertEqual(len(response), 13)
+        self.assertEqual(len(response), 14)
 
         self.assertEqual(student_object.name, response['name'])
         self.assertEqual(student_object.id, response['dbId'])
         self.assertEqual(student_object.fathersName, response['fathersName'])
         self.assertEqual(student_object.scholarNumber, response['scholarNumber'])
         self.assertEqual(student_object.mobileNumber, response['mobileNumber'])
+        self.assertEqual(student_object.secondMobileNumber, response['secondMobileNumber'])
         if student_section_object.parentStudent.currentBusStop is None:
             self.assertEqual(None, response['stopName'])
         else:

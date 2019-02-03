@@ -32,6 +32,7 @@ def get_student_fee_dues(student_section_object):
     student_fee_dues_response['fathersName'] = student_section_object.parentStudent.fathersName
     student_fee_dues_response['scholarNumber'] = student_section_object.parentStudent.scholarNumber
     student_fee_dues_response['mobileNumber'] = student_section_object.parentStudent.mobileNumber
+    student_fee_dues_response['secondMobileNumber'] = student_section_object.parentStudent.secondMobileNumber
 
     busStop = student_section_object.parentStudent.currentBusStop
     if busStop is None:

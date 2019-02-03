@@ -67,6 +67,7 @@ class UpdateProfileTestCase(ParentTestCase):
         self.assertEqual(student_object.name,student_profile_data['name'])
         self.assertEqual(student_object.fathersName,student_profile_data['fathersName'])
         self.assertEqual(student_object.mobileNumber,student_profile_data['mobileNumber'])
+        self.assertEqual(student_object.secondMobileNumber,student_profile_data['secondMobileNumber'])
         self.assertEqual(student_object.dateOfBirth.__str__(),student_profile_data['dateOfBirth'].__str__())
         self.assertEqual(student_object.dateOfAdmission.__str__(),student_profile_data['dateOfAdmission'].__str__())
         # self.assertEqual(student_object.totalFees,student_profile_data['totalFees'])
@@ -112,6 +113,7 @@ class UpdateProfileTestCase(ParentTestCase):
         data['name'] = 'Demo Student'
         data['fathersName'] = 'Father Name'
         data['mobileNumber'] = 9898955441
+        data['secondMobileNumber'] = 9898955442
         data['dateOfBirth'] = '2007-04-01'
         data['dateOfAdmission'] = '2011-04-15'
         data['totalFees'] = 1000
@@ -143,6 +145,7 @@ class UpdateProfileTestCase(ParentTestCase):
         student_object = Student.objects.get(id=data['dbId'])
 
         self.assertEqual(student_object.mobileNumber,data['mobileNumber'])
+        self.assertEqual(student_object.secondMobileNumber,data['secondMobileNumber'])
         self.assertEqual(student_object.dateOfBirth.__str__(),data['dateOfBirth'])
         self.assertEqual(student_object.dateOfAdmission.__str__(),data['dateOfAdmission'])
         self.assertEqual(student_object.totalFees,data['totalFees'])

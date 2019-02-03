@@ -7,6 +7,7 @@ from rest_framework_jwt.serializers import JSONWebTokenSerializer
 from django.contrib.auth.models import User
 
 from django.db.models import F
+from django.db.models import Q
 
 from team_app.models import Access
 from student_app.models import StudentSection
@@ -45,9 +46,10 @@ def get_school_list(user):
 
     # Parent User
     for student_section_object in \
-        StudentSection.objects.filter(parentStudent__mobileNumber=user.username,
-            parentSession=F('parentStudent__parentSchool__currentSession')) \
-            .select_related('parentStudent__parentSchool'):
+        StudentSection.objects.filter(Q(parentStudent__mobileNumber=user.username)
+                                      | Q(parentStudent__secondMobileNumber=user.username),
+                                        parentSession=F('parentStudent__parentSchool__currentSession')) \
+                                        .select_related('parentStudent__parentSchool'):
 
         school_data = get_data_from_school_list(school_list, student_section_object.parentStudent.parentSchool_id)
 
@@ -57,37 +59,6 @@ def get_school_list(user):
 
         school_data['studentList'].append(get_student_data(student_section_object.parentStudent))
         school_data['role'] = 'Parent'
-
-        '''for student_object in Student.objects.filter(mobileNumber=user.username).select_related('parentSchool'):
-
-            school_data = get_data_from_school_list(school_list, student_object.parentSchool_id)
-
-            if school_data is None:
-                school_data = get_school_data_by_object(student_object.parentSchool)
-
-                student_section_queryset = \
-                    StudentSection.objects.filter(parentStudent_id=student_object.id,
-                                                  parentSession_id=school_data[
-                                                      'currentSessionDbId'])
-
-                if student_section_queryset.count() == 0:
-                    continue
-
-                school_data['studentList'].append(get_student_data(student_object))
-                school_data['role'] = 'Parent'
-                school_list.append(school_data)
-            else:
-
-                student_section_queryset = \
-                    StudentSection.objects.filter(parentStudent_id=student_object.id,
-                                                  parentSession_id=school_data[
-                                                      'currentSessionDbId'])
-
-                if student_section_queryset.count() == 0:
-                    continue
-
-                school_data['role'] = 'Parent'
-                school_data['studentList'].append(get_student_data(student_object))'''
 
     # Employee User
     for employee_object in Employee.objects.filter(mobileNumber=user.username,dateOfLeaving=None).select_related('parentSchool'):

@@ -47,6 +47,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['name'] = 'Demo Student'
         data['fathersName'] = 'Father Name'
         data['mobileNumber'] = 9898955441
+        data['secondMobileNumber'] = 9898955442
         data['dateOfBirth'] = '2007-04-01'
         data['dateOfAdmission'] = '2011-04-15'
         data['remark'] = 'okay nice'
@@ -95,6 +96,7 @@ class StudentFullProfileTestCase(ParentTestCase):
         data['name'] = 'Demo Student'
         data['fathersName'] = 'Father Name'
         data['mobileNumber'] = 9898955441
+        data['secondMobileNumber'] = 9898955442
         data['dateOfBirth'] = '2007-04-01'
         data['dateOfAdmission'] = '2011-04-15'
         data['remark'] = 'okay nice'
@@ -133,6 +135,7 @@ class StudentFullProfileTestCase(ParentTestCase):
             name='Demo Student',
             fathersName='Father Name',
             mobileNumber=9898955441,
+            secondMobileNumber=9898955442,
             dateOfBirth='2007-04-01',
             remark='1000',
             scholarNumber='A234',
@@ -158,13 +161,14 @@ class StudentFullProfileTestCase(ParentTestCase):
 
         response = get_student_full_profile(student_section_object)
 
-        self.assertEqual(len(response), 33)
+        self.assertEqual(len(response), 34)
 
         self.assertEqual(response['name'], student_object.name)
         self.assertEqual(response['dbId'], student_object.id)
         self.assertEqual(response['fathersName'], student_object.fathersName)
         self.assertEqual(response['profileImage'], None)
         self.assertEqual(response['mobileNumber'], student_object.mobileNumber)
+        self.assertEqual(response['secondMobileNumber'], student_object.secondMobileNumber)
         self.assertEqual(response['dateOfBirth'].__str__(),student_object.dateOfBirth)
         self.assertEqual(response['remark'],student_object.remark)
         self.assertEqual(response['rollNumber'],student_section_object.rollNumber)
