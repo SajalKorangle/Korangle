@@ -13,6 +13,7 @@ class ColumnFilter {
     showClassName = true;
     showFathersName = true;
     showMobileNumber = true;
+    showSecondMobileNumber = true;
     showScholarNumber = true;
     showFeesDue = true;
     showRTE = true;
@@ -242,6 +243,7 @@ export class SchoolRecordComponent implements OnInit {
         (this.columnFilter.showClassName)? headerValues.push('Class Name'): '';
         (this.columnFilter.showFathersName)? headerValues.push('Father\'s Name'): '';
         (this.columnFilter.showMobileNumber)? headerValues.push('Mobile No.'): '';
+        (this.columnFilter.showSecondMobileNumber)? headerValues.push('Alt. Mobile No.'): '';
         (this.columnFilter.showScholarNumber)? headerValues.push('Scholar No.'): '';
         (this.columnFilter.showRTE)? headerValues.push('RTE'): '';
         (this.columnFilter.showFeesDue)? headerValues.push('Fees Due'): '';
@@ -255,6 +257,7 @@ export class SchoolRecordComponent implements OnInit {
         (this.columnFilter.showClassName)? studentDisplay.push(student.className): '';
         (this.columnFilter.showFathersName)? studentDisplay.push(student.fathersName): '';
         (this.columnFilter.showMobileNumber)? studentDisplay.push(student.mobileNumber): '';
+        (this.columnFilter.showSecondMobileNumber)? studentDisplay.push(student.secondMobileNumber): '';
         (this.columnFilter.showScholarNumber)? studentDisplay.push(student.scholarNumber): '';
         (this.columnFilter.showRTE)? studentDisplay.push(student.rte): '';
         (this.columnFilter.showFeesDue)? studentDisplay.push(student.feesDue): '';

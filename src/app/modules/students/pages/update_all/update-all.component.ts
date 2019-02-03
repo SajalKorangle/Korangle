@@ -77,6 +77,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Roll No.', 'rollNumber', null, false, ''), // 3
         new ColumnHandle('Father\'s Name', 'fathersName', 'text', true, ''), // 4
         new ColumnHandle('Mobile No.', 'mobileNumber', 'number', true, ''), // 5
+        new ColumnHandle('Alternate Mobile No.', 'secondMobileNumber', 'number', true, ''), // 5
         new ColumnHandle('Scholar No.', 'scholarNumber', 'number', false, ''), // 6
         new ColumnHandle('Date of Birth', 'dateOfBirth', 'date', false, ''), // 7
         new ColumnHandle('Mother\'s Name', 'motherName', 'text', false, ''), // 10

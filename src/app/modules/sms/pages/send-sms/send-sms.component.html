@@ -148,6 +148,10 @@
                     </mat-checkbox>
                 </mat-option>
                 <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showSecondMobileNumber" (click)="$event.stopPropagation();">Alt. Mobile No.
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation();">Scholar
                         No.
                     </mat-checkbox>
@@ -205,6 +209,10 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
+        <mat-checkbox  [(ngModel)]="includeSecondMobileNumber"
+                      (click)="$event.stopPropagation();">Include Alternate Mobile Number
+        </mat-checkbox>
 
         <!-- Other Filters -->
         <mat-form-field style="float: right;">
@@ -266,64 +274,6 @@
                 (click)="unSelectAllStudents(); $event.stopPropagation();">Clear All
         </button>
 
-        <!-- Student Table List -->
-        <!-- ng-container *ngIf="!isLoading">
-            <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th></th>
-                    <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
-                    <th [class.hidden]="!columnFilter.showName">Name</th>
-                    <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
-                    <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
-                    <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
-                    <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
-                    <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
-                    <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
-                    <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
-                    <th [class.hidden]="!columnFilter.showGender">Gender</th>
-                    <th [class.hidden]="!columnFilter.showCaste">Caste</th>
-                    <th [class.hidden]="!columnFilter.showCategory">Category</th>
-                    <th [class.hidden]="!columnFilter.showReligion">Religion</th>
-                    <th [class.hidden]="!columnFilter.showFatherOccupation">Father's Occupation</th>
-                    <th [class.hidden]="!columnFilter.showAddress">Address</th>
-                    <th [class.hidden]="!columnFilter.showRTE">RTE</th>
-                </tr>
-                </thead>
-                <tbody>
-                <ng-container *ngFor="let student of studentFullProfileList">
-                    <tr [class.hidden]="!student.show">
-                        <ng-container>
-                            <td>
-                                <mat-checkbox [(ngModel)]="student.selected" [disabled]="!student.validMobileNumber">
-                                </mat-checkbox>
-                            </td>
-                            <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
-                            <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
-                            <td [class.hidden]="!columnFilter.showClassName">{{student.className}}
-                            </td>
-                            <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
-                            <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
-                            <td [class.hidden]="!columnFilter.showMobileNumber">{{student.mobileNumber}}</td>
-                            <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
-                            <td [class.hidden]="!columnFilter.showDateOfBirth">
-                                {{student.dateOfBirth | date: 'dd/MM/yyyy'}}
-                            </td>
-                            <td [class.hidden]="!columnFilter.showMotherName">{{student.motherName}}</td>
-                            <td [class.hidden]="!columnFilter.showGender">{{student.gender}}</td>
-                            <td [class.hidden]="!columnFilter.showCaste">{{student.caste}}</td>
-                            <td [class.hidden]="!columnFilter.showCategory">{{student.category}}</td>
-                            <td [class.hidden]="!columnFilter.showReligion">{{student.religion}}</td>
-                            <td [class.hidden]="!columnFilter.showFatherOccupation">{{student.fatherOccupation}}</td>
-                            <td [class.hidden]="!columnFilter.showAddress">{{student.address}}</td>
-                            <td [class.hidden]="!columnFilter.showRTE">{{student.rte}}</td>
-                        </ng-container>
-                    </tr>
-                </ng-container>
-                </tbody>
-            </table>
-        </ng-container -->
-
         <ngx-datatable
                 class='material ngxDataTable'
                 *ngIf="showStudentList && studentFullProfileList.length>0"
@@ -366,6 +316,11 @@
             <ngx-datatable-column name="Mobile No." *ngIf="columnFilter.showMobileNumber">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
                     <i>{{row.mobileNumber}}</i>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Alt. Mobile No." *ngIf="columnFilter.showSecondMobileNumber">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <i>{{row.secondMobileNumber}}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Scholar No." *ngIf="columnFilter.showScholarNumber">

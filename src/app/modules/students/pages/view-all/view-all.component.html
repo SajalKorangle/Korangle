@@ -80,6 +80,10 @@
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showSecondMobileNumber" (click)="$event.stopPropagation();">Alt. Mobile No.
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
                         <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation();">Scholar
                             No.
                         </mat-checkbox>
@@ -280,6 +284,7 @@
                 <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
                 <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
                 <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
+                <th [class.hidden]="!columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
                 <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
                 <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
                 <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
@@ -316,6 +321,12 @@
                         </td>
                         <td [class.hidden]="!columnFilter.showMobileNumber" class="visible-xs visible-sm">
                             <a href="tel:{{student.mobileNumber}}">Call Me</a>
+                        </td>
+                        <td [class.hidden]="!columnFilter.showSecondMobileNumber" class="hidden-xs hidden-sm">
+                            {{student.secondMobileNumber}}
+                        </td>
+                        <td [class.hidden]="!columnFilter.showSecondMobileNumber" class="visible-xs visible-sm">
+                            <a href="tel:{{student.secondMobileNumber}}">Call Me</a>
                         </td>
                         <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
                         <td [class.hidden]="!columnFilter.showDateOfBirth">

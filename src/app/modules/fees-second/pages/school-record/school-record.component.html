@@ -78,6 +78,10 @@
           </mat-checkbox>
         </mat-option>
         <mat-option>
+          <mat-checkbox [(ngModel)]="columnFilter.showSecondMobileNumber" (click)="$event.stopPropagation();">Alt. Mobile No.
+          </mat-checkbox>
+        </mat-option>
+        <mat-option>
           <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation();">Scholar
             No.
           </mat-checkbox>
@@ -137,6 +141,7 @@
         <span class="mat-header-cell" [class.hidden]="!columnFilter.showClassName">Class Name</span>
         <span class="mat-header-cell" [class.hidden]="!columnFilter.showFathersName">Father's Name</span>
         <span class="mat-header-cell" [class.hidden]="!columnFilter.showMobileNumber">Mobile Number</span>
+        <span class="mat-header-cell" [class.hidden]="!columnFilter.showSecondMobileNumber">Alt. Mobile Number</span>
         <span class="mat-header-cell" [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</span>
         <span class="mat-header-cell" [class.hidden]="!columnFilter.showFeesDue">Fees Due</span>
         <span class="mat-header-cell" [class.hidden]="!columnFilter.showRTE">RTE</span>
@@ -152,8 +157,9 @@
           <span class="mat-cell" [class.hidden]="!columnFilter.showFathersName">{{student.fathersName | titlecase}}</span>
           <span class="mat-cell" [class.hidden]="!columnFilter.showMobileNumber">
             <span class="hidden-xs">{{student.mobileNumber}}</span>
-            <!-- a class="visible-xs"
-               href="tel:{{student.mobileNumber}}">Call Me</a -->
+          </span>
+          <span class="mat-cell" [class.hidden]="!columnFilter.showSecondMobileNumber">
+            <span class="hidden-xs">{{student.secondMobileNumber}}</span>
           </span>
           <span class="mat-cell" [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</span>
           <span class="mat-cell" [class.hidden]="!columnFilter.showFeesDue">{{student.feesDue}}</span>
@@ -243,6 +249,7 @@
         <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
         <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
         <th [class.hidden]="!columnFilter.showMobileNumber">Mobile Number</th>
+        <th [class.hidden]="!columnFilter.showSecondMobileNumber">Alt. Mobile Number</th>
         <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
         <th [class.hidden]="!columnFilter.showFeesDue">Fees Due</th>
         <th [class.hidden]="!columnFilter.showRTE">RTE</th>
@@ -258,6 +265,10 @@
         <td [class.hidden]="!columnFilter.showMobileNumber">
           <a class="visible-xs"
              href="tel:{{student.mobileNumber}}">Call Me</a>
+        </td>
+        <td [class.hidden]="!columnFilter.showSecondMobileNumber">
+          <a class="visible-xs"
+             href="tel:{{student.secondMobileNumber}}">Call Me 2</a>
         </td>
         <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
         <td [class.hidden]="!columnFilter.showFeesDue">{{student.feesDue}}</td>

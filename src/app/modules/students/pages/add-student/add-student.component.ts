@@ -101,6 +101,7 @@ export class AddStudentComponent implements OnInit {
         }
         if (this.newStudent.dateOfBirth === undefined) { this.newStudent.dateOfBirth = this.todaysDate(); }
         if (this.newStudent.mobileNumber === undefined) { this.newStudent.mobileNumber = 0; }
+        if (this.newStudent.secondMobileNumber === undefined) { this.newStudent.secondMobileNumber = 0; }
         // if (this.newStudent.totalFees === undefined) { this.newStudent.totalFees = 0; }
         if (this.newStudent.remark === undefined) { this.newStudent.remark = ''; }
         if (this.newStudent.scholarNumber === undefined) { this.newStudent.scholarNumber = 0; }

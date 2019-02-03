@@ -13,6 +13,7 @@ class ColumnFilter {
     showRollNumber = false;
     showFathersName = true;
     showMobileNumber = true;
+    showSecondMobileNumber = false;
     showScholarNumber = false;
     showDateOfBirth = false;
     showMotherName = false;
@@ -362,6 +363,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showRollNumber?headerValues.push('Roll Number'):'';
         this.columnFilter.showFathersName?headerValues.push('Father\'s Name'):'';
         this.columnFilter.showMobileNumber?headerValues.push('Mobile No.'):'';
+        this.columnFilter.showSecondMobileNumber?headerValues.push('Alt. Mobile No.'):'';
         this.columnFilter.showScholarNumber?headerValues.push('Scholar No.'):'';
         this.columnFilter.showDateOfBirth?headerValues.push('Date of Birth'):'';
         this.columnFilter.showMotherName?headerValues.push('Mother\'s Name'):'';
@@ -392,6 +394,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showRollNumber?studentDisplay.push(student.rollNumber):'';
         this.columnFilter.showFathersName?studentDisplay.push(student.fathersName):'';
         this.columnFilter.showMobileNumber?studentDisplay.push(student.mobileNumber):'';
+        this.columnFilter.showSecondMobileNumber?studentDisplay.push(student.secondMobileNumber):'';
         this.columnFilter.showScholarNumber?studentDisplay.push(student.scholarNumber):'';
         this.columnFilter.showDateOfBirth?studentDisplay.push(student.dateOfBirth):'';
         this.columnFilter.showMotherName?studentDisplay.push(student.motherName):'';

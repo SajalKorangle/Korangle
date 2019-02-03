@@ -303,6 +303,18 @@
                            [(ngModel)]="newStudent.fatherAnnualIncome">
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Aternate Mobile Number
+                        <span *ngIf="checkLength(newStudent.secondMobileNumber)"
+                              [class.fieldRight]="checkRight(newStudent.secondMobileNumber,10)">
+                                        - {{newStudent.secondMobileNumber.toString().length}}</span>
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="newStudent.secondMobileNumber">
+                </div>
+            </div>
         </div>
 
         <!-- Address, Remark -->

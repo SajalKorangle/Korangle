@@ -14,6 +14,7 @@ class ColumnFilter {
     showRollNumber = false;
     showFathersName = true;
     showMobileNumber = true;
+    showSecondMobileNumber = true;
     showScholarNumber = false;
     showDateOfBirth = false;
     showMotherName = false;
@@ -58,6 +59,8 @@ class EmployeeColumnFilter {
 export class SendSmsComponent implements OnInit {
 
     @Input() user;
+
+    includeSecondMobileNumber = false;
 
     columnFilter: ColumnFilter;
 
@@ -235,6 +238,12 @@ export class SendSmsComponent implements OnInit {
                     if (this.selectedMobileNumberList.indexOf(student.mobileNumber) === -1) {
                         this.selectedMobileNumberList.push(student.mobileNumber);
                         ++result;
+                    }
+                    if (this.includeSecondMobileNumber && this.isMobileNumberValid(student.secondMobileNumber)) {
+                        if (this.selectedMobileNumberList.indexOf(student.secondMobileNumber) === -1) {
+                            this.selectedMobileNumberList.push(student.secondMobileNumber);
+                            ++result;
+                        }
                     }
                 }
             });

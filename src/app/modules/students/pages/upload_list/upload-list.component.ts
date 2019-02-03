@@ -38,6 +38,7 @@ const BUS_STOP = 24;
 const RTE = 25;
 const ADDRESS = 26;
 const REMARK = 27;
+const SECOND_MOBILE_NUMBER = 28;
 
 // HEADERS
 const HEADERS = [];
@@ -48,6 +49,7 @@ HEADERS[MOTHER_NAME] = 'Mother\'s Name';
 HEADERS[CLASS] = '*Class';
 HEADERS[SECTION] = 'Section';
 HEADERS[MOBILE_NUMBER] = 'Mobile Number';
+HEADERS[SECOND_MOBILE_NUMBER] = 'Alternate Mobile Number';
 HEADERS[ROLL_NUMBER] = 'Roll No.';
 HEADERS[SCHOLAR_NUMBER] = 'Scholar No.';
 HEADERS[DATE_OF_BIRTH] = 'Date of Birth';
@@ -407,6 +409,13 @@ export class UploadListComponent implements OnInit {
             deletedColumnList.push(MOBILE_NUMBER);
         }
 
+        // Check Alternate Mobile Number
+        this.trimCell(student, SECOND_MOBILE_NUMBER);
+        if (!this.undefinedOrNumberLength(student[SECOND_MOBILE_NUMBER], 10)) {
+            student[SECOND_MOBILE_NUMBER] = null;
+            deletedColumnList.push(SECOND_MOBILE_NUMBER);
+        }
+
         // Check Date of Birth
         this.trimCell(student, DATE_OF_BIRTH);
         if (!this.validateDate(student[DATE_OF_BIRTH])) {
@@ -621,6 +630,7 @@ export class UploadListComponent implements OnInit {
             'motherName': student[MOTHER_NAME],
             'parentDivision': this.getParentSection(student[SECTION]),
             'mobileNumber': parseInt(student[MOBILE_NUMBER]),
+            'secondMobileNumber': parseInt(student[SECOND_MOBILE_NUMBER]),
             'rollNumber': student[ROLL_NUMBER],
             'scholarNumber': student[SCHOLAR_NUMBER],
             'dateOfBirth': this.getDate(student[DATE_OF_BIRTH]),

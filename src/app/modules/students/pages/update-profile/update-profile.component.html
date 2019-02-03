@@ -57,9 +57,17 @@
 
     <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
 
-        <div class="row hidden-md hidden-lg hidden-sm">
+        <div class="row hidden-md hidden-lg hidden-sm"
+             *ngIf="selectedStudent.mobileNumber && selectedStudent.mobileNumber != 0">
             <div class="col-xs-3">
                 <a href="tel:{{selectedStudent.mobileNumber}}">Call Me</a>
+            </div>
+        </div>
+
+        <div class="row hidden-md hidden-lg hidden-sm"
+             *ngIf="selectedStudent.secondMobileNumber && selectedStudent.secondMobileNumber != 0">
+            <div class="col-xs-3">
+                <a href="tel:{{selectedStudent.secondMobileNumber}}">Call Me 2</a>
             </div>
         </div>
 
@@ -437,6 +445,19 @@
                     <input type="date"
                            class="form-control"
                            [ngModel]="selectedStudent.dateOfAdmission" (ngModelChange)="currentStudent.dateOfAdmission=$event">
+                </div>
+            </div>
+            <div class="col-md-3"
+                 [class.fieldChanged]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber)">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Alternate Mobile Number
+                        <span *ngIf="checkLength(currentStudent.secondMobileNumber)"
+                              [class.fieldRight]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber) && checkRight(currentStudent.secondMobileNumber,10)">
+                                        - {{currentStudent.secondMobileNumber.toString().length}}</span>
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           [ngModel]="selectedStudent.secondMobileNumber" (ngModelChange)="currentStudent.secondMobileNumber=$event">
                 </div>
             </div>
         </div>

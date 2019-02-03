@@ -7,6 +7,7 @@
         <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
         <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
         <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
+        <th [class.hidden]="!columnFilter.showSecondMobileNumber">Mobile No.</th>
         <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
         <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
         <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
@@ -38,6 +39,7 @@
                     <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
                     <td [class.hidden]="!columnFilter.showFathersName">{{ student.fathersName | titlecase }}</td>
                     <td [class.hidden]="!columnFilter.showMobileNumber">{{student.mobileNumber}}</td>
+                    <td [class.hidden]="!columnFilter.showSecondMobileNumber">{{student.secondMobileNumber}}</td>
                     <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
                     <td [class.hidden]="!columnFilter.showDateOfBirth">{{student.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
                     <td [class.hidden]="!columnFilter.showMotherName">{{ student.motherName | titlecase }}</td>

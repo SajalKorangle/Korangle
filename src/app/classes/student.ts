@@ -9,6 +9,7 @@ export class Student {
     dbId: number;
     fathersName: string;
     mobileNumber: number;
+    secondMobileNumber: number;
     dateOfBirth: any;
     rollNumber: any;
     scholarNumber: any;
@@ -53,6 +54,7 @@ export class Student {
         this.dbId = student.dbId;
         this.fathersName = student.fathersName;
         this.mobileNumber = student.mobileNumber;
+        this.secondMobileNumber = student.secondMobileNumber;
         this.dateOfBirth = student.dateOfBirth;
         this.rollNumber = student.rollNumber;
         this.scholarNumber = student.scholarNumber;
