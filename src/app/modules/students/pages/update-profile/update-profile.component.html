@@ -198,7 +198,7 @@
                               [class.fieldRight]="checkFieldChanged(selectedStudent.mobileNumber,currentStudent.mobileNumber) && checkRight(currentStudent.mobileNumber,10)">
                                         - {{currentStudent.mobileNumber.toString().length}}</span>
                     </label>
-                    <input type="text"
+                    <input type="number"
                            class="form-control"
                            [ngModel]="selectedStudent.mobileNumber" (ngModelChange)="currentStudent.mobileNumber=$event">
                 </div>
@@ -455,7 +455,7 @@
                               [class.fieldRight]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber) && checkRight(currentStudent.secondMobileNumber,10)">
                                         - {{currentStudent.secondMobileNumber.toString().length}}</span>
                     </label>
-                    <input type="text"
+                    <input type="number"
                            class="form-control"
                            [ngModel]="selectedStudent.secondMobileNumber" (ngModelChange)="currentStudent.secondMobileNumber=$event">
                 </div>
