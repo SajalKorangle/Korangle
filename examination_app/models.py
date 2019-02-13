@@ -5,7 +5,7 @@ from django.db import models
 from school_app.model.models import School, Session
 from student_app.models import Student
 from class_app.models import Class, Division
-from subject_app.models import Subject, SubjectSecond
+from subject_app.models import Subject, SubjectSecond, ExtraSubField
 
 
 class MaximumMarksAllowed(models.Model):
@@ -138,3 +138,35 @@ class StudentTest(models.Model):
     class Meta:
         db_table = 'student_test'
         unique_together = ('parentExamination', 'parentSubject', 'parentStudent', 'testType')
+
+
+class StudentExtraSubField(models.Model):
+
+    parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
+    parentExtraSubField = models.ForeignKey(ExtraSubField, models.PROTECT, null=False, default=0, verbose_name='parentExtraSubField')
+    parentStudent = models.ForeignKey(Student, models.PROTECT, null=False, default=0, verbose_name='parentStudent')
+    marksObtained = models.DecimalField(max_digits=6, decimal_places=1, null=False, verbose_name='marksObtained', default=0)
+
+    class Meta:
+        db_table = 'student_extra_sub_field'
+        unique_together = ('parentExamination', 'parentExtraSubField', 'parentStudent')
+
+
+class MpBoardReportCardMapping(models.Model):
+
+    parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
+    parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
+    parentExaminationJuly = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_july', null=False, default=0, verbose_name='parentExaminationJuly')
+    parentExaminationAugust = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_august', null=False, default=0, verbose_name='parentExaminationAugust')
+    parentExaminationSeptember = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_september', null=False, default=0, verbose_name='parentExaminationSeptember')
+    parentExaminationOctober = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_october', null=False, default=0, verbose_name='parentExaminationOctober')
+    parentExaminationHalfYearly = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_half_yearly', null=False, default=0, verbose_name='parentExaminationHalfYearly')
+    parentExaminationDecember = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_december', null=False, default=0, verbose_name='parentExaminationDecember')
+    parentExaminationJanuary = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_january', null=False, default=0, verbose_name='parentExaminationJanuary')
+    parentExaminationFebruary = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_february', null=False, default=0, verbose_name='parentExaminationFebruary')
+    parentExaminationFinal = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_final', null=False, default=0, verbose_name='parentExaminationFinal')
+    parentExaminationProject = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_project', null=False, default=0, verbose_name='parentExaminationProject')
+
+    class Meta:
+        db_table = 'mp_board_report_card_mapping'
+        unique_together = ('parentSchool', 'parentSession')

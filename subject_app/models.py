@@ -59,3 +59,27 @@ class StudentSubject(models.Model):
     class Meta:
         db_table = 'student_subject'
         unique_together = ('parentSubject', 'parentStudent', 'parentSession')
+
+
+class ExtraField(models.Model):
+
+    name = models.TextField(null=False, default='-', verbose_name='name')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'extra_field'
+
+
+class ExtraSubField(models.Model):
+
+    parentExtraField = models.ForeignKey(ExtraField, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentExtraField')
+    name = models.TextField(null=False, default='-', verbose_name='name')
+
+    def __str__(self):
+        return self.name + ' --- ' + self.parentExtraField.name
+
+    class Meta:
+        db_table = 'extra_sub_field'
+        unique_together = ('name', 'parentExtraField')
