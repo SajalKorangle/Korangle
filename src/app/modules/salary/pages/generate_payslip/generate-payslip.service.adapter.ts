@@ -123,7 +123,7 @@ export class GeneratePayslipServiceAdapter {
         let result = 0;
         leaveStatusList.every(leaveStatus => {
             if(attendanceStatus.dateOfAttendance === leaveStatus.dateOfLeave) {
-                if (leaveStatus.status !== LEAVE_STATUS_LIST[1] || !leaveStatus.paidLeave) {
+                /*if (leaveStatus.status !== LEAVE_STATUS_LIST[1] || !leaveStatus.paidLeave) {
                     if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
                         result = 1;
                     } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[3]) {
@@ -132,6 +132,19 @@ export class GeneratePayslipServiceAdapter {
                 } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1] &&
                     leaveStatus.status.halfDay ){
                     result = 0.5;
+                }*/
+                if (leaveStatus.status == LEAVE_STATUS_LIST[1]) {
+                    if (!leaveStatus.paidLeave) {
+                        if (leaveStatus.halfDay) {
+                            result = 0.5;
+                        } else {
+                            if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
+                                result = 1;
+                            } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[3]) {
+                                result = 0.5;
+                            }
+                        }
+                    }
                 }
                 return false;
             }
@@ -144,7 +157,8 @@ export class GeneratePayslipServiceAdapter {
         let result = 1;
         leaveStatusList.every(leaveStatus => {
             if(attendanceStatus.dateOfAttendance === leaveStatus.dateOfLeave) {
-                if (leaveStatus.status === LEAVE_STATUS_LIST[1] || leaveStatus.paidLeave) {
+                // if (leaveStatus.status === LEAVE_STATUS_LIST[1] || leaveStatus.paidLeave) {
+                if (leaveStatus.status === LEAVE_STATUS_LIST[1]) {
                     if (leaveStatus.halfDay && attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
                         result = 0.5;
                     } else {
