@@ -163,3 +163,47 @@ class StudentTestListView(APIView):
     @user_permission
     def delete(request, student_test_id_list):
         return delete_student_test_list(student_test_id_list)
+
+
+########### Student Extra Sub Field #############
+from examination_app.business.student_extra_sub_field import get_student_extra_sub_field_list, \
+    create_student_extra_sub_field_list, update_student_extra_sub_field_list
+
+
+class StudentExtraSubFieldListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_student_extra_sub_field_list(request.GET)
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_student_extra_sub_field_list(data)
+
+    @user_permission
+    def put(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return update_student_extra_sub_field_list(data)
+
+
+########### Mp Board Report Card Mapping #############
+from examination_app.business.mp_board_report_card_mapping import get_mp_board_report_card_mapping, \
+    create_mp_board_report_card_mapping, update_mp_board_report_card_mapping
+
+
+class MpBoardReportCardMappingView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_mp_board_report_card_mapping(request.GET)
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_mp_board_report_card_mapping(data)
+
+    @user_permission
+    def put(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return update_mp_board_report_card_mapping(data)

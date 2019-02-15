@@ -152,6 +152,13 @@ class StudentExtraSubField(models.Model):
         unique_together = ('parentExamination', 'parentExtraSubField', 'parentStudent')
 
 
+REPORT_CARD_TYPE = (
+    ('Classic', 'Classic'),
+    ('Elegant', 'Elegant'),
+    ('Comprehensive', 'Comprehensive'),
+)
+
+
 class MpBoardReportCardMapping(models.Model):
 
     parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
@@ -166,6 +173,7 @@ class MpBoardReportCardMapping(models.Model):
     parentExaminationFebruary = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_february', null=False, default=0, verbose_name='parentExaminationFebruary')
     parentExaminationFinal = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_final', null=False, default=0, verbose_name='parentExaminationFinal')
     parentExaminationProject = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_project', null=False, default=0, verbose_name='parentExaminationProject')
+    reportCardType = models.CharField(max_length=20, choices=REPORT_CARD_TYPE, null=True, default=None, verbose_name='reportCardType')
 
     class Meta:
         db_table = 'mp_board_report_card_mapping'

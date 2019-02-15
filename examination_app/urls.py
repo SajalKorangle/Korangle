@@ -40,3 +40,15 @@ urlpatterns += [
     url(r'^student-tests/batch/(?P<student_test_id_list>[0-9,]+)', StudentTestListView.as_view()),
     url(r'^student-tests/batch', StudentTestListView.as_view()),
 ]
+
+from examination_app.views import StudentExtraSubFieldListView
+
+urlpatterns += [
+    url(r'^student-extra-sub-fields/batch', StudentExtraSubFieldListView.as_view()),
+]
+
+from examination_app.views import MpBoardReportCardMappingView
+
+urlpatterns += [
+    url(r'^mp-board-report-card-mappings', MpBoardReportCardMappingView.as_view()),
+]

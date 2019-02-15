@@ -131,3 +131,24 @@ class StudentSubjectListView(APIView):
     def delete(request, student_subject_id_list):
         return delete_student_subject_list(student_subject_id_list)
 
+
+########### Extra Field #############
+from subject_app.business.extra_field import get_extra_field_list
+
+
+class ExtraFieldListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_extra_field_list(request.GET)
+
+
+########### Extra Sub Field #############
+from subject_app.business.extra_sub_field import get_extra_sub_field_list
+
+
+class ExtraSubFieldListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_extra_sub_field_list(request.GET)

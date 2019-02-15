@@ -34,3 +34,15 @@ urlpatterns += [
     url(r'^student-subjects/(?P<student_subject_id>[0-9]+)', StudentSubjectView.as_view()),
     url(r'^student-subjects', StudentSubjectView.as_view()),
 ]
+
+from subject_app.views import ExtraFieldListView
+
+urlpatterns += [
+    url(r'^extra-fields/batch', ExtraFieldListView.as_view()),
+]
+
+from subject_app.views import ExtraSubFieldListView
+
+urlpatterns += [
+    url(r'^extra-sub-fields/batch', ExtraSubFieldListView.as_view()),
+]
