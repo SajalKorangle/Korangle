@@ -81,4 +81,38 @@ export class ExaminationService extends CommonServiceRequirements {
         return super.deleteData(token, '/examinations/student-tests/batch/' + data);
     }
 
+    // Student Extra Sub Field
+    getStudentExtraSubFieldList(data: any, token: any): Promise<any> {
+        let url = '/examinations/student-extra-sub-fields/batch?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
+        return super.getData(token, url);
+    }
+
+    createStudentExtraSubFieldList(data: any, token: any): Promise<any> {
+        return super.postData(data, token, '/examinations/student-extra-sub-fields/batch');
+    }
+
+    updateStudentExtraSubFieldList(data: any, token: any): Promise<any> {
+        return super.putData(data, token, '/examinations/student-extra-sub-fields/batch');
+    }
+
+    // Mp Board Report Card Mapping
+    getMpBoardReportCardMapping(data: any, token: any): Promise<any> {
+        let url = '/examinations/mp-board-report-card-mappings?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
+        return super.getData(token, url);
+    }
+
+    createMpBoardReportCardMapping(data: any, token: any): Promise<any> {
+        return super.postData(data, token, '/examinations/mp-board-report-card-mappings');
+    }
+
+    updateMpBoardReportCardMapping(data: any, token: any): Promise<any> {
+        return super.putData(data, token, '/examinations/mp-board-report-card-mappings');
+    }
+
 }

@@ -1,0 +1,133 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <mat-form-field>
+            <mat-select placeholder="Map Monthly Test July"
+                        [ngModel]="reportCardMapping.parentExaminationJuly"
+                        (ngModelChange)="newReportCardMapping.parentExaminationJuly=$event;detectChanges(); ">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Monthly Test August"
+                        [ngModel]="reportCardMapping.parentExaminationAugust"
+                        (ngModelChange)="newReportCardMapping.parentExaminationAugust=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                        {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Monthly Test September"
+                        [ngModel]="reportCardMapping.parentExaminationSeptember"
+                        (ngModelChange)="newReportCardMapping.parentExaminationSeptember=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Monthly Test October"
+                        [ngModel]="reportCardMapping.parentExaminationOctober"
+                        (ngModelChange)="newReportCardMapping.parentExaminationOctober=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Half-Yearly"
+                        [ngModel]="reportCardMapping.parentExaminationHalfYearly"
+                        (ngModelChange)="newReportCardMapping.parentExaminationHalfYearly=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Monthly Test December"
+                        [ngModel]="reportCardMapping.parentExaminationDecember"
+                        (ngModelChange)="newReportCardMapping.parentExaminationDecember=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Monthly Test January"
+                        [ngModel]="reportCardMapping.parentExaminationJanuary"
+                        (ngModelChange)="newReportCardMapping.parentExaminationJanuary=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Monthly Test February"
+                        [ngModel]="reportCardMapping.parentExaminationFebruary"
+                        (ngModelChange)="newReportCardMapping.parentExaminationFebruary=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Final"
+                        [ngModel]="reportCardMapping.parentExaminationFinal"
+                        (ngModelChange)="newReportCardMapping.parentExaminationFinal=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Map Project"
+                        [ngModel]="reportCardMapping.parentExaminationProject"
+                        (ngModelChange)="newReportCardMapping.parentExaminationProject=$event;detectChanges();">
+                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                    {{examination.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field>
+            <mat-select placeholder="Select Report Card Type"
+                        [ngModel]="reportCardMapping.reportCardType"
+                        (ngModelChange)="newReportCardMapping.reportCardType=$event;detectChanges();">
+                <mat-option *ngFor="let reportCardType of reportCardTypeList;" [value]="reportCardType">
+                    {{reportCardType}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <button type="submit"
+                *ngIf="newReportCardMapping.id==null"
+                [disabled]="disableCreateButton()"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="serviceAdapter.createReportCardMapping()">Set Final Report</button>
+
+        <button type="submit"
+                *ngIf="newReportCardMapping.id!=null"
+                [disabled]="disableUpdateButton()"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="serviceAdapter.updateReportCardMapping()">Update Final Report</button>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

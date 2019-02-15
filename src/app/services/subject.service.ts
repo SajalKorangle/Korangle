@@ -84,4 +84,22 @@ export class SubjectService extends CommonServiceRequirements {
         return super.deleteData(token, '/subject/student-subjects/'+data);
     }
 
+    // Extra Field
+    getExtraFieldList(data: any, token: any): Promise<any> {
+        let url = '/subject/extra-fields/batch?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
+        return super.getData(token, url);
+    }
+
+    // Extra Sub Field
+    getExtraSubFieldList(data: any, token: any): Promise<any> {
+        let url = '/subject/extra-sub-fields/batch?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
+        return super.getData(token, url);
+    }
+
 }

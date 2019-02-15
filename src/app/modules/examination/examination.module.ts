@@ -13,6 +13,8 @@ import { ExaminationRoutingModule } from './examination.routing';
 import { ExaminationService } from '../../services/examination.service';
 import {UpdateMarksComponent} from './pages/update-marks/update-marks.component';
 import {PrintMarksheetComponent} from './pages/print-marksheet/print-marksheet.component';
+import {GradeStudentFieldsComponent} from './pages/grade-student-fields/grade-student-fields.component';
+import {SetFinalReportComponent} from './pages/set-final-report/set-final-report.component';
 
 @NgModule({
     declarations: [
@@ -24,6 +26,8 @@ import {PrintMarksheetComponent} from './pages/print-marksheet/print-marksheet.c
         GenerateHallTicketComponent,
         UpdateMarksComponent,
         PrintMarksheetComponent,
+        GradeStudentFieldsComponent,
+        SetFinalReportComponent,
 
     ],
 
