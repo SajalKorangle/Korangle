@@ -9,8 +9,16 @@ export class ExaminationService extends CommonServiceRequirements {
 
     // Examination
     getExaminationList(data: any, token: any): Promise<any> {
-        return super.getData(token, '/examinations/examinations/batch?sessionId='+data['sessionId']
-            +'&schoolId='+data['schoolId']);
+        if ('sessionId' in data) {
+            return super.getData(token, '/examinations/examinations/batch?sessionId='+data['sessionId']
+                +'&schoolId='+data['schoolId']);
+        } else {
+            let url = '/examinations/examinations/batch?e=';
+            Object.keys(data).forEach(key => {
+                url += '&'+key+'='+data[key];
+            });
+            return super.getData(token, url);
+        }
     }
 
     createExamination(data: any, token: any): Promise<any> {

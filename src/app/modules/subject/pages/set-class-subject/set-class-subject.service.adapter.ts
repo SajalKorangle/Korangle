@@ -106,6 +106,7 @@ export class SetClassSubjectServiceAdapter {
                             tempSubject[key] = classSubject[key];
                         });
                         tempSubject['newEmployee'] = this.getEmployee(tempSubject['parentEmployee']);
+                        tempSubject['newOrderNumber'] = tempSubject['orderNumber'];
                         tempSubject['newMainSubject'] = tempSubject['mainSubject'];
                         tempSubject['newOnlyGrade'] = tempSubject['onlyGrade'];
 
@@ -170,6 +171,7 @@ export class SetClassSubjectServiceAdapter {
                             tempSubject[key] = classSubject[key];
                         });
                         tempSubject['newEmployee'] = tempSubject['parentEmployee'];
+                        tempSubject['newOrderNumber'] = tempSubject['orderNumber'];
                         tempSubject['newMainSubject'] = tempSubject['mainSubject'];
                         tempSubject['newOnlyGrade'] = tempSubject['onlyGrade'];
 
@@ -222,6 +224,10 @@ export class SetClassSubjectServiceAdapter {
 
         this.vm.isLoading = true;
 
+        if (this.vm.orderNumber == null) {
+            this.vm.orderNumber = 0;
+        }
+
         let class_subject_data = {
             'parentClass': this.vm.selectedClass.dbId,
             'parentDivision': this.vm.selectedClass.selectedSection.id,
@@ -229,6 +235,7 @@ export class SetClassSubjectServiceAdapter {
             'parentSubject': this.vm.selectedSubject.id,
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentEmployee': this.vm.selectedEmployee.id,
+            'orderNumber': this.vm.orderNumber,
             'mainSubject': this.vm.mainSubject,
             'onlyGrade': this.vm.onlyGrade,
         };
@@ -322,6 +329,7 @@ export class SetClassSubjectServiceAdapter {
                             tempSubject[key] = classSubject[key];
                         });
                         tempSubject['newEmployee'] = this.getEmployee(tempSubject['parentEmployee']);
+                        tempSubject['newOrderNumber'] = tempSubject['orderNumber'];
                         tempSubject['newMainSubject'] = tempSubject['mainSubject'];
                         tempSubject['newOnlyGrade'] = tempSubject['onlyGrade'];
 
@@ -446,6 +454,7 @@ export class SetClassSubjectServiceAdapter {
             'parentSubject': subject.parentSubject,
             'parentSchool': subject.parentSchool,
             'parentEmployee': subject.newEmployee.id,
+            'orderNumber': subject.newOrderNumber,
             'mainSubject': subject.newMainSubject,
             'onlyGrade': subject.newOnlyGrade,
         };
@@ -460,6 +469,7 @@ export class SetClassSubjectServiceAdapter {
             // this.addSubjectInClassSectionStudentSubjectList(value[0], value[1]);
             // this.vm.selectedSubject = null;
             subject.parentEmployee = subject.newEmployee.id;
+            subject.orderNumber = subject.newOrderNumber;
             subject.mainSubject = subject.newMainSubject;
             subject.onlyGrade = subject.newOnlyGrade;
             this.vm.isLoading = false;

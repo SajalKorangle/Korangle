@@ -60,6 +60,7 @@
                 <tr>
                     <th>Subject</th>
                     <th>Teacher</th>
+                    <th>Order No.</th>
                     <th>-</th>
                     <th>-</th>
                     <th>-</th>
@@ -79,6 +80,9 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
+                    </td>
+                    <td>
+                        <input type="number" [(ngModel)]="subject.newOrderNumber"/>
                     </td>
                     <td>
                         <mat-checkbox [(ngModel)]="subject.newMainSubject">
@@ -137,6 +141,9 @@
                         </mat-form-field>
                     </td>
                     <td>
+                        <input type="number" [(ngModel)]="orderNumber"/>
+                    </td>
+                    <td>
                         <mat-checkbox [(ngModel)]="mainSubject">
                             Main Subject
                         </mat-checkbox>
@@ -154,83 +161,6 @@
                 </tr>
                 </tbody>
             </table>
-
-            <!-- div class="row hoverHighlight"
-                 *ngFor="let subject of selectedClass.selectedSection.subjectList">
-                <div class="col-md-2">
-                    {{getSubjectName(subject)}}
-                </div>
-                <div class="col-md-3">
-                    <mat-form-field>
-                        <mat-select placeholder="Select Employee"
-                                    [ngModel]="subject.newEmployee"
-                                    (ngModelChange)="subject.newEmployee=$event">
-                            <mat-option *ngFor='let employee of employeeList;' [value]="employee">
-                                {{employee.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-md-3">
-                    <mat-checkbox [(ngModel)]="subject.newMainSubject">
-                        Main Subject
-                    </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="subject.newOnlyGrade">
-                        Only Grade
-                    </mat-checkbox>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            style="padding: 3px 8px;"
-                            [disabled]="isSubjectUpdateDisabled(subject)"
-                            (click)="serviceAdapter.updateSubject(subject)">Update</button>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            style="padding: 3px 8px;"
-                            (click)="serviceAdapter.removeSubject(subject)">Remove</button>
-                </div>
-            </div -->
-
-            <!-- div class="row" style="margin-top: 30px;">
-                <div class="col-md-3">
-                    <mat-form-field>
-                        <mat-select placeholder="Select Subject"
-                                    [ngModel]="selectedSubject"
-                                    (ngModelChange)="selectedSubject=$event">
-                            <mat-option *ngFor='let subject of getFilteredSubjectList();' [value]="subject">
-                                {{subject.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-md-3">
-                    <mat-form-field>
-                        <mat-select placeholder="Select Employee"
-                                    [ngModel]="selectedEmployee"
-                                    (ngModelChange)="selectedEmployee=$event">
-                            <mat-option *ngFor='let employee of employeeList;' [value]="employee">
-                                {{employee.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-md-3">
-                    <mat-checkbox [(ngModel)]="mainSubject">
-                        Main Subject
-                    </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="onlyGrade">
-                        Only Grade
-                    </mat-checkbox>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="serviceAdapter.addSubject()">Add</button>
-                </div>
-            </div -->
 
         </ng-container>
 

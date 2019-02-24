@@ -36,6 +36,7 @@ export class CreateExaminationServiceAdapter {
         this.vm.examinationList = examinationList;
         this.vm.examinationList.forEach(examination => {
             examination['newName'] = examination['name'];
+            examination['newStatus'] = examination['status'];
             examination['updating'] = false;
         })
     }
@@ -65,15 +66,21 @@ export class CreateExaminationServiceAdapter {
 
         this.vm.isLoading = true;
 
+        if (this.vm.examinationStatusToBeAdded == 'None') {
+            this.vm.examinationStatusToBeAdded = null;
+        }
+
         let data = {
             'name': this.vm.examinationNameToBeAdded,
+            'status': this.vm.examinationStatusToBeAdded,
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         this.vm.examinationService.createExamination(data, this.vm.user.jwt).then(value => {
             this.addToExaminationList(value);
-            this.vm.examinationNameToBeAdded = '';
+            this.vm.examinationNameToBeAdded = null;
+            this.vm.examinationStatusToBeAdded = null;
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
@@ -83,6 +90,7 @@ export class CreateExaminationServiceAdapter {
 
     addToExaminationList(examination: any): void {
         examination['newName'] = examination['name'];
+        examination['newStatus'] = examination['status'];
         examination['updating'] = false;
         this.vm.examinationList.push(examination);
     }
@@ -98,7 +106,7 @@ export class CreateExaminationServiceAdapter {
 
         let nameAlreadyExists = false;
         this.vm.examinationList.every(item => {
-            if (item.name === examination.newName) {
+            if (item.name === examination.newName && item.id !== examination.id) {
                 nameAlreadyExists = true;
                 return false;
             }
@@ -112,18 +120,29 @@ export class CreateExaminationServiceAdapter {
 
         examination.updating = true;
 
+        this.vm.isLoading = true;
+
+        if (examination.newStatus == 'None') {
+            examination.newStatus = null;
+        }
+
         let data = {
             'id': examination.id,
             'name': examination.newName,
+            'status': examination.newStatus,
             'parentSchool': examination.parentSchool,
             'parentSession': examination.parentSession,
         };
 
         this.vm.examinationService.updateExamination(data, this.vm.user.jwt).then(value => {
+            alert("Examination updated successfully");
             examination.name = value.name;
+            examination.status = value.status;
             examination.updating = false;
+            this.vm.isLoading = false;
         }, error => {
             examination.updating = false;
+            this.vm.isLoading = false;
         });
 
     }

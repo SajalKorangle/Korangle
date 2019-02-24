@@ -17,6 +17,7 @@ export class CreateExaminationComponent implements OnInit {
 
     examinationList: any;
     examinationNameToBeAdded = null;
+    examinationStatusToBeAdded = null;
 
     serviceAdapter: CreateExaminationServiceAdapter;
 
@@ -28,6 +29,15 @@ export class CreateExaminationComponent implements OnInit {
         this.serviceAdapter = new CreateExaminationServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+    }
+
+    isExaminationUpdateDisabled(examination: any): boolean {
+        if ((examination.newName == examination.name
+                && examination.newStatus == examination.status)
+            || examination.updating) {
+            return true;
+        }
+        return false;
     }
 
 }

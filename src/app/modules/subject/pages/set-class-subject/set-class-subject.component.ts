@@ -28,6 +28,7 @@ export class SetClassSubjectComponent implements OnInit {
     selectedSession: any;
     selectedSubject = null;
     selectedEmployee = null;
+    orderNumber = 0;
     mainSubject = true;
     onlyGrade = false;
 
@@ -85,6 +86,7 @@ export class SetClassSubjectComponent implements OnInit {
     isSubjectUpdateDisabled(subject: any): boolean {
         if (subject.newEmployee.id !== subject.parentEmployee
             || subject.newMainSubject !== subject.mainSubject
+            || subject.newOrderNumber !== subject.orderNumber
             || subject.newOnlyGrade !== subject.onlyGrade) {
             return false;
         }

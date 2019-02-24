@@ -42,27 +42,29 @@ export class SetFinalReportComponent implements OnInit {
     }
 
     disableCreateButton(): boolean {
-        let result = false;
-        Object.keys(this.newReportCardMapping).every(key => {
-            if (key != "id" && this.newReportCardMapping[key] == null) {
-                result = true;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }
 
-    disableUpdateButton(): boolean {
-        let result = true;
-        Object.keys(this.newReportCardMapping).every(key => {
-            if (this.newReportCardMapping[key] != this.reportCardMapping[key]) {
-                result = false;
-                return false;
-            }
-            return true;
-        });
-        return result;
+        // For Playgroup - 8th
+        if (this.newReportCardMapping.parentExaminationJuly != null
+            && this.newReportCardMapping.parentExaminationAugust != null
+            && this.newReportCardMapping.parentExaminationSeptember != null
+            && this.newReportCardMapping.parentExaminationOctober != null
+            && this.newReportCardMapping.parentExaminationHalfYearly != null
+            && this.newReportCardMapping.parentExaminationDecember != null
+            && this.newReportCardMapping.parentExaminationJanuary != null
+            && this.newReportCardMapping.parentExaminationFebruary != null
+            && this.newReportCardMapping.parentExaminationFinal != null) {
+            return false;
+        }
+
+        // For 9th - 12th
+        if (this.newReportCardMapping.parentExaminationQuarterlyHigh != null
+            && this.newReportCardMapping.parentExaminationHalfYearlyHigh != null
+            && this.newReportCardMapping.parentExaminationFinalHigh != null) {
+            return false;
+        }
+
+        return true;
+
     }
 
 }

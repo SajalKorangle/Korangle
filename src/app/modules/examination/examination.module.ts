@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ComponentsModule } from '../../components/components.module';
 
 import { ExaminationComponent } from './examination.component';
@@ -15,6 +16,9 @@ import {UpdateMarksComponent} from './pages/update-marks/update-marks.component'
 import {PrintMarksheetComponent} from './pages/print-marksheet/print-marksheet.component';
 import {GradeStudentFieldsComponent} from './pages/grade-student-fields/grade-student-fields.component';
 import {SetFinalReportComponent} from './pages/set-final-report/set-final-report.component';
+import {GenerateFinalReportComponent} from './pages/generate-final-report/generate-final-report.component';
+import {GeneratePatrakComponent} from './pages/generate-patrak/generate-patrak.component';
+import {GenerateGoshwaraComponent} from './pages/generate-goshwara/generate-goshwara.component';
 
 @NgModule({
     declarations: [
@@ -28,6 +32,9 @@ import {SetFinalReportComponent} from './pages/set-final-report/set-final-report
         PrintMarksheetComponent,
         GradeStudentFieldsComponent,
         SetFinalReportComponent,
+        GenerateFinalReportComponent,
+        GeneratePatrakComponent,
+        GenerateGoshwaraComponent,
 
     ],
 
@@ -35,6 +42,7 @@ import {SetFinalReportComponent} from './pages/set-final-report/set-final-report
 
         ComponentsModule,
         ExaminationRoutingModule,
+        NgxDatatableModule,
 
     ],
     exports: [

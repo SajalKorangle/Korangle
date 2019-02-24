@@ -9,6 +9,10 @@ export class AmountInWordsPipe implements PipeTransform {
         let amountInWords = '';
         let tempAmount = amount;
 
+        if (amount == 0) {
+            return 'Zero';
+        }
+
         /* Lacs */
         amountInWords += ( Math.floor(tempAmount / 100000) > 0 ? this.getNumberInWords(Math.floor(tempAmount / 100000)) + ' Lacs ' : '' );
         tempAmount = tempAmount % 100000;

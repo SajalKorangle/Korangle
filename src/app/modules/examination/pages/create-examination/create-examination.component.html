@@ -2,25 +2,74 @@
 
     <ng-container *ngIf="!isLoading">
 
-        <div class="row" *ngFor="let examination of examinationList; let i=index;">
-            <div class="col-md-4">
+        <!-- div class="row" *ngFor="let examination of examinationList; let i=index;">
+            <div class="col-md-3">
                 {{(i+1)}}.
                 <input type="text"
                        [(ngModel)]="examination.newName" [disabled]="examination.updating"/>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                --
+            </div>
+            <div class="col-md-2">
+                --
+            </div>
+            <div class="col-md-2">
+                --
+            </div>
+            <div class="col-md-2">
                 <button type="submit"
-                        *ngIf="examination.newName !== examination.name"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        [disabled]="isExaminationUpdateDisabled(examination)"
                         style="padding: 3px 8px;"
                         (click)="serviceAdapter.updateExamination(examination)">Update</button>
                 <div *ngIf="examination.updating" class="loader-custom"></div>
             </div>
-        </div>
+        </div -->
+
+        <table class="table table-hover" *ngIf="examinationList && examinationList.length > 0">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th>S No.</th>
+                <th>Examination</th>
+                <th>Status</th>
+                <th>Attendance Start Date</th>
+                <th>Attendance End Date</th>
+                <th>-</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let examination of examinationList; let i=index;">
+                <td>{{(i+1)}}.</td>
+                <td>
+                    <input type="text"
+                           [(ngModel)]="examination.newName" [disabled]="examination.updating"/>
+                </td>
+                <td>
+                    <mat-form-field>
+                        <mat-select placeholder="Select Status"
+                                    [ngModel]="examination.newStatus"
+                                    (ngModelChange)="examination.newStatus=$event">
+                            <mat-option value="None">None</mat-option>
+                            <mat-option value="Declared">Declared</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            [disabled]="isExaminationUpdateDisabled(examination)"
+                            style="padding: 3px 8px;"
+                            (click)="serviceAdapter.updateExamination(examination)">Update</button>
+                    <div *ngIf="examination.updating" class="loader-custom"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
         <br/><br/><br/>
 
-        <div class="row">
+        <!-- div class="row">
             <div class="col-md-4">
                 <input type="text"
                        placeholder="Type examination name here ...."
@@ -32,7 +81,25 @@
                         style="padding: 3px 8px;"
                         (click)="serviceAdapter.createExamination()">Add</button>
             </div>
-        </div>
+        </div -->
+
+        <table class="table table-hover">
+            <tbody>
+            <tr>
+                <td>
+                    <input type="text"
+                           placeholder="Type examination name here ...."
+                           [(ngModel)]="examinationNameToBeAdded"/>
+                </td>
+                <td>
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="padding: 3px 8px;"
+                            (click)="serviceAdapter.createExamination()">Add</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
     </ng-container>
 

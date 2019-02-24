@@ -26,6 +26,9 @@ export class PrintComponent implements OnInit, OnDestroy {
     printICardsSubscription: any;
     printHallTicketSubscription: any;
     printStudentMarksheetListSubscription: any;
+    printStudentComprehensiveFinalReportListSubscription: any;
+    printStudentElegantFinalReportListSubscription: any;
+    printStudentClassicFinalReportListSubscription: any;
     printSalarySheetSubscription: any;
     printStudentAttendanceListSubscription: any;
     printEmployeeAttendanceListSubscription: any;
@@ -109,6 +112,24 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-student-marksheet-list-component').emit(value);
             });
         });
+        this.printStudentComprehensiveFinalReportListSubscription = EmitterService.get('print-student-comprehensive-final-report-list').subscribe(value => {
+            this.printType = 'studentComprehensiveFinalReportList';
+            setTimeout(()=> {
+                EmitterService.get('print-student-comprehensive-final-report-list-component').emit(value);
+            });
+        });
+        this.printStudentElegantFinalReportListSubscription = EmitterService.get('print-student-elegant-final-report-list').subscribe(value => {
+            this.printType = 'studentElegantFinalReportList';
+            setTimeout(()=> {
+                EmitterService.get('print-student-elegant-final-report-list-component').emit(value);
+            });
+        });
+        this.printStudentClassicFinalReportListSubscription = EmitterService.get('print-student-classic-final-report-list').subscribe(value => {
+            this.printType = 'studentClassicFinalReportList';
+            setTimeout(()=> {
+                EmitterService.get('print-student-classic-final-report-list-component').emit(value);
+            });
+        });
         this.printSalarySheetSubscription = EmitterService.get('print-salary-sheet').subscribe(value => {
             this.printType = 'salarySheet';
             setTimeout(()=> {
@@ -143,6 +164,9 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printICardsSubscription.unsubscribe();
         this.printHallTicketSubscription.unsubscribe();
         this.printStudentMarksheetListSubscription.unsubscribe();
+        this.printStudentComprehensiveFinalReportListSubscription.unsubscribe();
+        this.printStudentElegantFinalReportListSubscription.unsubscribe();
+        this.printStudentClassicFinalReportListSubscription.unsubscribe();
         this.printSalarySheetSubscription.unsubscribe();
         this.printStudentAttendanceListSubscription.unsubscribe();
         this.printEmployeeAttendanceListSubscription.unsubscribe();

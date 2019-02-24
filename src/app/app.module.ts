@@ -27,6 +27,9 @@ import { PrintEmployeeAttendanceListComponent } from './modules/attendance/print
 import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
 import { PrintStudentMarksheetListComponent } from './modules/examination/print/print-student-marksheet-list/print-student-marksheet-list.component';
 import { PrintSalarySheetComponent } from './modules/salary/print/print-salary-sheet/print-salary-sheet.component';
+import { PrintStudentComprehensiveFinalReportListComponent } from './modules/examination/print/print-student-comprehensive-final-report-list/print-student-comprehensive-final-report-list.component';
+import { PrintStudentElegantFinalReportListComponent } from './modules/examination/print/print-student-elegant-final-report-list/print-student-elegant-final-report-list.component';
+import { PrintStudentClassicFinalReportListComponent } from './modules/examination/print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
 
 @NgModule({
     declarations: [
@@ -50,6 +53,9 @@ import { PrintSalarySheetComponent } from './modules/salary/print/print-salary-s
         PrintStudentAttendanceListComponent,
         PrintEmployeeAttendanceListComponent,
         PrintSalarySheetComponent,
+        PrintStudentComprehensiveFinalReportListComponent,
+        PrintStudentElegantFinalReportListComponent,
+        PrintStudentClassicFinalReportListComponent,
         PrintComponent,
 
     ],

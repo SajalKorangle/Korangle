@@ -219,10 +219,14 @@ export class SetStudentSubjectServiceAdapter {
 
         let student_test_data = this.prepareStudentTestDataToRemove(item.subjectId);
 
-        Promise.all([
-            this.vm.subjectService.deleteStudentSubject(subject_data, this.vm.user.jwt),
-            this.vm.examinationService.deleteStudentTestList(student_test_data, this.vm.user.jwt),
-        ]).then(value => {
+        let request_array = [];
+        request_array.push(this.vm.subjectService.deleteStudentSubject(subject_data, this.vm.user.jwt));
+
+        if (student_test_data.length > 0) {
+            request_array.push(this.vm.examinationService.deleteStudentTestList(student_test_data.join(), this.vm.user.jwt))
+        }
+
+        Promise.all(request_array).then(value => {
             item.studentSubjectId = null;
 
             if (item.classSubjectId === null) {
@@ -253,7 +257,7 @@ export class SetStudentSubjectServiceAdapter {
                 id_list.push(item.id);
             }
         });
-        return id_list.join();
+        return id_list;
     }
 
 }

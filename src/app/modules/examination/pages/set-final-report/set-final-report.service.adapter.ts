@@ -61,17 +61,75 @@ export class SetFinalReportServiceAdapter {
                 'id': null,
                 'parentSchool': this.vm.user.activeSchool.dbId,
                 'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+
+                // July
                 'parentExaminationJuly': null,
+                'attendanceJulyStart': null,
+                'attendanceJulyEnd': null,
+
+                // August
                 'parentExaminationAugust': null,
+                'attendanceAugustStart': null,
+                'attendanceAugustEnd': null,
+
+                // September
                 'parentExaminationSeptember': null,
+                'attendanceSeptemberStart': null,
+                'attendanceSeptemberEnd': null,
+
+                // October
                 'parentExaminationOctober': null,
+                'attendanceOctoberStart': null,
+                'attendanceOctoberEnd': null,
+
+                // HalfYearly
                 'parentExaminationHalfYearly': null,
+                'attendanceHalfYearlyStart': null,
+                'attendanceHalfYearlyEnd': null,
+
+                // December
                 'parentExaminationDecember': null,
+                'attendanceDecemberStart': null,
+                'attendanceDecemberEnd': null,
+
+                // January
                 'parentExaminationJanuary': null,
+                'attendanceJanuaryStart': null,
+                'attendanceJanuaryEnd': null,
+
+                // February
                 'parentExaminationFebruary': null,
+                'attendanceFebruaryStart': null,
+                'attendanceFebruaryEnd': null,
+
+                // Final
                 'parentExaminationFinal': null,
+                'attendanceFinalStart': null,
+                'attendanceFinalEnd': null,
+
+                // QuarterlyHigh
+                'parentExaminationQuarterlyHigh': null,
+                'attendanceQuarterlyHighStart': null,
+                'attendanceQuarterlyHighEnd': null,
+
+                // HalfYearlyHigh
+                'parentExaminationHalfYearlyHigh': null,
+                'attendanceHalfYearlyHighStart': null,
+                'attendanceHalfYearlyHighEnd': null,
+
+                // FinalHigh
+                'parentExaminationFinalHigh': null,
+                'attendanceFinalHighStart': null,
+                'attendanceFinalHighEnd': null,
+
+                // Project
                 'parentExaminationProject': null,
+
+                // Report Card Type
                 'reportCardType': null,
+
+                // Auto Attendance
+                'autoAttendance': false,
             };
             this.vm.reportCardMapping = tempItem;
             this.vm.newReportCardMapping = this.copyObject(this.vm.reportCardMapping);
