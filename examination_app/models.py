@@ -89,11 +89,18 @@ class StudentTestResult(models.Model):
         unique_together = ('parentStudent', 'parentTest')
 
 
+EXAMINATION_STATUS = (
+    ('Created', 'Created'),
+    ('Declared', 'Declared'),
+)
+
+
 class Examination(models.Model):
 
     name = models.TextField(null=False, default='-', verbose_name='name')
     parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
+    status = models.CharField(max_length=20, choices=EXAMINATION_STATUS, null=True, default='Created', verbose_name='examinationStatus')
 
     def __str__(self):
         return self.name
@@ -163,17 +170,72 @@ class MpBoardReportCardMapping(models.Model):
 
     parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    parentExaminationJuly = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_july', null=False, default=0, verbose_name='parentExaminationJuly')
-    parentExaminationAugust = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_august', null=False, default=0, verbose_name='parentExaminationAugust')
-    parentExaminationSeptember = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_september', null=False, default=0, verbose_name='parentExaminationSeptember')
-    parentExaminationOctober = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_october', null=False, default=0, verbose_name='parentExaminationOctober')
-    parentExaminationHalfYearly = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_half_yearly', null=False, default=0, verbose_name='parentExaminationHalfYearly')
-    parentExaminationDecember = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_december', null=False, default=0, verbose_name='parentExaminationDecember')
-    parentExaminationJanuary = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_january', null=False, default=0, verbose_name='parentExaminationJanuary')
-    parentExaminationFebruary = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_february', null=False, default=0, verbose_name='parentExaminationFebruary')
-    parentExaminationFinal = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_final', null=False, default=0, verbose_name='parentExaminationFinal')
-    parentExaminationProject = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_project', null=False, default=0, verbose_name='parentExaminationProject')
+
+    # July
+    parentExaminationJuly = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_july', null=True, verbose_name='parentExaminationJuly')
+    attendanceJulyStart = models.DateField(null=True, verbose_name='attendanceJulyStart')
+    attendanceJulyEnd = models.DateField(null=True, verbose_name='attendanceJulyEnd')
+
+    # August
+    parentExaminationAugust = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_august', null=True, default=0, verbose_name='parentExaminationAugust')
+    attendanceAugustStart = models.DateField(null=True, verbose_name='attendanceAugustStart')
+    attendanceAugustEnd = models.DateField(null=True, verbose_name='attendanceAugustEnd')
+
+    # September
+    parentExaminationSeptember = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_september', null=True, default=0, verbose_name='parentExaminationSeptember')
+    attendanceSeptemberStart = models.DateField(null=True, verbose_name='attendanceSeptemberStart')
+    attendanceSeptemberEnd = models.DateField(null=True, verbose_name='attendanceSeptemberEnd')
+
+    # October
+    parentExaminationOctober = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_october', null=True, default=0, verbose_name='parentExaminationOctober')
+    attendanceOctoberStart = models.DateField(null=True, verbose_name='attendanceOctoberStart')
+    attendanceOctoberEnd = models.DateField(null=True, verbose_name='attendanceOctoberEnd')
+
+    # Half Yearly
+    parentExaminationHalfYearly = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_half_yearly', null=True, default=0, verbose_name='parentExaminationHalfYearly')
+    attendanceHalfYearlyStart = models.DateField(null=True, verbose_name='attendanceHalfYearlyStart')
+    attendanceHalfYearlyEnd = models.DateField(null=True, verbose_name='attendanceHalfYearlyEnd')
+
+    # December
+    parentExaminationDecember = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_december', null=True, default=0, verbose_name='parentExaminationDecember')
+    attendanceDecemberStart = models.DateField(null=True, verbose_name='attendanceDecemberStart')
+    attendanceDecemberEnd = models.DateField(null=True, verbose_name='attendanceDecemberEnd')
+
+    # January
+    parentExaminationJanuary = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_january', null=True, default=0, verbose_name='parentExaminationJanuary')
+    attendanceJanuaryStart = models.DateField(null=True, verbose_name='attendanceJanuaryStart')
+    attendanceJanuaryEnd = models.DateField(null=True, verbose_name='attendanceJanuaryEnd')
+
+    # February
+    parentExaminationFebruary = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_february', null=True, default=0, verbose_name='parentExaminationFebruary')
+    attendanceFebruaryStart = models.DateField(null=True, verbose_name='attendanceFebruaryStart')
+    attendanceFebruaryEnd = models.DateField(null=True, verbose_name='attendanceFebruaryEnd')
+
+    # Final
+    parentExaminationFinal = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_final', null=True, default=0, verbose_name='parentExaminationFinal')
+    attendanceFinalStart = models.DateField(null=True, verbose_name='attendanceFinalStart')
+    attendanceFinalEnd = models.DateField(null=True, verbose_name='attendanceFinalEnd')
+
+    # Quarterly
+    parentExaminationQuarterlyHigh = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_quarterly_high', null=True, default=0, verbose_name='parentExaminationQuarterlyHigh')
+    attendanceQuarterlyHighStart = models.DateField(null=True, verbose_name='attendanceQuarterlyHighStart')
+    attendanceQuarterlyHighEnd = models.DateField(null=True, verbose_name='attendanceQuarterlyHighEnd')
+
+    # HalfYearlyHigh
+    parentExaminationHalfYearlyHigh = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_half_yearly_high', null=True, default=0, verbose_name='parentExaminationHalfYearlyHigh')
+    attendanceHalfYearlyHighStart = models.DateField(null=True, verbose_name='attendanceHalfYearlyHighStart')
+    attendanceHalfYearlyHighEnd = models.DateField(null=True, verbose_name='attendanceHalfYearlyHighEnd')
+
+    # FinalHigh
+    parentExaminationFinalHigh = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_final_high', null=True, default=0, verbose_name='parentExaminationFinalHigh')
+    attendanceFinalHighStart = models.DateField(null=True, verbose_name='attendanceFinalHighStart')
+    attendanceFinalHighEnd = models.DateField(null=True, verbose_name='attendanceFinalHighEnd')
+
+    parentExaminationProject = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_project', null=True, default=0, verbose_name='parentExaminationProject')
+
     reportCardType = models.CharField(max_length=20, choices=REPORT_CARD_TYPE, null=True, default=None, verbose_name='reportCardType')
+
+    autoAttendance = models.BooleanField(null=False, default=True, verbose_name='autoAttendance')
 
     class Meta:
         db_table = 'mp_board_report_card_mapping'

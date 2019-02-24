@@ -20,13 +20,14 @@ def get_mp_board_report_card_mapping(data):
     if 'parentSchool' in data and data['parentSchool'] != '':
         query = query.filter(parentSchool=data['parentSchool'])
 
-    if (query.count() > 0):
+    if query.count() > 0:
         return ModelSerializer(query[0]).data
     else:
         return None
 
 
 def create_mp_board_report_card_mapping(data):
+    print(data)
     serializer = ModelSerializer(data=data)
     if serializer.is_valid():
         serializer.save()

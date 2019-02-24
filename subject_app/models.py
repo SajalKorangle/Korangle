@@ -44,6 +44,7 @@ class ClassSubject(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
     mainSubject = models.BooleanField(null=False, default=True, verbose_name='mainSubject')
     onlyGrade = models.BooleanField(null=False, default=False, verbose_name='onlyGrade')
+    orderNumber = models.IntegerField(default=0, verbose_name='orderNumber')
 
     class Meta:
         db_table = 'class_subject'

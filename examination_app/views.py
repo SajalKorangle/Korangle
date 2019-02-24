@@ -90,10 +90,13 @@ class ExaminationListView(APIView):
 
     @user_permission
     def get(request):
-        data = {
-            'sessionId': request.GET['sessionId'],
-            'schoolId': request.GET['schoolId'],
-        }
+        if 'sessionId' in request.GET:
+            data = {
+                'sessionId': request.GET['sessionId'],
+                'schoolId': request.GET['schoolId'],
+            }
+        else:
+            data = request.GET
         return get_examination_list(data)
 
 

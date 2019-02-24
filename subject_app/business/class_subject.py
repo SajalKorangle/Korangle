@@ -44,21 +44,21 @@ def get_class_subject_list(data):
     class_subject_query = ClassSubject.objects.all()
 
     if 'subjectList' in data:
-        if data['subjectList'] != '':
+        if 'subjectList' in data and data['subjectList'] != '':
             class_subject_query = class_subject_query.filter(parentSubject__in=data['subjectList'].split(','))
-        if data['schoolList'] != '':
+        if 'schoolList' in data and data['schoolList'] != '':
             class_subject_query = class_subject_query.filter(parentSchool__in=data['schoolList'].split(','))
-        if data['employeeList'] != '':
+        if 'employeeList' in data and data['employeeList'] != '':
             class_subject_query = class_subject_query.filter(parentEmployee__in=data['employeeList'].split(','))
-        if data['classList'] != '':
+        if 'classList' in data and data['classList'] != '':
             class_subject_query = class_subject_query.filter(parentClass__in=data['classList'].split(','))
-        if data['sectionList'] != '':
+        if 'sectionList' in data and data['sectionList'] != '':
             class_subject_query = class_subject_query.filter(parentDivision__in=data['sectionList'].split(','))
-        if data['sessionList'] != '':
+        if 'sessionList' in data and data['sessionList'] != '':
             class_subject_query = class_subject_query.filter(parentSession__in=data['sessionList'].split(','))
-        if data['mainSubject'] != '':
+        if '' in data and data['mainSubject'] != '':
             class_subject_query = class_subject_query.filter(mainSubject=data['mainSubject'])
-        if data['onlyGrade'] != '':
+        if 'subjectList' in data and data['onlyGrade'] != '':
             class_subject_query = class_subject_query.filter(onlyGrade=data['onlyGrade'])
     else:
         if 'classId' in data and 'sectionId' in data:

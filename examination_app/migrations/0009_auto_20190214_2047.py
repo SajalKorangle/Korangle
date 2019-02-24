@@ -7,7 +7,9 @@ import django.db.models.deletion
 
 from examination_app.db_script.access_grade_student_fields import access_grade_student_fields
 from examination_app.db_script.access_set_final_report import access_set_final_report
-
+from examination_app.db_script.access_generate_final_report import access_generate_final_report
+from examination_app.db_script.access_generate_patrak import access_generate_patrak
+from examination_app.db_script.access_generate_goshwara import access_generate_goshwara
 
 class Migration(migrations.Migration):
 
@@ -64,4 +66,7 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(access_grade_student_fields),
         migrations.RunPython(access_set_final_report),
+        migrations.RunPython(access_generate_final_report),
+        migrations.RunPython(access_generate_patrak),
+        migrations.RunPython(access_generate_goshwara),
     ]
