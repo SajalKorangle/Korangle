@@ -72,7 +72,8 @@ class ClassSubjectListView(APIView):
 
     @user_permission
     def get(request):
-        if 'subjectList' in request.GET:
+        return get_class_subject_list(request.GET)
+        '''if 'subjectList' in request.GET:
             return get_class_subject_list(request.GET)
         else:
             data = {}
@@ -83,7 +84,7 @@ class ClassSubjectListView(APIView):
                 data['schoolId'] = request.GET['schoolId']
             else:
                 data['schoolId'] = request.GET['schoolId']
-            return get_class_subject_list(data)
+            return get_class_subject_list(data)'''
 
 
 

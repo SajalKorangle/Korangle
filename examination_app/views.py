@@ -125,7 +125,8 @@ class TestListView(APIView):
 
     @user_permission
     def get(request):
-        if 'examinationList' in request.GET:
+        return get_test_list(request.GET)
+        '''if 'examinationList' in request.GET:
             return get_test_list(request.GET)
         else:
             if 'schoolId' in request.GET and 'sessionId' in request.GET:
@@ -139,7 +140,7 @@ class TestListView(APIView):
                     'classId': request.GET['classId'],
                     'sectionId': request.GET['sectionId'],
                 }
-            return get_test_list(data)
+            return get_test_list(data)'''
 
 
 ########### Student Test #############

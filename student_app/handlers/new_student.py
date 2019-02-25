@@ -35,5 +35,6 @@ def create_new_student(data):
 
     response = {}
     response['message'] = 'Student Profile created successfully'
+    response['id'] = student_object.id
 
     return response

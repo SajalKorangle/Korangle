@@ -16,7 +16,22 @@ def get_test_list(data):
 
     test_query = TestSecond.objects.all()
 
-    if 'examinationList' in data:
+    if 'examinationList' in data and data['examinationList'] != '':
+        test_query = test_query.filter(parentExamination__in=data['examinationList'].split(','))
+    if 'subjectList' in data and data['subjectList'] != '':
+        test_query = test_query.filter(parentSubject__in=data['subjectList'].split(','))
+    if 'classList' in data and data['classList'] != '':
+        test_query = test_query.filter(parentClass__in=data['classList'].split(','))
+    if 'sectionList' in data and data['sectionList'] != '':
+        test_query = test_query.filter(parentDivision__in=data['sectionList'].split(','))
+    if 'startTimeList' in data and data['startTimeList'] != '':
+        test_query = test_query.filter(startTime__in=data['startTimeList'].split(','))
+    if 'endTimeList' in data and data['endTimeList'] != '':
+        test_query = test_query.filter(endTime__in=data['endTimeList'].split(','))
+    if 'maximumMarksList' in data and data['maximumMarksList'] != '':
+        test_query = test_query.filter(maximumMarks__in=data['maximumMarksList'].split(','))
+
+    '''if 'examinationList' in data:
         if data['examinationList'] != '':
             test_query = test_query.filter(parentExamination__in=data['examinationList'].split(','))
         if data['subjectList'] != '':
@@ -38,7 +53,7 @@ def get_test_list(data):
         elif 'examinationId' in data and 'classId' in data and 'sectionId' in data:
             test_query = TestSecond.objects.filter(parentExamination_id=data['examinationId'],
                                                    parentClass_id=data['classId'],
-                                                   parentDivision_id=data['sectionId'])
+                                                   parentDivision_id=data['sectionId'])'''
 
     for test_object in test_query:
         test_list.append(TestModelSerializer(test_object).data)
