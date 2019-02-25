@@ -40,11 +40,6 @@ export class GenerateHallTicketServiceAdapter {
             schoolId: this.vm.user.activeSchool.dbId,
         };
 
-        let request_test_data = {
-            sessionId: this.vm.user.activeSchool.currentSessionDbId,
-            schoolId: this.vm.user.activeSchool.dbId,
-        };
-
         Promise.all([
             this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
             this.vm.classService.getClassList(this.vm.user.jwt),
@@ -52,20 +47,29 @@ export class GenerateHallTicketServiceAdapter {
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
-            this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt),
+            // this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt),
         ]).then(value => {
 
-            this.examinationList = value[0];
-            this.classList = value[1];
-            this.sectionList = value[2];
-            this.subjectList = value[3];
-            this.studentSectionList = value[4];
-            this.studentSubjectList = value[5];
-            this.testList = value[6];
+            let request_test_data = {
+                'examinationList': value[0].map(a => a.id),
+            };
 
-            this.populateExaminationList();
+            this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt).then(value2 => {
 
-            this.vm.isLoading = false;
+                this.examinationList = value[0];
+                this.classList = value[1];
+                this.sectionList = value[2];
+                this.subjectList = value[3];
+                this.studentSectionList = value[4];
+                this.studentSubjectList = value[5];
+                this.testList = value2;
+
+                this.populateExaminationList();
+
+                this.vm.isLoading = false;
+
+            });
+
         }, error => {
             this.vm.isLoading = false;
         });

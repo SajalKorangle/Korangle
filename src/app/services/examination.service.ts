@@ -31,7 +31,12 @@ export class ExaminationService extends CommonServiceRequirements {
 
     // Test
     getTestList(data: any, token: any): Promise<any> {
-        if ('examinationList' in data) {
+        let url = '/examinations/tests/batch?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
+        return super.getData(token, url);
+        /*if ('examinationList' in data) {
             let url = '/examinations/tests/batch' +
                 '?examinationList=' + data['examinationList'].join() +
                 '&subjectList=' + data['subjectList'].join() +
@@ -51,7 +56,7 @@ export class ExaminationService extends CommonServiceRequirements {
                     +'&classId='+data['classId']
                     +'&sectionId='+data['sectionId']);
             }
-        }
+        }*/
     }
 
     createTest(data: any, token: any): Promise<any> {

@@ -14,7 +14,12 @@ export class SubjectService extends CommonServiceRequirements {
 
     // Class Subject
     getClassSubjectList(data: any, token: any): Promise<any> {
-        if ('subjectList' in data) {
+        let url = '/subject/class-subjects/batch?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
+        return super.getData(token, url);
+        /*if ('subjectList' in data) {
             let url = '/subject/class-subjects/batch' +
                 '?subjectList=' + data['subjectList'].join() +
                 '&schoolList=' + data['schoolList'].join() +
@@ -36,7 +41,7 @@ export class SubjectService extends CommonServiceRequirements {
                 return super.getData(token,
                     '/subject/class-subjects/batch?sessionId='+data['sessionId']+'&schoolId='+data['schoolId']);
             }
-        }
+        }*/
     }
 
     createClassSubject(data: any, token: any): Promise<any> {

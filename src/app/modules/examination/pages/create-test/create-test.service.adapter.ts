@@ -105,16 +105,23 @@ export class CreateTestServiceAdapter {
         this.vm.isLoading = true;
 
         let request_test_data = {
-            'examinationId': this.vm.selectedExamination.id,
+            /*'examinationId': this.vm.selectedExamination.id,
             'classId': this.vm.selectedExamination.selectedClass.dbId,
-            'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,
+            'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+            'examinationList': [this.vm.selectedExamination.id],
+            'classList': [this.vm.selectedExamination.selectedClass.dbId],
+            'sectionList': [this.vm.selectedExamination.selectedClass.selectedSection.id],
         };
 
         let request_class_subject_data = {
-            'classId': this.vm.selectedExamination.selectedClass.dbId,
+            /*'classId': this.vm.selectedExamination.selectedClass.dbId,
             'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,
             'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-            'schoolId': this.vm.user.activeSchool.dbId,
+            'schoolId': this.vm.user.activeSchool.dbId,*/
+            'classList': [this.vm.selectedExamination.selectedClass.dbId],
+            'sectionList': [this.vm.selectedExamination.selectedClass.selectedSection.id],
+            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
+            'schoolList': [this.vm.user.activeSchool.dbId],
         };
 
         Promise.all([

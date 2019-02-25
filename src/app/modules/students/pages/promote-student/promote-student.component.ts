@@ -1,13 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 
+import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
+
 import { StudentService } from '../../student.service';
 import { ClassService } from '../../../../services/class.service';
+import {SubjectService} from '../../../../services/subject.service';
+import {ExaminationService} from '../../../../services/examination.service';
 
 @Component({
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ StudentService, ClassService ],
+    providers: [ StudentService, ClassService, SubjectService, ExaminationService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
@@ -22,10 +26,14 @@ export class PromoteStudentComponent implements OnInit {
     toClassSectionList = [];
     toStudentList = [];
 
+    serviceAdapter: PromoteStudentServiceAdapter;
+
     isLoading = false;
 
     constructor (private studentService: StudentService,
-                 private classService: ClassService) { }
+                 private classService: ClassService,
+                 public subjectService: SubjectService,
+                 public examinationService: ExaminationService) { }
 
     handleFromSelectedClassChange(): void {
         this.fromSelectedSection = this.fromSelectedClass.sectionList[0];
@@ -43,6 +51,10 @@ export class PromoteStudentComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
+        this.serviceAdapter = new PromoteStudentServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+
         const class_section_list_request_data = {
             sessionDbId : this.user.activeSchool.currentSessionDbId+1,
         };
@@ -60,7 +72,6 @@ export class PromoteStudentComponent implements OnInit {
             this.studentService.getStudentMiniProfileList(student_mini_profile_list_request_data, this.user.jwt),
             this.studentService.getClassSectionStudentList(class_section_student_list_request_data, this.user.jwt),
         ]).then( value => {
-            this.isLoading = false;
             console.log(value);
             this.initializeToList(value[0]);
             this.toStudentList = value[1].filter(item => {
@@ -70,6 +81,9 @@ export class PromoteStudentComponent implements OnInit {
                 return false;
             });
             this.initializeFromList(value[2]);
+
+            this.serviceAdapter.initializeData();
+
         }, error => {
             this.isLoading = false;
         });
@@ -132,11 +146,13 @@ export class PromoteStudentComponent implements OnInit {
         console.log(data);
         this.isLoading = true;
         this.studentService.createStudentSectionList(data, this.user.jwt).then(message => {
-            this.isLoading = false;
-            alert('Students Promoted Successfully');
+
             data.studentList.forEach( student => {
                 this.addInToList(student, data['sectionDbId'], data['classDbId']);
             });
+
+            this.serviceAdapter.addStudentSubjectsAndTests(data);
+
         }, error => {
             this.isLoading = false;
         })

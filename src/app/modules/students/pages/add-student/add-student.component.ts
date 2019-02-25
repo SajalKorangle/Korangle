@@ -2,15 +2,19 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { Student } from '../../../../classes/student';
 
+import { AddStudentServiceAdapter } from './add-student.service.adapter';
+
 import { ClassService } from '../../../../services/class.service';
 import { BusStopService } from '../../../../services/bus-stop.service';
 import { StudentService } from '../../student.service';
+import {SubjectService} from '../../../../services/subject.service';
+import {ExaminationService} from '../../../../services/examination.service';
 
 @Component({
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ ClassService, BusStopService, StudentService ],
+    providers: [ ClassService, BusStopService, StudentService, SubjectService, ExaminationService ],
 })
 
 export class AddStudentComponent implements OnInit {
@@ -24,11 +28,15 @@ export class AddStudentComponent implements OnInit {
 
     busStopList = [];
 
+    serviceAdapter: AddStudentServiceAdapter;
+
     isLoading = false;
 
-    constructor (private classService: ClassService,
+    constructor (public classService: ClassService,
                  private busStopService: BusStopService,
-                 private studentService: StudentService) { }
+                 private studentService: StudentService,
+                 public subjectService: SubjectService,
+                 public examinationService: ExaminationService) { }
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -57,6 +65,11 @@ export class AddStudentComponent implements OnInit {
         this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then( busStopList => {
             this.busStopList = busStopList;
         });
+
+        this.serviceAdapter = new AddStudentServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+
     }
 
     todaysDate(): string {
@@ -114,10 +127,15 @@ export class AddStudentComponent implements OnInit {
 
         this.studentService.createNewStudent(this.newStudent, this.user.jwt).then(
             data => {
-                this.isLoading = false;
-                alert(data.message);
-                this.newStudent = new Student();
-                this.newStudent.dateOfBirth = this.todaysDate();
+
+                // alert(data.message);
+
+                this.serviceAdapter.addStudentSubjectsAndTests(data.id, this.newStudent.classDbId, this.newStudent.sectionDbId);
+
+                // this.newStudent = new Student();
+                // this.newStudent.dateOfBirth = this.todaysDate();
+
+                // this.isLoading = false;
             }, error => {
                 this.isLoading = false;
                 alert('Server Error: Contact admin');

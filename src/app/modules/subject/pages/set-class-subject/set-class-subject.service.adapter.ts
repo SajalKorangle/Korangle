@@ -34,8 +34,10 @@ export class SetClassSubjectServiceAdapter {
         };
 
         let request_class_subject_data = {
-            sessionId: this.vm.user.activeSchool.currentSessionDbId,
-            schoolId: this.vm.user.activeSchool.dbId,
+            /*sessionId: this.vm.user.activeSchool.currentSessionDbId,
+            schoolId: this.vm.user.activeSchool.dbId,*/
+            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
+            'schoolList': [this.vm.user.activeSchool.dbId],
         };
 
         let request_student_section_data = {
