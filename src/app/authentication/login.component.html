@@ -34,9 +34,16 @@
                         </div -->
                         <mat-form-field class="example-full-width">
                             <input matInput
+                                   showHideInput
+                                   id="mysecretpassword"
                                    type="password"
                                    placeholder="Password"
                                    [(ngModel)]="password">
+                            <i matSuffix
+                               class="material-icons"
+                               showHideTrigger="mysecretpassword"
+                               [showHideStatus]="{ materialIcon: true, id: 'mysecretpassword' }"
+                            ></i>
                         </mat-form-field>
                     </div>
                 </div>

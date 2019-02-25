@@ -3,6 +3,8 @@ import { HttpModule } from '@angular/http';
 import { BrowserModule  } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { ShowHidePasswordModule } from 'ngx-show-hide-password';
+
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 
@@ -64,6 +66,7 @@ import { PrintStudentClassicFinalReportListComponent } from './modules/examinati
         AppRoutingModule,
         HttpModule,
         BrowserModule,
+        ShowHidePasswordModule,
         BrowserAnimationsModule,
     ],
     exports: [
