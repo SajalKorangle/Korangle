@@ -45,6 +45,7 @@
                                         padding: 0px 0px 0px 0px !important;">
                                 <table style="margin: 0px 2.5px 0px 0px !important;
                                                 font-size: 12px !important;
+                                                font-weight: 200 !important;
                                                 padding: 0px 0px 0px 0px !important;">
                                     <tbody>
                                     <tr>
@@ -113,7 +114,7 @@
                             </div>
                         </div>
 
-                        <table style="width: 100%; font-size: 13px !important;">
+                        <table style="width: 100%; font-size: 13px !important; font-weight: 200 !important;">
                             <tr>
                                 <td style="width: 5%"></td>
                                 <td style="width: 25%; padding: 1px 1px 1px 5px !important;">Area</td>
@@ -159,7 +160,7 @@
                             </div>
                         </div>
 
-                        <table style="width: 100%; font-size: 13px !important;">
+                        <table style="width: 100%; font-size: 13px !important; font-weight: 200 !important;">
                             <tr>
                                 <td style="width: 5%"></td>
                                 <td style="width: 25%; padding: 1px 1px 1px 5px !important;">Qualities</td>
@@ -278,7 +279,7 @@
                         </div>
 
                         <!-- Address -->
-                        <div class="row no-gutters" style="margin-top: 5px;">
+                        <div class="row no-gutters" style="margin-top: 7px !important; line-height: normal !important;">
                             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
                                 <span style="font-size: 18px;">
                                     {{user.activeSchool.address}}
@@ -287,7 +288,7 @@
                         </div>
 
                         <!-- Annual Report -->
-                        <div class="row no-gutters" style="margin-top: 25px;">
+                        <div class="row no-gutters" style="margin-top: 25px !important; line-height: normal !important;">
                             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
                                 <span style="font-size: 20px; font-weight: 800;">
                                     Annual Report
@@ -296,7 +297,7 @@
                         </div>
 
                         <!-- Session Name -->
-                        <div class="row no-gutters" style="margin-top: 15px;">
+                        <div class="row no-gutters" style="margin-top: 14px !important; line-height: normal !important;">
                             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
                                 <span style="font-size: 20px; font-weight: 400;">
                                     {{getSessionName(user.activeSchool.currentSessionDbId)}}
@@ -305,8 +306,8 @@
                         </div>
 
                         <!-- Class Name -->
-                        <div class="row no-gutters" style="margin-top: 15px;">
-                            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+                        <div class="row no-gutters" style="margin-top: 14px !important; line-height: normal !important;">
+                            <div class="col-xs-12" align="center">
                                 <span style="font-size: 20px; font-weight: 800;">
                                     {{student.className}}
                                 </span>
@@ -317,7 +318,7 @@
                         <div class="row no-gutters"
                              style="border: 1px solid navy;
                                     font-size: 15px !important;
-                                    margin: 40px 10px 0px 10px !important;
+                                    margin: 41px 10px 0px 10px !important;
                                     padding: 0px 0px 0px 0px !important;">
                             <div class="col-xs-12"
                                  style="margin: 0px 0px 0px 0px !important;
@@ -540,7 +541,7 @@
             </div>
 
             <!-- Subjects -->
-            <table class="table" style="font-size: 15px !important;">
+            <table class="table" style="font-size: 15px !important; font-weight: 200 !important;">
                 <tbody>
                 <tr>
                     <td align="center" rowspan="2">Subject</td>
@@ -615,7 +616,7 @@
             <!-- Extra Fields -->
             <div class="row no-gutters">
                 <div class="col-xs-5">
-                    <table class="table" style="font-size: 15px !important;">
+                    <table class="table" style="font-size: 15px !important; font-weight: 200 !important;">
                         <tbody>
                         <ng-container *ngFor="let extraSubField of extraFieldList[0].extraSubFieldList; let i = index;">
                             <tr>
@@ -627,7 +628,7 @@
                     </table>
                 </div>
                 <div class="col-xs-7">
-                    <table class="table" style="font-size: 15px !important;">
+                    <table class="table" style="font-size: 15px !important; font-weight: 200 !important;">
                         <tbody>
                         <ng-container *ngFor="let extraSubField of extraFieldList[1].extraSubFieldList.slice(0,5); let i = index;">
                             <tr>
