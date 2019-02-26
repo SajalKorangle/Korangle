@@ -621,7 +621,8 @@
                         <ng-container *ngFor="let extraSubField of extraFieldList[0].extraSubFieldList; let i = index;">
                             <tr>
                                 <td>{{i+1}}. {{extraSubField.name}}</td>
-                                <td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i], 2)}}</td>
+                                <!-- td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i], 2)}}</td -->
+                                <td align="center">{{getGrade(getOverallStudentExtraSubFieldMarks(student, i), 18)}}</td>
                             </tr>
                         </ng-container>
                         </tbody>
@@ -633,9 +634,11 @@
                         <ng-container *ngFor="let extraSubField of extraFieldList[1].extraSubFieldList.slice(0,5); let i = index;">
                             <tr>
                                 <td>{{i+1}}. {{extraSubField.name}}</td>
-                                <td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i+5], 2)}}</td>
+                                <!-- td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i+5], 2)}}</td -->
+                                <td align="center">{{getGrade(getOverallStudentExtraSubFieldMarks(student, i+5), 18)}}</td>
                                 <td>{{i+1+5}}. {{extraFieldList[1].extraSubFieldList[i+5].name}}</td>
-                                <td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i+10], 2)}}</td>
+                                <!-- td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i+10], 2)}}</td -->
+                                <td align="center">{{getGrade(getOverallStudentExtraSubFieldMarks(student, i+10), 18)}}</td>
                             </tr>
                         </ng-container>
                         </tbody>
