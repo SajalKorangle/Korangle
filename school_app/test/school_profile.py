@@ -24,6 +24,7 @@ class SchoolProfileTestCase(ParentTestCase):
         self.assertEqual(school_object.diseCode, response['diseCode'])
         self.assertEqual(school_object.address, response['address'])
         self.assertEqual(school_object.registrationNumber, response['registrationNumber'])
+        self.assertEqual(school_object.affiliationNumber, response['affiliationNumber'])
         self.assertEqual(school_object.currentSession.id, response['currentSessionDbId'])
 
     def test_update_school_profile(self):
@@ -40,6 +41,7 @@ class SchoolProfileTestCase(ParentTestCase):
             'diseCode': 'New Dise Code',
             'address': 'New Address',
             'registrationNumber': 'New Registration Number',
+            'affiliationNumber': '---',
             'currentSessionDbId': session_object.id,
         }
 
@@ -53,5 +55,6 @@ class SchoolProfileTestCase(ParentTestCase):
         self.assertEqual(new_school_object.diseCode, data['diseCode'])
         self.assertEqual(new_school_object.address, data['address'])
         self.assertEqual(new_school_object.registrationNumber, data['registrationNumber'])
+        self.assertEqual(new_school_object.affiliationNumber, data['affiliationNumber'])
         self.assertEqual(new_school_object.currentSession.id, data['currentSessionDbId'])
 

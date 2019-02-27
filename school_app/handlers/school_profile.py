@@ -12,6 +12,7 @@ def get_school_profile_by_object(school_object):
     school_profile_response['diseCode'] = school_object.diseCode
     school_profile_response['address'] = school_object.address
     school_profile_response['registrationNumber'] = school_object.registrationNumber
+    school_profile_response['affiliationNumber'] = school_object.affiliationNumber
     school_profile_response['medium'] = school_object.medium
     school_profile_response['currentSessionDbId'] = school_object.currentSession.id
     school_profile_response['mobileNumber'] = school_object.mobileNumber
@@ -28,6 +29,7 @@ def update_school_profile(data):
     school_object.diseCode = data['diseCode']
     school_object.address = data['address']
     school_object.registrationNumber = data['registrationNumber']
+    school_object.affiliationNumber = data['affiliationNumber']
     school_object.medium = data['medium']
     school_object.mobileNumber = data['mobileNumber']
 

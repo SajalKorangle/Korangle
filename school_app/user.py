@@ -192,6 +192,10 @@ def get_school_data_by_object(school_object):
         school_data['profileImage'] = school_object.profileImage.url
     else:
         school_data['profileImage'] = "https://korangleplus.s3.amazonaws.com/schools/18/main.png"
+    if school_object.principalSignatureImage:
+        school_data['principalSignatureImage'] = school_object.principalSignatureImage.url
+    else:
+        school_data['principalSignatureImage'] = None
     school_data['mobileNumber'] = school_object.mobileNumber
     school_data['primaryThemeColor'] = school_object.primaryThemeColor
     school_data['secondaryThemeColor'] = school_object.secondaryThemeColor
@@ -202,6 +206,7 @@ def get_school_data_by_object(school_object):
     school_data['currentSessionDbId'] = school_object.currentSession.id
     school_data['name'] = school_object.name
     school_data['registrationNumber'] = school_object.registrationNumber
+    school_data['affiliationNumber'] = school_object.affiliationNumber
     school_data['headerSize'] = school_object.headerSize
 
     school_data['medium'] = school_object.medium

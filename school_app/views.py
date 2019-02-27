@@ -97,3 +97,25 @@ def get_session_list_view(request):
         return JsonResponse({'response': get_success_response(get_session_list())})
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
+############ Profile Image ########################
+from .business.profile_image import update_profile_image
+
+
+class ProfileImageView(APIView):
+
+    @user_permission
+    def post(request, school_id):
+        return update_profile_image(request.FILES['myFile'], school_id)
+
+
+############ Principal Signature Image ########################
+from .business.principal_signature_image import update_principal_signature_image
+
+
+class PrincipalSignatureImageView(APIView):
+
+    @user_permission
+    def post(request, school_id):
+        return update_principal_signature_image(request.FILES['myFile'], school_id)
+

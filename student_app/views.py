@@ -157,7 +157,6 @@ class StudentSectionListView(APIView):
 
 ############ Profile Image ########################
 from .business.profile_image import update_profile_image
-from django.core.files.storage import FileSystemStorage
 
 
 class ProfileImageView(APIView):
@@ -165,12 +164,6 @@ class ProfileImageView(APIView):
     @user_permission
     def post(request, student_id):
         return update_profile_image(request.FILES['myFile'], student_id)
-        '''if request.method == 'POST' and request.FILES['myFile']:
-            myfile = request.FILES['myFile']
-            fs = FileSystemStorage()
-            fs.save(myfile.name, myfile)
-            return {'response': 'okay'}
-        return {'response': 'error'}'''
 
 ############ Transfer Certificate #################
 from .business.transfer_certificate import create_transfer_certificate, \

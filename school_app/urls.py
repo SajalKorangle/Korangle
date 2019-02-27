@@ -12,7 +12,23 @@ from .views import get_working_days_view, create_working_days_view, update_worki
 
 from .user import LoginUserView, UserDetailsView
 
-urlpatterns = [
+urlpatterns = []
+
+######## Profile Image ############
+from .views import ProfileImageView
+
+urlpatterns += [
+    url(r'^(?P<school_id>[0-9]+)/profile-image', ProfileImageView.as_view()),
+]
+
+######## Principal Signature Image ############
+from .views import PrincipalSignatureImageView
+
+urlpatterns += [
+    url(r'^(?P<school_id>[0-9]+)/principal-signature-image', PrincipalSignatureImageView.as_view()),
+]
+
+urlpatterns += [
 
 	url(r'^get-user-details/', UserDetailsView.as_view(), name="user_details"),
 	url(r'^login-user-details/', LoginUserView.as_view(), name="login_user_details"),

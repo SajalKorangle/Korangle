@@ -1,3 +1,7 @@
+
+import os
+from django.utils.timezone import now
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -5,12 +9,17 @@ from school_app.model_custom_field import CustomImageField
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.core.files.storage import default_storage as storage
+
 
 def upload_avatar_to(instance, filename):
-    import os
-    from django.utils.timezone import now
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'schools/%s/main%s' % (instance.id, filename_ext.lower())
+    return 'schools/%s/profile_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
+
+
+def upload_principal_signature_to(instance, filename):
+    filename_base, filename_ext = os.path.splitext(filename)
+    return 'schools/%s/principal_signature/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
 
 
 class Session(models.Model):
@@ -44,6 +53,8 @@ class School(models.Model):
 
     profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True)
 
+    principalSignatureImage = models.ImageField("Principal Signature", upload_to=upload_principal_signature_to, blank=True)
+
     mobileNumber = models.IntegerField(null=True)
 
     primaryThemeColor = models.TextField(null=True)
@@ -53,6 +64,7 @@ class School(models.Model):
     diseCode = models.TextField(null=True)
     currentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='currentSession', default=1)
     registrationNumber = models.TextField(null=False, default='426/13.01.1993')
+    affiliationNumber = models.TextField(null=True)
     smsId = models.CharField(max_length=10, null=False, default='KORNGL', verbose_name='smsId')
 
     ENGLISH = 'ENGLISH'
@@ -81,7 +93,13 @@ class School(models.Model):
         except ObjectDoesNotExist:
             return None
 
+    def __str__(self):
+        return self.printName
 
+    class Meta:
+        db_table = 'school'
+
+'''
     def save(self, profileImageUpdation = False, *args, **kwargs):
         super(School, self).save(*args, **kwargs)
         if profileImageUpdation:
@@ -137,12 +155,7 @@ class School(models.Model):
         if storage.exists(thumb_file_path):
             return storage.url(thumb_file_path)
         return ""
-
-    def __str__(self):
-        return self.printName
-
-    class Meta:
-        db_table = 'school'
+'''
 
 
 class SchoolSession(models.Model):
