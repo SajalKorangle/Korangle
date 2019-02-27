@@ -47,6 +47,9 @@ export class CreateSchoolServiceAdapter {
         if (!data.address) {
             data.address = "-";
         }
+        if (!data.affiliationNumber) {
+            data.affiliationNumber = null;
+        }
         data.mobileNumber = this.vm.user.username;
         data.primaryThemeColor = "green";
         data.secondaryThemeColor = "warning";

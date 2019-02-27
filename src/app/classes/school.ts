@@ -9,6 +9,7 @@ export class School {
     printName: string;
     //logo: string;
     profileImage: string;
+    principalSignatureImage: string;
     mobileNumber: number;
     primaryThemeColor = 'red';
     secondaryThemeColor = 'danger';
@@ -16,6 +17,7 @@ export class School {
     address = '';
     currentSessionDbId: number;
     registrationNumber: string;
+    affiliationNumber: string;
 
     headerSize: string;
 
@@ -40,12 +42,14 @@ export class School {
         }*/
         this.mobileNumber = schoolData.mobileNumber;
         this.profileImage = schoolData.profileImage;
+        this.principalSignatureImage = schoolData.principalSignatureImage;
         this.primaryThemeColor = schoolData.primaryThemeColor;
         this.secondaryThemeColor = schoolData.secondaryThemeColor;
         this.diseCode = schoolData.schoolDiseCode;
         this.address = schoolData.schoolAddress;
         this.currentSessionDbId = schoolData.currentSessionDbId;
         this.registrationNumber = schoolData.registrationNumber;
+        this.affiliationNumber = schoolData.affiliationNumber;
 
         this.headerSize = schoolData.headerSize;
 

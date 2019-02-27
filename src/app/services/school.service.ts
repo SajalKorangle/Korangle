@@ -15,6 +15,14 @@ export class SchoolService extends CommonServiceRequirements {
         return super.putData(data, token, '/school/' + data['dbId']);
     }
 
+    uploadProfileImage(file: any, data: any, token: any): Promise<any> {
+        return super.fileData(file, token, '/school/' + data['dbId'] + '/profile-image');
+    }
+
+    uploadPrincipalSignatureImage(file: any, data: any, token: any): Promise<any> {
+        return super.fileData(file, token, '/school/' + data['dbId'] + '/principal-signature-image');
+    }
+
     createSchoolProfile(data: any, token: any): Promise<any> {
         return super.postData(data, token, '/school/school-profile');
     }

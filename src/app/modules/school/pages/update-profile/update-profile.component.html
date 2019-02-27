@@ -2,8 +2,214 @@
 
     <ng-container *ngIf="!isLoading">
 
-        <!-- Name -->
         <div class="row">
+
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+
+                <img *ngIf="user.activeSchool.profileImage"
+                     src="{{user.activeSchool.profileImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!user.activeSchool.profileImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+                <br/>
+
+                <input type='file'
+                       (change)="onProfileImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #imageInput>
+
+                <a (click)="imageInput.click()"
+                   style="cursor: pointer">Select & Upload Logo</a>
+
+            </div>
+
+            <div class="col-md-9">
+
+                <!-- Name, Print Name -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.printName" (ngModelChange)="currentName=$event">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Print Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.printName" (ngModelChange)="currentPrintName=$event">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dise Code, Registration No. -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Dise Code</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.diseCode" (ngModelChange)="currentDiseCode=$event">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Registration No.</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.registrationNumber"
+                                   (ngModelChange)="currentRegistrationNumber=$event">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Affiliation No.</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.affiliationNumber" (ngModelChange)="currentAffiliationNumber=$event">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+
+                <img *ngIf="user.activeSchool.profileImage"
+                     src="{{user.activeSchool.profileImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!user.activeSchool.profileImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+                <br/>
+
+                <input type='file'
+                       (change)="onProfileImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #imageInputTwo>
+
+                <a (click)="imageInputTwo.click()"
+                   style="cursor: pointer">Select & Upload Logo</a>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+
+                <img *ngIf="user.activeSchool.principalSignatureImage"
+                     src="{{user.activeSchool.principalSignatureImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!user.activeSchool.principalSignatureImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+                <br/>
+
+                <input type='file'
+                       (change)="onPrincipalSignatureImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #principalSignatureImageInput>
+
+                <a (click)="principalSignatureImageInput.click()"
+                   style="cursor: pointer">Select & Upload Logo</a>
+
+            </div>
+
+            <div class="col-md-9">
+
+                <!-- Working Session, Medium, Mobile Number -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field style="margin-top: 22px; width: 100%;">
+                            <mat-select placeholder="Working Session"
+                                        [ngModel]="selectedWorkingSession"
+                                        (ngModelChange)="currentWorkingSession=$event">
+                                <mat-option  *ngFor="let session of sessionList;" [value]="session">
+                                    {{session.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field style="margin-top: 22px; width: 100%;">
+                            <mat-select placeholder="Medium"
+                                        [(ngModel)]="currentMedium">
+                                <mat-option  *ngFor="let medium of mediumList;"  [value]="medium">
+                                    {{medium}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Mobile No.</label>
+                            <input type="number"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.mobileNumber" (ngModelChange)="currentMobileNumber=$event">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Address</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.address" (ngModelChange)="currentAddress=$event">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+
+                <img *ngIf="user.activeSchool.principalSignatureImage"
+                     src="{{user.activeSchool.principalSignatureImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!user.activeSchool.principalSignatureImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+                <br/>
+
+                <input type='file'
+                       (change)="onPrincipalSignatureImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #principalSignatureImageInputTwo>
+
+                <a (click)="principalSignatureImageInputTwo.click()"
+                   style="cursor: pointer">Principal Signature</a>
+
+            </div>
+
+        </div>
+
+        <!-- Name -->
+        <!-- div class="row">
             <div class="col-md-3">
                 Name
             </div>
@@ -12,10 +218,10 @@
                         [ngModel]="user.activeSchool.name"
                         (ngModelChange)="currentName=$event" />
             </div>
-        </div>
+        </div -->
 
         <!-- Print Name -->
-        <div class="row">
+        <!-- div class="row">
             <div class="col-md-3">
                 Print Name
             </div>
@@ -24,10 +230,10 @@
                         [ngModel]="user.activeSchool.printName"
                         (ngModelChange)="currentPrintName=$event"/>
             </div>
-        </div>
+        </div -->
 
         <!-- Mobile Number -->
-        <div class="row">
+        <!-- div class="row">
             <div class="col-md-3">
                 Mobile No.
             </div>
@@ -36,10 +242,10 @@
                         [ngModel]="user.activeSchool.mobileNumber"
                         (ngModelChange)="currentMobileNumber=$event"/>
             </div>
-        </div>
+        </div -->
 
         <!-- Dise Code -->
-        <div class="row">
+        <!-- div class="row">
             <div class="col-md-3">
                 Dise Code
             </div>
@@ -48,10 +254,10 @@
                         [ngModel]="user.activeSchool.diseCode"
                         (ngModelChange)="currentDiseCode=$event"/>
             </div>
-        </div>
+        </div -->
 
         <!-- Registration No. -->
-        <div class="row">
+        <!-- div class="row">
             <div class="col-md-3">
                 Registration No.
             </div>
@@ -60,10 +266,10 @@
                         [ngModel]="user.activeSchool.registrationNumber"
                         (ngModelChange)="currentRegistrationNumber=$event"/>
             </div>
-        </div>
+        </div -->
 
         <!-- Medium -->
-        <div class="row">
+        <!-- div class="row">
             <div class="col-md-3">
                 Medium
             </div>
@@ -76,10 +282,10 @@
                     </option>
                 </select>
             </div>
-        </div>
+        </div -->
 
         <!-- Address -->
-        <div class="row">
+        <!-- div class="row">
             <div class="col-md-3">
                 Address
             </div>
@@ -88,10 +294,10 @@
                         [ngModel]="user.activeSchool.address"
                         (ngModelChange)="currentAddress=$event"/>
             </div>
-        </div>
+        </div -->
 
         <!-- Current Session -->
-        <div class="row">
+        <!-- div class="row">
             <div class="col-md-3">
                 Working Session:
             </div>
@@ -105,9 +311,26 @@
                     </option>
                 </select>
             </div>
-        </div>
+        </div -->
 
         <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateSchoolProfile()">Update</button>
+
+        <br/>
+
+        <a href="https://www110.lunapic.com/editor/" target="_blank">Make Signature Image transparent from here.</a>
+
+        <div class="row">
+            <div class="col-xs-12">
+                Instructions :- <br/>
+                1. Click on above link. (a new page will open in another tab)<br/>
+                2. Go to File > Upload Image (a new page will open)<br/>
+                3. Click on Choose File and select the image you want to make transparent. (wait for it to upload)<br/>
+                4. Go to Edit > Transparent Background.<br/>
+                5. Click on Image. (website will reload with a transparent image). <br/>
+                6. Go to File > Save Image.<br/>
+                7. Click on the green button "Save as png". (now you have your transparent image)<br/>
+            </div>
+        </div>
 
     </ng-container>
 
