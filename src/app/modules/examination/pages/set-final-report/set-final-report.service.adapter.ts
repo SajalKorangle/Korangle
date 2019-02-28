@@ -159,6 +159,16 @@ export class SetFinalReportServiceAdapter {
 
          let data = this.vm.newReportCardMapping;
 
+         Object.keys(data).forEach(key => {
+             if (key.match('Start') || key.match('End')) {
+                 if (data[key] == '') {
+                     data[key] = null;
+                 }
+             }
+         });
+
+         console.log(data);
+
         this.vm.isLoading = true;
 
         this.vm.examinationService.updateMpBoardReportCardMapping(data, this.vm.user.jwt).then(value => {
