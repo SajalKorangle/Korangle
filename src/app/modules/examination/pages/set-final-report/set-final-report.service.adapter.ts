@@ -167,8 +167,6 @@ export class SetFinalReportServiceAdapter {
              }
          });
 
-         console.log(data);
-
         this.vm.isLoading = true;
 
         this.vm.examinationService.updateMpBoardReportCardMapping(data, this.vm.user.jwt).then(value => {
