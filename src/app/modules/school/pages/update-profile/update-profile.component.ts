@@ -85,7 +85,7 @@ export class UpdateProfileComponent implements OnInit {
             this.user.activeSchool.printName = schoolProfile.printName;
             this.user.activeSchool.mobileNumber = schoolProfile.mobileNumber;
             this.user.activeSchool.registrationNumber = schoolProfile.registrationNumber;
-            this.user.activeSchool.affiliationNumber = schoolProfile.currentAffiliationNumber;
+            this.user.activeSchool.affiliationNumber = schoolProfile.affiliationNumber;
             this.user.activeSchool.medium = schoolProfile.medium;
             this.user.activeSchool.diseCode = schoolProfile.diseCode;
             this.user.activeSchool.address = schoolProfile.address;
