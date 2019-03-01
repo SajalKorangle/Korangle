@@ -206,7 +206,7 @@
                         <tr>
                             <td class="updownBorder leftBorder bold" style="padding: 5px;">Total</td>
                             <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMaxMarks(student)}}</td>
-                            <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMarks(student)}}</td>
+                            <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMarks(student) | number: '1.0-1'}}</td>
                             <td class="updownBorder rightBorder bold" style="padding: 5px;" align="center">{{getGrade(getOverallStudentMarks(student),getOverallStudentMaxMarks(student))}}</td>
                         </tr>
                         <tr>
