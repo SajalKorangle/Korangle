@@ -32,6 +32,7 @@ export class AmountInWordsPipe implements PipeTransform {
     }
 
     getNumberInWords(numerical: number): string {
+        numerical = numerical - (numerical%1);
         switch (numerical) {
             case 1: return 'One';
             case 2: return 'Two';
