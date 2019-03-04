@@ -326,6 +326,7 @@ export class CreateTestServiceAdapter {
         tempTest['onlyGrade'] = this.isOnlyGrade(test.parentSubject);
         tempTest['newDate'] = this.vm.formatDate(test.startTime, '');
         tempTest['newStartTime'] = this.extractTime(test.startTime);
+        console.log(tempTest);
         tempTest['newEndTime'] = this.extractTime(test.endTime);
         tempTest['newMaximumMarks'] = test.maximumMarks;
         this.vm.selectedExamination.selectedClass.selectedSection.testList.push(tempTest);
@@ -334,7 +335,7 @@ export class CreateTestServiceAdapter {
     extractTime(dateStr: any): any {
         let d = new Date(dateStr);
 
-        let hour = '' + d.getHours();
+        let hour = ((d.getHours()<10)?'0':'') + d.getHours();
         let minute = '' + d.getMinutes();
 
         return hour+":"+minute;
