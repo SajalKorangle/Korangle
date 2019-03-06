@@ -378,4 +378,32 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
         return this.getTotalMarksObtained(student)/this.getTotalMaximumMarks(student)*100;
     }
 
+    getThumbImage(row: any): string {
+        if (row.profileImage) {
+            let url = row.profileImage;
+            if (url.substr(url.length-4) === "main") {
+                return url + "_thumb";
+            }
+            return url.substr(0, url.length-4) + "_thumb" + url.substr(url.length-4);
+        } else {
+            return '';
+        }
+    }
+
+    getSessionName(sessionId: any): any {
+        let result = '';
+        switch(sessionId) {
+            case 1:
+                result = 'Session 2017-18';
+                break;
+            case 2:
+                result = 'Session 2018-19';
+                break;
+            case 3:
+                result = 'Session 2019-20';
+                break;
+        }
+        return result;
+    }
+
 }

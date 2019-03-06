@@ -39,6 +39,17 @@
                         style="margin-left: 20px;"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="serviceAdapter.getStudentTestDetails()">GET</button>
+
+                <br/><br/>
+                <ng-container *ngIf="selectedExamination">
+                    <ng-container *ngFor="let student of selectedExamination.selectedClass.selectedSection.studentList">
+                        <img src="{{getThumbImage(student)}}"
+                             style="border: 1px solid black;
+                                     margin-right: 5px;
+                                     width: 20px; height: 20px;"/>
+                    </ng-container>
+                </ng-container>
+
             </div>
 
             <div class="col-md-9" *ngIf="examinationClassSectionList.length === 0">
