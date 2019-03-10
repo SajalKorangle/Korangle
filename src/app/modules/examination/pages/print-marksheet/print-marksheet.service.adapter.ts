@@ -163,16 +163,22 @@ export class PrintMarksheetServiceAdapter {
 
                                         let tempSubject = this.copyObject(subject);
 
-                                        tempSubject['mainSubject'] = this.isMainSubject(tempSubject);
+                                        tempSubject['mainSubject'] = this.isMainSubject(tempSubject, classs.dbId);
 
-                                        tempSubject['onlyGrade'] = this.isOnlyGrade(tempSubject);
+                                        tempSubject['onlyGrade'] = this.isOnlyGrade(tempSubject, classs.dbId);
 
                                         tempSubject['testDetails'] = testDetails;
+
+                                        tempSubject['orderNumber'] = this.getOrderNumber(tempSubject, classs.dbId);
 
                                         tempSection['subjectList'].push(tempSubject);
 
                                     }
 
+                                });
+
+                                tempSection['subjectList'] = tempSection['subjectList'].sort((a,b) => {
+                                    return a.orderNumber - b.orderNumber;
                                 });
 
                                 tempClass['sectionList'].push(tempSection);
@@ -194,13 +200,12 @@ export class PrintMarksheetServiceAdapter {
             }
         });
         this.vm.selectedExamination = this.vm.examinationClassSectionList[0];
-
     }
 
-    isMainSubject(subject: any): boolean {
+    isMainSubject(subject: any, classDbId: any): boolean {
         let result = true;
         this.classSubjectList.every(item => {
-            if (subject.id === item.parentSubject && item.mainSubject === false) {
+            if (subject.id === item.parentSubject && classDbId === item.parentClass && item.mainSubject === false) {
                 result = false;
                 return false;
             }
@@ -209,11 +214,23 @@ export class PrintMarksheetServiceAdapter {
         return result;
     }
 
-    isOnlyGrade(subject: any): boolean {
+    isOnlyGrade(subject: any, classDbId: any): boolean {
         let result = true;
         this.classSubjectList.every(item => {
-            if (subject.id === item.parentSubject && item.onlyGrade === false) {
+            if (subject.id === item.parentSubject && classDbId === item.parentClass && item.onlyGrade === false) {
                 result = false;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    getOrderNumber(subject: any, classDbId: any): any {
+        let result = 0;
+        this.classSubjectList.every(item => {
+            if (subject.id === item.parentSubject && classDbId === item.parentClass) {
+                result = item.orderNumber;
                 return false;
             }
             return true;

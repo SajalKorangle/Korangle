@@ -125,6 +125,18 @@
             No students in this session.
         </ng-container>
 
+        <img src="{{user.activeSchool.principalSignatureImage}}"
+             *ngIf="user.activeSchool.principalSignatureImage != null"
+             style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/>
+        <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
+             style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/ -->
+
     </ng-container>
 
     <ng-container *ngIf="isLoading">

@@ -127,9 +127,22 @@
             </div>
         </div>
 
+        <!-- Principal Signature Image -->
+        <img src="{{user.activeSchool.principalSignatureImage}}"
+             *ngIf="user.activeSchool.principalSignatureImage != null"
+             style="position: absolute;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/>
+        <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
+             style="position: absolute;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/ -->
+
         <!-- Signature -->
         <div class="row no-gutters" style="position: absolute; bottom: 0px; width: 100%;">
-            <div class="col-xs-12 custom-padding" style="padding-right: 20px" align="end">
+            <div class="col-xs-12 custom-padding" style="padding-right: 40px" align="end">
                 (Signature)
             </div>
         </div>
