@@ -16,8 +16,8 @@
              style="border-radius: 2px; position: absolute;
              top: 160px; left: 210px;
              width: 300px; height: 300px;
-             opacity: 0.05;
-             filter: grayscale(100%);
+             opacity: 0.05 !important;
+             filter: grayscale(100%) !important;
              z-index: 10;"/>
 
         <!-- Reg. No. , Dise Code -->
@@ -31,7 +31,7 @@
         </div>
 
         <!-- School Name -->
-        <div class="row " style="margin-top: 8px;">
+        <div class="row " style="margin-top: 0px !important;">
             <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px;">
             <span style="background-color: yellow; font-size: 24px">
                 {{user.activeSchool.printName}}
@@ -40,55 +40,62 @@
         </div>
 
         <!-- Address -->
-        <div class="row " style="margin-top: 0px;">
+        <div class="row " style="margin-top: 0px !important;">
             <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px; font-size: 14px;">
                 {{user.activeSchool.address}}
             </div>
         </div>
 
         <!-- Examination -->
-        <div class="row " style="margin-top: 5px">
+        <div class="row " style="margin-top: 5px !important;">
             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
                 <span style="font-size: 17px;"><u>{{examination.name}}</u></span><br/>
             </div>
         </div>
 
         <!-- Session -->
-        <div class="row no-gutters" style="margin-top: 5px">
+        <div class="row no-gutters" style="margin-top: 1px !important;">
             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
                 <span style="font-size: 15px">{{getSessionName(user.activeSchool.currentSessionDbId)}}</span>
             </div>
         </div>
 
         <!-- Hall Ticket -->
-        <div class="row " style="margin-top: 10px">
+        <div class="row " style="margin-top: 5px !important;">
             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
                 <span style="font-size: 21px;"><u>Hall Ticket</u></span><br/>
             </div>
         </div>
 
-        <!-- Name -->
+        <!-- Name, Roll No. -->
         <div class="row" style="margin-right: 0px; margin-top: 5px;">
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 Name <span style="float: right">:</span>
             </div>
-            <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+            <div class="col-xs-5" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
                 {{ student.name | titlecase }}
+            </div>
+            <div class="col-xs-4" align="right">
+                Roll No. : {{student.rollNumber}}
             </div>
         </div>
 
         <!-- Father's Name -->
         <div class="row" style="margin-right: 0px;">
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 Father's Name <span style="float: right">:</span>
             </div>
-            <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+            <div class="col-xs-5" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
                 {{ student.fathersName | titlecase }}
+            </div>
+            <div class="col-xs-4" align="right">
+                Standard : {{student.className}}
+                <ng-container *ngIf="student.sectionName">, {{student.sectionName}}</ng-container>
             </div>
         </div>
 
         <!-- Scholar No, Standard -->
-        <div class="row">
+        <!-- div class="row">
             <div class="col-xs-6">
                 Roll No. : {{student.rollNumber}}
             </div>
@@ -96,36 +103,65 @@
                 Standard : {{student.className}}
                 <ng-container *ngIf="student.sectionName">, {{student.sectionName}}</ng-container>
             </div>
-        </div>
+        </div -->
 
-        <!-- S No. , Particulars, Amount -->
-        <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black; margin-top: 5px;" >
-            <!-- div class="col-xs-2">
-                <span style="font-weight: 400;">S. No.</span>
-            </div -->
-            <div class="col-xs-4" >
-                <span style="font-weight: 400;">Subject</span>
+        <!-- Subject , Date, Timings -->
+        <ng-container *ngIf="student.testList.length < 9">
+            <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black; margin-top: 5px;" >
+                <div class="col-xs-6" >
+                    <span style="font-weight: 400;">Subject</span>
+                </div>
+                <div class="col-xs-3"  align="center">
+                    <span style="font-weight: 400;">Date</span>
+                </div>
+                <div class="col-xs-3"  align="right" style="padding-right: 65px;">
+                    <span style="font-weight: 400;">Timings</span>
+                </div>
             </div>
-            <div class="col-xs-4"  align="center">
-                <span style="font-weight: 400;">Date</span>
+            <div class="row" *ngFor="let test of student.testList; let i=index;">
+                <div class="col-xs-6">
+                    {{test.subjectName}}
+                </div>
+                <div class="col-xs-3" align="center">
+                    {{test.startTime | date: 'dd - MMM - yyyy'}}
+                </div>
+                <div class="col-xs-3" align="right">
+                    {{test.startTime | date: 'hh:mm a'}} - {{test.endTime | date: 'hh:mm a'}}
+                </div>
             </div>
-            <div class="col-xs-4"  align="right" style="padding-right: 65px;">
-                <span style="font-weight: 400;">Timings</span>
-            </div>
-        </div>
+        </ng-container>
 
-        <div class="row" *ngFor="let test of student.testList; let i=index;">
-            <!-- div class="col-xs-2" align="center">{{i+1}}.</div -->
-            <div class="col-xs-4">
-                {{test.subjectName}}
+        <!-- Subject , Date, Timings -->
+        <ng-container *ngIf="student.testList.length >= 9">
+            <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black; margin-top: 5px;" >
+                <div class="col-xs-7" >
+                    <span style="font-weight: 400;">Subject</span>
+                </div>
+                <div class="col-xs-2"  align="center">
+                    <span style="font-weight: 400;">Date</span>
+                </div>
+                <div class="col-xs-3"  align="right" style="padding-right: 65px;">
+                    <span style="font-weight: 400;">Timings</span>
+                </div>
             </div>
-            <div class="col-xs-4" align="center">
-                {{test.startTime | date: 'dd - MMM - yyyy'}}
+            <div class="row" *ngFor="let test of student.testList; let i=index;"
+                 style="font-size: 12px !important;
+                        margin-top: 2px !important;
+                        padding-top: 0px !important;
+                        padding-bottom: 0px !important;
+                        margin-bottom: 0px !important;">
+                <!-- div class="col-xs-2" align="center">{{i+1}}.</div -->
+                <div class="col-xs-7" style="line-height: normal !important;">
+                    {{test.subjectName}}
+                </div>
+                <div class="col-xs-2" align="center" style="line-height: normal !important;">
+                    {{test.startTime | date: 'dd - MMM - yyyy'}}
+                </div>
+                <div class="col-xs-3" align="right" style="line-height: normal !important;">
+                    {{test.startTime | date: 'hh:mm a'}} - {{test.endTime | date: 'hh:mm a'}}
+                </div>
             </div>
-            <div class="col-xs-4" align="right">
-                {{test.startTime | date: 'hh:mm a'}} - {{test.endTime | date: 'hh:mm a'}}
-            </div>
-        </div>
+        </ng-container>
 
         <!-- Principal Signature Image -->
         <img src="{{user.activeSchool.principalSignatureImage}}"
