@@ -297,6 +297,11 @@ export class UpdateMarksServiceAdapter {
                 return true;
             }
             return false;
+        }).sort((a,b) => {
+            if (a.rollNumber && b.rollNumber) {
+                return (a.rollNumber.toString() < b.rollNumber.toString())? -1:1;
+            }
+            return 0;
         }).forEach(item => {
             let tempItem = {};
             tempItem = this.copyObject(item);
