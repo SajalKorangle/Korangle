@@ -19,6 +19,8 @@ export class School {
     registrationNumber: string;
     affiliationNumber: string;
 
+    opacity: number;
+
     headerSize: string;
 
     medium: string;
@@ -47,6 +49,7 @@ export class School {
         this.secondaryThemeColor = schoolData.secondaryThemeColor;
         this.diseCode = schoolData.schoolDiseCode;
         this.address = schoolData.schoolAddress;
+        this.opacity = schoolData.opacity;
         this.currentSessionDbId = schoolData.currentSessionDbId;
         this.registrationNumber = schoolData.registrationNumber;
         this.affiliationNumber = schoolData.affiliationNumber;

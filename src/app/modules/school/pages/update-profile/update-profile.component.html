@@ -178,6 +178,14 @@
                                    [ngModel]="user.activeSchool.address" (ngModelChange)="currentAddress=$event">
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Opacity (0 to 1)</label>
+                            <input type="number"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.opacity" (ngModelChange)="currentOpacity=$event">
+                        </div>
+                    </div>
                 </div>
 
             </div>

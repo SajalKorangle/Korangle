@@ -18,6 +18,8 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
     studentList: any;
     examination: any;
 
+    opacity: any;
+
     printHallTicketComponentSubscription: any;
 
     constructor(private cdRef: ChangeDetectorRef) { }
@@ -28,6 +30,9 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
             console.log(value);
             this.studentList = value.studentList;
             this.examination = value.examination;
+            this.opacity = {
+                opacity: this.user.activeSchool.opacity,
+            };
             this.viewChecked = false;
         });
     }

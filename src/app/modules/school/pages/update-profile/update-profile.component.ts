@@ -26,6 +26,7 @@ export class UpdateProfileComponent implements OnInit {
     currentMedium: any;
     currentDiseCode: any;
     currentAddress: any;
+    currentOpacity: any;
 
     currentWorkingSession: any;
     selectedWorkingSession: any;
@@ -45,6 +46,7 @@ export class UpdateProfileComponent implements OnInit {
         this.currentMedium = this.user.activeSchool.medium;
         this.currentDiseCode = this.user.activeSchool.diseCode;
         this.currentAddress = this.user.activeSchool.address;
+        this.currentOpacity = this.user.activeSchool.opacity;
 
 
         this.schoolService.getSessionList(this.user.jwt).then( sessionList => {
@@ -76,6 +78,7 @@ export class UpdateProfileComponent implements OnInit {
             'medium': this.currentMedium,
             'diseCode': this.currentDiseCode,
             'address': this.currentAddress,
+            'opacity': this.currentOpacity,
             'currentSessionDbId': this.currentWorkingSession.dbId,
         };
         this.isLoading = true;
@@ -89,6 +92,7 @@ export class UpdateProfileComponent implements OnInit {
             this.user.activeSchool.medium = schoolProfile.medium;
             this.user.activeSchool.diseCode = schoolProfile.diseCode;
             this.user.activeSchool.address = schoolProfile.address;
+            this.user.activeSchool.opacity = schoolProfile.opacity;
             this.user.activeSchool.currentSessionDbId = schoolProfile.currentSessionDbId;
             this.selectedWorkingSession = this.getSessionFromList(schoolProfile.currentSessionDbId);
             alert('School Profile updated successfully');
