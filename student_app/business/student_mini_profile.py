@@ -31,6 +31,8 @@ def get_student_mini_profile(student_section_object):
 
     student_response['rollNumber'] = student_section_object.rollNumber
 
+    student_response['gender'] = student_object.gender
+
     return student_response
 
 
