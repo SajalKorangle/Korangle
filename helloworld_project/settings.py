@@ -27,7 +27,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = '59g0wy_6v_=f7l8getixb1b87!ee_^#lajh^zli2b+9zkvm0jw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost','ec2-52-55-52-136.compute-1.amazonaws.com', '52.55.52.136']
 
