@@ -209,6 +209,8 @@ def get_school_data_by_object(school_object):
     school_data['affiliationNumber'] = school_object.affiliationNumber
     school_data['headerSize'] = school_object.headerSize
 
+    school_data['opacity'] = school_object.opacity
+
     school_data['medium'] = school_object.medium
 
     school_data['employeeId'] = None

@@ -11,6 +11,7 @@ def get_school_profile_by_object(school_object):
     school_profile_response['printName'] = school_object.printName
     school_profile_response['diseCode'] = school_object.diseCode
     school_profile_response['address'] = school_object.address
+    school_profile_response['opacity'] = school_object.opacity
     school_profile_response['registrationNumber'] = school_object.registrationNumber
     school_profile_response['affiliationNumber'] = school_object.affiliationNumber
     school_profile_response['medium'] = school_object.medium
@@ -28,6 +29,7 @@ def update_school_profile(data):
     school_object.printName = data['printName']
     school_object.diseCode = data['diseCode']
     school_object.address = data['address']
+    school_object.opacity = data['opacity']
     school_object.registrationNumber = data['registrationNumber']
     school_object.affiliationNumber = data['affiliationNumber']
     school_object.medium = data['medium']
