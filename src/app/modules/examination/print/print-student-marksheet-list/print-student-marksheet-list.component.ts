@@ -132,7 +132,8 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     isMultipleTest(student: any): boolean {
-        let result = false;
+        return this.isOralIncluded(student) || this.isPracticalIncluded(student);
+        /*let result = false;
 
         student.subjectList.every(item => {
             if (item.testDetails.length > 1) {
@@ -142,7 +143,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
             return true;
         });
 
-        return result;
+        return result;*/
     }
 
     getSubjectOralMaxMarks(subject: any): any {
