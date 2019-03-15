@@ -240,3 +240,16 @@ class MpBoardReportCardMapping(models.Model):
     class Meta:
         db_table = 'mp_board_report_card_mapping'
         unique_together = ('parentSchool', 'parentSession')
+
+
+class CCEMarks(models.Model):
+
+    parentStudent = models.ForeignKey(Student, models.PROTECT, null=False, default=0, verbose_name='parentStudent')
+    parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
+    marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
+
+    class Meta:
+        db_table = 'cce_marks'
+        unique_together = ('parentStudent', 'parentSession')
+
+
