@@ -13,6 +13,7 @@ import { ExaminationRoutingModule } from './examination.routing';
 
 import { ExaminationService } from '../../services/examination.service';
 import {UpdateMarksComponent} from './pages/update-marks/update-marks.component';
+import {UpdateCceMarksComponent} from './pages/update-cce-marks/update-cce-marks.component';
 import {PrintMarksheetComponent} from './pages/print-marksheet/print-marksheet.component';
 import {GradeStudentFieldsComponent} from './pages/grade-student-fields/grade-student-fields.component';
 import {SetFinalReportComponent} from './pages/set-final-report/set-final-report.component';
@@ -29,6 +30,7 @@ import {GenerateGoshwaraComponent} from './pages/generate-goshwara/generate-gosh
         CreateTestComponent,
         GenerateHallTicketComponent,
         UpdateMarksComponent,
+        UpdateCceMarksComponent,
         PrintMarksheetComponent,
         GradeStudentFieldsComponent,
         SetFinalReportComponent,
