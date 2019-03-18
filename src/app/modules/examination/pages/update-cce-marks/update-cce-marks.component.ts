@@ -21,20 +21,11 @@ export class UpdateCceMarksComponent implements OnInit {
 
     @Input() user;
 
-    showTestDetails = false;
+    classStudentCCEMarksList: any;
 
-    selectedExamination: any;
-    examinationClassSectionSubjectList: any;
-
-    student_mini_profile_list: any;
-
-    subjectList: any;
-
-    testTypeList = TEST_TYPE_LIST;
+    selectedClass: any;
 
     serviceAdapter: UpdateCceMarksServiceAdapter;
-
-    isInitialLoading = false;
 
     isLoading = false;
 
@@ -51,20 +42,7 @@ export class UpdateCceMarksComponent implements OnInit {
     }
 
     detectChanges(): void {
-        this.showTestDetails = false;
         this.cdRef.detectChanges();
-    }
-
-    getStudentName(studentId: any): any {
-        let result = '';
-        this.student_mini_profile_list.every(item => {
-            if (item.dbId === studentId) {
-                result = item.name;
-                return false;
-            }
-            return true;
-        });
-        return result;
     }
 
     getFilteredStudentList(list: any): any {

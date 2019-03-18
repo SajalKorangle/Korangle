@@ -31,6 +31,7 @@ import { PrintStudentMarksheetListComponent } from './modules/examination/print/
 import { PrintSalarySheetComponent } from './modules/salary/print/print-salary-sheet/print-salary-sheet.component';
 import { PrintStudentComprehensiveFinalReportListComponent } from './modules/examination/print/print-student-comprehensive-final-report-list/print-student-comprehensive-final-report-list.component';
 import { PrintStudentElegantFinalReportListComponent } from './modules/examination/print/print-student-elegant-final-report-list/print-student-elegant-final-report-list.component';
+import { PrintStudentHigherFinalReportListComponent } from './modules/examination/print/print-student-higher-final-report-list/print-student-higher-final-report-list.component';
 import { PrintStudentClassicFinalReportListComponent } from './modules/examination/print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
 
 @NgModule({
@@ -57,6 +58,7 @@ import { PrintStudentClassicFinalReportListComponent } from './modules/examinati
         PrintSalarySheetComponent,
         PrintStudentComprehensiveFinalReportListComponent,
         PrintStudentElegantFinalReportListComponent,
+        PrintStudentHigherFinalReportListComponent,
         PrintStudentClassicFinalReportListComponent,
         PrintComponent,
 

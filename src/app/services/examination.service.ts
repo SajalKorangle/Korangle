@@ -36,27 +36,6 @@ export class ExaminationService extends CommonServiceRequirements {
             url += '&'+key+'='+data[key];
         });
         return super.getData(token, url);
-        /*if ('examinationList' in data) {
-            let url = '/examinations/tests/batch' +
-                '?examinationList=' + data['examinationList'].join() +
-                '&subjectList=' + data['subjectList'].join() +
-                '&classList=' + data['classList'].join() +
-                '&sectionList=' + data['sectionList'].join() +
-                '&startTimeList=' + data['startTimeList'].join() +
-                '&endTimeList=' + data['endTimeList'].join() +
-                '&testTypeList=' + data['testTypeList'].join() +
-                '&maximumMarksList=' + data['maximumMarksList'].join();
-            return super.getData(token, url);
-        } else {
-            if (data['schoolId'] && data['sessionId']) {
-                return super.getData(token, '/examinations/tests/batch?sessionId='+data['sessionId']
-                    +'&schoolId='+data['schoolId']);
-            } else if (data['examinationId'] && data['classId'] && data['sectionId']){
-                return super.getData(token, '/examinations/tests/batch?examinationId='+data['examinationId']
-                    +'&classId='+data['classId']
-                    +'&sectionId='+data['sectionId']);
-            }
-        }*/
     }
 
     createTest(data: any, token: any): Promise<any> {
@@ -92,6 +71,23 @@ export class ExaminationService extends CommonServiceRequirements {
 
     deleteStudentTestList(data: any, token: any): Promise<any> {
         return super.deleteData(token, '/examinations/student-tests/batch/' + data);
+    }
+
+    // CCE Marks
+    getCCEMarksList(data: any, token: any): Promise<any> {
+        let url = '/examinations/cce-marks/batch?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
+        return super.getData(token, url);
+    }
+
+    createCCEMarksList(data: any, token: any): Promise<any> {
+        return super.postData(data, token, '/examinations/cce-marks/batch');
+    }
+
+    updateCCEMarksList(data: any, token: any): Promise<any> {
+        return super.putData(data, token, '/examinations/cce-marks/batch');
     }
 
     // Student Extra Sub Field

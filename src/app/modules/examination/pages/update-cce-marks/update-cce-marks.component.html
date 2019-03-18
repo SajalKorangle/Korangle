@@ -1,109 +1,76 @@
 <div class="card-content">
 
-    <ng-container *ngIf="!isInitialLoading">
+    <ng-container *ngIf="!isLoading">
 
-        <div class="row">
-            <div class="col-md-9" *ngIf="examinationClassSectionSubjectList.length > 0">
-                <mat-form-field>
-                    <mat-select placeholder="Select Examination"
-                                [ngModel]="selectedExamination"
-                                [disabled]="isLoading"
-                                (ngModelChange)="selectedExamination=$event;detectChanges();">
-                        <mat-option *ngFor='let examination of examinationClassSectionSubjectList;' [value]="examination">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+        <ng-container *ngIf="classStudentCCEMarksList.length > 0">
 
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Class"
-                                [ngModel]="selectedExamination.selectedClass"
-                                (ngModelChange)="selectedExamination.selectedClass=$event;detectChanges();">
-                        <mat-option *ngFor='let classs of selectedExamination.classList;' [value]="classs">
-                            {{classs.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="row">
+                <div class="col-md-9">
+                    <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                        <mat-select placeholder="Select Class"
+                                    [ngModel]="selectedClass"
+                                    (ngModelChange)="selectedClass=$event;detectChanges();">
+                            <mat-option *ngFor='let classs of classStudentCCEMarksList;' [value]="classs">
+                                {{classs.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
 
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Section"
-                                [ngModel]="selectedExamination.selectedClass.selectedSection"
-                                (ngModelChange)="selectedExamination.selectedClass.selectedSection=$event;detectChanges();">
-                        <mat-option *ngFor='let section of selectedExamination.selectedClass.sectionList;' [value]="section">
-                            {{section.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Subject"
-                                [ngModel]="selectedExamination.selectedClass.selectedSection.selectedSubject"
-                                (ngModelChange)="selectedExamination.selectedClass.selectedSection.selectedSubject=$event;detectChanges();">
-                        <mat-option *ngFor='let subject of selectedExamination.selectedClass.selectedSection.subjectList;' [value]="subject">
-                            {{subject.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <button type="submit"
-                        style="margin-left: 20px;"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.getStudentTestDetails()">GET</button>
+                    <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                        <mat-select placeholder="Select Section"
+                                    [ngModel]="selectedClass.selectedSection"
+                                    (ngModelChange)="selectedClass.selectedSection=$event;detectChanges();">
+                            <mat-option *ngFor='let section of selectedClass.sectionList;' [value]="section">
+                                {{section.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
 
-            <div class="col-md-9" *ngIf="examinationClassSectionSubjectList.length === 0">
-                No tests for you to update marks!
-            </div>
-
-        </div>
-
-        <ng-container *ngIf="showTestDetails && !isLoading">
-
-            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
-                <div class="col-md-12"></div>
-            </div>
-
-            <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th>S No.</th>
-                    <th>Student</th>
-                    <th>Roll No.</th>
-                    <th *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedSubject.testDetails">
-                        <span *ngIf="test.testType===null">Max. Marks {{test.maximumMarks}}</span>
-                        <span *ngIf="test.testType!==null">{{test.testType}} Out of {{test.maximumMarks}}</span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let student of getFilteredStudentList(selectedExamination.selectedClass.selectedSection.selectedSubject.studentList); let i=index;">
-                    <td>{{(i+1)}}.</td>
-                    <td>{{student.name}}</td>
-                    <td>{{student.rollNumber}}</td>
-                    <td *ngFor="let test of student.testDetails">
-                        <input type="number"
-                               placeholder="Type marks here"
-                               [(ngModel)]="test.marksObtained"/>
-                    </td>
-                </tr>
-                </tbody>
+            <table>
+                <table class="table table-hover">
+                    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Student</th>
+                        <th>Roll No.</th>
+                        <th>Max. Marks (100)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let student of selectedClass.selectedSection.studentList; let i=index;">
+                        <td>{{(i+1)}}.</td>
+                        <td>{{student.name}}</td>
+                        <td>{{student.rollNumber}}</td>
+                        <td>
+                            <input type="number"
+                                   placeholder="Type marks here"
+                                   [(ngModel)]="student.cceMarksObject.marksObtained"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </table>
-
-            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
-                <div class="col-md-12"></div>
-            </div>
 
             <button type="submit"
                     style="margin-left: 20px;"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.updateStudentTestDetails()">Update</button>
+                    (click)="serviceAdapter.updateCCEMarks()">Update</button>
 
         </ng-container>
 
+        <ng-container *ngIf="classStudentCCEMarksList.length == 0">
+            <div class="row">
+                <div class="col-md-9">
+                    No students in class - 9 and class - 11 for you to update marks!
+                </div>
+            </div>
+        </ng-container>
 
     </ng-container>
 
-    <ng-container *ngIf="isLoading || isInitialLoading">
+    <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
 

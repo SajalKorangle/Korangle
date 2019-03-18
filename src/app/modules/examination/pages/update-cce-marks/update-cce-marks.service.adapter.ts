@@ -7,20 +7,15 @@ export class UpdateCceMarksServiceAdapter {
 
     vm: UpdateCceMarksComponent;
 
-    test_type_list = TEST_TYPE_LIST;
-
     constructor() {}
 
     // Data
-    examinationList: any;
     classList: any;
     sectionList: any;
-    subjectList: any;
-
-    testList: any;
-    classSubjectList: any;
 
     student_mini_profile_list: any;
+
+    cce_marks_list: any;
 
 
     initializeAdapter(vm: UpdateCceMarksComponent): void {
@@ -37,23 +32,7 @@ export class UpdateCceMarksServiceAdapter {
 
     //initialize data
     initializeData(): void {
-        this.vm.isInitialLoading = true;
-
-        let request_examination_data = {
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-            'schoolId': this.vm.user.activeSchool.dbId,
-        };
-
-        let request_class_subject_data = {
-            'subjectList': [],
-            'classList': [],
-            'sectionList': [],
-            'employeeList': [this.vm.user.activeSchool.employeeId],
-            'schoolList': [this.vm.user.activeSchool.dbId],
-            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
-            'mainSubject': [],
-            'onlyGrade': [],
-        };
+        this.vm.isLoading = true;
 
         let request_student_mini_profile_data = {
             'schoolDbId': this.vm.user.activeSchool.dbId,
@@ -61,293 +40,172 @@ export class UpdateCceMarksServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
-            this.vm.subjectService.getSubjectList(this.vm.user.jwt),
-            this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
         ]).then(value => {
 
-            this.examinationList = value[0];
-            this.classList = value[1];
-            this.sectionList = value[2];
-            this.subjectList = value[3];
-            this.classSubjectList = value[4];
-            this.student_mini_profile_list = value[5];
-            this.vm.student_mini_profile_list = value[5];
-
-            let service_list = [];
-
-            let examination_id_list = this.getExaminationIdList();
-
-            this.classSubjectList.forEach(item => {
-
-                let request_class_test_data = {
-                    'examinationList': [examination_id_list],
-                    'subjectList': [item.parentSubject],
-                    'classList': [item.parentClass],
-                    'sectionList': [item.parentDivision],
-                    'startTimeList': [],
-                    'endTimeList': [],
-                    'testTypeList': [],
-                    'maximumMarksList': [],
-                };
-
-                service_list.push(this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt));
-
+            this.classList = value[0];
+            this.sectionList = value[1];
+            this.student_mini_profile_list = value[2].filter(student => {
+                return student.parentTransferCertificate == null;
             });
 
-            Promise.all(service_list).then(value => {
+            let request_cce_marks_data = {
+                'studentList': this.getStudentIdList(),
+                'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
+            };
 
-                this.testList = [];
+            this.vm.examinationService.getCCEMarksList(request_cce_marks_data, this.vm.user.jwt).then(valueTwo => {
 
-                value.forEach(item => {
-                    if (item.length > 0) {
-                        item.forEach(itemTwo => {
-                            this.testList.push(itemTwo);
-                        });
-                    }
-                });
+                this.cce_marks_list = valueTwo;
+                this.populateClassStudentCCEMarksList();
 
-                this.populateExaminationClassSectionSubjectList();
-                this.vm.subjectList = this.subjectList;
-                this.vm.isInitialLoading = false;
-
+                this.vm.isLoading = false;
+            }, error => {
+                this.vm.isLoading = false;
             });
 
         }, error => {
-            this.vm.isInitialLoading = false;
+            this.vm.isLoading = false;
         });
 
     }
 
-    getExaminationIdList(): any {
+    getStudentIdList(): any {
         let id_list = [];
-        this.examinationList.forEach(item => {
-            id_list.push(item.id);
+        this.student_mini_profile_list.filter(student => {
+            return student.className == 'Class - 9' || student.className == 'Class - 11';
+        }).forEach(student => {
+                id_list.push(student.dbId);
         });
+        if (id_list.length === 0) {
+            id_list.push(0);
+        }
         return id_list;
     }
 
-    populateExaminationClassSectionSubjectList(): void {
-        this.vm.examinationClassSectionSubjectList = [];
-        this.examinationList.forEach(examination => {
-            if (this.isExaminationInTestList(examination)) {
-
-                let tempExamination = this.copyObject(examination);
-
-                tempExamination['classList'] = [];
-
-                this.classList.forEach(classs => {
-                    if (this.isExaminationClassInTestList(examination, classs)) {
-
-                        let tempClass = this.copyObject(classs);
-
-                        tempClass['sectionList'] = [];
-
-                        this.sectionList.forEach(section => {
-                            if (this.isExaminationClassSectionInTestList(examination, classs, section)) {
-
-                                let tempSection = this.copyObject(section);
-
-                                tempSection['subjectList'] = [];
-
-                                this.subjectList.forEach(subject => {
-
-                                    let testDetails = this.getTestDetails(examination, classs, section, subject);
-
-                                    if (testDetails.length > 0) {
-
-                                        let tempSubject = this.copyObject(subject);
-
-                                        tempSubject['testDetails'] = testDetails;
-
-                                        tempSection['subjectList'].push(tempSubject);
-
-                                    }
-
-                                });
-
-                                tempSection['selectedSubject'] = tempSection['subjectList'][0];
-
-                                tempClass['sectionList'].push(tempSection);
-
-                            }
-                        });
-
-                        tempClass['selectedSection'] = tempClass['sectionList'][0];
-
-                        tempExamination['classList'].push(tempClass);
-
-                    }
+    populateClassStudentCCEMarksList(): void {
+        this.vm.classStudentCCEMarksList = [];
+        let filteredStudentList = this.student_mini_profile_list.filter(student => {
+            return student.className == 'Class - 9' || student.className == 'Class - 11';
+        });
+        this.classList.filter(classs => {
+            return classs.name == 'Class - 9' || classs.name == 'Class - 11';
+        }).forEach(classs => {
+            let tempClass = this.copyObject(classs);
+            tempClass['sectionList'] = [];
+            this.sectionList.forEach(section => {
+                let tempSection = this.copyObject(section);
+                tempSection['studentList'] = [];
+                filteredStudentList.filter(student => {
+                    return student.className == tempClass.name && student.sectionName == tempSection.name;
+                }).forEach(student => {
+                    let tempStudent = this.copyObject(student);
+                    tempStudent['cceMarksObject'] = this.getCCEMarksObject(student);
+                    tempSection['studentList'].push(tempStudent);
                 });
-
-                tempExamination['selectedClass'] = tempExamination['classList'][0];
-
-                this.vm.examinationClassSectionSubjectList.push(tempExamination);
-
+                if (tempSection['studentList'].length > 0) {
+                    tempClass['sectionList'].push(tempSection);
+                }
+            });
+            if (tempClass['sectionList'].length > 0) {
+                tempClass['selectedSection'] = tempClass['sectionList'][0];
+                this.vm.classStudentCCEMarksList.push(tempClass);
             }
         });
-        this.vm.selectedExamination = this.vm.examinationClassSectionSubjectList[0];
-
-        console.log(this.vm.examinationClassSectionSubjectList);
-
+        this.vm.selectedClass = this.vm.classStudentCCEMarksList[0];
     }
 
-    isExaminationInTestList(examination: any): boolean {
-        let result = false;
-        this.testList.every(item => {
-            if (item.parentExamination === examination.id) {
-                result = true;
-                return false;
-            }
-            return true;
-        });
-        return result
-    }
-
-    isExaminationClassInTestList(examination: any, classs: any): boolean {
-        let result = false;
-        this.testList.every(item => {
-            if (item.parentClass === classs.dbId
-                && item.parentExamination === examination.id) {
-                result = true;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }
-
-    isExaminationClassSectionInTestList(examination: any, classs: any, section: any): boolean {
-        let result = false;
-        this.testList.every(item => {
-            if (item.parentExamination === examination.id
-                && item.parentClass === classs.dbId
-                && item.parentDivision === section.id) {
-                result = true;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }
-
-    getTestDetails(examination: any, classs: any, section: any, subject: any): any {
-        let result = [];
-        this.testList.forEach(item => {
-            if (item.parentExamination === examination.id
-                && item.parentClass === classs.dbId
-                && item.parentDivision === section.id
-                && item.parentSubject === subject.id) {
-                result.push(item);
-            }
-        });
-        return result.sort((a, b) => {
-            if (a.testType === null) {
-                return 0;
-            } else if (b.testType === null) {
-                return 1;
-            }
-            return a.testType - b.testType;
-        });
-    }
-
-
-    // Get Student Test Details
-    getStudentTestDetails(): void {
-
-        this.vm.isLoading = true;
-
-        let request_student_test_data = {
-            'studentList': this.getStudentIdListForSelectedItems(),
-            'subjectList': [this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.id],
-            'examinationList': [this.vm.selectedExamination.id],
-            'marksObtainedList': [],
-            'testTypeList': [],
+    getCCEMarksObject(student: any): any {
+        let result = {
+            'id': 0,
+            'parentStudent': student.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'marksObtained': 0,
         };
-
-        this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt).then(value2 => {
-            this.populateStudentList(value2);
-            this.vm.showTestDetails = true;
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        })
-
-    }
-
-    getStudentIdListForSelectedItems(): any {
-        let id_list = [];
-        this.student_mini_profile_list.forEach(item => {
-            if (item.classDbId === this.vm.selectedExamination.selectedClass.dbId
-                && item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id) {
-                id_list.push(item.dbId);
-            }
-        });
-        return id_list;
-    }
-
-    populateStudentList(student_test_list: any): void {
-        this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject['studentList'] = [];
-        this.student_mini_profile_list.filter(item => {
-            if (item.classDbId === this.vm.selectedExamination.selectedClass.dbId
-                && item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id) {
-                return true;
-            }
-            return false;
-        }).sort((a,b) => {
-            if (a.rollNumber && b.rollNumber) {
-                return (a.rollNumber.toString() < b.rollNumber.toString())? -1:1;
-            }
-            return 0;
+        this.cce_marks_list.filter(item => {
+            return item.parentStudent == student.dbId;
         }).forEach(item => {
-            let tempItem = {};
-            tempItem = this.copyObject(item);
-            tempItem['testDetails'] = this.getStudentTestList(tempItem, student_test_list);
-            this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject['studentList'].push(tempItem);
+            result = item;
         });
-    }
-
-    getStudentTestList(student: any, student_test_list: any): any {
-        let result = [];
-        student_test_list.forEach(item => {
-            if (item.parentStudent === student.dbId) {
-                result.push(item);
-            }
-        });
-        return result.sort((a, b) => {
-            if (a.testType === null) {
-                return 0;
-            } else if (b.testType === null) {
-                return 1;
-            }
-            return a.testType - b.testType;
-        });
+        return result;
     }
 
 
     // Update Student Test Details
-    updateStudentTestDetails(): void {
+    updateCCEMarks(): void {
 
-        let data = [];
-
-        this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(item => {
-            item.testDetails.forEach(itemTwo => {
-                data.push(itemTwo);
-            });
-        });
+        let data_to_add = this.getDataToAdd();
+        let data_to_update = this.getDataToUpdate();
 
         this.vm.isLoading = true;
 
-        this.vm.examinationService.updateStudentTestList(data, this.vm.user.jwt).then(value => {
-            alert('Student Marks updated successfully');
+        let serviceList = [];
+
+        if (data_to_add.length > 0) {
+            serviceList.push(this.vm.examinationService.createCCEMarksList(data_to_add, this.vm.user.jwt));
+        }
+
+        if (data_to_update.length > 0) {
+            serviceList.push(this.vm.examinationService.updateCCEMarksList(data_to_update, this.vm.user.jwt));
+        }
+
+        Promise.all(serviceList).then(value => {
+
+            if (data_to_add.length > 0 && data_to_update.length > 0) {
+                value[1].forEach(item => {
+                    this.cce_marks_list.every(cce_marks => {
+                        if (cce_marks.id == item.id) {
+                            cce_marks.marksObtained = item.marksObtained;
+                            return false;
+                        }
+                        return true;
+                    });
+                });
+                this.cce_marks_list = this.cce_marks_list.concat(value[0]);
+            } else if (data_to_add.length > 0) {
+                this.cce_marks_list = this.cce_marks_list.concat(value[0]);
+            } else {
+                value[0].forEach(item => {
+                    this.cce_marks_list.every(cce_marks => {
+                        if (cce_marks.id == item.id) {
+                            cce_marks.marksObtained = item.marksObtained;
+                            return false;
+                        }
+                        return true;
+                    });
+                });
+            }
+
+            this.vm.selectedClass.selectedSection.studentList.forEach(student => {
+                student['cceMarksObject'] = this.getCCEMarksObject(student);
+            });
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
         });
 
+    }
+
+    getDataToAdd(): any {
+        let data = [];
+        this.vm.selectedClass.selectedSection.studentList.filter(student => {
+            return student.cceMarksObject.id == 0;
+        }).forEach(student => {
+            data.push(student.cceMarksObject);
+        });
+        return data;
+    }
+
+    getDataToUpdate(): any {
+        let data = [];
+        this.vm.selectedClass.selectedSection.studentList.filter(student => {
+            return student.cceMarksObject.id != 0;
+        }).forEach(student => {
+            data.push(student.cceMarksObject);
+        });
+        return data;
     }
 
 }

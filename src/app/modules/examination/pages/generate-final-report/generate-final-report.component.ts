@@ -63,7 +63,14 @@ export class GenerateFinalReportComponent implements OnInit {
             'studentFinalReportList': this.studentFinalReportCardList,
             'reportCardMapping': this.reportCardMapping,
         };
-        if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[2]) {
+        let selectedClassSection = this.getSelectedClassSection();
+        console.log(selectedClassSection);
+        if (selectedClassSection.className == 'Class - 9' ||
+            selectedClassSection.className == 'Class - 10' ||
+            selectedClassSection.className == 'Class - 11' ||
+            selectedClassSection.className == 'Class - 12') {
+            EmitterService.get('print-student-higher-final-report-list').emit(data);
+        } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[2]) {
             EmitterService.get('print-student-comprehensive-final-report-list').emit(data);
         } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[1]) {
             EmitterService.get('print-student-elegant-final-report-list').emit(data);

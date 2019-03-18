@@ -23,6 +23,7 @@ export class GenerateFinalReportServiceAdapter {
     classTestList: any;
     studentTestList: any;
     studentExtraSubFieldList: any;
+    studentCCEMarksList: any;
     studentAttendanceList: any;
 
 
@@ -67,6 +68,8 @@ export class GenerateFinalReportServiceAdapter {
                 const request_examination_data = {
                     'idList': this.getExaminationIdList(),
                 };
+
+                console.log(request_examination_data);
 
                 Promise.all([
                     this.vm.classService.getClassList(this.vm.user.jwt),
@@ -144,6 +147,21 @@ export class GenerateFinalReportServiceAdapter {
             id_list.push(this.reportCardMapping.parentExaminationProject);
         }
 
+        if (this.reportCardMapping.parentExaminationQuarterlyHigh
+            && id_list.indexOf(this.reportCardMapping.parentExaminationQuarterlyHigh) == -1) {
+            id_list.push(this.reportCardMapping.parentExaminationQuarterlyHigh);
+        }
+
+        if (this.reportCardMapping.parentExaminationHalfYearlyHigh
+            && id_list.indexOf(this.reportCardMapping.parentExaminationHalfYearlyHigh) == -1) {
+            id_list.push(this.reportCardMapping.parentExaminationHalfYearlyHigh);
+        }
+
+        if (this.reportCardMapping.parentExaminationFinalHigh
+            && id_list.indexOf(this.reportCardMapping.parentExaminationFinalHigh) == -1) {
+            id_list.push(this.reportCardMapping.parentExaminationFinalHigh);
+        }
+
         return id_list;
     }
 
@@ -200,8 +218,6 @@ export class GenerateFinalReportServiceAdapter {
 
         this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt).then(valueOne => {
 
-            console.log(valueOne);
-
             if (valueOne.length == 0) {
                 alert('No subjects added in class');
                 return;
@@ -239,11 +255,17 @@ export class GenerateFinalReportServiceAdapter {
                 'examinationList': this.getExaminationIdList().join(),
             };
 
+            let request_student_cce_marks_data = {
+                'studentList': this.vm.filteredStudentList.filter(student => {return student.selected;}).map(a => a.dbId).join(),
+                'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
+            };
+
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationService.getCCEMarksList(request_student_cce_marks_data, this.vm.user.jwt));
 
             // Call attendance data from here
             if (this.vm.reportCardMapping.autoAttendance) {
@@ -301,15 +323,36 @@ export class GenerateFinalReportServiceAdapter {
                 this.classTestList = valueTwo[1];
                 this.studentTestList = valueTwo[2];
                 this.studentExtraSubFieldList = valueTwo[3];
+                this.studentCCEMarksList = valueTwo[4];
                 this.studentAttendanceList = [];
                 if (valueTwo.length > 4) {
-                    valueTwo.slice(4, valueTwo.length).forEach(item => {
+                    valueTwo.slice(5, valueTwo.length).forEach(item => {
                         this.studentAttendanceList = this.studentAttendanceList.concat(item);
                     });
                 }
                 this.populateExtraFieldList();
-                this.populateStudentFinalReportCard();
-                console.log(this.vm.studentFinalReportCardList);
+                switch(selectedClassSection['className']) {
+                    case 'Play Group':
+                    case 'Nursery':
+                    case 'L.K.G.':
+                    case 'U.K.G.':
+                    case 'Class - 1':
+                    case 'Class - 2':
+                    case 'Class - 3':
+                    case 'Class - 4':
+                    case 'Class - 5':
+                    case 'Class - 6':
+                    case 'Class - 7':
+                    case 'Class - 8':
+                        this.populateStudentFinalReportCard();
+                        break;
+                    case 'Class - 9':
+                    case 'Class - 10':
+                    case 'Class - 11':
+                    case 'Class - 12':
+                        this.populateStudentFinalReportCardHigh();
+                        break;
+                }
                 this.vm.printStudentFinalReport();
                 this.vm.isLoading = false;
             }, error => {
@@ -396,6 +439,48 @@ export class GenerateFinalReportServiceAdapter {
                     } else {
                         student[key]['attendanceData'] = this.getStudentAttendanceExamData(student.dbId, key);
                     }
+                }
+            });
+        });
+    }
+
+    populateStudentFinalReportCardHigh(): void {
+        this.vm.studentFinalReportCardList = this.vm.filteredStudentList.filter(student => {return student.selected;});
+        this.vm.studentFinalReportCardList.forEach(student => {
+            Object.keys(this.vm.reportCardMapping).forEach(key => {
+                if (key.match('High')) {
+                    student[key] = {};
+                    student[key]['classTestList'] = this.classTestList.filter(item => {
+                        return item.parentExamination == this.vm.reportCardMapping[key];
+                    });
+                    student[key]['studentTestList'] = this.studentTestList.filter(item => {
+                        return item.parentStudent == student.dbId && item.parentExamination == this.vm.reportCardMapping[key];
+                    });
+                }
+            });
+            student['classSubjectList'] = this.classSubjectList.sort((a,b) => {
+                return a.orderNumber - b.orderNumber;
+            });
+            student['studentSubjectList'] = this.studentSubjectList.filter(item => {
+                return item.parentStudent == student.dbId;
+            }).sort((a,b) => {
+                return a.orderNumber - b.orderNumber;
+            });
+            student['cceMarks'] = this.studentCCEMarksList.filter(item => {
+                return item.parentStudent == student.dbId;
+            }).reduce((total, item) => {
+                return total + item.marksObtained;
+            }, 0);
+            student['attendanceData'] = {
+                'attendance': 0,
+                'workingDays': 0,
+            };
+            this.studentAttendanceList.forEach(studentAttendance => {
+                if (studentAttendance.status === ATTENDANCE_STATUS_LIST[0]) {
+                    student['attendanceData']['attendance'] += 1;
+                    student['attendanceData']['workingDays'] += 1;
+                } else if (studentAttendance.status === ATTENDANCE_STATUS_LIST[1]) {
+                    student['attendanceData']['workingDays'] += 1;
                 }
             });
         });
