@@ -52,3 +52,9 @@ from examination_app.views import MpBoardReportCardMappingView
 urlpatterns += [
     url(r'^mp-board-report-card-mappings', MpBoardReportCardMappingView.as_view()),
 ]
+
+from examination_app.views import CCEMarksListView
+
+urlpatterns += [
+    url(r'^cce-marks/batch', CCEMarksListView.as_view()),
+]

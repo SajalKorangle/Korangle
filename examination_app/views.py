@@ -126,21 +126,6 @@ class TestListView(APIView):
     @user_permission
     def get(request):
         return get_test_list(request.GET)
-        '''if 'examinationList' in request.GET:
-            return get_test_list(request.GET)
-        else:
-            if 'schoolId' in request.GET and 'sessionId' in request.GET:
-                data = {
-                    'schoolId': request.GET['schoolId'],
-                    'sessionId': request.GET['sessionId'],
-                }
-            elif 'examinationId' in request.GET and 'classId' in request.GET and 'sectionId' in request.GET:
-                data = {
-                    'examinationId': request.GET['examinationId'],
-                    'classId': request.GET['classId'],
-                    'sectionId': request.GET['sectionId'],
-                }
-            return get_test_list(data)'''
 
 
 ########### Student Test #############
@@ -211,3 +196,31 @@ class MpBoardReportCardMappingView(APIView):
     def put(request):
         data = json.loads(request.body.decode('utf-8'))
         return update_mp_board_report_card_mapping(data)
+
+
+########### CCE Marks #############
+from examination_app.business.cce_marks import get_cce_marks_list, create_cce_marks_list,\
+    delete_cce_marks_list, update_cce_marks_list
+
+
+class CCEMarksListView(APIView):
+
+    @user_permission
+    def get(request):
+        return get_cce_marks_list(request.GET)
+
+    @user_permission
+    def post(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_cce_marks_list(data)
+
+    @user_permission
+    def put(request):
+        data = json.loads(request.body.decode('utf-8'))
+        return update_cce_marks_list(data)
+
+    @user_permission
+    def delete(request, student_test_id_list):
+        return delete_cce_marks_list(student_test_id_list)
+
+

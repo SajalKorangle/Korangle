@@ -73,19 +73,6 @@ class ClassSubjectListView(APIView):
     @user_permission
     def get(request):
         return get_class_subject_list(request.GET)
-        '''if 'subjectList' in request.GET:
-            return get_class_subject_list(request.GET)
-        else:
-            data = {}
-            data['sessionId'] = request.GET['sessionId']
-            if 'classId' in request.GET and 'sectionId' in request.GET:
-                data['classId'] = request.GET['classId']
-                data['sectionId'] = request.GET['sectionId']
-                data['schoolId'] = request.GET['schoolId']
-            else:
-                data['schoolId'] = request.GET['schoolId']
-            return get_class_subject_list(data)'''
-
 
 
 ######### StudentSubjectView ##########
