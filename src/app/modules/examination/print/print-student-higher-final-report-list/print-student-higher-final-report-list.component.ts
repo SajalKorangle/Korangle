@@ -145,8 +145,7 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        console.log("Theory: " + studentMarks);
-        if (studentMarks = 0) {
+        if (studentMarks == 0) {
             return "";
         }
         return ((studentMarks*maxMarks)/classMaxMarks).toFixed(1);
@@ -168,8 +167,7 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        console.log("Practical: " + studentMarks);
-        if (studentMarks = 0) {
+        if (studentMarks == 0) {
             return "";
         }
         return ((studentMarks*maxMarks)/classMaxMarks).toFixed(1);
