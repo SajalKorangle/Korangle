@@ -458,18 +458,25 @@ export class GenerateFinalReportServiceAdapter {
                     });
                 }
             });
-            student['classSubjectList'] = this.classSubjectList.sort((a,b) => {
-                return a.orderNumber - b.orderNumber;
-            });
-            student['studentSubjectList'] = this.studentSubjectList.filter(item => {
-                return item.parentStudent == student.dbId;
+            student['subjectList'] = this.classSubjectList.filter(item => {
+                let length = this.studentSubjectList.filter(itemTwo =>
+                {
+                    return itemTwo.parentStudent == student.dbId && itemTwo.parentSubject == item.parentSubject;
+                }).length;
+                return item.mainSubject &&  length > 0;
             }).sort((a,b) => {
                 return a.orderNumber - b.orderNumber;
             });
+
+            /*student['studentSubjectList'] = this.studentSubjectList.filter(item => {
+                return item.parentStudent == student.dbId;
+            }).sort((a,b) => {
+                return a.orderNumber - b.orderNumber;
+            });*/
             student['cceMarks'] = this.studentCCEMarksList.filter(item => {
                 return item.parentStudent == student.dbId;
             }).reduce((total, item) => {
-                return total + item.marksObtained;
+                return total + parseFloat(item.marksObtained);
             }, 0);
             student['attendanceData'] = {
                 'attendance': 0,

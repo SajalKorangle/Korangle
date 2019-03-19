@@ -62,7 +62,7 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         return result;
     }
 
-    getQuarterlyMarks(student: any, subjectId: any, maxMarks: any): any {
+    getQuarterlyMarks(student: any, subjectId: any, maxMarks: any): number {
         let studentMarks = 0;
         let classMaxMarks = 100;
         let tempMaxMarks = student.parentExaminationQuarterlyHigh.classTestList.filter(item => {
@@ -78,10 +78,10 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return ((studentMarks*maxMarks)/classMaxMarks).toFixed(1);
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
     }
 
-    getHalfYearlyMarks(student: any, subjectId: any, maxMarks: any): any {
+    getHalfYearlyMarks(student: any, subjectId: any, maxMarks: any): number {
         let studentMarks = 0;
         let classMaxMarks = 100;
         let tempMaxMarks = student.parentExaminationHalfYearlyHigh.classTestList.filter(item => {
@@ -97,10 +97,10 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return ((studentMarks*maxMarks)/classMaxMarks).toFixed(1);
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
     }
 
-    getFinalMarks(student: any, subjectId: any, maxMarks: any): any {
+    getFinalMarks(student: any, subjectId: any, maxMarks: any): number {
         if (this.isPractical(student, subjectId)) {
             if (maxMarks == 100) {
                 return this.getFinalTheoryMarks(student, subjectId, 75)
@@ -125,11 +125,11 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
             }).reduce((total, item) => {
                 return total + parseFloat(item.marksObtained);
             }, 0);
-            return ((studentMarks*maxMarks)/classMaxMarks).toFixed(1);
+            return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
         }
     }
 
-    getFinalTheoryMarks(student: any, subjectId: any, maxMarks: any): any {
+    getFinalTheoryMarks(student: any, subjectId: any, maxMarks: any): number {
         let studentMarks = 0;
         let classMaxMarks = 75;
         let tempMaxMarks = student.parentExaminationFinalHigh.classTestList.filter(item => {
@@ -145,13 +145,10 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        if (studentMarks == 0) {
-            return "";
-        }
-        return ((studentMarks*maxMarks)/classMaxMarks).toFixed(1);
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
     }
 
-    getFinalPracticalMarks(student: any, subjectId: any, maxMarks: any): any {
+    getFinalPracticalMarks(student: any, subjectId: any, maxMarks: any): number {
         let studentMarks = 0;
         let classMaxMarks = 25;
         let tempMaxMarks = student.parentExaminationFinalHigh.classTestList.filter(item => {
@@ -167,74 +164,38 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        if (studentMarks == 0) {
-            return "";
-        }
-        return ((studentMarks*maxMarks)/classMaxMarks).toFixed(1);
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
     }
 
-    isPractical(student: any, subjectId: any): any {
+    getTotalSubjectMarks(student: any, subjectId: any): number {
+        return this.getQuarterlyMarks(student, subjectId, 5)
+            + this.getHalfYearlyMarks(student, subjectId, 5)
+            + this.getFinalMarks(student, subjectId, 70);
+    }
+
+    getTotalBestFiveMarks(student: any): number {
+        let marks_list = [];
+        student.subjectList.forEach(subject => {
+            marks_list.push(this.getTotalSubjectMarks(student, subject));
+        });
+        if (marks_list.length > 5) {
+            marks_list = marks_list.slice(0,5);
+        }
+        return marks_list.reduce((total, item) => {
+            return total + item;
+        }, 0);
+    }
+
+    isPractical(student: any, subjectId: any): boolean {
         let result = false;
         student.parentExaminationFinalHigh.classTestList.every(item => {
-            if (item.testType == TEST_TYPE_LIST[3]) {
+            if (item.testType == TEST_TYPE_LIST[3] && item.parentSubject == subjectId) {
                 result = true;
                 return false;
             }
             return true;
         });
         return result;
-    }
-
-    getMonthlyStudentSubjectMarks(student: any, subject: any, subjectIndex: any): any {
-    }
-
-    getOverallStudentSubjectMarks(student: any, subject: any, subjectIndex: any): any {
-    }
-
-    getOverallStudentSubjectMaxMarks(): any {
-    }
-
-    getGrade(marksObtained: any, maximumMarks: any): any {
-        let grade = '';
-        let percentage = marksObtained*100/maximumMarks;
-        if (percentage >= 75) {
-            grade = 'A';
-        } else if (percentage >= 60) {
-            grade = 'B';
-        } else if (percentage >= 45) {
-            grade = 'C';
-        } else if (percentage >= 33) {
-            grade = 'D';
-        } else {
-            grade = 'E';
-        }
-        return grade;
-    }
-
-    getOverallStudentExtraSubFieldMarks(student: any, index: any): any {
-        let result = 0;
-        result += student.parentExaminationJuly.extraSubFieldMarksList[index];
-        result += student.parentExaminationAugust.extraSubFieldMarksList[index];
-        result += student.parentExaminationSeptember.extraSubFieldMarksList[index];
-        result += student.parentExaminationOctober.extraSubFieldMarksList[index];
-        result += student.parentExaminationHalfYearly.extraSubFieldMarksList[index];
-        result += student.parentExaminationDecember.extraSubFieldMarksList[index];
-        result += student.parentExaminationJanuary.extraSubFieldMarksList[index];
-        result += student.parentExaminationFebruary.extraSubFieldMarksList[index];
-        result += student.parentExaminationFinal.extraSubFieldMarksList[index];
-        return result;
-    }
-
-    getOverallStudentTotalSubjectMarks(student: any): any {
-    }
-
-    getOverallStudentTotalSubjectMaxMarks(student: any): any {
-    }
-
-    getOverallStudentTotalExtraFieldMarks(student: any, index1: any): any {
-    }
-
-    getOverallStudentTotalExtraFieldMaxMarks(index: any): any {
     }
 
     getOverallStudentAttendance(student: any): any {
@@ -245,16 +206,8 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         return student.attendanceData.workingDays;
     }
 
-    getOverallStudentMarks(student: any): any {
-        return this.getOverallStudentTotalSubjectMarks(student)
-            + this.getOverallStudentTotalExtraFieldMarks(student, 0)
-            + this.getOverallStudentTotalExtraFieldMarks(student, 1);
-    }
-
-    getOverallStudentMaxMarks(student: any): any {
-        return this.getOverallStudentTotalSubjectMaxMarks(student)
-            + this.getOverallStudentTotalExtraFieldMaxMarks(0)
-            + this.getOverallStudentTotalExtraFieldMaxMarks(1);
+    getPercentage(marksObtained: any, maxMarks: any): any {
+        return marksObtained/maxMarks*100;
     }
 
     getSessionName(sessionId: any): any {
