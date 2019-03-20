@@ -281,6 +281,10 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         return result;
     }
 
+    getDivision(student: any): any {
+        return 'First';
+    }
+
     getThumbImage(row: any): string {
         if (row.profileImage) {
             let url = row.profileImage;
