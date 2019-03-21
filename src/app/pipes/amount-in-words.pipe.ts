@@ -25,8 +25,13 @@ export class AmountInWordsPipe implements PipeTransform {
         amountInWords += ( Math.floor(tempAmount / 100) > 0 ? this.getNumberInWords(Math.floor(tempAmount / 100)) + ' Hundred ' : '' );
         tempAmount = tempAmount % 100;
 
-        /* Change */
+        /* Ones And Tens */
         amountInWords += this.getNumberInWords(tempAmount);
+
+        /* Point till decimal one*/
+        if (tempAmount%1 > 0) {
+            amountInWords += ' Point ' + this.getNumberInWords(((tempAmount*10)%10));
+        }
 
         return amountInWords;
     }

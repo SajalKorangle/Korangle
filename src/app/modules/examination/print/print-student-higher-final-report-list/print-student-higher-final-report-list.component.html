@@ -192,7 +192,7 @@
                                 align="center"><b>Yearly</b></td>
                             <td class="upBorder rightBorder downBorder bold"
                                 colspan="7"
-                                align="center"><b>Final</b></td>
+                                align="center"><b>Final (Marks Obtained/Weightage)</b></td>
                         </tr>
                         <tr>
                             <td class="upBorder leftBorder downBorder bold"
@@ -231,86 +231,91 @@
                         <tr>
                             <td class="upBorder leftBorder downBorder bold"
                                 align="left"><b>Max./Min. Marks</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>100</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>100</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>75</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>25</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>100</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>5</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>5</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>60</b></td>
-                            <td class="upBorder downBorder bold"
-                                align="right"><b>10</b></td>
-                            <td class="upBorder downBorder bold"
+                            <td class="upBorder downBorder bold numberRightPadding"
+                                align="right"><b>10/3.3</b></td>
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right"><b>70</b></td>
-                            <td class="upBorder downBorder bold"
-                                align="right"><b>80</b></td>
+                            <td class="upBorder downBorder bold numberRightPadding"
+                                align="right"><b>80/26.4</b></td>
                         </tr>
                         <ng-container *ngFor="let subject of student.subjectList; let i = index;">
                             <tr>
                                 <td class="leftBorder">{{getSubjectName(subject.parentSubject)}}</td>
-                                <td class="leftBorder">{{getQuarterlyMarks(student, subject.parentSubject, 100)}}</td>
-                                <td class="leftBorder">{{getHalfYearlyMarks(student, subject.parentSubject, 100)}}</td>
-                                <td class="leftBorder">
+                                <td align="right" class="leftBorder numberRightPadding">{{getQuarterlyMarks(student, subject.parentSubject, 100)}}</td>
+                                <td align="right" class="leftBorder numberRightPadding">{{getHalfYearlyMarks(student, subject.parentSubject, 100)}}</td>
+                                <td align="right" class="leftBorder numberRightPadding">
                                     <ng-container *ngIf="isPractical(student, subject.parentSubject)">{{getFinalTheoryMarks(student, subject.parentSubject, 75)}}</ng-container>
                                 </td>
-                                <td class="leftBorder">
+                                <td align="right" class="leftBorder numberRightPadding">
                                     <ng-container *ngIf="isPractical(student, subject.parentSubject)">{{getFinalPracticalMarks(student, subject.parentSubject, 25)}}</ng-container>
                                 </td>
-                                <td class="leftBorder">{{getFinalMarks(student, subject.parentSubject, 100)}}</td>
-                                <td class="leftBorder">{{getQuarterlyMarks(student, subject.parentSubject, 5)}}</td>
-                                <td class="leftBorder">{{getHalfYearlyMarks(student, subject.parentSubject, 5)}}</td>
-                                <td class="leftBorder">
+                                <td align="right" class="leftBorder numberRightPadding">{{getFinalMarks(student, subject.parentSubject, 100)}}</td>
+                                <td align="right" class="leftBorder numberRightPadding">{{getQuarterlyMarks(student, subject.parentSubject, 5)}}</td>
+                                <td align="right" class="leftBorder numberRightPadding">{{getHalfYearlyMarks(student, subject.parentSubject, 5)}}</td>
+                                <td align="right" class="leftBorder numberRightPadding">
                                     <ng-container *ngIf="isPractical(student, subject.parentSubject)">{{getFinalTheoryMarks(student, subject.parentSubject, 60)}}</ng-container>
                                 </td>
-                                <td class="leftBorder">
+                                <td align="right" class="leftBorder numberRightPadding">
                                     <ng-container *ngIf="isPractical(student, subject.parentSubject)">{{getFinalPracticalMarks(student, subject.parentSubject, 10)}}</ng-container>
                                 </td>
-                                <td class="leftBorder">{{getFinalMarks(student, subject.parentSubject, 70)}}</td>
-                                <td class="leftBorder">{{getTotalSubjectMarks(student, subject.parentSubject)}}</td>
-                                <td class="leftBorder">Result</td>
+                                <td align="right" class="leftBorder numberRightPadding">{{getFinalMarks(student, subject.parentSubject, 70)}}</td>
+                                <td align="right" class="leftBorder numberRightPadding">{{getTotalSubjectMarks(student, subject.parentSubject) | number: '1.1-1'}}</td>
+                                <td align="center" class="leftBorder">{{getSubjectResult(student, subject.parentSubject)}}</td>
                             </tr>
                         </ng-container>
                         <tr>
                             <td class="upBorder downBorder bold"
                                 colspan="10"
-                                align="right"><b>Total</b></td>
-                            <td class="upBorder downBorder bold"
+                                align="left"><b>Total (Best Five subjects)</b></td>
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right">400</td>
-                            <td class="upBorder downBorder bold"
-                                align="right">{{getTotalBestFiveMarks(student)}}</td>
+                            <td class="upBorder downBorder bold numberRightPadding"
+                                align="right">{{getTotalBestFiveMarks(student) | number: '1.1-1'}}</td>
                             <td class="upBorder rightBorder downBorder bold"
-                                align="right">Result</td>
+                                align="right"></td>
                         </tr>
                         <tr>
                             <td class="upBorder downBorder bold"
                                 colspan="10"
-                                align="right"><b>C.C.E.</b></td>
-                            <td class="upBorder downBorder bold"
+                                align="left"><b>C.C.E.</b></td>
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right">100</td>
-                            <td class="upBorder downBorder bold"
-                                align="right">{{student.cceMarks}}</td>
+                            <td class="upBorder downBorder bold numberRightPadding"
+                                align="right">{{student.cceMarks | number: '1.1-1'}}</td>
                             <td class="upBorder rightBorder downBorder bold"
-                                align="right">Result</td>
+                                align="right"></td>
                         </tr>
                         <tr>
                             <td class="upBorder downBorder bold"
                                 colspan="10"
-                                align="right"><b>Grand Total</b></td>
-                            <td class="upBorder downBorder bold"
+                                align="left"><b>Grand Total</b></td>
+                            <td class="upBorder downBorder bold numberRightPadding"
                                 align="right">500</td>
-                            <td class="upBorder downBorder bold"
-                                align="right">{{getTotalBestFiveMarks(student)+student.cceMarks}}</td>
+                            <td class="upBorder downBorder bold numberRightPadding"
+                                align="right">{{getTotalBestFiveMarks(student)+student.cceMarks | number: '1.1-1'}}</td>
                             <td class="upBorder rightBorder downBorder bold"
-                                align="right">Result</td>
+                                align="center">{{getOverallResult(student)}}</td>
+                        </tr>
+                        <tr>
+                            <td class="upBorder downBorder bold"
+                                colspan="13"
+                                align="left"><b>Grand Total in words: {{getTotalBestFiveMarks(student)+student.cceMarks | amountInWords}}</b></td>
                         </tr>
                         </tbody>
                     </table>
@@ -320,13 +325,13 @@
             <!-- Division, Percentage -->
             <div class="row no-gutters" style="font-size: 16px !important;">
                 <div class="col-xs-6 d-flex custom-padding">
-                    Division:
+                    Result:
                     <ng-container *ngIf="reportCardMapping.autoAttendance">
                         {{getDivision(student)}}
                     </ng-container>
                 </div>
                 <div class="col-xs-6 custom-padding"  align="end">
-                    Percentage - {{getPercentage(getTotalBestFiveMarks(student)+student.cceMarks,500) | number: '1.0-1'}}%
+                    Percentage - {{getPercentage(student) | number: '1.0-1'}}%
                 </div>
             </div>
 
@@ -338,11 +343,11 @@
             </div>
 
             <!-- Promotion Info -->
-            <div class="row no-gutters" style="font-size: 20px !important;">
+            <!-- div class="row no-gutters" style="font-size: 20px !important;">
                 <div class="col-xs-12 d-flex custom-padding" align="center">
                     {{getNextStep(student)}}
                 </div>
-            </div>
+            </div -->
 
             <!-- Principal Signature Image -->
             <!-- img src="{{user.activeSchool.principalSignatureImage}}"

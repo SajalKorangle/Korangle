@@ -176,10 +176,10 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
     getTotalBestFiveMarks(student: any): number {
         let marks_list = [];
         student.subjectList.forEach(subject => {
-            marks_list.push(this.getTotalSubjectMarks(student, subject));
+            marks_list.push(this.getTotalSubjectMarks(student, subject.parentSubject));
         });
         if (marks_list.length > 5) {
-            marks_list = marks_list.slice(0,5);
+            marks_list = marks_list.sort((a,b) => {return b-a;}).slice(0,5);
         }
         return marks_list.reduce((total, item) => {
             return total + item;
@@ -198,6 +198,44 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         return result;
     }
 
+    getSubjectResult(student: any, subjectId: any): any {
+        if (this.getTotalSubjectMarks(student, subjectId) >= 26.4) {
+            return 'PASS';
+        }
+        if (this.getTotalSubjectMarks(student, subjectId) < 26.4) {
+            if (this.getOverallResult(student) == 'FAIL') {
+                return 'FAIL';
+            }
+            return 'SUPPL.';
+        }
+    }
+
+    getOverallResult(student: any): any {
+        let marks_list = [];
+        student.subjectList.forEach(subject => {
+            let tempItem = {
+                'subject': subject,
+                'marks': this.getTotalSubjectMarks(student, subject),
+            };
+            marks_list.push(tempItem);
+        });
+        let failNumber = 0;
+        let supplSubject = [];
+        marks_list.forEach(item => {
+            if (item.marks < 26.4) {
+                failNumber += 1;
+                supplSubject.push(this.getSubjectName(item.subject));
+            }
+        });
+        if (failNumber > (marks_list.length-4)) {
+            return 'FAIL';
+        } else if (failNumber == 0) {
+            return 'PASS';
+        } else {
+            return 'SUPPL. in ' + supplSubject.join();
+        }
+    }
+
     getOverallStudentAttendance(student: any): any {
         return student.attendanceData.attendance;
     }
@@ -206,8 +244,9 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         return student.attendanceData.workingDays;
     }
 
-    getPercentage(marksObtained: any, maxMarks: any): any {
-        return marksObtained/maxMarks*100;
+    getPercentage(student: any): any {
+        let marksObtained = this.getTotalBestFiveMarks(student)+student.cceMarks;
+        return marksObtained/5;
     }
 
     getSessionName(sessionId: any): any {
@@ -226,7 +265,7 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
         return result;
     }
 
-    getNextStep(student: any): any {
+    /*getNextStep(student: any): any {
         let result = '';
         switch(student.className) {
             case 'Play Group':
@@ -279,10 +318,20 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
                 break;
         }
         return result;
-    }
+    }*/
 
     getDivision(student: any): any {
-        return 'First';
+        let result = this.getOverallResult(student);
+        if (result == 'FAIL' || result.match('SUPPL.') != '') { return result; }
+        let percentage = this.getPercentage(student);
+        if (percentage >= 60) {
+            return 'Pass with First Division';
+        } else if (percentage >= 45) {
+            return 'Pass with Second Division';
+        } else if (percentage >= 33) {
+            return 'Pass with Third Division';
+        }
+        return '';
     }
 
     getThumbImage(row: any): string {
