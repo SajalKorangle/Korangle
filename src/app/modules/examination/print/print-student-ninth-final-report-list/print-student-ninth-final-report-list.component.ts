@@ -6,11 +6,11 @@ import { EmitterService } from '../../../../services/emitter.service';
 import {TEST_TYPE_LIST} from '../../classes/constants';
 
 @Component({
-    selector: 'app-print-student-higher-final-report-list',
-    templateUrl: './print-student-higher-final-report-list.component.html',
-    styleUrls: ['./print-student-higher-final-report-list.component.css'],
+    selector: 'app-print-student-ninth-final-report-list',
+    templateUrl: './print-student-ninth-final-report-list.component.html',
+    styleUrls: ['./print-student-ninth-final-report-list.component.css'],
 })
-export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     @Input() user;
 
@@ -20,13 +20,13 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
     studentFinalReportList: any;
     reportCardMapping: any;
 
-    printStudentHigherFinalReportListComponentSubscription: any;
+    printStudentNinthFinalReportListComponentSubscription: any;
 
     constructor(private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
-        this.printStudentHigherFinalReportListComponentSubscription =
-            EmitterService.get('print-student-higher-final-report-list-component').subscribe(value => {
+        this.printStudentNinthFinalReportListComponentSubscription =
+            EmitterService.get('print-student-ninth-final-report-list-component').subscribe(value => {
                 this.subjectList = value['subjectList'];
                 this.studentFinalReportList = value['studentFinalReportList'];
                 this.reportCardMapping = value['reportCardMapping'];
@@ -45,7 +45,7 @@ export class PrintStudentHigherFinalReportListComponent implements OnInit, OnDes
     }
 
     ngOnDestroy(): void {
-        this.printStudentHigherFinalReportListComponentSubscription.unsubscribe();
+        this.printStudentNinthFinalReportListComponentSubscription.unsubscribe();
         this.subjectList = null;
         this.studentFinalReportList = null;
     }

@@ -66,10 +66,8 @@ export class GenerateFinalReportComponent implements OnInit {
         let selectedClassSection = this.getSelectedClassSection();
         console.log(selectedClassSection);
         if (selectedClassSection.className == 'Class - 9' ||
-            selectedClassSection.className == 'Class - 10' ||
-            selectedClassSection.className == 'Class - 11' ||
-            selectedClassSection.className == 'Class - 12') {
-            EmitterService.get('print-student-higher-final-report-list').emit(data);
+            selectedClassSection.className == 'Class - 11') {
+            EmitterService.get('print-student-ninth-final-report-list').emit(data);
         } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[2]) {
             EmitterService.get('print-student-comprehensive-final-report-list').emit(data);
         } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[1]) {
