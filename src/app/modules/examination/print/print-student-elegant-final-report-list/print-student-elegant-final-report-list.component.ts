@@ -229,6 +229,9 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
             + this.getOverallStudentTotalExtraFieldMarks(student, 0)
             + this.getOverallStudentTotalExtraFieldMarks(student, 1);
     }
+    getOverallStudentPercentage(student: any) {
+        return this.getOverallStudentMarks(student)/this.getOverallStudentMaxMarks(student)*100;
+    }
 
     getOverallStudentMaxMarks(student: any): any {
         return this.getOverallStudentTotalSubjectMaxMarks(student)
