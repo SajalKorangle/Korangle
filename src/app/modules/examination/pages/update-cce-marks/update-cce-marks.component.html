@@ -1,0 +1,77 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <ng-container *ngIf="classStudentCCEMarksList.length > 0">
+
+            <div class="row">
+                <div class="col-md-9">
+                    <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                        <mat-select placeholder="Select Class"
+                                    [ngModel]="selectedClass"
+                                    (ngModelChange)="selectedClass=$event;detectChanges();">
+                            <mat-option *ngFor='let classs of classStudentCCEMarksList;' [value]="classs">
+                                {{classs.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                        <mat-select placeholder="Select Section"
+                                    [ngModel]="selectedClass.selectedSection"
+                                    (ngModelChange)="selectedClass.selectedSection=$event;detectChanges();">
+                            <mat-option *ngFor='let section of selectedClass.sectionList;' [value]="section">
+                                {{section.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <table>
+                <table class="table table-hover">
+                    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Student</th>
+                        <th>Roll No.</th>
+                        <th>Max. Marks (100)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let student of selectedClass.selectedSection.studentList; let i=index;">
+                        <td>{{(i+1)}}.</td>
+                        <td>{{student.name}}</td>
+                        <td>{{student.rollNumber}}</td>
+                        <td>
+                            <input type="number"
+                                   placeholder="Type marks here"
+                                   [(ngModel)]="student.cceMarksObject.marksObtained"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </table>
+
+            <button type="submit"
+                    style="margin-left: 20px;"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="serviceAdapter.updateCCEMarks()">Update</button>
+
+        </ng-container>
+
+        <ng-container *ngIf="classStudentCCEMarksList.length == 0">
+            <div class="row">
+                <div class="col-md-9">
+                    No students in class - 9 and class - 11 for you to update marks!
+                </div>
+            </div>
+        </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>
