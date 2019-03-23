@@ -662,7 +662,7 @@
                     Overall Marks: {{getOverallStudentMarks(student) | number: '1.0-1'}} / {{getOverallStudentMaxMarks(student) | number: '1.0-1'}}
                 </div>
                 <div class="col-xs-3" align="center">
-                    Percentage: {{getOverallStudentPercentage(student)}}%
+                    Percentage: {{getOverallStudentPercentage(student) | number: '1.0-1'}}%
                 </div>
                 <div class="col-xs-3" align="end" style="padding-right: 0px !important;">
                     Overall Grade: {{getGrade(getOverallStudentMarks(student), getOverallStudentMaxMarks(student))}}
