@@ -64,10 +64,10 @@ export class GenerateFinalReportComponent implements OnInit {
             'reportCardMapping': this.reportCardMapping,
         };
         let selectedClassSection = this.getSelectedClassSection();
-        console.log(selectedClassSection);
-        if (selectedClassSection.className == 'Class - 9' ||
-            selectedClassSection.className == 'Class - 11') {
+        if (selectedClassSection.className == 'Class - 9') {
             EmitterService.get('print-student-ninth-final-report-list').emit(data);
+        } else if( selectedClassSection.className == 'Class - 11'){
+            EmitterService.get('print-student-eleventh-final-report-list').emit(data);
         } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[2]) {
             EmitterService.get('print-student-comprehensive-final-report-list').emit(data);
         } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[1]) {

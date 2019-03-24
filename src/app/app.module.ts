@@ -33,6 +33,7 @@ import { PrintStudentComprehensiveFinalReportListComponent } from './modules/exa
 import { PrintStudentElegantFinalReportListComponent } from './modules/examination/print/print-student-elegant-final-report-list/print-student-elegant-final-report-list.component';
 import { PrintStudentNinthFinalReportListComponent } from './modules/examination/print/print-student-ninth-final-report-list/print-student-ninth-final-report-list.component';
 import { PrintStudentClassicFinalReportListComponent } from './modules/examination/print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
+import {PrintStudentEleventhFinalReportListComponent} from './modules/examination/print/print-student-eleventh-final-report-list/print-student-eleventh-final-report-list.component';
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { PrintStudentClassicFinalReportListComponent } from './modules/examinati
         PrintStudentComprehensiveFinalReportListComponent,
         PrintStudentElegantFinalReportListComponent,
         PrintStudentNinthFinalReportListComponent,
+        PrintStudentEleventhFinalReportListComponent,
         PrintStudentClassicFinalReportListComponent,
         PrintComponent,
 
