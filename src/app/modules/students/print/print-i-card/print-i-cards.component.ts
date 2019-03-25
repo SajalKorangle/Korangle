@@ -17,6 +17,8 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
 
     studentProfileList: any;
 
+    showClass = true;
+
     printICardsComponentSubscription: any;
 
     constructor(private cdRef: ChangeDetectorRef) { }
@@ -25,6 +27,7 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
         this.printICardsComponentSubscription = EmitterService.get('print-i-cards-component').subscribe( value => {
             this.studentProfileList = value.studentProfileList;
             this.viewChecked = false;
+            this.showClass = value.showClass;
         });
     }
 

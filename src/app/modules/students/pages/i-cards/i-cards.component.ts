@@ -57,6 +57,9 @@ export class ICardsComponent implements OnInit {
 
     filteredStudentFullProfileList = [];
 
+    // show class
+    showClass = true;
+
     message = '';
 
     isLoading = false;
@@ -339,7 +342,8 @@ export class ICardsComponent implements OnInit {
             studentProfileList: this.studentFullProfileList.filter(student => {
                 return (student.show && student.selected);
             }),
-            columnFilter: this.columnFilter
+            columnFilter: this.columnFilter,
+            showClass: this.showClass
         };
         EmitterService.get('print-i-cards').emit(value);
     };

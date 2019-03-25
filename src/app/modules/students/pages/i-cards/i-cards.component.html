@@ -194,6 +194,13 @@
             </mat-select>
         </mat-form-field>
 
+        <div>
+            <mat-checkbox [(ngModel)]="showClass">
+                Show Class
+            </mat-checkbox>
+        </div>
+
+
         <br>
         Total Students: <i>{{studentFullProfileList.length}}</i>,
         Displaying: <i>{{displayStudentNumber}}</i>,
