@@ -652,16 +652,19 @@
                         font-weight: bold !important;
                         margin-right: 0px;
                         font-size: 15px !important;">
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                     Attendance:
                     <ng-container *ngIf="reportCardMapping.autoAttendance">
                         {{getOverallStudentAttendance(student)}} / {{getOverallStudentWorkingDays(student)}}
                     </ng-container>
                 </div>
-                <div class="col-xs-4" align="center">
+                <div class="col-xs-3" align="center">
                     Overall Marks: {{getOverallStudentMarks(student) | number: '1.0-1'}} / {{getOverallStudentMaxMarks(student) | number: '1.0-1'}}
                 </div>
-                <div class="col-xs-4" align="end" style="padding-right: 0px !important;">
+                <div class="col-xs-3" align="center">
+                    Percentage: {{getOverallStudentPercentage(student) | number: '1.0-1'}}%
+                </div>
+                <div class="col-xs-3" align="end" style="padding-right: 0px !important;">
                     Overall Grade: {{getGrade(getOverallStudentMarks(student), getOverallStudentMaxMarks(student))}}
                 </div>
             </div>
