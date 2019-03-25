@@ -29,6 +29,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     printStudentComprehensiveFinalReportListSubscription: any;
     printStudentElegantFinalReportListSubscription: any;
     printStudentNinthFinalReportListSubscription: any;
+    printStudentEleventhFinalReportListSubscription: any;
     printStudentClassicFinalReportListSubscription: any;
     printSalarySheetSubscription: any;
     printStudentAttendanceListSubscription: any;
@@ -131,6 +132,12 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-student-ninth-final-report-list-component').emit(value);
             });
         });
+        this.printStudentEleventhFinalReportListSubscription = EmitterService.get('print-student-eleventh-final-report-list').subscribe(value => {
+            this.printType = 'studentEleventhFinalReportList';
+            setTimeout(()=> {
+                EmitterService.get('print-student-eleventh-final-report-list-component').emit(value);
+            });
+        });
         this.printStudentClassicFinalReportListSubscription = EmitterService.get('print-student-classic-final-report-list').subscribe(value => {
             this.printType = 'studentClassicFinalReportList';
             setTimeout(()=> {
@@ -174,6 +181,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printStudentComprehensiveFinalReportListSubscription.unsubscribe();
         this.printStudentElegantFinalReportListSubscription.unsubscribe();
         this.printStudentNinthFinalReportListSubscription.unsubscribe();
+        this.printStudentEleventhFinalReportListSubscription.unsubscribe();
         this.printStudentClassicFinalReportListSubscription.unsubscribe();
         this.printSalarySheetSubscription.unsubscribe();
         this.printStudentAttendanceListSubscription.unsubscribe();
