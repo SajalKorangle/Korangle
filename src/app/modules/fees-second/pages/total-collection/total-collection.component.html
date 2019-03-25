@@ -22,34 +22,34 @@
                     (click)="getSchoolFeeReceiptList();">
                 <!-- u>Get</u --><i class="material-icons">search</i></button><br>
         </div>
+        <div class="col-md-3" align="left">
+            <button type="button"
+                    *ngIf="selectedFeeType && filteredFeeReceiptList"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px; margin-right: 17px;"
+                    matTooltip="Print the following list"
+                    tooltip-position="left"
+                    (click)="printFeeReceiptList();">
+                Print<i class="material-icons" style="margin-left: 15px;">print</i></button><br>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="selectedFeeType" style="margin-bottom: 20px;">
         <div class="col-md-3"
-             align="right"
-             style="margin-top: 15px;"
+             align="left"
              *ngIf="selectedEmployee">
-            <select [ngModel]="selectedEmployee"
-                    (ngModelChange)="selectedEmployee=$event;populateFilteredFeeReceiptList();"
-                    style="margin-right: 15px">
+            Employee: <select [ngModel]="selectedEmployee"
+                        (ngModelChange)="selectedEmployee=$event;populateFilteredFeeReceiptList();"
+                        style="margin-right: 15px">
                 <option *ngFor="let employee of employeeList;" [ngValue]="employee">
                     {{employee.name}}
                 </option>
             </select>
         </div>
-        <!-- div class="col-md-3" align="right">
-            <button type="button"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    style="padding: 12px 15px; margin-right: 17px;"
-                    matTooltip="Print the following list"
-                    tooltip-position="left"
-                    (click)="printFeeRecords();">
-                Print<i class="material-icons" style="margin-left: 15px;">print</i></button><br>
-        </div -->
-    </div>
-
-    <div class="row" *ngIf="selectedFeeType" style="margin-bottom: 20px;">
-        <div class="col-md-12">
-            <select [ngModel]="selectedFeeType"
-                    (ngModelChange)="selectedFeeType=$event;"
-                    style="margin-right: 15px">
+        <div class="col-md-9" align="left">
+            Fee Type: <select [ngModel]="selectedFeeType"
+                        (ngModelChange)="selectedFeeType=$event;"
+                        style="margin-right: 15px">
                 <option *ngFor="let feeType of feeTypeList;" [ngValue]="feeType">
                     {{feeType.name}}
                 </option>

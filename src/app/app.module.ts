@@ -34,6 +34,7 @@ import { PrintStudentElegantFinalReportListComponent } from './modules/examinati
 import { PrintStudentNinthFinalReportListComponent } from './modules/examination/print/print-student-ninth-final-report-list/print-student-ninth-final-report-list.component';
 import { PrintStudentClassicFinalReportListComponent } from './modules/examination/print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
 import {PrintStudentEleventhFinalReportListComponent} from './modules/examination/print/print-student-eleventh-final-report-list/print-student-eleventh-final-report-list.component';
+import {PrintFeeReceiptListComponent} from './modules/fees-second/print/print-fee-receipt-list/print-fee-receipt-list.component';
 
 @NgModule({
     declarations: [
@@ -49,6 +50,7 @@ import {PrintStudentEleventhFinalReportListComponent} from './modules/examinatio
         PrintTransferCertificateComponent,
         PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
+        PrintFeeReceiptListComponent,
         PrintEmployeeListComponent,
         PrintNewFeeReceiptComponent,
         PrintICardsComponent,
