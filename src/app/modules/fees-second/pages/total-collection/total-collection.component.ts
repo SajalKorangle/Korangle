@@ -5,6 +5,7 @@ import { FeeService } from '../../fee.service';
 import { FeeReceipt } from '../../classes/common-functionalities';
 
 import {EmployeeService} from '../../../employee/employee.service';
+import {EmitterService} from '../../../../services/emitter.service';
 
 @Component({
   selector: 'app-total-collection',
@@ -128,8 +129,13 @@ export class TotalCollectionComponent implements OnInit {
         EmitterService.get('print-fee-records').emit(emitValue);
     }*/
 
-    /*printFeeReceipt(fee: Fee): void {
-        EmitterService.get('print-fee-receipt').emit(fee);
-    }*/
+    printFeeReceiptList(): void {
+        let value = {
+            'feeReceiptList': this.filteredFeeReceiptList,
+            'feeType': this.selectedFeeType,
+            'employee': this.selectedEmployee,
+        };
+        EmitterService.get('print-fee-receipt-list').emit(value);
+    }
 
 }
