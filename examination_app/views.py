@@ -38,11 +38,13 @@ def get_maximumMarksAllowed_view(request):
 ################ Marksheet ##################
 from .handlers.marksheet import get_marksheet
 @api_view(['GET'])
-def get_marksheet_view(request, section_id, student_id):
+def get_marksheet_view(request, section_id, class_id, session_id, student_id):
     if request.user.is_authenticated:
         data = {}
         data['sectionDbId'] = section_id
         data['studentDbId'] = student_id
+        data['classDbId'] = class_id
+        data['sessionDbId'] = session_id
         return JsonResponse({'response': get_success_response(get_marksheet(data))})
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
