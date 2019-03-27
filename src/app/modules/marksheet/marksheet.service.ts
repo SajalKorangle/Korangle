@@ -32,7 +32,7 @@ export class MarksheetService extends CommonServiceRequirements {
 
     /* Update Marks */
     getMarksUrl(data: any, token: any): Promise<any> {
-        const url = '/examinations/sections/' + data['sectionDbId'] + '/students/' + data['studentDbId'] + '/results';
+        const url = '/examinations/sections/' + data['sectionDbId'] + 'students/' + data['studentDbId'] + '/results';
         return super.getData(token, url);
     }
 
@@ -42,7 +42,7 @@ export class MarksheetService extends CommonServiceRequirements {
 
     /* Print Marksheet */
     getStudentMarksheet(data: any, token: any): Promise<any> {
-        const url = '/examinations/sections/' + data['sectionDbId'] + '/students/' + data['studentDbId'] + '/marksheets';
+        const url = '/examinations/sections/' + data['sectionDbId'] + '/classes/' + data['classDbId'] + '/sessions/' + data['sessionDbId']+ '/students/' + data['studentDbId'] + '/marksheets';
         return super.getData(token, url);
     }
 
