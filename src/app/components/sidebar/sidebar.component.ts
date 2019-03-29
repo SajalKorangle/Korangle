@@ -117,8 +117,4 @@ export class SidebarComponent implements OnInit {
         this.user.emptyUserDetails();
     }
 
-    getThumbnail(student: any): any {
-        return Student.getThumbnail(student);
-    }
-
 }

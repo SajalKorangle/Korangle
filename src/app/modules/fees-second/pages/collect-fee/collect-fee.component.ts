@@ -483,8 +483,4 @@ export class CollectFeeComponent implements OnInit {
         return componentMonthly.amountDue;
     }
 
-    getThumbnail(student: any): any {
-        return Student.getThumbnail(student);
-    }
-
 }

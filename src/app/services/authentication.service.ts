@@ -3,14 +3,14 @@ import {Injectable} from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { Constants } from '../classes/constants';
-
+import { environment } from '../../environments/environment';
 
 
 @Injectable()
 export class AuthenticationService {
 
-    private getUserDetailsUrl = Constants.DJANGO_SERVER + Constants.api_version + '/school/get-user-details/';
-    private loginUserDetailsUrl = Constants.DJANGO_SERVER + Constants.api_version + '/school/login-user-details/';
+    private getUserDetailsUrl = environment.DJANGO_SERVER + Constants.api_version + '/school/get-user-details/';
+    private loginUserDetailsUrl = environment.DJANGO_SERVER + Constants.api_version + '/school/login-user-details/';
 
     private headers = new Headers({'Content-Type': 'application/json' });
 

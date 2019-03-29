@@ -91,7 +91,7 @@ export class Student {
 
     }
 
-    public static getThumbnail(student: any): any {
+    /*public static getThumbnail(student: any): any {
         if (student.profileImage) {
             let url = student.profileImage;
             if (url.substr(url.length-4) === "main") {
@@ -101,6 +101,6 @@ export class Student {
         } else {
             return '';
         }
-    }
+    }*/
 
 }

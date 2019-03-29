@@ -76,7 +76,7 @@
                                 <i *ngIf="!student.profileImage" class="material-icons">account_circle</i>
                                 <i><img *ngIf="student.profileImage"
                                      style="width: 35px; height: 35px;"
-                                     src="{{getThumbnail(student)}}"></i>
+                                     src="{{student.profileImage}}"></i>
                                 <p>
                                     {{student.name | titlecase}}
                                     <i *ngIf="!student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>

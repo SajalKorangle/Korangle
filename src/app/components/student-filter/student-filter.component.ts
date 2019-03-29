@@ -149,8 +149,4 @@ export class StudentFilterComponent implements OnInit {
         });
     }
 
-    getThumbnail(student: any): any {
-        return Student.getThumbnail(student);
-    }
-
 }

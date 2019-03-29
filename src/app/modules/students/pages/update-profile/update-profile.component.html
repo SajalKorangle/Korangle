@@ -76,7 +76,7 @@
             <div class="col-md-3 visible-sm visible-xs" align="center">
 
                 <img *ngIf="selectedStudent.profileImage"
-                     src="{{getThumbImage(selectedStudent)}}"
+                     src="{{selectedStudent.profileImage}}"
                      style="width: 50%">
 
                 <img *ngIf="!selectedStudent.profileImage"
@@ -165,7 +165,7 @@
             <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
 
                 <img *ngIf="selectedStudent.profileImage"
-                     src="{{getThumbImage(selectedStudent)}}"
+                     src="{{selectedStudent.profileImage}}"
                      style="width: 50%">
 
                 <img *ngIf="!selectedStudent.profileImage"

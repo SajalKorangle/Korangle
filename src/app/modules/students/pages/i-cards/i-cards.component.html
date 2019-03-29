@@ -236,7 +236,7 @@
             </ngx-datatable-column>
             <ngx-datatable-column name="Photo">
                 <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <img *ngIf="row.profileImage" src="{{getThumbImage(row)}}" style="width: 20%;">
+                    <img *ngIf="row.profileImage" src="{{row.profileImage}}" style="width: 20%;">
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Name" *ngIf="columnFilter.showName">
@@ -317,7 +317,7 @@
         </ngx-datatable>
 
         <ng-container *ngFor="let studentProfile of studentFullProfileList">
-            <img src="{{getThumbImage(studentProfile)}}" style="width: 0px; height: 0px;">
+            <img src="{{student.profileImage}}" style="width: 0px; height: 0px;">
         </ng-container>
         <img src="{{user.activeSchool.principalSignatureImage}}" style="width: 0px; height: 0px;">
 

@@ -14,7 +14,7 @@
                     <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
                         <img *ngIf="student.profileImage"
                              style="width: 10%"
-                             src="{{getThumbnail(student)}}">
+                             src="{{student.profileImage}}">
                         <img *ngIf="!student.profileImage"
                              style="width: 10%"
                              src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">

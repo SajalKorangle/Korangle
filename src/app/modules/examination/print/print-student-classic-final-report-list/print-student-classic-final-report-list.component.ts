@@ -285,18 +285,6 @@ export class PrintStudentClassicFinalReportListComponent implements OnInit, OnDe
         return result;
     }
 
-    getThumbImage(row: any): string {
-        if (row.profileImage) {
-            let url = row.profileImage;
-            if (url.substr(url.length-4) === "main") {
-                return url + "_thumb";
-            }
-            return url.substr(0, url.length-4) + "_thumb" + url.substr(url.length-4);
-        } else {
-            return '';
-        }
-    }
-
     getPercentage(marksObtained: any, maxMarks: any): any {
         return marksObtained/maxMarks*100;
     }

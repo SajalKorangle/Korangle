@@ -262,6 +262,46 @@ export class UpdateProfileComponent implements OnInit {
         return '';
     }
 
+    cropImage(file: File, aspectRatio: any): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            let image = new Image();
+            image.src = URL.createObjectURL(file);
+            image.onload = () => {
+
+                let dx = 0;
+                let dy = 0;
+                let dw = image.width;
+                let dh = image.height;
+
+                let sx = 0;
+                let sy = 0;
+                let sw = dw;
+                let sh = dh;
+
+                if (sw > (aspectRatio[1]*sh/aspectRatio[0])) {
+                    sx = (sw - (aspectRatio[1]*sh/aspectRatio[0]))/2;
+                    sw = (aspectRatio[1]*sh/aspectRatio[0]);
+                    dw = sw;
+                } else if (sh > (aspectRatio[0]*sw/aspectRatio[1])) {
+                    sy = (sh - (aspectRatio[0]*sw/aspectRatio[1]))/2;
+                    sh = (aspectRatio[0]*sw/aspectRatio[1]);
+                    dh = sh;
+                }
+
+                let canvas = document.createElement('canvas');
+                canvas.width = dw;
+                canvas.height = dh;
+
+                let context = canvas.getContext('2d');
+
+                context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+
+                canvas.toBlob(resolve, file.type);
+            };
+            image.onerror = reject;
+        });
+    }
+
     async onImageSelect(evt: any) {
         let image = evt.target.files[0];
 
@@ -269,6 +309,8 @@ export class UpdateProfileComponent implements OnInit {
             alert("Image type should be either jpg, jpeg, or png");
             return;
         }
+
+        image = await this.cropImage(image, [1,1]);
 
         while (image.size > 512000) {
             image = await this.resizeImage(image);
@@ -332,18 +374,6 @@ export class UpdateProfileComponent implements OnInit {
             };
             image.onerror = reject;
         });
-    }
-
-    getThumbImage(row: any): string {
-        if (row.profileImage) {
-            let url = row.profileImage;
-            if (url.substr(url.length-4) === "main") {
-                return url + "_thumb";
-            }
-            return url.substr(0, url.length-4) + "_thumb" + url.substr(url.length-4);
-        } else {
-            return '';
-        }
     }
 
 }
