@@ -8,12 +8,20 @@ from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
 
+import os
+from django.utils.timezone import now
 
-def upload_avatar_to(instance, filename):
+
+'''def upload_avatar_to(instance, filename):
     import os
     from django.utils.timezone import now
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'students/%s/main%s' % (instance.id, filename_ext.lower())
+    return 'students/%s/main%s' % (instance.id, filename_ext.lower())'''
+
+
+def upload_avatar_to(instance, filename):
+    filename_base, filename_ext = os.path.splitext(filename)
+    return 'students/%s/profile_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
 
 
 class TransferCertificate(models.Model):
@@ -131,6 +139,10 @@ class Student(models.Model):
         return self.studentsection_set \
             .get(parentSession=session_object).rollNumber
 
+    class Meta:
+        db_table = 'student'
+
+'''
     def save(self, profileImageUpdation = False, *args, **kwargs):
         super(Student, self).save(*args, **kwargs)
         if profileImageUpdation:
@@ -186,9 +198,7 @@ class Student(models.Model):
         if storage.exists(thumb_file_path):
             return storage.url(thumb_file_path)
         return ""
-
-    class Meta:
-        db_table = 'student'
+'''
 
 
 class StudentSection(models.Model):
