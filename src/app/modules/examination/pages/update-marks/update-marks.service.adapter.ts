@@ -314,6 +314,9 @@ export class UpdateMarksServiceAdapter {
         let result = [];
         student_test_list.forEach(item => {
             if (item.parentStudent === student.dbId) {
+                if (item.marksObtained == 0.0) {
+                    item.marksObtained = null;
+                }
                 result.push(item);
             }
         });
@@ -335,6 +338,11 @@ export class UpdateMarksServiceAdapter {
 
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(item => {
             item.testDetails.forEach(itemTwo => {
+                if (itemTwo.marksObtained == null) {
+                    itemTwo.marksObtained = 0.0;
+                } else {
+                    itemTwo.marksObtained = parseFloat(itemTwo.marksObtained.toString()).toFixed(1);
+                }
                 data.push(itemTwo);
             });
         });
@@ -343,6 +351,13 @@ export class UpdateMarksServiceAdapter {
 
         this.vm.examinationService.updateStudentTestList(data, this.vm.user.jwt).then(value => {
             alert('Student Marks updated successfully');
+            this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(item => {
+                item.testDetails.forEach(itemTwo => {
+                    if (itemTwo.marksObtained == 0.0) {
+                        itemTwo.marksObtained = null;
+                    }
+                });
+            });
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;

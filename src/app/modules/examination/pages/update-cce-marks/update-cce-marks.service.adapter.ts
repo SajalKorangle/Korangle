@@ -122,11 +122,14 @@ export class UpdateCceMarksServiceAdapter {
             'id': 0,
             'parentStudent': student.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'marksObtained': 0,
+            'marksObtained': null,
         };
         this.cce_marks_list.filter(item => {
             return item.parentStudent == student.dbId;
         }).forEach(item => {
+            if (item.marksObtained == 0.0) {
+                item.marksObtained = null;
+            }
             result = item;
         });
         return result;
@@ -193,6 +196,11 @@ export class UpdateCceMarksServiceAdapter {
         this.vm.selectedClass.selectedSection.studentList.filter(student => {
             return student.cceMarksObject.id == 0;
         }).forEach(student => {
+            if (student.cceMarksObject.marksObtained == null) {
+                student.cceMarksObject.marksObtained = 0.0;
+            } else {
+                student.cceMarksObject.marksObtained = parseFloat(student.cceMarksObject.marksObtained.toString()).toFixed(1);
+            }
             data.push(student.cceMarksObject);
         });
         return data;
@@ -203,6 +211,11 @@ export class UpdateCceMarksServiceAdapter {
         this.vm.selectedClass.selectedSection.studentList.filter(student => {
             return student.cceMarksObject.id != 0;
         }).forEach(student => {
+            if (student.cceMarksObject.marksObtained == null) {
+                student.cceMarksObject.marksObtained = 0.0;
+            } else {
+                student.cceMarksObject.marksObtained = parseFloat(student.cceMarksObject.marksObtained.toString()).toFixed(1);
+            }
             data.push(student.cceMarksObject);
         });
         return data;

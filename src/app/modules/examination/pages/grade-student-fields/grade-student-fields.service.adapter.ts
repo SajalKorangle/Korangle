@@ -190,6 +190,9 @@ export class GradeStudentFieldsServiceAdapter {
             this.vm.selectedField.subFieldList.forEach(subField => {
                 let result = this.getStudentSubField(item, subField, student_sub_field_list);
                 if (result) {
+                    if (result.marksObtained == 0.0) {
+                        result.marksObtained = null;
+                    }
                     tempItem['subFieldList'].push(result);
                 } else {
                     result = {
@@ -197,7 +200,7 @@ export class GradeStudentFieldsServiceAdapter {
                         'parentStudent': item.dbId,
                         'parentExamination': this.vm.selectedExamination.id,
                         'parentExtraSubField': subField.id,
-                        'marksObtained': 0,
+                        'marksObtained': null,
                     };
                     tempItem['subFieldList'].push(result);
                 }
@@ -225,6 +228,20 @@ export class GradeStudentFieldsServiceAdapter {
 
         let student_field_data_to_update = this.getStudentFieldDataToUpdate();
         let student_field_data_to_add = this.getStudentFieldDataToAdd();
+        student_field_data_to_update.forEach(item => {
+            if (item.marksObtained == null) {
+                item.marksObtained = 0.0;
+            } else {
+                item.marksObtained = parseFloat(item.marksObtained.toString()).toFixed(1);
+            }
+        });
+        student_field_data_to_add.forEach(item => {
+            if (item.marksObtained == null) {
+                item.marksObtained = 0.0;
+            } else {
+                item.marksObtained = parseFloat(item.marksObtained.toString()).toFixed(1);
+            }
+        });
 
         this.vm.isLoading = true;
 
