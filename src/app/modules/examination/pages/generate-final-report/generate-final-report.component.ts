@@ -25,6 +25,8 @@ export class GenerateFinalReportComponent implements OnInit {
 
     reportCardTypeList = REPORT_CARD_TYPE_LIST;
 
+    showPrinicipalSignature = true;
+
     reportCardMapping: any;
     classSectionStudentList = [];
 
@@ -62,6 +64,7 @@ export class GenerateFinalReportComponent implements OnInit {
             'subjectList': this.subjectList,
             'studentFinalReportList': this.studentFinalReportCardList,
             'reportCardMapping': this.reportCardMapping,
+            'showPrincipalSignature': this.showPrinicipalSignature,
         };
         let selectedClassSection = this.getSelectedClassSection();
         if (selectedClassSection.className == 'Class - 9') {

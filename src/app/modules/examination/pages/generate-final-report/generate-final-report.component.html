@@ -28,6 +28,12 @@
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="serviceAdapter.getStudentFinalReport()">GET</button>
 
+            <div>
+                <mat-checkbox [(ngModel)]="showPrinicipalSignature">
+                    Show Principal Signature
+                </mat-checkbox>
+            </div>
+
             <br/>
             <ng-container *ngIf="filteredStudentList.length>0">
                 <ng-container *ngFor="let item of ' '.repeat((filteredStudentList.length+9)/10).split(''); let i = index; let last=last;">

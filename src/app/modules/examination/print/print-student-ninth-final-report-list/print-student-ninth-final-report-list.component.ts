@@ -19,6 +19,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
     subjectList: any;
     studentFinalReportList: any;
     reportCardMapping: any;
+    showPrincipalSignature: any;
 
     printStudentNinthFinalReportListComponentSubscription: any;
 
@@ -30,6 +31,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
                 this.subjectList = value['subjectList'];
                 this.studentFinalReportList = value['studentFinalReportList'];
                 this.reportCardMapping = value['reportCardMapping'];
+                this.showPrincipalSignature = value['showPrincipalSignature'];
                 this.viewChecked = false;
             });
     }

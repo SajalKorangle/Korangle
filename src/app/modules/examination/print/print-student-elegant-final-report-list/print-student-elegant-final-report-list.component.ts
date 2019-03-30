@@ -20,6 +20,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
     studentFinalReportList: any;
     reportCardMapping: any;
     includeProject: any;
+    showPrincipalSignature: any;
 
     printStudentElegantFinalReportListComponentSubscription: any;
 
@@ -32,6 +33,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
                 this.extraFieldList = value['extraFieldList'];
                 this.studentFinalReportList = value['studentFinalReportList'];
                 this.reportCardMapping = value['reportCardMapping'];
+                this.showPrincipalSignature = value['showPrincipalSignature'];
                 this.populateIncludeProject();
                 this.viewChecked = false;
             });
