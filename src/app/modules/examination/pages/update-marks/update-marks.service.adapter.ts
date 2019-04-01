@@ -299,15 +299,18 @@ export class UpdateMarksServiceAdapter {
             return false;
         }).sort((a,b) => {
             if (a.rollNumber && b.rollNumber) {
+                console.log("here: "+a.rollNumber+", "+b.rollNumber);
                 return (a.rollNumber.toString() < b.rollNumber.toString())? -1:1;
             }
-            return 0;
+            console.log("not here: "+a.rollNumber+", "+b.rollNumber);
+            return (b.rollNumber)? -1:1;
         }).forEach(item => {
             let tempItem = {};
             tempItem = this.copyObject(item);
             tempItem['testDetails'] = this.getStudentTestList(tempItem, student_test_list);
             this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject['studentList'].push(tempItem);
         });
+        console.log(this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject['studentList']);
     }
 
     getStudentTestList(student: any, student_test_list: any): any {
