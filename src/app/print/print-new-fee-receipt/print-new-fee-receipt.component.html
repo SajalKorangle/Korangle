@@ -15,7 +15,12 @@
 
     <!-- Reg. No. , Dise Code -->
     <div class="row " style="margin-top: 0px;">
-        <div class="col-xs-6 d-flex custom-padding">
+        <div *ngIf="user.activeSchool.affiliationNumber && user.activeSchool.affiliationNumber.length > 4"
+             class="col-xs-6 d-flex custom-padding">
+            Aff. No. : {{user.activeSchool.affiliationNumber}}
+        </div>
+        <div *ngIf="!user.activeSchool.affiliationNumber || user.activeSchool.affiliationNumber.length <= 4"
+             class="col-xs-6 d-flex custom-padding">
             Reg. No. : {{user.activeSchool.registrationNumber}}
         </div>
         <div class="col-xs-6 d-flex custom-padding" align="end">
