@@ -63,7 +63,11 @@
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
-                        <mat-checkbox [(ngModel)]="columnFilter.showClassName" (click)="$event.stopPropagation();">Class Name
+                        <mat-checkbox [(ngModel)]="columnFilter.showClassName" (click)="$event.stopPropagation();">Class
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showSectionName" (click)="$event.stopPropagation();">Section
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
@@ -280,7 +284,8 @@
             <tr>
                 <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
                 <th [class.hidden]="!columnFilter.showName">Name</th>
-                <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
+                <th [class.hidden]="!columnFilter.showClassName">Class</th>
+                <th [class.hidden]="!columnFilter.showSectionName">Section</th>
                 <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
                 <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
                 <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
@@ -314,6 +319,7 @@
                         <td [class.hidden]="!columnFilter.showClassName">{{student.className}}
                             <!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->
                         </td>
+                        <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>
                         <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
                         <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
                         <td [class.hidden]="!columnFilter.showMobileNumber" class="hidden-xs hidden-sm">

@@ -10,6 +10,7 @@ class ColumnFilter {
     showSerialNumber = true;
     showName = true;
     showClassName = false;
+    showSectionName = false;
     showRollNumber = false;
     showFathersName = true;
     showMobileNumber = true;
@@ -360,6 +361,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showSerialNumber?headerValues.push('Serial No.'):'';
         this.columnFilter.showName?headerValues.push('Name'):'';
         this.columnFilter.showClassName?headerValues.push('Class Name'):'';
+        this.columnFilter.showSectionName?headerValues.push('Section Name'):'';
         this.columnFilter.showRollNumber?headerValues.push('Roll Number'):'';
         this.columnFilter.showFathersName?headerValues.push('Father\'s Name'):'';
         this.columnFilter.showMobileNumber?headerValues.push('Mobile No.'):'';
@@ -391,6 +393,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showSerialNumber?studentDisplay.push(student.serialNumber):'';
         this.columnFilter.showName?studentDisplay.push(student.name):'';
         this.columnFilter.showClassName?studentDisplay.push(student.className):'';
+        this.columnFilter.showSectionName?studentDisplay.push(student.sectionName):'';
         this.columnFilter.showRollNumber?studentDisplay.push(student.rollNumber):'';
         this.columnFilter.showFathersName?studentDisplay.push(student.fathersName):'';
         this.columnFilter.showMobileNumber?studentDisplay.push(student.mobileNumber):'';

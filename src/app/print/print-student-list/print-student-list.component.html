@@ -4,6 +4,7 @@
         <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
         <th [class.hidden]="!columnFilter.showName">Name</th>
         <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
+        <th [class.hidden]="!columnFilter.showSectionName">Section Name</th>
         <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
         <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
         <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
@@ -36,6 +37,7 @@
                     <td [class.hidden]="!columnFilter.showSerialNumber">{{i+1}}.</td>
                     <td [class.hidden]="!columnFilter.showName">{{ student.name | titlecase }}</td>
                     <td [class.hidden]="!columnFilter.showClassName">{{student.className}}<!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span --></td>
+                    <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>
                     <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
                     <td [class.hidden]="!columnFilter.showFathersName">{{ student.fathersName | titlecase }}</td>
                     <td [class.hidden]="!columnFilter.showMobileNumber">{{student.mobileNumber}}</td>
