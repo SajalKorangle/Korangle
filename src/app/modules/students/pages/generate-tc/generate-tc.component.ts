@@ -133,6 +133,7 @@ export class GenerateTcComponent implements OnInit {
             ]).then(value => {
                 this.isLoading = false;
                 if (this.selectedStudent.dbId === value[0].dbId) {
+                    this.selectedStudent = new Student();
                     this.selectedStudent.copy(value[0]);
                 }
                 if (this.selectedStudent.parentTransferCertificate === value[1].id) {
@@ -148,6 +149,7 @@ export class GenerateTcComponent implements OnInit {
                 student => {
                     this.isLoading = false;
                     if (this.selectedStudent.dbId === student.dbId) {
+                        this.selectedStudent = new Student();
                         this.selectedStudent.copy(student);
                         this.selectedTransferCertificate.clean();
                         this.currentTransferCertificate.clean();
@@ -253,5 +255,8 @@ export class GenerateTcComponent implements OnInit {
         };
         EmitterService.get('print-transfer-certificate-second-format').emit(value);
     }
-
+    handleStudentSelection(student: any): void {
+        this.selectedStudent = student;
+        this.getStudentProfile();
+    }
 }
