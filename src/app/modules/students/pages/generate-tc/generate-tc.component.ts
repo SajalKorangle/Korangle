@@ -56,9 +56,11 @@ export class GenerateTcComponent implements OnInit {
         this.showDetails = false;
     }
 
+/*
     handleSessionChange(): void {
         this.getStudentList(this.selectedSession.dbId);
     }
+*/
 
     ngOnInit(): void {
         this.getSessionList();
@@ -258,5 +260,6 @@ export class GenerateTcComponent implements OnInit {
     handleStudentSelection(student: any): void {
         this.selectedStudent = student;
         this.getStudentProfile();
+        console.log(this.user);
     }
 }
