@@ -2,9 +2,19 @@ from django.db import models
 
 from school_app.model.models import School, Session
 from team_app.models import Task
+import os
+from django.utils.timezone import now
 
+
+def upload_avatar_to(instance, filename):
+    filename_base, filename_ext = os.path.splitext(filename)
+    return 'employees/%s/profile_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
 
 class Employee(models.Model):
+
+    #ProfileImage
+    profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True)
+
 
     # Name
     name = models.CharField(max_length=100)

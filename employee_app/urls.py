@@ -40,3 +40,10 @@ urlpatterns += [
 	url(r'^employee-permissions', EmployeePermissionView.as_view()),
 ]
 
+######## Profile Image ############
+from .views import ProfileImageView
+urlpatterns += [
+    url(r'^(?P<employee_id>[0-9]+)/profile-image', ProfileImageView.as_view()),
+]
+
+

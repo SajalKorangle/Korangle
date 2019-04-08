@@ -133,3 +133,13 @@ class EmployeePermissionListView(APIView):
         data = json.loads(request.body.decode('utf-8'))
         print("okay one")
         return create_employee_permission_list(data)
+
+############ Profile Image ########################
+from .business.profile_image import update_profile_image
+
+class ProfileImageView(APIView):
+
+    @user_permission
+    def post(request, employee_id):
+        return update_profile_image(request.FILES['myFile'], employee_id)
+
