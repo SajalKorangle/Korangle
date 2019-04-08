@@ -6,6 +6,11 @@ import { CommonServiceRequirements } from '../../services/common-service-require
 
 @Injectable()
 export class EmployeeService extends CommonServiceRequirements {
+    // Profile Image
+    uploadProfileImage(file: any, data: any, token: any): Promise<any> {
+        const url = '/employee/' + data['id'] + '/profile-image';
+        return super.fileData(file, token, url);
+    }
 
     // Employee Profile
     createEmployeeProfile(data: any, token: any): Promise<any> {

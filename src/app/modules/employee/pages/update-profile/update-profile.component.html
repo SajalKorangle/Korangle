@@ -26,70 +26,127 @@
                 <a href="tel:{{selectedEmployeeProfile.mobileNumber}}">Call Me</a>
             </div>
         </div>
-
-        <!-- Name, Father's Name, Mother's Name, Mobile Number -->
         <div class="row">
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Name"
-                           (ngModelChange)="currentEmployeeProfile.name=$event"
-                           [ngModel]="selectedEmployeeProfile.name">
-                </mat-form-field>
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+
+                <img *ngIf="selectedEmployeeProfile.profileImage"
+                     src="{{selectedEmployeeProfile.profileImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!selectedEmployeeProfile.profileImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+                <br/>
+
+                <input type='file'
+                       (change)="onImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #imageInput>
+
+                <a (click)="imageInput.click()"
+                   style="cursor: pointer">Select & Upload Image</a>
+
             </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Father's Name"
-                           (ngModelChange)="currentEmployeeProfile.fatherName=$event"
-                           [ngModel]="selectedEmployeeProfile.fatherName">
-                </mat-form-field>
+
+            <div class="col-md-9">
+                <!-- Name, Father's Name, Mother's Name-->
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input matInput
+                                   type="text"
+                                   placeholder="Name"
+                                   (ngModelChange)="currentEmployeeProfile.name=$event"
+                                   [ngModel]="selectedEmployeeProfile.name">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input matInput
+                                   type="text"
+                                   placeholder="Father's Name"
+                                   (ngModelChange)="currentEmployeeProfile.fatherName=$event"
+                                   [ngModel]="selectedEmployeeProfile.fatherName">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input matInput
+                                   type="text"
+                                   placeholder="Mother's Name"
+                                   (ngModelChange)="currentEmployeeProfile.motherName=$event"
+                                   [ngModel]="selectedEmployeeProfile.motherName">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!--  Mobile Number , Date of Birth, Gender -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input matInput
+                                   type="number"
+                                   placeholder="Mobile Number"
+                                   (ngModelChange)="currentEmployeeProfile.mobileNumber=$event"
+                                   [ngModel]="selectedEmployeeProfile.mobileNumber">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input matInput
+                                   type="date"
+                                   placeholder="Date of Birth"
+                                   (ngModelChange)="currentEmployeeProfile.dateOfBirth=$event"
+                                   [ngModel]="selectedEmployeeProfile.dateOfBirth">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-select placeholder="Gender"
+                                        (ngModelChange)="currentEmployeeProfile.gender=$event"
+                                        [ngModel]="selectedEmployeeProfile.gender">
+                                <mat-option>None</mat-option>
+                                <mat-option value="Male">Male</mat-option>
+                                <mat-option value="Female">Female</mat-option>
+                                <mat-option value="Other">Other</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
             </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Mother's Name"
-                           (ngModelChange)="currentEmployeeProfile.motherName=$event"
-                           [ngModel]="selectedEmployeeProfile.motherName">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="number"
-                           placeholder="Mobile Number"
-                           (ngModelChange)="currentEmployeeProfile.mobileNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.mobileNumber">
-                </mat-form-field>
+
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+
+                <img *ngIf="selectedEmployeeProfile.profileImage"
+                     src="{{selectedEmployeeProfile.profileImage}}"
+                     style="width: 50%">
+
+                <img *ngIf="!selectedEmployeeProfile.profileImage"
+                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                     style="width: 50%"/>
+
+                <br/>
+
+                <input type='file'
+                       (change)="onImageSelect($event)"
+                       multiple="false"
+                       style="display: none"
+                       accept="image/*"
+                       #imageInputTwo>
+
+                <a (click)="imageInputTwo.click()"
+                   style="cursor: pointer">Select & Upload Image</a>
+
             </div>
         </div>
 
-        <!-- Date of Birth, Gender, Aadhar Number, Passport Number -->
+        <!-- Aadhar number, Passport number, Employee Number, Job Title -->
         <div class="row">
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput
-                           type="date"
-                           placeholder="Date of Birth"
-                           (ngModelChange)="currentEmployeeProfile.dateOfBirth=$event"
-                           [ngModel]="selectedEmployeeProfile.dateOfBirth">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <mat-select placeholder="Gender"
-                                (ngModelChange)="currentEmployeeProfile.gender=$event"
-                                [ngModel]="selectedEmployeeProfile.gender">
-                        <mat-option>None</mat-option>
-                        <mat-option value="Male">Male</mat-option>
-                        <mat-option value="Female">Female</mat-option>
-                        <mat-option value="Other">Other</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -108,10 +165,6 @@
                            [ngModel]="selectedEmployeeProfile.passportNumber">
                 </mat-form-field>
             </div>
-        </div>
-
-        <!-- Employee Number, Job Title, Qualification, Date of Joining -->
-        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -130,6 +183,10 @@
                            [ngModel]="selectedEmployeeProfile.currentPost">
                 </mat-form-field>
             </div>
+        </div>
+
+        <!-- Qualification, Date of Joining, Bank Name, Bank Account Number -->
+        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -148,10 +205,6 @@
                            [ngModel]="selectedEmployeeProfile.dateOfJoining">
                 </mat-form-field>
             </div>
-        </div>
-
-        <!-- Bank Name, Bank Account Number, EPF Account No. , Pan Number -->
-        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -170,6 +223,10 @@
                            [ngModel]="selectedEmployeeProfile.bankAccountNumber">
                 </mat-form-field>
             </div>
+        </div>
+
+        <!--EPF account no., Pan number, Monthly Salary, Paid Leaves -->
+        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -188,10 +245,6 @@
                            [ngModel]="selectedEmployeeProfile.panNumber">
                 </mat-form-field>
             </div>
-        </div>
-
-        <!-- Monthly Salary, Paid Leaves, Date of Leaving -->
-        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -210,6 +263,10 @@
                            [ngModel]="selectedEmployeeSessionProfile.paidLeaveNumber">
                 </mat-form-field>
             </div>
+        </div>
+
+        <!-- Date of leaving, Spouse name, PRAN Number -->
+        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -226,6 +283,15 @@
                            placeholder="Spouse's Name"
                            (ngModelChange)="currentEmployeeProfile.spouseName=$event"
                            [ngModel]="selectedEmployeeProfile.spouseName">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="PRAN Number"
+                           (ngModelChange)="currentEmployeeProfile.pranNumber=$event"
+                           [ngModel]="selectedEmployeeProfile.pranNumber">
                 </mat-form-field>
             </div>
         </div>
