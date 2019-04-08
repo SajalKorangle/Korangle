@@ -35,7 +35,7 @@ export class GenerateTcComponent implements OnInit {
     showDetails: boolean = false;
 
     isLoading = false;
-    isStudentListLoading = false;
+    // isStudentListLoading = false;
 
     twoCopies = false;
 
@@ -44,7 +44,7 @@ export class GenerateTcComponent implements OnInit {
 
     constructor (private studentService: StudentService,
                  private schoolService: SchoolService) { }
-
+/*
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
         this.changeSelectedStudentToFirst();
@@ -56,7 +56,7 @@ export class GenerateTcComponent implements OnInit {
         this.showDetails = false;
     }
 
-/*
+
     handleSessionChange(): void {
         this.getStudentList(this.selectedSession.dbId);
     }
@@ -64,7 +64,7 @@ export class GenerateTcComponent implements OnInit {
 
     ngOnInit(): void {
         this.getSessionList();
-        this.getStudentList(this.user.activeSchool.currentSessionDbId);
+        // this.getStudentList(this.user.activeSchool.currentSessionDbId);
     }
 
     getSessionList(): void {
@@ -80,7 +80,7 @@ export class GenerateTcComponent implements OnInit {
         });
     }
 
-    getStudentList(sessionDbId: number): void {
+    /*getStudentList(sessionDbId: number): void {
         const data = {
             sessionDbId: sessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
@@ -117,7 +117,7 @@ export class GenerateTcComponent implements OnInit {
         }, error => {
             this.isStudentListLoading = false;
         });
-    }
+    }*/
 
     getStudentProfile(): void {
         this.isLoading = true;
@@ -257,9 +257,13 @@ export class GenerateTcComponent implements OnInit {
         };
         EmitterService.get('print-transfer-certificate-second-format').emit(value);
     }
+
     handleStudentSelection(student: any): void {
         this.selectedStudent = student;
-        this.getStudentProfile();
-        console.log(this.user);
+        if (this.selectedStudent == null) {
+            this.showDetails = false;
+        } else {
+            this.getStudentProfile();
+        }
     }
 }

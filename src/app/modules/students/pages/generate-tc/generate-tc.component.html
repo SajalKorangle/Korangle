@@ -60,7 +60,9 @@
     <!--</ng-container>-->
 
     <student-filter [user]="user"
-                    (onStudentSelected)="handleStudentSelection($event)" [studentTcGenerated]="true"></student-filter>
+                    (onStudentSelected)="handleStudentSelection($event)"
+                    (onStudentLoading)="isLoading=$event"
+                    [studentTcGenerated]="true"></student-filter>
 
 
     <div class="row">
@@ -70,7 +72,7 @@
 
 
     <!-- ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading && !isStudentListLoading" -->
-    <ng-container *ngIf="showDetails==true && !isLoading && !isStudentListLoading">
+    <ng-container *ngIf="showDetails==true && !isLoading">
 
 
         <div class="row" style="font-weight: 800;">
@@ -214,6 +216,6 @@
 
 </div>
 
-<ng-container *ngIf="isLoading || isStudentListLoading">
+<ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
