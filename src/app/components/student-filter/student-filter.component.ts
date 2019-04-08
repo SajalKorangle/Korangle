@@ -20,6 +20,8 @@ export class StudentFilterComponent implements OnInit {
 
     @Input() sessionChange = true;
 
+    @Input() studentTcGenerated = false;
+
     @Output() onStudentSelected = new EventEmitter<any>();
 
     @Output() onStudentLoading = new EventEmitter<boolean>();
@@ -70,12 +72,16 @@ export class StudentFilterComponent implements OnInit {
     }
 
     populateStudentList(studentList: any): void {
-        this.studentList = studentList.filter(student => {
-            if (student.parentTransferCertificate) {
-                return false;
-            }
-            return true;
-        });
+        if (this.studentTcGenerated) {
+            this.studentList = studentList;
+        } else {
+            this.studentList = studentList.filter(student => {
+                if (student.parentTransferCertificate) {
+                    return false;
+                }
+                return true;
+            });
+        }
         this.studentList.forEach(student => {
             student.showSectionName = this.showSectionName(student.className);
         });
