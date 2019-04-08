@@ -214,7 +214,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         student.subjectList.forEach(subject => {
             let tempItem = {
                 'subject': subject,
-                'marks': this.getTotalSubjectMarks(student, subject),
+                'marks': this.getTotalSubjectMarks(student, subject.parentSubject),
             };
             marks_list.push(tempItem);
         });
@@ -223,7 +223,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         marks_list.forEach(item => {
             if (item.marks < 26.4) {
                 failNumber += 1;
-                supplSubject.push(this.getSubjectName(item.subject));
+                supplSubject.push(this.getSubjectName(item.subject.parentSubject));
             }
         });
         if (failNumber > (marks_list.length-4)) {
