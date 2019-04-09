@@ -26,6 +26,7 @@ class ColumnFilter {
     showBankAccountNumber = false;
     showEpfAccountNumber = false;
     showMonthlySalary = false;
+    showPranNumber = false;
     showRemark = false;
 }
 
@@ -134,12 +135,13 @@ export class ViewAllComponent implements OnInit {
         (this.columnFilter.showBankAccountNumber)? headerValues.push('Bank Account Number'): '';
         (this.columnFilter.showEpfAccountNumber)? headerValues.push('Epf Account Number'): '';
         (this.columnFilter.showMonthlySalary)? headerValues.push('Monthly Salary'): '';
+        (this.columnFilter.showPranNumber)? headerValues.push('PRAN Number'): '';
         (this.columnFilter.showRemark)? headerValues.push('Remark'): '';
 
         return headerValues;
     }
 
-    getEmployeeDisplayInfo(employee: any): any {
+     getEmployeeDisplayInfo(employee: any): any {
         let employeeDisplay = [];
 
         (this.columnFilter.showName)? employeeDisplay.push(employee.name): '';
@@ -162,6 +164,7 @@ export class ViewAllComponent implements OnInit {
         (this.columnFilter.showBankAccountNumber)? employeeDisplay.push(employee.bankAccountNumber): '';
         (this.columnFilter.showEpfAccountNumber)? employeeDisplay.push(employee.epfAccountNumber): '';
         (this.columnFilter.showMonthlySalary)? employeeDisplay.push(employee.monthlySalary): '';
+        (this.columnFilter.showPranNumber)? employeeDisplay.push(employee.pranNumber): '';
         (this.columnFilter.showRemark)? employeeDisplay.push(employee.remark): '';
 
         return employeeDisplay;
