@@ -203,8 +203,6 @@ export class GenerateFinalReportServiceAdapter {
 
         let selectedClassSection = this.vm.getSelectedClassSection();
 
-        console.log(selectedClassSection.className);
-
         let request_class_subject_data = {
             'subjectList': [],
             'schoolList': [this.vm.user.activeSchool.dbId],
