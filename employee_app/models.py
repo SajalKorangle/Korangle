@@ -66,6 +66,9 @@ class Employee(models.Model):
     # Monthly Salary
     monthlySalary = models.IntegerField(null=True)
 
+    # Pran No.
+    pranNumber = models.TextField(null=True)
+
     # Joining Date
     dateOfLeaving = models.DateField(null=True)
 
