@@ -190,7 +190,7 @@
             </div>
         </div>
 
-        <!-- Monthly Salary, Paid Leaves, Date of Leaving -->
+        <!-- Monthly Salary, Paid Leaves, Date of Leaving, Spouse Name -->
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
@@ -226,6 +226,19 @@
                            placeholder="Spouse's Name"
                            (ngModelChange)="currentEmployeeProfile.spouseName=$event"
                            [ngModel]="selectedEmployeeProfile.spouseName">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- PRAN Number -->
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           placeholder="PRAN Number"
+                           (ngModelChange)="currentEmployeeProfile.pranNumber=$event"
+                           [ngModel]="selectedEmployeeProfile.pranNumber">
                 </mat-form-field>
             </div>
         </div>

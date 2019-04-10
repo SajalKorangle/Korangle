@@ -108,6 +108,11 @@
                 </mat-checkbox>
             </mat-option>
             <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showPranNumber" (click)="$event.stopPropagation();">
+                    PRAN Number
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
                 <mat-checkbox [(ngModel)]="columnFilter.showRemark" (click)="$event.stopPropagation();">
                     Remark
                 </mat-checkbox>
@@ -168,6 +173,7 @@
                 <th [class.hidden]="!columnFilter.showBankAccountNumber">Bank Acc. No.</th>
                 <th [class.hidden]="!columnFilter.showEpfAccountNumber">EPF Acc. No.</th>
                 <th [class.hidden]="!columnFilter.showMonthlySalary">Monthly Salary</th>
+                <th [class.hidden]="!columnFilter.showPranNumber">PRAN Number</th>
                 <th [class.hidden]="!columnFilter.showRemark">Remark</th>
             </tr>
             </thead>
@@ -199,6 +205,7 @@
                         <td [class.hidden]="!columnFilter.showBankAccountNumber">{{employee.bankAccountNumber}}</td>
                         <td [class.hidden]="!columnFilter.showEpfAccountNumber">{{employee.epfAccountNumber}}</td>
                         <td [class.hidden]="!columnFilter.showMonthlySalary">{{employee.monthlySalary}}</td>
+                        <td [class.hidden]="!columnFilter.showPranNumber">{{employee.pranNumber}}</td>
                         <td [class.hidden]="!columnFilter.showRemark">{{employee.remark}}</td>
                     </ng-container>
                 </tr>
