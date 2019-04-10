@@ -327,6 +327,13 @@ export class UploadListComponent implements OnInit {
         if (checkFailed) {
             return;
         }*/
+        console.log('prev', this.data);
+        this.data = this.data.filter(value => {
+            if (value.length <= 1 ) {
+                return false;
+            }
+            return true;
+        });
 
         this.data.forEach((student, index) => {
             if (index >= this.numberOfFillerRows) {
