@@ -46,3 +46,7 @@ def update_transfer_certificate(data):
             'status': 'failure',
             'message': 'Transfer Certificate updation failed',
         }
+
+def delete_transfer_certificate(transfer_certificate_id):
+    TransferCertificate.objects.get(id=transfer_certificate_id).delete()
+    return 'TC deleted successfully'
