@@ -111,7 +111,6 @@ export class ViewMarksServiceAdapter {
                 this.classSubjectList = value2[0];
                 this.studentSubjectList = value2[1];
                 this.classTestList = value2[2];
-                console.log('Hello world data using service' , value2[2]);
                 this.studentTestList = value2[3];
 
                 this.populateStudentMarksList();

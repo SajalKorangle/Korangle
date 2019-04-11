@@ -85,8 +85,5 @@ export class ViewMarksComponent implements OnInit, OnChanges {
             return 'E';
         }
     }
-    welcome() {
-        console.log(this.selectedExamination , this.examinationList);
-    }
 
 }
