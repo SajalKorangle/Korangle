@@ -10,6 +10,8 @@ import { StudentService } from '../../student.service';
 import { SchoolService } from '../../../../services/school.service';
 
 import { EmitterService } from '../../../../services/emitter.service';
+import {logger} from 'codelyzer/util/logger';
+import {error} from '@angular/compiler/src/util';
 
 @Component({
   selector: 'generate-tc',
@@ -223,6 +225,7 @@ export class GenerateTcComponent implements OnInit {
                             }
                         }
                     );
+                    this.selectedStudent.parentTransferCertificate = response.id;
                 } else {
                     this.isLoading = false;
                     alert('Failed to generate Transfer Certificate');
@@ -256,6 +259,24 @@ export class GenerateTcComponent implements OnInit {
             twoCopies: this.twoCopies,
         };
         EmitterService.get('print-transfer-certificate-second-format').emit(value);
+    }
+
+    cancelTc(): void {
+        if (!confirm('Are you sure, you want to cancel TC')) {
+            return;
+        }
+        this.isLoading = true ;
+        this.studentService.deleteTransferCertificate(this.selectedStudent.parentTransferCertificate , this.user.jwt).then(
+            response => {
+                this.isLoading = false;
+                alert('TC has been cancelled successfully');
+                this.selectedTransferCertificate.id = 0;
+                this.selectedStudent.parentTransferCertificate = null;
+            }, error => {
+                this.isLoading = false;
+            }
+        );
+        this.selectedTransferCertificate.clean();
     }
 
     handleStudentSelection(student: any): void {

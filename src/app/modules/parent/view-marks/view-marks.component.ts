@@ -49,7 +49,7 @@ export class ViewMarksComponent implements OnInit, OnChanges {
     }
 
     getTestGrade(test: any): any {
-        return this.getGradeFromPercentage((test.marksObtained/test.maximumMarks)*100);
+        return this.getGradeFromPercentage((test.marksObtained / test.maximumMarks) * 100);
     }
 
     getTotalMaximumMarks(marksList: any): any {
@@ -73,7 +73,7 @@ export class ViewMarksComponent implements OnInit, OnChanges {
     }
 
     getGradeFromPercentage(percentage: any): any {
-        if (percentage >=75) {
+        if (percentage >= 75) {
             return 'A';
         } else if (percentage >= 60) {
             return 'B';

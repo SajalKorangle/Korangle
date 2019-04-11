@@ -79,6 +79,10 @@ export class StudentService extends CommonServiceRequirements {
         return super.putData(data, token, '/student/transfer-certificates/' + data['id']);
     }
 
+    deleteTransferCertificate(Id: any, token: any): Promise<any> {
+        return super.deleteData(token, '/student/transfer-certificates/' + Id);
+    }
+
 
     // Variables
 

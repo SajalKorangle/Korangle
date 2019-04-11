@@ -204,6 +204,11 @@
                 (click)="printTCSecondFormat();"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Print T. C.</button>
 
+        <button type="button"
+                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
+                (click)="cancelTc()"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Cancel T. C.</button>
+
         <mat-checkbox [(ngModel)]="twoCopies">Two Copies</mat-checkbox>
 
         <div class="clearfix"></div>

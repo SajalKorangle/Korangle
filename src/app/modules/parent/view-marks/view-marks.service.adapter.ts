@@ -151,7 +151,7 @@ export class ViewMarksServiceAdapter {
 
                         tempItem = this.copyObject(item);
                         tempItem['subjectName'] = this.getSubjectName(item.parentSubject);
-                        tempItem['maximumMarks'] = this.getMaximumMarks(item.parentSubject, item.testType);
+                        tempItem['maximumMarks'] = this.getMaximumMarks(item.parentExamination, item.parentSubject, item.testType);
 
                         examination['marksList'].push(tempItem);
 
@@ -218,11 +218,12 @@ export class ViewMarksServiceAdapter {
         return result;
     }
 
-    getMaximumMarks(subjectId: any, testType: any): any {
+    getMaximumMarks(examId: any, subjectId: any, testType: any): any {
         let result = 100;
         this.classTestList.every(item => {
-            if (item.parentSubject === subjectId
-                && item.testType == testType) {
+            if (item.parentExamination === examId
+                && item.parentSubject === subjectId
+                && item.testType === testType) {
                 result = item.maximumMarks;
                 return false;
             }

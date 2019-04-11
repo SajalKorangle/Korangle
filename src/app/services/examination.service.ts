@@ -47,7 +47,7 @@ export class ExaminationService extends CommonServiceRequirements {
     }
 
     deleteTest(testId: any, token: any): Promise<any> {
-        return super.deleteData(token, '/examinations/tests/'+testId);
+        return super.deleteData(token, '/examinations/tests/' + testId);
     }
 
     // Student Test
