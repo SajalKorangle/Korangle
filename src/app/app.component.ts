@@ -6,6 +6,7 @@ import { DataStorage } from './classes/data-storage';
 import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -14,6 +15,8 @@ import {environment} from '../environments/environment.prod';
     providers: [ AuthenticationService, VersionCheckService ],
 })
 export class AppComponent implements OnInit {
+    subRouteValue: string;
+    isLoading = false;
 
 	public user = new User();
 
@@ -39,6 +42,16 @@ export class AppComponent implements OnInit {
 
         this.versionCheckService.initVersionCheck(environment.versionCheckURL);
 
+    }
+
+    refresh() {
+        this.subRouteValue = this.user.section.subRoute ;
+        this.user.section.subRoute = null;
+        this.isLoading = true;
+        setTimeout(() => {
+            this.user.section.subRoute = this.subRouteValue;
+            this.isLoading = false;
+        }, 1000);
     }
 
 }

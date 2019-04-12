@@ -20,7 +20,12 @@
                          *ngIf="user.section"
                          style="min-height: 100%">
                         <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="user.activeSchool.primaryThemeColor">
-                            <h4 class="title hidden-xs">{{user.section.title}} - {{user.section.subTitle}}</h4>
+                            <div class="card-header-part1 hidden-xs">
+                                <h4 class="title">{{user.section.title}} - {{user.section.subTitle}}</h4>
+                                <a style="text-decoration: none" (click)="refresh()">
+                                    <i class="material-icons">refresh</i>
+                                </a>
+                            </div>
                             <h4 class="title visible-xs">{{user.section.title}}</h4>
                         </div>
                         <router-outlet></router-outlet>
@@ -37,6 +42,12 @@
                 </div>
             </div>
 
+            <!--Loading-->
+            <ng-container *ngIf="isLoading">
+                <app-loading-spinner [user]="user"></app-loading-spinner>
+            </ng-container>
+
+
         </div>
 
     </div>
@@ -50,3 +61,4 @@
 <div class="wrapper showPrint">
     <app-print [user]="user"></app-print>
 </div>
+
