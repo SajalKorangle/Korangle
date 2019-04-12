@@ -17,6 +17,7 @@ docutils==0.14
 entrypoints==0.2.3
 factory-boy==2.10.0
 Faker==0.8.12
+freeze==1.0.10
 gunicorn==19.9.0
 html5lib==1.0.1
 idna==2.6
@@ -54,6 +55,7 @@ requests==2.18.4
 rsa==3.4.2
 s3transfer==0.1.13
 Send2Trash==1.4.2
+sentry-sdk==0.7.10
 simplegeneric==0.8.1
 six==1.11.0
 terminado==0.8.1
