@@ -27,6 +27,7 @@ export class GenerateTcComponent implements OnInit {
     selectedClass: Classs;
     selectedSection: Section;
     selectedStudent: Student;
+    studentFromFilter: any;
 
     selectedTransferCertificate: TransferCertificate = new TransferCertificate();
 
@@ -226,6 +227,7 @@ export class GenerateTcComponent implements OnInit {
                         }
                     );
                     this.selectedStudent.parentTransferCertificate = response.id;
+                    this.studentFromFilter.parentTransferCertificate = response.id;
                 } else {
                     this.isLoading = false;
                     alert('Failed to generate Transfer Certificate');
@@ -272,6 +274,7 @@ export class GenerateTcComponent implements OnInit {
                 alert('TC has been cancelled successfully');
                 this.selectedTransferCertificate.id = 0;
                 this.selectedStudent.parentTransferCertificate = null;
+                this.studentFromFilter.parentTransferCertificate = null;
             }, error => {
                 this.isLoading = false;
             }
@@ -281,6 +284,7 @@ export class GenerateTcComponent implements OnInit {
 
     handleStudentSelection(student: any): void {
         this.selectedStudent = student;
+        this.studentFromFilter = student;
         if (this.selectedStudent == null) {
             this.showDetails = false;
         } else {
