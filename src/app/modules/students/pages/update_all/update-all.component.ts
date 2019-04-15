@@ -368,8 +368,8 @@ export class UpdateAllComponent implements OnInit {
         console.log(newValue);
         // return;
         if (student[key] !== newValue) {
-            console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
-            console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
+            // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
+            // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
             const data = {
                 id: student['dbId'],
             };
@@ -386,7 +386,7 @@ export class UpdateAllComponent implements OnInit {
             } else if (inputType === 'list') {
 
             }
-            console.log(data);
+            // console.log(data);
             this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
                 response => {
                     if (response.status === 'success') {
