@@ -329,7 +329,7 @@ export class UploadListComponent implements OnInit {
         }*/
         console.log('prev', this.data);
         this.data = this.data.filter(value => {
-            if (value.length <= 1 ) {
+            if (value.length < 1 ) {
                 return false;
             }
             return true;
