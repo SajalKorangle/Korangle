@@ -83,8 +83,8 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Mother\'s Name', 'motherName', 'text', false, ''), // 10
         new ColumnHandle('Gender', 'gender', 'list', false, GENDER_LIST), // 11
         new ColumnHandle('Caste', 'caste', 'text', false, ''), // 12
-        new ColumnHandle('Category', 'newCategoryField', 'list', false, CATEGORY_LIST), // 13
-        new ColumnHandle('Religion', 'newReligionField', 'list', false, RELIGION_LIST), // 14
+        new ColumnHandle('Category', 'category', 'list', false, CATEGORY_LIST), // 13
+        new ColumnHandle('Religion', 'religion', 'list', false, RELIGION_LIST), // 14
         new ColumnHandle('Father\'s Occupation', 'fatherOccupation', 'text', false, ''), // 15
         new ColumnHandle('Address', 'address', 'text', true, ''), // 16
         new ColumnHandle('Child SSMID', 'childSSMID', 'number', false, ''), // 17
@@ -373,7 +373,13 @@ export class UpdateAllComponent implements OnInit {
             const data = {
                 id: student['dbId'],
             };
-            data[key] = newValue;
+            if (key == 'category') {
+                data['newCategoryField'] = newValue;
+            } else if (key == 'religion') {
+                data['newReligionField'] = newValue;
+            } else {
+                data[key] = newValue;
+            }
             document.getElementById(key + student.dbId).classList.add('updatingField');
             if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
                 (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = true;
