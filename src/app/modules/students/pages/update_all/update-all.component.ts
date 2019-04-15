@@ -83,8 +83,8 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Mother\'s Name', 'motherName', 'text', false, ''), // 10
         new ColumnHandle('Gender', 'gender', 'list', false, GENDER_LIST), // 11
         new ColumnHandle('Caste', 'caste', 'text', false, ''), // 12
-        new ColumnHandle('Category', 'category', 'list', false, CATEGORY_LIST), // 13
-        new ColumnHandle('Religion', 'religion', 'list', false, RELIGION_LIST), // 14
+        new ColumnHandle('Category', 'newCategoryField', 'list', false, CATEGORY_LIST), // 13
+        new ColumnHandle('Religion', 'newReligionField', 'list', false, RELIGION_LIST), // 14
         new ColumnHandle('Father\'s Occupation', 'fatherOccupation', 'text', false, ''), // 15
         new ColumnHandle('Address', 'address', 'text', true, ''), // 16
         new ColumnHandle('Child SSMID', 'childSSMID', 'number', false, ''), // 17
@@ -368,8 +368,8 @@ export class UpdateAllComponent implements OnInit {
         console.log(newValue);
         // return;
         if (student[key] !== newValue) {
-            // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
-            // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
+            console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
+            console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
             const data = {
                 id: student['dbId'],
             };
@@ -380,6 +380,7 @@ export class UpdateAllComponent implements OnInit {
             } else if (inputType === 'list') {
 
             }
+            console.log(data);
             this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
                 response => {
                     if (response.status === 'success') {
