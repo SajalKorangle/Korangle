@@ -167,7 +167,7 @@ class ProfileImageView(APIView):
 
 ############ Transfer Certificate #################
 from .business.transfer_certificate import create_transfer_certificate, \
-    get_transfer_certificate, update_transfer_certificate
+    get_transfer_certificate, update_transfer_certificate, delete_transfer_certificate
 
 
 class TransferCertificateView(APIView):
@@ -187,3 +187,8 @@ class TransferCertificateView(APIView):
     def put(request, transfer_certificate_id):
         data = json.loads(request.body.decode('utf-8'))
         return update_transfer_certificate(data)
+
+    @user_permission
+    def delete(request, transfer_certificate_id):
+        return delete_transfer_certificate(transfer_certificate_id)
+
