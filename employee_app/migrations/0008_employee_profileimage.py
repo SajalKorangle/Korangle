@@ -9,7 +9,7 @@ import employee_app.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('employee_app', '0006_employee_spousename'),
+        ('employee_app', '0007_employee_prannumber'),
     ]
 
     operations = [

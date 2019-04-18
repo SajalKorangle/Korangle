@@ -35,6 +35,7 @@ def create_employee_profile(data):
 
 def update_employee_profile(data):
 
+    del data['profileImage']
     employee_object = EmployeeModelSerializer(Employee.objects.get(id=data['id']), data=data)
     if employee_object.is_valid():
         employee_object.save()
