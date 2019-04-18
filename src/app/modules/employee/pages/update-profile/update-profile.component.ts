@@ -83,7 +83,7 @@ export class UpdateProfileComponent implements OnInit {
             this.isLoading = false;
             this.selectedEmployeeProfile = value[0];
             Object.keys(this.selectedEmployeeProfile).forEach(key => {
-                this.currentEmployeeProfile[key] = this.selectedEmployeeProfile[key];
+                this. currentEmployeeProfile[key] = this.selectedEmployeeProfile[key];
             });
             this.selectedEmployeeSessionProfile = value[1];
             Object.keys(this.selectedEmployeeSessionProfile).forEach(key => {

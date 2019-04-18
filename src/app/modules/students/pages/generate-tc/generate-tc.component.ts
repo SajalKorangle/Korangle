@@ -10,6 +10,8 @@ import { StudentService } from '../../student.service';
 import { SchoolService } from '../../../../services/school.service';
 
 import { EmitterService } from '../../../../services/emitter.service';
+import {logger} from 'codelyzer/util/logger';
+import {error} from '@angular/compiler/src/util';
 
 @Component({
   selector: 'generate-tc',
@@ -25,6 +27,7 @@ export class GenerateTcComponent implements OnInit {
     selectedClass: Classs;
     selectedSection: Section;
     selectedStudent: Student;
+    studentFromFilter: any;
 
     selectedTransferCertificate: TransferCertificate = new TransferCertificate();
 
@@ -35,7 +38,7 @@ export class GenerateTcComponent implements OnInit {
     showDetails: boolean = false;
 
     isLoading = false;
-    isStudentListLoading = false;
+    // isStudentListLoading = false;
 
     twoCopies = false;
 
@@ -44,7 +47,7 @@ export class GenerateTcComponent implements OnInit {
 
     constructor (private studentService: StudentService,
                  private schoolService: SchoolService) { }
-
+/*
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
         this.changeSelectedStudentToFirst();
@@ -56,13 +59,15 @@ export class GenerateTcComponent implements OnInit {
         this.showDetails = false;
     }
 
+
     handleSessionChange(): void {
         this.getStudentList(this.selectedSession.dbId);
     }
+*/
 
     ngOnInit(): void {
         this.getSessionList();
-        this.getStudentList(this.user.activeSchool.currentSessionDbId);
+        // this.getStudentList(this.user.activeSchool.currentSessionDbId);
     }
 
     getSessionList(): void {
@@ -78,7 +83,7 @@ export class GenerateTcComponent implements OnInit {
         });
     }
 
-    getStudentList(sessionDbId: number): void {
+    /*getStudentList(sessionDbId: number): void {
         const data = {
             sessionDbId: sessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
@@ -115,7 +120,7 @@ export class GenerateTcComponent implements OnInit {
         }, error => {
             this.isStudentListLoading = false;
         });
-    }
+    }*/
 
     getStudentProfile(): void {
         this.isLoading = true;
@@ -133,6 +138,7 @@ export class GenerateTcComponent implements OnInit {
             ]).then(value => {
                 this.isLoading = false;
                 if (this.selectedStudent.dbId === value[0].dbId) {
+                    this.selectedStudent = new Student();
                     this.selectedStudent.copy(value[0]);
                 }
                 if (this.selectedStudent.parentTransferCertificate === value[1].id) {
@@ -148,6 +154,7 @@ export class GenerateTcComponent implements OnInit {
                 student => {
                     this.isLoading = false;
                     if (this.selectedStudent.dbId === student.dbId) {
+                        this.selectedStudent = new Student();
                         this.selectedStudent.copy(student);
                         this.selectedTransferCertificate.clean();
                         this.currentTransferCertificate.clean();
@@ -219,6 +226,8 @@ export class GenerateTcComponent implements OnInit {
                             }
                         }
                     );
+                    this.selectedStudent.parentTransferCertificate = response.id;
+                    this.studentFromFilter.parentTransferCertificate = response.id;
                 } else {
                     this.isLoading = false;
                     alert('Failed to generate Transfer Certificate');
@@ -254,4 +263,32 @@ export class GenerateTcComponent implements OnInit {
         EmitterService.get('print-transfer-certificate-second-format').emit(value);
     }
 
+    cancelTc(): void {
+        if (!confirm('Are you sure, you want to cancel TC')) {
+            return;
+        }
+        this.isLoading = true ;
+        this.studentService.deleteTransferCertificate(this.selectedStudent.parentTransferCertificate , this.user.jwt).then(
+            response => {
+                this.isLoading = false;
+                alert('TC has been cancelled successfully');
+                this.selectedTransferCertificate.id = 0;
+                this.selectedStudent.parentTransferCertificate = null;
+                this.studentFromFilter.parentTransferCertificate = null;
+            }, error => {
+                this.isLoading = false;
+            }
+        );
+        this.selectedTransferCertificate.clean();
+    }
+
+    handleStudentSelection(student: any): void {
+        this.selectedStudent = student;
+        this.studentFromFilter = student;
+        if (this.selectedStudent == null) {
+            this.showDetails = false;
+        } else {
+            this.getStudentProfile();
+        }
+    }
 }

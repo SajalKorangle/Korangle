@@ -38,9 +38,14 @@
                 <div class="col-xs-6 d-flex custom-padding">
                     Dise code : {{user.activeSchool.diseCode}}
                 </div>
-                <div class="col-xs-6 d-flex custom-padding" align="end">
-                    Reg. No. : {{user.activeSchool.registrationNumber}}
+                <div *ngIf="user.activeSchool.affiliationNumber; else registrationNumber" class="col-xs-6 d-flex custom-padding" align="end">
+                    School Code : {{user.activeSchool.affiliationNumber}}
                 </div>
+                <ng-template #registrationNumber>
+                    <div  class="col-xs-6 d-flex custom-padding" align="end">
+                        Reg. No. : {{user.activeSchool.registrationNumber}}
+                    </div>
+                </ng-template>
             </div>
 
             <!-- School Name -->

@@ -32,3 +32,11 @@
         margin: 15px 0px 0px 0px;
     }
 }
+.card-header-part1 {
+    display: flex;
+    justify-content: space-between;
+}
+.refresh-button {
+    display: flex;
+    flex-direction: row-reverse;
+}

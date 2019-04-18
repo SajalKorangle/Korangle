@@ -373,13 +373,20 @@ export class UpdateAllComponent implements OnInit {
             const data = {
                 id: student['dbId'],
             };
-            data[key] = newValue;
+            if (key == 'category') {
+                data['newCategoryField'] = newValue;
+            } else if (key == 'religion') {
+                data['newReligionField'] = newValue;
+            } else {
+                data[key] = newValue;
+            }
             document.getElementById(key + student.dbId).classList.add('updatingField');
             if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
                 (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = true;
             } else if (inputType === 'list') {
 
             }
+            // console.log(data);
             this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
                 response => {
                     if (response.status === 'success') {
