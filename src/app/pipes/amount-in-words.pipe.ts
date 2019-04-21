@@ -30,7 +30,8 @@ export class AmountInWordsPipe implements PipeTransform {
 
         /* Point till decimal one*/
         if (tempAmount%1 > 0) {
-            amountInWords += ' Point ' + this.getNumberInWords(((tempAmount*10)%10));
+            let tempNumber = Math.round(tempAmount*10);
+            amountInWords += ' Point ' + this.getNumberInWords(((tempNumber)%10));
         }
 
         return amountInWords;
