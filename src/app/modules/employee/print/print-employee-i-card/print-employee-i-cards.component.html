@@ -1,0 +1,81 @@
+<ng-container *ngFor="let employeeProfile of employeeProfileList; let isLast = last;">
+
+    <div class="container-fluid" [class.pageBreakAfter]="!isLast"
+         style="width: 100%; height: 100%;
+         padding: 0px;
+         border-radius: 20px;
+         background-color: ivory !important;
+         position: relative;
+         overflow: hidden;
+         font-weight: 800 !important">
+
+
+        <!-- Background Watermark -->
+        <!--<img src="{{user.activeSchool.profileImage}}"-->
+             <!--style="border-radius: 2px; position: absolute;-->
+             <!--top: 218px; left: 140px;-->
+             <!--width: 430px; height: 430px;-->
+             <!--opacity: 0.2;-->
+             <!--filter: grayscale(100%);-->
+             <!--z-index: 1;"/>-->
+
+        <!--school logo-->
+
+        <div style="display: flex;
+                    justify-content: center;
+                    padding-top: 10px;
+                    padding-bottom: 10px;">
+            <img style="height: 120px; width: 120px; border-radius: 10px" src="{{user.activeSchool.profileImage}}">
+        </div>
+
+        <!--school details-->
+
+        <div style="padding: 20px;
+                    background-color: #80d8ff !important;" >
+            <p class="schoolName"><b>{{user.activeSchool.printName}}</b></p>
+            <p class="schoolAddress"><b>{{user.activeSchool.address}}</b></p>
+            <div class="schoolPhone">
+                <p><b>Phone: &nbsp;</b></p>
+                <p>{{user.activeSchool.mobileNumber}}</p>
+            </div>
+        </div>
+
+        <!--employee Image-->
+        <div class="employeeImage" >
+            <img style="width: 300px;
+                        height: 300px;
+                        border: 1px solid black;" src="{{employeeProfile.profileImage}}">
+        </div>
+
+        <!--employee details-->
+
+        <div class="employeeSection">
+            <p class="employeeName">{{employeeProfile.name}}</p>
+            <div class="employeeDetails">
+                <p>Employee ID: &nbsp;</p>
+                <p><b>{{employeeProfile.employeeNumber}}</b></p>
+            </div>
+            <div class="employeeDetails">
+                <p>Post: &nbsp;</p>
+                <p><b>{{employeeProfile.currentPost}}</b></p>
+            </div>
+            <div class="employeeDetails">
+                <p>Mobile Number:&nbsp;</p>
+                <p><b>{{employeeProfile.mobileNumber}}</b></p>
+            </div>
+            <div class="employeeDetails">
+                <p>Address: &nbsp;</p>
+                <p><b>{{employeeProfile.address}}</b></p>
+            </div>
+        </div>
+
+        <!--Principal Signature-->
+
+        <div class="principalSignature">
+            <img class="principalSignatureImage" src="{{user.activeSchool.principalSignatureImage}}">
+            <p style="font-size: 25px; padding-top: 10px;">Principal's Signature</p>
+        </div>
+
+    </div>
+
+</ng-container>

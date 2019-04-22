@@ -41,6 +41,7 @@ import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { GradePipe } from '../pipes/grade.pipe';
 import { MoneyFormatPipe } from '../pipes/money-format.pipe';
+import {EmployeeFilterComponent} from './employee-filter/employee-filter.component';
 
 @NgModule({
     declarations: [
@@ -61,6 +62,8 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         DateInWordsPipe,
         GradePipe,
         MoneyFormatPipe,
+
+        EmployeeFilterComponent,
 
     ],
     imports: [
@@ -95,6 +98,7 @@ import { MoneyFormatPipe } from '../pipes/money-format.pipe';
         LoadingSpinnerComponent,
         // StudentFilterOldComponent,
         StudentFilterComponent,
+        EmployeeFilterComponent,
         FeeReceiptListComponent,
         DiscountListComponent,
         MonthDateComponent,

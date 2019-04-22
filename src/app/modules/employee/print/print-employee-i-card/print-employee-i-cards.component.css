@@ -1,0 +1,94 @@
+.schoolName {
+    display: flex;
+    justify-content: center;
+    font-size: 50px;
+}
+.schoolAddress {
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.schoolPhone {
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+}
+.employeeSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.employeeImage {
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+    margin-bottom: 20px;
+}
+.employeeName {
+    color: darkblue !important;
+    font-size: 35px;
+    padding-bottom: 15px;
+}
+.employeeDetails {
+    display: flex;
+    font-size: 25px;
+    padding-bottom: 5px;
+}
+.principalSignature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 10px;
+}
+.principalSignatureImage {
+    border-radius: 2px;
+    width: 200px;
+    height: 100px;
+    margin-right: 10px;
+}
+
+th {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+.updownBorder {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+.downBorder {
+    border-bottom: 1px solid black;
+}
+.upBorder {
+    border-top: 1px solid black;
+}
+.leftBorder {
+    border-left: 1px solid black;
+}
+.rightBorder {
+    border-right: 1px solid black;
+}
+
+.fontHandle {
+    font-size: 18px;
+    padding-bottom: 3px;
+}
+
+.fontHandle {
+    font-size: 16px;
+}
+
+svg {
+    background-color: #333;
+    font-size: 35px;
+}
+
+path {
+    fill: transparent;
+}
+
+.pageBreakAfter {
+    page-break-after: always;
+}
+
