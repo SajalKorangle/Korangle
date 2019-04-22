@@ -14,6 +14,10 @@ def get_employee_mini_profile_list(data):
             'mobileNumber': employee_object.mobileNumber,
             'dateOfLeaving': employee_object.dateOfLeaving,
         }
+        if employee_object.profileImage:
+            tempEmployee['profileImage'] = employee_object.profileImage.url
+        else:
+            tempEmployee['profileImage'] = None
         employee_list.append(tempEmployee)
 
     return employee_list
