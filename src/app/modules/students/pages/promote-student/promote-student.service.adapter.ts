@@ -46,19 +46,25 @@ export class PromoteStudentServiceAdapter {
             this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
         ]).then(value => {
 
-            let request_class_test_data = {
-                'examinationList': value[1].map(a => a.id),
-            };
+            this.classSubjectList = value[0];
 
-            this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt).then(value2 => {
+            if (value[1].length > 0) {
+                let request_class_test_data = {
+                    'examinationList': value[1].map(a => a.id),
+                };
 
-                this.classSubjectList = value[0];
-                this.classTestList = value2;
+                this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt).then(value2 => {
+
+                    this.classTestList = value2;
+                    this.vm.isLoading = false;
+
+                }, error => {
+                    this.vm.isLoading = false;
+                });
+            } else {
+                this.classTestList = [];
                 this.vm.isLoading = false;
-
-            }, error => {
-                this.vm.isLoading = false;
-            });
+            }
 
         }, error => {
             this.vm.isLoading = false;
