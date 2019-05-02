@@ -117,15 +117,15 @@
                 <span *ngIf="studentProfile.gender=='Male'">Master</span>
                 <span *ngIf="studentProfile.gender=='Female'">Miss</span>
                 {{ studentProfile.name | titlecase }}</b></i>
-                <span *ngIf="studentProfile.gender=='Male'">s/o</span>
-                <span *ngIf="studentProfile.gender=='Female'">d/o</span>
+                <span *ngIf="studentProfile.gender=='Male'">&nbsp;s/o&nbsp;</span>
+                <span *ngIf="studentProfile.gender=='Female'">&nbsp;d/o&nbsp;</span>
                 <i><b>Mr. {{ studentProfile.fathersName | titlecase }}</b></i>
                 and <i><b>Mrs. {{ studentProfile.motherName | titlecase }}</b></i> residing at
                 <i><b> {{ studentProfile.address | titlecase }}</b></i> had taken admission in our school,
                 with scholar no. <i><b>{{studentProfile.scholarNumber}}</b></i>,
                 <span *ngIf="!transferCertificate.leavingMidSession"> in <i><b>{{transferCertificate.admissionClass}}</b></i>,</span>
                 on <i><b>{{studentProfile.dateOfAdmission | date: 'dd/MM/yyyy'}}</b></i>
-                and is leaving school on <i><b>{{transferCertificate.leavingDate | date: 'dd/MM/yyyy'}}</b></i>
+                and is leaving school on <i><b>{{transferCertificate.leavingDate | date: 'dd/MM/yyyy'}}</b>&nbsp;</i>
                 <span *ngIf="!transferCertificate.leavingMidSession"> after passing
                 <i><b>{{transferCertificate.lastClassPassed}}</b></i> with <i>
                     <b *ngIf="user.activeSchool.medium===mediumList[0]">English</b>
@@ -136,7 +136,7 @@
 
                 <span *ngIf="studentProfile.gender=='Male'">His</span>
                 <span *ngIf="studentProfile.gender=='Female'">Her</span>
-                date of birth is <i><b>{{studentProfile.dateOfBirth | date: 'dd/MM/yyyy'}}</b></i>
+                date of birth is <i><b>{{studentProfile.dateOfBirth | date: 'dd/MM/yyyy'}}</b>&nbsp;</i>
                 in words <i><b>{{studentProfile.dateOfBirth | dateInWords}}</b></i>.<br/><br/>
 
                 <span *ngIf="studentProfile.gender=='Male'">His</span>
@@ -163,7 +163,7 @@
                     <ng-container *ngIf="transferCertificate.lastClassAttendance && transferCertificate.lastClassAttendance != ''">
                         <span *ngIf="studentProfile.gender=='Male'">His</span>
                         <span *ngIf="studentProfile.gender=='Female'">Her</span>
-                        attendance in last class(<i><b>{{transferCertificate.lastClassAttended}}</b></i>)
+                        attendance in last class(<i><b>{{transferCertificate.lastClassAttended}}</b>&nbsp;</i>)
                         was <i><b>{{transferCertificate.lastClassAttendance}}</b></i> days out of
                         <i><b>{{transferCertificate.attendanceOutOf}}</b></i>.
                     </ng-container>
