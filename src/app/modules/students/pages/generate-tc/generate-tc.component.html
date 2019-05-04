@@ -64,36 +64,6 @@
                     (onStudentLoading)="isLoading=$event"
                     [studentTcGenerated]="true"></student-filter>
 
-    <div class="row" *ngIf="flag">
-        <div class="col-md-12"
-             style="border-bottom: 1px solid lightgrey;"></div>
-    </div>
-
-    <div *ngIf="flag">
-        <p>
-            <span style="color: red">
-        <span *ngIf="!motherNameIsComing">Mothers Name,&nbsp;</span>
-        <span *ngIf="!scholarNumberIsComing">Scholar Number,&nbsp;</span>
-        <span *ngIf="!addressIsComing">Address,&nbsp;</span>
-        <span *ngIf="!dateOfBirthIsComing">Date of birth,&nbsp;</span>
-        <span *ngIf="!aadharNumberIsComing">Aadhar number,&nbsp;</span>
-        <span *ngIf="!sssmidIsComing">Child sssmid,&nbsp;</span>
-        <span *ngIf="!genderIsComing">Gender,&nbsp;</span>
-        <span *ngIf="!casteIsComing">Caste,&nbsp;</span>
-        <span *ngIf="!categoryIsComing">Category,&nbsp;</span>
-           </span>
-            <span *ngIf="count === 1">
-                is missing in student profile.
-                Please fill it by going in update profile for a valid transfer certificate.
-            </span>
-            <span *ngIf=" count > 1">
-                {{flag}}
-                following details are missing in student profile.
-                Please fill them by going in update profile for a valid transfer certificate.
-            </span>
-        </p>
-    </div>
-
 
 
     <div class="row">
@@ -110,11 +80,8 @@
             <div class="col-md-3">
                 {{selectedStudent.name}}
             </div>
-            <div class="col-md-3" *ngIf="fatherNameIsComing">
+            <div class="col-md-3">
                 {{selectedStudent.fathersName}}
-            </div>
-            <div class="col-md-3" *ngIf="!fatherNameIsComing" style="color: red">
-                No Father's Name
             </div>
             <div class="col-md-3">
                 {{selectedStudent.scholarNumber}}
@@ -246,6 +213,37 @@
         <mat-checkbox [(ngModel)]="twoCopies">Two Copies</mat-checkbox>
 
         <div class="clearfix"></div>
+
+        <div class="row" *ngIf="count>0">
+            <div class="col-md-12"
+                 style="border-bottom: 1px solid lightgrey;"></div>
+        </div>
+
+        <div *ngIf="count>0">
+            <p>
+            <span style="color: red">
+                <span *ngIf="!fatherNameIsComing">Fathers Name,&nbsp;</span>
+                <span *ngIf="!motherNameIsComing">Mothers Name,&nbsp;</span>
+                <span *ngIf="!scholarNumberIsComing">Scholar Number,&nbsp;</span>
+                <span *ngIf="!addressIsComing">Address,&nbsp;</span>
+                <span *ngIf="!dateOfBirthIsComing">Date of birth,&nbsp;</span>
+                <span *ngIf="!aadharNumberIsComing">Aadhar number,&nbsp;</span>
+                <span *ngIf="!sssmidIsComing">Child sssmid,&nbsp;</span>
+                <span *ngIf="!genderIsComing">Gender,&nbsp;</span>
+                <span *ngIf="!casteIsComing">Caste,&nbsp;</span>
+                <span *ngIf="!categoryIsComing">Category,&nbsp;</span>
+           </span>
+                <span *ngIf="count === 1">
+                is missing in student profile.
+                Please fill it by going in update profile for a valid transfer certificate.
+            </span>
+                <span *ngIf=" count > 1">
+                are missing in student profile.
+                Please fill them by going in update profile for a valid transfer certificate.
+            </span>
+            </p>
+        </div>
+
 
     </ng-container>
 

@@ -164,7 +164,6 @@ export class GenerateTcComponent implements OnInit {
                     this.currentTransferCertificate.copy(value[1]);
                 }
                 this.showDetails = true;
-                console.log(this.selectedStudent);
                 this.checkAllRequiredDetailsAreComing(this.selectedStudent);
             }, error => {
                 this.isLoading = false;
@@ -180,7 +179,6 @@ export class GenerateTcComponent implements OnInit {
                         this.currentTransferCertificate.clean();
                     }
                     this.showDetails = true;
-                    console.log(this.selectedStudent);
                     this.checkAllRequiredDetailsAreComing(this.selectedStudent);
                 }, error => {
                     this.isLoading = false;
@@ -334,59 +332,52 @@ export class GenerateTcComponent implements OnInit {
         this.intializeVariables();
         if (selectedStudent.fathersName) {
             this.fatherNameIsComing = true;
+        } else {
+            this.count++;
         }
         if (selectedStudent.motherName) {
             this.motherNameIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
         if (selectedStudent.scholarNumber) {
             this.scholarNumberIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
         if (selectedStudent.address) {
             this.addressIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
         if (selectedStudent.dateOfBirth) {
             this.dateOfBirthIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
         if (selectedStudent.aadharNum) {
             this.aadharNumberIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
         if (selectedStudent.childSSMID) {
             this.sssmidIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
         if (selectedStudent.gender) {
             this.genderIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
         if (selectedStudent.caste) {
             this.casteIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
         if (selectedStudent.category) {
             this.categoryIsComing = true;
         } else {
-            this.flag = true;
             this.count++;
         }
 
