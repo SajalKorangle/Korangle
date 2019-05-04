@@ -45,6 +45,24 @@ export class GenerateTcComponent implements OnInit {
     selectedSession: any;
     sessionList: any;
 
+    // Boolean variable to check if all the required fields are coming from student profile
+    fatherNameIsComing = false;
+    motherNameIsComing = false;
+    scholarNumberIsComing = false;
+    addressIsComing = false;
+    dateOfBirthIsComing = false;
+    aadharNumberIsComing = false;
+    sssmidIsComing = false;
+    genderIsComing = false;
+    casteIsComing = false;
+    categoryIsComing = false;
+
+    // flag to show the error message or not
+    flag = false;
+    count = 0;
+
+
+
     constructor (private studentService: StudentService,
                  private schoolService: SchoolService) { }
 /*
@@ -146,6 +164,8 @@ export class GenerateTcComponent implements OnInit {
                     this.currentTransferCertificate.copy(value[1]);
                 }
                 this.showDetails = true;
+                console.log(this.selectedStudent);
+                this.checkAllRequiredDetailsAreComing(this.selectedStudent);
             }, error => {
                 this.isLoading = false;
             });
@@ -160,6 +180,8 @@ export class GenerateTcComponent implements OnInit {
                         this.currentTransferCertificate.clean();
                     }
                     this.showDetails = true;
+                    console.log(this.selectedStudent);
+                    this.checkAllRequiredDetailsAreComing(this.selectedStudent);
                 }, error => {
                     this.isLoading = false;
                 }
@@ -290,5 +312,83 @@ export class GenerateTcComponent implements OnInit {
         } else {
             this.getStudentProfile();
         }
+    }
+    intializeVariables() {
+        // Boolean variable to check if all the required fields are coming from student profile
+        this.fatherNameIsComing = false;
+        this.motherNameIsComing = false;
+        this.scholarNumberIsComing = false;
+        this.addressIsComing = false;
+        this.dateOfBirthIsComing = false;
+        this.aadharNumberIsComing = false;
+        this.sssmidIsComing = false;
+        this.genderIsComing = false;
+        this.casteIsComing = false;
+        this.categoryIsComing = false;
+
+        // flag to show the error message or not
+        this.flag = false;
+        this.count = 0;
+    }
+    checkAllRequiredDetailsAreComing(selectedStudent) {
+        this.intializeVariables();
+        if (selectedStudent.fathersName) {
+            this.fatherNameIsComing = true;
+        }
+        if (selectedStudent.motherName) {
+            this.motherNameIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+        if (selectedStudent.scholarNumber) {
+            this.scholarNumberIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+        if (selectedStudent.address) {
+            this.addressIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+        if (selectedStudent.dateOfBirth) {
+            this.dateOfBirthIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+        if (selectedStudent.aadharNum) {
+            this.aadharNumberIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+        if (selectedStudent.childSSMID) {
+            this.sssmidIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+        if (selectedStudent.gender) {
+            this.genderIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+        if (selectedStudent.caste) {
+            this.casteIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+        if (selectedStudent.category) {
+            this.categoryIsComing = true;
+        } else {
+            this.flag = true;
+            this.count++;
+        }
+
     }
 }

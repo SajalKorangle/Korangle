@@ -119,8 +119,8 @@
                 {{ studentProfile.name | titlecase }}</b></i>
                 <span *ngIf="studentProfile.gender=='Male'">&nbsp;s/o&nbsp;</span>
                 <span *ngIf="studentProfile.gender=='Female'">&nbsp;d/o&nbsp;</span>
-                <i><b>Mr. {{ studentProfile.fathersName | titlecase }}</b></i>
-                and <i><b>Mrs. {{ studentProfile.motherName | titlecase }}</b></i> residing at
+                <i><b>{{ studentProfile.fathersName | titlecase }}</b></i>
+                and <i><b>{{ studentProfile.motherName | titlecase }}</b></i> residing at
                 <i><b> {{ studentProfile.address | titlecase }}</b></i> had taken admission in our school,
                 with scholar no. <i><b>{{studentProfile.scholarNumber}}</b></i>,
                 <span *ngIf="!transferCertificate.leavingMidSession"> in <i><b>{{transferCertificate.admissionClass}}</b></i>,</span>
