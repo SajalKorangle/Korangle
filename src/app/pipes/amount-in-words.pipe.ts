@@ -30,7 +30,8 @@ export class AmountInWordsPipe implements PipeTransform {
 
         /* Point till decimal one*/
         if (tempAmount%1 > 0) {
-            amountInWords += ' Point ' + this.getNumberInWords(((tempAmount*10)%10));
+            let tempNumber = Math.round(tempAmount*10);
+            amountInWords += ' Point ' + this.getNumberInWords(((tempNumber)%10));
         }
 
         return amountInWords;
@@ -57,7 +58,7 @@ export class AmountInWordsPipe implements PipeTransform {
             case 16: return 'Sixteen';
             case 17: return 'Seventeen';
             case 18: return 'Eighteen';
-            case 19: return 'Ninteen';
+            case 19: return 'Nineteen';
             case 20: return 'Twenty';
             case 21: return 'Twenty One';
             case 22: return 'Twenty Two';
@@ -128,16 +129,16 @@ export class AmountInWordsPipe implements PipeTransform {
             case 87: return 'Eighty Seven';
             case 88: return 'Eighty Eight';
             case 89: return 'Eighty Nine';
-            case 90: return 'Ninty';
-            case 91: return 'Ninty One';
-            case 92: return 'Ninty Two';
-            case 93: return 'Ninty Three';
-            case 94: return 'Ninty Four';
-            case 95: return 'Ninty Five';
-            case 96: return 'Ninty Six';
-            case 97: return 'Ninty Seven';
-            case 98: return 'Ninty Eight';
-            case 99: return 'Ninty Nine';
+            case 90: return 'Ninety';
+            case 91: return 'Ninety One';
+            case 92: return 'Ninety Two';
+            case 93: return 'Ninety Three';
+            case 94: return 'Ninety Four';
+            case 95: return 'Ninety Five';
+            case 96: return 'Ninety Six';
+            case 97: return 'Ninety Seven';
+            case 98: return 'Ninety Eight';
+            case 99: return 'Ninety Nine';
             default: return '';
         }
     }
