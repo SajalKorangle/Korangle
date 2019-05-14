@@ -1,6 +1,8 @@
 
 from school_app.model.models import School
 
+from datetime import date, timedelta
+
 from rest_framework import serializers
 
 
@@ -11,6 +13,8 @@ class SchoolModelSerializer(serializers.ModelSerializer):
 
 
 def create_school_profile(data):
+
+    data['dateOfExpiration'] = date.today() + timedelta(30)
 
     school_serializer = SchoolModelSerializer(data=data)
     if school_serializer.is_valid():
