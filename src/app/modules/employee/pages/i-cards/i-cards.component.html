@@ -32,7 +32,10 @@
                     <mat-checkbox [(ngModel)]="columnFilter.showAadharNumber" (click)="$event.stopPropagation()">Aadhar number</mat-checkbox>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showEmployeeId" (click)="$event.stopPropagation()">Employee ID</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="columnFilter.showEmployeeNumber" (click)="$event.stopPropagation()">Employee No.</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showCurrentPost" (click)="$event.stopPropagation()">Post</mat-checkbox>
                 </mat-option>
                 <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showPanNumber" (click)="$event.stopPropagation()">Pan number</mat-checkbox>
@@ -144,6 +147,9 @@
             </ng-template>
         </ngx-datatable-column>
     </ngx-datatable>
+
+    <img src="{{user.activeSchool.principalSignatureImage}}" style="width: 0px; height: 0px;">
+
 </div>
 
 <ng-container *ngIf="isLoading">

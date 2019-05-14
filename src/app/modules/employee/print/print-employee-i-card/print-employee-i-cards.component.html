@@ -30,50 +30,86 @@
 
         <!--school details-->
 
-        <div style="padding: 20px;
-                    background-color: #80d8ff !important;" >
-            <p class="schoolName"><b>{{user.activeSchool.printName}}</b></p>
-            <p class="schoolAddress"><b>{{user.activeSchool.address}}</b></p>
-            <div class="schoolPhone">
-                <p><b>Phone: &nbsp;</b></p>
-                <p>{{user.activeSchool.mobileNumber}}</p>
+        <div class="row"
+             style="background-color: #3F51B5 !important; padding-top: 20px !important;" >
+            <div class="col-xs-12"
+                 align="center"
+                 style="font-size: 35px !important; margin-bottom: 10px !important; color: white !important;">
+                {{user.activeSchool.printName}}
+            </div>
+            <div class="col-xs-12"
+                 align="center"
+                 style="font-size: 20px !important; margin-bottom: 5px !important; color: white !important;">
+                {{user.activeSchool.address}}
+            </div>
+            <div class="col-xs-12"
+                 align="center"
+                 style="font-size: 20px !important; margin-bottom: 5px !important; color: white !important;">
+                Phone: {{user.activeSchool.mobileNumber}}
             </div>
         </div>
 
         <!--employee Image-->
-        <div class="employeeImage" >
-            <img style="width: 300px;
-                        height: 300px;
-                        border: 1px solid black;" src="{{employeeProfile.profileImage}}">
+
+        <div class="row" style="margin-top: 40px !important;">
+            <div class="col-xs-12" align="center">
+                <img style="width: 300px; height: 300px; border-radius: 15px;"
+                     src="{{employeeProfile.profileImage}}">
+            </div>
         </div>
 
         <!--employee details-->
 
-        <div class="employeeSection">
-            <p class="employeeName">{{employeeProfile.name}}</p>
-            <div class="employeeDetails">
-                <p>Employee ID: &nbsp;</p>
-                <p><b>{{employeeProfile.employeeNumber}}</b></p>
-            </div>
-            <div class="employeeDetails">
-                <p>Post: &nbsp;</p>
-                <p><b>{{employeeProfile.currentPost}}</b></p>
-            </div>
-            <div class="employeeDetails">
-                <p>Mobile Number:&nbsp;</p>
-                <p><b>{{employeeProfile.mobileNumber}}</b></p>
-            </div>
-            <div class="employeeDetails">
-                <p>Address: &nbsp;</p>
-                <p><b>{{employeeProfile.address}}</b></p>
+        <div class="row" style="margin-top: 40px !important; font-size: 35px !important;">
+            <div class="col-xs-12" align="center" style="color: #3F51B5 !important;">
+                {{employeeProfile.name}}
             </div>
         </div>
 
-        <!--Principal Signature-->
+        <div class="row" style="margin-top: 20px !important; font-size: 25px !important;">
+            <div class="col-xs-12" align="center">
+                Empl. ID: {{employeeProfile.employeeNumber}}
+            </div>
+        </div>
 
-        <div class="principalSignature">
-            <img class="principalSignatureImage" src="{{user.activeSchool.principalSignatureImage}}">
-            <p style="font-size: 25px; padding-top: 10px;">Principal's Signature</p>
+        <div class="row" style="margin-top: 20px !important; font-size: 25px !important;">
+            <div class="col-xs-12" align="center">
+                {{employeeProfile.currentPost}}
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px !important; font-size: 25px !important;">
+            <div class="col-xs-12" align="center">
+                <i class="material-icons" style="margin-top: 3px !important;">phone</i>
+                &nbsp;{{employeeProfile.mobileNumber}}
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px !important; font-size: 30px !important;">
+            <div class="col-xs-12" align="center" style="font-weight: normal !important;">
+                <i>Address</i>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px !important; font-size: 25px !important;">
+            <div class="col-xs-12" align="center">
+                {{employeeProfile.address}}
+            </div>
+        </div>
+
+        <!-- Signature -->
+
+        <div class="row" style="position: absolute; left: 0px; bottom: 25px; width: 100%; margin: 0px !important;">
+            <div class="col-xs-12" align="center">
+                <img style="height: 100px; width: 200px;"
+                     src="{{user.activeSchool.principalSignatureImage}}">
+            </div>
+        </div>
+
+        <div class="row" style="position: absolute; left: 0px; bottom: 0px; width: 100%; margin: 0px !important;">
+            <div class="col-xs-12" align="center">
+                Authorised Signatory
+            </div>
         </div>
 
     </div>

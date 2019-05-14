@@ -7,7 +7,7 @@ import {EmitterService} from '../../../../services/emitter.service';
 
 export class ColumnFilter {
     showName = true;
-    showEmployeeId = true;
+    showEmployeeNumber = true;
     showJobTitle = true;
     showAddress = true;
     showMobileNumber = true;
@@ -17,6 +17,7 @@ export class ColumnFilter {
     showGender = false;
     showAadharNumber = false;
     showPanNumber = false;
+    showCurrentPost = false;
 }
 
 @Component({
