@@ -45,7 +45,7 @@ export class ICardsComponent implements OnInit {
     timeout: any;
 
     constructor(private employeeService: EmployeeService ,
-                private columnFilter: ColumnFilter) {
+                public columnFilter: ColumnFilter) {
     }
 
     ngOnInit(): void {
