@@ -96,6 +96,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Blood Group', 'bloodGroup', 'list', false, BLOOD_GROUP_LIST), // 23
         new ColumnHandle('Father\'s Annual Income', 'fatherAnnualIncome', 'text', false, ''), // 24
         new ColumnHandle('RTE', 'rte', 'list', false, RTE_LIST), // 25
+        new ColumnHandle('Date Of Admission', 'dateOfAdmission', 'date', false, ''), // 26
     ];
 
     /* Category Options */
