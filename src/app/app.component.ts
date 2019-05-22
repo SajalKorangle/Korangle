@@ -40,7 +40,6 @@ export class AppComponent implements OnInit {
         }
 
         this.versionCheckService.initVersionCheck(environment.versionCheckURL);
-
     }
 
     refresh() {

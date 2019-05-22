@@ -71,10 +71,8 @@ export class User {
         // this.displayName = data.displayName;
         this.email = data.email;
         this.initializeSchoolList(data.schoolList);
-        if (this.schoolList.length > 0) {
-            this.activeSchool = this.schoolList[0];
-            this.initializeTask();
-        }
+        this.activeSchool = this.schoolList[0];
+        this.initializeTask();
     }
 
     getSchoolCurrentSessionName(): string {
@@ -89,12 +87,23 @@ export class User {
     }
 
     initializeTask(): void {
-        if (this.activeSchool.role === 'Parent') {
-            this.populateSection(this.activeSchool.studentList[0].taskList[0], this.activeSchool.studentList[0]);
-        } else if (this.activeSchool.role === 'Employee') {
-            this.populateSection(this.activeSchool.moduleList[0].taskList[0], this.activeSchool.moduleList[0]);
+        if (this.schoolList.length > 0) {
+            if (this.activeSchool.role === 'Parent') {
+                this.populateSection(this.activeSchool.studentList[0].taskList[0], this.activeSchool.studentList[0]);
+            } else if (this.activeSchool.role === 'Employee') {
+                this.populateSection(this.activeSchool.moduleList[0].taskList[0], this.activeSchool.moduleList[0]);
+            }
+            EmitterService.get('initialize-router').emit('');
+        } else {
+            this.section = {
+                route: 'user-settings',
+                subRoute: 'update_profile',
+                title: 'Settings',
+                subTitle: 'Update Profile',
+            }
+            EmitterService.get('initialize-router').emit('');
         }
-        EmitterService.get('initialize-router').emit('');
+
     }
 
     populateSection(task: any, module: any): void {

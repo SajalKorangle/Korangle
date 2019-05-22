@@ -84,9 +84,16 @@
             </div>
         </div>
 
-        <button type="button"
+        <button *ngIf="user.activeSchool"
+                type="button"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="serviceAdapter.createSchool(schoolProfile)">Create</button>
+
+        <button *ngIf="!user.activeSchool"
+                type="button"
+                class="btn btn-warning"
+                (click)="serviceAdapter.createSchool(schoolProfile)">Create</button>
+
 
     </ng-container>
 

@@ -34,6 +34,9 @@ export class SidebarComponent implements OnInit {
 
     @Input() user: User;
 
+    green = 'green';
+    warning = 'warning';
+
     settings = {
         path: 'user-settings',
         title: 'Settings',

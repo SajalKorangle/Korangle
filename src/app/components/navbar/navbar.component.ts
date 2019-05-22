@@ -20,7 +20,9 @@ export class NavbarComponent implements OnInit {
           this.sidebarVisible = false;
     }
 
-    ngOnInit(){
+    ngOnInit() {
+      // const navbar: HTMLElement = this.element.nativeElement;
+      // this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
       const navbar: HTMLElement = this.element.nativeElement;
       this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
       EmitterService.get('close-sidebar').subscribe(value => {
@@ -29,7 +31,8 @@ export class NavbarComponent implements OnInit {
     }
 
     sidebarOpen() {
-        const toggleButton = this.toggleButton;
+        // const toggleButton = this.toggleButton;
+        const toggleButton = this.element.nativeElement.getElementsByClassName('navbar-toggle')[0];
         const body = document.getElementsByTagName('body')[0];
         /*setTimeout(function(){
             toggleButton.classList.add('toggled');
@@ -40,8 +43,9 @@ export class NavbarComponent implements OnInit {
         this.sidebarVisible = true;
     };
     sidebarClose() {
+        const toggleButton = this.element.nativeElement.getElementsByClassName('navbar-toggle')[0];
         const body = document.getElementsByTagName('body')[0];
-        this.toggleButton.classList.remove('toggled');
+        toggleButton.classList.remove('toggled');
         this.sidebarVisible = false;
         body.classList.remove('nav-open');
     };
