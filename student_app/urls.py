@@ -39,10 +39,10 @@ urlpatterns += [
 ]
 
 ######## Student Section ###########
-from .views import StudentSectionListView, StudentSectionView
+from .views import StudentSectionListOldView, StudentSectionOldView
 urlpatterns += [
-    url(r'^student-sections/(?P<student_section_id>[0-9]+)', StudentSectionView.as_view()),
-    url(r'^student-sections/batch', StudentSectionListView.as_view()),
+    url(r'^student-sections-old/(?P<student_section_id>[0-9]+)', StudentSectionOldView.as_view()),
+    url(r'^student-sections-old/batch', StudentSectionListOldView.as_view()),
 ]
 
 ######## Profile Image ############
@@ -57,3 +57,24 @@ urlpatterns += [
     url(r'^transfer-certificates/(?P<transfer_certificate_id>[0-9]+)', TransferCertificateView.as_view()),
     url(r'^transfer-certificates', TransferCertificateView.as_view()),
 ]
+
+
+####################################
+##### Trying Common Views Below ####
+####################################
+
+from student_app.views import StudentView, StudentListView
+
+urlpatterns += [
+    url(r'^students/batch', StudentListView.as_view()),
+    url(r'^students', StudentView.as_view()),
+]
+
+
+from student_app.views import StudentSectionView, StudentSectionListView
+
+urlpatterns += [
+    url(r'^student-sections/batch', StudentSectionListView.as_view()),
+    url(r'^student-sections', StudentSectionView.as_view()),
+]
+

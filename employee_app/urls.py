@@ -47,3 +47,14 @@ urlpatterns += [
 ]
 
 
+####################################
+##### Trying Common Views Below ####
+####################################
+
+
+from .views import EmployeeView, EmployeeListView
+
+urlpatterns += [
+	url(r'^employees/batch', EmployeeListView.as_view()),
+	url(r'^employees', EmployeeView.as_view()),
+]

@@ -142,64 +142,6 @@ class Student(models.Model):
     class Meta:
         db_table = 'student'
 
-'''
-    def save(self, profileImageUpdation = False, *args, **kwargs):
-        super(Student, self).save(*args, **kwargs)
-        if profileImageUpdation:
-            self.create_avatar_thumb()
-
-    def create_avatar_thumb(self):
-        import os
-        from PIL import Image
-        from django.core.files.storage import default_storage as storage
-        if not self.profileImage:
-            return ""
-        file_path = self.profileImage.name
-        filename_base, filename_ext = os.path.splitext(file_path)
-        thumb_file_path = "%s_thumb%s" % (filename_base, filename_ext.lower())
-        try:
-            # resize the original image and return url path of the thumbnail
-            f = storage.open(file_path, 'r')
-            image = Image.open(f)
-            width, height = image.size
-
-            if width > height:
-                delta = width - height
-                left = int(delta/2)
-                upper = 0
-                right = height + left
-                lower = height
-            else:
-                delta = height - width
-                left = 0
-                upper = int(delta/2)
-                right = width
-                lower = width + upper
-
-            imageTwo = image.crop((left, upper, right, lower))
-            imageTwo = imageTwo.resize((100, 100), Image.ANTIALIAS)
-
-            f_thumb = storage.open(thumb_file_path, "w")
-            imageTwo.save(f_thumb, format="PNG")
-            f_thumb.close()
-
-            return "success"
-        except:
-            return "error"
-
-    def get_avatar_thumb_url(self):
-        import os
-        from django.core.files.storage import default_storage as storage
-        if not self.profileImage:
-            return ""
-        file_path = self.profileImage.name
-        filename_base, filename_ext = os.path.splitext(file_path)
-        thumb_file_path = "%s_thumb.jpg" % filename_base
-        if storage.exists(thumb_file_path):
-            return storage.url(thumb_file_path)
-        return ""
-'''
-
 
 class StudentSection(models.Model):
 

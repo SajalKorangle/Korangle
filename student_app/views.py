@@ -5,7 +5,9 @@ from rest_framework.views import APIView
 
 import json
 
+from common.common_views import CommonView, CommonListView
 from decorators import user_permission
+from student_app.models import Student, StudentSection
 
 
 def get_error_response(message):
@@ -133,7 +135,7 @@ class StudentMiniProfileView(APIView):
 from .business.student_section import create_student_section_list, update_student_section, get_student_section_list
 
 
-class StudentSectionView(APIView):
+class StudentSectionOldView(APIView):
 
     @user_permission
     def put(request, student_section_id):
@@ -141,7 +143,7 @@ class StudentSectionView(APIView):
         return update_student_section(data)
 
 
-class StudentSectionListView(APIView):
+class StudentSectionListOldView(APIView):
 
     @user_permission
     def get(request):
@@ -191,4 +193,28 @@ class TransferCertificateView(APIView):
     @user_permission
     def delete(request, transfer_certificate_id):
         return delete_transfer_certificate(transfer_certificate_id)
+
+
+
+########### Student #############
+
+
+class StudentView(CommonView, APIView):
+    Model = Student
+
+
+class StudentListView(CommonListView, APIView):
+    Model = Student
+
+
+########### Student Section #############
+
+
+class StudentSectionView(CommonView, APIView):
+    Model = StudentSection
+
+
+class StudentSectionListView(CommonListView, APIView):
+    Model = StudentSection
+
 

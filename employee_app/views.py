@@ -1,3 +1,4 @@
+from common.common_views import CommonView, CommonListView
 from decorators import user_permission
 
 from rest_framework.views import APIView
@@ -6,6 +7,7 @@ import json
 
 
 ############## Employee Profile ##############
+from employee_app.models import Employee
 from .business.employee_profile \
     import get_employee_profile, create_employee_profile, delete_employee_profile, \
     update_employee_profile, get_employee_profile_list
@@ -142,4 +144,16 @@ class ProfileImageView(APIView):
     @user_permission
     def post(request, employee_id):
         return update_profile_image(request.FILES['myFile'], employee_id)
+
+
+########### Employee ############
+
+
+class EmployeeView(CommonView, APIView):
+    Model = Employee
+
+
+class EmployeeListView(CommonListView, APIView):
+    Model = Employee
+
 
