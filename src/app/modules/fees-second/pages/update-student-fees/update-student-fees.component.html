@@ -1,6 +1,6 @@
 <div class="card-content">
 
-    <!-- app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter -->
+    <!-- app-student-filter [user]="user" (onStudentListSelected)="getStudentFeeDetails($event)"></app-student-filter -->
     <student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></student-filter>
 
     <ng-container *ngIf="studentFeeStatus && !isLoading">

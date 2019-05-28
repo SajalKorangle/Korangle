@@ -4,11 +4,11 @@ import {EmitterService} from '../../services/emitter.service';
 import {FeeReceipt} from '../../modules/fees-second/classes/common-functionalities';
 
 @Component({
-    selector: 'app-fee-receipt-list',
-    templateUrl: './fee-receipt-list.component.html',
-    styleUrls: ['./fee-receipt-list.component.css'],
+    selector: 'app-fee-receipt-list-old',
+    templateUrl: './fee-receipt-list-component-old.component.html',
+    styleUrls: ['./fee-receipt-list-component-old.component.css'],
 })
-export class FeeReceiptListComponent {
+export class FeeReceiptListComponentOld {
 
     @Input() user;
     @Input() feeReceiptList;

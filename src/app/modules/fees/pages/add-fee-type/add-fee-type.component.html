@@ -1,0 +1,68 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <table class="table table-hover" *ngIf="feeTypeList && feeTypeList.length > 0">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th>S No.</th>
+                <th>Fee Type</th>
+                <th>Order Number</th>
+                <th>-</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let feeType of feeTypeList; let i=index;">
+                <td>{{(i+1)}}.</td>
+                <td>
+                    <input type="text"
+                           [(ngModel)]="feeType.newName" [disabled]="feeType.updating"/>
+                </td>
+                <td>
+                    <input type="text"
+                           [(ngModel)]="feeType.newOrderNumber" [disabled]="feeType.updating"/>
+                </td>
+                <td>
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            [disabled]="isFeeTypeUpdateDisabled(feeType)"
+                            style="padding: 3px 8px;"
+                            (click)="serviceAdapter.updateFeeType(feeType)">Update</button>
+                    <div *ngIf="feeType.updating" class="loader-custom"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <br/><br/><br/>
+
+        <table class="table table-hover">
+            <tbody>
+            <tr>
+                <td>
+                    <input type="text"
+                           placeholder="Type name here ...."
+                           [(ngModel)]="feeTypeNameToBeAdded"/>
+                </td>
+                <td>
+                    <input type="text"
+                           placeholder="Type order number here ...."
+                           [(ngModel)]="feeTypeOrderNumberToBeAdded"/>
+                </td>
+                <td>
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="padding: 3px 8px;"
+                            (click)="serviceAdapter.createFeeType()">Add</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

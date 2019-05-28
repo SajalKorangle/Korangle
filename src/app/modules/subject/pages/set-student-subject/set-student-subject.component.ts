@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { SubjectService } from '../../../../services/subject.service';
 import { ClassService } from '../../../../services/class.service';
-import { StudentService } from '../../../students/student.service';
+import { StudentOldService } from '../../../students/student-old.service';
 import { SchoolService } from '../../../../services/school.service';
 
 
@@ -13,7 +13,7 @@ import {ExaminationService} from '../../../../services/examination.service';
     selector: 'set-student-subject',
     templateUrl: './set-student-subject.component.html',
     styleUrls: ['./set-student-subject.component.css'],
-    providers: [ SubjectService, ClassService, StudentService, SchoolService, ExaminationService ],
+    providers: [ SubjectService, ClassService, StudentOldService, SchoolService, ExaminationService ],
 })
 
 export class SetStudentSubjectComponent implements OnInit {
@@ -33,7 +33,7 @@ export class SetStudentSubjectComponent implements OnInit {
 
     constructor(public subjectService: SubjectService,
                 public classService: ClassService,
-                public studentService: StudentService,
+                public studentService: StudentOldService,
                 public schoolService: SchoolService,
                 public examinationService: ExaminationService) {}
 

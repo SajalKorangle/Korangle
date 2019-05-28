@@ -1,0 +1,45 @@
+<table class="table table-hover">
+    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+        <tr>
+            <th>Discount No.</th>
+            <th class="text-center">Name</th>
+            <th class="text-center hidden-sm hidden-xs">Scholar No.</th>
+            <th class="text-center hidden-sm hidden-xs">Class</th>
+            <th class="text-right">Amount</th>
+            <th class="text-center">Date</th>
+            <th class="text-center hidden-sm hidden-xs">Remark</th>
+            <!-- th class="text-center hidden-sm hidden-xs">-</th -->
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let discount of discountList | slice:0:number">
+            <td>{{discount.discountNumber}}</td>
+            <td align="center">{{getStudentName(discount.parentStudent)}}</td>
+            <td align="center" class="hidden-sm hidden-xs">{{getStudentScholarNumber(discount.parentStudent)}}</td>
+            <td align="center" class="hidden-sm hidden-xs">
+                {{getClassName(discount.parentStudent, discount.parentSession)}},
+                {{getSectionName(discount.parentStudent, discount.parentSession)}}
+            </td>
+            <td style="padding-right: 15px;" align="right">{{getDiscountTotalAmount(discount)}}</td>
+            <td align="center">{{discount.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
+            <td align="center" class="hidden-sm hidden-xs">{{discount.remark}}</td>
+            <!-- td align="center" class="hidden-sm hidden-xs">
+                <button type="button"
+                        style="padding: 8px 11px; margin: 0px"
+                        matTooltip="Print"
+                        tooltip-position="right"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="printFeeReceipt(discount)">
+                    <i class="material-icons">print</i></button>
+            </td -->
+        </tr>
+    </tbody>
+</table>
+<ng-container *ngIf="discountList.length>3">
+    <u *ngIf="number<discountList.length"
+       style="color: deepskyblue; cursor: pointer"
+       (click)="increaseNumber()">
+        Show More
+    </u>
+    Total Receipts: {{discountList.length}}
+</ng-container>

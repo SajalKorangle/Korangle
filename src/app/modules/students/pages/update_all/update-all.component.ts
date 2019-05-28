@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
-import {StudentService} from '../../student.service';
+import {StudentOldService} from '../../student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -62,7 +62,7 @@ const RELIGION_LIST = [
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentService, ClassService],
+    providers: [StudentOldService, ClassService],
 })
 
 export class UpdateAllComponent implements OnInit {
@@ -131,7 +131,7 @@ export class UpdateAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private studentService: StudentService,
+    constructor(private studentService: StudentOldService,
                 private classService: ClassService,
                 private cdRef: ChangeDetectorRef) { }
 

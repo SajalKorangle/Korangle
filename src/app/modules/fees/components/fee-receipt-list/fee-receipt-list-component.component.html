@@ -1,0 +1,45 @@
+<table class="table table-hover">
+    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+        <tr>
+            <th>Receipt No.</th>
+            <th class="text-center">Name</th>
+            <th class="text-center hidden-sm hidden-xs">Scholar No.</th>
+            <th class="text-center hidden-sm hidden-xs">Class</th>
+            <th class="text-right">Amount</th>
+            <th class="text-center">Date</th>
+            <th class="text-center hidden-sm hidden-xs">Remark</th>
+            <th class="text-center hidden-sm hidden-xs">-</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let feeReceipt of feeReceiptList | slice:0:number">
+            <td>{{feeReceipt.receiptNumber}}</td>
+            <td align="center">{{getStudentName(feeReceipt.parentStudent)}}</td>
+            <td align="center" class="hidden-sm hidden-xs">{{getStudentScholarNumber(feeReceipt.parentStudent)}}</td>
+            <td align="center" class="hidden-sm hidden-xs">
+                {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
+                {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
+            </td>
+            <td style="padding-right: 15px;" align="right">{{getFeeReceiptTotalAmount(feeReceipt)}}</td>
+            <td align="center">{{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
+            <td align="center" class="hidden-sm hidden-xs">{{feeReceipt.remark}}</td>
+            <td align="center" class="hidden-sm hidden-xs">
+                <button type="button"
+                        style="padding: 8px 11px; margin: 0px"
+                        matTooltip="Print"
+                        tooltip-position="right"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="printFeeReceipt(feeReceipt)">
+                    <i class="material-icons">print</i></button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<ng-container *ngIf="feeReceiptList.length>3">
+    <u *ngIf="number<feeReceiptList.length"
+       style="color: deepskyblue; cursor: pointer"
+       (click)="increaseNumber()">
+        Show More
+    </u>
+    Total Receipts: {{feeReceiptList.length}}
+</ng-container>

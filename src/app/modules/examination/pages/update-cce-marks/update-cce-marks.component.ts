@@ -6,7 +6,7 @@ import { SubjectService } from '../../../../services/subject.service';
 
 import { UpdateCceMarksServiceAdapter } from './update-cce-marks.service.adapter';
 import {TEST_TYPE_LIST} from '../../classes/constants';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -14,7 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
     selector: 'update-cce-marks',
     templateUrl: './update-cce-marks.component.html',
     styleUrls: ['./update-cce-marks.component.css'],
-    providers: [ ExaminationService, ClassService, SubjectService, StudentService ],
+    providers: [ ExaminationService, ClassService, SubjectService, StudentOldService ],
 })
 
 export class UpdateCceMarksComponent implements OnInit {
@@ -32,7 +32,7 @@ export class UpdateCceMarksComponent implements OnInit {
     constructor(public examinationService: ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectService,
-                public studentService: StudentService,
+                public studentService: StudentOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

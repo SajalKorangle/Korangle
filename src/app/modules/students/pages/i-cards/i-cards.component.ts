@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassService} from '../../../../services/class.service';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {EmitterService} from '../../../../services/emitter.service';
@@ -29,7 +29,7 @@ class ColumnFilter {
     selector: 'i-cards',
     templateUrl: './i-cards.component.html',
     styleUrls: ['./i-cards.component.css'],
-    providers: [StudentService, ClassService ],
+    providers: [StudentOldService, ClassService ],
 })
 
 export class ICardsComponent implements OnInit {
@@ -68,7 +68,7 @@ export class ICardsComponent implements OnInit {
     expanded = {};
     timeout: any;
 
-    constructor(private studentService: StudentService,
+    constructor(private studentService: StudentOldService,
                 private classService: ClassService,
                 private cdRef: ChangeDetectorRef) { }
 

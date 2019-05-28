@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import {ExaminationService} from '../../../../services/examination.service';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 import {SubjectService} from '../../../../services/subject.service';
 import {ClassService} from '../../../../services/class.service';
 
@@ -12,7 +12,7 @@ import {EmitterService} from '../../../../services/emitter.service';
     selector: 'generate-hall-ticket',
     templateUrl: './generate-hall-ticket.component.html',
     styleUrls: ['./generate-hall-ticket.component.css'],
-    providers: [ ExaminationService, SubjectService, StudentService, ClassService ],
+    providers: [ ExaminationService, SubjectService, StudentOldService, ClassService ],
 })
 
 export class GenerateHallTicketComponent implements OnInit {
@@ -28,7 +28,7 @@ export class GenerateHallTicketComponent implements OnInit {
     isLoading = false;
 
     constructor(public examinationService: ExaminationService,
-                public studentService: StudentService,
+                public studentService: StudentOldService,
                 public subjectService: SubjectService,
                 public classService: ClassService) {}
 

@@ -7,7 +7,7 @@ import { AttendanceService } from '../../../attendance/attendance.service';
 
 import { GradeStudentFieldsServiceAdapter } from './grade-student-fields.service.adapter';
 import {TEST_TYPE_LIST} from '../../classes/constants';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -15,7 +15,7 @@ import { ChangeDetectorRef } from '@angular/core';
     selector: 'grade-student-fields',
     templateUrl: './grade-student-fields.component.html',
     styleUrls: ['./grade-student-fields.component.css'],
-    providers: [ ExaminationService, ClassService, SubjectService, StudentService, AttendanceService ],
+    providers: [ ExaminationService, ClassService, SubjectService, StudentOldService, AttendanceService ],
 })
 
 export class GradeStudentFieldsComponent implements OnInit {
@@ -45,7 +45,7 @@ export class GradeStudentFieldsComponent implements OnInit {
     constructor(public examinationService: ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectService,
-                public studentService: StudentService,
+                public studentService: StudentOldService,
                 public attendanceService: AttendanceService,
                 private cdRef: ChangeDetectorRef) {}
 

@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
-import {StudentService} from '../../student.service';
+import {StudentOldService} from '../../student-old.service';
 
 import * as XLSX from 'xlsx';
 
@@ -39,7 +39,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, ClassService],
+    providers: [StudentOldService, ClassService],
 })
 
 export class ViewAllComponent implements OnInit {
@@ -80,7 +80,7 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private studentService: StudentService,
+    constructor(private studentService: StudentOldService,
                 private classService: ClassService) { }
 
     ngOnInit(): void {

@@ -6,7 +6,7 @@ import { AddStudentServiceAdapter } from './add-student.service.adapter';
 
 import { ClassService } from '../../../../services/class.service';
 import { BusStopService } from '../../../../services/bus-stop.service';
-import { StudentService } from '../../student.service';
+import { StudentOldService } from '../../student-old.service';
 import {SubjectService} from '../../../../services/subject.service';
 import {ExaminationService} from '../../../../services/examination.service';
 
@@ -14,7 +14,7 @@ import {ExaminationService} from '../../../../services/examination.service';
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ ClassService, BusStopService, StudentService, SubjectService, ExaminationService ],
+    providers: [ ClassService, BusStopService, StudentOldService, SubjectService, ExaminationService ],
 })
 
 export class AddStudentComponent implements OnInit {
@@ -34,7 +34,7 @@ export class AddStudentComponent implements OnInit {
 
     constructor (public classService: ClassService,
                  private busStopService: BusStopService,
-                 private studentService: StudentService,
+                 private studentService: StudentOldService,
                  public subjectService: SubjectService,
                  public examinationService: ExaminationService) { }
 

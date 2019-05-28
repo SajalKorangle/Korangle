@@ -10,7 +10,7 @@ import { Student } from '../../classes/student';
 import { CommonServiceRequirements } from '../../services/common-service-requirements';
 
 @Injectable()
-export class StudentService extends CommonServiceRequirements {
+export class StudentOldService extends CommonServiceRequirements {
 
     // Profile Image
     uploadProfileImage(file: any, data: any, token: any): Promise<any> {
@@ -48,15 +48,15 @@ export class StudentService extends CommonServiceRequirements {
 
     // Student Section
     updateStudentSection(data, token): Promise<any> {
-        return super.putData(data, token, '/student/student-sections/' + data['id']);
+        return super.putData(data, token, '/student/student-sections-old/' + data['id']);
     }
 
     createStudentSectionList(data, token): Promise<any> {
-        return super.postData(data, token, '/student/student-sections/batch');
+        return super.postData(data, token, '/student/student-sections-old/batch');
     }
 
     /*getStudentSectionList(data, token): Promise<any> {
-        let url = '/student/student-sections/batch' +
+        let url = '/student/student-sections-old/batch' +
             '?studentList='+data['studentList'].join() +
             '&classList='+data['classList'].join() +
             '&sectionList='+data['sectionList'].join() +

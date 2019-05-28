@@ -1,6 +1,6 @@
 <div class="card-content">
 
-    <!-- app-student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></app-student-filter -->
+    <!-- app-student-filter [user]="user" (onStudentListSelected)="getStudentFeeDetails($event)"></app-student-filter -->
     <student-filter [user]="user" (onStudentSelected)="getStudentFeeDetails($event)"></student-filter>
 
     <ng-container *ngIf="studentFeeProfile && studentFeeStatusList && !isLoading">
@@ -203,9 +203,9 @@
                 </div>
                 <div class="row" [@slideDown]="showPreviousFeeDetails">
                     <div class="col-md-12">
-                        <app-fee-receipt-list [user]="user"
-                                              [feeReceiptList]="feeReceiptList"
-                                              [whileSubmittingFee]="true"></app-fee-receipt-list>
+                        <app-fee-receipt-list-old [user]="user"
+                                                  [feeReceiptList]="feeReceiptList"
+                                                  [whileSubmittingFee]="true"></app-fee-receipt-list-old>
                     </div>
                 </div>
             </div>
@@ -235,9 +235,9 @@
                 </div>
                 <div class="row" [@slideDown]="showPreviousConcessionDetails">
                     <div class="col-md-12">
-                        <app-discount-list [user]="user"
-                                           [concessionList]="concessionList"
-                                           [whileSubmittingConcession]="true"></app-discount-list>
+                        <app-discount-list-old [user]="user"
+                                               [concessionList]="concessionList"
+                                               [whileSubmittingConcession]="true"></app-discount-list-old>
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@ import { SubjectService } from '../../../../services/subject.service';
 
 import { PrintMarksheetServiceAdapter } from './print-marksheet.service.adapter';
 import {TEST_TYPE_LIST} from '../../classes/constants';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {EmitterService} from '../../../../services/emitter.service';
@@ -15,7 +15,7 @@ import {EmitterService} from '../../../../services/emitter.service';
     selector: 'examination-print-marksheet',
     templateUrl: './print-marksheet.component.html',
     styleUrls: ['./print-marksheet.component.css'],
-    providers: [ ExaminationService, ClassService, SubjectService, StudentService ],
+    providers: [ ExaminationService, ClassService, SubjectService, StudentOldService ],
 })
 
 export class PrintMarksheetComponent implements OnInit {
@@ -42,7 +42,7 @@ export class PrintMarksheetComponent implements OnInit {
     constructor(public examinationService: ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectService,
-                public studentService: StudentService,
+                public studentService: StudentOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
-import { StudentService } from '../../student.service';
+import { StudentOldService } from '../../student-old.service';
 import { ClassService } from '../../../../services/class.service';
 import {SubjectService} from '../../../../services/subject.service';
 import {ExaminationService} from '../../../../services/examination.service';
@@ -11,7 +11,7 @@ import {ExaminationService} from '../../../../services/examination.service';
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ StudentService, ClassService, SubjectService, ExaminationService ],
+    providers: [ StudentOldService, ClassService, SubjectService, ExaminationService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
@@ -30,7 +30,7 @@ export class PromoteStudentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private studentService: StudentService,
+    constructor (private studentService: StudentOldService,
                  private classService: ClassService,
                  public subjectService: SubjectService,
                  public examinationService: ExaminationService) { }

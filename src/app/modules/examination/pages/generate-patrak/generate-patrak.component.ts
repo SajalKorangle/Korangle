@@ -7,7 +7,7 @@ import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {ClassService} from '../../../../services/class.service';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 import {SubjectService} from '../../../../services/subject.service';
 import {AttendanceService} from '../../../attendance/attendance.service';
 import {EmitterService} from '../../../../services/emitter.service';
@@ -18,7 +18,7 @@ import * as XLSX from 'xlsx';
     selector: 'generate-patrak',
     templateUrl: './generate-patrak.component.html',
     styleUrls: ['./generate-patrak.component.css'],
-    providers: [ ExaminationService, ClassService, StudentService, SubjectService, AttendanceService ],
+    providers: [ ExaminationService, ClassService, StudentOldService, SubjectService, AttendanceService ],
 })
 
 export class GeneratePatrakComponent implements OnInit {
@@ -45,7 +45,7 @@ export class GeneratePatrakComponent implements OnInit {
 
     constructor(public examinationService: ExaminationService,
                 public classService: ClassService,
-                public studentService: StudentService,
+                public studentService: StudentOldService,
                 public subjectService: SubjectService,
                 public attendanceService: AttendanceService,
                 private cdRef: ChangeDetectorRef) {}

@@ -6,13 +6,13 @@ import { SubjectService } from '../../../../services/subject.service';
 
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
 import {TEST_TYPE_LIST} from '../../classes/constants';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 
 @Component({
     selector: 'create-test',
     templateUrl: './create-test.component.html',
     styleUrls: ['./create-test.component.css'],
-    providers: [ ExaminationService, ClassService, SubjectService, StudentService ],
+    providers: [ ExaminationService, ClassService, SubjectService, StudentOldService ],
 })
 
 export class CreateTestComponent implements OnInit {
@@ -45,7 +45,7 @@ export class CreateTestComponent implements OnInit {
     constructor(public examinationService: ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectService,
-                public studentService: StudentService) {}
+                public studentService: StudentOldService) {}
 
     ngOnInit(): void {
         this.serviceAdapter = new CreateTestServiceAdapter();

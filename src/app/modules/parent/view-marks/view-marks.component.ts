@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
-import { StudentService } from '../../students/student.service';
+import { StudentOldService } from '../../students/student-old.service';
 import {ExaminationService} from '../../../services/examination.service';
 import {SubjectService} from '../../../services/subject.service';
 import {ViewMarksServiceAdapter} from './view-marks.service.adapter';
@@ -9,7 +9,7 @@ import {ViewMarksServiceAdapter} from './view-marks.service.adapter';
   selector: 'view-marks',
   templateUrl: './view-marks.component.html',
   styleUrls: ['./view-marks.component.css'],
-    providers: [ StudentService, ExaminationService, SubjectService ],
+    providers: [ StudentOldService, ExaminationService, SubjectService ],
 })
 
 export class ViewMarksComponent implements OnInit, OnChanges {
@@ -28,7 +28,7 @@ export class ViewMarksComponent implements OnInit, OnChanges {
 
     isLoading = false;
 
-    constructor (public studentService: StudentService,
+    constructor (public studentService: StudentOldService,
                  public examinationService: ExaminationService,
                  public subjectService: SubjectService) { }
 
