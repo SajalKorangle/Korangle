@@ -22,6 +22,7 @@ export class FeeReceiptListComponent {
     @Input() classList;
     @Input() sectionList;
     @Input() employeeList;
+    @Input() receiptColumnFilter;
     @Input() number = 3;
 
     // Constant Lists
@@ -94,6 +95,13 @@ export class FeeReceiptListComponent {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
             }).parentDivision;
         }).name;
+    }
+
+    getEmployeeName(feeReceipt: any): any {
+        let employee = this.employeeList.find(employee => {
+            return employee.id == feeReceipt.parentEmployee;
+        });
+        return employee?employee.name:null;
     }
 
 }

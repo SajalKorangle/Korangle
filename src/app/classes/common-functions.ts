@@ -1,4 +1,6 @@
 
+declare const $: any;
+
 export class CommonFunctions {
 
     static instance: CommonFunctions;
@@ -17,6 +19,13 @@ export class CommonFunctions {
         });
         return tempObject;
     }
+
+    isMobileMenu(): boolean {
+        if ($(window).width() > 991) {
+            return false;
+        }
+        return true;
+    };
 
 }
 

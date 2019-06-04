@@ -169,6 +169,7 @@ export class UpdateStudentFeesServiceAdapter {
             'parentFeeType': schoolFeeRule.parentFeeType,
             'parentSession': schoolFeeRule.parentSession,
             'isAnnually': schoolFeeRule.isAnnually,
+            'cleared': false,
         };
         this.vm.installmentList.forEach(installment => {
             tempObject[installment+'Amount'] = schoolFeeRule[installment+'Amount'];

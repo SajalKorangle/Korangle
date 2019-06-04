@@ -1,15 +1,15 @@
 
-import { GiveParentDiscountComponent } from './give-parent-discount.component';
+import { GiveDiscountComponent } from './give-discount.component';
 
-export class GiveParentDiscountServiceAdapter {
+export class GiveDiscountServiceAdapter {
 
-    vm: GiveParentDiscountComponent;
+    vm: GiveDiscountComponent;
 
     constructor() {}
 
     // Data
 
-    initializeAdapter(vm: GiveParentDiscountComponent): void {
+    initializeAdapter(vm: GiveDiscountComponent): void {
         this.vm = vm;
     }
 

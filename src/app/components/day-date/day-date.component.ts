@@ -52,7 +52,11 @@ export class DayDateComponent implements OnInit {
         } else {
             this.date = new FormControl({value: this.initialValue, disabled: true});
         }
-        this.onDateSelected.emit(this.date.value);
+        if (this.formattedDateOutput) {
+            this.onDateSelected.emit(this.formatDate(this.date.value));
+        } else {
+            this.onDateSelected.emit(this.date.value);
+        }
     }
 
     onDateChanged(event: any): void {

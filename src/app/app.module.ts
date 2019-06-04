@@ -34,7 +34,8 @@ import { PrintStudentElegantFinalReportListComponent } from './modules/examinati
 import { PrintStudentNinthFinalReportListComponent } from './modules/examination/print/print-student-ninth-final-report-list/print-student-ninth-final-report-list.component';
 import { PrintStudentClassicFinalReportListComponent } from './modules/examination/print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
 import {PrintStudentEleventhFinalReportListComponent} from './modules/examination/print/print-student-eleventh-final-report-list/print-student-eleventh-final-report-list.component';
-import {PrintFeeReceiptListComponent} from './modules/fees-second/print/print-fee-receipt-list/print-fee-receipt-list.component';
+import {PrintOldFeeReceiptListComponent} from './modules/fees-second/print/print-old-fee-receipt-list/print-old-fee-receipt-list.component';
+import { PrintFeeReceiptListComponent } from "./modules/fees/print/print-fee-receipt-list/print-fee-receipt-list.component";
 import {PrintEmployeeICardsComponent} from './modules/employee/print/print-employee-i-card/print-employee-i-cards.component';
 import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-fee-receipt-list/print-full-fee-receipt-list.component";
 
@@ -52,7 +53,7 @@ import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-
         PrintTransferCertificateComponent,
         PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
-        PrintFeeReceiptListComponent,
+        PrintOldFeeReceiptListComponent,
         PrintEmployeeListComponent,
         PrintNewFeeReceiptComponent,
         PrintICardsComponent,
@@ -69,6 +70,7 @@ import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-
         PrintComponent,
         PrintEmployeeICardsComponent,
         PrintFullFeeReceiptListComponent,
+        PrintFeeReceiptListComponent,
 
     ],
     imports: [

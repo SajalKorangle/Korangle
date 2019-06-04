@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 
-import { FeeService } from '../../fee.service';
+import { FeeOldService } from '../../fee-old.service';
 
 import {Concession, FeeReceipt} from '../../classes/common-functionalities';
 
@@ -28,7 +28,7 @@ const MARCH = 'MARCH';
     selector: 'app-collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [ FeeService ],
+    providers: [ FeeOldService ],
     animations: [
         trigger('rotate', [
             state('true', style({transform: 'rotate(0deg)'})),
@@ -75,7 +75,7 @@ export class CollectFeeComponent implements OnInit {
 
     sectionName: boolean;
 
-    constructor (private feeService: FeeService) { }
+    constructor (private feeService: FeeOldService) { }
 
     ngOnInit(): void {
         this.selectedSessionDbId = this.user.activeSchool.currentSessionDbId;

@@ -8,6 +8,8 @@ export class StudentFee {
     parentSchoolFeeRule: number = null;
     isAnnually: boolean = null;
 
+    cleared: boolean = null;
+
     // April
     aprilAmount: number = null;
     aprilLastDate: any = null;

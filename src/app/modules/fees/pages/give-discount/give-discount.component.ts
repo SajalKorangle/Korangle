@@ -1,15 +1,15 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import { GiveParentDiscountServiceAdapter } from "./give-parent-discount.service.adapter";
+import { GiveDiscountServiceAdapter } from "./give-discount-service.adapter";
 import { FeeService } from "../../../../services/fee.service";
 
 @Component({
-    selector: 'give-parent-discount',
-    templateUrl: './give-parent-discount.component.html',
-    styleUrls: ['./give-parent-discount.component.css'],
+    selector: 'give-discount',
+    templateUrl: './give-discount.component.html',
+    styleUrls: ['./give-discount.component.css'],
     providers: [ FeeService ],
 })
 
-export class GiveParentDiscountComponent implements OnInit {
+export class GiveDiscountComponent implements OnInit {
 
     @Input() user;
 
@@ -17,7 +17,7 @@ export class GiveParentDiscountComponent implements OnInit {
 
     selectedClass: any;
 
-    serviceAdapter: GiveParentDiscountServiceAdapter;
+    serviceAdapter: GiveDiscountServiceAdapter;
 
     isLoading = false;
 
@@ -25,7 +25,7 @@ export class GiveParentDiscountComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
-        this.serviceAdapter = new GiveParentDiscountServiceAdapter();
+        this.serviceAdapter = new GiveDiscountServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }

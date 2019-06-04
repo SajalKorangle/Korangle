@@ -7,7 +7,7 @@ import { CommonServiceRequirements } from '../../services/common-service-require
 import { URLSearchParams } from '@angular/http';
 
 @Injectable()
-export class FeeService extends CommonServiceRequirements {
+export class FeeOldService extends CommonServiceRequirements {
 
     //Fee Type
     getFeeTypeList(token: string): Promise<any> {

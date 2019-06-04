@@ -6,11 +6,11 @@ import { EmitterService } from '../../../../services/emitter.service';
 import {FeeReceipt} from '../../classes/common-functionalities';
 
 @Component({
-    selector: 'app-print-fee-receipt-list',
-    templateUrl: './print-fee-receipt-list.component.html',
-    styleUrls: ['./print-fee-receipt-list.component.css'],
+    selector: 'app-print-old-fee-receipt-list',
+    templateUrl: './print-old-fee-receipt-list.component.html',
+    styleUrls: ['./print-old-fee-receipt-list.component.css'],
 })
-export class PrintFeeReceiptListComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class PrintOldFeeReceiptListComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     @Input() user;
 
@@ -25,7 +25,7 @@ export class PrintFeeReceiptListComponent implements OnInit, OnDestroy, AfterVie
     constructor(private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
-        this.printFeeReceiptListComponentSubscription = EmitterService.get('print-fee-receipt-list-component').subscribe(value => {
+        this.printFeeReceiptListComponentSubscription = EmitterService.get('print-old-fee-receipt-list-component').subscribe(value => {
             this.feeReceiptList = value['feeReceiptList'];
             this.feeType = value['feeType'];
             this.employee = value['employee'];

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { FeeService } from '../../fee.service';
+import { FeeOldService } from '../../fee-old.service';
 
 import { FeeReceipt } from '../../classes/common-functionalities';
 
@@ -8,7 +8,7 @@ import { FeeReceipt } from '../../classes/common-functionalities';
   selector: 'my-collection',
   templateUrl: './my-collection.component.html',
   styleUrls: ['./my-collection.component.css'],
-    providers: [FeeService]
+    providers: [FeeOldService]
 })
 export class MyCollectionComponent {
 
@@ -35,7 +35,7 @@ export class MyCollectionComponent {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private feeService: FeeService) { }
+    constructor(private feeService: FeeOldService) { }
 
     getEmployeeFeeReceiptList(): void {
         const data = {

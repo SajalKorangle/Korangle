@@ -1,16 +1,16 @@
 
-import { CollectStudentFeeComponent } from './collect-student-fee.component';
+import { CollectFeeComponent } from './collect-fee.component';
 import {CommonFunctions} from "../../../../classes/common-functions";
 
-export class CollectStudentFeeServiceAdapter {
+export class CollectFeeServiceAdapter {
 
-    vm: CollectStudentFeeComponent;
+    vm: CollectFeeComponent;
 
     constructor() {}
 
     // Data
 
-    initializeAdapter(vm: CollectStudentFeeComponent): void {
+    initializeAdapter(vm: CollectFeeComponent): void {
         this.vm = vm;
     }
 
@@ -62,31 +62,31 @@ export class CollectStudentFeeServiceAdapter {
         let studentListId = this.vm.selectedStudentList.map(a => a.id).join();
 
         let student_fee_list = {
-            'parentStudent': studentListId,
+            'parentStudent__in': studentListId,
         };
 
         let fee_receipt_list = {
-            'parentStudent': studentListId,
+            'parentStudent__in': studentListId,
             'cancelled': 'false__boolean',
         };
 
         let sub_fee_receipt_list = {
-            'parentStudentFee__parentStudent': studentListId,
+            'parentStudentFee__parentStudent__in': studentListId,
             'parentFeeReceipt__cancelled': 'false__boolean',
         };
 
         let discount_list = {
-            'parentStudent': studentListId,
+            'parentStudent__in': studentListId,
             'cancelled': 'false__boolean',
         };
 
         let sub_discount_list = {
-            'parentStudentFee__parentStudent': studentListId,
+            'parentStudentFee__parentStudent__in': studentListId,
             'parentDiscount__cancelled': 'false__boolean',
         };
 
         let student_section_list = {
-            'parentStudent': studentListId,
+            'parentStudent__in': studentListId,
         };
 
         this.vm.isLoading = true;
@@ -159,11 +159,21 @@ export class CollectStudentFeeServiceAdapter {
             return CommonFunctions.getInstance().copyObject(subFeeReceipt);
         });
 
+        let student_fee_list = this.vm.studentFeeList.filter(studentFee => {
+            return this.vm.getStudentFeeFeesDue(studentFee) + this.vm.getStudentFeeLateFeesDue(studentFee) == 0;
+        }).map(item => {
+            item.cleared = true;
+            return CommonFunctions.getInstance().copyObject(item);
+        });
+
         this.vm.isLoading = true;
 
-        this.vm.feeService.createList(this.vm.feeService.fee_receipts, fee_receipt_list).then(value => {
+        Promise.all([
+            this.vm.feeService.createList(this.vm.feeService.fee_receipts, fee_receipt_list),
+            this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
+        ]).then(value => {
 
-            value.filter(fee_receipt => {
+            value[0].filter(fee_receipt => {
                 sub_fee_receipt_list.filter(subFeeReceipt => {
                     if(subFeeReceipt.parentSession == fee_receipt.parentSession
                         && this.vm.studentFeeList.find(item => {

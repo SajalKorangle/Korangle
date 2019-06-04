@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {FeeService} from '../../fee.service';
+import {FeeOldService} from '../../fee-old.service';
 import {ClassService} from '../../../../services/class.service';
 import {FREQUENCY_LIST} from '../../classes/constants';
 import {EmitterService} from '../../../../services/emitter.service';
@@ -23,7 +23,7 @@ class ColumnFilter {
     selector: 'app-school-fee-record',
     templateUrl: './school-record.component.html',
     styleUrls: ['./school-record.component.css', './school-record.component.scss'],
-    providers: [FeeService, ClassService],
+    providers: [FeeOldService, ClassService],
 })
 
 export class SchoolRecordComponent implements OnInit {
@@ -43,7 +43,7 @@ export class SchoolRecordComponent implements OnInit {
 
     frequencyList = FREQUENCY_LIST;
 
-    constructor(private feeService: FeeService,
+    constructor(private feeService: FeeOldService,
                 private classService: ClassService) {
     }
 
@@ -233,7 +233,7 @@ export class SchoolRecordComponent implements OnInit {
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
         /* save to file */
-        XLSX.writeFile(wb, 'korganle_student_fees.csv');
+        XLSX.writeFile(wb, 'korangle_student_fees.csv');
     }
 
     getHeaderValues(): any {

@@ -144,11 +144,11 @@
                                (keypress)="policeOverallPaymentInput($event)"
                                (ngModelChange)="handleOverallPaymentChange($event);">
                     </td>
-                    <td align="right">Total Fees: {{getOverallTotalFees()}}</td>
+                    <td align="right">Total Fees: {{getOverallTotalFees() | currency:'INR':'':'1.0-0'}}</td>
                 </tr>
                 <tr style="font-weight: 800 !important; font-size: 22px !important;">
-                    <td align="left">Fees Due Till Month: <span style="color: red;">{{getOverallFeesDueTillMonth()}}</span></td>
-                    <td align="right">Total Fees Due: {{getOverallFeesDue()}}</td>
+                    <td align="left">Fees Due Till Month: <span style="color: red;">{{getOverallFeesDueTillMonth() | currency:'INR':'':'1.0-0'}}</span></td>
+                    <td align="right">Total Fees Due: {{getOverallFeesDue() | currency:'INR':'':'1.0-0'}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -164,29 +164,33 @@
                 </tr>
                 <tr>
                     <td *ngIf="!lateFeeVisible" align="center">Title</td>
-                    <td align="center">Payment</td>
+                    <td align="right">Payment</td>
                     <td align="center">Due</td>
                     <td align="center">Total</td>
-                    <td *ngIf="lateFeeVisible" align="center">Payment</td>
+                    <td *ngIf="lateFeeVisible" align="right">Payment</td>
                     <td *ngIf="lateFeeVisible" align="center">Due</td>
                     <td *ngIf="lateFeeVisible" align="center">Total</td>
                     <td></td>
                 </tr>
                 <ng-container *ngFor="let student of getStudentList();">
+
+                    <!-- Student -->
+
                     <tr style="font-weight: 800 !important; font-size: 20px !important; background-color: #f8f5e6 !important; color: blue !important;">
                         <td align="left">{{student.name}}</td>
-                        <td align="center">
+                        <td align="right">
                             <input class='paymentInput'
                                    *ngIf="getStudentFeesDue(student, false) != 0"
                                    type="number"
                                    min="0"
+                                   [disabled]="getStudentLateFeesDue(student, true) != 0"
                                    [ngModel]="getStudentPayment(student)==0?null:getStudentPayment(student)"
                                    (keypress)="policeStudentPaymentInput(student, $event)"
                                    (ngModelChange)="handleStudentPaymentChange(student, $event);">
                         </td>
                         <td align="center">{{getStudentFeesDue(student)}}</td>
                         <td align="center">{{getStudentTotalFees(student)}}</td>
-                        <td *ngIf="lateFeeVisible" align="center">
+                        <td *ngIf="lateFeeVisible" align="right">
                             <input class='paymentInput'
                                    *ngIf="getStudentLateFeesDue(student, false) != 0"
                                    type="number"
@@ -200,21 +204,26 @@
                         <!-- td align="center">{{getStudentClearanceDate(student) | date : 'dd - MMM - yyyy'}}</td -->
                         <td></td>
                     </tr>
+
                     <ng-container *ngFor="let session of getFilteredSessionListByStudent(student); let sessionIndex=index;">
+
+                        <!-- Session -->
+
                         <tr style="font-weight: 500 !important; font-size: 16px !important;">
                             <td align="left">{{sessionIndex+1}}. Session {{session.name}}</td>
-                            <td align="center">
+                            <td align="right">
                                 <input class='paymentInput'
                                        *ngIf="getSessionFeesDue(student, session, false) != 0"
                                        type="number"
                                        min="0"
+                                       [disabled]="getSessionLateFeesDue(student, session, true) != 0"
                                        [ngModel]="getSessionPayment(student, session)==0?null:getSessionPayment(student, session)"
                                        (keypress)="policeSessionPaymentInput(student, session, $event)"
                                        (ngModelChange)="handleSessionPaymentChange(student, session, $event);">
                             </td>
                             <td align="center">{{getSessionFeesDue(student, session)}}</td>
                             <td align="center">{{getSessionTotalFees(student, session)}}</td>
-                            <td *ngIf="lateFeeVisible" align="center">
+                            <td *ngIf="lateFeeVisible" align="right">
                                 <input class='paymentInput'
                                        *ngIf="getSessionLateFeesDue(student, session, false) != 0"
                                        type="number"
@@ -228,22 +237,27 @@
                             <!-- td align="center">{{getSessionClearanceDate(student, session) | date : 'dd - MMM - yyyy'}}</td -->
                             <td></td>
                         </tr>
+
                         <ng-container *ngFor="let studentFee of getFilteredStudentFeeListBySession(student, session); let studentFeeIndex=index;">
                             <ng-container *ngIf="studentFee.isAnnually">
+
+                                <!-- Student Fee Annually -->
+
                                 <tr style="font-weight: 500 !important; font-size: 16px !important;">
                                     <td align="left" style="padding-left: 50px;">{{studentFeeIndex+1}}. {{getFeeTypeByStudentFee(studentFee).name}}</td>
-                                    <td align="center">
+                                    <td align="right">
                                         <input class='paymentInput'
                                                *ngIf="getStudentFeeInstallmentFeesDue(studentFee, 'april', false) != 0"
                                                type="number"
                                                min="0"
+                                               [disabled]="getStudentFeeInstallmentLateFeesDue(studentFee, 'april', true) != 0"
                                                [ngModel]="getStudentFeeInstallmentPayment(studentFee, 'april')==0?null:getStudentFeeInstallmentPayment(studentFee, 'april')"
                                                (keypress)="policeStudentFeeInstallmentPaymentInput(studentFee, 'april', $event)"
                                                (ngModelChange)="handleStudentFeeInstallmentPaymentChange(studentFee, 'april', $event);">
                                     </td>
                                     <td align="center">{{getStudentFeeInstallmentFeesDue(studentFee, 'april')}}</td>
                                     <td align="center">{{getStudentFeeInstallmentTotalFees(studentFee, 'april')}}</td>
-                                    <td *ngIf="lateFeeVisible" align="center">
+                                    <td *ngIf="lateFeeVisible" align="right">
                                         <input class='paymentInput'
                                                *ngIf="getStudentFeeInstallmentLateFeesDue(studentFee, 'april', false) != 0"
                                                type="number"
@@ -257,22 +271,27 @@
                                     <!-- td align="center">{{studentFee['aprilClearanceDate'] | date : 'dd - MMM - yyyy'}}</td -->
                                     <td></td>
                                 </tr>
+
                             </ng-container>
                             <ng-container *ngIf="!studentFee.isAnnually">
+
+                                <!-- Student Fee Not Annually -->
+
                                 <tr style="font-weight: 500 !important; font-size: 16px !important;">
                                     <td align="left" style="padding-left: 50px;">{{studentFeeIndex+1}}. {{getFeeTypeByStudentFee(studentFee).name}}</td>
-                                    <td align="center">
+                                    <td align="right">
                                         <input class='paymentInput'
                                                *ngIf="getStudentFeeFeesDue(studentFee, false) != 0"
                                                type="number"
                                                min="0"
+                                               [disabled]="getStudentFeeLateFeesDue(studentFee, true) != 0"
                                                [ngModel]="getStudentFeePayment(studentFee)==0?null:getStudentFeePayment(studentFee)"
                                                (keypress)="policeStudentFeePaymentInput(studentFee, $event)"
                                                (ngModelChange)="handleStudentFeePaymentChange(studentFee, $event);">
                                     </td>
                                     <td align="center">{{getStudentFeeFeesDue(studentFee)}}</td>
                                     <td align="center">{{getStudentFeeTotalFees(studentFee)}}</td>
-                                    <td *ngIf="lateFeeVisible" align="center">
+                                    <td *ngIf="lateFeeVisible" align="right">
                                         <input class='paymentInput'
                                                *ngIf="getStudentFeeLateFeesDue(studentFee, false) != 0"
                                                type="number"
@@ -294,35 +313,42 @@
                                         </button>
                                     </td>
                                 </tr>
+
                                 <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">
                                     <ng-container *ngFor="let installment of getFilteredInstallmentListByStudentFee(studentFee); let installmentIndex=index;">
+
+                                        <!-- Installment -->
+
                                         <tr>
                                             <td align="left" style="padding-left: 60px;">{{installmentIndex+1}}. {{installment | titlecase}}</td>
-                                            <td align="center">
-                                                <input class='paymentInput'
+                                            <td align="right">
+                                                {{getStudentFeeInstallmentPayment(studentFee, installment)==0?null:getStudentFeeInstallmentPayment(studentFee, installment)}}
+                                                <!-- input class='paymentInput'
                                                        *ngIf="getStudentFeeInstallmentFeesDue(studentFee, installment, false) != 0"
                                                        type="number"
                                                        min="0"
                                                        [ngModel]="getStudentFeeInstallmentPayment(studentFee, installment)==0?null:getStudentFeeInstallmentPayment(studentFee, installment)"
                                                        (keypress)="policeStudentFeeInstallmentPaymentInput(studentFee, installment, $event)"
-                                                       (ngModelChange)="handleStudentFeeInstallmentPaymentChange(studentFee, installment, $event);">
+                                                       (ngModelChange)="handleStudentFeeInstallmentPaymentChange(studentFee, installment, $event);" -->
                                             </td>
                                             <td align="center">{{getStudentFeeInstallmentFeesDue(studentFee, installment)}}</td>
                                             <td align="center">{{getStudentFeeInstallmentTotalFees(studentFee, installment)}}</td>
-                                            <td *ngIf="lateFeeVisible" align="center">
-                                                <input class='paymentInput'
+                                            <td *ngIf="lateFeeVisible" align="right">
+                                                {{getStudentFeeInstallmentLateFeePayment(studentFee, installment)==0?null:getStudentFeeInstallmentLateFeePayment(studentFee, installment)}}
+                                                <!-- input class='paymentInput'
                                                        *ngIf="getStudentFeeInstallmentLateFeesDue(studentFee, installment, false) != 0"
                                                        type="number"
                                                        min="0"
                                                        [ngModel]="getStudentFeeInstallmentLateFeePayment(studentFee, installment)==0?null:getStudentFeeInstallmentLateFeePayment(studentFee, installment)"
                                                        (keypress)="policeStudentFeeInstallmentLateFeePaymentInput(studentFee, installment, $event)"
-                                                       (ngModelChange)="handleStudentFeeInstallmentLateFeePaymentChange(studentFee, installment, $event);">
+                                                       (ngModelChange)="handleStudentFeeInstallmentLateFeePaymentChange(studentFee, installment, $event);" -->
                                             </td>
                                             <td *ngIf="lateFeeVisible" align="center">{{getStudentFeeInstallmentLateFeesDue(studentFee, installment)}}</td>
                                             <td *ngIf="lateFeeVisible" align="center">{{getStudentFeeInstallmentLateFeeTotal(studentFee, installment)}}</td>
                                             <!-- td align="center">{{studentFee[installment+'ClearanceDate'] | date : 'dd - MMM - yyyy'}}</td -->
                                             <td></td>
                                         </tr>
+
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
@@ -338,34 +364,50 @@
                 </tbody>
             </table>
 
-            <div class="row" *ngIf="newFeeReceiptList.length>0">
-                <div class="col-sm-3">
-                    <mat-form-field style="margin-top: 22px;">
-                        <mat-select placeholder="Select Payment Mode"
-                                    [ngModel]="newModeOfPayment"
-                                    (ngModelChange)="newModeOfPayment=$event;updateNewFeeReceiptPaymentMode()">
-                            <mat-option *ngFor='let paymentMode of modeOfPaymentList;' [value]="paymentMode">
-                                {{paymentMode}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group form-black label-floating">
-                        <label class="control-label">Remark</label>
-                        <input type="text"
-                               class="form-control"
-                               [ngModel]="newRemark"
-                               (ngModelChange)="newRemark=$event;updateNewFeeReceiptRemark()"/>
+            <ng-container *ngIf="newFeeReceiptList.length>0">
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <mat-form-field style="margin-top: 22px;">
+                            <mat-select placeholder="Select Payment Mode"
+                                        [ngModel]="newModeOfPayment"
+                                        (ngModelChange)="newModeOfPayment=$event;updateNewFeeReceiptPaymentMode()">
+                                <mat-option *ngFor='let paymentMode of modeOfPaymentList;' [value]="paymentMode">
+                                    {{paymentMode}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3" *ngIf="newModeOfPayment==modeOfPaymentList[1]">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Check No.</label>
+                            <input type="number"
+                                   class="form-control"
+                                   [ngModel]="newCheckNumber"
+                                   (ngModelChange)="newCheckNumber=$event;updateNewFeeReceiptCheckNumber()"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" >
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Remark</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [ngModel]="newRemark"
+                                   (ngModelChange)="newRemark=$event;updateNewFeeReceiptRemark()"/>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="serviceAdapter.generateFeeReceipts()">
-                        Generate {{newFeeReceiptList.length}} Receipts for Rs. {{getOverallPayment()}}
-                    </button>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="serviceAdapter.generateFeeReceipts()">
+                            Generate {{newFeeReceiptList.length}} Receipts for Rs. {{getOverallPayment()}}
+                        </button>
+                    </div>
                 </div>
-            </div>
+
+            </ng-container>
 
         </ng-container>
 
@@ -386,12 +428,14 @@
                 <mat-expansion-panel-header>
                     <mat-panel-title *ngIf="feeReceiptList.length === 0">**No fees submitted yet</mat-panel-title>
                     <mat-panel-title *ngIf="feeReceiptList.length !== 0">
-                        <span class="hidden-xs">Last Receipt Date: &nbsp;</span><i>{{feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>, &nbsp;
-                        <span class="hidden-xs">Amount:  &nbsp;</span><i>{{getFeeReceiptTotalAmount(feeReceiptList[0])}}</i>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Last Receipt Date: &nbsp;</span><i>{{feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>, &nbsp;
+                        <span class="hidden-xs" style="color: #7b7b7b;">Amount:  &nbsp;</span>{{getLastDaySubmittedAmount(feeReceiptList[0]) | currency:'INR':'':'1.0-0'}} &nbsp; / &nbsp;
+                        <span class="hidden-xs" style="color: #7b7b7b;">Receipts:  &nbsp;</span>{{getLastDaySubmittedReceipts(feeReceiptList[0]).length}}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
                 <app-fee-receipt-list [user]="user"
+                                      [receiptColumnFilter]="receiptColumnFilter"
                                       [feeTypeList]="feeTypeList"
                                       [feeReceiptList]="feeReceiptList"
                                       [subFeeReceiptList]="subFeeReceiptList"

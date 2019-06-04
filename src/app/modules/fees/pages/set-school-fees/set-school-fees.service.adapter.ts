@@ -170,6 +170,7 @@ export class SetSchoolFeesServiceAdapter {
                 'parentFeeType': school_fee_rule_data['parentFeeType'],
                 'parentSession': school_fee_rule_data['parentSession'],
                 'isAnnually': school_fee_rule_data['isAnnually'],
+                'cleared': false,
             };
             this.vm.installmentList.forEach(installment => {
                 tempObject[installment+'Amount'] = school_fee_rule_data[installment+'Amount'];
@@ -274,15 +275,12 @@ export class SetSchoolFeesServiceAdapter {
 
         service_list.push(this.vm.feeService.delete(this.vm.feeService.school_fee_rules, school_fee_rule_data));
         if (class_filter_fee_list) {
-            console.log('class filter');
             service_list.push(this.vm.feeService.deleteList(this.vm.feeService.class_filter_fees, class_filter_fee_list));
         }
         if (bus_stop_filter_fee_list) {
-            console.log('bus stop filter');
             service_list.push(this.vm.feeService.deleteList(this.vm.feeService.bus_stop_filter_fees, bus_stop_filter_fee_list));
         }
         if (student_fee_list['id'] != '') {
-            console.log('student fee');
             service_list.push(this.vm.feeService.deleteList(this.vm.feeService.student_fees, student_fee_list));
         }
 
