@@ -131,6 +131,8 @@ class StudentFee(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
+    cleared = models.BooleanField(verbose_name='cleared', default=False)
+
     # April
     aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')
     aprilLastDate = models.DateField(null=True, verbose_name='aprilLastDate')
@@ -214,10 +216,15 @@ class FeeReceipt(models.Model):
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     remark = models.TextField(null=True, verbose_name='remark')
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
+
+    # Added for the unique together field
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+
     parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, verbose_name='parentStudent')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee')
+
+    checkNumber = models.IntegerField(null=True, verbose_name='checkNumber')
 
     MODE_OF_PAYMENT = (
         ( 'Cash', 'Cash' ),

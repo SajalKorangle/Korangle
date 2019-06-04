@@ -1,4 +1,6 @@
 
+from django.db.models import Sum
+
 
 def populate_fees_app(apps, schema_editor):
 
@@ -227,9 +229,15 @@ def populate_school_fee_rule(apps, fee_definition_object, school_fee_component_o
                                             parentSession=school_fee_rule_object.parentSession,
                                             isAnnually=school_fee_rule_object.isAnnually)
 
+            studentAmount = 0
+            subFeeReceiptAmount = 0
+            subDiscountAmount = 0
+
             if school_fee_rule_object.isAnnually:
 
                 student_fee_object.aprilAmount = student_fee_component_object.amount
+
+                studentAmount = student_fee_object.aprilAmount
 
             else:
 
@@ -293,6 +301,11 @@ def populate_school_fee_rule(apps, fee_definition_object, school_fee_component_o
                                                            parentStudentFeeComponent=student_fee_component_object)
                 student_fee_object.marchAmount = student_fee_component_monthly_object.amount
 
+                studentAmount = \
+                    StudentMonthlyFeeComponent.objects.filter(
+                        parentStudentFeeComponent=student_fee_component_object)\
+                        .aggregate(Sum('amount'))['amount__sum']
+
             student_fee_object.save()
 
             for sub_fee_receipt_old in \
@@ -309,6 +322,7 @@ def populate_school_fee_rule(apps, fee_definition_object, school_fee_component_o
 
                 if student_fee_object.isAnnually:
                     sub_fee_receipt.aprilAmount = sub_fee_receipt_old.amount
+                    subFeeReceiptAmount = sub_fee_receipt.aprilAmount
                 else:
 
                     sub_fee_receipt_monthly_query = \
@@ -383,6 +397,11 @@ def populate_school_fee_rule(apps, fee_definition_object, school_fee_component_o
                     if sub_fee_receipt_monthly_query.count() == 1:
                         sub_fee_receipt.marchAmount = sub_fee_receipt_monthly_query[0].amount
 
+                    subFeeReceiptAmount = \
+                        SubFeeReceiptMonthly.objects.filter(
+                            parentSubFeeReceipt=sub_fee_receipt_old) \
+                            .aggregate(Sum('amount'))['amount__sum']
+
                 sub_fee_receipt.save()
 
             for sub_concession in \
@@ -399,6 +418,7 @@ def populate_school_fee_rule(apps, fee_definition_object, school_fee_component_o
 
                 if student_fee_object.isAnnually:
                     sub_discount.aprilAmount = sub_concession.amount
+                    subDiscountAmount = sub_discount.aprilAmount
                 else:
 
                     sub_concession_monthly_query = \
@@ -473,7 +493,18 @@ def populate_school_fee_rule(apps, fee_definition_object, school_fee_component_o
                     if sub_concession_monthly_query.count() == 1:
                         sub_discount.marchAmount = sub_concession_monthly_query[0].amount
 
+                    subDiscountAmount = \
+                        SubConcessionMonthly.objects.filter(
+                            parentSubConcession=sub_concession) \
+                            .aggregate(Sum('amount'))['amount__sum']
+
                 sub_discount.save()
+
+            if studentAmount - subFeeReceiptAmount - subDiscountAmount == 0:
+                student_fee_object.cleared = True
+                student_fee_object.save()
+            elif studentAmount - subFeeReceiptAmount - subDiscountAmount < 0:
+                print('Fees paid more than due')
 
 
 def get_fee_receipt(apps, sub_fee_receipt_old):

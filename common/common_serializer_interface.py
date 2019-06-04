@@ -1,6 +1,8 @@
 
 import json
 
+from django.db.models import Q
+
 
 def get_object(data, Model, ModelSerializer):
     object = Model.objects.get(id=data['id'])
@@ -11,21 +13,21 @@ def get_list(data, Model, ModelSerializer):
 
     query = Model.objects.all()
 
-    '''for field in Model._meta.get_fields(include_parents=False):
-        fieldName = field.name
-        if fieldName in data and data[fieldName] != '':
-            filter_var = {fieldName + '__in': data[fieldName].split(',')}
-            print(filter_var)
-            try:
-                query = query.filter(**filter_var)
-            except:
-                print(filter_var)
-                print('filter exception')'''
+    filter_var_list = []
+    filter_var = ''
 
     if data != '' and data is not None:
-        for attr in data:
-            if attr != 'e':
-                filter_var = ''
+        for index, attr in enumerate(data):
+
+            if attr == 'e':
+                continue
+            elif attr[-4:] == '__in':
+                filter_var = {attr: list(map(int, data[attr].split(',')))}
+            elif attr[-4:] == '__or':
+                filter_var = {attr[:-4]: data[attr]}
+                filter_var_list.append(filter_var)
+                continue
+            else:
                 if data[attr] == 'null__korangle':
                     filter_var = {attr: None}
                 elif data[attr] == 'false__boolean':
@@ -33,12 +35,26 @@ def get_list(data, Model, ModelSerializer):
                 elif data[attr] == 'true__boolean':
                     filter_var = {attr: True}
                 else:
-                    filter_var = {attr + '__in': data[attr].split(',')}
+                    filter_var = {attr: data[attr]}
+
+            if filter_var_list.__len__() > 0:
+                filter_var_list.append(filter_var)
+                q_total = Q()
+                for q_variable in filter_var_list:
+                    q_total = q_total | Q(**q_variable)
+                try:
+                    query = query.filter(q_total)
+                except:
+                    print('filter exception in or:')
+                    print(filter_var_list)
+                filter_var_list = []
+            else:
                 try:
                     query = query.filter(**filter_var)
                 except:
                     print('filter exception:')
                     print(filter_var)
+
 
     return_data = []
 
@@ -91,10 +107,10 @@ def update_object(data, Model, ModelSerializer):
         return 'Updation failed'
 
 
-def partial_update_list(data_list):
+def partial_update_list(data_list, Model, ModelSerializer):
     return_data = []
     for data in data_list:
-        return_data.append(partial_update_object(data))
+        return_data.append(partial_update_object(data, Model, ModelSerializer))
     return return_data
 
 
