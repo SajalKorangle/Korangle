@@ -2,7 +2,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 # Models
-from fee_second_app.models import FeeDefinition, FeeType
+from fee_second_app.models import FeeDefinition, FeeType, StudentFeeComponent
 from student_app.models import StudentSection
 
 # Business
@@ -123,6 +123,9 @@ def lock_fee_definition(data):
                                           parentSession=session_object):
 
         student_object = student_section_object.parentStudent
+
+        if StudentFeeComponent.objects.filter(parentStudent=student_object, parentFeeDefinition=fee_definition_object).count() > 0:
+            continue
 
         school_fee_component_object = \
             get_school_fee_component_by_student_and_fee_defintion_object(student_object, fee_definition_object)
