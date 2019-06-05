@@ -17,6 +17,8 @@ export class EmployeeFilterComponent implements OnInit {
 
     @Input() user;
 
+    @Input() showAllEmployees;
+
     @Output() emitEmployeeList = new EventEmitter <any>();
 
     @Output() employee = new EventEmitter <any>();
@@ -50,9 +52,15 @@ export class EmployeeFilterComponent implements OnInit {
         if (value === '') {
             return [];
         }
-        return this.employeeList.filter(employee => {
-            return employee.name.toLowerCase().indexOf(value.toLowerCase()) === 0 && employee.dateOfLeaving === null;
-        });
+        if (this.showAllEmployees) {
+            return this.employeeList.filter(employee => {
+                return employee.name.toLowerCase().indexOf(value.toLowerCase()) === 0;
+            });
+        } else {
+            return this.employeeList.filter(employee => {
+                return employee.name.toLowerCase().indexOf(value.toLowerCase()) === 0 && employee.dateOfLeaving === null;
+            });
+        }
     }
 
     getEmployee(employee: any) {

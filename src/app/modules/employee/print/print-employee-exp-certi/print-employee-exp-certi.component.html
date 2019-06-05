@@ -1,0 +1,148 @@
+<div class="container-fluid"
+     *ngIf="viewChecked === false"
+     style="width: 100%; height: 100%;
+         border: 4px double blue;
+         border-radius: 8px;
+         outline: 1px solid blue;
+         outline-offset: -5px;
+         position: relative;
+         font-weight: 800 !important">
+
+    <!-- Reg. No. , Dise Code -->
+    <div class="row no-gutters">
+        <div class="col-xs-6 d-flex custom-padding">
+            Dise code : {{user.activeSchool.diseCode}}
+        </div>
+        <div class="col-xs-6 d-flex custom-padding" align="end">
+            Reg. No. : {{user.activeSchool.registrationNumber}}
+        </div>
+    </div>
+
+    <ng-container *ngIf="user.activeSchool.headerSize==='SMALL'">
+        <img src="{{user.activeSchool.profileImage}}"
+             style="border-radius: 2px; position: absolute;
+         top: 40px; left: 20px;
+         width: 80px; height: 80px;"/>
+
+        <!-- Background Watermark -->
+        <img src="{{user.activeSchool.profileImage}}"
+             style="border-radius: 2px; position: absolute;
+         top: 350px; left: 198px;
+         width: 350px; height: 350px;
+         opacity: 0.07;
+         filter: grayscale(100%);
+         z-index: 10;"/>
+
+        <!-- School Name -->
+        <div class="row no-gutters" style="margin-top: 20px;">
+            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <span style="background-color: yellow; font-size: 35px">
+                {{user.activeSchool.printName}}
+            </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="user.activeSchool.headerSize==='BIG'">
+        <!-- Background Watermark -->
+        <img src="{{user.activeSchool.profileImage}}"
+             style="border-radius: 2px; position: absolute;
+         top: 460px; left: 198px;
+         width: 350px; height: 350px;
+         opacity: 0.07;
+         filter: grayscale(100%);
+         z-index: 10;"/>
+
+        <!-- School Name -->
+        <svg viewBox="0 0 500 115" style="padding-top: 0px;">
+            <path id="curve" d="M43.2,125c4-6.1,70.5-96.8,193.6-95.6c136.3,1.2,205.8,85.3,220.1,97" />
+            <text>
+                <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle" fill="red">
+                    {{user.activeSchool.printName}}
+                </textPath>
+            </text>
+            <!-- image xlink:href="http://localhost:4200/assets/img/angular2-logo.png"
+                   x="210" y="45" width="80" height="80"/ -->
+        </svg>
+
+        <!-- School Logo -->
+        <img src="{{user.activeSchool.profileImage}}"
+             style="border-radius: 2px;
+                position: absolute; top: 100px; left: 314px;
+                opacity: 0.8;
+                width: 80px; height: 80px;"/>
+    </ng-container>
+
+    <!-- Address -->
+    <div class="row no-gutters">
+        <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <span   style="font-size: 15px">
+                {{user.activeSchool.address}}<br/>
+                (Regd. and Recognised by M.P. Govt.)
+            </span>
+        </div>
+    </div>
+
+    <!-- School Transfer Certificate -->
+    <div class="row no-gutters" style="margin-top: 70px;">
+        <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <span style="font-size: 28px;"><u>TRANSFER CERTIFICATE</u></span><br/>
+        </div>
+    </div>
+
+    <div class="row no-gutters">
+        <div class="col-xs-12" style="height: 45px;"></div>
+    </div>
+
+    <!-- Certificate No. , Date -->
+    <div class="row no-gutters">
+        <div class="col-xs-6 d-flex justify-content-start custom-padding fontHandle">
+            Certificate No. : {{employeeProfile.certificateNumber}}
+        </div>
+        <div class="col-xs-6 d-flex justify-content-end custom-padding fontHandle" align="right">
+            Date : {{employeeProfile.certificateIssueDate | date: 'dd/MM/yyyy'}}
+        </div>
+    </div>
+
+    <div class="row no-gutters">
+        <div class="col-xs-12" style="height: 45px;"></div>
+    </div>
+
+    <div class="row no-gutters" style="font-weight: normal !important; font-size: 16px;">
+        <div class="col-xs-12">
+
+            This is to certify that <i><b>
+            <span *ngIf="employee.gender=='Male'">Shri</span>
+            <span *ngIf="employee.gender=='Female'">Smt</span>
+            {{ employee.name | titlecase }}</b></i>&nbsp;
+            <span *ngIf="employee.gender=='Male'">s/o</span>
+            <span *ngIf="employee.gender=='Female'">d/o</span>&nbsp;
+            <i><b>Mr. {{ employee.fatherName | titlecase }}</b></i>&nbsp;
+            and &nbsp;<i><b>Mrs. {{ employee.motherName | titlecase }}</b></i>&nbsp; joined us on
+            <span>{{employee.dateOfJoining | date: 'dd/MM/yyyy'}}</span>
+            <span *ngIf="employeeProfile.employeeDateOfLeaving">
+                    and worked with us upto <span>{{employeeProfile.employeeDateOfLeaving | date: 'dd/MM/yyyy'}}</span> as
+                {{employee.currentPost}}.
+                </span>
+            <span *ngIf="!employeeProfile.employeeDateOfLeaving">
+                    and is currently working as <span>{{employee.currentPost}}.</span>
+            </span><br>
+            <span>{{employeeProfile.remark}}</span>
+        </div>
+    </div>
+
+
+    <div class="row no-gutters"
+         style="position: absolute; bottom: 100px; width: 100%;">
+        <div class="col-xs-12 custom-padding signatureFontHandle" style="padding-right: 80px" align="end">
+            <span style="text-align: left">Authorised Signature</span>
+            <br>
+            <span style="padding-right: 92px">Name:</span><br>
+            <span style="padding-right: 98px">Post:</span><br>
+            <span style="padding-right: 65px">Mobile no.</span>
+        </div>
+    </div>
+
+
+</div>
+

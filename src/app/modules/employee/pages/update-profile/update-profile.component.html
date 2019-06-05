@@ -2,6 +2,7 @@
 
 
     <app-employee-filter [user]="user"
+                         [showAllEmployees]="true"
                          (employee)="getEmployeeProfile($event)"
                          (emitEmployeeList)="getEmployeeList($event)"></app-employee-filter>
 
@@ -250,12 +251,7 @@
                            [ngModel]="selectedEmployeeSessionProfile.paidLeaveNumber">
                 </mat-form-field>
             </div>
-<!-- <<<<<<< HEAD
-=======>
-        </div>
 
-        <div class="row">
-<!-- >>>>>>> master -->
         </div>
 
         <!-- Date of leaving, Spouse name, PRAN Number -->

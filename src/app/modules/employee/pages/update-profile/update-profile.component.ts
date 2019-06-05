@@ -86,7 +86,7 @@ export class UpdateProfileComponent implements OnInit {
             this.currentEmployeeProfile.dateOfBirth = null;
         }
 
-        if (this.currentEmployeeProfile.dateOfJoininig === undefined || this.currentEmployeeProfile.dateOfJoining === '') {
+        if (this.currentEmployeeProfile.dateOfJoining === undefined || this.currentEmployeeProfile.dateOfJoining === '') {
             this.currentEmployeeProfile.dateOfJoining = null;
         }
 

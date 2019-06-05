@@ -36,6 +36,7 @@ import { PrintStudentClassicFinalReportListComponent } from './modules/examinati
 import {PrintStudentEleventhFinalReportListComponent} from './modules/examination/print/print-student-eleventh-final-report-list/print-student-eleventh-final-report-list.component';
 import {PrintFeeReceiptListComponent} from './modules/fees-second/print/print-fee-receipt-list/print-fee-receipt-list.component';
 import {PrintEmployeeICardsComponent} from './modules/employee/print/print-employee-i-card/print-employee-i-cards.component';
+import {PrintEmployeeExpCertiComponent} from './modules/employee/print/print-employee-exp-certi/print-employee-exp-certi.component';
 
 @NgModule({
     declarations: [
@@ -66,7 +67,8 @@ import {PrintEmployeeICardsComponent} from './modules/employee/print/print-emplo
         PrintStudentEleventhFinalReportListComponent,
         PrintStudentClassicFinalReportListComponent,
         PrintComponent,
-        PrintEmployeeICardsComponent
+        PrintEmployeeICardsComponent,
+        PrintEmployeeExpCertiComponent
     ],
     imports: [
         ComponentsModule,

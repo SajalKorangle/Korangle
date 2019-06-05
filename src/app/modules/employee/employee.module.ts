@@ -14,6 +14,7 @@ import { EmployeeRoutingModule } from './employee.routing';
 import { EmployeeService } from './employee.service';
 import {ICardsComponent} from './pages/i-cards/i-cards.component';
 import {NgxDatatableModule} from '@swimlane/ngx-datatable';
+import {ExperienceCertiComponent} from './pages/experience-certi/experience-certi.component';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import {NgxDatatableModule} from '@swimlane/ngx-datatable';
         UpdateProfileComponent,
         AssignTaskComponent,
         ICardsComponent,
+        ExperienceCertiComponent,
 
     ],
 

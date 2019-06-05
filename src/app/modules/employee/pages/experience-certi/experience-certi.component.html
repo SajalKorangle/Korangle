@@ -1,0 +1,86 @@
+<div class="card-content">
+
+    <app-employee-filter [user]="user"
+                         [showAllEmployees]="true"
+                         (employee)="getEmployeeProfile($event)"></app-employee-filter>
+
+
+    <div class="row">
+        <div class="col-md-12"
+             style="border-bottom: 1px solid lightgrey;"></div>
+    </div>
+
+
+    <ng-container *ngIf="selected && !isLoading">
+
+        <div class="row" style="font-weight: 800;">
+            <div class="col-md-3">
+                {{employee.name}}
+            </div>
+            <div class="col-md-3">
+                {{employeeFullProfile.fatherName}}
+            </div>
+            <div class="col-md-3">
+                {{employee.employeeNumber}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Certificate No.</div>
+            <div class="col-md-3">
+                <input type="number"
+                       [(ngModel)]="certificateNumber"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Issue Date</div>
+            <div class="col-md-3">
+                <day-date [initialValue]="05/06/2019"
+                           (onDateSelected)="handleEmployeeCertiIssueDate($event)"></day-date>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">Remark</div>
+            <div class="col-md-3">
+                <textarea [(ngModel)]="remark" style="width: 250px; height: 150px" id="remark">
+                </textarea>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="numberOfMissingParameters > 0">
+            <div style="padding-left: 15px">
+                <div *ngIf="numberOfMissingParameters === 1" style="color: red">
+                    <span *ngIf="dateOfJoiningMissing">Date of Joining&nbsp;</span>
+                    <span *ngIf="dateOfLeavingMissing">Date of leaving&nbsp;</span>
+                    <span *ngIf="currentPostMissing">Current Post&nbsp;</span>
+                    <span *ngIf="mothernameMissing">Mother Name&nbsp;</span>
+                    <span *ngIf="fatherNameMissing">Father Name&nbsp;</span>is missing.
+                </div>
+                <div *ngIf="numberOfMissingParameters > 1" style="color: red">
+                    <span *ngIf="dateOfJoiningMissing">Date of Joining ,&nbsp;</span>
+                    <span *ngIf="dateOfLeavingMissing">Date of leaving ,&nbsp;</span>
+                    <span *ngIf="currentPostMissing">Current Post ,&nbsp;</span>
+                    <span *ngIf="mothernameMissing">Mother Name ,&nbsp;</span>
+                    <span *ngIf="fatherNameMissing">Father Name ,&nbsp;</span>are missing.
+                </div>
+            </div>
+        </div>
+
+        <button type="button"
+                *ngIf="numberOfMissingParameters === 0"
+                (click)="genrateExpCerti()"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Generate Experience Certificate</button>
+
+
+        <div class="clearfix"></div>
+
+    </ng-container>
+
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

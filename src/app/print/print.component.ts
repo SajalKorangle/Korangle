@@ -36,6 +36,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     printStudentAttendanceListSubscription: any;
     printEmployeeAttendanceListSubscription: any;
     printEmployeeICardsSubscription: any;
+    printEmployeeExperienceCertificate: any;
 
     ngOnInit(): void {
         this.printFeeReceiptSubscription = EmitterService.get('print-fee-receipt').subscribe( value => {
@@ -106,55 +107,55 @@ export class PrintComponent implements OnInit, OnDestroy {
         });
         this.printICardsSubscription = EmitterService.get('print-i-cards').subscribe(value => {
             this.printType = 'iCards';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-i-cards-component').emit(value);
             });
         });
         this.printHallTicketSubscription = EmitterService.get('print-hall-ticket').subscribe(value => {
             this.printType = 'hallTicket';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-hall-ticket-component').emit(value);
             });
         });
         this.printStudentMarksheetListSubscription = EmitterService.get('print-student-marksheet-list').subscribe(value => {
             this.printType = 'studentMarksheetList';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-student-marksheet-list-component').emit(value);
             });
         });
         this.printStudentComprehensiveFinalReportListSubscription = EmitterService.get('print-student-comprehensive-final-report-list').subscribe(value => {
             this.printType = 'studentComprehensiveFinalReportList';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-student-comprehensive-final-report-list-component').emit(value);
             });
         });
         this.printStudentElegantFinalReportListSubscription = EmitterService.get('print-student-elegant-final-report-list').subscribe(value => {
             this.printType = 'studentElegantFinalReportList';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-student-elegant-final-report-list-component').emit(value);
             });
         });
         this.printStudentNinthFinalReportListSubscription = EmitterService.get('print-student-ninth-final-report-list').subscribe(value => {
             this.printType = 'studentNinthFinalReportList';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-student-ninth-final-report-list-component').emit(value);
             });
         });
         this.printStudentEleventhFinalReportListSubscription = EmitterService.get('print-student-eleventh-final-report-list').subscribe(value => {
             this.printType = 'studentEleventhFinalReportList';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-student-eleventh-final-report-list-component').emit(value);
             });
         });
         this.printStudentClassicFinalReportListSubscription = EmitterService.get('print-student-classic-final-report-list').subscribe(value => {
             this.printType = 'studentClassicFinalReportList';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-student-classic-final-report-list-component').emit(value);
             });
         });
         this.printSalarySheetSubscription = EmitterService.get('print-salary-sheet').subscribe(value => {
             this.printType = 'salarySheet';
-            setTimeout(()=> {
+            setTimeout(() => {
                 EmitterService.get('print-salary-sheet-component').emit(value);
             });
         });
@@ -177,6 +178,12 @@ export class PrintComponent implements OnInit, OnDestroy {
             setTimeout(() => {
                 EmitterService.get('print-employee-i-cards-component').emit(value);
             });
+        });
+        this.printEmployeeExperienceCertificate = EmitterService.get('print-employee-exp-certi').subscribe(value => {
+            this.printType = 'employeeExpCerti';
+            setTimeout(() => {
+                EmitterService.get('print-employee-exp-certi-component').emit(value);
+            })
         });
     }
 
@@ -202,6 +209,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printStudentAttendanceListSubscription.unsubscribe();
         this.printEmployeeAttendanceListSubscription.unsubscribe();
         this.printEmployeeICardsSubscription.unsubscribe();
+        this.printEmployeeExperienceCertificate.unsubscribe();
     }
 
 }
