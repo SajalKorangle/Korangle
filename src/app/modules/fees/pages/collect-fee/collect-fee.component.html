@@ -1,11 +1,5 @@
 <div class="card-content table-responsive">
 
-    <!-- student-filter [user]="user"
-                    (onStudentSelected)="handleStudentSelection($event)"
-                    (onStudentLoading)="isStudentListLoading=$event"
-                    [sessionChange]="false"
-                    [studentTcGenerated]="false"></student-filter -->
-
     <parent-student-filter [user]="user"
                            (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
                            (onStudentListSelected)="handleStudentListSelection($event)"
@@ -195,7 +189,7 @@
                                    *ngIf="getStudentLateFeesDue(student, false) != 0"
                                    type="number"
                                    min="0"
-                                   [ngModel]="getStudentLateFeePayment(student)==0?null:getStudentPayment(student)"
+                                   [ngModel]="getStudentLateFeePayment(student)==0?null:getStudentLateFeePayment(student)"
                                    (keypress)="policeStudentLateFeePaymentInput(student, $event)"
                                    (ngModelChange)="handleStudentLateFeePaymentChange(student, $event);">
                         </td>
@@ -228,7 +222,7 @@
                                        *ngIf="getSessionLateFeesDue(student, session, false) != 0"
                                        type="number"
                                        min="0"
-                                       [ngModel]="getSessionLateFeePayment(student, session)==0?null:getSessionPayment(student, session)"
+                                       [ngModel]="getSessionLateFeePayment(student, session)==0?null:getSessionLateFeePayment(student, session)"
                                        (keypress)="policeSessionLateFeePaymentInput(student, session, $event)"
                                        (ngModelChange)="handleSessionLateFeePaymentChange(student, session, $event);">
                             </td>
@@ -457,6 +451,7 @@
                 </mat-expansion-panel-header>
 
                 <app-discount-list [user]="user"
+                                   [discountColumnFilter]="discountColumnFilter"
                                    [discountList]="discountList"
                                    [subDiscountList]="subDiscountList"
                                    [studentList]="selectedStudentList"

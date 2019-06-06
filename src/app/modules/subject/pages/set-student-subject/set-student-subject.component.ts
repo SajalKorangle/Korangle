@@ -1,19 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { SubjectService } from '../../../../services/subject.service';
+import { SubjectOldService } from '../../../../services/subject-old.service';
 import { ClassService } from '../../../../services/class.service';
 import { StudentOldService } from '../../../students/student-old.service';
 import { SchoolService } from '../../../../services/school.service';
 
 
 import { SetStudentSubjectServiceAdapter } from './set-student-subject.service.adapter';
-import {ExaminationService} from '../../../../services/examination.service';
+import {ExaminationOldService} from '../../../../services/examination-old.service';
 
 @Component({
     selector: 'set-student-subject',
     templateUrl: './set-student-subject.component.html',
     styleUrls: ['./set-student-subject.component.css'],
-    providers: [ SubjectService, ClassService, StudentOldService, SchoolService, ExaminationService ],
+    providers: [ SubjectOldService, ClassService, StudentOldService, SchoolService, ExaminationOldService ],
 })
 
 export class SetStudentSubjectComponent implements OnInit {
@@ -31,11 +31,11 @@ export class SetStudentSubjectComponent implements OnInit {
 
     selectedStudent: any;
 
-    constructor(public subjectService: SubjectService,
+    constructor(public subjectService: SubjectOldService,
                 public classService: ClassService,
                 public studentService: StudentOldService,
                 public schoolService: SchoolService,
-                public examinationService: ExaminationService) {}
+                public examinationService: ExaminationOldService) {}
 
     ngOnInit(): void {
         this.serviceAdapter = new SetStudentSubjectServiceAdapter();

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationService } from '../../../../services/examination.service';
+import { ExaminationOldService } from '../../../../services/examination-old.service';
 
 import { GenerateFinalReportServiceAdapter } from './generate-final-report.service.adapter';
 import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
@@ -8,7 +8,7 @@ import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 import { ChangeDetectorRef } from '@angular/core';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../../students/student-old.service';
-import {SubjectService} from '../../../../services/subject.service';
+import {SubjectOldService} from '../../../../services/subject-old.service';
 import {AttendanceService} from '../../../attendance/attendance.service';
 import {EmitterService} from '../../../../services/emitter.service';
 
@@ -16,7 +16,7 @@ import {EmitterService} from '../../../../services/emitter.service';
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationService, ClassService, StudentOldService, SubjectService, AttendanceService ],
+    providers: [ ExaminationOldService, ClassService, StudentOldService, SubjectOldService, AttendanceService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -41,10 +41,10 @@ export class GenerateFinalReportComponent implements OnInit {
     isLoading = true;
     timeout: any;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(public examinationService: ExaminationOldService,
                 public classService: ClassService,
                 public studentService: StudentOldService,
-                public subjectService: SubjectService,
+                public subjectService: SubjectOldService,
                 public attendanceService: AttendanceService,
                 private cdRef: ChangeDetectorRef) {}
 

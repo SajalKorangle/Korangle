@@ -51,6 +51,8 @@ export class UpdateStudentFeesComponent implements OnInit {
     subFeeReceiptList: SubFeeReceipt[];
     subDiscountList: SubDiscount[];
 
+    lockFees = null;
+
     selectedFeeType: FeeType;
     selectedStudentFee: StudentFee;
     newStudentFee: StudentFee;

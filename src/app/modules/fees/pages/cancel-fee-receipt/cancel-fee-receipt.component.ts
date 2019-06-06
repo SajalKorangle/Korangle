@@ -25,7 +25,6 @@ export class CancelFeeReceiptComponent implements OnInit {
 
     feeReceiptList: any;
     subFeeReceiptList = [];
-    studentFeeList = [];
     studentList = [];
     studentSectionList = [];
     classList = [];

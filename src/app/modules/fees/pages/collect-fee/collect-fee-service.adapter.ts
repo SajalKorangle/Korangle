@@ -159,11 +159,15 @@ export class CollectFeeServiceAdapter {
             return CommonFunctions.getInstance().copyObject(subFeeReceipt);
         });
 
+        let tempStudentFeeIdList = sub_fee_receipt_list.map(a => a.parentStudentFee);
+
         let student_fee_list = this.vm.studentFeeList.filter(studentFee => {
-            return this.vm.getStudentFeeFeesDue(studentFee) + this.vm.getStudentFeeLateFeesDue(studentFee) == 0;
-        }).map(item => {
-            item.cleared = true;
-            return CommonFunctions.getInstance().copyObject(item);
+            return tempStudentFeeIdList.includes(studentFee.id);
+        }).map(studentFee => {
+            if (this.vm.getStudentFeeFeesDue(studentFee) + this.vm.getStudentFeeLateFeesDue(studentFee) == 0) {
+                studentFee.cleared = true;
+            }
+            return CommonFunctions.getInstance().copyObject(studentFee);
         });
 
         this.vm.isLoading = true;
@@ -173,8 +177,8 @@ export class CollectFeeServiceAdapter {
             this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]).then(value => {
 
-            value[0].filter(fee_receipt => {
-                sub_fee_receipt_list.filter(subFeeReceipt => {
+            value[0].forEach(fee_receipt => {
+                sub_fee_receipt_list.forEach(subFeeReceipt => {
                     if(subFeeReceipt.parentSession == fee_receipt.parentSession
                         && this.vm.studentFeeList.find(item => {
                             return item.id == subFeeReceipt.parentStudentFee;
@@ -186,12 +190,12 @@ export class CollectFeeServiceAdapter {
 
             this.vm.feeService.createList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then( value2 => {
 
-                this.addToFeeReceiptList(value);
+                this.addToFeeReceiptList(value[0]);
                 this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(value2);
 
                 alert('Fees submitted successfully');
 
-                this.vm.printFullFeeReceiptList(value, value2);
+                this.vm.printFullFeeReceiptList(value[0], value2);
 
                 this.vm.handleStudentFeeProfile();
 

@@ -29,13 +29,6 @@ export class FeeReceiptListComponent {
     installmentList = INSTALLMENT_LIST;
     sessionList = SESSION_LIST;
 
-    // @Input() whileSubmittingFee;
-    /*@Input() feeType = {
-        dbId: 0,
-        name: 'All',
-    };
-    @Input() sectionName;*/
-
     printFeeReceipt(feeReceipt: any): void {
 
         let data = {

@@ -1,11 +1,11 @@
 
-import { AddStudentComponent } from './add-student.component';
+import { AddStudentOldComponent } from './add-student-old.component';
 import { ATTENDANCE_STATUS_LIST } from '../../../attendance/classes/constants';
 import {Student} from '../../../../classes/student';
 
-export class AddStudentServiceAdapter {
+export class AddStudentOldServiceAdapter {
 
-    vm: AddStudentComponent;
+    vm: AddStudentOldComponent;
 
     constructor() {}
 
@@ -14,7 +14,7 @@ export class AddStudentServiceAdapter {
     classTestList: any;
 
 
-    initializeAdapter(vm: AddStudentComponent): void {
+    initializeAdapter(vm: AddStudentOldComponent): void {
         this.vm = vm;
     }
 

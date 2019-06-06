@@ -36,6 +36,8 @@ export class SetSchoolFeesComponent implements OnInit {
     subFeeReceiptList: any;
     subDiscountList: any;
 
+    lockFees = null;
+
     selectedFeeType: any;
 
     newSchoolFeeRule: SchoolFeeRule;

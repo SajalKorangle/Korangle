@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationService } from '../../../../services/examination.service';
+import { ExaminationOldService } from '../../../../services/examination-old.service';
 
 import { GenerateGoshwaraServiceAdapter } from './generate-goshwara.service.adapter';
 import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
@@ -8,7 +8,7 @@ import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 import { ChangeDetectorRef } from '@angular/core';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../../students/student-old.service';
-import {SubjectService} from '../../../../services/subject.service';
+import {SubjectOldService} from '../../../../services/subject-old.service';
 import {EmitterService} from '../../../../services/emitter.service';
 
 import * as XLSX from 'xlsx';
@@ -17,7 +17,7 @@ import * as XLSX from 'xlsx';
     selector: 'generate-goshwara',
     templateUrl: './generate-goshwara.component.html',
     styleUrls: ['./generate-goshwara.component.css'],
-    providers: [ ExaminationService, ClassService, StudentOldService, SubjectService ],
+    providers: [ ExaminationOldService, ClassService, StudentOldService, SubjectOldService ],
 })
 
 export class GenerateGoshwaraComponent implements OnInit {
@@ -42,10 +42,10 @@ export class GenerateGoshwaraComponent implements OnInit {
     isLoading = true;
     timeout: any;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(public examinationService: ExaminationOldService,
                 public classService: ClassService,
                 public studentService: StudentOldService,
-                public subjectService: SubjectService,
+                public subjectService: SubjectOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

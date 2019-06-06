@@ -66,6 +66,11 @@ export class SetSchoolFeesServiceAdapter {
             'parentDiscount__cancelled': 'true__boolean',
         };
 
+        let lock_fees_list = {
+            'parentSchool': schoolId,
+            'parentSession': sessionId,
+        };
+
         this.vm.isLoading = true;
 
         Promise.all([
@@ -80,6 +85,7 @@ export class SetSchoolFeesServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.student_fees, request_student_fee_data),
             this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, request_sub_fee_receipt_data),
             this.vm.feeService.getList(this.vm.feeService.sub_discounts, request_sub_discount_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
         ]).then(value => {
 
             this.populateFeeTypeList(value[0]);
@@ -99,6 +105,7 @@ export class SetSchoolFeesServiceAdapter {
             this.vm.studentFeeList = value[8];
             this.vm.subFeeReceiptList = value[9];
             this.vm.subDiscountList = value[10];
+            if (value[11].length == 1) { this.vm.lockFees = value[11]; }
 
             this.vm.isLoading = false;
 
@@ -176,6 +183,7 @@ export class SetSchoolFeesServiceAdapter {
                 tempObject[installment+'Amount'] = school_fee_rule_data[installment+'Amount'];
                 tempObject[installment+'LastDate'] = school_fee_rule_data[installment+'LastDate'];
                 tempObject[installment+'LateFee'] = school_fee_rule_data[installment+'LateFee'];
+                tempObject[installment+'MaximumLateFee'] = school_fee_rule_data[installment+'MaximumLateFee'];
                 tempObject[installment+'ClearanceDate'] = null;
             });
             student_fee_list.push(tempObject);

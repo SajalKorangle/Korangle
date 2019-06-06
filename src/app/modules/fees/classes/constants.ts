@@ -33,3 +33,14 @@ export class ReceiptColumnFilter {
     'employee'= true;
     'printButton'= true;
 }
+
+export class DiscountColumnFilter {
+    'discountNumber'= true;
+    'name'= true;
+    'scholarNumber'= true;
+    'class'= true;
+    'amount'= true;
+    'date'= true;
+    'remark'= true;
+    'employee'= true;
+}

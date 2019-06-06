@@ -102,6 +102,9 @@ export class ViewDefaultersComponent implements OnInit {
                         let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
+                            if (student[installment+'MaximumLateFee'] && student[installment+'MaximumLateFee'] < lateFeeAmount) {
+                                lateFeeAmount = student[installment+'MaximumLateFee'];
+                            }
                         }
                     }
                     return installmentAmount
@@ -134,6 +137,9 @@ export class ViewDefaultersComponent implements OnInit {
                         let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
+                            if (student[installment+'MaximumLateFee'] && student[installment+'MaximumLateFee'] < lateFeeAmount) {
+                                lateFeeAmount = student[installment+'MaximumLateFee'];
+                            }
                         }
                     }
                     return  installmentAmount
@@ -162,7 +168,9 @@ export class ViewDefaultersComponent implements OnInit {
                         + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
                         + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
                 }, 0);
-            }, 0) + filteredSubDiscountList.filter(subDiscount => {
+            }, 0);
+
+            student['discountThisSession'] = filteredSubDiscountList.filter(subDiscount => {
                 return subDiscount.parentSession == this.user.activeSchool.currentSessionDbId;
             }).reduce((total, subDiscount) => {
                 return total + this.installmentList.reduce((installmentAmount, installment) => {
@@ -186,6 +194,9 @@ export class ViewDefaultersComponent implements OnInit {
                         let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
+                            if (student[installment+'MaximumLateFee'] && student[installment+'MaximumLateFee'] < lateFeeAmount) {
+                                lateFeeAmount = student[installment+'MaximumLateFee'];
+                            }
                         }
                     }
                     return installmentAmount
@@ -264,6 +275,12 @@ export class ViewDefaultersComponent implements OnInit {
         }, 0);
     }
 
+    getAllParentFeesDueTillMonth(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + this.getParentFeesDueTillMonth(parent);
+        }, 0);
+    }
+
     getParentFeesDueOverall(parent: any): any {
         return parent.studentList.reduce((total, student) => {
             return total + student['feesDueOverall'];
@@ -273,6 +290,12 @@ export class ViewDefaultersComponent implements OnInit {
     getParentFeesPaid(parent: any): any {
         return parent.studentList.reduce((total, student) => {
             return total + student['feesPaidThisSession'];
+        }, 0);
+    }
+
+    getParentDiscount(parent: any): any {
+        return parent.studentList.reduce((total, student) => {
+            return total + student['discountThisSession'];
         }, 0);
     }
 

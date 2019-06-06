@@ -5,7 +5,8 @@ import { ComponentsModule } from '../../components/components.module';
 
 import { StudentComponent } from './student.component';
 
-import { AddStudentComponent } from './pages/add-student/add-student.component';
+import { AddStudentOldComponent } from './pages/add-student-old/add-student-old.component';
+import { AddStudentComponent } from "./pages/add-student/add-student.component";
 import { ChangeClassComponent } from './pages/change-class/change-class.component';
 import { GenerateTcComponent } from './pages/generate-tc/generate-tc.component';
 import { PromoteStudentComponent } from './pages/promote-student/promote-student.component';
@@ -23,6 +24,7 @@ import {UpdateAllComponent} from './pages/update_all/update-all.component';
         StudentComponent,
 
         AddStudentComponent,
+        AddStudentOldComponent,
         ChangeClassComponent,
         GenerateTcComponent,
         PromoteStudentComponent,

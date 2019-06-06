@@ -7,6 +7,7 @@ export class Discount {
     remark: string = null;
     cancelled: boolean = null;
     parentStudent: number = null;
+    parentSchool: number = null;
     parentSession: number = null;
     parentEmployee: number = null;
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { SubjectService } from '../../../../services/subject.service';
+import { SubjectOldService } from '../../../../services/subject-old.service';
 import { ClassService } from '../../../../services/class.service';
 import { StudentOldService } from '../../../students/student-old.service';
 import { SchoolService } from '../../../../services/school.service';
@@ -13,7 +13,7 @@ import {EmployeeService} from '../../../employee/employee.service';
     selector: 'set-class-subject',
     templateUrl: './set-class-subject.component.html',
     styleUrls: ['./set-class-subject.component.css'],
-    providers: [ SubjectService, ClassService, StudentOldService, SchoolService, EmployeeService ],
+    providers: [ SubjectOldService, ClassService, StudentOldService, SchoolService, EmployeeService ],
 })
 
 export class SetClassSubjectComponent implements OnInit {
@@ -41,7 +41,7 @@ export class SetClassSubjectComponent implements OnInit {
 
     employeeList: any;
 
-    constructor(public subjectService: SubjectService,
+    constructor(public subjectService: SubjectOldService,
                 public classService: ClassService,
                 public studentService: StudentOldService,
                 public schoolService: SchoolService,

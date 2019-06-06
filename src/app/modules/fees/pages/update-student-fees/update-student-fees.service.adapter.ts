@@ -44,6 +44,11 @@ export class UpdateStudentFeesServiceAdapter {
             parentSchool: schoolId,
         };
 
+        let lock_fees_list = {
+            'parentSchool': schoolId,
+            'parentSession': sessionId,
+        };
+
         this.vm.isLoading = true;
 
         Promise.all([
@@ -54,6 +59,7 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
+            this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
         ]).then(value => {
 
             this.vm.feeTypeList = value[0];
@@ -63,6 +69,7 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.classList = value[4];
             this.vm.sectionList = value[5];
             this.vm.busStopList = value[6];
+            if (value[7].length == 1) { this.vm.lockFees = value[7]; }
 
             this.vm.isLoading = false;
         }, error => {
@@ -175,6 +182,7 @@ export class UpdateStudentFeesServiceAdapter {
             tempObject[installment+'Amount'] = schoolFeeRule[installment+'Amount'];
             tempObject[installment+'LastDate'] = schoolFeeRule[installment+'LastDate'];
             tempObject[installment+'LateFee'] = schoolFeeRule[installment+'LateFee'];
+            tempObject[installment+'MaximumLateFee'] = schoolFeeRule[installment+'MaximumLateFee'];
             tempObject[installment+'ClearanceDate'] = null;
         });
 

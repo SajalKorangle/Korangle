@@ -12,6 +12,8 @@ import {SESSION_LIST} from "../../../../classes/constants/session";
 export class DiscountListComponent {
 
     @Input() user;
+    @Input() discountColumnFilter;
+    @Input() feeTypeList;
     @Input() discountList;
     @Input() subDiscountList;
     @Input() studentList;
@@ -24,21 +26,6 @@ export class DiscountListComponent {
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
     sessionList = SESSION_LIST;
-
-    // @Input() whileSubmittingFee;
-    /*@Input() feeType = {
-        dbId: 0,
-        name: 'All',
-    };
-    @Input() sectionName;*/
-
-    printDiscount(fee: any): void {
-        /*let data = {
-            'sectionName': this.sectionName,
-            'feeReceipt': fee,
-        };
-        EmitterService.get('print-new-fee-receipt').emit(data);*/
-    }
 
     getDiscountTotalAmount(discount: any): number {
         return this.subDiscountList.filter(subDiscount => {
@@ -82,6 +69,13 @@ export class DiscountListComponent {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
             }).parentDivision;
         }).name;
+    }
+
+    getEmployeeName(discount: any): any {
+        let employee = this.employeeList.find(employee => {
+            return employee.id == discount.parentEmployee;
+        });
+        return employee?employee.name:null;
     }
 
 }

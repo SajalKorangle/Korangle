@@ -31,6 +31,8 @@ const moment = _moment;
 })
 export class DayDateComponent implements OnInit {
 
+    @Input() placeHolder = "Choose a date";
+
     @Input() initialValue = null;
 
     @Input() acceptNull = false;
@@ -68,6 +70,8 @@ export class DayDateComponent implements OnInit {
     }
 
     formatDate(dateStr: any): any {
+
+        if (dateStr == null) { return null; }
 
         let d = new Date(dateStr);
 

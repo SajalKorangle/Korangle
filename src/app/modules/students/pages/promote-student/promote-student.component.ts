@@ -4,14 +4,14 @@ import { PromoteStudentServiceAdapter } from './promote-student.service.adapter'
 
 import { StudentOldService } from '../../student-old.service';
 import { ClassService } from '../../../../services/class.service';
-import {SubjectService} from '../../../../services/subject.service';
-import {ExaminationService} from '../../../../services/examination.service';
+import {SubjectOldService} from '../../../../services/subject-old.service';
+import {ExaminationOldService} from '../../../../services/examination-old.service';
 
 @Component({
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ StudentOldService, ClassService, SubjectService, ExaminationService ],
+    providers: [ StudentOldService, ClassService, SubjectOldService, ExaminationOldService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
@@ -32,8 +32,8 @@ export class PromoteStudentComponent implements OnInit {
 
     constructor (private studentService: StudentOldService,
                  private classService: ClassService,
-                 public subjectService: SubjectService,
-                 public examinationService: ExaminationService) { }
+                 public subjectService: SubjectOldService,
+                 public examinationService: ExaminationOldService) { }
 
     handleFromSelectedClassChange(): void {
         this.fromSelectedSection = this.fromSelectedClass.sectionList[0];

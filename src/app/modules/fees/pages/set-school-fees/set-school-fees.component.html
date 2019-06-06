@@ -81,6 +81,7 @@
                                         <th>Amount</th>
                                         <th>Last Date</th>
                                         <th>Late Fee per day</th>
+                                        <th>Max. Late Fee</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -113,6 +114,9 @@
                                                        [disabled]="disableSchoolFeeRuleMonthLateFee(schoolFeeRule, installment)"
                                                        [(ngModel)]="schoolFeeRule[installment+'LateFee']"/ -->
                                             </td>
+                                            <td>
+                                                {{schoolFeeRule[installment+'MaximumLateFee']}}
+                                            </td>
                                         </tr>
                                     </ng-container>
                                     </tbody>
@@ -129,6 +133,7 @@
                                         <th>Amount</th>
                                         <th>Last Date</th>
                                         <th>Late Fee per day</th>
+                                        <th>Max. Late Fee</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -159,6 +164,9 @@
                                                    [disabled]="disableSchoolFeeRuleMonthLateFee(schoolFeeRule, 'april')"
                                                    [(ngModel)]="schoolFeeRule.aprilLateFee"/ -->
                                         </td>
+                                        <td>
+                                            {{schoolFeeRule['aprilMaximumLateFee']}}
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -187,6 +195,7 @@
                                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                         (click)="serviceAdapter.updateSchoolFeeRule(schoolFeeRule)">Update</button -->
                                 <button type="submit"
+                                        *ngIf="!lockFees"
                                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                         (click)="serviceAdapter.deleteSchoolFeeRule(schoolFeeRule)">Delete</button>
                             </ng-container>
@@ -199,237 +208,253 @@
 
                 <br/><br/>
 
-                Add New School Fee Rule
+                <ng-container *ngIf="!lockFees">
 
-                <br/><br/>
+                    Add New School Fee Rule
 
-                <!-- Rule Number, Rule Name -->
-                <div class="row">
-                    <div class="col-md-3">
-                        <mat-form-field class="example-full-width">
-                            <input matInput
-                                   style="border: none;"
-                                   [(ngModel)]="newSchoolFeeRule.ruleNumber"
-                                   type="number"
-                                   placeholder="Rule Number">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-3">
-                        <mat-form-field class="example-full-width">
-                            <input matInput
-                                   style="border: none;"
-                                   [(ngModel)]="newSchoolFeeRule.name"
-                                   type="text"
-                                   placeholder="Rule Name">
-                        </mat-form-field>
-                    </div>
-                </div>
+                    <br/><br/>
 
-                <!-- Class Filter Fee -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <mat-checkbox [(ngModel)]="newSchoolFeeRule.isClassFilter">Include Class Filter</mat-checkbox>
-                    </div>
-                </div>
-
-                <!-- Class List -->
-                <ng-container *ngIf="newSchoolFeeRule.isClassFilter">
+                    <!-- Rule Number, Rule Name -->
                     <div class="row">
                         <div class="col-md-3">
-                            <mat-form-field>
-                                <mat-select placeholder="Select Class"
-                                            [(ngModel)]="selectedClass">
-                                    <mat-option *ngFor="let class of classList;" [value]="class">
-                                        {{class.name}}
-                                    </mat-option>
-                                </mat-select>
+                            <mat-form-field class="example-full-width">
+                                <input matInput
+                                       style="border: none;"
+                                       [(ngModel)]="newSchoolFeeRule.ruleNumber"
+                                       type="number"
+                                       placeholder="Rule Number">
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
-                            <mat-form-field>
-                                <mat-select placeholder="Select Section"
-                                            [(ngModel)]="selectedSection">
-                                    <mat-option *ngFor="let section of sectionList;" [value]="section">
-                                        {{section.name}}
-                                    </mat-option>
-                                </mat-select>
+                            <mat-form-field class="example-full-width">
+                                <input matInput
+                                       style="border: none;"
+                                       [(ngModel)]="newSchoolFeeRule.name"
+                                       type="text"
+                                       placeholder="Rule Name">
                             </mat-form-field>
                         </div>
-                        <div class="col-md-3">
-                            <button type="submit"
-                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                    [disabled]="selectedClass == null || selectedSection == null"
-                                    (click)="addToNewClassFilterFeeList()">Add</button>
-                        </div>
                     </div>
-                    <ng-container *ngFor="let classFilterFee of newClassFilterFeeList; let i=index;">
-                        {{i+1}}. {{getClassName(classFilterFee.parentClass)}}, {{getSectionName(classFilterFee.parentDivision)}}
-                        <button type="submit"
-                                style="padding: 3px 8px;"
-                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                (click)="deleteFromNewClassFilterFeeList(classFilterFee)">Del</button><br/>
-                    </ng-container>
-                </ng-container>
 
-                <!-- Bus Stop Filter Fee -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <mat-checkbox
-                                [(ngModel)]="newSchoolFeeRule.isBusStopFilter"
-                                [disabled]="busStopList.length == 0">
-                            Include Bus Stop Filter
-                            <ng-container *ngIf="busStopList.length == 0">
-                                (Add Bus stops in vehicle module to enable this feature)
-                            </ng-container>
-                        </mat-checkbox>
-                    </div>
-                </div>
-
-                <!-- Bus Stop List -->
-                <ng-container *ngIf="newSchoolFeeRule.isBusStopFilter">
+                    <!-- Class Filter Fee -->
                     <div class="row">
-                        <div class="col-md-3">
-                            <mat-form-field>
-                                <mat-select placeholder="Select Bus Stop"
-                                            [(ngModel)]="selectedBusStop">
-                                    <mat-option *ngFor="let busStop of busStopList;" [value]="busStop">
-                                        {{busStop.stopName}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                        <div class="col-md-12">
+                            <mat-checkbox [(ngModel)]="newSchoolFeeRule.isClassFilter">Include Class Filter</mat-checkbox>
                         </div>
-                        <div class="col-md-3">
+                    </div>
+
+                    <!-- Class List -->
+                    <ng-container *ngIf="newSchoolFeeRule.isClassFilter">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field>
+                                    <mat-select placeholder="Select Class"
+                                                [(ngModel)]="selectedClass">
+                                        <mat-option *ngFor="let class of classList;" [value]="class">
+                                            {{class.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field>
+                                    <mat-select placeholder="Select Section"
+                                                [(ngModel)]="selectedSection">
+                                        <mat-option *ngFor="let section of sectionList;" [value]="section">
+                                            {{section.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit"
+                                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                        [disabled]="selectedClass == null || selectedSection == null"
+                                        (click)="addToNewClassFilterFeeList()">Add</button>
+                            </div>
+                        </div>
+                        <ng-container *ngFor="let classFilterFee of newClassFilterFeeList; let i=index;">
+                            {{i+1}}. {{getClassName(classFilterFee.parentClass)}}, {{getSectionName(classFilterFee.parentDivision)}}
                             <button type="submit"
+                                    style="padding: 3px 8px;"
                                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                    (click)="addToNewBusStopFilterFeeList()">Add</button>
+                                    (click)="deleteFromNewClassFilterFeeList(classFilterFee)">Del</button><br/>
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- Bus Stop Filter Fee -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <mat-checkbox
+                                    [(ngModel)]="newSchoolFeeRule.isBusStopFilter"
+                                    [disabled]="busStopList.length == 0">
+                                Include Bus Stop Filter
+                                <ng-container *ngIf="busStopList.length == 0">
+                                    (Add Bus stops in vehicle module to enable this feature)
+                                </ng-container>
+                            </mat-checkbox>
                         </div>
                     </div>
-                    <ng-container *ngFor="let busStopFilterFee of newBusStopFilterFeeList; let i=index;">
-                        {{i+1}}. {{getBusStopName(busStopFilterFee.parentBusStop)}}
-                        <button type="submit"
-                                style="padding: 3px 8px;"
-                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                (click)="deleteFromNewBusStopFilterFeeList(busStopFilterFee)">Del</button><br/>
+
+                    <!-- Bus Stop List -->
+                    <ng-container *ngIf="newSchoolFeeRule.isBusStopFilter">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field>
+                                    <mat-select placeholder="Select Bus Stop"
+                                                [(ngModel)]="selectedBusStop">
+                                        <mat-option *ngFor="let busStop of busStopList;" [value]="busStop">
+                                            {{busStop.stopName}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit"
+                                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                        (click)="addToNewBusStopFilterFeeList()">Add</button>
+                            </div>
+                        </div>
+                        <ng-container *ngFor="let busStopFilterFee of newBusStopFilterFeeList; let i=index;">
+                            {{i+1}}. {{getBusStopName(busStopFilterFee.parentBusStop)}}
+                            <button type="submit"
+                                    style="padding: 3px 8px;"
+                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                    (click)="deleteFromNewBusStopFilterFeeList(busStopFilterFee)">Del</button><br/>
+                        </ng-container>
                     </ng-container>
+
+                    <!-- Only New Admission -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <mat-checkbox [(ngModel)]="newSchoolFeeRule.onlyNewAdmission">Applies only to new admission in this session</mat-checkbox>
+                        </div>
+                    </div>
+
+                    <!-- RTE Student too -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <mat-checkbox [(ngModel)]="newSchoolFeeRule.includeRTE">Include RTE students too</mat-checkbox>
+                        </div>
+                    </div>
+
+                    <!-- Expected no. of students attached to this rule. -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            Expected no. of students attached to this rule: {{getExpectedStudentList().length}}
+                        </div>
+                    </div>
+
+                    <!-- Payment Type -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <mat-checkbox [(ngModel)]="newSchoolFeeRule.isAnnually">Payment only one time in a year</mat-checkbox>
+                        </div>
+                    </div>
+
+                    <!-- Installment Payment -->
+                    <ng-container *ngIf="!newSchoolFeeRule.isAnnually">
+
+                        <table class="table table-hover">
+                            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                            <tr>
+                                <th>Installment</th>
+                                <th>Amount</th>
+                                <th>Last Date</th>
+                                <th>Late Fee per day</th>
+                                <th>Max. Late Fee</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let installment of installmentList; let i=index;">
+                                <td>{{installment | titlecase}}</td>
+                                <td>
+                                    <input type="number"
+                                           [ngModel]="newSchoolFeeRule[installment+'Amount']"
+                                           (ngModelChange)="handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule, installment, $event);"/>
+                                </td>
+                                <td>
+                                    <day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
+                                              [initialValue]="newSchoolFeeRule[installment+'LastDate']"
+                                              [acceptNull]="true"
+                                              [formattedDateOutput]="true"
+                                              (onDateSelected)="newSchoolFeeRule[installment+'LastDate']=$event">
+                                    </day-date>
+                                    <day-date *ngIf="disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
+                                              [acceptNull]="true"
+                                              [initialValue]="null"
+                                              [disableDatePicker]="true">
+                                    </day-date>
+                                </td>
+                                <td>
+                                    <input type="number"
+                                           [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, installment)"
+                                           [(ngModel)]="newSchoolFeeRule[installment+'LateFee']"/>
+                                </td>
+                                <td>
+                                    <input type="number"
+                                           [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, installment)"
+                                           [(ngModel)]="newSchoolFeeRule[installment+'MaximumLateFee']"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </ng-container>
+
+                    <!-- Annual Payment -->
+                    <ng-container *ngIf="newSchoolFeeRule.isAnnually">
+
+                        <table class="table table-hover">
+                            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                            <tr>
+                                <th>Amount</th>
+                                <th>Last Date</th>
+                                <th>Late Fee per day</th>
+                                <th>Max. Late Fee</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <input type="number"
+                                           [ngModel]="newSchoolFeeRule['aprilAmount']"
+                                           (ngModelChange)="handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule, 'april', $event);"/>
+                                </td>
+                                <td>
+                                    <day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
+                                              [initialValue]="newSchoolFeeRule['aprilLastDate']"
+                                              [acceptNull]="true"
+                                              [formattedDateOutput]="true"
+                                              (onDateSelected)="newSchoolFeeRule['aprilLastDate']=$event">
+                                    </day-date>
+                                    <day-date *ngIf="disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
+                                              [acceptNull]="true"
+                                              [initialValue]="null"
+                                              [disableDatePicker]="true">
+                                    </day-date>
+                                </td>
+                                <td>
+                                    <input type="number"
+                                           [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, 'april')"
+                                           [(ngModel)]="newSchoolFeeRule.aprilLateFee"/>
+                                </td>
+                                <td>
+                                    <input type="number"
+                                           [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, 'april')"
+                                           [(ngModel)]="newSchoolFeeRule.aprilMaximumLateFee"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </ng-container>
+
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="serviceAdapter.addNewSchoolFeeRule()">Add New Rule</button>
+
                 </ng-container>
-
-                <!-- Only New Admission -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <mat-checkbox [(ngModel)]="newSchoolFeeRule.onlyNewAdmission">Applies only to new admission in this session</mat-checkbox>
-                    </div>
-                </div>
-
-                <!-- RTE Student too -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <mat-checkbox [(ngModel)]="newSchoolFeeRule.includeRTE">Include RTE students too</mat-checkbox>
-                    </div>
-                </div>
-
-                <!-- Expected no. of students attached to this rule. -->
-                <div class="row">
-                    <div class="col-md-12">
-                        Expected no. of students attached to this rule: {{getExpectedStudentList().length}}
-                    </div>
-                </div>
-
-                <!-- Payment Type -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <mat-checkbox [(ngModel)]="newSchoolFeeRule.isAnnually">Payment only one time in a year</mat-checkbox>
-                    </div>
-                </div>
-
-                <!-- Installment Payment -->
-                <ng-container *ngIf="!newSchoolFeeRule.isAnnually">
-
-                    <table class="table table-hover">
-                        <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                        <tr>
-                            <th>Installment</th>
-                            <th>Amount</th>
-                            <th>Last Date</th>
-                            <th>Late Fee per day</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let installment of installmentList; let i=index;">
-                            <td>{{installment | titlecase}}</td>
-                            <td>
-                                <input type="number"
-                                       [ngModel]="newSchoolFeeRule[installment+'Amount']"
-                                       (ngModelChange)="handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule, installment, $event);"/>
-                            </td>
-                            <td>
-                                <day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
-                                          [initialValue]="newSchoolFeeRule[installment+'LastDate']"
-                                          [acceptNull]="true"
-                                          [formattedDateOutput]="true"
-                                          (onDateSelected)="newSchoolFeeRule[installment+'LastDate']=$event">
-                                </day-date>
-                                <day-date *ngIf="disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
-                                          [acceptNull]="true"
-                                          [initialValue]="null"
-                                          [disableDatePicker]="true">
-                                </day-date>
-                            </td>
-                            <td>
-                                <input type="number"
-                                       [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, installment)"
-                                       [(ngModel)]="newSchoolFeeRule[installment+'LateFee']"/>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </ng-container>
-
-                <!-- Annual Payment -->
-                <ng-container *ngIf="newSchoolFeeRule.isAnnually">
-
-                    <table class="table table-hover">
-                        <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                        <tr>
-                            <th>Amount</th>
-                            <th>Last Date</th>
-                            <th>Late Fee per day</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <input type="number"
-                                       [ngModel]="newSchoolFeeRule['aprilAmount']"
-                                       (ngModelChange)="handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule, 'april', $event);"/>
-                            </td>
-                            <td>
-                                <day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
-                                          [initialValue]="newSchoolFeeRule['aprilLastDate']"
-                                          [acceptNull]="true"
-                                          [formattedDateOutput]="true"
-                                          (onDateSelected)="newSchoolFeeRule['aprilLastDate']=$event">
-                                </day-date>
-                                <day-date *ngIf="disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
-                                          [acceptNull]="true"
-                                          [initialValue]="null"
-                                          [disableDatePicker]="true">
-                                </day-date>
-                            </td>
-                            <td>
-                                <input type="number"
-                                       [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, 'april')"
-                                       [(ngModel)]="newSchoolFeeRule.aprilLateFee"/>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </ng-container>
-
-                <button type="submit"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.addNewSchoolFeeRule()">Add New Rule</button>
 
             </ng-container>
 

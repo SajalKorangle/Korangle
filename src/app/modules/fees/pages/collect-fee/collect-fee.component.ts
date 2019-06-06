@@ -8,7 +8,12 @@ import {FeeReceipt} from "../../../../services/fees/fee-receipt";
 import {Discount} from "../../../../services/fees/discount";
 import {VehicleService} from "../../../vehicle/vehicle.service";
 import {SESSION_LIST} from "../../../../classes/constants/session";
-import {INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
+import {
+    DiscountColumnFilter,
+    INSTALLMENT_LIST,
+    MODE_OF_PAYMENT_LIST,
+    ReceiptColumnFilter
+} from "../../classes/constants";
 import {FeeType} from "../../../../services/fees/fee-type";
 import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
 import {ClassService} from "../../../../services/class.service";
@@ -35,6 +40,7 @@ export class CollectFeeComponent implements OnInit {
     sessionList = SESSION_LIST;
     modeOfPaymentList = MODE_OF_PAYMENT_LIST;
     receiptColumnFilter = new ReceiptColumnFilter();
+    discountColumnFilter = new DiscountColumnFilter();
 
     // From Service Adapter
     feeTypeList: FeeType[];
@@ -94,6 +100,15 @@ export class CollectFeeComponent implements OnInit {
             this.receiptColumnFilter.employee = false;
             this.receiptColumnFilter.printButton = false;
         }
+
+        this.discountColumnFilter.discountNumber = false;
+        this.discountColumnFilter.scholarNumber = false;
+
+        if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.discountColumnFilter.class = false;
+            this.discountColumnFilter.employee = false;
+        }
+
     }
 
     detectChanges(): void {
@@ -407,9 +422,9 @@ export class CollectFeeComponent implements OnInit {
         let amount = 0;
         this.getFilteredSessionListByStudent(student).forEach(session => {
             if ((new Date(session.endDate)).getTime() < (new Date()).getTime()) {
-                amount += this.getSessionLateFeesDue(session, includeNewSubFeeReceipt);
+                amount += this.getSessionLateFeesDue(student, session, includeNewSubFeeReceipt);
             } else {
-                amount += this.getSessionLateFeesDueTillMonth(session, includeNewSubFeeReceipt);
+                amount += this.getSessionLateFeesDueTillMonth(student, session, includeNewSubFeeReceipt);
             }
         });
         return amount;
@@ -867,7 +882,7 @@ export class CollectFeeComponent implements OnInit {
             }
         });
         filteredSubDiscountList.forEach(subDiscount => {
-            if (subDiscount[installment+'Amount']) {
+            if (subDiscount[installment+'LateFee']) {
                 amount -= subDiscount[installment+'LateFee'];
             }
         });
@@ -884,7 +899,10 @@ export class CollectFeeComponent implements OnInit {
             }
             let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
             if (numberOfLateDays > 0) {
-                amount += (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
+                amount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
+                if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < amount) {
+                    amount = studentFee[installment+'MaximumLateFee'];
+                }
             }
         }
         return amount;
@@ -956,7 +974,7 @@ export class CollectFeeComponent implements OnInit {
         let subFeeReceipt = this.newSubFeeReceiptList.find(subFeeReceipt => {
             return subFeeReceipt.parentStudentFee == studentFee.id;
         });
-        return subFeeReceipt?subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0:0;
+        return subFeeReceipt?(subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0):0;
     }
 
     policeStudentFeeInstallmentLateFeePaymentInput(studentFee: any, installment: string, event: any): boolean {

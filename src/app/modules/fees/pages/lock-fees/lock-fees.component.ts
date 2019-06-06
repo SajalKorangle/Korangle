@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { LockFeesServiceAdapter } from "./lock-fees.service.adapter";
 import { FeeService } from "../../../../services/fee.service";
+import {SESSION_LIST} from "../../../../classes/constants/session";
 
 @Component({
     selector: 'lock-fees',
@@ -11,13 +12,13 @@ import { FeeService } from "../../../../services/fee.service";
 
 export class LockFeesComponent implements OnInit {
 
+    sessionList = SESSION_LIST;
+
     @Input() user;
 
-    classStudentCCEMarksList: any;
-
-    selectedClass: any;
-
     serviceAdapter: LockFeesServiceAdapter;
+
+    lockFees = null;
 
     isLoading = false;
 
@@ -32,6 +33,12 @@ export class LockFeesComponent implements OnInit {
 
     detectChanges(): void {
         this.cdRef.detectChanges();
+    }
+
+    getSession(sessionId: any): any {
+        return this.sessionList.find(session => {
+            return session.id == sessionId;
+        });
     }
 
 }

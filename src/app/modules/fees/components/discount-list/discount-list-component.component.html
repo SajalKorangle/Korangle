@@ -1,45 +1,37 @@
 <table class="table table-hover">
     <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-        <tr>
-            <th>Discount No.</th>
-            <th class="text-center">Name</th>
-            <th class="text-center hidden-sm hidden-xs">Scholar No.</th>
-            <th class="text-center hidden-sm hidden-xs">Class</th>
-            <th class="text-right">Amount</th>
-            <th class="text-center">Date</th>
-            <th class="text-center hidden-sm hidden-xs">Remark</th>
-            <!-- th class="text-center hidden-sm hidden-xs">-</th -->
-        </tr>
+    <tr>
+        <th *ngIf="discountColumnFilter.discountNumber">Discount No.</th>
+        <th *ngIf="discountColumnFilter.name" class="text-left">Name</th>
+        <th *ngIf="discountColumnFilter.scholarNumber" class="text-center">Scholar No.</th>
+        <th *ngIf="discountColumnFilter.class" class="text-center">Class</th>
+        <th *ngIf="discountColumnFilter.amount" class="text-right">Amount</th>
+        <th *ngIf="discountColumnFilter.date" class="text-center">Date</th>
+        <th *ngIf="discountColumnFilter.remark" class="text-center">Remark</th>
+        <th *ngIf="discountColumnFilter.employee" class="text-left">Given By</th>
+    </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let discount of discountList | slice:0:number">
-            <td>{{discount.discountNumber}}</td>
-            <td align="center">{{getStudentName(discount.parentStudent)}}</td>
-            <td align="center" class="hidden-sm hidden-xs">{{getStudentScholarNumber(discount.parentStudent)}}</td>
-            <td align="center" class="hidden-sm hidden-xs">
-                {{getClassName(discount.parentStudent, discount.parentSession)}},
-                {{getSectionName(discount.parentStudent, discount.parentSession)}}
-            </td>
-            <td style="padding-right: 15px;" align="right">{{getDiscountTotalAmount(discount)}}</td>
-            <td align="center">{{discount.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
-            <td align="center" class="hidden-sm hidden-xs">{{discount.remark}}</td>
-            <!-- td align="center" class="hidden-sm hidden-xs">
-                <button type="button"
-                        style="padding: 8px 11px; margin: 0px"
-                        matTooltip="Print"
-                        tooltip-position="right"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="printFeeReceipt(discount)">
-                    <i class="material-icons">print</i></button>
-            </td -->
-        </tr>
+    <tr *ngFor="let discount of discountList | slice:0:number">
+        <td *ngIf="discountColumnFilter.discountNumber">{{discount.discountNumber}}</td>
+        <td *ngIf="discountColumnFilter.name" align="left">{{getStudentName(discount.parentStudent)}}</td>
+        <td *ngIf="discountColumnFilter.scholarNumber" align="center">{{getStudentScholarNumber(discount.parentStudent)}}</td>
+        <td *ngIf="discountColumnFilter.class" align="center">
+            {{getClassName(discount.parentStudent, discount.parentSession)}},
+            {{getSectionName(discount.parentStudent, discount.parentSession)}}
+        </td>
+        <td *ngIf="discountColumnFilter.amount" style="padding-right: 15px;" align="right">{{getDiscountTotalAmount(discount) | currency:'INR':'':'1.0-0'}}</td>
+        <td *ngIf="discountColumnFilter.date" align="center">{{discount.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
+        <td *ngIf="discountColumnFilter.remark" align="center">{{discount.remark}}</td>
+        <td *ngIf="discountColumnFilter.employee" align="left">{{getEmployeeName(discount)}}</td>
+    </tr>
     </tbody>
 </table>
-<ng-container *ngIf="discountList.length>3">
+<ng-container *ngIf="discountList.length>number">
     <u *ngIf="number<discountList.length"
        style="color: deepskyblue; cursor: pointer"
        (click)="increaseNumber()">
         Show More
     </u>
-    Total Receipts: {{discountList.length}}
+    # of Discounts: {{discountList.length}}
 </ng-container>

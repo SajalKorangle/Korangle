@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationService } from '../../../../services/examination.service';
+import { ExaminationOldService } from '../../../../services/examination-old.service';
 import { ClassService } from '../../../../services/class.service';
-import { SubjectService } from '../../../../services/subject.service';
+import { SubjectOldService } from '../../../../services/subject-old.service';
 
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
 import {TEST_TYPE_LIST} from '../../classes/constants';
@@ -12,7 +12,7 @@ import {StudentOldService} from '../../../students/student-old.service';
     selector: 'create-test',
     templateUrl: './create-test.component.html',
     styleUrls: ['./create-test.component.css'],
-    providers: [ ExaminationService, ClassService, SubjectService, StudentOldService ],
+    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService ],
 })
 
 export class CreateTestComponent implements OnInit {
@@ -42,9 +42,9 @@ export class CreateTestComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(public examinationService: ExaminationOldService,
                 public classService: ClassService,
-                public subjectService: SubjectService,
+                public subjectService: SubjectOldService,
                 public studentService: StudentOldService) {}
 
     ngOnInit(): void {

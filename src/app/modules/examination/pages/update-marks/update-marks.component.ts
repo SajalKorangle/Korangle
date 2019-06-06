@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationService } from '../../../../services/examination.service';
+import { ExaminationOldService } from '../../../../services/examination-old.service';
 import { ClassService } from '../../../../services/class.service';
-import { SubjectService } from '../../../../services/subject.service';
+import { SubjectOldService } from '../../../../services/subject-old.service';
 
 import { UpdateMarksServiceAdapter } from './update-marks.service.adapter';
 import {TEST_TYPE_LIST} from '../../classes/constants';
@@ -14,7 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ ExaminationService, ClassService, SubjectService, StudentOldService ],
+    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService ],
 })
 
 export class UpdateMarksComponent implements OnInit {
@@ -38,9 +38,9 @@ export class UpdateMarksComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(public examinationService: ExaminationOldService,
                 public classService: ClassService,
-                public subjectService: SubjectService,
+                public subjectService: SubjectOldService,
                 public studentService: StudentOldService,
                 private cdRef: ChangeDetectorRef) {}
 

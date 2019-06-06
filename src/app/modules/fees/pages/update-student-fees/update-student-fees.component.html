@@ -41,6 +41,7 @@
                             <th>Amount</th>
                             <th>Last Date</th>
                             <th>Late Fee per day</th>
+                            <th>Max. Late Fee</th>
                             <th>Subimission Date</th>
                         </tr>
                         </thead>
@@ -56,6 +57,9 @@
                                 </td>
                                 <td>
                                     {{newStudentFee[installment+'LateFee']}}
+                                </td>
+                                <td>
+                                    {{newStudentFee[installment+'MaximumLateFee']}}
                                 </td>
                                 <td>
                                     {{newStudentFee[installment+'ClearanceDate'] | date : 'dd - MMM - yyyy'}}
@@ -92,6 +96,16 @@
                                            (ngModelChange)="newStudentFee[installment+'LateFee']=$event"/>
                                 </td>
                                 <td>
+                                    <input type="number"
+                                           *ngIf="disableNewStudentFeeMonthLateFee(installment)"
+                                           [ngModel]="newStudentFee[installment+'MaximumLateFee']"
+                                           [disabled]="true"/>
+                                    <input type="number"
+                                           *ngIf="!disableNewStudentFeeMonthLateFee(installment)"
+                                           [ngModel]="selectedStudentFee[installment+'MaximumLateFee']"
+                                           (ngModelChange)="newStudentFee[installment+'MaximumLateFee']=$event"/>
+                                </td>
+                                <td>
                                     {{newStudentFee[installment+'ClearanceDate'] | date : 'dd - MMM - yyyy'}}
                                 </td>
                             </tr>
@@ -110,6 +124,7 @@
                             <th>Amount</th>
                             <th>Last Date</th>
                             <th>Late Fee per day</th>
+                            <th>Max. Late Fee</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -123,6 +138,9 @@
                             </td>
                             <td>
                                 {{newStudentFee['aprilLateFee']}}
+                            </td>
+                            <td>
+                                {{newStudentFee['aprilMaximumLateFee']}}
                             </td>
                             <td>
                                 {{newStudentFee['aprilClearanceDate'] | date : 'dd - MMM - yyyy'}}
@@ -159,6 +177,16 @@
                                        (ngModelChange)="newStudentFee['aprilLateFee']=$event"/>
                             </td>
                             <td>
+                                <input type="number"
+                                       *ngIf="disableNewStudentFeeMonthLateFee('april')"
+                                       [ngModel]="newStudentFee['aprilMaximumLateFee']"
+                                       [disabled]="true"/>
+                                <input type="number"
+                                       *ngIf="!disableNewStudentFeeMonthLateFee('april')"
+                                       [ngModel]="selectedStudentFee['aprilMaximumLateFee']"
+                                       (ngModelChange)="newStudentFee['aprilMaximumLateFee']=$event"/>
+                            </td>
+                            <td>
                                 {{newStudentFee['aprilClearanceDate'] | date : 'dd - MMM - yyyy'}}
                             </td>
                         </tr>
@@ -168,6 +196,7 @@
                 </ng-container>
 
                 <button type="submit"
+                        *ngIf="!lockFees"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="serviceAdapter.editStudentFee()">
                     Edit
@@ -175,7 +204,7 @@
 
                 <button type="submit"
                         style="margin-left: 20px;"
-                        *ngIf="!receiptAndDiscountExists()"
+                        *ngIf="!receiptAndDiscountExists() && !lockFees"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="serviceAdapter.deleteStudentFee()">
                     Delete
@@ -247,6 +276,7 @@
                                         <th>Amount</th>
                                         <th>Last Date</th>
                                         <th>Late Fee per day</th>
+                                        <th>Max. Late Fee</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -261,6 +291,9 @@
                                             </td>
                                             <td>
                                                 {{schoolFeeRule[installment+'LateFee']}}
+                                            </td>
+                                            <td>
+                                                {{schoolFeeRule[installment+'MaximumLateFee']}}
                                             </td>
                                         </tr>
                                     </ng-container>
@@ -278,6 +311,7 @@
                                         <th>Amount</th>
                                         <th>Last Date</th>
                                         <th>Late Fee per day</th>
+                                        <th>Max. Late Fee</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -290,6 +324,9 @@
                                         </td>
                                         <td>
                                             {{schoolFeeRule['aprilLateFee']}}
+                                        </td>
+                                        <td>
+                                            {{schoolFeeRule['aprilMaximumLateFee']}}
                                         </td>
                                     </tr>
                                     </tbody>
@@ -305,6 +342,7 @@
                             <!-- Buttons -->
                             <ng-container>
                                 <button type="submit"
+                                        *ngIf="!lockFees"
                                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                         (click)="serviceAdapter.attachToThisRule(schoolFeeRule)">Attach to this rule</button>
                             </ng-container>
