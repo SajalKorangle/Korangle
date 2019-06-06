@@ -22,7 +22,10 @@ def get_list(data, Model, ModelSerializer):
             if attr == 'e':
                 continue
             elif attr[-4:] == '__in':
-                filter_var = {attr: list(map(int, data[attr].split(',')))}
+                if data[attr] != '':
+                    filter_var = {attr: list(map(int, data[attr].split(',')))}
+                else:
+                    filter_var = {attr: []}
             elif attr[-4:] == '__or':
                 filter_var = {attr[:-4]: data[attr]}
                 filter_var_list.append(filter_var)
@@ -72,6 +75,7 @@ def create_list(data_list, Model, ModelSerializer):
 
 
 def create_object(data, Model, ModelSerializer):
+    print(data)
     serializer = ModelSerializer(data=data)
     if serializer.is_valid(raise_exception=True):
         serializer.save()

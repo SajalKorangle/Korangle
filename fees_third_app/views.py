@@ -3,9 +3,10 @@ import json
 
 from common.common_views import CommonView, APIView, CommonListView, APIView, get_model_serializer
 from decorators import user_permission_new
+from fees_third_app.business.discount import create_discount_object, create_discount_list
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
-    SubFeeReceipt, Discount, SubDiscount, FeeFeature, LockFee
+    SubFeeReceipt, Discount, SubDiscount, LockFee
 
 
 # Create your views here.
@@ -105,9 +106,19 @@ class SubFeeReceiptListView(CommonListView, APIView):
 class DiscountView(CommonView, APIView):
     Model = Discount
 
+    @user_permission_new
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_discount_object(data, self.Model, self.ModelSerializer)
+
 
 class DiscountListView(CommonListView, APIView):
     Model = Discount
+
+    @user_permission_new
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        return create_discount_list(data, self.Model, self.ModelSerializer)
 
 
 ########### Sub Discount #############
@@ -119,17 +130,6 @@ class SubDiscountView(CommonView, APIView):
 
 class SubDiscountListView(CommonListView, APIView):
     Model = SubDiscount
-
-
-########### Fee Feature #############
-
-
-class FeeFeatureView(CommonView, APIView):
-    Model = FeeFeature
-
-
-class FeeFeatureListView(CommonListView, APIView):
-    Model = FeeFeature
 
 
 ########### Lock Fee #############

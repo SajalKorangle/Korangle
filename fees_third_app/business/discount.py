@@ -6,24 +6,24 @@ from django.db.models import Max
 from student_app.models import Student
 
 
-def create_fee_receipt_list(data_list, Model, ModelSerializer):
+def create_discount_list(data_list, Model, ModelSerializer):
     return_data = []
     for data in data_list:
-        return_data.append(create_fee_receipt_object(data, Model, ModelSerializer))
+        return_data.append(create_discount_object(data, Model, ModelSerializer))
     return return_data
 
 
-def create_fee_receipt_object(data, Model, ModelSerializer):
+def create_discount_object(data, Model, ModelSerializer):
 
-    data['receiptNumber'] = 1
+    data['discountNumber'] = 1
     schoolId = Student.objects.get(id=data['parentStudent']).parentSchool.id
 
     with transaction.atomic():
-        last_receipt_number = \
+        last_discount_number = \
             Model.objects.filter(parentStudent__parentSchool=schoolId)\
-                .aggregate(Max('receiptNumber'))['receiptNumber__max']
-        if last_receipt_number is not None:
-            data['receiptNumber'] = last_receipt_number + 1
+                .aggregate(Max('discountNumber'))['discountNumber__max']
+        if last_discount_number is not None:
+            data['discountNumber'] = last_discount_number + 1
 
     serializer = ModelSerializer(data=data)
     if serializer.is_valid(raise_exception=True):

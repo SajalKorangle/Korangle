@@ -75,14 +75,6 @@ urlpatterns += [
 ]
 
 
-from fees_third_app.views import FeeFeatureView, FeeFeatureListView
-
-urlpatterns += [
-    url(r'^fee-features/batch', FeeFeatureListView.as_view()),
-    url(r'^fee-features', FeeFeatureView.as_view()),
-]
-
-
 from fees_third_app.views import LockFeeView, LockFeeListView
 
 urlpatterns += [

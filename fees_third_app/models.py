@@ -42,61 +42,73 @@ class SchoolFeeRule(models.Model):
     aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')
     aprilLastDate = models.DateField(null=True, verbose_name='aprilLastDate')
     aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee')
+    aprilMaximumLateFee = models.IntegerField(null=True, verbose_name='aprilMaximumLateFee')
 
     # May
     mayAmount = models.IntegerField(null=True, verbose_name='mayAmount')
     mayLastDate = models.DateField(null=True, verbose_name='mayLastDate')
     mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee')
+    mayMaximumLateFee = models.IntegerField(null=True, verbose_name='mayMaximumLateFee')
 
     # June
     juneAmount = models.IntegerField(null=True, verbose_name='juneAmount')
     juneLastDate = models.DateField(null=True, verbose_name='juneLastDate')
     juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee')
+    juneMaximumLateFee = models.IntegerField(null=True, verbose_name='juneMaximumLateFee')
 
     # July
     julyAmount = models.IntegerField(null=True, verbose_name='julyAmount')
     julyLastDate = models.DateField(null=True, verbose_name='julyLastDate')
     julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee')
+    julyMaximumLateFee = models.IntegerField(null=True, verbose_name='julyMaximumLateFee')
 
     # August
     augustAmount = models.IntegerField(null=True, verbose_name='augustAmount')
     augustLastDate = models.DateField(null=True, verbose_name='augustLastDate')
     augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee')
+    augustMaximumLateFee = models.IntegerField(null=True, verbose_name='augustMaximumLateFee')
 
     # September
     septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount')
     septemberLastDate = models.DateField(null=True, verbose_name='septemberLastDate')
     septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee')
+    septemberMaximumLateFee = models.IntegerField(null=True, verbose_name='septemberMaximumLateFee')
 
     # October
     octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount')
     octoberLastDate = models.DateField(null=True, verbose_name='octoberLastDate')
     octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee')
+    octoberMaximumLateFee = models.IntegerField(null=True, verbose_name='octoberMaximumLateFee')
 
     # November
     novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount')
     novemberLastDate = models.DateField(null=True, verbose_name='novemberLastDate')
     novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee')
+    novemberMaximumLateFee = models.IntegerField(null=True, verbose_name='novemberMaximumLateFee')
 
     # December
     decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount')
     decemberLastDate = models.DateField(null=True, verbose_name='decemberLastDate')
     decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee')
+    decemberMaximumLateFee = models.IntegerField(null=True, verbose_name='decemberMaximumLateFee')
 
     # January
     januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount')
     januaryLastDate = models.DateField(null=True, verbose_name='januaryLastDate')
     januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee')
+    januaryMaximumLateFee = models.IntegerField(null=True, verbose_name='januaryMaximumLateFee')
 
     # February
     februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount')
     februaryLastDate = models.DateField(null=True, verbose_name='februaryLastDate')
     februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee')
+    februaryMaximumLateFee = models.IntegerField(null=True, verbose_name='februaryMaximumLateFee')
 
     # March
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLastDate = models.DateField(null=True, verbose_name='marchLastDate')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
+    marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee')
 
     class Meta:
         db_table = 'school_fee_rule'
@@ -137,72 +149,84 @@ class StudentFee(models.Model):
     aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')
     aprilLastDate = models.DateField(null=True, verbose_name='aprilLastDate')
     aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee')
+    aprilMaximumLateFee = models.IntegerField(null=True, verbose_name='aprilMaximumLateFee')
     aprilClearanceDate = models.DateField(null=True, verbose_name='aprilClearanceDate')
 
     # May
     mayAmount = models.IntegerField(null=True, verbose_name='mayAmount')
     mayLastDate = models.DateField(null=True, verbose_name='mayLastDate')
     mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee')
+    mayMaximumLateFee = models.IntegerField(null=True, verbose_name='mayMaximumLateFee')
     mayClearanceDate = models.DateField(null=True, verbose_name='mayClearanceDate')
 
     # June
     juneAmount = models.IntegerField(null=True, verbose_name='juneAmount')
     juneLastDate = models.DateField(null=True, verbose_name='juneLastDate')
     juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee')
+    juneMaximumLateFee = models.IntegerField(null=True, verbose_name='juneMaximumLateFee')
     juneClearanceDate = models.DateField(null=True, verbose_name='juneClearanceDate')
 
     # July
     julyAmount = models.IntegerField(null=True, verbose_name='julyAmount')
     julyLastDate = models.DateField(null=True, verbose_name='julyLastDate')
     julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee')
+    julyMaximumLateFee = models.IntegerField(null=True, verbose_name='julyMaximumLateFee')
     julyClearanceDate = models.DateField(null=True, verbose_name='julyClearanceDate')
 
     # August
     augustAmount = models.IntegerField(null=True, verbose_name='augustAmount')
     augustLastDate = models.DateField(null=True, verbose_name='augustLastDate')
     augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee')
+    augustMaximumLateFee = models.IntegerField(null=True, verbose_name='augustMaximumLateFee')
     augustClearanceDate = models.DateField(null=True, verbose_name='augustClearanceDate')
 
     # September
     septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount')
     septemberLastDate = models.DateField(null=True, verbose_name='septemberLastDate')
     septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee')
+    septemberMaximumLateFee = models.IntegerField(null=True, verbose_name='septemberMaximumLateFee')
     septemberClearanceDate = models.DateField(null=True, verbose_name='septemberClearanceDate')
 
     # October
     octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount')
     octoberLastDate = models.DateField(null=True, verbose_name='octoberLastDate')
     octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee')
+    octoberMaximumLateFee = models.IntegerField(null=True, verbose_name='octoberMaximumLateFee')
     octoberClearanceDate = models.DateField(null=True, verbose_name='octoberClearanceDate')
 
     # November
     novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount')
     novemberLastDate = models.DateField(null=True, verbose_name='novemberLastDate')
     novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee')
+    novemberMaximumLateFee = models.IntegerField(null=True, verbose_name='novemberMaximumLateFee')
     novemberClearanceDate = models.DateField(null=True, verbose_name='novemberClearanceDate')
 
     # December
     decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount')
     decemberLastDate = models.DateField(null=True, verbose_name='decemberLastDate')
     decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee')
+    decemberMaximumLateFee = models.IntegerField(null=True, verbose_name='decemberMaximumLateFee')
     decemberClearanceDate = models.DateField(null=True, verbose_name='decemberClearanceDate')
 
     # January
     januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount')
     januaryLastDate = models.DateField(null=True, verbose_name='januaryLastDate')
     januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee')
+    januaryMaximumLateFee = models.IntegerField(null=True, verbose_name='januaryMaximumLateFee')
     januaryClearanceDate = models.DateField(null=True, verbose_name='januaryClearanceDate')
 
     # February
     februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount')
     februaryLastDate = models.DateField(null=True, verbose_name='februaryLastDate')
     februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee')
+    februaryMaximumLateFee = models.IntegerField(null=True, verbose_name='februaryMaximumLateFee')
     februaryClearanceDate = models.DateField(null=True, verbose_name='februaryClearanceDate')
 
     # March
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLastDate = models.DateField(null=True, verbose_name='marchLastDate')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
+    marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee')
     marchClearanceDate = models.DateField(null=True, verbose_name='marchClearanceDate')
 
     class Meta:
@@ -377,19 +401,7 @@ class LockFee(models.Model):
 
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
-    locked = models.BooleanField(verbose_name='locked', default=False)
 
     class Meta:
         db_table = 'lock_fee'
 
-
-class FeeFeature(models.Model):
-
-    heading = models.TextField(verbose_name='heading')
-    requirement = models.TextField(verbose_name='requirement')
-    reason = models.TextField(verbose_name='reason')
-    example = models.TextField(verbose_name='example')
-    parentUser = models.ForeignKey(User, on_delete=models.PROTECT, default=0, verbose_name='parentUser')
-
-    class Meta:
-        db_table = 'fee_feature'
