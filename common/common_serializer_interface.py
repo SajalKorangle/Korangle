@@ -75,13 +75,10 @@ def create_list(data_list, Model, ModelSerializer):
 
 
 def create_object(data, Model, ModelSerializer):
-    print(data)
     serializer = ModelSerializer(data=data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save()
-        return serializer.data
-    else:
-        return 'Creation failed'
+    assert serializer.is_valid(), serializer.errors
+    serializer.save()
+    return serializer.data
 
 
 def update_list(data_list, Model, ModelSerializer):

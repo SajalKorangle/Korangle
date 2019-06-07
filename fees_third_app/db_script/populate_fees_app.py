@@ -242,64 +242,221 @@ def populate_school_fee_rule(apps, fee_definition_object, school_fee_component_o
             else:
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='APRIL',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='APRIL',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.aprilAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.aprilAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.aprilAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- APRIL')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='APRIL',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.aprilAmount = school_fee_component_monthly_object.amount
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='MAY',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='MAY',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.mayAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.mayAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.mayAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- MAY')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='MAY',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.mayAmount = school_fee_component_monthly_object.amount
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='JUNE',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='JUNE',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.juneAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.juneAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.juneAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- JUNE')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='JUNE',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.juneAmount = school_fee_component_monthly_object.amount
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='JULY',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='JULY',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.julyAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.julyAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.julyAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- JULY')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='JULY',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.julyAmount = school_fee_component_monthly_object.amount
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='AUGUST',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='AUGUST',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.augustAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.augustAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.augustAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- AUGUST')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='AUGUST',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.augustAmount = school_fee_component_monthly_object.amount
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='SEPTEMBER',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='SEPTEMBER',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.septemberAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.septemberAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.septemberAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- SEPTEMBER')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='SEPTEMBER',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.septemberAmount = school_fee_component_monthly_object.amount
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='OCTOBER',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='OCTOBER',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.octoberAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.octoberAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.octoberAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- OCTOBER')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='OCTOBER',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.octoberAmount = school_fee_component_monthly_object.amount
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='NOVEMBER',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='NOVEMBER',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.novemberAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.novemberAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.novemberAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- NOVEMBER')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='NOVEMBER',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.novemberAmount = school_fee_component_monthly_object.amount
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='DECEMBER',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='DECEMBER',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.decemberAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.decemberAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.decemberAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- DECEMBER')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='DECEMBER',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.decemberAmount = school_fee_component_monthly_object.amount
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='JANUARY',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='JANUARY',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.januaryAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.januaryAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.januaryAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- JANUARY')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='JANUARY',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.januaryAmount = school_fee_component_monthly_object.amount
+
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='FEBRUARY',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='FEBRUARY',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.februaryAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.februaryAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.februaryAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- FEBRUARY')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='FEBRUARY',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.februaryAmount = school_fee_component_monthly_object.amount
+
+
 
                 student_fee_component_monthly_object = \
-                    StudentMonthlyFeeComponent.objects.get(parentMonth__name='MARCH',
+                    StudentMonthlyFeeComponent.objects.filter(parentMonth__name='MARCH',
                                                            parentStudentFeeComponent=student_fee_component_object)
-                student_fee_object.marchAmount = student_fee_component_monthly_object.amount
+                if student_fee_component_monthly_object.count() == 1:
+                    student_fee_object.marchAmount = student_fee_component_monthly_object[0].amount
+                else:
+                    student_fee_object.marchAmount = 0
+                    print('Error: '+student_fee_component_object.parentStudent.parentSchool.name+' -- '
+                          +student_fee_component_object.parentStudent.name+' -- '
+                          +student_fee_component_object.parentFeeDefinition.parentFeeType.name+' -- MARCH')
+                    if school_fee_component_object is not None:
+                        school_fee_component_monthly_object = \
+                            SchoolMonthlyFeeComponent.objects.get(parentMonth__name='MARCH',
+                                                                     parentSchoolFeeComponent=school_fee_component_object)
+                        print(school_fee_component_monthly_object.amount)
+                        student_fee_object.marchAmount = school_fee_component_monthly_object.amount
+
 
                 studentAmount = \
                     StudentMonthlyFeeComponent.objects.filter(

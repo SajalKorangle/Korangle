@@ -34,11 +34,11 @@ urlpatterns += [
 ]
 
 
-from examination_app.views import StudentTestListView
+from examination_app.views import StudentTestListOldView
 
 urlpatterns += [
-    url(r'^student-tests/batch/(?P<student_test_id_list>[0-9,]+)', StudentTestListView.as_view()),
-    url(r'^student-tests/batch', StudentTestListView.as_view()),
+    url(r'^student-tests/batch/(?P<student_test_id_list>[0-9,]+)', StudentTestListOldView.as_view()),
+    url(r'^student-tests/batch', StudentTestListOldView.as_view()),
 ]
 
 from examination_app.views import StudentExtraSubFieldListView

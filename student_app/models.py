@@ -44,7 +44,7 @@ class TransferCertificate(models.Model):
 
 class Student(models.Model):
 
-    profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True)
+    profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True, null=True)
 
     name = models.CharField(max_length=100)
     fathersName = models.CharField(max_length=100)

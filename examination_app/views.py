@@ -139,7 +139,7 @@ from examination_app.business.student_test import get_student_test_list, create_
     delete_student_test_list, update_student_test_list
 
 
-class StudentTestListView(APIView):
+class StudentTestListOldView(APIView):
 
     @user_permission
     def get(request):
