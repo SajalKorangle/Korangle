@@ -76,7 +76,7 @@ export class CancelDiscountComponent implements OnInit {
 
     getDiscountTotalAmount(discount: any): number {
         return this.subDiscountList.filter(subDiscount => {
-            return subDiscount.parentFeeReceipt == discount.id;
+            return subDiscount.parentDiscount == discount.id;
         }).reduce((total, subDiscount) => {
             return total + this.installmentList.reduce((amount, installment) => {
                 return amount

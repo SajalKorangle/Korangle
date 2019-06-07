@@ -68,6 +68,9 @@ export class AddStudentServiceAdapter {
             this.vm.busStopList = value[2];
             this.vm.testSecondList = value[3];
             this.vm.classSubjectList = value[4];
+            this.vm.schoolFeeRuleList = value[5];
+            this.vm.classFilterFeeList = value[6];
+            this.vm.busStopFilterFeeList = value[7];
 
             this.vm.initializeVariable();
 
@@ -79,9 +82,6 @@ export class AddStudentServiceAdapter {
     }
 
     createNewStudent(): void {
-
-        console.log(this.vm.newStudent);
-        console.log(this.vm.newStudentSection);
 
         if (this.vm.newStudent.name == null || this.vm.newStudent.name == '') {
             alert('Name should be populated');
@@ -135,8 +135,6 @@ export class AddStudentServiceAdapter {
 
         this.vm.studentService.createObject(this.vm.studentService.student, this.vm.newStudent).then(value => {
 
-            console.log(value);
-
             this.vm.newStudentSection.parentStudent = value.id;
 
             let student_subject_list = [];
@@ -152,11 +150,7 @@ export class AddStudentServiceAdapter {
                 student_subject_list.push(student_subject);
             });
 
-            console.log(student_subject_list);
-
             let student_test_list = [];
-
-            console.log(student_test_list);
 
             this.vm.testSecondList.filter(testSecond => {
                 return testSecond.parentClass == this.vm.newStudentSection.parentClass
@@ -165,7 +159,7 @@ export class AddStudentServiceAdapter {
                 let student_test = new StudentTest();
                 student_test.parentExamination = testSecond.parentExamination;
                 student_test.parentSubject = testSecond.parentSubject;
-                student_test.parentStudent = testSecond.value.id;
+                student_test.parentStudent = value.id;
                 student_test.testType = testSecond.testType;
                 student_test.marksObtained = 0;
                 student_test_list.push(student_test);
@@ -184,7 +178,7 @@ export class AddStudentServiceAdapter {
                         if (schoolFeeRule.isClassFilter && this.vm.classFilterFeeList.find(classFilterFee => {
                             return classFilterFee.parentSchoolFeeRule == schoolFeeRule.id
                                 && classFilterFee.parentClass == this.vm.newStudentSection.parentClass
-                                && classFilterFee.parentDivision == this.vm.newStudentSection.parentDivision
+                                && classFilterFee.parentDivision == this.vm.newStudentSection.parentDivision;
                         }) == undefined) {
                             return true;
                         }
@@ -195,7 +189,7 @@ export class AddStudentServiceAdapter {
                             return true;
                         }
                         if (schoolFeeRule.onlyNewAdmission
-                            && this.vm.newStudent.admissionSession != this.vm.user.activeSchool.currentSessionDbId) {
+                            && this.vm.newStudent.admissionSession != schoolFeeRule.parentSession) {
                             return true;
                         }
                         if (!schoolFeeRule.includeRTE && this.vm.newStudent.rte == "YES") {
@@ -222,16 +216,12 @@ export class AddStudentServiceAdapter {
                 });
             });
 
-            console.log(student_fee_list);
-
             Promise.all([
                 this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),
                 this.vm.subjectService.createObjectList(this.vm.subjectService.student_subject, student_subject_list),
                 this.vm.examinationService.createObjectList(this.vm.examinationService.student_test, student_test_list),
                 this.vm.feeService.createObjectList(this.vm.feeService.student_fees, student_fee_list),
             ]).then( valueTwo => {
-
-                alert(valueTwo);
 
                 alert('Student admitted successfully');
 

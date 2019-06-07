@@ -10,7 +10,7 @@ export class Student {
     mobileNumber: number = null;
     secondMobileNumber: number = null;
     scholarNumber: string = null;
-    totalFees: number = null;
+    totalFees: number = 0;
     dateOfBirth: any = null;
     remark: string = null;
 

@@ -7,8 +7,7 @@ import {DataStorage} from '../../classes/data-storage';
     '<generate-tc *ngIf="user.section.subRoute===\'generate_tc\'" [user]="user"></generate-tc>' +
     '<promote-student *ngIf="user.section.subRoute===\'promote_student\'" [user]="user"></promote-student>' +
     '<change-class *ngIf="user.section.subRoute===\'change_class\'" [user]="user"></change-class>' +
-    '<add-student-old *ngIf="user.section.subRoute===\'add_student_old\'" [user]="user"></add-student-old>' +
-        '<add-student *ngIf="user.section.subRoute===\'add_student\'" [user]="user"></add-student>' +
+    '<add-student *ngIf="user.section.subRoute===\'add_student\'" [user]="user"></add-student>' +
     '<upload-list *ngIf="user.section.subRoute===\'upload_list\'" [user]="user"></upload-list>' +
     '<update-all *ngIf="user.section.subRoute===\'update_all\'" [user]="user"></update-all>' +
     '<i-cards *ngIf="user.section.subRoute===\'i_cards\'" [user]="user"></i-cards>',

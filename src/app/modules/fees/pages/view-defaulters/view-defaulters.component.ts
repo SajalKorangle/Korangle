@@ -60,6 +60,13 @@ export class ViewDefaultersComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
+    checkMobileNumber(mobileNumber: number): boolean {
+        if (mobileNumber && mobileNumber.toString().length == 10) {
+            return true;
+        }
+        return false;
+    }
+
     policeNumberInput(event: any): boolean {
         let value = event.key;
         if (value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
