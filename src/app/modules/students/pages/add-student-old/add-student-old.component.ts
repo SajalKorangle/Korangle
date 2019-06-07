@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+/*import {Component, Input, OnInit} from '@angular/core';
 
 import { Student } from '../../../../classes/student';
 
@@ -157,4 +157,4 @@ export class AddStudentOldComponent implements OnInit {
         return false;
     }
 
-}
+}*/

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+/*import { Component, Input, OnInit } from '@angular/core';
 
 import { PromoteStudentOldServiceAdapter } from './promote-student-old-service.adapter';
 
@@ -231,4 +231,4 @@ export class PromoteStudentOldComponent implements OnInit {
         return "-";
     }
 
-}
+}*/

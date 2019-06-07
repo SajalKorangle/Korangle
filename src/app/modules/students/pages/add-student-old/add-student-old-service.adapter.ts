@@ -1,4 +1,4 @@
-
+/*
 import { AddStudentOldComponent } from './add-student-old.component';
 import { ATTENDANCE_STATUS_LIST } from '../../../attendance/classes/constants';
 import {Student} from '../../../../classes/student';
@@ -120,3 +120,4 @@ export class AddStudentOldServiceAdapter {
     }
 
 }
+*/
