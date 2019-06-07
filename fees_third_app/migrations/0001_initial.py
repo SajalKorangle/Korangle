@@ -7,6 +7,7 @@ import django.db.models.deletion
 
 from fees_third_app.db_script.access_fees_app import access_fees_app
 from fees_third_app.db_script.populate_fees_app import populate_fees_app
+from fees_third_app.db_script.remove_old_fees_module import remove_old_fees_module
 
 
 class Migration(migrations.Migration):
@@ -350,4 +351,5 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(access_fees_app),
         migrations.RunPython(populate_fees_app),
+        migrations.RunPython(remove_old_fees_module),
     ]
