@@ -340,7 +340,7 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(parent.name);
             if (parent.studentList.length == 1) {
                 row.push(parent.studentList[0].name);
-                row.push(parent.studentList[0].class.name);
+                row.push(parent.studentList[0].class.name+', '+parent.studentList[0].section.name);
                 row.push(parent.studentList[0].mobileNumber);
                 row.push(parent.studentList[0].secondMobileNumber);
             } else {
@@ -360,7 +360,7 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push('');
                     newRow.push('');
                     newRow.push(student.name);
-                    newRow.push(student.class.name);
+                    newRow.push(student.class.name+', '+student.section.name);
                     newRow.push(student.mobileNumber);
                     newRow.push(student.secondMobileNumber);
                     newRow.push(student.feesDueTillMonth);
