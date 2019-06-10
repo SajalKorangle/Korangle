@@ -5,10 +5,10 @@
                          (employee)="getEmployeeProfile($event)"></app-employee-filter>
 
 
-    <div class="row">
+    <!-- div class="row">
         <div class="col-md-12"
              style="border-bottom: 1px solid lightgrey;"></div>
-    </div>
+    </div -->
 
 
     <ng-container *ngIf="selected && !isLoading">
@@ -26,26 +26,29 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3">Certificate No.</div>
             <div class="col-md-3">
-                <input type="number"
-                       [(ngModel)]="certificateNumber"/>
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Certificate No.</label>
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="certificateNumber">
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 23px;">
+                <day-date [placeHolder]="'Issue Date'"
+                          (onDateSelected)="handleEmployeeCertiIssueDate($event)"></day-date>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-3">Issue Date</div>
-            <div class="col-md-3">
-                <day-date [initialValue]="05/06/2019"
-                           (onDateSelected)="handleEmployeeCertiIssueDate($event)"></day-date>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-3">Remark</div>
-            <div class="col-md-3">
-                <textarea [(ngModel)]="remark" style="width: 250px; height: 150px" id="remark">
-                </textarea>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-group form-black label-floating">
+                        <label class="control-label">remark</label>
+                        <textarea class="form-control" rows="3"
+                                  [(ngModel)]="remark"></textarea>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -64,7 +64,7 @@ export class ExperienceCertiComponent {
             employeeFullProfile: this.employeeFullProfile,
             certificateNumber: this.certificateNumber,
             certificateIssueDate: this.certificateIssueDate,
-            remark: this.remark
+            remark: this.remark,
         };
         EmitterService.get('print-employee-exp-certi').emit(value);
     }
