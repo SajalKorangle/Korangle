@@ -25,7 +25,6 @@ export class AppComponent implements OnInit {
     ngOnInit() {
 
         DataStorage.getInstance().setUser(this.user);
-        // localStorage.setItem('schoolJWT', '');
         if (this.user.checkAuthentication()) {
             this.authenticationService.getUserDetails(this.user.jwt).then( data => {
                 if (data === 'failed') {
