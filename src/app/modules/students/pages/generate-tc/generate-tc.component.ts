@@ -6,7 +6,7 @@ import { Section } from '../../../../classes/section';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
 
-import { StudentService } from '../../student.service';
+import { StudentOldService } from '../../student-old.service';
 import { SchoolService } from '../../../../services/school.service';
 
 import { EmitterService } from '../../../../services/emitter.service';
@@ -17,7 +17,7 @@ import {error} from '@angular/compiler/src/util';
   selector: 'generate-tc',
   templateUrl: './generate-tc.component.html',
   styleUrls: ['./generate-tc.component.css'],
-    providers: [ StudentService, SchoolService ],
+    providers: [ StudentOldService, SchoolService ],
 })
 
 export class GenerateTcComponent implements OnInit {
@@ -45,7 +45,25 @@ export class GenerateTcComponent implements OnInit {
     selectedSession: any;
     sessionList: any;
 
-    constructor (private studentService: StudentService,
+    // Boolean variable to check if all the required fields are coming from student profile
+    fatherNameIsComing = false;
+    motherNameIsComing = false;
+    scholarNumberIsComing = false;
+    addressIsComing = false;
+    dateOfBirthIsComing = false;
+    aadharNumberIsComing = false;
+    sssmidIsComing = false;
+    genderIsComing = false;
+    casteIsComing = false;
+    categoryIsComing = false;
+
+    // flag to show the error message or not
+    flag = false;
+    count = 0;
+
+
+
+    constructor (private studentService: StudentOldService,
                  private schoolService: SchoolService) { }
 /*
     changeSelectedSectionToFirst(): void {
@@ -146,6 +164,7 @@ export class GenerateTcComponent implements OnInit {
                     this.currentTransferCertificate.copy(value[1]);
                 }
                 this.showDetails = true;
+                this.checkAllRequiredDetailsAreComing(this.selectedStudent);
             }, error => {
                 this.isLoading = false;
             });
@@ -160,6 +179,7 @@ export class GenerateTcComponent implements OnInit {
                         this.currentTransferCertificate.clean();
                     }
                     this.showDetails = true;
+                    this.checkAllRequiredDetailsAreComing(this.selectedStudent);
                 }, error => {
                     this.isLoading = false;
                 }
@@ -290,5 +310,76 @@ export class GenerateTcComponent implements OnInit {
         } else {
             this.getStudentProfile();
         }
+    }
+    intializeVariables() {
+        // Boolean variable to check if all the required fields are coming from student profile
+        this.fatherNameIsComing = false;
+        this.motherNameIsComing = false;
+        this.scholarNumberIsComing = false;
+        this.addressIsComing = false;
+        this.dateOfBirthIsComing = false;
+        this.aadharNumberIsComing = false;
+        this.sssmidIsComing = false;
+        this.genderIsComing = false;
+        this.casteIsComing = false;
+        this.categoryIsComing = false;
+
+        // flag to show the error message or not
+        this.flag = false;
+        this.count = 0;
+    }
+    checkAllRequiredDetailsAreComing(selectedStudent) {
+        this.intializeVariables();
+        if (selectedStudent.fathersName) {
+            this.fatherNameIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.motherName) {
+            this.motherNameIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.scholarNumber) {
+            this.scholarNumberIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.address) {
+            this.addressIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.dateOfBirth) {
+            this.dateOfBirthIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.aadharNum) {
+            this.aadharNumberIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.childSSMID) {
+            this.sssmidIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.gender) {
+            this.genderIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.caste) {
+            this.casteIsComing = true;
+        } else {
+            this.count++;
+        }
+        if (selectedStudent.category) {
+            this.categoryIsComing = true;
+        } else {
+            this.count++;
+        }
+
     }
 }

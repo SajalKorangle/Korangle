@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
-import {StudentService} from '../../student.service';
+import {StudentOldService} from '../../student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -62,7 +62,7 @@ const RELIGION_LIST = [
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentService, ClassService],
+    providers: [StudentOldService, ClassService],
 })
 
 export class UpdateAllComponent implements OnInit {
@@ -96,6 +96,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Blood Group', 'bloodGroup', 'list', false, BLOOD_GROUP_LIST), // 23
         new ColumnHandle('Father\'s Annual Income', 'fatherAnnualIncome', 'text', false, ''), // 24
         new ColumnHandle('RTE', 'rte', 'list', false, RTE_LIST), // 25
+        new ColumnHandle('Date Of Admission', 'dateOfAdmission', 'date', false, ''), // 26
     ];
 
     /* Category Options */
@@ -130,7 +131,7 @@ export class UpdateAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private studentService: StudentService,
+    constructor(private studentService: StudentOldService,
                 private classService: ClassService,
                 private cdRef: ChangeDetectorRef) { }
 

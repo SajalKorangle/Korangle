@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassService} from '../../../../services/class.service';
-import {StudentService} from '../../student.service';
+import {StudentOldService} from '../../student-old.service';
 import {VehicleService} from '../../../vehicle/vehicle.service';
 import {SchoolService} from '../../../../services/school.service';
 
@@ -169,7 +169,7 @@ const RTE_VALUES = [
     selector: 'upload-list',
     templateUrl: './upload-list.component.html',
     styleUrls: ['./upload-list.component.css'],
-    providers: [StudentService, ClassService, VehicleService, SchoolService],
+    providers: [StudentOldService, ClassService, VehicleService, SchoolService],
 })
 
 export class UploadListComponent implements OnInit {
@@ -205,7 +205,7 @@ export class UploadListComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private studentService: StudentService,
+    constructor(private studentService: StudentOldService,
                 private classService: ClassService,
                 private schoolService: SchoolService,
                 private vehicleService: VehicleService) { }

@@ -5,10 +5,9 @@ import { ComponentsModule } from '../../components/components.module';
 
 import { StudentComponent } from './student.component';
 
-import { AddStudentComponent } from './pages/add-student/add-student.component';
+import { AddStudentComponent } from "./pages/add-student/add-student.component";
 import { ChangeClassComponent } from './pages/change-class/change-class.component';
 import { GenerateTcComponent } from './pages/generate-tc/generate-tc.component';
-import { PromoteStudentComponent } from './pages/promote-student/promote-student.component';
 import { UpdateProfileComponent } from './pages/update-profile/update-profile.component';
 import { ViewAllComponent } from './pages/view-all/view-all.component';
 import { UploadListComponent } from './pages/upload_list/upload-list.component';
@@ -16,6 +15,7 @@ import { ICardsComponent } from './pages/i-cards/i-cards.component';
 
 import {StudentRoutingModule} from './student.routing';
 import {UpdateAllComponent} from './pages/update_all/update-all.component';
+import {PromoteStudentComponent} from "./pages/promote-student/promote-student.component";
 
 @NgModule({
     declarations: [

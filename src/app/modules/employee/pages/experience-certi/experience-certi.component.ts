@@ -23,7 +23,6 @@ export class ExperienceCertiComponent {
     numberOfMissingParameters = 0;
 
     dateOfJoiningMissing = false;
-    dateOfLeavingMissing = false;
     fatherNameMissing = false;
     mothernameMissing = false;
     currentPostMissing = false;
@@ -85,10 +84,6 @@ export class ExperienceCertiComponent {
     validateAllParameters(employeeFullProfile) {
        if (!employeeFullProfile.dateOfJoining) {
            this.dateOfJoiningMissing = true;
-           this.numberOfMissingParameters++;
-       }
-       if (!employeeFullProfile.dateOfLeaving) {
-           this.dateOfLeavingMissing = true;
            this.numberOfMissingParameters++;
        }
        if (!employeeFullProfile.fatherName) {

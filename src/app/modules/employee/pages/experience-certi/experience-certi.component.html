@@ -53,14 +53,12 @@
             <div style="padding-left: 15px">
                 <div *ngIf="numberOfMissingParameters === 1" style="color: red">
                     <span *ngIf="dateOfJoiningMissing">Date of Joining&nbsp;</span>
-                    <span *ngIf="dateOfLeavingMissing">Date of leaving&nbsp;</span>
                     <span *ngIf="currentPostMissing">Current Post&nbsp;</span>
                     <span *ngIf="mothernameMissing">Mother Name&nbsp;</span>
                     <span *ngIf="fatherNameMissing">Father Name&nbsp;</span>is missing.
                 </div>
                 <div *ngIf="numberOfMissingParameters > 1" style="color: red">
                     <span *ngIf="dateOfJoiningMissing">Date of Joining ,&nbsp;</span>
-                    <span *ngIf="dateOfLeavingMissing">Date of leaving ,&nbsp;</span>
                     <span *ngIf="currentPostMissing">Current Post ,&nbsp;</span>
                     <span *ngIf="mothernameMissing">Mother Name ,&nbsp;</span>
                     <span *ngIf="fatherNameMissing">Father Name ,&nbsp;</span>are missing.

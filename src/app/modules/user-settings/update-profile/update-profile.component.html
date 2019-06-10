@@ -35,9 +35,16 @@
             </div>
         </div>
 
-        <button type="button"
+        <button *ngIf="user.activeSchool"
+                type="button"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="updateProfile()">Update</button>
+
+        <button *ngIf="!user.activeSchool"
+                type="button"
+                class="btn btn-warning"
+                (click)="updateProfile()">Update</button>
+
 
     </ng-container>
 

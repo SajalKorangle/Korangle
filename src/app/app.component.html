@@ -11,33 +11,38 @@
 
         <div class="main-panel">
 
-            <app-navbar *ngIf="user.activeSchool" [user]="user" class="visible-sm visible-xs"></app-navbar>
+            <app-navbar [user]="user" class="visible-sm visible-xs"></app-navbar>
 
             <div class="main-content">
                 <div class="container-fluid">
 
                     <div class="card"
-                         *ngIf="user.section"
+                         *ngIf="user.section && user.activeSchool"
                          style="min-height: 100%">
                         <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="user.activeSchool.primaryThemeColor">
-                            <div class="card-header-part1 hidden-xs">
+                            <div class="card-header-part1">
                                 <h4 class="title">{{user.section.title}} - {{user.section.subTitle}}</h4>
                                 <a style="text-decoration: none" (click)="refresh()">
                                     <i class="material-icons">refresh</i>
                                 </a>
                             </div>
-                            <h4 class="title visible-xs">{{user.section.title}}</h4>
                         </div>
                         <router-outlet></router-outlet>
                     </div>
 
-                    <ng-container *ngIf="user.username && !user.activeSchool">
-                        You are not attached to any of the schools yet!
-                    </ng-container>
-
-                    <!-- ng-container *ngIf="user.isPageLoading">
-                        <app-loading-spinner [user]="user"></app-loading-spinner>
-                    </ng-container -->
+                    <div class="card"
+                         *ngIf="user.section && !user.activeSchool"
+                         style="min-height: 100%">
+                        <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="'green'">
+                            <div class="card-header-part1">
+                                <h4 class="title">{{user.section.title}} - {{user.section.subTitle}}</h4>
+                                <a style="text-decoration: none;" (click)="refresh()">
+                                    <i class="material-icons">refresh</i>
+                                </a>
+                            </div>
+                        </div>
+                        <router-outlet></router-outlet>
+                    </div>
 
                 </div>
             </div>
@@ -46,7 +51,6 @@
             <ng-container *ngIf="isLoading">
                 <app-loading-spinner [user]="user"></app-loading-spinner>
             </ng-container>
-
 
         </div>
 

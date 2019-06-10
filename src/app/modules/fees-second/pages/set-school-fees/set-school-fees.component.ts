@@ -4,7 +4,7 @@ import {style, state, trigger, animate, transition} from "@angular/animations";
 // import 'rxjs/add/operator/toPromise';
 
 import { ClassService } from '../../../../services/class.service';
-import { FeeService } from '../../fee.service';
+import { FeeOldService } from '../../fee-old.service';
 import {FeeDefinition} from '../../classes/fee-definition';
 import {BusStopService} from '../../../../services/bus-stop.service';
 
@@ -16,7 +16,7 @@ import { FREQUENCY_LIST } from '../../classes/constants';
     selector: 'app-set-school-fees',
     templateUrl: './set-school-fees.component.html',
     styleUrls: ['./set-school-fees.component.css'],
-    providers: [ ClassService, BusStopService, FeeService ],
+    providers: [ ClassService, BusStopService, FeeOldService ],
     animations: [
         trigger('rotate', [
             state('true', style({transform: 'rotate(0deg)'})),
@@ -59,7 +59,7 @@ export class SetSchoolFeesComponent implements OnInit {
 
     constructor (private classService: ClassService,
                  private busStopService: BusStopService,
-                 private feeService: FeeService) { }
+                 private feeService: FeeOldService) { }
 
     ngOnInit(): void {
 

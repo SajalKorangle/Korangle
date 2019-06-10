@@ -1,15 +1,15 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
-import { StudentService } from '../../students/student.service';
-import {ExaminationService} from '../../../services/examination.service';
-import {SubjectService} from '../../../services/subject.service';
+import { StudentOldService } from '../../students/student-old.service';
+import {ExaminationOldService} from '../../../services/examination-old.service';
+import {SubjectOldService} from '../../../services/subject-old.service';
 import {ViewMarksServiceAdapter} from './view-marks.service.adapter';
 
 @Component({
   selector: 'view-marks',
   templateUrl: './view-marks.component.html',
   styleUrls: ['./view-marks.component.css'],
-    providers: [ StudentService, ExaminationService, SubjectService ],
+    providers: [ StudentOldService, ExaminationOldService, SubjectOldService ],
 })
 
 export class ViewMarksComponent implements OnInit, OnChanges {
@@ -28,9 +28,9 @@ export class ViewMarksComponent implements OnInit, OnChanges {
 
     isLoading = false;
 
-    constructor (public studentService: StudentService,
-                 public examinationService: ExaminationService,
-                 public subjectService: SubjectService) { }
+    constructor (public studentService: StudentOldService,
+                 public examinationService: ExaminationOldService,
+                 public subjectService: SubjectOldService) { }
 
     ngOnChanges(): void {
         this.ngOnInit();

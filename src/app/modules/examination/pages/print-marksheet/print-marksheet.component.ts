@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationService } from '../../../../services/examination.service';
+import { ExaminationOldService } from '../../../../services/examination-old.service';
 import { ClassService } from '../../../../services/class.service';
-import { SubjectService } from '../../../../services/subject.service';
+import { SubjectOldService } from '../../../../services/subject-old.service';
 
 import { PrintMarksheetServiceAdapter } from './print-marksheet.service.adapter';
 import {TEST_TYPE_LIST} from '../../classes/constants';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {EmitterService} from '../../../../services/emitter.service';
@@ -15,7 +15,7 @@ import {EmitterService} from '../../../../services/emitter.service';
     selector: 'examination-print-marksheet',
     templateUrl: './print-marksheet.component.html',
     styleUrls: ['./print-marksheet.component.css'],
-    providers: [ ExaminationService, ClassService, SubjectService, StudentService ],
+    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService ],
 })
 
 export class PrintMarksheetComponent implements OnInit {
@@ -39,10 +39,10 @@ export class PrintMarksheetComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(public examinationService: ExaminationOldService,
                 public classService: ClassService,
-                public subjectService: SubjectService,
-                public studentService: StudentService,
+                public subjectService: SubjectOldService,
+                public studentService: StudentOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

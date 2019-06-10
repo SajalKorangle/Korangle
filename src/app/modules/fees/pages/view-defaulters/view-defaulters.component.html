@@ -1,0 +1,156 @@
+<div class="card-content table-responsive">
+
+    <ng-container *ngIf="!isLoading">
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Min. No. (Fees Due till month)</label>
+                    <input type="number"
+                           class="form-control"
+                           (keypress)="policeNumberInput($event)"
+                           [ngModel]="minimumNumber"
+                           (ngModelChange)="minimumNumber=$event;"/>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Max. No. (Fees Due till month)</label>
+                    <input type="number"
+                           class="form-control"
+                           (keypress)="policeNumberInput($event)"
+                           [ngModel]="maximumNumber"
+                           (ngModelChange)="maximumNumber=$event;"/>
+                </div>
+            </div>
+            <div class="col-md-3 hidden-sm">
+
+                <!-- button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Print the following list"
+                        tooltip-position="left"
+                        (click)="printFeesReport();">
+                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button -->
+
+                <button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Download the following list"
+                        tooltip-position="left"
+                        (click)="downloadFeesReport();">
+                    Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+
+
+            </div>
+            <!-- div class="col-sm-6" align="end">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Max. No.</label>
+                    <input type="number"
+                           class="form-control"
+                           (keypress)="policeNumberInput($event)"
+                           [ngModel]="maximumNumber"
+                           (ngModelChange)="maximumNumber=$event;"/>
+                </div>
+            </div -->
+        </div>
+
+        <!-- Parent -->
+
+        <div class="row">
+            <div class="col-sm-6">
+                Selected <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
+            </div>
+            <div class="col-sm-6" align="end">
+                Fees Due (Till Month): <b>{{getAllParentFeesDueTillMonth() | currency:'INR':'Rs. ':'1.0-0'}}</b>
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th>S No.</th>
+                <th>Parent</th>
+                <th>Student</th>
+                <th>Class</th>
+                <th>Mobile No.</th>
+                <th>Mobile No. (2)</th>
+                <th>Fees Due<br/>(Till Month)</th>
+                <th>Fees Due<br/>(Overall)</th>
+                <th>Fees Paid<br/>(This Session)</th>
+                <th>Discount<br/>(This Session)</th>
+                <th>Total Fees<br/>(This Session)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let parent of getFilteredParentList(); let i=index;">
+                <tr>
+                    <td>{{i+1}}.</td>
+                    <td style="font-weight: 600;">{{parent.name}}</td>
+                    <ng-container *ngIf="parent.studentList.length == 1; else multipleStudents">
+                        <td>{{parent.studentList[0].name}}</td>
+                        <td>{{parent.studentList[0].class.name}}, {{parent.studentList[0].section.name}}</td>
+                        <td>
+                            <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
+                                <span class="hidden-xs hidden-sm">{{parent.studentList[0].mobileNumber}}</span>
+                                <span class="visible-xs visible-sm">
+                                    <a href="tel:{{parent.studentList[0].mobileNumber}}">Call Me</a>
+                                </span>
+                            </ng-container>
+                        </td>
+                        <td>{{parent.studentList[0].secondMobileNumber}}</td>
+                    </ng-container>
+                    <ng-template #multipleStudents>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
+                                <span class="hidden-xs hidden-sm">{{parent.studentList[0].mobileNumber}}</span>
+                                <span class="visible-xs visible-sm">
+                                    <a href="tel:{{parent.studentList[0].mobileNumber}}">Call Me</a>
+                                </span>
+                            </ng-container>
+                        </td>
+                        <td></td>
+                    </ng-template>
+                    <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | currency:'INR':'':'1.0-0'}}</td>
+                    <td>{{getParentFeesDueOverall(parent) | currency:'INR':'':'1.0-0'}}</td>
+                    <td>{{getParentFeesPaid(parent) | currency:'INR':'':'1.0-0'}}</td>
+                    <td>{{getParentDiscount(parent) | currency:'INR':'':'1.0-0'}}</td>
+                    <td>{{getParentTotalFees(parent) | currency:'INR':'':'1.0-0'}}</td>
+                </tr>
+                <ng-container *ngIf="parent.studentList.length > 1">
+                    <ng-container *ngFor="let student of parent.studentList;">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>{{student.name}}</td>
+                            <td>{{student.class.name}}, {{student.section.name}}</td>
+                            <td></td>
+                            <td>
+                                <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
+                                    <span class="hidden-xs hidden-sm">{{student.secondMobileNumber}}</span>
+                                    <span class="visible-xs visible-sm">
+                                        <a href="tel:{{student.secondMobileNumber}}">Call Me 2</a>
+                                    </span>
+                                </ng-container>
+                            </td>
+                            <td>{{student.feesDueTillMonth | currency:'INR':'':'1.0-0'}}</td>
+                            <td>{{student.feesDueOverall | currency:'INR':'':'1.0-0'}}</td>
+                            <td>{{student.feesPaidThisSession | currency:'INR':'':'1.0-0'}}</td>
+                            <td>{{student.discountThisSession | currency:'INR':'':'1.0-0'}}</td>
+                            <td>{{student.totalFeesThisSession | currency:'INR':'':'1.0-0'}}</td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+            </tbody>
+        </table>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user" [timer]="60"></app-loading-spinner>
+    </ng-container>
+
+</div>

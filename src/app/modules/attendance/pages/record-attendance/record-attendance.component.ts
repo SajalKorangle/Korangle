@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { AttendanceService } from '../../attendance.service';
 import {ClassService} from '../../../../services/class.service';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 import {EmitterService} from '../../../../services/emitter.service';
@@ -16,7 +16,7 @@ import * as XLSX from 'xlsx';
     providers: [
         AttendanceService,
         ClassService,
-        StudentService,
+        StudentOldService,
     ],
 })
 
@@ -46,7 +46,7 @@ export class RecordAttendanceComponent implements OnInit {
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
     constructor (private attendanceService: AttendanceService,
-                 private studentService: StudentService) { }
+                 private studentService: StudentOldService) { }
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];

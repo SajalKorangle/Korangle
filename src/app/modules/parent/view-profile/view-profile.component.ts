@@ -1,13 +1,13 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
-import { StudentService } from '../../students/student.service';
+import { StudentOldService } from '../../students/student-old.service';
 import {BusStopService} from '../../../services/bus-stop.service';
 
 @Component({
   selector: 'view-profile',
   templateUrl: './view-profile.component.html',
   styleUrls: ['./view-profile.component.css'],
-    providers: [ StudentService, BusStopService ],
+    providers: [ StudentOldService, BusStopService ],
 })
 
 export class ViewProfileComponent implements OnInit, OnChanges {
@@ -22,7 +22,7 @@ export class ViewProfileComponent implements OnInit, OnChanges {
 
     isLoading = false;
 
-    constructor (private studentService: StudentService,
+    constructor (private studentService: StudentOldService,
                  private busStopService: BusStopService) { }
 
     ngOnChanges(): void {
