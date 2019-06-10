@@ -288,8 +288,8 @@
                 <th [class.hidden]="!columnFilter.showSectionName">Section</th>
                 <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
                 <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
-                <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
-                <th [class.hidden]="!columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
+                <th *ngIf="columnFilter.showMobileNumber">Mobile No.</th>
+                <th *ngIf="columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
                 <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
                 <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
                 <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
@@ -322,17 +322,17 @@
                         <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>
                         <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
                         <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
-                        <td [class.hidden]="!columnFilter.showMobileNumber" class="hidden-xs hidden-sm">
+                        <td *ngIf="columnFilter.showMobileNumber" class="hidden-xs hidden-sm">
                             {{student.mobileNumber}}
                         </td>
-                        <td [class.hidden]="!columnFilter.showMobileNumber" class="visible-xs visible-sm">
-                            <a [class.hidden]="!columnFilter.showMobileNumber" href="tel:{{student.mobileNumber}}">Call Me</a>
+                        <td *ngIf="columnFilter.showMobileNumber" class="visible-xs visible-sm">
+                            <a href="tel:{{student.mobileNumber}}">Call Me</a>
                         </td>
-                        <td [class.hidden]="!columnFilter.showSecondMobileNumber" class="hidden-xs hidden-sm">
+                        <td *ngIf="columnFilter.showSecondMobileNumber" class="hidden-xs hidden-sm">
                             {{student.secondMobileNumber}}
                         </td>
-                        <td [class.hidden]="!columnFilter.showSecondMobileNumber" class="visible-xs visible-sm">
-                            <a [class.hidden]="!columnFilter.showSecondMobileNumber"  href="tel:{{student.secondMobileNumber}}">Call Me</a>
+                        <td *ngIf="columnFilter.showSecondMobileNumber" class="visible-xs visible-sm">
+                            <a href="tel:{{student.secondMobileNumber}}">Call Me</a>
                         </td>
                         <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
                         <td [class.hidden]="!columnFilter.showDateOfBirth">
