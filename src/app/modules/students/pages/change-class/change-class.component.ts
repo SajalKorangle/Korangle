@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ClassService } from '../../../../services/class.service';
-import { StudentService } from '../../student.service';
+import { StudentOldService } from '../../student-old.service';
 
 
 @Component({
     selector: 'change-class',
     templateUrl: './change-class.component.html',
     styleUrls: ['./change-class.component.css'],
-    providers: [ ClassService, StudentService ],
+    providers: [ ClassService, StudentOldService ],
 })
 
 export class ChangeClassComponent implements OnInit {
@@ -26,7 +26,7 @@ export class ChangeClassComponent implements OnInit {
     isStudentListLoading = false;
 
     constructor (private classService: ClassService,
-                 private studentService: StudentService) { }
+                 private studentService: StudentOldService) { }
 
     ngOnInit(): void {
         const data = {

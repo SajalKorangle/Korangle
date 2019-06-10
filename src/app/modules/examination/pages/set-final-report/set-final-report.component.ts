@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationService } from '../../../../services/examination.service';
+import { ExaminationOldService } from '../../../../services/examination-old.service';
 
 import { SetFinalReportServiceAdapter } from './set-final-report.service.adapter';
 import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
@@ -11,7 +11,7 @@ import { ChangeDetectorRef } from '@angular/core';
     selector: 'set-final-report',
     templateUrl: './set-final-report.component.html',
     styleUrls: ['./set-final-report.component.css'],
-    providers: [ ExaminationService ],
+    providers: [ ExaminationOldService ],
 })
 
 export class SetFinalReportComponent implements OnInit {
@@ -28,7 +28,7 @@ export class SetFinalReportComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(public examinationService: ExaminationOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

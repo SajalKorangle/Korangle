@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
 
-import { FeeService } from '../../fees-second/fee.service';
+import { FeeOldService } from '../../fees-second/fee-old.service';
 
 import { FeeReceipt } from '../../fees-second/classes/common-functionalities';
 
@@ -31,7 +31,7 @@ const MARCH = 'MARCH';
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [ FeeService ],
+    providers: [ FeeOldService ],
 })
 
 export class ViewFeeComponent implements OnInit, OnChanges {
@@ -58,7 +58,7 @@ export class ViewFeeComponent implements OnInit, OnChanges {
 
     frequencyList = FREQUENCY_LIST;
 
-    constructor (private feeService: FeeService) { }
+    constructor (private feeService: FeeOldService) { }
 
     ngOnChanges(): void {
         this.ngOnInit();

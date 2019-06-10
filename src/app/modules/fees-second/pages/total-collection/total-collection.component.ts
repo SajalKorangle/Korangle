@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { FeeService } from '../../fee.service';
+import { FeeOldService } from '../../fee-old.service';
 
 import { FeeReceipt } from '../../classes/common-functionalities';
 
@@ -11,7 +11,7 @@ import {EmitterService} from '../../../../services/emitter.service';
   selector: 'app-total-collection',
   templateUrl: './total-collection.component.html',
   styleUrls: ['./total-collection.component.css'],
-    providers: [FeeService, EmployeeService]
+    providers: [FeeOldService, EmployeeService]
 })
 export class TotalCollectionComponent implements OnInit {
 
@@ -45,7 +45,7 @@ export class TotalCollectionComponent implements OnInit {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private feeService: FeeService,
+    constructor(private feeService: FeeOldService,
                 private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
@@ -135,7 +135,7 @@ export class TotalCollectionComponent implements OnInit {
             'feeType': this.selectedFeeType,
             'employee': this.selectedEmployee,
         };
-        EmitterService.get('print-fee-receipt-list').emit(value);
+        EmitterService.get('print-old-fee-receipt-list').emit(value);
     }
 
 }

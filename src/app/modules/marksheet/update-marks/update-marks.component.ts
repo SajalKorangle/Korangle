@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { MarksheetService } from '../marksheet.service';
-import {StudentService} from '../../students/student.service';
+import {StudentOldService} from '../../students/student-old.service';
 
 import {Classs} from '../../../classes/classs';
 import {Section} from '../../../classes/section';
@@ -11,7 +11,7 @@ import {StudentTest} from '../classes/student-test';
     selector: 'update-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ MarksheetService, StudentService ]
+    providers: [ MarksheetService, StudentOldService ]
 })
 
 export class UpdateMarksComponent implements OnInit {
@@ -35,7 +35,7 @@ export class UpdateMarksComponent implements OnInit {
     isLoading = false;
 
     constructor(private marksheetService: MarksheetService,
-                private studentService: StudentService) { }
+                private studentService: StudentOldService) { }
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];

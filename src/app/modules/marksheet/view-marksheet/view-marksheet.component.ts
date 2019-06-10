@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { MarksheetService } from '../marksheet.service';
-import {StudentService} from '../../students/student.service';
+import {StudentOldService} from '../../students/student-old.service';
 
 import {EmitterService} from '../../../services/emitter.service';
 import {StudentTest} from '../classes/student-test';
@@ -16,7 +16,7 @@ import moment = require('moment');
     selector: 'view-marksheet',
     templateUrl: './view-marksheet.component.html',
     styleUrls: ['./view-marksheet.component.css'],
-    providers: [ MarksheetService, StudentService ]
+    providers: [ MarksheetService, StudentOldService ]
 })
 
 export class ViewMarksheetComponent implements OnInit {
@@ -37,7 +37,7 @@ export class ViewMarksheetComponent implements OnInit {
     isListLoading = false;
 
     constructor(private marksheetService: MarksheetService,
-                private studentService: StudentService) { }
+                private studentService: StudentOldService) { }
 
 
     ngOnInit(): void {

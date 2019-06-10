@@ -32,8 +32,8 @@ import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateComponent } from './day-date/day-date.component';
 import { CalendarComponent } from './calendar/calendar.component';
 
-import { FeeReceiptListComponent } from './fees-table/fee-receipt-list.component';
-import { DiscountListComponent } from './discount-table/discount-list.component';
+import { FeeReceiptListComponentOld } from './fees-table/fee-receipt-list-component-old.component';
+import { DiscountListOldComponent } from './discount-table/discount-list-old.component';
 
 // Pipes
 
@@ -42,6 +42,9 @@ import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { GradePipe } from '../pipes/grade.pipe';
 import { MoneyFormatPipe } from '../pipes/money-format.pipe';
 import {EmployeeFilterComponent} from './employee-filter/employee-filter.component';
+import {ParentStudentFilterComponent} from "./parent-student-filter/parent-student-filter.component";
+import {FeeReceiptListComponent} from "../modules/fees/components/fee-receipt-list/fee-receipt-list-component.component";
+import {DiscountListComponent} from "../modules/fees/components/discount-list/discount-list-component.component";
 
 @NgModule({
     declarations: [
@@ -52,8 +55,9 @@ import {EmployeeFilterComponent} from './employee-filter/employee-filter.compone
         LoadingSpinnerComponent,
         // StudentFilterOldComponent,
         StudentFilterComponent,
-        FeeReceiptListComponent,
-        DiscountListComponent,
+        ParentStudentFilterComponent,
+        FeeReceiptListComponentOld,
+        DiscountListOldComponent,
         MonthDateComponent,
         DayDateComponent,
         CalendarComponent,
@@ -64,6 +68,9 @@ import {EmployeeFilterComponent} from './employee-filter/employee-filter.compone
         MoneyFormatPipe,
 
         EmployeeFilterComponent,
+
+        FeeReceiptListComponent,
+        DiscountListComponent,
 
     ],
     imports: [
@@ -98,12 +105,16 @@ import {EmployeeFilterComponent} from './employee-filter/employee-filter.compone
         LoadingSpinnerComponent,
         // StudentFilterOldComponent,
         StudentFilterComponent,
+        ParentStudentFilterComponent,
         EmployeeFilterComponent,
-        FeeReceiptListComponent,
-        DiscountListComponent,
+        FeeReceiptListComponentOld,
+        DiscountListOldComponent,
         MonthDateComponent,
         DayDateComponent,
         CalendarComponent,
+        FeeReceiptListComponent,
+        DiscountListComponent,
+
 
         AmountInWordsPipe,
         DateInWordsPipe,

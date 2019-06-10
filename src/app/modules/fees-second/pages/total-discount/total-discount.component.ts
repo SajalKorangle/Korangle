@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { FeeService } from '../../fee.service';
+import { FeeOldService } from '../../fee-old.service';
 
 import { Concession } from '../../classes/common-functionalities';
 import {EmployeeService} from '../../../employee/employee.service';
@@ -9,7 +9,7 @@ import {EmployeeService} from '../../../employee/employee.service';
   selector: 'app-total-discount',
   templateUrl: './total-discount.component.html',
   styleUrls: ['./total-discount.component.css'],
-    providers: [FeeService, EmployeeService]
+    providers: [FeeOldService, EmployeeService]
 })
 export class TotalDiscountComponent implements OnInit {
 
@@ -38,7 +38,7 @@ export class TotalDiscountComponent implements OnInit {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private feeService: FeeService,
+    constructor(private feeService: FeeOldService,
                 private employeeService: EmployeeService) { }
 
     ngOnInit(): void {

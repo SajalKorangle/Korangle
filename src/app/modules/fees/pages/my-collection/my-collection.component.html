@@ -1,0 +1,98 @@
+<div class="card-content table-responsive">
+
+    <ng-container *ngIf="!isInitialLoading">
+
+        <div class="row">
+            <div class="col-sm-3">
+                <day-date [formattedDateOutput]="true"
+                          [placeHolder]="'Start Date'"
+                          (onDateSelected)="startDate=$event"></day-date>
+            </div>
+            <div class="col-sm-3">
+                <day-date [formattedDateOutput]="true"
+                          [placeHolder]="'End Date'"
+                          (onDateSelected)="endDate=$event"></day-date>
+            </div>
+            <div class="col-sm-3">
+                <button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        style="padding: 12px 15px"
+                        matTooltip="Get all the receipts b/w start and end date"
+                        tooltip-position="right"
+                        (click)="serviceAdapter.getFeeCollectionList();">
+                    <i class="material-icons">search</i></button><br>
+            </div>
+            <!-- div class="col-md-3" align="left">
+                <button type="button"
+                        *ngIf="getFilteredFeeReceiptList()"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Print the following list"
+                        tooltip-position="left"
+                        (click)="printFeeReceiptList();">
+                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button><br>
+            </div -->
+        </div>
+
+        <ng-container *ngIf="!isLoading && feeReceiptList">
+
+            <ng-container *ngIf="feeReceiptList.length > 0">
+
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Select Payment Mode"
+                                [(ngModel)]="selectedModeOfPayment">
+                        <mat-option *ngFor="let modeOfPayment of getFilteredModeOfPaymentList();" [value]="modeOfPayment">
+                            {{modeOfPayment}}
+                        </mat-option>
+                        <mat-option [value]="nullValue">
+                            All
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Select Columns">
+                        <ng-container *ngFor="let key of getReceiptColumnFilterKeys();">
+                            <mat-option>
+                                <mat-checkbox [(ngModel)]="receiptColumnFilter[key]"
+                                              (click)="$event.stopPropagation();">
+                                    {{key | titlecase}}
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+
+                <br/>
+
+                <span style="font-size: 16px;">
+                    Total Fees: {{getFilteredFeeReceiptListTotalAmount() | currency:'INR':'Rs. ':'1.0-0'}}
+                </span>
+
+                <app-fee-receipt-list [user]="user"
+                                      [number]="50"
+                                      [receiptColumnFilter]="receiptColumnFilter"
+                                      [feeTypeList]="feeTypeList"
+                                      [feeReceiptList]="getFilteredFeeReceiptList()"
+                                      [subFeeReceiptList]="subFeeReceiptList"
+                                      [studentList]="studentList"
+                                      [studentSectionList]="studentSectionList"
+                                      [employeeList]="employeeList"
+                                      [classList]="classList"
+                                      [sectionList]="sectionList"></app-fee-receipt-list>
+
+            </ng-container>
+
+            <ng-container *ngIf="getFilteredFeeReceiptList().length == 0">
+                <span style="font-size: 16px;">No Fee Receipts found</span>
+            </ng-container>
+
+        </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="isInitialLoading || isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

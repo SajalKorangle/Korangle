@@ -4,14 +4,14 @@ import { Student } from '../../../../classes/student';
 import { Classs } from '../../../../classes/classs';
 import { Section } from '../../../../classes/section';
 
-import { StudentService } from '../../student.service';
+import { StudentOldService } from '../../student-old.service';
 import {BusStopService} from '../../../../services/bus-stop.service';
 
 @Component({
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
-    providers: [ StudentService, BusStopService ],
+    providers: [ StudentOldService, BusStopService ],
 })
 
 export class UpdateProfileComponent implements OnInit {
@@ -30,7 +30,7 @@ export class UpdateProfileComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private studentService: StudentService,
+    constructor (private studentService: StudentOldService,
                  private busStopService: BusStopService) { }
 
     changeSelectedSectionToFirst(): void {

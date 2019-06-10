@@ -73,7 +73,7 @@
             <div class="col-md-2">
                 <img *ngIf="studentFeeProfile.profileImage"
                      style="width: 50%"
-                     src="{{studentFeeProfile.profileImage">
+                     src="{{studentFeeProfile.profileImage}}">
                 <img *ngIf="!studentFeeProfile.profileImage"
                      style="width: 50%"
                      src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
@@ -272,10 +272,10 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-fee-receipt-list [user]="user"
-                                          [feeReceiptList]="feeReceiptList"
-                                          [sectionName]="sectionName"
-                                          [whileSubmittingFee]="true"></app-fee-receipt-list>
+                    <app-fee-receipt-list-old [user]="user"
+                                              [feeReceiptList]="feeReceiptList"
+                                              [sectionName]="sectionName"
+                                              [whileSubmittingFee]="true"></app-fee-receipt-list-old>
 
                 </mat-expansion-panel>
 
@@ -292,9 +292,9 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-discount-list [user]="user"
-                                       [concessionList]="concessionList"
-                                       [whileSubmittingConcession]="true"></app-discount-list>
+                    <app-discount-list-old [user]="user"
+                                           [concessionList]="concessionList"
+                                           [whileSubmittingConcession]="true"></app-discount-list-old>
 
                 </mat-expansion-panel>
 

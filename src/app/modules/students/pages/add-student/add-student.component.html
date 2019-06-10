@@ -20,31 +20,28 @@
                            [(ngModel)]="newStudent.fathersName">
                 </div>
             </div>
-            <div class="col-md-3" *ngIf="selectedClass">
+            <div class="col-md-3" *ngIf="newStudentSection.parentClass && newStudentSection.parentDivision">
                 <mat-form-field style="margin-top: 23px;">
                     <mat-select placeholder="Select Class"
                                 #selectClassSection
-                                [ngModel]="selectedClass"
-                                (ngModelChange)="selectedClass=$event;">
-                        <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
-                            {{classs.name}}
-                            <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
-                                            , {{classs.selectedSection.name}}
-                                        </span>
+                                [ngModel]="newStudentSection.parentClass"
+                                (ngModelChange)="newStudentSection.parentClass=$event;">
+                        <mat-option *ngFor='let classs of classList;' [value]="classs.dbId">
+                            {{classs.name}}, {{getSection(newStudentSection.parentDivision).name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
                 <button class="btn"
                         style="padding: 2px 11px; background-color: transparent;"
-                        matTooltip="Choose Section (default: Section - A)"
+                        [matTooltip]="'Choose Section (default: Section - A)'"
                         mat-icon-button
                         [matMenuTriggerFor]="classSectionMenu">
                     <i class="material-icons" style="color: black;">expand_more</i>
                 </button>
                 <mat-menu #classSectionMenu="matMenu">
-                    <button *ngFor="let section of selectedClass.sectionList"
+                    <button *ngFor="let section of sectionList"
                             mat-menu-item
-                            (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
+                            (click)="selectClassSection.open(); selectClassSection.close(); newStudentSection.parentDivision=section.id">
                         {{section.name}}
                     </button>
                 </mat-menu>
@@ -56,9 +53,11 @@
                               [class.fieldRight]="checkRight(newStudent.mobileNumber,10)">
                                         - {{newStudent.mobileNumber.toString().length}}</span>
                     </label>
-                    <input type="text"
+                    <input type="number"
                            class="form-control"
-                           [(ngModel)]="newStudent.mobileNumber">
+                           [ngModel]="newStudent.mobileNumber"
+                           (keypress)="policeNumberInput($event)"
+                           (ngModelChange)="newStudent.mobileNumber=$event">
                 </div>
             </div>
         </div>
@@ -94,17 +93,9 @@
                     <label class="control-label">Roll No.</label>
                     <input type="text"
                            class="form-control"
-                           [(ngModel)]="newStudent.rollNumber">
+                           [(ngModel)]="newStudentSection.rollNumber">
                 </div>
             </div>
-            <!-- div class="col-md-3">
-              <div class="form-group form-black label-floating">
-                <label class="control-label">Total Fees</label>
-                <input type="number"
-                       class="form-control"
-                       [(ngModel)]="newStudent.totalFees">
-              </div>
-            </div -->
         </div>
 
         <!-- Gender, Category, Religion, Blood Group -->
@@ -112,8 +103,7 @@
             <div class="col-md-3">
                 <mat-form-field>
                     <mat-select placeholder="Gender"
-                                [(ngModel)]="newStudent.gender"
-                    >
+                                [(ngModel)]="newStudent.gender">
                         <mat-option>None</mat-option>
                         <mat-option value="Male">Male</mat-option>
                         <mat-option value="Female">Female</mat-option>
@@ -124,8 +114,7 @@
             <div class="col-md-3">
                 <mat-form-field>
                     <mat-select placeholder="Category"
-                                [(ngModel)]="newStudent.category"
-                    >
+                                [(ngModel)]="newStudent.newCategoryField">
                         <mat-option>None</mat-option>
                         <mat-option value="SC">SC</mat-option>
                         <mat-option value="ST">ST</mat-option>
@@ -137,7 +126,7 @@
             <div class="col-md-3">
                 <mat-form-field>
                     <mat-select placeholder="Religion"
-                                [(ngModel)]="newStudent.religion"
+                                [(ngModel)]="newStudent.newReligionField"
                     >
                         <mat-option>None</mat-option>
                         <mat-option value="Hinduism">Hinduism</mat-option>
@@ -177,7 +166,9 @@
                     </label>
                     <input type="number"
                            class="form-control"
-                           [(ngModel)]="newStudent.familySSMID">
+                           [ngModel]="newStudent.familySSMID"
+                           (keypress)="policeNumberInput($event)"
+                           (ngModelChange)="newStudent.familySSMID=$event">
                 </div>
             </div>
             <div class="col-md-3">
@@ -189,7 +180,9 @@
                     </label>
                     <input type="number"
                            class="form-control"
-                           [(ngModel)]="newStudent.childSSMID">
+                           [ngModel]="newStudent.childSSMID"
+                           (keypress)="policeNumberInput($event)"
+                           (ngModelChange)="newStudent.childSSMID=$event">
                 </div>
             </div>
             <div class="col-md-3">
@@ -201,7 +194,9 @@
                     </label>
                     <input type="number"
                            class="form-control"
-                           [(ngModel)]="newStudent.aadharNum">
+                           [ngModel]="newStudent.aadharNum"
+                           (keypress)="policeNumberInput($event)"
+                           (ngModelChange)="newStudent.aadharNum=$event">
                 </div>
             </div>
             <div class="col-md-3">
@@ -230,9 +225,9 @@
             <div *ngIf="busStopList.length > 0" class="col-md-3">
                 <mat-form-field>
                     <mat-select placeholder="Bus Stop"
-                                [(ngModel)]="newStudent.busStopDbId">
-                        <mat-option value=0>None</mat-option>
-                        <mat-option *ngFor="let busStop of busStopList" value="{{busStop.dbId}}">
+                                [(ngModel)]="newStudent.currentBusStop">
+                        <mat-option [value]="nullValue">None</mat-option>
+                        <mat-option *ngFor="let busStop of busStopList" value="{{busStop.id}}">
                             {{busStop.stopName}}
                         </mat-option>
                     </mat-select>
@@ -241,9 +236,9 @@
             <div class="col-md-3">
                 <mat-form-field>
                     <mat-select placeholder="Admission Session"
-                                [(ngModel)]="newStudent.admissionSessionDbId">
-                        <mat-option [value]=0>None</mat-option>
-                        <mat-option [value]="user.activeSchool.currentSessionDbId">{{user.getSchoolCurrentSessionName()}}</mat-option>
+                                [(ngModel)]="newStudent.admissionSession">
+                        <mat-option [value]="nullValue">None</mat-option>
+                        <mat-option [value]="user.activeSchool.currentSessionDbId">{{getCurrentSessionName()}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -310,9 +305,11 @@
                               [class.fieldRight]="checkRight(newStudent.secondMobileNumber,10)">
                                         - {{newStudent.secondMobileNumber.toString().length}}</span>
                     </label>
-                    <input type="text"
+                    <input type="number"
                            class="form-control"
-                           [(ngModel)]="newStudent.secondMobileNumber">
+                           [ngModel]="newStudent.secondMobileNumber"
+                           (keypress)="policeNumberInput($event)"
+                           (ngModelChange)="newStudent.secondMobileNumber=$event">
                 </div>
             </div>
         </div>
@@ -339,7 +336,9 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="createNewStudent()">Create Profile</button>
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="serviceAdapter.createNewStudent()">Create Profile</button>
 
     </ng-container>
 

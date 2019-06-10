@@ -54,8 +54,12 @@ const routes: Routes = [
         loadChildren: 'app/modules/expenses/expense.module#ExpenseModule',
     },
     {
-        path: 'fees',
+        path: 'fees-old',
         loadChildren: 'app/modules/fees-second/fee.module#FeeModule',
+    },
+    {
+        path: 'fees',
+        loadChildren: 'app/modules/fees/fee.module#FeeModule',
     },
     {
         path: 'sms',

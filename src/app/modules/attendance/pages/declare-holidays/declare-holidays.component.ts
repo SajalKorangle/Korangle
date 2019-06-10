@@ -1,7 +1,7 @@
 import {Component, Input, OnInit } from '@angular/core';
 
 import { AttendanceService } from '../../attendance.service';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
 import {EmployeeService} from '../../../employee/employee.service';
 
@@ -9,7 +9,7 @@ import {EmployeeService} from '../../../employee/employee.service';
   selector: 'declare-holidays',
   templateUrl: './declare-holidays.component.html',
   styleUrls: ['./declare-holidays.component.css'],
-    providers: [ AttendanceService, StudentService, EmployeeService ],
+    providers: [ AttendanceService, StudentOldService, EmployeeService ],
 })
 
 export class DeclareHolidaysComponent implements OnInit {
@@ -27,7 +27,7 @@ export class DeclareHolidaysComponent implements OnInit {
     isLoading = false;
 
     constructor (private attendanceService: AttendanceService,
-                 private studentService: StudentService,
+                 private studentService: StudentOldService,
                  private employeeService: EmployeeService) { }
 
     ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
-import { FeeService } from '../../fee.service';
+import { FeeOldService } from '../../fee-old.service';
 
 
 import { FREQUENCY_LIST } from '../../classes/constants';
@@ -10,7 +10,7 @@ import { FREQUENCY_LIST } from '../../classes/constants';
     selector: 'app-approve-fees',
     templateUrl: './approve-fees.component.html',
     styleUrls: ['./approve-fees.component.css'],
-    providers: [ FeeService ],
+    providers: [ FeeOldService ],
     animations: [
         trigger('rotate', [
             state('true', style({transform: 'rotate(0deg)'})),
@@ -39,7 +39,7 @@ export class ApproveFeesComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private feeService: FeeService) { }
+    constructor (private feeService: FeeOldService) { }
 
     ngOnInit(): void {
 
