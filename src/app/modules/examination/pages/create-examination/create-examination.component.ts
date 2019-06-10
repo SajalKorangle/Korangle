@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationService } from '../../../../services/examination.service';
+import { ExaminationOldService } from '../../../../services/examination-old.service';
 
 import { CreateExaminationServiceAdapter } from './create-examination.service.adapter';
 
@@ -8,7 +8,7 @@ import { CreateExaminationServiceAdapter } from './create-examination.service.ad
     selector: 'create-examination',
     templateUrl: './create-examination.component.html',
     styleUrls: ['./create-examination.component.css'],
-    providers: [ ExaminationService ],
+    providers: [ ExaminationOldService ],
 })
 
 export class CreateExaminationComponent implements OnInit {
@@ -23,7 +23,7 @@ export class CreateExaminationComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationService) {}
+    constructor(public examinationService: ExaminationOldService) {}
 
     ngOnInit(): void {
         this.serviceAdapter = new CreateExaminationServiceAdapter();

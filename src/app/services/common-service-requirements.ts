@@ -12,6 +12,10 @@ export class CommonServiceRequirements {
 
     constructor(private http: Http) { }
 
+    public getToken(): any {
+        return localStorage.getItem('schoolJWT');
+    }
+
     public returnResponse(response: any): any {
         const jsonResponse = response.json().response;
         if (jsonResponse.status === 'success') {
@@ -27,7 +31,7 @@ export class CommonServiceRequirements {
         }
     }
 
-    public deleteData(token: any, url: any): Promise<any> {
+    public deleteData(token=this.getToken() , url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.delete(environment.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
             .toPromise()
@@ -40,7 +44,7 @@ export class CommonServiceRequirements {
             .catch(this.handleError);
     }
 
-    public putData(body: any, token: any, url: any): Promise<any> {
+    public putData(body: any, token=this.getToken() , url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.put(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
@@ -53,7 +57,7 @@ export class CommonServiceRequirements {
             .catch(this.handleError);
     }
 
-    public patchData(body: any, token: any, url: any): Promise<any> {
+    public patchData(body: any, token=this.getToken() , url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.patch(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
@@ -66,7 +70,7 @@ export class CommonServiceRequirements {
             .catch(this.handleError);
     }
 
-    public postData(body: any, token: any, url: any): Promise<any> {
+    public postData(body: any, token=this.getToken() , url: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
@@ -79,7 +83,7 @@ export class CommonServiceRequirements {
             .catch(this.handleError);
     }
 
-    public fileData(file: any, token: any, url: any): Promise<any> {
+    public fileData(file: any, token=this.getToken() , url: any): Promise<any> {
         const headers = new Headers({'Authorization' : 'JWT ' + token, 'Accept': 'application/json' });
         let uploadData = new FormData();
         uploadData.append('myFile', file);
@@ -94,7 +98,7 @@ export class CommonServiceRequirements {
             .catch(this.handleError);
     }
 
-    public getData(token: any, url: any, params?: any): Promise<any> {
+    public getData(token=this.getToken() , url: any, params?: any): Promise<any> {
         const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.get(environment.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
             .toPromise()

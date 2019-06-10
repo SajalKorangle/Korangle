@@ -11,7 +11,7 @@ import { GenerateHallTicketComponent } from './pages/generate-hall-ticket/genera
 
 import { ExaminationRoutingModule } from './examination.routing';
 
-import { ExaminationService } from '../../services/examination.service';
+import { ExaminationOldService } from '../../services/examination-old.service';
 import {UpdateMarksComponent} from './pages/update-marks/update-marks.component';
 import {UpdateCceMarksComponent} from './pages/update-cce-marks/update-cce-marks.component';
 import {PrintMarksheetComponent} from './pages/print-marksheet/print-marksheet.component';
@@ -49,7 +49,7 @@ import {GenerateGoshwaraComponent} from './pages/generate-goshwara/generate-gosh
     ],
     exports: [
     ],
-    providers: [ExaminationService],
+    providers: [ExaminationOldService],
     bootstrap: [ExaminationComponent],
 })
 export class ExaminationModule { }

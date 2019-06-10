@@ -16,7 +16,6 @@ export class UpdateProfileComponent implements OnInit {
     @Input() user;
 
     employeeList: any;
-    filteredEmployeeList: any;
 
     selectedEmployeeProfile: any;
     currentEmployeeProfile: any;
@@ -34,34 +33,10 @@ export class UpdateProfileComponent implements OnInit {
 
         this.currentEmployeeProfile = {};
         this.currentEmployeeSessionProfile = {};
-
-        const data = {
-            parentSchool: this.user.activeSchool.dbId,
-        };
-
-        this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt).then( employeeList => {
-            this.employeeList = employeeList;
-            this.filteredEmployeeList = this.myControl.valueChanges.pipe(
-                map(value => typeof value === 'string' ? value: (value as any).name),
-                map(value => this.filter(value))
-            );
-        });
-
     }
 
-    filter(value: any): any {
-        if (value === '') {
-            return [];
-        }
-        return this.employeeList.filter( member => member.name.toLowerCase().indexOf(value.toLowerCase()) === 0 );
-    }
-
-    displayFn(member?: any) {
-        if (member) {
-            return member.name;
-        } else {
-            return '';
-        }
+    getEmployeeList(employeeList: any) {
+        this.employeeList = employeeList;
     }
 
     getEmployeeProfile(employee: any): void {
@@ -221,7 +196,8 @@ export class UpdateProfileComponent implements OnInit {
             this.isLoading = false;
             alert(response.message);
             if (response.status === 'success') {
-                this.selectedEmployeeProfile.profileImage = response.url + '?random+\=' + Math.random();
+                this.selectedEmployeeProfile.profileImage = response.url;
+                this.currentEmployeeProfile.profileImage = response.url;
             }
         }, error => {
             this.isLoading = false;

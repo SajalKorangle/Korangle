@@ -1,146 +1,75 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { Student } from '../../../../classes/student';
-
-import { AddStudentServiceAdapter } from './add-student.service.adapter';
+import { AddStudentServiceAdapter } from './add-student-service.adapter';
 
 import { ClassService } from '../../../../services/class.service';
 import { BusStopService } from '../../../../services/bus-stop.service';
-import { StudentService } from '../../student.service';
-import {SubjectService} from '../../../../services/subject.service';
-import {ExaminationService} from '../../../../services/examination.service';
+import {StudentService} from "../../../../services/student.service";
+import {Student} from "../../../../services/student/student";
+import {StudentSection} from "../../../../services/student/student-section";
+import {SESSION_LIST} from "../../../../classes/constants/session";
+import {VehicleService} from "../../../vehicle/vehicle.service";
+import {ExaminationService} from "../../../../services/examination.service";
+import {SubjectService} from "../../../../services/subject.service";
+import {FeeService} from "../../../../services/fee.service";
+import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 
 @Component({
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ ClassService, BusStopService, StudentService, SubjectService, ExaminationService ],
+    providers: [ ClassService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleService, FeeService ],
 })
 
 export class AddStudentComponent implements OnInit {
 
+    installmentList = INSTALLMENT_LIST;
+    sessionList = SESSION_LIST;
+    nullValue = null;
+
     @Input() user;
 
-    selectedClass: any;
+    // From Service Adapter
+    classList = [];
+    sectionList = [];
+    busStopList = [];
+    classSubjectList = [];
+    testSecondList = []; // represents Class Test
+    schoolFeeRuleList = [];
+    classFilterFeeList = [];
+    busStopFilterFeeList = [];
 
     newStudent: Student;
-    classSectionList = [];
-
-    busStopList = [];
+    newStudentSection: StudentSection;
 
     serviceAdapter: AddStudentServiceAdapter;
 
     isLoading = false;
 
     constructor (public classService: ClassService,
-                 private busStopService: BusStopService,
-                 private studentService: StudentService,
+                 public busStopService: BusStopService,
+                 public studentService: StudentService,
                  public subjectService: SubjectService,
-                 public examinationService: ExaminationService) { }
+                 public vehicleService: VehicleService,
+                 public examinationService: ExaminationService,
+                 public feeService: FeeService) { }
 
     ngOnInit(): void {
-        this.isLoading = true;
-        this.newStudent = new Student();
-        this.newStudent.dateOfBirth = this.todaysDate();
-
-        const data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-
-        this.classService.getClassSectionList(data, this.user.jwt).then(
-            classSectionList => {
-                this.isLoading = false;
-                this.classSectionList = classSectionList;
-                this.classSectionList.forEach( classs => {
-                    classs.selectedSection = classs.sectionList[0];
-                });
-                this.selectedClass = this.classSectionList[0];
-            }
-        );
-
-        const dataForBusStop = {
-            schoolDbId: this.user.activeSchool.dbId,
-        };
-
-        this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then( busStopList => {
-            this.busStopList = busStopList;
-        });
-
         this.serviceAdapter = new AddStudentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
     }
 
-    todaysDate(): string {
-        const d = new Date();
-        let month = '' + (d.getMonth() + 1);
-        let day = '' + d.getDate();
-        const year = d.getFullYear();
+    initializeVariable(): void {
 
-        if (month.length < 2) { month = '0' + month; }
-        if (day.length < 2) { day = '0' + day; }
+        this.newStudent = new Student();
+        this.newStudent.parentSchool = this.user.activeSchool.dbId;
 
-        return year + '-' + month + '-' + day;
-    }
+        this.newStudentSection = new StudentSection();
+        this.newStudentSection.parentClass = this.classList[0].dbId;
+        this.newStudentSection.parentDivision = this.sectionList[0].id;
+        this.newStudentSection.parentSession = this.user.activeSchool.currentSessionDbId;
 
-    createNewStudent(): void {
-
-        if (this.newStudent.busStopDbId == 0) {
-            this.newStudent.busStopDbId = null;
-        }
-
-        if (this.newStudent.admissionSessionDbId == 0) {
-            this.newStudent.admissionSessionDbId = null;
-        }
-
-        if (this.newStudent.name === undefined || this.newStudent.name === '') {
-            alert('Name should be populated');
-            return;
-        }
-        if (this.newStudent.fathersName === undefined || this.newStudent.fathersName === '') {
-            alert('Father\'s Name should be populated');
-            return;
-        }
-        this.newStudent.classDbId = this.selectedClass.dbId;
-        if (this.newStudent.classDbId === undefined || this.newStudent.classDbId === 0) {
-            alert('Class should be selected');
-            return;
-        }
-        this.newStudent.sectionDbId = this.selectedClass.selectedSection.dbId;
-        if (this.newStudent.sectionDbId === undefined || this.newStudent.sectionDbId === 0) {
-            alert('Class should be selected');
-            return;
-        }
-        if (this.newStudent.dateOfBirth === undefined) { this.newStudent.dateOfBirth = this.todaysDate(); }
-        if (this.newStudent.mobileNumber === undefined) { this.newStudent.mobileNumber = 0; }
-        if (this.newStudent.secondMobileNumber === undefined) { this.newStudent.secondMobileNumber = 0; }
-        // if (this.newStudent.totalFees === undefined) { this.newStudent.totalFees = 0; }
-        if (this.newStudent.remark === undefined) { this.newStudent.remark = ''; }
-        if (this.newStudent.scholarNumber === undefined) { this.newStudent.scholarNumber = 0; }
-
-        this.newStudent.schoolDbId = this.user.activeSchool.dbId;
-
-        this.newStudent.sessionDbId = this.user.activeSchool.currentSessionDbId;
-
-        this.isLoading = true;
-
-        this.studentService.createNewStudent(this.newStudent, this.user.jwt).then(
-            data => {
-
-                // alert(data.message);
-
-                this.serviceAdapter.addStudentSubjectsAndTests(data.id, this.newStudent.classDbId, this.newStudent.sectionDbId);
-
-                // this.newStudent = new Student();
-                // this.newStudent.dateOfBirth = this.todaysDate();
-
-                // this.isLoading = false;
-            }, error => {
-                this.isLoading = false;
-                alert('Server Error: Contact admin');
-            }
-        );
     }
 
     checkLength(value: any) {
@@ -155,6 +84,28 @@ export class AddStudentComponent implements OnInit {
             return true;
         }
         return false;
+    }
+
+    policeNumberInput(event: any): boolean {
+        let value = event.key;
+        if (value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
+            value !== '4' && value !== '5' && value !== '6' && value !== '7' &&
+            value !== '8' && value !== '9') {
+            return false;
+        }
+        return true;
+    }
+
+    getCurrentSessionName(): string {
+        return this.sessionList.find(session => {
+            return session.id == this.user.activeSchool.currentSessionDbId;
+        }).name;
+    }
+
+    getSection(sectionId: number): any {
+        return this.sectionList.find(section => {
+            return this.newStudentSection.parentDivision == section.id;
+        });
     }
 
 }

@@ -1,24 +1,9 @@
 <div class="card-content">
 
-    <ng-container *ngIf="employeeList && employeeList.length>0">
+    <ng-container>
 
-        <form class="example-form">
-            <mat-form-field class="example-full-width">
-                <input type="text"
-                       placeholder="Type employee name here...."
-                       aria-label="Employee"
-                       matInput
-                       [formControl]="myControl"
-                       [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete"
-                                  (optionSelected)="getEmployeePermissionList($event.option.value)"
-                                  [displayWith]="displayFn">
-                    <mat-option *ngFor="let employee of filteredEmployeeList | async" [value]="employee">
-                        {{ employee.name }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </form>
+        <app-employee-filter [user]="user"
+                             (employee)="getEmployeePermissionList($event)"></app-employee-filter>
 
         <ng-container *ngIf="selectedEmployee && !isLoading">
 

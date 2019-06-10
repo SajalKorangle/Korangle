@@ -3,7 +3,7 @@ import {style, state, trigger, animate, transition} from "@angular/animations";
 
 import { FREQUENCY_LIST } from '../../classes/constants';
 
-import { FeeService } from '../../fee.service';
+import { FeeOldService } from '../../fee-old.service';
 
 import {Concession, FeeReceipt} from '../../classes/common-functionalities';
 
@@ -25,7 +25,7 @@ const MARCH = 'MARCH';
     selector: 'app-give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [ FeeService ],
+    providers: [ FeeOldService ],
     animations: [
         trigger('rotate', [
             state('true', style({transform: 'rotate(0deg)'})),
@@ -68,7 +68,7 @@ export class GiveDiscountComponent {
 
     frequencyList = FREQUENCY_LIST;
 
-    constructor (private feeService: FeeService) { }
+    constructor (private feeService: FeeOldService) { }
 
     getStudentFeeDetails(student: any): void {
         const data = {

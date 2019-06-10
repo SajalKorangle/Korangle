@@ -11,6 +11,8 @@
 
 <app-print-student-list [class.hideThisComponent]="printType!='studentList'"></app-print-student-list>
 
+<app-print-old-fee-receipt-list [user]="user" [class.hideThisComponent]="printType!='oldFeeReceiptList'"></app-print-old-fee-receipt-list>
+
 <app-print-fee-receipt-list [user]="user" [class.hideThisComponent]="printType!='feeReceiptList'"></app-print-fee-receipt-list>
 
 <app-print-employee-list [class.hideThisComponent]="printType!='employeeList'"></app-print-employee-list>
@@ -42,3 +44,7 @@
 <print-student-attendance-list [user]="user" [class.hideThisComponent]="printType!='studentAttendanceList'"></print-student-attendance-list>
 
 <print-employee-attendance-list [user]="user" [class.hideThisComponent]="printType!='employeeAttendanceList'"></print-employee-attendance-list>
+
+<app-print-employee-i-cards [user]="user" [class.hideThisComponent]="printType!='employeeICards'" ></app-print-employee-i-cards>
+
+<app-print-full-fee-receipt-list [user]="user" [class.hideThisComponent]="printType!='fullFeeReceiptList'" ></app-print-full-fee-receipt-list>

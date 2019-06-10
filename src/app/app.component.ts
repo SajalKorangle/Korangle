@@ -6,7 +6,6 @@ import { DataStorage } from './classes/data-storage';
 import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
-import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-root',

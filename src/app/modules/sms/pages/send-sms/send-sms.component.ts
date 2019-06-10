@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassService} from '../../../../services/class.service';
-import {StudentService} from '../../../students/student.service';
+import {StudentOldService} from '../../../students/student-old.service';
 import { EmployeeService } from '../../../employee/employee.service';
 import { SmsService } from '../../sms.service';
 
@@ -53,7 +53,7 @@ class EmployeeColumnFilter {
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
     styleUrls: ['./send-sms.component.css'],
-    providers: [StudentService, ClassService, EmployeeService],
+    providers: [StudentOldService, ClassService, EmployeeService],
 })
 
 export class SendSmsComponent implements OnInit {
@@ -104,7 +104,7 @@ export class SendSmsComponent implements OnInit {
     expanded = {};
     timeout: any;
 
-    constructor(private studentService: StudentService,
+    constructor(private studentService: StudentOldService,
                 private employeeService: EmployeeService,
                 private classService: ClassService,
                 private smsService: SmsService,

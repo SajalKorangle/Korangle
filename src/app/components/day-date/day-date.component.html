@@ -2,10 +2,10 @@
     <input matInput
            [matDatepicker]="picker"
            (dateChange)="onDateChanged($event);"
-           placeholder="Choose a date"
+           [placeholder]="placeHolder"
            [formControl]="date"
            disabled>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="disableDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #picker disabled="false"></mat-datepicker>
 </mat-form-field>
 

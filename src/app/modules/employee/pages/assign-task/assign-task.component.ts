@@ -16,10 +16,7 @@ export class AssignTaskComponent implements OnInit {
 
     @Input() user;
 
-    employeeList = [];
     moduleList = [];
-
-    filteredEmployeeList: any;
 
     myControl = new FormControl();
 
@@ -27,30 +24,24 @@ export class AssignTaskComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeService,
-                 private teamService: TeamService) { }
+    constructor ( private employeeService: EmployeeService,
+                  private teamService: TeamService) { }
 
     ngOnInit() {
 
         console.log(this.user.username);
 
-        let request_employee_data = {
-            parentSchool: this.user.activeSchool.dbId,
-        };
-
-        let request_module_data = {
+        const request_module_data = {
             schoolDbId: this.user.activeSchool.dbId,
         };
 
         this.isLoading = true;
         Promise.all([
-            this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
             this.teamService.getSchoolModuleList(request_module_data, this.user.jwt),
         ]).then(value => {
             console.log(value);
             this.isLoading = false;
-            this.initializeEmployeeList(value[0]);
-            this.initializeModuleList(value[1]);
+            this.initializeModuleList(value[0]);
         }, error => {
             this.isLoading = false;
         });
@@ -64,31 +55,6 @@ export class AssignTaskComponent implements OnInit {
                 task.selected = false;
             })
         })
-    }
-
-    initializeEmployeeList(employeeList: any): void {
-        this.employeeList = employeeList;
-        this.filteredEmployeeList = this.myControl.valueChanges.pipe(
-            map(value => typeof value === 'string' ? value: (value as any).name),
-            map(value => this.filter(value))
-        );
-    }
-
-    filter(value: any): any {
-        if (value === '') {
-            return [];
-        }
-        return this.employeeList.filter(employee => {
-            return employee.name.toLowerCase().indexOf(value.toLowerCase()) === 0 && employee.dateOfLeaving === null;
-        });
-    }
-
-    displayFn(employee?: any) {
-        if (employee) {
-            return employee.name;
-        } else {
-            return '';
-        }
     }
 
     getEmployeePermissionList(employee: any): void {

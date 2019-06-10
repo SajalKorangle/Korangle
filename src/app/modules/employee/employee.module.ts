@@ -12,6 +12,8 @@ import { AssignTaskComponent } from './pages/assign-task/assign-task.component';
 import { EmployeeRoutingModule } from './employee.routing';
 
 import { EmployeeService } from './employee.service';
+import {ICardsComponent} from './pages/i-cards/i-cards.component';
+import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 
 @NgModule({
     declarations: [
@@ -22,6 +24,7 @@ import { EmployeeService } from './employee.service';
         ViewAllComponent,
         UpdateProfileComponent,
         AssignTaskComponent,
+        ICardsComponent,
 
     ],
 
@@ -29,6 +32,7 @@ import { EmployeeService } from './employee.service';
 
         ComponentsModule,
         EmployeeRoutingModule,
+        NgxDatatableModule
 
     ],
     exports: [

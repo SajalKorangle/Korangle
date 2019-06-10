@@ -6,7 +6,7 @@ import { Section } from '../../../../classes/section';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
 
-import { StudentService } from '../../student.service';
+import { StudentOldService } from '../../student-old.service';
 import { SchoolService } from '../../../../services/school.service';
 
 import { EmitterService } from '../../../../services/emitter.service';
@@ -17,7 +17,7 @@ import {error} from '@angular/compiler/src/util';
   selector: 'generate-tc',
   templateUrl: './generate-tc.component.html',
   styleUrls: ['./generate-tc.component.css'],
-    providers: [ StudentService, SchoolService ],
+    providers: [ StudentOldService, SchoolService ],
 })
 
 export class GenerateTcComponent implements OnInit {
@@ -63,7 +63,7 @@ export class GenerateTcComponent implements OnInit {
 
 
 
-    constructor (private studentService: StudentService,
+    constructor (private studentService: StudentOldService,
                  private schoolService: SchoolService) { }
 /*
     changeSelectedSectionToFirst(): void {

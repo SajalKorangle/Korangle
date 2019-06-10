@@ -1,0 +1,157 @@
+<div class="card-content">
+    <div>
+        <mat-form-field>
+            <mat-select placeholder="Select columns">
+                <mat-option>
+                    <button class="btn"
+                            style="padding: 4px 7px">select all
+                    </button>
+                    <button class="btn"
+                            style="padding: 4px 7px">clear all
+                    </button>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation()">Name</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showFatherName" (click)="$event.stopPropagation()">Father's name</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showMotherName" (click)="$event.stopPropagation()">Mother's name</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation()">Mobile number</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showDateOfBirth" (click)="$event.stopPropagation()">Date of Birth</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showGender" (click)="$event.stopPropagation()">Gender</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showAadharNumber" (click)="$event.stopPropagation()">Aadhar number</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showEmployeeNumber" (click)="$event.stopPropagation()">Employee No.</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showCurrentPost" (click)="$event.stopPropagation()">Post</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showPanNumber" (click)="$event.stopPropagation()">Pan number</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showJobTitle" (click)="$event.stopPropagation()">Job title</mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation()">Address</mat-checkbox>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="padding: 12px 15px;margin-left: 17px"
+                matTooltip="Print ID card"
+                tooltip-position="left"
+                (click)="printEmployeeICards();">Print<i class="material-icons" style="margin-left: 15px;">print</i>
+        </button>
+    </div>
+    <br>
+    <div>
+        <p>Total Employee: <b>{{employeeProfileList.length}}</b>, &nbsp;
+           Selected: <b>{{getSelectedEmployee()}}</b></p>
+    </div>
+    <br>
+    <div>
+        <button class="btn"
+                style="padding: 4px 7px"
+                (click)="selectAllStudents(); $event.stopPropagation();">Select all</button>
+        <button class="btn"
+                style="padding: 4px 7px"
+                (click)="unSelectAllStudents(); $event.stopPropagation();">Clear all</button>
+    </div>
+    <ngx-datatable
+            class="material ngxDataTable "
+            *ngIf = "employeeProfileList.length > 0"
+            [rows]="employeeProfileList"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [rowHeight]="50"
+            [scrollbarH]="true"
+            [scrollbarV]="true"
+            (page)="onPage($event)">
+        <ngx-datatable-column name="Select">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <mat-checkbox [(ngModel)]="row['selected']"
+                              (ngModelChange)="updateRowValue(row, $event)"></mat-checkbox>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Photo">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <img src="{{row.profileImage}}" style="width: 20%;">
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Name" *ngIf="columnFilter.showName">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <strong>{{row.name}}</strong>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Father's name" *ngIf="columnFilter.showFatherName">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.fatherName}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Mother's name" *ngIf="columnFilter.showMotherName">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.motherName}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Mobile number" *ngIf="columnFilter.showMobileNumber">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.mobileNumber}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Date Of Birth" *ngIf="columnFilter.showDateOfBirth">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.dateOfBirth | date: 'dd-MMM-yyyy' }}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Gender" *ngIf="columnFilter.showGender">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.gender}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Aadhar number" *ngIf="columnFilter.showAadharNumber">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.aadharNumber}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Employee number" *ngIf="columnFilter.showEmployeeNumber">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.employeeNumber}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Pan number" *ngIf="columnFilter.showPanNumber">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.panNumber}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Job title" *ngIf="columnFilter.showCurrentPost">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.currentPost}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Address" *ngIf="columnFilter.showAddress">
+            <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                <i>{{row.address}}</i>
+            </ng-template>
+        </ngx-datatable-column>
+    </ngx-datatable>
+
+    <img src="{{user.activeSchool.principalSignatureImage}}" style="width: 0px; height: 0px;">
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

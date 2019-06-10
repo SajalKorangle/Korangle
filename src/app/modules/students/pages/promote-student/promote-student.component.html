@@ -1,156 +1,164 @@
 <div class="card-content">
 
-    <ng-container *ngIf="fromSelectedClass && toSelectedClass && !isLoading">
+    <ng-container *ngIf="isMobileMenu()">This page is not supported in mobile version yet.</ng-container>
 
-        <!-- Session, Class, Section Headings Selection -->
-        <div class="row">
+    <ng-container *ngIf="!isLoading && !isMobileMenu()">
 
-            <div class="col-sm-6">
+        <ng-container *ngIf="user.activeSchool.currentSessionDbId != sessionList[sessionList.length-1].id; else noNextSession">
 
-                <span class="visible-xs">From: </span><span style="font-weight: 800; font-size: 16px;">{{getFromSessionName()}}</span><br/>
-
-                Class:
-                <select [ngModel]="fromSelectedClass"
-                        (ngModelChange)="fromSelectedClass=$event;handleFromSelectedClassChange();"
-                        style="margin-right: 15px">
-                    <option *ngFor="let class of fromClassSectionStudentList;" [ngValue]="class">
-                        {{class.name}}
-                    </option>
-                </select>
-
-                <span *ngIf='fromSelectedClass' [class.hidden]="fromSelectedClass.sectionList.length == 1">
-                    <div class="visible-xs" style="margin-top: 10px;"></div>
-                    Section:
-                    <select [ngModel]="fromSelectedSection"
-                            (ngModelChange)="fromSelectedSection=$event;handleFromSelectedSectionChange()"
-                            style="margin-right: 15px">
-                        <option *ngFor="let section of fromSelectedClass.sectionList" [ngValue]="section">
-                            {{section.name}}
-                        </option>
-                    </select>
-                </span> <br/>
-
-                <button class="btn hidden-xs"
-                        style="padding: 4px 7px"
-                        (click)="selectAllStudentsFromList(); $event.stopPropagation();">Select All
-                </button>
-                <button class="btn hidden-xs"
-                        style="padding: 4px 7px"
-                        (click)="clearAllStudentsFromList(); $event.stopPropagation();">Clear All
-                </button>
+            <!-- Session -->
+            <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-6">
+                    From:
+                    <span style="font-weight: 800; font-size: 16px;">
+                        Session {{getSessionName(user.activeSchool.currentSessionDbId)}}
+                    </span>
+                </div>
+                <div class="col-xs-6">
+                    To:
+                    <span style="font-weight: 800; font-size: 16px;">
+                        Session {{getSessionName(user.activeSchool.currentSessionDbId+1)}}
+                    </span>
+                </div>
             </div>
 
-            <div class="visible-xs" style="margin-top:10px; margin-bottom: 10px; border: 1px solid black"></div>
+            <!-- Class -->
+            <div class="row" style="margin-top: 15px;">
 
-            <div class="col-sm-6" *ngIf="toSelectedClass">
+                <div class="col-xs-6">
 
-                <span class="visible-xs">To: </span><span style="font-weight: 800; font-size: 16px;">{{getToSessionName()}}</span><br/>
-
-
-                <mat-form-field style="margin-top: 23px;">
-                    <mat-select placeholder="Select Class"
-                                #selectClassSection
-                                [ngModel]="toSelectedClass"
-                                (ngModelChange)="toSelectedClass=$event;">
-                        <mat-option *ngFor='let classs of toClassSectionList;' [value]="classs">
-                            {{classs.name}}
-                            <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
-                                            , {{classs.selectedSection.name}}
-                                        </span>
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <button class="btn"
-                        style="padding: 2px 11px; background-color: transparent;"
-                        matTooltip="Choose Section (default: Section - A)"
-                        mat-icon-button
-                        [matMenuTriggerFor]="classSectionMenu">
-                    <i class="material-icons" style="color: black;">expand_more</i>
-                </button>
-                <mat-menu #classSectionMenu="matMenu">
-                    <button *ngFor="let section of toSelectedClass.sectionList"
-                            mat-menu-item
-                            (click)="selectClassSection.open(); selectClassSection.close(); toSelectedClass.selectedSection=section">
-                        {{section.name}}
+                    <mat-form-field>
+                        <mat-select placeholder="Select Class"
+                                    #selectClassSectionOne
+                                    [ngModel]="fromSelectedClass"
+                                    (ngModelChange)="handleFromSelectedClassChange($event)">
+                            <mat-option *ngFor='let classs of classList;' [value]="classs">
+                                {{classs.name}}, {{fromSelectedSection.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button class="btn"
+                            style="padding: 2px 11px; background-color: transparent;"
+                            mat-icon-button
+                            [matMenuTriggerFor]="classSectionMenuOne">
+                        <i class="material-icons" style="color: black;">expand_more</i>
                     </button>
-                </mat-menu>
+                    <mat-menu #classSectionMenuOne="matMenu">
+                        <button *ngFor="let section of sectionList"
+                                mat-menu-item
+                                (click)="selectClassSectionOne.open(); selectClassSectionOne.close(); handleFromSelectedSectionChange(section);">
+                            {{section.name}}
+                        </button>
+                    </mat-menu>
+
+                </div>
+
+                <div class="col-xs-6">
+
+                    <mat-form-field>
+                        <mat-select placeholder="Select Class"
+                                    #selectClassSectionTwo
+                                    [ngModel]="toSelectedClass"
+                                    (ngModelChange)="toSelectedClass=$event;">
+                            <mat-option *ngFor='let classs of getToClassList();' [value]="classs">
+                                {{classs.name}}, {{toSelectedSection.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button class="btn"
+                            style="padding: 2px 11px; background-color: transparent;"
+                            mat-icon-button
+                            [matMenuTriggerFor]="classSectionMenuTwo">
+                        <i class="material-icons" style="color: black;">expand_more</i>
+                    </button>
+                    <mat-menu #classSectionMenuTwo="matMenu">
+                        <button *ngFor="let section of sectionList"
+                                mat-menu-item
+                                (click)="selectClassSectionTwo.open(); selectClassSectionTwo.close(); toSelectedSection=section">
+                            {{section.name}}
+                        </button>
+                    </mat-menu>
+
+                </div>
 
             </div>
 
-            <div class="visible-xs" style="margin-bottom: 10px; border: 1px solid black"></div>
+            <!-- Select All, Clear All -->
+            <div class="row" style="margin-top: 15px;">
 
-        </div>
-
-        <div class="row visible-xs">
-            <div class="col-sm-6">
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="selectAllStudentsFromList(); $event.stopPropagation();">Select All
-                </button>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="clearAllStudentsFromList(); $event.stopPropagation();">Clear All
-                </button>
-            </div>
-        </div>
-
-        <!-- Student List -->
-        <div class="row">
-
-            <div class="col-sm-6" style="border-right: 1px solid black">
-                <ng-container *ngFor="let student of fromSelectedSection.studentList">
-                    <div [class.highlightBackground]="inToList(student.dbId)"
-                         style="width: 100%">
-                        <mat-checkbox [(ngModel)]="student.selected"
-                                      [disabled]="inToList(student.dbId)">
-                            {{student.name}}, {{student.scholarNumber}}
-                        </mat-checkbox><br/>
-                    </div>
-                </ng-container>
-            </div>
-
-            <div class="col-sm-6 hidden-xs" style="border-left: 1px solid black">
-                <ng-container *ngFor="let student of getFilteredToStudentList()">
-                    <span>{{student.name}}, {{student.scholarNumber}}</span><br/>
-                </ng-container>
-            </div>
-
-            <div class="visible-xs" style="margin-top: 10px; margin-bottom: 10px; border: 1px solid black"></div>
-
-        </div>
-
-        <!-- Selected Session, Class, Section Headings -->
-        <div class="row">
-
-            <div class="col-xs-6">
-
-                From: <br class="visible-xs"/>
-                <span style="font-weight: 800; font-size: 16px;">
-                      {{getFromSessionName()}}, <br class="visible-xs"/> {{fromSelectedClass.name}}
-                      <ng-container *ngIf="fromSelectedClass.sectionList.length != 1">
-                          , {{fromSelectedSection.name}}
-                      </ng-container>
-                </span>
+                <div class="col-xs-6">
+                    <button class="btn hidden-xs"
+                            style="padding: 4px 7px"
+                            (click)="selectAllStudentsFromList(); $event.stopPropagation();">Select All
+                    </button>
+                    <button class="btn hidden-xs"
+                            style="padding: 4px 7px"
+                            (click)="clearAllStudentsFromList(); $event.stopPropagation();">Clear All
+                    </button>
+                </div>
 
             </div>
 
-            <div class="col-xs-6" *ngIf="toSelectedClass">
+            <!-- Student List -->
+            <div class="row" style="margint-top: 15px;">
 
-                To: <br class="visible-xs"/>
-                <span style="font-weight: 800; font-size: 16px;">
-                    {{getToSessionName()}}, <br class="visible-xs"/> {{toSelectedClass.name}}
-                    <ng-container *ngIf="toSelectedClass.selectedSection.name != 'Section - A'">
-                      , {{toSelectedClass.selectedSection.name}}
+                <div class="col-xs-6" style="border-right: 1px solid black">
+                    <ng-container *ngFor="let studentSection of getFilteredStudentSectionListOne();">
+                        <div [class.highlightBackground]="!inUnPromotedStudentList(studentSection)"
+                             style="width: 100%">
+                            <mat-checkbox [ngModel]="inNewPromotionList(studentSection)"
+                                          (ngModelChange)="handlePromotionChange(studentSection, $event);"
+                                          [disabled]="!inUnPromotedStudentList(studentSection)">
+                                {{getStudent(studentSection.parentStudent).name}},
+                                {{getStudent(studentSection.parentStudent).scholarNumber}}
+                            </mat-checkbox><br/>
+                        </div>
                     </ng-container>
-                </span>
+                </div>
+
+                <div class="col-xs-6" style="border-left: 1px solid black">
+                    <ng-container *ngFor="let studentSection of getFilteredStudentSectionListTwo();">
+                        <span>
+                            {{getStudent(studentSection.parentStudent).name}},
+                            {{getStudent(studentSection.parentStudent).scholarNumber}}
+                        </span><br/>
+                    </ng-container>
+                </div>
 
             </div>
 
-        </div>
+            <!-- Session -->
+            <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-6">
+                    From:
+                    <span style="font-weight: 800; font-size: 16px;">
+                        Session {{getSessionName(user.activeSchool.currentSessionDbId)}}
+                    </span>,
+                    {{fromSelectedClass.name}}, {{fromSelectedSection.name}}
+                </div>
+                <div class="col-xs-6">
+                    To:
+                    <span style="font-weight: 800; font-size: 16px;">
+                        Session {{getSessionName(user.activeSchool.currentSessionDbId+1)}}
+                    </span>,
+                    {{toSelectedClass.name}}, {{toSelectedSection.name}}
+                </div>
+            </div>
 
-        <div class="row" align="center">
-            <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="promoteStudent();">Promote</button>
-        </div>
+            <div class="row" align="center">
+                <button type="submit"
+                        *ngIf="newPromotedList.length > 0"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="serviceAdapter.promoteStudents();">Promote</button>
+            </div>
+
+        </ng-container>
+
+        <ng-template #noNextSession>
+
+            You can promote students after next session has been created!
+
+        </ng-template>
 
     </ng-container>
 

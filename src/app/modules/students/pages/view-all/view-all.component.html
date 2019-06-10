@@ -322,17 +322,13 @@
                         <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>
                         <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
                         <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
-                        <td [class.hidden]="!columnFilter.showMobileNumber" class="hidden-xs hidden-sm">
-                            {{student.mobileNumber}}
+                        <td [class.hidden]="!columnFilter.showMobileNumber">
+                            <span class="hidden-xs hidden-sm">{{student.mobileNumber}}</span>
+                            <a class="visible-xs visible-sm" href="tel:{{student.mobileNumber}}">Call Me</a>
                         </td>
-                        <td [class.hidden]="!columnFilter.showMobileNumber" class="visible-xs visible-sm">
-                            <a href="tel:{{student.mobileNumber}}">Call Me</a>
-                        </td>
-                        <td [class.hidden]="!columnFilter.showSecondMobileNumber" class="hidden-xs hidden-sm">
-                            {{student.secondMobileNumber}}
-                        </td>
-                        <td [class.hidden]="!columnFilter.showSecondMobileNumber" class="visible-xs visible-sm">
-                            <a href="tel:{{student.secondMobileNumber}}">Call Me</a>
+                        <td [class.hidden]="!columnFilter.showSecondMobileNumber">
+                            <span class="hidden-xs hidden-sm">{{student.secondMobileNumber}}</span>
+                            <a class="visible-xs visible-sm" href="tel:{{student.secondMobileNumber}}">Call Me</a>
                         </td>
                         <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
                         <td [class.hidden]="!columnFilter.showDateOfBirth">
