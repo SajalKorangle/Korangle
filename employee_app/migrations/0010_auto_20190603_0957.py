@@ -7,6 +7,7 @@ from django.db import migrations
 
 from employee_app.db_script.employee_experience_certi import employee_experience_certi
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
