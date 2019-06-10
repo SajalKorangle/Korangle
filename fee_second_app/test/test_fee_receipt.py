@@ -8,14 +8,14 @@ from fee_second_app.business.student_fee_status import get_student_fee_status_li
 from fee_second_app.business.fee_receipt import create_fee_receipt, get_fee_receipt_by_id, \
     get_fee_receipt_list_by_student_id, get_fee_receipt_list_by_school_id, get_fee_receipt_list_by_employee_id
 
-from fee_second_app.models import FeeDefinition, FeeReceipt, SubFeeReceipt, SubFeeReceiptMonthly
+from fee_second_app.models import FeeDefinition, FeeReceiptOld, SubFeeReceipt, SubFeeReceiptMonthly
 
 
 class FeeReceiptTestCase(ParentTestCase):
 
     def test_get_fee_receipt_by_id(self):
 
-        fee_receipt_object = FeeReceipt.objects.all()[0]
+        fee_receipt_object = FeeReceiptOld.objects.all()[0]
 
         fee_receipt_request = {}
         fee_receipt_request['dbId'] = fee_receipt_object.id
@@ -68,7 +68,7 @@ class FeeReceiptTestCase(ParentTestCase):
 
     def test_get_fee_receipt_by_school_id(self):
 
-        fee_receipt_object = FeeReceipt.objects.all()[0]
+        fee_receipt_object = FeeReceiptOld.objects.all()[0]
 
         school_object = fee_receipt_object.parentStudent.parentSchool
 
@@ -79,9 +79,9 @@ class FeeReceiptTestCase(ParentTestCase):
 
         response = get_fee_receipt_list_by_school_id(request)
 
-        fee_receipt_queryset = FeeReceipt.objects.filter(parentStudent__parentSchool=school_object,
-                                                         generationDateTime__gte=request['startDate']+' 00:00:00+05:30',
-                                                         generationDateTime__lte=request['endDate']+ ' 23:59:59+05:30').order_by('-generationDateTime')
+        fee_receipt_queryset = FeeReceiptOld.objects.filter(parentStudent__parentSchool=school_object,
+                                                            generationDateTime__gte=request['startDate']+' 00:00:00+05:30',
+                                                            generationDateTime__lte=request['endDate']+ ' 23:59:59+05:30').order_by('-generationDateTime')
 
         self.assertEqual(len(response), fee_receipt_queryset.count())
 
@@ -97,7 +97,7 @@ class FeeReceiptTestCase(ParentTestCase):
         school_object = School.objects.get(name='B. Salsalai')
         employee_object = school_object.employee_set.all()[0]
 
-        fee_receipt_object = FeeReceipt.objects.filter(parentStudent__parentSchool=school_object)[0]
+        fee_receipt_object = FeeReceiptOld.objects.filter(parentStudent__parentSchool=school_object)[0]
         fee_receipt_object.parentEmployee_id = employee_object.id
         fee_receipt_object.save()
 
@@ -108,9 +108,9 @@ class FeeReceiptTestCase(ParentTestCase):
 
         response = get_fee_receipt_list_by_employee_id(request)
 
-        fee_receipt_queryset = FeeReceipt.objects.filter(parentEmployee_id=request['parentEmployee'],
-                                                         generationDateTime__gte=request['startDate']+' 00:00:00+05:30',
-                                                         generationDateTime__lte=request['endDate']+ ' 23:59:59+05:30').order_by('-generationDateTime')
+        fee_receipt_queryset = FeeReceiptOld.objects.filter(parentEmployee_id=request['parentEmployee'],
+                                                            generationDateTime__gte=request['startDate']+' 00:00:00+05:30',
+                                                            generationDateTime__lte=request['endDate']+ ' 23:59:59+05:30').order_by('-generationDateTime')
 
         self.assertEqual(len(response), fee_receipt_queryset.count())
 
@@ -124,11 +124,11 @@ class FeeReceiptTestCase(ParentTestCase):
     def test_get_fee_receipt_list_by_student_id(self):
 
         request = {}
-        request['studentDbId'] = FeeReceipt.objects.all()[0].parentStudent.id
+        request['studentDbId'] = FeeReceiptOld.objects.all()[0].parentStudent.id
 
         response = get_fee_receipt_list_by_student_id(request)
 
-        fee_receipt_queryset = FeeReceipt.objects.filter(parentStudent_id=request['studentDbId']).order_by('-generationDateTime')
+        fee_receipt_queryset = FeeReceiptOld.objects.filter(parentStudent_id=request['studentDbId']).order_by('-generationDateTime')
 
         self.assertEqual(len(response), fee_receipt_queryset.count())
 

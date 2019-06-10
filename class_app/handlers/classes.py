@@ -11,6 +11,7 @@ def get_class_list():
         temp_class_response = {}
         temp_class_response['name'] = class_object.name
         temp_class_response['dbId'] = class_object.id
+        temp_class_response['orderNumber'] = class_object.orderNumber
 
         class_list.append(temp_class_response)
 

@@ -2,11 +2,15 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
+from common.common_views import CommonListView, CommonView
 from decorators import user_permission
 
 from rest_framework.views import APIView
 
 import json
+
+from examination_app.models import Examination, TestSecond, StudentTest
+
 
 def get_error_response(message):
     error_response = {}
@@ -75,7 +79,7 @@ def create_student_result_view(request):
 from examination_app.business.examination import get_examination_list, create_examination, update_examination
 
 
-class ExaminationView(APIView):
+class ExaminationOldView(APIView):
 
     @user_permission
     def post(request):
@@ -88,7 +92,7 @@ class ExaminationView(APIView):
         return update_examination(data)
 
 
-class ExaminationListView(APIView):
+class ExaminationListOldView(APIView):
 
     @user_permission
     def get(request):
@@ -135,7 +139,7 @@ from examination_app.business.student_test import get_student_test_list, create_
     delete_student_test_list, update_student_test_list
 
 
-class StudentTestListView(APIView):
+class StudentTestListOldView(APIView):
 
     @user_permission
     def get(request):
@@ -224,5 +228,38 @@ class CCEMarksListView(APIView):
     @user_permission
     def delete(request, student_test_id_list):
         return delete_cce_marks_list(student_test_id_list)
+
+
+########### Examination #############
+
+
+class ExaminationView(CommonView, APIView):
+    Model = Examination
+
+
+class ExaminationListView(CommonListView, APIView):
+    Model = Examination
+
+
+########### Test Second #############
+
+
+class TestSecondView(CommonView, APIView):
+    Model = TestSecond
+
+
+class TestSecondListView(CommonListView, APIView):
+    Model = TestSecond
+
+
+########### Student Test #############
+
+
+class StudentTestView(CommonView, APIView):
+    Model = StudentTest
+
+
+class StudentTestListView(CommonListView, APIView):
+    Model = StudentTest
 
 

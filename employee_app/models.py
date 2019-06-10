@@ -10,6 +10,7 @@ def upload_avatar_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
     return 'employees/%s/profile_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
 
+
 class Employee(models.Model):
 
     #ProfileImage

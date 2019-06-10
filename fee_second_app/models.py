@@ -296,7 +296,7 @@ class StudentMonthlyFeeComponent(models.Model):
 
 
 ##### Receipts #######
-class FeeReceipt(models.Model):
+class FeeReceiptOld(models.Model):
     receiptNumber = models.IntegerField(null=False, default=0, verbose_name='receiptNumber')
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     remark = models.TextField(null=True, verbose_name='remark')
@@ -312,7 +312,7 @@ class FeeReceipt(models.Model):
 
 
 class SubFeeReceipt(models.Model):
-    parentFeeReceipt = models.ForeignKey(FeeReceipt, models.PROTECT, default=0, verbose_name='parentFeeReceipt')
+    parentFeeReceipt = models.ForeignKey(FeeReceiptOld, models.PROTECT, default=0, verbose_name='parentFeeReceipt')
     parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.PROTECT, default=0,
                                                   verbose_name='parentStudentFeeComponent')
     amount = models.IntegerField(null=True, verbose_name='amount')

@@ -17,11 +17,11 @@ urlpatterns += [
 ]
 
 
-from examination_app.views import ExaminationListView, ExaminationView
+from examination_app.views import ExaminationListOldView, ExaminationOldView
 
 urlpatterns += [
-    url(r'^examinations/batch', ExaminationListView.as_view()),
-    url(r'^examinations', ExaminationView.as_view()),
+    url(r'^examinations/batch', ExaminationListOldView.as_view()),
+    url(r'^examinations', ExaminationOldView.as_view()),
 ]
 
 
@@ -34,11 +34,11 @@ urlpatterns += [
 ]
 
 
-from examination_app.views import StudentTestListView
+from examination_app.views import StudentTestListOldView
 
 urlpatterns += [
-    url(r'^student-tests/batch/(?P<student_test_id_list>[0-9,]+)', StudentTestListView.as_view()),
-    url(r'^student-tests/batch', StudentTestListView.as_view()),
+    url(r'^student-tests/batch/(?P<student_test_id_list>[0-9,]+)', StudentTestListOldView.as_view()),
+    url(r'^student-tests/batch', StudentTestListOldView.as_view()),
 ]
 
 from examination_app.views import StudentExtraSubFieldListView
@@ -58,3 +58,32 @@ from examination_app.views import CCEMarksListView
 urlpatterns += [
     url(r'^cce-marks/batch', CCEMarksListView.as_view()),
 ]
+
+
+####################################
+##### Trying Common Views Below ####
+####################################
+
+from examination_app.views import ExaminationView, ExaminationListView
+
+urlpatterns += [
+    url(r'^examination/batch', ExaminationListView.as_view()),
+    url(r'^examination', ExaminationView.as_view()),
+]
+
+
+from examination_app.views import TestSecondView, TestSecondListView
+
+urlpatterns += [
+    url(r'^test-second/batch', TestSecondListView.as_view()),
+    url(r'^test-second', TestSecondView.as_view()),
+]
+
+
+from examination_app.views import StudentTestView, StudentTestListView
+
+urlpatterns += [
+    url(r'^student-test/batch', StudentTestListView.as_view()),
+    url(r'^student-test', StudentTestView.as_view()),
+]
+

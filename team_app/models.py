@@ -48,30 +48,3 @@ class Access(models.Model):
         db_table = 'access'
         unique_together = ('parentSchool', 'parentModule')
 
-
-'''class Permission(models.Model):
-
-    parentTask = models.ForeignKey(Task, on_delete=models.PROTECT, null=False, verbose_name='parentTask', default=0)
-    parentUser = models.ForeignKey(User, on_delete=models.PROTECT, null=False, verbose_name='parentUser', default=0)
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool', default=0)
-
-    def __str__(self):
-        return self.parentUser.username + ' -- ' + str(self.parentTask)
-
-    class Meta:
-        db_table = 'permission'
-        unique_together = ('parentUser', 'parentTask', 'parentSchool')
-
-
-class Member(models.Model):
-
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool', default=0)
-    parentUser = models.ForeignKey(User, on_delete=models.PROTECT, null=False, verbose_name='parentUser', default=0)
-
-    def __str__(self):
-        return self.parentSchool.name + ' -- ' + self.parentUser.username
-
-    class Meta:
-        db_table = 'member'
-        unique_together = ('parentUser', 'parentSchool')'''
-

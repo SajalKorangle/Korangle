@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'expense_app',
     # 'fee_app',
     'fee_second_app',
+    'fees_third_app',
     'examination_app',
     'team_app',
     'employee_app',

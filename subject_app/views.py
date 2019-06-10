@@ -4,9 +4,14 @@ from rest_framework.decorators import api_view
 from django.shortcuts import render
 
 from rest_framework.views import APIView
+
+from common.common_views import CommonView, CommonListView
 from decorators import user_permission
 
 import json
+
+from subject_app.models import StudentSubject, ClassSubject
+
 
 def get_error_response(message):
     error_response = {}
@@ -47,7 +52,7 @@ class SubjectListView(APIView):
 from subject_app.business.class_subject import create_class_subject, update_class_subject, delete_class_subject
 
 
-class ClassSubjectView(APIView):
+class ClassSubjectOldView(APIView):
 
     @user_permission
     def post(request):
@@ -68,7 +73,7 @@ class ClassSubjectView(APIView):
 from subject_app.business.class_subject import get_class_subject_list
 
 
-class ClassSubjectListView(APIView):
+class ClassSubjectListOldView(APIView):
 
     @user_permission
     def get(request):
@@ -79,7 +84,7 @@ class ClassSubjectListView(APIView):
 from subject_app.business.student_subject import create_student_subject, delete_student_subject
 
 
-class StudentSubjectView(APIView):
+class StudentSubjectOldView(APIView):
 
     @user_permission
     def post(request):
@@ -95,7 +100,7 @@ class StudentSubjectView(APIView):
 from subject_app.business.student_subject import get_student_subject_list, create_student_subject_list, delete_student_subject_list
 
 
-class StudentSubjectListView(APIView):
+class StudentSubjectListOldView(APIView):
 
     @user_permission
     def get(request):
@@ -140,3 +145,27 @@ class ExtraSubFieldListView(APIView):
     @user_permission
     def get(request):
         return get_extra_sub_field_list(request.GET)
+
+
+########### Class Subject #############
+
+
+class ClassSubjectView(CommonView, APIView):
+    Model = ClassSubject
+
+
+class ClassSubjectListView(CommonListView, APIView):
+    Model = ClassSubject
+
+
+########### Student Subject #############
+
+
+class StudentSubjectView(CommonView, APIView):
+    Model = StudentSubject
+
+
+class StudentSubjectListView(CommonListView, APIView):
+    Model = StudentSubject
+
+

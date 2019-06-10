@@ -1,5 +1,5 @@
 
-from fee_second_app.models import FeeReceipt, SubFeeReceipt, SubFeeReceiptMonthly, \
+from fee_second_app.models import FeeReceiptOld, SubFeeReceipt, SubFeeReceiptMonthly, \
     StudentFeeComponent, StudentMonthlyFeeComponent, FeeDefinition, Month
 
 from fee_second_app.business.student_fee_status import get_student_fee_status_list
@@ -15,7 +15,7 @@ from django.db.models import Max
 
 def get_fee_receipt_by_id(data):
 
-    fee_receipt_object = FeeReceipt.objects.get(id=data['dbId'])
+    fee_receipt_object = FeeReceiptOld.objects.get(id=data['dbId'])
 
     return get_fee_receipt_by_object(fee_receipt_object)
 
@@ -77,9 +77,9 @@ def get_fee_receipt_list_by_school_id(data):
 
     fee_receipt_list_response = []
 
-    for fee_receipt_object in FeeReceipt.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
-                                                        generationDateTime__gte=startDate,
-                                                        generationDateTime__lte=endDate).order_by('-generationDateTime'):
+    for fee_receipt_object in FeeReceiptOld.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
+                                                           generationDateTime__gte=startDate,
+                                                           generationDateTime__lte=endDate).order_by('-generationDateTime'):
 
         fee_receipt_list_response.append(get_fee_receipt_by_object(fee_receipt_object))
 
@@ -93,9 +93,9 @@ def get_fee_receipt_list_by_employee_id(data):
 
     fee_receipt_list_response = []
 
-    for fee_receipt_object in FeeReceipt.objects.filter(parentEmployee_id=data['parentEmployee'],
-                                                        generationDateTime__gte=startDate,
-                                                        generationDateTime__lte=endDate).order_by('-generationDateTime'):
+    for fee_receipt_object in FeeReceiptOld.objects.filter(parentEmployee_id=data['parentEmployee'],
+                                                           generationDateTime__gte=startDate,
+                                                           generationDateTime__lte=endDate).order_by('-generationDateTime'):
 
         fee_receipt_list_response.append(get_fee_receipt_by_object(fee_receipt_object))
 
@@ -106,7 +106,7 @@ def get_fee_receipt_list_by_student_id(data):
 
     fee_receipt_list_response = []
 
-    for fee_receipt_object in FeeReceipt.objects.filter(parentStudent_id=data['studentDbId']).order_by('-generationDateTime'):
+    for fee_receipt_object in FeeReceiptOld.objects.filter(parentStudent_id=data['studentDbId']).order_by('-generationDateTime'):
 
         fee_receipt_response = get_fee_receipt_by_object(fee_receipt_object)
         fee_receipt_list_response.append(fee_receipt_response)
@@ -121,12 +121,12 @@ def create_fee_receipt(data):
 
     with transaction.atomic():
         new_receipt_number = 1
-        last_receipt_number = FeeReceipt.objects.filter(parentStudent__parentSchool=school_object).aggregate(Max('receiptNumber'))['receiptNumber__max']
+        last_receipt_number = FeeReceiptOld.objects.filter(parentStudent__parentSchool=school_object).aggregate(Max('receiptNumber'))['receiptNumber__max']
         if last_receipt_number is not None:
             new_receipt_number = last_receipt_number + 1
-        fee_receipt_object = FeeReceipt(receiptNumber=new_receipt_number,
-                                        remark=data['remark'],
-                                        parentStudent=student_object)
+        fee_receipt_object = FeeReceiptOld(receiptNumber=new_receipt_number,
+                                           remark=data['remark'],
+                                           parentStudent=student_object)
         fee_receipt_object.save()
 
         if 'parentEmployee' in data:

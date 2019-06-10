@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-api_version = 'v2.0/'
+api_version = 'v2.1/'
 
 urlpatterns = [
 	url(r'^admin/', admin.site.urls),
@@ -28,6 +28,7 @@ urlpatterns = [
 	url(r'^'+api_version+'expense/', include('expense_app.urls')),
 	url(r'^'+api_version+'class/', include('class_app.urls')),
 	# url(r'^'+api_version+'fee/', include('fee_app.urls')),
+	url(r'^'+api_version+'fees/', include('fees_third_app.urls')),
 	url(r'^'+api_version+'fee-second/', include('fee_second_app.urls')),
 	url(r'^'+api_version+'subjects/', include('subject_app.urls')),
 	url(r'^'+api_version+'examinations/', include('examination_app.urls')),

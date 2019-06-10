@@ -27,3 +27,16 @@ def user_permission(function):
     wrap.__name__ = function.__name__
     return wrap
 
+
+def user_permission_new(function):
+    def wrap(*args, **kwargs):
+        if args[1].user.is_authenticated:
+            data = {'response': get_success_response(function(*args, **kwargs))}
+            return JsonResponse(data)
+        else:
+            return JsonResponse(
+                {'response': get_error_response('User is not authenticated, logout and login again.')})
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap
+
