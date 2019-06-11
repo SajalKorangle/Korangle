@@ -144,6 +144,8 @@ def get_school_data_by_object(school_object):
 
     school_data['employeeId'] = None
 
+    school_data['dateOfExpiration'] = school_object.dateOfExpiration
+
     school_data['moduleList'] = []
     school_data['studentList'] = []
 
