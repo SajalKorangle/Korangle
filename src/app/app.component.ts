@@ -6,6 +6,7 @@ import { DataStorage } from './classes/data-storage';
 import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
+import moment = require('moment');
 
 @Component({
     selector: 'app-root',
@@ -16,6 +17,7 @@ import {environment} from '../environments/environment.prod';
 export class AppComponent implements OnInit {
     subRouteValue: string;
     isLoading = false;
+    countDownForValidity = -1;
 
 	public user = new User();
 
@@ -35,6 +37,7 @@ export class AppComponent implements OnInit {
                     localStorage.setItem('schoolJWT', '');
                 } else {
                     this.user.initializeUserData(data);
+                    this.lastMonthIsGoingOn();
                 }
             });
         }
@@ -53,4 +56,34 @@ export class AppComponent implements OnInit {
         }, 1000);
     }
 
+    userHasAssignTaskCapability(): boolean {
+        for (let i = 0; i < this.user.activeSchool.moduleList.length; i++) {
+            if (this.user.activeSchool.moduleList[i].path === 'employees') {
+                const cd = this.user.activeSchool.moduleList[i];
+                for (let j = 0; j < cd.taskList.length; j++) {
+                    if (cd.taskList[j].path === 'assign_task') {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    lastMonthIsGoingOn(): boolean {
+        const date1 = new Date();
+        if (this.userHasAssignTaskCapability()) {
+            const date2 = moment(this.user.activeSchool.dateOfExpiration);
+            const diff1 = moment.duration(date2.diff(date1)).asDays();
+            const diff2 = Math.ceil(diff1);
+            if (diff2 <= 15) {
+                this.countDownForValidity = diff2;
+            }
+            if (diff2 <= 30) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }

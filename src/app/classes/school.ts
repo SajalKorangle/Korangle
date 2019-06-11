@@ -19,6 +19,8 @@ export class School {
     registrationNumber: string;
     affiliationNumber: string;
 
+    dateOfExpiration: string;
+
     opacity: number;
 
     headerSize: string;
@@ -61,6 +63,8 @@ export class School {
         this.role = schoolData.role;
 
         this.employeeId = schoolData.employeeId;
+
+        this.dateOfExpiration = schoolData.dateOfExpiration;
 
         if ('employeeId' in schoolData && schoolData['employeeId'] !== null) {
             this.moduleList = schoolData.moduleList;
