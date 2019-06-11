@@ -24,7 +24,6 @@ export class ExperienceCertiComponent {
 
     dateOfJoiningMissing = false;
     fatherNameMissing = false;
-    mothernameMissing = false;
     currentPostMissing = false;
 
 
@@ -46,6 +45,7 @@ export class ExperienceCertiComponent {
             this.isLoading = false;
             this.employeeFullProfile = value[0];
             this.validateAllParameters(this.employeeFullProfile);
+            this.populateRemark();
         }, error => {
             this.isLoading = false;
         });
@@ -82,22 +82,34 @@ export class ExperienceCertiComponent {
     }
 
     validateAllParameters(employeeFullProfile) {
-       if (!employeeFullProfile.dateOfJoining) {
-           this.dateOfJoiningMissing = true;
-           this.numberOfMissingParameters++;
-       }
-       if (!employeeFullProfile.fatherName) {
-           this.fatherNameMissing = true;
-           this.numberOfMissingParameters++;
-       }
-       if (!employeeFullProfile.motherName) {
-           this.mothernameMissing = true;
-           this.numberOfMissingParameters++;
-       }
-       if ( !employeeFullProfile.currentPost) {
-           this.currentPostMissing = true;
-           this.numberOfMissingParameters++;
-       }
+        this.numberOfMissingParameters = 0;
+        this.dateOfJoiningMissing = false;
+        this.fatherNameMissing = false;
+        this.currentPostMissing = false;
+        if (!employeeFullProfile.dateOfJoining) {
+            this.dateOfJoiningMissing = true;
+            this.numberOfMissingParameters++;
+        }
+        if (!employeeFullProfile.fatherName) {
+            this.fatherNameMissing = true;
+            this.numberOfMissingParameters++;
+        }
+        if ( !employeeFullProfile.currentPost) {
+            this.currentPostMissing = true;
+            this.numberOfMissingParameters++;
+        }
+    }
+
+    populateRemark(): void {
+        if (this.employeeFullProfile.dateOfLeaving) {
+            this.remark = (this.employeeFullProfile.gender=='Female'?'Her':'His')
+                +' general conduct was good during the work. We hope for '
+                + (this.employeeFullProfile.gender=='Female'?'her':'his')
+                + ' better future.';
+        } else {
+            this.remark = (this.employeeFullProfile.gender=='Female'?'Her':'His')
+                +' general conduct is good during the work.';
+        }
     }
 
 }

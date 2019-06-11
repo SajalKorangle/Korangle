@@ -9,10 +9,10 @@
 
         <div class="row" style="font-weight: 800;">
             <div class="col-md-3">
-                {{employee.name}}
+                {{employee.name | titlecase}}
             </div>
             <div class="col-md-3">
-                {{employeeFullProfile.fatherName}}
+                Mr. {{employeeFullProfile.fatherName | titlecase}}
             </div>
             <div class="col-md-3">
                 {{employee.employeeNumber}}
@@ -38,7 +38,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <div class="form-group form-black label-floating">
-                        <label class="control-label">remark</label>
+                        <label class="control-label">Remark</label>
                         <textarea class="form-control" rows="3"
                                   [(ngModel)]="remark"></textarea>
                     </div>
@@ -51,13 +51,11 @@
                 <div *ngIf="numberOfMissingParameters === 1" style="color: red">
                     <span *ngIf="dateOfJoiningMissing">Date of Joining&nbsp;</span>
                     <span *ngIf="currentPostMissing">Current Post&nbsp;</span>
-                    <span *ngIf="mothernameMissing">Mother Name&nbsp;</span>
                     <span *ngIf="fatherNameMissing">Father Name&nbsp;</span>is missing.
                 </div>
                 <div *ngIf="numberOfMissingParameters > 1" style="color: red">
                     <span *ngIf="dateOfJoiningMissing">Date of Joining ,&nbsp;</span>
                     <span *ngIf="currentPostMissing">Current Post ,&nbsp;</span>
-                    <span *ngIf="mothernameMissing">Mother Name ,&nbsp;</span>
                     <span *ngIf="fatherNameMissing">Father Name ,&nbsp;</span>are missing.
                 </div>
             </div>

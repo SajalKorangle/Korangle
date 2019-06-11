@@ -26,7 +26,6 @@ export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterV
         this.printExpCertiComponentSubscription = EmitterService.get('print-employee-exp-certi-component').subscribe( value => {
             this.employeeProfile = value;
             this.employee = this.employeeProfile.employeeFullProfile;
-            console.log(this.employee);
             this.viewChecked = false;
         });
     }
