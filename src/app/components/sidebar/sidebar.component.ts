@@ -113,6 +113,11 @@ export class SidebarComponent implements OnInit {
         });
     }
 
+    getFirstName(value: string): string {
+        if (!value) { return ''; }
+        return value.split(' ')[0];
+    }
+
     logout() {
         localStorage.setItem('schoolJWT', '');
         this.user.isAuthenticated = false;

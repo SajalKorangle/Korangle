@@ -31,17 +31,12 @@ export class School {
 
     moduleList = [];
     studentList = [];
+    parentModuleList = [];
 
     fromServerObject(schoolData: any) {
         this.dbId = schoolData.dbId;
         this.name = schoolData.name;
         this.printName = schoolData.printName;
-        /*if (Constants.DJANGO_SERVER === 'http://localhost:8000') {
-            // this.logo = 'http://54.174.109.85:8000' + schoolData.logo;
-            this.logo = schoolData.logo;
-        } else {
-            this.logo = Constants.DJANGO_SERVER + schoolData.logo;
-        }*/
         this.mobileNumber = schoolData.mobileNumber;
         this.profileImage = schoolData.profileImage;
         this.principalSignatureImage = schoolData.principalSignatureImage;
@@ -106,11 +101,11 @@ export class School {
                     path: 'view_profile',
                     icon: 'account_circle',
                 },
-                {
+                /*{
                     title: 'Fees',
                     path: 'view_fee',
                     icon: 'receipt',
-                },
+                },*/
                 {
                     title: 'Attendance',
                     path: 'view_attendance',
@@ -123,6 +118,22 @@ export class School {
                 }
             ];
         });
+
+        if (this.studentList.length > 0) {
+            this.parentModuleList.push({
+                'name': this.studentList[0].fathersName,
+                'studentList': this.studentList,
+                'id': this.studentList[0].id,
+                'taskList': [
+                    {
+                        title: 'Fees',
+                        path: 'view_fee',
+                        icon: 'receipt',
+                    },
+                ]
+            })
+        }
+
     }
 
 }

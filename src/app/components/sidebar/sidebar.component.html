@@ -87,7 +87,7 @@
                                      style="width: 35px; height: 35px;"
                                      src="{{student.profileImage}}"></i>
                                 <p>
-                                    {{student.name | titlecase}}
+                                    {{getFirstName(student.name) | titlecase}}
                                     <i *ngIf="!student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
                                     <i *ngIf="student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
                                 </p>
@@ -108,8 +108,8 @@
 
                 <!-- Single Student -->
                 <ng-container *ngIf="user.activeSchool.studentList.length === 1">
-                    <ng-container  *ngFor="let task of user.activeSchool.studentList[0].taskList">
-                        <li [class.active]="user.activeSchool.studentList[0].name === user.section.route"
+                    <ng-container *ngFor="let task of user.activeSchool.studentList[0].taskList">
+                        <li [class.active]="user.activeSchool.studentList[0].name === user.section.title && task.title===user.section.subTitle"
                             [attr.data-color]='user.activeSchool.primaryThemeColor'
                             style="border-bottom: 0.1px solid lightgrey;">
                             <a (click)="changePage(task, user.activeSchool.studentList[0]);">
@@ -121,6 +121,18 @@
                         </li>
                     </ng-container>
                 </ng-container>
+
+                <!-- Parent Module (Fees) -->
+                <li [class.active]="user.activeSchool.parentModuleList[0].name === user.section.title"
+                    [attr.data-color]='user.activeSchool.primaryThemeColor'
+                    style="border-bottom: 0.1px solid lightgrey;">
+                    <a (click)="changePage(user.activeSchool.parentModuleList[0].taskList[0], user.activeSchool.parentModuleList[0]);">
+                        <i class="material-icons">{{user.activeSchool.parentModuleList[0].taskList[0].icon}}</i>
+                        <p>
+                            {{user.activeSchool.parentModuleList[0].taskList[0].title | titlecase}}
+                        </p>
+                    </a>
+                </li>
 
             </ng-container>
 

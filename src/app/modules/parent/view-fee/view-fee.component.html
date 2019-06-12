@@ -1,176 +1,191 @@
 <div class="card-content table-responsive">
 
-    <ng-container *ngIf="studentFeeProfile && studentFeeStatusList && !isLoading">
+    <ng-container *ngIf="!isLoading">
 
-        <ng-container *ngIf="getStudentFeesDue()>0">
-            <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th></th>
-                    <th class="text-right">Due</th>
-                    <th class="text-right">Total</th>
-                </tr>
-                </thead>
+        <!-- Student Fee Structures-->
+        <ng-container *ngIf="getOverallFeesDue() > 0">
+
+            <table class="table table-hover" style="margin-bottom: 40px;">
                 <tbody>
-                <tr>
-                    <td style="font-weight: 800">{{studentFeeProfile.name | titlecase}}</td>
-                    <td style="font-weight: 800" align="right">{{getStudentFeesDue()-getStudentPayment()}}</td>
-                    <td style="font-weight: 800" align="right">{{getStudentTotalFee()}}</td>
+                <tr style="font-weight: 800 !important; font-size: 22px !important;">
+                    <td align="left">Fees Due Till Month: <span style="color: red;">{{getOverallFeesDueTillMonth() | currency:'INR':'':'1.0-0'}}</span></td>
+                    <td align="right">Total Fees: {{getOverallTotalFees() | currency:'INR':'':'1.0-0'}}</td>
                 </tr>
-                <ng-container *ngFor="let sessionFeeStatus of studentFeeStatusList; let i=index;">
-                    <ng-container  *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
-                        <tr *ngIf="showSessionFeesLine()">
-                            <td style="font-weight: 600; padding-left: 20px">{{sessionFeeStatus.sessionName}}</td>
-                            <td style="font-weight: 600" align="right">{{getSessionFeesDue(sessionFeeStatus)-getSessionPayment(sessionFeeStatus)}}</td>
-                            <td style="font-weight: 600" align="right">{{getSessionTotalFee(sessionFeeStatus)}}</td>
+                <tr style="font-weight: 800 !important; font-size: 22px !important;">
+                    <td align="left">Total Fees Due: {{getOverallFeesDue() | currency:'INR':'':'1.0-0'}}</td>
+                    <td align="left"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-hover">
+                <tbody>
+                <tr *ngIf="lateFeeVisible">
+                    <td rowspan="2" align="center">Title</td>
+                    <td colspan="2" align="center">Fees</td>
+                    <td colspan="2" align="center">Late Fees</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td *ngIf="!lateFeeVisible" align="center">Title</td>
+                    <td align="center">Due</td>
+                    <td align="center">Total</td>
+                    <td *ngIf="lateFeeVisible" align="center">Due</td>
+                    <td *ngIf="lateFeeVisible" align="center">Total</td>
+                    <td></td>
+                </tr>
+                <ng-container *ngFor="let student of getStudentList();">
+
+                    <!-- Student -->
+
+                    <tr style="font-weight: 800 !important; font-size: 20px !important; background-color: #f8f5e6 !important; color: blue !important;">
+                        <td align="left">{{student.name}}</td>
+                        <td align="center">{{getStudentFeesDue(student)}}</td>
+                        <td align="center">{{getStudentTotalFees(student)}}</td>
+                        <td *ngIf="lateFeeVisible" align="center">{{getStudentLateFeesDue(student)}}</td>
+                        <td *ngIf="lateFeeVisible" align="center">{{getStudentLateFeeTotal(student)}}</td>
+                        <td></td>
+                    </tr>
+
+                    <ng-container *ngFor="let session of getFilteredSessionListByStudent(student); let sessionIndex=index;">
+
+                        <!-- Session -->
+
+                        <tr style="font-weight: 500 !important; font-size: 16px !important;">
+                            <td align="left">{{sessionIndex+1}}. Session {{session.name}}</td>
+                            <td align="center">{{getSessionFeesDue(student, session)}}</td>
+                            <td align="center">{{getSessionTotalFees(student, session)}}</td>
+                            <td *ngIf="lateFeeVisible" align="center">{{getSessionLateFeesDue(student, session)}}</td>
+                            <td *ngIf="lateFeeVisible" align="center">{{getSessionLateFeeTotal(student, session)}}</td>
+                            <td></td>
                         </tr>
-                        <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
-                            <tr *ngIf="getComponentTotalFee(component) != 0">
-                                <td style="padding-left: 30px">{{component.feeType}}</td>
-                                <td align="right">{{getComponentFeesDue(component)-getComponentPayment(component)}}</td>
-                                <td align="right">{{getComponentTotalFee(component)}}</td>
-                            </tr>
-                            <ng-container *ngIf="component.frequency == frequencyList[1]">
-                                <ng-container *ngFor="let month of component.monthList">
-                                    <tr *ngIf="getComponentMonthlyTotalFee(month)>0">
-                                        <td style="padding-left: 40px">{{month.month}}</td>
-                                        <td align="right">{{getComponentMonthlyFeesDue(month)-getComponentMonthlyPayment(month)}}</td>
-                                        <td align="right">{{getComponentMonthlyTotalFee(month)}}</td>
-                                    </tr>
+
+                        <ng-container *ngFor="let studentFee of getFilteredStudentFeeListBySession(student, session); let studentFeeIndex=index;">
+                            <ng-container *ngIf="studentFee.isAnnually">
+
+                                <!-- Student Fee Annually -->
+
+                                <tr style="font-weight: 500 !important; font-size: 16px !important;">
+                                    <td align="left" style="padding-left: 50px;">{{studentFeeIndex+1}}. {{getFeeTypeByStudentFee(studentFee).name}}</td>
+                                    <td align="center">{{getStudentFeeInstallmentFeesDue(studentFee, 'april')}}</td>
+                                    <td align="center">{{getStudentFeeInstallmentTotalFees(studentFee, 'april')}}</td>
+                                    <td *ngIf="lateFeeVisible" align="center">{{getStudentFeeInstallmentLateFeesDue(studentFee, 'april')}}</td>
+                                    <td *ngIf="lateFeeVisible" align="center">{{getStudentFeeInstallmentLateFeeTotal(studentFee, 'april')}}</td>
+                                    <td></td>
+                                </tr>
+
+                            </ng-container>
+                            <ng-container *ngIf="!studentFee.isAnnually">
+
+                                <!-- Student Fee Not Annually -->
+
+                                <tr style="font-weight: 500 !important; font-size: 16px !important;">
+                                    <td align="left" style="padding-left: 50px;">{{studentFeeIndex+1}}. {{getFeeTypeByStudentFee(studentFee).name}}</td>
+                                    <td align="center">{{getStudentFeeFeesDue(studentFee)}}</td>
+                                    <td align="center">{{getStudentFeeTotalFees(studentFee)}}</td>
+                                    <td *ngIf="lateFeeVisible" align="center">{{getStudentFeeLateFeesDue(studentFee)}}</td>
+                                    <td *ngIf="lateFeeVisible" align="center">{{getStudentFeeLateFeeTotal(studentFee)}}</td>
+                                    <td align="center">
+                                        <button type="button"
+                                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                                style="padding: 3px 8px;"
+                                                (click)="showOrHideStudentFeeDetails(studentFee);">
+                                            <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">-</ng-container>
+                                            <ng-container *ngIf="!studentFeeDetailsVisible(studentFee)">+</ng-container>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">
+                                    <ng-container *ngFor="let installment of getFilteredInstallmentListByStudentFee(studentFee); let installmentIndex=index;">
+
+                                        <!-- Installment -->
+
+                                        <tr>
+                                            <td align="left" style="padding-left: 60px;">{{installmentIndex+1}}. {{installment | titlecase}}</td>
+                                            <td align="center">{{getStudentFeeInstallmentFeesDue(studentFee, installment)}}</td>
+                                            <td align="center">{{getStudentFeeInstallmentTotalFees(studentFee, installment)}}</td>
+                                            <td *ngIf="lateFeeVisible" align="center">{{getStudentFeeInstallmentLateFeesDue(studentFee, installment)}}</td>
+                                            <td *ngIf="lateFeeVisible" align="center">{{getStudentFeeInstallmentLateFeeTotal(studentFee, installment)}}</td>
+                                            <td></td>
+                                        </tr>
+
+                                    </ng-container>
                                 </ng-container>
                             </ng-container>
                         </ng-container>
                     </ng-container>
                 </ng-container>
+                <ng-container *ngFor="let student of getNoFeesDueStudentList();">
+                    <tr style="font-weight: 800 !important; font-size: 20px !important;">
+                        <td align="left">{{student.name}}</td>
+                        <td align="center">No Fees Due</td>
+                    </tr>
+                </ng-container>
                 </tbody>
             </table>
-            <!-- div class="row hoverHighlight" style="font-size: 16px;">
-                <div class="col-xs-3 col-xs-offset-6" align="end">
-                    Due
-                </div>
-                <div class="col-xs-3" align="end">
-                    Total
-                </div>
-            </div>
-            <div class="row hoverHighlight" style="font-size: 16px; font-weight: 800 !important;">
-                <div class="col-xs-6">
-                    {{studentFeeProfile.name | titlecase}}
-                </div>
-                <div class="col-xs-3" align="end">
-                    {{getStudentFeesDue()-getStudentPayment()}}
-                </div>
-                <div class="col-xs-3" align="end">
-                    {{getStudentTotalFee()}}
-                </div>
-            </div>
-            <div>
-                <ng-container *ngFor="let sessionFeeStatus of studentFeeStatusList; let i=index;">
-                    <ng-container  *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
-                        <div class="row hoverHighlight"
-                             style="font-size: 16px; font-weight: 500 !important;"
-                             *ngIf="showSessionFeesLine()">
-                            <div class="col-xs-6">
-                                {{sessionFeeStatus.sessionName}}
-                            </div>
-                            <div class="col-xs-3" align="end">
-                                {{getSessionFeesDue(sessionFeeStatus)-getSessionPayment(sessionFeeStatus)}}
-                            </div>
-                            <div class="col-xs-3" align="end">
-                                {{getSessionTotalFee(sessionFeeStatus)}}
-                            </div>
-                        </div>
-                        <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
-                            <div class="row hoverHighlight"
-                                 *ngIf="getComponentTotalFee(component) != 0"
-                                 style="font-size: 16px; font-weight: 500 !important;">
-                                <div class="col-xs-5 col-xs-offset-1">
-                                    {{component.feeType}}
-                                </div>
-                                <div class="col-xs-3" align="end">
-                                    {{getComponentFeesDue(component)-getComponentPayment(component)}}
-                                </div>
-                                <div class="col-xs-3" align="end">
-                                    {{getComponentTotalFee(component)}}
-                                </div>
-                            </div>
-                            <div *ngIf="component.frequency == frequencyList[1]">
-                                <ng-container *ngFor="let month of component.monthList">
-                                    <div class="row hoverHighlight"
-                                         *ngIf="getComponentMonthlyTotalFee(month)>0"
-                                         style="font-size: 16px; font-weight: 300 !important;">
-                                        <div class="col-xs-4 col-xs-offset-2">
-                                            {{month.month}}
-                                        </div>
-                                        <div class="col-xs-3" align="end">
-                                            {{getComponentMonthlyFeesDue(month)-getComponentMonthlyPayment(month)}}
-                                        </div>
-                                        <div class="col-xs-3" align="end">
-                                            {{getComponentMonthlyTotalFee(month)}}
-                                        </div>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </ng-container>
-                    </ng-container>
-                </ng-container>
-            </div -->
+
         </ng-container>
 
-        <ng-container *ngIf="getStudentTotalFee() === 0">
-            **No Fees Due
+        <ng-container *ngIf="getOverallFeesDue() == 0">
+
+            <span  style="font-weight: 800 !important; font-size: 22px !important;">**No Fees Due</span>
+
         </ng-container>
 
         <div style="margin-top: 25px; margin-bottom: 25px; border-bottom: 1px solid black"> </div>
 
-        <ng-container *ngIf="feeReceiptList && concessionList">
+        <!-- Fee Receipts & Discounts -->
 
-            <mat-accordion>
+        <mat-accordion *ngIf="feeReceiptList && discountList">
 
-                <mat-expansion-panel [disabled]="feeReceiptList.length === 0"
-                                     (opened)="showPreviousFeeDetails = true"
-                                     (closed)="showPreviousFeeDetails = false">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title *ngIf="feeReceiptList.length !== 0">
-                            <span class="hidden-xs">
-                                Last Receipt Date: <i>{{feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>,
-                                Amount: <i>Rs. {{getFeeReceiptTotalAmount(feeReceiptList[0])}}</i>
-                            </span>
-                            <span class="visible-xs">
-                                Latest: <i>Rs. {{getFeeReceiptTotalAmount(feeReceiptList[0])}}</i>,
-                                <i>{{feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>
-                            </span>
-                        </mat-panel-title>
-                        <mat-panel-title *ngIf="feeReceiptList.length === 0">
-                            **No fees submitted yet
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
+            <mat-expansion-panel [disabled]="feeReceiptList.length === 0">
 
-                    <app-fee-receipt-list-old [user]="user"
-                                              [feeReceiptList]="feeReceiptList"
-                                              [whileSubmittingFee]="true"></app-fee-receipt-list-old>
+                <mat-expansion-panel-header>
+                    <mat-panel-title *ngIf="feeReceiptList.length === 0">**No fees submitted yet</mat-panel-title>
+                    <mat-panel-title *ngIf="feeReceiptList.length !== 0">
+                        <span class="hidden-xs" style="color: #7b7b7b;">Last Receipt Date: &nbsp;</span><i>{{feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>, &nbsp;
+                        <span class="hidden-xs" style="color: #7b7b7b;">Amount:  &nbsp;</span>{{getLastDaySubmittedAmount(feeReceiptList[0]) | currency:'INR':'':'1.0-0'}} &nbsp; / &nbsp;
+                        <span class="hidden-xs" style="color: #7b7b7b;">Receipts:  &nbsp;</span>{{getLastDaySubmittedReceipts(feeReceiptList[0]).length}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
 
-                </mat-expansion-panel>
+                <app-fee-receipt-list [user]="user"
+                                      [receiptColumnFilter]="receiptColumnFilter"
+                                      [feeTypeList]="feeTypeList"
+                                      [feeReceiptList]="feeReceiptList"
+                                      [subFeeReceiptList]="subFeeReceiptList"
+                                      [studentList]="selectedStudentList"
+                                      [studentSectionList]="selectedStudentSectionList"
+                                      [employeeList]="employeeList"
+                                      [classList]="classList"
+                                      [sectionList]="sectionList"></app-fee-receipt-list>
 
-                <mat-expansion-panel *ngIf="concessionList.length !== 0"
-                                     [disabled]="concessionList.length === 0"
-                                     (opened)="showPreviousConcessionDetails = true"
-                                     (closed)="showPreviousConcessionDetails = false">
+            </mat-expansion-panel>
 
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Total discount given till now: <i>{{getConcessionListTotalAmount()}}</i>
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
+            <mat-expansion-panel [disabled]="discountList.length === 0">
 
-                    <app-discount-list-old [user]="user"
-                                           [concessionList]="concessionList"
-                                           [whileSubmittingConcession]="true"></app-discount-list-old>
+                <mat-expansion-panel-header>
+                    <mat-panel-title *ngIf="discountList.length === 0">**No discount given yet</mat-panel-title>
+                    <mat-panel-title *ngIf="discountList.length !== 0">
+                        Total Discount given till now:  &nbsp;<i>{{getDiscountListTotalAmount()}}</i>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
 
-                </mat-expansion-panel>
+                <app-discount-list [user]="user"
+                                   [discountColumnFilter]="discountColumnFilter"
+                                   [discountList]="discountList"
+                                   [subDiscountList]="subDiscountList"
+                                   [studentList]="selectedStudentList"
+                                   [studentSectionList]="selectedStudentSectionList"
+                                   [employeeList]="employeeList"
+                                   [classList]="classList"
+                                   [sectionList]="sectionList"></app-discount-list>
 
-            </mat-accordion>
+            </mat-expansion-panel>
 
-        </ng-container>
+        </mat-accordion>
+
 
     </ng-container>
 
