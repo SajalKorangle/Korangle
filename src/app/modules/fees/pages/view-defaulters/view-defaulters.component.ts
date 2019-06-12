@@ -18,6 +18,8 @@ export class ViewDefaultersComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
 
+    nullValue = null;
+
     @Input() user;
 
     subFeeReceiptList: any;
@@ -30,6 +32,13 @@ export class ViewDefaultersComponent implements OnInit {
 
     parentList = [];
 
+    filterTypeList = [
+        'Student',
+        'Parent',
+    ];
+
+    selectedFilterType = this.filterTypeList[1];
+
     // d1 = new Date();
     // d2 = new Date();
 
@@ -37,6 +46,9 @@ export class ViewDefaultersComponent implements OnInit {
 
     maximumNumber = null;
     minimumNumber = null;
+
+    selectedClassSection = null;
+    filteredClassSectionList = [];
 
     serviceAdapter: ViewDefaultersServiceAdapter;
 
@@ -225,6 +237,8 @@ export class ViewDefaultersComponent implements OnInit {
                 return studentSection.parentDivision == section.id;
             });
 
+            this.checkAndAddToFilteredClassSectionList(student['class'], student['section']);
+
             let parentObject = this.parentList.find(parent => {
                 return parent.mobileNumber == student.mobileNumber
                     && parent.mobileNumber != null;
@@ -259,6 +273,58 @@ export class ViewDefaultersComponent implements OnInit {
             return this.getParentTotalFees(b) - this.getParentTotalFees(a);
         });
 
+        this.studentList = this.studentList.sort((a,b) => {
+            let amount = b.feesDueTillMonth - a.feesDueTillMonth;
+            if (amount != 0) { return amount; }
+            amount = b.feesDueOverall - a.feesDueOverall;
+            if (amount != 0) { return amount; }
+            amount = a.feesPaidThisSession - b.feesPaidThisSession;
+            if (amount != 0) { return amount; }
+            return b.totalFeesThisSession - a.totalFeesThisSession;
+        });
+
+        this.filteredClassSectionList = this.filteredClassSectionList.sort((a,b) => {
+            let orderNumber = a.class.orderNumber-b.class.orderNumber
+            if (orderNumber != 0) {return orderNumber;}
+            return a.section.orderNumber-b.section.orderNumber;
+        })
+
+    }
+
+    checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
+        if (this.filteredClassSectionList.find(classSection => {
+            return classSection.class.dbId == classs.dbId && classSection.section.id == section.id;
+        }) == undefined) {
+            this.filteredClassSectionList.push({
+                'class': classs,
+                'section': section,
+            });
+        }
+    }
+
+    getFilteredStudentList(): any {
+        let tempList = this.studentList;
+        if (this.selectedClassSection) {
+            tempList = tempList.filter(student => {
+                return student.class.dbId == this.selectedClassSection.class.dbId
+                    && student.section.id == this.selectedClassSection.section.id;
+            });
+        }
+        if ((this.maximumNumber && this.maximumNumber != '')
+            || (this.minimumNumber && this.minimumNumber != '')) {
+            tempList = tempList.filter(student => {
+                let amount = student.feesDueTillMonth;
+                return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
+                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
+            });
+        }
+        return tempList;
+    }
+
+    getFilteredStudentListFeesDueTillMonth(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student.feesDueTillMonth;
+        }, 0);
     }
 
     getFilteredParentList(): any {
@@ -282,7 +348,7 @@ export class ViewDefaultersComponent implements OnInit {
         }, 0);
     }
 
-    getAllParentFeesDueTillMonth(): any {
+    getFilteredParentListFeesDueTillMonth(): any {
         return this.getFilteredParentList().reduce((total, parent) => {
             return total + this.getParentFeesDueTillMonth(parent);
         }, 0);
@@ -322,14 +388,63 @@ export class ViewDefaultersComponent implements OnInit {
         EmitterService.get('print-student-list').emit(value);*/
     }
     
-    downloadFeesReport(): any {
+    downloadFeesReport(): void {
+
+        if (this.selectedFilterType==this.filterTypeList[0]) {
+            this.downloadStudentFeesReport();
+        } else {
+            this.downloadParentFeesReport();
+        }
+
+    }
+
+    downloadStudentFeesReport(): void {
 
         let template: any;
 
         template = [
 
-            ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 
-                'Fees Due (overall)', 'Fees Paid (this session)', 'Total Fees (this session)'],
+            ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
+                'Fees Due (overall)', 'Fees Paid (this session)', 'Discount (this session)', 'Total Fees (this session)'],
+
+        ];
+
+        let count = 0;
+        this.getFilteredStudentList().forEach(student => {
+            let row = [];
+            row.push(++count);
+            row.push(student.name);
+            row.push(student.fathersName);
+            row.push(student.class.name+', '+student.section.name);
+            row.push(student.mobileNumber);
+            row.push(student.secondMobileNumber);
+            row.push(student.feesDueTillMonth);
+            row.push(student.feesDueOverall);
+            row.push(student.feesPaidThisSession);
+            row.push(student.discountThisSession);
+            row.push(student.totalFeesThisSession);
+            template.push(row);
+        });
+
+        /* generate worksheet */
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
+
+        /* generate workbook and add the worksheet */
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        /* save to file */
+        XLSX.writeFile(wb, 'korangle_student_fees.csv');
+    }
+
+    downloadParentFeesReport(): void {
+
+        let template: any;
+
+        template = [
+
+            ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
+                'Fees Due (overall)', 'Fees Paid (this session)', 'Discount (this session)', 'Total Fees (this session)'],
 
         ];
 
@@ -346,12 +461,13 @@ export class ViewDefaultersComponent implements OnInit {
             } else {
                 row.push('');
                 row.push('');
-                row.push('');
+                row.push(parent.studentList[0].mobileNumber);
                 row.push('');
             }
             row.push(this.getParentFeesDueTillMonth(parent));
             row.push(this.getParentFeesDueOverall(parent));
             row.push(this.getParentFeesPaid(parent));
+            row.push(this.getParentDiscount(parent));
             row.push(this.getParentTotalFees(parent));
             template.push(row);
             if (parent.studentList.length > 1) {
@@ -361,11 +477,12 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push('');
                     newRow.push(student.name);
                     newRow.push(student.class.name+', '+student.section.name);
-                    newRow.push(student.mobileNumber);
+                    newRow.push('');
                     newRow.push(student.secondMobileNumber);
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
                     newRow.push(student.feesPaidThisSession);
+                    newRow.push(student.discountThisSession);
                     newRow.push(student.totalFeesThisSession);
                     template.push(newRow);
                 });
@@ -382,5 +499,5 @@ export class ViewDefaultersComponent implements OnInit {
         /* save to file */
         XLSX.writeFile(wb, 'korangle_parent_fees.csv');
     }
-    
+
 }
