@@ -1,388 +1,620 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import {style, state, trigger, animate, transition} from "@angular/animations";
+import {ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
+import {FeeService} from "../../../services/fee.service";
+import {StudentService} from "../../../services/student.service";
 
-import { FeeOldService } from '../../fees-second/fee-old.service';
+import {ViewFeeServiceAdapter} from "./view-fee.service.adapter";
+import {EmitterService} from "../../../services/emitter.service";
+import {SubFeeReceipt} from "../../../services/fees/sub-fee-receipt";
+import {FeeReceipt} from "../../../services/fees/fee-receipt";
+import {
+    DiscountColumnFilter,
+    INSTALLMENT_LIST,
+    MODE_OF_PAYMENT_LIST,
+    ReceiptColumnFilter
+} from "../../fees/classes/constants";
+import {SESSION_LIST} from "../../../classes/constants/session";
+import {FeeType} from "../../../services/fees/fee-type";
+import {SchoolFeeRule} from "../../../services/fees/school-fee-rule";
+import {StudentFee} from "../../../services/fees/student-fee";
+import {Discount} from "../../../services/fees/discount";
+import {SubDiscount} from "../../../services/fees/sub-discount";
+import {VehicleService} from "../../vehicle/vehicle.service";
+import {EmployeeService} from "../../../services/employee.service";
+import {CommonFunctions} from "../../../classes/common-functions";
+import {ClassService} from "../../../services/class.service";
 
-import { FeeReceipt } from '../../fees-second/classes/common-functionalities';
-
-import { Concession } from '../../fees-second/classes/common-functionalities';
-
-/*import { EmitterService } from '../../../../services/emitter.service';
-import { FREQUENCY_LIST } from '../../classes/constants';*/
-
-import { FREQUENCY_LIST } from '../../fees-second/classes/constants';
-
-const APRIL = 'APRIL';
-const MAY = 'MAY';
-const JUNE = 'JUNE';
-const JULY = 'JULY';
-const AUGUST = 'AUGUST';
-const SEPTEMBER = 'SEPTEMBER';
-const OCTOBER = 'OCTOBER';
-const NOVEMBER = 'NOVEMBER';
-const DECEMBER = 'DECEMBER';
-const JANUARY = 'JANUARY';
-const FEBRUARY = 'FEBRUARY';
-const MARCH = 'MARCH';
-
+declare const $: any;
 
 @Component({
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [ FeeOldService ],
+    providers: [ FeeService, StudentService, ClassService, VehicleService, EmployeeService ],
 })
 
-export class ViewFeeComponent implements OnInit, OnChanges {
+export class ViewFeeComponent implements OnInit {
 
     @Input() user;
 
-    @Input() studentId;
+    // Constant Lists
+    installmentList = INSTALLMENT_LIST;
+    sessionList = SESSION_LIST;
+    modeOfPaymentList = MODE_OF_PAYMENT_LIST;
+    receiptColumnFilter = new ReceiptColumnFilter();
+    discountColumnFilter = new DiscountColumnFilter();
 
-    studentFeeProfile: any;
+    // From Service Adapter
+    feeTypeList: FeeType[];
+    schoolFeeRuleList: SchoolFeeRule[];
+    studentFeeList: StudentFee[];
+    feeReceiptList: FeeReceipt[];
+    subFeeReceiptList: SubFeeReceipt[];
+    discountList: Discount[];
+    subDiscountList: SubDiscount[];
+    busStopList = [];
+    employeeList = [];
 
-    studentFeeStatusList: any;
+    // Data from Parent Student Filter
+    classList = [];
+    sectionList = [];
 
-    showPreviousFeeDetails: boolean;
+    selectedStudentList = [];
+    selectedStudentSectionList = [];
 
-    showPreviousConcessionDetails: boolean;
+    studentFeeDetailsVisibleList = [];
 
-    feeReceiptList: any;
+    lateFeeVisible = true;
 
-    concessionList: any;
-
-    remark: string;
+    serviceAdapter: ViewFeeServiceAdapter;
 
     isLoading = false;
 
-    frequencyList = FREQUENCY_LIST;
-
-    constructor (private feeService: FeeOldService) { }
-
-    ngOnChanges(): void {
-        this.ngOnInit();
-    }
-
-    initializeData(): void {
-        this.studentFeeProfile = null;
-        this.studentFeeStatusList = null;
-        this.showPreviousFeeDetails = null;
-        this.showPreviousConcessionDetails = null;
-        this.feeReceiptList = null;
-        this.concessionList = null;
-        this.remark = null;
-        this.isLoading = false;
-        this.frequencyList = FREQUENCY_LIST;
-    }
+    constructor (public feeService: FeeService,
+                 public studentService: StudentService,
+                 public vehicleService: VehicleService,
+                 public employeeService: EmployeeService,
+                 public classService: ClassService,
+                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
-        this.initializeData();
-        const data = {
-            studentDbId: this.user.section.student.id,
-        };
-        // this.selectedStudent = this.user.activeSchool.section.student;
-        this.getStudentFeeProfile(data);
-        this.getStudentFeeReceiptList(data);
-        this.getStudentConcessionList(data);
+
+        this.selectedStudentList = this.user.section.student.studentList;
+
+        this.serviceAdapter = new ViewFeeServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+
+        this.receiptColumnFilter.receiptNumber = false;
+        this.receiptColumnFilter.scholarNumber = false;
+        this.receiptColumnFilter.printButton = false;
+
+        if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.receiptColumnFilter.class = false;
+            this.receiptColumnFilter.employee = false;
+        }
+
+        this.discountColumnFilter.discountNumber = false;
+        this.discountColumnFilter.scholarNumber = false;
+
+        if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.discountColumnFilter.class = false;
+            this.discountColumnFilter.employee = false;
+        }
+
     }
 
-    /*getStudentFeeDetails(student: any): void {
-        const data = {
-            studentDbId: student.dbId,
-        };
-        this.selectedStudent = student;
-        this.getStudentFeeProfile(data);
-        this.getStudentFeeReceiptList(data);
-    }*/
-
-    getStudentConcessionList(data): void {
-        this.concessionList = null;
-        this.feeService.getStudentConcessionList(data, this.user.jwt).then(concessionList => {
-            this.concessionList = concessionList;
-            console.log(this.concessionList);
-        });
+    detectChanges(): void {
+        this.cdRef.detectChanges();
     }
 
-    getStudentFeeReceiptList(data): void {
-        this.feeReceiptList = null;
-        this.feeService.getStudentFeeReceiptList(data, this.user.jwt).then(feeReceiptList => {
-            this.feeReceiptList = feeReceiptList;
-            console.log(this.feeReceiptList);
-        });
-    }
+    handleStudentFeeProfile(): void {
 
-    getStudentFeeProfile(data: any): void {
-        this.isLoading = true;
-        this.studentFeeStatusList = null;
-        data['sessionDbId'] = this.user.activeSchool.currentSessionDbId;
-        this.feeService.getStudentFeeProfile(data, this.user.jwt).then( studentFeeProfile => {
-            this.isLoading = false;
-            this.studentFeeProfile = studentFeeProfile;
-            this.studentFeeStatusList = studentFeeProfile['sessionFeeStatusList'];
-            this.studentFeeStatusList.forEach(sessionFeeStatus => {
-                sessionFeeStatus.componentList.forEach( component => {
-                    if (component.frequency === FREQUENCY_LIST[0]) {
-                        component.payment = 0;
-                    } else if ( component.frequency === FREQUENCY_LIST[1]) {
-                        component.monthList.forEach( componentMonthly => {
-                            componentMonthly.payment = 0;
-                        });
-                    }
-                });
+        this.selectedStudentList.forEach(student => {
+            this.sessionList.forEach(session => {
+                if(this.getSessionFeesDue(student, session)
+                    + this.getSessionLateFeesDue(student, session) == 0) {
+                    this.studentFeeList = this.studentFeeList.filter(studentFee => {
+                        return studentFee.parentStudent != student.id || studentFee.parentSession != session.id;
+                    });
+                }
             });
-            this.showPreviousFeeDetails = false;
-            this.showPreviousConcessionDetails = false;
-            console.log(this.studentFeeStatusList);
-        }, error => {
-            this.isLoading = false;
-            alert('error');
+        });
+
+        this.lateFeeVisible = this.getStudentList().reduce((total, student) => {
+            return total + this.getStudentLateFeeTotal(student);
+        },0) > 0;
+
+        this.studentFeeDetailsVisibleList = [];
+
+    }
+
+    getFeeTypeByStudentFee(studentFee: any): any {
+        return this.feeTypeList.find(feeType => {
+            return feeType.id == studentFee.parentFeeType;
         });
     }
 
-    getConcessionListTotalAmount(): number {
-        return Concession.getConcessionListTotalAmount(this.concessionList);
+    formatDate(dateStr: any): any {
+
+        let d;
+        if (dateStr == null) {
+            d = new Date();
+        } else {
+            d = new Date(dateStr);
+        }
+
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        let year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
     }
 
-    showSessionFeesLine(): boolean {
-        let number = 0;
-        this.studentFeeStatusList.forEach(sessionFeeStatus => {
-            if (this.getSessionFeesDue(sessionFeeStatus) > 0) {
-                number += 1;
-            }
+    showOrHideStudentFeeDetails(studentFee: any): void {
+        if (this.studentFeeDetailsVisibleList.find(item => {
+            return item == studentFee.id;
+        })) {
+            this.studentFeeDetailsVisibleList = this.studentFeeDetailsVisibleList.filter(item => {
+                return item != studentFee.id;
+            });
+        } else {
+            this.studentFeeDetailsVisibleList.push(studentFee.id);
+        }
+    }
+
+    studentFeeDetailsVisible(studentFee: any): boolean {
+        return this.studentFeeDetailsVisibleList.find(item => {
+            return item == studentFee.id;
+        }) != undefined;
+    }
+
+    ////////////////////////
+    /// For Fee Structre ///
+    ////////////////////////
+
+    // Overall
+    getOverallFeesDueTillMonth(): number {
+        let amount = 0;
+        this.getStudentList().forEach(student => {
+            amount += this.getStudentFeesDueTillMonth(student);
+            amount += this.getStudentLateFeesDueTillMonth(student);
         });
-        return number > 1;
+        return amount;
     }
 
-    getFeeReceiptTotalAmount(feeReceipt: any): number {
-        return FeeReceipt.getFeeReceiptTotalAmount(feeReceipt);
+    getOverallFeesDue(): number {
+        let amount = 0;
+        this.getStudentList().forEach(student => {
+            amount += this.getStudentFeesDue(student);
+            amount += this.getStudentLateFeesDue(student);
+        });
+        return amount;
     }
 
-    // Student Payment & Fee
+    getOverallTotalFees(): number {
+        let amount = 0;
+        this.getStudentList().forEach(student => {
+            amount += this.getStudentTotalFees(student);
+            amount += this.getStudentLateFeeTotal(student);
+        });
+        return amount;
+    }
+    
+    // Student
+    getStudentList(): any {
+        return this.selectedStudentList.filter(student => {
+            return this.getStudentFeesDue(student)
+                + this.getStudentLateFeesDue(student) > 0;
+        });
+    }
 
-    handleStudentPaymentChange(payment: number): void {
-        if (payment === null) payment = 0;
-        let amountLeft = payment;
-        this.studentFeeStatusList.forEach(sessionFeeStatus => {
-            let amountDue = this.getSessionFeesDue(sessionFeeStatus);
-            if(amountDue > amountLeft) {
-                this.handleSessionPaymentChange(sessionFeeStatus, amountLeft);
-                amountLeft = 0;
+    getNoFeesDueStudentList(): any {
+        return this.selectedStudentList.filter(student => {
+            return this.getStudentFeesDue(student)
+                + this.getStudentLateFeesDue(student) == 0;
+        });
+    }
+
+    getStudentFeesDue(student: any): number {
+        let amount = 0;
+        this.getFilteredSessionListByStudent(student).forEach(session => {
+            amount += this.getSessionFeesDue(student, session);
+        });
+        return amount;
+    }
+
+    getStudentTotalFees(student: any): number {
+        let amount = 0;
+        this.getFilteredSessionListByStudent(student).forEach(session => {
+            amount += this.getSessionTotalFees(student, session);
+        });
+        return amount;
+    }
+
+    getStudentLateFeesDue(student: any): number {
+        let amount = 0;
+        this.getFilteredSessionListByStudent(student).forEach(session => {
+            amount += this.getSessionLateFeesDue(student, session);
+        });
+        return amount;
+    }
+
+    getStudentLateFeeTotal(student: any): number {
+        let amount = 0;
+        this.getFilteredSessionListByStudent(student).forEach(session => {
+            amount += this.getSessionLateFeeTotal(student, session);
+        });
+        return amount;
+    }
+
+    getStudentClearanceDate(student: any): any {
+        let clearanceDate = new Date('1000-01-01');
+        let result = null;
+        this.getFilteredSessionListByStudent(student).every(session => {
+            let sessionClearanceDate = this.getSessionClearanceDate(student, session);
+            if (sessionClearanceDate) {
+                if ((new Date(sessionClearanceDate).getTime() > clearanceDate.getTime())) {
+                    clearanceDate = new Date(sessionClearanceDate);
+                    result = sessionClearanceDate;
+                }
             } else {
-                this.handleSessionPaymentChange(sessionFeeStatus, amountDue);
-                amountLeft -= amountDue;
+                clearanceDate = null;
+                result = null;
+                return false;
             }
+            return true;
         });
+        return result;
     }
 
-    getStudentPayment(): number {
-        let payment = 0;
-        this.studentFeeStatusList.forEach(sessionFeeStatus => {
-            payment += this.getSessionPayment(sessionFeeStatus);
-        });
-        return payment;
-    }
-
-    getStudentTotalFee(): number {
+    getStudentFeesDueTillMonth(student: any): number {
         let amount = 0;
-        this.studentFeeStatusList.forEach(sessionFeeStatus => {
-            if (this.getSessionFeesDue(sessionFeeStatus) > 0) {
-                amount += this.getSessionTotalFee(sessionFeeStatus);
+        this.getFilteredSessionListByStudent(student).forEach(session => {
+            if ((new Date(session.endDate)).getTime() < (new Date()).getTime()) {
+                amount += this.getSessionFeesDue(student, session);
+            } else {
+                amount += this.getSessionFeesDueTillMonth(student, session);
             }
         });
         return amount;
     }
 
-    getStudentFeesDue(): number {
-        let amountDue = 0;
-        this.studentFeeStatusList.forEach(sessionFeeStatus => {
-            amountDue += this.getSessionFeesDue(sessionFeeStatus);
-        });
-        return amountDue;
-    }
-
-    policeStudentPaymentInput(event: any): boolean {
-        if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
-            event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
-            event.key !== '8' && event.key !== '9') {
-            return false;
-        }
-        let studentFeesDue = this.getStudentFeesDue();
-        let payment = Number(event.srcElement.value+''+event.key);
-        if (payment > studentFeesDue) {
-            event.srcElement.value = studentFeesDue;
-            this.handleStudentPaymentChange(Number(event.srcElement.value));
-            return false;
-        }
-        return true;
-    }
-
-
-    // Session Payment & Fee
-    handleSessionPaymentChange(sessionFeeStatus: any, payment: number): void {
-        if (payment === null) payment = 0;
-        let amountLeft = payment;
-
-        // handle Annual Components
-        sessionFeeStatus.componentList.forEach(component => {
-            if (component.frequency === FREQUENCY_LIST[0]) {
-                let amountDue = this.getComponentFeesDue(component);
-                if(amountDue > amountLeft) {
-                    this.handleComponentPaymentChange(component, amountLeft);
-                    amountLeft = 0;
-                } else {
-                    amountLeft -= amountDue;
-                    this.handleComponentPaymentChange(component, amountDue);
-                }
+    getStudentLateFeesDueTillMonth(student: any): number {
+        let amount = 0;
+        this.getFilteredSessionListByStudent(student).forEach(session => {
+            if ((new Date(session.endDate)).getTime() < (new Date()).getTime()) {
+                amount += this.getSessionLateFeesDue(student, session);
+            } else {
+                amount += this.getSessionLateFeesDueTillMonth(student, session);
             }
         });
-
-        // handle Monthly Components
-        for (let i=0; i<12; ++i) {
-            sessionFeeStatus.componentList.forEach(component => {
-                if (component.frequency === FREQUENCY_LIST[1]) {
-                    let amountDue = component.monthList[i].amountDue;
-                    if (amountDue > amountLeft) {
-                        component.monthList[i].payment = amountLeft;
-                        amountLeft = 0;
-                    } else {
-                        component.monthList[i].payment = amountDue;
-                        amountLeft -= amountDue;
-                    }
-                }
-            });
-        }
+        return amount;
     }
 
-    getSessionPayment(sessionFeeStatus: any): number {
-        let payment = 0;
-        sessionFeeStatus.componentList.forEach(component => {
-            payment += this.getComponentPayment(component);
+    // Session
+    getFilteredSessionListByStudent(student: any): any {
+        return this.sessionList.filter(session => {
+            return this.getSessionFeesDue(student, session)
+                + this.getSessionLateFeesDue(student, session) > 0;
+        }).sort((a,b) => {
+            return a.id - b.id;
         });
-        return payment;
     }
 
-    getSessionTotalFee(sessionFeeStatus: any): number {
+    getSessionFeesDue(student: any, session: any): number {
         let amount = 0;
-        sessionFeeStatus.componentList.forEach(component => {
-            amount += this.getComponentTotalFee(component);
+        this.getFilteredStudentFeeListBySession(student, session).forEach(studentFee => {
+            amount += this.getStudentFeeFeesDue(studentFee);
         });
         return amount;
     }
 
-    getSessionFeesDue(sessionFeeStatus: any): number {
-        let amountDue = 0;
-        sessionFeeStatus.componentList.forEach(component => {
-            amountDue += this.getComponentFeesDue(component);
-        });
-        return amountDue;
-    }
-
-    policeSessionPaymentInput(sessionFeeStatus: any, event: any): boolean {
-        if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
-            event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
-            event.key !== '8' && event.key !== '9') {
-            return false;
-        }
-        let sessionFeesDue = this.getSessionFeesDue(sessionFeeStatus);
-        let payment = Number(event.srcElement.value+''+event.key);
-        if (payment > sessionFeesDue) {
-            event.srcElement.value = sessionFeesDue;
-            this.handleSessionPaymentChange(sessionFeeStatus, Number(event.srcElement.value));
-            return false;
-        }
-        return true;
-    }
-
-    // Component Payment & Fee
-
-    handleComponentPaymentChange(component: any, payment: number): void {
-        if (payment === null) payment = 0;
-        let amountLeft = payment;
-        if (component.frequency === FREQUENCY_LIST[0]) {
-            component.payment = payment;
-        } else if (component.frequency === FREQUENCY_LIST[1]) {
-            component.monthList.forEach(componentMonthly => {
-                let amountDue = componentMonthly.amountDue;
-                if (amountDue > amountLeft) {
-                    componentMonthly.payment = amountLeft;
-                    amountLeft = 0;
-                } else {
-                    componentMonthly.payment = amountDue;
-                    amountLeft -= amountDue;
-                }
-            });
-        }
-    }
-
-    getComponentPayment(component: any): number {
-        let payment = 0;
-        if (component.frequency === FREQUENCY_LIST[0]) {
-            payment = component.payment;
-        } else if (component.frequency === FREQUENCY_LIST[1]) {
-            component.monthList.forEach( componentMonthly => {
-                // payment += componentMonthly.payment;
-                payment += this.getComponentMonthlyPayment(componentMonthly);
-            });
-        }
-        return payment;
-    }
-
-    getComponentTotalFee(component: any): number {
+    getSessionTotalFees(student: any, session: any): number {
         let amount = 0;
-        if (component.frequency === FREQUENCY_LIST[0]) {
-            amount += component.amount;
-        } else if (component.frequency === FREQUENCY_LIST[1]) {
-            component.monthList.forEach( componentMonthly => {
-                // amount += componentMonthly.amount;
-                amount += this.getComponentMonthlyTotalFee(componentMonthly);
-            });
+        this.getFilteredStudentFeeListBySession(student, session).forEach(studentFee => {
+            amount += this.getStudentFeeTotalFees(studentFee);
+        });
+        return amount;
+    }
+
+    getSessionLateFeesDue(student: any, session: any): number {
+        let amount = 0;
+        this.getFilteredStudentFeeListBySession(student, session).forEach(studentFee => {
+            amount += this.getStudentFeeLateFeesDue(studentFee);
+        });
+        return amount;
+    }
+
+    getSessionLateFeeTotal(student: any, session: any): number {
+        let amount = 0;
+        this.getFilteredStudentFeeListBySession(student, session).forEach(studentFee => {
+            amount += this.getStudentFeeLateFeeTotal(studentFee);
+        });
+        return amount;
+    }
+
+    getSessionClearanceDate(student: any, session: any): any {
+        let clearanceDate = new Date('1000-01-01');
+        let result = null;
+        this.getFilteredStudentFeeListBySession(student, session).every(studentFee => {
+            let studentFeeClearanceDate = this.getStudentFeeClearanceDate(studentFee);
+            if (studentFeeClearanceDate) {
+                if ((new Date(studentFeeClearanceDate).getTime() > clearanceDate.getTime())) {
+                    clearanceDate = new Date(studentFeeClearanceDate);
+                    result = studentFeeClearanceDate;
+                }
+            } else {
+                clearanceDate = null;
+                result = null;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    getSessionFeesDueTillMonth(student: any, session: any): number {
+        let amount = 0;
+        this.getFilteredStudentFeeListBySession(student, session).forEach(studentFee => {
+            amount += this.getStudentFeeFeesDueTillMonth(studentFee);
+        });
+        return amount;
+    }
+
+    getSessionLateFeesDueTillMonth(student: any, session: any): number {
+        let amount = 0;
+        this.getFilteredStudentFeeListBySession(student, session).forEach(studentFee => {
+            amount += this.getStudentFeeLateFeesDueTillMonth(studentFee);
+        });
+        return amount;
+    }
+
+    // Student Fees
+    getFilteredStudentFeeListBySession(student: any, session: any): any {
+        return this.studentFeeList.filter(studentFee => {
+            return studentFee.parentSession == session.id
+                && studentFee.parentStudent == student.id
+                && this.getStudentFeeTotalFees(studentFee) > 0;
+        });
+    }
+
+    getStudentFeeFeesDue(studentFee: any): number {
+        let amount = 0;
+        this.getFilteredInstallmentListByStudentFee(studentFee).forEach(installment => {
+            amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment);
+        });
+        return amount;
+    }
+
+    getStudentFeeTotalFees(studentFee: any): number {
+        let amount = 0;
+        this.getFilteredInstallmentListByStudentFee(studentFee).forEach(installment => {
+            amount += this.getStudentFeeInstallmentTotalFees(studentFee, installment);
+        });
+        return amount;
+    }
+
+    getStudentFeeLateFeesDue(studentFee: any): number {
+        let amount = 0;
+        this.getFilteredInstallmentListByStudentFee(studentFee).forEach(installment => {
+            amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
+        });
+        return amount;
+    }
+
+    getStudentFeeLateFeeTotal(studentFee: any): number {
+        let amount = 0;
+        this.getFilteredInstallmentListByStudentFee(studentFee).forEach(installment => {
+            amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
+        });
+        return amount;
+    }
+
+    getStudentFeeClearanceDate(studentFee: any): any {
+        let clearanceDate = new Date('1000-01-01');
+        let result = null;
+        this.getFilteredInstallmentListByStudentFee(studentFee).every(installment => {
+            let studentFeeInstallmentClearanceDate = this.getStudentFeeInstallmentClearanceDate(studentFee, installment);
+            if (studentFeeInstallmentClearanceDate) {
+                if ((new Date(studentFeeInstallmentClearanceDate).getTime() > clearanceDate.getTime())) {
+                    clearanceDate = new Date(studentFeeInstallmentClearanceDate);
+                    result = studentFeeInstallmentClearanceDate;
+                }
+            } else {
+                clearanceDate = null;
+                result = null;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    getStudentFeeFeesDueTillMonth(studentFee: any): number {
+        let amount = 0;
+        this.getFilteredInstallmentListByStudentFeeTillMonth(studentFee).forEach(installment => {
+            amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment);
+        });
+        return amount;
+    }
+
+    getStudentFeeLateFeesDueTillMonth(studentFee: any): number {
+        let amount = 0;
+        this.getFilteredInstallmentListByStudentFeeTillMonth(studentFee).forEach(installment => {
+            amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
+        });
+        return amount;
+    }
+
+    // Installment
+    getFilteredInstallmentListByStudentFee(studentFee: any): any {
+        return this.installmentList.filter(installment => {
+            return (studentFee[installment+'Amount'])?studentFee[installment+'Amount'] > 0:false;
+        });
+    }
+
+    getFilteredInstallmentListByStudentFeeTillMonth(studentFee: any): any {
+        let monthNumber = (new Date()).getMonth();
+        let installmentNumber = 0;
+        if (monthNumber > 2) {
+            installmentNumber = monthNumber-3;
+        } else {
+            installmentNumber = monthNumber+9;
+        }
+        return this.installmentList.slice(0,installmentNumber+1).filter(installment => {
+            return (studentFee[installment+'Amount'])?studentFee[installment+'Amount'] > 0:false;
+        });
+    }
+
+    getStudentFeeInstallmentFeesDue(studentFee: any, installment: string): number {
+        let amount = 0;
+        let filteredSubReceiptList = this.getFilteredSubFeeReceiptListByStudentFee(studentFee);
+        let filteredSubDiscountList = this.getFilteredSubDiscountListByStudentFee(studentFee);
+        amount += studentFee[installment+'Amount']?studentFee[installment+'Amount']:0;
+        filteredSubReceiptList.forEach(subFeeReceipt => {
+            if (subFeeReceipt[installment+'Amount']) {
+                amount -= subFeeReceipt[installment+'Amount'];
+            }
+        });
+        filteredSubDiscountList.forEach(subDiscount => {
+            if (subDiscount[installment+'Amount']) {
+                amount -= subDiscount[installment+'Amount'];
+            }
+        });
+        return amount;
+    }
+
+    getStudentFeeInstallmentTotalFees(studentFee: any, installment: string): number {
+        let amount = 0;
+        amount += studentFee[installment+'Amount'];
+        return amount;
+    }
+
+    getStudentFeeInstallmentLateFeesDue(studentFee: any, installment: string): number {
+        let amount = 0;
+        let filteredSubReceiptList = this.getFilteredSubFeeReceiptListByStudentFee(studentFee);
+        let filteredSubDiscountList = this.getFilteredSubDiscountListByStudentFee(studentFee);
+        amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
+        filteredSubReceiptList.forEach(subFeeReceipt => {
+            if (subFeeReceipt[installment+'LateFee']) {
+                amount -= subFeeReceipt[installment+'LateFee'];
+            }
+        });
+        filteredSubDiscountList.forEach(subDiscount => {
+            if (subDiscount[installment+'LateFee']) {
+                amount -= subDiscount[installment+'LateFee'];
+            }
+        });
+        return amount;
+    }
+
+    getStudentFeeInstallmentLateFeeTotal(studentFee: any, installment: string): number {
+        let amount = 0;
+        if (studentFee[installment+'LastDate'] && studentFee[installment+'LateFee'] && studentFee[installment+'LateFee'] > 0) {
+            let lastDate = new Date(studentFee[installment+'LastDate']);
+            let clearanceDate = new Date();
+            if (studentFee[installment+'ClearanceDate']) {
+                clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
+            }
+            let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+            if (numberOfLateDays > 0) {
+                amount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
+                if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < amount) {
+                    amount = studentFee[installment+'MaximumLateFee'];
+                }
+            }
         }
         return amount;
     }
 
-    getComponentFeesDue(component: any): number {
-        let amountDue = 0;
-        if (component.frequency === FREQUENCY_LIST[0]) {
-            amountDue += component.amountDue;
-        } else if (component.frequency === FREQUENCY_LIST[1]) {
-            component.monthList.forEach( componentMonthly => {
-                // amountDue += componentMonthly.amountDue;
-                amountDue += this.getComponentMonthlyFeesDue(componentMonthly);
-            });
-        }
-        return amountDue;
+    getStudentFeeInstallmentClearanceDate(studentFee: any, installment: string): any {
+        return studentFee[installment+'ClearanceDate'];
     }
 
-    policeComponentPaymentInput(component: any, event: any): boolean {
-        if (event.key !== '0' && event.key !== '1' && event.key !== '2' && event.key !== '3' &&
-            event.key !== '4' && event.key !== '5' && event.key !== '6' && event.key !== '7' &&
-            event.key !== '8' && event.key !== '9') {
-            return false;
-        }
-        let componentFeesDue = this.getComponentFeesDue(component);
-        let payment = Number(event.srcElement.value+''+event.key);
-        if (payment > componentFeesDue) {
-            event.srcElement.value = componentFeesDue;
-            this.handleComponentPaymentChange(component, Number(event.srcElement.value));
-            return false;
-        }
-        return true;
+    // Sub Fee Receipt
+    getFilteredSubFeeReceiptListByStudentFee(studentFee: any): any {
+        let filteredSubFeeReceiptList = this.subFeeReceiptList.filter(subFeeReceipt => {
+            return subFeeReceipt.parentStudentFee == studentFee.id && !this.feeReceiptList.find(feeReceipt => {
+                return feeReceipt.id == subFeeReceipt.parentFeeReceipt;
+            }).cancelled;
+        });
+        return filteredSubFeeReceiptList;
     }
 
-
-    // Component Monthly Fee
-    getComponentMonthlyPayment(componentMonthly: any): number {
-        return componentMonthly.payment;
+    // Sub Discount
+    getFilteredSubDiscountListByStudentFee(studentFee: any): any {
+        let filteredSubDiscountList = this.subDiscountList.filter(subDiscount => {
+            return subDiscount.parentStudentFee == studentFee.id && !this.discountList.find(discount => {
+                return discount.id == subDiscount.parentDiscount;
+            }).cancelled;
+        });
+        return filteredSubDiscountList;
     }
 
-    getComponentMonthlyTotalFee(componentMonthly: any): number {
-        return componentMonthly.amount;
+    ////////////////////////////////////
+    /// For Fee Receipts & Discounts ///
+    ////////////////////////////////////
+
+    // Fee Receipt
+    getFeeReceiptTotalAmount(feeReceipt: any): number {
+        return this.subFeeReceiptList.filter(subFeeReceipt => {
+            return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+        }).reduce((totalSubFeeReceipt, subFeeReceipt) => {
+            return totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
+                return totalInstallment
+                    + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
+                    + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
+            }, 0);
+        }, 0);
     }
 
-    getComponentMonthlyFeesDue(componentMonthly: any): number {
-        return componentMonthly.amountDue;
+    getFeeReceiptListTotalAmount(): number {
+        return this.subFeeReceiptList.reduce((totalSubFeeReceipt, subFeeReceipt) => {
+            return totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
+                return totalInstallment
+                    + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
+                    + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
+            }, 0);
+        }, 0);
     }
 
+    getLastDaySubmittedAmount(lastFeeReceipt: any): number {
+        return this.getLastDaySubmittedReceipts(lastFeeReceipt).reduce((total, item) => {
+            return total + this.getFeeReceiptTotalAmount(item);
+        }, 0);
+    }
+
+    getLastDaySubmittedReceipts(lastFeeReceipt: any): any {
+        return this.feeReceiptList.filter(item => {
+            return this.formatDate(item.generationDateTime) == this.formatDate(lastFeeReceipt.generationDateTime);
+        })
+    }
+
+    // Discount
+    getDiscountTotalAmount(discount: any): number {
+        return this.subDiscountList.filter(subDiscount => {
+            return subDiscount.parentDiscount == discount.id;
+        }).reduce((totalSubDiscount, subDiscount) => {
+            return totalSubDiscount + this.installmentList.reduce((totalInstallment, installment) => {
+                return totalInstallment
+                    + (subDiscount[installment+'Amount']?subDiscount[installment+'Amount']:0)
+                    + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
+            }, 0);
+        }, 0);
+    }
+
+    getDiscountListTotalAmount(): number {
+        return this.subDiscountList.reduce((totalSubDiscount, subDiscount) => {
+            return totalSubDiscount + this.installmentList.reduce((totalInstallment, installment) => {
+                return totalInstallment
+                    + (subDiscount[installment+'Amount']?subDiscount[installment+'Amount']:0)
+                    + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
+            }, 0);
+        }, 0);
+    }
 
 }
