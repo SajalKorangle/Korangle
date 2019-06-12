@@ -2,7 +2,7 @@
 
     <ng-container *ngIf="!isInitialLoading">
 
-        <div class="row">
+        <div class="row" style="margin-top: 15px;">
             <div class="col-sm-3">
                 <day-date [formattedDateOutput]="true"
                           [placeHolder]="'Start Date'"
@@ -26,7 +26,7 @@
                 <button type="button"
                         *ngIf="getFilteredFeeReceiptList()"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        style="padding: 12px 15px; margin-right: 17px;"
+                        style="padding: 12px 15px;"
                         matTooltip="Print the following list"
                         tooltip-position="left"
                         (click)="printFeeReceiptList();">

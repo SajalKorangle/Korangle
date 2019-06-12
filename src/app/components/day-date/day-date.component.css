@@ -1,22 +1,8 @@
-.example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.example-full-width {
-    width: 100%;
-}
-
-.example-month-picker .mat-calendar-period-button {
-    pointer-events: none;
-}
-
-.example-month-picker .mat-calendar-arrow {
-    display: none;
-}
-
 input:disabled {
     color: black;
 }
 
+mat-form-field {
+    width: 100%;
+    max-width: 200px;
+}
