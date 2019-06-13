@@ -45,7 +45,7 @@ export class ViewDefaultersComponent implements OnInit {
     installmentNumber = 0;
 
     maximumNumber = null;
-    minimumNumber = null;
+    minimumNumber = 1;
 
     selectedClassSection = null;
     filteredClassSectionList = [];
@@ -311,11 +311,11 @@ export class ViewDefaultersComponent implements OnInit {
             });
         }
         if ((this.maximumNumber && this.maximumNumber != '')
-            || (this.minimumNumber && this.minimumNumber != '')) {
+            || (this.minimumNumber && this.minimumNumber.toString() != '')) {
             tempList = tempList.filter(student => {
                 let amount = student.feesDueTillMonth;
                 return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
-                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
+                    && ((this.minimumNumber && this.minimumNumber.toString() != '')?amount>=this.minimumNumber:true)
             });
         }
         return tempList;
