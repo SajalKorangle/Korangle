@@ -330,13 +330,13 @@ export class ViewDefaultersComponent implements OnInit {
     getFilteredParentList(): any {
         let tempList = this.parentList;
         if ((this.maximumNumber && this.maximumNumber != '')
-            || (this.minimumNumber && this.minimumNumber != '')) {
+            || (this.minimumNumber && this.minimumNumber.toString() != '')) {
             tempList = tempList.filter(parent => {
                 let amount = parent.studentList.reduce((amount, student) => {
                     return amount + student['feesDueTillMonth'];
                 }, 0);
                 return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
-                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
+                    && ((this.minimumNumber && this.minimumNumber.toString() != '')?amount>=this.minimumNumber:true)
             });
         }
         return tempList;
