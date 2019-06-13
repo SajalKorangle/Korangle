@@ -6,6 +6,7 @@ import {ClassService} from "../../../../services/class.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {EmitterService} from "../../../../services/emitter.service";
 import * as XLSX from "xlsx";
+import {SESSION_LIST} from "../../../../classes/constants/session";
 
 @Component({
     selector: 'view-defaulters',
@@ -17,6 +18,7 @@ import * as XLSX from "xlsx";
 export class ViewDefaultersComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
+    sessionList = SESSION_LIST;
 
     nullValue = null;
 
@@ -52,6 +54,8 @@ export class ViewDefaultersComponent implements OnInit {
 
     serviceAdapter: ViewDefaultersServiceAdapter;
 
+    currentSession: any;
+
     isLoading = false;
 
     constructor(public feeService: FeeService,
@@ -60,9 +64,16 @@ export class ViewDefaultersComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        let todaysDate = new Date();
+        this.currentSession = this.sessionList.find(session => {
+            return new Date(session.startDate) <= todaysDate
+                && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
+        });
 
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
@@ -110,7 +121,13 @@ export class ViewDefaultersComponent implements OnInit {
             });
 
             student['feesDueTillMonth'] = filteredStudentFeeList.reduce((total, studentFee) => {
-                return total + this.installmentList.slice(0,this.installmentNumber).reduce((installmentAmount, installment) => {
+                let filteredInstallmentList = [];
+                if (studentFee.parentSession == this.currentSession.id) {
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber);
+                } else {
+                    filteredInstallmentList = this.installmentList;
+                }
+                return total + filteredInstallmentList.reduce((installmentAmount, installment) => {
                     let lateFeeAmount = 0;
                     if (studentFee[installment+'LastDate'] && studentFee[installment+'LateFee'] && studentFee[installment+'LateFee'] > 0) {
                         let lastDate = new Date(studentFee[installment+'LastDate']);
@@ -131,13 +148,25 @@ export class ViewDefaultersComponent implements OnInit {
                         + lateFeeAmount;
                 }, 0);
             }, 0) - filteredSubFeeReceiptList.reduce((total, subFeeReceipt) => {
-                return total + this.installmentList.slice(0,this.installmentNumber).reduce((installmentAmount, installment) => {
+                let filteredInstallmentList = [];
+                if (subFeeReceipt.parentSession == this.currentSession.id) {
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber);
+                } else {
+                    filteredInstallmentList = this.installmentList;
+                }
+                return total + filteredInstallmentList.reduce((installmentAmount, installment) => {
                     return installmentAmount
                         + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
                         + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
                 }, 0);
             }, 0) - filteredSubDiscountList.reduce((total, subDiscount) => {
-                return total + this.installmentList.slice(0,this.installmentNumber).reduce((installmentAmount, installment) => {
+                let filteredInstallmentList = [];
+                if (subDiscount.parentSession == this.currentSession.id) {
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber);
+                } else {
+                    filteredInstallmentList = this.installmentList;
+                }
+                return total + filteredInstallmentList.reduce((installmentAmount, installment) => {
                     return installmentAmount
                         + (subDiscount[installment+'Amount']?subDiscount[installment+'Amount']:0)
                         + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
