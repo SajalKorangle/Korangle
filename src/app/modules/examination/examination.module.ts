@@ -25,6 +25,8 @@ import { PrintStudentEleventhFinalReportListComponent } from './print/print-stud
 import { PrintStudentComprehensiveFinalReportListComponent } from './print/print-student-comprehensive-final-report-list/print-student-comprehensive-final-report-list.component';
 import { PrintStudentElegantFinalReportListComponent } from './print/print-student-elegant-final-report-list/print-student-elegant-final-report-list.component';
 import { PrintStudentClassicFinalReportListComponent } from './print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
+import { PrintStudentMarksheetListComponent } from './print/print-student-marksheet-list/print-student-marksheet-list.component';
+import { PrintHallTicketComponent } from './print/print-hall-ticket/print-hall-ticket.component';
 
 @NgModule({
     declarations: [
@@ -42,23 +44,22 @@ import { PrintStudentClassicFinalReportListComponent } from './print/print-stude
         GenerateFinalReportComponent,
         GeneratePatrakComponent,
         GenerateGoshwaraComponent,
+        
         PrintStudentNinthFinalReportListComponent,
         PrintStudentEleventhFinalReportListComponent,
         PrintStudentComprehensiveFinalReportListComponent,
         PrintStudentElegantFinalReportListComponent,
-        PrintStudentClassicFinalReportListComponent
-
+        PrintStudentClassicFinalReportListComponent,
+        PrintStudentMarksheetListComponent,
+        PrintHallTicketComponent
     ],
 
     imports: [
-
         ComponentsModule,
         ExaminationRoutingModule,
         NgxDatatableModule,
-
     ],
-    exports: [
-    ],
+    exports: [],
     providers: [ExaminationOldService],
     bootstrap: [ExaminationComponent],
 })

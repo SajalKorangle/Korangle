@@ -9,7 +9,8 @@ import {TEST_TYPE_LIST} from '../../classes/constants';
 import {StudentOldService} from '../../../students/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {EmitterService} from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_STUDENT_MARKSHEET } from '../../../../print/print-routes.constants';
 
 @Component({
     selector: 'examination-print-marksheet',
@@ -43,7 +44,8 @@ export class PrintMarksheetComponent implements OnInit {
                 public classService: ClassService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                private printService: PrintService) {}
 
     ngOnInit(): void {
         this.serviceAdapter = new PrintMarksheetServiceAdapter();
@@ -78,7 +80,7 @@ export class PrintMarksheetComponent implements OnInit {
     }
 
     printMarksheet(): void {
-        EmitterService.get('print-student-marksheet-list').emit(this.selectedExamination);
+        this.printService.navigateToPrintRoute(PRINT_STUDENT_MARKSHEET, {user: this.user, value: this.selectedExamination});
         alert('This may take a while');
     }
 

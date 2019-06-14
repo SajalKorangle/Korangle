@@ -6,7 +6,8 @@ import {SubjectOldService} from '../../../../services/subject-old.service';
 import {ClassService} from '../../../../services/class.service';
 
 import { GenerateHallTicketServiceAdapter } from './generate-hall-ticket.service.adapter';
-import {EmitterService} from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_HALL_TICKET } from '../../../../print/print-routes.constants';
 
 @Component({
     selector: 'generate-hall-ticket',
@@ -30,7 +31,8 @@ export class GenerateHallTicketComponent implements OnInit {
     constructor(public examinationService: ExaminationOldService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
-                public classService: ClassService) {}
+                public classService: ClassService,
+                private printService: PrintService) {}
 
     ngOnInit(): void {
         this.serviceAdapter = new GenerateHallTicketServiceAdapter();
@@ -43,7 +45,7 @@ export class GenerateHallTicketComponent implements OnInit {
             'studentList': this.selectedExamination.selectedClass.selectedSection.studentList,
             'examination': this.selectedExamination,
         };
-        EmitterService.get('print-hall-ticket').emit(data);
+        this.printService.navigateToPrintRoute(PRINT_HALL_TICKET, {user: this.user, value: data});
         alert('This may take a while');
     }
 

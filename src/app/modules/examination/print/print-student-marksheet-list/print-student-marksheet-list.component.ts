@@ -2,32 +2,28 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../../../services/emitter.service';
 import {TEST_TYPE_LIST} from '../../classes/constants';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-student-marksheet-list',
     templateUrl: './print-student-marksheet-list.component.html',
     styleUrls: ['./print-student-marksheet-list.component.css'],
 })
 export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    @Input() user;
+    user : any;
 
     viewChecked = true;
 
     examination: any;
 
-    printStudentMarksheetListComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printStudentMarksheetListComponentSubscription =
-            EmitterService.get('print-student-marksheet-list-component').subscribe(value => {
-                this.examination = value;
-                this.viewChecked = false;
-            });
+        const { user, value } = this.printService.getData();
+        this.user = user;
+        this.examination = value;
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
@@ -40,7 +36,6 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     ngOnDestroy(): void {
-        this.printStudentMarksheetListComponentSubscription.unsubscribe();
         this.examination = null;
     }
 

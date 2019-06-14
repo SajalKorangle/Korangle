@@ -25,8 +25,6 @@ export class PrintComponent implements OnInit, OnDestroy {
     printFeeReceiptListSubscription: any;
     printEmployeeListSubscription: any;
     printNewFeeReceiptSubscription: any;
-    printHallTicketSubscription: any;
-    printStudentMarksheetListSubscription: any;
     printSalarySheetSubscription: any;
     printFullFeeReceiptListSubscription: any;
 
@@ -103,18 +101,6 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-new-fee-receipt-component').emit(value);
             });
         });
-        this.printHallTicketSubscription = EmitterService.get('print-hall-ticket').subscribe(value => {
-            this.printType = 'hallTicket';
-            setTimeout(() => {
-                EmitterService.get('print-hall-ticket-component').emit(value);
-            });
-        });
-        this.printStudentMarksheetListSubscription = EmitterService.get('print-student-marksheet-list').subscribe(value => {
-            this.printType = 'studentMarksheetList';
-            setTimeout(() => {
-                EmitterService.get('print-student-marksheet-list-component').emit(value);
-            });
-        });
         this.printSalarySheetSubscription = EmitterService.get('print-salary-sheet').subscribe(value => {
             this.printType = 'salarySheet';
             setTimeout(() => {
@@ -140,8 +126,6 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printFeeReceiptListSubscription.unsubscribe();
         this.printEmployeeListSubscription.unsubscribe();
         this.printNewFeeReceiptSubscription.unsubscribe();
-        this.printHallTicketSubscription.unsubscribe();
-        this.printStudentMarksheetListSubscription.unsubscribe();
         this.printSalarySheetSubscription.unsubscribe();
         this.printFullFeeReceiptListSubscription.unsubscribe();
     }

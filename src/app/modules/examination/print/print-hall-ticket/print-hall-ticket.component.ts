@@ -1,17 +1,15 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
-
-import { EmitterService } from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-hall-ticket',
     templateUrl: './print-hall-ticket.component.html',
     styleUrls: ['./print-hall-ticket.component.css'],
 })
 export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    @Input() user;
+    user: any;
 
     viewChecked = true;
 
@@ -20,21 +18,17 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
 
     opacity: any;
 
-    printHallTicketComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printHallTicketComponentSubscription =
-            EmitterService.get('print-hall-ticket-component').subscribe(value => {
-            console.log(value);
-            this.studentList = value.studentList;
-            this.examination = value.examination;
-            this.opacity = {
-                opacity: this.user.activeSchool.opacity,
-            };
-            this.viewChecked = false;
-        });
+        const { user, value } = this.printService.getData();
+        this.user = user;
+        this.studentList = value.studentList;
+        this.examination = value.examination;
+        this.opacity = {
+            opacity: this.user.activeSchool.opacity,
+        };
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
@@ -48,7 +42,6 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
     }
 
     ngOnDestroy(): void {
-        this.printHallTicketComponentSubscription.unsubscribe();
         this.studentList = null;
         this.examination = null;
     }
