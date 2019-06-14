@@ -2,6 +2,8 @@ import {Component, ElementRef, Input} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 // import {Router} from "@angular/router";
 import { User } from '../classes/user';
+import {CommonFunctions} from "../classes/common-functions";
+import {sendDataToAndroid} from "../classes/common";
 
 @Component({
     selector: 'app-login-form',
@@ -29,6 +31,7 @@ export class LoginComponent {
             } else {
                 localStorage.setItem('schoolJWT', data.token);
                 this.user.jwt = data.token;
+                sendDataToAndroid(this.user.jwt);
                 this.user.isAuthenticated = true;
                 this.user.initializeUserData(data);
             }
