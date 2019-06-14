@@ -90,7 +90,9 @@ const routes: Routes = [
             {path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule'},
             {path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule'},
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
-            {path: 'fees', loadChildren: 'app/modules/fees/fee.module#FeeModule'}
+            {path: 'fees', loadChildren: 'app/modules/fees/fee.module#FeeModule'},
+            {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
+            {path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'}
         ]
     }
 ];
