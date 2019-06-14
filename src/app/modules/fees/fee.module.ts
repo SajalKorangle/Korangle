@@ -23,7 +23,6 @@ import {TotalCollectionComponent} from "./pages/total-collection/total-collectio
 import {TotalDiscountComponent} from "./pages/total-discount/total-discount.component";
 import {UpdateStudentFeesComponent} from "./pages/update-student-fees/update-student-fees.component";
 import {ViewDefaultersComponent} from "./pages/view-defaulters/view-defaulters.component";
-import { PrintOldFeeReceiptListComponent } from '../fees-second/print/print-old-fee-receipt-list/print-old-fee-receipt-list.component';
 import { PrintFeeReceiptListComponent } from './print/print-fee-receipt-list/print-fee-receipt-list.component';
 
 
@@ -47,7 +46,6 @@ import { PrintFeeReceiptListComponent } from './print/print-fee-receipt-list/pri
         UpdateStudentFeesComponent,
         ViewDefaultersComponent,
 
-        PrintOldFeeReceiptListComponent,
         PrintFeeReceiptListComponent
 
     ],
