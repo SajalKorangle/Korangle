@@ -18,9 +18,10 @@ import {FeeType} from "../../../../services/fees/fee-type";
 import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
 import {ClassService} from "../../../../services/class.service";
 import {StudentService} from "../../../../services/student.service";
-import {EmitterService} from "../../../../services/emitter.service";
 import {EmployeeService} from "../../../../services/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
 
 declare const $: any;
 
@@ -83,7 +84,8 @@ export class CollectFeeComponent implements OnInit {
                 public vehicleService: VehicleService,
                 public classService: ClassService,
                 public employeeService: EmployeeService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                private printService: PrintService) {}
 
     ngOnInit(): void {
 
@@ -244,7 +246,7 @@ export class CollectFeeComponent implements OnInit {
             'employeeList': this.employeeList,
         };
 
-        EmitterService.get('print-full-fee-receipt-list').emit(data);
+        this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, {user: this.user, value: data});
 
     }
 
