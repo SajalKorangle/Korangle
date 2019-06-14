@@ -5,7 +5,8 @@ import { FeeOldService } from '../../fee-old.service';
 import { FeeReceipt } from '../../classes/common-functionalities';
 
 import {EmployeeService} from '../../../employee/employee.service';
-import {EmitterService} from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_OLD_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
 
 @Component({
   selector: 'app-total-collection',
@@ -46,7 +47,8 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     constructor(private feeService: FeeOldService,
-                private employeeService: EmployeeService) { }
+                private employeeService: EmployeeService,
+                private printService: PrintService) { }
 
     ngOnInit(): void {
         let data = {
@@ -135,7 +137,8 @@ export class TotalCollectionComponent implements OnInit {
             'feeType': this.selectedFeeType,
             'employee': this.selectedEmployee,
         };
-        EmitterService.get('print-old-fee-receipt-list').emit(value);
+        debugger;
+        this.printService.navigateToPrintRoute(PRINT_OLD_FEE_RECIEPT_LIST, {user: this.user, value});
     }
 
 }

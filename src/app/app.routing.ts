@@ -89,7 +89,8 @@ const routes: Routes = [
             {path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule'},
             {path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule'},
             {path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule'},
-            {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'}
+            {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
+            {path: 'fees', loadChildren: 'app/modules/fees/fee.module#FeeModule'}
         ]
     }
 ];

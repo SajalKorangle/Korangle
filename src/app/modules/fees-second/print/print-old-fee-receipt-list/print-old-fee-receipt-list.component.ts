@@ -1,18 +1,17 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../../../services/emitter.service';
 import {FeeReceipt} from '../../classes/common-functionalities';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-old-fee-receipt-list',
     templateUrl: './print-old-fee-receipt-list.component.html',
     styleUrls: ['./print-old-fee-receipt-list.component.css'],
 })
-export class PrintOldFeeReceiptListComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class PrintOldFeeReceiptListComponent implements OnInit, AfterViewChecked {
 
-    @Input() user;
+    user : any;
 
     feeReceiptList: any;
     feeType: any;
@@ -20,17 +19,15 @@ export class PrintOldFeeReceiptListComponent implements OnInit, OnDestroy, After
 
     viewChecked = true;
 
-    printFeeReceiptListComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printFeeReceiptListComponentSubscription = EmitterService.get('print-old-fee-receipt-list-component').subscribe(value => {
-            this.feeReceiptList = value['feeReceiptList'];
-            this.feeType = value['feeType'];
-            this.employee = value['employee'];
-            this.viewChecked = false;
-        });
+        const {user, value} = this.printService.getData();
+        this.user = user;
+        this.feeReceiptList = value['feeReceiptList'];
+        this.feeType = value['feeType'];
+        this.employee = value['employee'];
+        this.viewChecked = false;
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
@@ -48,14 +45,10 @@ export class PrintOldFeeReceiptListComponent implements OnInit, OnDestroy, After
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.feeReceiptList = null;
             this.cdRef.detectChanges();
         }
-    }
-
-    ngOnDestroy(): void {
-        this.printFeeReceiptListComponentSubscription.unsubscribe();
     }
 
 }

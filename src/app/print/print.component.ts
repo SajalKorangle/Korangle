@@ -20,7 +20,6 @@ export class PrintComponent implements OnInit, OnDestroy {
     printMarksheetSecondFormatSubscription: any;
     printTransferCertificateSubscription: any;
     printStudentListSubscription: any;
-    printOldFeeReceiptListSubscription: any;
     printFeeReceiptListSubscription: any;
     printEmployeeListSubscription: any;
     printNewFeeReceiptSubscription: any;
@@ -63,12 +62,6 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-student-list-component').emit(value);
             });
         });
-        this.printOldFeeReceiptListSubscription = EmitterService.get('print-old-fee-receipt-list').subscribe(value => {
-            this.printType = 'oldFeeReceiptList';
-            setTimeout( () => {
-                EmitterService.get('print-old-fee-receipt-list-component').emit(value);
-            });
-        });
         this.printFeeReceiptListSubscription = EmitterService.get('print-fee-receipt-list').subscribe(value => {
             this.printType = 'feeReceiptList';
             setTimeout( () => {
@@ -108,7 +101,6 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printMarksheetSubscription.unsubscribe();
         this.printMarksheetSecondFormatSubscription.unsubscribe();
         this.printStudentListSubscription.unsubscribe();
-        this.printOldFeeReceiptListSubscription.unsubscribe();
         this.printFeeReceiptListSubscription.unsubscribe();
         this.printEmployeeListSubscription.unsubscribe();
         this.printNewFeeReceiptSubscription.unsubscribe();
