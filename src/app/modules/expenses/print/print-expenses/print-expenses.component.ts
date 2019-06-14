@@ -1,41 +1,32 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { Expense } from '../../../../classes/expense';
-
-import { EmitterService } from '../../../../services/emitter.service';
-import set = Reflect.set;
 import moment = require('moment');
+import { PrintService } from 'app/print/print-service';
 
 @Component({
     selector: 'print-expenses',
     templateUrl: './print-expenses.component.html',
     styleUrls: ['./print-expenses.component.css'],
 })
-export class PrintExpensesComponent implements OnInit, OnDestroy {
+export class PrintExpensesComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     expenseList: any;
     startDate: any;
     endDate: any;
     totalExpenses = 0;
-
-    printExpensesComponentSubscription: any;
-
+    constructor(private printService: PrintService) {}
     ngOnInit(): void {
-        this.printExpensesComponentSubscription = EmitterService.get('print-expenses-component').subscribe( value => {
-            this.expenseList = value['expenseList'];
-            this.startDate = moment(value['startDate']).format('DD-MM-YYYY');
-            this.endDate = moment(value['endDate']).format('DD-MM-YYYY');
-            this.totalExpenses = value['totalExpenses'];
-            setTimeout(() => {
-                window.print();
-            });
+        const {user, value} = this.printService.getData();
+        this.user = user;
+        this.expenseList = value['expenseList'];
+        this.startDate = moment(value['startDate']).format('DD-MM-YYYY');
+        this.endDate = moment(value['endDate']).format('DD-MM-YYYY');
+        this.totalExpenses = value['totalExpenses'];
+        setTimeout(() => {
+            this.printService.print();
         });
-    }
-
-    ngOnDestroy(): void {
-        this.printExpensesComponentSubscription.unsubscribe();
     }
 
 }

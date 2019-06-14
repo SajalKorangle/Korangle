@@ -1,10 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../student-old.service';
 
 import * as XLSX from 'xlsx';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -81,7 +82,8 @@ export class ViewAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassService) { }
+                private classService: ClassService,
+                private printService: PrintService) { }
 
     ngOnInit(): void {
 
@@ -168,7 +170,7 @@ export class ViewAllComponent implements OnInit {
             }),
             columnFilter: this.columnFilter
         };
-        EmitterService.get('print-student-list').emit(value);
+        this.printService.navigateToPrintRoute(PRINT_STUDENT_LIST, {user: this.user, value});
     };
 
     unselectAllClasses(): void {

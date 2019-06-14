@@ -1,15 +1,14 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
-
-import { EmitterService } from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
     selector: 'app-print-student-list',
     templateUrl: './print-student-list.component.html',
     styleUrls: ['./print-student-list.component.css'],
 })
-export class PrintStudentListComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class PrintStudentListComponent implements OnInit, AfterViewChecked {
 
     studentList: any;
     // classSectionStudentList: any;
@@ -17,30 +16,23 @@ export class PrintStudentListComponent implements OnInit, OnDestroy, AfterViewCh
 
     viewChecked = true;
 
-    printStudentListComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printStudentListComponentSubscription = EmitterService.get('print-student-list-component').subscribe( value => {
-            this.studentList = value['studentList'];
-            this.columnFilter = value['columnFilter'];
-            this.viewChecked = false;
-        });
+        const {value} = this.printService.getData();
+        this.studentList = value['studentList'];
+        this.columnFilter = value['columnFilter'];
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.studentList = null;
             this.columnFilter = null;
             this.cdRef.detectChanges();
         }
-    }
-
-    ngOnDestroy(): void {
-        this.printStudentListComponentSubscription.unsubscribe();
     }
 
 }

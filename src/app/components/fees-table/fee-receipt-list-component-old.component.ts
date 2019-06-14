@@ -26,7 +26,8 @@ export class FeeReceiptListComponentOld {
             'sectionName': this.sectionName,
             'feeReceipt': fee,
         };
-        EmitterService.get('print-new-fee-receipt').emit(data);
+        //Not refactoring. This Will be Removed
+        //EmitterService.get('print-new-fee-receipt').emit(data);
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {

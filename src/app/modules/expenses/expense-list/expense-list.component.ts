@@ -3,7 +3,8 @@ import * as Chartist from 'chartist';
 
 import { ExpenseService} from '../expense.service';
 import { Expense } from '../../../classes/expense';
-import {EmitterService} from '../../../services/emitter.service';
+import { PrintService } from '../../../print/print-service';
+import { PRINT_EXPENSES } from '../../../print/print-routes.constants';
 
 @Component({
   selector: 'expense-list',
@@ -43,7 +44,7 @@ export class ExpenseListComponent {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private expenseService: ExpenseService) { }
+    constructor(private expenseService: ExpenseService, private printService: PrintService) { }
 
     getExpenseList(): void {
       this.expenseList = [];
@@ -180,12 +181,12 @@ export class ExpenseListComponent {
 
 
     printExpenses(): void {
-        const emitValue = [];
-        emitValue['expenseList'] = this.expenseList;
-        emitValue['startDate'] = this.startDate;
-        emitValue['endDate'] = this.endDate;
-        emitValue['totalExpenses'] = this.totalExpenses;
-        EmitterService.get('print-expenses').emit(emitValue);
+        const value = [];
+        value['expenseList'] = this.expenseList;
+        value['startDate'] = this.startDate;
+        value['endDate'] = this.endDate;
+        value['totalExpenses'] = this.totalExpenses;
+        this.printService.navigateToPrintRoute(PRINT_EXPENSES, {user: this.user, value});
     }
 
 }

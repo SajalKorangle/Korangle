@@ -3,14 +3,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MarksheetService } from '../marksheet.service';
 import {StudentOldService} from '../../students/student-old.service';
 
-import {EmitterService} from '../../../services/emitter.service';
 import {StudentTest} from '../classes/student-test';
 
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import { startWith , map} from 'rxjs/operators';
 
-import moment = require('moment');
+import { PrintService } from '../../../print/print-service';
+import { PRINT_MARKSHEET_SECOND_FORMAT, PRINT_MARKSHEET } from '../../../print/print-routes.constants';
 
 @Component({
     selector: 'view-marksheet',
@@ -37,7 +37,8 @@ export class ViewMarksheetComponent implements OnInit {
     isListLoading = false;
 
     constructor(private marksheetService: MarksheetService,
-                private studentService: StudentOldService) { }
+                private studentService: StudentOldService,
+                private printService: PrintService) { }
 
 
     ngOnInit(): void {
@@ -95,11 +96,14 @@ export class ViewMarksheetComponent implements OnInit {
 
     printMarksheet(): void {
         this.marksheet.nextClassName = this.nextClassName;
+        let routeName;
         if (this.user.username === 'bhagatsingh' || this.user.username === 'brightstarsalsalai') {
-            EmitterService.get('print-marksheet-second-format').emit(this.marksheet);
+            routeName = PRINT_MARKSHEET_SECOND_FORMAT;
         } else {
-            EmitterService.get('print-marksheet').emit(this.marksheet);
+            routeName = PRINT_MARKSHEET;
         }
+
+        this.printService.navigateToPrintRoute(routeName, {user: this.user, value: this.marksheet});
     }
 
     getStudentMarksheet(student?: StudentTest): void {
