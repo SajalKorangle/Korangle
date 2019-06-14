@@ -8,10 +8,8 @@ import { TransferCertificate } from '../../classes/transfer-certificate';
 
 import { StudentOldService } from '../../student-old.service';
 import { SchoolService } from '../../../../services/school.service';
-
-import { EmitterService } from '../../../../services/emitter.service';
-import {logger} from 'codelyzer/util/logger';
-import {error} from '@angular/compiler/src/util';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_TC } from '../../../../print/print-routes.constants';
 
 @Component({
   selector: 'generate-tc',
@@ -64,7 +62,8 @@ export class GenerateTcComponent implements OnInit {
 
 
     constructor (private studentService: StudentOldService,
-                 private schoolService: SchoolService) { }
+                 private schoolService: SchoolService,
+                 private printService: PrintService) { }
 /*
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
@@ -280,7 +279,7 @@ export class GenerateTcComponent implements OnInit {
             transferCertificate: this.selectedTransferCertificate,
             twoCopies: this.twoCopies,
         };
-        EmitterService.get('print-transfer-certificate-second-format').emit(value);
+        this.printService.navigateToPrintRoute(PRINT_TC, {user: this.user, value});
     }
 
     cancelTc(): void {
