@@ -2,13 +2,12 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { TotalCollectionServiceAdapter } from "./total-collection.service.adapter";
 import { FeeService } from "../../../../services/fee.service";
 import {EmployeeService} from "../../../../services/employee.service";
-import {FeeReceipt} from "../../../../services/fees/fee-receipt";
-import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
 import {StudentService} from "../../../../services/student.service";
 import {ClassService} from "../../../../services/class.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {EmitterService} from "../../../../services/emitter.service";
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
 
 @Component({
     selector: 'total-collection',
@@ -52,7 +51,8 @@ export class TotalCollectionComponent implements OnInit {
                 public employeeService: EmployeeService,
                 public studentService: StudentService,
                 public classService: ClassService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                private printService: PrintService) {}
 
     ngOnInit(): void {
 
@@ -89,8 +89,7 @@ export class TotalCollectionComponent implements OnInit {
             'selectedModeOfPayment': this.selectedModeOfPayment,
         };
 
-        EmitterService.get('print-fee-receipt-list').emit(data);
-
+        this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
     }
 
     detectChanges(): void {

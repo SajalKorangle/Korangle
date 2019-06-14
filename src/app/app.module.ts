@@ -22,7 +22,6 @@ import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
-import { PrintFeeReceiptListComponent } from "./modules/fees/print/print-fee-receipt-list/print-fee-receipt-list.component";
 import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-fee-receipt-list/print-full-fee-receipt-list.component";
 import { PrintService } from './print/print-service';
 @NgModule({
@@ -41,8 +40,6 @@ import { PrintService } from './print/print-service';
         PrintNewFeeReceiptComponent,
         PrintComponent,
         PrintFullFeeReceiptListComponent,
-        PrintFeeReceiptListComponent,
-
     ],
     imports: [
         ComponentsModule,
