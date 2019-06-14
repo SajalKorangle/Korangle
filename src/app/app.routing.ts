@@ -88,6 +88,7 @@ const routes: Routes = [
             {path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule'},
             {path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule'},
             {path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule'},
+            {path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule'}
         ]
     }
 ];

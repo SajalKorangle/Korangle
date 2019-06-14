@@ -8,3 +8,10 @@ export const PRINT_EMPLOYEE_EXP_CERT = 'print-employee-exp-cert';
 //attendance
 export const PRINT_EMPLOYEE_ATTENDANCE = 'print-employee-attendance';
 export const PRINT_STUDENT_ATTENDANCE = 'print-student-attendance';
+
+//examination
+export const PRINT_STUDENT_NINTH_FINAL_REPORT = 'print-student-ninth-final-report';
+export const PRINT_STUDENT_ELEVENTH_FINAL_REPORT = 'print-student-eleventh-final-report';
+export const PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT = 'print-student-comprehensive-final-report';
+export const PRINT_STUDENT_ELEGANT_FINAL_REPORT = 'print-student-elegant-final-report';
+export const PRINT_STUDENT_CLASSIC_FINAL_REPORT = 'print-student-classic-final-report';

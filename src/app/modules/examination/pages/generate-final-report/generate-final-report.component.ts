@@ -10,7 +10,8 @@ import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../../students/student-old.service';
 import {SubjectOldService} from '../../../../services/subject-old.service';
 import {AttendanceService} from '../../../attendance/attendance.service';
-import {EmitterService} from '../../../../services/emitter.service';
+import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, PRINT_STUDENT_CLASSIC_FINAL_REPORT, PRINT_STUDENT_ELEGANT_FINAL_REPORT, PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT } from '../../../../print/print-routes.constants';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
     selector: 'generate-final-report',
@@ -46,7 +47,8 @@ export class GenerateFinalReportComponent implements OnInit {
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 public attendanceService: AttendanceService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                private printService: PrintService) {}
 
     ngOnInit(): void {
         this.serviceAdapter = new GenerateFinalReportServiceAdapter();
@@ -67,17 +69,21 @@ export class GenerateFinalReportComponent implements OnInit {
             'showPrincipalSignature': this.showPrinicipalSignature,
         };
         let selectedClassSection = this.getSelectedClassSection();
+        let printRoute : string;
+        
         if (selectedClassSection.className == 'Class - 9') {
-            EmitterService.get('print-student-ninth-final-report-list').emit(data);
+            printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT;
         } else if( selectedClassSection.className == 'Class - 11'){
-            EmitterService.get('print-student-eleventh-final-report-list').emit(data);
+            printRoute = PRINT_STUDENT_ELEVENTH_FINAL_REPORT;
         } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[2]) {
-            EmitterService.get('print-student-comprehensive-final-report-list').emit(data);
+            printRoute = PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT;
         } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[1]) {
-            EmitterService.get('print-student-elegant-final-report-list').emit(data);
+            printRoute = PRINT_STUDENT_ELEGANT_FINAL_REPORT;
         } else {
-            EmitterService.get('print-student-classic-final-report-list').emit(data);
+            printRoute = PRINT_STUDENT_CLASSIC_FINAL_REPORT;
         }
+
+        this.printService.navigateToPrintRoute(printRoute, {user: this.user, value: data});
         alert('This may take a while');
     }
 

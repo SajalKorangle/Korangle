@@ -2,17 +2,16 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../../../services/emitter.service';
 import {TEST_TYPE_LIST} from '../../classes/constants';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-student-ninth-final-report-list',
     templateUrl: './print-student-ninth-final-report-list.component.html',
     styleUrls: ['./print-student-ninth-final-report-list.component.css'],
 })
 export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    @Input() user;
+    user : any;
 
     viewChecked = true;
 
@@ -21,19 +20,16 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
     reportCardMapping: any;
     showPrincipalSignature: any;
 
-    printStudentNinthFinalReportListComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printStudentNinthFinalReportListComponentSubscription =
-            EmitterService.get('print-student-ninth-final-report-list-component').subscribe(value => {
-                this.subjectList = value['subjectList'];
-                this.studentFinalReportList = value['studentFinalReportList'];
-                this.reportCardMapping = value['reportCardMapping'];
-                this.showPrincipalSignature = value['showPrincipalSignature'];
-                this.viewChecked = false;
-            });
+        const { user, value } = this.printService.getData();
+        this.user = user;
+        this.subjectList = value['subjectList'];
+        this.studentFinalReportList = value['studentFinalReportList'];
+        this.reportCardMapping = value['reportCardMapping'];
+        this.showPrincipalSignature = value['showPrincipalSignature'];
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
@@ -47,7 +43,6 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
     }
 
     ngOnDestroy(): void {
-        this.printStudentNinthFinalReportListComponentSubscription.unsubscribe();
         this.subjectList = null;
         this.studentFinalReportList = null;
     }

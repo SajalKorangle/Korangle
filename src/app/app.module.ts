@@ -26,11 +26,6 @@ import { PrintHallTicketComponent } from './modules/examination/print/print-hall
 import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
 import { PrintStudentMarksheetListComponent } from './modules/examination/print/print-student-marksheet-list/print-student-marksheet-list.component';
 import { PrintSalarySheetComponent } from './modules/salary/print/print-salary-sheet/print-salary-sheet.component';
-import { PrintStudentComprehensiveFinalReportListComponent } from './modules/examination/print/print-student-comprehensive-final-report-list/print-student-comprehensive-final-report-list.component';
-import { PrintStudentElegantFinalReportListComponent } from './modules/examination/print/print-student-elegant-final-report-list/print-student-elegant-final-report-list.component';
-import { PrintStudentNinthFinalReportListComponent } from './modules/examination/print/print-student-ninth-final-report-list/print-student-ninth-final-report-list.component';
-import { PrintStudentClassicFinalReportListComponent } from './modules/examination/print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
-import {PrintStudentEleventhFinalReportListComponent} from './modules/examination/print/print-student-eleventh-final-report-list/print-student-eleventh-final-report-list.component';
 import {PrintOldFeeReceiptListComponent} from './modules/fees-second/print/print-old-fee-receipt-list/print-old-fee-receipt-list.component';
 import { PrintFeeReceiptListComponent } from "./modules/fees/print/print-fee-receipt-list/print-fee-receipt-list.component";
 import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-fee-receipt-list/print-full-fee-receipt-list.component";
@@ -54,11 +49,6 @@ import { PrintService } from './print/print-service';
         PrintHallTicketComponent,
         PrintStudentMarksheetListComponent,
         PrintSalarySheetComponent,
-        PrintStudentComprehensiveFinalReportListComponent,
-        PrintStudentElegantFinalReportListComponent,
-        PrintStudentNinthFinalReportListComponent,
-        PrintStudentEleventhFinalReportListComponent,
-        PrintStudentClassicFinalReportListComponent,
         PrintComponent,
         PrintFullFeeReceiptListComponent,
         PrintFeeReceiptListComponent,

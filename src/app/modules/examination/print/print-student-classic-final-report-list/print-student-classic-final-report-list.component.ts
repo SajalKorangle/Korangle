@@ -1,17 +1,15 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
-
-import { EmitterService } from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-student-classic-final-report-list',
     templateUrl: './print-student-classic-final-report-list.component.html',
-    styleUrls: ['./print-student-classic-final-report-list.component.css'],
+    styleUrls: ['./print-student-classic-final-report-list.component.css']
 })
 export class PrintStudentClassicFinalReportListComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    @Input() user;
+    user : any;
 
     viewChecked = true;
 
@@ -22,27 +20,24 @@ export class PrintStudentClassicFinalReportListComponent implements OnInit, OnDe
     includeProject: any;
     showPrincipalSignature: any;
 
-    printStudentClassicFinalReportListComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printStudentClassicFinalReportListComponentSubscription =
-            EmitterService.get('print-student-classic-final-report-list-component').subscribe(value => {
-                this.subjectList = value['subjectList'];
-                this.extraFieldList = value['extraFieldList'];
-                this.studentFinalReportList = value['studentFinalReportList'];
-                this.reportCardMapping = value['reportCardMapping'];
-                this.showPrincipalSignature = value['showPrincipalSignature'];
-                this.populateIncludeProject();
-                this.viewChecked = false;
-            });
+        const {user, value} = this.printService.getData();
+        this.user = user
+        this.subjectList = value['subjectList'];
+        this.extraFieldList = value['extraFieldList'];
+        this.studentFinalReportList = value['studentFinalReportList'];
+        this.reportCardMapping = value['reportCardMapping'];
+        this.showPrincipalSignature = value['showPrincipalSignature'];
+        this.populateIncludeProject();
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.subjectList = null;
             this.extraFieldList = null;
             this.studentFinalReportList = null;
@@ -51,7 +46,6 @@ export class PrintStudentClassicFinalReportListComponent implements OnInit, OnDe
     }
 
     ngOnDestroy(): void {
-        this.printStudentClassicFinalReportListComponentSubscription.unsubscribe();
         this.subjectList = null;
         this.extraFieldList = null;
         this.studentFinalReportList = null;

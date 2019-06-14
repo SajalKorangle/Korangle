@@ -27,11 +27,6 @@ export class PrintComponent implements OnInit, OnDestroy {
     printNewFeeReceiptSubscription: any;
     printHallTicketSubscription: any;
     printStudentMarksheetListSubscription: any;
-    printStudentComprehensiveFinalReportListSubscription: any;
-    printStudentElegantFinalReportListSubscription: any;
-    printStudentNinthFinalReportListSubscription: any;
-    printStudentEleventhFinalReportListSubscription: any;
-    printStudentClassicFinalReportListSubscription: any;
     printSalarySheetSubscription: any;
     printFullFeeReceiptListSubscription: any;
 
@@ -120,36 +115,6 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-student-marksheet-list-component').emit(value);
             });
         });
-        this.printStudentComprehensiveFinalReportListSubscription = EmitterService.get('print-student-comprehensive-final-report-list').subscribe(value => {
-            this.printType = 'studentComprehensiveFinalReportList';
-            setTimeout(() => {
-                EmitterService.get('print-student-comprehensive-final-report-list-component').emit(value);
-            });
-        });
-        this.printStudentElegantFinalReportListSubscription = EmitterService.get('print-student-elegant-final-report-list').subscribe(value => {
-            this.printType = 'studentElegantFinalReportList';
-            setTimeout(() => {
-                EmitterService.get('print-student-elegant-final-report-list-component').emit(value);
-            });
-        });
-        this.printStudentNinthFinalReportListSubscription = EmitterService.get('print-student-ninth-final-report-list').subscribe(value => {
-            this.printType = 'studentNinthFinalReportList';
-            setTimeout(() => {
-                EmitterService.get('print-student-ninth-final-report-list-component').emit(value);
-            });
-        });
-        this.printStudentEleventhFinalReportListSubscription = EmitterService.get('print-student-eleventh-final-report-list').subscribe(value => {
-            this.printType = 'studentEleventhFinalReportList';
-            setTimeout(() => {
-                EmitterService.get('print-student-eleventh-final-report-list-component').emit(value);
-            });
-        });
-        this.printStudentClassicFinalReportListSubscription = EmitterService.get('print-student-classic-final-report-list').subscribe(value => {
-            this.printType = 'studentClassicFinalReportList';
-            setTimeout(() => {
-                EmitterService.get('print-student-classic-final-report-list-component').emit(value);
-            });
-        });
         this.printSalarySheetSubscription = EmitterService.get('print-salary-sheet').subscribe(value => {
             this.printType = 'salarySheet';
             setTimeout(() => {
@@ -177,11 +142,6 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printNewFeeReceiptSubscription.unsubscribe();
         this.printHallTicketSubscription.unsubscribe();
         this.printStudentMarksheetListSubscription.unsubscribe();
-        this.printStudentComprehensiveFinalReportListSubscription.unsubscribe();
-        this.printStudentElegantFinalReportListSubscription.unsubscribe();
-        this.printStudentNinthFinalReportListSubscription.unsubscribe();
-        this.printStudentEleventhFinalReportListSubscription.unsubscribe();
-        this.printStudentClassicFinalReportListSubscription.unsubscribe();
         this.printSalarySheetSubscription.unsubscribe();
         this.printFullFeeReceiptListSubscription.unsubscribe();
     }
