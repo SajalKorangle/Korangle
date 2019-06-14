@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../services/emitter.service';
+import { EmitterService } from '../../../../services/emitter.service';
 
 @Component({
     selector: 'app-print-marksheet',

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
-import { Expense } from '../../classes/expense';
+import { Expense } from '../../../../classes/expense';
 
-import { EmitterService } from '../../services/emitter.service';
+import { EmitterService } from '../../../../services/emitter.service';
 import set = Reflect.set;
 import moment = require('moment');
 

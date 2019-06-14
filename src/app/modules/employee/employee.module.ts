@@ -17,6 +17,7 @@ import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {ExperienceCertiComponent} from './pages/experience-certi/experience-certi.component';
 import { PrintEmployeeExpCertiComponent } from './print/print-employee-exp-certi/print-employee-exp-certi.component';
 import { PrintEmployeeICardsComponent } from './print/print-employee-i-card/print-employee-i-cards.component';
+import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
 
 @NgModule({
     declarations: [
@@ -28,7 +29,8 @@ import { PrintEmployeeICardsComponent } from './print/print-employee-i-card/prin
         ICardsComponent,
         ExperienceCertiComponent,
         PrintEmployeeExpCertiComponent,
-        PrintEmployeeICardsComponent
+        PrintEmployeeICardsComponent,
+        PrintEmployeeListComponent
     ],
 
     imports: [

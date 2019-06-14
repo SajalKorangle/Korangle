@@ -2,9 +2,9 @@ import { Component, OnInit, Input, OnDestroy, AfterViewChecked } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../services/emitter.service';
-import {FREQUENCY_LIST} from '../../modules/fees-second/classes/constants';
-import {FeeReceipt} from '../../modules/fees-second/classes/common-functionalities';
+import { EmitterService } from '../../../../services/emitter.service';
+import {FREQUENCY_LIST} from '../../../../modules/fees-second/classes/constants';
+import {FeeReceipt} from '../../../../modules/fees-second/classes/common-functionalities';
 
 @Component({
     selector: 'app-print-new-fee-receipt',
@@ -25,13 +25,14 @@ export class PrintNewFeeReceiptComponent implements OnInit, OnDestroy, AfterView
     constructor(private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
-        // this.feeReceipt = new TempFee();
-        this.printNewFeeReceiptComponentSubscription = EmitterService.get('print-new-fee-receipt-component').subscribe( value => {
-            // this.feeReceipt.copy(value);
-            this.feeReceipt = value['feeReceipt'];
-            this.sectionName = value['sectionName'];
-            this.checkView = true;
-        });
+        //Getting removed. //No refactoring
+        // // this.feeReceipt = new TempFee();
+        // this.printNewFeeReceiptComponentSubscription = EmitterService.get('print-new-fee-receipt-component').subscribe( value => {
+        //     // this.feeReceipt.copy(value);
+        //     this.feeReceipt = value['feeReceipt'];
+        //     this.sectionName = value['sectionName'];
+        //     this.checkView = true;
+        // });
     }
 
     ngAfterViewChecked(): void {

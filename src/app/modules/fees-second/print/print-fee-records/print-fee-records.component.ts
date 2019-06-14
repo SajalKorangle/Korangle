@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
-import { Fee } from '../../classes/fee';
-
-import { EmitterService } from '../../services/emitter.service';
+import { EmitterService } from '../../../../services/emitter.service';
 // import set = Reflect.set;
 import moment = require("moment");
 
@@ -23,15 +21,16 @@ export class PrintFeeRecordsComponent implements OnInit, OnDestroy {
     printFeeRecordsComponentSubscription: any;
 
     ngOnInit(): void {
-        this.printFeeRecordsComponentSubscription = EmitterService.get('print-fee-records-component').subscribe( value => {
-            this.feesList = value['feesList'];
-            this.startDate = moment(value['startDate']).format('DD-MM-YYYY');
-            this.endDate = moment(value['endDate']).format('DD-MM-YYYY');
-            this.totalFees = value['totalFees'];
-            setTimeout(() => {
-                window.print();
-            });
-        });
+        //Getting removed. //No refactoring
+        // this.printFeeRecordsComponentSubscription = EmitterService.get('print-fee-records-component').subscribe( value => {
+        //     this.feesList = value['feesList'];
+        //     this.startDate = moment(value['startDate']).format('DD-MM-YYYY');
+        //     this.endDate = moment(value['endDate']).format('DD-MM-YYYY');
+        //     this.totalFees = value['totalFees'];
+        //     setTimeout(() => {
+        //         window.print();
+        //     });
+        // });
     }
 
     ngOnDestroy(): void {

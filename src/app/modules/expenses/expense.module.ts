@@ -8,6 +8,7 @@ import { ExpenseListComponent } from './expense-list/expense-list.component';
 import { AddExpenseComponent } from './add-expense/add-expense.component';
 
 import {ExpenseRoutingModule} from './expense.routing';
+import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import {ExpenseRoutingModule} from './expense.routing';
 
         ExpenseListComponent,
         AddExpenseComponent,
+        PrintExpensesComponent
 
     ],
 

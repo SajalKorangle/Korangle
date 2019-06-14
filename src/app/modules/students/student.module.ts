@@ -18,6 +18,7 @@ import {UpdateAllComponent} from './pages/update_all/update-all.component';
 import {PromoteStudentComponent} from "./pages/promote-student/promote-student.component";
 import { PrintICardsComponent } from './print/print-i-card/print-i-cards.component';
 import { PrintTransferCertificateSecondFormatComponent } from './print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component';
+import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 
 @NgModule({
     declarations: [
@@ -34,6 +35,7 @@ import { PrintTransferCertificateSecondFormatComponent } from './print/print-tra
         ICardsComponent,
         PrintICardsComponent,
         PrintTransferCertificateSecondFormatComponent,
+        PrintStudentListComponent
 
     ],
 

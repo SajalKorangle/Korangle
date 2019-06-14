@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../services/emitter.service';
-import {viewClassName} from "@angular/compiler";
+import { EmitterService } from '../../../../services/emitter.service';
 
 @Component({
     selector: 'app-print-student-list',

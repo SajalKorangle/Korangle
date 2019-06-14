@@ -3,7 +3,8 @@ import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { StudentComponent } from './student.component';
 import { PrintICardsComponent } from './print/print-i-card/print-i-cards.component';
-import  { PRINT_I_CARD, PRINT_TC } from '../../print/print-routes.constants';
+import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
+import  { PRINT_I_CARD, PRINT_TC, PRINT_STUDENT_LIST } from '../../print/print-routes.constants';
 
 const routes: Routes = [
     {
@@ -17,6 +18,10 @@ const routes: Routes = [
     {
         path: PRINT_TC,
         component: PrintICardsComponent,
+    },
+    {
+        path: PRINT_STUDENT_LIST,
+        component: PrintStudentListComponent,
     }
 ];
 
