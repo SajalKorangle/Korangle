@@ -112,11 +112,7 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     getFilteredModeOfPaymentList(): any {
-        let tempList = this.feeReceiptList.map(a => a.modeOfPayment);
-        tempList = tempList.filter((item, index) => {
-            return tempList.indexOf(item) == index && item != null;
-        });
-        return tempList;
+        return [...new Set(this.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {return a != null;});
     }
 
     getFilteredFeeReceiptList(): any {

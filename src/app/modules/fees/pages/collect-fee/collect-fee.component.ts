@@ -1114,6 +1114,7 @@ export class CollectFeeComponent implements OnInit {
             feeReceipt.parentSession = studentFee.parentSession;
             feeReceipt.parentSchool = this.user.activeSchool.dbId;
             feeReceipt.parentEmployee = this.user.activeSchool.employeeId;
+            feeReceipt.modeOfPayment = this.newModeOfPayment;
 
             this.newFeeReceiptList.push(feeReceipt);
 

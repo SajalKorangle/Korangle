@@ -40,7 +40,6 @@ export class ViewFeeComponent implements OnInit {
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
     sessionList = SESSION_LIST;
-    modeOfPaymentList = MODE_OF_PAYMENT_LIST;
     receiptColumnFilter = new ReceiptColumnFilter();
     discountColumnFilter = new DiscountColumnFilter();
 
