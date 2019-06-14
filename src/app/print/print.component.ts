@@ -25,7 +25,6 @@ export class PrintComponent implements OnInit, OnDestroy {
     printFeeReceiptListSubscription: any;
     printEmployeeListSubscription: any;
     printNewFeeReceiptSubscription: any;
-    printSalarySheetSubscription: any;
     printFullFeeReceiptListSubscription: any;
 
     ngOnInit(): void {
@@ -101,12 +100,6 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-new-fee-receipt-component').emit(value);
             });
         });
-        this.printSalarySheetSubscription = EmitterService.get('print-salary-sheet').subscribe(value => {
-            this.printType = 'salarySheet';
-            setTimeout(() => {
-                EmitterService.get('print-salary-sheet-component').emit(value);
-            });
-        });
         this.printFullFeeReceiptListSubscription = EmitterService.get('print-full-fee-receipt-list').subscribe(value => {
             this.printType = 'fullFeeReceiptList';
             setTimeout(() => {
@@ -126,7 +119,6 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printFeeReceiptListSubscription.unsubscribe();
         this.printEmployeeListSubscription.unsubscribe();
         this.printNewFeeReceiptSubscription.unsubscribe();
-        this.printSalarySheetSubscription.unsubscribe();
         this.printFullFeeReceiptListSubscription.unsubscribe();
     }
 

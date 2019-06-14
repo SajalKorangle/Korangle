@@ -35,7 +35,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.subjectList = null;
             this.studentFinalReportList = null;
             this.cdRef.detectChanges();

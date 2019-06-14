@@ -23,7 +23,6 @@ import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
-import { PrintSalarySheetComponent } from './modules/salary/print/print-salary-sheet/print-salary-sheet.component';
 import {PrintOldFeeReceiptListComponent} from './modules/fees-second/print/print-old-fee-receipt-list/print-old-fee-receipt-list.component';
 import { PrintFeeReceiptListComponent } from "./modules/fees/print/print-fee-receipt-list/print-fee-receipt-list.component";
 import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-fee-receipt-list/print-full-fee-receipt-list.component";
@@ -44,7 +43,6 @@ import { PrintService } from './print/print-service';
         PrintOldFeeReceiptListComponent,
         PrintEmployeeListComponent,
         PrintNewFeeReceiptComponent,
-        PrintSalarySheetComponent,
         PrintComponent,
         PrintFullFeeReceiptListComponent,
         PrintFeeReceiptListComponent,

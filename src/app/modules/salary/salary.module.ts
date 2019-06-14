@@ -10,6 +10,7 @@ import { GeneratePayslipComponent } from './pages/generate_payslip/generate-pays
 import { RecordPaymentComponent } from './pages/record_payment/record-payment.component';
 import { ViewRecordComponent } from './pages/view_record/view-record.component';
 import { PrintSalarySheetComponent } from './pages/print_salary_sheet/print-salary-sheet.component';
+import { PrintSalarySheetListComponent } from './print/print-salary-sheet-list/print-salary-sheet-list.component';
 
 @NgModule({
     declarations: [
@@ -19,6 +20,7 @@ import { PrintSalarySheetComponent } from './pages/print_salary_sheet/print-sala
         RecordPaymentComponent,
         ViewRecordComponent,
         PrintSalarySheetComponent,
+        PrintSalarySheetListComponent
 
     ],
 

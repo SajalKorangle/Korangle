@@ -29,7 +29,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.examination = null;
             this.cdRef.detectChanges();
         }

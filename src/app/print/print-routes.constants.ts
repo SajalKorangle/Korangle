@@ -18,3 +18,6 @@ export const PRINT_STUDENT_CLASSIC_FINAL_REPORT = 'print-student-classic-final-r
 
 export const PRINT_HALL_TICKET = 'print-hall-ticket';
 export const PRINT_STUDENT_MARKSHEET = 'print-student-marksheet';
+
+//salary
+export const PRINT_SALARY_SHEET = 'print-salary-sheet';

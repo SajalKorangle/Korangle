@@ -34,7 +34,7 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.studentList = null;
             this.examination = null;
             this.cdRef.detectChanges();
