@@ -33,8 +33,6 @@ export class PrintComponent implements OnInit, OnDestroy {
     printStudentEleventhFinalReportListSubscription: any;
     printStudentClassicFinalReportListSubscription: any;
     printSalarySheetSubscription: any;
-    printStudentAttendanceListSubscription: any;
-    printEmployeeAttendanceListSubscription: any;
     printFullFeeReceiptListSubscription: any;
 
     ngOnInit(): void {
@@ -158,20 +156,6 @@ export class PrintComponent implements OnInit, OnDestroy {
                 EmitterService.get('print-salary-sheet-component').emit(value);
             });
         });
-        this.printStudentAttendanceListSubscription =
-            EmitterService.get('print-student-attendance-list').subscribe( value => {
-                this.printType = 'studentAttendanceList';
-                setTimeout( () => {
-                    EmitterService.get('print-student-attendance-list-component').emit(value);
-                });
-        });
-        this.printEmployeeAttendanceListSubscription =
-            EmitterService.get('print-employee-attendance-list').subscribe( value => {
-                this.printType = 'employeeAttendanceList';
-                setTimeout( () => {
-                    EmitterService.get('print-employee-attendance-list-component').emit(value);
-                });
-            });
         this.printFullFeeReceiptListSubscription = EmitterService.get('print-full-fee-receipt-list').subscribe(value => {
             this.printType = 'fullFeeReceiptList';
             setTimeout(() => {
@@ -199,8 +183,6 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printStudentEleventhFinalReportListSubscription.unsubscribe();
         this.printStudentClassicFinalReportListSubscription.unsubscribe();
         this.printSalarySheetSubscription.unsubscribe();
-        this.printStudentAttendanceListSubscription.unsubscribe();
-        this.printEmployeeAttendanceListSubscription.unsubscribe();
         this.printFullFeeReceiptListSubscription.unsubscribe();
     }
 

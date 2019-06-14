@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, Input } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../../../services/emitter.service';
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'print-student-attendance-list',
     templateUrl: './print-student-attendance-list.component.html',
     styleUrls: ['./print-student-attendance-list.component.css'],
 })
-export class PrintStudentAttendanceListComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class PrintStudentAttendanceListComponent implements OnInit, AfterViewChecked {
 
     @Input() user;
 
@@ -21,32 +20,25 @@ export class PrintStudentAttendanceListComponent implements OnInit, OnDestroy, A
 
     viewChecked = true;
 
-    printStudentAttendanceListComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printStudentAttendanceListComponentSubscription =
-            EmitterService.get('print-student-attendance-list-component').subscribe( value => {
-                this.studentAttendanceList = value['studentAttendanceList'];
-                this.startDate = value['startDate'];
-                this.endDate = value['endDate'];
-                this.by = value['by'];
-                this.viewChecked = false;
-        });
+        const { user, value } = this.printService.getData();
+        this.user = user; 
+        this.studentAttendanceList = value['studentAttendanceList'];
+        this.startDate = value['startDate'];
+        this.endDate = value['endDate'];
+        this.by = value['by'];
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.studentAttendanceList = null;
             this.cdRef.detectChanges();
         }
-    }
-
-    ngOnDestroy(): void {
-        this.printStudentAttendanceListComponentSubscription.unsubscribe();
     }
 
     getDateList(): any {

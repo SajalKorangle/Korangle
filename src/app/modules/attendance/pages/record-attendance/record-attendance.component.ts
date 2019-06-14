@@ -5,9 +5,10 @@ import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../../students/student-old.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
-import {EmitterService} from '../../../../services/emitter.service';
 
 import * as XLSX from 'xlsx';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constants';
 
 @Component({
   selector: 'record-attendance',
@@ -46,7 +47,8 @@ export class RecordAttendanceComponent implements OnInit {
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
     constructor (private attendanceService: AttendanceService,
-                 private studentService: StudentOldService) { }
+                 private studentService: StudentOldService,
+                 private printServie: PrintService) { }
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
@@ -253,7 +255,7 @@ export class RecordAttendanceComponent implements OnInit {
             endDate: this.endDate,
             by: this.by,
         };
-        EmitterService.get('print-student-attendance-list').emit(value);
+        this.printServie.navigateToPrintRoute(PRINT_STUDENT_ATTENDANCE, {user: this.user, value});
     }
 
     // For Downloading

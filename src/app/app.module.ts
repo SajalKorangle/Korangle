@@ -23,8 +23,6 @@ import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 import { PrintHallTicketComponent } from './modules/examination/print/print-hall-ticket/print-hall-ticket.component';
-import { PrintStudentAttendanceListComponent } from './modules/attendance/print/print-student-attendance-list/print-student-attendance-list.component';
-import { PrintEmployeeAttendanceListComponent } from './modules/attendance/print/print-employee-attendance-list/print-employee-attendance-list.component';
 import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
 import { PrintStudentMarksheetListComponent } from './modules/examination/print/print-student-marksheet-list/print-student-marksheet-list.component';
 import { PrintSalarySheetComponent } from './modules/salary/print/print-salary-sheet/print-salary-sheet.component';
@@ -40,7 +38,6 @@ import { PrintService } from './print/print-service';
 @NgModule({
     declarations: [
         AppComponent,
-
         LoginComponent,
 
         PrintFeeReceiptComponent,
@@ -56,8 +53,6 @@ import { PrintService } from './print/print-service';
         PrintNewFeeReceiptComponent,
         PrintHallTicketComponent,
         PrintStudentMarksheetListComponent,
-        PrintStudentAttendanceListComponent,
-        PrintEmployeeAttendanceListComponent,
         PrintSalarySheetComponent,
         PrintStudentComprehensiveFinalReportListComponent,
         PrintStudentElegantFinalReportListComponent,
