@@ -253,6 +253,7 @@ class FeeReceipt(models.Model):
     MODE_OF_PAYMENT = (
         ( 'Cash', 'Cash' ),
         ( 'Check', 'Check' ),
+        ( 'Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
 
