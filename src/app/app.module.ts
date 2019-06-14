@@ -35,8 +35,6 @@ import { PrintStudentClassicFinalReportListComponent } from './modules/examinati
 import {PrintStudentEleventhFinalReportListComponent} from './modules/examination/print/print-student-eleventh-final-report-list/print-student-eleventh-final-report-list.component';
 import {PrintOldFeeReceiptListComponent} from './modules/fees-second/print/print-old-fee-receipt-list/print-old-fee-receipt-list.component';
 import { PrintFeeReceiptListComponent } from "./modules/fees/print/print-fee-receipt-list/print-fee-receipt-list.component";
-import {PrintEmployeeICardsComponent} from './modules/employee/print/print-employee-i-card/print-employee-i-cards.component';
-import {PrintEmployeeExpCertiComponent} from './modules/employee/print/print-employee-exp-certi/print-employee-exp-certi.component';
 import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-fee-receipt-list/print-full-fee-receipt-list.component";
 import { PrintService } from './print/print-service';
 @NgModule({
@@ -67,8 +65,6 @@ import { PrintService } from './print/print-service';
         PrintStudentEleventhFinalReportListComponent,
         PrintStudentClassicFinalReportListComponent,
         PrintComponent,
-        PrintEmployeeICardsComponent,
-        PrintEmployeeExpCertiComponent,
         PrintFullFeeReceiptListComponent,
         PrintFeeReceiptListComponent,
 

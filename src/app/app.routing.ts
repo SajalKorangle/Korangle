@@ -85,7 +85,8 @@ const routes: Routes = [
         path: 'print',
         outlet: 'print',
         children: [
-            { path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule' }
+            { path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule' },
+            { path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule' }
         ]
     }
 ];

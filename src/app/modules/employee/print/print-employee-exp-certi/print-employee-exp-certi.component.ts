@@ -1,15 +1,13 @@
 import {Component, OnInit, OnDestroy, AfterViewChecked, Input, ChangeDetectorRef} from '@angular/core';
-
-import { EmitterService } from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-employee-exp-certi',
     templateUrl: './print-employee-exp-certi.component.html',
     styleUrls: ['./print-employee-exp-certi.component.css'],
 })
 export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    @Input() user;
+    user : any;
 
     printExpCertiComponentSubscription: any;
 
@@ -19,29 +17,28 @@ export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterV
 
     employee: any;
 
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
 
     ngOnInit(): void {
-        this.printExpCertiComponentSubscription = EmitterService.get('print-employee-exp-certi-component').subscribe( value => {
-            this.employeeProfile = value;
-            this.employee = this.employeeProfile.employeeFullProfile;
-            this.viewChecked = false;
-        });
+        const { user, value } = this.printService.getData();
+        this.user = user;
+        this.employeeProfile = value;
+        this.employee = this.employeeProfile.employeeFullProfile;
+        this.viewChecked = false;
     }
 
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.employeeProfile = null;
             this.cdRef.detectChanges();
         }
     }
 
     ngOnDestroy(): void {
-        this.printExpCertiComponentSubscription.unsubscribe();
         this.employeeProfile = null;
     }
 
