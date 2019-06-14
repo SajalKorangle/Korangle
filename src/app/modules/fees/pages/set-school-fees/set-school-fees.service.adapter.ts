@@ -63,7 +63,7 @@ export class SetSchoolFeesServiceAdapter {
         let request_sub_discount_data = {
             'parentStudentFee__parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
             'parentStudentFee__parentSchoolFeeRule__parentSession': sessionId,
-            'parentDiscount__cancelled': 'true__boolean',
+            'parentDiscount__cancelled': 'false__boolean',
         };
 
         let lock_fees_list = {
