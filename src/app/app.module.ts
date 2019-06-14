@@ -22,7 +22,6 @@ import { PrintTransferCertificateSecondFormatComponent } from './modules/student
 import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print-new-fee-receipt.component';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
-import { PrintICardsComponent } from './modules/students/print/print-i-card/print-i-cards.component';
 import { PrintHallTicketComponent } from './modules/examination/print/print-hall-ticket/print-hall-ticket.component';
 import { PrintStudentAttendanceListComponent } from './modules/attendance/print/print-student-attendance-list/print-student-attendance-list.component';
 import { PrintEmployeeAttendanceListComponent } from './modules/attendance/print/print-employee-attendance-list/print-employee-attendance-list.component';
@@ -39,7 +38,7 @@ import { PrintFeeReceiptListComponent } from "./modules/fees/print/print-fee-rec
 import {PrintEmployeeICardsComponent} from './modules/employee/print/print-employee-i-card/print-employee-i-cards.component';
 import {PrintEmployeeExpCertiComponent} from './modules/employee/print/print-employee-exp-certi/print-employee-exp-certi.component';
 import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-fee-receipt-list/print-full-fee-receipt-list.component";
-
+import { PrintService } from './print/print-service';
 @NgModule({
     declarations: [
         AppComponent,
@@ -57,7 +56,6 @@ import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-
         PrintOldFeeReceiptListComponent,
         PrintEmployeeListComponent,
         PrintNewFeeReceiptComponent,
-        PrintICardsComponent,
         PrintHallTicketComponent,
         PrintStudentMarksheetListComponent,
         PrintStudentAttendanceListComponent,
@@ -85,7 +83,7 @@ import {PrintFullFeeReceiptListComponent} from "./modules/fees/print/print-full-
     ],
     exports: [
     ],
-  providers: [],
+  providers: [ PrintService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

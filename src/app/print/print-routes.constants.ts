@@ -1,0 +1,1 @@
+export const PRINT_I_CARD = 'print-i-card';

@@ -1,9 +1,9 @@
 
-import {of as observableOf, Observable} from 'rxjs';
+import { of as observableOf, Observable } from 'rxjs';
 import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule, Route } from '@angular/router';
-import { PreloadAllModules, PreloadingStrategy } from '@angular/router';
+import { PreloadingStrategy } from '@angular/router';
 
 
 import {DataStorage} from './classes/data-storage';
@@ -81,6 +81,13 @@ const routes: Routes = [
         path: 'team',
         loadChildren: 'app/modules/team/team.module#TeamModule',
     },
+    {
+        path: 'print',
+        outlet: 'print',
+        children: [
+            { path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule' }
+        ]
+    }
 ];
 
 export class CustomPreload implements PreloadingStrategy {

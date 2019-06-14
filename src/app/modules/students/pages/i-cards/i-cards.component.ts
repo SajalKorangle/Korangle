@@ -4,7 +4,8 @@ import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {EmitterService} from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_I_CARD } from '../../../../print/print-routes.constants';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -70,7 +71,8 @@ export class ICardsComponent implements OnInit {
 
     constructor(private studentService: StudentOldService,
                 private classService: ClassService,
-                private cdRef: ChangeDetectorRef) { }
+                private cdRef: ChangeDetectorRef,
+                private printService: PrintService) { }
 
     onPage(event) {
         clearTimeout(this.timeout);
@@ -333,7 +335,7 @@ export class ICardsComponent implements OnInit {
             columnFilter: this.columnFilter,
             showClass: this.showClass
         };
-        EmitterService.get('print-i-cards').emit(value);
+        this.printService.navigateToPrintRoute(PRINT_I_CARD, {user: this.user, value});
     };
 
 }
