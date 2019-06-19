@@ -24,7 +24,7 @@
 
                         <mat-expansion-panel>
 
-                            <!-- Rule Number, Rule Name-->
+                            <!-- Group Number, Group Name-->
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     {{schoolFeeRule.ruleNumber}}. {{schoolFeeRule.name}}
@@ -210,11 +210,11 @@
 
                 <ng-container *ngIf="!lockFees">
 
-                    Add New School Fee Rule
+                    <b>Add New Fee Group</b>
 
                     <br/><br/>
 
-                    <!-- Rule Number, Rule Name -->
+                    <!-- Group Number, Group Name -->
                     <div class="row">
                         <div class="col-md-3">
                             <mat-form-field class="example-full-width">
@@ -222,7 +222,7 @@
                                        style="border: none;"
                                        [(ngModel)]="newSchoolFeeRule.ruleNumber"
                                        type="number"
-                                       placeholder="Rule Number">
+                                       placeholder="Group Number">
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
@@ -231,7 +231,7 @@
                                        style="border: none;"
                                        [(ngModel)]="newSchoolFeeRule.name"
                                        type="text"
-                                       placeholder="Rule Name">
+                                       placeholder="Group Name">
                             </mat-form-field>
                         </div>
                     </div>
