@@ -62,15 +62,11 @@ class MsgClubDeliveryReportView(APIView):
         }
         return get_msg_club_delivery_report_list(data)
 
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        handle_msg_club_delivery_report(data)
-        return HttpResponse(status=201)
 
-'''def handle_msg_club_delivery_report_view(request):
+def handle_msg_club_delivery_report_view(request):
     data = json.loads(request.body.decode('utf-8'))
     handle_msg_club_delivery_report(data)
-    return HttpResponse(status=201)'''
+    return HttpResponse(status=201)
 
 
 ############## SMS Purchase ##############
