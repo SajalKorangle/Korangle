@@ -89,7 +89,7 @@ export class ViewSentComponent implements OnInit {
     getMobileNumberList(sms: any): any {
         let mobileNumberList = [];
         if (this.selectedStatus == this.STATUS_UNKNOWN) {
-            let subtractMobileNumberList = sms.deliveryReportList.map(a => a.mobileNumber);
+            let subtractMobileNumberList = sms.deliveryReportList.map(a => a.mobileNumber.toString());
             mobileNumberList = sms.mobileNumberList.split(',').filter(item => {
                 return !subtractMobileNumberList.includes(item);
             });
