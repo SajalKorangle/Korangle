@@ -1,13 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 import { SmsService } from '../../sms.service';
+import { ViewSentServiceAdapter } from './view-sent.service.adapter';
 
 @Component({
   selector: 'view-sent',
   templateUrl: './view-sent.component.html',
-  styleUrls: ['./view-sent.component.css'],
+  styleUrls: ['./view-sent.component.css', './view-sent.component.scss'],
 })
-export class ViewSentComponent {
+export class ViewSentComponent implements OnInit {
+
+    STATUS_UNKNOWN = 'Unknown';
 
     @Input() user;
 
@@ -16,7 +19,22 @@ export class ViewSentComponent {
 
     smsList: any;
 
+    selectedStatus;
+
+    serviceAdapter: ViewSentServiceAdapter;
+
     isLoading = false;
+
+    constructor(public smsService: SmsService,
+                private cdRef: ChangeDetectorRef) { }
+
+    ngOnInit(): void {
+        this.serviceAdapter = new ViewSentServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+
+        this.selectedStatus = this.STATUS_UNKNOWN;
+    }
 
     todaysDate(): string {
         const d = new Date();
@@ -29,8 +47,6 @@ export class ViewSentComponent {
 
         return year + '-' + month + '-' + day;
     }
-
-    constructor(private smsService: SmsService) { }
 
     getSMSList(): void {
         const data = {
@@ -47,6 +63,42 @@ export class ViewSentComponent {
         }, error => {
             this.isLoading = false;
         });
+    }
+
+    getStatusList(sms: any): any {
+        let statusList = [];
+        if (sms.count != sms.deliveryReportList.length) {
+            statusList.push(this.STATUS_UNKNOWN);
+        }
+        statusList = statusList.concat([...new Set(sms.deliveryReportList.map(a => a.status))]);
+        return statusList;
+    }
+
+    getStatusCount(status: any, sms: any): number {
+        let result = 0;
+        if (status == this.STATUS_UNKNOWN) {
+            result = sms.count-sms.deliveryReportList.length;
+        } else {
+            result = sms.deliveryReportList.filter(item => {
+                return item.status == status;
+            }).length;
+        }
+        return result;
+    }
+
+    getMobileNumberList(sms: any): any {
+        let mobileNumberList = [];
+        if (this.selectedStatus == this.STATUS_UNKNOWN) {
+            let subtractMobileNumberList = sms.deliveryReportList.map(a => a.mobileNumber);
+            mobileNumberList = sms.mobileNumberList.split(',').filter(item => {
+                return !subtractMobileNumberList.includes(item);
+            });
+        } else {
+            mobileNumberList = sms.deliveryReportList.filter(item => {
+                return item.status == this.selectedStatus;
+            }).map(a => a.mobileNumber);
+        }
+        return mobileNumberList;
     }
 
 }
