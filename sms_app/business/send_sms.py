@@ -23,7 +23,7 @@ def send_sms(data):
         'content': data['message'],
         'estimatedCount': data['estimatedCount'],
         'count': data['estimatedCount'],
-        'mobileNumberList': data['mobileNumberList'],
+        'mobileNumberList': data['mobileNumberList'][:-1],
         'parentSchool': data['parentSchool'],
     }
 
@@ -72,7 +72,7 @@ def send_sms(data):
     anotherPayload = {
         "smsContent": data['message'],
         "routeId": "1",
-        "mobileNumbers": data['mobileNumberList'],
+        "mobileNumbers": data['mobileNumberList'][:-1],
         "senderId": school_object.smsId,
         "smsContentType": data['smsContentType'],
     }
