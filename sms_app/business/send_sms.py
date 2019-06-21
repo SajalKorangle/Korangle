@@ -1,4 +1,6 @@
 
+import http.client
+
 import requests
 
 from sms_app.business.sms import create_sms
@@ -10,7 +12,7 @@ import json
 
 def send_sms(data):
 
-    print(data['message'].encode('utf-8'))
+    # print(data['message'].encode('utf-8'))
 
     sms_count_left = get_sms_count(data)
 
@@ -31,16 +33,16 @@ def send_sms(data):
 
     # Msg Club
 
-    url = "http://msg.msgclub.net/rest/services/sendSMS/sendGroupSms"
+    # url = "http://msg.msgclub.net/rest/services/sendSMS/sendGroupSms"
 
-    querystring = {
+    '''querystring = {
         "AUTH_KEY": "fbe5746e5505757b176a1cf914110c3",
         "message": data['message'],
         "senderId": school_object.smsId,
         "routeId": "1",
         "mobileNos": data['mobileNumberList'],
         "smsContentType": data['smsContentType'],
-    }
+    }'''
 
     # Msg 91
 
@@ -59,21 +61,59 @@ def send_sms(data):
     if data['smsContentType'] == 'unicode':
         querystring['unicode'] = 1'''
 
+    '''headers = {
+        'Cache-Control': "no-cache"
+    }'''
+
+    conn = http.client.HTTPConnection("msg.msgclub.net")
+
+    # mobileNumberList = data['mobileNumberList'].replace(',',',')[:-1]
+
+    anotherPayload = {
+        "smsContent": data['message'],
+        "routeId": "1",
+        "mobileNumbers": data['mobileNumberList'],
+        "senderId": school_object.smsId,
+        "smsContentType": data['smsContentType'],
+    }
+
+    payloadJson = json.dumps(anotherPayload)
+
+    # print(payloadJson)
+
+    # payload = " {\"smsContent\":\""+data['message']+"\",\"routeId\":\"1\",\"mobileNumbers\":\""+mobileNumberList+"\",\"senderId\":\""+school_object.smsId+"\",\"signature\":\"signature\",\"smsContentType\":\""+data['smsContentType']+"\"}"
+
+    # payload = "{\"smsContent\":\"Hello Test SMS\",\"routeId\":\"1\",\"mobileNumbers\":\"9999999999,8888888888\",\"senderId\":\"DEMOOS\",\"signature\":\"signature\",\"smsContentType\":\"english\"}"
+
+    # print(payload)
+
     headers = {
+        'Content-Type': "application/json",
         'Cache-Control': "no-cache"
     }
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
+    conn.request("POST", "/rest/services/sendSMS/sendGroupSms?AUTH_KEY=fbe5746e5505757b176a1cf914110c3", payloadJson, headers)
 
-    print('Response: ' + response.text)
+    response = conn.getresponse().read()
 
-    if 'response' in response.text:
-        sms_data['requestId'] = json.loads(response.text)['response']
+    print(response.decode("utf-8"))
 
-    create_sms(sms_data)
+    requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
 
-    f = open('sms_file', 'a+')
-    f.write("'{0}'\n'{1}'\n'{2}'\n".format(response.text, data['estimatedCount'], data['message'].encode('utf-8')))
-    f.close()
+    # response = requests.request("GET", url, headers=headers, params=querystring)
+
+    # print('Response: ' + response.text)
+
+    # if 'response' in response.text:
+    sms_data['requestId'] = requestIdFromMsgClub # json.loads(response.text)['response']
+
+    message = create_sms(sms_data)
+
+    print(message)
 
     return {'status': 'success', 'count': data['estimatedCount'], 'message': 'SMS Sent successfully'}
+
+    # f = open('sms_file', 'a+')
+    # f.write("'{0}'\n'{1}'\n'{2}'\n".format(response.text, data['estimatedCount'], data['message'].encode('utf-8')))
+    # f.close()
+
