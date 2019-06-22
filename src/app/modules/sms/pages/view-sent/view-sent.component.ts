@@ -59,7 +59,6 @@ export class ViewSentComponent implements OnInit {
         this.smsService.getSMSList(data, this.user.jwt).then(smsList => {
             this.isLoading = false;
             this.smsList = smsList;
-            console.log(this.smsList);
         }, error => {
             this.isLoading = false;
         });
@@ -74,28 +73,22 @@ export class ViewSentComponent implements OnInit {
         return statusList;
     }
 
-    getStatusCount(status: any, sms: any): number {
-        let result = 0;
-        if (status == this.STATUS_UNKNOWN) {
-            result = sms.count-sms.deliveryReportList.length;
-        } else {
-            result = sms.deliveryReportList.filter(item => {
-                return item.status == status;
-            }).length;
-        }
-        return result;
+    getMobileNumberListBySMS(sms: any): any {
+        return sms.mobileNumberList.split(',').filter(item => {
+            return item != null && item != "";
+        });
     }
 
-    getMobileNumberList(sms: any): any {
+    getMobileNumberListByStatusAndSMS(status: any, sms: any): any {
         let mobileNumberList = [];
-        if (this.selectedStatus == this.STATUS_UNKNOWN) {
+        if (status == this.STATUS_UNKNOWN) {
             let subtractMobileNumberList = sms.deliveryReportList.map(a => a.mobileNumber.toString());
             mobileNumberList = sms.mobileNumberList.split(',').filter(item => {
-                return !subtractMobileNumberList.includes(item);
+                return item != null && item != "" && !subtractMobileNumberList.includes(item);
             });
         } else {
             mobileNumberList = sms.deliveryReportList.filter(item => {
-                return item.status == this.selectedStatus;
+                return item.status == status;
             }).map(a => a.mobileNumber);
         }
         return mobileNumberList;

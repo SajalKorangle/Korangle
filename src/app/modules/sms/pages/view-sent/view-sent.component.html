@@ -68,7 +68,7 @@
                         <span class="mat-cell">{{i+1}}.</span>
                         <span class="mat-cell">{{sms.count}}</span>
                         <span class="mat-cell" >{{sms.sentDateTime | date: 'dd - MMM - yyyy'}}</span>
-                        <span class="mat-cell" style="white-space: pre-line;">{{sms.content}}</span>
+                        <span class="mat-cell">{{sms.content.substring(0,20)}}</span>
                     </mat-expansion-panel-header>
 
                     <ng-container *ngIf="sms.isOpen">
@@ -80,9 +80,16 @@
                         </ng-container>
                                 
                         <ng-container *ngIf="sms.isLoading==false">
+                            
+                            <div class="row">
+                                <div class="col-sm-3">Message:</div>
+                                <div class="col-sm-9" style="white-space: pre-line;">{{sms.content}}</div>
+                            </div><br/>
+
                             <ng-container *ngFor="let status of getStatusList(sms); let last=last;">
-                                {{status}}: {{getStatusCount(status,sms)}}<ng-container *ngIf="!last">,&nbsp;&nbsp;</ng-container>
-                            </ng-container><br/><br/>
+                                {{status}}: {{getMobileNumberListByStatusAndSMS(status,sms).length}},&nbsp;&nbsp;
+                            </ng-container>Total: {{getMobileNumberListBySMS(sms).length}}<br/><br/>
+
                             <mat-form-field>
                                 <mat-select placeholder="Select Status"
                                             [(ngModel)]="selectedStatus">
@@ -91,9 +98,11 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field><br/><br/>
-                            <ng-container *ngFor="let mobileNumber of getMobileNumberList(sms); let last=last;">
+
+                            <ng-container *ngFor="let mobileNumber of getMobileNumberListByStatusAndSMS(selectedStatus, sms); let last=last;">
                                 {{mobileNumber}}<ng-container *ngIf="!last">,&nbsp;&nbsp;</ng-container>
                             </ng-container>
+
                         </ng-container>
 
                     </ng-container>
