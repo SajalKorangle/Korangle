@@ -6,7 +6,6 @@
 export const environment = {
     production: false,
     versionCheckURL: 'www.korangle.com/version.json',
-    // DJANGO_SERVER: 'http://localhost:8000',
-    DJANGO_SERVER: 'http://52.55.52.136',
+    DJANGO_SERVER: 'http://localhost:8000',
     api_version: '/v2.0',
 };
