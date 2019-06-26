@@ -40,7 +40,7 @@ class CommonView():
     ModelSerializer = ''
 
     def __init__(self):
-        self.ModelSerializer = get_model_serializer(self.Model)
+        self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None)
 
     @user_permission_new
     def get(self, request):
@@ -73,15 +73,6 @@ class CommonListView():
 
     def __init__(self):
         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None)
-
-    def get_query_fields(self):
-        custom_query_fields = set()
-        raw_fields = self.request.query_params.getlist('fields__korangle')
-
-        for item in raw_fields:
-            custom_query_fields.update(item.split(','))
-
-        return custom_query_fields
 
     @user_permission_new
     def get(self, request):
