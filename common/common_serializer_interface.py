@@ -19,11 +19,7 @@ def get_list(data, Model, ModelSerializer):
     if data != '' and data is not None:
         for index, attr in enumerate(data):
 
-            if attr == 'e':
-                continue
-            if attr == 'fields__korangle':
-                column_list = data[attr].split(',')
-                query = query.values(*column_list)
+            if attr == 'e' or attr == 'fields__korangle':
                 continue
             elif attr[-4:] == '__in':
                 if data[attr] != '':
