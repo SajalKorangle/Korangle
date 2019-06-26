@@ -11,9 +11,19 @@ from common.common_serializer_interface import get_object, get_list, create_obje
     update_object, update_list, partial_update_object, partial_update_list, delete_object, delete_list
 
 
-def get_model_serializer(Model):
+def get_model_serializer(Model, fields__korangle):
 
     class ModelSerializer(serializers.ModelSerializer):
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            if fields__korangle is not None:
+                fields = set(fields__korangle.split(','))
+                all_fields = set(self.fields.keys())
+                for not_requested in all_fields - set(fields):
+                    self.fields.pop(not_requested)
+
         class Meta:
             model = Model
             fields = '__all__'
@@ -62,10 +72,21 @@ class CommonListView():
     ModelSerializer = ''
 
     def __init__(self):
-        self.ModelSerializer = get_model_serializer(self.Model)
+        self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None)
+
+    def get_query_fields(self):
+        custom_query_fields = set()
+        raw_fields = self.request.query_params.getlist('fields__korangle')
+
+        for item in raw_fields:
+            custom_query_fields.update(item.split(','))
+
+        return custom_query_fields
 
     @user_permission_new
     def get(self, request):
+        if 'fields__korangle' in request.GET:
+            self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=request.GET['fields__korangle'])
         return get_list(request.GET, self.Model, self.ModelSerializer)
 
     @user_permission_new

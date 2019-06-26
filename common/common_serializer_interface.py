@@ -21,6 +21,10 @@ def get_list(data, Model, ModelSerializer):
 
             if attr == 'e':
                 continue
+            if attr == 'fields__korangle':
+                column_list = data[attr].split(',')
+                query = query.values(*column_list)
+                continue
             elif attr[-4:] == '__in':
                 if data[attr] != '':
                     filter_var = {attr: list(map(int, data[attr].split(',')))}
@@ -57,7 +61,6 @@ def get_list(data, Model, ModelSerializer):
                 except:
                     print('filter exception:')
                     print(filter_var)
-
 
     return_data = []
 
