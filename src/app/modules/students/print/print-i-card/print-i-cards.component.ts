@@ -19,15 +19,19 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
 
     showClass = true;
 
+    printMultipleIcards = false;
+
     printICardsComponentSubscription: any;
 
     constructor(private cdRef: ChangeDetectorRef) { }
+
 
     ngOnInit(): void {
         this.printICardsComponentSubscription = EmitterService.get('print-i-cards-component').subscribe( value => {
             this.studentProfileList = value.studentProfileList;
             this.viewChecked = false;
             this.showClass = value.showClass;
+            this.printMultipleIcards = value.printMultipleIcards;
         });
     }
 
