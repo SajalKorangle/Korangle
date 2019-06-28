@@ -80,7 +80,7 @@
                     Selected <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
                 </div>
                 <div class="col-sm-6" align="end">
-                    Fees Due (Till Month): <b>{{getFilteredParentListFeesDueTillMonth() | currency:'INR':'Rs. ':'1.0-0'}}</b>
+                    Fees Due (Till Month): <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency:true}}</b>
                 </div>
             </div>
 
@@ -138,11 +138,11 @@
                             </td>
                             <td></td>
                         </ng-template>
-                        <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | currency:'INR':'':'1.0-0'}}</td>
-                        <td>{{getParentFeesDueOverall(parent) | currency:'INR':'':'1.0-0'}}</td>
-                        <td>{{getParentFeesPaid(parent) | currency:'INR':'':'1.0-0'}}</td>
-                        <td>{{getParentDiscount(parent) | currency:'INR':'':'1.0-0'}}</td>
-                        <td>{{getParentTotalFees(parent) | currency:'INR':'':'1.0-0'}}</td>
+                        <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | indianCurrency}}</td>
+                        <td>{{getParentFeesDueOverall(parent) | indianCurrency}}</td>
+                        <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
+                        <td>{{getParentDiscount(parent) | indianCurrency}}</td>
+                        <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
                     </tr>
                     <ng-container *ngIf="parent.studentList.length > 1">
                         <ng-container *ngFor="let student of parent.studentList;">
@@ -160,11 +160,11 @@
                                     </span>
                                     </ng-container>
                                 </td>
-                                <td>{{student.feesDueTillMonth | currency:'INR':'':'1.0-0'}}</td>
-                                <td>{{student.feesDueOverall | currency:'INR':'':'1.0-0'}}</td>
-                                <td>{{student.feesPaidThisSession | currency:'INR':'':'1.0-0'}}</td>
-                                <td>{{student.discountThisSession | currency:'INR':'':'1.0-0'}}</td>
-                                <td>{{student.totalFeesThisSession | currency:'INR':'':'1.0-0'}}</td>
+                                <td>{{student.feesDueTillMonth | indianCurrency}}</td>
+                                <td>{{student.feesDueOverall | indianCurrency}}</td>
+                                <td>{{student.feesPaidThisSession | indianCurrency}}</td>
+                                <td>{{student.discountThisSession | indianCurrency}}</td>
+                                <td>{{student.totalFeesThisSession | indianCurrency}}</td>
                             </tr>
                         </ng-container>
                     </ng-container>
@@ -183,7 +183,7 @@
                     Selected <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
                 </div>
                 <div class="col-sm-6" align="end">
-                    Fees Due (Till Month): <b>{{getFilteredStudentListFeesDueTillMonth() | currency:'INR':'Rs. ':'1.0-0'}}</b>
+                    Fees Due (Till Month): <b>{{getFilteredStudentListFeesDueTillMonth() | indianCurrency:true}}</b>
                 </div>
             </div>
 
@@ -226,11 +226,11 @@
                                 </span>
                             </ng-container>
                         </td>
-                        <td style="font-weight: 600;">{{student.feesDueTillMonth | currency:'INR':'':'1.0-0'}}</td>
-                        <td>{{student.feesDueOverall | currency:'INR':'':'1.0-0'}}</td>
-                        <td>{{student.feesPaidThisSession | currency:'INR':'':'1.0-0'}}</td>
-                        <td>{{student.discountThisSession | currency:'INR':'':'1.0-0'}}</td>
-                        <td>{{student.totalFeesThisSession | currency:'INR':'':'1.0-0'}}</td>
+                        <td style="font-weight: 600;">{{student.feesDueTillMonth | indianCurrency}}</td>
+                        <td>{{student.feesDueOverall | indianCurrency}}</td>
+                        <td>{{student.feesPaidThisSession | indianCurrency}}</td>
+                        <td>{{student.discountThisSession | indianCurrency}}</td>
+                        <td>{{student.totalFeesThisSession | indianCurrency}}</td>
                     </tr>
                 </ng-container>
                 </tbody>

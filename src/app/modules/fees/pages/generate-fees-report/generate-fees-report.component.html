@@ -13,7 +13,7 @@
                 Total Fees (Academic Session {{getSession().name}})
             </div>
             <div class="col-xs-7">
-                : <b>{{getAllParentTotalFees() | currency:'INR':'Rs. ':'1.0-0'}}</b><br/>
+                : <b>{{getAllParentTotalFees() | indianCurrency:true}}</b><br/>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
                 Total Discount (Academic Session {{getSession().name}})
             </div>
             <div class="col-xs-7">
-                : <b>{{getAllParentDiscount() | currency:'INR':'Rs. ':'1.0-0'}}</b><br/>
+                : <b>{{getAllParentDiscount() | indianCurrency:true}}</b><br/>
             </div>
         </div>
 
@@ -37,7 +37,7 @@
                 Expected Revenue (Financial Year {{getSession().name}})
             </div>
             <div class="col-xs-7">
-                : <b>{{getExpectedRevenue() | currency:'INR':'Rs. ':'1.0-0'}}</b><br/>
+                : <b>{{getExpectedRevenue() | indianCurrency:true}}</b><br/>
             </div>
         </div>
 
@@ -46,7 +46,7 @@
                 Total Collection (Financial Year {{getSession().name}})
             </div>
             <div class="col-xs-7">
-                : <b>{{getTotalCollection() | currency:'INR':'Rs. ':'1.0-0'}}</b><br/>
+                : <b>{{getTotalCollection() | indianCurrency:true}}</b><br/>
             </div>
         </div>
 
@@ -55,7 +55,7 @@
                 Fees Due (Overall)
             </div>
             <div class="col-xs-7">
-                : <b>{{getAllParentFeesDueOverall() | currency:'INR':'Rs. ':'1.0-0'}}</b><br/>
+                : <b>{{getAllParentFeesDueOverall() | indianCurrency:true}}</b><br/>
             </div>
         </div>
 
@@ -70,7 +70,7 @@
                 Fees Due (Till Month)
             </div>
             <div class="col-xs-7">
-                : <b>{{getAllParentFeesDueTillMonth() | currency:'INR':'Rs. ':'1.0-0'}}</b><br/>
+                : <b>{{getAllParentFeesDueTillMonth() | indianCurrency:true}}</b><br/>
             </div>
         </div>
 

@@ -23,7 +23,7 @@
                 {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
                 {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
             </td>
-            <td *ngIf="receiptColumnFilter.amount" style="padding-right: 15px;" align="right">{{getFeeReceiptTotalAmount(feeReceipt) | currency:'INR':'':'1.0-0'}}</td>
+            <td *ngIf="receiptColumnFilter.amount" style="padding-right: 15px;" align="right">{{getFeeReceiptTotalAmount(feeReceipt) | indianCurrency}}</td>
             <td *ngIf="receiptColumnFilter.modeOfPayment" align="center">{{feeReceipt.modeOfPayment}}</td>
             <td *ngIf="receiptColumnFilter.checkNumber" align="center">{{feeReceipt.checkNumber}}</td>
             <td *ngIf="receiptColumnFilter.date" align="center">{{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
