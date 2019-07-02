@@ -154,7 +154,11 @@ export class CollectFeeComponent implements OnInit {
         this.newSubFeeReceiptList = [];
         this.newFeeReceiptList = [];
         this.studentFeeDetailsVisibleList = [];
-
+        this.newRemark = null;
+        this.newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
+        this.newCheckNumber = null;
+    
+    
     }
 
     getBusStopName(busStopId: any): any {
