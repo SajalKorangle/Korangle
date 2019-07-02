@@ -7,6 +7,7 @@ import { first } from 'rxjs/operators';
 export class VersionCheckService {
     // this will be replaced by actual hash post-build.js
     private currentHash = '{{POST_BUILD_ENTERS_HASH_HERE}}';
+    private lastUpdation = '{{POST_BUILD_ENTERS_LAST_UPDATED_HERE}}';
 
     constructor(private http: Http) {}
 
@@ -31,7 +32,7 @@ export class VersionCheckService {
             .toPromise()
             .then(
                 (response: any) => {
-                    const hash = response.hash;
+                    /*const hash = response.hash;
                     const hashChanged = this.hasHashChanged(this.currentHash, hash);
 
                     // If new version, do something
@@ -43,7 +44,13 @@ export class VersionCheckService {
                     }
                     // store the new hash so we wouldn't trigger versionChange again
                     // only necessary in case you did not force refresh
-                    this.currentHash = hash;
+                    this.currentHash = hash;*/
+                    const computerLastUpdation = response.computerLastUpdation.toString();
+                    if (parseInt(this.lastUpdation) < parseInt(computerLastUpdation)) {
+                        location.assign('www.korangle.com');
+                        location.reload(true);
+                    }
+                     this.lastUpdation = computerLastUpdation;
                 },
                 (err) => {
                     console.error(err, 'Could not get version');

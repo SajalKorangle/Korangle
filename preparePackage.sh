@@ -1,6 +1,6 @@
-rm -rf brighstar.tar.gz brightstar.zip brightstar/
+rm -rf korangle.zip korangle/
 ng build --prod --build-optimizer
-npm run post-build
-mv dist/ brightstar
-tar -zcvf brightstar.tar.gz brightstar/
-zip -r brightstar.zip brightstar/
+mv dist/ korangle
+npm run post-build $1
+cp version.json korangle/version.json
+zip -r korangle.zip korangle/
