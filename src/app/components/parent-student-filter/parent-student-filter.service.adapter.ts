@@ -27,6 +27,7 @@ export class ParentStudentFilterServiceAdapter {
         let student_data = {
             'parentTransferCertificate': 'null__korangle',
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'fields__korangle': 'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte'
         };
 
         Promise.all([

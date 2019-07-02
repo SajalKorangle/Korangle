@@ -33,6 +33,7 @@ export class ViewDefaultersServiceAdapter {
 
             let student_list = {
                 'id__in': tempStudentIdList.join(),
+                'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber',
             };
 
             let student_fee_list = {
