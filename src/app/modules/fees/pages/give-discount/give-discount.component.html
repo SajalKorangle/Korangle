@@ -138,11 +138,11 @@
                                (keypress)="policeOverallPaymentInput($event)"
                                (ngModelChange)="handleOverallPaymentChange($event);">
                     </td>
-                    <td align="right">Total Fees: {{getOverallTotalFees() | currency:'INR':'':'1.0-0'}}</td>
+                    <td align="right">Total Fees: {{getOverallTotalFees() | indianCurrency}}</td>
                 </tr>
                 <tr style="font-weight: 800 !important; font-size: 22px !important;">
-                    <td align="left">Fees Due Till Month: <span style="color: red;">{{getOverallFeesDueTillMonth() | currency:'INR':'':'1.0-0'}}</span></td>
-                    <td align="right">Total Fees Due: {{getOverallFeesDue() | currency:'INR':'':'1.0-0'}}</td>
+                    <td align="left">Fees Due Till Month: <span style="color: red;">{{getOverallFeesDueTillMonth() | indianCurrency}}</span></td>
+                    <td align="right">Total Fees Due: {{getOverallFeesDue() | indianCurrency}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -383,7 +383,7 @@
                     <mat-panel-title *ngIf="feeReceiptList.length === 0">**No fees submitted yet</mat-panel-title>
                     <mat-panel-title *ngIf="feeReceiptList.length !== 0">
                         <span class="hidden-xs" style="color: #7b7b7b;">Last Receipt Date: &nbsp;</span><i>{{feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy'}}</i>, &nbsp;
-                        <span class="hidden-xs" style="color: #7b7b7b;">Amount:  &nbsp;</span>{{getLastDaySubmittedAmount(feeReceiptList[0]) | currency:'INR':'':'1.0-0'}} &nbsp; / &nbsp;
+                        <span class="hidden-xs" style="color: #7b7b7b;">Amount:  &nbsp;</span>{{getLastDaySubmittedAmount(feeReceiptList[0]) | indianCurrency}} &nbsp; / &nbsp;
                         <span class="hidden-xs" style="color: #7b7b7b;">Receipts:  &nbsp;</span>{{getLastDaySubmittedReceipts(feeReceiptList[0]).length}}
                     </mat-panel-title>
                 </mat-expansion-panel-header>

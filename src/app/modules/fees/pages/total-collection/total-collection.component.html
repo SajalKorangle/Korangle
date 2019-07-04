@@ -78,7 +78,7 @@
                 <br/>
 
                 <span style="font-size: 16px;">
-                    Total Fees: {{getFilteredFeeReceiptListTotalAmount() | currency:'INR':'Rs. ':'1.0-0'}}
+                    Total Fees: {{getFilteredFeeReceiptListTotalAmount() | indianCurrency:true}}
                 </span>
 
                 <app-fee-receipt-list [user]="user"

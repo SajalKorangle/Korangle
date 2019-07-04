@@ -2,7 +2,7 @@
 
     <div class="row">
         <div class="col-xs-4">
-            Total Fees: {{getFeeReceiptListTotalAmount() | currency:'INR':'':'1.0-0'}}
+            Total Fees: {{getFeeReceiptListTotalAmount() | indianCurrency:true}}
         </div>
         <div class="col-xs-4" *ngIf="data.selectedEmployee">
             Employee: {{data.selectedEmployee.name}}

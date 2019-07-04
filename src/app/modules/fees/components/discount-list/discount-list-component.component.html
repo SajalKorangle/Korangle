@@ -20,7 +20,7 @@
             {{getClassName(discount.parentStudent, discount.parentSession)}},
             {{getSectionName(discount.parentStudent, discount.parentSession)}}
         </td>
-        <td *ngIf="discountColumnFilter.amount" style="padding-right: 15px;" align="right">{{getDiscountTotalAmount(discount) | currency:'INR':'':'1.0-0'}}</td>
+        <td *ngIf="discountColumnFilter.amount" style="padding-right: 15px;" align="right">{{getDiscountTotalAmount(discount)}}</td>
         <td *ngIf="discountColumnFilter.date" align="center">{{discount.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
         <td *ngIf="discountColumnFilter.remark" align="center">{{discount.remark}}</td>
         <td *ngIf="discountColumnFilter.employee" align="left">{{getEmployeeName(discount)}}</td>
