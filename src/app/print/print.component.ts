@@ -26,6 +26,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     printEmployeeListSubscription: any;
     printNewFeeReceiptSubscription: any;
     printICardsSubscription: any;
+    printMultipleICardsSubscription: any;
     printHallTicketSubscription: any;
     printStudentMarksheetListSubscription: any;
     printStudentComprehensiveFinalReportListSubscription: any;
@@ -117,6 +118,12 @@ export class PrintComponent implements OnInit, OnDestroy {
             this.printType = 'iCards';
             setTimeout(() => {
                 EmitterService.get('print-i-cards-component').emit(value);
+            });
+        });
+        this.printMultipleICardsSubscription = EmitterService.get('print-multiple-i-cards').subscribe(value => {
+            this.printType = 'multipleICards';
+            setTimeout(() => {
+                EmitterService.get('print-multiple-i-cards-component').emit(value);
             });
         });
         this.printHallTicketSubscription = EmitterService.get('print-hall-ticket').subscribe(value => {
@@ -212,6 +219,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printFeeReceiptListSubscription.unsubscribe();
         this.printEmployeeListSubscription.unsubscribe();
         this.printNewFeeReceiptSubscription.unsubscribe();
+        this.printMultipleICardsSubscription.unsubscribe();
         this.printICardsSubscription.unsubscribe();
         this.printHallTicketSubscription.unsubscribe();
         this.printStudentMarksheetListSubscription.unsubscribe();

@@ -60,7 +60,7 @@ export class ICardsComponent implements OnInit {
     // show class
     showClass = true;
 
-    printMultipleIcards = false;
+    printMultipleIcards = true;
 
     message = '';
 
@@ -334,9 +334,13 @@ export class ICardsComponent implements OnInit {
             }),
             columnFilter: this.columnFilter,
             showClass: this.showClass,
-            printMultipleIcards: this.printMultipleIcards
+            // printMultipleIcards: this.printMultipleIcards
         };
-        EmitterService.get('print-i-cards').emit(value);
+        if (this.printMultipleIcards) {
+            EmitterService.get('print-multiple-i-cards').emit(value);
+        } else {
+            EmitterService.get('print-i-cards').emit(value);
+        }
     };
 
 }

@@ -5,11 +5,12 @@ import { ChangeDetectorRef } from '@angular/core';
 import { EmitterService } from '../../../../services/emitter.service';
 
 @Component({
-    selector: 'app-print-i-cards',
-    templateUrl: './print-i-cards.component.html',
-    styleUrls: ['./print-i-cards.component.css'],
+    selector: 'app-print-multiple-i-cards',
+    templateUrl: './print-multiple-i-cards.component.html',
+    styleUrls: ['./print-multiple-i-cards.component.css'],
 })
-export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked {
+
+export class PrintMultipleICardsComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     @Input() user;
 
@@ -19,13 +20,13 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
 
     showClass = true;
 
-    printICardsComponentSubscription: any;
+    printMultipleICardsComponentSubscription: any;
 
     constructor(private cdRef: ChangeDetectorRef) { }
 
 
     ngOnInit(): void {
-        this.printICardsComponentSubscription = EmitterService.get('print-i-cards-component').subscribe( value => {
+        this.printMultipleICardsComponentSubscription = EmitterService.get('print-multiple-i-cards-component').subscribe(value => {
             this.studentProfileList = value.studentProfileList;
             this.viewChecked = false;
             this.showClass = value.showClass;
@@ -42,7 +43,7 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
     }
 
     ngOnDestroy(): void {
-        this.printICardsComponentSubscription.unsubscribe();
+        this.printMultipleICardsComponentSubscription.unsubscribe();
         this.studentProfileList = null;
     }
 
