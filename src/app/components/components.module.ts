@@ -45,6 +45,7 @@ import {EmployeeFilterComponent} from './employee-filter/employee-filter.compone
 import {ParentStudentFilterComponent} from "./parent-student-filter/parent-student-filter.component";
 import {FeeReceiptListComponent} from "../modules/fees/components/fee-receipt-list/fee-receipt-list-component.component";
 import {DiscountListComponent} from "../modules/fees/components/discount-list/discount-list-component.component";
+import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
 
 @NgModule({
     declarations: [
@@ -66,6 +67,7 @@ import {DiscountListComponent} from "../modules/fees/components/discount-list/di
         DateInWordsPipe,
         GradePipe,
         MoneyFormatPipe,
+        IndianCurrencyPipe,
 
         EmployeeFilterComponent,
 
@@ -120,6 +122,7 @@ import {DiscountListComponent} from "../modules/fees/components/discount-list/di
         DateInWordsPipe,
         GradePipe,
         MoneyFormatPipe,
+        IndianCurrencyPipe,
 
         CommonModule,
         FormsModule,

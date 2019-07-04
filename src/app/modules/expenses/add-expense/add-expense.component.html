@@ -26,7 +26,7 @@
 
     <div class="row" *ngIf="totalExpenses!=0">
         <div class="col-md-12">
-            Total Fees: {{totalExpenses | currency:'INR':true:'1.1-1'}}
+            Total Fees: {{totalExpenses | indianCurrency:true}}
         </div>
     </div>
 

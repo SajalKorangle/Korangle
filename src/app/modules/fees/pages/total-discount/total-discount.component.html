@@ -64,7 +64,7 @@
                 <br/>
 
                 <span style="font-size: 16px;">
-                    Total Discount: {{getFilteredDiscountListTotalAmount() | currency:'INR':'Rs. ':'1.0-0'}}
+                    Total Discount: {{getFilteredDiscountListTotalAmount() | indianCurrency:true}}
                 </span>
 
                 <app-discount-list [user]="user"

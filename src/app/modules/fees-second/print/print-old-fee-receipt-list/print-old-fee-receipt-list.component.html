@@ -1,7 +1,7 @@
 <ng-container *ngIf="feeReceiptList">
     <div class="row">
         <div class="col-xs-4">
-            Total Fees: {{getSchoolFeeTotalAmount() | currency:'INR':true:'1.1-1'}}
+            Total Fees: {{getSchoolFeeTotalAmount() | indianCurrency:true}}
         </div>
         <div class="col-xs-4">
             Employee: {{employee.name}}

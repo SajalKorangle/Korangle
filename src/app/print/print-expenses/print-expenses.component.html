@@ -11,7 +11,7 @@
     </div>
     <div class="row">
         <div class="col-xs-6">
-            Total Expense: {{ totalExpenses | currency:'INR':true:'1.1-1'}}
+            Total Expense: {{ totalExpenses | indianCurrency:true}}
         </div>
         <div class="col-xs-6" align="right">
             Date: {{startDate}} to {{endDate}}

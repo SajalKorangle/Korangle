@@ -8,11 +8,11 @@
             <table class="table table-hover" style="margin-bottom: 40px;">
                 <tbody>
                 <tr style="font-weight: 800 !important; font-size: 22px !important;">
-                    <td align="left">Fees Due Till Month: <span style="color: red;">{{getOverallFeesDueTillMonth() | currency:'INR':'':'1.0-0'}}</span></td>
-                    <td align="right">Total Fees: {{getOverallTotalFees() | currency:'INR':'':'1.0-0'}}</td>
+                    <td align="left">Fees Due Till Month: <span style="color: red;">{{getOverallFeesDueTillMonth() | indianCurrency}}</span></td>
+                    <td align="right">Total Fees: {{getOverallTotalFees() | indianCurrency</td>
                 </tr>
                 <tr style="font-weight: 800 !important; font-size: 22px !important;">
-                    <td align="left">Total Fees Due: {{getOverallFeesDue() | currency:'INR':'':'1.0-0'}}</td>
+                    <td align="left">Total Fees Due: {{getOverallFeesDue() | indianCurrency}}</td>
                     <td align="left"></td>
                 </tr>
                 </tbody>

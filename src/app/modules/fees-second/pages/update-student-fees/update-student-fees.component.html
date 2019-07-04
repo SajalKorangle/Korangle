@@ -46,7 +46,8 @@
                                        type="number"
                                        [attr.min]="getComponentMonthlyTotalFeeInitialValue(monthlyComponent)-getComponentMonthlyFeesDue(monthlyComponent)"
                                        [(ngModel)]="monthlyComponent.amount"
-                                       (blur)="policeComponentMonthlyTotalFeeInput(monthlyComponent, $event)">
+                                       (blur)="policeComponentMonthlyTotalFeeInput(monthlyComponent, $event)"
+                                       (keypress)="policeNumberInput($event)">
                             </td>
                         </tr>
                     </ng-container>
