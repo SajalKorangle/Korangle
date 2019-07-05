@@ -336,12 +336,11 @@ export class ICardsComponent implements OnInit {
             }),
             columnFilter: this.columnFilter,
             showClass: this.showClass,
-            // printMultipleIcards: this.printMultipleIcards
         };
         if (this.printMultipleIcards) {
-            this.printService.navigateToPrintRoute(PRINT_I_CARD, {user: this.user, value});
-        } else {
             this.printService.navigateToPrintRoute(PRINT_MULTIPLE_I_CARDS, {user: this.user, value});
+        } else {
+            this.printService.navigateToPrintRoute(PRINT_I_CARD, {user: this.user, value});
         }
     };
 

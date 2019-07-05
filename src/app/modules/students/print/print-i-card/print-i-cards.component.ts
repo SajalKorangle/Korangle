@@ -17,8 +17,6 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
 
     showClass = true;
 
-    printICardsComponentSubscription: any;
-
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
 
