@@ -13,7 +13,7 @@
             <!-- Background Watermark -->
             <img src="{{user.activeSchool.profileImage}}"
                  style="border-radius: 2px; position: absolute;
-                 top: 55px; left: 120px;
+                 top: 55px; left: 110px;
                  width: 108px; height: 108px;
                  opacity: 0.2;
                  filter: grayscale(100%);
@@ -24,88 +24,88 @@
                         background-color: #80d8ff !important;
                         border-bottom: 1px solid lightgrey">
 
-                <div class="col-xs-3" style="background-color: white !important; padding-left: 10px !important;">
+                <div class="col-xs-3" style="padding-left: 7px !important;">
                     <img src="{{user.activeSchool.profileImage}}"
                          style="border-radius: 2px;
-                         width: 30px; height: 30px;"/>
+                         width: 34px; height: 34px;"/>
                 </div>
 
-                <div class="col-xs-9" align="right" style="line-height: 70% !important; background-color: lightgreen !important; padding-right: 10px !important;">
-                    <span style="font-size: 12px; line-height: normal !important;">
+                <div class="col-xs-9" align="right" style="padding-right: 7px !important; padding-top: 0px !important;">
+                    <div style="font-size: 14px; line-height: normal !important; padding: 0px !important; margin: 0px !important;">
                         {{user.activeSchool.printName}}
-                    </span><br/>
-                    <span style="font-size: 7px; line-height: normal !important;">
+                    </div>
+                    <div style="font-size: 8px; line-height: normal !important; padding: 0px !important; margin: 0px !important;">
                         {{user.activeSchool.address}}
-                    </span><br/>
-                    <span style="font-size: 7px; line-height: normal !important;">
+                    </div>
+                    <div style="font-size: 8px; line-height: normal !important; padding: 0px !important; margin: 0px !important;">
                         Phone: {{user.activeSchool.mobileNumber}}
-                    </span>
+                    </div>
                 </div>
 
             </div>
 
-            <div class="row no-gutters" style="margin-top: 7.5px; line-height: normal !important;">
+            <div class="row no-gutters" style="margin-top: 7px; line-height: normal !important;">
                 <div class="col-xs-8">
 
                     <!-- Name -->
-                    <div class="row no-gutters" style="font-size: 11.25px; padding-left: 5px;">
-                        <div class="col-xs-12">
-                            <span style="color: darkblue !important;">{{ studentProfile.name | titlecase }}</span>
+                    <div class="row no-gutters" style="font-size: 13px; padding-left: 7px;">
+                        <div class="col-xs-12" style="color: darkblue !important; padding: 0px !important;">
+                            {{ studentProfile.name | titlecase }}
                         </div>
                     </div>
 
                     <!-- Father's Name -->
-                    <div class="row no-gutters" style="font-size: 7.5px; padding-left: 5px;">
-                        <div class="col-xs-12">
-                            <div style="font-size: 5px;"><i>Father's Name</i></div>
+                    <div class="row no-gutters" style="font-size: 9px; padding-left: 7px; margin-top: 3px !important;">
+                        <div class="col-xs-12" style="padding: 0px !important;">
+                            <div style="font-size: 6.5px;"><i>Father's Name</i></div>
                             <span>{{ studentProfile.fathersName | titlecase}}</span>
                         </div>
                     </div>
 
                     <!-- Date of Birth, Standard -->
-                    <div class="row no-gutters" style="font-size: 7.5px; padding-left: 5px;">
-                        <div class="col-xs-8">
-                            <div style="font-size: 5px;"><i>Date of Birth</i></div>
+                    <div class="row no-gutters" style="font-size: 9px; padding-left: 7px; margin-top: 3px !important;">
+                        <div class="col-xs-8" style="padding: 0px !important;">
+                            <div style="font-size: 6.5px;"><i>Date of Birth</i></div>
                             {{studentProfile.dateOfBirth | date: 'dd/MM/yyyy'}}
                         </div>
-                        <div class="col-xs-4" *ngIf="showClass">
-                            <div style="font-size: 5px;"><i>Standard</i></div>
+                        <div class="col-xs-4" *ngIf="showClass" style="padding: 0px !important;">
+                            <div style="font-size: 6.5px;"><i>Standard</i></div>
                             {{studentProfile.className}}
                         </div>
                     </div>
 
                     <!-- Scholar No. -->
-                    <div class="row no-gutters" style="font-size: 7.5px; padding-left: 5px;">
-                        <div class="col-xs-12">
-                            <div style="font-size: 5px;"><i>Scholar No.</i></div>
+                    <div class="row no-gutters" style="font-size: 9px; padding-left: 7px; margin-top: 3px !important;">
+                        <div class="col-xs-12" style="padding: 0px !important;">
+                            <div style="font-size: 6.5px;"><i>Scholar No.</i></div>
                             {{studentProfile.scholarNumber}}
                         </div>
                     </div>
 
                     <!-- Address -->
-                    <div class="row no-gutters" style="font-size: 7.5px; padding-left: 5px;">
-                        <div class="col-xs-12">
-                            <div style="font-size: 5px;"><i>Address</i></div>
+                    <div class="row no-gutters" style="font-size: 9px; padding-left: 7px; margin-top: 3px !important;">
+                        <div class="col-xs-12" style="padding: 0px !important;">
+                            <div style="font-size: 6.5px;"><i>Address</i></div>
                             <span>{{ studentProfile.address | titlecase}}</span>
                         </div>
                     </div>
 
                     <!-- Mobile No. -->
-                    <div class="row no-gutters" style="font-size: 7.5px; padding-left: 5px;">
-                        <div class="col-xs-12">
-                            <div style="font-size: 5px;"><i>Mobile No.</i></div>
+                    <div class="row no-gutters" style="font-size: 9px; padding-left: 7px; margin-top: 3px !important;">
+                        <div class="col-xs-12" style="padding: 0px !important;">
+                            <div style="font-size: 6.5px;"><i>Mobile No.</i></div>
                             {{studentProfile.mobileNumber}}
                         </div>
                     </div>
 
                 </div>
-                <div class="col-xs-4" style="padding-right: 7.5px;" align="right">
+                <div class="col-xs-4" style="padding-right: 7px;" align="right">
                     <img src="{{studentProfile.profileImage}}"
-                         style="border: 1px solid black;
-                                 border-radius: 4px;
+                         style="border: 1px solid lightgrey;
+                                 border-radius: 2px;
                                  z-index: 10;
-                                 width: 70px;
-                                 height: 70px;">
+                                 width: 90px;
+                                 height: 90px;">
                 </div>
             </div>
 
