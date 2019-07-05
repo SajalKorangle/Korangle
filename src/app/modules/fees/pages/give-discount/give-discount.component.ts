@@ -38,7 +38,6 @@ export class GiveDiscountComponent implements OnInit {
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
     sessionList = SESSION_LIST;
-    modeOfPaymentList = MODE_OF_PAYMENT_LIST;
     receiptColumnFilter = new ReceiptColumnFilter();
     discountColumnFilter = new DiscountColumnFilter();
 
@@ -62,13 +61,9 @@ export class GiveDiscountComponent implements OnInit {
     selectedStudentSectionList = [];
     showDetails = false;
 
-    // newFeeReceiptList = [];
-    // newSubFeeReceiptList = [];
     newDiscountList = [];
     newSubDiscountList = [];
     newRemark = null;
-    // newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
-    // newCheckNumber = null;
 
     studentFeeDetailsVisibleList = [];
 
@@ -1112,64 +1107,6 @@ export class GiveDiscountComponent implements OnInit {
             }, 0);
         }, 0);
     }
-
-    /*checkAndCreateNewFeeReceipt(studentFee: any): void {
-
-        if (this.newFeeReceiptList.filter(feeReceipt => {
-            return feeReceipt.parentStudent == studentFee.parentStudent
-                && feeReceipt.parentSession == studentFee.parentSession;
-        }).length == 0) {
-
-            let feeReceipt = new FeeReceipt();
-            feeReceipt.remark = this.newRemark;
-            feeReceipt.cancelled = false;
-            feeReceipt.parentStudent = studentFee.parentStudent;
-            feeReceipt.parentSession = studentFee.parentSession;
-            feeReceipt.parentSchool = this.user.activeSchool.dbId;
-            feeReceipt.parentEmployee = this.user.activeSchool.employeeId;
-
-            this.newFeeReceiptList.push(feeReceipt);
-
-        }
-
-    }*/
-
-    /*checkAndDeleteNewFeeReceipt(studentFee: any): void {
-
-        if (this.newSubFeeReceiptList.filter(subFeeReceipt => {
-            return subFeeReceipt.parentSession == studentFee.parentSession
-                && this.studentFeeList.find(item => {
-                    return item.id == subFeeReceipt.parentStudentFee;
-                }).parentStudent == studentFee.parentStudent;
-        }).length == 0) {
-            this.newFeeReceiptList = this.newFeeReceiptList.filter(feeReceipt => {
-                return feeReceipt.parentStudent != studentFee.parentStudent || feeReceipt.parentSession != studentFee.parentSession;
-            });
-        }
-
-    }*/
-
-    /*updateNewFeeReceiptRemark(): void {
-        this.newFeeReceiptList.forEach(feeReceipt => {
-            feeReceipt.remark = this.newRemark;
-        });
-    }*/
-
-    /*updateNewFeeReceiptPaymentMode(): void {
-        this.newFeeReceiptList.forEach(feeReceipt => {
-            feeReceipt.modeOfPayment = this.newModeOfPayment;
-            if (feeReceipt.modeOfPayment != this.modeOfPaymentList[1]) {
-                this.newCheckNumber = null;
-                feeReceipt.checkNumber = null;
-            }
-        });
-    }
-
-    updateNewFeeReceiptCheckNumber(): void {
-        this.newFeeReceiptList.forEach(feeReceipt => {
-            feeReceipt.checkNumber = this.newCheckNumber;
-        });
-    }*/
 
     getLastDaySubmittedAmount(lastFeeReceipt: any): number {
         return this.getLastDaySubmittedReceipts(lastFeeReceipt).reduce((total, item) => {

@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './authentication/login.component';
 
 import { PrintService } from './print/print-service';
+
 @NgModule({
     declarations: [
         AppComponent,

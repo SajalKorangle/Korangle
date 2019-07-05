@@ -5,7 +5,7 @@ import {StudentOldService} from '../../student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_I_CARD } from '../../../../print/print-routes.constants';
+import {PRINT_I_CARD, PRINT_MULTIPLE_I_CARDS} from '../../../../print/print-routes.constants';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -60,6 +60,8 @@ export class ICardsComponent implements OnInit {
 
     // show class
     showClass = true;
+
+    printMultipleIcards = true;
 
     message = '';
 
@@ -333,9 +335,14 @@ export class ICardsComponent implements OnInit {
                 return (student.show && student.selected);
             }),
             columnFilter: this.columnFilter,
-            showClass: this.showClass
+            showClass: this.showClass,
+            // printMultipleIcards: this.printMultipleIcards
         };
-        this.printService.navigateToPrintRoute(PRINT_I_CARD, {user: this.user, value});
+        if (this.printMultipleIcards) {
+            this.printService.navigateToPrintRoute(PRINT_I_CARD, {user: this.user, value});
+        } else {
+            this.printService.navigateToPrintRoute(PRINT_MULTIPLE_I_CARDS, {user: this.user, value});
+        }
     };
 
 }

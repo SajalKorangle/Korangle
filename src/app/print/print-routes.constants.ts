@@ -1,5 +1,6 @@
 //students
 export const PRINT_I_CARD = 'print-i-card';
+export const PRINT_MULTIPLE_I_CARDS = 'print-multiple-i-cards';
 export const PRINT_TC = 'print-tc';
 export const PRINT_STUDENT_LIST = 'print-student-list';
 

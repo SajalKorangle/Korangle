@@ -207,7 +207,7 @@
                                 <span style="font-weight: 400">Total Amount</span>
                             </div>
                             <div class="col-xs-4" align="right" >
-                                <span style="font-weight: 400">Rs. {{getTotalFeeReceiptAmount(feeReceipt)}}/-</span>
+                                <span style="font-weight: 400">{{getTotalFeeReceiptAmount(feeReceipt) | indianCurrency:true}}/-</span>
                             </div>
                         </div>
 
@@ -446,7 +446,7 @@
                                 <span style="font-weight: 400">Total Amount</span>
                             </div>
                             <div class="col-xs-4" align="right" >
-                                <span style="font-weight: 400">Rs. {{getTotalFeeReceiptAmount(feeReceipt)}}/-</span>
+                                <span style="font-weight: 400">{{getTotalFeeReceiptAmount(feeReceipt) | indianCurrency:true}}/-</span>
                             </div>
                         </div>
 

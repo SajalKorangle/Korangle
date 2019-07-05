@@ -52,18 +52,21 @@ export class SetSchoolFeesServiceAdapter {
         let request_student_fee_data = {
             'parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
             'parentSchoolFeeRule__parentSession': sessionId,
+            'fields__korangle': 'id,parentSchoolFeeRule,parentStudent',
         };
 
         let request_sub_fee_receipt_data = {
             'parentStudentFee__parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
             'parentSession': sessionId,
             'parentFeeReceipt__cancelled': 'false__boolean',
+            'fields__korangle': 'id,parentStudentFee',
         };
 
         let request_sub_discount_data = {
             'parentStudentFee__parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
             'parentStudentFee__parentSchoolFeeRule__parentSession': sessionId,
-            'parentDiscount__cancelled': 'true__boolean',
+            'parentDiscount__cancelled': 'false__boolean',
+            'fields__korangle': 'id,parentStudentFee',
         };
 
         let lock_fees_list = {

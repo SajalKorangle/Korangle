@@ -27,7 +27,7 @@
 
     <div class="row" *ngIf="!isLoading && expenseList.length > 0">
         <div class="col-md-6">
-            Total Expenses: {{totalExpenses | currency:'INR':true:'1.1-1'}}
+            Total Expenses: {{totalExpenses | indianCurrency:true}}
         </div>
         <div class="col-md-6" align="right">
             From: {{displayStartDate | date: 'dd - MMM - yyyy'}}, To: {{displayEndDate | date: 'dd - MMM - yyyy'}}

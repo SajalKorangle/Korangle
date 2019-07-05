@@ -8,3 +8,11 @@ brightstar/
 src/src.iml
 .DS_Store
 md-angular-v1.4.1.iml
+.vscode/
+build/post-build.js
+build/post-build-old.js
+korangle/
+korangle.*
+version.json
+preparePackage.sh
+src/environments/environment.prod.ts

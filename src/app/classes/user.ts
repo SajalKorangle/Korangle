@@ -2,6 +2,8 @@
 import {School} from './school';
 
 import { EmitterService } from '../services/emitter.service';
+import {CommonFunctions} from "./common-functions";
+import {sendDataToAndroid} from "./common.js";
 
 export class User {
 
@@ -44,6 +46,7 @@ export class User {
 
     checkAuthentication(): boolean {
         this.jwt = localStorage.getItem('schoolJWT');
+        sendDataToAndroid(this.jwt);
         if (this.jwt === null || this.jwt.length === 0) {
             this.isAuthenticated = false;
             return false;

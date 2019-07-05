@@ -140,6 +140,17 @@ export class UpdateStudentFeesComponent implements OnInit {
 
     }
 
+    policeAmountInput(event: any): boolean {
+        const value = event.key;
+        if (value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
+            value !== '4' && value !== '5' && value !== '6' && value !== '7' &&
+            value !== '8' && value !== '9') {
+            return false;
+        }
+        return true;
+    }
+
+
     handleNewStudentFeeAmountChange(installment: any, value: any): void {
         this.newStudentFee[installment+'Amount'] = value;
         if (value == null || value == 0) {

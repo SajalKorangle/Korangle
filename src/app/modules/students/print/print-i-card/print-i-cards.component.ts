@@ -21,6 +21,7 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
 
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
+
     ngOnInit(): void {
         const {user, value}  = this.printService.getData();
         this.user = user;

@@ -24,7 +24,7 @@
 
                         <mat-expansion-panel>
 
-                            <!-- Rule Number, Rule Name-->
+                            <!-- Group Number, Group Name-->
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     {{schoolFeeRule.ruleNumber}}. {{schoolFeeRule.name}}
@@ -210,11 +210,11 @@
 
                 <ng-container *ngIf="!lockFees">
 
-                    Add New School Fee Rule
+                    <b>Add New Fee Group</b>
 
                     <br/><br/>
 
-                    <!-- Rule Number, Rule Name -->
+                    <!-- Group Number, Group Name -->
                     <div class="row">
                         <div class="col-md-3">
                             <mat-form-field class="example-full-width">
@@ -222,7 +222,8 @@
                                        style="border: none;"
                                        [(ngModel)]="newSchoolFeeRule.ruleNumber"
                                        type="number"
-                                       placeholder="Rule Number">
+                                       placeholder="Group Number"
+                                       (keypress)="policeAmountInput($event)">
                             </mat-form-field>
                         </div>
                         <div class="col-md-3">
@@ -231,7 +232,7 @@
                                        style="border: none;"
                                        [(ngModel)]="newSchoolFeeRule.name"
                                        type="text"
-                                       placeholder="Rule Name">
+                                       placeholder="Group Name">
                             </mat-form-field>
                         </div>
                     </div>
@@ -371,7 +372,8 @@
                                 <td>
                                     <input type="number"
                                            [ngModel]="newSchoolFeeRule[installment+'Amount']"
-                                           (ngModelChange)="handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule, installment, $event);"/>
+                                           (ngModelChange)="handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule, installment, $event);"
+                                           (keypress)="policeAmountInput($event)"/>
                                 </td>
                                 <td>
                                     <day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
@@ -389,12 +391,14 @@
                                 <td>
                                     <input type="number"
                                            [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, installment)"
-                                           [(ngModel)]="newSchoolFeeRule[installment+'LateFee']"/>
+                                           [(ngModel)]="newSchoolFeeRule[installment+'LateFee']"
+                                           (keypress)="policeAmountInput($event)"/>
                                 </td>
                                 <td>
                                     <input type="number"
                                            [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, installment)"
-                                           [(ngModel)]="newSchoolFeeRule[installment+'MaximumLateFee']"/>
+                                           [(ngModel)]="newSchoolFeeRule[installment+'MaximumLateFee']"
+                                           (keypress)="policeAmountInput($event)"/>
                                 </td>
                             </tr>
                             </tbody>
@@ -419,7 +423,8 @@
                                 <td>
                                     <input type="number"
                                            [ngModel]="newSchoolFeeRule['aprilAmount']"
-                                           (ngModelChange)="handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule, 'april', $event);"/>
+                                           (ngModelChange)="handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule, 'april', $event);"
+                                           (keypress)="policeAmountInput($event)"/>
                                 </td>
                                 <td>
                                     <day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
@@ -437,12 +442,14 @@
                                 <td>
                                     <input type="number"
                                            [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, 'april')"
-                                           [(ngModel)]="newSchoolFeeRule.aprilLateFee"/>
+                                           [(ngModel)]="newSchoolFeeRule.aprilLateFee"
+                                           (keypress)="policeAmountInput($event)"/>
                                 </td>
                                 <td>
                                     <input type="number"
                                            [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, 'april')"
-                                           [(ngModel)]="newSchoolFeeRule.aprilMaximumLateFee"/>
+                                           [(ngModel)]="newSchoolFeeRule.aprilMaximumLateFee"
+                                           (keypress)="policeAmountInput($event)"/>
                                 </td>
                             </tr>
                             </tbody>
@@ -452,7 +459,7 @@
 
                     <button type="submit"
                             class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="serviceAdapter.addNewSchoolFeeRule()">Add New Rule</button>
+                            (click)="serviceAdapter.addNewSchoolFeeRule()">Add New Group</button>
 
                 </ng-container>
 

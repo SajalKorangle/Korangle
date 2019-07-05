@@ -17,7 +17,6 @@ import {EmployeeService} from "../../../../services/employee.service";
 export class CancelDiscountComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
-    modeOfPaymentList = MODE_OF_PAYMENT_LIST;
 
     @Input() user;
 
