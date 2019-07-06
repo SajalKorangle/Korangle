@@ -21,12 +21,6 @@ import { MatSortModule } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
 
 
-// import { FooterComponent } from './footer/footer.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-
-import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
-// import { StudentFilterOldComponent } from './student-filter-old/student-filter.component';
 import { StudentFilterComponent } from './student-filter/student-filter.component';
 import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateComponent } from './day-date/day-date.component';
@@ -50,11 +44,6 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
 @NgModule({
     declarations: [
 
-        // FooterComponent,
-        NavbarComponent,
-        SidebarComponent,
-        LoadingSpinnerComponent,
-        // StudentFilterOldComponent,
         StudentFilterComponent,
         ParentStudentFilterComponent,
         FeeReceiptListComponentOld,
@@ -101,11 +90,6 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
     ],
     exports: [
 
-        // FooterComponent,
-        NavbarComponent,
-        SidebarComponent,
-        LoadingSpinnerComponent,
-        // StudentFilterOldComponent,
         StudentFilterComponent,
         ParentStudentFilterComponent,
         EmployeeFilterComponent,
