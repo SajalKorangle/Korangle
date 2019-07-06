@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatProgressBarModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
+import { MatInputModule } from '@angular/material';
 
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -24,6 +25,7 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 
         MatProgressBarModule,
         MatFormFieldModule,
+        MatInputModule,
 
     ],
     exports: [
@@ -38,6 +40,7 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 
         MatProgressBarModule,
         MatFormFieldModule,
+        MatInputModule,
 
     ]
 })

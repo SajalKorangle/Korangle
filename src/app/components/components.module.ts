@@ -9,8 +9,6 @@ import { MatCheckboxModule } from '@angular/material';
 import { MatTooltipModule } from '@angular/material';
 import { MatMenuModule } from '@angular/material';
 import { MatAutocompleteModule } from '@angular/material';
-import { MatFormFieldModule } from '@angular/material';
-import { MatInputModule } from '@angular/material';
 import { MatProgressBarModule } from '@angular/material';
 import { MatDatepickerModule } from '@angular/material';
 import { MatNativeDateModule } from '@angular/material';
@@ -79,8 +77,6 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
         MatTooltipModule,
         MatMenuModule,
         MatAutocompleteModule,
-        MatFormFieldModule,
-        MatInputModule,
         MatProgressBarModule,
         MatDatepickerModule,
         MatNativeDateModule,
@@ -125,8 +121,6 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
         MatTooltipModule,
         MatMenuModule,
         MatAutocompleteModule,
-        MatFormFieldModule,
-        MatInputModule,
         MatProgressBarModule,
         MatDatepickerModule,
         MatNativeDateModule,
