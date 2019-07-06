@@ -20,6 +20,7 @@ import { MatSortModule } from '@angular/material';
 
 import {CdkTableModule} from '@angular/cdk/table';
 
+import { BasicComponentsModule } from "../basic-components/basic-components.module";
 
 import { StudentFilterComponent } from './student-filter/student-filter.component';
 import { MonthDateComponent } from './month-date/month-date.component';
@@ -87,8 +88,12 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
         MatSortModule,
         ScrollDispatchModule,
 
+        BasicComponentsModule,
+
     ],
     exports: [
+
+        BasicComponentsModule,
 
         StudentFilterComponent,
         ParentStudentFilterComponent,

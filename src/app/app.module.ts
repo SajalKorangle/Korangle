@@ -6,7 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ShowHidePasswordModule } from 'ngx-show-hide-password';
 
 import { AppRoutingModule } from './app.routing';
-// import { ComponentsModule } from './components/components.module';
 import {BasicComponentsModule} from "./basic-components/basic-components.module";
 
 import { AppComponent } from './app.component';
@@ -21,7 +20,6 @@ import { PrintService } from './print/print-service';
         LoginComponent,
     ],
     imports: [
-        // ComponentsModule,
         BasicComponentsModule,
         AppRoutingModule,
         HttpModule,
