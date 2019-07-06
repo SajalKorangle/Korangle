@@ -186,7 +186,8 @@ export class SchoolRecordComponent implements OnInit {
             studentList: this.getFilteredStudentFeeDuesList(),
             columnFilter: this.columnFilter
         };
-        EmitterService.get('print-student-list').emit(value);
+        //Getting removved. No refactoring
+        //EmitterService.get('print-student-list').emit(value);
     }
 
     downloadList(): void {

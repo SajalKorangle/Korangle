@@ -22,6 +22,10 @@ import { FeeStructureComponent } from './components/fee-structure/fee-structure.
 
 
 import {FeeRoutingModule} from './fee.routing';
+import { PrintOldFeeReceiptListComponent } from './print/print-old-fee-receipt-list/print-old-fee-receipt-list.component';
+import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
+import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
+import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print-new-fee-receipt.component';
 
 
 @NgModule({
@@ -43,6 +47,11 @@ import {FeeRoutingModule} from './fee.routing';
         // DiscountListComponent,
         MonthlyAmountComponent,
         FeeStructureComponent,
+
+        PrintOldFeeReceiptListComponent,
+        PrintFeeReceiptComponent,
+        PrintFeeRecordsComponent,
+        PrintNewFeeReceiptComponent
 
     ],
 

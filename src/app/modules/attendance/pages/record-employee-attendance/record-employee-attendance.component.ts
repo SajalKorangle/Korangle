@@ -4,10 +4,11 @@ import { AttendanceService } from '../../attendance.service';
 import {ClassService} from '../../../../services/class.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
-import {EmitterService} from '../../../../services/emitter.service';
 
 import * as XLSX from 'xlsx';
 import {EmployeeService} from '../../../employee/employee.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_EMPLOYEE_ATTENDANCE } from '../../../../print/print-routes.constants';
 
 @Component({
   selector: 'record-employee-attendance',
@@ -42,7 +43,8 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
     constructor (private attendanceService: AttendanceService,
-                 private employeeService: EmployeeService) { }
+                 private employeeService: EmployeeService,
+                 private printService: PrintService) { }
 
 
     // Server Handling - Initial
@@ -181,7 +183,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
             endDate: this.endDate,
             by: this.by,
         };
-        EmitterService.get('print-employee-attendance-list').emit(value);
+        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_ATTENDANCE, {user: this.user, value});
     }
 
     // For Downloading

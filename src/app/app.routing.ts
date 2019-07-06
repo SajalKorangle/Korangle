@@ -1,9 +1,9 @@
 
-import {of as observableOf, Observable} from 'rxjs';
+import { of as observableOf, Observable } from 'rxjs';
 import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule, Route } from '@angular/router';
-import { PreloadAllModules, PreloadingStrategy } from '@angular/router';
+import { PreloadingStrategy } from '@angular/router';
 
 
 import {DataStorage} from './classes/data-storage';
@@ -81,6 +81,20 @@ const routes: Routes = [
         path: 'team',
         loadChildren: 'app/modules/team/team.module#TeamModule',
     },
+    {
+        path: 'print',
+        outlet: 'print',
+        children: [
+            {path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule'},
+            {path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule'},
+            {path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule'},
+            {path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule'},
+            {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
+            {path: 'fees', loadChildren: 'app/modules/fees/fee.module#FeeModule'},
+            {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
+            {path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'}
+        ]
+    }
 ];
 
 export class CustomPreload implements PreloadingStrategy {

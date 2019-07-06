@@ -5,7 +5,8 @@ import {PrintSalarySheetServiceAdapter} from './print-salary-sheet.service.adapt
 import {MONTH_LIST} from '../../../../classes/constants/month';
 import {AttendanceService} from '../../../attendance/attendance.service';
 import {SalaryService} from '../../salary.service';
-import {EmitterService} from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_SALARY_SHEET } from '../../../../print/print-routes.constants';
 
 @Component({
   selector: 'app-print-salary-sheet',
@@ -33,7 +34,8 @@ export class PrintSalarySheetComponent implements OnInit {
 
     constructor (public employeeService: EmployeeService,
                  public attendanceService: AttendanceService,
-                 public salaryService: SalaryService) { }
+                 public salaryService: SalaryService,
+                 private printService: PrintService) { }
 
     ngOnInit(): void {
         this.serviceAdapter.initializeAdapter(this);
@@ -87,7 +89,7 @@ export class PrintSalarySheetComponent implements OnInit {
             'month': this.selectedMonth,
             'year': this.selectedYear,
         };
-        EmitterService.get('print-salary-sheet').emit(value);
+        this.printService.navigateToPrintRoute(PRINT_SALARY_SHEET, {user: this.user, value});
     }
 
 }

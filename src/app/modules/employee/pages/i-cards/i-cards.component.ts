@@ -1,9 +1,7 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {EmployeeService} from '../../employee.service';
-import {map} from 'rxjs/operators';
-import {FormControl} from '@angular/forms';
-import {error} from '@angular/compiler/src/util';
-import {EmitterService} from '../../../../services/emitter.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_EMPLOYEE_I_CARD } from '../../../../print/print-routes.constants';
 
 export class ColumnFilter {
     showName = true;
@@ -45,7 +43,8 @@ export class ICardsComponent implements OnInit {
     timeout: any;
 
     constructor(private employeeService: EmployeeService ,
-                public columnFilter: ColumnFilter) {
+                public columnFilter: ColumnFilter,
+                private printService: PrintService) {
     }
 
     ngOnInit(): void {
@@ -101,6 +100,6 @@ export class ICardsComponent implements OnInit {
             return (employee.selected);
         });
         console.log(employeeProfileList);
-        EmitterService.get('print-employee-i-cards').emit(employeeProfileList);
+        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_I_CARD, {user: this.user, value: employeeProfileList});
     };
 }

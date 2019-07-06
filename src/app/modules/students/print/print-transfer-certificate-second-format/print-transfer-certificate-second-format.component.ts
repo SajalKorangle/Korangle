@@ -2,18 +2,17 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../../../services/emitter.service';
 import { TransferCertificate } from '../../classes/transfer-certificate';
 import {MEDIUM_LIST} from '../../../../classes/constants/medium';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-transfer-certificate-second-format',
     templateUrl: './print-transfer-certificate-second-format.component.html',
     styleUrls: ['./print-transfer-certificate-second-format.component.css'],
 })
 export class PrintTransferCertificateSecondFormatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    @Input() user;
+    user: any;
 
     mediumList = MEDIUM_LIST;
 
@@ -25,27 +24,25 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
 
     numberOfCopies = 1;
 
-    printTransferCertificateSecondFormatComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printTransferCertificateSecondFormatComponentSubscription = EmitterService.get('print-transfer-certificate-second-format-component').subscribe( value => {
-            this.studentProfile = value.studentProfile;
-            this.transferCertificate.copy(value.transferCertificate);
-            if(value.twoCopies) {
-                this.numberOfCopies = 2;
-            } else {
-                this.numberOfCopies = 1;
-            }
-            this.viewChecked = false;
-        });
+        const {user, value} = this.printService.getData();
+        this.user = user;
+        this.studentProfile = value.studentProfile;
+        this.transferCertificate.copy(value.transferCertificate);
+        if(value.twoCopies) {
+            this.numberOfCopies = 2;
+        } else {
+            this.numberOfCopies = 1;
+        }
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.studentProfile = null;
             this.transferCertificate.clean();
             this.numberOfCopies = 1;
@@ -54,7 +51,6 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
     }
 
     ngOnDestroy(): void {
-        this.printTransferCertificateSecondFormatComponentSubscription.unsubscribe();
         this.studentProfile = null;
         this.transferCertificate.clean();
     }

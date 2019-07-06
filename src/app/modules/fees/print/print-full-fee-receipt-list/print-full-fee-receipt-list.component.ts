@@ -1,22 +1,21 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {EmitterService} from "../../../../services/emitter.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-full-fee-receipt-list',
     templateUrl: './print-full-fee-receipt-list.component.html',
     styleUrls: ['./print-full-fee-receipt-list.component.css'],
 })
 
-export class PrintFullFeeReceiptListComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecked {
 
     installmentList = INSTALLMENT_LIST;
     sessionList = SESSION_LIST;
 
-    @Input() user;
+    user : any;
 
     feeTypeList: any;
     feeReceiptList: any;
@@ -27,43 +26,32 @@ export class PrintFullFeeReceiptListComponent implements OnInit, OnDestroy, Afte
     sectionList: any;
     employeeList: any;
 
-    printFullFeeReceiptListComponentSubscription: any;
-
     checkView = false;
 
-    constructor(private cdRef: ChangeDetectorRef) {}
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
         // this.feeReceipt = new TempFee();
-        this.printFullFeeReceiptListComponentSubscription =
-            EmitterService.get('print-full-fee-receipt-list-component').subscribe(value => {
-
-                console.log(value);
-
-                this.feeTypeList = value['feeTypeList'];
-                this.feeReceiptList = value['feeReceiptList'];
-                this.subFeeReceiptList = value['subFeeReceiptList'];
-                this.studentList = value['studentList'];
-                this.studentSectionList = value['studentSectionList'];
-                this.classList = value['classList'];
-                this.sectionList = value['sectionList'];
-                this.employeeList = value['employeeList'];
-
-                this.checkView = true;
-        });
+        const {user, value} = this.printService.getData();
+        this.user=user;
+        this.feeTypeList = value['feeTypeList'];
+        this.feeReceiptList = value['feeReceiptList'];
+        this.subFeeReceiptList = value['subFeeReceiptList'];
+        this.studentList = value['studentList'];
+        this.studentSectionList = value['studentSectionList'];
+        this.classList = value['classList'];
+        this.sectionList = value['sectionList'];
+        this.employeeList = value['employeeList'];
+        this.checkView = true;
     }
 
     ngAfterViewChecked(): void {
         if(this.checkView) {
             this.checkView = false;
-            window.print();
+            this.printService.print();
             this.feeReceiptList = null;
             this.cdRef.detectChanges();
         }
-    }
-
-    ngOnDestroy(): void {
-        this.printFullFeeReceiptListComponentSubscription.unsubscribe();
     }
 
     getStudent(studentId: number): any {

@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
-import {EmitterService} from "../../../../services/emitter.service";
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
 
 // import {EmitterService} from '../../services/emitter.service';
 // import {FeeReceipt} from '../../modules/fees-second/classes/common-functionalities';
@@ -29,6 +30,8 @@ export class FeeReceiptListComponent {
     installmentList = INSTALLMENT_LIST;
     sessionList = SESSION_LIST;
 
+    constructor(private printService: PrintService) { }
+
     printFeeReceipt(feeReceipt: any): void {
 
         let data = {
@@ -42,7 +45,7 @@ export class FeeReceiptListComponent {
             'employeeList': this.employeeList,
         };
 
-        EmitterService.get('print-full-fee-receipt-list').emit(data);
+        this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, {user: this.user, value: data});
 
     }
 

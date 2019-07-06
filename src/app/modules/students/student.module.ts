@@ -16,12 +16,15 @@ import { ICardsComponent } from './pages/i-cards/i-cards.component';
 import {StudentRoutingModule} from './student.routing';
 import {UpdateAllComponent} from './pages/update_all/update-all.component';
 import {PromoteStudentComponent} from "./pages/promote-student/promote-student.component";
+import { PrintICardsComponent } from './print/print-i-card/print-i-cards.component';
+import {PrintMultipleICardsComponent} from "./print/print-multiple-i-cards/print-multiple-i-cards.component";
+import { PrintTransferCertificateSecondFormatComponent } from './print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component';
+import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 
 @NgModule({
     declarations: [
 
         StudentComponent,
-
         AddStudentComponent,
         ChangeClassComponent,
         GenerateTcComponent,
@@ -31,11 +34,14 @@ import {PromoteStudentComponent} from "./pages/promote-student/promote-student.c
         UpdateAllComponent,
         UploadListComponent,
         ICardsComponent,
+        PrintICardsComponent,
+        PrintMultipleICardsComponent,
+        PrintTransferCertificateSecondFormatComponent,
+        PrintStudentListComponent
 
     ],
 
     imports: [
-
         ComponentsModule,
         StudentRoutingModule,
         NgxDatatableModule,

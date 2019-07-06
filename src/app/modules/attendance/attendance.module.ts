@@ -9,32 +9,29 @@ import { GivePermissionsComponent } from './pages/give-permissions/give-permissi
 import { RecordAttendanceComponent } from './pages/record-attendance/record-attendance.component';
 import { RecordEmployeeAttendanceComponent } from './pages/record-employee-attendance/record-employee-attendance.component';
 import { ApproveLeaveComponent } from './pages/approve-leave/approve-leave.component';
-
 import { AttendanceRoutingModule } from './attendance.routing';
-
 import { AttendanceService } from './attendance.service';
+
+import { PrintStudentAttendanceListComponent } from './print/print-student-attendance-list/print-student-attendance-list.component';
+import { PrintEmployeeAttendanceListComponent } from './print/print-employee-attendance-list/print-employee-attendance-list.component';
 
 @NgModule({
     declarations: [
-
         AttendanceComponent,
-
         DeclareHolidaysComponent,
         GivePermissionsComponent,
         RecordAttendanceComponent,
         RecordEmployeeAttendanceComponent,
         ApproveLeaveComponent,
-
+        PrintStudentAttendanceListComponent,
+        PrintEmployeeAttendanceListComponent
     ],
 
     imports: [
-
         ComponentsModule,
         AttendanceRoutingModule,
-
     ],
-    exports: [
-    ],
+    exports: [],
     providers: [AttendanceService],
     bootstrap: [AttendanceComponent]
 })

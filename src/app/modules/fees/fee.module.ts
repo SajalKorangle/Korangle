@@ -23,6 +23,8 @@ import {TotalCollectionComponent} from "./pages/total-collection/total-collectio
 import {TotalDiscountComponent} from "./pages/total-discount/total-discount.component";
 import {UpdateStudentFeesComponent} from "./pages/update-student-fees/update-student-fees.component";
 import {ViewDefaultersComponent} from "./pages/view-defaulters/view-defaulters.component";
+import { PrintFeeReceiptListComponent } from './print/print-fee-receipt-list/print-fee-receipt-list.component';
+import { PrintFullFeeReceiptListComponent } from './print/print-full-fee-receipt-list/print-full-fee-receipt-list.component';
 
 
 @NgModule({
@@ -44,6 +46,9 @@ import {ViewDefaultersComponent} from "./pages/view-defaulters/view-defaulters.c
         TotalDiscountComponent,
         UpdateStudentFeesComponent,
         ViewDefaultersComponent,
+
+        PrintFeeReceiptListComponent,
+        PrintFullFeeReceiptListComponent
 
     ],
 

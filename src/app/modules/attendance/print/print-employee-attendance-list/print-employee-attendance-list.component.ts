@@ -1,18 +1,17 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, Input } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../../../services/emitter.service';
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'print-employee-attendance-list',
     templateUrl: './print-employee-attendance-list.component.html',
     styleUrls: ['./print-employee-attendance-list.component.css'],
 })
-export class PrintEmployeeAttendanceListComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class PrintEmployeeAttendanceListComponent implements OnInit, AfterViewChecked {
 
-    @Input() user;
+    user: any;
 
     employeeAttendanceList: any;
     startDate: any;
@@ -21,33 +20,25 @@ export class PrintEmployeeAttendanceListComponent implements OnInit, OnDestroy, 
 
     viewChecked = true;
 
-    printEmployeeAttendanceListComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printEmployeeAttendanceListComponentSubscription =
-            EmitterService.get('print-employee-attendance-list-component').subscribe( value => {
-                console.log(value);
-                this.employeeAttendanceList = value['employeeAttendanceList'];
-                this.startDate = value['startDate'];
-                this.endDate = value['endDate'];
-                this.by = value['by'];
-                this.viewChecked = false;
-        });
+        const { user, value } = this.printService.getData();
+        this.user = user
+        this.employeeAttendanceList = value['employeeAttendanceList'];
+        this.startDate = value['startDate'];
+        this.endDate = value['endDate'];
+        this.by = value['by'];
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.employeeAttendanceList = null;
             this.cdRef.detectChanges();
         }
-    }
-
-    ngOnDestroy(): void {
-        this.printEmployeeAttendanceListComponentSubscription.unsubscribe();
     }
 
     getDateList(): any {

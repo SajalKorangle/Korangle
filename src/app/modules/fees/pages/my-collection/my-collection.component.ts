@@ -86,7 +86,7 @@ export class MyCollectionComponent implements OnInit {
             'selectedModeOfPayment': this.selectedModeOfPayment,
         };
 
-        EmitterService.get('print-fee-receipt-list').emit(data);
+        //EmitterService.get('print-fee-receipt-list').emit(data);
 
     }
 

@@ -229,7 +229,8 @@ export class CollectFeeComponent implements OnInit {
                 'sectionName': this.sectionName,
                 'feeReceipt': feeReceipt,
             };
-            EmitterService.get('print-new-fee-receipt').emit(data);
+            //Fees second is going to be removed. No refactoring needed
+            //EmitterService.get('print-new-fee-receipt').emit(data);
         }
     }
 

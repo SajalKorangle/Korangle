@@ -2,17 +2,16 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { EmitterService } from '../../../../services/emitter.service';
 import {TEST_TYPE_LIST} from '../../classes/constants';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-student-eleventh-final-report-list',
     templateUrl: './print-student-eleventh-final-report-list.component.html',
     styleUrls: ['./print-student-eleventh-final-report-list.component.css'],
 })
 export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-    @Input() user;
+    user : any;
 
     viewChecked = true;
 
@@ -21,25 +20,22 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
     reportCardMapping: any;
     showPrincipalSignature: any;
 
-    printStudentEleventhFinalReportListComponentSubscription: any;
-
-    constructor(private cdRef: ChangeDetectorRef) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
-        this.printStudentEleventhFinalReportListComponentSubscription =
-            EmitterService.get('print-student-eleventh-final-report-list-component').subscribe(value => {
-                this.subjectList = value['subjectList'];
-                this.studentFinalReportList = value['studentFinalReportList'];
-                this.reportCardMapping = value['reportCardMapping'];
-                this.showPrincipalSignature = value['showPrincipalSignature'];
-                this.viewChecked = false;
-            });
+        const { user, value } = this.printService.getData();
+        this.user = user;
+        this.subjectList = value['subjectList'];
+        this.studentFinalReportList = value['studentFinalReportList'];
+        this.reportCardMapping = value['reportCardMapping'];
+        this.showPrincipalSignature = value['showPrincipalSignature'];
+        this.viewChecked = false;
     }
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
-            window.print();
+            this.printService.print();
             this.subjectList = null;
             this.studentFinalReportList = null;
             this.cdRef.detectChanges();
@@ -47,7 +43,6 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
     }
 
     ngOnDestroy(): void {
-        this.printStudentEleventhFinalReportListComponentSubscription.unsubscribe();
         this.subjectList = null;
         this.studentFinalReportList = null;
     }

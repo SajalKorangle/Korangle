@@ -8,6 +8,8 @@ import { UpdateMarksComponent } from './update-marks/update-marks.component';
 import { ViewMarksheetComponent } from './view-marksheet/view-marksheet.component';
 
 import { MarksheetRoutingModule } from './marksheet.routing';
+import { PrintMarksheetComponent } from './print/print-marksheet/print-marksheet.component';
+import { PrintMarksheetSecondFormatComponent } from './print/print-marksheet-second-format/print-marksheet-second-format.component';
 
 @NgModule({
     declarations: [
@@ -16,6 +18,9 @@ import { MarksheetRoutingModule } from './marksheet.routing';
 
         UpdateMarksComponent,
         ViewMarksheetComponent,
+
+        PrintMarksheetComponent,
+        PrintMarksheetSecondFormatComponent
 
     ],
 

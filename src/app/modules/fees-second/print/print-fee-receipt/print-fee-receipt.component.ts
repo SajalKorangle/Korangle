@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, AfterViewChecked } from '@angular/
 
 // import { TempFee } from '../../fees/classes/temp-fee';
 
-import { EmitterService } from '../../services/emitter.service';
+import { EmitterService } from '../../../../services/emitter.service';
 
 @Component({
     selector: 'app-print-fee-receipt',
@@ -21,11 +21,12 @@ export class PrintFeeReceiptComponent implements OnInit, OnDestroy, AfterViewChe
 
     ngOnInit(): void {
         this.feeReceipt = {};
+        //Getting removed. //No refactoring
         /*this.feeReceipt = new TempFee();*/
-        this.printFeeReceiptComponentSubscription = EmitterService.get('print-fee-receipt-component').subscribe( value => {
-            this.feeReceipt.copy(value);
-            this.checkView = true;
-        });
+        // this.printFeeReceiptComponentSubscription = EmitterService.get('print-fee-receipt-component').subscribe( value => {
+        //     this.feeReceipt.copy(value);
+        //     this.checkView = true;
+        // });
     }
 
     ngAfterViewChecked(): void {

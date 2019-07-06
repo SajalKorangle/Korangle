@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {EmitterService} from '../../../../services/emitter.service';
+import {Component, Input} from '@angular/core';
 import {EmployeeService} from '../../employee.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_EMPLOYEE_EXP_CERT } from '../../../../print/print-routes.constants';
 
 @Component({
     selector: 'app-experience-certi',
@@ -27,7 +28,7 @@ export class ExperienceCertiComponent {
     currentPostMissing = false;
 
 
-    constructor (private employeeService: EmployeeService) { }
+    constructor (private employeeService: EmployeeService, private printService: PrintService) { }
 
     getEmployeeProfile(employee: any): void {
 
@@ -66,7 +67,7 @@ export class ExperienceCertiComponent {
             certificateIssueDate: this.certificateIssueDate,
             remark: this.remark,
         };
-        EmitterService.get('print-employee-exp-certi').emit(value);
+        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_EXP_CERT, {user:this.user, value})
     }
 
     isValidCertificate(): boolean {
