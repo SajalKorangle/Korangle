@@ -48,3 +48,6 @@ path {
     page-break-after: always;
 }
 
+.nineSize {
+    font-size: 9px !important;
+}
