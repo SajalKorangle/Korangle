@@ -6,6 +6,7 @@ import { PrintICardsComponent } from './print/print-i-card/print-i-cards.compone
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 import {PrintMultipleICardsComponent} from "./print/print-multiple-i-cards/print-multiple-i-cards.component";
 import {PRINT_I_CARD, PRINT_TC, PRINT_STUDENT_LIST, PRINT_MULTIPLE_I_CARDS} from '../../print/print-routes.constants';
+import {PrintTransferCertificateSecondFormatComponent} from "./print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component";
 
 const routes: Routes = [
     {
@@ -22,7 +23,7 @@ const routes: Routes = [
     },
     {
         path: PRINT_TC,
-        component: PrintICardsComponent,
+        component: PrintTransferCertificateSecondFormatComponent,
     },
     {
         path: PRINT_STUDENT_LIST,
