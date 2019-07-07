@@ -3,9 +3,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../student-old.service';
 
-import * as XLSX from 'xlsx';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
+import {ExcelService} from "../../../../excel/excel-service";
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -40,7 +40,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassService],
+    providers: [StudentOldService, ClassService, ExcelService],
 })
 
 export class ViewAllComponent implements OnInit {
@@ -83,6 +83,7 @@ export class ViewAllComponent implements OnInit {
 
     constructor(private studentService: StudentOldService,
                 private classService: ClassService,
+                private excelService: ExcelService,
                 private printService: PrintService) { }
 
     ngOnInit(): void {
@@ -347,15 +348,7 @@ export class ViewAllComponent implements OnInit {
 
         console.log(template);
 
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, 'korangle_students.csv');
+        this.excelService.downloadFile(template, 'korangle_students.csv');
     }
 
     getHeaderValues(): any {

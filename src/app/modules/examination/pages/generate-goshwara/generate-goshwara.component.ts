@@ -9,9 +9,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../../students/student-old.service';
 import {SubjectOldService} from '../../../../services/subject-old.service';
-import {EmitterService} from '../../../../services/emitter.service';
-
-import * as XLSX from 'xlsx';
+import {ExcelService} from "../../../../excel/excel-service";
 
 @Component({
     selector: 'generate-goshwara',
@@ -46,6 +44,7 @@ export class GenerateGoshwaraComponent implements OnInit {
                 public classService: ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
+                private excelService: ExcelService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -93,16 +92,7 @@ export class GenerateGoshwaraComponent implements OnInit {
 
         template.push(this.getStStudentsGoshwara());
 
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, this.selectedClass.name+'_goshwara.csv');
-
+        this.excelService.downloadFile(template, this.selectedClass.name+'_goshwara.csv');
     }
 
     getHeaderValues(): any {

@@ -5,10 +5,10 @@ import {ClassService} from '../../../../services/class.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 
-import * as XLSX from 'xlsx';
 import {EmployeeService} from '../../../employee/employee.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_ATTENDANCE } from '../../../../print/print-routes.constants';
+import {ExcelService} from "../../../../excel/excel-service";
 
 @Component({
   selector: 'record-employee-attendance',
@@ -44,6 +44,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     constructor (private attendanceService: AttendanceService,
                  private employeeService: EmployeeService,
+                 private excelService: ExcelService,
                  private printService: PrintService) { }
 
 
@@ -201,15 +202,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
             template.push(this.getEmployeeDisplayInfo(employee, index));
         });
 
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, 'korangle_employee_attendance.csv');
+        this.excelService.downloadFile(template, 'korangle_employee_attendance.csv');
     }
 
     getHeaderValues(): any {

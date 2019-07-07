@@ -4,9 +4,8 @@ import { FeeService } from "../../../../services/fee.service";
 import {StudentService} from "../../../../services/student.service";
 import {ClassService} from "../../../../services/class.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
-import {EmitterService} from "../../../../services/emitter.service";
-import * as XLSX from "xlsx";
 import {SESSION_LIST} from "../../../../classes/constants/session";
+import {ExcelService} from "../../../../excel/excel-service";
 
 @Component({
     selector: 'view-defaulters',
@@ -61,6 +60,7 @@ export class ViewDefaultersComponent implements OnInit {
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
                 public classService: ClassService,
+                private excelService: ExcelService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -455,15 +455,7 @@ export class ViewDefaultersComponent implements OnInit {
             template.push(row);
         });
 
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, 'korangle_student_fees.csv');
+        this.excelService.downloadFile(template, 'korangle_student_fees.csv');
     }
 
     downloadParentFeesReport(): void {
@@ -518,15 +510,7 @@ export class ViewDefaultersComponent implements OnInit {
             }
         });
 
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, 'korangle_parent_fees.csv');
+        this.excelService.downloadFile(template, 'korangle_parent_fees.csv');
     }
 
 }

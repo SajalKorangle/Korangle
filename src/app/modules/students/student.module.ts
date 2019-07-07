@@ -20,6 +20,7 @@ import { PrintICardsComponent } from './print/print-i-card/print-i-cards.compone
 import {PrintMultipleICardsComponent} from "./print/print-multiple-i-cards/print-multiple-i-cards.component";
 import { PrintTransferCertificateSecondFormatComponent } from './print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
+import {ExcelService} from "../../excel/excel-service";
 
 @NgModule({
     declarations: [
@@ -49,7 +50,7 @@ import { PrintStudentListComponent } from './print/print-student-list/print-stud
     ],
     exports: [
     ],
-    providers: [],
+    providers: [ExcelService],
     bootstrap: [StudentComponent]
 })
 export class StudentModule { }

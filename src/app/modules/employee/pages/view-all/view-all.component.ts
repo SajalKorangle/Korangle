@@ -2,9 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { EmployeeService } from '../../employee.service';
 
-import * as XLSX from 'xlsx';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_LIST } from '../../../../print/print-routes.constants';
+import {ExcelService} from "../../../../excel/excel-service";
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -47,7 +47,9 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private employeeService: EmployeeService, private printService: PrintService) { }
+    constructor(private employeeService: EmployeeService,
+                private excelService: ExcelService,
+                private printService: PrintService) { }
 
     ngOnInit(): void {
 
@@ -103,15 +105,7 @@ export class ViewAllComponent implements OnInit {
             template.push(this.getEmployeeDisplayInfo(employee));
         });
 
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, 'korangle_employees.csv');
+        this.excelService.downloadFile(template, 'korangle_employees.csv');
     }
 
     getHeaderValues(): any {

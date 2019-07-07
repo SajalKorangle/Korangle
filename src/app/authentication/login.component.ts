@@ -1,8 +1,6 @@
 import {Component, ElementRef, Input} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
-// import {Router} from "@angular/router";
 import { User } from '../classes/user';
-import {CommonFunctions} from "../classes/common-functions";
 import {sendDataToAndroid} from "../classes/common";
 
 @Component({
@@ -15,9 +13,9 @@ import {sendDataToAndroid} from "../classes/common";
 export class LoginComponent {
 
     @Input() user: User;
-    public errorMsg = '';
     username = '';
     password = '';
+    visibilityMode = false;
     isLoading = false;
 
     constructor(private authenticationService: AuthenticationService) {}
@@ -38,6 +36,18 @@ export class LoginComponent {
         }, error => {
             this.isLoading = false;
         });
+    }
+
+    toggleVisibilityMode(): void {
+        this.visibilityMode = !this.visibilityMode;
+    }
+
+    getVisibilityMode(): string {
+        if (this.visibilityMode) {
+            return "visibility_off";
+        } else {
+            return "visibility";
+        }
     }
 
 }

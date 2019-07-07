@@ -32,7 +32,7 @@
                                    class="form-control"
                                    [(ngModel)]="password">
                         </div -->
-                        <mat-form-field class="example-full-width">
+                        <!-- mat-form-field class="example-full-width">
                             <input matInput
                                    showHideInput
                                    id="mysecretpassword"
@@ -44,6 +44,16 @@
                                showHideTrigger="mysecretpassword"
                                [showHideStatus]="{ materialIcon: true, id: 'mysecretpassword' }"
                             ></i>
+                        </mat-form-field -->
+                        <mat-form-field class="example-full-width">
+                            <input matInput
+                                   type="{{visibilityMode ? 'text':'password'}}"
+                                   placeholder="Password"
+                                   [(ngModel)]="password">
+                            <i matSuffix
+                               class="material-icons"
+                               (click)="toggleVisibilityMode()"
+                            >{{getVisibilityMode()}}</i>
                         </mat-form-field>
                     </div>
                 </div>

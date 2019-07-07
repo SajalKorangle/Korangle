@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import * as Chartist from 'chartist';
+// import * as Chartist from 'chartist';
 
 import { ExpenseService} from '../expense.service';
 import { Expense } from '../../../classes/expense';
@@ -115,19 +115,19 @@ export class ExpenseListComponent {
                           ]
                       };
 
-                      const optionsExpenseChart: any = {
+                      /* const optionsExpenseChart: any = {
                           lineSmooth: Chartist.Interpolation.cardinal({
                               tension: 0
                           }),
                           low: 0,
                           high: this.maxTotalExpenseInADate, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
                           chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
-                      };
+                      };*/
 
 
-                      const expenseChart = new Chartist.Line('#expenseChart', dataExpenseChart, optionsExpenseChart);
+                      // const expenseChart = new Chartist.Line('#expenseChart', dataExpenseChart, optionsExpenseChart);
 
-                      this.startAnimationForLineChart(expenseChart);
+                      // this.startAnimationForLineChart(expenseChart);
                   } );
               }
 
@@ -145,7 +145,7 @@ export class ExpenseListComponent {
         }
     }
 
-    startAnimationForLineChart(chart) {
+    /*startAnimationForLineChart(chart) {
         let seq: any, delays: any, durations: any;
         seq = 0;
         delays = 80;
@@ -177,7 +177,7 @@ export class ExpenseListComponent {
         });
 
         seq = 0;
-    };
+    };*/
 
 
     printExpenses(): void {

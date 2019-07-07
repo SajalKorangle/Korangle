@@ -25,6 +25,7 @@ import {UpdateStudentFeesComponent} from "./pages/update-student-fees/update-stu
 import {ViewDefaultersComponent} from "./pages/view-defaulters/view-defaulters.component";
 import { PrintFeeReceiptListComponent } from './print/print-fee-receipt-list/print-fee-receipt-list.component';
 import { PrintFullFeeReceiptListComponent } from './print/print-full-fee-receipt-list/print-full-fee-receipt-list.component';
+import {ExcelService} from "../../excel/excel-service";
 
 
 @NgModule({
@@ -63,7 +64,7 @@ import { PrintFullFeeReceiptListComponent } from './print/print-full-fee-receipt
     ],
     exports: [
     ],
-    providers: [],
+    providers: [ExcelService],
     bootstrap: [FeeComponent]
 })
 export class FeeModule { }

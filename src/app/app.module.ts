@@ -3,8 +3,6 @@ import { HttpModule } from '@angular/http';
 import { BrowserModule  } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { ShowHidePasswordModule } from 'ngx-show-hide-password';
-
 import { AppRoutingModule } from './app.routing';
 import {BasicComponentsModule} from "./basic-components/basic-components.module";
 
@@ -24,7 +22,6 @@ import { PrintService } from './print/print-service';
         AppRoutingModule,
         HttpModule,
         BrowserModule,
-        ShowHidePasswordModule,
         BrowserAnimationsModule,
     ],
     exports: [

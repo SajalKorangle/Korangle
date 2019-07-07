@@ -26,6 +26,7 @@ import { PrintOldFeeReceiptListComponent } from './print/print-old-fee-receipt-l
 import { PrintFeeReceiptComponent } from './print/print-fee-receipt/print-fee-receipt.component';
 import { PrintFeeRecordsComponent } from './print/print-fee-records/print-fee-records.component';
 import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print-new-fee-receipt.component';
+import {ExcelService} from "../../excel/excel-service";
 
 
 @NgModule({
@@ -66,7 +67,7 @@ import { PrintNewFeeReceiptComponent } from './print/print-new-fee-receipt/print
     ],
     exports: [
     ],
-    providers: [],
+    providers: [ExcelService],
     bootstrap: [FeeComponent]
 })
 export class FeeModule { }

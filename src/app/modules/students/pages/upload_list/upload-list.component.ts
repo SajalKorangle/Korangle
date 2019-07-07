@@ -5,9 +5,7 @@ import {StudentOldService} from '../../student-old.service';
 import {VehicleService} from '../../../vehicle/vehicle.service';
 import {SchoolService} from '../../../../services/school.service';
 
-import * as XLSX from 'xlsx';
-
-type AOA = any[][];
+import {ExcelService} from "../../../../excel/excel-service";
 
 // Constants
 const NAME = 0;
@@ -186,6 +184,7 @@ export class UploadListComponent implements OnInit {
     exportFileName = 'students_list_template.csv';
 
     busStopList: any;
+    busStopNameList = [];
 
     // classSectionList = [];
     sessionList = [];
@@ -208,6 +207,7 @@ export class UploadListComponent implements OnInit {
     constructor(private studentService: StudentOldService,
                 private classService: ClassService,
                 private schoolService: SchoolService,
+                private excelService: ExcelService,
                 private vehicleService: VehicleService) { }
 
     ngOnInit(): void {
@@ -226,6 +226,7 @@ export class UploadListComponent implements OnInit {
         ]).then(value => {
             this.isLoading = false;
             this.busStopList = value[0];
+            this.busStopNameList = this.busStopList.map(a => a.stopName);
             this.classList = value[1];
             this.populateSessionList(value[2]);
             this.sectionList = value[3];
@@ -265,7 +266,7 @@ export class UploadListComponent implements OnInit {
 
             RTE_VALUES,
 
-            ['Bus Stop Values'].concat(this.busStopList.map(a => a.stopName)),
+            ['Bus Stop Values'].concat(this.busStopNameList),
 
             ['Date Format', 'dd-mm-yyyy or dd/mm/yyyy'],
 
@@ -277,56 +278,40 @@ export class UploadListComponent implements OnInit {
     }
 
     onFileChange(evt: any) {
+
+        if (evt.target.files.length !== 1) throw new Error('Cannot use multiple files');
+        this.excelService.getData(evt, (result, file) => {
+            console.log(result.data);
+            this.data = result.data;
+            this.validateAndPopulateData();
+        });
+        evt.target.value = '';
+
         /* wire up file reader */
-        const target: DataTransfer = <DataTransfer>(evt.target);
+        /*const target: DataTransfer = <DataTransfer>(evt.target);
         if (target.files.length !== 1) throw new Error('Cannot use multiple files');
         const reader: FileReader = new FileReader();
         reader.onload = (e: any) => {
-            /* read workbook */
-            const bstr: string = e.target.result;
-            const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
 
-            /* grab first sheet */
-            const wsname: string = wb.SheetNames[0];
-            const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-
-            /* save data */
-            this.data = <AOA>(XLSX.utils.sheet_to_json(ws, {header: 1}));
-            // this.data = XLSX.utils.sheet_to_row_object_array(ws, {'date_format': 'dd/mm/yyyy'});
+            this.data = this.excelService.getData(event);
 
             this.validateAndPopulateData();
 
         };
-        reader.readAsBinaryString(target.files[0]);
-        evt.target.value = '';
+        reader.readAsBinaryString(target.files[0]);*/
+        // evt.target.value = '';
     }
 
     export(): void {
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(this.template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, this.exportFileName);
+        this.excelService.downloadFile(this.template, this.exportFileName);
     }
 
     validateAndPopulateData(): void {
+
         this.studentList = null;
         this.errorList = [];
-        /*let checkFailed = false;
-        this.data.every((student, index) => {
-            if (index >= this.fillerRows && !this.validateStudent(student, index)) {
-                checkFailed = true;
-                return false;
-            }
-            return true;
-        });
-        if (checkFailed) {
-            return;
-        }*/
+        this.deletedList = [];
+        
         console.log('prev', this.data);
         this.data = this.data.filter(value => {
             if (value.length < 1 ) {
@@ -371,28 +356,34 @@ export class UploadListComponent implements OnInit {
 
     validateStudent(student: any, index: number): any {
 
-        let rowNumber = index+1;
+        // let rowNumber = index+1;
 
         let dualList = [];
 
         let errorColumnList = [];
         let deletedColumnList = [];
 
+        student.forEach((item, index) => {
+            if (item == "" || item == undefined) {
+                student[index] = null;
+            }
+        });
+
         // Check Name
         this.trimCell(student, NAME);
-        if (student[NAME] === undefined || student[NAME].length < 3) {
+        if (student[NAME] === null || student[NAME].length < 3) {
             errorColumnList.push(NAME);
         }
 
         // Check Father's Name
         this.trimCell(student, FATHER_NAME);
-        if (student[FATHER_NAME] === undefined || student[FATHER_NAME].length < 3) {
+        if (student[FATHER_NAME] === null || student[FATHER_NAME].length < 3) {
             errorColumnList.push(FATHER_NAME);
         }
 
         // Check Mother's Name
         this.trimCell(student, MOTHER_NAME);
-        if (student[MOTHER_NAME] !== undefined && student[MOTHER_NAME].length < 3) {
+        if (student[MOTHER_NAME] !== null && student[MOTHER_NAME].length < 3) {
             errorColumnList.push(MOTHER_NAME);
         }
 
@@ -405,20 +396,20 @@ export class UploadListComponent implements OnInit {
 
         // Check Section
         this.trimCell(student, SECTION);
-        if (student[SECTION] !== undefined && SECTION_VALUES.indexOf(student[SECTION]) === -1) {
+        if (student[SECTION] !== null && SECTION_VALUES.indexOf(student[SECTION]) === -1) {
             errorColumnList.push(SECTION);
         }
 
         // Check Mobile Number
         this.trimCell(student, MOBILE_NUMBER);
-        if (!this.undefinedOrNumberLength(student[MOBILE_NUMBER], 10)) {
+        if (!this.nullOrNumberLength(student[MOBILE_NUMBER], 10)) {
             student[MOBILE_NUMBER] = null;
             deletedColumnList.push(MOBILE_NUMBER);
         }
 
         // Check Alternate Mobile Number
         this.trimCell(student, SECOND_MOBILE_NUMBER);
-        if (!this.undefinedOrNumberLength(student[SECOND_MOBILE_NUMBER], 10)) {
+        if (!this.nullOrNumberLength(student[SECOND_MOBILE_NUMBER], 10)) {
             student[SECOND_MOBILE_NUMBER] = null;
             deletedColumnList.push(SECOND_MOBILE_NUMBER);
         }
@@ -438,20 +429,20 @@ export class UploadListComponent implements OnInit {
         // Check Admission Session
         this.trimCell(student, ADMISSION_SESSION);
         this.toCamelCase(student, ADMISSION_SESSION);
-        if (student[ADMISSION_SESSION] !== undefined && ADMISSION_SESSION_VALUES.indexOf(student[ADMISSION_SESSION]) === -1) {
+        if (student[ADMISSION_SESSION] !== null && ADMISSION_SESSION_VALUES.indexOf(student[ADMISSION_SESSION]) === -1) {
             errorColumnList.push(ADMISSION_SESSION);
         }
 
         // Check Gender
         this.trimCell(student, GENDER);
         this.toCamelCase(student, GENDER);
-        if (student[GENDER] !== undefined && GENDER_VALUES.indexOf(student[GENDER]) === -1) {
+        if (student[GENDER] !== null && GENDER_VALUES.indexOf(student[GENDER]) === -1) {
             errorColumnList.push(GENDER);
         }
 
         // Check Category
         this.trimCell(student, CATEGORY);
-        if (student[CATEGORY] !== undefined) {
+        if (student[CATEGORY] !== null) {
             student[CATEGORY] = student[CATEGORY].toUpperCase();
             if (student[CATEGORY] === "GEN.") {
                 this.toCamelCase(student, CATEGORY);
@@ -464,13 +455,13 @@ export class UploadListComponent implements OnInit {
         // Check Religion
         this.trimCell(student, RELIGION);
         this.toCamelCase(student, RELIGION);
-        if (student[RELIGION] !== undefined && RELIGION_VALUES.indexOf(student[RELIGION]) === -1) {
+        if (student[RELIGION] !== null && RELIGION_VALUES.indexOf(student[RELIGION]) === -1) {
             errorColumnList.push(RELIGION);
         }
 
         // Check Blood Group
         this.trimCell(student, BLOOD_GROUP);
-        if (student[BLOOD_GROUP] !== undefined) {
+        if (student[BLOOD_GROUP] !== null) {
             student[BLOOD_GROUP] = student[BLOOD_GROUP].toUpperCase();
             if (BLOOD_GROUP_VALUES.indexOf(student[BLOOD_GROUP]) === -1) {
                 errorColumnList.push(BLOOD_GROUP);
@@ -479,34 +470,34 @@ export class UploadListComponent implements OnInit {
 
         // Check Family SSMID
         this.trimCell(student, FAMILY_SSMID);
-        if (!this.undefinedOrNumberLength(student[FAMILY_SSMID], 8)) {
+        if (!this.nullOrNumberLength(student[FAMILY_SSMID], 8)) {
             student[FAMILY_SSMID] = null;
             deletedColumnList.push(FAMILY_SSMID);
         }
 
         // Check Child SSMID
         this.trimCell(student, CHILD_SSMID);
-        if (!this.undefinedOrNumberLength(student[CHILD_SSMID], 9)) {
+        if (!this.nullOrNumberLength(student[CHILD_SSMID], 9)) {
             student[CHILD_SSMID] = null;
             deletedColumnList.push(CHILD_SSMID);
         }
 
         // Check Aadhar Number
         this.trimCell(student, AADHAR_NUMBER);
-        if (!this.undefinedOrNumberLength(student[AADHAR_NUMBER], 12)) {
+        if (!this.nullOrNumberLength(student[AADHAR_NUMBER], 12)) {
             student[AADHAR_NUMBER] = null;
             deletedColumnList.push(AADHAR_NUMBER);
         }
 
         // Check Bus Stop
         this.trimCell(student, BUS_STOP);
-        if (student[BUS_STOP] !== undefined && this.busStopList.map(a => a.stopName).indexOf(student[BUS_STOP]) === -1) {
+        if (student[BUS_STOP] !== null && this.busStopNameList.indexOf(student[BUS_STOP]) === -1) {
             errorColumnList.push(BUS_STOP);
         }
 
         // Check RTE
         this.trimCell(student, RTE);
-        if (student[RTE] !== undefined) {
+        if (student[RTE] !== null) {
             student[RTE] = student[RTE].toUpperCase();
             if (RTE_VALUES.indexOf(student[RTE]) === -1) {
                 errorColumnList.push(RTE);
@@ -598,8 +589,8 @@ export class UploadListComponent implements OnInit {
 
     }
 
-    undefinedOrNumberLength(value: any, length: number): boolean {
-        if (value === undefined) {
+    nullOrNumberLength(value: any, length: number): boolean {
+        if (value === null) {
             return true;
         }
         if (isNaN(parseInt(value))) {
@@ -673,7 +664,7 @@ export class UploadListComponent implements OnInit {
     }
 
     getBusStop(data: any): any {
-        if (data === undefined) {
+        if (data === null) {
             return null;
         }
 
@@ -754,7 +745,7 @@ export class UploadListComponent implements OnInit {
     }
 
     getParentSection(sectionName: any): any {
-        if (sectionName === undefined) {
+        if (sectionName === null) {
             sectionName = 'Section - A';
         }
         let result = null;
@@ -769,7 +760,7 @@ export class UploadListComponent implements OnInit {
     }
 
     getParentClass(className: any): any {
-        if (className === undefined) {
+        if (className === null) {
             className = 'Class - 12';
         }
         let result = null;

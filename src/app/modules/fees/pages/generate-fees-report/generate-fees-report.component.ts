@@ -4,7 +4,6 @@ import { FeeService } from "../../../../services/fee.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {StudentService} from "../../../../services/student.service";
 import {ClassService} from "../../../../services/class.service";
-import * as XLSX from "xlsx";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 
 @Component({

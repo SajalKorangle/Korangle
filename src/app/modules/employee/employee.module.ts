@@ -18,6 +18,7 @@ import {ExperienceCertiComponent} from './pages/experience-certi/experience-cert
 import { PrintEmployeeExpCertiComponent } from './print/print-employee-exp-certi/print-employee-exp-certi.component';
 import { PrintEmployeeICardsComponent } from './print/print-employee-i-card/print-employee-i-cards.component';
 import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
+import {ExcelService} from "../../excel/excel-service";
 
 @NgModule({
     declarations: [
@@ -41,7 +42,7 @@ import { PrintEmployeeListComponent } from './print/print-employee-list/print-em
     ],
     exports: [
     ],
-    providers: [EmployeeService],
+    providers: [EmployeeService, ExcelService],
     bootstrap: [EmployeeComponent]
 })
 export class EmployeeModule { }

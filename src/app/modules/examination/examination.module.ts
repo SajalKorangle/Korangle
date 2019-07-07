@@ -27,6 +27,7 @@ import { PrintStudentElegantFinalReportListComponent } from './print/print-stude
 import { PrintStudentClassicFinalReportListComponent } from './print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
 import { PrintStudentMarksheetListComponent } from './print/print-student-marksheet-list/print-student-marksheet-list.component';
 import { PrintHallTicketComponent } from './print/print-hall-ticket/print-hall-ticket.component';
+import {ExcelService} from "../../excel/excel-service";
 
 @NgModule({
     declarations: [
@@ -60,7 +61,7 @@ import { PrintHallTicketComponent } from './print/print-hall-ticket/print-hall-t
         NgxDatatableModule,
     ],
     exports: [],
-    providers: [ExaminationOldService],
+    providers: [ExaminationOldService, ExcelService],
     bootstrap: [ExaminationComponent],
 })
 export class ExaminationModule { }

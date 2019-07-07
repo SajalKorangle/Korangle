@@ -6,7 +6,7 @@ import {StudentOldService} from '../../../students/student-old.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 
-import * as XLSX from 'xlsx';
+import { ExcelService } from "../../../../excel/excel-service";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constants';
 
@@ -48,6 +48,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     constructor (private attendanceService: AttendanceService,
                  private studentService: StudentOldService,
+                 private excelService: ExcelService,
                  private printServie: PrintService) { }
 
     changeSelectedSectionToFirst(): void {
@@ -273,15 +274,7 @@ export class RecordAttendanceComponent implements OnInit {
             template.push(this.getStudentDisplayInfo(student, index));
         });
 
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, 'korangle_student_attendance.csv');
+        this.excelService.downloadFile(template, 'korangle_student_attendance.csv');
     }
 
     getHeaderValues(): any {

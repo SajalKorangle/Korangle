@@ -3,9 +3,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FeeOldService} from '../../fee-old.service';
 import {ClassService} from '../../../../services/class.service';
 import {FREQUENCY_LIST} from '../../classes/constants';
-import {EmitterService} from '../../../../services/emitter.service';
-
-import * as XLSX from 'xlsx';
+import {ExcelService} from "../../../../excel/excel-service";
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -44,6 +42,7 @@ export class SchoolRecordComponent implements OnInit {
     frequencyList = FREQUENCY_LIST;
 
     constructor(private feeService: FeeOldService,
+                private excelService: ExcelService,
                 private classService: ClassService) {
     }
 
@@ -226,15 +225,7 @@ export class SchoolRecordComponent implements OnInit {
             template.push(this.getStudentDisplayInfo(student));
         });
 
-        /* generate worksheet */
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(template);
-
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, 'korangle_student_fees.csv');
+        this.excelService.downloadFile(template, 'korangle_student_fees.csv');
     }
 
     getHeaderValues(): any {

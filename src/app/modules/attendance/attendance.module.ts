@@ -14,6 +14,7 @@ import { AttendanceService } from './attendance.service';
 
 import { PrintStudentAttendanceListComponent } from './print/print-student-attendance-list/print-student-attendance-list.component';
 import { PrintEmployeeAttendanceListComponent } from './print/print-employee-attendance-list/print-employee-attendance-list.component';
+import {ExcelService} from "../../excel/excel-service";
 
 @NgModule({
     declarations: [
@@ -32,7 +33,7 @@ import { PrintEmployeeAttendanceListComponent } from './print/print-employee-att
         AttendanceRoutingModule,
     ],
     exports: [],
-    providers: [AttendanceService],
+    providers: [AttendanceService, ExcelService],
     bootstrap: [AttendanceComponent]
 })
 export class AttendanceModule { }
