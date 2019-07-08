@@ -25,7 +25,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
 
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
-        this.user == user;
+        this.user = user;
         this.subjectList = value['subjectList'];
         this.extraFieldList = value['extraFieldList'];
         this.studentFinalReportList = value['studentFinalReportList'];
