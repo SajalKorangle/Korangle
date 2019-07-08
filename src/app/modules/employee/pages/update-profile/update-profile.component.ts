@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { EmployeeService } from '../../employee.service';
 
 import {FormControl} from '@angular/forms';
-import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'update-profile',

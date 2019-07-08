@@ -1,7 +1,6 @@
 import {Component, Input, OnInit } from '@angular/core';
 
 import {FormControl} from '@angular/forms';
-import {map} from 'rxjs/operators';
 import {EmployeeService} from '../../employee.service';
 import {TeamService} from '../../../team/team.service';
 

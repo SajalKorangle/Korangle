@@ -6,8 +6,8 @@ import {StudentOldService} from '../../students/student-old.service';
 import {StudentTest} from '../classes/student-test';
 
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import { startWith , map} from 'rxjs/operators';
+import { Observable } from "rxjs";
+import { startWith, map} from 'rxjs/operators';
 
 import { PrintService } from '../../../print/print-service';
 import { PRINT_MARKSHEET_SECOND_FORMAT, PRINT_MARKSHEET } from '../../../print/print-routes.constants';
