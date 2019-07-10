@@ -38,3 +38,5 @@ export const PRINT_EXPENSES = 'print-expenses';
 export const PRINT_MARKSHEET = 'print-marksheet';
 export const PRINT_MARKSHEET_SECOND_FORMAT = 'print-marksheet-second-format';
 
+//enquiry
+export const PRINT_ENQUIRY_LIST='print-enquiry-list';

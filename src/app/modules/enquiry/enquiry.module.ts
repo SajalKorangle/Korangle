@@ -12,6 +12,7 @@ import { EnquiryRoutingModule } from './enquiry.routing';
 
 import { ClassService } from '../../services/class.service';
 import { EnquiryService } from './enquiry.service';
+import {PrintEnquiryListComponent} from "./print/print-enquiry-list/print-enquiry-list.component";
 
 @NgModule({
     declarations: [
@@ -21,6 +22,7 @@ import { EnquiryService } from './enquiry.service';
         AddEnquiryComponent,
         ViewAllComponent,
         UpdateEnquiryComponent,
+        PrintEnquiryListComponent
 
     ],
 
@@ -28,6 +30,7 @@ import { EnquiryService } from './enquiry.service';
 
         ComponentsModule,
         EnquiryRoutingModule,
+        EnquiryRoutingModule
 
     ],
     exports: [
