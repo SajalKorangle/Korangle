@@ -22,7 +22,7 @@
                     (click)="getEnquiryList();">
                 <i class="material-icons">search</i></button><br>
         </div>
-        <div class="col-md-3" align="left">
+        <div  *ngIf="enquiryList.length>=1"  class="col-md-3" align="left">
             <button type="button"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     style="padding: 12px 15px;"
