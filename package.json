@@ -45,7 +45,7 @@
     "ngx-papaparse": "^3.0.3",
     "npm": "^6.5.0",
     "rxjs": "^6.2.2",
-    "rxjs-compat": "^6.2.2",
+    "rxjs-compat": "^6.5.2",
     "xlsx": "^0.13.0",
     "zone.js": "^0.8.26"
   },
