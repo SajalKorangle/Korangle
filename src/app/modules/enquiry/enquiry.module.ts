@@ -30,7 +30,6 @@ import {PrintEnquiryListComponent} from "./print/print-enquiry-list/print-enquir
 
         ComponentsModule,
         EnquiryRoutingModule,
-        EnquiryRoutingModule
 
     ],
     exports: [

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
@@ -25,13 +25,8 @@ export class PrintEnquiryListComponent implements OnInit, AfterViewChecked {
         this.user = user;
         this.data = value[0];
         this.classList=value[1];
-        console.log("data::",this.data);
         this.checkView = true;
     }
-
-    // addToClassList():void{
-    //     let c
-    // }
 
     ngAfterViewChecked(): void {
         if(this.checkView) {
