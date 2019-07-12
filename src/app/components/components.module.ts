@@ -25,9 +25,6 @@ import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateComponent } from './day-date/day-date.component';
 import { CalendarComponent } from './calendar/calendar.component';
 
-import { FeeReceiptListComponentOld } from './fees-table/fee-receipt-list-component-old.component';
-import { DiscountListOldComponent } from './discount-table/discount-list-old.component';
-
 // Pipes
 
 import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
@@ -45,8 +42,6 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
 
         StudentFilterComponent,
         ParentStudentFilterComponent,
-        FeeReceiptListComponentOld,
-        DiscountListOldComponent,
         MonthDateComponent,
         DayDateComponent,
         CalendarComponent,
@@ -94,8 +89,6 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
         StudentFilterComponent,
         ParentStudentFilterComponent,
         EmployeeFilterComponent,
-        FeeReceiptListComponentOld,
-        DiscountListOldComponent,
         MonthDateComponent,
         DayDateComponent,
         CalendarComponent,

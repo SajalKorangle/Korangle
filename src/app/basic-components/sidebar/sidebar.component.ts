@@ -95,7 +95,11 @@ export class SidebarComponent implements OnInit {
 
     changePage(task: any, module: any) {
         this.user.populateSection(task, module);
-        this.router.navigateByUrl(this.user.section.route);
+        if (this.user.section.route == 'expenses') {
+            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
+        } else {
+            this.router.navigateByUrl(this.user.section.route);
+        }
         EmitterService.get('close-sidebar').emit();
     }
 

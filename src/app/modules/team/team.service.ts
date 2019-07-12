@@ -10,7 +10,7 @@ export class TeamService extends CommonServiceRequirements {
 
     // Permission
 
-    getMemberPermissionList(data: any, token: any): Promise<any> {
+    /*getMemberPermissionList(data: any, token: any): Promise<any> {
         const url = '/team/school/' + data.schoolDbId + '/user/' + data.userDbId + '/permissions';
         return super.getData(token, url);
     }
@@ -18,11 +18,11 @@ export class TeamService extends CommonServiceRequirements {
     giveMemberPermissions(data: any, token: any): Promise<any> {
         const url = '/team/school/' + data.schoolDbId + '/user/' + data.userDbId + '/permissions';
         return super.putData(data['permissionList'], token, url)
-    }
+    }*/
 
     // Member
 
-    createMember(data: any, token: any): Promise<any> {
+    /*createMember(data: any, token: any): Promise<any> {
         const url = '/team/school/' + data.schoolDbId + '/members';
         return super.postData(data, token, url);
     }
@@ -35,7 +35,7 @@ export class TeamService extends CommonServiceRequirements {
     getSchoolMemberList(data, token: any): Promise<any> {
         const url = '/team/school/' + data.schoolDbId + '/members';
         return super.getData(token, url);
-    }
+    }*/
 
     // Module
 
@@ -63,9 +63,9 @@ export class TeamService extends CommonServiceRequirements {
 
     // User
 
-    getUserList(token: any): Promise<any> {
+    /*getUserList(token: any): Promise<any> {
         const url = '/team/users';
         return super.getData(token, url);
-    }
+    }*/
 
 }
