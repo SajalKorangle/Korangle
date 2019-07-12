@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 
-// import 'rxjs/add/operator/toPromise';
-
 import { ClassService } from '../../../../services/class.service';
 import { FeeOldService } from '../../fee-old.service';
 import {FeeDefinition} from '../../classes/fee-definition';

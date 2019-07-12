@@ -4,7 +4,6 @@ import {EmployeeService} from '../../modules/employee/employee.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
-import {Student} from '../../classes/student';
 
 @Component({
     selector: 'app-employee-filter',

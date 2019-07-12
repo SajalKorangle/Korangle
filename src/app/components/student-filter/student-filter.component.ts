@@ -5,7 +5,6 @@ import {SchoolService} from '../../services/school.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
-import {Student} from '../../classes/student';
 
 @Component({
     selector: 'student-filter',

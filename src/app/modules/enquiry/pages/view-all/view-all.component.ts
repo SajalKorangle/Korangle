@@ -2,6 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { EnquiryService } from '../../enquiry.service';
 import { ClassService } from '../../../../services/class.service';
+import {PrintService} from "../../../../print/print-service";
+import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
 
 @Component({
     selector: 'view-all',
@@ -23,7 +25,8 @@ export class ViewAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private enquiryService: EnquiryService,
-                private classService: ClassService) { }
+                private classService: ClassService,
+                private printService: PrintService) { }
 
     ngOnInit(): void {
         this.classService.getClassList(this.user.jwt).then(classList => {
@@ -60,6 +63,10 @@ export class ViewAllComponent implements OnInit {
             this.isLoading = false;
         });
 
+    }
+
+    printEnquiryList(){
+        this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {user: this.user, value: [this.enquiryList,this.classList]});
     }
 
     getClassName(dbId: number): string {

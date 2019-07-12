@@ -3,9 +3,7 @@ import {Component, Input, OnInit } from '@angular/core';
 import { TeamService } from '../../team.service';
 
 import {FormControl} from '@angular/forms';
-// import {Observable} from 'rxjs/Observable';
-// import { startWith } from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators';
+import {map} from 'rxjs/internal/operators/map';
 
 @Component({
   selector: 'remove-member',

@@ -22,6 +22,16 @@
                     (click)="getEnquiryList();">
                 <i class="material-icons">search</i></button><br>
         </div>
+        <div  *ngIf="enquiryList.length>=1"  class="col-md-3" align="left">
+            <button type="button"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px;"
+                    matTooltip="Print the following list"
+                    tooltip-position="left"
+                    (click)="printEnquiryList();">
+                Print<i class="material-icons" style="margin-left: 15px;">print</i></button><br>
+        </div>
+
     </div>
 
     <i>
