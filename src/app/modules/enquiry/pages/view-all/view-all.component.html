@@ -64,7 +64,7 @@
                         <td>{{enquiry.enquirerName}}</td>
                         <td >
                             <span class="hidden-xs hidden-sm">{{enquiry.mobileNumber}}</span>
-                            <a   *ngIf="enquiry.mobileNumber" class="visible-xs visible-sm" href="tel:{{enquiry.mobileNumber}}">Call Me</a>
+                            <a *ngIf="enquiry.mobileNumber" class="visible-xs visible-sm" href="tel:{{enquiry.mobileNumber}}">Call Me</a>
                         </td>
                         <td>{{enquiry.studentName}}</td>
                         <td>{{getClassName(enquiry.parentClass)}}</td>
