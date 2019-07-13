@@ -8,13 +8,11 @@ import { UpdateProfileComponent } from './pages/update-profile/update-profile.co
 
 import { SchoolRoutingModule } from './school.routing';
 
-import {ChangeSessionComponent} from './pages/change-session/change-session.component';
 
 @NgModule({
     declarations: [
 
         SchoolComponent,
-        ChangeSessionComponent,
         UpdateProfileComponent,
 
     ],
