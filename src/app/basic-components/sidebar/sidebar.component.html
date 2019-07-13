@@ -11,15 +11,15 @@
 
         <!-- Multiple School List -->
         <ng-container *ngIf="user.schoolList.length>1">
-            <select [(ngModel)]="user.activeSchool"
-                    (ngModelChange)="handleSchoolChange()"
-                    style="padding: 0px; border: none; background-color: transparent;">
-                <option *ngFor="let school of user.schoolList;"
-                        [ngValue]="school">
-                    {{school.name}}
-                </option>
-            </select>
-        </ng-container>
+
+        </ng-container><select [(ngModel)]="user.activeSchool"
+                               (ngModelChange)="handleSchoolChange()"
+                               style="padding: 0px; border: none; background-color: transparent;">
+        <option *ngFor="let school of user.schoolList;"
+                [ngValue]="school">
+            {{school.name}}
+        </option>
+    </select>
 
         <!-- Single School -->
         <ng-container *ngIf="user.schoolList.length===1">
@@ -47,13 +47,34 @@
 
         <br/>
 
+        <div *ngIf="condition">Content to render when condition is true.</div>
+
+        <ng-container *ngIf="checkChangeSession()">
+
+            <select [class.sessionMargin61]="user.schoolList.length>1"
+                    [class.sessionMargin60]="user.schoolList.length==1"
+                    [(ngModel)]="user.activeSchool.currentSessionDbId"
+                    (ngModelChange)="handleSessionChange()"
+                    style="padding: 0px; border: none; background-color: transparent;">
+                <option *ngFor="let session of session_list;"
+                        [ngValue]="session.id">
+                    {{session.name}}
+                </option>
+            </select>
+
+
+        </ng-container>
+
+
         <!-- Current Session Name -->
-        <span [class.sessionMargin68]="user.schoolList.length>1"
-              [class.sessionMargin60]="user.schoolList.length==1">
-            <span *ngIf="user.activeSchool.currentSessionDbId==1">2017-18</span>
-            <span *ngIf="user.activeSchool.currentSessionDbId==2">2018-19</span>
-            <span *ngIf="user.activeSchool.currentSessionDbId==3">2019-20</span>
-        </span>
+        <div *ngIf="!checkChangeSession()">
+            <span [class.sessionMargin61]="user.schoolList.length>1"
+                  [class.sessionMargin60]="user.schoolList.length==1">
+                <span *ngIf="user.activeSchool.currentSessionDbId==1">2017-18</span>
+                <span *ngIf="user.activeSchool.currentSessionDbId==2">2018-19</span>
+                <span *ngIf="user.activeSchool.currentSessionDbId==3">2019-20</span>
+            </span>
+        </div>
 
     </a>
     <div>
