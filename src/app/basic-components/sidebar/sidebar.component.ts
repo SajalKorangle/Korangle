@@ -6,10 +6,8 @@ import { EmitterService } from '../../services/emitter.service';
 
 import {User} from '../../classes/user';
 import {style, state, trigger, animate, transition} from "@angular/animations";
-import {Student} from '../../classes/student';
-import {TeamService} from "../../modules/team/team.service";
-import {SchoolService} from "../../services/school.service";
-import {logger} from "codelyzer/util/logger";
+import {SESSION_LIST} from "../../classes/constants/session";
+
 
 declare const $: any;
 
@@ -31,7 +29,7 @@ declare const $: any;
             transition('false => true', animate('800ms ease-in'))
         ]),
     ],
-    providers: [ TeamService ],
+    providers: [  ],
 
 
 })
@@ -42,6 +40,8 @@ export class SidebarComponent implements OnInit {
     moduleList=[];
     green = 'green';
     warning = 'warning';
+    session_list=SESSION_LIST;
+    callChange=false;
 
     settings = {
         path: 'user-settings',
@@ -68,8 +68,7 @@ export class SidebarComponent implements OnInit {
         ],
     };
 
-    constructor(private router: Router,
-                private teamService:TeamService) {
+    constructor(private router: Router) {
     }
 
     ngOnInit() {
@@ -77,6 +76,7 @@ export class SidebarComponent implements OnInit {
             .subscribe((event) => {
                 if(event instanceof NavigationStart) {
                     this.user.isLazyLoading = true;
+                    // this.checkChangeSession();
                 }
                 else if (
                     event instanceof NavigationEnd ||
@@ -92,7 +92,6 @@ export class SidebarComponent implements OnInit {
             this.router.navigateByUrl(this.user.section.route);
         }
 
-        this.handleChangeSession();
     }
 
     isMobileMenu() {
@@ -102,53 +101,28 @@ export class SidebarComponent implements OnInit {
         return true;
     };
 
-    handleChangeSession(){
-        console.log("usre",this.user['activeSchool']);
-            const request_module_data = {
-                schoolDbId: this.user.activeSchool.dbId,
-            };
-            console.log('hrere');
-            Promise.all([
-                this.teamService.getSchoolModuleList(request_module_data, this.user.jwt),
-            ]).then(value => {
-                // console.log(value);
-                console.log('hrere22');
-
-                this.sessionChangePermission=true;
-                this.moduleList=value[0];
-                //no need for checkPermission??
-                this.checkPermission(this.moduleList)
-            }, error => {
-                console.log('error changing session');
-            });
-
-
-    }
-
-    checkPermission(moduleArray):void{
-        moduleArray.forEach(module=>{
-            if(module.path=="school"){
-                let taskList=module.taskList;
-                taskList.forEach(task=>{
-                    if(task.path=="change_session"){
-                        console.log('permission is granted!');
-                        this.sessionChangePermission=true;
-                        // this.permissionEmitter.emit(this.sessionChangePermission);
-                    }else{
-                        console.log('permission is not granted!');
-                    }
-
-                });
-
-            }
-        });
-    }
-
     changePage(task: any, module: any) {
         this.user.populateSection(task, module);
         this.router.navigateByUrl(this.user.section.route);
         EmitterService.get('close-sidebar').emit();
     }
+
+    checkChangeSession(){
+        // console.log(this.user.activeSchool.currentSessionDbId);
+        return this.user.activeSchool && this.user.activeSchool.moduleList.find(module=>{
+            return module.path=='school' && module.taskList.find(task=>{
+                return task.path=='change_session';
+            })!=undefined;
+        })!=undefined;
+    }
+
+    handleSessionChange(){
+        this.router.navigateByUrl('');
+        setTimeout(()=>{
+            this.user.initializeTask();
+        });
+    }
+
 
     handleSchoolChange(): void {
         this.router.navigateByUrl('');
