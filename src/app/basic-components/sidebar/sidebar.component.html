@@ -47,6 +47,9 @@
 
         <br/>
 
+        <div *ngIf="condition">Content to render when condition is true.</div>
+
+
         <!-- Current Session Name -->
         <span [class.sessionMargin68]="user.schoolList.length>1"
               [class.sessionMargin60]="user.schoolList.length==1">
