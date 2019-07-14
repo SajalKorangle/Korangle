@@ -70,6 +70,7 @@ export class TotalCollectionComponent implements OnInit {
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }
+
     }
 
     printFeeReceiptList(): void {
@@ -113,19 +114,15 @@ export class TotalCollectionComponent implements OnInit {
         return className+','+sectionName;
     }
 
-
-
     getFilteredClassList(){
         let tempClassList = this.feeReceiptList.map(fee=>{
             return this.getClassAndSectionName(fee.parentStudent,fee.parentSession);
         });
-        tempClassList = tempClassList .filter((item, index) => {
-            return tempClassList .indexOf(item) == index;
+        tempClassList = tempClassList.filter((item, index) => {
+            return tempClassList.indexOf(item) == index;
         });
         return tempClassList;
     }
-
-
 
     detectChanges(): void {
         this.cdRef.detectChanges();
