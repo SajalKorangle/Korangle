@@ -38,11 +38,11 @@ export class TotalCollectionComponent implements OnInit {
 
     studentList = [];
     studentSectionList = [];
-
     serviceAdapter: TotalCollectionServiceAdapter;
 
     selectedEmployee = null;
     selectedModeOfPayment = null;
+    selectedClass=null;
 
     isInitialLoading = false;
     isLoading = false;
@@ -70,7 +70,6 @@ export class TotalCollectionComponent implements OnInit {
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }
-
     }
 
     printFeeReceiptList(): void {
@@ -91,6 +90,42 @@ export class TotalCollectionComponent implements OnInit {
 
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
     }
+
+    getClassName(studentId: any, sessionId: any): string {
+        return  this.classList.find(classs => {
+            return classs.dbId == this.studentSectionList.find(studentSection => {
+                return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
+            }).parentClass;
+        }).name;
+    }
+
+    getSectionName(studentId: any, sessionId: any): string{
+        return this.sectionList.find(section => {
+            return section.id == this.studentSectionList.find(studentSection => {
+                return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
+            }).parentDivision;
+        }).name;
+    }
+
+    getClassAndSectionName(studentId: any, sessionId: any): string{
+        const className=this.getClassName(studentId,sessionId);
+        const sectionName=this.getSectionName(studentId,sessionId);
+        return className+','+sectionName;
+    }
+
+
+
+    getFilteredClassList(){
+        let tempClassList = this.feeReceiptList.map(fee=>{
+            return this.getClassAndSectionName(fee.parentStudent,fee.parentSession);
+        });
+        tempClassList = tempClassList .filter((item, index) => {
+            return tempClassList .indexOf(item) == index;
+        });
+        return tempClassList;
+    }
+
+
 
     detectChanges(): void {
         this.cdRef.detectChanges();
@@ -124,6 +159,11 @@ export class TotalCollectionComponent implements OnInit {
         if (this.selectedModeOfPayment) {
             tempList = tempList.filter(feeReceipt => {
                 return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
+            })
+        }
+        if (this.selectedClass) {
+            tempList = tempList.filter(feeReceipt => {
+                return this.getClassAndSectionName(feeReceipt.parentStudent,feeReceipt.parentSession)== this.selectedClass;
             })
         }
         return tempList;

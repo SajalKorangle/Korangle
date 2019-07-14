@@ -22,7 +22,7 @@
                         (click)="serviceAdapter.getFeeCollectionList();">
                     <i class="material-icons">search</i></button><br>
             </div>
-            <div class="col-md-3" align="left">
+            <div   class="col-md-3" align="left">
                 <button type="button"
                         *ngIf="getFilteredFeeReceiptList()"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
@@ -55,6 +55,18 @@
                                 [(ngModel)]="selectedModeOfPayment">
                         <mat-option *ngFor="let modeOfPayment of getFilteredModeOfPaymentList();" [value]="modeOfPayment">
                             {{modeOfPayment}}
+                        </mat-option>
+                        <mat-option [value]="nullValue">
+                            All
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Collection of Classes"
+                                [(ngModel)]="selectedClass">
+                        <mat-option *ngFor="let class of getFilteredClassList();" [value]="class">
+                            {{class}}
                         </mat-option>
                         <mat-option [value]="nullValue">
                             All
