@@ -13,7 +13,7 @@
         <ng-container *ngIf="user.schoolList.length>1">
             <select [(ngModel)]="user.activeSchool"
                     (ngModelChange)="handleSchoolChange()"
-                    style="padding: 0px; border: none; background-color: transparent;">
+                    style="padding: 0px; border: none; background-color: transparent; margin-bottom: 0px !important;">
                 <option *ngFor="let school of user.schoolList;"
                         [ngValue]="school">
                     {{school.name}}
@@ -26,12 +26,15 @@
             {{user.activeSchool.name}}
         </ng-container>
 
+        <div [class.sessionMargin68]="user.schoolList.length>1"
+              [class.sessionMargin60]="user.schoolList.length==1"
+              style="font-size: 14px; padding: 0px !important; margin-bottom: 5px !important; line-height: normal !important;">
+            <i><b>KID: {{user.activeSchool.dbId}}</b></i>
+        </div>
 
         <!-- Role -->
         <ng-container *ngIf="user.activeSchool">
             <ng-container *ngIf="user.activeSchool.studentList.length > 0 && user.activeSchool.moduleList.length > 0">
-
-                <br/>
 
                 <select [(ngModel)]="user.activeSchool.role"
                         (ngModelChange)="handleRoleChange()"
@@ -45,15 +48,13 @@
             </ng-container>
         </ng-container>
 
-        <br/>
-
         <!-- Current Session Name -->
-        <span [class.sessionMargin68]="user.schoolList.length>1"
+        <div [class.sessionMargin68]="user.schoolList.length>1"
               [class.sessionMargin60]="user.schoolList.length==1">
             <span *ngIf="user.activeSchool.currentSessionDbId==1">2017-18</span>
             <span *ngIf="user.activeSchool.currentSessionDbId==2">2018-19</span>
             <span *ngIf="user.activeSchool.currentSessionDbId==3">2019-20</span>
-        </span>
+        </div>
 
     </a>
     <div>

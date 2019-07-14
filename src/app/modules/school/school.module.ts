@@ -8,11 +8,11 @@ import { UpdateProfileComponent } from './pages/update-profile/update-profile.co
 
 import { SchoolRoutingModule } from './school.routing';
 
+
 @NgModule({
     declarations: [
 
         SchoolComponent,
-
         UpdateProfileComponent,
 
     ],
