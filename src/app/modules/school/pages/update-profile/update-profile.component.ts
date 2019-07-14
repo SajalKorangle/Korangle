@@ -22,7 +22,7 @@ export class UpdateProfileComponent implements OnInit {
     currentPrintName: any;
     currentMobileNumber: any;
     currentRegistrationNumber: any;
-    currentAffiliationNumber: any
+    currentAffiliationNumber: any;
     currentMedium: any;
     currentDiseCode: any;
     currentAddress: any;
