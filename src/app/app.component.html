@@ -3,7 +3,7 @@
     <div *ngIf="user.isAuthenticated" class="pageDiv">
 
         <div class="sidebar" data-image="" style="position: fixed">
-            <app-sidebar *ngIf="user"  [user]="user"></app-sidebar>
+            <app-sidebar [user]="user"></app-sidebar>
             <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
         </div>
 
