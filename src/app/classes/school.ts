@@ -16,6 +16,7 @@ export class School {
     diseCode = 0;
     address = '';
     currentSessionDbId: number;
+    currentWorkingSessionDbId: number;
     registrationNumber: string;
     affiliationNumber: string;
 
@@ -48,6 +49,7 @@ export class School {
         this.address = schoolData.schoolAddress;
         this.opacity = schoolData.opacity;
         this.currentSessionDbId = schoolData.currentSessionDbId;
+        this.currentWorkingSessionDbId = schoolData.currentSessionDbId;
         this.registrationNumber = schoolData.registrationNumber;
         this.affiliationNumber = schoolData.affiliationNumber;
 

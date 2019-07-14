@@ -52,7 +52,7 @@ export class UpdateProfileComponent implements OnInit {
         this.schoolService.getSessionList(this.user.jwt).then( sessionList => {
             this.isLoading = false;
             this.sessionList = sessionList;
-            this.selectedWorkingSession = this.getSessionFromList(this.user.activeSchool.currentSessionDbId);
+            this.selectedWorkingSession = this.getSessionFromList(this.user.activeSchool.currentWorkingSessionDbId);
             this.currentWorkingSession = this.selectedWorkingSession;
         }, error => {
             this.isLoading = false;
@@ -93,7 +93,7 @@ export class UpdateProfileComponent implements OnInit {
             this.user.activeSchool.diseCode = schoolProfile.diseCode;
             this.user.activeSchool.address = schoolProfile.address;
             this.user.activeSchool.opacity = schoolProfile.opacity;
-            this.user.activeSchool.currentSessionDbId = schoolProfile.currentSessionDbId;
+            this.user.activeSchool.currentWorkingSessionDbId = schoolProfile.currentSessionDbId;
             this.selectedWorkingSession = this.getSessionFromList(schoolProfile.currentSessionDbId);
             alert('School Profile updated successfully');
         }, error => {
