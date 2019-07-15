@@ -63,7 +63,7 @@ export class FeeReceiptListComponent {
     }
 
     increaseNumber(): void {
-        this.number += this.stepNumber;
+        this.number += this.number;
     }
 
     getStudentName(studentId: number): any {
