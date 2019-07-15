@@ -54,7 +54,7 @@ export class CreateSchoolServiceAdapter {
         data.primaryThemeColor = "green";
         data.secondaryThemeColor = "warning";
         data.complexFeeStructure = false;
-        data.currentSession = 2;
+        data.currentSession = 3;
         data.smsId = "KORNGL";
         if (data.printName && data.printName.length > 15) {
             data.headerSize = "BIG";
