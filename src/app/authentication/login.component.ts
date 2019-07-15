@@ -38,6 +38,7 @@ export class LoginComponent {
         });
     }
 
+
     toggleVisibilityMode(): void {
         this.visibilityMode = !this.visibilityMode;
     }
