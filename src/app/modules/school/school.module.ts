@@ -15,7 +15,6 @@ import {ChangeSessionComponent} from './pages/change-session/change-session.comp
     declarations: [
 
         SchoolComponent,
-
         UpdateProfileComponent,
 
         ChangeSessionComponent

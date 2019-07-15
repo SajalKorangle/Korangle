@@ -120,3 +120,7 @@ li.active[data-color="indigo"] a,
 .sessionMargin52 {
     margin-left: 52px;
 }
+
+.simple-text {
+    text-transform: none !important;
+}
