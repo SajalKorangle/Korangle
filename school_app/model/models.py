@@ -98,7 +98,7 @@ class School(models.Model):
             return None
 
     def __str__(self):
-        return self.printName
+        return str(self.pk) + ' -- ' + self.printName
 
     class Meta:
         db_table = 'school'
