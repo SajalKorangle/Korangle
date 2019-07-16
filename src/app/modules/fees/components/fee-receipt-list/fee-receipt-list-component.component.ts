@@ -25,6 +25,7 @@ export class FeeReceiptListComponent {
     @Input() employeeList;
     @Input() receiptColumnFilter;
     @Input() number;
+    @Input() stepNumber;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -62,7 +63,7 @@ export class FeeReceiptListComponent {
     }
 
     increaseNumber(): void {
-        this.number += 50;
+        this.number += this.number;
     }
 
     getStudentName(studentId: number): any {
