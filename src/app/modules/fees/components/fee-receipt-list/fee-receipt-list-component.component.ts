@@ -25,7 +25,6 @@ export class FeeReceiptListComponent {
     @Input() employeeList;
     @Input() receiptColumnFilter;
     @Input() number;
-    @Input() stepNumber;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -100,7 +99,5 @@ export class FeeReceiptListComponent {
         });
         return employee?employee.name:null;
     }
-
-
 
 }
