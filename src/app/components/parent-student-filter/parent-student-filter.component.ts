@@ -83,6 +83,7 @@ export class ParentStudentFilterComponent implements OnInit {
 
     getClassName(classId: number): any {
         return this.classList.find(item => {
+            console.log(item,'s')
             return item.dbId == classId;
         }).name;
     }
