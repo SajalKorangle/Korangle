@@ -38,11 +38,17 @@ export class TotalCollectionComponent implements OnInit {
 
     studentList = [];
     studentSectionList = [];
+
     serviceAdapter: TotalCollectionServiceAdapter;
 
     selectedEmployee = null;
+    filteredEmployeeList = [];
+
     selectedModeOfPayment = null;
-    selectedClass=null;
+    filteredModeOfPaymentList = [];
+
+    selectedClassSection=null;
+    filteredClassSectionList = [];
 
     isInitialLoading = false;
     isLoading = false;
@@ -82,7 +88,7 @@ export class TotalCollectionComponent implements OnInit {
             'subFeeReceiptList': this.subFeeReceiptList,
             'studentList': this.studentList,
             'studentSectionList': this.studentSectionList,
-            'employeeList': this.getFilteredEmployeeList(),
+            'employeeList': this.filteredEmployeeList,
             'classList': this.classList,
             'sectionList': this.sectionList,
             'selectedEmployee': this.selectedEmployee,
@@ -92,36 +98,29 @@ export class TotalCollectionComponent implements OnInit {
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
     }
 
-    getClassName(studentId: any, sessionId: any): string {
+    getClass(studentId: any, sessionId: any): any {
         return  this.classList.find(classs => {
             return classs.dbId == this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
             }).parentClass;
-        }).name;
+        });
     }
 
-    getSectionName(studentId: any, sessionId: any): string{
+    getSection(studentId: any, sessionId: any): any {
         return this.sectionList.find(section => {
             return section.id == this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
             }).parentDivision;
-        }).name;
+        });
     }
 
-    getClassAndSectionName(studentId: any, sessionId: any): string{
-        const className=this.getClassName(studentId,sessionId);
-        const sectionName=this.getSectionName(studentId,sessionId);
-        return className+','+sectionName;
-    }
-
-    getFilteredClassList(){
-        let tempClassList = this.feeReceiptList.map(fee=>{
-            return this.getClassAndSectionName(fee.parentStudent,fee.parentSession);
-        });
-        tempClassList = tempClassList.filter((item, index) => {
-            return tempClassList.indexOf(item) == index;
-        });
-        return tempClassList;
+    getClassAndSection(studentId: any, sessionId: any): any {
+        const classs=this.getClass(studentId,sessionId);
+        const section=this.getSection(studentId,sessionId);
+        return {
+            'classs': classs,
+            'section': section,
+        };
     }
 
     detectChanges(): void {
@@ -130,20 +129,6 @@ export class TotalCollectionComponent implements OnInit {
 
     getReceiptColumnFilterKeys(): any {
         return Object.keys(this.receiptColumnFilter);
-    }
-
-    getFilteredEmployeeList(): any {
-        let tempEmployeeIdList = this.feeReceiptList.map(a => a.parentEmployee);
-        tempEmployeeIdList = tempEmployeeIdList.filter((item, index) => {
-            return tempEmployeeIdList.indexOf(item) == index;
-        });
-        return this.employeeList.filter(employee => {
-            return tempEmployeeIdList.includes(employee.id);
-        });
-    }
-
-    getFilteredModeOfPaymentList(): any {
-        return [...new Set(this.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {return a != null;});
     }
 
     getFilteredFeeReceiptList(): any {
@@ -158,10 +143,12 @@ export class TotalCollectionComponent implements OnInit {
                 return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
             })
         }
-        if (this.selectedClass) {
+        if (this.selectedClassSection) {
             tempList = tempList.filter(feeReceipt => {
-                return this.getClassAndSectionName(feeReceipt.parentStudent,feeReceipt.parentSession)== this.selectedClass;
-            })
+                let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
+                return classSection.classs.dbId == this.selectedClassSection.classs.dbId
+                    && classSection.section.id == this.selectedClassSection.section.id;
+            });
         }
         return tempList;
     }
