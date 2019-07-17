@@ -366,8 +366,6 @@ export class UpdateAllComponent implements OnInit {
     }
 
     updateStudentField(key: any, student: any, newValue: any, inputType: any): void {
-        console.log(newValue);
-        // return;
         if (student[key] !== newValue) {
             // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
             // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
@@ -376,7 +374,47 @@ export class UpdateAllComponent implements OnInit {
             };
             if (key == 'category') {
                 data['newCategoryField'] = newValue;
-            } else if (key == 'religion') {
+            } else if (key == 'mobileNumber') {
+                if (newValue.toString().length==10|| newValue.toString().length==0){
+                    data['mobileNumber'] = newValue;
+                }else{
+                    alert('Mobile number should be 10 digits');
+                    return;
+                }
+
+            }else if (key == 'secondMobileNumber') {
+                if (newValue.toString().length==10|| newValue.toString().length==0){
+                    data['secondMobileNumber'] = newValue;
+                }
+                else{
+                    alert('Alternate Mobile number should be 10 digits');
+                    return;
+                }
+            }else if (key == 'familySSMID') {
+                if (newValue.toString().length==8|| newValue.toString().length==0){
+                    data['familySSMID'] = newValue;
+                }
+                else{
+                    alert('FamilySSMID number should be 8 digits');
+                    return;
+                }
+            }else if (key == 'childSSMID') {
+                if (newValue.toString().length==9|| newValue.toString().length==0){
+                    data['childSSMID'] = newValue;
+                }
+                else{
+                    alert('ChildSSMID number should be 9 digits');
+                    return;
+                }
+            }else if (key == 'aadharNum') {
+                if (newValue.toString().length==12|| newValue.toString().length==0){
+                    data['aadharNum'] = newValue;
+                }
+                else{
+                    alert('Aadhar number should be 12 digits');
+                    return;
+                }
+            }else if (key == 'religion') {
                 data['newReligionField'] = newValue;
             } else {
                 data[key] = newValue;
@@ -387,7 +425,6 @@ export class UpdateAllComponent implements OnInit {
             } else if (inputType === 'list') {
 
             }
-            // console.log(data);
             this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
                 response => {
                     if (response.status === 'success') {
