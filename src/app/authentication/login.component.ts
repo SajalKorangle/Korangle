@@ -2,7 +2,6 @@ import {Component, ElementRef, Input} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../classes/user';
 import {sendDataToAndroid} from "../classes/common";
-// import * as $ from 'jquery';
 
 @Component({
     selector: 'app-login-form',
@@ -47,16 +46,7 @@ export class LoginComponent {
         else {
             this.login()
         }
-        // var hasFocus = $('#username').is(':focus');
-        // if (hasFocus) {
-        //    $('#pass').focus()
-        // }
-        // else{
-        //     this.login()
-        // }
     }
-
-
 
     toggleVisibilityMode(): void {
         this.visibilityMode = !this.visibilityMode;
