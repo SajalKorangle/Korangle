@@ -49,6 +49,7 @@ export class AddEnquiryComponent implements OnInit {
         }
 
         this.newEnquiry.parentSchool = this.user.activeSchool.dbId;
+        this.newEnquiry.parentEmployee = this.user.activeSchool.employeeId;
 
         this.isLoading = true;
 
