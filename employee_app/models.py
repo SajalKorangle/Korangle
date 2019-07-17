@@ -90,6 +90,9 @@ class Employee(models.Model):
         db_table = 'employee'
         unique_together = ('parentSchool', 'mobileNumber')
 
+    def __str__(self):
+        return str(self.id)
+
 
 class EmployeeSessionDetail(models.Model):
 

@@ -11,7 +11,7 @@ class Class(models.Model):
 
     def __str__(self):
         """A string representation of the model."""
-        return self.parentBoard.name + " --- " + self.name
+        return self.name
 
     class Meta:
         db_table = 'class'
