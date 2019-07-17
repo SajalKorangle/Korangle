@@ -4,6 +4,7 @@ import { EnquiryService } from '../../enquiry.service';
 import { ClassService } from '../../../../services/class.service';
 import {PrintService} from "../../../../print/print-service";
 import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'view-all',
@@ -13,7 +14,7 @@ import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
 
 export class ViewAllComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     enquiryList = [];
 
@@ -29,6 +30,7 @@ export class ViewAllComponent implements OnInit {
                 private printService: PrintService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         this.classService.getClassList(this.user.jwt).then(classList => {
             this.classList = classList;
         });

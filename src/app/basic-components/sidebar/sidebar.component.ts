@@ -95,7 +95,7 @@ export class SidebarComponent implements OnInit {
 
     changePage(task: any, module: any) {
         this.user.populateSection(task, module);
-        if (this.user.section.route == 'expenses') {
+        if (this.user.section.route == 'expenses' || this.user.section.route == 'enquiries') {
             this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         } else {
             this.router.navigateByUrl(this.user.section.route);

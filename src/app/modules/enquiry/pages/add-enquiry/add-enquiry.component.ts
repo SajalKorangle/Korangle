@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { ClassService } from '../../../../services/class.service';
 import { EnquiryService } from '../../enquiry.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'add-enquiry',
@@ -11,7 +12,7 @@ import { EnquiryService } from '../../enquiry.service';
 
 export class AddEnquiryComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     newEnquiry: any;
 
@@ -23,6 +24,7 @@ export class AddEnquiryComponent implements OnInit {
                  private classService: ClassService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         this.newEnquiry = {};
 
         this.classService.getClassList(this.user.jwt).then(classList => {
