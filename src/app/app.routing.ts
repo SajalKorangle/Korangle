@@ -85,7 +85,9 @@ const routes: Routes = [
             {path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule'},
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
             {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
-            {path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'}
+            {path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'},
+            {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
+
         ]
     }
 ];
