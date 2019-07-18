@@ -20,7 +20,7 @@ export class ViewAllComponent implements OnInit {
     enquiryList = [];
 
     classList = [];
-    parentEmployee: string; 
+    parentEmployee = []; 
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
@@ -38,12 +38,16 @@ export class ViewAllComponent implements OnInit {
         });
 
         let data = {
-            id: this.user.activeSchool.employeeId
+            parentSchool: this.user.activeSchool.dbId
         }
-        this.employeeService.getEmployeeProfile(data, this.user.jwt)
-            .then(employeeName => {
-                this.parentEmployee = employeeName.name
-            })
+        this.employeeService.getEmployeeProfileList(data, this.user.jwt)
+            .then(
+                res =>{
+                    this.parentEmployee = res;
+            },
+            error => {
+                console.log(error)
+            });
     }
 
     todaysDate(): string {
