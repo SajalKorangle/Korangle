@@ -489,7 +489,6 @@ export class UpdateAllComponent implements OnInit {
             }
             this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
                 response => {
-                    console.log(response.code+"hrererer");
                     if (response.status === 'success') {
                         student[key] = newValue;
                         document.getElementById(key + student.dbId).classList.remove('updatingField');
