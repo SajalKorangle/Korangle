@@ -1,6 +1,5 @@
-import {Component, Input, OnInit,ApplicationRef} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
-import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../student-old.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -132,8 +131,7 @@ export class UpdateAllComponent implements OnInit {
 
     constructor(private studentService: StudentOldService,
                 private classService: ClassService,
-                private cdRef: ChangeDetectorRef,
-                private appRef: ApplicationRef) { }
+                private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
 

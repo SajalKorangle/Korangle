@@ -33,7 +33,6 @@ export class UpdateProfileComponent implements OnInit {
     constructor (private studentService: StudentOldService,
                  private busStopService: BusStopService) { }
 
-
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
         this.changeSelectedStudentToFirst();
