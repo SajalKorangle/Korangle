@@ -68,7 +68,6 @@ export class MyCollectionComponent implements OnInit {
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
         }
-
     }
 
     printFeeReceiptList(): void {

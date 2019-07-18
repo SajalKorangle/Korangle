@@ -4,11 +4,13 @@ import { EnquiryService } from '../../enquiry.service';
 import { ClassService } from '../../../../services/class.service';
 import {PrintService} from "../../../../print/print-service";
 import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
+import { EmployeeService } from '../../../employee/employee.service';
 
 @Component({
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
+    providers: [EmployeeService],
 })
 
 export class ViewAllComponent implements OnInit {
@@ -18,6 +20,7 @@ export class ViewAllComponent implements OnInit {
     enquiryList = [];
 
     classList = [];
+    parentEmployee: string; 
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
@@ -26,12 +29,21 @@ export class ViewAllComponent implements OnInit {
 
     constructor(private enquiryService: EnquiryService,
                 private classService: ClassService,
-                private printService: PrintService) { }
+                private printService: PrintService,
+                private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
         this.classService.getClassList(this.user.jwt).then(classList => {
             this.classList = classList;
         });
+
+        let data = {
+            id: this.user.activeSchool.employeeId
+        }
+        this.employeeService.getEmployeeProfile(data, this.user.jwt)
+            .then(employeeName => {
+                this.parentEmployee = employeeName.name
+            })
     }
 
     todaysDate(): string {
