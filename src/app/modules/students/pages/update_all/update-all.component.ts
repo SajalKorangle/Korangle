@@ -1,9 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit,ApplicationRef} from '@angular/core';
 
 import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../student-old.service';
-
 import { ChangeDetectorRef } from '@angular/core';
 
 class ColumnHandle {
@@ -133,7 +132,8 @@ export class UpdateAllComponent implements OnInit {
 
     constructor(private studentService: StudentOldService,
                 private classService: ClassService,
-                private cdRef: ChangeDetectorRef) { }
+                private cdRef: ChangeDetectorRef,
+                private appRef: ApplicationRef) { }
 
     ngOnInit(): void {
 
@@ -366,6 +366,7 @@ export class UpdateAllComponent implements OnInit {
     }
 
     updateStudentField(key: any, student: any, newValue: any, inputType: any): void {
+        console.log(key);
         if (student[key] !== newValue) {
             // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
             // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
@@ -374,46 +375,107 @@ export class UpdateAllComponent implements OnInit {
             };
             if (key == 'category') {
                 data['newCategoryField'] = newValue;
-            } else if (key == 'mobileNumber') {
-                if (newValue.toString().length==10|| newValue.toString().length==0){
-                    data['mobileNumber'] = newValue;
+            }else if (key == 'mobileNumber') {
+                if (newValue.toString().length!==10){
+                    //empty the mobile number
+                    if(newValue.toString().length==0){
+                        newValue=0;
+                        data['mobileNumber'] = newValue;
+                        alert('Mobile number emptied!');
+                    }else{
+                        if(student['mobileNumber']===''){
+                            student['mobileNumber']=0;
+                        }else{
+                            student['mobileNumber']='';
+                        }
+                        alert('Mobile number should be 10 digits!');
+                        return;
+                    }
                 }else{
-                    alert('Mobile number should be 10 digits');
-                    return;
+                    data['mobileNumber'] = newValue;
+                    alert('Mobile number added succesfully!');
                 }
 
             }else if (key == 'secondMobileNumber') {
-                if (newValue.toString().length==10|| newValue.toString().length==0){
+                if (newValue.toString().length!==10){
+                    if(newValue.toString().length==0){
+                        newValue=0;
+                        data['secondMobileNumber'] = newValue;
+                        alert('Mobile number emptied!');
+                    }else{
+                        if(student['secondMobileNumber']===''){
+                            student['secondMobileNumber']=0;
+                        }else{
+                            student['secondMobileNumber']='';
+                        }
+                        alert('Mobile number should be 10 digits!');
+                        return;
+                    }
+                }else{
                     data['secondMobileNumber'] = newValue;
+                    alert('Mobile number added succesfully!');
                 }
-                else{
-                    alert('Alternate Mobile number should be 10 digits');
-                    return;
-                }
+
             }else if (key == 'familySSMID') {
-                if (newValue.toString().length==8|| newValue.toString().length==0){
+                if (newValue.toString().length!==8){
+                    if(newValue.toString().length==0){
+                        newValue=0;
+                        data['familySSMID'] = newValue;
+                        alert('familySSMID emptied!');
+                    }else{
+                        if(student['familySSMID']===''){
+                            student['familySSMID']=0;
+                        }else{
+                            student['familySSMID']='';
+                        }
+                        alert('familySSMID number should be 8 digits!');
+                        return;
+                    }
+                }else{
                     data['familySSMID'] = newValue;
+                    alert('familySSMID number added succesfully!');
                 }
-                else{
-                    alert('FamilySSMID number should be 8 digits');
-                    return;
-                }
+
             }else if (key == 'childSSMID') {
-                if (newValue.toString().length==9|| newValue.toString().length==0){
+                if (newValue.toString().length!==9){
+                    if(newValue.toString().length==0){
+                        newValue=0;
+                        data['childSSMID'] = newValue;
+                        alert('childSSMID number emptied!');
+                    }else{
+                        if(student['childSSMID']===''){
+                            student['childSSMID']=0;
+                        }else{
+                            student['childSSMID']='';
+                        }
+                        alert('childSSMID number should be 9 digits!');
+                        return;
+                    }
+                }else{
                     data['childSSMID'] = newValue;
+                    alert('childSSMID number added succesfully!');
                 }
-                else{
-                    alert('ChildSSMID number should be 9 digits');
-                    return;
-                }
+
             }else if (key == 'aadharNum') {
-                if (newValue.toString().length==12|| newValue.toString().length==0){
+                if (newValue.toString().length!==12){
+                    if(newValue.toString().length==0){
+                        newValue=0;
+                        data['aadharNum'] = newValue;
+                        alert('aadhar Number emptied!');
+                    }else{
+                        if(student['aadharNum']===''){
+                            student['aadharNum']=0;
+                        }else{
+                            student['aadharNum']='';
+                        }
+                        alert('aadhar Number should be 12 digits!');
+                        return;
+                    }
+                }else{
                     data['aadharNum'] = newValue;
+                    alert('aadhar Number added succesfully!');
                 }
-                else{
-                    alert('Aadhar number should be 12 digits');
-                    return;
-                }
+
             }else if (key == 'religion') {
                 data['newReligionField'] = newValue;
             } else {
@@ -427,6 +489,7 @@ export class UpdateAllComponent implements OnInit {
             }
             this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
                 response => {
+                    console.log(response.code+"hrererer");
                     if (response.status === 'success') {
                         student[key] = newValue;
                         document.getElementById(key + student.dbId).classList.remove('updatingField');
