@@ -37,6 +37,16 @@ export class LoginComponent {
             this.isLoading = false;
         });
     }
+    
+    submit() {
+        var elem = document.getElementById('username')
+        if (document.activeElement === elem) {
+            document.getElementById('pass').focus()
+        }
+        else {
+            this.login()
+        }
+    }
 
     toggleVisibilityMode(): void {
         this.visibilityMode = !this.visibilityMode;
