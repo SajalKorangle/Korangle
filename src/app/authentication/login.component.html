@@ -6,103 +6,59 @@
             </div -->
             <div class="card-content" style="padding-top: 25vh" *ngIf="!isLoading">
 
-                <div class="row">
-                    <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"
-                         align="center">
-                        <!-- div class="form-group form-black label-floating">
-                            <label class="control-label">Username</label>
-                            <input type="text"
-                                   class="form-control"
-                                   [(ngModel)]="username">
-                        </div -->
-                        <mat-form-field class="example-full-width">
-                            <input matInput
-                                   type="text"
-                                   placeholder="Mobile No."
-                                   [(ngModel)]="username">
-                        </mat-form-field>
+                <form (ngSubmit)="submit()">
+
+
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"
+                             align="center">
+
+                            <mat-form-field class="example-full-width">
+                                <input matInput id="username" type="text"
+                                       [(ngModel)]="username"
+                                       placeholder="Mobile No."
+                                       name="username">
+                            </mat-form-field>
+
+                        </div>
+
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" align="center">
-                        <!-- div class="form-group form-black label-floating">
-                            <label class="control-label">Password</label>
-                            <input type="password"
-                                   class="form-control"
-                                   [(ngModel)]="password">
-                        </div -->
-                        <!-- mat-form-field class="example-full-width">
-                            <input matInput
-                                   showHideInput
-                                   id="mysecretpassword"
-                                   type="password"
-                                   placeholder="Password"
-                                   [(ngModel)]="password">
-                            <i matSuffix
-                               class="material-icons"
-                               showHideTrigger="mysecretpassword"
-                               [showHideStatus]="{ materialIcon: true, id: 'mysecretpassword' }"
-                            ></i>
-                        </mat-form-field -->
-                        <mat-form-field class="example-full-width">
-                            <input matInput
-                                   type="{{visibilityMode ? 'text':'password'}}"
-                                   placeholder="Password"
-                                   [(ngModel)]="password">
-                            <i matSuffix
-                               class="material-icons"
-                               (click)="toggleVisibilityMode()"
-                            >{{getVisibilityMode()}}</i>
-                        </mat-form-field>
-                    </div>
-                </div>
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"
+                             align="center">
 
-                <div class="row">
-                    <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" align="center">
-                        <button type="submit" class="btn btn-danger" (click)="login();">Login</button>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
+                            <mat-form-field class="example-full-width">
+                                <input matInput id="pass"
+                                       type="{{visibilityMode ? 'text':'password'}}"
+                                       placeholder="Password"
+                                       [(ngModel)]="password"
+                                       name="password">
+                                <i matSuffix
+                                   class="material-icons"
+                                   (click)="toggleVisibilityMode()"
+                                >{{getVisibilityMode()}}</i>
+                            </mat-form-field>
 
-                <!-- div class="col-sm-6 col-sm-offset-4">
-                    <div class="card card-register">
-                        <h3 class="title">Welcome</h3>
-                        <form class="register-form">
-                            <label>Username</label>
-                            <input type="text" class="form-control" placeholder="Email">
-
-                            <label>Password</label>
-                            <input type="password" class="form-control" placeholder="Password">
-                            <button class="btn btn-success btn-block btn-round">Login</button>
-                        </form>
-                        <div class="forgot">
-                            <a href="#">Forgot password?</a>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-1 col-md-offset-5 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
-                        <a href="https://msg91.com/startups/?utm_source=startup-banner">
-                            <img src="https://msg91.com/images/startups/msg91Badge.png"
-                                 width="4" height="3" title="MSG91 - SMS for Startups"
-                                 alt="Bulk SMS - MSG91">
-                        </a>
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"
+                             align="center">
+                            <button type="submit" class="btn btn-danger">Login</button>
+                        </div>
                     </div>
-                </div -->
+
+                </form>
+
+                <div class="clearfix"></div>
 
             </div>
 
             <ng-container *ngIf="isLoading">
-                <!-- div class="loader-container" align="center">
-                    <div class="loader"></div>
-                </div -->
                 <app-loading-spinner [user]="user"></app-loading-spinner>
             </ng-container>
-            <!-- button (click)="login()"
-                    class="btn waves-effect waves-light"
-                    type="submit" name="action">Login</button -->
         </div>
     </div>
 </div>
