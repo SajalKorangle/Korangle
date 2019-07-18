@@ -366,8 +366,8 @@ export class UpdateAllComponent implements OnInit {
     }
 
     updateStudentField(key: any, student: any, newValue: any, inputType: any): void {
-        console.log(key);
-        if (student[key] !== newValue) {
+        // console.log(key);
+        if (student[key] != newValue) {
             // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
             // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
             const data = {
@@ -377,110 +377,62 @@ export class UpdateAllComponent implements OnInit {
                 data['newCategoryField'] = newValue;
             }else if (key == 'mobileNumber') {
                 if (newValue.toString().length!==10){
-                    //empty the mobile number
-                    if(newValue.toString().length==0){
-                        newValue=0;
-                        data['mobileNumber'] = newValue;
-                        alert('Mobile number emptied!');
-                    }else{
-                        if(student['mobileNumber']===''){
-                            student['mobileNumber']=0;
-                        }else{
-                            student['mobileNumber']='';
-                        }
+                    if (student.mobileNumber!=null) {
                         alert('Mobile number should be 10 digits!');
-                        return;
                     }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.mobileNumber;
+                    return;
                 }else{
                     data['mobileNumber'] = newValue;
-                    alert('Mobile number added succesfully!');
                 }
 
             }else if (key == 'secondMobileNumber') {
                 if (newValue.toString().length!==10){
-                    if(newValue.toString().length==0){
-                        newValue=0;
-                        data['secondMobileNumber'] = newValue;
-                        alert('Mobile number emptied!');
-                    }else{
-                        if(student['secondMobileNumber']===''){
-                            student['secondMobileNumber']=0;
-                        }else{
-                            student['secondMobileNumber']='';
-                        }
-                        alert('Mobile number should be 10 digits!');
-                        return;
+                    if (student.secondMobileNumber!=null) {
+                        alert('Alternate Mobile number should be 10 digits!');
                     }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.secondMobileNumber;
+                    return;
                 }else{
                     data['secondMobileNumber'] = newValue;
-                    alert('Mobile number added succesfully!');
                 }
 
             }else if (key == 'familySSMID') {
                 if (newValue.toString().length!==8){
-                    if(newValue.toString().length==0){
-                        newValue=0;
-                        data['familySSMID'] = newValue;
-                        alert('familySSMID emptied!');
-                    }else{
-                        if(student['familySSMID']===''){
-                            student['familySSMID']=0;
-                        }else{
-                            student['familySSMID']='';
-                        }
-                        alert('familySSMID number should be 8 digits!');
-                        return;
+                    if (student.familySSMID!=null) {
+                        alert('familySSMID should be 8 digits!');
                     }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.familySSMID;
+                    return;
                 }else{
                     data['familySSMID'] = newValue;
-                    alert('familySSMID number added succesfully!');
                 }
-
             }else if (key == 'childSSMID') {
                 if (newValue.toString().length!==9){
-                    if(newValue.toString().length==0){
-                        newValue=0;
-                        data['childSSMID'] = newValue;
-                        alert('childSSMID number emptied!');
-                    }else{
-                        if(student['childSSMID']===''){
-                            student['childSSMID']=0;
-                        }else{
-                            student['childSSMID']='';
-                        }
-                        alert('childSSMID number should be 9 digits!');
-                        return;
+                    if (student.childSSMID!=null) {
+                        alert('childSSMID should be 9 digits!');
                     }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.childSSMID;
+                    return;
                 }else{
                     data['childSSMID'] = newValue;
-                    alert('childSSMID number added succesfully!');
                 }
-
             }else if (key == 'aadharNum') {
                 if (newValue.toString().length!==12){
-                    if(newValue.toString().length==0){
-                        newValue=0;
-                        data['aadharNum'] = newValue;
-                        alert('aadhar Number emptied!');
-                    }else{
-                        if(student['aadharNum']===''){
-                            student['aadharNum']=0;
-                        }else{
-                            student['aadharNum']='';
-                        }
-                        alert('aadhar Number should be 12 digits!');
-                        return;
+                    if (student.aadharNum!=null) {
+                        alert('Aadhar number should be 12 digits!');
                     }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.aadharNum;
+                    return;
                 }else{
                     data['aadharNum'] = newValue;
-                    alert('aadhar Number added succesfully!');
                 }
-
             }else if (key == 'religion') {
                 data['newReligionField'] = newValue;
             } else {
                 data[key] = newValue;
             }
+
             document.getElementById(key + student.dbId).classList.add('updatingField');
             if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
                 (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = true;
