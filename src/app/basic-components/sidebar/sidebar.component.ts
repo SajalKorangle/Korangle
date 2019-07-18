@@ -29,19 +29,15 @@ declare const $: any;
             transition('false => true', animate('800ms ease-in'))
         ]),
     ],
-    providers: [  ],
-
 
 })
 export class SidebarComponent implements OnInit {
 
     @Input() user: User;
-    sessionChangePermission=false;
-    moduleList=[];
+
     green = 'green';
     warning = 'warning';
     session_list=SESSION_LIST;
-    callChange=false;
 
     settings = {
         path: 'user-settings',
@@ -76,7 +72,6 @@ export class SidebarComponent implements OnInit {
             .subscribe((event) => {
                 if(event instanceof NavigationStart) {
                     this.user.isLazyLoading = true;
-                    // this.checkChangeSession();
                 }
                 else if (
                     event instanceof NavigationEnd ||
@@ -91,7 +86,6 @@ export class SidebarComponent implements OnInit {
         if (this.user.section) {
             this.router.navigateByUrl(this.user.section.route);
         }
-
     }
 
     isMobileMenu() {
@@ -108,7 +102,6 @@ export class SidebarComponent implements OnInit {
     }
 
     checkChangeSession(){
-        // console.log(this.user.activeSchool.currentSessionDbId);
         return this.user.activeSchool && this.user.activeSchool.moduleList.find(module=>{
             return module.path=='school' && module.taskList.find(task=>{
                 return task.path=='change_session';
