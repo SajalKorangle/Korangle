@@ -16,8 +16,8 @@ import { SubjectOldService } from '../../services/subject-old.service';
 
         SubjectComponent,
 
-        SetClassSubjectComponent,
-        SetStudentSubjectComponent,
+        // SetClassSubjectComponent,
+        // SetStudentSubjectComponent,
 
     ],
 

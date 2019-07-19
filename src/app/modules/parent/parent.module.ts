@@ -17,10 +17,10 @@ import { ParentService } from './parent.service';
     declarations: [
 
         ParentComponent,
-        ViewProfileComponent,
-        ViewAttendanceComponent,
-        ViewMarksComponent,
-        ViewFeeComponent,
+        // ViewProfileComponent,
+        // ViewAttendanceComponent,
+        // ViewMarksComponent,
+        // ViewFeeComponent,
 
     ],
 

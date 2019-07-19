@@ -10,6 +10,51 @@ import {PrintTransferCertificateSecondFormatComponent} from "./print/print-trans
 
 const routes: Routes = [
     {
+        path: 'update_profile',
+        loadChildren: 'app/modules/students/pages/update-profile/update-profile.module#UpdateProfileModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'view_all',
+        loadChildren: 'app/modules/students/pages/view-all/view-all.module#ViewAllModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'generate_tc',
+        loadChildren: 'app/modules/students/pages/generate-tc/generate-tc.module#GenerateTcModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'promote_student',
+        loadChildren: 'app/modules/students/pages/promote-student/promote-student.module#PromoteStudentModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'change_class',
+        loadChildren: 'app/modules/students/pages/change-class/change-class.module#ChangeClassModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'add_student',
+        loadChildren: 'app/modules/students/pages/add-student/add-student.module#AddStudentModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'upload_list',
+        loadChildren: 'app/modules/students/pages/upload_list/upload-list.module#UploadListModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'update_all',
+        loadChildren: 'app/modules/students/pages/update_all/update-all.module#UpdateAllModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'i_cards',
+        loadChildren: 'app/modules/students/pages/i-cards/i-cards.module#ICardsModule',
+        data: {moduleName: 'students'},
+    },
+    {
         path: '',
         component: StudentComponent,
     },

@@ -17,9 +17,9 @@ import { VehicleService } from './vehicle.service';
 
         VehicleComponent,
 
-        AddBusStopComponent,
-        DeleteBusStopComponent,
-        UpdateBusStopComponent,
+        // AddBusStopComponent,
+        // DeleteBusStopComponent,
+        // UpdateBusStopComponent,
 
     ],
 

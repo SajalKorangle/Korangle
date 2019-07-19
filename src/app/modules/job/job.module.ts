@@ -16,10 +16,10 @@ import { JobRoutingModule } from './job.routing';
 
         JobComponent,
 
-        ViewProfileComponent,
-        ViewAttendanceComponent,
-        ApplyLeaveComponent,
-        ViewPaymentComponent,
+        // ViewProfileComponent,
+        // ViewAttendanceComponent,
+        // ApplyLeaveComponent,
+        // ViewPaymentComponent,
 
     ],
 

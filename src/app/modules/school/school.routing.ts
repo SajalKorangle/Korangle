@@ -6,6 +6,11 @@ import { SchoolComponent } from './school.component';
 
 const routes: Routes = [
     {
+        path: 'update_profile',
+        loadChildren: 'app/modules/school/pages/update-profile/update-profile.module#UpdateProfileModule',
+        data: {moduleName: 'school'},
+    },
+    {
         path: '',
         component: SchoolComponent,
     },

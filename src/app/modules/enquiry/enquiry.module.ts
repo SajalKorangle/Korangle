@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { ComponentsModule } from '../../components/components.module';
 
 import { EnquiryComponent } from './enquiry.component';
@@ -14,7 +13,6 @@ import { PrintEnquiryListComponent } from "./print/print-enquiry-list/print-enqu
     declarations: [
 
         EnquiryComponent,
-
         PrintEnquiryListComponent
 
     ],

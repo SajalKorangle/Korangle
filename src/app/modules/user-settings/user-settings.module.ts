@@ -16,10 +16,10 @@ import { UserSettingsRoutingModule } from './user-settings.routing';
 
         UserSettingsComponent,
 
-        UpdateProfileComponent,
-        ChangePasswordComponent,
-        ContactUsComponent,
-        CreateSchoolComponent,
+        // UpdateProfileComponent,
+        // ChangePasswordComponent,
+        // ContactUsComponent,
+        // CreateSchoolComponent,
 
     ],
 

@@ -23,12 +23,12 @@ import {ExcelService} from "../../excel/excel-service";
 @NgModule({
     declarations: [
         EmployeeComponent,
-        AddEmployeeComponent,
-        ViewAllComponent,
-        UpdateProfileComponent,
-        AssignTaskComponent,
-        ICardsComponent,
-        ExperienceCertiComponent,
+        // AddEmployeeComponent,
+        // ViewAllComponent,
+        // UpdateProfileComponent,
+        // AssignTaskComponent,
+        // ICardsComponent,
+        // ExperienceCertiComponent,
         PrintEmployeeExpCertiComponent,
         PrintEmployeeICardsComponent,
         PrintEmployeeListComponent

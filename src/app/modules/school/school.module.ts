@@ -13,7 +13,7 @@ import { SchoolRoutingModule } from './school.routing';
     declarations: [
 
         SchoolComponent,
-        UpdateProfileComponent,
+        // UpdateProfileComponent,
 
     ],
 
