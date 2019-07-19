@@ -20,7 +20,7 @@ export class ViewAllComponent implements OnInit {
     enquiryList = [];
 
     classList = [];
-    parentEmployee = []; 
+    employeeList = []; 
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
@@ -33,21 +33,15 @@ export class ViewAllComponent implements OnInit {
                 private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
-        this.classService.getClassList(this.user.jwt).then(classList => {
-            this.classList = classList;
-        });
-
         let data = {
             parentSchool: this.user.activeSchool.dbId
         }
-        this.employeeService.getEmployeeProfileList(data, this.user.jwt)
-            .then(
-                res =>{
-                    this.parentEmployee = res;
-            },
-            error => {
-                console.log(error)
-            });
+
+        Promise.all([this.classService.getClassList(this.user.jwt), this.employeeService.getEmployeeProfileList(data, this.user.jwt)])
+            .then(res => {
+                this.classList = res[0];
+                this.employeeList = res[1];
+            })
     }
 
     todaysDate(): string {
@@ -70,15 +64,26 @@ export class ViewAllComponent implements OnInit {
             parentSchool: this.user.activeSchool.dbId,
         };
 
-        this.enquiryList = [];
         this.isLoading = true;
         this.enquiryService.getEnquiryList(data, this.user.jwt).then(enquiryList => {
             this.isLoading = false;
-            this.enquiryList = enquiryList;
+            this.enquiryList = enquiryList; 
         }, error => {
             this.isLoading = false;
         });
+        
+    }    
 
+    getEmployeeName(employeeId: number): string {
+        let employeeName = '';
+        this.employeeList.every(employee => {
+            if (employeeId === employee.id) {
+                employeeName = employee.name;
+                return false;
+            }
+            return true;
+        });
+        return employeeName;
     }
 
     printEnquiryList(){

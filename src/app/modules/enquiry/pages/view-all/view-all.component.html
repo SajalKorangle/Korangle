@@ -71,11 +71,7 @@
                         <td>{{getClassName(enquiry.parentClass)}}</td>
                         <td>{{enquiry.address}}</td>
                         <td>{{enquiry.remark}}</td>
-                        <span *ngFor="let employee of parentEmployee">
-                            <td *ngIf="enquiry.parentEmployee === employee.id"
-                                >{{ employee.name }}
-                            </td>
-                        </span>
+                        <td>{{getEmployeeName(enquiry.parentEmployee)}}</td>
                     </ng-container>
                 </tr>
             </ng-container>
