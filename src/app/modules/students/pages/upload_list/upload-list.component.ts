@@ -314,7 +314,7 @@ export class UploadListComponent implements OnInit {
         
         console.log('prev', this.data);
         this.data = this.data.filter(value => {
-            if (value.length < 1 ) {
+            if (value.length <= 1 ) {
                 return false;
             }
             return true;
@@ -322,7 +322,7 @@ export class UploadListComponent implements OnInit {
 
         this.data.forEach((student, index) => {
             if (index >= this.numberOfFillerRows) {
-                let dualList = this.validateStudent(student, index);
+                let dualList = this.validateStudent(student);
                 let errorColumnList = dualList[0];
                 let deletedColumnList = dualList[1];
                 if (errorColumnList.length > 0) {
@@ -354,9 +354,7 @@ export class UploadListComponent implements OnInit {
         }
     }
 
-    validateStudent(student: any, index: number): any {
-
-        // let rowNumber = index+1;
+    validateStudent(student: any): any {
 
         let dualList = [];
 

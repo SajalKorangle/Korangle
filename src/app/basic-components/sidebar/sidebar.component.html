@@ -45,11 +45,30 @@
                     <option value="Parent">Parent</option>
                 </select>
 
+                <br/>
+
             </ng-container>
         </ng-container>
 
+        <ng-container *ngIf="checkChangeSession()">
+
+            <select [class.sessionMargin61]="user.schoolList.length>1"
+                    [class.sessionMargin60]="user.schoolList.length==1"
+                    [(ngModel)]="user.activeSchool.currentSessionDbId"
+                    (ngModelChange)="handleSessionChange()"
+                    style="padding: 0px; border: none; background-color: transparent;">
+                <option *ngFor="let session of session_list;"
+                        [ngValue]="session.id">
+                    {{session.name}}
+                </option>
+            </select>
+
+
+        </ng-container>
+
         <!-- Current Session Name -->
-        <div [class.sessionMargin68]="user.schoolList.length>1"
+        <div  *ngIf="!checkChangeSession()"
+              [class.sessionMargin68]="user.schoolList.length>1"
               [class.sessionMargin60]="user.schoolList.length==1">
             <span *ngIf="user.activeSchool.currentSessionDbId==1">2017-18</span>
             <span *ngIf="user.activeSchool.currentSessionDbId==2">2018-19</span>

@@ -109,7 +109,6 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     updateProfile(): void {
-
         if (this.currentStudent.busStopDbId == 0) {
             this.currentStudent.busStopDbId = null;
         }
@@ -122,6 +121,20 @@ export class UpdateProfileComponent implements OnInit {
             alert('Number of digits in Family SSMID should be 8');
             return;
         }
+
+        if (this.currentStudent.mobileNumber
+            && this.currentStudent.mobileNumber.toString().length !== 0
+            && this.currentStudent.mobileNumber.toString().length !== 10) {
+            alert("mobile number should be of l0 digits!");
+            return;
+        }
+        if (this.currentStudent.secondMobileNumber
+            && this.currentStudent.secondMobileNumber.toString().length !== 0
+            && this.currentStudent.secondMobileNumber.toString().length !== 10) {
+            alert("alternate mobile number should be of l0 digits!");
+            return;
+        }
+
         if (this.currentStudent.childSSMID
             && this.currentStudent.childSSMID.toString().length !== 0
             && this.currentStudent.childSSMID.toString().length !== 9) {

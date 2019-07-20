@@ -1,9 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {EmitterService} from '../../../../services/emitter.service';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../student-old.service';
-
 import { ChangeDetectorRef } from '@angular/core';
 
 class ColumnHandle {
@@ -366,9 +364,8 @@ export class UpdateAllComponent implements OnInit {
     }
 
     updateStudentField(key: any, student: any, newValue: any, inputType: any): void {
-        console.log(newValue);
-        // return;
-        if (student[key] !== newValue) {
+        // console.log(key);
+        if (student[key] != newValue) {
             // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
             // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
             const data = {
@@ -376,18 +373,70 @@ export class UpdateAllComponent implements OnInit {
             };
             if (key == 'category') {
                 data['newCategoryField'] = newValue;
-            } else if (key == 'religion') {
+            }else if (key == 'mobileNumber') {
+                if (newValue.toString().length!==10){
+                    if (student.mobileNumber!=null) {
+                        alert('Mobile number should be 10 digits!');
+                    }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.mobileNumber;
+                    return;
+                }else{
+                    data['mobileNumber'] = newValue;
+                }
+
+            }else if (key == 'secondMobileNumber') {
+                if (newValue.toString().length!==10){
+                    if (student.secondMobileNumber!=null) {
+                        alert('Alternate Mobile number should be 10 digits!');
+                    }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.secondMobileNumber;
+                    return;
+                }else{
+                    data['secondMobileNumber'] = newValue;
+                }
+
+            }else if (key == 'familySSMID') {
+                if (newValue.toString().length!==8){
+                    if (student.familySSMID!=null) {
+                        alert('familySSMID should be 8 digits!');
+                    }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.familySSMID;
+                    return;
+                }else{
+                    data['familySSMID'] = newValue;
+                }
+            }else if (key == 'childSSMID') {
+                if (newValue.toString().length!==9){
+                    if (student.childSSMID!=null) {
+                        alert('childSSMID should be 9 digits!');
+                    }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.childSSMID;
+                    return;
+                }else{
+                    data['childSSMID'] = newValue;
+                }
+            }else if (key == 'aadharNum') {
+                if (newValue.toString().length!==12){
+                    if (student.aadharNum!=null) {
+                        alert('Aadhar number should be 12 digits!');
+                    }
+                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.aadharNum;
+                    return;
+                }else{
+                    data['aadharNum'] = newValue;
+                }
+            }else if (key == 'religion') {
                 data['newReligionField'] = newValue;
             } else {
                 data[key] = newValue;
             }
+
             document.getElementById(key + student.dbId).classList.add('updatingField');
             if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
                 (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = true;
             } else if (inputType === 'list') {
 
             }
-            // console.log(data);
             this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
                 response => {
                     if (response.status === 'success') {
