@@ -1,12 +1,30 @@
-@import "../../../assets/sass/md/variables";
-@import "../../../assets/sass/md/typography";
-@import "../../../assets/sass/md/colors";
+// @import "../../../assets/sass/md/variables";
+// @import "../../../assets/sass/md/typography";
+// @import "../../../assets/sass/md/colors";
 $dayBase: 60px;
 $cloud: lightgrey;
 $base: $dayBase / 5;
 $seafoam: green;
 $light-blue-grey: lightBlue;
 $concrete: grey;
+
+$white: #ffffff; $rgb-white: "255,255,255" !default;
+
+$teal-50: #e0f2f1 !default;
+$teal-100: #b2dfdb !default;
+$teal-200: #80cbc4 !default;
+$teal-300: #4db6ac !default;
+$teal-400: #26a69a !default;
+$teal-500: #009688 !default;
+$teal-600: #00897b !default;
+$teal-700: #00796b !default;
+$teal-800: #00695c !default;
+$teal-900: #004d40 !default;
+$teal-A100: #a7ffeb !default;
+$teal-A200: #64ffda !default;
+$teal-A400: #1de9b6 !default;
+$teal-A700: #00bfa5 !default;
+$teal: $teal-500 !default;
 
 
 .calendar {
