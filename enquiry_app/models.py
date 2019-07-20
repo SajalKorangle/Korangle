@@ -37,5 +37,3 @@ class Enquiry(models.Model):
     class Meta:
         db_table = 'enquiry'
 
-    def __str__(self):
-        return str(self.id)
