@@ -45,6 +45,8 @@ export class ApproveLeaveComponent implements OnInit {
 
     ngOnInit(): void {
 
+        this.selectedSession = this.sessionList.find(item => item.id==this.user.activeSchool.currentSessionDbId);
+
         LEAVE_STATUS_LIST.forEach(status => {
             this.statusList.push(status);
         });
