@@ -53,10 +53,6 @@ const routes: Routes = [
         path: 'expenses',
         loadChildren: 'app/modules/expenses/expense.module#ExpenseModule',
     },
-    /*{
-        path: 'fees-old',
-        loadChildren: 'app/modules/fees-second/fee.module#FeeModule',
-    },*/
     {
         path: 'fees',
         loadChildren: 'app/modules/fees/fee.module#FeeModule',
