@@ -23,7 +23,7 @@ import { BasicComponentsModule } from "../basic-components/basic-components.modu
 import { StudentFilterComponent } from './student-filter/student-filter.component';
 import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateComponent } from './day-date/day-date.component';
-import { CalendarComponent } from './calendar/calendar.component';
+// import { CalendarComponent } from './calendar/calendar.component';
 
 import { FeeReceiptListComponentOld } from './fees-table/fee-receipt-list-component-old.component';
 import { DiscountListOldComponent } from './discount-table/discount-list-old.component';
@@ -49,7 +49,7 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
         DiscountListOldComponent,
         MonthDateComponent,
         DayDateComponent,
-        CalendarComponent,
+        // CalendarComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -98,7 +98,7 @@ import {IndianCurrencyPipe} from '../pipes/indian-currency.pipe';
         DiscountListOldComponent,
         MonthDateComponent,
         DayDateComponent,
-        CalendarComponent,
+        // CalendarComponent,
         FeeReceiptListComponent,
         DiscountListComponent,
 
