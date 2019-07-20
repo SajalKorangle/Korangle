@@ -41,7 +41,7 @@
                 <mat-form-field style="margin-right: 15px;">
                     <mat-select placeholder="Collected By"
                                 [(ngModel)]="selectedEmployee">
-                        <mat-option *ngFor="let employee of getFilteredEmployeeList();" [value]="employee">
+                        <mat-option *ngFor="let employee of filteredEmployeeList;" [value]="employee">
                             {{employee.name}}
                         </mat-option>
                         <mat-option [value]="nullValue">
@@ -53,8 +53,20 @@
                 <mat-form-field style="margin-right: 15px;">
                     <mat-select placeholder="Select Payment Mode"
                                 [(ngModel)]="selectedModeOfPayment">
-                        <mat-option *ngFor="let modeOfPayment of getFilteredModeOfPaymentList();" [value]="modeOfPayment">
+                        <mat-option *ngFor="let modeOfPayment of filteredModeOfPaymentList;" [value]="modeOfPayment">
                             {{modeOfPayment}}
+                        </mat-option>
+                        <mat-option [value]="nullValue">
+                            All
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Collection of Classes"
+                                [(ngModel)]="selectedClassSection">
+                        <mat-option *ngFor="let classSection of filteredClassSectionList;" [value]="classSection">
+                            {{classSection.classs.name}}, {{classSection.section.name}}
                         </mat-option>
                         <mat-option [value]="nullValue">
                             All
@@ -89,7 +101,7 @@
                                       [subFeeReceiptList]="subFeeReceiptList"
                                       [studentList]="studentList"
                                       [studentSectionList]="studentSectionList"
-                                      [employeeList]="getFilteredEmployeeList()"
+                                      [employeeList]="filteredEmployeeList"
                                       [classList]="classList"
                                       [sectionList]="sectionList"></app-fee-receipt-list>
 

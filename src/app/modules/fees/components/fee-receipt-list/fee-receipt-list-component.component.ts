@@ -24,7 +24,7 @@ export class FeeReceiptListComponent {
     @Input() sectionList;
     @Input() employeeList;
     @Input() receiptColumnFilter;
-    @Input() number = 3;
+    @Input() number;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -62,7 +62,7 @@ export class FeeReceiptListComponent {
     }
 
     increaseNumber(): void {
-        this.number += 3;
+        this.number += this.number;
     }
 
     getStudentName(studentId: number): any {

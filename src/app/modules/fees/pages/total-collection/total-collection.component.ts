@@ -42,7 +42,13 @@ export class TotalCollectionComponent implements OnInit {
     serviceAdapter: TotalCollectionServiceAdapter;
 
     selectedEmployee = null;
+    filteredEmployeeList = [];
+
     selectedModeOfPayment = null;
+    filteredModeOfPaymentList = [];
+
+    selectedClassSection=null;
+    filteredClassSectionList = [];
 
     isInitialLoading = false;
     isLoading = false;
@@ -82,7 +88,7 @@ export class TotalCollectionComponent implements OnInit {
             'subFeeReceiptList': this.subFeeReceiptList,
             'studentList': this.studentList,
             'studentSectionList': this.studentSectionList,
-            'employeeList': this.getFilteredEmployeeList(),
+            'employeeList': this.filteredEmployeeList,
             'classList': this.classList,
             'sectionList': this.sectionList,
             'selectedEmployee': this.selectedEmployee,
@@ -92,26 +98,37 @@ export class TotalCollectionComponent implements OnInit {
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
     }
 
+    getClass(studentId: any, sessionId: any): any {
+        return  this.classList.find(classs => {
+            return classs.dbId == this.studentSectionList.find(studentSection => {
+                return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
+            }).parentClass;
+        });
+    }
+
+    getSection(studentId: any, sessionId: any): any {
+        return this.sectionList.find(section => {
+            return section.id == this.studentSectionList.find(studentSection => {
+                return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
+            }).parentDivision;
+        });
+    }
+
+    getClassAndSection(studentId: any, sessionId: any): any {
+        const classs=this.getClass(studentId,sessionId);
+        const section=this.getSection(studentId,sessionId);
+        return {
+            'classs': classs,
+            'section': section,
+        };
+    }
+
     detectChanges(): void {
         this.cdRef.detectChanges();
     }
 
     getReceiptColumnFilterKeys(): any {
         return Object.keys(this.receiptColumnFilter);
-    }
-
-    getFilteredEmployeeList(): any {
-        let tempEmployeeIdList = this.feeReceiptList.map(a => a.parentEmployee);
-        tempEmployeeIdList = tempEmployeeIdList.filter((item, index) => {
-            return tempEmployeeIdList.indexOf(item) == index;
-        });
-        return this.employeeList.filter(employee => {
-            return tempEmployeeIdList.includes(employee.id);
-        });
-    }
-
-    getFilteredModeOfPaymentList(): any {
-        return [...new Set(this.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {return a != null;});
     }
 
     getFilteredFeeReceiptList(): any {
@@ -125,6 +142,13 @@ export class TotalCollectionComponent implements OnInit {
             tempList = tempList.filter(feeReceipt => {
                 return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
             })
+        }
+        if (this.selectedClassSection) {
+            tempList = tempList.filter(feeReceipt => {
+                let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
+                return classSection.classs.dbId == this.selectedClassSection.classs.dbId
+                    && classSection.section.id == this.selectedClassSection.section.id;
+            });
         }
         return tempList;
     }
