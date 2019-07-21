@@ -15,7 +15,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 
 
-import {CdkTableModule} from '@angular/cdk/table';
 
 import { BasicComponentsModule } from "../basic-components/basic-components.module";
 
@@ -31,8 +30,6 @@ import { DiscountListComponent } from "../modules/fees/components/discount-list/
 
 import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
-import { GradePipe } from '../pipes/grade.pipe';
-import { MoneyFormatPipe } from '../pipes/money-format.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 
 
@@ -46,8 +43,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 
         AmountInWordsPipe,
         DateInWordsPipe,
-        GradePipe,
-        MoneyFormatPipe,
         IndianCurrencyPipe,
 
         EmployeeFilterComponent,
@@ -62,7 +57,8 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         FormsModule,
         ReactiveFormsModule,
 
-        CdkTableModule,
+        ScrollDispatchModule,
+        // CdkTableModule,
 
         MatRadioModule,
         MatSelectModule,
@@ -74,7 +70,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatDatepickerModule,
         MatExpansionModule,
         MatSortModule,
-        ScrollDispatchModule,
 
         BasicComponentsModule,
 
@@ -94,15 +89,14 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 
         AmountInWordsPipe,
         DateInWordsPipe,
-        GradePipe,
-        MoneyFormatPipe,
         IndianCurrencyPipe,
 
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
 
-        CdkTableModule,
+        ScrollDispatchModule,
+        // CdkTableModule,
 
         MatRadioModule,
         MatSelectModule,
@@ -114,7 +108,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatDatepickerModule,
         MatExpansionModule,
         MatSortModule,
-        ScrollDispatchModule,
 
     ]
 })

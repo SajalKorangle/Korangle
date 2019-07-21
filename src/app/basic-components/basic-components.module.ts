@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from "@angular/forms";
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,7 +21,6 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 
         CommonModule,
         FormsModule,
-        ReactiveFormsModule,
 
         MatProgressBarModule,
         MatFormFieldModule,
@@ -36,7 +35,6 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 
         CommonModule,
         FormsModule,
-        ReactiveFormsModule,
 
         MatProgressBarModule,
         MatFormFieldModule,
