@@ -58,7 +58,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         ReactiveFormsModule,
 
         ScrollDispatchModule,
-        // CdkTableModule,
 
         MatRadioModule,
         MatSelectModule,
@@ -96,7 +95,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         ReactiveFormsModule,
 
         ScrollDispatchModule,
-        // CdkTableModule,
 
         MatRadioModule,
         MatSelectModule,
