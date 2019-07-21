@@ -20,7 +20,6 @@ import {VehicleService} from "../../../vehicle/vehicle.service";
 import {ClassService} from "../../../../services/class.service";
 import {EmployeeService} from "../../../../services/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {EmitterService} from "../../../../services/emitter.service";
 
 declare const $: any;
 
