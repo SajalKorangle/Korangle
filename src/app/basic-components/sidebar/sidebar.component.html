@@ -1,8 +1,5 @@
 <div class="logo">
     <span style="margin-left: 10px;">Hi {{user.first_name}}!</span>
-    <!--<a style="float: right; cursor: pointer;"-->
-       <!--*ngIf="!user.section"-->
-       <!--(click)="logout()">Logout</a>-->
     <br/>
     <a class="simple-text" disabled="true" *ngIf="user.schoolList.length > 0">
         <div class="logo-img" *ngIf="user.activeSchool">

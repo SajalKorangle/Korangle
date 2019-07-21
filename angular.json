@@ -23,7 +23,6 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "src/assets/sass/material-dashboard.scss",
               "src/styles.scss"
             ],
             "scripts": [
