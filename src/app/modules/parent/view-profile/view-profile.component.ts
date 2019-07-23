@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnChanges } from '@angular/core';
 
 import { StudentOldService } from '../../students/student-old.service';
 import {BusStopService} from '../../../services/bus-stop.service';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
   selector: 'view-profile',
@@ -12,7 +13,7 @@ import {BusStopService} from '../../../services/bus-stop.service';
 
 export class ViewProfileComponent implements OnInit, OnChanges {
 
-    @Input() user;
+     user;
 
     @Input() studentId;
 
@@ -30,6 +31,8 @@ export class ViewProfileComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.selectedStudent = null;
 
         this.busStopList = [];

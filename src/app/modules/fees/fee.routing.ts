@@ -39,19 +39,19 @@ const routes: Routes = [
 
     {
         path: 'generate_fees_report',
-        loadChildren: 'app/modules/fees/pages/generate_fees_report/generate_fees_report.module#GenerateFeeReportModule',
+        loadChildren: 'app/modules/fees/pages/generate-fees-report/generate-fees-report.module#GenerateFeesReportModule',
         data: {moduleName: 'fees'},
     },
 
     {
         path: 'give_discount',
-        loadChildren: 'app/modules/fees/pages/give_discount/give_discount.module#GiveDiscountModule',
+        loadChildren: 'app/modules/fees/pages/give-discount/give-discount.module#GiveDiscountModule',
         data: {moduleName: 'fees'},
     },
 
     {
         path: 'total_discount',
-        loadChildren: 'app/modules/fees/pages/total_discount/total_discount.module#TotalDiscountModule',
+        loadChildren: 'app/modules/fees/pages/total-discount/total-discount.module#TotalDiscountModule',
         data: {moduleName: 'fees'},
     },
 
@@ -69,13 +69,13 @@ const routes: Routes = [
 
     {
         path: 'update_student_fees',
-        loadChildren: 'app/modules/fees/pages/update-student-fees/update-student-fees.module#UpdateStudentFeeModule',
+        loadChildren: 'app/modules/fees/pages/update-student-fees/update-student-fees.module#UpdateStudentFeesModule',
         data: {moduleName: 'fees'},
     },
 
     {
         path: 'set_school_fees',
-        loadChildren: 'app/modules/fees/pages/set-school-fees/set-school-fees.module#SetSchoolFeeModule',
+        loadChildren: 'app/modules/fees/pages/set-school-fees/set-school-fees.module#SetSchoolFeesModule',
         data: {moduleName: 'fees'},
     },
 

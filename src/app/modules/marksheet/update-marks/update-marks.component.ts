@@ -6,6 +6,7 @@ import {StudentOldService} from '../../students/student-old.service';
 import {Classs} from '../../../classes/classs';
 import {Section} from '../../../classes/section';
 import {StudentTest} from '../classes/student-test';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
     selector: 'update-marks',
@@ -16,7 +17,7 @@ import {StudentTest} from '../classes/student-test';
 
 export class UpdateMarksComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     selectedClass: Classs;
     selectedSection: Section;
@@ -48,6 +49,8 @@ export class UpdateMarksComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,

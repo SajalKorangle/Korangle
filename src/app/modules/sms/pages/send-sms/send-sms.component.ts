@@ -6,6 +6,7 @@ import { EmployeeService } from '../../../employee/employee.service';
 import { SmsService } from '../../sms.service';
 
 import { ChangeDetectorRef } from '@angular/core';
+import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -58,7 +59,7 @@ class EmployeeColumnFilter {
 
 export class SendSmsComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     includeSecondMobileNumber = false;
 
@@ -156,6 +157,7 @@ export class SendSmsComponent implements OnInit {
 
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.columnFilter = new ColumnFilter();
         this.employeeColumnFilter = new EmployeeColumnFilter();

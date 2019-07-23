@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
   selector: 'contact-us',
@@ -8,10 +9,13 @@ import { Component, Input } from '@angular/core';
 
 export class ContactUsComponent {
 
-    @Input() user;
+     user;
 
     isLoading = false;
 
     constructor () { }
+    ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+    }
 
 }

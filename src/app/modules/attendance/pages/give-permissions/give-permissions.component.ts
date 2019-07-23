@@ -9,6 +9,7 @@ import { ClassService } from '../../../../services/class.service';
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {EmployeeService} from '../../../employee/employee.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'give-permissions',
@@ -19,7 +20,7 @@ import {EmployeeService} from '../../../employee/employee.service';
 
 export class GivePermissionsComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     employeeList = [];
     moduleList = [];
@@ -42,6 +43,7 @@ export class GivePermissionsComponent implements OnInit {
                  private classService: ClassService) { }
 
     ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
 
         let request_employee_data = {
             parentSchool: this.user.activeSchool.dbId,

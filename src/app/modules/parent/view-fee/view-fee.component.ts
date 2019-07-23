@@ -23,6 +23,7 @@ import {VehicleService} from "../../vehicle/vehicle.service";
 import {EmployeeService} from "../../../services/employee.service";
 import {CommonFunctions} from "../../../classes/common-functions";
 import {ClassService} from "../../../services/class.service";
+import {DataStorage} from "../../../classes/data-storage";
 
 declare const $: any;
 
@@ -35,7 +36,7 @@ declare const $: any;
 
 export class ViewFeeComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -77,6 +78,7 @@ export class ViewFeeComponent implements OnInit {
                  private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.selectedStudentList = this.user.section.student.studentList;
 

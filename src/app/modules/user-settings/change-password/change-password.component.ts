@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import { UserSettingsService } from '../user-settings.service';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
   selector: 'change-password',
@@ -11,7 +12,7 @@ import { UserSettingsService } from '../user-settings.service';
 
 export class ChangePasswordComponent {
 
-    @Input() user;
+    user;
 
     oldPassword: any;
     newPassword: any;
@@ -20,6 +21,10 @@ export class ChangePasswordComponent {
     isLoading = false;
 
     constructor (private userSettingsService: UserSettingsService) { }
+
+    ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+    }
 
     changePassword(): void {
 

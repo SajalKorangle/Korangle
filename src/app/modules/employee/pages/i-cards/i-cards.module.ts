@@ -4,6 +4,7 @@ import { ICardsComponent } from "./i-cards.component";
 
 import {ICardsRoutingModule } from './i-cards.routing';
 import {ComponentsModule} from "../../../../components/components.module";
+import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {ComponentsModule} from "../../../../components/components.module";
     imports: [
         ICardsRoutingModule ,
         ComponentsModule,
+        NgxDatatableModule
     ],
     exports: [
     ],

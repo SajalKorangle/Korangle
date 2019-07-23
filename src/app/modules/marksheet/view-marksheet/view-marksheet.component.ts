@@ -11,6 +11,7 @@ import { startWith, map} from 'rxjs/operators';
 
 import { PrintService } from '../../../print/print-service';
 import { PRINT_MARKSHEET_SECOND_FORMAT, PRINT_MARKSHEET } from '../../../print/print-routes.constants';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
     selector: 'view-marksheet',
@@ -21,7 +22,7 @@ import { PRINT_MARKSHEET_SECOND_FORMAT, PRINT_MARKSHEET } from '../../../print/p
 
 export class ViewMarksheetComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     myControl = new FormControl();
 
@@ -42,6 +43,8 @@ export class ViewMarksheetComponent implements OnInit {
 
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.isListLoading = true;
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,

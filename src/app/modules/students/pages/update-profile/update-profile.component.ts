@@ -6,6 +6,7 @@ import { Section } from '../../../../classes/section';
 
 import { StudentOldService } from '../../student-old.service';
 import {BusStopService} from '../../../../services/bus-stop.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'update-profile',
@@ -16,7 +17,7 @@ import {BusStopService} from '../../../../services/bus-stop.service';
 
 export class UpdateProfileComponent implements OnInit {
 
-    @Input() user;
+   user;
 
     selectedClass: Classs;
     selectedSection: Section;
@@ -44,6 +45,8 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,

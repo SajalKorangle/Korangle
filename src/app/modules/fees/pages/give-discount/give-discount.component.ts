@@ -21,6 +21,7 @@ import {ClassService} from "../../../../services/class.service";
 import {EmployeeService} from "../../../../services/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {EmitterService} from "../../../../services/emitter.service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 declare const $: any;
 
@@ -33,7 +34,7 @@ declare const $: any;
 
 export class GiveDiscountComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -83,6 +84,8 @@ export class GiveDiscountComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new GiveDiscountServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

@@ -16,10 +16,10 @@ import { PrintSalarySheetListComponent } from './print/print-salary-sheet-list/p
     declarations: [
 
         SalaryComponent,
-        GeneratePayslipComponent,
-        RecordPaymentComponent,
-        ViewRecordComponent,
-        PrintSalarySheetComponent,
+        // GeneratePayslipComponent,
+        // RecordPaymentComponent,
+        // ViewRecordComponent,
+        // PrintSalarySheetComponent,
         PrintSalarySheetListComponent
 
     ],

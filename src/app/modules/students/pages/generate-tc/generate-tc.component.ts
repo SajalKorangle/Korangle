@@ -10,6 +10,7 @@ import { StudentOldService } from '../../student-old.service';
 import { SchoolService } from '../../../../services/school.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_TC } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'generate-tc',
@@ -20,7 +21,7 @@ import { PRINT_TC } from '../../../../print/print-routes.constants';
 
 export class GenerateTcComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     selectedClass: Classs;
     selectedSection: Section;
@@ -83,6 +84,7 @@ export class GenerateTcComponent implements OnInit {
 */
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         this.getSessionList();
         // this.getStudentList(this.user.activeSchool.currentSessionDbId);
     }

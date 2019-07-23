@@ -9,6 +9,7 @@ import {ClassService} from "../../../../services/class.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {EmitterService} from "../../../../services/emitter.service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'my-collection',
@@ -24,7 +25,7 @@ export class MyCollectionComponent implements OnInit {
     nullValue = null;
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+     user;
 
     startDate: any;
     endDate: any;
@@ -54,6 +55,7 @@ export class MyCollectionComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new MyCollectionServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

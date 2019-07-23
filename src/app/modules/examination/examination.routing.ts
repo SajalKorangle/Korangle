@@ -55,7 +55,7 @@ const routes: Routes = [
     },
     {
         path: 'generate_final_report',
-        loadChildren: 'app/modules/examination/pages/generate-final-report/generate-final-report.module#CreateExaminationModule',
+        loadChildren: 'app/modules/examination/pages/generate-final-report/generate-final-report.module#GenerateFinalReportModule',
         data: {moduleName: 'examination'},
     },
     {

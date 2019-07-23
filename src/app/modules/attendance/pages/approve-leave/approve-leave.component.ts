@@ -6,6 +6,7 @@ import {EmployeeService} from '../../../employee/employee.service';
 import { ApproveLeaveServiceAdapter } from './approve-leave.service.adapter';
 import {SESSION_LIST} from '../../../../classes/constants/session';
 import {LEAVE_OPTION_LIST, LEAVE_STATUS_LIST} from '../../classes/constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'approve-leave',
@@ -16,7 +17,7 @@ import {LEAVE_OPTION_LIST, LEAVE_STATUS_LIST} from '../../classes/constants';
 
 export class ApproveLeaveComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     employeeMiniProfileList: any;
 
@@ -44,6 +45,7 @@ export class ApproveLeaveComponent implements OnInit {
                 public employeeService: EmployeeService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         LEAVE_STATUS_LIST.forEach(status => {
             this.statusList.push(status);

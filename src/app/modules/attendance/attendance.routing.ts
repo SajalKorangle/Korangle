@@ -16,7 +16,7 @@ const routes: Routes = [
 
     {
         path: 'record_student_attendance',
-        loadChildren: 'app/modules/attendance/pages/record-attendance/record-attendance.module#DeclareHolidaysModule',
+        loadChildren: 'app/modules/attendance/pages/record-attendance/record-attendance.module#RecordAttendanceModule',
         data: {moduleName: 'attendance'},
     },
     {

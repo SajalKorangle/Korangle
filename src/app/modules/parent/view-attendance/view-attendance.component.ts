@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 import { AttendanceService } from '../../attendance/attendance.service';
 import {ATTENDANCE_STATUS_LIST} from '../../attendance/classes/constants';
+import {DataStorage} from "../../../classes/data-storage";
 
 export interface CalendarDate {
     mDate: moment.Moment;
@@ -18,7 +19,7 @@ export interface CalendarDate {
 
 export class ViewAttendanceComponent implements OnInit, OnChanges {
 
-    @Input() user;
+    user;
     @Input() studentId;
 
     currentMoment: any;
@@ -52,6 +53,7 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         this.initializeData();
     }
 

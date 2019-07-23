@@ -6,6 +6,7 @@ import { EmployeeService } from '../../employee/employee.service';
 import {CreateSchoolServiceAdapter} from './create-school.service.adapter';
 import {MEDIUM_LIST} from '../../../classes/constants/medium';
 import {TeamService} from '../../team/team.service';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
   selector: 'create-school',
@@ -16,7 +17,7 @@ import {TeamService} from '../../team/team.service';
 
 export class CreateSchoolComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     mediumList = MEDIUM_LIST;
 
@@ -33,6 +34,8 @@ export class CreateSchoolComponent implements OnInit {
                  public teamService: TeamService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.schoolProfile = {};
         this.serviceAdapter = new CreateSchoolServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

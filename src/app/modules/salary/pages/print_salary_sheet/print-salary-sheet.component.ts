@@ -7,6 +7,7 @@ import {AttendanceService} from '../../../attendance/attendance.service';
 import {SalaryService} from '../../salary.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_SALARY_SHEET } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'app-print-salary-sheet',
@@ -19,7 +20,7 @@ import { PRINT_SALARY_SHEET } from '../../../../print/print-routes.constants';
 
 export class PrintSalarySheetComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     employeeList = null;
 
@@ -38,6 +39,8 @@ export class PrintSalarySheetComponent implements OnInit {
                  private printService: PrintService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.getEmployeeList();
     }

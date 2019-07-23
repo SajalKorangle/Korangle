@@ -16,8 +16,8 @@ import { PrintMarksheetSecondFormatComponent } from './print/print-marksheet-sec
 
         MarksheetComponent,
 
-        UpdateMarksComponent,
-        ViewMarksheetComponent,
+        // UpdateMarksComponent,
+        // ViewMarksheetComponent,
 
         PrintMarksheetComponent,
         PrintMarksheetSecondFormatComponent

@@ -4,6 +4,7 @@ import { StudentOldService } from '../../students/student-old.service';
 import {ExaminationOldService} from '../../../services/examination-old.service';
 import {SubjectOldService} from '../../../services/subject-old.service';
 import {ViewMarksServiceAdapter} from './view-marks.service.adapter';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
   selector: 'view-marks',
@@ -14,7 +15,7 @@ import {ViewMarksServiceAdapter} from './view-marks.service.adapter';
 
 export class ViewMarksComponent implements OnInit, OnChanges {
 
-    @Input() user;
+     user;
 
     @Input() studentId;
 
@@ -37,6 +38,8 @@ export class ViewMarksComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.selectedStudent = null;
 
         this.isLoading = false;

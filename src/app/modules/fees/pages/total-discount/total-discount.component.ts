@@ -6,6 +6,7 @@ import {EmployeeService} from "../../../../services/employee.service";
 import {StudentService} from "../../../../services/student.service";
 import {ClassService} from "../../../../services/class.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'total-discount',
@@ -21,7 +22,7 @@ export class TotalDiscountComponent implements OnInit {
     nullValue = null;
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+     user;
 
     startDate: any;
     endDate: any;
@@ -52,6 +53,8 @@ export class TotalDiscountComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new TotalDiscountServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

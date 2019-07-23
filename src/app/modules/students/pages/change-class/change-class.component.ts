@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { ClassService } from '../../../../services/class.service';
 import { StudentOldService } from '../../student-old.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 
 @Component({
@@ -13,7 +14,7 @@ import { StudentOldService } from '../../student-old.service';
 
 export class ChangeClassComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     selectedStudent: any;
 
@@ -29,6 +30,7 @@ export class ChangeClassComponent implements OnInit {
                  private studentService: StudentOldService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         const data = {
             sessionDbId : this.user.activeSchool.currentSessionDbId,
         };

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import {EmployeeService} from '../../employee/employee.service';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
   selector: 'view-profile',
@@ -11,7 +12,7 @@ import {EmployeeService} from '../../employee/employee.service';
 
 export class ViewProfileComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     selectedEmployee: any;
 
@@ -26,6 +27,8 @@ export class ViewProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.selectedEmployee = null;
 
         this.busStopList = [];

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { UserSettingsService } from '../user-settings.service';
+import {DataStorage} from "../../../classes/data-storage";
 
 @Component({
   selector: 'update-profile',
@@ -11,7 +12,7 @@ import { UserSettingsService } from '../user-settings.service';
 
 export class UpdateProfileComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     first_name: any;
     last_name: any;
@@ -22,6 +23,8 @@ export class UpdateProfileComponent implements OnInit {
     constructor (private userSettingsService: UserSettingsService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.first_name = this.user.first_name;
         this.last_name = this.user.last_name;
         this.email = this.user.email;
