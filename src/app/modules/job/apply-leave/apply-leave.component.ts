@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import * as moment from 'moment';
-import * as _ from 'lodash';
 
 import { AttendanceService } from '../../attendance/attendance.service';
 import {ATTENDANCE_STATUS_LIST, LEAVE_STATUS_LIST, LEAVE_OPTION_LIST} from '../../attendance/classes/constants';
 import {DataStorage} from "../../../classes/data-storage";
+import {CommonFunctions} from "../../../classes/common-functions";
 
 export interface CalendarDate {
     mDate: moment.Moment;
@@ -205,7 +205,7 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
         const numberOfDays = moment(currentMoment).daysInMonth();
         const numberTobeAdded = Math.ceil((numberOfDays+firstOfMonth)/7)*7;
 
-        return _.range(start, start+numberTobeAdded)
+        return CommonFunctions.getArrayFromRange(start, start+numberTobeAdded)
             .map((date: number): CalendarDate => {
                 const d = moment(firstDayOfGrid).date(date);
                 return {

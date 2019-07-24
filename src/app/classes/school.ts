@@ -1,13 +1,9 @@
 
-
-// import {Constants} from './constants';
-
 export class School {
 
     dbId = 0;
     name: string; // School Name (for sidebar)
     printName: string;
-    //logo: string;
     profileImage: string;
     principalSignatureImage: string;
     mobileNumber: number;
@@ -16,6 +12,7 @@ export class School {
     diseCode = 0;
     address = '';
     currentSessionDbId: number;
+    currentWorkingSessionDbId: number;
     registrationNumber: string;
     affiliationNumber: string;
 
@@ -48,6 +45,7 @@ export class School {
         this.address = schoolData.schoolAddress;
         this.opacity = schoolData.opacity;
         this.currentSessionDbId = schoolData.currentSessionDbId;
+        this.currentWorkingSessionDbId = schoolData.currentSessionDbId;
         this.registrationNumber = schoolData.registrationNumber;
         this.affiliationNumber = schoolData.affiliationNumber;
 
@@ -105,11 +103,6 @@ export class School {
                     path: 'view_profile',
                     icon: 'account_circle',
                 },
-                /*{
-                    title: 'Fees',
-                    path: 'view_fee',
-                    icon: 'receipt',
-                },*/
                 {
                     title: 'Attendance',
                     path: 'view_attendance',

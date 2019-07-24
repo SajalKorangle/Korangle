@@ -2,11 +2,6 @@ import {Injectable} from '@angular/core';
 
 import { Student } from '../../classes/student';
 
-// import { Headers, Http } from '@angular/http';
-
-
-// import {Constants} from '../classes/constants';
-
 import { CommonServiceRequirements } from '../../services/common-service-requirements';
 
 @Injectable()

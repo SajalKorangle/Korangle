@@ -23,7 +23,7 @@ export class UpdateProfileComponent implements OnInit {
     currentPrintName: any;
     currentMobileNumber: any;
     currentRegistrationNumber: any;
-    currentAffiliationNumber: any
+    currentAffiliationNumber: any;
     currentMedium: any;
     currentDiseCode: any;
     currentAddress: any;
@@ -55,7 +55,7 @@ export class UpdateProfileComponent implements OnInit {
         this.schoolService.getSessionList(this.user.jwt).then( sessionList => {
             this.isLoading = false;
             this.sessionList = sessionList;
-            this.selectedWorkingSession = this.getSessionFromList(this.user.activeSchool.currentSessionDbId);
+            this.selectedWorkingSession = this.getSessionFromList(this.user.activeSchool.currentWorkingSessionDbId);
             this.currentWorkingSession = this.selectedWorkingSession;
         }, error => {
             this.isLoading = false;
@@ -96,7 +96,7 @@ export class UpdateProfileComponent implements OnInit {
             this.user.activeSchool.diseCode = schoolProfile.diseCode;
             this.user.activeSchool.address = schoolProfile.address;
             this.user.activeSchool.opacity = schoolProfile.opacity;
-            this.user.activeSchool.currentSessionDbId = schoolProfile.currentSessionDbId;
+            this.user.activeSchool.currentWorkingSessionDbId = schoolProfile.currentSessionDbId;
             this.selectedWorkingSession = this.getSessionFromList(schoolProfile.currentSessionDbId);
             alert('School Profile updated successfully');
         }, error => {
@@ -115,38 +115,6 @@ export class UpdateProfileComponent implements OnInit {
         });
         return resultSession;
     }
-
-    /*async onImageSelect(evt: any) {
-        let image = evt.target.files[0];
-
-        if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
-            alert("Image type should be either jpg, jpeg, or png");
-            return;
-        }
-
-        while (image.size > 512000) {
-            image = await this.resizeImage(image, 1.5);
-        }
-
-        if (image.size > 512000) {
-            alert('Image size should be less than 512kb');
-            return;
-        }
-
-        let data = {
-            id: this.selectedStudent.dbId,
-        };
-        this.isLoading = true;
-        this.studentService.uploadProfileImage(image, data, this.user.jwt).then( response => {
-            this.isLoading = false;
-            alert(response.message);
-            if (response.status === 'success') {
-                this.selectedStudent.profileImage = response.url + '?random+\=' + Math.random();
-            }
-        }, error => {
-            this.isLoading = false;
-        });
-    }*/
 
     resizeImage(file:File, ratio: any): Promise<Blob> {
         return new Promise((resolve, reject) => {

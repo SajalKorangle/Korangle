@@ -11,6 +11,11 @@ const routes: Routes = [
         data: {moduleName: 'school'},
     },
     {
+        path: 'change_session',
+        loadChildren: 'app/modules/school/pages/change-session/change-session.module#ChangeSessionModule',
+        data: {moduleName: 'school'},
+    },
+    {
         path: '',
         component: SchoolComponent,
     },

@@ -13,10 +13,12 @@ const routes: Routes = [
     {
         path: 'students',
         loadChildren: 'app/modules/students/student.module#StudentModule',
+        // loadChildren: () => import('app/modules/students/student.module').then(m => m.StudentModule),
     },
     {
         path: 'fees',
-        loadChildren: 'app/modules/fees/fee.module#FeeModule',
+        // loadChildren: 'app/modules/fees/fee.module#FeeModule',
+        loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
     },
     {
         path: 'sms',
@@ -61,6 +63,7 @@ const routes: Routes = [
     {
         path: 'user-settings',
         loadChildren: 'app/modules/user-settings/user-settings.module#UserSettingsModule',
+        // loadChildren: () => import('app/modules/user-settings/user-settings.module').then(m => m.UserSettingsModule),
     },
     {
         path: 'parent',
@@ -119,8 +122,8 @@ export class CustomPreload implements PreloadingStrategy {
                 result = true;
             }
         }
-        // console.log(result);
         return result ? timer(10000).pipe(flatMap( _ => load())) : observableOf(null);
+        // return result ? load() : observableOf(null);
     }
 }
 

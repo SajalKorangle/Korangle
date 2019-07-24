@@ -8,12 +8,6 @@ import { PrintStudentAttendanceListComponent } from './print/print-student-atten
 import { PRINT_EMPLOYEE_ATTENDANCE, PRINT_STUDENT_ATTENDANCE } from 'app/print/print-routes.constants';
 
 const routes: Routes = [
-    // '<record-attendance *ngIf="user.section.subRoute===\'record_student_attendance\'" [user]="user"></record-attendance>' +
-    // '<record-employee-attendance *ngIf="user.section.subRoute===\'record_employee_attendance\'" [user]="user"></record-employee-attendance>' +
-    // '<declare-holidays *ngIf="user.section.subRoute===\'declare_holidays\'" [user]="user"></declare-holidays>' +
-    // '<approve-leave *ngIf="user.section.subRoute===\'approve_leave\'" [user]="user"></approve-leave>' +
-    // '<give-permissions *ngIf="user.section.subRoute===\'give_permissions\'" [user]="user"></give-permissions>',
-
     {
         path: 'record_student_attendance',
         loadChildren: 'app/modules/attendance/pages/record-attendance/record-attendance.module#RecordAttendanceModule',

@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { Student } from '../../../../classes/student';
-import { Classs } from '../../../../classes/classs';
-import { Section } from '../../../../classes/section';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
 
@@ -23,16 +21,12 @@ export class GenerateTcComponent implements OnInit {
 
     user;
 
-    selectedClass: Classs;
-    selectedSection: Section;
     selectedStudent: Student;
     studentFromFilter: any;
 
     selectedTransferCertificate: TransferCertificate = new TransferCertificate();
 
     currentTransferCertificate: TransferCertificate = new TransferCertificate();
-
-    classSectionStudentList: Classs[] = [];
 
     showDetails: boolean = false;
 
@@ -65,28 +59,10 @@ export class GenerateTcComponent implements OnInit {
     constructor (private studentService: StudentOldService,
                  private schoolService: SchoolService,
                  private printService: PrintService) { }
-/*
-    changeSelectedSectionToFirst(): void {
-        this.selectedSection = this.selectedClass.sectionList[0];
-        this.changeSelectedStudentToFirst();
-    }
-
-    changeSelectedStudentToFirst(): void {
-        this.selectedStudent = this.selectedSection.studentList[0];
-        // this.currentTransferCertificate.copy(this.selectedStudent);
-        this.showDetails = false;
-    }
-
-
-    handleSessionChange(): void {
-        this.getStudentList(this.selectedSession.dbId);
-    }
-*/
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.getSessionList();
-        // this.getStudentList(this.user.activeSchool.currentSessionDbId);
     }
 
     getSessionList(): void {
@@ -101,45 +77,6 @@ export class GenerateTcComponent implements OnInit {
             });
         });
     }
-
-    /*getStudentList(sessionDbId: number): void {
-        const data = {
-            sessionDbId: sessionDbId,
-            schoolDbId: this.user.activeSchool.dbId,
-        };
-        this.isStudentListLoading = true;
-        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(classSectionStudentList => {
-            this.isStudentListLoading = false;
-            this.classSectionStudentList = [];
-            classSectionStudentList.forEach( classs => {
-                const tempClass = new Classs();
-                tempClass.name = classs.name;
-                tempClass.dbId = classs.dbId;
-                classs.sectionList.forEach( section => {
-                    const tempSection = new Section();
-                    tempSection.name = section.name;
-                    tempSection.dbId = section.dbId;
-                    section.studentList.forEach( student => {
-                        const tempStudent = new Student();
-                        tempStudent.name = student.name;
-                        tempStudent.dbId = student.dbId;
-                        tempStudent.parentTransferCertificate = student.parentTransferCertificate;
-                        tempSection.studentList.push(tempStudent);
-                    });
-                    tempClass.sectionList.push(tempSection);
-                });
-                this.classSectionStudentList.push(tempClass);
-            });
-            if (this.classSectionStudentList.length > 0) {
-                this.selectedClass = this.classSectionStudentList[0];
-                this.changeSelectedSectionToFirst();
-            } else {
-                alert('Student needs to be added first, before profile updation');
-            }
-        }, error => {
-            this.isStudentListLoading = false;
-        });
-    }*/
 
     getStudentProfile(): void {
         this.isLoading = true;

@@ -2,13 +2,10 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { MyCollectionServiceAdapter } from "./my-collection.service.adapter";
 import { FeeService } from "../../../../services/fee.service";
 import {EmployeeService} from "../../../../services/employee.service";
-import {FeeReceipt} from "../../../../services/fees/fee-receipt";
-import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
 import {StudentService} from "../../../../services/student.service";
 import {ClassService} from "../../../../services/class.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {EmitterService} from "../../../../services/emitter.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
@@ -25,7 +22,7 @@ export class MyCollectionComponent implements OnInit {
     nullValue = null;
     installmentList = INSTALLMENT_LIST;
 
-     user;
+    user;
 
     startDate: any;
     endDate: any;

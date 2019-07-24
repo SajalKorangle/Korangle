@@ -11,6 +11,7 @@ import { PrintStudentComprehensiveFinalReportListComponent } from './print/print
 import { PrintStudentElegantFinalReportListComponent } from './print/print-student-elegant-final-report-list/print-student-elegant-final-report-list.component';
 import { PrintHallTicketComponent } from './print/print-hall-ticket/print-hall-ticket.component';
 import { PrintStudentMarksheetListComponent } from './print/print-student-marksheet-list/print-student-marksheet-list.component';
+import {PrintStudentEleventhFinalReportListComponent} from "./print/print-student-eleventh-final-report-list/print-student-eleventh-final-report-list.component";
 
 const routes: Routes = [
     {
@@ -83,7 +84,7 @@ const routes: Routes = [
     },
     {
         path: PRINT_STUDENT_ELEVENTH_FINAL_REPORT,
-        component: PrintStudentClassicFinalReportListComponent,
+        component: PrintStudentEleventhFinalReportListComponent,
     },
     {
         path: PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT,

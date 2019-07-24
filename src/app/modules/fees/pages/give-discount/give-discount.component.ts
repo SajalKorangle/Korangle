@@ -4,7 +4,6 @@ import { FeeService } from "../../../../services/fee.service";
 import {
     DiscountColumnFilter,
     INSTALLMENT_LIST,
-    MODE_OF_PAYMENT_LIST,
     ReceiptColumnFilter
 } from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
@@ -20,7 +19,6 @@ import {VehicleService} from "../../../vehicle/vehicle.service";
 import {ClassService} from "../../../../services/class.service";
 import {EmployeeService} from "../../../../services/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {EmitterService} from "../../../../services/emitter.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
 declare const $: any;
