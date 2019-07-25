@@ -248,11 +248,11 @@ class FeeReceipt(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee')
 
-    checkNumber = models.IntegerField(null=True, verbose_name='checkNumber')
+    chequeNumber = models.IntegerField(null=True, verbose_name='chequeNumber')
 
     MODE_OF_PAYMENT = (
         ( 'Cash', 'Cash' ),
-        ( 'Check', 'Check' ),
+        ( 'Cheque', 'Cheque' ),
         ( 'Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
