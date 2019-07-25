@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 
 import { StudentOldService } from '../../../students/student-old.service';
 import {ExaminationOldService} from '../../../../services/examination-old.service';
@@ -16,8 +16,6 @@ import {DataStorage} from "../../../../classes/data-storage";
 export class ViewMarksComponent implements OnInit, OnChanges {
 
      user;
-
-    @Input() studentId;
 
     serviceAdapter: ViewMarksServiceAdapter;
 

@@ -96,13 +96,12 @@ export class SidebarComponent implements OnInit {
     };
 
     changePage(task: any, module: any) {
-        this.user.populateSection(task, module);
-        // if (this.user.section.route == 'expenses' || this.user.section.route == 'enquiries' || this.user.section.route == 'attendance') {
-        //     this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
-        // } else {
+        this.router.navigateByUrl('');
+        setTimeout(() => {
+            this.user.populateSection(task, module);
             this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
-        // }
-        EmitterService.get('close-sidebar').emit();
+            EmitterService.get('close-sidebar').emit();
+        });
     }
 
     checkChangeSession(){

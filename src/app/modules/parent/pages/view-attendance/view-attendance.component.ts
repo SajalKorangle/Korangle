@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import * as moment from 'moment';
 
 import { AttendanceService } from '../../../attendance/attendance.service';
@@ -20,7 +20,6 @@ export interface CalendarDate {
 export class ViewAttendanceComponent implements OnInit, OnChanges {
 
     user;
-    @Input() studentId;
 
     currentMoment: any;
     weeks: any;
@@ -68,7 +67,7 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
     getStudentAttendanceStatusList(): void {
 
         let data = {
-            studentIdList: [this.studentId],
+            studentIdList: [this.user.section.student.id],
             startDate: this.startDate,
             endDate: this.endDate,
         };

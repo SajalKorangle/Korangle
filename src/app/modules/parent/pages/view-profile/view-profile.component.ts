@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 
 import { StudentOldService } from '../../../students/student-old.service';
 import {BusStopService} from '../../../../services/bus-stop.service';
@@ -14,8 +14,6 @@ import {DataStorage} from "../../../../classes/data-storage";
 export class ViewProfileComponent implements OnInit, OnChanges {
 
      user;
-
-    @Input() studentId;
 
     selectedStudent: any;
 
