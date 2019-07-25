@@ -99,8 +99,6 @@ export class ViewMarksServiceAdapter {
                 'marksObtainedList': [],
             };
 
-            console.log('okay');
-
             Promise.all([
                 this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
                 this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
