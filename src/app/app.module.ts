@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
-import  { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule  } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app.routing';
-import {BasicComponentsModule} from "./basic-components/basic-components.module";
+import { BasicComponentsModule } from "./basic-components/basic-components.module";
 
 import { AppComponent } from './app.component';
 
@@ -27,6 +27,6 @@ import { PrintService } from './print/print-service';
     exports: [
     ],
   providers: [ PrintService ],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

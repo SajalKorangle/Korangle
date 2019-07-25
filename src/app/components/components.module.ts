@@ -23,8 +23,6 @@ import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateComponent } from './day-date/day-date.component';
 import { EmployeeFilterComponent } from './employee-filter/employee-filter.component';
 import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
-import { FeeReceiptListComponent } from "../modules/fees/components/fee-receipt-list/fee-receipt-list-component.component";
-import { DiscountListComponent } from "../modules/fees/components/discount-list/discount-list-component.component";
 
 // Pipes
 
@@ -46,9 +44,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         IndianCurrencyPipe,
 
         EmployeeFilterComponent,
-
-        FeeReceiptListComponent,
-        DiscountListComponent,
 
     ],
     imports: [
@@ -82,8 +77,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         EmployeeFilterComponent,
         MonthDateComponent,
         DayDateComponent,
-        FeeReceiptListComponent,
-        DiscountListComponent,
 
 
         AmountInWordsPipe,

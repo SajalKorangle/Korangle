@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { TotalDiscountRoutingModule} from './total-discount.routing';
 import {ComponentsModule} from "../../../../components/components.module";
 import {TotalDiscountComponent} from "./total-discount.component";
+import {FeesComponentsModule} from "../../components/fees-components.module";
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {TotalDiscountComponent} from "./total-discount.component";
     imports: [
         TotalDiscountRoutingModule ,
         ComponentsModule,
+        FeesComponentsModule,
     ],
     exports: [
     ],

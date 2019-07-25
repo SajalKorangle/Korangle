@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {ViewFeeComponent} from "./view-fee.component";
+import { ViewFeeComponent } from "./view-fee.component";
 
 const routes: Routes = [
     {

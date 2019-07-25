@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import {MyCollectionRoutingModule, } from './my-collection.routing';
 import {ComponentsModule} from "../../../../components/components.module";
 import {MyCollectionComponent} from "./my-collection.component";
+import {FeesComponentsModule} from "../../components/fees-components.module";
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {MyCollectionComponent} from "./my-collection.component";
     imports: [
         MyCollectionRoutingModule ,
         ComponentsModule,
+        FeesComponentsModule,
     ],
     exports: [
     ],
