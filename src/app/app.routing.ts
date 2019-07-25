@@ -1,6 +1,7 @@
 
-import {of as observableOf, Observable, timer} from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { of as observableOf, Observable } from 'rxjs';
+// import { timer } from 'rxjs/operators';
+// import { flatMap } from 'rxjs/operators';
 import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule, Route } from '@angular/router';
@@ -122,8 +123,8 @@ export class CustomPreload implements PreloadingStrategy {
                 result = true;
             }
         }
-        return result ? timer(10000).pipe(flatMap( _ => load())) : observableOf(null);
-        // return result ? load() : observableOf(null);
+        // return result ? timer(10000).pipe(flatMap( _ => load())) : observableOf(null);
+        return result ? load() : observableOf(null);
     }
 }
 
