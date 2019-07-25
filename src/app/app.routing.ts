@@ -17,8 +17,8 @@ const routes: Routes = [
     },
     {
         path: 'fees',
-        // loadChildren: 'app/modules/fees/fee.module#FeeModule',
-        loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
+        loadChildren: 'app/modules/fees/fee.module#FeeModule',
+        // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
     },
     {
         path: 'sms',

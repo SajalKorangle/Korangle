@@ -10,12 +10,12 @@ import { PrintMarksheetSecondFormatComponent } from './print/print-marksheet-sec
 const routes: Routes = [
     {
         path: 'update_marks',
-        loadChildren: 'app/modules/marksheet/update-marks/update-marks.module#UpdateMarksModule',
+        loadChildren: 'app/modules/marksheet/pages/update-marks/update-marks.module#UpdateMarksModule',
         data: {moduleName: 'marksheet'},
     },
     {
         path: 'print_marksheet',
-        loadChildren: 'app/modules/marksheet/view-marksheet/view-marksheet.module#ViewMarksheetModule',
+        loadChildren: 'app/modules/marksheet/pages/view-marksheet/view-marksheet.module#ViewMarksheetModule',
         data: {moduleName: 'marksheet'},
     },
 

@@ -4,8 +4,8 @@ import { ComponentsModule } from '../../components/components.module';
 
 import { MarksheetComponent } from './marksheet.component';
 
-import { UpdateMarksComponent } from './update-marks/update-marks.component';
-import { ViewMarksheetComponent } from './view-marksheet/view-marksheet.component';
+import { UpdateMarksComponent } from './pages/update-marks/update-marks.component';
+import { ViewMarksheetComponent } from './pages/view-marksheet/view-marksheet.component';
 
 import { MarksheetRoutingModule } from './marksheet.routing';
 import { PrintMarksheetComponent } from './print/print-marksheet/print-marksheet.component';
