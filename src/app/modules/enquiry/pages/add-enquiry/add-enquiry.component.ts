@@ -48,8 +48,9 @@ export class AddEnquiryComponent implements OnInit {
             return;
         }
 
-        this.newEnquiry.parentSchool = this.user.activeSchool.dbId;
-
+        this.newEnquiry.parentSchool    = this.user.activeSchool.dbId;
+        this.newEnquiry.parentEmployee = this.user.activeSchool.employeeId;
+        
         this.isLoading = true;
 
         this.enquiryService.createEnquiry(this.newEnquiry, this.user.jwt).then(message => {

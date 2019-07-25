@@ -17,7 +17,7 @@ export const INSTALLMENT_LIST = [
 
 export const MODE_OF_PAYMENT_LIST = [
     'Cash',
-    'Check',
+    'Cheque',
     'Online',
 ];
 

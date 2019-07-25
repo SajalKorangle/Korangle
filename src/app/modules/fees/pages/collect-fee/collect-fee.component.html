@@ -374,11 +374,11 @@
                     </div>
                     <div class="col-sm-3" *ngIf="newModeOfPayment==modeOfPaymentList[1]">
                         <div class="form-group form-black label-floating">
-                            <label class="control-label">Check No.</label>
+                            <label class="control-label">Cheque No.</label>
                             <input type="number"
                                    class="form-control"
-                                   [ngModel]="newCheckNumber"
-                                   (ngModelChange)="newCheckNumber=$event;updateNewFeeReceiptCheckNumber()"/>
+                                   [ngModel]="newChequeNumber"
+                                   (ngModelChange)="newChequeNumber=$event;updateNewFeeReceiptChequeNumber()"/>
                         </div>
                     </div>
                     <div class="col-sm-3" >

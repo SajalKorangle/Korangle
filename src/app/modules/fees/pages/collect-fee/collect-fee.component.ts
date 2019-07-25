@@ -67,7 +67,7 @@ export class CollectFeeComponent implements OnInit {
     newSubFeeReceiptList = [];
     newRemark = null;
     newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
-    newCheckNumber = null;
+    newChequeNumber = null;
 
     studentFeeDetailsVisibleList = [];
 
@@ -158,7 +158,7 @@ export class CollectFeeComponent implements OnInit {
         this.studentFeeDetailsVisibleList = [];
         this.newRemark = null;
         this.newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
-        this.newCheckNumber = null;
+        this.newChequeNumber = null;
     
     
     }
@@ -1153,15 +1153,15 @@ export class CollectFeeComponent implements OnInit {
         this.newFeeReceiptList.forEach(feeReceipt => {
             feeReceipt.modeOfPayment = this.newModeOfPayment;
             if (feeReceipt.modeOfPayment != this.modeOfPaymentList[1]) {
-                this.newCheckNumber = null;
-                feeReceipt.checkNumber = null;
+                this.newChequeNumber = null;
+                feeReceipt.chequeNumber = null;
             }
         });
     }
 
-    updateNewFeeReceiptCheckNumber(): void {
+    updateNewFeeReceiptChequeNumber(): void {
         this.newFeeReceiptList.forEach(feeReceipt => {
-            feeReceipt.checkNumber = this.newCheckNumber;
+            feeReceipt.chequeNumber = this.newChequeNumber;
         });
     }
 
