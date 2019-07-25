@@ -5,6 +5,7 @@ import { ClassService } from '../../../../services/class.service';
 import {PrintService} from "../../../../print/print-service";
 import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
 import { EmployeeService } from '../../../employee/employee.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'view-all',
@@ -15,7 +16,7 @@ import { EmployeeService } from '../../../employee/employee.service';
 
 export class ViewAllComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     enquiryList = [];
 
@@ -33,15 +34,18 @@ export class ViewAllComponent implements OnInit {
                 private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         let data = {
             parentSchool: this.user.activeSchool.dbId
-        }
+        };
 
-        Promise.all([this.classService.getClassList(this.user.jwt), this.employeeService.getEmployeeProfileList(data, this.user.jwt)])
-            .then(res => {
-                this.classList = res[0];
-                this.employeeList = res[1];
-            })
+        Promise.all([
+            this.classService.getClassList(this.user.jwt),
+            this.employeeService.getEmployeeProfileList(data, this.user.jwt)
+        ]).then(res => {
+            this.classList = res[0];
+            this.employeeList = res[1];
+        });
     }
 
     todaysDate(): string {

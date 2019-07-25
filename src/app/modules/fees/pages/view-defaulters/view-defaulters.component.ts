@@ -6,6 +6,7 @@ import {ClassService} from "../../../../services/class.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'view-defaulters',
@@ -21,7 +22,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     nullValue = null;
 
-    @Input() user;
+     user;
 
     subFeeReceiptList: any;
     subDiscountList: any;
@@ -64,6 +65,7 @@ export class ViewDefaultersComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

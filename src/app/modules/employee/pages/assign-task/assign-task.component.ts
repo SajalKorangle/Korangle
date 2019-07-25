@@ -3,6 +3,7 @@ import {Component, Input, OnInit } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {EmployeeService} from '../../employee.service';
 import {TeamService} from '../../../team/team.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'assign-task',
@@ -13,7 +14,7 @@ import {TeamService} from '../../../team/team.service';
 
 export class AssignTaskComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     moduleList = [];
 
@@ -27,6 +28,7 @@ export class AssignTaskComponent implements OnInit {
                   private teamService: TeamService) { }
 
     ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
 
         console.log(this.user.username);
 

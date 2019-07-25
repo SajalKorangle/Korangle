@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../classes/user';
 import {sendDataToAndroid} from "../classes/common";
@@ -36,6 +36,16 @@ export class LoginComponent {
         }, error => {
             this.isLoading = false;
         });
+    }
+    
+    submit() {
+        var elem = document.getElementById('username')
+        if (document.activeElement === elem) {
+            document.getElementById('pass').focus()
+        }
+        else {
+            this.login()
+        }
     }
 
     toggleVisibilityMode(): void {

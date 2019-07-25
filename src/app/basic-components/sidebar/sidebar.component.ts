@@ -6,7 +6,8 @@ import { EmitterService } from '../../services/emitter.service';
 
 import {User} from '../../classes/user';
 import {style, state, trigger, animate, transition} from "@angular/animations";
-import {Student} from '../../classes/student';
+import {SESSION_LIST} from "../../classes/constants/session";
+
 
 declare const $: any;
 
@@ -36,6 +37,7 @@ export class SidebarComponent implements OnInit {
 
     green = 'green';
     warning = 'warning';
+    session_list=SESSION_LIST;
 
     settings = {
         path: 'user-settings',
@@ -79,10 +81,10 @@ export class SidebarComponent implements OnInit {
                 }
             });
         EmitterService.get('initialize-router').subscribe(value => {
-            this.router.navigateByUrl(this.user.section.route);
+            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         });
         if (this.user.section) {
-            this.router.navigateByUrl(this.user.section.route);
+            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         }
     }
 
@@ -94,10 +96,29 @@ export class SidebarComponent implements OnInit {
     };
 
     changePage(task: any, module: any) {
-        this.user.populateSection(task, module);
-        this.router.navigateByUrl(this.user.section.route);
-        EmitterService.get('close-sidebar').emit();
+        this.router.navigateByUrl('');
+        setTimeout(() => {
+            this.user.populateSection(task, module);
+            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
+            EmitterService.get('close-sidebar').emit();
+        });
     }
+
+    checkChangeSession(){
+        return this.user.activeSchool && this.user.activeSchool.moduleList.find(module=>{
+            return module.path=='school' && module.taskList.find(task=>{
+                return task.path=='change_session';
+            })!=undefined;
+        })!=undefined;
+    }
+
+    handleSessionChange(){
+        this.router.navigateByUrl('');
+        setTimeout(()=>{
+            this.user.initializeTask();
+        });
+    }
+
 
     handleSchoolChange(): void {
         this.router.navigateByUrl('');

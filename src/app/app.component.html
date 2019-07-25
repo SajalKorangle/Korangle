@@ -4,7 +4,7 @@
 
         <div class="sidebar" data-image="" style="position: fixed">
             <app-sidebar [user]="user"></app-sidebar>
-            <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
+            <div class="sidebar-background"></div>
         </div>
 
         <mat-progress-bar *ngIf="user.isLazyLoading"  mode="indeterminate"></mat-progress-bar>
@@ -68,7 +68,6 @@
     </div>
 
 </div>
-<!-- app-new-fee-receipt-modal [user]="user"></app-new-fee-receipt-modal -->
 <div class="wrapper showPrint">
     <router-outlet name="print"></router-outlet>
 </div>

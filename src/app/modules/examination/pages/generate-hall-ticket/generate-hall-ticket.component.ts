@@ -8,6 +8,7 @@ import {ClassService} from '../../../../services/class.service';
 import { GenerateHallTicketServiceAdapter } from './generate-hall-ticket.service.adapter';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_HALL_TICKET } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'generate-hall-ticket',
@@ -18,7 +19,7 @@ import { PRINT_HALL_TICKET } from '../../../../print/print-routes.constants';
 
 export class GenerateHallTicketComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     selectedExamination: any;
 
@@ -35,6 +36,8 @@ export class GenerateHallTicketComponent implements OnInit {
                 private printService: PrintService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new GenerateHallTicketServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

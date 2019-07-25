@@ -6,6 +6,7 @@ import {StudentService} from "../../../../services/student.service";
 import {FormControl} from "@angular/forms";
 import {INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST} from "../../classes/constants";
 import {EmployeeService} from "../../../../services/employee.service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'cancel-fee-receipt',
@@ -19,7 +20,7 @@ export class CancelFeeReceiptComponent implements OnInit {
     installmentList = INSTALLMENT_LIST;
     modeOfPaymentList = MODE_OF_PAYMENT_LIST;
 
-    @Input() user;
+     user;
 
     searchParameter = new FormControl();
 
@@ -42,6 +43,8 @@ export class CancelFeeReceiptComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new CancelFeeReceiptServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

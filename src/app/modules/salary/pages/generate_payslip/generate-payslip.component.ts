@@ -5,6 +5,7 @@ import {GeneratePayslipServiceAdapter} from './generate-payslip.service.adapter'
 import {MONTH_LIST} from '../../../../classes/constants/month';
 import {AttendanceService} from '../../../attendance/attendance.service';
 import {SalaryService} from '../../salary.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'generate-payslip',
@@ -17,7 +18,7 @@ import {SalaryService} from '../../salary.service';
 
 export class GeneratePayslipComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     employeeList = null;
 
@@ -42,6 +43,8 @@ export class GeneratePayslipComponent implements OnInit {
                  public salaryService: SalaryService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.getEmployeeList();
     }

@@ -123,18 +123,48 @@ export class TotalCollectionServiceAdapter {
                         this.vm.studentSectionList = this.vm.studentSectionList.concat(item);
                     });
 
+                    this.initializeFilteredLists();
                     this.vm.isLoading = false;
                 }, error => {
                     this.vm.isLoading = false;
                 })
 
             } else {
+                this.initializeFilteredLists();
                 this.vm.isLoading = false;
             }
 
         }, error => {
             this.vm.isLoading = false;
         });
+
+    }
+
+    initializeFilteredLists(): void {
+
+        // Filtered Class Section List
+        this.vm.filteredClassSectionList = this.vm.feeReceiptList.map(fee=>{
+            return this.vm.getClassAndSection(fee.parentStudent,fee.parentSession);
+        }).filter((item, index, final) => {
+            return final.findIndex(item2 => item2.classs.dbId == item.classs.dbId
+                && item2.section.id == item.section.id ) == index;
+        }).sort((a,b) => {
+            if (a.classs.orderNumber == b.classs.orderNumber) {
+                return a.section.orderNumber-b.section.orderNumber;
+            } else {
+                return a.classs.orderNumber-b.classs.orderNumber;
+            }
+        });
+
+        // Filtered Employee List
+        this.vm.filteredEmployeeList = this.vm.employeeList.filter(employee => {
+            return this.vm.feeReceiptList.map(a => a.parentEmployee).filter((item, index, final) => {
+                return final.indexOf(item) == index;
+            }).includes(employee.id);
+        });
+
+        // Filtered Mode of Payment List
+        this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {return a != null;});
 
     }
 

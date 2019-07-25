@@ -8,6 +8,7 @@ import { SchoolService } from '../../../../services/school.service';
 
 import { SetClassSubjectServiceAdapter } from './set-class-subject.service.adapter';
 import {EmployeeService} from '../../../employee/employee.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'set-class-subject',
@@ -18,7 +19,7 @@ import {EmployeeService} from '../../../employee/employee.service';
 
 export class SetClassSubjectComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     serviceAdapter: SetClassSubjectServiceAdapter;
 
@@ -48,6 +49,8 @@ export class SetClassSubjectComponent implements OnInit {
                 public employeeService: EmployeeService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new SetClassSubjectServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

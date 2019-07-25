@@ -6,6 +6,7 @@ import {VehicleService} from '../../../vehicle/vehicle.service';
 import {SchoolService} from '../../../../services/school.service';
 
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 // Constants
 const NAME = 0;
@@ -172,7 +173,7 @@ const RTE_VALUES = [
 
 export class UploadListComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     displayStudentNumber = 0;
 
@@ -211,6 +212,8 @@ export class UploadListComponent implements OnInit {
                 private vehicleService: VehicleService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         let request_bus_stop_data = {
             parentSchool: this.user.activeSchool.dbId,
         };
@@ -314,7 +317,7 @@ export class UploadListComponent implements OnInit {
         
         console.log('prev', this.data);
         this.data = this.data.filter(value => {
-            if (value.length < 1 ) {
+            if (value.length <= 1 ) {
                 return false;
             }
             return true;
@@ -322,7 +325,7 @@ export class UploadListComponent implements OnInit {
 
         this.data.forEach((student, index) => {
             if (index >= this.numberOfFillerRows) {
-                let dualList = this.validateStudent(student, index);
+                let dualList = this.validateStudent(student);
                 let errorColumnList = dualList[0];
                 let deletedColumnList = dualList[1];
                 if (errorColumnList.length > 0) {
@@ -354,9 +357,7 @@ export class UploadListComponent implements OnInit {
         }
     }
 
-    validateStudent(student: any, index: number): any {
-
-        // let rowNumber = index+1;
+    validateStudent(student: any): any {
 
         let dualList = [];
 

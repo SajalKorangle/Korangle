@@ -6,6 +6,7 @@ import {StudentOldService} from '../../student-old.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
 import {PRINT_I_CARD, PRINT_MULTIPLE_I_CARDS} from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -35,7 +36,7 @@ class ColumnFilter {
 
 export class ICardsComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     columnFilter: ColumnFilter;
 
@@ -99,7 +100,7 @@ export class ICardsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        this.user = DataStorage.getInstance().getUser();
         this.columnFilter = new ColumnFilter();
 
         const student_full_profile_request_data = {

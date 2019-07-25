@@ -4,9 +4,6 @@ import {SESSION_LIST} from "../../../../classes/constants/session";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
 
-// import {EmitterService} from '../../services/emitter.service';
-// import {FeeReceipt} from '../../modules/fees-second/classes/common-functionalities';
-
 @Component({
     selector: 'app-fee-receipt-list',
     templateUrl: './fee-receipt-list-component.component.html',
@@ -24,7 +21,7 @@ export class FeeReceiptListComponent {
     @Input() sectionList;
     @Input() employeeList;
     @Input() receiptColumnFilter;
-    @Input() number = 3;
+    @Input() number;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -62,7 +59,7 @@ export class FeeReceiptListComponent {
     }
 
     increaseNumber(): void {
-        this.number += 3;
+        this.number += this.number;
     }
 
     getStudentName(studentId: number): any {

@@ -1,64 +1,5 @@
 <div class="card-content">
 
-    <!--<ng-container *ngIf="!isStudentListLoading">-->
-        <!--Class:-->
-        <!--<select [ngModel]="selectedClass"-->
-                <!--(ngModelChange)="selectedClass=$event;changeSelectedSectionToFirst();"-->
-                <!--style="margin-right: 15px">-->
-            <!--<option *ngFor="let class of classSectionStudentList;" [ngValue]="class">-->
-                <!--{{class.name}}-->
-            <!--</option>-->
-        <!--</select>-->
-
-        <!--<div class="visible-xs" style="margin-top: 10px;"></div>-->
-
-        <!--<span *ngIf='selectedClass' [class.hidden]="selectedClass.sectionList.length == 1">-->
-            <!--Section:-->
-            <!--<select [ngModel]="selectedSection"-->
-                    <!--(ngModelChange)="selectedSection=$event;changeSelectedStudentToFirst();"-->
-                    <!--style="margin-right: 15px">-->
-                <!--<option *ngFor="let section of selectedClass.sectionList" [ngValue]="section">-->
-                    <!--{{section.name}}-->
-                <!--</option>-->
-            <!--</select>-->
-            <!--<div class="visible-xs" style="margin-top: 10px;"></div>-->
-        <!--</span>-->
-
-        <!--<span *ngIf="selectedSection">-->
-            <!--Student:-->
-            <!--<select [ngModel]="selectedStudent"-->
-                    <!--(ngModelChange)="selectedStudent=$event;this.showDetails=false;"-->
-                    <!--style="margin-right: 15px">-->
-                <!--<option *ngFor="let student of selectedSection.studentList" [ngValue]="student">-->
-                    <!--{{student.name}}-->
-                <!--</option>-->
-            <!--</select>-->
-        <!--</span>-->
-
-        <!--<div class="visible-xs" style="margin-top: 10px;"></div>-->
-
-        <!--<button type="button"-->
-                <!--class="btn btn-{{user.activeSchool.secondaryThemeColor}}"-->
-                <!--style="padding: 3px 8px;"-->
-                <!--[disabled]="!selectedStudent"-->
-                <!--(click)="getStudentProfile();">Get-->
-        <!--</button>-->
-
-        <!--&lt;!&ndash; span *ngIf="selectedSection" style="float: right; margin-top: 10px;"><i>{{selectedSection.studentList.length}} students</i></span &ndash;&gt;-->
-
-        <!--<span style="float: right; margin-top: 10px;"-->
-              <!--*ngIf="selectedSession">-->
-              <!--<select [ngModel]="selectedSession"-->
-                      <!--(ngModelChange)="selectedSession=$event;handleSessionChange();"-->
-                      <!--style="margin-right: 15px">-->
-                  <!--<option *ngFor="let session of sessionList;" [ngValue]="session">-->
-                      <!--{{session.name}}-->
-                  <!--</option>-->
-              <!--</select>-->
-        <!--</span>-->
-
-    <!--</ng-container>-->
-
     <student-filter [user]="user"
                     (onStudentSelected)="handleStudentSelection($event)"
                     (onStudentLoading)="isLoading=$event"
@@ -71,8 +12,6 @@
              style="border-bottom: 1px solid lightgrey;"></div>
     </div>
 
-
-    <!-- ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading && !isStudentListLoading" -->
     <ng-container *ngIf="showDetails==true && !isLoading">
 
 
@@ -135,15 +74,6 @@
                        (ngModelChange)="currentTransferCertificate.issueDate=$event"/>
             </div>
         </div>
-
-        <!-- div class="row">
-            <div class="col-md-3">Admission Date</div>
-            <div class="col-md-3">
-                <input type="date"
-                       [ngModel]="selectedTransferCertificate.admissionDate"
-                       (ngModelChange)="currentTransferCertificate.admissionDate=$event"/>
-            </div>
-        </div -->
 
         <div class="row">
             <div class="col-md-3">Leaving Date</div>
@@ -244,10 +174,6 @@
 
         <div class="clearfix"></div>
 
-    </ng-container>
-
-    <ng-container *ngIf="selectedClass && !selectedStudent">
-        <br/>No Students in this class
     </ng-container>
 
 </div>

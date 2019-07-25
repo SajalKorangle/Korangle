@@ -2,7 +2,6 @@
 import {School} from './school';
 
 import { EmitterService } from '../services/emitter.service';
-import {CommonFunctions} from "./common-functions";
 import {sendDataToAndroid} from "./common.js";
 
 export class User {
@@ -16,8 +15,6 @@ export class User {
     email: string;
     isAuthenticated = false;
     jwt = '';
-    // displayName: string;
-    // route = '';
 
     section: any;
 
@@ -30,7 +27,6 @@ export class User {
 
     emptyUserDetails(): void {
         this.username = null;
-        // this.displayName = null;
         this.first_name = null;
         this.last_name = null;
         this.id = null;
@@ -71,7 +67,6 @@ export class User {
         this.username = data.username;
         this.first_name = data.first_name;
         this.last_name = data.last_name;
-        // this.displayName = data.displayName;
         this.email = data.email;
         this.initializeSchoolList(data.schoolList);
         this.activeSchool = this.schoolList[0];
