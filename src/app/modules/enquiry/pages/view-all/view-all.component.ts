@@ -71,23 +71,21 @@ export class ViewAllComponent implements OnInit {
         this.isLoading = true;
         this.enquiryService.getEnquiryList(data, this.user.jwt).then(enquiryList => {
             this.isLoading = false;
-            this.enquiryList = enquiryList; 
+            this.enquiryList = enquiryList;
         }, error => {
             this.isLoading = false;
         });
-        
-    }    
+
+    }
 
     getEmployeeName(employeeId: number): string {
-        let employeeName = '';
-        this.employeeList.every(employee => {
-            if (employeeId === employee.id) {
-                employeeName = employee.name;
-                return false;
-            }
-            return true;
+        let employee = this.employeeList.find(employee => {
+            return employeeId == employee.id;
         });
-        return employeeName;
+        if (employee) {
+            return employee.name;
+        }
+        return '';
     }
 
     printEnquiryList(){
