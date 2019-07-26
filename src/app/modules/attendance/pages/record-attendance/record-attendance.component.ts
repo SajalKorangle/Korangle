@@ -9,6 +9,7 @@ import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 import { ExcelService } from "../../../../excel/excel-service";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'record-attendance',
@@ -23,7 +24,8 @@ import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constan
 
 export class RecordAttendanceComponent implements OnInit {
 
-    @Input() user;
+    // @Input() user;
+    user: any;
 
     classSectionStudentList = [];
 
@@ -58,7 +60,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     // Server Handling - Initial
     ngOnInit(): void {
-
+        this.user = DataStorage.getInstance().getUser();
         let request_attendance_permission_list_data = {
             parentEmployee: this.user.activeSchool.employeeId,
             sessionId: this.user.activeSchool.currentSessionDbId,

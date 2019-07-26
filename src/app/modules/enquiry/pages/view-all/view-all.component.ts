@@ -1,27 +1,29 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import { EnquiryService } from '../../enquiry.service';
 import { ClassService } from '../../../../services/class.service';
 import {PrintService} from "../../../../print/print-service";
 import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
 import { EmployeeService } from '../../../employee/employee.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [EmployeeService]
+    providers: [EmployeeService],
 })
 
 export class ViewAllComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     enquiryList = [];
 
     employeeList = []; 
 
     classList = [];
+    employeeList = []; 
 
     selectedEmployee = null;
     filteredEmployeeList = [];
@@ -40,16 +42,18 @@ export class ViewAllComponent implements OnInit {
                 private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         let data = {
             parentSchool: this.user.activeSchool.dbId
-        }
+        };
 
-        Promise.all([this.classService.getClassList(this.user.jwt), this.employeeService.getEmployeeProfileList(data, this.user.jwt)])
-                  .then(res => {
-                        this.classList = res[0];
-                        this.employeeList = res[1];           
-                    });
-
+        Promise.all([
+            this.classService.getClassList(this.user.jwt),
+            this.employeeService.getEmployeeProfileList(data, this.user.jwt)
+        ]).then(res => {
+            this.classList = res[0];
+            this.employeeList = res[1];
+        });
     }
 
     todaysDate(): string {
@@ -72,7 +76,6 @@ export class ViewAllComponent implements OnInit {
             parentSchool: this.user.activeSchool.dbId,
         };
 
-        this.enquiryList = [];
         this.isLoading = true;
         this.enquiryService.getEnquiryList(data, this.user.jwt).then(enquiryList => {
             this.isLoading = false;
@@ -84,15 +87,13 @@ export class ViewAllComponent implements OnInit {
     }
 
     getEmployeeName(employeeId: number): string {
-        let employeeName = '';
-        this.employeeList.every(employee => {
-                if (employeeId === employee.id) {
-                        employeeName = employee.name;
-                        return false;
-                    }
-                return true;
-            });
-        return employeeName;
+        let employee = this.employeeList.find(employee => {
+            return employeeId == employee.id;
+        });
+        if (employee) {
+            return employee.name;
+        }
+        return '';
     }
     
     getFilteredEmployeeList() {

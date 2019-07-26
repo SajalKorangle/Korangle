@@ -9,6 +9,7 @@ import {TEST_TYPE_LIST} from '../../classes/constants';
 import {StudentOldService} from '../../../students/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'update-cce-marks',
@@ -19,7 +20,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 export class UpdateCceMarksComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     classStudentCCEMarksList: any;
 
@@ -36,6 +37,8 @@ export class UpdateCceMarksComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new UpdateCceMarksServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

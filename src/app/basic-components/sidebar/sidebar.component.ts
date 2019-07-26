@@ -81,10 +81,10 @@ export class SidebarComponent implements OnInit {
                 }
             });
         EmitterService.get('initialize-router').subscribe(value => {
-            this.router.navigateByUrl(this.user.section.route);
+            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         });
         if (this.user.section) {
-            this.router.navigateByUrl(this.user.section.route);
+            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         }
     }
 
@@ -96,9 +96,12 @@ export class SidebarComponent implements OnInit {
     };
 
     changePage(task: any, module: any) {
-        this.user.populateSection(task, module);
-        this.router.navigateByUrl(this.user.section.route);
-        EmitterService.get('close-sidebar').emit();
+        this.router.navigateByUrl('');
+        setTimeout(() => {
+            this.user.populateSection(task, module);
+            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
+            EmitterService.get('close-sidebar').emit();
+        });
     }
 
     checkChangeSession(){

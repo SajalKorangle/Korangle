@@ -5,6 +5,7 @@ import {INSTALLMENT_LIST} from "../../classes/constants";
 import {StudentService} from "../../../../services/student.service";
 import {ClassService} from "../../../../services/class.service";
 import {SESSION_LIST} from "../../../../classes/constants/session";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'generate-fees-report',
@@ -18,7 +19,7 @@ export class GenerateFeesReportComponent implements OnInit {
     installmentList = INSTALLMENT_LIST;
     sessionList = SESSION_LIST;
 
-    @Input() user;
+     user;
 
     subFeeReceiptList: any;
     subDiscountList: any;
@@ -49,6 +50,8 @@ export class GenerateFeesReportComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new GenerateFeesReportServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

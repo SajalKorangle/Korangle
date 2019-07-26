@@ -12,6 +12,7 @@ import {FeeType} from "../../../../services/fees/fee-type";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {ClassService} from "../../../../services/class.service";
 import {VehicleService} from "../../../vehicle/vehicle.service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'update-student-fees',
@@ -37,7 +38,7 @@ export class UpdateStudentFeesComponent implements OnInit {
         'march',
     ];
 
-    @Input() user;
+   user;
 
     feeTypeList: any;
     schoolFeeRuleList: SchoolFeeRule[];
@@ -71,6 +72,8 @@ export class UpdateStudentFeesComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new UpdateStudentFeesServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

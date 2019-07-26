@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ExaminationOldService } from '../../../../services/examination-old.service';
 
 import { CreateExaminationServiceAdapter } from './create-examination.service.adapter';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'create-examination',
@@ -13,7 +14,7 @@ import { CreateExaminationServiceAdapter } from './create-examination.service.ad
 
 export class CreateExaminationComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     examinationList: any;
     examinationNameToBeAdded = null;
@@ -26,6 +27,8 @@ export class CreateExaminationComponent implements OnInit {
     constructor(public examinationService: ExaminationOldService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new CreateExaminationServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

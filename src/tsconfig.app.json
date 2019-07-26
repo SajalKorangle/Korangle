@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "module": "commonjs",
-    "baseUrl": "",
+    "baseUrl": "./",
     "types": [],
     "paths": {
       "moment": [

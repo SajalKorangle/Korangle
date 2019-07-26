@@ -11,6 +11,7 @@ import {StudentOldService} from '../../../students/student-old.service';
 import {SubjectOldService} from '../../../../services/subject-old.service';
 import {AttendanceService} from '../../../attendance/attendance.service';
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'generate-patrak',
@@ -21,7 +22,7 @@ import {ExcelService} from "../../../../excel/excel-service";
 
 export class GeneratePatrakComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     reportCardTypeList = REPORT_CARD_TYPE_LIST;
 
@@ -50,6 +51,8 @@ export class GeneratePatrakComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new GeneratePatrakServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

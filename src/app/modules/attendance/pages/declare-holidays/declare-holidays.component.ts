@@ -4,6 +4,7 @@ import { AttendanceService } from '../../attendance.service';
 import {StudentOldService} from '../../../students/student-old.service';
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
 import {EmployeeService} from '../../../employee/employee.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'declare-holidays',
@@ -14,7 +15,7 @@ import {EmployeeService} from '../../../employee/employee.service';
 
 export class DeclareHolidaysComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     classSectionStudentList = [];
     employeeList = [];
@@ -31,6 +32,7 @@ export class DeclareHolidaysComponent implements OnInit {
                  private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         let request_student_data = {
             schoolDbId: this.user.activeSchool.dbId,

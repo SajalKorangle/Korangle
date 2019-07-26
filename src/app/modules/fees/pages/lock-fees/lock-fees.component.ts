@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { LockFeesServiceAdapter } from "./lock-fees.service.adapter";
 import { FeeService } from "../../../../services/fee.service";
 import {SESSION_LIST} from "../../../../classes/constants/session";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'lock-fees',
@@ -14,7 +15,7 @@ export class LockFeesComponent implements OnInit {
 
     sessionList = SESSION_LIST;
 
-    @Input() user;
+    user;
 
     serviceAdapter: LockFeesServiceAdapter;
 
@@ -26,6 +27,8 @@ export class LockFeesComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new LockFeesServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

@@ -5,6 +5,7 @@ import { ClassService } from '../../../../services/class.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'update-enquiry',
@@ -14,7 +15,7 @@ import {map} from 'rxjs/operators';
 
 export class UpdateEnquiryComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     classList: any;
 
@@ -33,6 +34,8 @@ export class UpdateEnquiryComponent implements OnInit {
                  private classService: ClassService) { }
 
     ngOnInit(): void {
+
+        this.user = DataStorage.getInstance().getUser();
 
         this.currentEnquiry = {};
 

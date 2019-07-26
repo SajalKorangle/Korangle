@@ -3,6 +3,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {EmployeeService} from '../../../employee/employee.service';
 import {SalaryService} from '../../salary.service';
 import { ViewRecordServiceAdapter } from './view-record.service.adapter';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'view-record',
@@ -15,7 +16,7 @@ import { ViewRecordServiceAdapter } from './view-record.service.adapter';
 
 export class ViewRecordComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     employeeList = null;
 
@@ -27,6 +28,8 @@ export class ViewRecordComponent implements OnInit {
                  public salaryService: SalaryService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.getEmployeeList();
     }

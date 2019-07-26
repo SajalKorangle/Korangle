@@ -9,6 +9,7 @@ import {ClassFilterFee} from "../../../../services/fees/class-filter-fee";
 import {BusStopFilterFee} from "../../../../services/fees/bus-stop-filter-fee";
 import {FormControl} from "@angular/forms";
 import {INSTALLMENT_LIST} from "../../classes/constants";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'set-school-fees',
@@ -21,7 +22,7 @@ export class SetSchoolFeesComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+    user;
 
     feeTypeList: any;
     classList: any;
@@ -59,6 +60,8 @@ export class SetSchoolFeesComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.initializeNewSchoolFeeRule();
         this.serviceAdapter = new SetSchoolFeesServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

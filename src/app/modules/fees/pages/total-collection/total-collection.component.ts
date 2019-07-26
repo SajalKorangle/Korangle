@@ -8,6 +8,7 @@ import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'total-collection',
@@ -23,7 +24,7 @@ export class TotalCollectionComponent implements OnInit {
     nullValue = null;
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+    user;
 
     startDate: any;
     endDate: any;
@@ -61,6 +62,7 @@ export class TotalCollectionComponent implements OnInit {
                 private printService: PrintService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new TotalCollectionServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
