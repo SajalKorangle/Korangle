@@ -20,8 +20,6 @@ export class ViewAllComponent implements OnInit {
 
     enquiryList = [];
 
-    employeeList = []; 
-
     classList = [];
     employeeList = []; 
 
