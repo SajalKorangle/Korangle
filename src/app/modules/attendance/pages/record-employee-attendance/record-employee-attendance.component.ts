@@ -9,6 +9,7 @@ import {EmployeeService} from '../../../employee/employee.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_ATTENDANCE } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'record-employee-attendance',
@@ -23,7 +24,7 @@ import {ExcelService} from "../../../../excel/excel-service";
 
 export class RecordEmployeeAttendanceComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     employeeList: any;
 
@@ -50,6 +51,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     // Server Handling - Initial
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         let request_employee_data = {
             parentSchool: this.user.activeSchool.dbId,

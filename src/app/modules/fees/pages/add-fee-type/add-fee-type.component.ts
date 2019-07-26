@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {AddFeeTypeServiceAdapter} from "./add-fee-type.service.adapter";
 import { FeeService } from "../../../../services/fee.service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'add-fee-type',
@@ -11,7 +12,7 @@ import { FeeService } from "../../../../services/fee.service";
 
 export class AddFeeTypeComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     feeTypeList: any;
     feeTypeNameToBeAdded: any;
@@ -25,6 +26,8 @@ export class AddFeeTypeComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new AddFeeTypeServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

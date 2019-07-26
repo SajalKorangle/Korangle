@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import { EmployeeService } from '../../employee.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'add-employee',
@@ -10,7 +11,7 @@ import { EmployeeService } from '../../employee.service';
 
 export class AddEmployeeComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     newEmployee: any;
     newEmployeeSessionDetail: any;
@@ -22,6 +23,8 @@ export class AddEmployeeComponent implements OnInit {
     constructor (private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.newEmployee = {};
         this.newEmployeeSessionDetail = {};
         let data = {

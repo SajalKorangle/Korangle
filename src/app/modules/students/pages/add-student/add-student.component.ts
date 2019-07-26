@@ -13,6 +13,7 @@ import {ExaminationService} from "../../../../services/examination.service";
 import {SubjectService} from "../../../../services/subject.service";
 import {FeeService} from "../../../../services/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'add-student',
@@ -27,7 +28,7 @@ export class AddStudentComponent implements OnInit {
     sessionList = SESSION_LIST;
     nullValue = null;
 
-    @Input() user;
+    user:any;
 
     // From Service Adapter
     classList = [];
@@ -55,6 +56,7 @@ export class AddStudentComponent implements OnInit {
                  public feeService: FeeService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new AddStudentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

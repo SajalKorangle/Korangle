@@ -22,6 +22,7 @@ import {EmployeeService} from "../../../../services/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 declare const $: any;
 
@@ -34,7 +35,7 @@ declare const $: any;
 
 export class CollectFeeComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -67,7 +68,7 @@ export class CollectFeeComponent implements OnInit {
     newSubFeeReceiptList = [];
     newRemark = null;
     newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
-    newCheckNumber = null;
+    newChequeNumber = null;
 
     studentFeeDetailsVisibleList = [];
 
@@ -88,6 +89,7 @@ export class CollectFeeComponent implements OnInit {
                 private printService: PrintService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new CollectFeeServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -158,7 +160,7 @@ export class CollectFeeComponent implements OnInit {
         this.studentFeeDetailsVisibleList = [];
         this.newRemark = null;
         this.newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
-        this.newCheckNumber = null;
+        this.newChequeNumber = null;
     
     
     }
@@ -1153,15 +1155,15 @@ export class CollectFeeComponent implements OnInit {
         this.newFeeReceiptList.forEach(feeReceipt => {
             feeReceipt.modeOfPayment = this.newModeOfPayment;
             if (feeReceipt.modeOfPayment != this.modeOfPaymentList[1]) {
-                this.newCheckNumber = null;
-                feeReceipt.checkNumber = null;
+                this.newChequeNumber = null;
+                feeReceipt.chequeNumber = null;
             }
         });
     }
 
-    updateNewFeeReceiptCheckNumber(): void {
+    updateNewFeeReceiptChequeNumber(): void {
         this.newFeeReceiptList.forEach(feeReceipt => {
-            feeReceipt.checkNumber = this.newCheckNumber;
+            feeReceipt.chequeNumber = this.newChequeNumber;
         });
     }
 

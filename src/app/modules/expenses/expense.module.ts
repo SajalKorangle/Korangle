@@ -4,9 +4,6 @@ import { ComponentsModule } from '../../components/components.module';
 
 import { ExpenseComponent } from './expense.component';
 
-import { ExpenseListComponent } from './expense-list/expense-list.component';
-import { AddExpenseComponent } from './add-expense/add-expense.component';
-
 import {ExpenseRoutingModule} from './expense.routing';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 
@@ -15,9 +12,6 @@ import { PrintExpensesComponent } from './print/print-expenses/print-expenses.co
     declarations: [
 
         ExpenseComponent,
-
-        ExpenseListComponent,
-        AddExpenseComponent,
         PrintExpensesComponent
 
     ],

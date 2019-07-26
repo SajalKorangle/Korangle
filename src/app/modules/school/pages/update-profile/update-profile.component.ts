@@ -2,6 +2,7 @@ import {Component, Input, OnInit } from '@angular/core';
 
 import { SchoolService } from '../../../../services/school.service';
 import {MEDIUM_LIST} from '../../../../classes/constants/medium';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'update-profile',
@@ -12,7 +13,7 @@ import {MEDIUM_LIST} from '../../../../classes/constants/medium';
 
 export class UpdateProfileComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     mediumList = MEDIUM_LIST;
 
@@ -36,6 +37,8 @@ export class UpdateProfileComponent implements OnInit {
     constructor (private schoolService: SchoolService) { }
 
     ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
+
         this.isLoading = true;
 
         this.currentName = this.user.activeSchool.name;

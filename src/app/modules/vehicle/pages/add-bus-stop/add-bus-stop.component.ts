@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import { VehicleService } from '../../vehicle.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'add-bus-stop',
@@ -10,7 +11,7 @@ import { VehicleService } from '../../vehicle.service';
 
 export class AddBusStopComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     newBusStop: any;
 
@@ -19,6 +20,8 @@ export class AddBusStopComponent implements OnInit {
     constructor (private vehicleService: VehicleService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.newBusStop = {};
     }
 

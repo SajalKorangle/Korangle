@@ -10,6 +10,7 @@ import {TEST_TYPE_LIST} from '../../classes/constants';
 import {StudentOldService} from '../../../students/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'grade-student-fields',
@@ -20,7 +21,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 export class GradeStudentFieldsComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     showTestDetails = false;
 
@@ -50,6 +51,7 @@ export class GradeStudentFieldsComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new GradeStudentFieldsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

@@ -7,7 +7,7 @@
             <th *ngIf="receiptColumnFilter.class" class="text-center">Class</th>
             <th *ngIf="receiptColumnFilter.amount" class="text-right">Amount</th>
             <th *ngIf="receiptColumnFilter.modeOfPayment" class="text-right">Payment Mode</th>
-            <th *ngIf="receiptColumnFilter.checkNumber" class="text-right">Check No.</th>
+            <th *ngIf="receiptColumnFilter.chequeNumber" class="text-right">Cheque No.</th>
             <th *ngIf="receiptColumnFilter.date" class="text-center">Date</th>
             <th *ngIf="receiptColumnFilter.remark" class="text-center">Remark</th>
             <th *ngIf="receiptColumnFilter.employee" class="text-left">Collected By</th>
@@ -25,7 +25,7 @@
             </td>
             <td *ngIf="receiptColumnFilter.amount" style="padding-right: 15px;" align="right">{{getFeeReceiptTotalAmount(feeReceipt)}}</td>
             <td *ngIf="receiptColumnFilter.modeOfPayment" align="center">{{feeReceipt.modeOfPayment}}</td>
-            <td *ngIf="receiptColumnFilter.checkNumber" align="center">{{feeReceipt.checkNumber}}</td>
+            <td *ngIf="receiptColumnFilter.chequeNumber" align="center">{{feeReceipt.chequeNumber}}</td>
             <td *ngIf="receiptColumnFilter.date" align="center">{{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
             <td *ngIf="receiptColumnFilter.remark" align="center">{{feeReceipt.remark}}</td>
             <td *ngIf="receiptColumnFilter.employee" align="left">{{getEmployeeName(feeReceipt)}}</td>

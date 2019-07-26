@@ -10,6 +10,7 @@ import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../../students/student-old.service';
 import {SubjectOldService} from '../../../../services/subject-old.service';
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'generate-goshwara',
@@ -20,7 +21,7 @@ import {ExcelService} from "../../../../excel/excel-service";
 
 export class GenerateGoshwaraComponent implements OnInit {
 
-    @Input() user;
+   user;
 
     reportCardTypeList = REPORT_CARD_TYPE_LIST;
 
@@ -48,6 +49,8 @@ export class GenerateGoshwaraComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new GenerateGoshwaraServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

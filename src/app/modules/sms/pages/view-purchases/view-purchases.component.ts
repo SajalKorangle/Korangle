@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { SmsService } from '../../sms.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'view-purchases',
@@ -9,7 +10,7 @@ import { SmsService } from '../../sms.service';
 })
 export class ViewPurchasesComponent implements OnInit{
 
-    @Input() user;
+    user;
 
     smsPurchaseList: any;
 
@@ -30,6 +31,8 @@ export class ViewPurchasesComponent implements OnInit{
     constructor(private smsService: SmsService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.isLoading = true;
         let data = {
             'parentSchool': this.user.activeSchool.dbId,

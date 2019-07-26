@@ -6,6 +6,7 @@ import {StudentOldService} from '../../student-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -45,7 +46,7 @@ class ColumnFilter {
 
 export class ViewAllComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     columnFilter: ColumnFilter;
 
@@ -87,6 +88,7 @@ export class ViewAllComponent implements OnInit {
                 private printService: PrintService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.columnFilter = new ColumnFilter();
 
