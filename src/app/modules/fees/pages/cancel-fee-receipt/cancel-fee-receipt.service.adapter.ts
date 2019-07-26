@@ -47,13 +47,13 @@ export class CancelFeeReceiptServiceAdapter {
         let fee_receipt_list = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'receiptNumber__or': this.vm.searchParameter,
-            'checkNumber': this.vm.searchParameter,
+            'chequeNumber': this.vm.searchParameter,
         };
 
         let sub_fee_receipt_list = {
             'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId,
             'parentFeeReceipt__receiptNumber__or': this.vm.searchParameter,
-            'parentFeeReceipt__checkNumber': this.vm.searchParameter,
+            'parentFeeReceipt__chequeNumber': this.vm.searchParameter,
         };
 
         Promise.all([
