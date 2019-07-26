@@ -1,6 +1,6 @@
 
 export class Constants {
 
-    public static api_version = '/v2.1';
+    public static api_version = '/v2.2';
 
 }
