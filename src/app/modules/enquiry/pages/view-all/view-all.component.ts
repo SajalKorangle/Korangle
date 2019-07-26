@@ -123,7 +123,7 @@ export class ViewAllComponent implements OnInit {
 
 
     printEnquiryList(){
-        this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {user: this.user, value: [this.enquiryList,this.classList]});
+        this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {user: this.user, value: [this.getFilteredEnquiryList(), this.getFilteredClassList(), this.getFilteredEmployeeList()]});
     }
 
     getClassName(dbId: number): string {
