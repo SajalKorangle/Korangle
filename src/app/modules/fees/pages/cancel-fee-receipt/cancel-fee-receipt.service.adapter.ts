@@ -144,15 +144,6 @@ export class CancelFeeReceiptServiceAdapter {
             'cancelled': true,
         };
 
-        /*let sub_fee_receipt_list = this.vm.subFeeReceiptList.filter(subFeeReceipt => {
-            return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
-        }).map(item => {
-            return {
-                'id': item.id,
-                'cancelled': true,
-            }
-        });*/
-
         let student_fee_list = this.vm.subFeeReceiptList.filter(subFeeReceipt => {
             return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
         }).map(item => {
