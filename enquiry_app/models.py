@@ -36,4 +36,3 @@ class Enquiry(models.Model):
 
     class Meta:
         db_table = 'enquiry'
-
