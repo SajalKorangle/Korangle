@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import { EnquiryService } from '../../enquiry.service';
 import { ClassService } from '../../../../services/class.service';
@@ -20,8 +20,16 @@ export class ViewAllComponent implements OnInit {
 
     enquiryList = [];
 
+    employeeList = []; 
+
     classList = [];
     employeeList = []; 
+
+    selectedEmployee = null;
+    filteredEmployeeList = [];
+
+    selectedClass = null;
+    filteredClassList = [];
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
@@ -87,6 +95,33 @@ export class ViewAllComponent implements OnInit {
         }
         return '';
     }
+    
+    getFilteredEmployeeList() {
+        this.filteredEmployeeList = this.employeeList.filter(employee => {
+            return this.enquiryList.map(a => a.parentEmployee).filter((item, index, final) => {
+                return final.indexOf(item) == index;
+            }).includes(employee.id);
+        });
+    
+        return this.filteredEmployeeList
+    }
+
+    getFilteredEnquiryList(): any {
+        let tempList = this.enquiryList;
+        if (this.selectedEmployee) {
+            tempList = tempList.filter(enqList => {
+                return enqList.parentEmployee == this.selectedEmployee.id;
+            });
+        }
+
+        if (this.selectedClass) {
+            tempList = tempList.filter(enqList => {
+                return enqList.parentClass == this.selectedClass.dbId
+            });
+        }
+        return tempList;
+    }
+
 
     printEnquiryList(){
         this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {user: this.user, value: [this.enquiryList,this.classList]});
@@ -102,6 +137,15 @@ export class ViewAllComponent implements OnInit {
             return true;
         });
         return className;
+    }
+
+    getFilteredClassList() {
+        this.filteredClassList = this.classList.filter(className => {
+            return this.enquiryList.map(a => a.parentClass).filter((item, index, final) => {
+                return final.indexOf(item) == index;
+            }).includes(className.dbId)
+        });
+        return this.filteredClassList
     }
 
 }

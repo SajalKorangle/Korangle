@@ -38,10 +38,35 @@
         Displaying {{enquiryList.length}}
         <span *ngIf="enquiryList.length<=1">enquiry</span>
         <span *ngIf="enquiryList.length>1">enquiries</span>
-    </i>
+    </i> <br> <br>
 
     <!-- Enquiry Table List -->
-    <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="!isLoading && enquiryList">
+
+        <ng-container *ngIf="enquiryList.length > 0">
+
+            <mat-form-field style="margin-right: 15px;">
+                <mat-select placeholder="Collected By" [(ngModel)]="selectedEmployee">
+                    <mat-option *ngFor="let employee of getFilteredEmployeeList();" [value]="employee">
+                        {{employee.name}}
+                    </mat-option>
+                    <mat-option [value]="nullValue">
+                        All
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="margin-right: 15px;">
+                <mat-select placeholder="Collection of Classes" [(ngModel)]="selectedClass">
+                    <mat-option *ngFor="let classs of getFilteredClassList();" [value]="classs">
+                        {{classs.name}}
+                    </mat-option>
+                    <mat-option [value]="nullValue">
+                        All
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
         <table class="table table-hover">
             <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
             <tr>
@@ -57,7 +82,7 @@
             </tr>
             </thead>
             <tbody>
-            <ng-container *ngFor="let enquiry of enquiryList; let i = index">
+            <ng-container *ngFor="let enquiry of getFilteredEnquiryList(); let i = index">
                 <tr>
                     <ng-container>
                         <td>{{i+1}}.</td>
@@ -77,6 +102,7 @@
             </ng-container>
             </tbody>
         </table>
+        </ng-container>
     </ng-container>
 
 </div>
