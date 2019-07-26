@@ -8,6 +8,7 @@ import { SchoolService } from '../../../../services/school.service';
 
 import { SetStudentSubjectServiceAdapter } from './set-student-subject.service.adapter';
 import {ExaminationOldService} from '../../../../services/examination-old.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'set-student-subject',
@@ -18,7 +19,7 @@ import {ExaminationOldService} from '../../../../services/examination-old.servic
 
 export class SetStudentSubjectComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     serviceAdapter: SetStudentSubjectServiceAdapter;
 
@@ -38,6 +39,8 @@ export class SetStudentSubjectComponent implements OnInit {
                 public examinationService: ExaminationOldService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new SetStudentSubjectServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
 

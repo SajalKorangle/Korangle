@@ -3,6 +3,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ClassService} from '../../../../services/class.service';
 import {StudentOldService} from '../../student-old.service';
 import { ChangeDetectorRef } from '@angular/core';
+import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnHandle {
     name: any;
@@ -65,7 +66,7 @@ const RELIGION_LIST = [
 
 export class UpdateAllComponent implements OnInit {
 
-    @Input() user;
+    user:any ;
 
     COLUMNHANDLES: ColumnHandle[] = [
         // value, key, inputType, show, selectedList
@@ -134,7 +135,7 @@ export class UpdateAllComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
-
+        this.user = DataStorage.getInstance().getUser();
         const student_full_profile_request_data = {
             schoolDbId: this.user.activeSchool.dbId,
             sessionDbId: this.user.activeSchool.currentSessionDbId,

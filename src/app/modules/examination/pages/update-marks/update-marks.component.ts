@@ -9,6 +9,7 @@ import {TEST_TYPE_LIST} from '../../classes/constants';
 import {StudentOldService} from '../../../students/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'update-class-marks',
@@ -19,7 +20,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 export class UpdateMarksComponent implements OnInit {
 
-    @Input() user;
+   user;
 
     showTestDetails = false;
 
@@ -45,6 +46,8 @@ export class UpdateMarksComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new UpdateMarksServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

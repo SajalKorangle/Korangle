@@ -22,6 +22,7 @@ import {EmployeeService} from "../../../../services/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 declare const $: any;
 
@@ -34,7 +35,7 @@ declare const $: any;
 
 export class CollectFeeComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -88,6 +89,7 @@ export class CollectFeeComponent implements OnInit {
                 private printService: PrintService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new CollectFeeServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

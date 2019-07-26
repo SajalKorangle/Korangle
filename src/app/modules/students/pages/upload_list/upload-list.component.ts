@@ -6,6 +6,7 @@ import {VehicleService} from '../../../vehicle/vehicle.service';
 import {SchoolService} from '../../../../services/school.service';
 
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 // Constants
 const NAME = 0;
@@ -172,7 +173,7 @@ const RTE_VALUES = [
 
 export class UploadListComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     displayStudentNumber = 0;
 
@@ -211,6 +212,8 @@ export class UploadListComponent implements OnInit {
                 private vehicleService: VehicleService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         let request_bus_stop_data = {
             parentSchool: this.user.activeSchool.dbId,
         };

@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {EmployeeService} from '../../employee.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_EXP_CERT } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'app-experience-certi',
@@ -10,7 +11,7 @@ import { PRINT_EMPLOYEE_EXP_CERT } from '../../../../print/print-routes.constant
 })
 
 export class ExperienceCertiComponent {
-    @Input() user;
+    user;
 
     employee: any;
     employeeFullProfile: any;
@@ -29,6 +30,9 @@ export class ExperienceCertiComponent {
 
 
     constructor (private employeeService: EmployeeService, private printService: PrintService) { }
+    ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
+    }
 
     getEmployeeProfile(employee: any): void {
 

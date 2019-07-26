@@ -1,13 +1,9 @@
 
-
-// import {Constants} from './constants';
-
 export class School {
 
     dbId = 0;
     name: string; // School Name (for sidebar)
     printName: string;
-    //logo: string;
     profileImage: string;
     principalSignatureImage: string;
     mobileNumber: number;
@@ -107,11 +103,6 @@ export class School {
                     path: 'view_profile',
                     icon: 'account_circle',
                 },
-                /*{
-                    title: 'Fees',
-                    path: 'view_fee',
-                    icon: 'receipt',
-                },*/
                 {
                     title: 'Attendance',
                     path: 'view_attendance',

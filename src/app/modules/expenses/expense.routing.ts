@@ -2,14 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ExpenseComponent } from './expense.component';
 import { PRINT_EXPENSES } from 'app/print/print-routes.constants';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 
 const routes: Routes = [
     {
-        path: '',
-        component: ExpenseComponent,
+        path: 'add_expense',
+        loadChildren: 'app/modules/expenses/pages/add-expense/add-expense.module#AddExpenseModule',
+        data: {moduleName: 'expenses'},
+    },
+    {
+        path: 'expense_list',
+        loadChildren: 'app/modules/expenses/pages/expense-list/expense-list.module#ExpenseListModule',
+        data: {moduleName: 'expenses'},
     },
     {
         path: PRINT_EXPENSES,

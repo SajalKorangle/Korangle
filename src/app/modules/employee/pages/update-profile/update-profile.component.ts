@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { EmployeeService } from '../../employee.service';
 
 import {FormControl} from '@angular/forms';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'update-profile',
@@ -12,7 +13,7 @@ import {FormControl} from '@angular/forms';
 
 export class UpdateProfileComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     employeeList: any;
 
@@ -29,6 +30,7 @@ export class UpdateProfileComponent implements OnInit {
     constructor (private employeeService: EmployeeService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.currentEmployeeProfile = {};
         this.currentEmployeeSessionProfile = {};

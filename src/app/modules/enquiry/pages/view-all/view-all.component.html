@@ -53,6 +53,7 @@
                 <th>Class</th>
                 <th>Address</th>
                 <th>Remark</th>
+                <th>Employee Name</th>
             </tr>
             </thead>
             <tbody>
@@ -70,6 +71,7 @@
                         <td>{{getClassName(enquiry.parentClass)}}</td>
                         <td>{{enquiry.address}}</td>
                         <td>{{enquiry.remark}}</td>
+                        <td>{{getEmployeeName(enquiry.parentEmployee)}}</td>
                     </ng-container>
                 </tr>
             </ng-container>

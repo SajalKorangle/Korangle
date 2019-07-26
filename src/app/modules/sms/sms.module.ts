@@ -18,9 +18,9 @@ import { SmsService } from './sms.service';
 
         SmsComponent,
 
-        SendSmsComponent,
-        ViewSentComponent,
-        ViewPurchasesComponent,
+        // SendSmsComponent,
+        // ViewSentComponent,
+        // ViewPurchasesComponent,
 
     ],
 

@@ -7,6 +7,7 @@ import { SubjectOldService } from '../../../../services/subject-old.service';
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
 import {TEST_TYPE_LIST} from '../../classes/constants';
 import {StudentOldService} from '../../../students/student-old.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'create-test',
@@ -17,7 +18,7 @@ import {StudentOldService} from '../../../students/student-old.service';
 
 export class CreateTestComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     showTestDetails = false;
 
@@ -48,6 +49,8 @@ export class CreateTestComponent implements OnInit {
                 public studentService: StudentOldService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new CreateTestServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

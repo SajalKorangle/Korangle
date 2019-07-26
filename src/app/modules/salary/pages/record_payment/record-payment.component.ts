@@ -3,6 +3,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {EmployeeService} from '../../../employee/employee.service';
 import {SalaryService} from '../../salary.service';
 import {RecordPaymentServiceAdapter} from './record-payment.service.adapter';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'record-payment',
@@ -15,7 +16,7 @@ import {RecordPaymentServiceAdapter} from './record-payment.service.adapter';
 
 export class RecordPaymentComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     employeeList = null;
 
@@ -36,6 +37,8 @@ export class RecordPaymentComponent implements OnInit {
                  public salaryService: SalaryService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.getEmployeeList();
     }

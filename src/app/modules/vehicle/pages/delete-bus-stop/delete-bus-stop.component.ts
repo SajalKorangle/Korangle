@@ -4,6 +4,7 @@ import { VehicleService } from '../../vehicle.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'delete-bus-stop',
@@ -13,7 +14,7 @@ import {map} from 'rxjs/operators';
 
 export class DeleteBusStopComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     busStopList: any;
     filteredBusStopList: any;
@@ -29,6 +30,7 @@ export class DeleteBusStopComponent implements OnInit {
     constructor (private vehicleService: VehicleService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         const data = {
             parentSchool: this.user.activeSchool.dbId,

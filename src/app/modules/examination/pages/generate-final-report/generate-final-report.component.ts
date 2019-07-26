@@ -12,6 +12,7 @@ import {SubjectOldService} from '../../../../services/subject-old.service';
 import {AttendanceService} from '../../../attendance/attendance.service';
 import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, PRINT_STUDENT_CLASSIC_FINAL_REPORT, PRINT_STUDENT_ELEGANT_FINAL_REPORT, PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT } from '../../../../print/print-routes.constants';
 import { PrintService } from '../../../../print/print-service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'generate-final-report',
@@ -22,7 +23,7 @@ import { PrintService } from '../../../../print/print-service';
 
 export class GenerateFinalReportComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     reportCardTypeList = REPORT_CARD_TYPE_LIST;
 
@@ -51,6 +52,8 @@ export class GenerateFinalReportComponent implements OnInit {
                 private printService: PrintService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new GenerateFinalReportServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

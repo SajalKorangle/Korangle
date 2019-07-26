@@ -11,6 +11,7 @@ import {StudentOldService} from '../../../students/student-old.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_MARKSHEET } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'examination-print-marksheet',
@@ -21,7 +22,7 @@ import { PRINT_STUDENT_MARKSHEET } from '../../../../print/print-routes.constant
 
 export class PrintMarksheetComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     showTestDetails = false;
 
@@ -48,6 +49,8 @@ export class PrintMarksheetComponent implements OnInit {
                 private printService: PrintService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new PrintMarksheetServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

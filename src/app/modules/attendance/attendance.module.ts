@@ -19,11 +19,11 @@ import {ExcelService} from "../../excel/excel-service";
 @NgModule({
     declarations: [
         AttendanceComponent,
-        DeclareHolidaysComponent,
-        GivePermissionsComponent,
-        RecordAttendanceComponent,
-        RecordEmployeeAttendanceComponent,
-        ApproveLeaveComponent,
+        // DeclareHolidaysComponent,
+        // GivePermissionsComponent,
+        // RecordAttendanceComponent,
+        // RecordEmployeeAttendanceComponent,
+        // ApproveLeaveComponent,
         PrintStudentAttendanceListComponent,
         PrintEmployeeAttendanceListComponent
     ],

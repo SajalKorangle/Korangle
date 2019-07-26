@@ -46,9 +46,6 @@ export class StudentFilterComponent implements OnInit {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
         };
-        const request_class_section_data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
         Promise.all([
             this.schoolService.getSessionList(this.user.jwt),
             this.studentService.getStudentMiniProfileList(request_student_data, this.user.jwt),

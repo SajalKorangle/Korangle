@@ -6,6 +6,7 @@ import { SetFinalReportServiceAdapter } from './set-final-report.service.adapter
 import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'set-final-report',
@@ -16,7 +17,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 export class SetFinalReportComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     examinationList: any;
     reportCardMapping: any;
@@ -32,6 +33,8 @@ export class SetFinalReportComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new SetFinalReportServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

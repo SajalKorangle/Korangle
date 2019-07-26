@@ -11,6 +11,7 @@ import {StudentService} from "../../../../services/student.service";
 import {StudentSection} from "../../../../services/student/student-section";
 import {FeeService} from "../../../../services/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'promote-student',
@@ -24,7 +25,7 @@ export class PromoteStudentComponent implements OnInit {
     sessionList = SESSION_LIST;
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+    user;
 
     // From Service Adapter
     classList: any;
@@ -60,6 +61,7 @@ export class PromoteStudentComponent implements OnInit {
                  public examinationService: ExaminationService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         if (this.isMobileMenu()) { return; }
 

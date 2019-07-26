@@ -25,8 +25,6 @@ export const PRINT_STUDENT_MARKSHEET = 'print-student-marksheet';
 //salary
 export const PRINT_SALARY_SHEET = 'print-salary-sheet';
 
-//fees-second
-export const PRINT_OLD_FEE_RECIEPT_LIST = 'print-old-fee-receipt-list';
 //fees
 export const PRINT_FEE_RECIEPT_LIST = 'print-fee-receipt-list';
 export const PRINT_FULL_FEE_RECIEPT_LIST = 'print-full-fee-receipt-list';

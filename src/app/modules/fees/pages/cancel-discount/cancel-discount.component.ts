@@ -6,6 +6,7 @@ import {FormControl} from "@angular/forms";
 import {ClassService} from "../../../../services/class.service";
 import {StudentService} from "../../../../services/student.service";
 import {EmployeeService} from "../../../../services/employee.service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'cancel-discount',
@@ -18,7 +19,7 @@ export class CancelDiscountComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+    user;
 
     searchParameter = new FormControl();
 
@@ -41,6 +42,8 @@ export class CancelDiscountComponent implements OnInit {
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new CancelDiscountServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
