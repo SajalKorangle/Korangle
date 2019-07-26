@@ -28,7 +28,7 @@ export class ReceiptColumnFilter {
     'class'= true;
     'amount'= true;
     'modeOfPayment' = false;
-    'checkNumber' = false;
+    'chequeNumber' = false;
     'date'= true;
     'remark'= true;
     'employee'= true;

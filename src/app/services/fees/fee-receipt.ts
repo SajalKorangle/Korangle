@@ -11,6 +11,6 @@ export class FeeReceipt {
     parentSession: number = null;
     parentEmployee: number = null;
     modeOfPayment: string = null;
-    checkNumber: number = null;
+    chequeNumber: number = null;
 
 }
