@@ -168,17 +168,19 @@ export class ViewAllComponent implements OnInit {
         return admissionSession;
     }
 
-    getBusStop(busStopDbId: number): string {
-        let busStopName = null;
-        this.busStopList.every(busStop => {
-            if (busStop.dbId === busStopDbId) {
-                busStopName = busStop.stopName;
-                return false;
-            }
-            return true;
-        });
-        return busStopName;
+    getBusStopName(busStopDbId: any) {
+        let stopName = 'None';
+        if (busStopDbId !== null) {
+            this.busStopList.forEach(busStop => {
+                if (busStop.dbId == busStopDbId) {
+                    stopName = busStop.stopName;
+                    return;
+                }
+            });
+        }
+        return stopName;
     }
+
 
     getSectionObject(classDbId: any, sectionDbId: number): any {
         let sectionObject = null;
