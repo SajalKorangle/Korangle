@@ -6,6 +6,8 @@ import {StudentOldService} from '../../student-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
+import { SESSION_LIST } from '../../../../classes/constants/session';
+import { BusStopService } from '../../../../services/bus-stop.service';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -34,18 +36,24 @@ class ColumnFilter {
     showBloodGroup = false;
     showFatherAnnualIncome = false;
     showRTE = false;
+    showAdmissionSession = false;
+    showBusStopName = false;
+    showDateOfAdmission = false;
+    showRemark = false;
 }
 
 @Component({
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassService, ExcelService],
+    providers: [StudentOldService, ClassService, ExcelService, BusStopService],
 })
 
 export class ViewAllComponent implements OnInit {
 
     @Input() user;
+
+    session_list = SESSION_LIST;
 
     columnFilter: ColumnFilter;
 
@@ -79,12 +87,17 @@ export class ViewAllComponent implements OnInit {
 
     studentFullProfileList = [];
 
+    busStopList = [];
+
+    addmissionSession: string;
+
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
                 private classService: ClassService,
                 private excelService: ExcelService,
-                private printService: PrintService) { }
+                private printService: PrintService,
+                private busStopService: BusStopService) { }
 
     ngOnInit(): void {
 
@@ -102,10 +115,12 @@ export class ViewAllComponent implements OnInit {
         Promise.all([
             this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
+            this.busStopService.getBusStopList(student_full_profile_request_data, this.user.jwt)
         ]).then(value => {
             this.isLoading = false;
             this.initializeClassSectionList(value[0]);
             this.initializeStudentFullProfileList(value[1]);
+            this.busStopList = value[2];            
         }, error => {
             this.isLoading = false;
         });
@@ -139,6 +154,30 @@ export class ViewAllComponent implements OnInit {
             studentFullProfile['show'] = false;
         });
         this.handleStudentDisplay();
+    }
+
+    getAdmissionSession(admissionSessionDbId: number): string {
+        let admissionSession = null;
+        this.session_list.every(session => {
+            if (session.id === admissionSessionDbId) {
+                admissionSession = session.name;
+                return false;
+            }
+            return true;
+        });
+        return admissionSession;
+    }
+
+    getBusStop(busStopDbId: number): string {
+        let busStopName = null;
+        this.busStopList.every(busStop => {
+            if (busStop.dbId === busStopDbId) {
+                busStopName = busStop.stopName;
+                return false;
+            }
+            return true;
+        });
+        return busStopName;
     }
 
     getSectionObject(classDbId: any, sectionDbId: number): any {

@@ -170,6 +170,30 @@
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showAdmissionSession"
+                            (click)="$event.stopPropagation();">
+                            Admission Session
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showBusStopName"
+                            (click)="$event.stopPropagation();">
+                            Bus Stop Name
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showDateOfAdmission"
+                            (click)="$event.stopPropagation();">
+                            Date Of Admission
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showRemark"
+                            (click)="$event.stopPropagation();">
+                            Remark
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
                                 (click)="selectAllColumns(); $event.stopPropagation();">Select All
@@ -308,6 +332,10 @@
                 <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
                 <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
                 <th [class.hidden]="!columnFilter.showRTE">RTE</th>
+                <th [class.hidden]="!columnFilter.showAdmissionSession">Admission Session</th>
+                <th [class.hidden]="!columnFilter.showBusStopName">Bus Stop Name</th>
+                <th [class.hidden]="!columnFilter.showDateOfAdmission">Date Of Admission</th>
+                <th [class.hidden]="!columnFilter.showRemark">Remark</th>
             </tr>
             </thead>
             <tbody>
@@ -351,6 +379,18 @@
                         <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{student.fatherAnnualIncome}}
                         </td>
                         <td [class.hidden]="!columnFilter.showRTE">{{student.rte}}</td>
+                        <td [class.hidden]="!columnFilter.showAdmissionSession">
+                            {{getAdmissionSession(student.admissionSessionDbId)}}
+                        </td>
+                        <td [class.hidden]="!columnFilter.showBusStopName">
+                            {{getBusStop(student.busStopDbId)}}
+                        </td>
+                         <td [class.hidden]="!columnFilter.showDateOfAdmission">
+                             {{student.dateOfAdmission}}
+                         </td>
+                          <td [class.hidden]="!columnFilter.showRemark">
+                              {{student.remark}}
+                          </td>
                     </ng-container>
                 </tr>
             </ng-container>
