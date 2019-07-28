@@ -1,4 +1,6 @@
 db.sqlite3*
+change-session_db.sqlite3*
+enquiry-fix_db.sqlite3*
 *.pyc
 *.swp
 *DS_Store
