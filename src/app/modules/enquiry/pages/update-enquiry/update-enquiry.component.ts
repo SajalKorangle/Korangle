@@ -31,8 +31,7 @@ export class UpdateEnquiryComponent implements OnInit {
     isLoading = false;
 
     constructor (private enquiryService: EnquiryService,
-                 private classService: ClassService,
-                 private router: Router) { }
+                 private classService: ClassService) { }
 
     ngOnInit(): void {
 
