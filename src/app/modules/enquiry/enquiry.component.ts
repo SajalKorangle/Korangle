@@ -3,8 +3,9 @@ import {DataStorage} from '../../classes/data-storage';
 
 @Component({
     template: '<update-enquiry *ngIf="user.section.subRoute===\'update_enquiry\'" [user]="user"></update-enquiry>' +
-    '<view-all *ngIf="user.section.subRoute===\'view_all\'" [user]="user"></view-all>' +
-    '<add-enquiry *ngIf="user.section.subRoute===\'add_enquiry\'" [user]="user"></add-enquiry>',
+        '<delete-enquiry *ngIf="user.section.subRoute===\'delete_enquiry\'" [user]="user"></delete-enquiry>'+
+        '<view-all *ngIf="user.section.subRoute===\'view_all\'" [user]="user"></view-all>' +
+        '<add-enquiry *ngIf="user.section.subRoute===\'add_enquiry\'" [user]="user"></add-enquiry>',
 })
 
 export class EnquiryComponent implements OnInit {

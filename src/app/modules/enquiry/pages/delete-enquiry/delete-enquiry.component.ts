@@ -8,12 +8,12 @@ import {map} from 'rxjs/operators';
 
 
 @Component({
-  selector: 'update-enquiry',
-  templateUrl: './update-enquiry.component.html',
-  styleUrls: ['./update-enquiry.component.css'],
+    selector: 'delete-enquiry',
+    templateUrl: './delete-enquiry.component.html',
+    styleUrls: ['./delete-enquiry.component.css'],
 })
 
-export class UpdateEnquiryComponent implements OnInit {
+export class DeleteEnquiryComponent implements OnInit {
 
     @Input() user;
 
@@ -31,8 +31,7 @@ export class UpdateEnquiryComponent implements OnInit {
     isLoading = false;
 
     constructor (private enquiryService: EnquiryService,
-                 private classService: ClassService,
-                 private router: Router) { }
+                 private classService: ClassService) { }
 
     ngOnInit(): void {
 
@@ -98,28 +97,15 @@ export class UpdateEnquiryComponent implements OnInit {
     }
 
 
-
-    updateEnquiry(): void {
-
-        if (this.currentEnquiry.studentName === undefined || this.currentEnquiry.studentName === '') {
-            alert('Name should be populated');
-            return;
-        }
-
-        if (this.currentEnquiry.enquirerName === undefined || this.currentEnquiry.enquirerName === '') {
-            alert('Father\'s Name should be populated');
-            return;
-        }
+    deleteEnquiry(): void {
 
         let id = this.currentEnquiry.id;
 
         this.isLoading = true;
-        this.enquiryService.updateEnquiry(this.currentEnquiry, this.user.jwt).then(message => {
+        this.enquiryService.deleteEnquiry(this.currentEnquiry, this.user.jwt).then(message => {
             this.isLoading = false;
             alert(message);
-            if (this.selectedEnquiry.id === id) {
-                this.selectedEnquiry = this.currentEnquiry;
-            }
+            this.selectedEnquiry=null;
         }, error => {
             this.isLoading = false;
         });
