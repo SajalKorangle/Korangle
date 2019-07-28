@@ -56,7 +56,6 @@ export class UpdateEnquiryComponent implements OnInit {
     }
 
     filter(value: any): any {
-        console.log(this.enquiryList);
         if (value === '') {
             return [];
         }
@@ -88,11 +87,6 @@ export class UpdateEnquiryComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
-        console.log(this.selectedEnquiry+"nsdubcdibcd");
-        console.log(this.currentEnquiry+"curr");
-        console.log(enquiry+"curr");
-
-
 
     }
 

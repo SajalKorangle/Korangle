@@ -47,8 +47,9 @@ export class DeleteEnquiryComponent implements OnInit {
         ]).then(value => {
             this.classList = value[0];
             this.enquiryList = value[1];
+
             this.filteredEnquiryList = this.myControl.valueChanges.pipe(
-                map(value => typeof value === 'string' ? value: (value as any).enquirerName),
+                map(value => typeof value === 'string' ? value:(value==null?value:value.enquirerName)),
                 map(value => this.filter(value))
             );
         });
@@ -56,8 +57,7 @@ export class DeleteEnquiryComponent implements OnInit {
     }
 
     filter(value: any): any {
-        console.log(this.enquiryList);
-        if (value === '') {
+        if (value === '' || value==null) {
             return [];
         }
         return this.enquiryList.filter( enquiry => enquiry.studentName.toLowerCase().indexOf(value.toLowerCase()) === 0 );
@@ -88,11 +88,6 @@ export class DeleteEnquiryComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
-        console.log(this.selectedEnquiry+"nsdubcdibcd");
-        console.log(this.currentEnquiry+"curr");
-        console.log(enquiry+"curr");
-
-
 
     }
 
