@@ -436,7 +436,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [
 
             ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)', 'Fees Paid (this session)', 'Discount (this session)', 'Total Fees (this session)'],
+                'Fees Due (overall)', 'Total Fees (this session)','Fees Paid (this session)', 'Discount (this session)' ],
 
         ];
 
@@ -451,9 +451,9 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.secondMobileNumber);
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
+            row.push(student.totalFeesThisSession);
             row.push(student.feesPaidThisSession);
             row.push(student.discountThisSession);
-            row.push(student.totalFeesThisSession);
             template.push(row);
         });
 
@@ -467,7 +467,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [
 
             ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)', 'Fees Paid (this session)', 'Discount (this session)', 'Total Fees (this session)'],
+                'Fees Due (overall)','Total Fees (this session)', 'Fees Paid (this session)', 'Discount (this session)'],
 
         ];
 
@@ -489,9 +489,9 @@ export class ViewDefaultersComponent implements OnInit {
             }
             row.push(this.getParentFeesDueTillMonth(parent));
             row.push(this.getParentFeesDueOverall(parent));
+            row.push(this.getParentTotalFees(parent));
             row.push(this.getParentFeesPaid(parent));
             row.push(this.getParentDiscount(parent));
-            row.push(this.getParentTotalFees(parent));
             template.push(row);
             if (parent.studentList.length > 1) {
                 parent.studentList.forEach(student => {
@@ -504,9 +504,9 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push(student.secondMobileNumber);
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
+                    newRow.push(student.totalFeesThisSession);
                     newRow.push(student.feesPaidThisSession);
                     newRow.push(student.discountThisSession);
-                    newRow.push(student.totalFeesThisSession);
                     template.push(newRow);
                 });
             }
