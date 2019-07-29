@@ -7,7 +7,6 @@ import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
-import {logging} from "selenium-webdriver";
 
 @Component({
     selector: 'view-defaulters',
