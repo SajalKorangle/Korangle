@@ -7,6 +7,7 @@ import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
+import {logging} from "selenium-webdriver";
 
 @Component({
     selector: 'view-defaulters',
@@ -76,7 +77,6 @@ export class ViewDefaultersComponent implements OnInit {
             return new Date(session.startDate) <= todaysDate
                 && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
         });
-
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
     }
