@@ -30,11 +30,18 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
+                    <mat-label>Mobile Number
+                        <span *ngIf="checkLength(newEmployee.mobileNumber)"
+                              [class.fieldRight]="checkRight(newEmployee.mobileNumber,10)">
+                                        - {{newEmployee.mobileNumber.toString().length}}</span>
+
+                    </mat-label>
                     <input matInput
                            type="number"
                            placeholder="Mobile Number"
                            [(ngModel)]="newEmployee.mobileNumber">
                 </mat-form-field>
+
             </div>
         </div>
 
@@ -61,6 +68,12 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
+                    <mat-label>Aadhar Number
+                        <span *ngIf="checkLength(newEmployee.aadharNumber)"
+                              [class.fieldRight]="checkRight(newEmployee.aadharNumber,12)">
+                                        - {{newEmployee.aadharNumber.toString().length}}</span>
+
+                    </mat-label>
                     <input matInput
                            type="number"
                            placeholder="Aadhar Number"

@@ -35,6 +35,22 @@ export class AddEmployeeComponent implements OnInit {
         });
     }
 
+
+    checkLength(value: any) {
+        if (value && value.toString().length > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    checkRight(value: any, rightValue: number) {
+        if (value && value.toString().length === rightValue) {
+            return true;
+        }
+        return false;
+    }
+
+
     createNewEmployee(): void {
 
         if (this.newEmployee.name === undefined || this.newEmployee.name === '') {

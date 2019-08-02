@@ -71,6 +71,31 @@ export class UpdateProfileComponent implements OnInit {
 
     }
 
+
+    checkFieldChanged(selectedValue, currentValue): boolean {
+        if(selectedValue!==null && currentValue!==null ){
+            if (selectedValue !== currentValue){
+                return true;
+            }
+            return false;
+        }
+    }
+
+    checkLength(value: any) {
+        if (value && value.toString().length > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    checkRight(value: any, rightValue: number) {
+        if (value && value.toString().length === rightValue) {
+            return true;
+        }
+        return false;
+    }
+
+
     updateEmployeeProfile(): void {
 
         if (this.currentEmployeeProfile.name === undefined || this.currentEmployeeProfile.name === '') {

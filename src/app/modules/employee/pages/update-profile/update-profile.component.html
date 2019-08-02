@@ -75,12 +75,19 @@
                 <div class="row">
                     <div class="col-md-4">
                         <mat-form-field>
+                            <mat-label>Mobile Number
+                                <span *ngIf="checkLength(selectedEmployeeProfile.mobileNumber)"
+                                      [class.fieldRight]="checkFieldChanged(selectedEmployeeProfile.mobileNumber,currentEmployeeProfile.mobileNumber) && checkRight(currentEmployeeProfile.mobileNumber,10)">
+                                        - {{currentEmployeeProfile.mobileNumber.toString().length}}</span>
+
+                            </mat-label>
                             <input matInput
                                    type="number"
-                                   placeholder="Mobile Number"
+                                   placeholder=""
                                    (ngModelChange)="currentEmployeeProfile.mobileNumber=$event"
                                    [ngModel]="selectedEmployeeProfile.mobileNumber">
                         </mat-form-field>
+
                     </div>
 
                     <div class="col-md-4">
@@ -137,12 +144,19 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
+                    <mat-label>Aadhar Number
+                        <span *ngIf="checkLength(selectedEmployeeProfile.aadharNumber)"
+                              [class.fieldRight]="checkFieldChanged(selectedEmployeeProfile.aadharNumber,currentEmployeeProfile.aadharNumber) && checkRight(currentEmployeeProfile.aadharNumber,12)">
+                                        - {{currentEmployeeProfile.aadharNumber.toString().length}}</span>
+
+                    </mat-label>
                     <input matInput
                            type="number"
-                           placeholder="Aadhar Number"
+                           placeholder=""
                            (ngModelChange)="currentEmployeeProfile.aadharNumber=$event"
                            [ngModel]="selectedEmployeeProfile.aadharNumber">
                 </mat-form-field>
+
             </div>
             <div class="col-md-3">
                 <mat-form-field>
