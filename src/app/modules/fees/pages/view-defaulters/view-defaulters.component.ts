@@ -435,7 +435,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [
 
             ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)', 'Total Fees (this session)','Fees Paid (this session)', 'Discount (this session)' ],
+                'Fees Due (overall)', `Total Fees (${this.currentSession.name})`,`Fees Paid (${this.currentSession.name})`, `Discount (${this.currentSession.name})` ],
 
         ];
 
@@ -466,7 +466,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [
 
             ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)','Total Fees (this session)', 'Fees Paid (this session)', 'Discount (this session)'],
+                'Fees Due (overall)',`Total Fees (${this.currentSession.name})`, `Fees Paid (${this.currentSession.name})`, `Discount (${this.currentSession.name}))`],
 
         ];
 
