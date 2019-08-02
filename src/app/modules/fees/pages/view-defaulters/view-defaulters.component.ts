@@ -78,6 +78,12 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
+        console.log(this.sessionList);
+        let id=this.user.activeSchool.currentSessionDbId;
+        let tList=this.sessionList.filter(session=>{
+            return session.id==id;
+        });
+        console.log(tList);
     }
 
     detectChanges(): void {
@@ -357,6 +363,15 @@ export class ViewDefaultersComponent implements OnInit {
         }, 0);
     }
 
+    getCurrentSessionName(){
+        let id=this.user.activeSchool.currentSessionDbId;
+        let tList=this.sessionList.filter(session=>{
+            return session.id==id;
+        });
+        return tList[0].name;
+    }
+
+
     getFilteredParentList(): any {
         let tempList = this.parentList;
         if ((this.maximumNumber && this.maximumNumber != '')
@@ -431,11 +446,10 @@ export class ViewDefaultersComponent implements OnInit {
     downloadStudentFeesReport(): void {
 
         let template: any;
-
         template = [
 
             ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)', `Total Fees (${this.currentSession.name})`,`Fees Paid (${this.currentSession.name})`, `Discount (${this.currentSession.name})` ],
+                'Fees Due (overall)', `Total Fees (${this.getCurrentSessionName()})`,`Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})` ],
 
         ];
 
@@ -466,7 +480,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [
 
             ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)',`Total Fees (${this.currentSession.name})`, `Fees Paid (${this.currentSession.name})`, `Discount (${this.currentSession.name}))`],
+                'Fees Due (overall)',`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`],
 
         ];
 
