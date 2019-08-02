@@ -78,6 +78,8 @@ INSTALLED_APPS = [
 
     'storages',
 
+    'push_notifications',
+
 ]
 
 SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E307']
@@ -192,6 +194,10 @@ AWS_SECRET_ACCESS_KEY = 'oLYa8rZF9O3DwW/l4HBCFqF5PuEEJxCX0EkUI1gk'
 AWS_STORAGE_BUCKET_NAME = 'korangleplus'
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_SECURE_URLS = False # to use http instead of https
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "FCM_API_KEY": "AAAAKdpMXv4:APA91bFqo9G8GT8FELpCT7zsDTR9Whu4kZNOyQUaUo-HNqQwe7Jl2MxOLxGO8YPqaaeu_MjVM5uzzfcte7i32bgeXvlZFacSXAhGMFfUrLdzbJim11PyZ7tNmsdaBtaum1ieUHZdrs_3",
+}
 
 # the next monkey patch is necessary if you use dots in the bucket name
 import ssl
