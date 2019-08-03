@@ -37,6 +37,7 @@ def get_class_section_student_list_view(request, school_id, session_id):
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
+
 from .handlers.update_profile import get_student_profile
 @api_view(['POST'])
 def get_student_profile_view(request):
@@ -45,6 +46,7 @@ def get_student_profile_view(request):
         return JsonResponse({'response': get_success_response(get_student_profile(data))})
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+
 
 from .handlers.update_profile import update_student
 @api_view(['POST'])
@@ -157,6 +159,12 @@ class StudentSectionListOldView(APIView):
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
+############ Delete Student #################
+from student_app.models import StudentSection
+
+# def get(request):
+#     data = request.get.GET('q')
+
 ############ Profile Image ########################
 from .business.profile_image import update_profile_image
 
@@ -166,6 +174,8 @@ class ProfileImageView(APIView):
     @user_permission
     def post(request, student_id):
         return update_profile_image(request.FILES['myFile'], student_id)
+
+
 
 ############ Transfer Certificate #################
 from .business.transfer_certificate import create_transfer_certificate, \
@@ -194,6 +204,20 @@ class TransferCertificateView(APIView):
     def delete(request, transfer_certificate_id):
         return delete_transfer_certificate(transfer_certificate_id)
 
+#### check student session count ###
+def check_student_sessions_count(data):
+    qs1 = data['id']
+    qs = {}
+    qs['session_count'] = StudentSection.objects.filter(parentStudent=qs1).count()
+    return qs
+
+
+from student_app.models import StudentSection
+@api_view(['GET'])
+def get_student_sessions_count(request, *args, **kwargs):
+    data = {}
+    data['id'] = request.GET.get('id')
+    return JsonResponse({'response': get_success_response(check_student_sessions_count(data))})
 
 
 ########### Student #############

@@ -5,12 +5,14 @@ from django.conf.urls import url
 urlpatterns = []
 
 ########## Update Profile #############
-from .views import get_class_section_student_list_view, get_student_profile_view, update_student_view, delete_student_view
+from .views import (get_class_section_student_list_view, get_student_profile_view,
+                    update_student_view, delete_student_view, get_student_sessions_count)
 urlpatterns += [
     url(r'^class_section_student_list/school/(?P<school_id>[0-9]+)/sessions/(?P<session_id>[0-9]+)', get_class_section_student_list_view),
     url(r'^get_student_profile/', get_student_profile_view),
     url(r'^update_student_profile/', update_student_view),
     url(r'^delete_student/', delete_student_view),
+    url(r'^multiple_session_check/', get_student_sessions_count),
 ]
 
 ########## New Student ###########
