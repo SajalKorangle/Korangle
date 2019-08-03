@@ -159,11 +159,6 @@ class StudentSectionListOldView(APIView):
             return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
-############ Delete Student #################
-from student_app.models import StudentSection
-
-# def get(request):
-#     data = request.get.GET('q')
 
 ############ Profile Image ########################
 from .business.profile_image import update_profile_image
