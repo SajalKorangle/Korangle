@@ -1,0 +1,339 @@
+<div class="card-content">
+  
+  <parent-student-filter [user]="user" (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+    (onStudentListSelected)="handleStudentListSelection($event)" (onStudentListLoading)="isStudentListLoading=$event"
+    [selectedFilterType]="'Student'" [studentTcGenerated]="false"></parent-student-filter>
+
+    <div class="row" style="margin-bottom: 30px;">
+      <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
+    </div>
+
+  <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
+
+    <div class="row hidden-md hidden-lg hidden-sm"
+      *ngIf="selectedStudent.mobileNumber && selectedStudent.mobileNumber != 0">
+      <div class="col-xs-3">
+        <a href="tel:{{selectedStudent.mobileNumber}}">Call Me</a>
+      </div>
+    </div>
+
+    <div class="row hidden-md hidden-lg hidden-sm"
+      *ngIf="selectedStudent.secondMobileNumber && selectedStudent.secondMobileNumber != 0">
+      <div class="col-xs-3">
+        <a href="tel:{{selectedStudent.secondMobileNumber}}">Call Me 2</a>
+      </div>
+    </div>
+
+    <div class="row">
+
+
+      <div class="col-md-9">
+
+        <!-- Name, Father's Name, Mother's Name -->
+        <div class="row">
+          <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedStudent.name,currentStudent.name)">
+            <div class="form-group form-black label-floating">
+              <label class="control-label">Name</label>
+              <input type="text" class="form-control" [ngModel]="selectedStudent.name"
+                (ngModelChange)="currentStudent.name=$event;" readonly>
+            </div>
+          </div>
+          <div class="col-md-4"
+            [class.fieldChanged]="checkFieldChanged(selectedStudent.fathersName,currentStudent.fathersName)">
+            <div class="form-group form-black label-floating">
+              <label class="control-label">Father's Name</label>
+              <input type="text" class="form-control" [ngModel]="selectedStudent.fathersName"
+                (ngModelChange)="currentStudent.fathersName=$event" readonly>
+            </div>
+          </div>
+          <div class="col-md-4"
+            [class.fieldChanged]="checkFieldChanged(selectedStudent.motherName,currentStudent.motherName)">
+            <div class="form-group form-black label-floating">
+              <label class="control-label">Mother's Name</label>
+              <input type="text" class="form-control" [ngModel]="selectedStudent.motherName"
+                (ngModelChange)="currentStudent.motherName=$event" readonly>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roll No., Scholar No., Date of Birth -->
+        <div class="row">
+          <div class="col-md-4"
+            [class.fieldChanged]="checkFieldChanged(selectedStudent.rollNumber,currentStudent.rollNumber)">
+            <div class="form-group form-black label-floating">
+              <label class="control-label">Roll No.</label>
+              <input type="text" class="form-control" [ngModel]="selectedStudent.rollNumber"
+                (ngModelChange)="currentStudent.rollNumber=$event" readonly>
+            </div>
+          </div>
+          <div class="col-md-4"
+            [class.fieldChanged]="checkFieldChanged(selectedStudent.scholarNumber,currentStudent.scholarNumber)">
+            <div class="form-group form-black label-floating">
+              <label class="control-label">Scholar No.</label>
+              <input type="text" class="form-control" [ngModel]="selectedStudent.scholarNumber"
+                (ngModelChange)="currentStudent.scholarNumber=$event" readonly>
+            </div>
+          </div>
+          <div class="col-md-4"
+            [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfBirth,currentStudent.dateOfBirth)">
+            <div class="form-group form-black label-floating">
+              <label class="control-label">Date of Birth</label>
+              <input type="date" class="form-control" [ngModel]="selectedStudent.dateOfBirth"
+                (ngModelChange)="currentStudent.dateOfBirth=$event" readonly>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+
+        <img *ngIf="selectedStudent.profileImage" src="{{selectedStudent.profileImage}}" style="width: 50%">
+
+        <img *ngIf="!selectedStudent.profileImage"
+          src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" style="width: 50%" />
+
+        <br />
+
+      </div>
+
+    </div>
+
+    <!-- Mobile Number, Admission Session, Bus Stop, RTE -->
+    <div class="row">
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.mobileNumber,currentStudent.mobileNumber)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Mobile Number
+            <span *ngIf="checkLength(currentStudent.mobileNumber)"
+              [class.fieldRight]="checkFieldChanged(selectedStudent.mobileNumber,currentStudent.mobileNumber) && checkRight(currentStudent.mobileNumber,10)">
+              - {{currentStudent.mobileNumber.toString().length}}</span>
+          </label>
+          <input type="number" class="form-control" [ngModel]="selectedStudent.mobileNumber"
+            (ngModelChange)="currentStudent.mobileNumber=$event" readonly>
+        </div>
+      </div>
+      <div>
+        <div *ngIf="busStopList.length > 0" class="col-md-3">
+          <div class="form-group form-black label-floating">
+            <label class="control-label">Admission Session</label>
+            <input type="text" class="form-control" [ngModel]="selectedStudent.admissionSessionDbId"
+              (ngModelChange)="selectedStudent.admissionSessionDbId=$event" readonly>
+          </div>
+        </div>
+        <div *ngIf="busStopList.length > 0" class="col-md-3">
+          <div class="form-group form-black label-floating">
+            <label class="control-label">Bus Stop</label>
+            <input type="text" class="form-control" [ngModel]="selectedStudent.busStopDbId"
+              (ngModelChange)="selectedStudent.busStopDbId=$event" readonly>
+          </div>
+
+        </div>
+        <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.rte,currentStudent.rte)">
+          <div class="form-group form-black label-floating">
+            <label class="control-label">RTE</label>
+            <input type="text" class="form-control" [ngModel]="selectedStudent.rte"
+              (ngModelChange)="currentStudent.rte=$event" readonly>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Gender, Category, Religion, Blood Group -->
+    <div class="row">
+      <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.gender,currentStudent.gender)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Gender</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.gender"
+            (ngModelChange)="currentStudent.gender=$event" readonly>
+        </div>
+
+      </div>
+      <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.category,currentStudent.category)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Category</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.category"
+            (ngModelChange)="currentStudent.category=$event" readonly>
+        </div>
+
+      </div>
+      <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.religion,currentStudent.religion)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Religion</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.religion"
+            (ngModelChange)="currentStudent.religion=$event" readonly>
+        </div>
+
+      </div>
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.bloodGroup,currentStudent.bloodGroup)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Blood Group</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.bloodGroup"
+            (ngModelChange)="currentStudent.bloodGroup=$event" readonly>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Child SSMID, Family SSMID, Aadhar Number, Caste -->
+    <div class="row">
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.familySSMID,currentStudent.familySSMID)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Family SSMID
+            <span *ngIf="checkLength(currentStudent.familySSMID)"
+              [class.fieldRight]="checkFieldChanged(selectedStudent.familySSMID,currentStudent.familySSMID) && checkRight(currentStudent.familySSMID,8)">
+              - {{currentStudent.familySSMID.toString().length}}</span>
+          </label>
+          <input type="number" class="form-control" [ngModel]="selectedStudent.familySSMID"
+            (ngModelChange)="currentStudent.familySSMID=$event" readonly>
+        </div>
+      </div>
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.childSSMID,currentStudent.childSSMID)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Child SSMID
+            <span *ngIf="checkLength(currentStudent.childSSMID)"
+              [class.fieldRight]="checkFieldChanged(selectedStudent.childSSMID,currentStudent.childSSMID) && checkRight(currentStudent.childSSMID,9)">
+              - {{currentStudent.childSSMID.toString().length}}</span>
+          </label>
+          <input type="number" class="form-control" [ngModel]="selectedStudent.childSSMID"
+            (ngModelChange)="currentStudent.childSSMID=$event" readonly>
+        </div>
+      </div>
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.aadharNum,currentStudent.aadharNum)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Aadhar Number
+            <span *ngIf="checkLength(currentStudent.aadharNum)"
+              [class.fieldRight]="checkFieldChanged(selectedStudent.aadharNum,currentStudent.aadharNum) && checkRight(currentStudent.aadharNum,12)">
+              - {{currentStudent.aadharNum.toString().length}}</span>
+          </label>
+          <input type="number" class="form-control" [ngModel]="selectedStudent.aadharNum"
+            (ngModelChange)="currentStudent.aadharNum=$event" readonly>
+        </div>
+      </div>
+      <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.caste,currentStudent.caste)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Caste</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.caste"
+            (ngModelChange)="currentStudent.caste=$event" readonly>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bank Name, Bank Account Number, Bank Ifsc Code -->
+    <div class="row">
+      <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.bankName,currentStudent.bankName)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Bank Name</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.bankName"
+            (ngModelChange)="currentStudent.bankName=$event" readonly>
+        </div>
+      </div>
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.bankAccountNum,currentStudent.bankAccountNum)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Bank Account Number</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.bankAccountNum"
+            (ngModelChange)="currentStudent.bankAccountNum=$event" readonly>
+        </div>
+      </div>
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.bankIfscCode,currentStudent.bankIfscCode)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Bank Ifsc Code</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.bankIfscCode"
+            (ngModelChange)="currentStudent.bankIfscCode=$event" readonly>
+        </div>
+      </div>
+    </div>
+
+    <!-- Father's Occupation, Father's Annual Income, Date Of Admission -->
+    <div class="row">
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.fatherOccupation,currentStudent.fatherOccupation)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Father's Occupation</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.fatherOccupation"
+            (ngModelChange)="currentStudent.fatherOccupation=$event" readonly>
+        </div>
+      </div>
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.fatherAnnualIncome,currentStudent.fatherAnnualIncome)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Father's Annual Income</label>
+          <input type="text" class="form-control" [ngModel]="selectedStudent.fatherAnnualIncome"
+            (ngModelChange)="currentStudent.fatherAnnualIncome=$event" readonly>
+        </div>
+
+      </div>
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfAdmission,currentStudent.dateOfAdmission)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Date of Admission</label>
+          <input type="date" class="form-control" [ngModel]="selectedStudent.dateOfAdmission"
+            (ngModelChange)="currentStudent.dateOfAdmission=$event" readonly>
+        </div>
+      </div>
+      <div class="col-md-3"
+        [class.fieldChanged]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber)">
+        <div class="form-group form-black label-floating">
+          <label class="control-label">Alternate Mobile Number
+            <span *ngIf="checkLength(currentStudent.secondMobileNumber)"
+              [class.fieldRight]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber) && checkRight(currentStudent.secondMobileNumber,10)">
+              - {{currentStudent.secondMobileNumber.toString().length}}</span>
+          </label>
+          <input type="number" class="form-control" [ngModel]="selectedStudent.secondMobileNumber"
+            (ngModelChange)="currentStudent.secondMobileNumber=$event" readonly>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address, Remark -->
+    <div class="row">
+      <div class="col-md-6" [class.fieldChanged]="checkFieldChanged(selectedStudent.address,currentStudent.address)">
+        <div class="form-group">
+          <div class="form-group form-black label-floating">
+            <label class="control-label">Address</label>
+            <textarea class="form-control" rows="3" [ngModel]="selectedStudent.address"
+              (ngModelChange)="currentStudent.address=$event" readonly></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6" [class.fieldChanged]="checkFieldChanged(selectedStudent.remark,currentStudent.remark)">
+        <div class="form-group">
+          <div class="form-group form-black label-floating">
+            <label class="control-label">Remark</label>
+            <textarea class="form-control" rows="3" [ngModel]="selectedStudent.remark"
+              (ngModelChange)="currentStudent.remark=$event" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+      (click)="updateProfile();">Update</button> -->
+    <span *ngIf="studentFeeReciept.length === 0 || countCheck > sessionCount">
+      <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+        (click)="deleteProfile();">Delete
+      </button>
+    </span>
+    <div class="clearfix"></div>
+
+  </ng-container>
+
+  <ng-container *ngIf="selectedClass && !selectedStudent">
+    <br />No Students in this class
+  </ng-container>
+
+</div>
+
+<div>
+<ng-container *ngIf="isLoading">
+  <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+</div>

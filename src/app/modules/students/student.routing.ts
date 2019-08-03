@@ -50,6 +50,11 @@ const routes: Routes = [
         data: {moduleName: 'students'},
     },
     {
+        path: 'delete_student',
+        loadChildren: 'app/modules/students/pages/delete-student/delete-student.module#DeleteStudentModule',
+        data: { moduleName: 'students' },
+    },
+    {
         path: 'i_cards',
         loadChildren: 'app/modules/students/pages/i-cards/i-cards.module#ICardsModule',
         data: {moduleName: 'students'},
