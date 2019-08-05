@@ -51,6 +51,9 @@ export class TotalCollectionComponent implements OnInit {
     selectedClassSection=null;
     filteredClassSectionList = [];
 
+    selectedFeeType=null;
+    filteredFeeTypeList=[];
+
     isInitialLoading = false;
     isLoading = false;
 
@@ -135,6 +138,7 @@ export class TotalCollectionComponent implements OnInit {
 
     getFilteredFeeReceiptList(): any {
         let tempList = this.feeReceiptList;
+
         if (this.selectedEmployee) {
             tempList = tempList.filter(feeReceipt => {
                 return feeReceipt.parentEmployee == this.selectedEmployee.id;
@@ -151,8 +155,39 @@ export class TotalCollectionComponent implements OnInit {
                 return classSection.classs.dbId == this.selectedClassSection.classs.dbId
                     && classSection.section.id == this.selectedClassSection.section.id;
             });
+
         }
+
+
+
+        let filteredSubFeeList=[];
+        let filteredFeeList=[];
+        if(this.selectedFeeType){
+            filteredSubFeeList=this.subFeeReceiptList.filter(subFeeRecipt=>{
+                return subFeeRecipt.parentFeeType==this.selectedFeeType.id;
+            }).map(a=>a.parentFeeReceipt);
+
+            filteredSubFeeList.forEach(parentFeeId=>{
+                tempList.forEach(a=>{
+                    if(a.id==parentFeeId){
+                        filteredFeeList.push(a);
+                    }
+                })
+            });
+
+            tempList=filteredFeeList;
+        }
+
+
         return tempList;
+    }
+
+    getFeeType(feeReceipt){
+        return this.subFeeReceiptList.map(a=>a.parentFeeRecipt).filter((item,index,final)=>{
+            return item == feeReceipt.id;
+        });
+        let subFeeReceipt;
+        return subFeeReceipt.feeType;
     }
 
     getFilteredFeeReceiptListTotalAmount(): any {
