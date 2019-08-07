@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'attendance_app',
     'salary_app',
     'user_app',
+    'notification_app',
 
 	'corsheaders',
 
