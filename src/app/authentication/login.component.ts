@@ -2,6 +2,8 @@ import {Component, Input} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../classes/user';
 import {sendDataToAndroid} from "../classes/common";
+import {Constants} from "../classes/constants";
+import {environment} from "../../environments/environment";
 
 @Component({
     selector: 'app-login-form',
@@ -29,7 +31,12 @@ export class LoginComponent {
             } else {
                 localStorage.setItem('schoolJWT', data.token);
                 this.user.jwt = data.token;
-                sendDataToAndroid(this.user.jwt);
+                // sendDataToAndroid(this.user.jwt);
+                registerForNotification({
+                    'user': this.user.id,
+                    'jwt': this.user.jwt,
+                    'url': environment.DJANGO_SERVER + Constants.api_version + '/notification/gcm-devices'
+                });
                 this.user.isAuthenticated = true;
                 this.user.initializeUserData(data);
             }
