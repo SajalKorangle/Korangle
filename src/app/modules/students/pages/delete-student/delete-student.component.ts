@@ -48,6 +48,8 @@ export class DeleteStudentComponent implements OnInit {
 
   isLoading = false;
 
+  isStudentListLoading = false;
+
   constructor(private studentService: StudentOldService,
     private busStopService: BusStopService,
     public feeService: FeeService,
@@ -70,9 +72,8 @@ export class DeleteStudentComponent implements OnInit {
       sessionDbId: this.user.activeSchool.currentSessionDbId,
       schoolDbId: this.user.activeSchool.dbId,
     };
-
     this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
-      classSectionStudentList => {
+      classSectionStudentList => { 
         classSectionStudentList.forEach(classs => {
           const tempClass = new Classs();
           tempClass.name = classs.name;
@@ -223,6 +224,9 @@ export class DeleteStudentComponent implements OnInit {
       alert('Server Error: Contact admin');
     });
   }
+
+
+  
 
   getBusStopName(busStopDbId: any) {
     let stopName = 'None';
