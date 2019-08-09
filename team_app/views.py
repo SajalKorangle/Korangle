@@ -22,7 +22,7 @@ def get_success_response(data):
 def get_success_message(message):
     message_response = {}
     message_response['status'] = 'success'
-    message_response['message'] = message
+    message_response['medssage'] = message
     return message_response
 
 

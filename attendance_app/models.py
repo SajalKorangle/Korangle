@@ -35,7 +35,7 @@ class EmployeeAttendance(models.Model):
 
 class StudentAttendance(models.Model):
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT,
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE,
                                       null=False, default=0, verbose_name='parentStudent')
     dateOfAttendance = models.DateField(null=False, verbose_name='dateOfAttendance', default='2011-01-01')
     status = models.CharField(max_length=10, choices=ATTENDANCE_STATUS, null=False, default=PRESENT_ATTENDANCE_STATUS)

@@ -67,6 +67,7 @@ def delete_student_view(request):
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
+
 ############### New Student ######################
 from .handlers.new_student import create_new_student
 @api_view(['POST'])
@@ -213,6 +214,7 @@ def get_student_sessions_count(request, *args, **kwargs):
     data = {}
     data['id'] = request.GET.get('id')
     return JsonResponse({'response': get_success_response(check_student_sessions_count(data))})
+
 
 
 ########### Student #############

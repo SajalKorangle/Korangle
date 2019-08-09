@@ -81,7 +81,7 @@ def delete_student(data):
         response['message'] = 'Student Profile removed successfully.'
         return response
     except ProtectedError:
-
+        print(ProtectedError,'_protectedError')
         response = {}
         response['studentDbId'] = 0
         response['message'] = 'Not able to delete Student Profile'
