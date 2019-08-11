@@ -163,7 +163,6 @@ export class TotalCollectionServiceAdapter {
             }).includes(employee.id);
         });
 
-
         // Filtered Mode of Payment List
         this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {return a != null;});
 

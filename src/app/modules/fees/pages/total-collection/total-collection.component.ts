@@ -98,8 +98,8 @@ export class TotalCollectionComponent implements OnInit {
             'sectionList': this.sectionList,
             'selectedEmployee': this.selectedEmployee,
             'selectedModeOfPayment': this.selectedModeOfPayment,
+            'selectedFeeType':this.selectedFeeType,
         };
-
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
     }
 
@@ -178,10 +178,10 @@ export class TotalCollectionComponent implements OnInit {
             tempList=filteredFeeList;
         }
 
-
         return tempList;
     }
 
+    //not used
     getFeeType(feeReceipt){
         return this.subFeeReceiptList.map(a=>a.parentFeeRecipt).filter((item,index,final)=>{
             return item == feeReceipt.id;
@@ -198,7 +198,13 @@ export class TotalCollectionComponent implements OnInit {
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
         return this.subFeeReceiptList.filter(subFeeReceipt => {
-            return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+            if(this.selectedFeeType){
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id &&
+                    subFeeReceipt.parentFeeType == this.selectedFeeType.id;
+            }else{
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id ;
+            }
+
         }).reduce((totalSubFeeReceipt, subFeeReceipt) => {
             return totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
                 return totalInstallment
