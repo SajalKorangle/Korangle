@@ -13,6 +13,6 @@ export function registerForNotification(data) {
 
 export function unregisterForNotification(data) {
     if (navigator.userAgent == "Mobile") {
-        Android.unregisterForNotification(data);
+        Android.unregisterForNotification(data['jwt'], data['url']);
     }
 }

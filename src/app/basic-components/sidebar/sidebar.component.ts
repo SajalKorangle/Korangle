@@ -7,6 +7,9 @@ import { EmitterService } from '../../services/emitter.service';
 import {User} from '../../classes/user';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 import {SESSION_LIST} from "../../classes/constants/session";
+import {environment} from "../../../environments/environment";
+import {Constants} from "../../classes/constants";
+import {unregisterForNotification} from '../../classes/common.js';
 
 
 declare const $: any;
@@ -140,6 +143,10 @@ export class SidebarComponent implements OnInit {
     }
 
     logout() {
+        unregisterForNotification({
+            'jwt': this.user.jwt,
+            'url': environment.DJANGO_SERVER + Constants.api_version + '/notification/gcm-devices',
+        });
         localStorage.setItem('schoolJWT', '');
         this.user.isAuthenticated = false;
         this.user.jwt = '';
