@@ -29,20 +29,38 @@
             </mat-form-field>
         </div>
         <div class="col-md-6">
-            <div style="margin-top: 50px;"></div>
-            <span  style="font-size: 14px;">
+            <mat-form-field style="margin-top: 23px;">
+                <mat-select placeholder="Send via"
+                            [(ngModel)]="selectedSentType">
+                    <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
+                        {{sentType}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field><br/>
+            <span  style="font-size: 14px; margin-top: 5px;">
                 # of Characters/SMS: {{message.length}}/{{getSMSCount()}}<br/>
-                # of Mobile devices: {{getMobileNumberList()}}<br/>
-                Estimated SMS Count: {{getMobileNumberList()*getSMSCount()}}<br/>
+                # of Mobile devices: {{getMobileNumberList('both').length}}<br/>
+                Estimated SMS Count: {{getMobileNumberList('sms').length*getSMSCount()}}<br/>
+                Estimated Notification Count: {{getMobileNumberList('notification').length}}<br/>
             </span>
-            <span *ngIf="(getMobileNumberList()*getSMSCount()) !== 0">
-                <span *ngIf="smsBalance<(getMobileNumberList()*getSMSCount())" style="font-size: 16px;">
-                    You are short by <b>{{(getMobileNumberList()*getSMSCount()) - smsBalance}}</b> SMS.
+            <span *ngIf="getMobileNumberList('both').length !== 0">
+                <span *ngIf="(selectedSentType=='SMS' || selectedSentType=='BOTH') && smsBalance<getMobileNumberList('sms').length*getSMSCount()" style="font-size: 16px;">
+                    You are short by <b>{{(getMobileNumberList('sms').length*getSMSCount()) - smsBalance}}</b> SMS.
                 </span>
+                <ng-container *ngIf="getMobileNumberList('sms').length*getSMSCount() != 0 && smsBalance>=(getMobileNumberList('sms').length*getSMSCount())">
+                    <button type="submit"
+                            *ngIf="selectedSentType=='SMS'"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="sendSMS()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS</button>
+                    <button type="submit"
+                            *ngIf="selectedSentType=='BOTH' && getMobileNumberList('notification') != 0"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="sendSMS()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS & {{getMobileNumberList('notification').length}} notifications</button>
+                </ng-container>
                 <button type="submit"
-                        *ngIf="smsBalance>=(getMobileNumberList()*getSMSCount())"
+                        *ngIf="selectedSentType=='NOTIFICATION'"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="sendSMS()">Send {{getMobileNumberList()*getSMSCount()}} SMS</button>
+                        (click)="sendSMS()">Send {{getMobileNumberList('notification').length}} notifications</button>
             </span>
         </div>
     </div>
@@ -66,7 +84,7 @@
         </div>
     </div>
 
-    <div [class.hidden]="!showStudentList || studentFullProfileList.length===0">
+    <div [class.hidden]="!showStudentList || studentList.length===0">
 
         <!-- Class Filter -->
         <mat-form-field style="margin-right: 15px;">
@@ -83,17 +101,12 @@
                     </button>
                 </mat-option>
 
-                <ng-container *ngFor="let class of classSectionList">
-                    <ng-container *ngFor="let section of class.sectionList">
-                        <mat-option *ngIf="section.containsStudent" style="width: 100%;">
-                            <mat-checkbox [(ngModel)]="section.selected"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">
-                                {{class.name}}<span *ngIf="showSectionName(class)">, {{section.name}}</span>
-                            </mat-checkbox>
-                        </mat-option>
-                    </ng-container>
-                </ng-container>
+                <mat-option *ngFor="let classSection of classSectionList" style="width: 100%;">
+                    <mat-checkbox [(ngModel)]="classSection.selected"
+                                  (click)="$event.stopPropagation();">
+                        {{getClassSectionName(classSection.class.dbId,classSection.section.id)}}
+                    </mat-checkbox>
+                </mat-option>
 
                 <mat-option>
                     <button class="btn"
@@ -109,160 +122,15 @@
             </mat-select>
         </mat-form-field>
 
-        <!-- Column Filter -->
-        <mat-form-field style="margin-right: 15px;">
-            <mat-select placeholder="Select Columns">
-                <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllColumns(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
-                    </button>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation();">Serial No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation();">Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showClassName" (click)="$event.stopPropagation();">Class Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showRollNumber" (click)="$event.stopPropagation();">Roll No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showFathersName" (click)="$event.stopPropagation();">Father's
-                        Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation();">Mobile No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showSecondMobileNumber" (click)="$event.stopPropagation();">Alt. Mobile No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation();">Scholar
-                        No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showDateOfBirth" (click)="$event.stopPropagation();">Date of
-                        Birth
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showMotherName" (click)="$event.stopPropagation();">Mother's
-                        Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showGender" (click)="$event.stopPropagation();">Gender
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showCaste" (click)="$event.stopPropagation();">Caste
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showCategory" (click)="$event.stopPropagation();">Category
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showReligion" (click)="$event.stopPropagation();">Religion
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showFatherOccupation" (click)="$event.stopPropagation();">
-                        Father's
-                        Occupation
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation();">Address
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showRTE" (click)="$event.stopPropagation();">
-                        RTE
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllColumns(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
-                    </button>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-checkbox  [(ngModel)]="includeSecondMobileNumber"
-                      (click)="$event.stopPropagation();">Include Alternate Mobile Number
+        <mat-checkbox [(ngModel)]="includeSecondMobileNumber"
+                      (click)="$event.stopPropagation();">
+            Include Alternate Mobile Number
         </mat-checkbox>
 
-        <!-- Other Filters -->
-        <mat-form-field style="float: right;">
-            <mat-select placeholder="Filters">
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="scSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">SC,
-                    </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="stSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">ST,
-                    </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="obcSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">OBC,
-                    </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="generalSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">Gen.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="maleSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">M
-                    </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="femaleSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">F
-                    </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="otherGenderSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">Other
-                    </mat-checkbox>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
         <br>
-        Total Students: <i>{{studentFullProfileList.length}}</i>,
-        Displaying: <i>{{displayStudentNumber}}</i>,
-        Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
+            Total Students: <i>{{studentSectionList.length}}</i>,
+            Displaying: <i>{{getDisplayStudentNumber()}}</i>,
+            Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
         <br/>
 
         <button class="btn"
@@ -276,8 +144,8 @@
 
         <ngx-datatable
                 class='material ngxDataTable'
-                *ngIf="showStudentList && studentFullProfileList.length>0"
-                [rows]='filteredStudentFullProfileList'
+                *ngIf="showStudentList && studentSectionList.length>0"
+                [rows]='getFilteredStudentList()'
                 [columnMode]="'force'"
                 [headerHeight]="50"
                 [footerHeight]="50"
@@ -293,91 +161,41 @@
                                   [disabled]="!row.validMobileNumber"></mat-checkbox>
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Name" *ngIf="columnFilter.showName">
+            <ngx-datatable-column name="Name">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <strong>{{value}}</strong>
+                    <strong>{{row.student.name}}</strong>
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Class" *ngIf="columnFilter.showClassName">
+            <ngx-datatable-column name="Class">
                 <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
-                    <strong>{{row.className}}</strong>
+                    <strong>{{getClassSectionName(row.parentClass,row.parentDivision)}}</strong>
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Roll No." *ngIf="columnFilter.showRollNumber">
+            <ngx-datatable-column name="Scholar No.">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.rollNumber}}</i>
+                    <i>{{row.student.scholarNumber}}</i>
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Father's Name" *ngIf="columnFilter.showFathersName">
+            <ngx-datatable-column name="Father's Name">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.fathersName}}</i>
+                    <i>{{row.student.fathersName}}</i>
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Mobile No." *ngIf="columnFilter.showMobileNumber">
+            <ngx-datatable-column name="Mobile No.">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.mobileNumber}}</i>
+                    <i>{{row.student.mobileNumber}}</i>
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Alt. Mobile No." *ngIf="columnFilter.showSecondMobileNumber">
+            <ngx-datatable-column name="Alt. Mobile No.">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.secondMobileNumber}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Scholar No." *ngIf="columnFilter.showScholarNumber">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.scholarNumber}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Birth Date" *ngIf="columnFilter.showDateOfBirth">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.dateOfBirth | date: 'dd/MM/yyyy'}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Mother's Name" *ngIf="columnFilter.showMotherName">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.motherName}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Gender" *ngIf="columnFilter.showGender">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.gender}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Caste" *ngIf="columnFilter.showCaste">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.caste}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Category" *ngIf="columnFilter.showCategory">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.category}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Religion" *ngIf="columnFilter.showReligion">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.religion}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Father's Occupation" *ngIf="columnFilter.showFatherOccupation">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.fatherOccupation}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Address" *ngIf="columnFilter.showAddress">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.address}}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="RTE" *ngIf="columnFilter.showRTE">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.rte}}</i>
+                    <i>{{row.student.secondMobileNumber}}</i>
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable>
 
     </div>
 
-    <div [class.hidden]="!showStudentList || studentFullProfileList.length>0">
+    <div [class.hidden]="!showStudentList || studentList.length>0">
         Students need to be added or promoted in this session.
     </div>
 
@@ -400,125 +218,10 @@
         </div>
     </div>
 
-    <div [class.hidden]="!showEmployeeList || employeeProfileList.length===0">
-
-        <!-- Employee Column Filter -->
-        <mat-form-field style="margin-right: 15px;">
-            <mat-select placeholder="Select Columns">
-                <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllEmployeeColumns(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unSelectAllEmployeeColumns(); $event.stopPropagation();">Clear All
-                    </button>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showSerialNumber" (click)="$event.stopPropagation();">Serial No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showName" (click)="$event.stopPropagation();">Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showEmployeeNumber" (click)="$event.stopPropagation();">
-                        Employee No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showFatherName" (click)="$event.stopPropagation();">Father's
-                        Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showMobileNumber" (click)="$event.stopPropagation();">Mobile No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showDateOfBirth" (click)="$event.stopPropagation();">Date of
-                        Birth
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showMotherName" (click)="$event.stopPropagation();">Mother's
-                        Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showAadharNumber" (click)="$event.stopPropagation();">
-                        Aadhar No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showPassportNumber" (click)="$event.stopPropagation();">
-                        Passport No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showQualification" (click)="$event.stopPropagation();">
-                        Qualification
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showCurrentPost" (click)="$event.stopPropagation();">
-                        Post
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showDateOfJoining" (click)="$event.stopPropagation();">
-                        Joining Date
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showPanNumber" (click)="$event.stopPropagation();">
-                        Pan No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showGender" (click)="$event.stopPropagation();">Gender
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showAddress" (click)="$event.stopPropagation();">Address
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showBankName" (click)="$event.stopPropagation();">Bank Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showBankAccountNumber" (click)="$event.stopPropagation();">
-                        Bank Acc. No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showEpfAccountNumber" (click)="$event.stopPropagation();">
-                        Epf Acc. No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="employeeColumnFilter.showRemark" (click)="$event.stopPropagation();">
-                        Remark
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllColumns(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
-                    </button>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+    <div [class.hidden]="!showEmployeeList || employeeList.length===0">
 
         <br>
-        Total Employees: <i> {{employeeProfileList.length}} employee<span *ngIf="employeeProfileList.length>1">s</span></i>,
+        Total Employees: <i> {{employeeList.length}} employee<span *ngIf="employeeList.length>1">s</span></i>,
         Selected: <b><i>{{getSelectedEmployeeNumber()}}</i></b>
         <br/>
 
@@ -537,29 +240,16 @@
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
                     <th></th>
-                    <th [class.hidden]="!employeeColumnFilter.showSerialNumber">S No.</th>
-                    <th [class.hidden]="!employeeColumnFilter.showName">Name</th>
-                    <th [class.hidden]="!employeeColumnFilter.showEmployeeNumber">Employee No.</th>
-                    <th [class.hidden]="!employeeColumnFilter.showFatherName">Father's Name</th>
-                    <th [class.hidden]="!employeeColumnFilter.showMobileNumber">Mobile No.</th>
-                    <th [class.hidden]="!employeeColumnFilter.showDateOfBirth">Date of Birth</th>
-                    <th [class.hidden]="!employeeColumnFilter.showMotherName">Mother's Name</th>
-                    <th [class.hidden]="!employeeColumnFilter.showAadharNumber">Aadhar No.</th>
-                    <th [class.hidden]="!employeeColumnFilter.showPassportNumber">Passport No.</th>
-                    <th [class.hidden]="!employeeColumnFilter.showQualification">Qualification</th>
-                    <th [class.hidden]="!employeeColumnFilter.showCurrentPost">Post</th>
-                    <th [class.hidden]="!employeeColumnFilter.showDateOfJoining">Joining Date</th>
-                    <th [class.hidden]="!employeeColumnFilter.showPanNumber">Pan No.</th>
-                    <th [class.hidden]="!employeeColumnFilter.showGender">Gender</th>
-                    <th [class.hidden]="!employeeColumnFilter.showAddress">Address</th>
-                    <th [class.hidden]="!employeeColumnFilter.showBankName">Bank Name</th>
-                    <th [class.hidden]="!employeeColumnFilter.showBankAccountNumber">Bank Acc. No.</th>
-                    <th [class.hidden]="!employeeColumnFilter.showEpfAccountNumber">EPF Acc. No.</th>
-                    <th [class.hidden]="!employeeColumnFilter.showRemark">Remark</th>
+                    <th>S No.</th>
+                    <th>Name</th>
+                    <!-- th>Employee No.</th -->
+                    <th>Father's Name</th>
+                    <th>Mobile No.</th>
+                    <!-- th>Post</th -->
                 </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let employee of employeeProfileList; let i = index">
+                <ng-container *ngFor="let employee of employeeList; let i = index">
                     <tr>
                         <ng-container>
                             <td>
@@ -567,29 +257,12 @@
                                               [disabled]="!employee.validMobileNumber">
                                 </mat-checkbox>
                             </td>
-                            <td [class.hidden]="!employeeColumnFilter.showSerialNumber">{{i+1}}.</td>
-                            <td [class.hidden]="!employeeColumnFilter.showName">{{employee.name}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showEmployeeNumber">{{employee.employeeNumber}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showFatherName">{{employee.fatherName}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showMobileNumber">{{employee.mobileNumber}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showDateOfBirth">
-                                {{employee.dateOfBirth | date: 'dd - MMM - yyyy'}}
-                            </td>
-                            <td [class.hidden]="!employeeColumnFilter.showMotherName">{{employee.motherName}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showAadharNumber">{{employee.aadharNumber}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showPassportNumber">{{employee.passportNumber}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showQualification">{{employee.qualification}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showCurrentPost">{{employee.currentPost}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showDateOfJoining">
-                                {{employee.dateOfJoining | date: 'dd - MMM - yyyy'}}
-                            </td>
-                            <td [class.hidden]="!employeeColumnFilter.showPanNumber">{{employee.panNumber}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showGender">{{employee.gender}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showAddress">{{employee.address}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showBankName">{{employee.bankName}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showBankAccountNumber">{{employee.bankAccountNumber}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showEpfAccountNumber">{{employee.epfAccountNumber}}</td>
-                            <td [class.hidden]="!employeeColumnFilter.showRemark">{{employee.remark}}</td>
+                            <td>{{i+1}}.</td>
+                            <td>{{employee.name}}</td>
+                            <!-- td>{{employee.employeeNumber}}</td -->
+                            <td>{{employee.fatherName}}</td>
+                            <td>{{employee.mobileNumber}}</td>
+                            <!-- td>{{employee.currentPost}}</td -->
                         </ng-container>
                     </tr>
                 </ng-container>
@@ -599,7 +272,7 @@
 
     </div>
 
-    <div [class.hidden]="!showEmployeeList || employeeProfileList.length>0">
+    <div [class.hidden]="!showEmployeeList || employeeList.length>0">
         Employees need to be added.
     </div>
 
