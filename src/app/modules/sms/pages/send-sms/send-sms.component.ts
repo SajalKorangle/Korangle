@@ -191,7 +191,7 @@ export class SendSmsComponent implements OnInit {
         } else if (returnType == 'notification') {
             return this.notificationMobileNumberList;
         } else if (returnType == 'both') {
-            return mobileNumberList;
+            return this.smsMobileNumberList.concat(this.notificationMobileNumberList);
         } else {
             alert('error');
             return null;
