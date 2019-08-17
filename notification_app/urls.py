@@ -11,3 +11,11 @@ urlpatterns += [
 ]
 
 
+from notification_app.views import NotificationView, NotificationListView
+
+urlpatterns += [
+    url(r'^notifications/batch', NotificationListView.as_view()),
+    url(r'^notifications', NotificationView.as_view()),
+]
+
+
