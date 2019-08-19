@@ -125,7 +125,7 @@ export class ViewDefaultersComponent implements OnInit {
             student['feesDueTillMonth'] = filteredStudentFeeList.reduce((total, studentFee) => {
                 let filteredInstallmentList = [];
                 if (studentFee.parentSession == this.currentSession.id) {
-                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber);
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber+1);
                 } else {
                     filteredInstallmentList = this.installmentList;
                 }
@@ -137,14 +137,15 @@ export class ViewDefaultersComponent implements OnInit {
                         if (studentFee[installment+'ClearanceDate']) {
                             clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
                         }
-                        let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+                        let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
-                            if (student[installment+'MaximumLateFee'] && student[installment+'MaximumLateFee'] < lateFeeAmount) {
-                                lateFeeAmount = student[installment+'MaximumLateFee'];
+                            if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < lateFeeAmount) {
+                                lateFeeAmount = studentFee[installment+'MaximumLateFee'];
                             }
                         }
                     }
+
                     return installmentAmount
                         + (studentFee[installment+'Amount']?studentFee[installment+'Amount']:0)
                         + lateFeeAmount;
@@ -152,7 +153,7 @@ export class ViewDefaultersComponent implements OnInit {
             }, 0) - filteredSubFeeReceiptList.reduce((total, subFeeReceipt) => {
                 let filteredInstallmentList = [];
                 if (subFeeReceipt.parentSession == this.currentSession.id) {
-                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber);
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber+1);
                 } else {
                     filteredInstallmentList = this.installmentList;
                 }
@@ -164,7 +165,7 @@ export class ViewDefaultersComponent implements OnInit {
             }, 0) - filteredSubDiscountList.reduce((total, subDiscount) => {
                 let filteredInstallmentList = [];
                 if (subDiscount.parentSession == this.currentSession.id) {
-                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber);
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber+1);
                 } else {
                     filteredInstallmentList = this.installmentList;
                 }
@@ -184,11 +185,11 @@ export class ViewDefaultersComponent implements OnInit {
                         if (studentFee[installment+'ClearanceDate']) {
                             clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
                         }
-                        let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+                        let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
-                            if (student[installment+'MaximumLateFee'] && student[installment+'MaximumLateFee'] < lateFeeAmount) {
-                                lateFeeAmount = student[installment+'MaximumLateFee'];
+                            if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < lateFeeAmount) {
+                                lateFeeAmount = studentFee[installment+'MaximumLateFee'];
                             }
                         }
                     }
@@ -241,11 +242,11 @@ export class ViewDefaultersComponent implements OnInit {
                         if (studentFee[installment+'ClearanceDate']) {
                             clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
                         }
-                        let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+                        let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
-                            if (student[installment+'MaximumLateFee'] && student[installment+'MaximumLateFee'] < lateFeeAmount) {
-                                lateFeeAmount = student[installment+'MaximumLateFee'];
+                            if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < lateFeeAmount) {
+                                lateFeeAmount = studentFee[installment+'MaximumLateFee'];
                             }
                         }
                     }
