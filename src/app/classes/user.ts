@@ -99,11 +99,16 @@ export class User {
             };
             EmitterService.get('initialize-router').emit('');
         }
-
+        /*this.section = {
+            route: 'notification',
+            subRoute: 'view_notification',
+            title: 'Notifictation',
+            subTitle: 'View Notification',
+        }*/
     }
 
     populateSection(task: any, module: any): void {
-        if (module.path === 'user-settings') {
+        if (module.path === 'user-settings' || module.path === 'notification') {
             this.section = {
                 route: module.path,
                 subRoute: task.path,

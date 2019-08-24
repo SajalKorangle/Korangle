@@ -101,7 +101,7 @@ export class SendSmsServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
-            this.vm.smsService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
         ]).then(value => {
 
             console.log(value);
@@ -118,6 +118,7 @@ export class SendSmsServiceAdapter {
             
             let gcm_device_data = {
                 'user__username__in': this.getAllMobileNumberList(),
+                'active ': 'true__boolean',
             };
             
             let user_data = {
@@ -125,7 +126,7 @@ export class SendSmsServiceAdapter {
             };
 
             Promise.all([
-                this.vm.notificationService.getList(this.vm.notificationService.gcm_device, gcm_device_data),
+                this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data),
                 this.vm.userService.getList(this.vm.userService.user, user_data),
             ]).then(value2 => {
 
@@ -198,6 +199,100 @@ export class SendSmsServiceAdapter {
                 return item.user == user.id;
             }) != undefined;
         });
+    }
+
+
+    sendSMSAndNotification(): void {
+
+        // let smsContentType = (this.vm.hasUnicode()? 'unicode':'english');
+
+        let mobileNumberList = '';
+        let notifMobileNumberList = '';
+
+        this.vm.smsMobileNumberList.forEach(mobileNumber => {
+            mobileNumberList += mobileNumber.toString() + ',';
+        });
+
+        this.vm.notificationMobileNumberList.forEach(mobileNumber => {
+            notifMobileNumberList += mobileNumber.toString() + ',';
+        });
+
+        /*let data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'smsContentType': smsContentType,
+            'estimatedCount': this.vm.getSMSCount()*this.vm.getMobileNumberList('sms').length,
+            'message': this.vm.message,
+            'mobileNumberList': mobileNumberList,
+            'notificationMobileNumberList': notifMobileNumberList,
+        };*/
+
+        let sms_data = {
+            'contentType': (this.vm.hasUnicode()? 'unicode':'english'),
+            'content': this.vm.message,
+            'count': this.vm.getSMSCount()*this.vm.smsMobileNumberList.length,
+            'notificationCount': notifMobileNumberList.length,
+            'mobileNumberList': mobileNumberList,
+            'notificationMobileNumberList': notifMobileNumberList,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+        };
+
+        let notification_data = this.vm.notificationMobileNumberList.map(mobileNumber => {
+            return {
+                'content': this.vm.message,
+                'parentUser': this.vm.filteredUserList.find(user => { return user.username == mobileNumber.toString();}).id,
+                'parentSchool': this.vm.user.activeSchool.dbId,
+            };
+        });
+
+        if (!confirm('Please confirm that you are sending ' + (this.vm.getSMSCount()*this.vm.getMobileNumberList('sms').length) + ' SMS.')) {
+            return;
+        }
+
+        let service_list = [];
+
+        if (this.vm.selectedSentType == 'SMS') {
+            service_list.push(this.vm.smsService.createObject(this.vm.smsService.sms, sms_data));
+        } else if (this.vm.selectedSentType == 'BOTH') {
+            if (this.vm.smsMobileNumberList.length > 0) {
+                service_list.push(this.vm.smsService.createObject(this.vm.smsService.sms, sms_data));
+            }
+            if (this.vm.notificationMobileNumberList.length > 0) {
+                service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService, notification_data));
+            }
+        } else if (this.vm.selectedSentType == 'NOTIFICATION') {
+            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService, notification_data));
+        }
+
+        this.vm.isLoading = true;
+
+        Promise.all(service_list).then(value => {
+
+            alert("Operation Successful");
+
+            if ((this.vm.selectedSentType == 'SMS' || this.vm.selectedSentType == 'BOTH') && (this.vm.smsMobileNumberList.length > 0)) {
+                if (value[0].status == 'success') {
+                    this.vm.smsBalance -= value[0].data.count;
+                } else if (value[0].status == 'failure') {
+                    this.vm.smsBalance = value[0].count;
+                }
+            }
+
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        })
+
+        /*this.vm.smsOldService.sendSMS(data, this.vm.user.jwt).then(data => {
+            this.vm.isLoading = false;
+            alert(data.message);
+            if (data.status === 'success') {
+                this.vm.smsBalance -= data.count;
+            } else if (data.status === 'failure') {
+                this.vm.smsBalance = data.count;
+            }
+        }, error => {
+            this.vm.isLoading = false;
+        })*/
     }
 
 }

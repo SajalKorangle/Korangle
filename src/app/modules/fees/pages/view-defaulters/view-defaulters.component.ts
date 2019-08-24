@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
+import { FeeService } from "../../../../services/fees/fee.service";
 import {StudentService} from "../../../../services/student.service";
 import {ClassService} from "../../../../services/class.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
@@ -47,7 +47,7 @@ export class ViewDefaultersComponent implements OnInit {
     installmentNumber = 0;
 
     maximumNumber = null;
-    minimumNumber = 1;
+    minimumNumber = null;
 
     selectedClassSection = null;
     filteredClassSectionList = [];
@@ -343,11 +343,11 @@ export class ViewDefaultersComponent implements OnInit {
             });
         }
         if ((this.maximumNumber && this.maximumNumber != '')
-            || (this.minimumNumber && this.minimumNumber.toString() != '')) {
+            || (this.minimumNumber && this.minimumNumber != '')) {
             tempList = tempList.filter(student => {
                 let amount = student.feesDueTillMonth;
                 return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
-                    && ((this.minimumNumber && this.minimumNumber.toString() != '')?amount>=this.minimumNumber:true)
+                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
             });
         }
         return tempList;
@@ -362,13 +362,13 @@ export class ViewDefaultersComponent implements OnInit {
     getFilteredParentList(): any {
         let tempList = this.parentList;
         if ((this.maximumNumber && this.maximumNumber != '')
-            || (this.minimumNumber && this.minimumNumber.toString() != '')) {
+            || (this.minimumNumber && this.minimumNumber != '')) {
             tempList = tempList.filter(parent => {
                 let amount = parent.studentList.reduce((amount, student) => {
                     return amount + student['feesDueTillMonth'];
                 }, 0);
                 return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
-                    && ((this.minimumNumber && this.minimumNumber.toString() != '')?amount>=this.minimumNumber:true)
+                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
             });
         }
         return tempList;

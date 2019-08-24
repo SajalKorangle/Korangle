@@ -3,7 +3,8 @@ import {Component, OnInit} from '@angular/core';
 import {ClassService} from '../../../../services/class.service';
 import { StudentService } from "../../../../services/student.service";
 import { EmployeeService } from "../../../../services/employee.service";
-import { SmsService } from '../../sms.service';
+import { SmsOldService } from '../../sms-old.service';
+import { SmsService } from "../../../../services/sms/sms.service";
 
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -15,7 +16,7 @@ import {UserService} from "../../../../services/user/user.service";
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
     styleUrls: ['./send-sms.component.css'],
-    providers: [ StudentService, ClassService, EmployeeService, NotificationService, UserService],
+    providers: [ StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService],
 })
 
 export class SendSmsComponent implements OnInit {
@@ -64,6 +65,7 @@ export class SendSmsComponent implements OnInit {
     constructor(public studentService: StudentService,
                 public employeeService: EmployeeService,
                 public classService: ClassService,
+                public smsOldService: SmsOldService,
                 public smsService: SmsService,
                 public notificationService: NotificationService,
                 public userService: UserService,
@@ -101,14 +103,19 @@ export class SendSmsComponent implements OnInit {
 
     }
 
-    sendSMS(): void {
+    /*sendSMS(): void {
 
         let smsContentType = (this.hasUnicode()? 'unicode':'english');
 
         let mobileNumberList = '';
+        let notifMobileNumberList = '';
 
         this.smsMobileNumberList.forEach(mobileNumber => {
             mobileNumberList += mobileNumber.toString() + ',';
+        });
+
+        this.notificationMobileNumberList.forEach(mobileNumber => {
+            notifMobileNumberList += mobileNumber.toString() + ',';
         });
 
         let data = {
@@ -117,6 +124,7 @@ export class SendSmsComponent implements OnInit {
             'estimatedCount': this.getSMSCount()*this.getMobileNumberList('sms').length,
             'message': this.message,
             'mobileNumberList': mobileNumberList,
+            'notificationMobileNumberList': notifMobileNumberList,
         };
 
         if (!confirm('Please confirm that you are sending ' + (this.getSMSCount()*this.getMobileNumberList('sms').length) + ' SMS.')) {
@@ -124,7 +132,7 @@ export class SendSmsComponent implements OnInit {
         }
 
         this.isLoading = true;
-        this.smsService.sendSMS(data, this.user.jwt).then(data => {
+        this.smsOldService.sendSMS(data, this.user.jwt).then(data => {
             this.isLoading = false;
             alert(data.message);
             if (data.status === 'success') {
@@ -135,7 +143,7 @@ export class SendSmsComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         })
-    }
+    }*/
 
     getMobileNumberList(returnType: string): any {
         let mobileNumberList = [];

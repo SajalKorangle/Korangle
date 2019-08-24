@@ -42,6 +42,19 @@ export class SidebarComponent implements OnInit {
     warning = 'warning';
     session_list=SESSION_LIST;
 
+    notification = {
+        path: 'notification',
+        title: 'Notification',
+        icon: 'notifications_active',
+        showTaskList: false,
+        taskList: [
+            {
+                path: 'view_notification',
+                title: 'View Notification',
+            },
+        ],
+    };
+
     settings = {
         path: 'user-settings',
         title: 'Settings',

@@ -1,0 +1,16 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <ng-container *ngFor="let notification of notificationList">
+            {{notification.content}}<br/><br/>
+        </ng-container>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+

@@ -12,6 +12,11 @@ import {DataStorage} from './classes/data-storage';
 
 const routes: Routes = [
     {
+        path: 'notification',
+        loadChildren: 'app/modules/notification/notification.module#NotificationModule',
+        // loadChildren: () => import('app/modules/students/student.module').then(m => m.StudentModule),
+    },
+    {
         path: 'students',
         loadChildren: 'app/modules/students/student.module#StudentModule',
         // loadChildren: () => import('app/modules/students/student.module').then(m => m.StudentModule),

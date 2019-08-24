@@ -33,7 +33,7 @@
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
                     <th>S No.</th>
-                    <th class="text-right">Count</th>
+                    <th class="text-right">Sms/Notif.</th>
                     <th class="text-center">Date</th>
                     <th class="text-left">Message</th>
                 </tr>
@@ -41,7 +41,7 @@
                 <tbody>
                 <tr *ngFor="let sms of smsList; let i = index;" style="padding: 0px;">
                     <td>{{i+1}}</td>
-                    <td style="padding-right: 15px;" align="right">{{sms.count}}</td>
+                    <td style="padding-right: 15px;" align="right">{{sms.count}}/{{sms.notificationCount}}</td>
                     <td align="center">{{sms.sentDateTime | date: 'dd - MMM - yyyy'}}</td>
                     <td align="left" style="white-space: pre-line;">
                         {{sms.content}}

@@ -13,7 +13,7 @@ const routes: Routes = [
     },
     {
         path: 'change_password',
-        loadChildren: 'app/modules/user-settings/pages/change-password/change-password.module#ChangePasswordModule',
+        loadChildren: 'app/modules/user-settings/pages/change-password/change-password.module#ViewNotificationModule',
         data: {moduleName: 'user-settings'},
     },
     {

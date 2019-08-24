@@ -89,6 +89,30 @@
 
         <ul class="nav" *ngIf="user.activeSchool">
 
+            <!-- Notification -->
+            <li [class.active]="notification.path === user.section.route"
+                [attr.data-color]='user.activeSchool.primaryThemeColor'
+                style="border-bottom: 0.1px solid lightgrey;">
+                <a (click)="notification.showTaskList = !notification.showTaskList;">
+                    <i class="material-icons">{{settings.icon}}</i>
+                    <p>
+                        {{notification.title}}
+                        <i *ngIf="!notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                        <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                    </p>
+                </a>
+                <ng-container *ngIf="notification.showTaskList">
+                    <div *ngFor="let task of notification.taskList"
+                         [attr.data-color]="user.activeSchool.secondaryThemeColor"
+                         [class.active]="notification.path===user.section.route && task.title===user.section.subTitle"
+                         class="subsectionDiv"
+                         (click)="changePage(task, notification);">
+                        <i class="material-icons">remove</i>
+                        <p>{{task.title}}</p>
+                    </div>
+                </ng-container>
+            </li>
+
             <!-- Parent -->
             <ng-container *ngIf="user.activeSchool.role==='Parent'">
 

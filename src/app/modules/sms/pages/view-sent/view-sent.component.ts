@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import { SmsService } from '../../sms.service';
+import { SmsOldService } from '../../sms-old.service';
 import { ViewSentServiceAdapter } from './view-sent.service.adapter';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -26,7 +26,7 @@ export class ViewSentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public smsService: SmsService,
+    constructor(public smsService: SmsOldService,
                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {

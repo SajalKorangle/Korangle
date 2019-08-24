@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import {FeeService} from "../../../../services/fee.service";
+import {FeeService} from "../../../../services/fees/fee.service";
 import {StudentService} from "../../../../services/student.service";
 
 import {ViewFeeServiceAdapter} from "./view-fee.service.adapter";

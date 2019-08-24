@@ -51,16 +51,16 @@
                     <button type="submit"
                             *ngIf="selectedSentType=='SMS'"
                             class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="sendSMS()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS</button>
+                            (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS</button>
                     <button type="submit"
                             *ngIf="selectedSentType=='BOTH'"
                             class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="sendSMS()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS & {{getMobileNumberList('notification').length}} notifications</button>
+                            (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS & {{getMobileNumberList('notification').length}} notifications</button>
                 </ng-container>
                 <button type="submit"
                         *ngIf="selectedSentType=='NOTIFICATION'"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="sendSMS()">Send {{getMobileNumberList('notification').length}} notifications</button>
+                        (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('notification').length}} notifications</button>
             </span>
         </div>
     </div>
