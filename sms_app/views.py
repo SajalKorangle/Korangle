@@ -1,4 +1,6 @@
-from decorators import user_permission
+from common.common_views import CommonView, CommonListView
+from common.common_serializer_interface import create_object
+from decorators import user_permission, user_permission_new
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
@@ -7,11 +9,12 @@ from rest_framework.views import APIView
 import json
 
 
-############## SMS ##############
+############## SMS Old ##############
+from sms_app.models import SMS
 from .business.sms import get_sms_list
 
 
-class SMSListView(APIView):
+class SMSOldListView(APIView):
 
     @user_permission
     def get(request, school_id):
@@ -37,8 +40,8 @@ class SMSCountView(APIView):
         return get_sms_count(data)
 
 
-############## Send SMS ##############
-from .business.send_sms import send_sms
+############## Send SMS Old ##############
+from .business.send_sms import send_sms_old
 
 
 class SendSMSView(APIView):
@@ -46,7 +49,7 @@ class SendSMSView(APIView):
     @user_permission
     def post(request):
         data = json.loads(request.body.decode('utf-8'))
-        return send_sms(data)
+        return send_sms_old(data)
 
 
 ############## Msg Club Delivery Report ##############
@@ -81,3 +84,30 @@ class SMSPurchaseView(APIView):
             'parentSchool': school_id,
         }
         return get_sms_purchase_list(data)
+
+
+############## SMS ##############
+from .business.send_sms import send_sms
+
+
+class SmsView(CommonView, APIView):
+    Model = SMS
+
+    @user_permission_new
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        return_data = { 'status': 'success' }
+        if data['mobileNumberList'] != '':
+            return_data = send_sms(data)
+            if return_data['status'] == 'success':
+                data['requestId'] = return_data['requestId']
+                return_data['data'] = create_object(data, self.Model, self.ModelSerializer)
+        else:
+            data['requestId'] = 1
+            return_data['data'] = create_object(data, self.Model, self.ModelSerializer)
+        return return_data
+
+
+class SmsListView(CommonListView, APIView):
+    Model = SMS
+

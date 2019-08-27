@@ -15,12 +15,18 @@ def get_list(data, Model, ModelSerializer):
 
     filter_var_list = []
     filter_var = ''
+    order_var = ''
+    count_var = ''
 
     if data != '' and data is not None:
         for index, attr in enumerate(data):
 
             if attr == 'e' or attr == 'fields__korangle':
                 continue
+            elif attr[:15] == 'korangle__order':
+                order_var = ''
+            elif attr == 'korangle__count':
+                count_var = ''
             elif attr[-4:] == '__in':
                 if data[attr] != '':
                     filter_var = {attr: list(map(int, data[attr].split(',')))}
@@ -51,9 +57,22 @@ def get_list(data, Model, ModelSerializer):
                     print('filter exception in or:')
                     print(filter_var_list)
                 filter_var_list = []
+            elif attr[:15] == 'korangle__order':
+                try:
+                    query = query.order_by(data[attr])
+                except:
+                    print('order exception:')
+                    print(data[attr])
+            elif attr == 'korangle__count':
+                try:
+                    count_array = list(map(int, data[attr].split(',')))
+                    query = query[count_array[0]:count_array[1]]
+                except:
+                    print('count exception: ')
+                    print(data[attr])
             else:
                 try:
-                    query = query.filter(**filter_var)
+                    query = query   .filter(**filter_var)
                 except:
                     print('filter exception:')
                     print(filter_var)

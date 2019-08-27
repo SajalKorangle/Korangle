@@ -12,6 +12,41 @@ import json
 
 def send_sms(data):
 
+    sms_count_left = get_sms_count(data)
+
+    if data['count'] > sms_count_left['count']:
+        return {'status': 'failure', 'count': sms_count_left, 'message': 'Not enough sms left'}
+
+    school_object = School.objects.get(id=data['parentSchool'])
+
+    conn = http.client.HTTPConnection("msg.msgclub.net")
+
+    anotherPayload = {
+        "smsContent": data['content'],
+        "routeId": "1",
+        "mobileNumbers": data['mobileNumberList'],
+        "senderId": school_object.smsId,
+        "smsContentType": data['contentType'],
+    }
+
+    payloadJson = json.dumps(anotherPayload)
+
+    headers = {
+        'Content-Type': "application/json",
+        'Cache-Control': "no-cache"
+    }
+
+    conn.request("POST", "/rest/services/sendSMS/sendGroupSms?AUTH_KEY=fbe5746e5505757b176a1cf914110c3", payloadJson, headers)
+
+    response = conn.getresponse().read()
+
+    requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
+
+    return {'status': 'success', 'requestId': requestIdFromMsgClub, 'message': 'SMS Sent successfully'}
+
+
+def send_sms_old(data):
+
     # print(data['message'].encode('utf-8'))
 
     sms_count_left = get_sms_count(data)
