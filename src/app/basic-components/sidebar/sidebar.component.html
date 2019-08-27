@@ -94,11 +94,11 @@
                 [attr.data-color]='user.activeSchool.primaryThemeColor'
                 style="border-bottom: 0.1px solid lightgrey;">
                 <a (click)="notification.showTaskList = !notification.showTaskList;">
-                    <i class="material-icons">{{settings.icon}}</i>
+                    <i class="material-icons">{{notification.icon}}</i>
                     <p>
                         {{notification.title}}
                         <i *ngIf="!notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                        <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                        <i *ngIf="notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
                     </p>
                 </a>
                 <ng-container *ngIf="notification.showTaskList">

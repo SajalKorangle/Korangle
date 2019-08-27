@@ -6,7 +6,7 @@ import {ServiceObject} from "../common/service-object";
 @Injectable()
 export class NotificationService extends ServiceObject {
 
-    protected module_url = '/notification';
+    public module_url = '/notification';
 
     // objects urls
     public gcm_device = '/gcm-devices';

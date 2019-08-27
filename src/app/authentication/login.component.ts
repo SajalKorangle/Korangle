@@ -22,7 +22,7 @@ export class LoginComponent {
     isLoading = false;
 
     constructor(private authenticationService: AuthenticationService,
-                private notificationService: NotificationService,) {}
+                private notificationService: NotificationService) {}
 
     login() {
         this.isLoading = true;
@@ -38,7 +38,7 @@ export class LoginComponent {
                 registerForNotification({
                     'user': this.user.id,
                     'jwt': this.user.jwt,
-                    'url': environment.DJANGO_SERVER + Constants.api_version + '/notification/gcm-devices'
+                    'url': environment.DJANGO_SERVER + Constants.api_version + this.notificationService.module_url + this.notificationService.gcm_device,
                 });
             }
         }, error => {

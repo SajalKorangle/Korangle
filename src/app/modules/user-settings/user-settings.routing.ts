@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserSettingsComponent } from './user-settings.component';
 
 const routes: Routes = [
-
     {
         path: 'update_profile',
         loadChildren: 'app/modules/user-settings/pages/update-profile/update-profile.module#UpdateProfileModule',
@@ -13,7 +12,7 @@ const routes: Routes = [
     },
     {
         path: 'change_password',
-        loadChildren: 'app/modules/user-settings/pages/change-password/change-password.module#ViewNotificationModule',
+        loadChildren: 'app/modules/user-settings/pages/change-password/change-password.module#ChangePasswordModule',
         data: {moduleName: 'user-settings'},
     },
     {

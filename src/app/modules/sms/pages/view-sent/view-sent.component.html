@@ -55,7 +55,7 @@
 
                 <section class="mat-elevation-z2 mat-header-row">
                 <span class="mat-header-cell">S No.</span>
-                <span class="mat-header-cell">Count</span>
+                <span class="mat-header-cell">Sms/Notif.</span>
                 <span class="mat-header-cell">Date</span>
                 <span class="mat-header-cell">Message</span>
                 </section>
@@ -66,7 +66,7 @@
 
                     <mat-expansion-panel-header class="mat-row">
                         <span class="mat-cell">{{i+1}}.</span>
-                        <span class="mat-cell">{{sms.count}}</span>
+                        <span class="mat-cell">{{sms.count}}/{{sms.notificationCount}}</span>
                         <span class="mat-cell" >{{sms.sentDateTime | date: 'dd - MMM - yyyy'}}</span>
                         <span class="mat-cell">{{sms.content.substring(0,20)}}</span>
                     </mat-expansion-panel-header>
@@ -107,72 +107,6 @@
 
                     </ng-container>
 
-                    <!-- div>
-            
-                        <ng-container *ngIf="student.studentFeeProfile">
-                        <table class="table table-hover">
-            
-                            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                            <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>Fees Due</th>
-                            <th>Total Fees</th>
-                            </tr>
-                            </thead>
-            
-                            <tbody>
-                            <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td style="font-weight: 800; font-size: 16px;">{{getStudentFeesDue(student)}}</td>
-                            <td style="font-weight: 800; font-size: 16px;">{{getStudentTotalFee(student)}}</td>
-                            </tr>
-                            <ng-container *ngFor="let sessionFeeStatus of student.studentFeeProfile.sessionFeeStatusList; let i=index;">
-                            <ng-container *ngIf="getSessionFeesDue(sessionFeeStatus)>0">
-                                <ng-container *ngIf="showSessionFeesLine(student)">
-                                <tr>
-                                    <td>{{i+1}}. {{sessionFeeStatus.sessionName}}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td style="font-weight: 600;">{{getSessionFeesDue(sessionFeeStatus)}}</td>
-                                    <td style="font-weight: 600;">{{getSessionTotalFee(sessionFeeStatus)}}</td>
-                                </tr>
-                                </ng-container>
-                                <ng-container *ngFor="let component of sessionFeeStatus.componentList; let i=index;">
-                                <ng-container *ngIf="getComponentTotalFee(component) != 0">
-                                    <tr>
-                                    <td></td>
-                                    <td>{{component.feeType}}</td>
-                                    <td></td>
-                                    <td style="font-weight: 600;">{{getComponentFeesDue(component)}}</td>
-                                    <td style="font-weight: 600;">{{getComponentTotalFee(component)}}</td>
-                                    </tr>
-                                    <ng-container *ngIf="component.frequency === frequencyList[1]">
-                                    <ng-container *ngFor="let month of component.monthList">
-                                        <ng-container *ngIf="getComponentMonthlyTotalFee(month)>0">
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{{month.month}}</td>
-                                            <td>{{getComponentMonthlyFeesDue(month)}}</td>
-                                            <td>{{getComponentMonthlyTotalFee(month)}}</td>
-                                        </tr>
-                                        </ng-container>
-                                    </ng-container>
-                                    </ng-container>
-                                </ng-container>
-                                </ng-container>
-                            </ng-container>
-                            </ng-container>
-                            </tbody>
-                        </table>
-            
-                        </ng-container>
-
-                    </div -->
                 </mat-expansion-panel>
         
             </mat-accordion>

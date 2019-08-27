@@ -103,48 +103,6 @@ export class SendSmsComponent implements OnInit {
 
     }
 
-    /*sendSMS(): void {
-
-        let smsContentType = (this.hasUnicode()? 'unicode':'english');
-
-        let mobileNumberList = '';
-        let notifMobileNumberList = '';
-
-        this.smsMobileNumberList.forEach(mobileNumber => {
-            mobileNumberList += mobileNumber.toString() + ',';
-        });
-
-        this.notificationMobileNumberList.forEach(mobileNumber => {
-            notifMobileNumberList += mobileNumber.toString() + ',';
-        });
-
-        let data = {
-            'parentSchool': this.user.activeSchool.dbId,
-            'smsContentType': smsContentType,
-            'estimatedCount': this.getSMSCount()*this.getMobileNumberList('sms').length,
-            'message': this.message,
-            'mobileNumberList': mobileNumberList,
-            'notificationMobileNumberList': notifMobileNumberList,
-        };
-
-        if (!confirm('Please confirm that you are sending ' + (this.getSMSCount()*this.getMobileNumberList('sms').length) + ' SMS.')) {
-            return;
-        }
-
-        this.isLoading = true;
-        this.smsOldService.sendSMS(data, this.user.jwt).then(data => {
-            this.isLoading = false;
-            alert(data.message);
-            if (data.status === 'success') {
-                this.smsBalance -= data.count;
-            } else if (data.status === 'failure') {
-                this.smsBalance = data.count;
-            }
-        }, error => {
-            this.isLoading = false;
-        })
-    }*/
-
     getMobileNumberList(returnType: string): any {
         let mobileNumberList = [];
         if (this.showStudentList) {

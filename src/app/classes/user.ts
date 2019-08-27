@@ -83,7 +83,7 @@ export class User {
     }
 
     initializeTask(): void {
-        if (this.schoolList.length > 0) {
+        /*if (this.schoolList.length > 0) {
             if (this.activeSchool.role === 'Parent') {
                 this.populateSection(this.activeSchool.studentList[0].taskList[0], this.activeSchool.studentList[0]);
             } else if (this.activeSchool.role === 'Employee') {
@@ -98,13 +98,14 @@ export class User {
                 subTitle: 'Update Profile',
             };
             EmitterService.get('initialize-router').emit('');
-        }
-        /*this.section = {
+        }*/
+        this.section = {
             route: 'notification',
             subRoute: 'view_notification',
-            title: 'Notifictation',
+            title: 'Notification',
             subTitle: 'View Notification',
-        }*/
+        };
+        EmitterService.get('initialize-router').emit('');
     }
 
     populateSection(task: any, module: any): void {

@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { SubjectComponent } from './subject.component';
 
 const routes: Routes = [
-
     {
         path: 'set_class_subject',
         loadChildren: 'app/modules/subject/pages/set-class-subject/set-class-subject.module#SetClassSubjectModule',

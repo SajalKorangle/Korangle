@@ -104,7 +104,7 @@ const routes: Routes = [
 export class CustomPreload implements PreloadingStrategy {
     preload(route: Route, load: Function): Observable<any> {
         // console.log(route);
-        if (route.path === 'user-settings') {
+        if (route.path === 'user-settings' || route.path === 'notification') {
             return load();
         }
         let user = DataStorage.getInstance().getUser();

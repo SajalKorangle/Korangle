@@ -10,6 +10,7 @@ import moment = require('moment');
 import {NotificationService} from "./services/notification/notification.service";
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
+import {EmitterService} from "./services/emitter.service";
 
 @Component({
     selector: 'app-root',

@@ -16,32 +16,6 @@ export class SendSmsServiceAdapter {
         this.vm = vm;
     }
 
-    getAllMobileNumberList(): any {
-        let mobileNumberList = [];
-        this.vm.studentSectionList.forEach(studentSection => {
-            if (studentSection.selected) {
-                if (mobileNumberList.indexOf(studentSection.student.mobileNumber) === -1) {
-                    mobileNumberList.push(studentSection.student.mobileNumber);
-                }
-                if (this.vm.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
-                    if (mobileNumberList.indexOf(studentSection.student.secondMobileNumber) === -1) {
-                        mobileNumberList.push(studentSection.student.secondMobileNumber);
-                    }
-                }
-            }
-        });
-        this.vm.employeeList.forEach(employee => {
-            if (employee.selected) {
-                if (this.vm.isMobileNumberValid(employee.mobileNumber)) {
-                    if (mobileNumberList.indexOf(employee.mobileNumber) === -1) {
-                        mobileNumberList.push(employee.mobileNumber);
-                    }
-                }
-            }
-        });
-        return mobileNumberList;
-    }
-
     getAllStringMobileNumberList(): any {
         let mobileNumberList = [];
         this.vm.studentSectionList.forEach(studentSection => {
@@ -117,21 +91,27 @@ export class SendSmsServiceAdapter {
             this.populateStudentSectionList();
             
             let gcm_device_data = {
-                'user__username__in': this.getAllMobileNumberList(),
-                'active ': 'true__boolean',
+                'user__username__in': this.getAllStringMobileNumberList(),
+                'active': 'true__boolean',
             };
             
             let user_data = {
-                'username': this.getAllStringMobileNumberList(),
+                'fields__korangle': 'username,id',
+                'username__in': this.getAllStringMobileNumberList(),
             };
+
+            console.log(gcm_device_data);
+            console.log(user_data);
 
             Promise.all([
                 this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data),
                 this.vm.userService.getList(this.vm.userService.user, user_data),
             ]).then(value2 => {
 
+                console.log(value2);
+
                 this.vm.gcmDeviceList = value2[0];
-                this.populateFilteredUserList(value[1]);
+                this.populateFilteredUserList(value2[1]);
 
                 this.vm.isLoading = false;
 
@@ -209,28 +189,19 @@ export class SendSmsServiceAdapter {
         let mobileNumberList = '';
         let notifMobileNumberList = '';
 
-        this.vm.smsMobileNumberList.forEach(mobileNumber => {
-            mobileNumberList += mobileNumber.toString() + ',';
+        this.vm.smsMobileNumberList.forEach((mobileNumber,index) => {
+            mobileNumberList += mobileNumber.toString() + ((index!=this.vm.smsMobileNumberList.length-1)?',':'');
         });
 
-        this.vm.notificationMobileNumberList.forEach(mobileNumber => {
-            notifMobileNumberList += mobileNumber.toString() + ',';
+        this.vm.notificationMobileNumberList.forEach((mobileNumber, index) => {
+            notifMobileNumberList += mobileNumber.toString() + ((index!=this.vm.notificationMobileNumberList.length-1)?',':'');
         });
-
-        /*let data = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'smsContentType': smsContentType,
-            'estimatedCount': this.vm.getSMSCount()*this.vm.getMobileNumberList('sms').length,
-            'message': this.vm.message,
-            'mobileNumberList': mobileNumberList,
-            'notificationMobileNumberList': notifMobileNumberList,
-        };*/
 
         let sms_data = {
             'contentType': (this.vm.hasUnicode()? 'unicode':'english'),
             'content': this.vm.message,
             'count': this.vm.getSMSCount()*this.vm.smsMobileNumberList.length,
-            'notificationCount': notifMobileNumberList.length,
+            'notificationCount': this.vm.notificationMobileNumberList.length,
             'mobileNumberList': mobileNumberList,
             'notificationMobileNumberList': notifMobileNumberList,
             'parentSchool': this.vm.user.activeSchool.dbId,
@@ -244,23 +215,18 @@ export class SendSmsServiceAdapter {
             };
         });
 
-        if (!confirm('Please confirm that you are sending ' + (this.vm.getSMSCount()*this.vm.getMobileNumberList('sms').length) + ' SMS.')) {
-            return;
+        console.log(notification_data);
+
+        if (this.vm.smsMobileNumberList.length>0) {
+            if (!confirm('Please confirm that you are sending ' + (this.vm.getSMSCount()*this.vm.getMobileNumberList('sms').length) + ' SMS.')) {
+                return;
+            }
         }
 
         let service_list = [];
-
-        if (this.vm.selectedSentType == 'SMS') {
-            service_list.push(this.vm.smsService.createObject(this.vm.smsService.sms, sms_data));
-        } else if (this.vm.selectedSentType == 'BOTH') {
-            if (this.vm.smsMobileNumberList.length > 0) {
-                service_list.push(this.vm.smsService.createObject(this.vm.smsService.sms, sms_data));
-            }
-            if (this.vm.notificationMobileNumberList.length > 0) {
-                service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService, notification_data));
-            }
-        } else if (this.vm.selectedSentType == 'NOTIFICATION') {
-            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService, notification_data));
+        service_list.push(this.vm.smsService.createObject(this.vm.smsService.sms, sms_data));
+        if (this.vm.notificationMobileNumberList.length > 0 ) {
+            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
         }
 
         this.vm.isLoading = true;
@@ -282,17 +248,6 @@ export class SendSmsServiceAdapter {
             this.vm.isLoading = false;
         })
 
-        /*this.vm.smsOldService.sendSMS(data, this.vm.user.jwt).then(data => {
-            this.vm.isLoading = false;
-            alert(data.message);
-            if (data.status === 'success') {
-                this.vm.smsBalance -= data.count;
-            } else if (data.status === 'failure') {
-                this.vm.smsBalance = data.count;
-            }
-        }, error => {
-            this.vm.isLoading = false;
-        })*/
     }
 
 }

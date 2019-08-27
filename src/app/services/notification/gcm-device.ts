@@ -1,5 +1,5 @@
 
-export class GcmDevice {
+export class GCMDevice {
 
     id: number = null;
     registration_id: string = null;
