@@ -14,7 +14,7 @@ export class ViewNotificationComponent {
 
     user;
 
-    loadingCount = 4;
+    loadingCount = 20;
 
     loadMoreNotifications = true;
 
