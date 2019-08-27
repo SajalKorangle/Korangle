@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { GenerateFeesReportServiceAdapter } from "./generate-fees-report.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
+import { FeeService } from "../../../../services/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {StudentService} from "../../../../services/student.service";
 import {ClassService} from "../../../../services/class.service";
@@ -37,6 +37,8 @@ export class GenerateFeesReportComponent implements OnInit {
 
     installmentNumber = 0;
 
+    currentSession: any;
+
     maximumNumber = null;
     minimumNumber = null;
 
@@ -55,6 +57,12 @@ export class GenerateFeesReportComponent implements OnInit {
         this.serviceAdapter = new GenerateFeesReportServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        let todaysDate = new Date();
+        this.currentSession = this.sessionList.find(session => {
+            return new Date(session.startDate) <= todaysDate
+                && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
+        });
 
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
@@ -100,8 +108,8 @@ export class GenerateFeesReportComponent implements OnInit {
                 }) != undefined;
             });
 
-            student['feesDueTillMonth'] = filteredStudentFeeList.reduce((total, studentFee) => {
-                return total + this.installmentList.slice(0,this.installmentNumber).reduce((installmentAmount, installment) => {
+            /*student['feesDueTillMonth'] = filteredStudentFeeList.reduce((total, studentFee) => {
+                return total + this.installmentList.slice(0,this.installmentNumber+1).reduce((installmentAmount, installment) => {
                     let lateFeeAmount = 0;
                     if (studentFee[installment+'LastDate'] && studentFee[installment+'LateFee'] && studentFee[installment+'LateFee'] > 0) {
                         let lastDate = new Date(studentFee[installment+'LastDate']);
@@ -109,7 +117,7 @@ export class GenerateFeesReportComponent implements OnInit {
                         if (studentFee[installment+'ClearanceDate']) {
                             clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
                         }
-                        let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+                        let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
                             if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < lateFeeAmount) {
@@ -122,13 +130,67 @@ export class GenerateFeesReportComponent implements OnInit {
                         + lateFeeAmount;
                 }, 0);
             }, 0) - filteredSubFeeReceiptList.reduce((total, subFeeReceipt) => {
-                return total + this.installmentList.slice(0,this.installmentNumber).reduce((installmentAmount, installment) => {
+                return total + this.installmentList.slice(0,this.installmentNumber+1).reduce((installmentAmount, installment) => {
                     return installmentAmount
                         + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
                         + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
                 }, 0);
             }, 0) - filteredSubDiscountList.reduce((total, subDiscount) => {
-                return total + this.installmentList.slice(0,this.installmentNumber).reduce((installmentAmount, installment) => {
+                return total + this.installmentList.slice(0,this.installmentNumber+1).reduce((installmentAmount, installment) => {
+                    return installmentAmount
+                        + (subDiscount[installment+'Amount']?subDiscount[installment+'Amount']:0)
+                        + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
+                }, 0);
+            }, 0);*/
+
+            student['feesDueTillMonth'] = filteredStudentFeeList.reduce((total, studentFee) => {
+                let filteredInstallmentList = [];
+                if (studentFee.parentSession == this.currentSession.id) {
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber+1);
+                } else {
+                    filteredInstallmentList = this.installmentList;
+                }
+                return total + filteredInstallmentList.reduce((installmentAmount, installment) => {
+                    let lateFeeAmount = 0;
+                    if (studentFee[installment+'LastDate'] && studentFee[installment+'LateFee'] && studentFee[installment+'LateFee'] > 0) {
+                        let lastDate = new Date(studentFee[installment+'LastDate']);
+                        let clearanceDate = new Date();
+                        if (studentFee[installment+'ClearanceDate']) {
+                            clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
+                        }
+                        let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+                        if (numberOfLateDays > 0) {
+                            lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
+                            if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < lateFeeAmount) {
+                                lateFeeAmount = studentFee[installment+'MaximumLateFee'];
+                            }
+                        }
+                    }
+
+                    return installmentAmount
+                        + (studentFee[installment+'Amount']?studentFee[installment+'Amount']:0)
+                        + lateFeeAmount;
+                }, 0);
+            }, 0) - filteredSubFeeReceiptList.reduce((total, subFeeReceipt) => {
+                let filteredInstallmentList = [];
+                if (subFeeReceipt.parentSession == this.currentSession.id) {
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber+1);
+                } else {
+                    filteredInstallmentList = this.installmentList;
+                }
+                return total + filteredInstallmentList.reduce((installmentAmount, installment) => {
+                    return installmentAmount
+                        + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
+                        + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
+                }, 0);
+            }, 0) - filteredSubDiscountList.reduce((total, subDiscount) => {
+                let filteredInstallmentList = [];
+                if (subDiscount.parentSession == this.currentSession.id) {
+                    filteredInstallmentList = this.installmentList.slice(0,this.installmentNumber+1);
+                } else {
+                    filteredInstallmentList = this.installmentList;
+                }
+                return total + filteredInstallmentList.reduce((installmentAmount, installment) => {
                     return installmentAmount
                         + (subDiscount[installment+'Amount']?subDiscount[installment+'Amount']:0)
                         + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
@@ -144,7 +206,7 @@ export class GenerateFeesReportComponent implements OnInit {
                         if (studentFee[installment+'ClearanceDate']) {
                             clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
                         }
-                        let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+                        let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
                             if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < lateFeeAmount) {
@@ -201,7 +263,7 @@ export class GenerateFeesReportComponent implements OnInit {
                         if (studentFee[installment+'ClearanceDate']) {
                             clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
                         }
-                        let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+                        let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
                         if (numberOfLateDays > 0) {
                             lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
                             if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < lateFeeAmount) {

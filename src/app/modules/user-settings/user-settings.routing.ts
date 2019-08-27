@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserSettingsComponent } from './user-settings.component';
 
 const routes: Routes = [
-
     {
         path: 'update_profile',
         loadChildren: 'app/modules/user-settings/pages/update-profile/update-profile.module#UpdateProfileModule',

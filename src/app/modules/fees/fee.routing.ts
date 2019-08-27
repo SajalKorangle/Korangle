@@ -7,7 +7,6 @@ import {  PRINT_FEE_RECIEPT_LIST, PRINT_FULL_FEE_RECIEPT_LIST } from '../../prin
 import { PrintFeeReceiptListComponent } from './print/print-fee-receipt-list/print-fee-receipt-list.component';
 import { PrintFullFeeReceiptListComponent } from './print/print-full-fee-receipt-list/print-full-fee-receipt-list.component';
 
-
 const routes: Routes = [
     {
         path: 'collect_fee',

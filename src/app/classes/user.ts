@@ -2,7 +2,6 @@
 import {School} from './school';
 
 import { EmitterService } from '../services/emitter.service';
-import {sendDataToAndroid} from "./common.js";
 
 export class User {
 
@@ -42,7 +41,6 @@ export class User {
 
     checkAuthentication(): boolean {
         this.jwt = localStorage.getItem('schoolJWT');
-        sendDataToAndroid(this.jwt);
         if (this.jwt === null || this.jwt.length === 0) {
             this.isAuthenticated = false;
             return false;
@@ -85,7 +83,7 @@ export class User {
     }
 
     initializeTask(): void {
-        if (this.schoolList.length > 0) {
+        /*if (this.schoolList.length > 0) {
             if (this.activeSchool.role === 'Parent') {
                 this.populateSection(this.activeSchool.studentList[0].taskList[0], this.activeSchool.studentList[0]);
             } else if (this.activeSchool.role === 'Employee') {
@@ -100,12 +98,18 @@ export class User {
                 subTitle: 'Update Profile',
             };
             EmitterService.get('initialize-router').emit('');
-        }
-
+        }*/
+        this.section = {
+            route: 'notification',
+            subRoute: 'view_notification',
+            title: 'Notification',
+            subTitle: 'View Notification',
+        };
+        EmitterService.get('initialize-router').emit('');
     }
 
     populateSection(task: any, module: any): void {
-        if (module.path === 'user-settings') {
+        if (module.path === 'user-settings' || module.path === 'notification') {
             this.section = {
                 route: module.path,
                 subRoute: task.path,

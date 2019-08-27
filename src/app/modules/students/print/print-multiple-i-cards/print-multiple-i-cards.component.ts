@@ -44,7 +44,7 @@ export class PrintMultipleICardsComponent implements OnInit, OnDestroy, AfterVie
     }
 
     isLongScholarNumber(scholarNumber: any): boolean {
-        if (scholarNumber.length > 13) {
+        if (scholarNumber && scholarNumber.length > 13) {
             return true;
         }
         return false;
