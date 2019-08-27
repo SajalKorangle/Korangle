@@ -100,6 +100,7 @@ export class TotalCollectionComponent implements OnInit {
             'selectedModeOfPayment': this.selectedModeOfPayment,
             'selectedFeeType':this.selectedFeeType,
         };
+
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
     }
 
@@ -155,39 +156,20 @@ export class TotalCollectionComponent implements OnInit {
                 return classSection.classs.dbId == this.selectedClassSection.classs.dbId
                     && classSection.section.id == this.selectedClassSection.section.id;
             });
-
         }
 
-
-
-        let filteredSubFeeList=[];
-        let filteredFeeList=[];
         if(this.selectedFeeType){
-            filteredSubFeeList=this.subFeeReceiptList.filter(subFeeRecipt=>{
+            let filteredSubFeeList=this.subFeeReceiptList.filter(subFeeRecipt=>{
                 return subFeeRecipt.parentFeeType==this.selectedFeeType.id;
             }).map(a=>a.parentFeeReceipt);
-
-            filteredSubFeeList.forEach(parentFeeId=>{
-                tempList.forEach(a=>{
-                    if(a.id==parentFeeId){
-                        filteredFeeList.push(a);
-                    }
-                })
+            tempList = tempList.filter(feeReceipt => {
+                return filteredSubFeeList.find(parentFeeId => {
+                    return parentFeeId == feeReceipt.id;
+                }) != undefined;
             });
-
-            tempList=filteredFeeList;
         }
 
         return tempList;
-    }
-
-    //not used
-    getFeeType(feeReceipt){
-        return this.subFeeReceiptList.map(a=>a.parentFeeRecipt).filter((item,index,final)=>{
-            return item == feeReceipt.id;
-        });
-        let subFeeReceipt;
-        return subFeeReceipt.feeType;
     }
 
     getFilteredFeeReceiptListTotalAmount(): any {

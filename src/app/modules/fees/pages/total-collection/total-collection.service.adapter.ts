@@ -166,13 +166,12 @@ export class TotalCollectionServiceAdapter {
         // Filtered Mode of Payment List
         this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {return a != null;});
 
-        //filtered feetype list
+        //Filtered Fee Type list
         this.vm.filteredFeeTypeList=this.vm.feeTypeList.filter(feeType=>{
-            return this.vm.subFeeReceiptList.map(a=>a.parentFeeType).find(b=>{
-                return b==feeType.id;
+            return this.vm.subFeeReceiptList.find(subFeeReceipt =>{
+                return subFeeReceipt.parentFeeType==feeType.id;
             }) != undefined;
         });
-
 
     }
 

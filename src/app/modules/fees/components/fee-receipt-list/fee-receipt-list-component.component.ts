@@ -42,7 +42,7 @@ export class FeeReceiptListComponent {
             'sectionList': this.sectionList,
             'employeeList': this.employeeList,
         };
-        //TODO: send current fee type here if needed
+
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, {user: this.user, value: data});
 
     }
