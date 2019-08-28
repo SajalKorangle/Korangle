@@ -6,7 +6,7 @@
             <mat-card style="margin-bottom: 10px;">
                 <mat-card-title style="font-weight: normal; font-size: 15px; align: left">
                     {{getNotificationTitle(notification)}}
-                    <span style="float: right">Date</span>
+                    <span style="float: right">{{notification.sentDateTime | date: 'dd/MM/yyyy'}}</span>
                 </mat-card-title>
                 <mat-card-content style="font-weight: 400; font-size: 20px;">{{notification.content}}</mat-card-content>
             </mat-card>

@@ -26,7 +26,7 @@ export class SendSmsComponent implements OnInit {
     sentTypeList = [
         'SMS',
         'NOTIFICATION',
-        'BOTH',
+        'NOTIF./SMS',
     ];
 
     selectedSentType = 'SMS';

@@ -89,29 +89,69 @@ export class SendSmsServiceAdapter {
 
             this.populateClassSectionList();
             this.populateStudentSectionList();
-            
-            let gcm_device_data = {
-                'user__username__in': this.getAllStringMobileNumberList(),
-                'active': 'true__boolean',
-            };
-            
-            let user_data = {
-                'fields__korangle': 'username,id',
-                'username__in': this.getAllStringMobileNumberList(),
-            };
 
-            console.log(gcm_device_data);
-            console.log(user_data);
+            let stringMobileNumberList = this.getAllStringMobileNumberList();
 
-            Promise.all([
-                this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data),
-                this.vm.userService.getList(this.vm.userService.user, user_data),
-            ]).then(value2 => {
+            let service_list = [];
+
+            if(stringMobileNumberList.length>700) {
+
+                let gcm_device_data_1 = {
+                    'user__username__in': stringMobileNumberList.slice(0,700),
+                    'active': 'true__boolean',
+                };
+
+                let gcm_device_data_2 = {
+                    'user__username__in': stringMobileNumberList.slice(700),
+                    'active': 'true__boolean',
+                };
+
+                let user_data_1 = {
+                    'fields__korangle': 'username,id',
+                    'username__in': stringMobileNumberList.slice(0,700),
+                };
+
+                let user_data_2 = {
+                    'fields__korangle': 'username,id',
+                    'username__in': stringMobileNumberList.slice(700),
+                };
+
+                service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data_1));
+                service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data_2));
+                service_list.push(this.vm.userService.getList(this.vm.userService.user, user_data_1));
+                service_list.push(this.vm.userService.getList(this.vm.userService.user, user_data_2));
+
+            } else {
+
+                let gcm_device_data = {
+                    'user__username__in': this.getAllStringMobileNumberList(),
+                    'active': 'true__boolean',
+                };
+
+                let user_data = {
+                    'fields__korangle': 'username,id',
+                    'username__in': this.getAllStringMobileNumberList(),
+                };
+
+                service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data));
+                service_list.push(this.vm.userService.getList(this.vm.userService.user, user_data));
+
+            }
+
+            // console.log(gcm_device_data);
+            // console.log(user_data);
+
+            Promise.all(service_list).then(value2 => {
 
                 console.log(value2);
 
-                this.vm.gcmDeviceList = value2[0];
-                this.populateFilteredUserList(value2[1]);
+                if (service_list.length == 4) {
+                    this.vm.gcmDeviceList = value2[0].concat(value2[1]);
+                    this.populateFilteredUserList(value2[2].concat(value2[3]));
+                } else {
+                    this.vm.gcmDeviceList = value2[0];
+                    this.populateFilteredUserList(value2[1]);
+                }
 
                 this.vm.isLoading = false;
 
@@ -235,7 +275,7 @@ export class SendSmsServiceAdapter {
 
             alert("Operation Successful");
 
-            if ((this.vm.selectedSentType == 'SMS' || this.vm.selectedSentType == 'BOTH') && (this.vm.smsMobileNumberList.length > 0)) {
+            if ((this.vm.selectedSentType == this.vm.sentTypeList[1] || this.vm.selectedSentType == this.vm.sentTypeList[2]) && (this.vm.smsMobileNumberList.length > 0)) {
                 if (value[0].status == 'success') {
                     this.vm.smsBalance -= value[0].data.count;
                 } else if (value[0].status == 'failure') {
