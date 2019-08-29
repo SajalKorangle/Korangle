@@ -44,12 +44,12 @@
                 Estimated Notification Count: {{getMobileNumberList('notification').length}}<br/>
             </span>
             <span *ngIf="getMobileNumberList('both').length !== 0 && message.length > 0">
-                <span *ngIf="(selectedSentType==sentTypeList[1] || selectedSentType==sentTypeList[2]) && smsBalance<getMobileNumberList('sms').length*getSMSCount()" style="font-size: 16px;">
+                <span *ngIf="(selectedSentType==sentTypeList[0] || selectedSentType==sentTypeList[2]) && smsBalance<getMobileNumberList('sms').length*getSMSCount()" style="font-size: 16px;">
                     You are short by <b>{{(getMobileNumberList('sms').length*getSMSCount()) - smsBalance}}</b> SMS.
                 </span>
                 <ng-container *ngIf="smsBalance>=(getMobileNumberList('sms').length*getSMSCount())">
                     <button type="submit"
-                            *ngIf="selectedSentType==sentTypeList[1]"
+                            *ngIf="selectedSentType==sentTypeList[0]"
                             class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                             (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS</button>
                     <button type="submit"
@@ -58,7 +58,7 @@
                             (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS & {{getMobileNumberList('notification').length}} notifications</button>
                 </ng-container>
                 <button type="submit"
-                        *ngIf="selectedSentType=='NOTIFICATION'"
+                        *ngIf="selectedSentType==sentTypeList[1]"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('notification').length}} notifications</button>
             </span>

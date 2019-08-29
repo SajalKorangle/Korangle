@@ -275,7 +275,7 @@ export class SendSmsServiceAdapter {
 
             alert("Operation Successful");
 
-            if ((this.vm.selectedSentType == this.vm.sentTypeList[1] || this.vm.selectedSentType == this.vm.sentTypeList[2]) && (this.vm.smsMobileNumberList.length > 0)) {
+            if ((this.vm.selectedSentType == this.vm.sentTypeList[0] || this.vm.selectedSentType == this.vm.sentTypeList[2]) && (this.vm.smsMobileNumberList.length > 0)) {
                 if (value[0].status == 'success') {
                     this.vm.smsBalance -= value[0].data.count;
                 } else if (value[0].status == 'failure') {
