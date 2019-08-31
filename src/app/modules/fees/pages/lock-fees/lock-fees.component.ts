@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { LockFeesServiceAdapter } from "./lock-fees.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
+import { FeeService } from "../../../../services/fees/fee.service";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {DataStorage} from "../../../../classes/data-storage";
 

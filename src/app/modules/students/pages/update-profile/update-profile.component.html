@@ -102,30 +102,34 @@
                 <!-- Name, Father's Name, Mother's Name -->
                 <div class="row">
                     <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedStudent.name,currentStudent.name)">
-                        <div class="form-group form-black label-floating">
-                            <label class="control-label">Name</label>
-                            <input type="text"
-                                   class="form-control"
-                                   [ngModel]="selectedStudent.name" (ngModelChange)="currentStudent.name=$event;">
-                        </div>
+                        <mat-form-field  style="width: 100%;">
+                            <mat-label>Name</mat-label>
+                            <input matInput
+                                   type="text"
+                                   (ngModelChange)="currentStudent.name=$event;"
+                                   [ngModel]="selectedStudent.name">
+                        </mat-form-field>
                     </div>
                     <div class="col-md-4"
                          [class.fieldChanged]="checkFieldChanged(selectedStudent.fathersName,currentStudent.fathersName)">
-                        <div class="form-group form-black label-floating">
-                            <label class="control-label">Father's Name</label>
-                            <input type="text"
-                                   class="form-control"
-                                   [ngModel]="selectedStudent.fathersName" (ngModelChange)="currentStudent.fathersName=$event">
-                        </div>
+                        <mat-form-field  style="width: 100%;">
+                            <mat-label>Father's Name</mat-label>
+                            <input matInput
+                                   type="text"
+                                   (ngModelChange)="currentStudent.fathersName=$event;"
+                                   [ngModel]="selectedStudent.fathersName">
+                        </mat-form-field>
+
                     </div>
                     <div class="col-md-4"
                          [class.fieldChanged]="checkFieldChanged(selectedStudent.motherName,currentStudent.motherName)">
-                        <div class="form-group form-black label-floating">
-                            <label class="control-label">Mother's Name</label>
-                            <input type="text"
-                                   class="form-control"
-                                   [ngModel]="selectedStudent.motherName" (ngModelChange)="currentStudent.motherName=$event">
-                        </div>
+                        <mat-form-field  style="width: 100%;">
+                            <mat-label>Mother's Name</mat-label>
+                            <input matInput
+                                   type="text"
+                                   (ngModelChange)="currentStudent.motherName=$event;"
+                                   [ngModel]="selectedStudent.motherName">
+                        </mat-form-field>
                     </div>
                 </div>
 
@@ -133,30 +137,35 @@
                 <div class="row">
                     <div class="col-md-4"
                          [class.fieldChanged]="checkFieldChanged(selectedStudent.rollNumber,currentStudent.rollNumber)">
-                        <div class="form-group form-black label-floating">
-                            <label class="control-label">Roll No.</label>
-                            <input type="text"
-                                   class="form-control"
-                                   [ngModel]="selectedStudent.rollNumber" (ngModelChange)="currentStudent.rollNumber=$event">
-                        </div>
+                        <mat-form-field  style="width: 100%;">
+                            <mat-label>Roll No.</mat-label>
+                            <input matInput
+                                   type="text"
+                                   (ngModelChange)="currentStudent.rollNumber=$event;"
+                                   [ngModel]="selectedStudent.rollNumber">
+                        </mat-form-field>
                     </div>
+
                     <div class="col-md-4"
                          [class.fieldChanged]="checkFieldChanged(selectedStudent.scholarNumber,currentStudent.scholarNumber)">
-                        <div class="form-group form-black label-floating">
-                            <label class="control-label">Scholar No.</label>
-                            <input type="text"
-                                   class="form-control"
-                                   [ngModel]="selectedStudent.scholarNumber" (ngModelChange)="currentStudent.scholarNumber=$event">
-                        </div>
+                        <mat-form-field  style="width: 100%;">
+                            <mat-label>Scholar No.</mat-label>
+                            <input matInput
+                                   type="text"
+                                   (ngModelChange)="currentStudent.scholarNumber=$event;"
+                                   [ngModel]="selectedStudent.scholarNumber">
+                        </mat-form-field>
+
                     </div>
                     <div class="col-md-4"
                          [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfBirth,currentStudent.dateOfBirth)">
-                        <div class="form-group form-black label-floating">
-                            <label class="control-label">Date of Birth</label>
-                            <input type="date"
-                                   class="form-control"
-                                   [ngModel]="selectedStudent.dateOfBirth" (ngModelChange)="currentStudent.dateOfBirth=$event">
-                        </div>
+                        <mat-form-field  style="width: 100%;">
+                            <mat-label>Date of Birth</mat-label>
+                            <input matInput
+                                   type="date"
+                                   (ngModelChange)="currentStudent.dateOfBirth=$event;"
+                                   [ngModel]="selectedStudent.dateOfBirth">
+                        </mat-form-field>
                     </div>
                 </div>
 
@@ -192,19 +201,20 @@
         <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.mobileNumber,currentStudent.mobileNumber)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Mobile Number
-                        <span *ngIf="checkLength(currentStudent.mobileNumber)"
-                              [class.fieldRight]="checkFieldChanged(selectedStudent.mobileNumber,currentStudent.mobileNumber) && checkRight(currentStudent.mobileNumber,10)">
-                                        - {{currentStudent.mobileNumber.toString().length}}</span>
-                    </label>
-                    <input type="number"
-                           class="form-control"
-                           [ngModel]="selectedStudent.mobileNumber" (ngModelChange)="currentStudent.mobileNumber=$event">
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Mobile Number
+                        <span *ngIf="checkLength(selectedStudent.mobileNumber)"
+                              [class.fieldRight]="checkRight(selectedStudent.mobileNumber,10)">
+                                        - {{selectedStudent.mobileNumber.toString().length}}</span>
+                    </mat-label>
+                    <input matInput
+                           type="number"
+                           [ngModel]="selectedStudent.mobileNumber"
+                           (ngModelChange)="currentStudent.mobileNumber=$event">
+                </mat-form-field>
             </div>
             <div class="col-md-3">
-                <mat-form-field style="margin-top: 22px; width: 100%;">
+                <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Admission Session"
                                 [ngModel]="selectedStudent.admissionSessionDbId"
                                 (ngModelChange)="currentStudent.admissionSessionDbId=$event">
@@ -214,7 +224,7 @@
                 </mat-form-field>
             </div>
             <div *ngIf="busStopList.length > 0" class="col-md-3">
-                <mat-form-field style="margin-top: 22px; width: 100%;">
+                <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Bus Stop"
                                 [ngModel]="selectedStudent.busStopDbId"
                                 (ngModelChange)="currentStudent.busStopDbId = $event">
@@ -226,7 +236,7 @@
                 </mat-form-field>
             </div>
             <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.rte,currentStudent.rte)">
-                <mat-form-field style="margin-top: 22px; width: 100%;">
+                <mat-form-field style="width: 100%;">
                     <mat-select placeholder="RTE"
                                 [ngModel]="selectedStudent.rte"
                                 (ngModelChange)="currentStudent.rte=$event">
@@ -241,13 +251,7 @@
         <!-- Gender, Category, Religion, Blood Group -->
         <div class="row">
             <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.gender,currentStudent.gender)">
-                <!-- div class="form-group form-black label-floating">
-                    <label class="control-label">Gender</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.gender" (ngModelChange)="currentStudent.gender=$event">
-                </div -->
-                <mat-form-field style="margin-top: 22px; width: 100%;">
+                <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Gender"
                                 [ngModel]="selectedStudent.gender"
                                 (ngModelChange)="currentStudent.gender=$event">
@@ -259,20 +263,11 @@
                 </mat-form-field>
             </div>
             <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.category,currentStudent.category)">
-                <!-- div class="form-group form-black label-floating">
-                    <label class="control-label">Category</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.category" (ngModelChange)="currentStudent.category=$event">
-                </div -->
-                <mat-form-field style="margin-top: 22px; width: 100%;">
+
+                <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Category"
                                 [ngModel]="selectedStudent.category"
                                 (ngModelChange)="currentStudent.category=$event">
-                        <!-- mat-option value="Scheduled Caste">Scheduled Caste</mat-option>
-                        <mat-option value="Scheduled Tribe">Scheduled Tribe</mat-option>
-                        <mat-option value="Other Backward Classes">Other Backward Classes</mat-option>
-                        <mat-option value="General">General</mat-option -->
                         <mat-option>None</mat-option>
                         <mat-option value="SC">SC</mat-option>
                         <mat-option value="ST">ST</mat-option>
@@ -282,13 +277,8 @@
                 </mat-form-field>
             </div>
             <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.religion,currentStudent.religion)">
-                <!-- div class="form-group form-black label-floating">
-                    <label class="control-label">Religion</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.religion" (ngModelChange)="currentStudent.religion=$event">
-                </div -->
-                <mat-form-field style="margin-top: 22px; width: 100%;">
+
+                <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Religion"
                                 [ngModel]="selectedStudent.religion"
                                 (ngModelChange)="currentStudent.religion=$event">
@@ -301,13 +291,8 @@
                 </mat-form-field>
             </div>
             <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.bloodGroup,currentStudent.bloodGroup)">
-                <!-- div class="form-group form-black label-floating">
-                    <label class="control-label">Blood Group</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.bloodGroup" (ngModelChange)="currentStudent.bloodGroup=$event">
-                </div -->
-                <mat-form-field style="margin-top: 22px; width: 100%;">
+
+                <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Blood Group"
                                 [ngModel]="selectedStudent.bloodGroup"
                                 (ngModelChange)="currentStudent.bloodGroup=$event">
@@ -329,50 +314,60 @@
         <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.familySSMID,currentStudent.familySSMID)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Family SSMID
+                <mat-form-field style="width: 100%;">
+                    <mat-label >Family SSMID
                         <span *ngIf="checkLength(currentStudent.familySSMID)"
-                              [class.fieldRight]="checkFieldChanged(selectedStudent.familySSMID,currentStudent.familySSMID) && checkRight(currentStudent.familySSMID,8)">
+                              [class.fieldRight]="checkRight(currentStudent.familySSMID,8)">
                                         - {{currentStudent.familySSMID.toString().length}}</span>
-                    </label>
-                    <input type="number"
-                           class="form-control"
-                           [ngModel]="selectedStudent.familySSMID" (ngModelChange)="currentStudent.familySSMID=$event">
-                </div>
+                    </mat-label>
+                    <input matInput
+                           type="number"
+                           (ngModelChange)="currentStudent.familySSMID=$event"
+                           [ngModel]="selectedStudent.familySSMID">
+                </mat-form-field>
+
+
+
             </div>
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.childSSMID,currentStudent.childSSMID)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Child SSMID
+                <mat-form-field style="width: 100%;">
+                    <mat-label >Child SSMID
                         <span *ngIf="checkLength(currentStudent.childSSMID)"
-                              [class.fieldRight]="checkFieldChanged(selectedStudent.childSSMID,currentStudent.childSSMID) && checkRight(currentStudent.childSSMID,9)">
+                              [class.fieldRight]="checkRight(currentStudent.childSSMID,9)">
                                         - {{currentStudent.childSSMID.toString().length}}</span>
-                    </label>
-                    <input type="number"
-                           class="form-control"
-                           [ngModel]="selectedStudent.childSSMID" (ngModelChange)="currentStudent.childSSMID=$event">
-                </div>
+                    </mat-label>
+                    <input matInput
+                           type="number"
+                           (ngModelChange)="currentStudent.childSSMID=$event"
+                           [ngModel]="selectedStudent.childSSMID">
+                </mat-form-field>
+
+
             </div>
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.aadharNum,currentStudent.aadharNum)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Aadhar Number
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Aadhar Number
                         <span *ngIf="checkLength(currentStudent.aadharNum)"
-                              [class.fieldRight]="checkFieldChanged(selectedStudent.aadharNum,currentStudent.aadharNum) && checkRight(currentStudent.aadharNum,12)">
+                              [class.fieldRight]="checkRight(currentStudent.aadharNum,12)">
                                         - {{currentStudent.aadharNum.toString().length}}</span>
-                    </label>
-                    <input type="number"
-                           class="form-control"
-                           [ngModel]="selectedStudent.aadharNum" (ngModelChange)="currentStudent.aadharNum=$event">
-                </div>
+                    </mat-label>
+
+                    <input matInput
+                           type="number"
+                           [ngModel]="currentStudent.aadharNum">
+                </mat-form-field>
             </div>
             <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.caste,currentStudent.caste)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Caste</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.caste" (ngModelChange)="currentStudent.caste=$event">
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Caste</mat-label>
+                    <input matInput
+                           type="text"
+                           (ngModelChange)="currentStudent.caste=$event;"
+                           [ngModel]="selectedStudent.caste">
+                </mat-form-field>
+
             </div>
         </div>
 
@@ -380,32 +375,33 @@
         <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.bankName,currentStudent.bankName)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Bank Name</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.bankName" (ngModelChange)="currentStudent.bankName=$event">
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Bank Name</mat-label>
+                    <input matInput
+                           type="text"
+                           (ngModelChange)="currentStudent.bankName=$event;"
+                           [ngModel]="selectedStudent.bankName">
+                </mat-form-field>
             </div>
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.bankAccountNum,currentStudent.bankAccountNum)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Bank Account Number</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.bankAccountNum"
-                           (ngModelChange)="currentStudent.bankAccountNum=$event">
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Account Number</mat-label>
+                    <input matInput
+                           type="text"
+                           (ngModelChange)="currentStudent.bankAccountNum=$event;"
+                           [ngModel]="selectedStudent.bankAccountNum">
+                </mat-form-field>
             </div>
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.bankIfscCode,currentStudent.bankIfscCode)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Bank Ifsc Code</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.bankIfscCode"
-                           (ngModelChange)="currentStudent.bankIfscCode=$event">
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Bank IFSC Code</mat-label>
+                    <input matInput
+                           type="text"
+                           (ngModelChange)="currentStudent.bankIfscCode=$event;"
+                           [ngModel]="selectedStudent.bankIfscCode">
+                </mat-form-field>
             </div>
         </div>
 
@@ -413,52 +409,49 @@
         <div class="row">
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.fatherOccupation,currentStudent.fatherOccupation)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Father's Occupation</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.fatherOccupation"
-                           (ngModelChange)="currentStudent.fatherOccupation=$event">
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Father's Occupation</mat-label>
+                    <input matInput
+                           type="text"
+                           (ngModelChange)="currentStudent.fatherOccupation=$event;"
+                           [ngModel]="selectedStudent.fatherOccupation">
+                </mat-form-field>
             </div>
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.fatherAnnualIncome,currentStudent.fatherAnnualIncome)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Father's Annual Income</label>
-                    <input type="text"
-                           class="form-control"
-                           [ngModel]="selectedStudent.fatherAnnualIncome"
-                           (ngModelChange)="currentStudent.fatherAnnualIncome=$event">
-                </div>
-                <!-- mat-form-field style="margin-top: 22px; width: 100%;">
-                    <input type="text"
-                           matInput
-                           placeholder="Father's Annual Income"
-                           [ngModel]="selectedStudent.fatherAnnualIncome"
-                           (ngModelChange)="currentStudent.fatherAnnualIncome=$event">
-                </mat-form-field -->
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Father's Annual Income</mat-label>
+                    <input matInput
+                           type="text"
+                           (ngModelChange)="currentStudent.fatherAnnualIncome=$event;"
+                           [ngModel]="selectedStudent.fatherAnnualIncome">
+                </mat-form-field>
+
             </div>
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfAdmission,currentStudent.dateOfAdmission)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Date of Admission</label>
-                    <input type="date"
-                           class="form-control"
-                           [ngModel]="selectedStudent.dateOfAdmission" (ngModelChange)="currentStudent.dateOfAdmission=$event">
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Date of Admission</mat-label>
+                    <input matInput
+                           type="date"
+                           (ngModelChange)="currentStudent.dateOfAdmission=$event;"
+                           [ngModel]="selectedStudent.dateOfAdmission">
+                </mat-form-field>
             </div>
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber)">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Alternate Mobile Number
-                        <span *ngIf="checkLength(currentStudent.secondMobileNumber)"
-                              [class.fieldRight]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber) && checkRight(currentStudent.secondMobileNumber,10)">
+                    <mat-form-field  style="width: 100%;">
+                        <mat-label >Alternate Mobile Number
+                            <span *ngIf="checkLength(currentStudent.secondMobileNumber)"
+                                  [class.fieldRight]="checkRight(currentStudent.secondMobileNumber,10)">
                                         - {{currentStudent.secondMobileNumber.toString().length}}</span>
-                    </label>
-                    <input type="number"
-                           class="form-control"
-                           [ngModel]="selectedStudent.secondMobileNumber" (ngModelChange)="currentStudent.secondMobileNumber=$event">
-                </div>
+                        </mat-label>
+
+                        <input matInput
+                               type="number"
+                               (ngModelChange)="currentStudent.secondMobileNumber=$event"
+                               [ngModel]="currentStudent.secondMobileNumber">
+                    </mat-form-field>
             </div>
         </div>
 
@@ -466,25 +459,31 @@
         <div class="row">
             <div class="col-md-6"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.address,currentStudent.address)">
-                <div class="form-group">
-                    <div class="form-group form-black label-floating">
-                        <label class="control-label">Address</label>
-                        <textarea class="form-control" rows="3"
-                                  [ngModel]="selectedStudent.address"
-                                  (ngModelChange)="currentStudent.address=$event"></textarea>
-                    </div>
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput
+                           type="text"
+                           rows="3"
+                           (ngModelChange)="currentStudent.address=$event;"
+                           [ngModel]="selectedStudent.address">
+                        </textarea>
+                </mat-form-field>
+
+
             </div>
             <div class="col-md-6"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.remark,currentStudent.remark)">
-                <div class="form-group">
-                    <div class="form-group form-black label-floating">
-                        <label class="control-label">Remark</label>
-                        <textarea class="form-control" rows="3"
-                                  [ngModel]="selectedStudent.remark"
-                                  (ngModelChange)="currentStudent.remark=$event"></textarea>
-                    </div>
-                </div>
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Remark</mat-label>
+                    <textarea matInput
+                              type="text"
+                              rows="3"
+                              (ngModelChange)="currentStudent.remark=$event;"
+                              [ngModel]="selectedStudent.remark">
+                        </textarea>
+                </mat-form-field>
+
+
             </div>
         </div>
 

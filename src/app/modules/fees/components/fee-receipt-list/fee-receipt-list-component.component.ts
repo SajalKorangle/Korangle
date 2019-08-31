@@ -22,6 +22,7 @@ export class FeeReceiptListComponent {
     @Input() employeeList;
     @Input() receiptColumnFilter;
     @Input() number;
+    @Input() selectedFeeType;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -48,7 +49,12 @@ export class FeeReceiptListComponent {
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
         return this.subFeeReceiptList.filter(subFeeReceipt => {
-            return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+            if(this.selectedFeeType){
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id &&
+                    subFeeReceipt.parentFeeType == this.selectedFeeType.id;
+            }else{
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id ;
+            }
         }).reduce((totalSubFeeReceipt, subFeeReceipt) => {
             return totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
                 return totalInstallment

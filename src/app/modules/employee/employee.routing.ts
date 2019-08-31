@@ -21,7 +21,7 @@ const routes: Routes = [
     },
     {
         path: 'add_employee',
-        loadChildren: 'app/modules/employee/pages/update-profile/update-profile.module#UpdateProfileModule',
+        loadChildren: 'app/modules/employee/pages/add-employee/add-employee.module#AddEmployeeModule',
         data: {moduleName: 'employee'},
     },
     {

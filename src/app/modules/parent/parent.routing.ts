@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { ParentComponent } from './parent.component';
 
 const routes: Routes = [
-
     {
         path: 'view_profile',
         loadChildren: 'app/modules/parent/pages/view-profile/view-profile.module#ViewProfileModule',
