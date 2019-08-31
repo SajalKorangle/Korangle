@@ -143,7 +143,6 @@
                         <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
                         <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
                         <td>{{getParentDiscount(parent) | indianCurrency}}</td>
-
                     </tr>
                     <ng-container *ngIf="parent.studentList.length > 1">
                         <ng-container *ngFor="let student of parent.studentList;">

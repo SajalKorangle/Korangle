@@ -76,14 +76,9 @@ export class ViewDefaultersComponent implements OnInit {
             return new Date(session.startDate) <= todaysDate
                 && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
         });
+
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
-        console.log(this.sessionList);
-        let id=this.user.activeSchool.currentSessionDbId;
-        let tList=this.sessionList.filter(session=>{
-            return session.id==id;
-        });
-        console.log(tList);
     }
 
     detectChanges(): void {
@@ -365,11 +360,9 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     getCurrentSessionName(){
-        let id=this.user.activeSchool.currentSessionDbId;
-        let tList=this.sessionList.filter(session=>{
-            return session.id==id;
-        });
-        return tList[0].name;
+        return this.sessionList.find(session => {
+            return session.id == this.user.activeSchool.currentSessionDbId;
+        }).name;
     }
 
 
