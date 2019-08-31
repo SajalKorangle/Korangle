@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { TotalDiscountServiceAdapter } from "./total-discount.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
+import { FeeService } from "../../../../services/fees/fee.service";
 import {DiscountColumnFilter, INSTALLMENT_LIST} from "../../classes/constants";
 import {EmployeeService} from "../../../../services/employee.service";
 import {StudentService} from "../../../../services/student.service";

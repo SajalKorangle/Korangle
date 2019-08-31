@@ -7,6 +7,10 @@ import { EmitterService } from '../../services/emitter.service';
 import {User} from '../../classes/user';
 import {style, state, trigger, animate, transition} from "@angular/animations";
 import {SESSION_LIST} from "../../classes/constants/session";
+import {environment} from "../../../environments/environment";
+import {Constants} from "../../classes/constants";
+import {NotificationService} from "../../services/notification/notification.service";
+import {unregisterForNotification} from '../../classes/common.js';
 
 
 declare const $: any;
@@ -15,6 +19,7 @@ declare const $: any;
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css'],
+    providers: [NotificationService],
     animations: [
         trigger('rotate', [
             state('true', style({transform: 'rotate(0deg)'})),
@@ -38,6 +43,19 @@ export class SidebarComponent implements OnInit {
     green = 'green';
     warning = 'warning';
     session_list=SESSION_LIST;
+
+    notification = {
+        path: 'notification',
+        title: 'Notification',
+        icon: 'notifications_active',
+        showTaskList: false,
+        taskList: [
+            {
+                path: 'view_notification',
+                title: 'View Notification',
+            },
+        ],
+    };
 
     settings = {
         path: 'user-settings',
@@ -64,7 +82,8 @@ export class SidebarComponent implements OnInit {
         ],
     };
 
-    constructor(private router: Router) {
+    constructor(private router: Router,
+                private notificationService: NotificationService) {
     }
 
     ngOnInit() {
@@ -140,6 +159,10 @@ export class SidebarComponent implements OnInit {
     }
 
     logout() {
+        unregisterForNotification({
+            'jwt': this.user.jwt,
+            'url': environment.DJANGO_SERVER + Constants.api_version + this.notificationService.module_url + this.notificationService.gcm_device,
+        });
         localStorage.setItem('schoolJWT', '');
         this.user.isAuthenticated = false;
         this.user.jwt = '';

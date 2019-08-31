@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { SmsService } from '../../sms.service';
+import { SmsOldService } from '../../sms-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
@@ -28,7 +28,7 @@ export class ViewPurchasesComponent implements OnInit{
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private smsService: SmsService) { }
+    constructor(private smsService: SmsOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
