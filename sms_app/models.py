@@ -7,6 +7,9 @@ from school_app.model.models import School
 
 class SMS(models.Model):
 
+    # Content Type
+    contentType = models.TextField(null=False, default='', verbose_name='contentType')
+
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
 
@@ -14,22 +17,28 @@ class SMS(models.Model):
     sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')
 
     # Estimated Count
-    estimatedCount = models.IntegerField(null=False, default=0, verbose_name='estimatedCount')
+    # estimatedCount = models.IntegerField(null=False, default=0, verbose_name='estimatedCount')
 
     # Count
     count = models.IntegerField(null=False, default=0, verbose_name='count')
 
+    # Notification Count
+    notificationCount = models.IntegerField(null=False, default=0, verbose_name='notificationCount')
+
     # Mobile Number List
-    mobileNumberList = models.TextField(null=False, default='', verbose_name='mobileNumberList')
+    mobileNumberList = models.TextField(null=False, blank=True, default='', verbose_name='mobileNumberList')
+
+    # Notification Mobile Number List
+    notificationMobileNumberList = models.TextField(null=False, blank=True, default='', verbose_name='notificationMobileNumberList')
 
     # Request Id
-    requestId = models.TextField(null=True, verbose_name='requestId', unique=True)
+    requestId = models.TextField(null=True, verbose_name='requestId')
 
     # School
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
     def __str__(self):
-        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.estimatedCount)
+        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.count)
 
     class Meta:
         db_table = 'sms'

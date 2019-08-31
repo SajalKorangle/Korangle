@@ -11,11 +11,11 @@ urlpatterns += [
 ]
 
 
-######## SMS ###############
-from .views import SMSListView
+######## SMS Old ###############
+from .views import SMSOldListView
 
 urlpatterns += [
-	url(r'^school/(?P<school_id>[0-9]+)/sms$', SMSListView.as_view()),
+	url(r'^school/(?P<school_id>[0-9]+)/sms$', SMSOldListView.as_view()),
 ]
 
 
@@ -41,4 +41,13 @@ from .views import MsgClubDeliveryReportView, handle_msg_club_delivery_report_vi
 urlpatterns += [
 	url(r'^handle-msg-club-delivery-report', handle_msg_club_delivery_report_view),
 	url(r'^msg-club-delivery-report', MsgClubDeliveryReportView.as_view()),
+]
+
+
+######## SMS ##############
+from .views import SmsView, SmsListView
+
+urlpatterns += [
+	url(r'^sms/batch', SmsListView.as_view()),
+	url(r'^sms', SmsView.as_view()),
 ]

@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-api_version = 'v2.2/'
+api_version = 'v2.3/'
 
 urlpatterns = [
 	url(r'^admin/', admin.site.urls),
@@ -41,5 +41,6 @@ urlpatterns = [
     url(r'^'+api_version+'salary/', include('salary_app.urls')),
     url(r'^'+api_version+'user/', include('user_app.urls')),
 	url(r'^'+api_version+'subject/', include('subject_app.urls')),
+	url(r'^'+api_version+'notification/', include('notification_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

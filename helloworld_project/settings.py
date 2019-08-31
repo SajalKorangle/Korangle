@@ -71,12 +71,15 @@ INSTALLED_APPS = [
     'attendance_app',
     'salary_app',
     'user_app',
+    'notification_app',
 
 	'corsheaders',
 
 	'django_extensions',
 
     'storages',
+
+    'push_notifications',
 
 ]
 
@@ -121,6 +124,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'CONN_MAX_AGE': None,
+        'OPTIONS': {
+            'timeout': 20,
+        },
     }
 }
 
@@ -188,6 +195,10 @@ AWS_SECRET_ACCESS_KEY = 'oLYa8rZF9O3DwW/l4HBCFqF5PuEEJxCX0EkUI1gk'
 AWS_STORAGE_BUCKET_NAME = 'korangleplus'
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_SECURE_URLS = False # to use http instead of https
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "FCM_API_KEY": "AAAAKdpMXv4:APA91bFqo9G8GT8FELpCT7zsDTR9Whu4kZNOyQUaUo-HNqQwe7Jl2MxOLxGO8YPqaaeu_MjVM5uzzfcte7i32bgeXvlZFacSXAhGMFfUrLdzbJim11PyZ7tNmsdaBtaum1ieUHZdrs_3",
+}
 
 # the next monkey patch is necessary if you use dots in the bucket name
 import ssl

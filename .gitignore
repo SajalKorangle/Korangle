@@ -17,3 +17,4 @@ stop_server.sh
 helloworld_project/logs
 helloworld_project/nginx.conf
 helloworld_project/gunicorn.conf.py
+backup_database.sh
