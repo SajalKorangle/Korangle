@@ -30,4 +30,5 @@ const routes: Routes = [
         RouterModule,
     ],
 })
+
 export class SchoolRoutingModule { }

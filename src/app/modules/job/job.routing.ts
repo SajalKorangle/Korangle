@@ -5,8 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { JobComponent } from './job.component';
 
 const routes: Routes = [
-
-
     {
         path: 'view_profile',
         loadChildren: 'app/modules/job/pages/view-profile/view-profile.module#ViewProfileModule',

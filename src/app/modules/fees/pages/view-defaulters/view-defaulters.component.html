@@ -95,9 +95,9 @@
                     <th>Mobile No. (2)</th>
                     <th>Fees Due<br/>(Till Month)</th>
                     <th>Fees Due<br/>(Overall)</th>
-                    <th>Fees Paid<br/>(This Session)</th>
-                    <th>Discount<br/>(This Session)</th>
-                    <th>Total Fees<br/>(This Session)</th>
+                    <th>Total Fees<br/>({{getCurrentSessionName()}})</th>
+                    <th>Fees Paid<br/>({{getCurrentSessionName()}})</th>
+                    <th>Discount<br/>({{getCurrentSessionName()}})</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -140,9 +140,9 @@
                         </ng-template>
                         <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | indianCurrency}}</td>
                         <td>{{getParentFeesDueOverall(parent) | indianCurrency}}</td>
+                        <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
                         <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
                         <td>{{getParentDiscount(parent) | indianCurrency}}</td>
-                        <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
                     </tr>
                     <ng-container *ngIf="parent.studentList.length > 1">
                         <ng-container *ngFor="let student of parent.studentList;">
@@ -162,9 +162,9 @@
                                 </td>
                                 <td>{{student.feesDueTillMonth | indianCurrency}}</td>
                                 <td>{{student.feesDueOverall | indianCurrency}}</td>
+                                <td>{{student.totalFeesThisSession | indianCurrency}}</td>
                                 <td>{{student.feesPaidThisSession | indianCurrency}}</td>
                                 <td>{{student.discountThisSession | indianCurrency}}</td>
-                                <td>{{student.totalFeesThisSession | indianCurrency}}</td>
                             </tr>
                         </ng-container>
                     </ng-container>
@@ -198,9 +198,9 @@
                     <th>Mobile No. (2)</th>
                     <th>Fees Due<br/>(Till Month)</th>
                     <th>Fees Due<br/>(Overall)</th>
-                    <th>Fees Paid<br/>(This Session)</th>
-                    <th>Discount<br/>(This Session)</th>
-                    <th>Total Fees<br/>(This Session)</th>
+                    <th>Total Fees<br/>({{getCurrentSessionName()}})</th>
+                    <th>Fees Paid<br/>({{getCurrentSessionName()}})</th>
+                    <th>Discount<br/>({{getCurrentSessionName()}})</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -228,9 +228,9 @@
                         </td>
                         <td style="font-weight: 600;">{{student.feesDueTillMonth | indianCurrency}}</td>
                         <td>{{student.feesDueOverall | indianCurrency}}</td>
+                        <td>{{student.totalFeesThisSession | indianCurrency}}</td>
                         <td>{{student.feesPaidThisSession | indianCurrency}}</td>
                         <td>{{student.discountThisSession | indianCurrency}}</td>
-                        <td>{{student.totalFeesThisSession | indianCurrency}}</td>
                     </tr>
                 </ng-container>
                 </tbody>

@@ -1,11 +1,14 @@
 import {Component, Input} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../classes/user';
-import {sendDataToAndroid} from "../classes/common";
+import {registerForNotification} from "../classes/common.js";
+import {NotificationService} from "../services/notification/notification.service";
+import {Constants} from "../classes/constants";
+import {environment} from "../../environments/environment";
 
 @Component({
     selector: 'app-login-form',
-    providers: [AuthenticationService],
+    providers: [AuthenticationService, NotificationService],
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
 })
@@ -18,7 +21,8 @@ export class LoginComponent {
     visibilityMode = false;
     isLoading = false;
 
-    constructor(private authenticationService: AuthenticationService) {}
+    constructor(private authenticationService: AuthenticationService,
+                private notificationService: NotificationService) {}
 
     login() {
         this.isLoading = true;
@@ -29,15 +33,19 @@ export class LoginComponent {
             } else {
                 localStorage.setItem('schoolJWT', data.token);
                 this.user.jwt = data.token;
-                sendDataToAndroid(this.user.jwt);
                 this.user.isAuthenticated = true;
                 this.user.initializeUserData(data);
+                registerForNotification({
+                    'user': this.user.id,
+                    'jwt': this.user.jwt,
+                    'url': environment.DJANGO_SERVER + Constants.api_version + this.notificationService.module_url + this.notificationService.gcm_device,
+                });
             }
         }, error => {
             this.isLoading = false;
         });
     }
-    
+
     submit() {
         var elem = document.getElementById('username')
         if (document.activeElement === elem) {
