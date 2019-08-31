@@ -73,11 +73,16 @@
 
                 <!--  Mobile Number , Date of Birth, Gender -->
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedEmployeeProfile.mobileNumber,currentEmployeeProfile.mobileNumber)">
                         <mat-form-field>
+                            <mat-label>Mobile Number
+                                <span *ngIf="checkLength(currentEmployeeProfile.mobileNumber)"
+                                      [class.fieldRight]="checkRight(currentEmployeeProfile.mobileNumber,10)">
+                                        - {{currentEmployeeProfile.mobileNumber.toString().length}}</span>
+                            </mat-label>
                             <input matInput
                                    type="number"
-                                   placeholder="Mobile Number"
+                                   (keypress)="policeNumberInput($event)"
                                    (ngModelChange)="currentEmployeeProfile.mobileNumber=$event"
                                    [ngModel]="selectedEmployeeProfile.mobileNumber">
                         </mat-form-field>
@@ -135,11 +140,16 @@
 
         <!-- Aadhar number, Passport number, Employee Number, Job Title -->
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedEmployeeProfile.aadharNumber,currentEmployeeProfile.aadharNumber)">
                 <mat-form-field>
+                    <mat-label>Aadhar Number
+                        <span *ngIf="checkLength(currentEmployeeProfile.aadharNumber)"
+                              [class.fieldRight]="checkRight(currentEmployeeProfile.aadharNumber,12)">
+                                        - {{currentEmployeeProfile.aadharNumber.toString().length}}</span>
+                    </mat-label>
                     <input matInput
                            type="number"
-                           placeholder="Aadhar Number"
+                           (keypress)="policeNumberInput($event)"
                            (ngModelChange)="currentEmployeeProfile.aadharNumber=$event"
                            [ngModel]="selectedEmployeeProfile.aadharNumber">
                 </mat-form-field>
@@ -238,6 +248,7 @@
                     <input matInput
                            type="number"
                            placeholder="Monthly Salary"
+                           (keypress)="policeNumberInput($event)"
                            (ngModelChange)="currentEmployeeProfile.monthlySalary=$event"
                            [ngModel]="selectedEmployeeProfile.monthlySalary">
                 </mat-form-field>
@@ -247,6 +258,7 @@
                     <input matInput
                            type="number"
                            placeholder="Paid Leaves"
+                           (keypress)="policeNumberInput($event)"
                            (ngModelChange)="currentEmployeeSessionProfile.paidLeaveNumber=$event"
                            [ngModel]="selectedEmployeeSessionProfile.paidLeaveNumber">
                 </mat-form-field>

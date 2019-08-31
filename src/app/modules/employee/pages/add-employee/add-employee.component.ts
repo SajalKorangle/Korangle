@@ -35,6 +35,30 @@ export class AddEmployeeComponent implements OnInit {
         });
     }
 
+    checkLength(value: any) {
+        if (value && value.toString().length > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    checkRight(value: any, rightValue: number) {
+        if (value && value.toString().length === rightValue) {
+            return true;
+        }
+        return false;
+    }
+
+    policeNumberInput(event: any): boolean {
+        let value = event.key;
+        if (value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
+            value !== '4' && value !== '5' && value !== '6' && value !== '7' &&
+            value !== '8' && value !== '9') {
+            return false;
+        }
+        return true;
+    }
+
     createNewEmployee(): void {
 
         if (this.newEmployee.name === undefined || this.newEmployee.name === '') {
@@ -63,6 +87,9 @@ export class AddEmployeeComponent implements OnInit {
             this.newEmployee.mobileNumber = null;
             alert('Mobile number is required');
             return;
+        } else if (this.newEmployee.mobileNumber.toString().length != 10){
+            alert('Mobile number should be of 10 digits');
+            return;
         } else {
             let selectedEmployee = null;
             this.employeeList.forEach(employee => {
@@ -74,6 +101,12 @@ export class AddEmployeeComponent implements OnInit {
                 alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
                 return;
             }
+        }
+
+        if (this.newEmployee.aadharNumber != null
+            && this.newEmployee.aadharNumber.toString().length != 12) {
+            alert("Aadhar No. should be 12 digits");
+            return;
         }
 
         this.newEmployee.parentSchool = this.user.activeSchool.dbId;

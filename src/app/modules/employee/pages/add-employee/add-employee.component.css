@@ -54,3 +54,8 @@ mat-form-field input[type='date'] {
 	padding-top: 2px;
 	padding-bottom: 1px;
 }
+
+.fieldRight {
+	color: lightgreen;
+	font-weight: 400;
+}

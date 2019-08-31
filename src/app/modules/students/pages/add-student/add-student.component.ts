@@ -9,9 +9,9 @@ import {Student} from "../../../../services/student/student";
 import {StudentSection} from "../../../../services/student/student-section";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {VehicleService} from "../../../vehicle/vehicle.service";
-import {ExaminationService} from "../../../../services/examination.service";
+import {ExaminationService} from "../../../../services/examination/examination.service";
 import {SubjectService} from "../../../../services/subject.service";
-import {FeeService} from "../../../../services/fee.service";
+import {FeeService} from "../../../../services/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
 

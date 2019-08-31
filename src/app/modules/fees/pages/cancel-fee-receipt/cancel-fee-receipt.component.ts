@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CancelFeeReceiptServiceAdapter } from "./cancel-fee-receipt.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
+import { FeeService } from "../../../../services/fees/fee.service";
 import {ClassService} from "../../../../services/class.service";
 import {StudentService} from "../../../../services/student.service";
 import {FormControl} from "@angular/forms";

@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { UpdateStudentFeesServiceAdapter } from "./update-student-fees.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
+import { FeeService } from "../../../../services/fees/fee.service";
 import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
 import {ClassFilterFee} from "../../../../services/fees/class-filter-fee";
 import {BusStopFilterFee} from "../../../../services/fees/bus-stop-filter-fee";

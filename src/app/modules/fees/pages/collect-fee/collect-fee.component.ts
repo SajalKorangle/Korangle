@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CollectFeeServiceAdapter } from "./collect-fee-service.adapter";
-import { FeeService } from "../../../../services/fee.service";
+import { FeeService } from "../../../../services/fees/fee.service";
 import {StudentFee} from "../../../../services/fees/student-fee";
 import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
 import {SubDiscount} from "../../../../services/fees/sub-discount";
@@ -905,7 +905,7 @@ export class CollectFeeComponent implements OnInit {
             if (studentFee[installment+'ClearanceDate']) {
                 clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
             }
-            let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+            let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
             if (numberOfLateDays > 0) {
                 amount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
                 if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < amount) {

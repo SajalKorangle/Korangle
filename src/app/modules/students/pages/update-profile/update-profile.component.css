@@ -38,6 +38,10 @@
 }
 
 .fieldRight {
-	color: green;
+	color: lightgreen;
 	font-weight: 400;
+}
+
+mat-form-field {
+	margin-top: 23px;
 }

@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import {FeeService} from "../../../../services/fee.service";
+import {FeeService} from "../../../../services/fees/fee.service";
 import {StudentService} from "../../../../services/student.service";
 
 import {ViewFeeServiceAdapter} from "./view-fee.service.adapter";
@@ -521,7 +521,7 @@ export class ViewFeeComponent implements OnInit {
             if (studentFee[installment+'ClearanceDate']) {
                 clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
             }
-            let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+            let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
             if (numberOfLateDays > 0) {
                 amount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
                 if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < amount) {

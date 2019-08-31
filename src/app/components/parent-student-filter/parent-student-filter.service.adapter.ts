@@ -1,6 +1,5 @@
 
 import {ParentStudentFilterComponent} from "./parent-student-filter.component";
-import {CollectFeeServiceAdapter} from "../../modules/fees/pages/collect-fee/collect-fee-service.adapter";
 
 export class ParentStudentFilterServiceAdapter {
 

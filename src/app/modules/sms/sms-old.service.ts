@@ -1,13 +1,11 @@
 import {Injectable} from '@angular/core';
 
 
-import { URLSearchParams } from '@angular/http';
-
 import { CommonServiceRequirements } from '../../services/common-service-requirements';
 import { DataStorage } from '../../classes/data-storage';
 
 @Injectable()
-export class SmsService extends CommonServiceRequirements {
+export class SmsOldService extends CommonServiceRequirements {
 
     // SMS
     sendSMS(data: any, token: any): Promise<any> {

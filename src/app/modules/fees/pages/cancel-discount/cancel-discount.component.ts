@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CancelDiscountServiceAdapter } from "./cancel-discount.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
-import {INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST} from "../../classes/constants";
+import { FeeService } from "../../../../services/fees/fee.service";
+import {INSTALLMENT_LIST} from "../../classes/constants";
 import {FormControl} from "@angular/forms";
 import {ClassService} from "../../../../services/class.service";
 import {StudentService} from "../../../../services/student.service";

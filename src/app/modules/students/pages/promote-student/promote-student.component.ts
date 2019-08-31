@@ -6,10 +6,10 @@ import { ClassService } from '../../../../services/class.service';
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {SubjectService} from "../../../../services/subject.service";
-import {ExaminationService} from "../../../../services/examination.service";
+import {ExaminationService} from "../../../../services/examination/examination.service";
 import {StudentService} from "../../../../services/student.service";
 import {StudentSection} from "../../../../services/student/student-section";
-import {FeeService} from "../../../../services/fee.service";
+import {FeeService} from "../../../../services/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
 

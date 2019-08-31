@@ -20,4 +20,4 @@ import {ComponentsModule} from "../../../../components/components.module";
     providers: [],
     bootstrap: [AddEmployeeComponent]
 })
-export class RecordAttendanceModule { }
+export class AddEmployeeModule { }
