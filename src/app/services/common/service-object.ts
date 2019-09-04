@@ -54,7 +54,12 @@ export class ServiceObject extends RestApiGateway {
     }
 
     deleteObjectList(object_url: any, data: any): Promise<any> {
-        let url = this.module_url+object_url+'/batch?id='+data['id'];
+        // let url = this.module_url+object_url+'/batch?id='+data['id'];
+        // return super.deleteData(url);
+        let url = this.module_url+object_url+'/batch?e=';
+        Object.keys(data).forEach(key => {
+            url += '&'+key+'='+data[key];
+        });
         return super.deleteData(url);
     }
 

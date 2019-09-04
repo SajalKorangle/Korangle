@@ -5,7 +5,7 @@ import { PromoteStudentServiceAdapter } from './promote-student.service.adapter'
 import { ClassService } from '../../../../services/class.service';
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {SubjectService} from "../../../../services/subject.service";
+import {SubjectService} from "../../../../services/subject/subject.service";
 import {ExaminationService} from "../../../../services/examination/examination.service";
 import {StudentService} from "../../../../services/student.service";
 import {StudentSection} from "../../../../services/student/student-section";

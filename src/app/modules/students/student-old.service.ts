@@ -46,9 +46,9 @@ export class StudentOldService extends CommonServiceRequirements {
         return super.putData(data, token, '/student/student-sections-old/' + data['id']);
     }
 
-    createStudentSectionList(data, token): Promise<any> {
+    /*createStudentSectionList(data, token): Promise<any> {
         return super.postData(data, token, '/student/student-sections-old/batch');
-    }
+    }*/
 
     /*getStudentSectionList(data, token): Promise<any> {
         let url = '/student/student-sections-old/batch' +
@@ -122,9 +122,9 @@ export class StudentOldService extends CommonServiceRequirements {
     }
 
     /* New Student */
-    createNewStudent(student: any, token: any): Promise<any> {
+    /*createNewStudent(student: any, token: any): Promise<any> {
         return super.postData(JSON.stringify(student), token, this.createNewStudentUrl);
-    }
+    }*/
 
     /* Promote Student */
 

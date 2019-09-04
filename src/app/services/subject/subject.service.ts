@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
 
-import {ServiceObject} from "./common/service-object";
+import {ServiceObject} from "../common/service-object";
 
 @Injectable()
 export class SubjectService extends ServiceObject {

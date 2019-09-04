@@ -12,5 +12,7 @@ export class ExaminationService extends ServiceObject {
     public examination = '/examination';
     public test_second = '/test-second';
     public student_test = '/student-test';
+    public student_extra_sub_field = '/student-extra-sub-field';
+    public cce_marks = '/cce-marks';
 
 }

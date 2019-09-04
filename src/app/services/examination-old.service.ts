@@ -75,7 +75,7 @@ export class ExaminationOldService extends CommonServiceRequirements {
 
     // CCE Marks
     getCCEMarksList(data: any, token: any): Promise<any> {
-        let url = '/examinations/cce-marks/batch?e=';
+        let url = '/examinations/old-cce-marks/batch?e=';
         Object.keys(data).forEach(key => {
             url += '&'+key+'='+data[key];
         });
@@ -83,11 +83,11 @@ export class ExaminationOldService extends CommonServiceRequirements {
     }
 
     createCCEMarksList(data: any, token: any): Promise<any> {
-        return super.postData(data, token, '/examinations/cce-marks/batch');
+        return super.postData(data, token, '/examinations/old-cce-marks/batch');
     }
 
     updateCCEMarksList(data: any, token: any): Promise<any> {
-        return super.putData(data, token, '/examinations/cce-marks/batch');
+        return super.putData(data, token, '/examinations/old-cce-marks/batch');
     }
 
     // Student Extra Sub Field

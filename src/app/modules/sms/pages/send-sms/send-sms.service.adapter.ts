@@ -118,8 +118,8 @@ export class SendSmsServiceAdapter {
 
                 service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data_1));
                 service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data_2));
-                service_list.push(this.vm.userService.getList(this.vm.userService.user, user_data_1));
-                service_list.push(this.vm.userService.getList(this.vm.userService.user, user_data_2));
+                service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data_1));
+                service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data_2));
 
             } else {
 
@@ -134,7 +134,7 @@ export class SendSmsServiceAdapter {
                 };
 
                 service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data));
-                service_list.push(this.vm.userService.getList(this.vm.userService.user, user_data));
+                service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
 
             }
 

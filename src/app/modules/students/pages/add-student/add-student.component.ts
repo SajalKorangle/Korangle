@@ -10,7 +10,7 @@ import {StudentSection} from "../../../../services/student/student-section";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {VehicleService} from "../../../vehicle/vehicle.service";
 import {ExaminationService} from "../../../../services/examination/examination.service";
-import {SubjectService} from "../../../../services/subject.service";
+import {SubjectService} from "../../../../services/subject/subject.service";
 import {FeeService} from "../../../../services/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";

@@ -99,7 +99,7 @@ export class SidebarComponent implements OnInit {
                     this.user.isLazyLoading = false;
                 }
             });
-        EmitterService.get('initialize-router').subscribe(value => {           
+        EmitterService.get('initialize-router').subscribe(value => {
             this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         });
         if (this.user.section) {

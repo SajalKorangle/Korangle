@@ -11,9 +11,9 @@ import { PRINT_TC } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
-  selector: 'generate-tc',
-  templateUrl: './generate-tc.component.html',
-  styleUrls: ['./generate-tc.component.css'],
+    selector: 'generate-tc',
+    templateUrl: './generate-tc.component.html',
+    styleUrls: ['./generate-tc.component.css'],
     providers: [ StudentOldService, SchoolService ],
 })
 
@@ -53,8 +53,6 @@ export class GenerateTcComponent implements OnInit {
     // flag to show the error message or not
     flag = false;
     count = 0;
-
-
 
     constructor (private studentService: StudentOldService,
                  private schoolService: SchoolService,

@@ -20,7 +20,7 @@ import {ExcelService} from "../../excel/excel-service";
         PrintICardsComponent,
         PrintMultipleICardsComponent,
         PrintTransferCertificateSecondFormatComponent,
-        PrintStudentListComponent,
+        PrintStudentListComponent
 
     ],
 

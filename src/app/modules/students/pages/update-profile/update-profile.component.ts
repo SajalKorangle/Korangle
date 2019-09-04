@@ -177,63 +177,6 @@ export class UpdateProfileComponent implements OnInit {
         );
     }
 
-    deleteProfile(): void {
-        if (!confirm('Are you sure you want to delete ' + this.currentStudent.name + '\'s profile.')) {
-            return;
-        }
-        this.isLoading = true;
-        this.studentService.deleteStudentProfile(this.currentStudent.dbId, this.user.jwt).then( data => {
-            alert(data['message']);
-            this.isLoading = false;
-
-            if (data['studentDbId'] === 0) {
-                return;
-            }
-
-            let studentIndex = 0;
-            this.selectedSection.studentList.forEach( (student, index) => {
-                if (student.dbId === data['studentDbId']) {
-                    studentIndex = index;
-                }
-            });
-            this.selectedSection.studentList.splice(studentIndex, 1);
-            if (this.selectedSection.studentList.length > 0) {
-                this.changeSelectedStudentToFirst();
-            } else {
-                let sectionIndex = 0;
-                this.selectedClass.sectionList.forEach( (section, index) => {
-                    if (section.dbId === this.selectedSection.dbId) {
-                        sectionIndex = index;
-                    }
-                });
-                this.selectedClass.sectionList.splice(sectionIndex, 1);
-                if (this.selectedClass.sectionList.length > 0) {
-                    this.changeSelectedSectionToFirst();
-                } else {
-                    let classIndex = 0;
-                    this.classSectionStudentList.forEach( (classs, index) => {
-                        if (classs.dbId === this.selectedClass.dbId) {
-                            classIndex = index;
-                        }
-                    });
-                    this.classSectionStudentList.splice(classIndex, 1);
-                    if (this.classSectionStudentList.length > 0) {
-                        this.selectedClass = this.classSectionStudentList[0];
-                        this.changeSelectedSectionToFirst();
-                    } else {
-                        alert('No students left, you can add more students from \'New Student\' section');
-                        this.selectedClass = null;
-                        this.selectedSection = null;
-                        this.selectedStudent = null;
-                    }
-                }
-            }
-        }, error => {
-            this.isLoading = false;
-            alert('Server Error: Contact admin');
-        });
-    }
-
     getBusStopName(busStopDbId: any) {
         let stopName = 'None';
         if (busStopDbId !== null) {

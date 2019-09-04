@@ -11,6 +11,5 @@ export class StudentService extends ServiceObject {
     // objects urls
     public student = '/students';
     public student_section = '/student-sections';
-    public student_multiple_session_check = '/multiple_session_check';
 
 }
