@@ -92,7 +92,7 @@ export class ExaminationOldService extends CommonServiceRequirements {
 
     // Student Extra Sub Field
     getStudentExtraSubFieldList(data: any, token: any): Promise<any> {
-        let url = '/examinations/student-extra-sub-fields/batch?e=';
+        let url = '/examinations/old-student-extra-sub-fields/batch?e=';
         Object.keys(data).forEach(key => {
             url += '&'+key+'='+data[key];
         });
@@ -100,11 +100,11 @@ export class ExaminationOldService extends CommonServiceRequirements {
     }
 
     createStudentExtraSubFieldList(data: any, token: any): Promise<any> {
-        return super.postData(data, token, '/examinations/student-extra-sub-fields/batch');
+        return super.postData(data, token, '/examinations/old-student-extra-sub-fields/batch');
     }
 
     updateStudentExtraSubFieldList(data: any, token: any): Promise<any> {
-        return super.putData(data, token, '/examinations/student-extra-sub-fields/batch');
+        return super.putData(data, token, '/examinations/old-student-extra-sub-fields/batch');
     }
 
     // Mp Board Report Card Mapping
