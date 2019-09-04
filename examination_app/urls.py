@@ -44,7 +44,7 @@ urlpatterns += [
 from examination_app.views import StudentExtraSubFieldOldListView
 
 urlpatterns += [
-    url(r'^student-extra-sub-fields/batch', StudentExtraSubFieldOldListView.as_view()),
+    url(r'^old-student-extra-sub-fields/batch', StudentExtraSubFieldOldListView.as_view()),
 ]
 
 from examination_app.views import MpBoardReportCardMappingView
@@ -91,8 +91,8 @@ urlpatterns += [
 from examination_app.views import StudentExtraSubFieldView, StudentExtraSubFieldListView
 
 urlpatterns += [
-    url(r'^student-extra-sub-field/batch', StudentExtraSubFieldListView.as_view()),
-    url(r'^student-extra-sub-field', StudentExtraSubFieldView.as_view()),
+    url(r'^student-extra-sub-fields/batch', StudentExtraSubFieldListView.as_view()),
+    url(r'^student-extra-sub-fields', StudentExtraSubFieldView.as_view()),
 ]
 
 
