@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Create your models here.
 
-from school_app.model.models import School, Session, BusStop
+"""from school_app.model.models import School, Session, BusStop
 
 from student_app.models import Student, StudentSection
 
@@ -149,8 +149,7 @@ class BusStopBasedFilter(models.Model):
 
 ##### Student Fees #####
 class StudentFeeComponent(models.Model):
-    parentStudent = models.ForeignKey(
-        Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
     parentFeeDefinition = models.ForeignKey(FeeDefinition, on_delete=models.PROTECT, default=0,
                                             verbose_name='parentFeeDefinition')
     amount = models.IntegerField(null=True, verbose_name='amount')
@@ -384,4 +383,4 @@ class StudentFeeDues(models.Model):
 
     class Meta:
         db_table = 'student_fee_dues'
-
+        """

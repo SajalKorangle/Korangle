@@ -37,7 +37,6 @@ def get_class_section_student_list_view(request, school_id, session_id):
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
-
 from .handlers.update_profile import get_student_profile
 @api_view(['POST'])
 def get_student_profile_view(request):
@@ -46,7 +45,6 @@ def get_student_profile_view(request):
         return JsonResponse({'response': get_success_response(get_student_profile(data))})
     else:
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
-
 
 from .handlers.update_profile import update_student
 @api_view(['POST'])
@@ -67,16 +65,15 @@ def delete_student_view(request):
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
-
 ############### New Student ######################
-from .handlers.new_student import create_new_student
+'''from .handlers.new_student import create_new_student
 @api_view(['POST'])
 def create_new_student_view(request):
     if request.user.is_authenticated:
         data = json.loads(request.body.decode('utf-8'))
         return JsonResponse({'response': get_success_response(create_new_student(data))})
     else:
-        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 
 ############## Student Full Profile ##############
@@ -135,7 +132,7 @@ class StudentMiniProfileView(APIView):
 
 
 ############# Student Section #####################
-from .business.student_section import create_student_section_list, update_student_section, get_student_section_list
+from .business.student_section import update_student_section
 
 
 class StudentSectionOldView(APIView):
@@ -146,7 +143,7 @@ class StudentSectionOldView(APIView):
         return update_student_section(data)
 
 
-class StudentSectionListOldView(APIView):
+'''class StudentSectionListOldView(APIView):
 
     @user_permission
     def get(request):
@@ -157,8 +154,7 @@ class StudentSectionListOldView(APIView):
             data = json.loads(request.body.decode('utf-8'))
             return JsonResponse({'response': get_success_response(create_student_section_list(data))})
         else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
-
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 
 ############ Profile Image ########################
@@ -170,8 +166,6 @@ class ProfileImageView(APIView):
     @user_permission
     def post(request, student_id):
         return update_profile_image(request.FILES['myFile'], student_id)
-
-
 
 ############ Transfer Certificate #################
 from .business.transfer_certificate import create_transfer_certificate, \
@@ -199,21 +193,6 @@ class TransferCertificateView(APIView):
     @user_permission
     def delete(request, transfer_certificate_id):
         return delete_transfer_certificate(transfer_certificate_id)
-
-#### check student session count ###
-def check_student_sessions_count(data):
-    qs1 = data['id']
-    qs = {}
-    qs['session_count'] = StudentSection.objects.filter(parentStudent=qs1).count()
-    return qs
-
-
-from student_app.models import StudentSection
-@api_view(['GET'])
-def get_student_sessions_count(request, *args, **kwargs):
-    data = {}
-    data['id'] = request.GET.get('id')
-    return JsonResponse({'response': get_success_response(check_student_sessions_count(data))})
 
 
 

@@ -145,8 +145,7 @@ class Student(models.Model):
 
 class StudentSection(models.Model):
 
-    parentStudent = models.ForeignKey(
-        Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
 
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentClass')
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision')

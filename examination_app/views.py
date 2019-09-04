@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 import json
 
-from examination_app.models import Examination, TestSecond, StudentTest
+from examination_app.models import Examination, TestSecond, StudentTest, StudentExtraSubField, CCEMarks
 
 
 def get_error_response(message):
@@ -165,7 +165,7 @@ from examination_app.business.student_extra_sub_field import get_student_extra_s
     create_student_extra_sub_field_list, update_student_extra_sub_field_list
 
 
-class StudentExtraSubFieldListView(APIView):
+class StudentExtraSubFieldOldListView(APIView):
 
     @user_permission
     def get(request):
@@ -209,7 +209,7 @@ from examination_app.business.cce_marks import get_cce_marks_list, create_cce_ma
     delete_cce_marks_list, update_cce_marks_list
 
 
-class CCEMarksListView(APIView):
+class CCEMarksOldListView(APIView):
 
     @user_permission
     def get(request):
@@ -261,5 +261,27 @@ class StudentTestView(CommonView, APIView):
 
 class StudentTestListView(CommonListView, APIView):
     Model = StudentTest
+
+
+########### Student Extra Sub Field #############
+
+
+class StudentExtraSubFieldView(CommonView, APIView):
+    Model = StudentExtraSubField
+
+
+class StudentExtraSubFieldListView(CommonListView, APIView):
+    Model = StudentExtraSubField
+
+
+########### CCE Marks #############
+
+
+class CCEMarksView(CommonView, APIView):
+    Model = CCEMarks
+
+
+class CCEMarksListView(CommonListView, APIView):
+    Model = CCEMarks
 
 

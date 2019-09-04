@@ -41,10 +41,10 @@ urlpatterns += [
     url(r'^student-tests/batch', StudentTestListOldView.as_view()),
 ]
 
-from examination_app.views import StudentExtraSubFieldListView
+from examination_app.views import StudentExtraSubFieldOldListView
 
 urlpatterns += [
-    url(r'^student-extra-sub-fields/batch', StudentExtraSubFieldListView.as_view()),
+    url(r'^student-extra-sub-fields/batch', StudentExtraSubFieldOldListView.as_view()),
 ]
 
 from examination_app.views import MpBoardReportCardMappingView
@@ -53,10 +53,10 @@ urlpatterns += [
     url(r'^mp-board-report-card-mappings', MpBoardReportCardMappingView.as_view()),
 ]
 
-from examination_app.views import CCEMarksListView
+from examination_app.views import CCEMarksOldListView
 
 urlpatterns += [
-    url(r'^cce-marks/batch', CCEMarksListView.as_view()),
+    url(r'^old-cce-marks/batch', CCEMarksOldListView.as_view()),
 ]
 
 
@@ -85,5 +85,21 @@ from examination_app.views import StudentTestView, StudentTestListView
 urlpatterns += [
     url(r'^student-test/batch', StudentTestListView.as_view()),
     url(r'^student-test', StudentTestView.as_view()),
+]
+
+
+from examination_app.views import StudentExtraSubFieldView, StudentExtraSubFieldListView
+
+urlpatterns += [
+    url(r'^student-extra-sub-field/batch', StudentExtraSubFieldListView.as_view()),
+    url(r'^student-extra-sub-field', StudentExtraSubFieldView.as_view()),
+]
+
+
+from examination_app.views import CCEMarksView, CCEMarksListView
+
+urlpatterns += [
+    url(r'^cce-marks/batch', CCEMarksListView.as_view()),
+    url(r'^cce-marks', CCEMarksView.as_view()),
 ]
 

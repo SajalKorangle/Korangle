@@ -1,4 +1,4 @@
-
+"""
 from parent_test import ParentTestCase
 
 # Factories
@@ -94,3 +94,4 @@ class StudentSectionTestCase(ParentTestCase):
                                    parentDivision=division_object,
                                    parentClass=class_object,
                                    parentSession=session_object)
+"""
