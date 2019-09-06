@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-from school_app.model.models import School
+from school_app.model.models import School, Board
 
 # Create your models here.
 
@@ -13,6 +13,7 @@ class Module(models.Model):
     title = models.TextField(default='', null=False, verbose_name='title')
     icon = models.TextField(default='', null=False, verbose_name='icon')
     orderNumber = models.IntegerField(default=1, null=False)
+    parentBoard = models.ForeignKey(Board, on_delete=models.PROTECT, null=True, verbose_name='parentBoard')
 
     def __str__(self):
         return str(self.title)

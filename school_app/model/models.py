@@ -22,6 +22,17 @@ def upload_principal_signature_to(instance, filename):
     return 'schools/%s/principal_signature/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
 
 
+class Board(models.Model):
+
+    name = models.TextField(default='',null=False)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'board'
+
+
 class Session(models.Model):
 
     startDate = models.DateField()
@@ -70,6 +81,8 @@ class School(models.Model):
     smsId = models.CharField(max_length=10, null=False, default='KORNGL', verbose_name='smsId')
 
     opacity = models.DecimalField(max_digits=3, decimal_places=2,null=False, verbose_name='opacity', default=0.1)
+
+    parentBoard = models.ForeignKey(Board, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentBoard')
 
     ENGLISH = 'ENGLISH'
     HINDI = 'HINDI'

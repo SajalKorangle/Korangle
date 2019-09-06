@@ -140,6 +140,8 @@ def get_school_data_by_object(school_object):
 
     school_data['opacity'] = school_object.opacity
 
+    school_data['parentBoard'] = school_object.parentBoard.id
+
     school_data['medium'] = school_object.medium
 
     school_data['employeeId'] = None
