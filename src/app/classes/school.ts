@@ -22,6 +22,8 @@ export class School {
 
     headerSize: string;
 
+    parentBoard: number;
+
     medium: string;
 
     role: string;

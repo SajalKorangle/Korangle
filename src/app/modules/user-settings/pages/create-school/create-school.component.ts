@@ -5,6 +5,7 @@ import { SchoolService } from '../../../../services/school.service';
 import { EmployeeService } from '../../../employee/employee.service';
 import {CreateSchoolServiceAdapter} from './create-school.service.adapter';
 import {MEDIUM_LIST} from '../../../../classes/constants/medium';
+import {BOARD_LIST} from "../../../../classes/constants/board";
 import {TeamService} from '../../../team/team.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -20,6 +21,7 @@ export class CreateSchoolComponent implements OnInit {
     user;
 
     mediumList = MEDIUM_LIST;
+    boardList = BOARD_LIST;
 
     schoolProfile: any;
 

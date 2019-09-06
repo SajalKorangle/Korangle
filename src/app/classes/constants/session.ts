@@ -1,5 +1,5 @@
 
-// School Medium
+// Session
 export const SESSION_LIST = [
     {
         id: 1,
