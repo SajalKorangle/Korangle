@@ -11,7 +11,7 @@ def populate_board(apps, schema_editor):
     cbse_board_object = Board(name='C.B.S.E.')
     cbse_board_object.save()
 
-    id_list = [94,93,143,163]
+    id_list = [94,93,143,163, 174]
 
     for school_object in School.objects.all():
 

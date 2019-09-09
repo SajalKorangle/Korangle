@@ -11,7 +11,7 @@ from django.db.models import Q
 
 from datetime import date
 
-from team_app.models import Access
+from team_app.models import Module
 from student_app.models import StudentSection
 from employee_app.models import Employee, EmployeePermission
 
@@ -87,19 +87,22 @@ def get_employee_school_module_list(employee_object):
 
     school_object = employee_object.parentSchool
 
-    for access_object in \
+    '''for access_object in \
             Access.objects.filter(parentSchool=school_object)\
                     .order_by('parentModule__orderNumber')\
-                    .select_related('parentModule'):
+                    .select_related('parentModule'):'''
+    for module_object in \
+            Module.objects.filter(Q(parentBoard=None) | Q(parentBoard=school_object.parentBoard))\
+                    .order_by('orderNumber'):
         tempModule = {}
-        tempModule['dbId'] = access_object.parentModule.id
-        tempModule['path'] = access_object.parentModule.path
-        tempModule['title'] = access_object.parentModule.title
-        tempModule['icon'] = access_object.parentModule.icon
+        tempModule['dbId'] = module_object.id
+        tempModule['path'] = module_object.path
+        tempModule['title'] = module_object.title
+        tempModule['icon'] = module_object.icon
         tempModule['taskList'] = []
         for permission_object in \
                 EmployeePermission.objects.filter(parentEmployee=employee_object,
-                                                  parentTask__parentModule=access_object.parentModule)\
+                                                  parentTask__parentModule=module_object)\
                     .order_by('parentTask__orderNumber') \
                     .select_related('parentTask'):
             tempTask = {}

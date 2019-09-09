@@ -50,16 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-	'rest_framework',
+    'rest_framework',
 
-	# 'message_app',
-
-	'school_app',
+    'school_app',
     'class_app',
     'subject_app',
     'student_app',
     'expense_app',
-    # 'fee_app',
     'fee_second_app',
     'fees_third_app',
     'examination_app',
@@ -72,10 +69,11 @@ INSTALLED_APPS = [
     'salary_app',
     'user_app',
     'notification_app',
+    'report_card_app',
 
-	'corsheaders',
+    'corsheaders',
 
-	'django_extensions',
+    'django_extensions',
 
     'storages',
 
@@ -88,9 +86,9 @@ SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E307']
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-		'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-		# 'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
