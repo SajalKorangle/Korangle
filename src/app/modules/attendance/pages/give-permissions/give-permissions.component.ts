@@ -1,21 +1,21 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { AttendanceService } from '../../attendance.service';
+import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
 
-import { ClassService } from '../../../../services/class.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 
 
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
-import {EmployeeService} from '../../../employee/employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'give-permissions',
   templateUrl: './give-permissions.component.html',
   styleUrls: ['./give-permissions.component.css'],
-    providers: [ EmployeeService, AttendanceService, ClassService ],
+    providers: [ EmployeeOldService, AttendanceOldService, ClassOldService ],
 })
 
 export class GivePermissionsComponent implements OnInit {
@@ -38,9 +38,9 @@ export class GivePermissionsComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeService,
-                 private attendanceService: AttendanceService,
-                 private classService: ClassService) { }
+    constructor (private employeeService: EmployeeOldService,
+                 private attendanceService: AttendanceOldService,
+                 private classService: ClassOldService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();

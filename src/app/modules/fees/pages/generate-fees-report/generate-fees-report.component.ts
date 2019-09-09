@@ -1,9 +1,9 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { GenerateFeesReportServiceAdapter } from "./generate-fees-report.service.adapter";
-import { FeeService } from "../../../../services/fees/fee.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
-import {StudentService} from "../../../../services/student.service";
-import {ClassService} from "../../../../services/class.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -11,7 +11,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'generate-fees-report',
     templateUrl: './generate-fees-report.component.html',
     styleUrls: ['./generate-fees-report.component.css'],
-    providers: [ FeeService, StudentService, ClassService ],
+    providers: [ FeeService, StudentService, ClassOldService ],
 })
 
 export class GenerateFeesReportComponent implements OnInit {
@@ -48,7 +48,7 @@ export class GenerateFeesReportComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

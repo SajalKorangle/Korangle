@@ -1,7 +1,7 @@
 
 import { PrintMarksheetComponent } from './print-marksheet.component';
 
-import { TEST_TYPE_LIST } from '../../classes/constants';
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
 export class PrintMarksheetServiceAdapter {
 

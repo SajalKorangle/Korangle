@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { EmployeeService } from '../../employee.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 
 import {FormControl} from '@angular/forms';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -27,7 +27,7 @@ export class UpdateProfileComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeService) { }
+    constructor (private employeeService: EmployeeOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

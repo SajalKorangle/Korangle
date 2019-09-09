@@ -353,10 +353,10 @@
                               [class.fieldRight]="checkRight(currentStudent.aadharNum,12)">
                                         - {{currentStudent.aadharNum.toString().length}}</span>
                     </mat-label>
-
                     <input matInput
                            type="number"
-                           [ngModel]="currentStudent.aadharNum">
+                           (ngModelChange)="currentStudent.aadharNum=$event"
+                           [ngModel]="selectedStudent.aadharNum">
                 </mat-form-field>
             </div>
             <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.caste,currentStudent.caste)">

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ExpenseService} from '../../expense.service';
+import { ExpenseOldService} from '../../../../services/modules/expense/expense-old.service';
 import { Expense } from '../../../../classes/expense';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EXPENSES } from '../../../../print/print-routes.constants';
@@ -10,7 +10,7 @@ import { DataStorage } from "../../../../classes/data-storage";
   selector: 'expense-list',
   templateUrl: './expense-list.component.html',
   styleUrls: ['./expense-list.component.css'],
-    providers: [ ExpenseService ]
+    providers: [ ExpenseOldService ]
 })
 
 export class ExpenseListComponent implements OnInit {
@@ -44,7 +44,7 @@ export class ExpenseListComponent implements OnInit {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private expenseService: ExpenseService, private printService: PrintService) { }
+    constructor(private expenseService: ExpenseOldService, private printService: PrintService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

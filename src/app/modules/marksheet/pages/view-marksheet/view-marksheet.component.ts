@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { MarksheetService } from '../../marksheet.service';
-import {StudentOldService} from '../../../students/student-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import {StudentTest} from '../../classes/student-test';
 

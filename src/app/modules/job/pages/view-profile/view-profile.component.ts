@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import {EmployeeService} from '../../../employee/employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'view-profile',
   templateUrl: './view-profile.component.html',
   styleUrls: ['./view-profile.component.css'],
-    providers: [ EmployeeService ],
+    providers: [ EmployeeOldService ],
 })
 
 export class ViewProfileComponent implements OnInit {
@@ -20,7 +20,7 @@ export class ViewProfileComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeService) { }
+    constructor (private employeeService: EmployeeOldService) { }
 
     ngOnChanges(): void {
         this.ngOnInit();

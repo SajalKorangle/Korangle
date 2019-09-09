@@ -1,7 +1,7 @@
 
 import { UpdateStudentFeesComponent } from './update-student-fees.component';
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
+import {SchoolFeeRule} from "../../../../services/modules/fees/school-fee-rule";
 
 export class UpdateStudentFeesServiceAdapter {
 

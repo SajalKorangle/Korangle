@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import {DataStorage} from "../../../../classes/data-storage";
-import {NotificationService} from "../../../../services/notification/notification.service";
+import {NotificationService} from "../../../../services/modules/notification/notification.service";
 import {ViewNotificationServiceAdapter} from "./view-notification.service.adapter";
 
 @Component({

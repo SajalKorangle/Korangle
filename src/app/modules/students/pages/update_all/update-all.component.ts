@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassService} from '../../../../services/class.service';
-import {StudentOldService} from '../../student-old.service';
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -61,7 +61,7 @@ const RELIGION_LIST = [
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentOldService, ClassService],
+    providers: [StudentOldService, ClassOldService],
 })
 
 export class UpdateAllComponent implements OnInit {
@@ -131,7 +131,7 @@ export class UpdateAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassService,
+                private classService: ClassOldService,
                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {

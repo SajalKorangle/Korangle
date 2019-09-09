@@ -12,15 +12,17 @@ export class CreateSchoolServiceAdapter {
     }
 
     // Server Handling - 1
-    public getModuleList(): void {
-        this.vm.isLoading = true;
-        this.vm.teamService.getLatestModuleList(this.vm.user.jwt).then(moduleList => {
+    public initializeData(): void {
+
+        /*this.vm.isLoading = true;
+        this.vm.teamOldService.getLatestModuleList(this.vm.user.jwt).then(moduleList => {
             this.vm.moduleList = moduleList;
             console.log(this.vm.moduleList);
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
-        });
+        });*/
+
     }
 
     // Server Handling - 2
@@ -68,15 +70,20 @@ export class CreateSchoolServiceAdapter {
         this.vm.isLoading = true;
         this.vm.schoolService.createSchoolProfile(data,this.vm.user.jwt).then(value => {
             console.log(value.message);
-            let request_access_data = this.prepareSchoolAccessData(value.id);
             let request_employee_data = this.prepareSchoolEmployeeData(value.id);
+            let task_data = {
+                'parentBoard__or': data.parentBoard,
+                'parentBoard': 'null__korangle',
+                'parentModule__parentBoard__or': data.parentBoard,
+                'parentModule__parentBoard': 'null__korangle',
+            };
             Promise.all([
-                this.vm.teamService.create_school_access_batch(request_access_data, this.vm.user.jwt),
                 this.vm.employeeService.createEmployeeProfile(request_employee_data, this.vm.user.jwt),
-                this.vm.teamService.get_task_list(this.vm.user.jwt),
+                // this.vm.teamOldService.get_task_list(this.vm.user.jwt),
+                this.vm.teamService.getObjectList(this.vm.teamService.task, task_data),
             ]).then(value => {
                 console.log(value);
-                let request_employee_permission_data = this.prepareEmployeePermissionData(value[1].id, value[2]);
+                let request_employee_permission_data = this.prepareEmployeePermissionData(value[0].id, value[1]);
                 this.vm.employeeService.addEmployeePermissionList(request_employee_permission_data, this.vm.user.jwt).then(value => {
                     alert('School created successfully, Logout and login again to see changes');
                     this.vm.isLoading = false;
@@ -87,7 +94,7 @@ export class CreateSchoolServiceAdapter {
         });
     }
 
-    prepareSchoolAccessData(schoolDbId: number): any {
+    /*prepareSchoolAccessData(schoolDbId: number): any {
         let data_list = [];
         this.vm.moduleList.forEach(module => {
             let tempData = {
@@ -97,7 +104,7 @@ export class CreateSchoolServiceAdapter {
             data_list.push(tempData);
         });
         return data_list;
-    }
+    }*/
 
     prepareSchoolEmployeeData(schoolDbId: number): any {
         let employee = {

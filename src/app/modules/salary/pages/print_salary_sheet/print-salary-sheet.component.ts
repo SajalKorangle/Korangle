@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {EmployeeService} from '../../../employee/employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import {PrintSalarySheetServiceAdapter} from './print-salary-sheet.service.adapter';
 import {MONTH_LIST} from '../../../../classes/constants/month';
-import {AttendanceService} from '../../../attendance/attendance.service';
-import {SalaryService} from '../../salary.service';
+import {AttendanceOldService} from '../../../../services/modules/attendance/attendance-old.service';
+import {SalaryOldService} from '../../../../services/modules/salary/salary-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_SALARY_SHEET } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -14,7 +14,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   templateUrl: './print-salary-sheet.component.html',
   styleUrls: ['./print-salary-sheet.component.css'],
     providers: [
-        EmployeeService, AttendanceService, SalaryService
+        EmployeeOldService, AttendanceOldService, SalaryOldService
     ],
 })
 
@@ -33,9 +33,9 @@ export class PrintSalarySheetComponent implements OnInit {
 
     isLoading = true;
 
-    constructor (public employeeService: EmployeeService,
-                 public attendanceService: AttendanceService,
-                 public salaryService: SalaryService,
+    constructor (public employeeService: EmployeeOldService,
+                 public attendanceService: AttendanceOldService,
+                 public salaryService: SalaryOldService,
                  private printService: PrintService) { }
 
     ngOnInit(): void {

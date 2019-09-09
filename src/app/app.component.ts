@@ -7,7 +7,7 @@ import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
 import moment = require('moment');
-import {NotificationService} from "./services/notification/notification.service";
+import {NotificationService} from "./services/modules/notification/notification.service";
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
 import {EmitterService} from "./services/emitter.service";

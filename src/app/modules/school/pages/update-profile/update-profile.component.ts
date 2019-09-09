@@ -1,6 +1,6 @@
 import {Component, Input, OnInit } from '@angular/core';
 
-import { SchoolService } from '../../../../services/school.service';
+import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import {MEDIUM_LIST} from '../../../../classes/constants/medium';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -8,7 +8,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
-    providers: [ SchoolService ],
+    providers: [ SchoolOldService ],
 })
 
 export class UpdateProfileComponent implements OnInit {
@@ -34,7 +34,7 @@ export class UpdateProfileComponent implements OnInit {
 
     sessionList: any;
 
-    constructor (private schoolService: SchoolService) { }
+    constructor (private schoolService: SchoolOldService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();

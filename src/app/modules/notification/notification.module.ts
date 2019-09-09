@@ -5,7 +5,7 @@ import { ComponentsModule } from '../../components/components.module';
 import { NotificationComponent } from './notification.component';
 
 import { NotificationRoutingModule } from './notification.routing';
-import {NotificationService} from "../../services/notification/notification.service";
+import {NotificationService} from "../../services/modules/notification/notification.service";
 
 @NgModule({
     declarations: [

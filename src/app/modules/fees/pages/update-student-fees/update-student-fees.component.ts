@@ -1,24 +1,24 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { UpdateStudentFeesServiceAdapter } from "./update-student-fees.service.adapter";
-import { FeeService } from "../../../../services/fees/fee.service";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
-import {ClassFilterFee} from "../../../../services/fees/class-filter-fee";
-import {BusStopFilterFee} from "../../../../services/fees/bus-stop-filter-fee";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {SchoolFeeRule} from "../../../../services/modules/fees/school-fee-rule";
+import {ClassFilterFee} from "../../../../services/modules/fees/class-filter-fee";
+import {BusStopFilterFee} from "../../../../services/modules/fees/bus-stop-filter-fee";
 import {FormControl} from "@angular/forms";
-import {StudentFee} from "../../../../services/fees/student-fee";
-import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
-import {SubDiscount} from "../../../../services/fees/sub-discount";
-import {FeeType} from "../../../../services/fees/fee-type";
+import {StudentFee} from "../../../../services/modules/fees/student-fee";
+import {SubFeeReceipt} from "../../../../services/modules/fees/sub-fee-receipt";
+import {SubDiscount} from "../../../../services/modules/fees/sub-discount";
+import {FeeType} from "../../../../services/modules/fees/fee-type";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {ClassService} from "../../../../services/class.service";
-import {VehicleService} from "../../../vehicle/vehicle.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'update-student-fees',
     templateUrl: './update-student-fees.component.html',
     styleUrls: ['./update-student-fees.component.css'],
-    providers: [ FeeService, ClassService, VehicleService ],
+    providers: [ FeeService, ClassOldService, VehicleOldService ],
 })
 
 export class UpdateStudentFeesComponent implements OnInit {
@@ -67,8 +67,8 @@ export class UpdateStudentFeesComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public classService: ClassService,
-                public vehicleService: VehicleService,
+                public classService: ClassOldService,
+                public vehicleService: VehicleOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import * as moment from 'moment';
 
-import { AttendanceService } from '../../../attendance/attendance.service';
+import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
 import {ATTENDANCE_STATUS_LIST, LEAVE_STATUS_LIST, LEAVE_OPTION_LIST} from '../../../attendance/classes/constants';
 import {DataStorage} from "../../../../classes/data-storage";
 import {CommonFunctions} from "../../../../classes/common-functions";
@@ -20,7 +20,7 @@ export interface CalendarDate {
     selector: 'apply-leave',
     templateUrl: './apply-leave.component.html',
     styleUrls: ['./apply-leave.component.css', './apply-leave.component.scss'],
-    providers: [AttendanceService]
+    providers: [AttendanceOldService]
 })
 
 export class ApplyLeaveComponent implements OnInit, OnChanges {
@@ -45,7 +45,7 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
     showCalendar = false;
     isLoading = false;
 
-    constructor (private attendanceService: AttendanceService) { }
+    constructor (private attendanceService: AttendanceOldService) { }
 
     ngOnChanges(): void {
         this.ngOnInit();

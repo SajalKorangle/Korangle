@@ -1,10 +1,10 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { TotalDiscountServiceAdapter } from "./total-discount.service.adapter";
-import { FeeService } from "../../../../services/fees/fee.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {DiscountColumnFilter, INSTALLMENT_LIST} from "../../classes/constants";
-import {EmployeeService} from "../../../../services/employee.service";
-import {StudentService} from "../../../../services/student.service";
-import {ClassService} from "../../../../services/class.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -12,7 +12,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'total-discount',
     templateUrl: './total-discount.component.html',
     styleUrls: ['./total-discount.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService, ClassService ],
+    providers: [ FeeService, EmployeeService, StudentService, ClassOldService ],
 })
 
 export class TotalDiscountComponent implements OnInit {
@@ -49,7 +49,7 @@ export class TotalDiscountComponent implements OnInit {
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
                 public studentService: StudentService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

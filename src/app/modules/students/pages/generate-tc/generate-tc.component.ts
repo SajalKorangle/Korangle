@@ -4,8 +4,8 @@ import { Student } from '../../../../classes/student';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
 
-import { StudentOldService } from '../../student-old.service';
-import { SchoolService } from '../../../../services/school.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_TC } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -14,7 +14,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [ StudentOldService, SchoolService ],
+    providers: [ StudentOldService, SchoolOldService ],
 })
 
 export class GenerateTcComponent implements OnInit {
@@ -55,7 +55,7 @@ export class GenerateTcComponent implements OnInit {
     count = 0;
 
     constructor (private studentService: StudentOldService,
-                 private schoolService: SchoolService,
+                 private schoolService: SchoolOldService,
                  private printService: PrintService) { }
 
     ngOnInit(): void {

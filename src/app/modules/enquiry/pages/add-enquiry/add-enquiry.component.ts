@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
-import { ClassService } from '../../../../services/class.service';
-import { EnquiryService } from '../../enquiry.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
@@ -20,8 +20,8 @@ export class AddEnquiryComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private enquiryService: EnquiryService,
-                 private classService: ClassService) { }
+    constructor (private enquiryService: EnquiryOldService,
+                 private classService: ClassOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

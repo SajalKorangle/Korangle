@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
 
-import { UserSettingsService } from '../../user-settings.service';
+import { UserOldService } from '../../../../services/modules/user/user-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css'],
-    providers: [ UserSettingsService ],
+    providers: [ UserOldService ],
 })
 
 export class ChangePasswordComponent {
@@ -20,7 +20,7 @@ export class ChangePasswordComponent {
 
     isLoading = false;
 
-    constructor (private userSettingsService: UserSettingsService) { }
+    constructor (private userSettingsService: UserOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

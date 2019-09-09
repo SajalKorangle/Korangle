@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {EmployeeService} from '../../employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_I_CARD } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -43,7 +43,7 @@ export class ICardsComponent implements OnInit {
 
     timeout: any;
 
-    constructor(private employeeService: EmployeeService ,
+    constructor(private employeeService: EmployeeOldService ,
                 public columnFilter: ColumnFilter,
                 private printService: PrintService) {
     }

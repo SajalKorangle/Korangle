@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { EmployeeService } from '../../employee.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_LIST } from '../../../../print/print-routes.constants';
@@ -48,7 +48,7 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private employeeService: EmployeeService,
+    constructor(private employeeService: EmployeeOldService,
                 private excelService: ExcelService,
                 private printService: PrintService) { }
 

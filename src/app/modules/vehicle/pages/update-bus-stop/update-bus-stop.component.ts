@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { VehicleService } from '../../vehicle.service';
+import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class UpdateBusStopComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private vehicleService: VehicleService) { }
+    constructor (private vehicleService: VehicleOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

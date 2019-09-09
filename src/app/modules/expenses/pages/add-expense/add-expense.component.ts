@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExpenseService } from '../../expense.service';
+import { ExpenseOldService } from '../../../../services/modules/expense/expense-old.service';
 import { Expense } from '../../../../classes/expense';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -8,7 +8,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'add-expense',
   templateUrl: './add-expense.component.html',
   styleUrls: ['./add-expense.component.css'],
-    providers: [ ExpenseService ]
+    providers: [ ExpenseOldService ]
 })
 
 export class AddExpenseComponent implements OnInit {
@@ -40,7 +40,7 @@ export class AddExpenseComponent implements OnInit {
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private expenseService: ExpenseService) { }
+    constructor(private expenseService: ExpenseOldService) { }
 
     submitExpense(): void {
         if (this.newExpense.amount === undefined || this.newExpense.amount === 0) {

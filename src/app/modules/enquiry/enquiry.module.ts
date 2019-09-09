@@ -5,8 +5,8 @@ import { EnquiryComponent } from './enquiry.component';
 
 import { EnquiryRoutingModule } from './enquiry.routing';
 
-import { ClassService } from '../../services/class.service';
-import { EnquiryService } from './enquiry.service';
+import { ClassOldService } from '../../services/modules/class/class-old.service';
+import { EnquiryOldService } from '../../services/modules/enquiry/enquiry-old.service';
 import { PrintEnquiryListComponent } from "./print/print-enquiry-list/print-enquiry-list.component";
 
 @NgModule({
@@ -25,7 +25,7 @@ import { PrintEnquiryListComponent } from "./print/print-enquiry-list/print-enqu
     ],
     exports: [
     ],
-    providers: [EnquiryService, ClassService],
+    providers: [EnquiryOldService, ClassOldService],
     bootstrap: [EnquiryComponent]
 })
 export class EnquiryModule { }

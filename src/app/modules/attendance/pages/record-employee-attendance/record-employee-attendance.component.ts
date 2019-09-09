@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { AttendanceService } from '../../attendance.service';
-import {ClassService} from '../../../../services/class.service';
+import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 
-import {EmployeeService} from '../../../employee/employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_ATTENDANCE } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
@@ -16,9 +16,9 @@ import {DataStorage} from "../../../../classes/data-storage";
   templateUrl: './record-employee-attendance.component.html',
   styleUrls: ['./record-employee-attendance.component.css'],
     providers: [
-        AttendanceService,
-        ClassService,
-        EmployeeService,
+        AttendanceOldService,
+        ClassOldService,
+        EmployeeOldService,
     ],
 })
 
@@ -43,8 +43,8 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
-    constructor (private attendanceService: AttendanceService,
-                 private employeeService: EmployeeService,
+    constructor (private attendanceService: AttendanceOldService,
+                 private employeeService: EmployeeOldService,
                  private excelService: ExcelService,
                  private printService: PrintService) { }
 

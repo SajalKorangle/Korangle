@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DataStorage } from '../../../../classes/data-storage';
-import { FeeService } from '../../../../services/fees/fee.service';
-import { StudentService } from '../../../../services/student.service';
+import { FeeService } from '../../../../services/modules/fees/fee.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
 import {DeleteStudentServiceAdapter} from "./delete-student.service.adapter";
-import {SubjectService} from "../../../../services/subject/subject.service";
-import {ExaminationService} from "../../../../services/examination/examination.service";
+import {SubjectService} from "../../../../services/modules/subject/subject.service";
+import {ExaminationService} from "../../../../services/modules/examination/examination.service";
 
 
 @Component({

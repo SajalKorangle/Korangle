@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationOldService } from '../../../../services/examination-old.service';
+import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
 
 import { CreateExaminationServiceAdapter } from './create-examination.service.adapter';
 import {DataStorage} from "../../../../classes/data-storage";

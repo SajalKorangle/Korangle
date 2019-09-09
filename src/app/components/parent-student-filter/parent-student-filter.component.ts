@@ -2,15 +2,15 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
-import {StudentService} from "../../services/student.service";
+import {StudentService} from "../../services/modules/student/student.service";
 import {ParentStudentFilterServiceAdapter} from "./parent-student-filter.service.adapter";
-import {ClassService} from "../../services/class.service";
+import {ClassOldService} from "../../services/modules/class/class-old.service";
 
 @Component({
     selector: 'parent-student-filter',
     templateUrl: './parent-student-filter.component.html',
     styleUrls: ['./parent-student-filter.component.css'],
-    providers: [ StudentService, ClassService ],
+    providers: [ StudentService, ClassOldService ],
 })
 
 export class ParentStudentFilterComponent implements OnInit {
@@ -51,7 +51,7 @@ export class ParentStudentFilterComponent implements OnInit {
     isLoading = false;
 
     constructor (public studentService: StudentService,
-                 public classService: ClassService) { }
+                 public classService: ClassOldService) { }
 
     ngOnInit(): void {
 

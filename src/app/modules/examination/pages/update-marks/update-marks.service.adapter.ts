@@ -1,7 +1,7 @@
 
 import {UpdateMarksComponent} from './update-marks.component';
 
-import { TEST_TYPE_LIST } from '../../classes/constants';
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
 export class UpdateMarksServiceAdapter {
 

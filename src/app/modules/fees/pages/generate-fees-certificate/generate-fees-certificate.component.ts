@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { GenerateFeesCertificateServiceAdapter } from "./generate-fees-certificate.service.adapter";
-import { FeeService } from "../../../../services/fees/fee.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({

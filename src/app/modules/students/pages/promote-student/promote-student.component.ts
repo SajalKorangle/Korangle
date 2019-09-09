@@ -2,14 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
-import { ClassService } from '../../../../services/class.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {SubjectService} from "../../../../services/subject/subject.service";
-import {ExaminationService} from "../../../../services/examination/examination.service";
-import {StudentService} from "../../../../services/student.service";
-import {StudentSection} from "../../../../services/student/student-section";
-import {FeeService} from "../../../../services/fees/fee.service";
+import {SubjectService} from "../../../../services/modules/subject/subject.service";
+import {ExaminationService} from "../../../../services/modules/examination/examination.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {StudentSection} from "../../../../services/modules/student/student-section";
+import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -17,7 +17,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
+    providers: [ StudentService, ClassOldService, SubjectService, ExaminationService, FeeService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
@@ -55,7 +55,7 @@ export class PromoteStudentComponent implements OnInit {
     isLoading = false;
 
     constructor (public studentService: StudentService,
-                 public classService: ClassService,
+                 public classService: ClassOldService,
                  public subjectService: SubjectService,
                  public feeService: FeeService,
                  public examinationService: ExaminationService) { }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import { StudentOldService } from '../../modules/students/student-old.service';
-import {SchoolService} from '../../services/school.service';
+import { StudentOldService } from '../../services/modules/student/student-old.service';
+import {SchoolOldService} from '../../services/modules/school/school-old.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
@@ -10,7 +10,7 @@ import {map} from 'rxjs/operators';
     selector: 'student-filter',
     templateUrl: './student-filter.component.html',
     styleUrls: ['./student-filter.component.css'],
-    providers: [ StudentOldService, SchoolService ],
+    providers: [ StudentOldService, SchoolOldService ],
 })
 
 export class StudentFilterComponent implements OnInit {
@@ -38,7 +38,7 @@ export class StudentFilterComponent implements OnInit {
     isLoading = false;
 
     constructor (private studentService: StudentOldService,
-                 private schoolService: SchoolService) { }
+                 private schoolService: SchoolOldService) { }
 
     ngOnInit(): void {
         this.handleOnStudentLoading(true);

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ClassService } from '../../../../services/class.service';
-import { StudentOldService } from '../../student-old.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 
@@ -9,7 +9,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'change-class',
     templateUrl: './change-class.component.html',
     styleUrls: ['./change-class.component.css'],
-    providers: [ ClassService, StudentOldService ],
+    providers: [ ClassOldService, StudentOldService ],
 })
 
 export class ChangeClassComponent implements OnInit {
@@ -26,7 +26,7 @@ export class ChangeClassComponent implements OnInit {
     isLoading = false;
     isStudentListLoading = false;
 
-    constructor (private classService: ClassService,
+    constructor (private classService: ClassOldService,
                  private studentService: StudentOldService) { }
 
     ngOnInit(): void {

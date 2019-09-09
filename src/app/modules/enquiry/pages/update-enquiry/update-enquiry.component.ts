@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { EnquiryService } from '../../enquiry.service';
-import { ClassService } from '../../../../services/class.service';
+import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
@@ -30,8 +30,8 @@ export class UpdateEnquiryComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private enquiryService: EnquiryService,
-                 private classService: ClassService) { }
+    constructor (private enquiryService: EnquiryOldService,
+                 private classService: ClassOldService) { }
 
     ngOnInit(): void {
 

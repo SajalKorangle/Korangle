@@ -1,0 +1,150 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <!--  div class="row"
+             style="margin-top: 10px; margin-bottom: 10px;">
+            <div class="col-xs-12">
+                <mat-checkbox [(ngModel)]="newReportCardMapping.autoAttendance">Do you want to get attendance data from software?</mat-checkbox>
+            </div>
+        </div -->
+
+        <div class="row"
+             style="font-size: 18px;
+                    font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
+            <div class="col-xs-12">
+                For Play Group to 8th
+            </div>
+        </div>
+
+        <div class="row"
+             style="font-size: 18px;
+                    font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
+            <div class="col-xs-12">
+                For 9th & 11th
+            </div>
+        </div>
+
+        <!-- table class="table">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <td>Examination Name</td>
+                <td>Attendance Start Date</td>
+                <td>Attendance End Date</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <mat-form-field>
+                        <mat-select placeholder="Map Quarterly Exam"
+                                    [ngModel]="reportCardMapping.parentExaminationQuarterlyHigh"
+                                    (ngModelChange)="newReportCardMapping.parentExaminationQuarterlyHigh=$event;detectChanges();">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <input type="date"
+                           [disabled]="!newReportCardMapping.autoAttendance"
+                           [(ngModel)]="newReportCardMapping.attendanceQuarterlyHighStart">
+                </td>
+                <td>
+                    <input type="date"
+                           [disabled]="!newReportCardMapping.autoAttendance"
+                           [(ngModel)]="newReportCardMapping.attendanceQuarterlyHighEnd">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field>
+                        <mat-select placeholder="Map Half-Yearly Exam"
+                                    [ngModel]="reportCardMapping.parentExaminationHalfYearlyHigh"
+                                    (ngModelChange)="newReportCardMapping.parentExaminationHalfYearlyHigh=$event;detectChanges();">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <input type="date"
+                           [disabled]="!newReportCardMapping.autoAttendance"
+                           [(ngModel)]="newReportCardMapping.attendanceHalfYearlyHighStart">
+                </td>
+                <td>
+                    <input type="date"
+                           [disabled]="!newReportCardMapping.autoAttendance"
+                           [(ngModel)]="newReportCardMapping.attendanceHalfYearlyHighEnd">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field>
+                        <mat-select placeholder="Map Final Exam"
+                                    [ngModel]="reportCardMapping.parentExaminationFinalHigh"
+                                    (ngModelChange)="newReportCardMapping.parentExaminationFinalHigh=$event;detectChanges();">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <input type="date"
+                           [disabled]="!newReportCardMapping.autoAttendance"
+                           [(ngModel)]="newReportCardMapping.attendanceFinalHighStart">
+                </td>
+                <td>
+                    <input type="date"
+                           [disabled]="!newReportCardMapping.autoAttendance"
+                           [(ngModel)]="newReportCardMapping.attendanceFinalHighEnd">
+                </td>
+            </tr>
+            </tbody>
+        </table -->
+
+        <button type="submit"
+                *ngIf="newReportCardMapping.id==null"
+                [disabled]="disableCreateButton()"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="serviceAdapter.createReportCardMapping()">Set Final Report</button>
+
+        <button type="submit"
+                *ngIf="newReportCardMapping.id!=null"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="serviceAdapter.updateReportCardMapping()">Update Final Report</button>
+
+        <!-- div class="row" style="font-weight: 800; font-size: 20px; margin-top: 25px;">
+            <div class="col-xs-12" align="center">
+                Marksheet Formats
+            </div>
+        </div>
+
+        <div class="row" style="font-weight: 800; font-size: 25px;">
+            <div class="col-xs-4" align="center">
+                <u>Classic</u><br/><br/>
+                <img src="http://www.anupreetiti.com/korangle_data/One.jpg">
+            </div>
+            <div class="col-xs-4" align="center">
+                <u>Elegant</u><br/><br/>
+                <img src="http://www.anupreetiti.com/korangle_data/Two-001.jpg">
+                <img src="http://www.anupreetiti.com/korangle_data/Two-002.jpg">
+            </div>
+            <div class="col-xs-4" align="center">
+                <u>Comprehensive</u><br/><br/>
+                <img src="http://www.anupreetiti.com/korangle_data/Three-001.jpg">
+                <img src="http://www.anupreetiti.com/korangle_data/Three-002.jpg">
+            </div>
+        </div -->
+
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

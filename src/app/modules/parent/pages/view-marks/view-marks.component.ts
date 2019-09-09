@@ -1,8 +1,8 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
 
-import { StudentOldService } from '../../../students/student-old.service';
-import {ExaminationOldService} from '../../../../services/examination-old.service';
-import {SubjectOldService} from '../../../../services/subject-old.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import {ExaminationOldService} from '../../../../services/modules/examination/examination-old.service';
+import {SubjectOldService} from '../../../../services/modules/subject/subject-old.service';
 import {ViewMarksServiceAdapter} from './view-marks.service.adapter';
 import {DataStorage} from "../../../../classes/data-storage";
 

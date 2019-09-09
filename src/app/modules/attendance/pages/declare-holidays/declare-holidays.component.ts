@@ -1,16 +1,16 @@
 import {Component, Input, OnInit } from '@angular/core';
 
-import { AttendanceService } from '../../attendance.service';
-import {StudentOldService} from '../../../students/student-old.service';
+import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
-import {EmployeeService} from '../../../employee/employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'declare-holidays',
   templateUrl: './declare-holidays.component.html',
   styleUrls: ['./declare-holidays.component.css'],
-    providers: [ AttendanceService, StudentOldService, EmployeeService ],
+    providers: [ AttendanceOldService, StudentOldService, EmployeeOldService ],
 })
 
 export class DeclareHolidaysComponent implements OnInit {
@@ -27,9 +27,9 @@ export class DeclareHolidaysComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private attendanceService: AttendanceService,
+    constructor (private attendanceService: AttendanceOldService,
                  private studentService: StudentOldService,
-                 private employeeService: EmployeeService) { }
+                 private employeeService: EmployeeOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

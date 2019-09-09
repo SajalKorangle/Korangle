@@ -1,17 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 
-import { EnquiryService } from '../../enquiry.service';
-import { ClassService } from '../../../../services/class.service';
+import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import {PrintService} from "../../../../print/print-service";
 import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
-import { EmployeeService } from '../../../employee/employee.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [EmployeeService],
+    providers: [EmployeeOldService],
 })
 
 export class ViewAllComponent implements OnInit {
@@ -34,10 +34,10 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private enquiryService: EnquiryService,
-                private classService: ClassService,
+    constructor(private enquiryService: EnquiryOldService,
+                private classService: ClassOldService,
                 private printService: PrintService,
-                private employeeService: EmployeeService) { }
+                private employeeService: EmployeeOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

@@ -1,23 +1,23 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { GiveDiscountServiceAdapter } from "./give-discount-service.adapter";
-import { FeeService } from "../../../../services/fees/fee.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {
     DiscountColumnFilter,
     INSTALLMENT_LIST,
     ReceiptColumnFilter
 } from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
-import {FeeType} from "../../../../services/fees/fee-type";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
-import {StudentFee} from "../../../../services/fees/student-fee";
-import {FeeReceipt} from "../../../../services/fees/fee-receipt";
-import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
-import {Discount} from "../../../../services/fees/discount";
-import {SubDiscount} from "../../../../services/fees/sub-discount";
-import {StudentService} from "../../../../services/student.service";
-import {VehicleService} from "../../../vehicle/vehicle.service";
-import {ClassService} from "../../../../services/class.service";
-import {EmployeeService} from "../../../../services/employee.service";
+import {FeeType} from "../../../../services/modules/fees/fee-type";
+import {SchoolFeeRule} from "../../../../services/modules/fees/school-fee-rule";
+import {StudentFee} from "../../../../services/modules/fees/student-fee";
+import {FeeReceipt} from "../../../../services/modules/fees/fee-receipt";
+import {SubFeeReceipt} from "../../../../services/modules/fees/sub-fee-receipt";
+import {Discount} from "../../../../services/modules/fees/discount";
+import {SubDiscount} from "../../../../services/modules/fees/sub-discount";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -27,7 +27,7 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [ FeeService, StudentService, VehicleService, ClassService, EmployeeService ],
+    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService ],
 })
 
 export class GiveDiscountComponent implements OnInit {
@@ -76,8 +76,8 @@ export class GiveDiscountComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
-                public vehicleService: VehicleService,
-                public classService: ClassService,
+                public vehicleService: VehicleOldService,
+                public classService: ClassOldService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}
 

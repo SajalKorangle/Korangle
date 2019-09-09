@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import { SmsOldService } from '../../sms-old.service';
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ViewSentServiceAdapter } from './view-sent.service.adapter';
 import {DataStorage} from "../../../../classes/data-storage";
 

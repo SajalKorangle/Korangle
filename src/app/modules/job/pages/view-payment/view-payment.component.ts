@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import {EmployeeService} from '../../../employee/employee.service';
-import {SalaryService} from '../../../salary/salary.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
+import {SalaryOldService} from '../../../../services/modules/salary/salary-old.service';
 import {ViewPaymentServiceAdapter} from './view-payment.service.adapter';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -9,7 +9,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'view-payment',
   templateUrl: './view-payment.component.html',
   styleUrls: ['./view-payment.component.css'],
-    providers: [ EmployeeService, SalaryService ],
+    providers: [ EmployeeOldService, SalaryOldService ],
 })
 
 export class ViewPaymentComponent implements OnInit {
@@ -22,8 +22,8 @@ export class ViewPaymentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public employeeService: EmployeeService,
-                 public salaryService: SalaryService) { }
+    constructor (public employeeService: EmployeeOldService,
+                 public salaryService: SalaryOldService) { }
 
     serviceAdapter = new ViewPaymentServiceAdapter();
 

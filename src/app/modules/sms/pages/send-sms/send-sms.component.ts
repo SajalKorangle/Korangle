@@ -1,22 +1,22 @@
 import {Component, OnInit} from '@angular/core';
 
-import {ClassService} from '../../../../services/class.service';
-import { StudentService } from "../../../../services/student.service";
-import { EmployeeService } from "../../../../services/employee.service";
-import { SmsOldService } from '../../sms-old.service';
-import { SmsService } from "../../../../services/sms/sms.service";
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import { StudentService } from "../../../../services/modules/student/student.service";
+import { EmployeeService } from "../../../../services/modules/employee/employee.service";
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
+import { SmsService } from "../../../../services/modules/sms/sms.service";
 
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SendSmsServiceAdapter} from "./send-sms.service.adapter";
-import {NotificationService} from "../../../../services/notification/notification.service";
-import {UserService} from "../../../../services/user/user.service";
+import {NotificationService} from "../../../../services/modules/notification/notification.service";
+import {UserService} from "../../../../services/modules/user/user.service";
 
 @Component({
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
     styleUrls: ['./send-sms.component.css'],
-    providers: [ StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService],
+    providers: [ StudentService, ClassOldService, EmployeeService, NotificationService, UserService, SmsService],
 })
 
 export class SendSmsComponent implements OnInit {
@@ -64,7 +64,7 @@ export class SendSmsComponent implements OnInit {
 
     constructor(public studentService: StudentService,
                 public employeeService: EmployeeService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 public smsOldService: SmsOldService,
                 public smsService: SmsService,
                 public notificationService: NotificationService,

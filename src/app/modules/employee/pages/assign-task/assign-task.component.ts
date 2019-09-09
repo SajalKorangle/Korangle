@@ -1,15 +1,16 @@
 import {Component, Input, OnInit } from '@angular/core';
 
 import {FormControl} from '@angular/forms';
-import {EmployeeService} from '../../employee.service';
-import {TeamService} from '../../../team/team.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import {AssignTaskServiceAdapter} from "./assign-task.service.adapter";
+import {TeamService} from "../../../../services/modules/team/team.service";
 
 @Component({
   selector: 'assign-task',
   templateUrl: './assign-task.component.html',
   styleUrls: ['./assign-task.component.css'],
-    providers: [ EmployeeService, TeamService ],
+    providers: [ EmployeeOldService, TeamService ],
 })
 
 export class AssignTaskComponent implements OnInit {
@@ -22,40 +23,20 @@ export class AssignTaskComponent implements OnInit {
 
     selectedEmployee: any;
 
+    serviceAdapter: AssignTaskServiceAdapter;
+
     isLoading = false;
 
-    constructor ( private employeeService: EmployeeService,
-                  private teamService: TeamService) { }
+    constructor (public employeeService: EmployeeOldService,
+                 public teamService: TeamService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
-        console.log(this.user.username);
+        this.serviceAdapter = new AssignTaskServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
 
-        const request_module_data = {
-            schoolDbId: this.user.activeSchool.dbId,
-        };
-
-        this.isLoading = true;
-        Promise.all([
-            this.teamService.getSchoolModuleList(request_module_data, this.user.jwt),
-        ]).then(value => {
-            console.log(value);
-            this.isLoading = false;
-            this.initializeModuleList(value[0]);
-        }, error => {
-            this.isLoading = false;
-        });
-
-    }
-
-    initializeModuleList(moduleList: any): void {
-        this.moduleList = moduleList;
-        this.moduleList.forEach(module => {
-            module.taskList.forEach(task => {
-                task.selected = false;
-            })
-        })
     }
 
     getEmployeePermissionList(employee: any): void {
@@ -78,7 +59,7 @@ export class AssignTaskComponent implements OnInit {
                 task.employeePermissionId = null;
                 task.permissionLoading = false;
                 employeePermissionList.forEach(employeePermission => {
-                    if (employeePermission.parentTask === task.dbId) {
+                    if (employeePermission.parentTask === task.id) {
                         task.employeePermissionId = employeePermission.id;
                     }
                 });
@@ -98,7 +79,7 @@ export class AssignTaskComponent implements OnInit {
     addEmployeePermission(task: any): void {
         let data = {
             'parentEmployee': this.selectedEmployee.id,
-            'parentTask': task.dbId,
+            'parentTask': task.id,
         };
         this.employeeService.addEmployeePermission(data, this.user.jwt).then(response => {
             if (response.status === 'success') {

@@ -11,7 +11,7 @@ import { AssignTaskComponent } from './pages/assign-task/assign-task.component';
 
 import { EmployeeRoutingModule } from './employee.routing';
 
-import { EmployeeService } from './employee.service';
+import { EmployeeOldService } from '../../services/modules/employee/employee-old.service';
 import {ICardsComponent} from './pages/i-cards/i-cards.component';
 import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {ExperienceCertiComponent} from './pages/experience-certi/experience-certi.component';
@@ -42,7 +42,7 @@ import {ExcelService} from "../../excel/excel-service";
     ],
     exports: [
     ],
-    providers: [EmployeeService, ExcelService],
+    providers: [EmployeeOldService, ExcelService],
     bootstrap: [EmployeeComponent]
 })
 export class EmployeeModule { }

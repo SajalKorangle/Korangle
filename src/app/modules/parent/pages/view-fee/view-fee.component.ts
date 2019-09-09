@@ -1,12 +1,12 @@
 import {ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import {FeeService} from "../../../../services/fees/fee.service";
-import {StudentService} from "../../../../services/student.service";
+import {FeeService} from "../../../../services/modules/fees/fee.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
 
 import {ViewFeeServiceAdapter} from "./view-fee.service.adapter";
 import {EmitterService} from "../../../../services/emitter.service";
-import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
-import {FeeReceipt} from "../../../../services/fees/fee-receipt";
+import {SubFeeReceipt} from "../../../../services/modules/fees/sub-fee-receipt";
+import {FeeReceipt} from "../../../../services/modules/fees/fee-receipt";
 import {
     DiscountColumnFilter,
     INSTALLMENT_LIST,
@@ -14,15 +14,15 @@ import {
     ReceiptColumnFilter
 } from "../../../fees/classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
-import {FeeType} from "../../../../services/fees/fee-type";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
-import {StudentFee} from "../../../../services/fees/student-fee";
-import {Discount} from "../../../../services/fees/discount";
-import {SubDiscount} from "../../../../services/fees/sub-discount";
-import {VehicleService} from "../../../vehicle/vehicle.service";
-import {EmployeeService} from "../../../../services/employee.service";
+import {FeeType} from "../../../../services/modules/fees/fee-type";
+import {SchoolFeeRule} from "../../../../services/modules/fees/school-fee-rule";
+import {StudentFee} from "../../../../services/modules/fees/student-fee";
+import {Discount} from "../../../../services/modules/fees/discount";
+import {SubDiscount} from "../../../../services/modules/fees/sub-discount";
+import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {ClassService} from "../../../../services/class.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
 declare const $: any;
@@ -31,7 +31,7 @@ declare const $: any;
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [ FeeService, StudentService, ClassService, VehicleService, EmployeeService ],
+    providers: [ FeeService, StudentService, ClassOldService, VehicleOldService, EmployeeService ],
 })
 
 export class ViewFeeComponent implements OnInit {
@@ -72,9 +72,9 @@ export class ViewFeeComponent implements OnInit {
 
     constructor (public feeService: FeeService,
                  public studentService: StudentService,
-                 public vehicleService: VehicleService,
+                 public vehicleService: VehicleOldService,
                  public employeeService: EmployeeService,
-                 public classService: ClassService,
+                 public classService: ClassOldService,
                  private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {

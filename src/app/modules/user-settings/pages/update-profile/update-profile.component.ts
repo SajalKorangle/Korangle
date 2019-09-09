@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { UserSettingsService } from '../../user-settings.service';
+import { UserOldService } from '../../../../services/modules/user/user-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
-    providers: [ UserSettingsService ],
+    providers: [ UserOldService ],
 })
 
 export class UpdateProfileComponent implements OnInit {
@@ -20,7 +20,7 @@ export class UpdateProfileComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private userSettingsService: UserSettingsService) { }
+    constructor (private userSettingsService: UserOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

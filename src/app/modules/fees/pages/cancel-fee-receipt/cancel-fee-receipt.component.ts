@@ -1,18 +1,18 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CancelFeeReceiptServiceAdapter } from "./cancel-fee-receipt.service.adapter";
-import { FeeService } from "../../../../services/fees/fee.service";
-import {ClassService} from "../../../../services/class.service";
-import {StudentService} from "../../../../services/student.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
 import {FormControl} from "@angular/forms";
 import {INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST} from "../../classes/constants";
-import {EmployeeService} from "../../../../services/employee.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'cancel-fee-receipt',
     templateUrl: './cancel-fee-receipt.component.html',
     styleUrls: ['./cancel-fee-receipt.component.css'],
-    providers: [ FeeService, ClassService, StudentService, EmployeeService ],
+    providers: [ FeeService, ClassOldService, StudentService, EmployeeService ],
 })
 
 export class CancelFeeReceiptComponent implements OnInit {
@@ -37,7 +37,7 @@ export class CancelFeeReceiptComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 public studentService: StudentService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}

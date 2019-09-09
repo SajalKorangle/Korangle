@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { SmsOldService } from '../../sms-old.service';
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({

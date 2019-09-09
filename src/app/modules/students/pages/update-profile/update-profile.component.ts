@@ -4,8 +4,8 @@ import { Student } from '../../../../classes/student';
 import { Classs } from '../../../../classes/classs';
 import { Section } from '../../../../classes/section';
 
-import { StudentOldService } from '../../student-old.service';
-import {BusStopService} from '../../../../services/bus-stop.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import {BusStopService} from '../../../../services/modules/school/bus-stop.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({

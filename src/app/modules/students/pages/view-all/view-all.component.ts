@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassService} from '../../../../services/class.service';
-import {StudentOldService} from '../../student-old.service';
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
@@ -41,7 +41,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassService, ExcelService],
+    providers: [StudentOldService, ClassOldService, ExcelService],
 })
 
 export class ViewAllComponent implements OnInit {
@@ -83,7 +83,7 @@ export class ViewAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassService,
+                private classService: ClassOldService,
                 private excelService: ExcelService,
                 private printService: PrintService) { }
 

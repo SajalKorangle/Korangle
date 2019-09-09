@@ -1,8 +1,8 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter";
-import { FeeService } from "../../../../services/fees/fee.service";
-import {StudentService} from "../../../../services/student.service";
-import {ClassService} from "../../../../services/class.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {ExcelService} from "../../../../excel/excel-service";
@@ -12,7 +12,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassService ],
+    providers: [ FeeService, StudentService, ClassOldService ],
 })
 
 export class ViewDefaultersComponent implements OnInit {
@@ -60,7 +60,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 private excelService: ExcelService,
                 private cdRef: ChangeDetectorRef) {}
 

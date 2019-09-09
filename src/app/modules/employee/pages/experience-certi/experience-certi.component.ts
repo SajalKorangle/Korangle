@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {EmployeeService} from '../../employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_EXP_CERT } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -29,7 +29,7 @@ export class ExperienceCertiComponent {
     currentPostMissing = false;
 
 
-    constructor (private employeeService: EmployeeService, private printService: PrintService) { }
+    constructor (private employeeService: EmployeeOldService, private printService: PrintService) { }
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
     }

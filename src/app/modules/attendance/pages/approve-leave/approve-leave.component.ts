@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import {AttendanceService} from '../../attendance.service';
-import {EmployeeService} from '../../../employee/employee.service';
+import {AttendanceOldService} from '../../../../services/modules/attendance/attendance-old.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 
 import { ApproveLeaveServiceAdapter } from './approve-leave.service.adapter';
 import {SESSION_LIST} from '../../../../classes/constants/session';
@@ -12,7 +12,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'approve-leave',
     templateUrl: './approve-leave.component.html',
     styleUrls: ['./approve-leave.component.css'],
-    providers: [ AttendanceService, EmployeeService ],
+    providers: [ AttendanceOldService, EmployeeOldService ],
 })
 
 export class ApproveLeaveComponent implements OnInit {
@@ -41,8 +41,8 @@ export class ApproveLeaveComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public attenendanceService: AttendanceService,
-                public employeeService: EmployeeService) {}
+    constructor(public attenendanceService: AttendanceOldService,
+                public employeeService: EmployeeOldService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

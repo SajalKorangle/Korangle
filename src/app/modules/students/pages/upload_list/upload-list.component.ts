@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassService} from '../../../../services/class.service';
-import {StudentOldService} from '../../student-old.service';
-import {VehicleService} from '../../../vehicle/vehicle.service';
-import {SchoolService} from '../../../../services/school.service';
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
+import {VehicleOldService} from '../../../../services/modules/vehicle/vehicle-old.service';
+import {SchoolOldService} from '../../../../services/modules/school/school-old.service';
 
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
@@ -168,7 +168,7 @@ const RTE_VALUES = [
     selector: 'upload-list',
     templateUrl: './upload-list.component.html',
     styleUrls: ['./upload-list.component.css'],
-    providers: [StudentOldService, ClassService, VehicleService, SchoolService],
+    providers: [StudentOldService, ClassOldService, VehicleOldService, SchoolOldService],
 })
 
 export class UploadListComponent implements OnInit {
@@ -206,10 +206,10 @@ export class UploadListComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassService,
-                private schoolService: SchoolService,
+                private classService: ClassOldService,
+                private schoolService: SchoolOldService,
                 private excelService: ExcelService,
-                private vehicleService: VehicleService) { }
+                private vehicleService: VehicleOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

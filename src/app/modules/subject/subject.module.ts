@@ -9,7 +9,7 @@ import { SetStudentSubjectComponent } from './pages/set-student-subject/set-stud
 
 import { SubjectRoutingModule } from './subject.routing';
 
-import { SubjectOldService } from '../../services/subject-old.service';
+import { SubjectOldService } from '../../services/modules/subject/subject-old.service';
 
 @NgModule({
     declarations: [

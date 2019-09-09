@@ -1,12 +1,12 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CollectFeeServiceAdapter } from "./collect-fee-service.adapter";
-import { FeeService } from "../../../../services/fees/fee.service";
-import {StudentFee} from "../../../../services/fees/student-fee";
-import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
-import {SubDiscount} from "../../../../services/fees/sub-discount";
-import {FeeReceipt} from "../../../../services/fees/fee-receipt";
-import {Discount} from "../../../../services/fees/discount";
-import {VehicleService} from "../../../vehicle/vehicle.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {StudentFee} from "../../../../services/modules/fees/student-fee";
+import {SubFeeReceipt} from "../../../../services/modules/fees/sub-fee-receipt";
+import {SubDiscount} from "../../../../services/modules/fees/sub-discount";
+import {FeeReceipt} from "../../../../services/modules/fees/fee-receipt";
+import {Discount} from "../../../../services/modules/fees/discount";
+import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {
     DiscountColumnFilter,
@@ -14,11 +14,11 @@ import {
     MODE_OF_PAYMENT_LIST,
     ReceiptColumnFilter
 } from "../../classes/constants";
-import {FeeType} from "../../../../services/fees/fee-type";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
-import {ClassService} from "../../../../services/class.service";
-import {StudentService} from "../../../../services/student.service";
-import {EmployeeService} from "../../../../services/employee.service";
+import {FeeType} from "../../../../services/modules/fees/fee-type";
+import {SchoolFeeRule} from "../../../../services/modules/fees/school-fee-rule";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
@@ -30,7 +30,7 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [ FeeService, StudentService, VehicleService, ClassService, EmployeeService ],
+    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService ],
 })
 
 export class CollectFeeComponent implements OnInit {
@@ -82,8 +82,8 @@ export class CollectFeeComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
-                public vehicleService: VehicleService,
-                public classService: ClassService,
+                public vehicleService: VehicleOldService,
+                public classService: ClassOldService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}

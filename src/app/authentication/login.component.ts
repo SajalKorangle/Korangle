@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../classes/user';
 import {registerForNotification} from "../classes/common.js";
-import {NotificationService} from "../services/notification/notification.service";
+import {NotificationService} from "../services/modules/notification/notification.service";
 import {Constants} from "../classes/constants";
 import {environment} from "../../environments/environment";
 

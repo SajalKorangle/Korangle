@@ -1,20 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { SubjectOldService } from '../../../../services/subject-old.service';
-import { ClassService } from '../../../../services/class.service';
-import { StudentOldService } from '../../../students/student-old.service';
-import { SchoolService } from '../../../../services/school.service';
+import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 
 
 import { SetStudentSubjectServiceAdapter } from './set-student-subject.service.adapter';
-import {ExaminationOldService} from '../../../../services/examination-old.service';
+import {ExaminationOldService} from '../../../../services/modules/examination/examination-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'set-student-subject',
     templateUrl: './set-student-subject.component.html',
     styleUrls: ['./set-student-subject.component.css'],
-    providers: [ SubjectOldService, ClassService, StudentOldService, SchoolService, ExaminationOldService ],
+    providers: [ SubjectOldService, ClassOldService, StudentOldService, SchoolOldService, ExaminationOldService ],
 })
 
 export class SetStudentSubjectComponent implements OnInit {
@@ -33,9 +33,9 @@ export class SetStudentSubjectComponent implements OnInit {
     selectedStudent: any;
 
     constructor(public subjectService: SubjectOldService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 public studentService: StudentOldService,
-                public schoolService: SchoolService,
+                public schoolService: SchoolOldService,
                 public examinationService: ExaminationOldService) {}
 
     ngOnInit(): void {

@@ -47,6 +47,14 @@ const routes: Routes = [
         loadChildren: 'app/modules/examination/examination.module#ExaminationModule',
     },
     {
+        path: 'report_card_mp_board',
+        loadChildren: 'app/modules/report-card/mp-board/report-card-mp-board.module#ReportCardMpBoardModule',
+    },
+    {
+        path: 'report_card_cbse',
+        loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule',
+    },
+    {
         path: 'salary',
         loadChildren: 'app/modules/salary/salary.module#SalaryModule',
     },
@@ -79,10 +87,11 @@ const routes: Routes = [
         path: 'school',
         loadChildren: 'app/modules/school/school.module#SchoolModule',
     },
-    {
+    //okay
+    /*{
         path: 'marksheet',
         loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule',
-    },
+    },*/
     {
         path: 'print',
         outlet: 'print',
@@ -92,9 +101,11 @@ const routes: Routes = [
             {path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule'},
             {path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule'},
             {path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule'},
+            {path: 'report_card_mp_board', loadChildren: 'app/modules/report-card/mp-board/report-card-mp-board.module#ReportCardMpBoardModule'},
+            {path: 'report_card_cbse', loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule'},
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
             {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
-            {path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'},
+            /*{path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'},*/
             {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
 
         ]

@@ -1,19 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { UserSettingsService } from '../../user-settings.service';
-import { SchoolService } from '../../../../services/school.service';
-import { EmployeeService } from '../../../employee/employee.service';
+import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import {CreateSchoolServiceAdapter} from './create-school.service.adapter';
 import {MEDIUM_LIST} from '../../../../classes/constants/medium';
 import {BOARD_LIST} from "../../../../classes/constants/board";
-import {TeamService} from '../../../team/team.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import {TeamService} from "../../../../services/modules/team/team.service";
 
 @Component({
   selector: 'create-school',
   templateUrl: './create-school.component.html',
   styleUrls: ['./create-school.component.css'],
-    providers: [ SchoolService, EmployeeService, TeamService ],
+    providers: [ SchoolOldService, EmployeeOldService, TeamService ],
 })
 
 export class CreateSchoolComponent implements OnInit {
@@ -31,8 +30,8 @@ export class CreateSchoolComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public schoolService: SchoolService,
-                 public employeeService: EmployeeService,
+    constructor (public schoolService: SchoolOldService,
+                 public employeeService: EmployeeOldService,
                  public teamService: TeamService) { }
 
     ngOnInit(): void {
@@ -41,7 +40,7 @@ export class CreateSchoolComponent implements OnInit {
         this.schoolProfile = {};
         this.serviceAdapter = new CreateSchoolServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.getModuleList();
+        this.serviceAdapter.initializeData();
     }
 
 }

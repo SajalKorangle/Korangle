@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { EmployeeService } from '../../employee.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
@@ -20,7 +20,7 @@ export class AddEmployeeComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeService) { }
+    constructor (private employeeService: EmployeeOldService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import {TEST_TYPE_LIST} from '../../classes/constants';
+import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
 import { PrintService } from '../../../../print/print-service';
 
 @Component({

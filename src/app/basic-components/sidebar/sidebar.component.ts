@@ -9,7 +9,7 @@ import {style, state, trigger, animate, transition} from "@angular/animations";
 import {SESSION_LIST} from "../../classes/constants/session";
 import {environment} from "../../../environments/environment";
 import {Constants} from "../../classes/constants";
-import {NotificationService} from "../../services/notification/notification.service";
+import {NotificationService} from "../../services/modules/notification/notification.service";
 import {unregisterForNotification} from '../../classes/common.js';
 
 
