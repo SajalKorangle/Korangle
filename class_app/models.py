@@ -1,7 +1,5 @@
 from django.db import models
 
-from school_app.model.models import Session
-
 # Create your models here.
 
 

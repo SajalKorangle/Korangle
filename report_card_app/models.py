@@ -1,0 +1,2 @@
+from report_card_app.model.cbse import Term as CbseTerm, ExtraField as CbseExtraField, StudentExtraField, ClassTeacherRemark, ReportCardMapping
+from report_card_app.model.mp_board import Term as MpBoardTerm, ExtraField as MpBoardExtraField, StudentExtraField, ClassTeacherRemark, ReportCardMapping
