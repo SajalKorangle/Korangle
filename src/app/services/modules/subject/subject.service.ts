@@ -9,6 +9,7 @@ export class SubjectService extends ServiceObject {
     protected module_url = '/subject';
 
     // objects urls
+    public subject = '/subject';
     public class_subject = '/class-subject';
     public student_subject = '/student-subject';
 
