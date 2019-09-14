@@ -3,7 +3,7 @@ from django.conf.urls import url
 
 from report_card_app.urls import urlpatterns
 
-from report_card_app.views.cbse import \
+from .views import \
     TermView, TermListView, \
     ExtraFieldView, ExtraFieldListView, \
     StudentExtraFieldView, StudentExtraFieldListView, \

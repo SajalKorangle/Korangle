@@ -1,8 +1,8 @@
 
 def populate_term_and_extra_field(apps, schema_editor):
 
-    Term = apps.get_model('report_card_app', 'Term')
-    ExtraField = apps.get_model('report_card_app', 'ExtraField')
+    Term = apps.get_model('report_card_cbse_app', 'Term')
+    ExtraField = apps.get_model('report_card_cbse_app', 'ExtraField')
 
     term_object = Term(name='Term - I')
     term_object.save()

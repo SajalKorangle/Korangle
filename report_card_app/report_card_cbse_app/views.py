@@ -1,7 +1,7 @@
 
 from common.common_views import CommonListView, CommonView
 from rest_framework.views import APIView
-from report_card_app.model.cbse import Term, ExtraField, StudentExtraField, ClassTeacherRemark, ReportCardMapping
+from .models  import Term, ExtraField, StudentExtraField, ClassTeacherRemark, ReportCardMapping
 
 
 ########### Term #############
