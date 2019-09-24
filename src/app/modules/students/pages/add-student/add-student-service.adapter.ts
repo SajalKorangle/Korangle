@@ -1,9 +1,9 @@
 
 import { AddStudentComponent } from './add-student.component';
 import { ATTENDANCE_STATUS_LIST } from '../../../attendance/classes/constants';
-import {StudentTest} from "../../../../services/modules/examination/student-test";
-import {StudentSubject} from "../../../../services/modules/subject/student-subject";
-import {StudentFee} from "../../../../services/modules/fees/student-fee";
+import {StudentTest} from "../../../../services/modules/examination/models/student-test";
+import {StudentSubject} from "../../../../services/modules/subject/models/student-subject";
+import {StudentFee} from "../../../../services/modules/fees/models/student-fee";
 
 export class AddStudentServiceAdapter {
 

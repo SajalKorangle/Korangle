@@ -12,8 +12,8 @@ import { DataStorage } from "../../../../../classes/data-storage";
 import { ReportCardCbseService } from "../../../../../services/modules/report-card/cbse/report-card-cbse.service";
 import { ClassService } from "../../../../../services/modules/class/class.service";
 import { StudentService } from "../../../../../services/modules/student/student.service";
-import {ExaminationService} from "../../../../../services/modules/examination/examination.service";
-import {SubjectService} from "../../../../../services/modules/subject/subject.service";
+import { ExaminationService } from "../../../../../services/modules/examination/examination.service";
+import { SubjectService } from "../../../../../services/modules/subject/subject.service";
 
 @Component({
     selector: 'generate-final-report',

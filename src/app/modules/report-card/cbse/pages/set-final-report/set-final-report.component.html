@@ -1,10 +1,10 @@
 <div class="card-content">
 
-    <ng-container *ngIf="!isLoading && termList">
+    <ng-container *ngIf="!isLoading && termList && reportCardMappingList">
 
         <!--  div class="row"
              style="margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
+            <div class="col-sm-12">
                 <mat-checkbox [(ngModel)]="newReportCardMapping.autoAttendance">Do you want to get attendance data from software?</mat-checkbox>
             </div>
         </div -->
@@ -12,22 +12,22 @@
         <div class="row"
              style="font-size: 18px;
                     font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
+            <div class="col-sm-12">
                 For Play Group to 8th
             </div>
         </div>
 
         <div class="row"
              style="font-size: 15px; font-weight: 800;
-                    margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
+                    margin-top: 30px; margin-bottom: 10px;">
+            <div class="col-sm-12">
                 {{termList[0].name}}
             </div>
         </div>
 
         <div class="row"
              style="font-size: 15px;">
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Periodic Test"
                                 [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationPeriodicTest">
@@ -37,7 +37,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Note Book"
                                 [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationNoteBook">
@@ -47,7 +47,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Sub Enrichment"
                                 [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationSubEnrichment">
@@ -57,7 +57,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Final Term"
                                 [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationFinalTerm">
@@ -71,11 +71,11 @@
 
         <div class="row"
              style="font-size: 15px;">
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <input type="date"
                        [(ngModel)]="getReportCardMapping(termList[0]).attendanceStartDate">
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <input type="date"
                        [(ngModel)]="getReportCardMapping(termList[0]).attendanceStartDate">
             </div>
@@ -83,15 +83,15 @@
 
         <div class="row"
              style="font-size: 15px; font-weight: 800;
-                    margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
+                    margin-top: 30px; margin-bottom: 10px;">
+            <div class="col-sm-12">
                 {{termList[1].name}}
             </div>
         </div>
 
         <div class="row"
              style="font-size: 15px;">
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Periodic Test"
                                 [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationPeriodicTest">
@@ -101,7 +101,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Note Book"
                                 [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationNoteBook">
@@ -111,7 +111,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Sub Enrichment"
                                 [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationSubEnrichment">
@@ -121,7 +121,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Final Term"
                                 [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationFinalTerm">
@@ -135,11 +135,11 @@
 
         <div class="row"
              style="font-size: 15px;">
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <input type="date"
                        [(ngModel)]="getReportCardMapping(termList[1]).attendanceStartDate">
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <input type="date"
                        [(ngModel)]="getReportCardMapping(termList[1]).attendanceStartDate">
             </div>
@@ -147,8 +147,8 @@
 
         <div class="row"
              style="font-size: 18px;
-                    font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
+                    font-weight: 800; margin-top: 50px; margin-bottom: 10px;">
+            <div class="col-sm-12">
                 For 9th & 11th
             </div>
         </div>
@@ -156,14 +156,14 @@
         <!-- div class="row"
              style="font-size: 15px; font-weight: 800;
                     margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
+            <div class="col-sm-12">
                 {{termList[2].name}}
             </div>
         </div -->
 
         <div class="row"
              style="font-size: 15px;">
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Periodic Test"
                                 [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationPeriodicTest">
@@ -173,7 +173,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Note Book"
                                 [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationNoteBook">
@@ -183,7 +183,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Sub Enrichment"
                                 [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationSubEnrichment">
@@ -193,7 +193,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select placeholder="Map Final Term"
                                 [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationFinalTerm">
@@ -207,18 +207,18 @@
 
         <div class="row"
              style="font-size: 15px;">
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <input type="date"
                        [(ngModel)]="getReportCardMapping(termList[2]).attendanceStartDate">
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <input type="date"
                        [(ngModel)]="getReportCardMapping(termList[2]).attendanceStartDate">
             </div>
         </div>
 
         <button type="submit"
-                *ngIf="reportCardMappingList[0].id"
+                *ngIf="reportCardMappingList[0].id == null"
                 [disabled]="disableCreateButton()"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="serviceAdapter.createReportCardMapping()">Set Final Report</button>
@@ -229,22 +229,22 @@
                 (click)="serviceAdapter.updateReportCardMapping()">Update Final Report</button>
 
         <!-- div class="row" style="font-weight: 800; font-size: 20px; margin-top: 25px;">
-            <div class="col-xs-12" align="center">
+            <div class="col-sm-12" align="center">
                 Marksheet Formats
             </div>
         </div>
 
         <div class="row" style="font-weight: 800; font-size: 25px;">
-            <div class="col-xs-4" align="center">
+            <div class="col-sm-4" align="center">
                 <u>Classic</u><br/><br/>
                 <img src="http://www.anupreetiti.com/korangle_data/One.jpg">
             </div>
-            <div class="col-xs-4" align="center">
+            <div class="col-sm-4" align="center">
                 <u>Elegant</u><br/><br/>
                 <img src="http://www.anupreetiti.com/korangle_data/Two-001.jpg">
                 <img src="http://www.anupreetiti.com/korangle_data/Two-002.jpg">
             </div>
-            <div class="col-xs-4" align="center">
+            <div class="col-sm-4" align="center">
                 <u>Comprehensive</u><br/><br/>
                 <img src="http://www.anupreetiti.com/korangle_data/Three-001.jpg">
                 <img src="http://www.anupreetiti.com/korangle_data/Three-002.jpg">

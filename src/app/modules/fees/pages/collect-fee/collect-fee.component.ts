@@ -1,11 +1,11 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CollectFeeServiceAdapter } from "./collect-fee-service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
-import {StudentFee} from "../../../../services/modules/fees/student-fee";
-import {SubFeeReceipt} from "../../../../services/modules/fees/sub-fee-receipt";
-import {SubDiscount} from "../../../../services/modules/fees/sub-discount";
-import {FeeReceipt} from "../../../../services/modules/fees/fee-receipt";
-import {Discount} from "../../../../services/modules/fees/discount";
+import {StudentFee} from "../../../../services/modules/fees/models/student-fee";
+import {SubFeeReceipt} from "../../../../services/modules/fees/models/sub-fee-receipt";
+import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount";
+import {FeeReceipt} from "../../../../services/modules/fees/models/fee-receipt";
+import {Discount} from "../../../../services/modules/fees/models/discount";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {
@@ -14,8 +14,8 @@ import {
     MODE_OF_PAYMENT_LIST,
     ReceiptColumnFilter
 } from "../../classes/constants";
-import {FeeType} from "../../../../services/modules/fees/fee-type";
-import {SchoolFeeRule} from "../../../../services/modules/fees/school-fee-rule";
+import {FeeType} from "../../../../services/modules/fees/models/fee-type";
+import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
 import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";

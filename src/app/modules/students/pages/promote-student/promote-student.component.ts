@@ -8,7 +8,7 @@ import {CommonFunctions} from "../../../../classes/common-functions";
 import {SubjectService} from "../../../../services/modules/subject/subject.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {StudentSection} from "../../../../services/modules/student/student-section";
+import {StudentSection} from "../../../../services/modules/student/models/student-section";
 import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";

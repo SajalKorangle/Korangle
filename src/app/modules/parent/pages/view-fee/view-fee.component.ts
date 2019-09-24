@@ -5,8 +5,8 @@ import {StudentService} from "../../../../services/modules/student/student.servi
 
 import {ViewFeeServiceAdapter} from "./view-fee.service.adapter";
 import {EmitterService} from "../../../../services/emitter.service";
-import {SubFeeReceipt} from "../../../../services/modules/fees/sub-fee-receipt";
-import {FeeReceipt} from "../../../../services/modules/fees/fee-receipt";
+import {SubFeeReceipt} from "../../../../services/modules/fees/models/sub-fee-receipt";
+import {FeeReceipt} from "../../../../services/modules/fees/models/fee-receipt";
 import {
     DiscountColumnFilter,
     INSTALLMENT_LIST,
@@ -14,11 +14,11 @@ import {
     ReceiptColumnFilter
 } from "../../../fees/classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
-import {FeeType} from "../../../../services/modules/fees/fee-type";
-import {SchoolFeeRule} from "../../../../services/modules/fees/school-fee-rule";
-import {StudentFee} from "../../../../services/modules/fees/student-fee";
-import {Discount} from "../../../../services/modules/fees/discount";
-import {SubDiscount} from "../../../../services/modules/fees/sub-discount";
+import {FeeType} from "../../../../services/modules/fees/models/fee-type";
+import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
+import {StudentFee} from "../../../../services/modules/fees/models/student-fee";
+import {Discount} from "../../../../services/modules/fees/models/discount";
+import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";

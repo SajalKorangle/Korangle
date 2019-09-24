@@ -131,7 +131,7 @@ export class GenerateFinalReportServiceAdapter {
             id_list.push(reportCardMapping.parentExaminationSubEnrichment);
             id_list.push(reportCardMapping.parentExaminationFinalTerm);
         });
-        return [new Set(id_list)];
+        return [new Set(id_list)].join(',');
     }
 
     getStudentFinalReport(): void {

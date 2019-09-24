@@ -15,14 +15,6 @@ export class SetFinalReportServiceAdapter {
         this.vm = vm;
     }
 
-    copyObject(object: any): any {
-        let tempObject = {};
-        Object.keys(object).forEach(key => {
-            tempObject[key] = object[key];
-        });
-        return tempObject;
-    }
-
     //initialize data
     initializeData(): void {
 
@@ -44,6 +36,7 @@ export class SetFinalReportServiceAdapter {
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.report_card_mapping, report_card_mapping_data),
         ]).then(value => {
 
+            console.log(value);
             this.vm.examinationList = value[0];
             this.vm.termList = value[1];
             this.populateReportCardMapping(value[2]);
@@ -57,7 +50,7 @@ export class SetFinalReportServiceAdapter {
     }
 
     populateReportCardMapping(reportCardMappingList: any): any {
-        if (reportCardMappingList) {
+        if (reportCardMappingList.length != 0) {
             this.vm.reportCardMappingList = reportCardMappingList;
         } else {
             this.vm.termList.forEach(term => {
@@ -69,6 +62,7 @@ export class SetFinalReportServiceAdapter {
                 this.vm.reportCardMappingList.push(reportCardMapping);
             });
         }
+        console.log(this.vm.reportCardMappingList);
     }
 
     // Create Report Card Mapping
