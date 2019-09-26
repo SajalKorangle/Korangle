@@ -13,15 +13,15 @@ def populate_term_and_extra_field(apps, schema_editor):
     term_object = Term(name='Term - II')
     term_object.save()
 
-    extra_field_object = ExtraField('First')
+    extra_field_object = ExtraField(name='First')
     extra_field_object.save()
 
-    extra_field_object = ExtraField('Second')
+    extra_field_object = ExtraField(name='Second')
     extra_field_object.save()
 
-    extra_field_object = ExtraField('Third')
+    extra_field_object = ExtraField(name='Third')
     extra_field_object.save()
 
-    extra_field_object = ExtraField('Fourth')
+    extra_field_object = ExtraField(name='Fourth')
     extra_field_object.save()
 

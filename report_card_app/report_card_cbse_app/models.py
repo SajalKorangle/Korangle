@@ -70,3 +70,5 @@ class ReportCardMapping(models.Model):
     class Meta:
         unique_together = ('parentSchool', 'parentSession', 'parentTerm')
 
+
+

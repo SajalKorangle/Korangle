@@ -71,8 +71,8 @@ INSTALLED_APPS = [
     'notification_app',
 
     'report_card_app',
-    'report_card_cbse_app',
-    'report_card_mp_board_app',
+    'report_card_app.report_card_cbse_app',
+    'report_card_app.report_card_mp_board_app',
 
     'corsheaders',
 
