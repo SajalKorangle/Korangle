@@ -16,3 +16,4 @@ version.json
 preparePackage.sh
 src/environments/environment.prod.ts
 dist/
+copytoserver.sh
