@@ -1,6 +1,38 @@
 <div class="card-content">
 
-    Contact us at +91 - <a href="tel:7999951154"><u>7999951154</u></a> for any queries/feedback.
+    <!-- Contact us at +91 - <a href="tel:7999951154"><u>7999951154</u></a> for any queries/feedback. -->
+
+    <mat-card style="margin-bottom: 15px;">
+
+        <mat-card-title> Sales Support </mat-card-title>
+
+        <div *ngIf="!isMobile()" style="margin-left: 10px;">
+            7974151131
+        </div>
+
+        <div *ngIf="isMobile()" style="margin-left: 10px;">
+            <a href="tel:7974151131">7974151131</a>
+        </div>
+
+    </mat-card>
+
+    <mat-card>
+
+        <mat-card-title> Technical Support </mat-card-title>
+
+        <div *ngIf="!isMobile()" style="margin-left: 10px;">
+            6261627172<br/>
+            7610507140<br/>
+            7999951154
+        </div>
+
+        <div *ngIf="isMobile()" style="margin-left: 10px;">
+            <a href="tel:6261627172">6261627172</a><br/>
+            <a href="tel:7610507140">7610507140</a><br/>
+            <a href="tel:7999951154">7999951154</a>
+        </div>
+
+    </mat-card>
 
 </div>
 

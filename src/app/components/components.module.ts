@@ -13,6 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
 
 
 
@@ -64,6 +65,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatDatepickerModule,
         MatExpansionModule,
         MatSortModule,
+        MatCardModule,
 
         BasicComponentsModule,
 
@@ -99,6 +101,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatDatepickerModule,
         MatExpansionModule,
         MatSortModule,
+        MatCardModule,
 
     ]
 })
