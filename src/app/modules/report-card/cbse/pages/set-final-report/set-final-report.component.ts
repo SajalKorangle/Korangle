@@ -44,7 +44,7 @@ export class SetFinalReportComponent implements OnInit {
 
     getReportCardMapping(term: any): any {
         return this.reportCardMappingList.find(reportCardMapping => {
-            return reportCardMapping.parentTerm = term.id;
+            return reportCardMapping.parentTerm == term.id;
         });
     }
 
