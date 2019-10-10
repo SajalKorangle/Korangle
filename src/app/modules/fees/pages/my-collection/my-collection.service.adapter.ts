@@ -55,12 +55,14 @@ export class MyCollectionServiceAdapter {
             'generationDateTime__gte': this.vm.startDate + ' 00:00:00%2B05:30',
             'generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
             'parentEmployee': this.vm.user.activeSchool.employeeId,
+            'cancelled': 'false__boolean',
         };
 
         let sub_fee_receipt_list = {
             'parentFeeReceipt__generationDateTime__gte': this.vm.startDate + ' 00:00:00%2B05:30',
             'parentFeeReceipt__generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
             'parentFeeReceipt__parentEmployee': this.vm.user.activeSchool.employeeId,
+            'parentFeeReceipt__cancelled': 'false__boolean',
         };
 
         Promise.all([
