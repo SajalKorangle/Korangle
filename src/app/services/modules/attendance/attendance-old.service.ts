@@ -67,18 +67,18 @@ export class AttendanceOldService extends CommonServiceRequirements {
 
     // Attendance Permission
     getAttendancePermissionList(data: any, token: any): Promise<any> {
-        const url = '/attendance/attendance-permissions?parentEmployee='
+        const url = '/attendance/attendance-permissions-old?parentEmployee='
             + data['parentEmployee'] + '&sessionId=' + data['sessionId'];
         return super.getData(token, url);
     }
 
     giveAttendancePermission(data: any, token: any): Promise<any> {
-        const url = '/attendance/attendance-permissions';
+        const url = '/attendance/attendance-permissions-old';
         return super.postData(data, token, url);
     }
 
     deleteAttendancePermission(data: any, token: any): Promise<any> {
-        const url = '/attendance/attendance-permissions/' + data['id'];
+        const url = '/attendance/attendance-permissions-old/' + data['id'];
         return super.deleteData(token, url);
     }
 

@@ -17,9 +17,9 @@ const moment = _moment;
 
 
 @Component({
-    selector: 'day-date',
-    templateUrl: './day-date.component.html',
-    styleUrls: ['./day-date.component.css'],
+    selector: 'day-date-old',
+    templateUrl: './day-date-old.component.html',
+    styleUrls: ['./day-date-old.component.css'],
     providers: [
         {
             provide: DateAdapter, useClass: AppDateAdapter
@@ -29,28 +29,25 @@ const moment = _moment;
         }
     ],
 })
-export class DayDateComponent implements OnInit {
+export class DayDateOldComponent implements OnInit {
 
     @Input() placeHolder = "Choose a date";
 
-    @Input() initialValue = new Date();
+    @Input() initialValue = null;
 
-    // @Input() acceptNull = false;
+    @Input() acceptNull = false;
 
-    @Input() formattedDateOutput = true;
+    @Input() formattedDateOutput = false;
 
     @Input() disableDatePicker = false;
 
     @Output() onDateSelected = new EventEmitter<any>();
 
 
-    // date = new FormControl({value: new Date(), disabled: true});
-    date: any;
+    date = new FormControl({value: new Date(), disabled: true});
 
     ngOnInit(): void {
-        this.date = new FormControl({value: this.initialValue, disabled: true});
-        this.onDateChanged(this.date);
-        /*if (!this.acceptNull) {
+        if (!this.acceptNull) {
             if (this.initialValue) {
                 this.date = new FormControl({value: this.initialValue, disabled: true});
             }
@@ -61,12 +58,7 @@ export class DayDateComponent implements OnInit {
             this.onDateSelected.emit(this.formatDate(this.date.value));
         } else {
             this.onDateSelected.emit(this.date.value);
-        }*/
-    }
-
-    nullDate(): void {
-        this.date = new FormControl({value: null, disabled: true});
-        this.onDateChanged(this.date);
+        }
     }
 
     onDateChanged(event: any): void {

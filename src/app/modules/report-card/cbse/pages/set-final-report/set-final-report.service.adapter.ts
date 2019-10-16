@@ -58,6 +58,12 @@ export class SetFinalReportServiceAdapter {
                     'parentTerm': term.id,
                     'parentSession': this.vm.user.activeSchool.currentSessionDbId,
                     'parentSchool': this.vm.user.activeSchool.dbId,
+                    'parentExaminationPeriodicTest': null,
+                    'parentExaminationNoteBook': null,
+                    'parentExaminationSubEnrichment': null,
+                    'parentExaminationFinalTerm': null,
+                    'attendanceStartDate': null,
+                    'attendanceEndDate': null,
                 };
                 this.vm.reportCardMappingList.push(reportCardMapping);
             });

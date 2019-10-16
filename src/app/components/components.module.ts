@@ -21,7 +21,8 @@ import { BasicComponentsModule } from "../basic-components/basic-components.modu
 
 import { StudentFilterComponent } from './student-filter/student-filter.component';
 import { MonthDateComponent } from './month-date/month-date.component';
-import { DayDateComponent } from './day-date/day-date.component';
+import { DayDateOldComponent } from './day-date-old/day-date-old.component';
+import { DayDateComponent } from "./day-date/day-date.component";
 import { EmployeeFilterComponent } from './employee-filter/employee-filter.component';
 import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
 
@@ -38,6 +39,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         StudentFilterComponent,
         ParentStudentFilterComponent,
         MonthDateComponent,
+        DayDateOldComponent,
         DayDateComponent,
 
         AmountInWordsPipe,
@@ -78,8 +80,8 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         ParentStudentFilterComponent,
         EmployeeFilterComponent,
         MonthDateComponent,
+        DayDateOldComponent,
         DayDateComponent,
-
 
         AmountInWordsPipe,
         DateInWordsPipe,

@@ -4,14 +4,14 @@
 
         <div class="row" style="margin-top: 15px;">
             <div class="col-sm-3">
-                <day-date [formattedDateOutput]="true"
-                          [placeHolder]="'Start Date'"
-                          (onDateSelected)="startDate=$event"></day-date>
+                <day-date-old [formattedDateOutput]="true"
+                              [placeHolder]="'Start Date'"
+                              (onDateSelected)="startDate=$event"></day-date-old>
             </div>
             <div class="col-sm-3">
-                <day-date [formattedDateOutput]="true"
-                          [placeHolder]="'End Date'"
-                          (onDateSelected)="endDate=$event"></day-date>
+                <day-date-old [formattedDateOutput]="true"
+                              [placeHolder]="'End Date'"
+                              (onDateSelected)="endDate=$event"></day-date-old>
             </div>
             <div class="col-sm-3">
                 <button type="button"

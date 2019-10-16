@@ -2,13 +2,6 @@
 
     <ng-container *ngIf="!isLoading && termList && reportCardMappingList">
 
-        <!--  div class="row"
-             style="margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-sm-12">
-                <mat-checkbox [(ngModel)]="newReportCardMapping.autoAttendance">Do you want to get attendance data from software?</mat-checkbox>
-            </div>
-        </div -->
-
         <div class="row"
              style="font-size: 18px;
                     font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
@@ -17,143 +10,155 @@
             </div>
         </div>
 
-        <div class="row"
-             style="font-size: 15px; font-weight: 800;
-                    margin-top: 30px; margin-bottom: 10px;">
-            <div class="col-sm-12">
-                {{termList[0].name}}
-            </div>
-        </div>
+        <mat-card>
 
-        <div class="row"
-             style="font-size: 15px;">
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Periodic Test"
-                                [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationPeriodicTest">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="row"
+                 style="font-size: 15px; font-weight: 800;">
+                <div class="col-sm-12">
+                    {{termList[0].name}}
+                </div>
             </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Note Book"
-                                [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationNoteBook">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Sub Enrichment"
-                                [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationSubEnrichment">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Final Term"
-                                [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationFinalTerm">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
 
-        <div class="row"
-             style="font-size: 15px;">
-            <div class="col-sm-3">
-                Attendance:
+            <div class="row"
+                 style="font-size: 15px;">
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Periodic Test"
+                                    [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationPeriodicTest">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Note Book"
+                                    [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationNoteBook">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Sub Enrichment"
+                                    [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationSubEnrichment">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Final Term"
+                                    [(ngModel)]="getReportCardMapping(termList[0]).parentExaminationFinalTerm">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <input type="date"
-                       placeholder="Start Date"
-                       [(ngModel)]="getReportCardMapping(termList[0]).attendanceStartDate">
-            </div>
-            <div class="col-sm-3">
-                <input type="date"
-                       placeholder="End Date"
-                       [(ngModel)]="getReportCardMapping(termList[0]).attendanceEndDate">
-            </div>
-        </div>
 
-        <div class="row"
-             style="font-size: 15px; font-weight: 800;
-                    margin-top: 30px; margin-bottom: 10px;">
-            <div class="col-sm-12">
-                {{termList[1].name}}
+            <div class="row"
+                 style="font-size: 15px;">
+                <div class="col-sm-3"
+                     style="font-size: 18px; font-weight: 400; line-height: 1.125; padding-top: 18px;">
+                    Attendance:
+                </div>
+                <div class="col-sm-3">
+                    <day-date [placeHolder]="'Start Date'"
+                              (onDateSelected)="getReportCardMapping(termList[0]).attendanceStartDate=$event"
+                              [formattedDateOutput]="true"
+                              [initialValue]="getReportCardMapping(termList[0]).attendanceStartDate"></day-date>
+                </div>
+                <div class="col-sm-3">
+                    <day-date [placeHolder]="'End Date'"
+                              (onDateSelected)="getReportCardMapping(termList[0]).attendanceEndDate=$event"
+                              [formattedDateOutput]="true"
+                              [initialValue]="getReportCardMapping(termList[0]).attendanceEndDate"></day-date>
+                </div>
             </div>
-        </div>
 
-        <div class="row"
-             style="font-size: 15px;">
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Periodic Test"
-                                [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationPeriodicTest">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Note Book"
-                                [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationNoteBook">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Sub Enrichment"
-                                [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationSubEnrichment">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Final Term"
-                                [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationFinalTerm">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
+        </mat-card>
 
-        <div class="row"
-             style="font-size: 15px;">
-            <div class="col-sm-3">
-                Attendance:
+        <mat-card style="margin-top: 20px;">
+
+            <div class="row"
+                 style="font-size: 15px; font-weight: 800;">
+                <div class="col-sm-12">
+                    {{termList[1].name}}
+                </div>
             </div>
-            <div class="col-sm-3">
-                <input type="date"
-                       placeholder="Start Date"
-                       [(ngModel)]="getReportCardMapping(termList[1]).attendanceStartDate">
+
+            <div class="row"
+                 style="font-size: 15px;">
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Periodic Test"
+                                    [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationPeriodicTest">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Note Book"
+                                    [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationNoteBook">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Sub Enrichment"
+                                    [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationSubEnrichment">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Final Term"
+                                    [(ngModel)]="getReportCardMapping(termList[1]).parentExaminationFinalTerm">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <input type="date"
-                       placeholder="End Date"
-                       [(ngModel)]="getReportCardMapping(termList[1]).attendanceEndDate">
+
+            <div class="row"
+                 style="font-size: 15px;">
+                <div class="col-sm-3"
+                     style="font-size: 18px; font-weight: 400; line-height: 1.125; padding-top: 18px;">
+                    Attendance:
+                </div>
+                <div class="col-sm-3">
+                    <day-date [placeHolder]="'Start Date'"
+                              (onDateSelected)="getReportCardMapping(termList[1]).attendanceStartDate=$event"
+                              [formattedDateOutput]="true"
+                              [initialValue]="getReportCardMapping(termList[1]).attendanceStartDate"></day-date>
+                </div>
+                <div class="col-sm-3">
+                    <day-date [placeHolder]="'End Date'"
+                              (onDateSelected)="getReportCardMapping(termList[1]).attendanceEndDate=$event"
+                              [formattedDateOutput]="true"
+                              [initialValue]="getReportCardMapping(termList[1]).attendanceEndDate"></day-date>
+                </div>
             </div>
-        </div>
+
+        </mat-card>
 
         <div class="row"
              style="font-size: 18px;
@@ -163,74 +168,73 @@
             </div>
         </div>
 
-        <!-- div class="row"
-             style="font-size: 15px; font-weight: 800;
-                    margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-sm-12">
-                {{termList[2].name}}
-            </div>
-        </div -->
+        <mat-card>
 
-        <div class="row"
-             style="font-size: 15px;">
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Periodic Test"
-                                [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationPeriodicTest">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="row"
+                 style="font-size: 15px;">
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Periodic Test"
+                                    [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationPeriodicTest">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Note Book"
+                                    [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationNoteBook">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Sub Enrichment"
+                                    [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationSubEnrichment">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Map Final Term"
+                                    [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationFinalTerm">
+                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
+                                {{examination.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Note Book"
-                                [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationNoteBook">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Sub Enrichment"
-                                [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationSubEnrichment">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Map Final Term"
-                                [(ngModel)]="getReportCardMapping(termList[2]).parentExaminationFinalTerm">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                            {{examination.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
 
-        <div class="row"
-             style="font-size: 15px;">
-            <div class="col-sm-3">
-                Attendance:
+            <div class="row"
+                 style="font-size: 15px;">
+                <div class="col-sm-3"
+                     style="font-size: 18px; font-weight: 400; line-height: 1.125; padding-top: 18px;">
+                    Attendance:
+                </div>
+                <div class="col-sm-3">
+                    <day-date [placeHolder]="'Start Date'"
+                              (onDateSelected)="getReportCardMapping(termList[2]).attendanceStartDate=$event"
+                              [formattedDateOutput]="true"
+                              [initialValue]="getReportCardMapping(termList[2]).attendanceStartDate"></day-date>
+                </div>
+                <div class="col-sm-3">
+                    <day-date [placeHolder]="'End Date'"
+                              (onDateSelected)="getReportCardMapping(termList[2]).attendanceEndDate=$event"
+                              [formattedDateOutput]="true"
+                              [initialValue]="getReportCardMapping(termList[2]).attendanceEndDate"></day-date>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <input type="date"
-                       placeholder="Start Date"
-                       [(ngModel)]="getReportCardMapping(termList[2]).attendanceStartDate">
-            </div>
-            <div class="col-sm-3">
-                <input type="date"
-                       placeholder="End Date"
-                       [(ngModel)]="getReportCardMapping(termList[2]).attendanceEndDate">
-            </div>
-        </div>
+
+        </mat-card>
 
         <button type="submit"
                 *ngIf="reportCardMappingList[0].id == null"
@@ -242,30 +246,6 @@
                 *ngIf="reportCardMappingList[0].id"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="serviceAdapter.updateReportCardMapping()">Update Final Report</button>
-
-        <!-- div class="row" style="font-weight: 800; font-size: 20px; margin-top: 25px;">
-            <div class="col-sm-12" align="center">
-                Marksheet Formats
-            </div>
-        </div>
-
-        <div class="row" style="font-weight: 800; font-size: 25px;">
-            <div class="col-sm-4" align="center">
-                <u>Classic</u><br/><br/>
-                <img src="http://www.anupreetiti.com/korangle_data/One.jpg">
-            </div>
-            <div class="col-sm-4" align="center">
-                <u>Elegant</u><br/><br/>
-                <img src="http://www.anupreetiti.com/korangle_data/Two-001.jpg">
-                <img src="http://www.anupreetiti.com/korangle_data/Two-002.jpg">
-            </div>
-            <div class="col-sm-4" align="center">
-                <u>Comprehensive</u><br/><br/>
-                <img src="http://www.anupreetiti.com/korangle_data/Three-001.jpg">
-                <img src="http://www.anupreetiti.com/korangle_data/Three-002.jpg">
-            </div>
-        </div -->
-
 
     </ng-container>
 

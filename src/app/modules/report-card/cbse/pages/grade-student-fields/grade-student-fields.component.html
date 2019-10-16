@@ -3,6 +3,12 @@
     <ng-container *ngIf="!isInitialLoading">
 
         <div class="row">
+            <div class="col-md-12" *ngIf="classSectionList.length > 0 && permissionList.length > 0">
+
+            </div>
+        </div>
+
+        <!-- div class="row">
             <div class="col-md-12" *ngIf="examinationList.length > 0 && classSectionList.length > 0">
 
                 <mat-form-field>
@@ -63,9 +69,9 @@
                 No Class permission for you to update fields!
             </div>
 
-        </div>
+        </div -->
 
-        <ng-container *ngIf="showTestDetails && !isLoading">
+        <!-- ng-container *ngIf="showTestDetails && !isLoading">
 
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-12"></div>
@@ -105,7 +111,7 @@
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="serviceAdapter.updateStudentFieldDetails()">Update</button>
 
-        </ng-container>
+        </ng-container -->
 
 
     </ng-container>

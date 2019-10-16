@@ -8,32 +8,49 @@ export class GradeStudentFieldsServiceAdapter {
     constructor() {}
 
     // Data
-    examinationList: any;
+    classList: any;
+    sectionList: any;
+
+
+    /*examinationList: any;
     classList: any;
     sectionList: any;
     fieldList: any;
     subFieldList: any;
     permissionList: any;
 
-    studentList: any;
+    studentList: any;*/
 
     initializeAdapter(vm: GradeStudentFieldsComponent): void {
         this.vm = vm;
     }
 
-    copyObject(object: any): any {
-        let tempObject = {};
-        Object.keys(object).forEach(key => {
-            tempObject[key] = object[key];
-        });
-        return tempObject;
-    }
-
     //initialize data
     initializeData(): void {
+
         this.vm.isInitialLoading = true;
 
-        let request_examination_data = {
+        Promise.all([
+            this.vm.classService.getObjectList(this.vm.classService.classs),
+            this.vm.classService.getObjectList(this.vm.classService.division),
+            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.extra_field),
+            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.term),
+            // this.vm.employeeService.getObjectList(this.vm.employeeService.)
+        ]).then(value => {
+
+            this.classList = value[0];
+            this.sectionList = value[0];
+            this.vm.extraFieldList = value[2];
+            this.vm.termList = value[3];
+
+            this.vm.isInitialLoading;
+
+        }, error => {
+            this.vm.isInitialLoading;
+        });
+
+
+        /*let request_examination_data = {
             'sessionId': this.vm.user.activeSchool.currentSessionDbId,
             'schoolId': this.vm.user.activeSchool.dbId,
         };
@@ -85,11 +102,11 @@ export class GradeStudentFieldsServiceAdapter {
 
         }, error => {
             this.vm.isInitialLoading = false;
-        });
+        });*/
 
     }
 
-    populateFieldList(): any {
+    /*populateFieldList(): any {
         this.vm.fieldList = this.fieldList;
         this.vm.fieldList.forEach(field => {
             field['subFieldList'] = [];
@@ -276,6 +293,6 @@ export class GradeStudentFieldsServiceAdapter {
             }));
         });
         return data;
-    }
+    }*/
 
 }

@@ -34,7 +34,7 @@
         </select>
 
         <ng-container *ngIf="by==='date'">
-            <day-date (onDateSelected)="onDateSelected($event)"></day-date>
+            <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
         </ng-container>
 
         <ng-container *ngIf="by==='month'">
