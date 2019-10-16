@@ -33,8 +33,8 @@ urlpatterns += [
 from .views import AttendancePermissionView
 
 urlpatterns += [
-    url(r'^attendance-permissions/(?P<attendance_permission_id>[0-9]+)', AttendancePermissionView.as_view()),
-    url(r'^attendance-permissions', AttendancePermissionView.as_view()),
+    url(r'^attendance-permissions-old/(?P<attendance_permission_id>[0-9]+)', AttendancePermissionView.as_view()),
+    url(r'^attendance-permissions-old', AttendancePermissionView.as_view()),
 ]
 
 
