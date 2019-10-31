@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^'+api_version+'enquiry/', include('enquiry_app.urls')),
     url(r'^'+api_version+'sms/', include('sms_app.urls')),
     url(r'^'+api_version+'vehicle/', include('vehicle_app.urls')),
+    url(r'^'+api_version+'attendance-old/', include('attendance_app.urls_old')),
     url(r'^'+api_version+'attendance/', include('attendance_app.urls')),
     url(r'^'+api_version+'salary/', include('salary_app.urls')),
     url(r'^'+api_version+'user/', include('user_app.urls')),

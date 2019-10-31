@@ -1,143 +1,53 @@
-from django.shortcuts import render
 
-from decorators import user_permission
+from common.common_views import CommonView, CommonListView, APIView
 
-from rest_framework.views import APIView
-
-import json
+from attendance_app.models import EmployeeAttendance, StudentAttendance, EmployeeAppliedLeave, AttendancePermission
 
 
-############## Student Attendance ##############
-from .business.student_attendance \
-    import create_or_update_student_attendance_list, get_student_attendance_list, delete_student_attendance_list
+# Create your views here.
 
 
-class StudentAttendanceListView(APIView):
-
-    @user_permission
-    def post(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_or_update_student_attendance_list(data)
-
-    @user_permission
-    def get(request):
-        data = {
-            'studentIdList': request.GET['studentIdList'],
-            'startDate': request.GET['startDate'],
-            'endDate': request.GET['endDate'],
-        }
-        return get_student_attendance_list(data)
-
-    @user_permission
-    def delete(request):
-        data = {
-            'studentIdList': request.GET['studentIdList'],
-            'startDate': request.GET['startDate'],
-            'endDate': request.GET['endDate'],
-        }
-        return delete_student_attendance_list(data)
-
-    '''@user_permission
-    def put(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_or_update_student_attendance_list(data)'''
+########### Employee Applied Leave #############
 
 
-############## Employee Attendance ##############
-from .business.employee_attendance \
-    import create_or_update_employee_attendance_list, get_employee_attendance_list, delete_employee_attendance_list
+class EmployeeAppliedLeaveView(CommonView, APIView):
+    Model = EmployeeAppliedLeave
 
 
-class EmployeeAttendanceListView(APIView):
-
-    @user_permission
-    def post(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_or_update_employee_attendance_list(data)
-
-    @user_permission
-    def get(request):
-        data = {
-            'employeeIdList': request.GET['employeeIdList'],
-            'startDate': request.GET['startDate'],
-            'endDate': request.GET['endDate'],
-        }
-        return get_employee_attendance_list(data)
-
-    @user_permission
-    def delete(request):
-        data = {
-            'employeeIdList': request.GET['employeeIdList'],
-            'startDate': request.GET['startDate'],
-            'endDate': request.GET['endDate'],
-        }
-        return delete_employee_attendance_list(data)
-
-    '''@user_permission
-    def put(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_or_update_employee_attendance_list(data)'''
+class EmployeeAppliedLeaveListView(CommonListView, APIView):
+    Model = EmployeeAppliedLeave
 
 
-############## Employee Applied Leave ##############
-from .business.employee_applied_leave \
-    import get_employee_applied_leave_list, create_employee_applied_leave_list, update_employee_applied_leave_list
+########### StudentAttendance #############
 
 
-class EmployeeAppliedLeaveListView(APIView):
-
-    @user_permission
-    def post(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_employee_applied_leave_list(data)
-
-    @user_permission
-    def get(request):
-        data = {
-            'employeeIdList': request.GET['employeeIdList'],
-            'startDate': request.GET['startDate'],
-            'endDate': request.GET['endDate'],
-        }
-        return get_employee_applied_leave_list(data)
-
-    @user_permission
-    def put(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return update_employee_applied_leave_list(data)
-
-    '''@user_permission
-    def delete(request):
-        data = {
-            'employeeIdList': request.GET['employeeIdList'],
-            'startDate': request.GET['startDate'],
-            'endDate': request.GET['endDate'],
-        }
-        return delete_employee_attendance_list(data)'''
+class StudentAttendanceView(CommonView, APIView):
+    Model = StudentAttendance
 
 
-############## Attendance Permission ##############
-from .business.attendance_permission \
-    import get_attendance_permission_list, create_attendance_permission, delete_attendance_permission
+class StudentAttendanceListView(CommonListView, APIView):
+    Model = StudentAttendance
 
 
-class AttendancePermissionView(APIView):
+########### Employee Attendance #############
 
-    @user_permission
-    def get(request):
-        data = {
-            'parentEmployee': request.GET['parentEmployee'],
-            'sessionId': request.GET['sessionId'],
-        }
-        return get_attendance_permission_list(data)
 
-    @user_permission
-    def post(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_attendance_permission(data)
+class EmployeeAttendanceView(CommonView, APIView):
+    Model = EmployeeAttendance
 
-    @user_permission
-    def delete(request, attendance_permission_id):
-        data = {
-            'id': attendance_permission_id
-        }
-        return delete_attendance_permission(data)
+
+class EmployeeAttendanceListView(CommonListView, APIView):
+    Model = EmployeeAttendance
+
+
+########### Attendance Permission #############
+
+
+class AttendancePermissionView(CommonView, APIView):
+    Model = AttendancePermission
+
+
+class AttendancePermissionListView(CommonListView, APIView):
+    Model = AttendancePermission
+
+

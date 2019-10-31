@@ -10,7 +10,7 @@ def populate_term_and_extra_field(apps, schema_editor):
     term_object = Term(name='Term - II')
     term_object.save()
 
-    term_object = Term(name='Term - II')
+    term_object = Term(name='Term - III')
     term_object.save()
 
     extra_field_object = ExtraField(name='Work Education (or Pre-vocational Education)')
