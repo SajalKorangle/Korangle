@@ -2,11 +2,141 @@
 
     <ng-container *ngIf="!isInitialLoading">
 
-        <div class="row">
-            <div class="col-md-12" *ngIf="classSectionList.length > 0 && permissionList.length > 0">
+        <div class="row" *ngIf="classSectionList.length > 0 && attendancePermissionList.length > 0">
+
+            <div class="col-md-3">
+
+                <mat-form-field>
+                    <mat-select placeholder="Select Class"
+                                [ngModel]="selectedClassSection"
+                                [disabled]="isLoading"
+                                (ngModelChange)="handleClassSectionChange($event)">
+                        <mat-option *ngFor='let classSection of classSectionList;' [value]="classSection">
+                            {{classSection.class.name}}, {{classSection.section.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
             </div>
+
+            <div class="col-md-3" *ngIf="showTermList()">
+
+                <mat-form-field>
+                    <mat-select placeholder="Select Term"
+                                [ngModel]="selectedTerm"
+                                [disabled]="isLoading"
+                                (ngModelChange)="selectedTerm=$event;">
+                        <mat-option *ngFor='let term of termList.slice(0,2);' [value]="term">
+                            {{term.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <mat-form-field>
+                    <mat-select placeholder="Select Field"
+                                [ngModel]="selectedExtraField"
+                                [disabled]="isLoading"
+                                (ngModelChange)="selectedExtraField=$event;">
+                        <mat-option *ngFor='let extraField of extraFieldList;' [value]="extraField">
+                            {{extraField.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <button type="submit"
+                        style="margin-left: 20px;"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="serviceAdapter.getStudentFieldDetails()">GET</button>
+
+            </div>
+
         </div>
+
+        <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList">
+
+            <table class="table table-hover">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th>S No.</th>
+                    <th>Student</th>
+                    <th>Roll No.</th>
+                    <th>Grade</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngFor="let studentSection of getFilteredStudentSectionList(); let i=index;">
+                    <tr>
+                        <td>{{i+1}}.</td>
+                        <td>
+                            {{getStudent(studentSection).name}}
+                        </td>
+                        <td>
+                            {{getStudent(studentSection).rollNumber}}
+                        </td>
+                        <td align="center">
+                            <button type="submit"
+                                    style="padding: 3px 8px;"
+                                    class="{{getButtonClass(studentSection)}}"
+                                    (click)="changeStudentGrade(studentSection)">
+                                {{getButtonString(studentSection)}}
+                            </button>
+                        </td>
+                        <!-- ng-container *ngFor="let attendance of student.attendanceStatusList">
+                            <td align="center">
+                                <button type="submit"
+                                        style="padding: 3px 8px;"
+                                        class="{{getButtonClass(attendance.status)}}"
+                                        [disabled]="attendance.status===attendanceStatusList[2]"
+                                        (click)="changeStudentAttendanceStatus(attendance)"
+                                        matTooltip="{{getMatTooltip(student, attendance)}}"
+                                        matTooltipShowDelay="1000"
+                                        [matTooltipDisabled]="attendance.status===attendanceStatusList[2] || by==='date'">
+                                    {{getButtonString(attendance.status)}}
+                                </button>
+                            </td>
+                        </ng-container -->
+                    </tr>
+                </ng-container>
+                </tbody>
+            </table>
+
+            <ng-container *ngIf="by==='date'">
+                <div class="row">
+                    <div class="col-md-2" *ngIf="getStatusNumber()>0">Not Taken: {{getStatusNumber()}}</div>
+                    <div class="col-md-1">A: {{getStatusNumber(attendanceStatusList[1])}}</div>
+                    <div class="col-md-1">P: {{getStatusNumber(attendanceStatusList[0])}}</div>
+                </div>
+            </ng-container>
+
+            <button type="submit"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="updateStudentAttendanceList()">Update</button>
+
+            <button type="submit"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px; margin-left: 15px;"
+                    (click)="printStudentAttendanceList()">
+                <i class="material-icons">print</i>
+            </button>
+
+            <button type="submit"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px; margin-left: 5px;"
+                    (click)="downloadList()">
+                <i class="material-icons">save_alt</i>
+            </button>
+
+            <br/>A: Absent, P: Present, H: Holiday, N: Not Recorded <br/>
+
+        </ng-container>
 
         <!-- div class="row">
             <div class="col-md-12" *ngIf="examinationList.length > 0 && classSectionList.length > 0">

@@ -8,8 +8,8 @@ export class ExtraField {
 }
 
 export const EXTRA_FIELD_LIST = [
-    {'id': 1,'name': 'First'},
-    {'id': 2,'name': 'Second'},
-    {'id': 3,'name': 'Third'},
-    {'id': 4,'name': 'Fourth'},
+    {'id': 1,'name': 'Work Education (or Pre-vocational Education)'},
+    {'id': 2,'name': 'Art Education'},
+    {'id': 3,'name': 'Health & Physical Education'},
+    {'id': 4,'name': 'Discipline'},
 ];
