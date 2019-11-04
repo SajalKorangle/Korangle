@@ -20,12 +20,13 @@ def create_fee_receipt_object(data, Model, ModelSerializer):
 
     with transaction.atomic():
         last_receipt_number = \
-            Model.objects.filter(parentStudent__parentSchool=schoolId)\
+            Model.objects.filter(parentSchool=schoolId)\
                 .aggregate(Max('receiptNumber'))['receiptNumber__max']
         if last_receipt_number is not None:
             data['receiptNumber'] = last_receipt_number + 1
 
     serializer = ModelSerializer(data=data)
+
     if serializer.is_valid(raise_exception=True):
         serializer.save()
         return serializer.data
