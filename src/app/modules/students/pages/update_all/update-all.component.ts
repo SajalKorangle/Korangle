@@ -77,7 +77,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Father\'s Name', 'fathersName', 'text', true, ''), // 4
         new ColumnHandle('Mobile No.', 'mobileNumber', 'number', true, ''), // 5
         new ColumnHandle('Alternate Mobile No.', 'secondMobileNumber', 'number', true, ''), // 5
-        new ColumnHandle('Scholar No.', 'scholarNumber', 'number', false, ''), // 6
+        new ColumnHandle('Scholar No.', 'scholarNumber', 'text', false, ''), // 6
         new ColumnHandle('Date of Birth', 'dateOfBirth', 'date', false, ''), // 7
         new ColumnHandle('Mother\'s Name', 'motherName', 'text', false, ''), // 10
         new ColumnHandle('Gender', 'gender', 'list', false, GENDER_LIST), // 11
