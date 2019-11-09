@@ -148,10 +148,10 @@ export class GradeStudentFieldsComponent implements OnInit {
                     break;
             }
         } else {
-            let item = {
+            /*let item = {
                 'parentStudent': studentSection.parentStudent,
                 'parentSession': this.vm.user
-            };
+            };*/
             return null;
         }
     }
