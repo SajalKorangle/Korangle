@@ -20,7 +20,7 @@ def create_discount_object(data, Model, ModelSerializer):
 
     with transaction.atomic():
         last_discount_number = \
-            Model.objects.filter(parentStudent__parentSchool=schoolId)\
+            Model.objects.filter(parentSchool=schoolId)\
                 .aggregate(Max('discountNumber'))['discountNumber__max']
         if last_discount_number is not None:
             data['discountNumber'] = last_discount_number + 1
