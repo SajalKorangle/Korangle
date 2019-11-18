@@ -79,6 +79,7 @@ export class GenerateFinalReportServiceAdapter {
                     this.vm.subjectService.getSubjectList(this.vm.user.jwt),
                     this.vm.subjectService.getExtraFieldList({}, this.vm.user.jwt),
                     this.vm.subjectService.getExtraSubFieldList({}, this.vm.user.jwt),
+                    this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
                 ]).then(value2 => {
                     console.log(value2);
                     this.classList = value2[0];
@@ -88,6 +89,7 @@ export class GenerateFinalReportServiceAdapter {
                     this.subjectList = value2[4];
                     this.extraFieldList = value2[5];
                     this.extraSubFieldList = value2[6];
+                    this.vm.boardList = value2[7];
 
                     this.vm.subjectList = value2[4];
                     this.populateClassSectionStudentList();

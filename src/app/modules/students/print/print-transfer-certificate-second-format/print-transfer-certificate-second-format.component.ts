@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 import { ChangeDetectorRef } from '@angular/core';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
-import {MEDIUM_LIST} from '../../../../classes/constants/medium';
+import { MEDIUM_LIST } from '../../../../classes/constants/medium';
 import { PrintService } from '../../../../print/print-service';
 
 @Component({
@@ -15,6 +15,8 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
     user: any;
 
     mediumList = MEDIUM_LIST;
+
+    boardList;
 
     viewChecked = true;
 
@@ -30,6 +32,7 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
         const {user, value} = this.printService.getData();
         this.user = user;
         this.studentProfile = value.studentProfile;
+        this.boardList = value.boardList;
         this.transferCertificate.copy(value.transferCertificate);
         if(value.twoCopies) {
             this.numberOfCopies = 2;

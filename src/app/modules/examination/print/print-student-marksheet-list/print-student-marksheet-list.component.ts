@@ -13,6 +13,8 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     user : any;
 
+    boardList: any;
+
     viewChecked = true;
 
     examination: any;
@@ -22,7 +24,8 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
         this.user = user;
-        this.examination = value;
+        this.examination = value.examination;
+        this.boardList = value.boardList;
         this.viewChecked = false;
     }
 

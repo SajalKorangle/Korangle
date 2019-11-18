@@ -47,6 +47,7 @@ export class GenerateHallTicketServiceAdapter {
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
             // this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt),
         ]).then(value => {
 
@@ -62,6 +63,7 @@ export class GenerateHallTicketServiceAdapter {
                 this.subjectList = value[3];
                 this.studentSectionList = value[4];
                 this.studentSubjectList = value[5];
+                this.vm.boardList = value[6];
                 this.testList = value2;
 
                 this.populateExaminationList();

@@ -9,12 +9,13 @@ import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
     selector: 'total-collection',
     templateUrl: './total-collection.component.html',
     styleUrls: ['./total-collection.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService, ClassOldService ],
+    providers: [ FeeService, EmployeeService, StudentService, ClassOldService, SchoolService ],
 })
 
 export class TotalCollectionComponent implements OnInit {
@@ -40,6 +41,8 @@ export class TotalCollectionComponent implements OnInit {
     studentList = [];
     studentSectionList = [];
 
+    boardList;
+
     serviceAdapter: TotalCollectionServiceAdapter;
 
     selectedEmployee = null;
@@ -61,6 +64,7 @@ export class TotalCollectionComponent implements OnInit {
                 public employeeService: EmployeeService,
                 public studentService: StudentService,
                 public classService: ClassOldService,
+                public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}
 

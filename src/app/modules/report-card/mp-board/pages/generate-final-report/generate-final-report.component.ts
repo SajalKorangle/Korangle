@@ -13,12 +13,13 @@ import {AttendanceOldService} from '../../../../../services/modules/attendance/a
 import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, PRINT_STUDENT_CLASSIC_FINAL_REPORT, PRINT_STUDENT_ELEGANT_FINAL_REPORT, PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT } from '../../../../../print/print-routes.constants';
 import { PrintService } from '../../../../../print/print-service';
 import {DataStorage} from "../../../../../classes/data-storage";
+import {SchoolService} from "../../../../../services/modules/school/school.service";
 
 @Component({
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService ],
+    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -37,6 +38,7 @@ export class GenerateFinalReportComponent implements OnInit {
     subjectList = [];
     extraFieldList = [];
     studentFinalReportCardList = [];
+    boardList: any;
 
     serviceAdapter: GenerateFinalReportServiceAdapter;
 
@@ -48,6 +50,7 @@ export class GenerateFinalReportComponent implements OnInit {
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 public attendanceService: AttendanceOldService,
+                public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}
 
@@ -70,6 +73,7 @@ export class GenerateFinalReportComponent implements OnInit {
             'studentFinalReportList': this.studentFinalReportCardList,
             'reportCardMapping': this.reportCardMapping,
             'showPrincipalSignature': this.showPrinicipalSignature,
+            'boardList': this.boardList,
         };
         let selectedClassSection = this.getSelectedClassSection();
         let printRoute : string;

@@ -9,12 +9,13 @@ import { GenerateHallTicketServiceAdapter } from './generate-hall-ticket.service
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_HALL_TICKET } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
     selector: 'generate-hall-ticket',
     templateUrl: './generate-hall-ticket.component.html',
     styleUrls: ['./generate-hall-ticket.component.css'],
-    providers: [ ExaminationOldService, SubjectOldService, StudentOldService, ClassOldService ],
+    providers: [ ExaminationOldService, SubjectOldService, StudentOldService, ClassOldService, SchoolService ],
 })
 
 export class GenerateHallTicketComponent implements OnInit {
@@ -25,6 +26,8 @@ export class GenerateHallTicketComponent implements OnInit {
 
     examinationList: any;
 
+    boardList: any;
+
     serviceAdapter: GenerateHallTicketServiceAdapter;
 
     isLoading = false;
@@ -32,6 +35,7 @@ export class GenerateHallTicketComponent implements OnInit {
     constructor(public examinationService: ExaminationOldService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
+                public schoolService: SchoolService,
                 public classService: ClassOldService,
                 private printService: PrintService) {}
 
@@ -47,6 +51,7 @@ export class GenerateHallTicketComponent implements OnInit {
         let data = {
             'studentList': this.selectedExamination.selectedClass.selectedSection.studentList,
             'examination': this.selectedExamination,
+            'boardList': this.boardList,
         };
         this.printService.navigateToPrintRoute(PRINT_HALL_TICKET, {user: this.user, value: data});
         alert('This may take a while');

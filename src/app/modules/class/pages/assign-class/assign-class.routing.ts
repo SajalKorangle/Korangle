@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { GivePermissionsComponent } from './give-permissions.component';
+import { AssignClassComponent } from './assign-class.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: GivePermissionsComponent ,
+        component: AssignClassComponent ,
     }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class GivePermissionsRoutingModule { }
+export class AssignClassRoutingModule { }

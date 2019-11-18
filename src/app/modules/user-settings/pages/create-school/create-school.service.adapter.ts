@@ -23,6 +23,15 @@ export class CreateSchoolServiceAdapter {
             this.vm.isLoading = false;
         });*/
 
+        this.vm.isLoading = true;
+        this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}).then(value => {
+            this.vm.boardList = value;
+            this.vm.schoolProfile.parentBoard = this.vm.boardList[0].id;
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
     }
 
     // Server Handling - 2
@@ -68,7 +77,7 @@ export class CreateSchoolServiceAdapter {
             data.headerSize = "SMALL";
         }
         this.vm.isLoading = true;
-        this.vm.schoolService.createSchoolProfile(data,this.vm.user.jwt).then(value => {
+        this.vm.schoolOldService.createSchoolProfile(data,this.vm.user.jwt).then(value => {
             console.log(value.message);
             let request_employee_data = this.prepareSchoolEmployeeData(value.id);
             let task_data = {

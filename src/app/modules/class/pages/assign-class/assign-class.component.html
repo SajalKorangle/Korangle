@@ -75,6 +75,15 @@
 
             </div>
 
+            <div class="row">
+                <div class="col-md-12">
+                    Following pages will be affected :-<br/>
+                    <ng-container *ngFor="let page of pageList; let i=index;">
+                        {{i+1}}. {{page}}<br/>
+                    </ng-container>
+                </div>
+            </div>
+
         </ng-container>
 
     </ng-container>

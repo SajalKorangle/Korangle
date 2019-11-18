@@ -7,12 +7,13 @@ import {MEDIUM_LIST} from '../../../../classes/constants/medium';
 import {BOARD_LIST} from "../../../../classes/constants/board";
 import {DataStorage} from "../../../../classes/data-storage";
 import {TeamService} from "../../../../services/modules/team/team.service";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
   selector: 'create-school',
   templateUrl: './create-school.component.html',
   styleUrls: ['./create-school.component.css'],
-    providers: [ SchoolOldService, EmployeeOldService, TeamService ],
+    providers: [ SchoolOldService, EmployeeOldService, TeamService, SchoolService ],
 })
 
 export class CreateSchoolComponent implements OnInit {
@@ -20,7 +21,7 @@ export class CreateSchoolComponent implements OnInit {
     user;
 
     mediumList = MEDIUM_LIST;
-    boardList = BOARD_LIST;
+    boardList: any;
 
     schoolProfile: any;
 
@@ -30,8 +31,9 @@ export class CreateSchoolComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public schoolService: SchoolOldService,
+    constructor (public schoolOldService: SchoolOldService,
                  public employeeService: EmployeeOldService,
+                 public schoolService: SchoolService,
                  public teamService: TeamService) { }
 
     ngOnInit(): void {

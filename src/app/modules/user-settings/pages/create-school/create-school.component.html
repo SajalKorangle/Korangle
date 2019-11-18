@@ -78,10 +78,11 @@
             </div>
         </div>
 
-        <!-- Affiliation No. -->
+        <!-- Affiliation No./School Code -->
         <div class="row">
             <div class="col-md-3">
-                Affiliation No.
+                <ng-container *ngIf="schoolProfile.parentBoard==boardList[0].id">School Code</ng-container>
+                <ng-container *ngIf="schoolProfile.parentBoard==boardList[1].id">Affiliation No.</ng-container>
             </div>
             <div class="col-md-3">
                 :<input type="text"

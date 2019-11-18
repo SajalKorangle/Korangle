@@ -15,6 +15,8 @@ export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterV
 
     employeeProfile: any;
 
+    boardList: any;
+
     employee: any;
 
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
@@ -24,6 +26,7 @@ export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterV
         const { user, value } = this.printService.getData();
         this.user = user;
         this.employeeProfile = value;
+        this.boardList = value.boardList;
         this.employee = this.employeeProfile.employeeFullProfile;
         this.viewChecked = false;
     }

@@ -71,7 +71,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group form-black label-floating">
-                            <label class="control-label">Affiliation No./School Code</label>
+                            <label class="control-label" *ngIf="user.activeSchool.parentBoard==boardList[0].id">School Code</label>
+                            <label class="control-label" *ngIf="user.activeSchool.parentBoard==boardList[1].id">Affiliation No.</label>
                             <input type="text"
                                    class="form-control"
                                    [ngModel]="user.activeSchool.affiliationNumber" (ngModelChange)="currentAffiliationNumber=$event">

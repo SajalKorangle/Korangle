@@ -24,11 +24,6 @@ const routes: Routes = [
         data: {moduleName: 'attendance'},
     },
     {
-        path: 'give_permissions',
-        loadChildren: 'app/modules/attendance/pages/give-permissions/give-permissions.module#GivePermissionModule',
-        data: {moduleName: 'attendance'},
-    },
-    {
         path: 'approve_leave',
         loadChildren: 'app/modules/attendance/pages/approve-leave/approve-leave.module#ApproveLeaveModule',
         data: {moduleName: 'attendance'},

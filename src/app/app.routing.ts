@@ -84,6 +84,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/parent/parent.module#ParentModule',
     },
     {
+        path: 'class',
+        loadChildren: 'app/modules/class/class.module#ClassModule',
+    },
+    {
         path: 'school',
         loadChildren: 'app/modules/school/school.module#SchoolModule',
     },

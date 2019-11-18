@@ -61,6 +61,8 @@ export class School {
 
         this.dateOfExpiration = schoolData.dateOfExpiration;
 
+        this.parentBoard = schoolData.parentBoard;
+
         if ('employeeId' in schoolData && schoolData['employeeId'] !== null) {
             this.moduleList = schoolData.moduleList;
             this.moduleList.push({

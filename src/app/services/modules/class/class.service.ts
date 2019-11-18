@@ -4,7 +4,7 @@ import {ServiceObject} from "../../common/service-object";
 
 import { CLASS_CONSTANT } from "./models/classs";
 import { DIVISION_CONSTANT } from "./models/division";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable()
 export class ClassService extends ServiceObject {
@@ -14,6 +14,7 @@ export class ClassService extends ServiceObject {
     // objects urls
     public classs = '/class';
     public division = '/division';
+    public class_teacher_signature = '/class-teacher-signature';
 
     constructor(private http_class: HttpClient) {
         super(http_class);

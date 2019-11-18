@@ -3,12 +3,13 @@ import {Component, Input, OnInit } from '@angular/core';
 import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import {MEDIUM_LIST} from '../../../../classes/constants/medium';
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
-    providers: [ SchoolOldService ],
+    providers: [ SchoolOldService, SchoolService ],
 })
 
 export class UpdateProfileComponent implements OnInit {
@@ -33,8 +34,10 @@ export class UpdateProfileComponent implements OnInit {
     selectedWorkingSession: any;
 
     sessionList: any;
+    boardList: any;
 
-    constructor (private schoolService: SchoolOldService) { }
+    constructor (private schoolOldService: SchoolOldService,
+                 private schoolService: SchoolService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -52,13 +55,17 @@ export class UpdateProfileComponent implements OnInit {
         this.currentOpacity = this.user.activeSchool.opacity;
 
 
-        this.schoolService.getSessionList(this.user.jwt).then( sessionList => {
+        this.schoolOldService.getSessionList(this.user.jwt).then( sessionList => {
             this.isLoading = false;
             this.sessionList = sessionList;
             this.selectedWorkingSession = this.getSessionFromList(this.user.activeSchool.currentWorkingSessionDbId);
             this.currentWorkingSession = this.selectedWorkingSession;
         }, error => {
             this.isLoading = false;
+        });
+
+        this.schoolService.getObjectList(this.schoolService.board,{}).then(value => {
+            this.boardList = value;
         });
     }
 
@@ -85,7 +92,7 @@ export class UpdateProfileComponent implements OnInit {
             'currentSessionDbId': this.currentWorkingSession.dbId,
         };
         this.isLoading = true;
-        this.schoolService.updateSchoolProfile(data, this.user.jwt).then(schoolProfile => {
+        this.schoolOldService.updateSchoolProfile(data, this.user.jwt).then(schoolProfile => {
             this.isLoading = false;
             this.user.activeSchool.name = schoolProfile.name;
             this.user.activeSchool.printName = schoolProfile.printName;
@@ -212,7 +219,7 @@ export class UpdateProfileComponent implements OnInit {
         };
 
         this.isLoading = true;
-        this.schoolService.uploadProfileImage(image, data, this.user.jwt).then( response => {
+        this.schoolOldService.uploadProfileImage(image, data, this.user.jwt).then( response => {
             this.isLoading = false;
             alert('Logo Uploaded Successfully');
             if (response.status === 'success') {
@@ -244,7 +251,7 @@ export class UpdateProfileComponent implements OnInit {
         };
 
         this.isLoading = true;
-        this.schoolService.uploadPrincipalSignatureImage(image, data, this.user.jwt).then( response => {
+        this.schoolOldService.uploadPrincipalSignatureImage(image, data, this.user.jwt).then( response => {
             this.isLoading = false;
             alert('Principal\'s signature uploaded Successfully');
             if (response.status === 'success') {

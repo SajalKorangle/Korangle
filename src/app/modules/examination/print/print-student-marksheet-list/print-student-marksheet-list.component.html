@@ -39,7 +39,13 @@
                     Dise code : {{user.activeSchool.diseCode}}
                 </div>
                 <div class="col-xs-6 d-flex custom-padding" align="end">
-                    Reg. No. : {{user.activeSchool.registrationNumber}}
+                    <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
+                        School Code :
+                    </ng-container>
+                    <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
+                        Affiliation No. :
+                    </ng-container>
+                    {{user.activeSchool.affiliationNumber}}
                 </div>
             </div>
 

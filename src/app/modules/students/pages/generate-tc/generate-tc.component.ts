@@ -9,12 +9,13 @@ import { SchoolOldService } from '../../../../services/modules/school/school-old
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_TC } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
     selector: 'generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [ StudentOldService, SchoolOldService ],
+    providers: [ StudentOldService, SchoolOldService, SchoolService ],
 })
 
 export class GenerateTcComponent implements OnInit {
@@ -38,6 +39,8 @@ export class GenerateTcComponent implements OnInit {
     selectedSession: any;
     sessionList: any;
 
+    boardList: any;
+
     // Boolean variable to check if all the required fields are coming from student profile
     fatherNameIsComing = false;
     motherNameIsComing = false;
@@ -55,16 +58,25 @@ export class GenerateTcComponent implements OnInit {
     count = 0;
 
     constructor (private studentService: StudentOldService,
-                 private schoolService: SchoolOldService,
+                 private schoolService: SchoolService,
+                 private schoolOldService: SchoolOldService,
                  private printService: PrintService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+
+        Promise.all([
+            this.schoolService.getObjectList(this.schoolService.board,{}),
+        ]).then(value => {
+            this.boardList = value[0];
+        }, error => {
+        });
+
         this.getSessionList();
     }
 
     getSessionList(): void {
-        this.schoolService.getSessionList(this.user.jwt).then(sessionList => {
+        this.schoolOldService.getSessionList(this.user.jwt).then(sessionList => {
             this.sessionList = sessionList;
             this.sessionList.every(session => {
                 if (session.dbId === this.user.activeSchool.currentSessionDbId) {
@@ -214,6 +226,7 @@ export class GenerateTcComponent implements OnInit {
         const value = {
             studentProfile: this.selectedStudent,
             transferCertificate: this.selectedTransferCertificate,
+            boardList: this.boardList,
             twoCopies: this.twoCopies,
         };
         this.printService.navigateToPrintRoute(PRINT_TC, {user: this.user, value});

@@ -12,12 +12,13 @@ import { ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_MARKSHEET } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
     selector: 'examination-print-marksheet',
     templateUrl: './print-marksheet.component.html',
     styleUrls: ['./print-marksheet.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, SubjectOldService, StudentOldService ],
+    providers: [ ExaminationOldService, ClassOldService, SubjectOldService, StudentOldService, SchoolService ],
 })
 
 export class PrintMarksheetComponent implements OnInit {
@@ -35,6 +36,8 @@ export class PrintMarksheetComponent implements OnInit {
 
     testTypeList = TEST_TYPE_LIST;
 
+    boardList;
+
     serviceAdapter: PrintMarksheetServiceAdapter;
 
     isInitialLoading = false;
@@ -45,6 +48,7 @@ export class PrintMarksheetComponent implements OnInit {
                 public classService: ClassOldService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService,
+                public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}
 
@@ -83,7 +87,11 @@ export class PrintMarksheetComponent implements OnInit {
     }
 
     printMarksheet(): void {
-        this.printService.navigateToPrintRoute(PRINT_STUDENT_MARKSHEET, {user: this.user, value: this.selectedExamination});
+        let value = {
+            'examination': this.selectedExamination,
+            'boardList': this.boardList,
+        };
+        this.printService.navigateToPrintRoute(PRINT_STUDENT_MARKSHEET, {user: this.user, value: value});
         alert('This may take a while');
     }
 

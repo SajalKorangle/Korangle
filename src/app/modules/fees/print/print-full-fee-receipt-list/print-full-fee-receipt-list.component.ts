@@ -25,6 +25,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
     classList: any;
     sectionList: any;
     employeeList: any;
+    boardList: any;
 
     checkView = false;
 
@@ -42,6 +43,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
         this.classList = value['classList'];
         this.sectionList = value['sectionList'];
         this.employeeList = value['employeeList'];
+        this.boardList = value['boardList'];
         this.checkView = true;
     }
 

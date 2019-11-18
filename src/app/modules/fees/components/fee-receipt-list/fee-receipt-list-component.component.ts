@@ -23,6 +23,7 @@ export class FeeReceiptListComponent {
     @Input() receiptColumnFilter;
     @Input() number;
     @Input() selectedFeeType;
+    @Input() boardList;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;

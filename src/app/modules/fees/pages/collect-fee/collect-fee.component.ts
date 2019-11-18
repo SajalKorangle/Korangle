@@ -23,6 +23,7 @@ import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 declare const $: any;
 
@@ -30,7 +31,7 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService ],
+    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService, SchoolService ],
 })
 
 export class CollectFeeComponent implements OnInit {
@@ -54,6 +55,7 @@ export class CollectFeeComponent implements OnInit {
     subDiscountList: SubDiscount[];
     busStopList = [];
     employeeList = [];
+    boardList = [];
 
     // Data from Parent Student Filter
     classList = [];
@@ -85,6 +87,7 @@ export class CollectFeeComponent implements OnInit {
                 public vehicleService: VehicleOldService,
                 public classService: ClassOldService,
                 public employeeService: EmployeeService,
+                public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}
 
@@ -250,6 +253,7 @@ export class CollectFeeComponent implements OnInit {
             'classList': this.classList,
             'sectionList': this.sectionList,
             'employeeList': this.employeeList,
+            'boardList': this.boardList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, {user: this.user, value: data});

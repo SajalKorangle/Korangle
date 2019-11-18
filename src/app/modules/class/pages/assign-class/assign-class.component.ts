@@ -10,15 +10,16 @@ import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
-  selector: 'give-permissions',
-  templateUrl: './give-permissions.component.html',
-  styleUrls: ['./give-permissions.component.css'],
-    providers: [ EmployeeOldService, AttendanceOldService, ClassOldService ],
+  selector: 'assign-class',
+  templateUrl: './assign-class.component.html',
+  styleUrls: ['./assign-class.component.css'],
+    providers: [ EmployeeOldService, AttendanceOldService, ClassOldService, SchoolService ],
 })
 
-export class GivePermissionsComponent implements OnInit {
+export class AssignClassComponent implements OnInit {
 
      user;
 
@@ -28,6 +29,9 @@ export class GivePermissionsComponent implements OnInit {
     selectedClass: any;
 
     classSectionList = [];
+
+    pageList = [];
+    boardList = [];
 
     filteredEmployeeList: any;
 
@@ -40,6 +44,7 @@ export class GivePermissionsComponent implements OnInit {
 
     constructor (private employeeService: EmployeeOldService,
                  private attendanceService: AttendanceOldService,
+                 private schoolService: SchoolService,
                  private classService: ClassOldService) { }
 
     ngOnInit() {
@@ -58,10 +63,13 @@ export class GivePermissionsComponent implements OnInit {
         Promise.all([
             this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
             this.classService.getClassSectionList(request_class_data, this.user.jwt),
+            this.schoolService.getObjectList(this.schoolService.board, {}),
         ]).then(value => {
             this.isLoading = false;
             this.initializeEmployeeList(value[0]);
             this.initializeClassSectionList(value[1]);
+            this.boardList = value[2];
+            this.populatePageList();
         }, error => {
             this.isLoading = false;
         });
@@ -201,6 +209,13 @@ export class GivePermissionsComponent implements OnInit {
             return true;
         });
         this.selectedEmployeeAttendancePermissionList.splice(index, 1);
+    }
+
+    populatePageList(): void {
+        this.pageList.push('Attendance -> Record Stud. Attendance');
+        if (this.user.activeSchool.parentBoard==this.boardList[0].id) {
+            this.pageList.push('Examination -> Update CCE Marks');
+        }
     }
 
 }
