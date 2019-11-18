@@ -6,6 +6,9 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 from team_app.db_script.changing_structure import changing_structure
+from team_app.db_script.add_mp_board_report_card_module import add_mp_board_report_card_module
+from team_app.db_script.add_cbse_report_card_module import add_cbse_report_card_module
+from team_app.db_script.add_class_module import add_class_module
 
 
 class Migration(migrations.Migration):
@@ -42,4 +45,7 @@ class Migration(migrations.Migration):
             name='Access',
         ),
         migrations.RunPython(changing_structure),
+        migrations.RunPython(add_mp_board_report_card_module),
+        migrations.RunPython(add_cbse_report_card_module),
+        migrations.RunPython(add_class_module),
     ]
