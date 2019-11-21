@@ -37,14 +37,14 @@ mat-form-field {
 	margin-top: 23px;
 }
 
-input {
+/*input {
 	border-top: none;
 	border-left: none;
 	border-right: none;
 	border-bottom: 1px solid lightgrey;
 	width: 90%;
 	margin-left: 5px;
-}
+}*/
 
 .row {
 	padding: 10px;
@@ -52,4 +52,8 @@ input {
 
 .row:hover {
 	background-color: lightgrey;
+}
+
+.example-full-width {
+	width: 100%;
 }

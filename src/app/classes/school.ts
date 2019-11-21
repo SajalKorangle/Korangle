@@ -10,7 +10,14 @@ export class School {
     primaryThemeColor = 'red';
     secondaryThemeColor = 'danger';
     diseCode = 0;
+
     address = '';
+    pincode: number;
+    villageCity: string;
+    block: string;
+    district: string;
+    state: string;
+
     currentSessionDbId: number;
     currentWorkingSessionDbId: number;
     registrationNumber: string;
@@ -44,7 +51,14 @@ export class School {
         this.primaryThemeColor = schoolData.primaryThemeColor;
         this.secondaryThemeColor = schoolData.secondaryThemeColor;
         this.diseCode = schoolData.schoolDiseCode;
+
         this.address = schoolData.schoolAddress;
+        this.pincode = schoolData.pincode;
+        this.villageCity = schoolData.villageCity;
+        this.block = schoolData.block;
+        this.district = schoolData.district;
+        this.state = schoolData.state;
+
         this.opacity = schoolData.opacity;
         this.currentSessionDbId = schoolData.currentSessionDbId;
         this.currentWorkingSessionDbId = schoolData.currentSessionDbId;

@@ -90,14 +90,83 @@
             </div>
         </div>
 
-        <!-- Address -->
+        <!-- Pincode -->
         <div class="row">
             <div class="col-md-3">
-                Address
+                Pincode
+            </div>
+            <div class="col-md-3">
+                :<input type="number"
+                        (ngModelChange)="schoolProfile.pincode=$event;serviceAdapter.getPincodeDetails()"
+                        [ngModel]="schoolProfile.pincode"/>
+            </div>
+        </div>
+
+        <!-- Street Address -->
+        <div class="row">
+            <div class="col-md-3">
+                Street Address
+            </div>
+            <div class="col-md-3">
+                :<textarea [(ngModel)]="schoolProfile.address"></textarea>
+            </div>
+        </div>
+
+        <!-- Village/City -->
+        <div class="row">
+            <div class="col-md-3">
+                Village/City
+            </div>
+            <div class="col-md-3">
+                <!-- :<input type="text"
+                        [(ngModel)]="schoolProfile.villageCity" /> -->
+                <mat-form-field class="example-full-width">
+                    <input type="text"
+                           matInput
+                           [formControl]="villageCityFormControl"
+                           [(ngModel)]="schoolProfile.villageCity"
+                           [matAutocomplete]="autoVillageCity">
+                    <mat-autocomplete #autoVillageCity="matAutocomplete"
+                                      (optionSelected)="schoolProfile.villageCity=$event.option.value;"
+                                      [displayWith]="displayFunction">
+                        <mat-option *ngFor="let villageCity of filteredVillageCityList | async" [value]="villageCity">
+                            {{displayListFunction(villageCity)}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Block -->
+        <div class="row">
+            <div class="col-md-3">
+                Block
             </div>
             <div class="col-md-3">
                 :<input type="text"
-                        [(ngModel)]="schoolProfile.address" />
+                        [(ngModel)]="schoolProfile.block" />
+            </div>
+        </div>
+
+        <!-- District -->
+        <div class="row">
+            <div class="col-md-3">
+                District
+            </div>
+            <div class="col-md-3">
+                :<input type="text"
+                        [(ngModel)]="schoolProfile.district" />
+            </div>
+        </div>
+
+        <!-- State -->
+        <div class="row">
+            <div class="col-md-3">
+                State
+            </div>
+            <div class="col-md-3">
+                :<input type="text"
+                        [(ngModel)]="schoolProfile.state" />
             </div>
         </div>
 

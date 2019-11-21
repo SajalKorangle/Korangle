@@ -20,6 +20,7 @@ export class ClassService extends ServiceObject {
         super(http_class);
         this.constant_list[this.classs] = CLASS_CONSTANT;
         this.constant_list[this.division] = DIVISION_CONSTANT;
+        this.file_list[this.class_teacher_signature] = this.class_teacher_signature;
     }
 
 }

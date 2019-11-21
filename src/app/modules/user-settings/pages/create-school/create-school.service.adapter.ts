@@ -14,15 +14,6 @@ export class CreateSchoolServiceAdapter {
     // Server Handling - 1
     public initializeData(): void {
 
-        /*this.vm.isLoading = true;
-        this.vm.teamOldService.getLatestModuleList(this.vm.user.jwt).then(moduleList => {
-            this.vm.moduleList = moduleList;
-            console.log(this.vm.moduleList);
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });*/
-
         this.vm.isLoading = true;
         this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}).then(value => {
             this.vm.boardList = value;
@@ -103,18 +94,6 @@ export class CreateSchoolServiceAdapter {
         });
     }
 
-    /*prepareSchoolAccessData(schoolDbId: number): any {
-        let data_list = [];
-        this.vm.moduleList.forEach(module => {
-            let tempData = {
-                parentModule: module.id,
-                parentSchool: schoolDbId,
-            };
-            data_list.push(tempData);
-        });
-        return data_list;
-    }*/
-
     prepareSchoolEmployeeData(schoolDbId: number): any {
         let employee = {
             name: this.vm.user.first_name+" "+this.vm.user.last_name,
@@ -138,6 +117,29 @@ export class CreateSchoolServiceAdapter {
             data_list.push(tempData);
         });
         return data_list;
+    }
+
+    getPincodeDetails(): void {
+
+        if (!this.vm.schoolProfile.pincode || this.vm.schoolProfile.pincode.toString().length != 6) {
+            return;
+        }
+
+        this.vm.pincodeService.getDetailsFromPincode(this.vm.schoolProfile.pincode.toString()).then(pincodeList=> {
+            if (pincodeList && pincodeList.length > 0) {
+
+                this.vm.villageCityList = pincodeList.map(a => a.Name);
+
+                this.vm.schoolProfile.villageCity = pincodeList[0].Name;
+                this.vm.schoolProfile.block = pincodeList[0].Block;
+                this.vm.schoolProfile.district = pincodeList[0].District;
+                this.vm.schoolProfile.state = pincodeList[0].State;
+
+            }
+        }, error => {
+            console.log("Error");
+        });
+
     }
 
 }

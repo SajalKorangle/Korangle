@@ -59,6 +59,20 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
+    public putFileData(body: any, url: any): Promise<any> {
+        // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
+        return this.http.put(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+            .toPromise()
+            .then(response => {
+                return this.returnResponse(response);
+            }, error => {
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                return null;
+            })
+            .catch(this.handleError);
+    }
+
     public patchData(body: any, url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
         return this.http.patch(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
@@ -72,8 +86,36 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
+    public patchFileData(body: any, url: any): Promise<any> {
+        // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
+        return this.http.patch(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+            .toPromise()
+            .then(response => {
+                return this.returnResponse(response);
+            }, error => {
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                return null;
+            })
+            .catch(this.handleError);
+    }
+
     public postData(body: any, url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
+        return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+            .toPromise()
+            .then(response => {
+                return this.returnResponse(response);
+            }, error => {
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                return null;
+            })
+            .catch(this.handleError);
+    }
+
+    public postFileData(body: any, url: any): Promise<any> {
+        // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
         return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
             .then(response => {
