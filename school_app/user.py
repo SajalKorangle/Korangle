@@ -134,7 +134,14 @@ def get_school_data_by_object(school_object):
     school_data['complexFeeStructure'] = school_object.complexFeeStructure
     school_data['dbId'] = school_object.id
     school_data['schoolDiseCode'] = school_object.diseCode
+
     school_data['schoolAddress'] = school_object.address
+    school_data['pincode'] = school_object.pincode
+    school_data['villageCity'] = school_object.villageCity
+    school_data['block'] = school_object.block
+    school_data['district'] = school_object.district
+    school_data['state'] = school_object.state
+
     school_data['currentSessionDbId'] = school_object.currentSession.id
     school_data['name'] = school_object.name
     school_data['registrationNumber'] = school_object.registrationNumber

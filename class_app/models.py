@@ -9,7 +9,7 @@ from school_app.model.models import School
 
 def upload_signature_image_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'school/%s/%s/%s/signature_image/%s%s' % (instance.parentSchool.id, instance.parentClass.name, instance.parentDivision.name, now().timestamp(), filename_ext.lower())
+    return 'schools/%s/%s/%s/signature_image/%s%s' % (instance.parentSchool.id, instance.parentClass.name, instance.parentDivision.name, now().timestamp(), filename_ext.lower())
 
 
 class Class(models.Model):

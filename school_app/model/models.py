@@ -73,7 +73,15 @@ class School(models.Model):
     primaryThemeColor = models.TextField(null=True)
     secondaryThemeColor = models.TextField(null=True)
     complexFeeStructure = models.BooleanField(default=False)
+
+    # address in now considered as street address
     address = models.TextField(null=True)
+    pincode = models.IntegerField(null=True, verbose_name='pincode')
+    villageCity = models.TextField(null=True, verbose_name='villageCity')
+    block = models.TextField(null=True, verbose_name='block')
+    district = models.TextField(null=True, verbose_name='district')
+    state = models.TextField(null=True, verbose_name='state')
+
     diseCode = models.TextField(null=True)
     currentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='currentSession', default=1)
     registrationNumber = models.TextField(null=False, default='426/13.01.1993')
