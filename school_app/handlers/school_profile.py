@@ -18,6 +18,12 @@ def get_school_profile_by_object(school_object):
     school_profile_response['currentSessionDbId'] = school_object.currentSession.id
     school_profile_response['mobileNumber'] = school_object.mobileNumber
 
+    school_profile_response['pincode'] = school_object.pincode
+    school_profile_response['villageCity'] = school_object.villageCity
+    school_profile_response['block'] = school_object.block
+    school_profile_response['district'] = school_object.district
+    school_profile_response['state'] = school_object.state
+
     return school_profile_response
 
 
@@ -34,6 +40,12 @@ def update_school_profile(data):
     school_object.affiliationNumber = data['affiliationNumber']
     school_object.medium = data['medium']
     school_object.mobileNumber = data['mobileNumber']
+
+    school_object.pincode = data['pincode']
+    school_object.villageCity = data['villageCity']
+    school_object.block = data['block']
+    school_object.district = data['district']
+    school_object.state = data['state']
 
     school_object.currentSession = Session.objects.get(id=data['currentSessionDbId'])
 

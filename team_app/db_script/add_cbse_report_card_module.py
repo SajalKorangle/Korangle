@@ -36,6 +36,34 @@ def add_cbse_report_card_module(apps, schema_editor):
 
         count = count + 1
 
+    task_title_list = [
+        {
+            'path': 'add_student_remarks',
+            'title': 'Add Student Remarks',
+        },
+        {
+            'path': 'view_grades_remarks',
+            'title': 'View Grades/Remarks',
+        }
+    ]
+
+    for task_title in task_title_list:
+
+        task_object = Task(parentModule=module_object,
+                           path=task_title['path'],
+                           title=task_title['title'],
+                           orderNumber=count,
+                           parentBoard=cbse_object)
+        task_object.save()
+
+        for employee_permission_object in EmployeePermission.objects.filter(parentTask__title='Assign Task',
+                                                                            parentTask__parentModule__title='Employees'):
+            permission_object = EmployeePermission(parentEmployee=employee_permission_object.parentEmployee,
+                                                   parentTask=task_object)
+            permission_object.save()
+
+        count = count + 1
+
     remove_cbse_employee_unnecessary_permissions(apps)
 
 
