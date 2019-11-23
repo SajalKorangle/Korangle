@@ -44,6 +44,8 @@ export class GradeStudentFieldsComponent implements OnInit {
     selectedTerm: any;
     selectedExtraField: any;
 
+    showStudentList = false;
+
     serviceAdapter: GradeStudentFieldsServiceAdapter;
 
     isInitialLoading = false;
@@ -148,29 +150,15 @@ export class GradeStudentFieldsComponent implements OnInit {
                     break;
             }
         } else {
-            /*let item = {
+            let item = {
+                'parentTerm': this.selectedTerm.id,
+                'parentExtraField': this.selectedExtraField.id,
+                'parentSession': this.user.activeSchool.currentSessionDbId,
                 'parentStudent': studentSection.parentStudent,
-                'parentSession': this.vm.user
-            };*/
-            return null;
+                'grade': this.gradeList[0],
+            };
+            this.studentExtraFieldList.push(item);
         }
     }
-
-    /*detectChanges(): void {
-        this.showTestDetails = false;
-        this.cdRef.detectChanges();
-    }*/
-
-    /*getStudentName(studentId: any): any {
-        let result = '';
-        this.studentList.every(item => {
-            if (item.dbId === studentId) {
-                result = item.name;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }*/
 
 }

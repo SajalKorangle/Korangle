@@ -10,7 +10,7 @@
                     <mat-select placeholder="Select Class"
                                 [ngModel]="selectedClassSection"
                                 [disabled]="isLoading"
-                                (ngModelChange)="handleClassSectionChange($event)">
+                                (ngModelChange)="handleClassSectionChange($event);showStudentList=false;">
                         <mat-option *ngFor='let classSection of classSectionList;' [value]="classSection">
                             {{classSection.class.name}}, {{classSection.section.name}}
                         </mat-option>
@@ -25,7 +25,7 @@
                     <mat-select placeholder="Select Term"
                                 [ngModel]="selectedTerm"
                                 [disabled]="isLoading"
-                                (ngModelChange)="selectedTerm=$event;">
+                                (ngModelChange)="selectedTerm=$event;showStudentList=false;">
                         <mat-option *ngFor='let term of termList.slice(0,2);' [value]="term">
                             {{term.name}}
                         </mat-option>
@@ -40,7 +40,7 @@
                     <mat-select placeholder="Select Field"
                                 [ngModel]="selectedExtraField"
                                 [disabled]="isLoading"
-                                (ngModelChange)="selectedExtraField=$event;">
+                                (ngModelChange)="selectedExtraField=$event;showStudentList=false;">
                         <mat-option *ngFor='let extraField of extraFieldList;' [value]="extraField">
                             {{extraField.name}}
                         </mat-option>
@@ -60,7 +60,7 @@
 
         </div>
 
-        <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList">
+        <ng-container *ngIf="!isLoading && showStudentList">
 
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
@@ -108,7 +108,7 @@
                 </tbody>
             </table>
 
-            <ng-container *ngIf="by==='date'">
+            <!-- ng-container *ngIf="by==='date'">
                 <div class="row">
                     <div class="col-md-2" *ngIf="getStatusNumber()>0">Not Taken: {{getStatusNumber()}}</div>
                     <div class="col-md-1">A: {{getStatusNumber(attendanceStatusList[1])}}</div>
@@ -134,7 +134,7 @@
                 <i class="material-icons">save_alt</i>
             </button>
 
-            <br/>A: Absent, P: Present, H: Holiday, N: Not Recorded <br/>
+            <br/>A: Absent, P: Present, H: Holiday, N: Not Recorded <br/ -->
 
         </ng-container>
 

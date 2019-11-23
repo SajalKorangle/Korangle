@@ -12,6 +12,7 @@ export class SchoolOldService extends CommonServiceRequirements {
     }
 
     updateSchoolProfile(data: any, token: any): Promise<any> {
+        console.log(data);
         return super.putData(data, token, '/school/' + data['dbId']);
     }
 

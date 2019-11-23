@@ -2,132 +2,116 @@
 
     <ng-container *ngIf="!isLoading">
 
-        <!-- Name -->
         <div class="row">
-            <div class="col-md-3">
-                Name<sup>*</sup> (less than 15 characters)
+            <!-- Print Name -->
+            <div class="col-md-9">
+                <mat-form-field class="example-full-width">
+                    <input matInput
+                           placeholder="Print Name (for certificates)"
+                           type="text"
+                           [(ngModel)]="schoolProfile.printName">
+                </mat-form-field>
             </div>
+            <!-- Name -->
             <div class="col-md-3">
-                :<input type="text"
-                        [(ngModel)]="schoolProfile.name" />
+                <mat-form-field class="example-full-width">
+                    <input matInput
+                           placeholder="Name* (less than 15 characters)"
+                           type="text"
+                           [(ngModel)]="schoolProfile.name">
+                </mat-form-field>
             </div>
         </div>
 
-        <!-- Print Name -->
         <div class="row">
+            <!-- Board -->
             <div class="col-md-3">
-                Print Name (for certificates)
+                <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Board*" [(ngModel)]="schoolProfile.parentBoard">
+                        <mat-option *ngFor="let board of boardList;" [value]="board.id">
+                            {{board.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
+            <!-- Medium -->
             <div class="col-md-3">
-                :<input type="text"
-                        [(ngModel)]="schoolProfile.printName" />
+                <mat-form-field class="example-full-width">
+                    <mat-select placeholder="Medium*" [(ngModel)]="schoolProfile.medium">
+                        <mat-option *ngFor="let medium of mediumList;" [value]="medium">
+                            {{medium}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
         </div>
 
-        <!-- Board -->
         <div class="row">
+            <!-- Dise Code -->
             <div class="col-md-3">
-                Board<sup>*</sup>
+                <mat-form-field class="example-full-width">
+                    <input matInput
+                           placeholder="Dise Code"
+                           type="text"
+                           [(ngModel)]="schoolProfile.diseCode">
+                </mat-form-field>
             </div>
+            <!-- Registration No. -->
             <div class="col-md-3">
-                :
-                <select [(ngModel)]="schoolProfile.parentBoard"
-                        style="margin-right: 15px">
-                    <option *ngFor="let board of boardList;" [ngValue]="board.id">
-                        {{board.name}}
-                    </option>
-                </select>
+                <mat-form-field class="example-full-width">
+                    <input matInput
+                           placeholder="Registration No."
+                           type="text"
+                           [(ngModel)]="schoolProfile.registrationNumber">
+                </mat-form-field>
+            </div>
+            <!-- Affiliation No./School Code -->
+            <div class="col-md-3">
+                <mat-form-field class="example-full-width">
+                    <input matInput
+                           [placeholder]="getAffiliationPlaceholder()"
+                           type="text"
+                           [(ngModel)]="schoolProfile.affiliationNumber">
+                </mat-form-field>
             </div>
         </div>
 
-        <!-- Medium -->
         <div class="row">
+            <!-- Pincode -->
             <div class="col-md-3">
-                Medium<sup>*</sup>
+                <mat-form-field class="example-full-width">
+                    <input matInput
+                           placeholder="Pincode"
+                           type="number"
+                           (ngModelChange)="schoolProfile.pincode=$event;serviceAdapter.getPincodeDetails()"
+                           [ngModel]="schoolProfile.pincode">
+                </mat-form-field>
             </div>
-            <div class="col-md-3">
-                :
-                <select [(ngModel)]="schoolProfile.medium"
-                        style="margin-right: 15px">
-                    <option *ngFor="let medium of mediumList;" [ngValue]="medium">
-                        {{medium}}
-                    </option>
-                </select>
+            <!-- Street Address -->
+            <div class="col-md-6">
+                <mat-form-field class="example-full-width">
+                    <textarea matInput
+                              placeholder="Street"
+                              type="text"
+                              rows="3"
+                              [(ngModel)]="schoolProfile.address">
+                    </textarea>
+                </mat-form-field>
             </div>
         </div>
 
-        <!-- Dise Code -->
         <div class="row">
+            <!-- Village/City -->
             <div class="col-md-3">
-                Dise Code
-            </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [(ngModel)]="schoolProfile.diseCode" />
-            </div>
-        </div>
-
-        <!-- Registration No. -->
-        <div class="row">
-            <div class="col-md-3">
-                Registration No.
-            </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [(ngModel)]="schoolProfile.registrationNumber" />
-            </div>
-        </div>
-
-        <!-- Affiliation No./School Code -->
-        <div class="row">
-            <div class="col-md-3">
-                <ng-container *ngIf="schoolProfile.parentBoard==boardList[0].id">School Code</ng-container>
-                <ng-container *ngIf="schoolProfile.parentBoard==boardList[1].id">Affiliation No.</ng-container>
-            </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [(ngModel)]="schoolProfile.affiliationNumber" />
-            </div>
-        </div>
-
-        <!-- Pincode -->
-        <div class="row">
-            <div class="col-md-3">
-                Pincode
-            </div>
-            <div class="col-md-3">
-                :<input type="number"
-                        (ngModelChange)="schoolProfile.pincode=$event;serviceAdapter.getPincodeDetails()"
-                        [ngModel]="schoolProfile.pincode"/>
-            </div>
-        </div>
-
-        <!-- Street Address -->
-        <div class="row">
-            <div class="col-md-3">
-                Street Address
-            </div>
-            <div class="col-md-3">
-                :<textarea [(ngModel)]="schoolProfile.address"></textarea>
-            </div>
-        </div>
-
-        <!-- Village/City -->
-        <div class="row">
-            <div class="col-md-3">
-                Village/City
-            </div>
-            <div class="col-md-3">
-                <!-- :<input type="text"
-                        [(ngModel)]="schoolProfile.villageCity" /> -->
                 <mat-form-field class="example-full-width">
                     <input type="text"
+                           placeholder="Village/City"
                            matInput
                            [formControl]="villageCityFormControl"
                            [(ngModel)]="schoolProfile.villageCity"
                            [matAutocomplete]="autoVillageCity">
                     <mat-autocomplete #autoVillageCity="matAutocomplete"
-                                      (optionSelected)="schoolProfile.villageCity=$event.option.value;"
+                                      (optionSelected)="schoolProfile.villageCity=$event.option.value"
                                       [displayWith]="displayFunction">
                         <mat-option *ngFor="let villageCity of filteredVillageCityList | async" [value]="villageCity">
                             {{displayListFunction(villageCity)}}
@@ -135,38 +119,59 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </div>
-        </div>
-
-        <!-- Block -->
-        <div class="row">
+            <!-- Block -->
             <div class="col-md-3">
-                Block
+                <mat-form-field class="example-full-width">
+                    <input type="text"
+                           matInput
+                           placeholder="Block"
+                           [formControl]="blockFormControl"
+                           [(ngModel)]="schoolProfile.block"
+                           [matAutocomplete]="autoBlock">
+                    <mat-autocomplete #autoBlock="matAutocomplete"
+                                      (optionSelected)="schoolProfile.block=$event.option.value;"
+                                      [displayWith]="displayFunction">
+                        <mat-option *ngFor="let block of filteredBlockList | async" [value]="block">
+                            {{displayListFunction(block)}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
             </div>
+            <!-- District -->
             <div class="col-md-3">
-                :<input type="text"
-                        [(ngModel)]="schoolProfile.block" />
+                <mat-form-field class="example-full-width">
+                    <input type="text"
+                           matInput
+                           placeholder="District"
+                           [formControl]="districtFormControl"
+                           [(ngModel)]="schoolProfile.district"
+                           [matAutocomplete]="autoDistrict">
+                    <mat-autocomplete #autoDistrict="matAutocomplete"
+                                      (optionSelected)="schoolProfile.district=$event.option.value;"
+                                      [displayWith]="displayFunction">
+                        <mat-option *ngFor="let district of filteredDistrictList | async" [value]="district">
+                            {{displayListFunction(district)}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
             </div>
-        </div>
-
-        <!-- District -->
-        <div class="row">
+            <!-- State -->
             <div class="col-md-3">
-                District
-            </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [(ngModel)]="schoolProfile.district" />
-            </div>
-        </div>
-
-        <!-- State -->
-        <div class="row">
-            <div class="col-md-3">
-                State
-            </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [(ngModel)]="schoolProfile.state" />
+                <mat-form-field class="example-full-width">
+                    <input type="text"
+                           matInput
+                           placeholder="State"
+                           [formControl]="stateFormControl"
+                           [(ngModel)]="schoolProfile.state"
+                           [matAutocomplete]="autoState">
+                    <mat-autocomplete #autoState="matAutocomplete"
+                                      (optionSelected)="schoolProfile.state=$event.option.value;"
+                                      [displayWith]="displayFunction">
+                        <mat-option *ngFor="let state of filteredStateList | async" [value]="state">
+                            {{displayListFunction(state)}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
             </div>
         </div>
 

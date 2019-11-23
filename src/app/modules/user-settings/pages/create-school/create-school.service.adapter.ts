@@ -23,6 +23,8 @@ export class CreateSchoolServiceAdapter {
             this.vm.isLoading = false;
         });
 
+        this.vm.schoolProfile.medium = this.vm.mediumList[0];
+
     }
 
     // Server Handling - 2
@@ -128,7 +130,10 @@ export class CreateSchoolServiceAdapter {
         this.vm.pincodeService.getDetailsFromPincode(this.vm.schoolProfile.pincode.toString()).then(pincodeList=> {
             if (pincodeList && pincodeList.length > 0) {
 
-                this.vm.villageCityList = pincodeList.map(a => a.Name);
+                this.vm.villageCityList = [...new Set(pincodeList.map(a => a.Name))];
+                this.vm.blockList = [...new Set(pincodeList.map(a => a.Block))];
+                this.vm.districtList = [...new Set(pincodeList.map(a => a.District))];
+                this.vm.stateList = [...new Set(pincodeList.map(a => a.State))];
 
                 this.vm.schoolProfile.villageCity = pincodeList[0].Name;
                 this.vm.schoolProfile.block = pincodeList[0].Block;

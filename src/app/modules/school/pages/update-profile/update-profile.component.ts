@@ -30,6 +30,13 @@ export class UpdateProfileComponent implements OnInit {
     currentAddress: any;
     currentOpacity: any;
 
+    currentPincode: any;
+    currentVillageCity: any;
+    currentBlock: any;
+    currentDistrict: any;
+    currentState: any;
+
+
     currentWorkingSession: any;
     selectedWorkingSession: any;
 
@@ -53,6 +60,12 @@ export class UpdateProfileComponent implements OnInit {
         this.currentDiseCode = this.user.activeSchool.diseCode;
         this.currentAddress = this.user.activeSchool.address;
         this.currentOpacity = this.user.activeSchool.opacity;
+
+        this.currentPincode = this.user.activeSchool.pincode;
+        this.currentVillageCity = this.user.activeSchool.villageCity;
+        this.currentBlock = this.user.activeSchool.block;
+        this.currentDistrict = this.user.activeSchool.district;
+        this.currentState = this.user.activeSchool.state;
 
 
         this.schoolOldService.getSessionList(this.user.jwt).then( sessionList => {
@@ -90,6 +103,11 @@ export class UpdateProfileComponent implements OnInit {
             'address': this.currentAddress,
             'opacity': this.currentOpacity,
             'currentSessionDbId': this.currentWorkingSession.dbId,
+            'pincode': this.currentPincode,
+            'villageCity': this.currentVillageCity,
+            'block': this.currentBlock,
+            'district': this.currentDistrict,
+            'state': this.currentState,
         };
         this.isLoading = true;
         this.schoolOldService.updateSchoolProfile(data, this.user.jwt).then(schoolProfile => {
@@ -104,6 +122,13 @@ export class UpdateProfileComponent implements OnInit {
             this.user.activeSchool.address = schoolProfile.address;
             this.user.activeSchool.opacity = schoolProfile.opacity;
             this.user.activeSchool.currentWorkingSessionDbId = schoolProfile.currentSessionDbId;
+
+            this.user.activeSchool.pincode = schoolProfile.pincode;
+            this.user.activeSchool.villageCity = schoolProfile.villageCity;
+            this.user.activeSchool.block = schoolProfile.block;
+            this.user.activeSchool.district = schoolProfile.district;
+            this.user.activeSchool.state = schoolProfile.state;
+
             this.selectedWorkingSession = this.getSessionFromList(schoolProfile.currentSessionDbId);
             alert('School Profile updated successfully');
         }, error => {

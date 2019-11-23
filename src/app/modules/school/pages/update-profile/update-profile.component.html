@@ -171,20 +171,20 @@
 
                 <!-- Address -->
                 <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Pincode</label>
+                            <input type="number"
+                                   class="form-control"
+                                   [ngModel]="user.activeSchool.pincode" (ngModelChange)="currentPincode=$event">
+                        </div>
+                    </div>
                     <div class="col-md-8">
                         <div class="form-group form-black label-floating">
-                            <label class="control-label">Address</label>
+                            <label class="control-label">Street</label>
                             <input type="text"
                                    class="form-control"
                                    [ngModel]="user.activeSchool.address" (ngModelChange)="currentAddress=$event">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group form-black label-floating">
-                            <label class="control-label">Opacity (0 to 1)</label>
-                            <input type="number"
-                                   class="form-control"
-                                   [ngModel]="user.activeSchool.opacity" (ngModelChange)="currentOpacity=$event">
                         </div>
                     </div>
                 </div>
@@ -217,110 +217,45 @@
 
         </div>
 
-        <!-- Name -->
-        <!-- div class="row">
-            <div class="col-md-3">
-                Name
-            </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [ngModel]="user.activeSchool.name"
-                        (ngModelChange)="currentName=$event" />
-            </div>
-        </div -->
+        <div class="row">
 
-        <!-- Print Name -->
-        <!-- div class="row">
             <div class="col-md-3">
-                Print Name
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Village/City</label>
+                    <input type="text"
+                           class="form-control"
+                           [ngModel]="user.activeSchool.villageCity" (ngModelChange)="currentVillageCity=$event">
+                </div>
             </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [ngModel]="user.activeSchool.printName"
-                        (ngModelChange)="currentPrintName=$event"/>
-            </div>
-        </div -->
 
-        <!-- Mobile Number -->
-        <!-- div class="row">
             <div class="col-md-3">
-                Mobile No.
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Block</label>
+                    <input type="text"
+                           class="form-control"
+                           [ngModel]="user.activeSchool.block" (ngModelChange)="currentBlock=$event">
+                </div>
             </div>
-            <div class="col-md-3">
-                :<input type="number"
-                        [ngModel]="user.activeSchool.mobileNumber"
-                        (ngModelChange)="currentMobileNumber=$event"/>
-            </div>
-        </div -->
 
-        <!-- Dise Code -->
-        <!-- div class="row">
             <div class="col-md-3">
-                Dise Code
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">District</label>
+                    <input type="text"
+                           class="form-control"
+                           [ngModel]="user.activeSchool.district" (ngModelChange)="currentDistrict=$event">
+                </div>
             </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [ngModel]="user.activeSchool.diseCode"
-                        (ngModelChange)="currentDiseCode=$event"/>
-            </div>
-        </div -->
 
-        <!-- Registration No. -->
-        <!-- div class="row">
             <div class="col-md-3">
-                Registration No.
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">State</label>
+                    <input type="text"
+                           class="form-control"
+                           [ngModel]="user.activeSchool.state" (ngModelChange)="currentState=$event">
+                </div>
             </div>
-            <div class="col-md-3">
-                :<input type="text"
-                        [ngModel]="user.activeSchool.registrationNumber"
-                        (ngModelChange)="currentRegistrationNumber=$event"/>
-            </div>
-        </div -->
 
-        <!-- Medium -->
-        <!-- div class="row">
-            <div class="col-md-3">
-                Medium
-            </div>
-            <div class="col-md-3">
-                :
-                <select [(ngModel)]="currentMedium"
-                        style="margin-right: 15px">
-                    <option *ngFor="let medium of mediumList;" [ngValue]="medium">
-                        {{medium}}
-                    </option>
-                </select>
-            </div>
-        </div -->
-
-        <!-- Address -->
-        <!-- div class="row">
-            <div class="col-md-3">
-                Address
-            </div>
-            <div class="col-md-6">
-                :<input type="text"
-                        [ngModel]="user.activeSchool.address"
-                        (ngModelChange)="currentAddress=$event"/>
-            </div>
-        </div -->
-
-        <!-- Current Session -->
-        <!-- div class="row">
-            <div class="col-md-3">
-                Working Session:
-            </div>
-            <div class="col-md-3" *ngIf="selectedWorkingSession">
-                :
-                <select [ngModel]="selectedWorkingSession"
-                        (ngModelChange)="currentWorkingSession=$event"
-                        style="margin-right: 15px">
-                    <option *ngFor="let session of sessionList;" [ngValue]="session">
-                        {{session.name}}
-                    </option>
-                </select>
-            </div>
-        </div -->
+        </div>
 
         <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateSchoolProfile()">Update</button>
 

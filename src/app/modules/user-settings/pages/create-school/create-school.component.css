@@ -33,11 +33,11 @@
 	100% { transform: rotate(360deg); }
 }
 
-mat-form-field {
+/*mat-form-field {
 	margin-top: 23px;
 }
 
-/*input {
+input {
 	border-top: none;
 	border-left: none;
 	border-right: none;
@@ -47,12 +47,12 @@ mat-form-field {
 }*/
 
 .row {
-	padding: 10px;
+	padding: 0px 10px 0px 10px;
 }
 
-.row:hover {
+/*.row:hover {
 	background-color: lightgrey;
-}
+}*/
 
 .example-full-width {
 	width: 100%;

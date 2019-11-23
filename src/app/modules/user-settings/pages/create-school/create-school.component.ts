@@ -85,18 +85,16 @@ export class CreateSchoolComponent implements OnInit {
     }
 
     filterList(value: string, list: any): any {
-        console.log(value);
-        console.log(list);
         if (value === null || value === '') {
             return [];
         }
-        return list.filter( item => {
+        let filteredList = list.filter( item => {
             return item.toLowerCase().indexOf(value.toLowerCase()) === 0;
         });
+        return filteredList;
     }
 
     displayListFunction(value?: any): any {
-        console.log(value);
         if (value) {
             return value;
         }
@@ -104,11 +102,18 @@ export class CreateSchoolComponent implements OnInit {
     }
 
     displayFunction(value: any): any {
-        console.log(value);
         if (value) {
             return value;
         }
         return '';
+    }
+
+    getAffiliationPlaceholder(): any {
+        if (this.schoolProfile.parentBoard==this.boardList[0].id) {
+            return "School Code";
+        } else if (this.schoolProfile.parentBoard==this.boardList[1].id) {
+            return "Affiliation No.";
+        }
     }
 
 }
