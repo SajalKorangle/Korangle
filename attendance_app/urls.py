@@ -22,8 +22,8 @@ urlpatterns += [
 from attendance_app.views import EmployeeAppliedLeaveView, EmployeeAppliedLeaveListView
 
 urlpatterns += [
-    url(r'^employee-applied-leave/batch', EmployeeAppliedLeaveView.as_view()),
-    url(r'^employee-applied-leave', EmployeeAppliedLeaveListView.as_view()),
+    url(r'^employee-applied-leave/batch', EmployeeAppliedLeaveListView.as_view()),
+    url(r'^employee-applied-leave', EmployeeAppliedLeaveView.as_view()),
 ]
 
 

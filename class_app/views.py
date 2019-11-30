@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 
 from decorators import user_permission
 
-from common.common_views import CommonView, APIView, CommonListView, APIView
+from common.common_views import CommonView, CommonListView, APIView
 from decorators import user_permission_new
 from class_app.models import ClassTeacherSignature
 

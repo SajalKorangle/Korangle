@@ -119,4 +119,3 @@ class PrincipalSignatureImageView(APIView):
     def post(request, school_id):
         return update_principal_signature_image(request.FILES['myFile'], school_id)
 
-

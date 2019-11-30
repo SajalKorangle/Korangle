@@ -74,7 +74,7 @@ class School(models.Model):
     secondaryThemeColor = models.TextField(null=True)
     complexFeeStructure = models.BooleanField(default=False)
 
-    # address in now considered as street address
+    # address is now considered as street address
     address = models.TextField(null=True)
     pincode = models.IntegerField(null=True, verbose_name='pincode')
     villageCity = models.TextField(null=True, verbose_name='villageCity')

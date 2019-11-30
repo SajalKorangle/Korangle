@@ -1,7 +1,7 @@
 
 import json
 
-from common.common_views import CommonView, APIView, CommonListView, APIView
+from common.common_views import CommonView, CommonListView, APIView
 from decorators import user_permission_new
 from fees_third_app.business.discount import create_discount_object, create_discount_list
 
