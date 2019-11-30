@@ -419,6 +419,8 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
                 return 'Class - XI';
             case 'Class - 12':
                 return 'Class - XII';
+            default:
+                return className;
         }
     }
 
