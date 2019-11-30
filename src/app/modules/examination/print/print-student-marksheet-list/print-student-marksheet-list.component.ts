@@ -393,4 +393,33 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
         return result;
     }
 
+    getRomanClassName(className: any): any {
+        switch(className) {
+            case 'Class - 1':
+                return 'Class - I';
+            case 'Class - 2':
+                return 'Class - II';
+            case 'Class - 3':
+                return 'Class - III';
+            case 'Class - 4':
+                return 'Class - IV';
+            case 'Class - 5':
+                return 'Class - V';
+            case 'Class - 6':
+                return 'Class - VI';
+            case 'Class - 7':
+                return 'Class - VII';
+            case 'Class - 8':
+                return 'Class - VIII';
+            case 'Class - 9':
+                return 'Class - IX';
+            case 'Class - 10':
+                return 'Class - X';
+            case 'Class - 11':
+                return 'Class - XI';
+            case 'Class - 12':
+                return 'Class - XII';
+        }
+    }
+
 }

@@ -60,6 +60,7 @@ export class SetFinalReportComponent implements OnInit {
                 result = true;
                 return false;
             }
+            return true;
         });
 
         return result;

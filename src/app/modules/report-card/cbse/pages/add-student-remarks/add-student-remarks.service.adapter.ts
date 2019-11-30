@@ -1,9 +1,9 @@
 
-import {GradeStudentFieldsComponent} from './grade-student-fields.component';
+import {AddStudentRemarksComponent} from './add-student-remarks.component';
 
-export class GradeStudentFieldsServiceAdapter {
+export class AddStudentRemarksServiceAdapter {
 
-    vm: GradeStudentFieldsComponent;
+    vm: AddStudentRemarksComponent;
 
     constructor() {}
 
@@ -13,16 +13,7 @@ export class GradeStudentFieldsServiceAdapter {
     studentSectionList: any;
 
 
-    /*examinationList: any;
-    classList: any;
-    sectionList: any;
-    fieldList: any;
-    subFieldList: any;
-    permissionList: any;
-
-    studentList: any;*/
-
-    initializeAdapter(vm: GradeStudentFieldsComponent): void {
+    initializeAdapter(vm: AddStudentRemarksComponent): void {
         this.vm = vm;
     }
 
@@ -44,19 +35,14 @@ export class GradeStudentFieldsServiceAdapter {
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.extra_field, {}),
-            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.term, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
-            // this.vm.employeeService.getObjectList(this.vm.employeeService.)
         ]).then(value => {
 
             this.classList = value[0];
             this.sectionList = value[1];
-            this.vm.extraFieldList = value[2];
-            this.vm.termList = value[3];
-            this.vm.attendancePermissionList = value[4];
-            this.studentSectionList = value[5];
+            this.vm.attendancePermissionList = value[2];
+            this.studentSectionList = value[3];
 
             this.populateStudentSectionList();
 
@@ -77,18 +63,12 @@ export class GradeStudentFieldsServiceAdapter {
                 this.vm.isInitialLoading = false;
             });
 
-            this.populateSelectedExtraField();
-
             this.populateClassSectionList();
 
         }, error => {
             this.vm.isInitialLoading = false;
         });
 
-    }
-
-    populateSelectedExtraField(): void {
-        this.vm.selectedExtraField = this.vm.extraFieldList[0];
     }
 
     populateStudentSectionList(): void {
@@ -142,20 +122,13 @@ export class GradeStudentFieldsServiceAdapter {
         }
         if (this.vm.classSectionList.length > 0) {
             this.vm.selectedClassSection = this.vm.classSectionList[0];
-            if (this.vm.selectedClassSection.class.orderNumber >= 5) {
-                this.vm.selectedTerm = this.vm.termList[0];
-            } else {
-                this.vm.selectedTerm = this.vm.termList[2];
-            }
         }
     }
 
-    getStudentFieldDetails(): void {
+    getStudentRemarkDetails(): void {
 
-        let student_extra_field_data = {
-            'parentTerm': this.vm.selectedTerm.id,
+        let student_remark_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentExtraField': this.vm.selectedExtraField.id,
             'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
                 return studentSection.parentClass == this.vm.selectedClassSection.class.id
                     && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
@@ -165,10 +138,10 @@ export class GradeStudentFieldsServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_extra_field,student_extra_field_data),
+            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_remark,student_remark_data),
         ]).then(value => {
 
-            this.vm.studentExtraFieldList = value[0];
+            this.vm.studentRemarkList = value[0];
 
             this.vm.isLoading = false;
             this.vm.showStudentList = true;
@@ -178,27 +151,52 @@ export class GradeStudentFieldsServiceAdapter {
 
     }
 
-    updateStudentExtraFieldList(): void {
+    updateStudentRemark(studentSection: any, newRemark: any, element: any): void {
 
-        this.vm.isLoading = true;
+        if (this.vm.getStudentRemark(studentSection) != newRemark) {
 
-        let list_for_creation = this.vm.studentExtraFieldList.filter(studentExtraField => {
-            return !studentExtraField.id;
-        });
+            let prev_student_remark = this.vm.studentRemarkList.find(studentRemark => {
+                return studentRemark.parentStudent == studentSection.parentStudent;
+            });
 
-        let list_for_updation = this.vm.studentExtraFieldList.filter(studentExtraField => {
-            return studentExtraField.id;
-        });
+            let service_list = [];
 
-        Promise.all([
-            this.vm.reportCardCbseService.createObjectList(this.vm.reportCardCbseService.student_extra_field, list_for_creation),
-            this.vm.reportCardCbseService.updateObjectList(this.vm.reportCardCbseService.student_extra_field, list_for_updation),
-        ]).then(value => {
-            alert('Grades updated successfully');
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
+            if (prev_student_remark) {
+                let student_remark_data = {
+                    'id': prev_student_remark.id,
+                    'parentStudent': prev_student_remark.parentStudent,
+                    'parentSession': prev_student_remark.parentSession,
+                    'remark': newRemark,
+                };
+                service_list.push(this.vm.reportCardCbseService.updateObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
+            } else {
+                let student_remark_data = {
+                    'parentStudent': studentSection.parentStudent,
+                    'parentSession': studentSection.parentSession,
+                    'remark': newRemark,
+                };
+                service_list.push(this.vm.reportCardCbseService.createObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
+            }
+
+            element.classList.add('updatingField');
+
+            Promise.all(service_list).then(value => {
+
+                if(prev_student_remark) {
+                    this.vm.studentRemarkList.find(studentRemark => {
+                        return studentRemark.id == value[0].id;
+                    }).remark = value[0].remark;
+                } else {
+                    this.vm.studentRemarkList.push(value[0]);
+                }
+
+                element.classList.remove('updatingField');
+
+            }, error => {
+                // Nothing to do here
+            })
+
+        }
 
     }
 

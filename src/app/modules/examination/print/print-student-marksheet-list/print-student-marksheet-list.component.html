@@ -84,7 +84,7 @@
             <!-- Class -->
             <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
                 <div class="col-xs-12" align="center">
-                    <span style="font-size: 30px;">{{student.className}}</span>
+                    <span style="font-size: 30px;">{{getRomanClassName(student.className)}}</span>
                 </div>
             </div>
 
@@ -175,6 +175,22 @@
                 </div>
                 <div class="col-xs-2 studentInfo" style="padding-left: 0px !important;">
                     {{student.familySSMID}}
+                </div>
+            </div>
+
+            <!-- Class , Caste -->
+            <div class="row no-gutters" style="margin-bottom: 7px !important;">
+                <div class="col-xs-3 studentInfo" style="font-weight: normal !important;">
+                    Class<span style="float: right">:</span>
+                </div>
+                <div class="col-xs-4 studentInfo" style="padding-left: 0px !important;">
+                    {{getRomanClassName(student.className)}}, {{student.sectionName}}
+                </div>
+                <div class="col-xs-3 studentInfo" style="padding-left: 0px !important;font-weight: normal !important;">
+                    Caste<span style="float: right">:</span>
+                </div>
+                <div class="col-xs-2 studentInfo" style="padding-left: 0px !important;">
+                    {{student.caste}}
                 </div>
             </div>
 
@@ -339,7 +355,7 @@
             <!-- Percentage, Grade, Attendance, Division -->
             <div class="row no-gutters" style="font-size: 16px !important;">
                 <div class="col-xs-5 d-flex custom-padding">
-
+                    Remark:
                 </div>
                 <div class="col-xs-3 d-flex custom-padding">
 

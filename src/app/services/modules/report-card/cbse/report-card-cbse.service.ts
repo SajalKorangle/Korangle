@@ -15,7 +15,7 @@ export class ReportCardCbseService extends ReportCardService {
     public term = this.cbse_url+'/term';
     public extra_field = this.cbse_url+'/extra-field';
     public student_extra_field = this.cbse_url+'/student-extra-field';
-    public class_teacher_remark = this.cbse_url+'/class-teacher-remark';
+    public student_remark = this.cbse_url+'/student-remark';
     public report_card_mapping = this.cbse_url+'/report-card-mapping';
 
     constructor(private http_report_card_cbse: HttpClient) {

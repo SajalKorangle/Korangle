@@ -6,26 +6,11 @@
 
             <!-- Class Filter -->
             <mat-form-field style="margin-right: 15px;">
-                <!-- mat-select placeholder="Select Class" style="width: 100%;">
-
-                    <ng-container *ngFor="let class of classSectionList">
-                        <ng-container *ngFor="let section of class.sectionList">
-                            <mat-option style="width: 100%;">
-                                <mat-checkbox [ngModel]="section.selected"
-                                              (ngModelChange)="unselectAllClasses();section.selected=true;handleStudentDisplay();"
-                                              (click)="$event.stopPropagation();">
-                                    {{class.name}}<span *ngIf="showSectionName(class.name)">, {{section.name}}</span>
-                                </mat-checkbox>
-                            </mat-option>
-                        </ng-container>
-                    </ng-container>
-
-                </mat-select -->
                 <mat-select placeholder="Select Class"
                             style="width: 100%"
                             [(ngModel)]="selectedClassSection">
                     <mat-option *ngFor="let classSection of classSectionList;" [value]="classSection">
-                        {{classSection.class.name}}<span *ngIf="showSectionName(class.name)">, {{classSection.section.name}}</span>
+                        {{classSection.class.name}}<span *ngIf="showSectionName(classSection)">, {{classSection.section.name}}</span>
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -33,17 +18,22 @@
             <button type="submit"
                     style="margin-left: 20px;"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.getStudentFinalReport()" disabled>GET</button>
+                    [disabled]="getSelectedStudentNumber()==0"
+                    (click)="serviceAdapter.getStudentFinalReport()">GET</button>
 
             <div>
                 <mat-checkbox [(ngModel)]="showPrincipalSignature">
                     Show Principal Signature
                 </mat-checkbox>
+                <mat-checkbox style="margin-left: 10px;"
+                              [(ngModel)]="showClassTeacherSignature">
+                    Show Class Teacher Signature
+                </mat-checkbox>
             </div>
 
             <br/>
-            <ng-container *ngIf="getFilteredStudentList().length>0">
-                <ng-container *ngFor="let item of ' '.repeat((getFilteredStudentList().length+9)/10).split(''); let i = index; let last=last;">
+            <ng-container *ngIf="getFilteredStudentSectionList().length>0">
+                <ng-container *ngFor="let item of ' '.repeat((getFilteredStudentSectionList().length+9)/10).split(''); let i = index; let last=last;">
                     <mat-checkbox *ngIf="!last"
                                   [ngModel]="getSelectedStudentsValue(i*10, i*10+10)"
                                   (ngModelChange)="selectStudents(i*10, i*10+10, $event)"
@@ -51,10 +41,10 @@
                         {{i*10+1}} - {{i*10+10}},
                     </mat-checkbox>
                     <mat-checkbox *ngIf="last"
-                                  [ngModel]="getSelectedStudentsValue(i*10, getFilteredStudentList().length)"
-                                  (ngModelChange)="selectStudents(i*10, getFilteredStudentList().length, $event)"
+                                  [ngModel]="getSelectedStudentsValue(i*10, getFilteredStudentSectionList().length)"
+                                  (ngModelChange)="selectStudents(i*10, getFilteredStudentSectionList().length, $event)"
                                   style="margin-right: 20px;">
-                        {{i*10+1}} - {{getFilteredStudentList().length}},
+                        {{i*10+1}} - {{getFilteredStudentSectionList().length}},
                     </mat-checkbox>
                 </ng-container>
             </ng-container>
@@ -62,75 +52,51 @@
             Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
             <br/>
 
-            <!-- ngx-datatable
-                    class='material ngxDataTable'
-                    [rows]='filteredStudentList'
-                    [columnMode]="'force'"
-                    [headerHeight]="50"
-                    [footerHeight]="50"
-                    [rowHeight]="getRowHeight"
-                    [rowClass]="getRowClass"
-                    [scrollbarV]="true"
-                    [scrollbarH]="true"
-                    (page)="onPage($event)">
-                <ngx-datatable-column name="S No.">
-                    <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
-                        {{rowIndex+1}}.
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Selected">
-                    <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
-                        <mat-checkbox [ngModel]="row['selected']"
-                                      (ngModelChange)="updateRowValue(row, $event)"
-                                      [disabled]="!row.selected && getSelectedStudentNumber()>=10">
-                            <span *ngIf="row.selected">Selected</span>
-                            <span *ngIf="!row.selected">Unselected</span>
-                        </mat-checkbox>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Photo">
-                    <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
-                        <img *ngIf="row.profileImage" src="{{row.profileImage}}" style="width: 20%;">
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Name">
-                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                        <strong>{{value}}</strong>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Class">
-                    <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
-                        <strong>{{row.className}}<span *ngIf="showSectionName(row.className)">, {{row.sectionName}}</span></strong>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Roll No.">
-                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                        <i>{{row.rollNumber}}</i>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Father's Name">
-                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                        <i>{{row.fathersName}}</i>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Scholar No.">
-                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                        <i>{{row.scholarNumber}}</i>
-                    </ng-template>
-                </ngx-datatable-column>
-            </ngx-datatable -->
-
-            <!-- ng-container *ngFor="let class of classSectionStudentList">
-                <ng-container *ngFor="let section of class.sectionList">
-                    <ng-container *ngFor="let student of section.studentList">
-                        <img src="{{student.profileImage}}" style="width: 0px; height: 0px;">
-                    </ng-container>
+            <table class="table table-hover">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th>S No.</th>
+                    <th>Selected</th>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Roll No.</th>
+                    <th>Father's Name</th>
+                    <th>Scholar No.</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngFor="let studentSection of getFilteredStudentSectionList(); let i=index;">
+                    <tr>
+                        <ng-container>
+                            <td>{{i+1}}.</td>
+                            <td>
+                                <mat-checkbox [(ngModel)]="studentSection.selected"
+                                              [disabled]="!studentSection.selected && getSelectedStudentNumber()>=10">
+                                    <!-- span *ngIf="studentSection.selected">Selected</span>
+                                    <span *ngIf="!studentSection.selected">Unselected</span -->
+                                </mat-checkbox>
+                            </td>
+                            <td>
+                                <img src="{{getStudent(studentSection).profileImage}}" style="width: 30px; height: 30px;">
+                            </td>
+                            <td>{{getStudent(studentSection).name}}</td>
+                            <td>{{studentSection.rollNumber}}</td>
+                            <td>{{getStudent(studentSection).fathersName}}</td>
+                            <td>{{getStudent(studentSection).scholarNumber}}</td>
+                        </ng-container>
+                    </tr>
                 </ng-container>
-            </ng-container -->
+                </tbody>
+            </table>
+
+            <ng-container *ngFor="let studentSection of studentSectionList">
+                <img src="{{getStudent(studentSection).profileImage}}" style="width: 0px; height: 0px;">
+            </ng-container>
+            <img src="https://www.enewstime.in/wp-content/uploads/2018/03/PICNN616.jpg" style="width: 0px; height: 0px;">
 
         </ng-container>
 
-        <ng-container *ngIf="reportCardMappingList.length > 0">
+        <ng-container *ngIf="reportCardMappingList.length == 0">
             Please "set report card" before generating them.
         </ng-container>
 

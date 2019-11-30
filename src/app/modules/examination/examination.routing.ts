@@ -35,6 +35,11 @@ const routes: Routes = [
         data: {moduleName: 'examinations'},
     },
     {
+        path: 'view_marks',
+        loadChildren: 'app/modules/examination/pages/view-marks/view-marks.module#ViewMarksModule',
+        data: {moduleName: 'examinations'},
+    },
+    {
         path: '',
         component: ExaminationComponent,
     },

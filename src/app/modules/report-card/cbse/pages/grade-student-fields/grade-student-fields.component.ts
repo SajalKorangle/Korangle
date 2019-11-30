@@ -87,6 +87,10 @@ export class GradeStudentFieldsComponent implements OnInit {
         return this.studentSectionList.filter(studentSection => {
             return studentSection.parentClass == this.selectedClassSection.class.id
                 && studentSection.parentDivision == this.selectedClassSection.section.id;
+        }).sort( (a,b) => {
+            if (a.rollNumber && b.rollNumber) {
+                return a.rollNumber - b.rollNumber;
+            }
         });
     }
 
@@ -159,6 +163,43 @@ export class GradeStudentFieldsComponent implements OnInit {
             };
             this.studentExtraFieldList.push(item);
         }
+    }
+
+    getGradeNumber(grade: any = null): number {
+        let gradeNumber = 0;
+        if(grade == null) {
+            gradeNumber = this.studentSectionList.filter(studentSection => {
+                return studentSection.parentClass == this.selectedClassSection.class.id
+                    && studentSection.parentDivision == this.selectedClassSection.section.id;
+            }).length - this.studentExtraFieldList.length;
+        } else {
+            this.studentExtraFieldList.forEach(studentExtraField => {
+                if (studentExtraField.grade == grade) {
+                    gradeNumber = gradeNumber + 1;
+                }
+            });
+        }
+        return gradeNumber;
+    }
+
+    declareAllGrade(grade: any): void {
+        console.log(grade);
+        this.studentExtraFieldList.forEach(studentExtraField => {
+            studentExtraField['grade'] = grade;
+        });
+        this.getFilteredStudentSectionList().filter(studentSection => {
+            return this.studentExtraFieldList.find(studentExtraField => {
+                return studentExtraField.parentStudent == studentSection.parentStudent;
+            }) == undefined;
+        }).forEach(studentSection => {
+            this.studentExtraFieldList.push({
+                'parentStudent': studentSection.parentStudent,
+                'parentSession': studentSection.parentSession,
+                'parentTerm': this.selectedTerm.id,
+                'parentExtraField': this.selectedExtraField.id,
+                'grade': grade,
+            });
+        });
     }
 
 }

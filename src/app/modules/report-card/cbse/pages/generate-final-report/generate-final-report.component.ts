@@ -4,7 +4,7 @@ import { GenerateFinalReportServiceAdapter } from './generate-final-report.servi
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { AttendanceOldService } from '../../../../../services/modules/attendance/attendance-old.service';
+import { AttendanceService } from "../../../../../services/modules/attendance/attendance.service";
 
 import { PrintService } from '../../../../../print/print-service';
 import { DataStorage } from "../../../../../classes/data-storage";
@@ -14,13 +14,14 @@ import { ClassService } from "../../../../../services/modules/class/class.servic
 import { StudentService } from "../../../../../services/modules/student/student.service";
 import { ExaminationService } from "../../../../../services/modules/examination/examination.service";
 import { SubjectService } from "../../../../../services/modules/subject/subject.service";
+import {PRINT_STUDENT_JUNIOR_REPORT, PRINT_STUDENT_SENIOR_REPORT} from "../../../../../print/print-routes.constants";
 
 @Component({
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
     providers: [ ReportCardCbseService, ClassService, StudentService, ExaminationService, SubjectService,
-         AttendanceOldService ],
+         AttendanceService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -35,9 +36,20 @@ export class GenerateFinalReportComponent implements OnInit {
     reportCardMappingList = [];
     classSectionList = [];
     studentSectionList = [];
+    studentList = [];
     examinationList = [];
 
+    testList = [];
+    studentProfileList = [];
+    studentTestList = [];
+    studentExtraFieldList = [];
+    studentRemarkList = [];
+    termStudentAttendanceList = [];
+    classSubjectList = [];
+    classTeacherSignature = null;
+
     showPrincipalSignature = true;
+    showClassTeacherSignature = true;
 
     serviceAdapter: GenerateFinalReportServiceAdapter;
 
@@ -49,7 +61,7 @@ export class GenerateFinalReportComponent implements OnInit {
                 public classService: ClassService,
                 public examinationService: ExaminationService,
                 public subjectService: SubjectService,
-                public attendanceOldService: AttendanceOldService,
+                public attendanceService: AttendanceService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}
 
@@ -67,27 +79,35 @@ export class GenerateFinalReportComponent implements OnInit {
 
     printStudentFinalReport(): void {
         let data = {
-            // 'extraFieldList': this.extraFieldList,
-            // 'subjectList': this.subjectList,
-            // 'studentFinalReportList': this.studentFinalReportCardList,
-            // 'reportCardMapping': this.reportCardMapping,
-            // 'showPrincipalSignature': this.showPrinicipalSignature,
+            'termList': this.termList,
+            'extraFieldList': this.extraFieldList,
+            'selectedClassSection': this.selectedClassSection,
+            'studentSectionList': this.getSelectedStudentList(),
+            'showSection': this.showSectionName(this.selectedClassSection),
+            'testList': this.testList,
+            'studentList': this.studentList.filter(student => {
+                return this.getSelectedStudentList().find(studentSection => {
+                    return studentSection.parentStudent == student.id;
+                }) != undefined;
+            }),
+            'studentTestList': this.studentTestList,
+            'studentExtraFieldList': this.studentExtraFieldList,
+            'studentRemarkList': this.studentRemarkList,
+            'termStudentAttendanceList': this.termStudentAttendanceList,
+            'reportCardMappingList': this.reportCardMappingList,
+            'subjectList': this.subjectList,
+            'classSubjectList': this.classSubjectList,
+            'showPrincipalSignature': this.showPrincipalSignature,
+            'classTeacherSignature': this.classTeacherSignature,
         };
-        // let selectedClassSection = this.getSelectedClassSection();
         let printRoute : string;
-        
-        /*if (selectedClassSection.className == 'Class - 9') {
-            printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT;
-        } else if( selectedClassSection.className == 'Class - 11'){
-            printRoute = PRINT_STUDENT_ELEVENTH_FINAL_REPORT;
-        } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[2]) {
-            printRoute = PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT;
-        } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[1]) {
-            printRoute = PRINT_STUDENT_ELEGANT_FINAL_REPORT;
-        } else {
-            printRoute = PRINT_STUDENT_CLASSIC_FINAL_REPORT;
-        }*/
 
+        if (this.selectedClassSection.class.orderNumber >= 5) {
+            printRoute = PRINT_STUDENT_JUNIOR_REPORT;
+        } else {
+            printRoute = PRINT_STUDENT_SENIOR_REPORT;
+        }
+        
         this.printService.navigateToPrintRoute(printRoute, {user: this.user, value: data});
         alert('This may take a while');
     }
@@ -99,23 +119,62 @@ export class GenerateFinalReportComponent implements OnInit {
         }, 100);
     }
 
+    getStudent(studentSection: any): any {
+        return this.studentList.find(student => {
+            return student.id == studentSection.parentStudent;
+        });
+    }
+
     showSectionName(classSection: any): boolean {
         return this.classSectionList.filter(item => {
             return item.class.id == classSection.class.id;
         }).length > 1;
     }
 
-    getFilteredStudentList(): any {
+    getFilteredStudentSectionList(): any {
         return this.studentSectionList.filter(studentSection => {
             return studentSection.parentClass == this.selectedClassSection.class.id
                 && studentSection.parentDivision == this.selectedClassSection.section.id;
         });
     }
 
-    getSelectedStudentNumber(): number {
-        return this.getFilteredStudentList().filter(studentSection => {
+    getSelectedStudentList(): any {
+        return this.getFilteredStudentSectionList().filter(studentSection => {
             return studentSection.selected == true;
-        }).length;
+        });
+    }
+
+    getSelectedStudentNumber(): number {
+        return this.getSelectedStudentList().length;
+    }
+
+    getSelectedStudentsValue(from: number, to: number): boolean {
+        let result = true;
+        this.getFilteredStudentSectionList().slice(from, to).every(studentSection => {
+            if (!studentSection.selected) {
+                result = false;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    selectStudents(from: number, to: number, value: boolean): void {
+        this.unselectAllStudents();
+        if (value) {
+            this.getFilteredStudentSectionList().slice(from, to).forEach(student => {
+                student.selected = true;
+            });
+        }
+        this.cdRef.detectChanges();
+    }
+
+    unselectAllStudents(): void {
+        this.getFilteredStudentSectionList().forEach(student => {
+            student.selected = false;
+        });
+        this.cdRef.detectChanges();
     }
 
 }
