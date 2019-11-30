@@ -5,7 +5,7 @@ from .views import \
     TermView, TermListView, \
     ExtraFieldView, ExtraFieldListView, \
     StudentExtraFieldView, StudentExtraFieldListView, \
-    ClassTeacherRemarkView, ClassTeacherRemarkListView, \
+    StudentRemarkView, StudentRemarkListView, \
     ReportCardMappingView, ReportCardMappingListView
 
 urlpatterns = []
@@ -21,8 +21,8 @@ urlpatterns += [
     url(r'^' + 'student-extra-field/batch', StudentExtraFieldListView.as_view()),
     url(r'^' + 'student-extra-field', StudentExtraFieldView.as_view()),
 
-    url(r'^' + 'class-teacher-remark/batch', ClassTeacherRemarkListView.as_view()),
-    url(r'^' + 'class-teacher-remark', ClassTeacherRemarkView.as_view()),
+    url(r'^' + 'student-remark/batch', StudentRemarkListView.as_view()),
+    url(r'^' + 'student-remark', StudentRemarkView.as_view()),
 
     url(r'^' + 'report-card-mapping/batch', ReportCardMappingListView.as_view()),
     url(r'^' + 'report-card-mapping', ReportCardMappingView.as_view()),

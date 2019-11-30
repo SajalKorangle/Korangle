@@ -1,7 +1,7 @@
 
 from common.common_views import CommonListView, CommonView
 from rest_framework.views import APIView
-from .models  import Term, ExtraField, StudentExtraField, ClassTeacherRemark, ReportCardMapping
+from .models  import Term, ExtraField, StudentExtraField, StudentRemark, ReportCardMapping
 
 
 ########### Term #############
@@ -40,12 +40,12 @@ class StudentExtraFieldListView(CommonListView, APIView):
 ########### Class Teacher Remark #############
 
 
-class ClassTeacherRemarkView(CommonView, APIView):
-    Model = ClassTeacherRemark
+class StudentRemarkView(CommonView, APIView):
+    Model = StudentRemark
 
 
-class ClassTeacherRemarkListView(CommonListView, APIView):
-    Model = ClassTeacherRemark
+class StudentRemarkListView(CommonListView, APIView):
+    Model = StudentRemark
 
 
 ########### Report Card Mapping #############
