@@ -1,15 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
     selector: 'app-fee-receipt-list',
     templateUrl: './fee-receipt-list-component.component.html',
     styleUrls: ['./fee-receipt-list-component.component.css'],
+    providers: [SchoolService]
 })
-export class FeeReceiptListComponent {
+export class FeeReceiptListComponent implements OnInit {
 
     @Input() user;
     @Input() feeTypeList;
@@ -29,7 +31,18 @@ export class FeeReceiptListComponent {
     installmentList = INSTALLMENT_LIST;
     sessionList = SESSION_LIST;
 
-    constructor(private printService: PrintService) { }
+    constructor(private printService: PrintService,
+                private schoolService: SchoolService) { }
+
+    ngOnInit() {
+
+        this.schoolService.getObjectList(this.schoolService.board, {}).then(value => {
+            this.boardList = value;
+        }, error => {
+
+        });
+
+    }
 
     printFeeReceipt(feeReceipt: any): void {
 
@@ -42,6 +55,7 @@ export class FeeReceiptListComponent {
             'classList': this.classList,
             'sectionList': this.sectionList,
             'employeeList': this.employeeList,
+            'boardList': this.boardList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, {user: this.user, value: data});
