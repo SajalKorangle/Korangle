@@ -111,6 +111,8 @@ export class SendSmsServiceAdapter {
 
                 service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data));
                 service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
+
+                loopVariable = loopVariable + 1;
             }
 
             /*if(stringMobileNumberList.length>700) {
@@ -179,6 +181,7 @@ export class SendSmsServiceAdapter {
                 while(loopVariable<iterationCount) {
                     gcmDeviceList = gcmDeviceList.concat(value2[loopVariable*2]);
                     userList = userList.concat(value2[loopVariable*2+1]);
+                    loopVariable = loopVariable + 1;
                 }
 
                 this.vm.gcmDeviceList = gcmDeviceList;
