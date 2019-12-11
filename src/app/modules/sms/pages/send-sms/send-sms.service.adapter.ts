@@ -94,7 +94,26 @@ export class SendSmsServiceAdapter {
 
             let service_list = [];
 
-            if(stringMobileNumberList.length>700) {
+            let iterationCount = Math.ceil(stringMobileNumberList.length/700);
+
+            let loopVariable = 0;
+            while(loopVariable<iterationCount) {
+
+                let gcm_device_data = {
+                    'user__username__in': stringMobileNumberList.slice(700*loopVariable,700*(loopVariable+1)),
+                    'active': 'true__boolean',
+                };
+
+                let user_data = {
+                    'fields__korangle': 'username,id',
+                    'username__in': stringMobileNumberList.slice(700*loopVariable,700*(loopVariable+1)),
+                };
+
+                service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data));
+                service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
+            }
+
+            /*if(stringMobileNumberList.length>700) {
 
                 let gcm_device_data_1 = {
                     'user__username__in': stringMobileNumberList.slice(0,700),
@@ -136,7 +155,7 @@ export class SendSmsServiceAdapter {
                 service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data));
                 service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
 
-            }
+            }*/
 
             // console.log(gcm_device_data);
             // console.log(user_data);
@@ -145,13 +164,25 @@ export class SendSmsServiceAdapter {
 
                 console.log(value2);
 
-                if (service_list.length == 4) {
+                /*if (service_list.length == 4) {
                     this.vm.gcmDeviceList = value2[0].concat(value2[1]);
                     this.populateFilteredUserList(value2[2].concat(value2[3]));
                 } else {
                     this.vm.gcmDeviceList = value2[0];
                     this.populateFilteredUserList(value2[1]);
+                }*/
+
+                let gcmDeviceList = [];
+                let userList = [];
+
+                let loopVariable = 0;
+                while(loopVariable<iterationCount) {
+                    gcmDeviceList = gcmDeviceList.concat(value2[loopVariable*2]);
+                    userList = userList.concat(value2[loopVariable*2+1]);
                 }
+
+                this.vm.gcmDeviceList = gcmDeviceList;
+                this.populateFilteredUserList(userList);
 
                 this.vm.isLoading = false;
 
