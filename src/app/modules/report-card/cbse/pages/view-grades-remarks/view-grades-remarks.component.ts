@@ -38,8 +38,10 @@ export class ViewGradesRemarksComponent implements OnInit {
     studentList = [];
     studentSectionList = [];
     studentRemarkList = [];
+    extraFieldList = [];
 
     selectedClassSection: any;
+    selectedExtraField: any;
 
     showStudentList = false;
 
@@ -68,7 +70,7 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     getFilteredStudentSectionList(): any {
-        return this.studentSectionList.filter(studentSection => {
+        let data =  this.studentSectionList.filter(studentSection => {
             return studentSection.parentClass == this.selectedClassSection.class.id
                 && studentSection.parentDivision == this.selectedClassSection.section.id;
         }).sort( (a,b) => {
@@ -76,6 +78,8 @@ export class ViewGradesRemarksComponent implements OnInit {
                 return a.rollNumber - b.rollNumber;
             }
         });
+        // console.log(data);
+        return data;
     }
 
     getStudent(studentSection: any): any {
@@ -85,9 +89,11 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     getStudentRemark(studentSection: any): any {
+        // console.log(studentSection);
         let item = this.studentRemarkList.find(studentRemark => {
             return studentRemark.parentStudent == studentSection.parentStudent;
         });
+        // console.log(item);
         if (item) {
             return item.remark;
         } else {

@@ -38,12 +38,11 @@ export class ViewGradesRemarksServiceAdapter {
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
         ]).then(value => {
-
+            // console.log(value);
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.attendancePermissionList = value[2];
             this.studentSectionList = value[3];
-
             this.populateStudentSectionList();
 
             let student_data = {
@@ -54,7 +53,7 @@ export class ViewGradesRemarksServiceAdapter {
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student,student_data),
             ]).then(value2 => {
-
+                // console.log(value2);
                 this.vm.studentList = value2[0];
 
                 this.vm.isInitialLoading=false;
@@ -64,13 +63,13 @@ export class ViewGradesRemarksServiceAdapter {
             });
 
             this.populateClassSectionList();
+            // this.getStudentRemarkDetails();
 
         }, error => {
             this.vm.isInitialLoading = false;
         });
 
     }
-
     populateStudentSectionList(): void {
 
         if (this.vm.attendancePermissionList.length > 0) {
@@ -140,7 +139,7 @@ export class ViewGradesRemarksServiceAdapter {
         Promise.all([
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_remark,student_remark_data),
         ]).then(value => {
-
+            // console.log(value);
             this.vm.studentRemarkList = value[0];
 
             this.vm.isLoading = false;

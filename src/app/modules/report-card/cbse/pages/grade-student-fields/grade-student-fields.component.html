@@ -17,6 +17,7 @@
                     </mat-select>
                 </mat-form-field>
 
+
             </div>
 
             <div class="col-md-3" *ngIf="showTermList()">
@@ -28,9 +29,9 @@
                                 (ngModelChange)="selectedTerm=$event;showStudentList=false;">
                         <mat-option *ngFor='let term of termList.slice(0,2);' [value]="term">
                             {{term.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
 
             </div>
 
