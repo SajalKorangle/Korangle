@@ -26,8 +26,6 @@ export class ViewNotificationComponent {
 
     isLoadingMoreNotification = false;
 
-    hasChecked = false;
-    
     constructor (public notificationService: NotificationService) { }
 
     ngOnInit(): void {

@@ -34,10 +34,8 @@ export class ViewNotificationServiceAdapter {
                 this.vm.loadMoreNotifications = false;
             }
             this.vm.isLoading = false;
-            this.vm.hasChecked = true;
         }, error=> {
             this.vm.isLoading = false;
-            this.vm.hasChecked = true;
         });
 
     }
