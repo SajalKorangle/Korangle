@@ -39,9 +39,13 @@ export class ViewGradesRemarksComponent implements OnInit {
     studentSectionList = [];
     studentRemarkList = [];
     extraFieldList = [];
+    termList =[];
 
     selectedClassSection: any;
     selectedExtraField: any;
+    selectedTerm: any;
+
+    studentExtraFieldList = [];
 
     showStudentList = false;
 
@@ -66,7 +70,21 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     handleClassSectionChange(classSection: any): void {
+        console.log(this.termList);
         this.selectedClassSection = classSection;
+        if (this.selectedClassSection.class.orderNumber >= 5) {
+            this.selectedTerm = this.termList[0];
+        } else {
+            this.selectedTerm = this.termList[2];
+        }
+    }
+
+    showTermList(): boolean {
+        if (this.selectedClassSection.class.orderNumber >= 5) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     getFilteredStudentSectionList(): any {
@@ -98,6 +116,28 @@ export class ViewGradesRemarksComponent implements OnInit {
             return item.remark;
         } else {
             return '';
+        }
+    }
+
+    getGrade(studentSection: any): any {
+        // console.log(this.studentExtraFieldList);
+        let item = this.studentExtraFieldList.find(studentExtraField => {
+            return studentExtraField.parentStudent == studentSection.parentStudent;
+        });
+        // console.log(item);
+        if (item) {
+            return item.grade;
+        } else {
+            return 'NA';
+        }
+    }
+
+    getRequiredField(studentSection: any): any{
+        console.log(this.selectedExtraField);
+        if(this.selectedExtraField=='remark-field'){
+            return this.getStudentRemark(studentSection);
+        }else{
+            return this.getGrade(studentSection);
         }
     }
 

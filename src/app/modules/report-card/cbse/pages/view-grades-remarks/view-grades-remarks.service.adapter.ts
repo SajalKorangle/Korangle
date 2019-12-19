@@ -37,13 +37,19 @@ export class ViewGradesRemarksServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
+            // Fetching the extra fields and the terms
+            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.extra_field, {}),
+            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.term, {}),
         ]).then(value => {
             // console.log(value);
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.attendancePermissionList = value[2];
             this.studentSectionList = value[3];
+            this.vm.extraFieldList = value[4];
+            this.vm.termList = value[5];
             this.populateStudentSectionList();
+            console.log(this.vm.extraFieldList);
 
             let student_data = {
                 'id__in': this.vm.studentSectionList.map(a => a.parentStudent).join(','),
@@ -61,8 +67,8 @@ export class ViewGradesRemarksServiceAdapter {
             }, error => {
                 this.vm.isInitialLoading = false;
             });
-
             this.populateClassSectionList();
+            this.populateSelectedExtraField();
             // this.getStudentRemarkDetails();
 
         }, error => {
@@ -83,6 +89,10 @@ export class ViewGradesRemarksServiceAdapter {
             this.vm.studentSectionList = this.studentSectionList;
         }
 
+    }
+
+    populateSelectedExtraField(): void{
+        this.vm.selectedExtraField = this.vm.extraFieldList[0];
     }
 
     populateClassSectionList(): void {
@@ -121,13 +131,71 @@ export class ViewGradesRemarksServiceAdapter {
         }
         if (this.vm.classSectionList.length > 0) {
             this.vm.selectedClassSection = this.vm.classSectionList[0];
+            if (this.vm.selectedClassSection.class.orderNumber >= 5) {
+                this.vm.selectedTerm = this.vm.termList[0];
+            } else {
+                this.vm.selectedTerm = this.vm.termList[2];
+            }
         }
     }
 
     getStudentRemarkDetails(): void {
+        if(this.vm.selectedExtraField !== 'remark-field') {
+            let student_extra_field_data = {
+                'parentTerm': this.vm.selectedTerm.id,
+                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentExtraField': this.vm.selectedExtraField.id,
+                'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
+                    return studentSection.parentClass == this.vm.selectedClassSection.class.id
+                        && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
+                }).map(item => item.parentStudent).join(','),
+            };
 
-        let student_remark_data = {
+            this.vm.isLoading = true;
+
+            Promise.all([
+                this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_extra_field, student_extra_field_data),
+            ]).then(value => {
+
+                this.vm.studentExtraFieldList = value[0];
+
+                this.vm.isLoading = false;
+                this.vm.showStudentList = true;
+            }, error => {
+                this.vm.isLoading = false;
+            });
+        }else {
+            let student_remark_data = {
+                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
+                    return studentSection.parentClass == this.vm.selectedClassSection.class.id
+                        && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
+                }).map(item => item.parentStudent).join(','),
+            };
+
+            this.vm.isLoading = true;
+
+            Promise.all([
+                this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_remark, student_remark_data),
+            ]).then(value => {
+                // console.log(value);
+                this.vm.studentRemarkList = value[0];
+
+                this.vm.isLoading = false;
+                this.vm.showStudentList = true;
+            }, error => {
+                this.vm.isLoading = false;
+            });
+        }
+
+    }
+
+    getStudentFieldDetails(): void {
+
+        let student_extra_field_data = {
+            // 'parentTerm': this.vm.selectedTerm.id,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentExtraField': this.vm.selectedExtraField.id,
             'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
                 return studentSection.parentClass == this.vm.selectedClassSection.class.id
                     && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
@@ -137,10 +205,10 @@ export class ViewGradesRemarksServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_remark,student_remark_data),
+            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_extra_field,student_extra_field_data),
         ]).then(value => {
-            // console.log(value);
-            this.vm.studentRemarkList = value[0];
+
+            this.vm.studentExtraFieldList = value[0];
 
             this.vm.isLoading = false;
             this.vm.showStudentList = true;

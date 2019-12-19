@@ -15,6 +15,38 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <div class="col-md-3" *ngIf="showTermList()">
+
+                <mat-form-field>
+                    <mat-select placeholder="Select Term"
+                                [ngModel]="selectedTerm"
+                                [disabled]="isLoading"
+                                (ngModelChange)="selectedTerm=$event;showStudentList=false;">
+                        <mat-option *ngFor='let term of termList.slice(0,2);' [value]="term">
+                            {{term.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <mat-form-field>
+                    <mat-select placeholder="Select Field"
+                                [ngModel]="selectedExtraField"
+                                [disabled]="isLoading"
+                                (ngModelChange)="selectedExtraField=$event;showStudentList=false;">
+                        <mat-option *ngFor='let extraField of extraFieldList;' [value]="extraField">
+                            {{extraField.name}}
+                        </mat-option>
+                        <mat-option value="remark-field">
+                            Remarks
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
             <button type="submit"
                     style="margin-left: 20px;"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
@@ -30,7 +62,7 @@
                     <th>S No.</th>
                     <th>Student</th>
                     <th>Roll No.</th>
-                    <th>Remark</th>
+                    <th>Grades/Remark</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,7 +76,7 @@
                             {{getStudent(studentSection).rollNumber}}
                         </td>
                         <td>
-                            {{getStudentRemark(studentSection)}}
+                            {{getRequiredField(studentSection)}}
                             <!--<mat-form-field class="example-full-width">-->
                                 <!--<textarea matInput-->
                                           <!--type="text"-->
