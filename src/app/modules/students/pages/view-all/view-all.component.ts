@@ -415,7 +415,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup?studentDisplay.push(student.bloodGroup):'';
         this.columnFilter.showFatherAnnualIncome?studentDisplay.push(student.fatherAnnualIncome):'';
         this.columnFilter.showRTE?studentDisplay.push(student.rte):'';
-        this.columnFilter.showRemark?studentDisplay.push('remark'):'';
+        this.columnFilter.showRemark?studentDisplay.push(student.remark):'';
 
         return studentDisplay;
     }
