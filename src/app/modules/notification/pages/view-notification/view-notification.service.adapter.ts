@@ -15,7 +15,7 @@ export class ViewNotificationServiceAdapter {
 
     //initialize data
     initializeData(): void {
-        
+
         let count = this.vm.notificationList.length;
 
         let notification_data = {
