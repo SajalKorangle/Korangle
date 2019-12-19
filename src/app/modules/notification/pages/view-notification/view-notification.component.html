@@ -1,6 +1,6 @@
 <div class="card-content">
 
-    <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="!isLoading else isLoadingElseBlock">
 
         <ng-container *ngFor="let notification of notificationList">
             <mat-card style="margin-bottom: 10px;">
@@ -24,7 +24,24 @@
 
     </ng-container>
 
+
+
+    <!-- Created by Harry Chhabra; Dated: 19.12.2019 -->
+    <ng-container #isLoadingElseBlock>
+        <div class="text-center">
+            <div class="visible-xs visible-sm" style="margin-top:80px;"></div>
+            <i class="material-icons">notifications_none</i>
+            <br>
+            <i>You have no Notifications yet !</i>
+            <br><br>
+            <span class="visible-xs visible-sm">
+                Click on &nbsp;&nbsp;<span style=''>&#8801;</span>&nbsp;&nbsp; to explore more
+            </span>
+        </div>
+    </ng-container>
+
 </div>
+
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
