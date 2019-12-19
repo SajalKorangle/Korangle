@@ -15,7 +15,7 @@ export class ViewNotificationServiceAdapter {
 
     //initialize data
     initializeData(): void {
-
+        
         let count = this.vm.notificationList.length;
 
         let notification_data = {
@@ -34,8 +34,10 @@ export class ViewNotificationServiceAdapter {
                 this.vm.loadMoreNotifications = false;
             }
             this.vm.isLoading = false;
+            this.vm.hasChecked = true;
         }, error=> {
             this.vm.isLoading = false;
+            this.vm.hasChecked = true;
         });
 
     }
