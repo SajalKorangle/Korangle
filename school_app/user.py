@@ -164,6 +164,7 @@ def get_school_data_by_object(school_object):
     return school_data
 
 
+
 class AuthenticationHandler():
     def authenticate_and_login(username, response):
         if 'token' in response.data:
@@ -177,7 +178,6 @@ class AuthenticationHandler():
 
 class LoginUserView(JSONWebTokenAPIView):
     serializer_class = JSONWebTokenSerializer
-
     def post(self, request, *args, **kwargs):
         username = request.data['username']
         if username:
@@ -191,6 +191,7 @@ class LoginUserView(JSONWebTokenAPIView):
                 username=username,
                 response=response
         )
+
         return Response({"data": response_data})
 
 
