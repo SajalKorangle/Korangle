@@ -37,3 +37,9 @@ urlpatterns = [
     url(r'^'+'extra-sub-field', ExtraSubFieldView.as_view()),
 ]
 
+from .views import StudentRemarkView, StudentRemarkListView
+urlpatterns += [
+    url(r'^'+'student-remark/batch', StudentRemarkListView.as_view()),
+    url(r'^'+'student-remark', StudentRemarkView.as_view())
+
+ ]
