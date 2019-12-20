@@ -262,6 +262,12 @@ export class GenerateFinalReportServiceAdapter {
                 'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             };
 
+            let request_teacher_signature_data = {
+                'parentSchool': this.vm.user.activeSchool.dbId,
+                'parentClass': this.vm.getSelectedClassSection().classDbId,
+                'parentDivision': this.vm.getSelectedClassSection().sectionDbId
+            };
+
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt));
@@ -316,6 +322,7 @@ export class GenerateFinalReportServiceAdapter {
                         break;
                 }
             }
+            request_array.push(this.vm.classNewService.getObjectList(this.vm.classNewService.class_teacher_signature, request_teacher_signature_data));
 
             Promise.all(request_array).then(valueTwo => {
 
@@ -355,6 +362,13 @@ export class GenerateFinalReportServiceAdapter {
                         this.populateStudentFinalReportCardHigh();
                         break;
                 }
+                if(valueTwo[valueTwo.length-1].length>0 && valueTwo[valueTwo.length-1][0]){
+                    this.vm.currentClassTeacherSignature = valueTwo[valueTwo.length-1][0]["signatureImage"];
+                }else{
+                    this.vm.currentClassTeacherSignature = null;
+                }
+                // console.log(valueTwo);
+                // console.log(valueTwo[valueTwo.length-1][0]["signatureImage"]);
                 this.vm.printStudentFinalReport();
                 this.vm.isLoading = false;
             }, error => {

@@ -33,6 +33,11 @@
                     Show Principal Signature
                 </mat-checkbox>
             </div>
+            <div>
+                <mat-checkbox [(ngModel)]="showClassTeacherSignature">
+                    Show Class Teacher Signature
+                </mat-checkbox>
+            </div>
 
             <br/>
             <ng-container *ngIf="filteredStudentList.length>0">

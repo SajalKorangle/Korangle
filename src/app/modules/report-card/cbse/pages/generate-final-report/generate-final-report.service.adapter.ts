@@ -44,8 +44,9 @@ export class GenerateFinalReportServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.classService.getObjectList(this.vm.classService.classs, ''),
             this.vm.classService.getObjectList(this.vm.classService.division, ''),
+            this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, '')
         ]).then(value => {
-
+            console.log(value);
             if (value[0].length > 0 || value[1].length > 0) {
 
                 this.vm.reportCardMappingList = value[0];
