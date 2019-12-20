@@ -67,6 +67,7 @@ export class ViewGradesRemarksServiceAdapter {
             }, error => {
                 this.vm.isInitialLoading = false;
             });
+
             this.populateClassSectionList();
             this.populateSelectedExtraField();
             // this.getStudentRemarkDetails();
@@ -76,6 +77,7 @@ export class ViewGradesRemarksServiceAdapter {
         });
 
     }
+
     populateStudentSectionList(): void {
 
         if (this.vm.attendancePermissionList.length > 0) {
@@ -164,7 +166,7 @@ export class ViewGradesRemarksServiceAdapter {
             }, error => {
                 this.vm.isLoading = false;
             });
-        }else {
+        } else {
             let student_remark_data = {
                 'parentSession': this.vm.user.activeSchool.currentSessionDbId,
                 'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
