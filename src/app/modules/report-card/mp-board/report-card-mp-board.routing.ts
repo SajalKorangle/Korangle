@@ -43,6 +43,11 @@ const routes: Routes = [
         data: {moduleName: 'report_card_mp_board'},
     },
     {
+        path:'add_student_remarks',
+        loadChildren:'app/modules/report-card/mp-board/pages/add-student-remarks/add-student-remarks.module#AddStudentRemarksModule',
+        data: {moduleName: 'report_card_mp_board'},
+    },
+    {
         path: '',
         component: ReportCardMpBoardComponent,
     },

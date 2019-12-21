@@ -17,6 +17,7 @@ export class ReportCardMpBoardService extends ReportCardService {
     public student_extra_sub_field = this.mp_board_url+'/student-extra-sub-field';
     public extra_field = this.mp_board_url+'/extra-field';
     public extra_sub_field = this.mp_board_url+'extra-sub-field';
+    public student_remark = this.mp_board_url+'/student-remark';
 
     constructor(private http_class: HttpClient) {
         super(http_class);
