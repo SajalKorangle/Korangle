@@ -37,6 +37,7 @@ export class PrintStudentComprehensiveFinalReportListComponent implements OnInit
         if(this.showClassTeacherSignature){
             this.classTeacherSignature = value['currentClassTeacherSignature'];
         }
+        // console.log(this.classTeacherSignature);
         this.boardList = value['boardList'];
         this.populateIncludeProject();
         this.viewChecked = false;
