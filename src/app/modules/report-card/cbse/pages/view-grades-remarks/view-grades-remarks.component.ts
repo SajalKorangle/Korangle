@@ -39,7 +39,7 @@ export class ViewGradesRemarksComponent implements OnInit {
     studentSectionList = [];
     studentRemarkList = [];
     extraFieldList = [];
-    termList =[];
+    termList = [];
 
     selectedClassSection: any;
     selectedExtraField: any;
@@ -47,6 +47,7 @@ export class ViewGradesRemarksComponent implements OnInit {
 
     studentExtraFieldList = [];
 
+    showRemark = true;
     showStudentList = false;
 
     serviceAdapter: ViewGradesRemarksServiceAdapter;
@@ -77,14 +78,21 @@ export class ViewGradesRemarksComponent implements OnInit {
         } else {
             this.selectedTerm = this.termList[2];
         }
+        this.handleTermChange(this.selectedTerm);
+    }
+
+    handleTermChange(term: any): void{
+        this.selectedTerm = term;
+        this.showStudentList = false;
+        if(this.showTermList() && term.id==1){
+            this.showRemark=false;
+        }else{
+            this.showRemark = true;
+        }
     }
 
     showTermList(): boolean {
-        if (this.selectedClassSection.class.orderNumber >= 5) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.selectedClassSection.class.orderNumber >= 5;
     }
 
     getFilteredStudentSectionList(): any {
@@ -115,13 +123,14 @@ export class ViewGradesRemarksComponent implements OnInit {
         if (item) {
             return item.remark;
         } else {
-            return '';
+            return 'NA';
         }
     }
 
-    getGrade(studentSection: any): any {
+    getGrade(studentSection: any, index: number): any {
+        index = index+1;
         // console.log(this.studentExtraFieldList);
-        let item = this.studentExtraFieldList.find(studentExtraField => {
+        let item = this.studentExtraFieldList[index].find(studentExtraField => {
             return studentExtraField.parentStudent == studentSection.parentStudent;
         });
         // console.log(item);
@@ -129,15 +138,6 @@ export class ViewGradesRemarksComponent implements OnInit {
             return item.grade;
         } else {
             return 'NA';
-        }
-    }
-
-    getRequiredField(studentSection: any): any{
-        console.log(this.selectedExtraField);
-        if(this.selectedExtraField=='remark-field'){
-            return this.getStudentRemark(studentSection);
-        }else{
-            return this.getGrade(studentSection);
         }
     }
 

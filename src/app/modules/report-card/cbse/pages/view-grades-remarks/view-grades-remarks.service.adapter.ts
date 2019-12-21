@@ -5,12 +5,12 @@ export class ViewGradesRemarksServiceAdapter {
 
     vm: ViewGradesRemarksComponent;
 
-    constructor() {}
-
     // Data
     classList: any;
     sectionList: any;
     studentSectionList: any;
+
+    constructor() {}
 
 
     initializeAdapter(vm: ViewGradesRemarksComponent): void {
@@ -46,9 +46,10 @@ export class ViewGradesRemarksServiceAdapter {
             this.sectionList = value[1];
             this.vm.attendancePermissionList = value[2];
             this.studentSectionList = value[3];
+            this.vm.studentSectionList = this.studentSectionList;
             this.vm.extraFieldList = value[4];
             this.vm.termList = value[5];
-            this.populateStudentSectionList();
+            // this.populateStudentSectionList();
             console.log(this.vm.extraFieldList);
 
             let student_data = {
@@ -76,59 +77,40 @@ export class ViewGradesRemarksServiceAdapter {
         });
 
     }
-    populateStudentSectionList(): void {
-
-        if (this.vm.attendancePermissionList.length > 0) {
-            this.vm.studentSectionList = this.studentSectionList.filter(studentSection => {
-                return this.vm.attendancePermissionList.find(attendancePermission => {
-                    return attendancePermission.parentClass == studentSection.parentClass
-                        && attendancePermission.parentDivision == studentSection.parentDivision;
-                }) != undefined;
-            });
-        } else {
-            this.vm.studentSectionList = this.studentSectionList;
-        }
-
-    }
+    // populateStudentSectionList(): void {
+    //
+    //     if (this.vm.attendancePermissionList.length > 0) {
+    //         this.vm.studentSectionList = this.studentSectionList.filter(studentSection => {
+    //             return this.vm.attendancePermissionList.find(attendancePermission => {
+    //                 return attendancePermission.parentClass == studentSection.parentClass
+    //                     && attendancePermission.parentDivision == studentSection.parentDivision;
+    //             }) != undefined;
+    //         });
+    //     } else {
+    //         this.vm.studentSectionList = this.studentSectionList;
+    //     }
+    //
+    // }
 
     populateSelectedExtraField(): void{
         this.vm.selectedExtraField = this.vm.extraFieldList[0];
     }
 
     populateClassSectionList(): void {
-        if (this.vm.attendancePermissionList.length > 0) {
-            this.classList.filter(classs => {
-                return this.vm.attendancePermissionList.find(attendancePermission => {
-                    return attendancePermission.parentClass == classs.id;
-                }) != undefined;
-            }).forEach(classs => {
-                this.sectionList.filter(section => {
-                    return this.vm.attendancePermissionList.find(attendancePermission => {
-                        return attendancePermission.parentClass == classs.id
-                            && attendancePermission.parentDivision == section.id;
-                    }) != undefined;
-                }).forEach(section => {
+        this.vm.classSectionList = [];
+        this.classList.filter(classs => {
+            this.sectionList.filter(section => {
+                if (this.vm.studentSectionList.find(studentSection => {
+                    return studentSection.parentClass == classs.id
+                        && studentSection.parentDivision == section.id;
+                }) != undefined) {
                     this.vm.classSectionList.push({
                         'class': classs,
                         'section': section,
                     });
-                });
+                }
             });
-        } else {
-            this.classList.forEach(classs => {
-                this.sectionList.filter(section => {
-                    return this.vm.studentSectionList.find(studentSection => {
-                        return studentSection.parentClass == classs.id
-                            && studentSection.parentDivision == section.id;
-                    }) !=  undefined;
-                }).forEach(section => {
-                    this.vm.classSectionList.push({
-                        'class': classs,
-                        'section': section,
-                    });
-                });
-            });
-        }
+        });
         if (this.vm.classSectionList.length > 0) {
             this.vm.selectedClassSection = this.vm.classSectionList[0];
             if (this.vm.selectedClassSection.class.orderNumber >= 5) {
@@ -139,77 +121,38 @@ export class ViewGradesRemarksServiceAdapter {
         }
     }
 
-    getStudentRemarkDetails(): void {
-        if(this.vm.selectedExtraField !== 'remark-field') {
-            let student_extra_field_data = {
-                'parentTerm': this.vm.selectedTerm.id,
-                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                'parentExtraField': this.vm.selectedExtraField.id,
-                'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
-                    return studentSection.parentClass == this.vm.selectedClassSection.class.id
-                        && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
-                }).map(item => item.parentStudent).join(','),
-            };
-
-            this.vm.isLoading = true;
-
-            Promise.all([
-                this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_extra_field, student_extra_field_data),
-            ]).then(value => {
-
-                this.vm.studentExtraFieldList = value[0];
-
-                this.vm.isLoading = false;
-                this.vm.showStudentList = true;
-            }, error => {
-                this.vm.isLoading = false;
-            });
-        }else {
-            let student_remark_data = {
-                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
-                    return studentSection.parentClass == this.vm.selectedClassSection.class.id
-                        && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
-                }).map(item => item.parentStudent).join(','),
-            };
-
-            this.vm.isLoading = true;
-
-            Promise.all([
-                this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_remark, student_remark_data),
-            ]).then(value => {
-                // console.log(value);
-                this.vm.studentRemarkList = value[0];
-
-                this.vm.isLoading = false;
-                this.vm.showStudentList = true;
-            }, error => {
-                this.vm.isLoading = false;
-            });
-        }
-
-    }
-
-    getStudentFieldDetails(): void {
-
-        let student_extra_field_data = {
-            // 'parentTerm': this.vm.selectedTerm.id,
+    getStudentFieldRemarkDetails(): void {
+        this.vm.studentExtraFieldList = [];
+        const promise_arr = [];
+        const student_remark_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentExtraField': this.vm.selectedExtraField.id,
             'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
                 return studentSection.parentClass == this.vm.selectedClassSection.class.id
                     && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
             }).map(item => item.parentStudent).join(','),
         };
-
+        promise_arr.push(this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_remark, student_remark_data));
+        this.vm.extraFieldList.forEach((item, index)=>{
+                const extra_data = {
+                    'parentTerm': this.vm.selectedTerm.id,
+                    'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                    'parentExtraField': item.id,
+                    'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
+                        return studentSection.parentClass == this.vm.selectedClassSection.class.id
+                            && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
+                    }).map(item => item.parentStudent).join(','),
+                };
+                promise_arr.push(this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_extra_field,
+                    extra_data));
+            }
+        );
         this.vm.isLoading = true;
 
-        Promise.all([
-            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_extra_field,student_extra_field_data),
-        ]).then(value => {
-
-            this.vm.studentExtraFieldList = value[0];
-
+        Promise.all(promise_arr).then(value => {
+            this.vm.studentRemarkList = value[0];
+            value.forEach((item, index) => {
+                this.vm.studentExtraFieldList.push(item);
+            });
             this.vm.isLoading = false;
             this.vm.showStudentList = true;
         }, error => {
@@ -218,53 +161,53 @@ export class ViewGradesRemarksServiceAdapter {
 
     }
 
-    updateStudentRemark(studentSection: any, newRemark: any, element: any): void {
-
-        if (this.vm.getStudentRemark(studentSection) != newRemark) {
-
-            let prev_student_remark = this.vm.studentRemarkList.find(studentRemark => {
-                return studentRemark.parentStudent == studentSection.parentStudent;
-            });
-
-            let service_list = [];
-
-            if (prev_student_remark) {
-                let student_remark_data = {
-                    'id': prev_student_remark.id,
-                    'parentStudent': prev_student_remark.parentStudent,
-                    'parentSession': prev_student_remark.parentSession,
-                    'remark': newRemark,
-                };
-                service_list.push(this.vm.reportCardCbseService.updateObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
-            } else {
-                let student_remark_data = {
-                    'parentStudent': studentSection.parentStudent,
-                    'parentSession': studentSection.parentSession,
-                    'remark': newRemark,
-                };
-                service_list.push(this.vm.reportCardCbseService.createObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
-            }
-
-            element.classList.add('updatingField');
-
-            Promise.all(service_list).then(value => {
-
-                if(prev_student_remark) {
-                    this.vm.studentRemarkList.find(studentRemark => {
-                        return studentRemark.id == value[0].id;
-                    }).remark = value[0].remark;
-                } else {
-                    this.vm.studentRemarkList.push(value[0]);
-                }
-
-                element.classList.remove('updatingField');
-
-            }, error => {
-                // Nothing to do here
-            })
-
-        }
-
-    }
+    // updateStudentRemark(studentSection: any, newRemark: any, element: any): void {
+    //
+    //     if (this.vm.getStudentRemark(studentSection) != newRemark) {
+    //
+    //         let prev_student_remark = this.vm.studentRemarkList.find(studentRemark => {
+    //             return studentRemark.parentStudent == studentSection.parentStudent;
+    //         });
+    //
+    //         let service_list = [];
+    //
+    //         if (prev_student_remark) {
+    //             let student_remark_data = {
+    //                 'id': prev_student_remark.id,
+    //                 'parentStudent': prev_student_remark.parentStudent,
+    //                 'parentSession': prev_student_remark.parentSession,
+    //                 'remark': newRemark,
+    //             };
+    //             service_list.push(this.vm.reportCardCbseService.updateObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
+    //         } else {
+    //             let student_remark_data = {
+    //                 'parentStudent': studentSection.parentStudent,
+    //                 'parentSession': studentSection.parentSession,
+    //                 'remark': newRemark,
+    //             };
+    //             service_list.push(this.vm.reportCardCbseService.createObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
+    //         }
+    //
+    //         element.classList.add('updatingField');
+    //
+    //         Promise.all(service_list).then(value => {
+    //
+    //             if(prev_student_remark) {
+    //                 this.vm.studentRemarkList.find(studentRemark => {
+    //                     return studentRemark.id == value[0].id;
+    //                 }).remark = value[0].remark;
+    //             } else {
+    //                 this.vm.studentRemarkList.push(value[0]);
+    //             }
+    //
+    //             element.classList.remove('updatingField');
+    //
+    //         }, error => {
+    //             // Nothing to do here
+    //         })
+    //
+    //     }
+    //
+    // }
 
 }
