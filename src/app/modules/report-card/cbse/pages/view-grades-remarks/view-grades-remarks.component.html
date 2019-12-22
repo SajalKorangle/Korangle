@@ -58,10 +58,10 @@
                         <td>
                             {{getStudent(studentSection).rollNumber}}
                         </td>
-                        <td *ngFor="let subject of extraFieldList; let i = index" [ngStyle]="{'background-color': ((getGrade(studentSection, i)=='NA')?'yellow':'')}">
+                        <td *ngFor="let subject of extraFieldList; let i = index" [ngStyle]="{'background-color': (!(getGrade(studentSection, i))?'yellow':'')}">
                             {{getGrade(studentSection, i)}}
                         </td>
-                        <td *ngIf="showRemark" [ngStyle]="{'background-color': ((getStudentRemark(studentSection)=='NA')?'yellow':'')}">
+                        <td *ngIf="showRemark" [ngStyle]="{'background-color': (!(getStudentRemark(studentSection))?'yellow':'')}">
                             {{getStudentRemark(studentSection)}}
                         </td>
                         <!--  -->
@@ -77,7 +77,20 @@
                             <!--&lt;!&ndash;</mat-form-field>&ndash;&gt;-->
                         <!--</td>-->
                     </tr>
+
                 </ng-container>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td *ngFor="let employee of currentEmployees">
+                        <ng-container *ngIf="!isMobile()">
+                            {{employee.name}}<br />
+                            {{employee.mobileNumber}}
+                        </ng-container>
+                        <a *ngIf="isMobile()" href="tel:{{employee.mobileNumber}}">{{employee.name}}</a>
+
+                    </td>
+                </tr>
                 </tbody>
             </table>
 

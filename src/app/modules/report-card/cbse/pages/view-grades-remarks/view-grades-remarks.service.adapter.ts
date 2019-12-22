@@ -32,6 +32,11 @@ export class ViewGradesRemarksServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        let request_employee_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'dateOfLeaving': 'null__korangle',
+        };
+
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
@@ -40,15 +45,19 @@ export class ViewGradesRemarksServiceAdapter {
             // Fetching the extra fields and the terms
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.extra_field, {}),
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.term, {}),
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, request_employee_data),
         ]).then(value => {
             // console.log(value);
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.attendancePermissionList = value[2];
+            console.log(this.vm.attendancePermissionList);
             this.studentSectionList = value[3];
             this.vm.studentSectionList = this.studentSectionList;
             this.vm.extraFieldList = value[4];
             this.vm.termList = value[5];
+            this.vm.employeeList = value[6];
+            console.log(this.vm.employeeList);
             // this.populateStudentSectionList();
             console.log(this.vm.extraFieldList);
 
@@ -101,7 +110,7 @@ export class ViewGradesRemarksServiceAdapter {
         this.classList.filter(classs => {
             this.sectionList.filter(section => {
                 if (this.vm.studentSectionList.find(studentSection => {
-                    return studentSection.parentClass == classs.id
+                    return classs.orderNumber !== 3 && classs.orderNumber !== 1 && studentSection.parentClass == classs.id
                         && studentSection.parentDivision == section.id;
                 }) != undefined) {
                     this.vm.classSectionList.push({
@@ -150,6 +159,7 @@ export class ViewGradesRemarksServiceAdapter {
 
         Promise.all(promise_arr).then(value => {
             this.vm.studentRemarkList = value[0];
+            this.vm.getEmployees();
             value.forEach((item, index) => {
                 this.vm.studentExtraFieldList.push(item);
             });

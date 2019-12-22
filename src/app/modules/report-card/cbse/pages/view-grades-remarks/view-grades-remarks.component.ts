@@ -40,6 +40,8 @@ export class ViewGradesRemarksComponent implements OnInit {
     studentRemarkList = [];
     extraFieldList = [];
     termList = [];
+    employeeList = [];
+    currentEmployees = [];
 
     selectedClassSection: any;
     selectedExtraField: any;
@@ -79,6 +81,31 @@ export class ViewGradesRemarksComponent implements OnInit {
             this.selectedTerm = this.termList[2];
         }
         this.handleTermChange(this.selectedTerm);
+    }
+
+    inAttendanceList(attendance_list: any, employee: any): boolean{
+        // console.log(employee.id);
+        const occurence = attendance_list.filter((obj) => {
+            return obj.parentEmployee === employee.id
+        });
+        if(occurence.length!=0){
+            console.log(employee.id);
+        }
+        return occurence.length !== 0;
+    }
+
+    getEmployees(): void{
+        // console.log(this.attendancePermissionList);
+        // return [];
+        console.log(this.selectedClassSection);
+         const attendance_list = this.attendancePermissionList.filter((employee) => {
+            return employee.parentClass == this.selectedClassSection.class.orderNumber &&
+                employee.parentDivision == this.selectedClassSection.section.orderNumber;
+        });
+         this.currentEmployees = this.employeeList.filter((employee) => {
+             return this.inAttendanceList(attendance_list, employee);
+         });
+        console.log(this.currentEmployees);
     }
 
     handleTermChange(term: any): void{
@@ -123,7 +150,7 @@ export class ViewGradesRemarksComponent implements OnInit {
         if (item) {
             return item.remark;
         } else {
-            return 'NA';
+            return null;
         }
     }
 
@@ -137,7 +164,7 @@ export class ViewGradesRemarksComponent implements OnInit {
         if (item) {
             return item.grade;
         } else {
-            return 'NA';
+            return null;
         }
     }
 
