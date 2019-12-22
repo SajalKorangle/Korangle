@@ -178,9 +178,7 @@
             </ng-container>
 
             <!-- Employee -->
-            
             <ng-container *ngIf="user.section && user.activeSchool.role==='Employee'">
-
                 <ng-container *ngFor="let module of user.activeSchool.moduleList">
                     <li [class.active]="module.path === user.section.route"
                         [attr.data-color]='user.activeSchool.primaryThemeColor'
