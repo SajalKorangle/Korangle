@@ -38,12 +38,13 @@ export class AddStudentRemarksServiceAdapter {
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
         ]).then(value => {
-
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.attendancePermissionList = value[2];
             this.studentSectionList = value[3];
-
+            this.vm.attendancePermissionList = this.vm.attendancePermissionList.filter(attendancePermission => {
+                return attendancePermission.parentSession == this.vm.user.activeSchool.currentWorkingSessionDbId;
+            });
             this.populateStudentSectionList();
 
             let student_data = {
