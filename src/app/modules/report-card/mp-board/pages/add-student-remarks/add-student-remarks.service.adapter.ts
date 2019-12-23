@@ -43,7 +43,7 @@ export class AddStudentRemarksServiceAdapter {
             this.vm.attendancePermissionList = value[2];
             this.studentSectionList = value[3];
             this.vm.attendancePermissionList = this.vm.attendancePermissionList.filter(attendancePermission => {
-                return attendancePermission.parentSession == this.vm.user.activeSchool.currentWorkingSessionDbId;
+                return attendancePermission.parentSession == this.vm.user.activeSchool.currentSessionDbId;
             });
             this.populateStudentSectionList();
 
