@@ -139,7 +139,7 @@ export class AddStudentRemarksServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_remark,student_remark_data),
+            this.vm.reportCardMpBoardService.getObjectList(this.vm.reportCardMpBoardService.student_remark,student_remark_data),
         ]).then(value => {
 
             this.vm.studentRemarkList = value[0];
@@ -169,14 +169,14 @@ export class AddStudentRemarksServiceAdapter {
                     'parentSession': prev_student_remark.parentSession,
                     'remark': newRemark,
                 };
-                service_list.push(this.vm.reportCardCbseService.updateObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
+                service_list.push(this.vm.reportCardMpBoardService.updateObject(this.vm.reportCardMpBoardService.student_remark,student_remark_data));
             } else {
                 let student_remark_data = {
                     'parentStudent': studentSection.parentStudent,
                     'parentSession': studentSection.parentSession,
                     'remark': newRemark,
                 };
-                service_list.push(this.vm.reportCardCbseService.createObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
+                service_list.push(this.vm.reportCardMpBoardService.createObject(this.vm.reportCardMpBoardService.student_remark,student_remark_data));
             }
 
             element.classList.add('updatingField');
