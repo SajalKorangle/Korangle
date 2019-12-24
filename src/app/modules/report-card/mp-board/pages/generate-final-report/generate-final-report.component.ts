@@ -14,12 +14,13 @@ import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, 
 import { PrintService } from '../../../../../print/print-service';
 import {DataStorage} from "../../../../../classes/data-storage";
 import {SchoolService} from "../../../../../services/modules/school/school.service";
+import {ReportCardService} from "../../../../../services/modules/report-card/report-card.service";
 
 @Component({
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService ],
+    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ReportCardService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -52,7 +53,8 @@ export class GenerateFinalReportComponent implements OnInit {
                 public attendanceService: AttendanceOldService,
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
-                private printService: PrintService) {}
+                private printService: PrintService,
+                public reportCardService: ReportCardService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -75,6 +77,8 @@ export class GenerateFinalReportComponent implements OnInit {
             'showPrincipalSignature': this.showPrinicipalSignature,
             'boardList': this.boardList,
         };
+        console.log('Final data for print');
+        console.log(data);
         let selectedClassSection = this.getSelectedClassSection();
         let printRoute : string;
         
@@ -218,4 +222,8 @@ export class GenerateFinalReportComponent implements OnInit {
         }, 100);
     }
 
+    getStudentRemarks(data : any):any{
+        let url = '/mp-board/student-remark';
+        return this.reportCardService.getObjectList(url, data);
+    }
 }
