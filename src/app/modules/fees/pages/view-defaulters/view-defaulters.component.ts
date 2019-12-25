@@ -7,6 +7,7 @@ import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
+import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
 
 @Component({
     selector: 'view-defaulters',
@@ -31,6 +32,8 @@ export class ViewDefaultersComponent implements OnInit {
     studentList: any;
     classList: any;
     sectionList: any;
+
+    filteredStudentList: any;
 
     parentList = [];
 
@@ -334,6 +337,16 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
+    notifyDefaulters(): void{
+        alert("Doing")
+        console.log(this.filteredStudentList);
+        let test = this.filteredStudentList.filter((item) => {
+            return item.selected;
+        })
+        console.log(test);
+
+    }
+
     getFilteredStudentList(): any {
         let tempList = this.studentList;
         if (this.selectedClassSection) {
@@ -353,8 +366,32 @@ export class ViewDefaultersComponent implements OnInit {
         return tempList;
     }
 
+    setFilteredStudentList(): any {
+        let tempList = this.studentList;
+        if (this.selectedClassSection) {
+            tempList = tempList.filter(student => {
+                return student.class.dbId == this.selectedClassSection.class.dbId
+                    && student.section.id == this.selectedClassSection.section.id;
+            });
+        }
+        if ((this.maximumNumber && this.maximumNumber != '')
+            || (this.minimumNumber && this.minimumNumber != '')) {
+            tempList = tempList.filter(student => {
+                let amount = student.feesDueTillMonth;
+                return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
+                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
+            });
+        }
+        this.filteredStudentList = tempList;
+    }
+
+    filterTypeChanged = (event) => {
+        this.selectedFilterType = event;
+        this.setFilteredStudentList();
+    }
+
     getFilteredStudentListFeesDueTillMonth(): any {
-        return this.getFilteredStudentList().reduce((total, student) => {
+        return this.filteredStudentList.reduce((total, student) => {
             return total + student.feesDueTillMonth;
         }, 0);
     }
@@ -448,7 +485,9 @@ export class ViewDefaultersComponent implements OnInit {
         ];
 
         let count = 0;
-        this.getFilteredStudentList().forEach(student => {
+        // this
+        // this.setFilteredStudentList();
+        this.filteredStudentList.forEach(student => {
             let row = [];
             row.push(++count);
             row.push(student.name);

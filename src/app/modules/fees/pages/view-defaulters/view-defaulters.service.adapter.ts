@@ -72,6 +72,8 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.classList = value[4];
                 this.vm.sectionList = value[5];
 
+                this.vm.setFilteredStudentList();
+
                 this.vm.handleLoading();
 
                 this.vm.isLoading = false;

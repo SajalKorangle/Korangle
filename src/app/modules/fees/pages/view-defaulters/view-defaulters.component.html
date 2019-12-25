@@ -47,7 +47,7 @@
                 <mat-form-field>
                     <mat-select placeholder="Select Filter Type"
                                 [ngModel]="selectedFilterType"
-                                (ngModelChange)="selectedFilterType=$event;">
+                                (ngModelChange)="filterTypeChanged($event)">
                         <mat-option *ngFor='let filterType of filterTypeList;' [value]="filterType">
                             {{filterType}}
                         </mat-option>
@@ -69,6 +69,15 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+        </div>
+        <div class="row">
+                <button type="button"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="padding: 12px 15px; margin-right: 17px;"
+                matTooltip="Notify all the selected defaulters"
+                tooltip-position="left"
+                (click)="notifyDefaulters();">
+            Notify</button>
         </div>
 
         <!-- Parent -->
@@ -180,7 +189,7 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    Selected <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
+                    Selected <b>{{filteredStudentList.length}}</b> out of {{studentList.length}} students
                 </div>
                 <div class="col-sm-6" align="end">
                     Fees Due (Till Month): <b>{{getFilteredStudentListFeesDueTillMonth() | indianCurrency:true}}</b>
@@ -190,6 +199,7 @@
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
+                    <th></th>
                     <th>S No.</th>
                     <th>Student</th>
                     <th>Father</th>
@@ -204,8 +214,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let student of getFilteredStudentList(); let i=index;">
+                <ng-container *ngFor="let student of filteredStudentList; let i=index;">
                     <tr>
+                        <td><mat-checkbox [(ngModel)]="student.selected"></mat-checkbox></td>
                         <td>{{i+1}}.</td>
                         <td style="font-weight: 600;">{{student.name}}</td>
                         <td>{{student.fathersName}}</td>

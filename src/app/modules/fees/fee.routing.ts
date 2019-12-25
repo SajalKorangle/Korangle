@@ -25,7 +25,7 @@ const routes: Routes = [
     },
 
     {
-        path: 'view_defaulters',
+        path: 'notify_defaulters',
         loadChildren: 'app/modules/fees/pages/view-defaulters/view-defaulters.module#ViewDefaultersModule',
         data: {moduleName: 'fees'},
     },
