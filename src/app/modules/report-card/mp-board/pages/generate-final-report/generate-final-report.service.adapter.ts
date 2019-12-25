@@ -335,7 +335,7 @@ export class GenerateFinalReportServiceAdapter {
                 this.studentCCEMarksList = valueTwo[4];
                 this.studentRemarksList = valueTwo[5];
                 this.studentAttendanceList = [];
-                if (valueTwo.length > 5) { // Earlier 4
+                if (valueTwo.length > 6) { // Earlier 4
                     valueTwo.slice(6, valueTwo.length).forEach(item => { // Earlier 5
                         this.studentAttendanceList = this.studentAttendanceList.concat(item);
                     });
@@ -434,10 +434,7 @@ export class GenerateFinalReportServiceAdapter {
                     });
                     student[key]['extraSubFieldMarksList'] = [];
 
-                    student['remark'] = this.studentRemarksList.filter(item => {return item.parentStudent == student.dbId });
-                    if(student['remark'].length == 1){
-                        student['remark'] = student['remark'][0]['remark'];
-                    }
+                    student['remark'] = this.extractStudentRemark(student.dbId);
 
                     if (key != 'parentExaminationProject') {
                         this.vm.extraFieldList.forEach(extraField => {
@@ -498,11 +495,9 @@ export class GenerateFinalReportServiceAdapter {
                 'attendance': 0,
                 'workingDays': 0,
             };
-            student['remark'] = this.studentRemarksList.filter(item => {return item.parentStudent == student.dbId });
-            if(student['remark'].length == 1){
-                student['remark'] = student['remark'][0]['remark'];
-            }
-            
+
+            student['remark'] = this.extractStudentRemark(student.dbId);
+
             this.studentAttendanceList.forEach(studentAttendance => {
                 if (studentAttendance.status === ATTENDANCE_STATUS_LIST[0]) {
                     student['attendanceData']['attendance'] += 1;
@@ -627,6 +622,16 @@ export class GenerateFinalReportServiceAdapter {
             });
         }
         return result;
+    }
+
+    extractStudentRemark(studentDbId):string {
+        let remark = this.studentRemarksList.filter(item => {return item.parentStudent == studentDbId });
+        if(remark.length == 1){
+            remark = remark[0]['remark'];
+        }else{
+            remark = '';
+        }
+        return remark;
     }
 
 }
