@@ -75,6 +75,7 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.setFilteredStudentList();
 
                 this.vm.handleLoading();
+                this.vm.filterTypeChanged(this.vm.filterTypeList[1]);
 
                 this.vm.isLoading = false;
 

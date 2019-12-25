@@ -86,7 +86,7 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    Selected <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
+                    Selected <b>{{filteredParentList.length}}</b> out of {{parentList.length}} parents
                 </div>
                 <div class="col-sm-6" align="end">
                     Fees Due (Till Month): <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency:true}}</b>
@@ -96,6 +96,7 @@
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
+                    <th></th>
                     <th>S No.</th>
                     <th>Parent</th>
                     <th>Student</th>
@@ -112,6 +113,10 @@
                 <tbody>
                 <ng-container *ngFor="let parent of getFilteredParentList(); let i=index;">
                     <tr>
+                        <td>
+                            <mat-checkbox [(ngModel)]="parent.selected"></mat-checkbox>
+                        </td>
+
                         <td>{{i+1}}.</td>
                         <td style="font-weight: 600;">{{parent.name}}</td>
                         <ng-container *ngIf="parent.studentList.length == 1; else multipleStudents">

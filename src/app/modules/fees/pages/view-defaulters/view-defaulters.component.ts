@@ -34,6 +34,7 @@ export class ViewDefaultersComponent implements OnInit {
     sectionList: any;
 
     filteredStudentList: any;
+    filteredParentList: any;
 
     parentList = [];
 
@@ -338,13 +339,21 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     notifyDefaulters(): void{
-        alert("Doing")
-        console.log(this.filteredStudentList);
-        let test = this.filteredStudentList.filter((item) => {
-            return item.selected;
-        })
-        console.log(test);
-
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            alert("Doing")
+            console.log(this.filteredStudentList);
+            let test = this.filteredStudentList.filter((item) => {
+                return item.selected;
+            })
+            console.log(test);
+        }else{
+            alert("this is parent");
+            console.log(this.filteredParentList);
+            let test = this.filteredParentList.filter((item) => {
+                return item.selected;
+            })
+            console.log(test);
+        }
     }
 
     getFilteredStudentList(): any {
@@ -387,7 +396,11 @@ export class ViewDefaultersComponent implements OnInit {
 
     filterTypeChanged = (event) => {
         this.selectedFilterType = event;
-        this.setFilteredStudentList();
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            this.setFilteredStudentList();
+        }else{
+            this.setFilteredParentList();
+        }
     }
 
     getFilteredStudentListFeesDueTillMonth(): any {
@@ -418,6 +431,21 @@ export class ViewDefaultersComponent implements OnInit {
         return tempList;
     }
 
+    setFilteredParentList(): any {
+        let tempList = this.parentList;
+        if ((this.maximumNumber && this.maximumNumber != '')
+            || (this.minimumNumber && this.minimumNumber != '')) {
+            tempList = tempList.filter(parent => {
+                let amount = parent.studentList.reduce((amount, student) => {
+                    return amount + student['feesDueTillMonth'];
+                }, 0);
+                return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
+                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
+            });
+        }
+        this.filteredParentList = tempList;
+    }
+
     getParentFeesDueTillMonth(parent: any): any {
         return parent.studentList.reduce((total, student) => {
             return total + student['feesDueTillMonth'];
@@ -425,7 +453,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     getFilteredParentListFeesDueTillMonth(): any {
-        return this.getFilteredParentList().reduce((total, parent) => {
+        return this.filteredParentList.reduce((total, parent) => {
             return total + this.getParentFeesDueTillMonth(parent);
         }, 0);
     }
@@ -518,7 +546,7 @@ export class ViewDefaultersComponent implements OnInit {
         ];
 
         let count = 0;
-        this.getFilteredParentList().forEach(parent => {
+        this.filteredParentList.forEach(parent => {
             let row = [];
             row.push(++count);
             row.push(parent.name);
