@@ -53,7 +53,8 @@ export class GradeStudentFieldsServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            // this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
 
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
@@ -147,7 +148,7 @@ export class GradeStudentFieldsServiceAdapter {
             'subFieldList': this.getSubFieldList().join(),
         };
 
-        this.vm.examinationService.getStudentExtraSubFieldList(request_student_field_data, this.vm.user.jwt).then(value2 => {
+        this.vm.examinationService.getObjectList(this.vm.examinationService.student_extra_sub_field,request_student_field_data).then(value2 => {
             this.populateStudentList(value2);
             this.vm.showTestDetails = true;
             this.vm.isLoading = false;
@@ -246,8 +247,8 @@ export class GradeStudentFieldsServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.examinationService.updateStudentExtraSubFieldList(student_field_data_to_update, this.vm.user.jwt),
-            this.vm.examinationService.createStudentExtraSubFieldList(student_field_data_to_add, this.vm.user.jwt),
+            this.vm.examinationService.updateObjectList(this.vm.examinationService.student_extra_sub_field,student_field_data_to_update),
+            this.vm.examinationService.createObjectList(this.vm.examinationService.student_extra_sub_field,student_field_data_to_add),
         ]).then(value => {
             alert('Student Fields updated successfully');
             this.populateStudentList(value[0].concat(value[1]));
