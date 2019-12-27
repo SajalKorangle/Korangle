@@ -143,9 +143,12 @@ export class GradeStudentFieldsServiceAdapter {
         this.vm.isLoading = true;
 
         let request_student_field_data = {
-            'studentList': this.getStudentIdListForSelectedItems().join(),
-            'examinationList': [this.vm.selectedExamination.id],
-            'subFieldList': this.getSubFieldList().join(),
+            // 'studentList': this.getStudentIdListForSelectedItems().join(),
+            'parentStudent__in': this.getStudentIdListForSelectedItems().join(),
+            // 'examinationList': [this.vm.selectedExamination.id],
+            'parentExamination__in': [this.vm.selectedExamination.id],
+            // 'subFieldList': this.getSubFieldList().join(),
+            'parentExtraSubField__in': this.getSubFieldList().join(),
         };
 
         this.vm.examinationService.getObjectList(this.vm.examinationService.student_extra_sub_field,request_student_field_data).then(value2 => {
