@@ -109,7 +109,7 @@ export class GradeStudentFieldsServiceAdapter {
     populateClassSectionList(): void {
         if (this.vm.attendancePermissionList.length > 0) {
             this.classList.filter(classs => {
-                return this.vm.attendancePermissionList.find(attendancePermission => {
+                return classs.orderNumber !== 1 && classs.orderNumber !== 3 && this.vm.attendancePermissionList.find(attendancePermission => {
                     return attendancePermission.parentClass == classs.id;
                 }) != undefined;
             }).forEach(classs => {

@@ -39,7 +39,9 @@ export class ViewGradesRemarksComponent implements OnInit {
     studentSectionList = [];
     studentRemarkList = [];
     extraFieldList = [];
-    termList =[];
+    termList = [];
+    employeeList = [];
+    currentEmployees = [];
 
     selectedClassSection: any;
     selectedExtraField: any;
@@ -47,6 +49,7 @@ export class ViewGradesRemarksComponent implements OnInit {
 
     studentExtraFieldList = [];
 
+    showRemark = true;
     showStudentList = false;
 
     serviceAdapter: ViewGradesRemarksServiceAdapter;
@@ -77,14 +80,46 @@ export class ViewGradesRemarksComponent implements OnInit {
         } else {
             this.selectedTerm = this.termList[2];
         }
+        this.handleTermChange(this.selectedTerm);
+    }
+
+    inAttendanceList(attendance_list: any, employee: any): boolean{
+        // console.log(employee.id);
+        const occurence = attendance_list.filter((obj) => {
+            return obj.parentEmployee === employee.id
+        });
+        if(occurence.length!=0){
+            console.log(employee.id);
+        }
+        return occurence.length !== 0;
+    }
+
+    getEmployees(): void{
+        // console.log(this.attendancePermissionList);
+        // return [];
+        console.log(this.selectedClassSection);
+         const attendance_list = this.attendancePermissionList.filter((employee) => {
+            return employee.parentClass == this.selectedClassSection.class.orderNumber &&
+                employee.parentDivision == this.selectedClassSection.section.orderNumber;
+        });
+         this.currentEmployees = this.employeeList.filter((employee) => {
+             return this.inAttendanceList(attendance_list, employee);
+         });
+        console.log(this.currentEmployees);
+    }
+
+    handleTermChange(term: any): void{
+        this.selectedTerm = term;
+        this.showStudentList = false;
+        if(this.showTermList() && term.id==1){
+            this.showRemark=false;
+        }else{
+            this.showRemark = true;
+        }
     }
 
     showTermList(): boolean {
-        if (this.selectedClassSection.class.orderNumber >= 5) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.selectedClassSection.class.orderNumber >= 5;
     }
 
     getFilteredStudentSectionList(): any {
@@ -115,29 +150,21 @@ export class ViewGradesRemarksComponent implements OnInit {
         if (item) {
             return item.remark;
         } else {
-            return '';
+            return null;
         }
     }
 
-    getGrade(studentSection: any): any {
+    getGrade(studentSection: any, index: number): any {
+        index = index+1;
         // console.log(this.studentExtraFieldList);
-        let item = this.studentExtraFieldList.find(studentExtraField => {
+        let item = this.studentExtraFieldList[index].find(studentExtraField => {
             return studentExtraField.parentStudent == studentSection.parentStudent;
         });
         // console.log(item);
         if (item) {
             return item.grade;
         } else {
-            return 'NA';
-        }
-    }
-
-    getRequiredField(studentSection: any): any{
-        console.log(this.selectedExtraField);
-        if(this.selectedExtraField=='remark-field'){
-            return this.getStudentRemark(studentSection);
-        }else{
-            return this.getGrade(studentSection);
+            return null;
         }
     }
 
