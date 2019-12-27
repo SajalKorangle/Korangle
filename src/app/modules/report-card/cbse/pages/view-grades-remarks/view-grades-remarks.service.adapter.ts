@@ -88,21 +88,6 @@ export class ViewGradesRemarksServiceAdapter {
 
     }
 
-    // populateStudentSectionList(): void {
-    //
-    //     if (this.vm.attendancePermissionList.length > 0) {
-    //         this.vm.studentSectionList = this.studentSectionList.filter(studentSection => {
-    //             return this.vm.attendancePermissionList.find(attendancePermission => {
-    //                 return attendancePermission.parentClass == studentSection.parentClass
-    //                     && attendancePermission.parentDivision == studentSection.parentDivision;
-    //             }) != undefined;
-    //         });
-    //     } else {
-    //         this.vm.studentSectionList = this.studentSectionList;
-    //     }
-    //
-    // }
-
     populateSelectedExtraField(): void{
         this.vm.selectedExtraField = this.vm.extraFieldList[0];
     }
