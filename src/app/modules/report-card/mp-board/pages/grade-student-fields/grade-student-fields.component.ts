@@ -2,13 +2,15 @@ import { Component, Input, OnInit } from '@angular/core';
 
 // import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
-import { ClassOldService } from '../../../../../services/modules/class/class-old.service';
-import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
+import { ClassService } from '../../../../../services/modules/class/class.service';
+import { SubjectService } from '../../../../../services/modules/subject/subject.service';
 import { AttendanceOldService } from '../../../../../services/modules/attendance/attendance-old.service';
+
+import { ReportCardMpBoardService } from '../../../../../services/modules/report-card/mp-board/report-card-mp-board.service';
 
 import { GradeStudentFieldsServiceAdapter } from './grade-student-fields.service.adapter';
 import {TEST_TYPE_LIST} from '../../../../../classes/constants/test-type';
-import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
+import {StudentService} from '../../../../../services/modules/student/student.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../../classes/data-storage";
@@ -17,7 +19,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
     selector: 'grade-student-fields',
     templateUrl: './grade-student-fields.component.html',
     styleUrls: ['./grade-student-fields.component.css'],
-    providers: [ ExaminationService, ClassOldService, SubjectOldService, StudentOldService, AttendanceOldService ],
+    providers: [ ExaminationService, ClassService, SubjectService, StudentService, AttendanceOldService, ReportCardMpBoardService ],
 })
 
 export class GradeStudentFieldsComponent implements OnInit {
@@ -45,11 +47,12 @@ export class GradeStudentFieldsComponent implements OnInit {
     isLoading = false;
 
     constructor(public examinationService: ExaminationService,
-                public classService: ClassOldService,
-                public subjectService: SubjectOldService,
-                public studentService: StudentOldService,
+                public classService: ClassService,
+                public subjectService: SubjectService,
+                public studentService: StudentService,
                 public attendanceService: AttendanceOldService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                public reportCardMpBoardService: ReportCardMpBoardService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

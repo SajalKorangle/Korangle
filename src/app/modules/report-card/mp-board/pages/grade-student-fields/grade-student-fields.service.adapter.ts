@@ -56,13 +56,15 @@ export class GradeStudentFieldsServiceAdapter {
             // this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
 
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getClassList(),
+            this.vm.classService.getSectionList(),
             this.vm.attendanceService.getAttendancePermissionList(request_permission_data, this.vm.user.jwt),
 
-            this.vm.subjectService.getExtraFieldList(request_field_data, this.vm.user.jwt),
-            this.vm.subjectService.getExtraSubFieldList(request_sub_field_data, this.vm.user.jwt),
-            this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
+            this.vm.reportCardMpBoardService.getObjectList(this.vm.reportCardMpBoardService.extra_field, request_field_data),
+            this.vm.reportCardMpBoardService.getObjectList(this.vm.reportCardMpBoardService.extra_sub_field, request_sub_field_data),
+            // this.vm.subjectService.getExtraFieldList(request_field_data, this.vm.user.jwt),
+            // this.vm.subjectService.getExtraSubFieldList(request_sub_field_data, this.vm.user.jwt),
+            this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data),
         ]).then(value => {
 
             this.examinationList = value[0];
@@ -147,8 +149,8 @@ export class GradeStudentFieldsServiceAdapter {
             'parentStudent__in': this.getStudentIdListForSelectedItems().join(),
             // 'examinationList': [this.vm.selectedExamination.id],
             'parentExamination__in': [this.vm.selectedExamination.id],
-            // 'subFieldList': this.getSubFieldList().join(),
-            'parentExtraSubField__in': this.getSubFieldList().join(),
+
+            // 'subFieldList': this.getSubFieldList().join(), // This field was removed as was not used
         };
 
         this.vm.examinationService.getObjectList(this.vm.examinationService.student_extra_sub_field,request_student_field_data).then(value2 => {
