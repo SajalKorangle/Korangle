@@ -2,7 +2,10 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
+import { SmsService } from "../../../../services/modules/sms/sms.service";
 import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {NotificationService} from "../../../../services/modules/notification/notification.service";
+import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {ExcelService} from "../../../../excel/excel-service";
@@ -13,7 +16,7 @@ import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService ],
+    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService ],
 })
 
 export class ViewDefaultersComponent implements OnInit {
@@ -25,6 +28,15 @@ export class ViewDefaultersComponent implements OnInit {
 
      user;
 
+     sentTypeList = [
+        'SMS',
+        'NOTIFICATION',
+        'NOTIF./SMS',
+    ];
+
+    selectedSentType = 'SMS';
+    extraDefaulterMessage = '';
+
     subFeeReceiptList: any;
     subDiscountList: any;
     studentFeeList: any;
@@ -32,6 +44,9 @@ export class ViewDefaultersComponent implements OnInit {
     studentList: any;
     classList: any;
     sectionList: any;
+
+    selectedParentNumber: number;
+    selectedChildrenNumber: number;
 
     filteredStudentList: any;
     filteredParentList: any;
@@ -66,6 +81,9 @@ export class ViewDefaultersComponent implements OnInit {
                 public studentService: StudentService,
                 public classService: ClassOldService,
                 private excelService: ExcelService,
+                public notificationService: NotificationService,
+                public userService: UserService,
+                public smsService: SmsService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -338,21 +356,54 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
+    getStudentString = (studentList) => {
+        let ret = "";
+        studentList.forEach(student => {
+            ret += student.name +": "+ student.feesDueTillMonth+"\n";
+        })
+        return ret;
+    }
+
     notifyDefaulters(): void{
         if(this.selectedFilterType == this.filterTypeList[0]){
+            let message = "Hi, your fee is due. The amount of due fees till month is <feesDueTillMonth>"
+            if(this.extraDefaulterMessage){
+                message+="\n"+this.extraDefaulterMessage;
+            }
             alert("Doing")
-            console.log(this.filteredStudentList);
-            let test = this.filteredStudentList.filter((item) => {
+            // console.log(this.filteredStudentList);
+            let test = this.getFilteredStudentList().filter((item) => {
                 return item.selected;
             })
             console.log(test);
+            let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
+                return {
+                "mobileNumber": obj.mobileNumber,
+                "feesDueTillMonth": obj.feesDueTillMonth,
+                "feesDueOverall": obj.feesDueOverall
+                }
+            });
+            this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
         }else{
             alert("this is parent");
-            console.log(this.filteredParentList);
-            let test = this.filteredParentList.filter((item) => {
+            let message = "Hi, your fee is due. The total amount of due fees till month is <feesDueTillMonth>\n<childrenData>"
+            // console.log(this.filteredParentList);
+            if(this.extraDefaulterMessage){
+                message+="\n"+this.extraDefaulterMessage;
+            }
+            let test = this.getFilteredParentList().filter((item) => {
                 return item.selected;
             })
-            console.log(test);
+            let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
+                return {
+                "mobileNumber": obj.mobileNumber,
+                "feesDueTillMonth": this.getParentFeesDueTillMonth(obj),
+                "feesDueOverall": this.getParentFeesDueOverall(obj),
+                "childrenData": this.getStudentString(obj.studentList)
+                }
+            });
+            console.log(mobile_numbers);
+            this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
         }
     }
 
@@ -375,36 +426,41 @@ export class ViewDefaultersComponent implements OnInit {
         return tempList;
     }
 
-    setFilteredStudentList(): any {
-        let tempList = this.studentList;
-        if (this.selectedClassSection) {
-            tempList = tempList.filter(student => {
-                return student.class.dbId == this.selectedClassSection.class.dbId
-                    && student.section.id == this.selectedClassSection.section.id;
-            });
-        }
-        if ((this.maximumNumber && this.maximumNumber != '')
-            || (this.minimumNumber && this.minimumNumber != '')) {
-            tempList = tempList.filter(student => {
-                let amount = student.feesDueTillMonth;
-                return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
-                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
-            });
-        }
-        this.filteredStudentList = tempList;
-    }
-
     filterTypeChanged = (event) => {
         this.selectedFilterType = event;
+        // if(this.selectedFilterType == this.filterTypeList[0]){
+        //     this.setFilteredStudentList();
+        // }else{
+        //     this.setFilteredParentList();
+        // }
+    }
+
+    selectAllHandler = () => {
         if(this.selectedFilterType == this.filterTypeList[0]){
-            this.setFilteredStudentList();
+            this.getFilteredStudentList().forEach(item => {
+                item.selected = true;
+            });
         }else{
-            this.setFilteredParentList();
+            this.getFilteredParentList().forEach(item => {
+                item.selected = true;
+            });
+        }
+    }
+
+    clearAllHandler = () => {
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            this.getFilteredStudentList().forEach(item => {
+                item.selected = false;
+            });
+        }else{
+            this.getFilteredParentList().forEach(item => {
+                item.selected = false;
+            });
         }
     }
 
     getFilteredStudentListFeesDueTillMonth(): any {
-        return this.filteredStudentList.reduce((total, student) => {
+        return this.getFilteredStudentList().reduce((total, student) => {
             return total + student.feesDueTillMonth;
         }, 0);
     }
@@ -453,7 +509,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     getFilteredParentListFeesDueTillMonth(): any {
-        return this.filteredParentList.reduce((total, parent) => {
+        return this.getFilteredParentList().reduce((total, parent) => {
             return total + this.getParentFeesDueTillMonth(parent);
         }, 0);
     }
@@ -500,6 +556,16 @@ export class ViewDefaultersComponent implements OnInit {
             this.downloadParentFeesReport();
         }
 
+    }
+
+    getSelectedParentCount = () =>{
+        return this.getFilteredParentList().filter(item => {
+            return item.selected && item.selected==true;
+        }).length;
+    }
+
+    getSelectedChildrenCount = () => {
+        return this.getFilteredStudentList().filter(item => item.selected).length;
     }
 
     downloadStudentFeesReport(): void {
