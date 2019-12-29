@@ -35,6 +35,7 @@ class ColumnFilter {
     showBloodGroup = false;
     showFatherAnnualIncome = false;
     showRTE = false;
+    showRemark = false;
 }
 
 @Component({
@@ -381,6 +382,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup?headerValues.push('Blood Group'):'';
         this.columnFilter.showFatherAnnualIncome?headerValues.push('Father\'s Annual Income'):'';
         this.columnFilter.showRTE?headerValues.push('RTE'):'';
+        this.columnFilter.showRemark?headerValues.push('remark'):'';
 
         return headerValues;
     }
@@ -413,6 +415,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup?studentDisplay.push(student.bloodGroup):'';
         this.columnFilter.showFatherAnnualIncome?studentDisplay.push(student.fatherAnnualIncome):'';
         this.columnFilter.showRTE?studentDisplay.push(student.rte):'';
+        this.columnFilter.showRemark?studentDisplay.push(student.remark):'';
 
         return studentDisplay;
     }
