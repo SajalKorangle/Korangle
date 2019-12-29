@@ -4,8 +4,18 @@ from school_app.model.models import School
 
 # Create your models here.
 
+MESSAGE_TYPE = (
+    ('Custom', 'Custom'),
+    ('Defaulter', 'Defaulter'),
+    ('Attendance', 'Attendance'),
+    ('Fees', 'Fees'),
+    ('Examination', 'Examination')
+)
+
 
 class SMS(models.Model):
+
+    message_type = models.CharField(max_length=15, choices=MESSAGE_TYPE, default='CST')
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')

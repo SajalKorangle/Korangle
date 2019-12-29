@@ -4,11 +4,20 @@ from django.db import models
 from school_app.model.models import School
 from django.contrib.auth.models import User
 
+MESSAGE_TYPE = (
+    ('Custom', 'Custom'),
+    ('Defaulter', 'Defaulter'),
+    ('Attendance', 'Attendance'),
+    ('Fees', 'Fees'),
+    ('Examination', 'Examination')
+)
 
 class Notification(models.Model):
 
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
+
+    message_type = models.CharField(max_length=20, choices=MESSAGE_TYPE, default='CST')
 
     # Sent Date & Time
     sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')

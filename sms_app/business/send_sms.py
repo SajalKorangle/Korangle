@@ -152,3 +152,52 @@ def send_sms_old(data):
     # f.write("'{0}'\n'{1}'\n'{2}'\n".format(response.text, data['estimatedCount'], data['message'].encode('utf-8')))
     # f.close()
 
+def send_different_sms(data):
+    """
+    Function send different SMS
+    Needs data in the format
+    data = {
+        'count': 12,
+        'parentSchool': 12,
+        'messages': [
+            {'mobileNumber': XXXXXXXXXX, 'isAdvanceSms': "Your message here"},
+            {'mobileNumber': XXXXXXXXXX, 'isAdvanceSms': "Your message here"},
+        ],
+        'smsContentType': 'english'
+    }
+    # Note: Alos add the other fields needed for the sms count
+    """
+    print("yo")
+    sms_count_left = get_sms_count(data)
+    print("no")
+    if data['count'] > sms_count_left['count']:
+        return {'status': 'failure', 'count': sms_count_left, 'message': 'Not enough sms left'}
+
+    school_object = School.objects.get(id=data['parentSchool'])
+
+    conn = http.client.HTTPConnection("msg.msgclub.net")
+
+    anotherPayload = {
+        "routeId": "1",
+        "sentSmsNumList": data['data'],
+        "senderId": school_object.smsId,
+        "smsContentType": data['contentType'],
+    }
+
+    payloadJson = json.dumps(anotherPayload)
+
+    headers = {
+        'Content-Type': "application/json",
+        'Cache-Control': "no-cache"
+    }
+
+    print(anotherPayload)
+
+    conn.request("POST", "/rest/services/sendSMS/sendCustomGroupSms?AUTH_KEY=fbe5746e5505757b176a1cf914110c3", payloadJson, headers)
+
+    response = conn.getresponse().read()
+    print(response)
+
+    requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
+
+    return {'status': 'success', 'requestId': requestIdFromMsgClub, 'message': 'SMS Sent successfully'}
