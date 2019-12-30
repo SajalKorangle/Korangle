@@ -98,17 +98,17 @@ export class CollectFeeComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.receiptColumnFilter.receiptNumber = false;
+        this.receiptColumnFilter.receiptNumber = true;
         this.receiptColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
-            this.receiptColumnFilter.printButton = false;
+            this.receiptColumnFilter.printButton = false; 
         }
 
-        this.discountColumnFilter.discountNumber = false;
+        this.discountColumnFilter.discountNumber = true;
         this.discountColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {

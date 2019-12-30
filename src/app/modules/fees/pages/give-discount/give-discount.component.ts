@@ -88,7 +88,7 @@ export class GiveDiscountComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.receiptColumnFilter.receiptNumber = false;
+        this.receiptColumnFilter.receiptNumber = true;
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.printButton = false;
 
@@ -98,7 +98,7 @@ export class GiveDiscountComponent implements OnInit {
             this.receiptColumnFilter.employee = false;
         }
 
-        this.discountColumnFilter.discountNumber = false;
+        this.discountColumnFilter.discountNumber = true;
         this.discountColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
