@@ -102,6 +102,7 @@ export class CollectFeeComponent implements OnInit {
         this.receiptColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.receiptColumnFilter.receiptNumber = false;
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
@@ -112,6 +113,7 @@ export class CollectFeeComponent implements OnInit {
         this.discountColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.discountColumnFilter.discountNumber = false;
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }

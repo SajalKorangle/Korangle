@@ -93,6 +93,7 @@ export class GiveDiscountComponent implements OnInit {
         this.receiptColumnFilter.printButton = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.receiptColumnFilter.receiptNumber = false;
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
@@ -102,6 +103,7 @@ export class GiveDiscountComponent implements OnInit {
         this.discountColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.discountColumnFilter.discountNumber = false;
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }
