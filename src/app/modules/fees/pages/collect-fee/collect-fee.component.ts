@@ -106,7 +106,7 @@ export class CollectFeeComponent implements OnInit {
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
-            this.receiptColumnFilter.printButton = false; 
+            this.receiptColumnFilter.printButton = false;
         }
 
         this.discountColumnFilter.discountNumber = true;
