@@ -26,8 +26,8 @@ export class GenerateHallTicketServiceAdapter {
         this.vm.isLoading = true;
 
         let request_examination_data = {
-            'schoolId': this.vm.user.activeSchool.dbId,
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         let request_student_section_data = {

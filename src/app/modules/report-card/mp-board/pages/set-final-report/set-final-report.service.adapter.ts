@@ -28,8 +28,8 @@ export class SetFinalReportServiceAdapter {
         this.vm.isLoading = true;
 
         let request_examination_data = {
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-            'schoolId': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
         let request_report_card_mapping_data = {

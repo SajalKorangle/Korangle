@@ -40,8 +40,8 @@ export class UpdateMarksServiceAdapter {
         this.vm.isInitialLoading = true;
 
         let request_examination_data = {
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-            'schoolId': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
         let request_class_subject_data = {

@@ -66,7 +66,7 @@ export class GenerateFinalReportServiceAdapter {
                 };
 
                 const request_examination_data = {
-                    'idList': this.getExaminationIdList(),
+                    'id__in': this.getExaminationIdList(),
                 };
 
                 console.log(request_examination_data);

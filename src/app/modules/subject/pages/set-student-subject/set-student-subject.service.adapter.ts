@@ -26,8 +26,8 @@ export class SetStudentSubjectServiceAdapter {
 
 
         let request_examination_data = {
-            'schoolId': this.vm.user.activeSchool.dbId,
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         Promise.all([
