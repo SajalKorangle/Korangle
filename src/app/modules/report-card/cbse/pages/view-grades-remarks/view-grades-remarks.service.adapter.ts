@@ -68,12 +68,6 @@ export class ViewGradesRemarksServiceAdapter {
             }, error => {
                 this.vm.isInitialLoading = false;
             });
-<<<<<<< HEAD
-=======
-
-            this.populateClassSectionList();
-            this.populateSelectedExtraField();
->>>>>>> d02d893741b10b41205905cca5c4b7092f13b45c
             // this.getStudentRemarkDetails();
             
         }, error => {
@@ -81,7 +75,6 @@ export class ViewGradesRemarksServiceAdapter {
         });
         
     }
-<<<<<<< HEAD
     // populateStudentSectionList(): void {
     //
     //     if (this.vm.attendancePermissionList.length > 0) {
@@ -97,9 +90,6 @@ export class ViewGradesRemarksServiceAdapter {
     //
     // }
     
-=======
-
->>>>>>> d02d893741b10b41205905cca5c4b7092f13b45c
     populateSelectedExtraField(): void{
         this.vm.selectedExtraField = this.vm.extraFieldList[0];
     }
@@ -236,9 +226,4 @@ export class ViewGradesRemarksServiceAdapter {
         // }
         
     }
-<<<<<<< HEAD
     
-=======
-
-}
->>>>>>> d02d893741b10b41205905cca5c4b7092f13b45c
