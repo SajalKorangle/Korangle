@@ -2,6 +2,7 @@ import { Component, OnInit, OnChanges } from '@angular/core';
 
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import {ExaminationOldService} from '../../../../services/modules/examination/examination-old.service';
+import {ExaminationService} from '../../../../services/modules/examination/examination.service';
 import {SubjectOldService} from '../../../../services/modules/subject/subject-old.service';
 import {ViewMarksServiceAdapter} from './view-marks.service.adapter';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -10,7 +11,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'view-marks',
   templateUrl: './view-marks.component.html',
   styleUrls: ['./view-marks.component.css'],
-    providers: [ StudentOldService, ExaminationOldService, SubjectOldService ],
+    providers: [ ExaminationService,StudentOldService, ExaminationOldService, SubjectOldService ],
 })
 
 export class ViewMarksComponent implements OnInit, OnChanges {
@@ -29,6 +30,7 @@ export class ViewMarksComponent implements OnInit, OnChanges {
 
     constructor (public studentService: StudentOldService,
                  public examinationOldService: ExaminationOldService,
+                 public examinationService : ExaminationService,
                  public subjectService: SubjectOldService) { }
 
     ngOnChanges(): void {

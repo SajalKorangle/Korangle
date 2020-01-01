@@ -8,6 +8,7 @@ import { ReportCardMpBoardComponent } from './report-card-mp-board.component';
 import { ReportCardMpBoardRoutingModule } from './report-card-mp-board.routing';
 
 import { ExaminationOldService } from '../../../services/modules/examination/examination-old.service';
+import { ExaminationService } from '../../../services/modules/examination/examination.service';
 import { PrintStudentNinthFinalReportListComponent } from './print/print-student-ninth-final-report-list/print-student-ninth-final-report-list.component';
 import { PrintStudentEleventhFinalReportListComponent } from './print/print-student-eleventh-final-report-list/print-student-eleventh-final-report-list.component';
 import { PrintStudentComprehensiveFinalReportListComponent } from './print/print-student-comprehensive-final-report-list/print-student-comprehensive-final-report-list.component';
@@ -33,7 +34,7 @@ import { ExcelService } from "../../../excel/excel-service";
         NgxDatatableModule,
     ],
     exports: [],
-    providers: [ExaminationOldService, ExcelService],
+    providers: [ExaminationOldService,ExaminationService, ExcelService],
     bootstrap: [ReportCardMpBoardComponent],
 })
 export class ReportCardMpBoardModule { }

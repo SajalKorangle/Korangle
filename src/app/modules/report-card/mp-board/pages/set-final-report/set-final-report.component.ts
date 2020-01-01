@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
+import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 
 import { SetFinalReportServiceAdapter } from './set-final-report.service.adapter';
 import { REPORT_CARD_TYPE_LIST } from '../../classes/constants';
@@ -12,7 +13,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
     selector: 'set-final-report',
     templateUrl: './set-final-report.component.html',
     styleUrls: ['./set-final-report.component.css'],
-    providers: [ ExaminationOldService ],
+    providers: [ ExaminationOldService, ExaminationService ],
 })
 
 export class SetFinalReportComponent implements OnInit {
@@ -30,6 +31,7 @@ export class SetFinalReportComponent implements OnInit {
     isLoading = false;
 
     constructor(public examinationOldService: ExaminationOldService,
+                public examinationService : ExaminationService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
