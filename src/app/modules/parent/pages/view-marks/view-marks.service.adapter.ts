@@ -45,7 +45,7 @@ export class ViewMarksServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.studentService.getStudentFullProfile(request_student_data, this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
         ]).then(value => {

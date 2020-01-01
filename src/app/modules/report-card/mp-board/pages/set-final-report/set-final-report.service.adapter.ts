@@ -38,7 +38,7 @@ export class SetFinalReportServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.examinationOldService.getMpBoardReportCardMapping(request_report_card_mapping_data, this.vm.user.jwt),
         ]).then(value => {
             this.examinationList = value[0];

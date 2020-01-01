@@ -42,7 +42,7 @@ export class CreateTestServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
@@ -60,7 +60,7 @@ export class CreateTestServiceAdapter {
             this.vm.isInitialLoading = false;
         });
 
-        /*this.vm.examinationOldService.getExaminationList(request_data, this.vm.user.jwt).then(value => {
+        /*this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data).then(value => {
             this.vm.examinationList = value;
             this.vm.isInitialLoading = false;
         }, error => {

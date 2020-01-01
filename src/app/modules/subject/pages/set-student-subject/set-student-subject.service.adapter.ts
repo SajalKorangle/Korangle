@@ -32,7 +32,7 @@ export class SetStudentSubjectServiceAdapter {
 
         Promise.all([
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
-            this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
         ]).then(value => {
             this.subjectList = value[0];
             this.examinationList = value[1];

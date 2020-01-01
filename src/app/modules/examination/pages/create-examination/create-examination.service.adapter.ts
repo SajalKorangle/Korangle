@@ -23,7 +23,7 @@ export class CreateExaminationServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
-        this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt).then(value => {
+        this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data).then(value => {
             this.populateExaminationList(value);
             this.vm.isLoading = false;
         }, error => {
@@ -77,7 +77,7 @@ export class CreateExaminationServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        this.vm.examinationOldService.createExamination(data, this.vm.user.jwt).then(value => {
+        this.vm.examinationService.createObjectList(data, this.vm.user.jwt).then(value => {
             this.addToExaminationList(value);
             this.vm.examinationNameToBeAdded = null;
             this.vm.examinationStatusToBeAdded = null;
