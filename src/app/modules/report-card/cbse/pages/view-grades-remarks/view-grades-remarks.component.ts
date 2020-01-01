@@ -34,7 +34,6 @@ export class ViewGradesRemarksComponent implements OnInit {
     user;
 
     classSectionList = [];
-    attendancePermissionList = [];
     studentList = [];
     studentSectionList = [];
     studentRemarkList = [];
@@ -73,7 +72,6 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     handleClassSectionChange(classSection: any): void {
-        console.log(this.termList);
         this.selectedClassSection = classSection;
         if (this.selectedClassSection.class.orderNumber >= 5) {
             this.selectedTerm = this.termList[0];
@@ -81,31 +79,6 @@ export class ViewGradesRemarksComponent implements OnInit {
             this.selectedTerm = this.termList[2];
         }
         this.handleTermChange(this.selectedTerm);
-    }
-
-    inAttendanceList(attendance_list: any, employee: any): boolean{
-        // console.log(employee.id);
-        const occurence = attendance_list.filter((obj) => {
-            return obj.parentEmployee === employee.id
-        });
-        if(occurence.length!=0){
-            console.log(employee.id);
-        }
-        return occurence.length !== 0;
-    }
-
-    getEmployees(): void{
-        // console.log(this.attendancePermissionList);
-        // return [];
-        console.log(this.selectedClassSection);
-         const attendance_list = this.attendancePermissionList.filter((employee) => {
-            return employee.parentClass == this.selectedClassSection.class.orderNumber &&
-                employee.parentDivision == this.selectedClassSection.section.orderNumber;
-        });
-         this.currentEmployees = this.employeeList.filter((employee) => {
-             return this.inAttendanceList(attendance_list, employee);
-         });
-        console.log(this.currentEmployees);
     }
 
     handleTermChange(term: any): void{
@@ -123,7 +96,7 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     getFilteredStudentSectionList(): any {
-        let data =  this.studentSectionList.filter(studentSection => {
+        return this.studentSectionList.filter(studentSection => {
             return studentSection.parentClass == this.selectedClassSection.class.id
                 && studentSection.parentDivision == this.selectedClassSection.section.id;
         }).sort( (a,b) => {
@@ -131,8 +104,6 @@ export class ViewGradesRemarksComponent implements OnInit {
                 return a.rollNumber - b.rollNumber;
             }
         });
-        // console.log(data);
-        return data;
     }
 
     getStudent(studentSection: any): any {
@@ -142,11 +113,9 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     getStudentRemark(studentSection: any): any {
-        // console.log(studentSection);
         let item = this.studentRemarkList.find(studentRemark => {
             return studentRemark.parentStudent == studentSection.parentStudent;
         });
-        // console.log(item);
         if (item) {
             return item.remark;
         } else {
@@ -156,11 +125,9 @@ export class ViewGradesRemarksComponent implements OnInit {
 
     getGrade(studentSection: any, index: number): any {
         index = index+1;
-        // console.log(this.studentExtraFieldList);
         let item = this.studentExtraFieldList[index].find(studentExtraField => {
             return studentExtraField.parentStudent == studentSection.parentStudent;
         });
-        // console.log(item);
         if (item) {
             return item.grade;
         } else {
