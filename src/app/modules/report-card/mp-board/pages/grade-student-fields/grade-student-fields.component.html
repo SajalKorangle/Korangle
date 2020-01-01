@@ -16,6 +16,8 @@
                     </mat-select>
                 </mat-form-field>
 
+                <!-- Merge these two sections according to the permission employee has -->
+
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
                     <mat-select placeholder="Select Class"
                                 [disabled]="isLoading"
@@ -67,8 +69,8 @@
 
         <ng-container *ngIf="showTestDetails && !isLoading">
 
-            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
-                <div class="col-md-12"></div>
+            <div class="row" style="border-bottom: 0px solid black; margin-top: 15px; margin-bottom: 15px;box-shadow: 5px;">
+                <div class="col-md-12"><b>Alert : </b><i>Marks scaling has been changed from 10 to 2</i></div>
             </div>
 
             <table class="table table-hover">
@@ -78,7 +80,7 @@
                     <th>Student</th>
                     <th>Roll No.</th>
                     <th *ngFor="let subField of selectedField.subFieldList">
-                        {{subField.name}} (10)
+                        {{subField.name}} (2)
                     </th>
                 </tr>
                 </thead>
@@ -90,7 +92,10 @@
                     <td *ngFor="let studentSubField of student.subFieldList">
                         <input type="number"
                                placeholder="Type marks here"
-                               [(ngModel)]="studentSubField.marksObtained"/>
+                               [(ngModel)]="studentSubField.marksObtained"
+                               min="0"
+                               max="2"
+                               (blur)="serviceAdapter.updateStudentField(studentSubField,$event)"/>
                     </td>
                 </tr>
                 </tbody>
@@ -99,11 +104,6 @@
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-12"></div>
             </div>
-
-            <button type="submit"
-                    style="margin-left: 20px;"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.updateStudentFieldDetails()">Update</button>
 
         </ng-container>
 
