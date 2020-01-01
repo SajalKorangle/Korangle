@@ -36,7 +36,7 @@ export class SetStudentSubjectComponent implements OnInit {
                 public classService: ClassOldService,
                 public studentService: StudentOldService,
                 public schoolService: SchoolOldService,
-                public examinationService: ExaminationOldService) {}
+                public examinationOldService: ExaminationOldService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

@@ -29,7 +29,7 @@ export class SetFinalReportComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService,
+    constructor(public examinationOldService: ExaminationOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

@@ -23,7 +23,7 @@ export class CreateExaminationServiceAdapter {
             schoolId: this.vm.user.activeSchool.dbId,
         };
 
-        this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt).then(value => {
+        this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt).then(value => {
             this.populateExaminationList(value);
             this.vm.isLoading = false;
         }, error => {
@@ -77,7 +77,7 @@ export class CreateExaminationServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        this.vm.examinationService.createExamination(data, this.vm.user.jwt).then(value => {
+        this.vm.examinationOldService.createExamination(data, this.vm.user.jwt).then(value => {
             this.addToExaminationList(value);
             this.vm.examinationNameToBeAdded = null;
             this.vm.examinationStatusToBeAdded = null;
@@ -134,7 +134,7 @@ export class CreateExaminationServiceAdapter {
             'parentSession': examination.parentSession,
         };
 
-        this.vm.examinationService.updateExamination(data, this.vm.user.jwt).then(value => {
+        this.vm.examinationOldService.updateExamination(data, this.vm.user.jwt).then(value => {
             alert("Examination updated successfully");
             examination.name = value.name;
             examination.status = value.status;

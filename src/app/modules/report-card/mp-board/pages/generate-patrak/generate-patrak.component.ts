@@ -42,7 +42,7 @@ export class GeneratePatrakComponent implements OnInit {
     isLoading = true;
     timeout: any;
 
-    constructor(public examinationService: ExaminationOldService,
+    constructor(public examinationOldService: ExaminationOldService,
                 public classService: ClassOldService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,

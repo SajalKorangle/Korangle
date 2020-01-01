@@ -32,7 +32,7 @@ export class GenerateHallTicketComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService,
+    constructor(public examinationOldService: ExaminationOldService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 public schoolService: SchoolService,

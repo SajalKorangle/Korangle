@@ -61,7 +61,7 @@ export class PrintMarksheetServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
@@ -98,7 +98,7 @@ export class PrintMarksheetServiceAdapter {
                     'maximumMarksList': [],
                 };
 
-                service_list.push(this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt));
+                service_list.push(this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt));
 
             });
 
@@ -313,7 +313,7 @@ export class PrintMarksheetServiceAdapter {
             'testTypeList': [],
         };
 
-        this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt).then(value2 => {
+        this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt).then(value2 => {
             console.log(value2);
             this.populateStudentList(value2);
             this.vm.showTestDetails = true;

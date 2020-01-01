@@ -49,7 +49,7 @@ export class ViewMarksComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(public examinationOldService: ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectService,
                 public studentService: StudentService,

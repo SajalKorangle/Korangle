@@ -28,7 +28,7 @@ export class ViewMarksComponent implements OnInit, OnChanges {
     isLoading = false;
 
     constructor (public studentService: StudentOldService,
-                 public examinationService: ExaminationOldService,
+                 public examinationOldService: ExaminationOldService,
                  public subjectService: SubjectOldService) { }
 
     ngOnChanges(): void {

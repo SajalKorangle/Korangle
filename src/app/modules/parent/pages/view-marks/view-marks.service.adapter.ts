@@ -45,7 +45,7 @@ export class ViewMarksServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt),
             this.vm.studentService.getStudentFullProfile(request_student_data, this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
         ]).then(value => {
@@ -102,8 +102,8 @@ export class ViewMarksServiceAdapter {
             Promise.all([
                 this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
                 this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
-                this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt),
-                this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
+                this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt),
+                this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
             ]).then(value2 => {
 
                 this.classSubjectList = value2[0];

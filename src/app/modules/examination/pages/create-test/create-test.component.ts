@@ -43,7 +43,7 @@ export class CreateTestComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService,
+    constructor(public examinationOldService: ExaminationOldService,
                 public classService: ClassOldService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService) {}

@@ -26,7 +26,7 @@ export class SetFinalReportComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(public examinationOldService: ExaminationService,
                 public reportCardCbseService: ReportCardCbseService,
                 private cdRef: ChangeDetectorRef) {}
 

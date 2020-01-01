@@ -31,7 +31,7 @@ export class SetFinalReportServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, examination_data),
+            this.vm.examinationOldService.getObjectList(this.vm.examinationOldService.examination, examination_data),
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.term, ''),
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.report_card_mapping, report_card_mapping_data),
         ]).then(value => {

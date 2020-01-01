@@ -41,21 +41,21 @@ export class GenerateHallTicketServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
-            // this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt),
+            // this.vm.examinationOldService.getTestList(request_test_data, this.vm.user.jwt),
         ]).then(value => {
 
             let request_test_data = {
                 'examinationList': value[0].map(a => a.id),
             };
 
-            this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt).then(value2 => {
+            this.vm.examinationOldService.getTestList(request_test_data, this.vm.user.jwt).then(value2 => {
 
                 this.examinationList = value[0];
                 this.classList = value[1];

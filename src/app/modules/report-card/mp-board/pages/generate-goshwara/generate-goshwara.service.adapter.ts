@@ -45,7 +45,7 @@ export class GenerateGoshwaraServiceAdapter {
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
-        this.vm.examinationService.getMpBoardReportCardMapping(request_mp_board_report_card_mapping_data, this.vm.user.jwt).then(value => {
+        this.vm.examinationOldService.getMpBoardReportCardMapping(request_mp_board_report_card_mapping_data, this.vm.user.jwt).then(value => {
 
             if (value == null) {
 
@@ -70,7 +70,7 @@ export class GenerateGoshwaraServiceAdapter {
                     this.vm.classService.getClassList(this.vm.user.jwt),
                     // this.vm.classService.getSectionList(this.vm.user.jwt),
                     this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
-                    this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+                    this.vm.examinationOldService.getExaminationList(request_examination_data, this.vm.user.jwt),
                     this.vm.subjectService.getSubjectList(this.vm.user.jwt),
                     this.vm.subjectService.getExtraFieldList({}, this.vm.user.jwt),
                     this.vm.subjectService.getExtraSubFieldList({}, this.vm.user.jwt),
@@ -240,9 +240,9 @@ export class GenerateGoshwaraServiceAdapter {
 
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationOldService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
 
             Promise.all(request_array).then(valueTwo => {
 
