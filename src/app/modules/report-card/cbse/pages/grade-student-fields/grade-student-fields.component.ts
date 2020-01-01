@@ -101,7 +101,6 @@ export class GradeStudentFieldsComponent implements OnInit {
     }
 
     getGrade(studentSection: any): any {
-        console.log(this.studentExtraFieldList);
         let item = this.studentExtraFieldList.find(studentExtraField => {
             return studentExtraField.parentStudent == studentSection.parentStudent;
         });

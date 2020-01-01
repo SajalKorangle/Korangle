@@ -17,7 +17,6 @@
                     </mat-select>
                 </mat-form-field>
 
-
             </div>
 
             <div class="col-md-3" *ngIf="showTermList()">
@@ -29,9 +28,9 @@
                                 (ngModelChange)="selectedTerm=$event;showStudentList=false;">
                         <mat-option *ngFor='let term of termList.slice(0,2);' [value]="term">
                             {{term.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
             </div>
 
@@ -89,7 +88,7 @@
                     <th>S No.</th>
                     <th>Student</th>
                     <th>Roll No.</th>
-                    <th align="center">Grade</th>
+                    <th class="text-center">Grade</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -102,7 +101,7 @@
                         <td>
                             {{getStudent(studentSection).rollNumber}}
                         </td>
-                        <td align="left">
+                        <td align="center">
                             <button type="submit"
                                     style="padding: 3px 8px;"
                                     class="{{getButtonClass(studentSection)}}"
