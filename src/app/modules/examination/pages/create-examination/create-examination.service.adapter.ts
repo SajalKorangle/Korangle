@@ -134,7 +134,7 @@ export class CreateExaminationServiceAdapter {
             'parentSession': examination.parentSession,
         };
 
-        this.vm.examinationOldService.updateExamination(data, this.vm.user.jwt).then(value => {
+        this.vm.examinationService.updateObjectList(data, this.vm.user.jwt).then(value => {
             alert("Examination updated successfully");
             examination.name = value.name;
             examination.status = value.status;
