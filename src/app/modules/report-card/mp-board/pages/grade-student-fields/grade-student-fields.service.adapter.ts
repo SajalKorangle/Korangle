@@ -42,51 +42,26 @@ export class GradeStudentFieldsServiceAdapter {
 
         let request_sub_field_data = {};
 
-        let request_student_mini_profile_data = {
-            'schoolDbId': this.vm.user.activeSchool.dbId,
-            'sessionDbId': this.vm.user.activeSchool.currentSessionDbId,
-        };
-
         let request_permission_data = {
             'parentEmployee': this.vm.user.activeSchool.employeeId,
             'sessionId': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         Promise.all([
-            // request: parentSession, parentSchool
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
-            // response: name, parentSchool, parentSession, status
-            
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            // response : id, classname,orderno
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            // response : id, classname,orderno
-
-            // request: parentEmployee, sessionId
             this.vm.attendanceService.getAttendancePermissionList(request_permission_data, this.vm.user.jwt),
-            // response: parentEmployee, parentClass, parentDivision, parentSession
-            // WIll return the class and section alloted to the logged in employee
-
             this.vm.reportCardMpBoardService.getObjectList(this.vm.reportCardMpBoardService.extra_field, request_field_data),
             this.vm.reportCardMpBoardService.getObjectList(this.vm.reportCardMpBoardService.extra_sub_field, request_sub_field_data),
-            
-            // request: sessionDbId, schoolDbID
-            // Model: parentStudent, parentDivision, parentClass, parentSession, rollNumber, attendance
-            // this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data),
-            // Response: Student Model fields
-
         ]).then(value => {
-            console.log(value);
-            this.examinationList = value[0]; // All examinations
-            this.vm.examinationList = value[0]; // All examinations
+            this.examinationList = value[0]; 
+            this.vm.examinationList = value[0]; 
+
             if (this.vm.examinationList.length > 0) {
                 this.vm.selectedExamination = this.vm.examinationList[0];
             }
-            // Else if length is zero ?
-
             this.classList = value[1];
-            // Filtering Classlist to remove class 10 and class 12
-            // Do in attendance permission
             
             this.sectionList = value[2];
 
@@ -95,6 +70,7 @@ export class GradeStudentFieldsServiceAdapter {
                 // Show message to user that he do not have any classes assigned
                 // return;
             }
+
             let unique_classes = []
             let unique_division = []
 
@@ -106,28 +82,29 @@ export class GradeStudentFieldsServiceAdapter {
                 if(class_.name == 'Class - 12'){ class_12_id = class_.id; }
             });
 
-            this.permissionList.forEach(permission =>{
-                if(permission.parentClass == class_10_id || permission.parentClass == class_12_id){return}
+            this.permissionList = this.permissionList.filter(permission =>{
+                if(permission.parentClass == class_10_id || permission.parentClass == class_12_id){return false}
+                // TODO: perform the same using set
                 if(unique_classes.includes(permission.parentClass) == false){unique_classes.push(permission.parentClass)}
                 if(unique_division.includes(permission.parentDivision) == false){unique_division.push(permission.parentDivision)}
+                return true;
             });
+
             let request_student_section_data = {
                 'parentStudent__parentSchool':this.vm.user.activeSchool.dbId,
                 'parentDivision__in':unique_division.join(),
                 'parentClass__in':unique_classes.join(),
                 'parentSession':this.vm.user.activeSchool.currentSessionDbId,
             };
-            // Fetch students for those class and sections
+
             let student_studentSection_map = {}
             this.vm.studentService.getObjectList(this.vm.studentService.student_section,request_student_section_data).then(value_studentSection=>{
-                console.log(value_studentSection);
-                // Assuming value.parentStudent to be unique
+                // Assuming value_studentSection.parentStudent to be unique
+                // TODO: if no student is present in class
                 let student_id = []
                 value_studentSection.forEach(item=>{
                     student_studentSection_map[item.parentStudent] = {
                         'rollNumber':item.rollNumber,
-                        // 'className':,
-                        // 'sectionName':,
                         'studentSectionId':item.id,
                         'classId':item.parentClass,
                         'sectionId':item.parentDivision,
@@ -140,8 +117,6 @@ export class GradeStudentFieldsServiceAdapter {
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(
                     value_student=>{
                         // map student with roll number from student section
-                        console.log('map');
-                        console.log(student_studentSection_map);
                         let studentDetails = value_student.map(student => {
                             student['rollNumber'] = student_studentSection_map[student.id].rollNumber;
                             student['classId'] = student_studentSection_map[student.id].classId;
@@ -155,27 +130,28 @@ export class GradeStudentFieldsServiceAdapter {
                             return student;
                         });
                         this.studentList = studentDetails;
-                        console.log('got student list');
-                        console.log(this.studentList);
+
+                        // TODO: Merge class section columns
+                        // TODO: Place below code into proper place
+                        this.populateClassSectionList();
+
+                        this.fieldList = value[4];
+                        this.subFieldList = value[5];
+                        this.populateFieldList();
+
+                        // this.studentList = value[6];
+
+                        this.vm.isInitialLoading = false;
+
 
                     },
                     error=>{console.log('Error fetching students');},
                     );
             }, error=>{console.log('Error fetching student section data');});
+            // Todo: Handle above errors properly 
 
 
-
-            // TODO: Merge class section columns
-            this.populateClassSectionList();
-
-            this.fieldList = value[4];
-            this.subFieldList = value[5];
-            this.populateFieldList();
-
-            // this.studentList = value[6];
-
-            this.vm.isInitialLoading = false;
-
+            
 
             return;
 
@@ -238,12 +214,8 @@ export class GradeStudentFieldsServiceAdapter {
         this.vm.isLoading = true;
 
         let request_student_field_data = {
-            // 'studentList': this.getStudentIdListForSelectedItems().join(),
             'parentStudent__in': this.getStudentIdListForSelectedItems().join(),
-            // 'examinationList': [this.vm.selectedExamination.id],
             'parentExamination': [this.vm.selectedExamination.id],
-
-            // 'subFieldList': this.getSubFieldList().join(),
         };
         this.vm.examinationService.getObjectList(this.vm.examinationService.student_extra_sub_field,request_student_field_data).then(value2 => {
             this.populateStudentList(value2);
@@ -257,6 +229,7 @@ export class GradeStudentFieldsServiceAdapter {
 
     getStudentIdListForSelectedItems(): any {
         let id_list = [];
+
         this.studentList.forEach(item => {
             if (item.classId === this.vm.selectedClass.id
                 && item.sectionId === this.vm.selectedClass.selectedSection.id) {
@@ -273,7 +246,7 @@ export class GradeStudentFieldsServiceAdapter {
     }
 
     populateStudentList(student_sub_field_list: any): void {
-        // ToDo: if length of vm.studentList == 0, then ?
+        // TODO: if length of vm.studentList == 0, then ?
         // Means no student is present in selected class and section
         this.vm.studentList = [];
         
@@ -310,7 +283,7 @@ export class GradeStudentFieldsServiceAdapter {
         });
 
         // Sorting student list
-        // Todo: Handle cases when rollNumber is empty or null; same for name
+        // Todo: Handle cases when either rollNumber is empty or null; same for name
         this.vm.studentList.sort(function(obj1,obj2){
             if(obj1.rollNumber < obj2.rollNumber) return -1;
             if(obj1.rollNumber > obj2.rollNumber) return 1;

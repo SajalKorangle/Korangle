@@ -92,7 +92,7 @@
                     <td *ngFor="let studentSubField of student.subFieldList">
                         <input type="number"
                                placeholder="Type marks here"
-                               [(ngModel)]="studentSubField.marksObtained"
+                               [ngModel]="studentSubField.marksObtained"
                                min="0"
                                max="2"
                                (blur)="serviceAdapter.updateStudentField(studentSubField,$event)"/>
