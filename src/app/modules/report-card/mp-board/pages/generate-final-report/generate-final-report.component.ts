@@ -35,7 +35,7 @@ export class GenerateFinalReportComponent implements OnInit {
     reportCardMapping: any;
     classSectionStudentList = [];
 
-    allSignatures = [];
+    class_teacher_signature_list = [];
 
     filteredStudentList = [];
 
@@ -51,8 +51,8 @@ export class GenerateFinalReportComponent implements OnInit {
     timeout: any;
 
     constructor(public examinationService: ExaminationOldService,
-                public classService: ClassOldService,
-                public classNewService: ClassService,
+                public classOldService: ClassOldService,
+                public classService: ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 public attendanceService: AttendanceOldService,
@@ -62,8 +62,6 @@ export class GenerateFinalReportComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        console.log(this.user);
-
         this.serviceAdapter = new GenerateFinalReportServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -74,20 +72,15 @@ export class GenerateFinalReportComponent implements OnInit {
     }
 
     printStudentFinalReport(): void {
-        console.log("HI");
-        console.log(this.filteredStudentList);
         let data = {
             'extraFieldList': this.extraFieldList,
             'subjectList': this.subjectList,
             'studentFinalReportList': this.studentFinalReportCardList,
             'reportCardMapping': this.reportCardMapping,
             'showPrincipalSignature': this.showPrinicipalSignature,
-            'showClassTeacherSignature': this.showClassTeacherSignature,
+            'classTeacherSignature': this.currentClassTeacherSignature,
             'boardList': this.boardList,
         };
-        if(this.showClassTeacherSignature){
-            data['currentClassTeacherSignature'] = this.currentClassTeacherSignature;
-        }
         let selectedClassSection = this.getSelectedClassSection();
         let printRoute : string;
         

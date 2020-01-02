@@ -19,7 +19,6 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
     studentFinalReportList: any;
     reportCardMapping: any;
     showPrincipalSignature: any;
-    showClassTeacherSignature: any;
     classTeacherSignature: any;
     boardList: any;
 
@@ -32,10 +31,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         this.studentFinalReportList = value['studentFinalReportList'];
         this.reportCardMapping = value['reportCardMapping'];
         this.showPrincipalSignature = value['showPrincipalSignature'];
-        this.showClassTeacherSignature = value['showClassTeacherSignature'];
-        if(this.showClassTeacherSignature){
-            this.classTeacherSignature = value['currentClassTeacherSignature'];
-        }
+        this.classTeacherSignature = value['classTeacherSignature'];
         this.boardList = value['boardList'];
         this.viewChecked = false;
     }

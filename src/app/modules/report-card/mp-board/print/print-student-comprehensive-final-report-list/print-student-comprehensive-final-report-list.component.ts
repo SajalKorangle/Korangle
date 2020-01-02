@@ -19,7 +19,6 @@ export class PrintStudentComprehensiveFinalReportListComponent implements OnInit
     reportCardMapping: any;
     includeProject: any;
     showPrincipalSignature: any;
-    showClassTeacherSignature: any;
     classTeacherSignature: any;
     boardList: any;
 
@@ -33,10 +32,7 @@ export class PrintStudentComprehensiveFinalReportListComponent implements OnInit
         this.studentFinalReportList = value['studentFinalReportList'];
         this.reportCardMapping = value['reportCardMapping'];
         this.showPrincipalSignature = value['showPrincipalSignature'];
-        this.showClassTeacherSignature = value['showClassTeacherSignature'];
-        if(this.showClassTeacherSignature){
-            this.classTeacherSignature = value['currentClassTeacherSignature'];
-        }
+        this.classTeacherSignature = value['classTeacherSignature'];
         // console.log(this.classTeacherSignature);
         this.boardList = value['boardList'];
         this.populateIncludeProject();
