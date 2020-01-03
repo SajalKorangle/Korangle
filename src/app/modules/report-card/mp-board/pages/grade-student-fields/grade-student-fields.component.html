@@ -16,7 +16,6 @@
                     </mat-select>
                 </mat-form-field>
 
-                <!-- Merge these two sections according to the permission employee has -->
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
                     <mat-select placeholder="Select Class"
@@ -24,18 +23,7 @@
                                 [ngModel]="selectedClass"
                                 (ngModelChange)="selectedClass=$event;detectChanges();">
                         <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
-                            {{classs.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Section"
-                                [disabled]="isLoading"
-                                [ngModel]="selectedClass.selectedSection"
-                                (ngModelChange)="selectedClass.selectedSection=$event;detectChanges();">
-                        <mat-option *ngFor='let section of selectedClass.sectionList;' [value]="section">
-                            {{section.name}}
+                            {{classs.className}} - {{classs.sectionName}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
