@@ -22,9 +22,23 @@
             </div>
         </ng-container>
 
+        <ng-container *ngIf="!notificationList.length">
+            <div class="text-center">
+                <div class="visible-xs visible-sm" style="margin-top:80px;"></div>
+                <i class="material-icons">notifications_none</i>
+                <br>
+                <i>You have no Notifications yet !</i>
+                <br><br>
+                <span class="visible-xs visible-sm">
+                    Click on &nbsp;&nbsp;<span style=''>&#8801;</span>&nbsp;&nbsp; to explore more
+                </span>
+            </div>
+        </ng-container>
+
     </ng-container>
 
 </div>
+
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
