@@ -106,7 +106,7 @@ export class GradeStudentFieldsServiceAdapter {
                     alert('No students have been allocated');
                     return;
                 }
-
+                // ToDo: filter the required class,section; un-necessary added due to permutation of class,section
                 let student_id = []
                 value_studentSection.forEach(item=>{
                     student_studentSection_map[item.parentStudent] = {
