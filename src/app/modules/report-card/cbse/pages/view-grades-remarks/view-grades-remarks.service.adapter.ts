@@ -45,17 +45,10 @@ export class ViewGradesRemarksServiceAdapter {
             this.classList = value[0];
             this.sectionList = value[1];
             this.studentSectionList = value[2];
-            console.log(value[2]);
             this.vm.studentSectionList = this.studentSectionList;
             this.vm.extraFieldList = value[3];
             this.vm.termList = value[4];
-            console.log(value[4]);
             this.vm.employeeList = value[5];
-            
-            
-            this.populateClassSectionList();
-            this.populateSelectedExtraField();
-            this.vm.isInitialLoading=false;
             let student_data = {
                 'id__in': this.vm.studentSectionList.map(a => a.parentStudent).join(','),
                 'fields__korangle': 'id,profileImage,name',
@@ -68,7 +61,10 @@ export class ViewGradesRemarksServiceAdapter {
             }, error => {
                 this.vm.isInitialLoading = false;
             });
-            // this.getStudentRemarkDetails();
+            this.populateClassSectionList();
+            this.populateSelectedExtraField();
+            this.vm.isInitialLoading=false;
+            
             
         }, error => {
             this.vm.isInitialLoading = false;
@@ -119,23 +115,16 @@ export class ViewGradesRemarksServiceAdapter {
         }
     }
     
-    getCurrentEmployeeList(): void{
-        const attendance_permission_data = {
-            'parentClass': this.vm.selectedClassSection.class,
-            'parentSection': this.vm.selectedClassSection.section
-        };
-        Promise.all([
-            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),    
-        ]).then(value => {
-            this.vm.currentEmployees = this.vm.employeeList.filter(employee=> value[0].filter(obj => obj.parentEmployee == employee.id).length!==0);
-        });        
-    }
-    
-    
     getStudentFieldRemarkDetails(): void {
         this.vm.studentExtraFieldList = [];
-        const promise_arr = [];   
-        if (this.vm.selectedTerm.id !==this.vm.termList[0]){
+        const promise_arr = [];
+        const attendance_permission_data = {
+            'parentClass': this.vm.selectedClassSection.class,
+            'parentSection': this.vm.selectedClassSection.section,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+        };
+        promise_arr.push(this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data));
+        if (this.vm.showRemark){
             
             const student_remark_data = {
                 'parentSession': this.vm.user.activeSchool.currentSessionDbId,
@@ -163,8 +152,12 @@ export class ViewGradesRemarksServiceAdapter {
             this.vm.isLoading = true;
             
             Promise.all(promise_arr).then(value => {
-                this.vm.studentRemarkList = value[0];
-                this.getCurrentEmployeeList();
+                this.vm.currentEmployeesList = this.vm.employeeList.filter(employee=> value[0].find(obj => obj.parentEmployee == employee.id)!=undefined);
+                value = value.slice(1);
+                if(this.vm.showRemark){
+                    this.vm.studentRemarkList = value[0];
+                    value = value.slice(1);
+                }
                 value.forEach((item, index) => {
                     this.vm.studentExtraFieldList.push(item);
                 });

@@ -63,14 +63,15 @@ export class GradeStudentFieldsServiceAdapter {
                 'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
                 'parentStudent__parentTransferCertificate': 'null__korangle',
                 'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                'parentClass__in': this.vm.attendancePermissionList.map(item => item.parentClass),
+                'parentClass__in': [...new Set(this.vm.attendancePermissionList.map(item => item.parentClass))],
+                'parentDivision__in': [...new Set(this.vm.attendancePermissionList.map(item => item.parentDivision))]
             };
             
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
             ]).then(value => {
-                this.studentSectionList = value[0];
-                this.populateStudentSectionList();
+                this.populateStudentSectionList(value[0]);
+                this.populateClassSectionList();
                 this.vm.isInitialLoading=false;   
                 let student_data = {
                     'id__in': this.vm.studentSectionList.map(a => a.parentStudent).join(','),
@@ -83,8 +84,7 @@ export class GradeStudentFieldsServiceAdapter {
                     this.vm.studentList = value2[0];                                         
                 }, error => {
                 });                
-                this.populateSelectedExtraField();                
-                this.populateClassSectionList();
+                this.populateSelectedExtraField();
             });
             
         }, error => {
@@ -97,17 +97,17 @@ export class GradeStudentFieldsServiceAdapter {
         this.vm.selectedExtraField = this.vm.extraFieldList[0];
     }
     
-    populateStudentSectionList(): void {
+    populateStudentSectionList(studentSectionList): void {
         
         if (this.vm.attendancePermissionList.length > 0) {
-            this.vm.studentSectionList = this.studentSectionList.filter(studentSection => {
+            this.vm.studentSectionList = studentSectionList.filter(studentSection => {
                 return this.vm.attendancePermissionList.find(attendancePermission => {
                     return attendancePermission.parentClass == studentSection.parentClass
                     && attendancePermission.parentDivision == studentSection.parentDivision;
                 }) != undefined;
             });
         } else {
-            this.vm.studentSectionList = this.studentSectionList;
+            this.vm.studentSectionList = [];
         }
         
     }

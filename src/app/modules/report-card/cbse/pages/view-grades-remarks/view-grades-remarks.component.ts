@@ -40,7 +40,7 @@ export class ViewGradesRemarksComponent implements OnInit {
     extraFieldList = [];
     termList = [];
     employeeList = [];
-    currentEmployees = [];
+    currentEmployeesList = [];
 
     selectedClassSection: any;
     selectedExtraField: any;
@@ -84,7 +84,7 @@ export class ViewGradesRemarksComponent implements OnInit {
     handleTermChange(term: any): void{
         this.selectedTerm = term;
         this.showStudentList = false;
-        if(this.showTermList() && term.id==1){
+        if(this.showTermList() && this.selectedTerm ===this.termList[0]){
             this.showRemark=false;
         }else{
             this.showRemark = true;
@@ -124,7 +124,6 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     getGrade(studentSection: any, index: number): any {
-        index = index+1;
         let item = this.studentExtraFieldList[index].find(studentExtraField => {
             return studentExtraField.parentStudent == studentSection.parentStudent;
         });

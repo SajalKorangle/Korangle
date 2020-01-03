@@ -56,7 +56,7 @@
                             {{getStudent(studentSection).name}}
                         </td>
                         <td>
-                            {{getStudent(studentSection).rollNumber}}
+                            {{studentSection.rollNumber}}
                         </td>
                         <td *ngFor="let subject of extraFieldList; let i = index" [ngStyle]="{'background-color': (!(getGrade(studentSection, i))?'yellow':'')}">
                             {{getGrade(studentSection, i)}}
@@ -82,7 +82,7 @@
                 </tbody>
             </table>
             <div class="" style="margin-top: 20px;">
-                    <div *ngFor="let employee of currentEmployees">
+                    <div *ngFor="let employee of currentEmployeesList">
                         <ng-container *ngIf="!isMobile()">
                             {{employee.name}}: {{employee.mobileNumber}}
                         </ng-container>
