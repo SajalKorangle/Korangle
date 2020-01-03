@@ -50,7 +50,7 @@ export class AddStudentRemarksComponent implements OnInit {
     isLoading = false;
 
     constructor(public reportCardCbseService: ReportCardCbseService,
-                public classService: ClassService,
+                public classOldService: ClassService,
                 public employeeService: EmployeeService,
                 public attendanceService: AttendanceService,
                 public studentService: StudentService,

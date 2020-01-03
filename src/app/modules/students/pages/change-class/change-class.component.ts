@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -9,7 +10,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'change-class',
     templateUrl: './change-class.component.html',
     styleUrls: ['./change-class.component.css'],
-    providers: [ ClassOldService, StudentOldService ],
+    providers: [ ClassOldService, ClassService, StudentOldService ],
 })
 
 export class ChangeClassComponent implements OnInit {
@@ -26,7 +27,8 @@ export class ChangeClassComponent implements OnInit {
     isLoading = false;
     isStudentListLoading = false;
 
-    constructor (private classService: ClassOldService,
+    constructor (private classOldService: ClassOldService,
+                private classService : ClassService,
                  private studentService: StudentOldService) { }
 
     ngOnInit(): void {
@@ -49,7 +51,7 @@ export class ChangeClassComponent implements OnInit {
     downloadClassSectionList(data: any): void {
         this.selectedClass = null;
         this.isLoading = true;
-        this.classService.getClassSectionList(data, this.user.jwt).then(classSectionList => {
+        this.classOldService.getClassSectionList(data, this.user.jwt).then(classSectionList => {
             this.isLoading = false;
             this.classSectionList = classSectionList;
             this.classSectionList.forEach( classs => {

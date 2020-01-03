@@ -10,6 +10,7 @@ import { ExcelService } from "../../../../excel/excel-service";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
+import {ClassService} from '../../../../services/modules/class/class.service';
 
 @Component({
   selector: 'record-attendance',
@@ -18,6 +19,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     providers: [
         AttendanceOldService,
         ClassOldService,
+        ClassService,
         StudentOldService,
     ],
 })

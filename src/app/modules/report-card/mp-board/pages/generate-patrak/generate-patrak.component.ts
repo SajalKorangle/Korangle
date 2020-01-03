@@ -7,6 +7,7 @@ import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {ClassOldService} from '../../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
 import {SubjectOldService} from '../../../../../services/modules/subject/subject-old.service';
 import {AttendanceOldService} from '../../../../../services/modules/attendance/attendance-old.service';
@@ -17,7 +18,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
     selector: 'generate-patrak',
     templateUrl: './generate-patrak.component.html',
     styleUrls: ['./generate-patrak.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService ],
+    providers: [ ExaminationOldService, ClassOldService, ClassService, StudentOldService, SubjectOldService, AttendanceOldService ],
 })
 
 export class GeneratePatrakComponent implements OnInit {
@@ -43,7 +44,8 @@ export class GeneratePatrakComponent implements OnInit {
     timeout: any;
 
     constructor(public examinationService: ExaminationOldService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 public attendanceService: AttendanceOldService,

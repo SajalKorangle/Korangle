@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
 import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
@@ -31,7 +32,8 @@ export class UpdateEnquiryComponent implements OnInit {
     isLoading = false;
 
     constructor (private enquiryService: EnquiryOldService,
-                 private classService: ClassOldService) { }
+                 private classOldService: ClassOldService,
+                 private classService : ClassService) { }
 
     ngOnInit(): void {
 
@@ -44,7 +46,7 @@ export class UpdateEnquiryComponent implements OnInit {
         };
 
         Promise.all([
-            this.classService.getClassList(this.user.jwt),
+            this.classOldService.getClassList(this.user.jwt),
             this.enquiryService.getMiniEnquiryList(data, this.user.jwt),
         ]).then(value => {
             this.classList = value[0];

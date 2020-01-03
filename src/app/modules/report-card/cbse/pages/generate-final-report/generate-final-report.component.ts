@@ -58,7 +58,7 @@ export class GenerateFinalReportComponent implements OnInit {
 
     constructor(public reportCardCbseService: ReportCardCbseService,
                 public studentService: StudentService,
-                public classService: ClassService,
+                public classOldService: ClassService,
                 public examinationService: ExaminationService,
                 public subjectService: SubjectService,
                 public attendanceService: AttendanceService,

@@ -6,6 +6,7 @@ import { EnquiryComponent } from './enquiry.component';
 import { EnquiryRoutingModule } from './enquiry.routing';
 
 import { ClassOldService } from '../../services/modules/class/class-old.service';
+import { ClassService } from '../../services/modules/class/class.service';
 import { EnquiryOldService } from '../../services/modules/enquiry/enquiry-old.service';
 import { PrintEnquiryListComponent } from "./print/print-enquiry-list/print-enquiry-list.component";
 
@@ -25,7 +26,7 @@ import { PrintEnquiryListComponent } from "./print/print-enquiry-list/print-enqu
     ],
     exports: [
     ],
-    providers: [EnquiryOldService, ClassOldService],
+    providers: [EnquiryOldService, ClassOldService, ClassService],
     bootstrap: [EnquiryComponent]
 })
 export class EnquiryModule { }

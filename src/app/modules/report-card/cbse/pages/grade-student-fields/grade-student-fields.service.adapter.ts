@@ -42,8 +42,8 @@ export class GradeStudentFieldsServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.classOldService.getObjectList(this.vm.classOldService.classs, {}),
+            this.vm.classOldService.getObjectList(this.vm.classOldService.division, {}),
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.extra_field, {}),
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.term, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),

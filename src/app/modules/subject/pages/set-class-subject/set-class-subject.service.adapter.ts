@@ -50,8 +50,8 @@ export class SetClassSubjectServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classOldService.getClassList(this.vm.user.jwt),
+            this.vm.classOldService.getSectionList(this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),

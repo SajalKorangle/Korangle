@@ -23,6 +23,7 @@ import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-ol
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
 declare const $: any;
@@ -31,7 +32,7 @@ declare const $: any;
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, VehicleOldService, EmployeeService ],
+    providers: [ FeeService, StudentService, ClassOldService,ClassService, VehicleOldService, EmployeeService ],
 })
 
 export class ViewFeeComponent implements OnInit {
@@ -74,7 +75,8 @@ export class ViewFeeComponent implements OnInit {
                  public studentService: StudentService,
                  public vehicleService: VehicleOldService,
                  public employeeService: EmployeeService,
-                 public classService: ClassOldService,
+                 public classOldService: ClassOldService,
+                 public classService : ClassService,
                  private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {

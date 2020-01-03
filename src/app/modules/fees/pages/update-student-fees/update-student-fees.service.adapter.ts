@@ -56,8 +56,8 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classOldService.getClassList(this.vm.user.jwt),
+            this.vm.classOldService.getSectionList(this.vm.user.jwt),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
             this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
         ]).then(value => {

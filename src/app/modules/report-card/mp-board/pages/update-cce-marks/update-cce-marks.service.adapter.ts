@@ -40,8 +40,8 @@ export class UpdateCceMarksServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classOldService.getClassList(this.vm.user.jwt),
+            this.vm.classOldService.getSectionList(this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
         ]).then(value => {
 

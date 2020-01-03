@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {VehicleOldService} from '../../../../services/modules/vehicle/vehicle-old.service';
 import {SchoolOldService} from '../../../../services/modules/school/school-old.service';
@@ -168,7 +169,7 @@ const RTE_VALUES = [
     selector: 'upload-list',
     templateUrl: './upload-list.component.html',
     styleUrls: ['./upload-list.component.css'],
-    providers: [StudentOldService, ClassOldService, VehicleOldService, SchoolOldService],
+    providers: [StudentOldService, ClassOldService, ClassService, VehicleOldService, SchoolOldService],
 })
 
 export class UploadListComponent implements OnInit {
@@ -206,7 +207,8 @@ export class UploadListComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassOldService,
+                private classOldService: ClassOldService,
+                public classService : ClassService,
                 private schoolService: SchoolOldService,
                 private excelService: ExcelService,
                 private vehicleService: VehicleOldService) { }
@@ -223,9 +225,9 @@ export class UploadListComponent implements OnInit {
         this.isLoading = true;
         Promise.all([
             this.vehicleService.getBusStopList(request_bus_stop_data, this.user.jwt),
-            this.classService.getClassList(this.user.jwt),
+            this.classOldService.getClassList(this.user.jwt),
             this.schoolService.getSessionList(this.user.jwt),
-            this.classService.getSectionList(this.user.jwt),
+            this.classOldService.getSectionList(this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
             this.busStopList = value[0];

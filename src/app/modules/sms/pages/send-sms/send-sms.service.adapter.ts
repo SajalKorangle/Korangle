@@ -70,8 +70,8 @@ export class SendSmsServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classOldService.getClassList(this.vm.user.jwt),
+            this.vm.classOldService.getSectionList(this.vm.user.jwt),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),

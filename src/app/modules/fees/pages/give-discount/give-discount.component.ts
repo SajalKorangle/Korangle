@@ -17,6 +17,7 @@ import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {DataStorage} from "../../../../classes/data-storage";
@@ -27,7 +28,7 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService ],
+    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService,ClassService, EmployeeService ],
 })
 
 export class GiveDiscountComponent implements OnInit {
@@ -77,7 +78,8 @@ export class GiveDiscountComponent implements OnInit {
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
                 public vehicleService: VehicleOldService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}
 

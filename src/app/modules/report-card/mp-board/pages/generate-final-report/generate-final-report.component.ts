@@ -7,6 +7,7 @@ import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {ClassOldService} from '../../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
 import {SubjectOldService} from '../../../../../services/modules/subject/subject-old.service';
 import {AttendanceOldService} from '../../../../../services/modules/attendance/attendance-old.service';
@@ -19,7 +20,7 @@ import {SchoolService} from "../../../../../services/modules/school/school.servi
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService ],
+    providers: [ ExaminationOldService, ClassOldService, ClassService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -46,7 +47,8 @@ export class GenerateFinalReportComponent implements OnInit {
     timeout: any;
 
     constructor(public examinationService: ExaminationOldService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 public attendanceService: AttendanceOldService,

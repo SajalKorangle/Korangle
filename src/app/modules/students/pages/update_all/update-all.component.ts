@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -61,7 +62,7 @@ const RELIGION_LIST = [
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentOldService, ClassOldService],
+    providers: [StudentOldService, ClassOldService, ClassService],
 })
 
 export class UpdateAllComponent implements OnInit {
@@ -131,7 +132,8 @@ export class UpdateAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassOldService,
+                private classOldService: ClassOldService,
+                private classService : ClassService,
                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
@@ -146,7 +148,7 @@ export class UpdateAllComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
+            this.classOldService.getClassSectionList(class_section_request_data, this.user.jwt),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
         ]).then(value => {
             this.isLoading = false;

@@ -42,8 +42,8 @@ export class GenerateFinalReportServiceAdapter {
         Promise.all([
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.report_card_mapping, report_card_mapping_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
-            this.vm.classService.getObjectList(this.vm.classService.classs, ''),
-            this.vm.classService.getObjectList(this.vm.classService.division, ''),
+            this.vm.classOldService.getObjectList(this.vm.classOldService.classs, ''),
+            this.vm.classOldService.getObjectList(this.vm.classOldService.division, ''),
         ]).then(value => {
 
             if (value[0].length > 0 || value[1].length > 0) {
@@ -209,7 +209,7 @@ export class GenerateFinalReportServiceAdapter {
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
-        service_list.push(this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, class_teacher_signature_data));
+        service_list.push(this.vm.classOldService.getObjectList(this.vm.classOldService.class_teacher_signature, class_teacher_signature_data));
 
         this.vm.isLoading = true;
 

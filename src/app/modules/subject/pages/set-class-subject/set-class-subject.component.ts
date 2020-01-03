@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 
@@ -14,7 +15,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'set-class-subject',
     templateUrl: './set-class-subject.component.html',
     styleUrls: ['./set-class-subject.component.css'],
-    providers: [ SubjectOldService, ClassOldService, StudentOldService, SchoolOldService, EmployeeOldService ],
+    providers: [ SubjectOldService, ClassOldService, ClassService, StudentOldService, SchoolOldService, EmployeeOldService ],
 })
 
 export class SetClassSubjectComponent implements OnInit {
@@ -43,7 +44,8 @@ export class SetClassSubjectComponent implements OnInit {
     employeeList: any;
 
     constructor(public subjectService: SubjectOldService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public studentService: StudentOldService,
                 public schoolService: SchoolOldService,
                 public employeeService: EmployeeOldService) {}

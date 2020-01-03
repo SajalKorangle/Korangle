@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
 import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
@@ -13,7 +14,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'create-test',
     templateUrl: './create-test.component.html',
     styleUrls: ['./create-test.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, SubjectOldService, StudentOldService ],
+    providers: [ ExaminationOldService, ClassOldService, ClassService, SubjectOldService, StudentOldService ],
 })
 
 export class CreateTestComponent implements OnInit {
@@ -44,7 +45,8 @@ export class CreateTestComponent implements OnInit {
     isLoading = false;
 
     constructor(public examinationService: ExaminationOldService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService) {}
 

@@ -5,12 +5,13 @@ import {map} from 'rxjs/operators';
 import {StudentService} from "../../services/modules/student/student.service";
 import {ParentStudentFilterServiceAdapter} from "./parent-student-filter.service.adapter";
 import {ClassOldService} from "../../services/modules/class/class-old.service";
+import {ClassService} from "../../services/modules/class/class.service";
 
 @Component({
     selector: 'parent-student-filter',
     templateUrl: './parent-student-filter.component.html',
     styleUrls: ['./parent-student-filter.component.css'],
-    providers: [ StudentService, ClassOldService ],
+    providers: [ StudentService, ClassOldService, ClassService],
 })
 
 export class ParentStudentFilterComponent implements OnInit {
@@ -51,7 +52,8 @@ export class ParentStudentFilterComponent implements OnInit {
     isLoading = false;
 
     constructor (public studentService: StudentService,
-                 public classService: ClassOldService) { }
+                 public classOldService: ClassOldService,
+                 public classService : ClassService) { }
 
     ngOnInit(): void {
 

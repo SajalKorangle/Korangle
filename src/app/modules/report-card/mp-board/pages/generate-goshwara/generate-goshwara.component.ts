@@ -7,6 +7,7 @@ import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {ClassOldService} from '../../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
 import {SubjectOldService} from '../../../../../services/modules/subject/subject-old.service';
 import {ExcelService} from "../../../../../excel/excel-service";
@@ -16,7 +17,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
     selector: 'generate-goshwara',
     templateUrl: './generate-goshwara.component.html',
     styleUrls: ['./generate-goshwara.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService ],
+    providers: [ ExaminationOldService, ClassOldService, ClassService, StudentOldService, SubjectOldService ],
 })
 
 export class GenerateGoshwaraComponent implements OnInit {
@@ -42,7 +43,8 @@ export class GenerateGoshwaraComponent implements OnInit {
     timeout: any;
 
     constructor(public examinationService: ExaminationOldService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 private excelService: ExcelService,

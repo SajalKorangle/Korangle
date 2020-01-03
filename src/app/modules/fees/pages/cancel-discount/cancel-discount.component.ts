@@ -4,6 +4,7 @@ import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {FormControl} from "@angular/forms";
 import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {DataStorage} from "../../../../classes/data-storage";
@@ -12,7 +13,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'cancel-discount',
     templateUrl: './cancel-discount.component.html',
     styleUrls: ['./cancel-discount.component.css'],
-    providers: [ FeeService, ClassOldService, StudentService, EmployeeService ],
+    providers: [ FeeService, ClassOldService, ClassService, StudentService, EmployeeService ],
 })
 
 export class CancelDiscountComponent implements OnInit {
@@ -36,7 +37,8 @@ export class CancelDiscountComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public studentService: StudentService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}

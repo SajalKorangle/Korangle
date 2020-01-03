@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CancelFeeReceiptServiceAdapter } from "./cancel-fee-receipt.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {FormControl} from "@angular/forms";
 import {INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST} from "../../classes/constants";
@@ -12,7 +13,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'cancel-fee-receipt',
     templateUrl: './cancel-fee-receipt.component.html',
     styleUrls: ['./cancel-fee-receipt.component.css'],
-    providers: [ FeeService, ClassOldService, StudentService, EmployeeService ],
+    providers: [ FeeService, ClassOldService, ClassService, StudentService, EmployeeService ],
 })
 
 export class CancelFeeReceiptComponent implements OnInit {
@@ -37,7 +38,8 @@ export class CancelFeeReceiptComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public studentService: StudentService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}

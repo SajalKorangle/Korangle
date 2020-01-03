@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
@@ -31,7 +32,7 @@ class ColumnFilter {
     selector: 'i-cards',
     templateUrl: './i-cards.component.html',
     styleUrls: ['./i-cards.component.css'],
-    providers: [StudentOldService, ClassOldService ],
+    providers: [StudentOldService, ClassOldService, ClassService ],
 })
 
 export class ICardsComponent implements OnInit {
@@ -73,7 +74,8 @@ export class ICardsComponent implements OnInit {
     timeout: any;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassOldService,
+                private classOldService: ClassOldService,
+                private classService : ClassService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) { }
 
@@ -113,7 +115,7 @@ export class ICardsComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
+            this.classOldService.getClassSectionList(class_section_request_data, this.user.jwt),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
         ]).then(value => {
             console.log(value);

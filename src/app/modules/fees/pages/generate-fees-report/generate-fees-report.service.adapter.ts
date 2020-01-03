@@ -143,8 +143,8 @@ export class GenerateFeesReportServiceAdapter {
                 this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
                 this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
                 this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
-                this.vm.classService.getClassList(this.vm.user.jwt),
-                this.vm.classService.getSectionList(this.vm.user.jwt),
+                this.vm.classOldService.getClassList(this.vm.user.jwt),
+                this.vm.classOldService.getSectionList(this.vm.user.jwt),
                 this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, second_sub_fee_receipt_list),
             ]).then(value => {
 

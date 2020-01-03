@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import { StudentService } from "../../../../services/modules/student/student.service";
 import { EmployeeService } from "../../../../services/modules/employee/employee.service";
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
@@ -16,7 +17,7 @@ import {UserService} from "../../../../services/modules/user/user.service";
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
     styleUrls: ['./send-sms.component.css'],
-    providers: [ StudentService, ClassOldService, EmployeeService, NotificationService, UserService, SmsService],
+    providers: [ StudentService, ClassOldService, ClassService, EmployeeService, NotificationService, UserService, SmsService],
 })
 
 export class SendSmsComponent implements OnInit {
@@ -64,7 +65,8 @@ export class SendSmsComponent implements OnInit {
 
     constructor(public studentService: StudentService,
                 public employeeService: EmployeeService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService : ClassService,
                 public smsOldService: SmsOldService,
                 public smsService: SmsService,
                 public notificationService: NotificationService,

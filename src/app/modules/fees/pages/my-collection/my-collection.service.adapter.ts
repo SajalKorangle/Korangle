@@ -29,8 +29,8 @@ export class MyCollectionServiceAdapter {
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
             this.vm.employeeService.getObject(this.vm.employeeService.employees, employee_data),
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classOldService.getClassList(this.vm.user.jwt),
+            this.vm.classOldService.getSectionList(this.vm.user.jwt),
         ]).then(value => {
 
             this.vm.feeTypeList = value[0]

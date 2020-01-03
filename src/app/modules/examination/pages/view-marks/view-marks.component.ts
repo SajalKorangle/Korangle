@@ -50,7 +50,7 @@ export class ViewMarksComponent implements OnInit {
     isLoading = false;
 
     constructor(public examinationService: ExaminationService,
-                public classService: ClassService,
+                public classOldService: ClassService,
                 public subjectService: SubjectService,
                 public studentService: StudentService,
                 public employeeService: EmployeeService,

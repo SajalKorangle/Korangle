@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import { PrintService } from '../../../../print/print-service';
@@ -42,7 +43,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassOldService, ExcelService],
+    providers: [StudentOldService, ClassOldService, ClassService, ExcelService],
 })
 
 export class ViewAllComponent implements OnInit {
@@ -84,7 +85,8 @@ export class ViewAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassOldService,
+                private classOldService: ClassOldService,
+                public classService : ClassService,
                 private excelService: ExcelService,
                 private printService: PrintService) { }
 
@@ -103,7 +105,7 @@ export class ViewAllComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
+            this.classOldService.getClassSectionList(class_section_request_data, this.user.jwt),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
         ]).then(value => {
             this.isLoading = false;

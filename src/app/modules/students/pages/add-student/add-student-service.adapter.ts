@@ -53,8 +53,8 @@ export class AddStudentServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classOldService.getClassList(this.vm.user.jwt),
+            this.vm.classOldService.getSectionList(this.vm.user.jwt),
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),

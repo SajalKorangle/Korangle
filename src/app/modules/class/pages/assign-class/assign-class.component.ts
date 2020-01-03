@@ -3,7 +3,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
 
 import { ClassOldService } from '../../../../services/modules/class/class-old.service';
-
+import { ClassService } from '../../../../services/modules/class/class.service';
 
 
 import {FormControl} from '@angular/forms';
@@ -16,7 +16,7 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
   selector: 'assign-class',
   templateUrl: './assign-class.component.html',
   styleUrls: ['./assign-class.component.css'],
-    providers: [ EmployeeOldService, AttendanceOldService, ClassOldService, SchoolService ],
+    providers: [ EmployeeOldService, AttendanceOldService, ClassOldService,ClassService, SchoolService ],
 })
 
 export class AssignClassComponent implements OnInit {
@@ -45,7 +45,8 @@ export class AssignClassComponent implements OnInit {
     constructor (private employeeService: EmployeeOldService,
                  private attendanceService: AttendanceOldService,
                  private schoolService: SchoolService,
-                 private classService: ClassOldService) { }
+                 private classOldService: ClassOldService,
+                 private classService : ClassService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -62,7 +63,7 @@ export class AssignClassComponent implements OnInit {
 
         Promise.all([
             this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
-            this.classService.getClassSectionList(request_class_data, this.user.jwt),
+            this.classOldService.getClassSectionList(request_class_data, this.user.jwt),
             this.schoolService.getObjectList(this.schoolService.board, {}),
         ]).then(value => {
             this.isLoading = false;

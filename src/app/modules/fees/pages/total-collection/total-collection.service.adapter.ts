@@ -29,8 +29,8 @@ export class TotalCollectionServiceAdapter {
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classOldService.getClassList(this.vm.user.jwt),
+            this.vm.classOldService.getSectionList(this.vm.user.jwt),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
         ]).then(value => {
 

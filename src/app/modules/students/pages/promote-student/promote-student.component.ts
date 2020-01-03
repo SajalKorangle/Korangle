@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
 import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {SubjectService} from "../../../../services/modules/subject/subject.service";
@@ -17,7 +18,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ StudentService, ClassOldService, SubjectService, ExaminationService, FeeService ],
+    providers: [ StudentService, ClassOldService, ClassService, SubjectService, ExaminationService, FeeService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
@@ -55,7 +56,8 @@ export class PromoteStudentComponent implements OnInit {
     isLoading = false;
 
     constructor (public studentService: StudentService,
-                 public classService: ClassOldService,
+                 public classOldService: ClassOldService,
+                 public classService : ClassService,
                  public subjectService: SubjectService,
                  public feeService: FeeService,
                  public examinationService: ExaminationService) { }
