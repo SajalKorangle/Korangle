@@ -8,7 +8,7 @@ export class ClassOldService extends CommonServiceRequirements {
 
     // private classSectionListUrl = '/class/class_section_list/';
 
-    getClassSectionList(data, token: any): Promise<any> {
+    getClassSectionList(data, token: any): Promise<any> { 
         return super.getData(token, '/class/class_section_list/sessions/' + data.sessionDbId);
     }
 
