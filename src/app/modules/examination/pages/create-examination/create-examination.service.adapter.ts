@@ -77,7 +77,7 @@ export class CreateExaminationServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        this.vm.examinationService.createObjectList(this.vm.examinationService.examination, data).then(value => {
+        this.vm.examinationService.createObject(this.vm.examinationService.examination, data).then(value => {
             this.addToExaminationList(value);
             this.vm.examinationNameToBeAdded = null;
             this.vm.examinationStatusToBeAdded = null;
@@ -134,7 +134,7 @@ export class CreateExaminationServiceAdapter {
             'parentSession': examination.parentSession,
         };
 
-        this.vm.examinationService.updateObjectList(this.vm.examinationService.examination, data).then(value => {
+        this.vm.examinationService.updateObject(this.vm.examinationService.examination, data).then(value => {
             alert("Examination updated successfully");
             examination.name = value.name;
             examination.status = value.status;
