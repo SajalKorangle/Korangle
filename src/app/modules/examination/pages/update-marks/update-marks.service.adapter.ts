@@ -299,7 +299,7 @@ export class UpdateMarksServiceAdapter {
             return false;
         }).sort((a,b) => {
             if (a.rollNumber && b.rollNumber) {
-                console.log("here: "+a.rollNumber+", "+b.rollNumber);
+                // console.log("here: "+a.rollNumber+", "+b.rollNumber);
                 return (a.rollNumber.toString() < b.rollNumber.toString())? -1:1;
             }
             console.log("not here: "+a.rollNumber+", "+b.rollNumber);
