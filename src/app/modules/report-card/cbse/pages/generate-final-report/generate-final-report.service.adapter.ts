@@ -144,7 +144,7 @@ export class GenerateFinalReportServiceAdapter {
             'parentExamination__in': this.getExaminationIdList(),
         };
 
-        service_list.push(this.vm.examinationOldService.getObjectList(this.vm.examinationOldService.test_second, test_data));
+        service_list.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_data));
 
         /*let student_profile_data = {
             'id__in': this.getStudentIdList(),
@@ -158,7 +158,7 @@ export class GenerateFinalReportServiceAdapter {
             'parentStudent__in': this.getStudentIdList(),
         };
 
-        service_list.push(this.vm.examinationOldService.getObjectList(this.vm.examinationOldService.student_test, student_test_data));
+        service_list.push(this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, student_test_data));
 
         let student_extra_field_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,

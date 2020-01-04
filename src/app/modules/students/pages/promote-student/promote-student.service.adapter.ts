@@ -67,7 +67,7 @@ export class PromoteStudentServiceAdapter {
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_one),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_two),
-            this.vm.examinationOldService.getObjectList(this.vm.examinationOldService.test_second, test_second_list),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
@@ -225,7 +225,7 @@ export class PromoteStudentServiceAdapter {
         Promise.all([
             this.vm.studentService.createObjectList(this.vm.studentService.student_section, this.vm.newPromotedList),
             this.vm.subjectService.createObjectList(this.vm.subjectService.student_subject, student_subject_list),
-            this.vm.examinationOldService.createObjectList(this.vm.examinationOldService.student_test, student_test_list),
+            this.vm.examinationService.createObjectList(this.vm.examinationService.student_test, student_test_list),
             this.vm.feeService.createObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]).then(value => {
 
