@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
 import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
@@ -43,7 +42,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassOldService, ClassService, ExcelService],
+    providers: [StudentOldService, ClassService, ExcelService],
 })
 
 export class ViewAllComponent implements OnInit {
@@ -84,8 +83,7 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private studentService: StudentOldService,
-                private classOldService: ClassOldService,
+    constructor(private studentService: StudentOldService,                
                 public classService : ClassService,
                 private excelService: ExcelService,
                 private printService: PrintService) { }
@@ -105,12 +103,17 @@ export class ViewAllComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.classOldService.getClassSectionList(class_section_request_data, this.user.jwt),
+            this.classService.getObjectList(this.classService.classs,{}),
+            this.classService.getObjectList(this.classService.division,{}),
+            //this.classOldService.getClassSectionList(class_section_request_data, this.user.jwt),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
-            this.initializeClassSectionList(value[0]);
-            this.initializeStudentFullProfileList(value[1]);
+            value[0].forEach(classs=>{
+                classs.sectionList = value[1];
+            })            
+            this.initializeClassSectionList(value[0]);            
+            this.initializeStudentFullProfileList(value[2]);
         }, error => {
             this.isLoading = false;
         });
@@ -138,19 +141,19 @@ export class ViewAllComponent implements OnInit {
     initializeStudentFullProfileList(studentFullProfileList: any): void {
         this.studentFullProfileList = studentFullProfileList.filter( student => {
             return student.parentTransferCertificate == null;
-        });
+        });        
         this.studentFullProfileList.forEach(studentFullProfile => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
-        });
+        });        
         this.handleStudentDisplay();
     }
 
     getSectionObject(classDbId: any, sectionDbId: number): any {
         let sectionObject = null;
         this.classSectionList.every(classs => {
-            classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
+            classs.sectionList.every(section => {                                
+                if (sectionDbId === section.id && classDbId === classs.id) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;

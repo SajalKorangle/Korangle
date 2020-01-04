@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
 import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
@@ -32,7 +31,7 @@ class ColumnFilter {
     selector: 'i-cards',
     templateUrl: './i-cards.component.html',
     styleUrls: ['./i-cards.component.css'],
-    providers: [StudentOldService, ClassOldService, ClassService ],
+    providers: [StudentOldService, ClassService ],
 })
 
 export class ICardsComponent implements OnInit {
@@ -73,8 +72,7 @@ export class ICardsComponent implements OnInit {
     expanded = {};
     timeout: any;
 
-    constructor(private studentService: StudentOldService,
-                private classOldService: ClassOldService,
+    constructor(private studentService: StudentOldService,                
                 private classService : ClassService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) { }
@@ -115,13 +113,17 @@ export class ICardsComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.classOldService.getClassSectionList(class_section_request_data, this.user.jwt),
+            this.classService.getObjectList(this.classService.classs,{}),
+            this.classService.getObjectList(this.classService.division,{}),            
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
         ]).then(value => {
             console.log(value);
             this.isLoading = false;
+            value[0].forEach(classs=>{
+                classs.sectionList = value[1]
+            })
             this.initializeClassSectionList(value[0]);
-            this.initializeStudentFullProfileList(value[1]);
+            this.initializeStudentFullProfileList(value[2]);
         }, error => {
             this.isLoading = false;
         });
@@ -155,7 +157,7 @@ export class ICardsComponent implements OnInit {
         let sectionObject = null;
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
+                if (sectionDbId === section.id && classDbId === classs.id) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;
@@ -237,7 +239,7 @@ export class ICardsComponent implements OnInit {
     handleStudentDisplay(): void {
         let serialNumber = 0;
         this.displayStudentNumber = 0;
-
+        console.log(this.studentFullProfileList)
         this.studentFullProfileList.forEach(student => {
 
             /* Class Section Check */

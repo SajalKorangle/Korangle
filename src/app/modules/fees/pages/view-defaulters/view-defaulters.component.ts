@@ -2,7 +2,6 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {SESSION_LIST} from "../../../../classes/constants/session";
@@ -13,7 +12,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, ClassService ],
+    providers: [ FeeService, StudentService,ClassService ],
 })
 
 export class ViewDefaultersComponent implements OnInit {
@@ -60,8 +59,7 @@ export class ViewDefaultersComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public studentService: StudentService,
-                public classOldService: ClassOldService,
+                public studentService: StudentService,                
                 public classService : ClassService,
                 private excelService: ExcelService,
                 private cdRef: ChangeDetectorRef) {}
@@ -264,7 +262,7 @@ export class ViewDefaultersComponent implements OnInit {
             });
 
             student['class'] = this.classList.find(classs => {
-                return studentSection.parentClass == classs.dbId;
+                return studentSection.parentClass == classs.id;
             });
 
             student['section'] = this.sectionList.find(section => {
@@ -325,9 +323,9 @@ export class ViewDefaultersComponent implements OnInit {
 
     }
 
-    checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
+    checkAndAddToFilteredClassSectionList(classs: any, section: any): void {        
         if (this.filteredClassSectionList.find(classSection => {
-            return classSection.class.dbId == classs.dbId && classSection.section.id == section.id;
+            return classSection.class.id == classs.id && classSection.section.id == section.id;
         }) == undefined) {
             this.filteredClassSectionList.push({
                 'class': classs,

@@ -61,8 +61,8 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
                 this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
                 this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
-                this.vm.classOldService.getClassList(this.vm.user.jwt),
-                this.vm.classOldService.getSectionList(this.vm.user.jwt),
+                this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+                this.vm.classService.getObjectList(this.vm.classService.division,{}),                
             ]).then(value => {
 
                 this.vm.studentList = value[0];

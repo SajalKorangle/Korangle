@@ -30,7 +30,7 @@ export class UpdateClassComponent implements OnInit {
     isLoading = false;
     timeout: any;
 
-    constructor(public classOldService: ClassService,
+    constructor(public classService: ClassService,
                 public studentService: StudentService,
                 private cdRef: ChangeDetectorRef) {}
 

@@ -50,7 +50,7 @@ export class ViewGradesRemarksComponent implements OnInit {
     isLoading = false;
 
     constructor(public reportCardCbseService: ReportCardCbseService,
-                public classOldService: ClassService,
+                public classService: ClassService,
                 public employeeService: EmployeeService,
                 public attendanceService: AttendanceService,
                 public studentService: StudentService,

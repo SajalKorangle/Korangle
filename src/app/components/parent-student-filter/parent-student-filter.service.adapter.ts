@@ -29,9 +29,9 @@ export class ParentStudentFilterServiceAdapter {
             'fields__korangle': 'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte'
         };
 
-        Promise.all([
-            this.vm.classOldService.getClassList(this.vm.user.jwt),
-            this.vm.classOldService.getSectionList(this.vm.user.jwt),
+        Promise.all([         
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),        
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
         ]).then(value => {

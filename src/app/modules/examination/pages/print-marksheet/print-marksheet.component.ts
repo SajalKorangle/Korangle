@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 
@@ -19,7 +18,7 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
     selector: 'examination-print-marksheet',
     templateUrl: './print-marksheet.component.html',
     styleUrls: ['./print-marksheet.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, ClassService, SubjectOldService, StudentOldService, SchoolService ],
+    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService, SchoolService ],
 })
 
 export class PrintMarksheetComponent implements OnInit {
@@ -45,8 +44,7 @@ export class PrintMarksheetComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService,
-                public classOldService: ClassOldService,
+    constructor(public examinationService: ExaminationOldService,                
                 public classService : ClassService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService,

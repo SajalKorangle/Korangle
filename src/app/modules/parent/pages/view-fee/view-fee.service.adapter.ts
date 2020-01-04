@@ -72,8 +72,8 @@ export class ViewFeeServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list),
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
-            this.vm.classOldService.getClassList(this.vm.user.jwt),
-            this.vm.classOldService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
 
             this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_list),
             this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),

@@ -35,8 +35,8 @@ export class UpdateClassServiceAdapter {
         this.vm.isInitialLoading = true;
 
         Promise.all([
-            this.vm.classOldService.getObjectList(this.vm.classOldService.classs, {}),
-            this.vm.classOldService.getObjectList(this.vm.classOldService.division, {}),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data),
         ]).then(value => {
 
@@ -89,7 +89,7 @@ export class UpdateClassServiceAdapter {
         this.vm.classTeacherSignature = null;
 
         Promise.all([
-            this.vm.classOldService.getObjectList(this.vm.classOldService.class_teacher_signature, request_class_teacher_signature_data),
+            this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_teacher_signature_data),
         ]).then(value => {
 
             if (value[0].length > 0) {
@@ -215,7 +215,7 @@ export class UpdateClassServiceAdapter {
             }));
             signature_data.append('signatureImage', image);
 
-            service = this.vm.classOldService.createObject(this.vm.classOldService.class_teacher_signature, signature_data) ;
+            service = this.vm.classService.createObject(this.vm.classService.class_teacher_signature, signature_data) ;
 
         } else {
 
@@ -225,7 +225,7 @@ export class UpdateClassServiceAdapter {
             }));
             signature_data.append('signatureImage', image);
 
-            service = this.vm.classOldService.partiallyUpdateObject(this.vm.classOldService.class_teacher_signature, signature_data);
+            service = this.vm.classService.partiallyUpdateObject(this.vm.classService.class_teacher_signature, signature_data);
 
         }
 

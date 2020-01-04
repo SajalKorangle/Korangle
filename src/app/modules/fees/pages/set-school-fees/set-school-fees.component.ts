@@ -2,7 +2,6 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { SetSchoolFeesServiceAdapter } from "./set-school-fees.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {StudentOldService} from "../../../../services/modules/student/student-old.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
@@ -16,7 +15,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'set-school-fees',
     templateUrl: './set-school-fees.component.html',
     styleUrls: ['./set-school-fees.component.css'],
-    providers: [ FeeService, StudentOldService, ClassOldService, ClassService, VehicleOldService ],
+    providers: [ FeeService, StudentOldService, ClassService, VehicleOldService ],
 })
 
 export class SetSchoolFeesComponent implements OnInit {
@@ -54,8 +53,7 @@ export class SetSchoolFeesComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public feeService: FeeService,
-                public classOldService: ClassOldService,
+    constructor(public feeService: FeeService,                
                 public classService : ClassService,
                 public studentService: StudentOldService,
                 public vehicleService: VehicleOldService,

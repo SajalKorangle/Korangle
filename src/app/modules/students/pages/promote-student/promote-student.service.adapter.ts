@@ -63,8 +63,8 @@ export class PromoteStudentServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.classOldService.getClassList(this.vm.user.jwt),
-            this.vm.classOldService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_one),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_two),
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list),

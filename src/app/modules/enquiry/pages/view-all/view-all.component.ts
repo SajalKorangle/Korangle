@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
 import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import {PrintService} from "../../../../print/print-service";
 import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
@@ -35,8 +34,7 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private enquiryService: EnquiryOldService,
-                private classOldService: ClassOldService,
+    constructor(private enquiryService: EnquiryOldService,                
                 private classService : ClassService,
                 private printService: PrintService,
                 private employeeService: EmployeeOldService) { }
@@ -48,7 +46,7 @@ export class ViewAllComponent implements OnInit {
         };
 
         Promise.all([
-            this.classOldService.getClassList(this.user.jwt),
+            this.classService.getObjectList(this.classService.classs,{}),            
             this.employeeService.getEmployeeProfileList(data, this.user.jwt)
         ]).then(res => {
             this.classList = res[0];

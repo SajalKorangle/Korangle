@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
-import { ClassOldService } from '../../../../../services/modules/class/class-old.service';
 import { ClassService } from '../../../../../services/modules/class/class.service';
 import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
 
@@ -16,7 +15,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
     selector: 'update-cce-marks',
     templateUrl: './update-cce-marks.component.html',
     styleUrls: ['./update-cce-marks.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, ClassService, SubjectOldService, StudentOldService ],
+    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService ],
 })
 
 export class UpdateCceMarksComponent implements OnInit {
@@ -31,8 +30,7 @@ export class UpdateCceMarksComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService,
-                public classOldService: ClassOldService,
+    constructor(public examinationService: ExaminationOldService,                
                 public classService : ClassService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService,

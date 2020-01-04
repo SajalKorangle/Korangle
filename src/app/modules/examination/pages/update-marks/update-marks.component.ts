@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 
@@ -16,7 +15,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, ClassService, SubjectOldService, StudentOldService ],
+    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService ],
 })
 
 export class UpdateMarksComponent implements OnInit {
@@ -40,8 +39,7 @@ export class UpdateMarksComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService,
-                public classOldService: ClassOldService,
+    constructor(public examinationService: ExaminationOldService,                
                 public classService : ClassService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService,

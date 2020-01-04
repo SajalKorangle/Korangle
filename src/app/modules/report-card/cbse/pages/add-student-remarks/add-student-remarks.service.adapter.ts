@@ -33,8 +33,8 @@ export class AddStudentRemarksServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classOldService.getObjectList(this.vm.classOldService.classs, {}),
-            this.vm.classOldService.getObjectList(this.vm.classOldService.division, {}),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
         ]).then(value => {

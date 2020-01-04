@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -10,7 +9,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'change-class',
     templateUrl: './change-class.component.html',
     styleUrls: ['./change-class.component.css'],
-    providers: [ ClassOldService, ClassService, StudentOldService ],
+    providers: [ ClassService, StudentOldService ],
 })
 
 export class ChangeClassComponent implements OnInit {
@@ -27,8 +26,7 @@ export class ChangeClassComponent implements OnInit {
     isLoading = false;
     isStudentListLoading = false;
 
-    constructor (private classOldService: ClassOldService,
-                private classService : ClassService,
+    constructor (private classService : ClassService,
                  private studentService: StudentOldService) { }
 
     ngOnInit(): void {
@@ -51,16 +49,33 @@ export class ChangeClassComponent implements OnInit {
     downloadClassSectionList(data: any): void {
         this.selectedClass = null;
         this.isLoading = true;
-        this.classOldService.getClassSectionList(data, this.user.jwt).then(classSectionList => {
+        Promise.all([
+            this.classService.getObjectList(this.classService.classs,{}),
+            this.classService.getObjectList(this.classService.division,{})
+        ]).then(value=>{
+            value[0].forEach(classs=>{
+                classs.sectionList = value[1]
+            })
             this.isLoading = false;
-            this.classSectionList = classSectionList;
+            this.classSectionList = value[0];
             this.classSectionList.forEach( classs => {
                 classs.selectedSection = classs.sectionList[0];
             });
             this.selectedClass = this.classSectionList[0];
-        }, error => {
+        },error=>{
             this.isLoading = false;
         });
+
+        // this.classOldService.getClassSectionList(data, this.user.jwt).then(classSectionList => {
+        //     this.isLoading = false;
+        //     this.classSectionList = classSectionList;
+        //     this.classSectionList.forEach( classs => {
+        //         classs.selectedSection = classs.sectionList[0];
+        //     });
+        //     this.selectedClass = this.classSectionList[0];
+        // }, error => {
+        //     this.isLoading = false;
+        // });
     }
 
     changeClassSection(): void {

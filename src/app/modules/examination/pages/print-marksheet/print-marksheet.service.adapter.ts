@@ -62,8 +62,8 @@ export class PrintMarksheetServiceAdapter {
 
         Promise.all([
             this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
-            this.vm.classOldService.getClassList(this.vm.user.jwt),
-            this.vm.classOldService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentFullProfileList(request_student_mini_profile_data, this.vm.user.jwt),
@@ -165,13 +165,13 @@ export class PrintMarksheetServiceAdapter {
 
                                         let tempSubject = this.copyObject(subject);
 
-                                        tempSubject['mainSubject'] = this.isMainSubject(tempSubject, classs.dbId);
+                                        tempSubject['mainSubject'] = this.isMainSubject(tempSubject, classs.id);
 
-                                        tempSubject['onlyGrade'] = this.isOnlyGrade(tempSubject, classs.dbId);
+                                        tempSubject['onlyGrade'] = this.isOnlyGrade(tempSubject, classs.id);
 
                                         tempSubject['testDetails'] = testDetails;
 
-                                        tempSubject['orderNumber'] = this.getOrderNumber(tempSubject, classs.dbId);
+                                        tempSubject['orderNumber'] = this.getOrderNumber(tempSubject, classs.id);
 
                                         tempSection['subjectList'].push(tempSubject);
 
@@ -255,7 +255,7 @@ export class PrintMarksheetServiceAdapter {
     isExaminationClassInTestList(examination: any, classs: any): boolean {
         let result = false;
         this.testList.every(item => {
-            if (item.parentClass === classs.dbId
+            if (item.parentClass === classs.id
                 && item.parentExamination === examination.id) {
                 result = true;
                 return false;
@@ -269,7 +269,7 @@ export class PrintMarksheetServiceAdapter {
         let result = false;
         this.testList.every(item => {
             if (item.parentExamination === examination.id
-                && item.parentClass === classs.dbId
+                && item.parentClass === classs.id
                 && item.parentDivision === section.id) {
                 result = true;
                 return false;
@@ -283,7 +283,7 @@ export class PrintMarksheetServiceAdapter {
         let result = [];
         this.testList.forEach(item => {
             if (item.parentExamination === examination.id
-                && item.parentClass === classs.dbId
+                && item.parentClass === classs.id
                 && item.parentDivision === section.id
                 && item.parentSubject === subject.id) {
                 result.push(item);
@@ -328,7 +328,7 @@ export class PrintMarksheetServiceAdapter {
     getStudentIdListForSelectedItems(): any {
         let id_list = [];
         this.student_full_profile_list.forEach(item => {
-            if (item.classDbId === this.vm.selectedExamination.selectedClass.dbId
+            if (item.classDbId === this.vm.selectedExamination.selectedClass.id
                 && item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id) {
                 id_list.push(item.dbId);
             }
@@ -347,7 +347,7 @@ export class PrintMarksheetServiceAdapter {
     populateStudentList(student_test_list: any): void {
         this.vm.selectedExamination.selectedClass.selectedSection['studentList'] = [];
         this.student_full_profile_list.filter(item => {
-            if (item.classDbId === this.vm.selectedExamination.selectedClass.dbId
+            if (item.classDbId === this.vm.selectedExamination.selectedClass.id
                 && item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id) {
                 return true;
             }

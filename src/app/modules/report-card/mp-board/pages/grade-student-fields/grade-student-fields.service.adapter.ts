@@ -55,8 +55,8 @@ export class GradeStudentFieldsServiceAdapter {
         Promise.all([
             this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
 
-            this.vm.classOldService.getClassList(this.vm.user.jwt),
-            this.vm.classOldService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
             this.vm.attendanceService.getAttendancePermissionList(request_permission_data, this.vm.user.jwt),
 
             this.vm.subjectService.getExtraFieldList(request_field_data, this.vm.user.jwt),

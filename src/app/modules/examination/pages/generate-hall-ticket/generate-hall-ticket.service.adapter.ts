@@ -42,8 +42,8 @@ export class GenerateHallTicketServiceAdapter {
 
         Promise.all([
             this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
-            this.vm.classOldService.getClassList(this.vm.user.jwt),
-            this.vm.classOldService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
@@ -101,7 +101,7 @@ export class GenerateHallTicketServiceAdapter {
                     });
                     tempSection['studentList'] = [];
                     this.studentSectionList.forEach(student => {
-                        if (student.classDbId === classs.dbId
+                        if (student.classDbId === classs.id
                             && student.sectionDbId === section.id
                             && student.parentTransferCertificate == null) {
                             let tempStudent = {};
@@ -121,7 +121,7 @@ export class GenerateHallTicketServiceAdapter {
                             tempStudent['testList'] = [];
                             this.testList.forEach(test => {
                                 if (test.parentExamination === examination.id
-                                    && test.parentClass === classs.dbId
+                                    && test.parentClass === classs.id
                                     && test.parentDivision === section.id) {
                                     tempStudent['subjectList'].every(studentSubject => {
                                         if (test.parentSubject === studentSubject.parentSubject) {

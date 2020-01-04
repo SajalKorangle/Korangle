@@ -3,7 +3,6 @@ import { GenerateFeesReportServiceAdapter } from "./generate-fees-report.service
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {SESSION_LIST} from "../../../../classes/constants/session";
 import {DataStorage} from "../../../../classes/data-storage";
@@ -12,7 +11,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'generate-fees-report',
     templateUrl: './generate-fees-report.component.html',
     styleUrls: ['./generate-fees-report.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, ClassService ],
+    providers: [ FeeService, StudentService, ClassService ],
 })
 
 export class GenerateFeesReportComponent implements OnInit {
@@ -48,8 +47,7 @@ export class GenerateFeesReportComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public studentService: StudentService,
-                public classOldService: ClassOldService,
+                public studentService: StudentService,                
                 public classService : ClassService,
                 private cdRef: ChangeDetectorRef) {}
 

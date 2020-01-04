@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { AddStudentServiceAdapter } from './add-student-service.adapter';
 
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { BusStopService } from '../../../../services/modules/school/bus-stop.service';
 import {StudentService} from "../../../../services/modules/student/student.service";
@@ -20,7 +19,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ ClassOldService, ClassService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService ],
+    providers: [ ClassService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService ],
 })
 
 export class AddStudentComponent implements OnInit {
@@ -48,8 +47,7 @@ export class AddStudentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public classOldService: ClassOldService,
-                 public classService : ClassService,
+    constructor (public classService : ClassService,
                  public busStopService: BusStopService,
                  public studentService: StudentService,
                  public subjectService: SubjectService,

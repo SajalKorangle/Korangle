@@ -3,7 +3,6 @@ import { TotalCollectionServiceAdapter } from "./total-collection.service.adapte
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
@@ -16,7 +15,7 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
     selector: 'total-collection',
     templateUrl: './total-collection.component.html',
     styleUrls: ['./total-collection.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService, ClassOldService, ClassService, SchoolService ],
+    providers: [ FeeService, EmployeeService, StudentService,ClassService, SchoolService ],
 })
 
 export class TotalCollectionComponent implements OnInit {
@@ -63,8 +62,7 @@ export class TotalCollectionComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
-                public studentService: StudentService,
-                public classOldService: ClassOldService,
+                public studentService: StudentService,                
                 public classService : ClassService,
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,

@@ -16,7 +16,6 @@ import {
 } from "../../classes/constants";
 import {FeeType} from "../../../../services/modules/fees/models/fee-type";
 import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
@@ -32,7 +31,7 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService, ClassService, EmployeeService, SchoolService ],
+    providers: [ FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService ],
 })
 
 export class CollectFeeComponent implements OnInit {
@@ -85,8 +84,7 @@ export class CollectFeeComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
-                public vehicleService: VehicleOldService,
-                public classOldService: ClassOldService,
+                public vehicleService: VehicleOldService,                
                 public classService : ClassService,
                 public employeeService: EmployeeService,
                 public schoolService: SchoolService,

@@ -42,9 +42,9 @@ export class ViewMarksServiceAdapter {
 
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data),
-            this.vm.classOldService.getObjectList(this.vm.classOldService.classs, {}),
-            this.vm.classOldService.getObjectList(this.vm.classOldService.division, {}),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data),            
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, request_employee_data),
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
         ]).then( value => {

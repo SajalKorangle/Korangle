@@ -22,7 +22,6 @@ import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -32,7 +31,7 @@ declare const $: any;
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService,ClassService, VehicleOldService, EmployeeService ],
+    providers: [ FeeService, StudentService,ClassService, VehicleOldService, EmployeeService ],
 })
 
 export class ViewFeeComponent implements OnInit {
@@ -74,8 +73,7 @@ export class ViewFeeComponent implements OnInit {
     constructor (public feeService: FeeService,
                  public studentService: StudentService,
                  public vehicleService: VehicleOldService,
-                 public employeeService: EmployeeService,
-                 public classOldService: ClassOldService,
+                 public employeeService: EmployeeService,                 
                  public classService : ClassService,
                  private cdRef: ChangeDetectorRef) { }
 

@@ -43,8 +43,8 @@ export class CreateTestServiceAdapter {
 
         Promise.all([
             this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
-            this.vm.classOldService.getClassList(this.vm.user.jwt),
-            this.vm.classOldService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
         ]).then(value => {
