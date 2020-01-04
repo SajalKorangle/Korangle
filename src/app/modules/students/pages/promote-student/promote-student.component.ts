@@ -58,7 +58,7 @@ export class PromoteStudentComponent implements OnInit {
                  public classService: ClassOldService,
                  public subjectService: SubjectService,
                  public feeService: FeeService,
-                 public examinationOldService: ExaminationService) { }
+                 public examinationService: ExaminationService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

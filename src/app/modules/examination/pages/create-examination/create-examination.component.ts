@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 
 import { CreateExaminationServiceAdapter } from './create-examination.service.adapter';
@@ -10,7 +9,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'create-examination',
     templateUrl: './create-examination.component.html',
     styleUrls: ['./create-examination.component.css'],
-    providers: [ ExaminationOldService, ExaminationService ],
+    providers: [ExaminationService ],
 })
 
 export class CreateExaminationComponent implements OnInit {
@@ -25,9 +24,7 @@ export class CreateExaminationComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationOldService: ExaminationOldService,
-        public examinationService : ExaminationService
-        ) {}
+    constructor(public examinationService : ExaminationService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
