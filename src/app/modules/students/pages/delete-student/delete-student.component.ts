@@ -37,7 +37,7 @@ export class DeleteStudentComponent implements OnInit {
 
     constructor(public studentService: StudentService,
                 public subjectService: SubjectService,
-                public examinationService: ExaminationService,
+                public examinationOldService: ExaminationService,
                 public feeService: FeeService) { }
 
     ngOnInit(): void {

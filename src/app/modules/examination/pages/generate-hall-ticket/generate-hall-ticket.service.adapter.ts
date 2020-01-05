@@ -26,8 +26,8 @@ export class GenerateHallTicketServiceAdapter {
         this.vm.isLoading = true;
 
         let request_examination_data = {
-            'schoolId': this.vm.user.activeSchool.dbId,
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         let request_student_section_data = {
@@ -41,21 +41,21 @@ export class GenerateHallTicketServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
             this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
-            // this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt),
+            // this.vm.examinationOldService.getTestList(request_test_data, this.vm.user.jwt),
         ]).then(value => {
 
             let request_test_data = {
                 'examinationList': value[0].map(a => a.id),
             };
 
-            this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt).then(value2 => {
+            this.vm.examinationOldService.getTestList(request_test_data, this.vm.user.jwt).then(value2 => {
 
                 this.examinationList = value[0];
                 this.classList = value[1];
