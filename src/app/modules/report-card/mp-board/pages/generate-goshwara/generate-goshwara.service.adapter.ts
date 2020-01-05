@@ -68,7 +68,7 @@ export class GenerateGoshwaraServiceAdapter {
 
                 Promise.all([
                     this.vm.classService.getClassList(this.vm.user.jwt),
-                    // this.vm.classService.getSectionList(this.vm.user.jwt),
+                    // this.vm.classOldService.getSectionList(this.vm.user.jwt),
                     this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
                     this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
                     this.vm.subjectService.getSubjectList(this.vm.user.jwt),

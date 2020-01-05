@@ -69,20 +69,23 @@ export class GenerateFinalReportServiceAdapter {
                     'id__in': this.getExaminationIdList(),
                 };
 
+                const teacher_signature_data = {
+                    parentSchool: this.vm.user.activeSchool.dbId,
+                };
+
                 console.log(request_examination_data);
 
                 Promise.all([
-                    this.vm.classService.getClassList(this.vm.user.jwt),
-                    this.vm.classService.getSectionList(this.vm.user.jwt),
+                    this.vm.classOldService.getClassList(this.vm.user.jwt),
+                    this.vm.classOldService.getSectionList(this.vm.user.jwt),
                     this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
                     this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
                     this.vm.subjectService.getSubjectList(this.vm.user.jwt),
                     this.vm.subjectService.getExtraFieldList({}, this.vm.user.jwt),
                     this.vm.subjectService.getExtraSubFieldList({}, this.vm.user.jwt),
                     this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
-                    this.vm.classNewService.getObjectList(this.vm.classNewService.class_teacher_signature, {})
+                    this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, teacher_signature_data)
                 ]).then(value2 => {
-                    console.log(value2);
                     this.classList = value2[0];
                     this.sectionList = value2[1];
                     this.studentList = value2[2];
@@ -91,7 +94,7 @@ export class GenerateFinalReportServiceAdapter {
                     this.extraFieldList = value2[5];
                     this.extraSubFieldList = value2[6];
                     this.vm.boardList = value2[7];
-                    this.vm.allSignatures = value2[8];
+                    this.vm.class_teacher_signature_list = value2[8];
 
                     this.vm.subjectList = value2[4];
                     this.populateClassSectionStudentList();
@@ -322,9 +325,6 @@ export class GenerateFinalReportServiceAdapter {
             }
 
             Promise.all(request_array).then(valueTwo => {
-
-                console.log(valueTwo);
-
                 this.studentSubjectList = valueTwo[0];
                 this.classTestList = valueTwo[1];
                 this.studentTestList = valueTwo[2];
@@ -359,28 +359,16 @@ export class GenerateFinalReportServiceAdapter {
                         this.populateStudentFinalReportCardHigh();
                         break;
                 }
-                // let request_teacher_signature_data = {
-                //     'parentSchool': this.vm.user.activeSchool.dbId,
-                //     'parentClass': this.vm.getSelectedClassSection().classDbId,
-                //     'parentDivision': this.vm.getSelectedClassSection().sectionDbId
-                // };
-                const signature = this.vm.allSignatures.filter((sign) => {
+                const signature = this.vm.class_teacher_signature_list.find((sign) => {
                     return sign.parentSchool === this.vm.user.activeSchool.dbId &&
                         sign.parentClass === this.vm.getSelectedClassSection().classDbId
                     && sign.parentDivision === this.vm.getSelectedClassSection().sectionDbId
                 });
-                if(signature.length>0 && signature[0]){
-                    this.vm.currentClassTeacherSignature = signature[0]["signatureImage"];
+                if(signature && this.vm.showClassTeacherSignature){
+                    this.vm.currentClassTeacherSignature = signature["signatureImage"];
                 }else{
                     this.vm.currentClassTeacherSignature = null;
                 }
-                // if(valueTwo[valueTwo.length-1].length>0 && valueTwo[valueTwo.length-1][0]){
-                //     this.vm.currentClassTeacherSignature = valueTwo[valueTwo.length-1][0]["signatureImage"];
-                // }else{
-                //     this.vm.currentClassTeacherSignature = null;
-                // }
-                // console.log(valueTwo);
-                // console.log(valueTwo[valueTwo.length-1][0]["signatureImage"]);
                 this.vm.printStudentFinalReport();
                 this.vm.isLoading = false;
             }, error => {
