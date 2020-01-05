@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
+import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 
 import { GenerateFinalReportServiceAdapter } from './generate-final-report.service.adapter';
 import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
@@ -19,7 +20,7 @@ import {SchoolService} from "../../../../../services/modules/school/school.servi
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService ],
+    providers: [ ExaminationOldService,ExaminationService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -45,7 +46,8 @@ export class GenerateFinalReportComponent implements OnInit {
     isLoading = true;
     timeout: any;
 
-    constructor(public examinationService: ExaminationOldService,
+    constructor(public examinationOldService: ExaminationOldService,
+                public examinationService : ExaminationService,
                 public classService: ClassOldService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
