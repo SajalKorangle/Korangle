@@ -2,7 +2,7 @@
     <!--Coming Soon!-->
     <ng-container *ngIf="!isInitialLoading">
 
-        <ng-container *ngIf="classSectionList.length > 0 && attendancePermissionList.length > 0">
+        <ng-container *ngIf="classSectionList.length > 0">
             <div class="col-md-3">
                 <mat-form-field>
                     <mat-select placeholder="Select Class"
@@ -44,7 +44,7 @@
                     <th>S No.</th>
                     <th>Student</th>
                     <th>Roll No.</th>
-                    <th *ngFor="let subject of extraFieldList">{{subject.name}}</th>
+                    <th *ngFor="let extraField of extraFieldList">{{extraField.name}}</th>
                     <td *ngIf="showRemark">Remark</td>
                 </tr>
                 </thead>
@@ -56,7 +56,7 @@
                             {{getStudent(studentSection).name}}
                         </td>
                         <td>
-                            {{getStudent(studentSection).rollNumber}}
+                            {{studentSection.rollNumber}}
                         </td>
                         <td *ngFor="let subject of extraFieldList; let i = index" [ngStyle]="{'background-color': (!(getGrade(studentSection, i))?'yellow':'')}">
                             {{getGrade(studentSection, i)}}
@@ -79,20 +79,17 @@
                     </tr>
 
                 </ng-container>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td *ngFor="let employee of currentEmployees">
+                </tbody>
+            </table>
+            <div class="" style="margin-top: 20px;">
+                    <div *ngFor="let employee of currentEmployeesList">
                         <ng-container *ngIf="!isMobile()">
-                            {{employee.name}}<br />
-                            {{employee.mobileNumber}}
+                            {{employee.name}}: {{employee.mobileNumber}}
                         </ng-container>
                         <a *ngIf="isMobile()" href="tel:{{employee.mobileNumber}}">{{employee.name}}</a>
 
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                    </div>
+            </div>
 
             <!--<ng-container *ngFor="let studentSection of studentSectionList">-->
                 <!--<mat-card style="margin-bottom: 10px;">-->
