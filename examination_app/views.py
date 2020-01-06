@@ -74,38 +74,6 @@ def create_student_result_view(request):
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
-
-########### Examination #############
-from examination_app.business.examination import get_examination_list, create_examination, update_examination
-
-
-class ExaminationOldView(APIView):
-
-    @user_permission
-    def post(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_examination(data)
-
-    @user_permission
-    def put(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return update_examination(data)
-
-
-class ExaminationListOldView(APIView):
-
-    @user_permission
-    def get(request):
-        if 'sessionId' in request.GET:
-            data = {
-                'sessionId': request.GET['sessionId'],
-                'schoolId': request.GET['schoolId'],
-            }
-        else:
-            data = request.GET
-        return get_examination_list(data)
-
-
 ########### Test #############
 from examination_app.business.test import get_test_list, create_test, delete_test, update_test
 
