@@ -56,7 +56,7 @@ export class UpdateCceMarksServiceAdapter {
                 'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             };
 
-            this.vm.examinationService.getCCEMarksList(request_cce_marks_data, this.vm.user.jwt).then(valueTwo => {
+            this.vm.examinationOldService.getCCEMarksList(request_cce_marks_data, this.vm.user.jwt).then(valueTwo => {
 
                 this.cce_marks_list = valueTwo;
                 this.populateClassStudentCCEMarksList();
@@ -147,11 +147,11 @@ export class UpdateCceMarksServiceAdapter {
         let serviceList = [];
 
         if (data_to_add.length > 0) {
-            serviceList.push(this.vm.examinationService.createCCEMarksList(data_to_add, this.vm.user.jwt));
+            serviceList.push(this.vm.examinationOldService.createCCEMarksList(data_to_add, this.vm.user.jwt));
         }
 
         if (data_to_update.length > 0) {
-            serviceList.push(this.vm.examinationService.updateCCEMarksList(data_to_update, this.vm.user.jwt));
+            serviceList.push(this.vm.examinationOldService.updateCCEMarksList(data_to_update, this.vm.user.jwt));
         }
 
         Promise.all(serviceList).then(value => {

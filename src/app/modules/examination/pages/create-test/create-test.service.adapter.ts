@@ -32,8 +32,8 @@ export class CreateTestServiceAdapter {
         this.vm.isInitialLoading = true;
 
         let request_examination_data = {
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-            'schoolId': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
         let request_student_mini_profile_data = {
@@ -42,7 +42,7 @@ export class CreateTestServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
@@ -60,7 +60,7 @@ export class CreateTestServiceAdapter {
             this.vm.isInitialLoading = false;
         });
 
-        /*this.vm.examinationService.getExaminationList(request_data, this.vm.user.jwt).then(value => {
+        /*this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data).then(value => {
             this.vm.examinationList = value;
             this.vm.isInitialLoading = false;
         }, error => {
@@ -125,7 +125,7 @@ export class CreateTestServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt),
+            this.vm.examinationOldService.getTestList(request_test_data, this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
         ]).then(value => {
 
@@ -148,7 +148,7 @@ export class CreateTestServiceAdapter {
             };
 
             Promise.all([
-                this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
+                this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
                 this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             ]).then(value2 => {
 
@@ -282,8 +282,8 @@ export class CreateTestServiceAdapter {
         let student_test_data = this.prepareStudentTestDataToAdd();
 
         Promise.all([
-            this.vm.examinationService.createTest(data, this.vm.user.jwt),
-            this.vm.examinationService.createStudentTestList(student_test_data, this.vm.user.jwt),
+            this.vm.examinationOldService.createTest(data, this.vm.user.jwt),
+            this.vm.examinationOldService.createStudentTestList(student_test_data, this.vm.user.jwt),
         ]).then(value => {
             this.addTestToTestList(value[0]);
             this.addStudentTestListToExaminationList(value[1], false);
@@ -374,10 +374,10 @@ export class CreateTestServiceAdapter {
         let student_test_data = this.prepareStudentTestDataToRemove(test);
 
         let service_list = [];
-        service_list.push(this.vm.examinationService.deleteTest(test.id, this.vm.user.jwt));
+        service_list.push(this.vm.examinationOldService.deleteTest(test.id, this.vm.user.jwt));
 
         if (student_test_data.length > 0) {
-            service_list.push(this.vm.examinationService.deleteStudentTestList(student_test_data, this.vm.user.jwt));
+            service_list.push(this.vm.examinationOldService.deleteStudentTestList(student_test_data, this.vm.user.jwt));
         }
 
         Promise.all(service_list).then(value => {
@@ -390,7 +390,7 @@ export class CreateTestServiceAdapter {
             this.vm.isLoading = false;
         });
 
-        /*this.vm.examinationService.deleteTest(test.id, this.vm.user.jwt).then(value => {
+        /*this.vm.examinationOldService.deleteTest(test.id, this.vm.user.jwt).then(value => {
             this.removeTestFromTestList(test);
             this.vm.isLoading = false;
         }, error => {
@@ -458,7 +458,7 @@ export class CreateTestServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.updateTest(data, this.vm.user.jwt),
+            this.vm.examinationOldService.updateTest(data, this.vm.user.jwt),
         ]).then(value => {
             test.startTime = value[0].startTime;
             test.endTime = value[0].endTime;
