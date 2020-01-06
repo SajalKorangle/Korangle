@@ -8,7 +8,7 @@ import { CommonServiceRequirements } from '../../common-service-requirements';
 export class SchoolOldService extends CommonServiceRequirements {
 
     getSessionList(token: any): Promise<any> {
-        return super.getData(token, '/school/sessions');
+        return super.getData(token, '/school/sessions-old');
     }
 
     updateSchoolProfile(data: any, token: any): Promise<any> {
