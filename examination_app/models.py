@@ -100,7 +100,7 @@ class Examination(models.Model):
     name = models.TextField(null=False, default='-', verbose_name='name')
     parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    status = models.CharField(max_length=20, choices=EXAMINATION_STATUS, null=True, default='Created', verbose_name='examinationStatus')
+    status = models.CharField(max_length=20, choices=EXAMINATION_STATUS, null=False, default='Created', verbose_name='examinationStatus')
 
     def __str__(self):
         return self.name
