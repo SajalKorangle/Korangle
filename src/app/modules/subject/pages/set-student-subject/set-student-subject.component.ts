@@ -36,7 +36,7 @@ export class SetStudentSubjectComponent implements OnInit {
     constructor(public subjectService: SubjectOldService,
                 public classService: ClassOldService,
                 public studentService: StudentOldService,
-                public schoolService: SchoolOldService,
+                public schoolService: SchoolService,
                 public examinationOldService: ExaminationOldService,
                 public examinationService : ExaminationService) {}
 
