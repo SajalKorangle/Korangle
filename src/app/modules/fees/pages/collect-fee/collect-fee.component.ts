@@ -7,7 +7,6 @@ import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount
 import {FeeReceipt} from "../../../../services/modules/fees/models/fee-receipt";
 import {Discount} from "../../../../services/modules/fees/models/discount";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import {
     DiscountColumnFilter,
     INSTALLMENT_LIST,
@@ -40,7 +39,7 @@ export class CollectFeeComponent implements OnInit {
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
     modeOfPaymentList = MODE_OF_PAYMENT_LIST;
     receiptColumnFilter = new ReceiptColumnFilter();
     discountColumnFilter = new DiscountColumnFilter();
@@ -254,6 +253,7 @@ export class CollectFeeComponent implements OnInit {
             'sectionList': this.sectionList,
             'employeeList': this.employeeList,
             'boardList': this.boardList,
+            'sessionList' : this.sessionList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, {user: this.user, value: data});

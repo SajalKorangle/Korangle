@@ -81,6 +81,7 @@ export class ViewFeeServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.discounts, discount_list),
             this.vm.feeService.getList(this.vm.feeService.sub_discounts, sub_discount_list),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
 
         ]).then( value => {
 
@@ -99,7 +100,7 @@ export class ViewFeeServiceAdapter {
             this.populateDiscountList(value[8]);
             this.vm.subDiscountList = value[9];
             this.vm.selectedStudentSectionList = value[10];
-
+            this.vm.sessionList = value[11];
             this.vm.handleStudentFeeProfile();
 
             this.vm.isLoading = false;

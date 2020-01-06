@@ -6,7 +6,7 @@ import { EmitterService } from '../../services/emitter.service';
 
 import {User} from '../../classes/user';
 import {style, state, trigger, animate, transition} from "@angular/animations";
-import {SESSION_LIST} from "../../classes/constants/session";
+import {SchoolService} from "../../services/modules/school/school.service"
 import {environment} from "../../../environments/environment";
 import {Constants} from "../../classes/constants";
 import {NotificationService} from "../../services/modules/notification/notification.service";
@@ -19,7 +19,7 @@ declare const $: any;
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css'],
-    providers: [NotificationService],
+    providers: [NotificationService,SchoolService],
     animations: [
         trigger('rotate', [
             state('true', style({transform: 'rotate(0deg)'})),
@@ -42,7 +42,7 @@ export class SidebarComponent implements OnInit {
 
     green = 'green';
     warning = 'warning';
-    session_list=SESSION_LIST;
+    session_list = [];    
 
     notification = {
         path: 'notification',
@@ -83,7 +83,8 @@ export class SidebarComponent implements OnInit {
     };
 
     constructor(private router: Router,
-                private notificationService: NotificationService) {
+                private notificationService: NotificationService,
+                private schoolService : SchoolService) {
     }
 
     ngOnInit() {
@@ -99,6 +100,10 @@ export class SidebarComponent implements OnInit {
                     this.user.isLazyLoading = false;
                 }
             });
+        this.schoolService.getObjectList(this.schoolService.session,{})
+            .then(value=>{
+                this.session_list = value;
+            })
         EmitterService.get('initialize-router').subscribe(value => {
             this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         });
@@ -123,7 +128,8 @@ export class SidebarComponent implements OnInit {
         });
     }
 
-    checkChangeSession(){
+    checkChangeSession(){  
+        //console.log(this.user.activeSchool)      
         return this.user.activeSchool && this.user.activeSchool.moduleList.find(module=>{
             return module.path=='school' && module.taskList.find(task=>{
                 return task.path=='change_session';
@@ -131,7 +137,7 @@ export class SidebarComponent implements OnInit {
         })!=undefined;
     }
 
-    handleSessionChange(){
+    handleSessionChange(){        
         this.router.navigateByUrl('');
         setTimeout(()=>{
             this.user.initializeTask();

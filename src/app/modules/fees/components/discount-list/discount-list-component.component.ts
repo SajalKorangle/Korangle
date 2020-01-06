@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
-import {SESSION_LIST} from "../../../../classes/constants/session";
+import {SchoolService} from "../../../../services/modules/school/school.service"
 
 // import {EmitterService} from '../../services/emitter.service';
 
@@ -9,7 +9,7 @@ import {SESSION_LIST} from "../../../../classes/constants/session";
     templateUrl: './discount-list-component.component.html',
     styleUrls: ['./discount-list-component.component.css'],
 })
-export class DiscountListComponent {
+export class DiscountListComponent implements OnInit{
 
     @Input() user;
     @Input() discountColumnFilter;
@@ -25,7 +25,19 @@ export class DiscountListComponent {
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
+
+    constructor(private schoolService: SchoolService) { }
+
+    ngOnInit() {
+
+        this.schoolService.getObjectList(this.schoolService.session, {}).then(value => {
+            this.sessionList = value;
+        }, error => {
+            console.log(error);
+        });
+
+    }
 
     getDiscountTotalAmount(discount: any): number {
         return this.subDiscountList.filter(subDiscount => {

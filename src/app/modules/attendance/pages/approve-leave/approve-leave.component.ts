@@ -4,7 +4,7 @@ import {AttendanceOldService} from '../../../../services/modules/attendance/atte
 import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 
 import { ApproveLeaveServiceAdapter } from './approve-leave.service.adapter';
-import {SESSION_LIST} from '../../../../classes/constants/session';
+import {SchoolService} from './../../../../services/modules/school/school.service'
 import {LEAVE_OPTION_LIST, LEAVE_STATUS_LIST} from '../../classes/constants';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -12,7 +12,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'approve-leave',
     templateUrl: './approve-leave.component.html',
     styleUrls: ['./approve-leave.component.css'],
-    providers: [ AttendanceOldService, EmployeeOldService ],
+    providers: [ AttendanceOldService, EmployeeOldService,SchoolService ],
 })
 
 export class ApproveLeaveComponent implements OnInit {
@@ -31,23 +31,28 @@ export class ApproveLeaveComponent implements OnInit {
 
     selectedStatus: any;
 
-    sessionList = SESSION_LIST;
+    sessionList = [];
 
     leave_status_list = LEAVE_STATUS_LIST;
 
     leave_option_list = LEAVE_OPTION_LIST;
 
-    selectedSession = SESSION_LIST[1];
+    selectedSession : any;
 
     isLoading = false;
 
     constructor(public attenendanceService: AttendanceOldService,
-                public employeeService: EmployeeOldService) {}
+                public employeeService: EmployeeOldService,
+                public schoolService : SchoolService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
-        this.selectedSession = this.sessionList.find(item => item.id==this.user.activeSchool.currentSessionDbId);
+        this.schoolService.getObjectList(this.schoolService.session,{})
+            .then(session => {
+                this.sessionList = session
+                this.selectedSession = this.sessionList.find(item => item.id==this.user.activeSchool.currentSessionDbId);
+                console.log(this.selectedSession)
+            })                
 
         LEAVE_STATUS_LIST.forEach(status => {
             this.statusList.push(status);
