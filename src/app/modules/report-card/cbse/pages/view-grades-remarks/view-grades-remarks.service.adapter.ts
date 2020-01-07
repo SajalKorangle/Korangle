@@ -157,9 +157,7 @@ export class ViewGradesRemarksServiceAdapter {
                     this.vm.studentRemarkList = value[0];
                     value = value.slice(1);
                 }
-                value.forEach((item, index) => {
-                    this.vm.studentExtraFieldList.push(item);
-                });
+                this.vm.studentExtraFieldList = value;
                 this.vm.isLoading = false;
                 this.vm.showStudentList = true;
             }, error => {
