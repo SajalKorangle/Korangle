@@ -82,13 +82,21 @@
         </mat-form-field>
     </div>
     <div class="col-sm-3">
-            <div class="form-group form-black label-floating">
-                <label class="control-label">Extra Message to append</label>
-                <input type="text"
-                class="form-control"
-                [(ngModel)]="extraDefaulterMessage"/>
-            </div>
+        <div class="form-group form-black label-floating">
+            <label class="control-label">Extra Message to append</label>
+            <textarea type="text"
+            class="form-control"
+            [(ngModel)]="extraDefaulterMessage"></textarea>
         </div>
+    </div>
+    <div class="col-sm-3">
+        <span  style="font-size: 14px; margin-top: 5px;">
+            # of extra Characters/SMS: {{getExtraMessageLength()}}<br/>
+            # of Mobile devices: {{getNumberOfMobileDevice()}}<br/>
+            Estimated SMS Count: {{getEstimatedSMSCount()}}<br/>
+            Estimated Notification Count: {{getEstimatedNotificationCount()}}<br/>
+        </span>
+    </div>
     <div class="col-sm-3">
         <button type="button"
         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"

@@ -21,6 +21,9 @@ export class ViewSentComponent implements OnInit {
     smsList: any;
 
     selectedStatus;
+    selectedMessageType = undefined;
+
+    messageTypeList = ['Defaulter', 'Custom', 'CST', 'Attendance', 'Fees', 'Examination'];
 
     serviceAdapter: ViewSentServiceAdapter;
 
@@ -65,6 +68,23 @@ export class ViewSentComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
+    }
+
+    getFilteredSMSList(): any{
+        console.log(this.selectedMessageType);
+        if (this.selectedMessageType==undefined){
+            return this.smsList;
+        }
+        console.log(this.smsList);
+        let tempList = [];
+        this.smsList.forEach(sms => {
+            if (sms.message_type==this.selectedMessageType){
+                tempList.push(sms);
+            }
+        });
+        console.log(this.selectedMessageType);
+        console.log(tempList);
+        return tempList;;
     }
 
     getStatusList(sms: any): any {

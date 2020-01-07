@@ -34,6 +34,9 @@ export class ViewDefaultersComponent implements OnInit {
         'NOTIF./SMS',
     ];
 
+    studentMessage = "Hi, your fee is due. The amount of due fees till month is <feesDueTillMonth>";
+    parentMessage = "Hi, your fee is due. The total amount of due fees till month is <feesDueTillMonth>\n<childrenData>";
+
     selectedSentType = 'SMS';
     extraDefaulterMessage = '';
 
@@ -305,6 +308,7 @@ export class ViewDefaultersComponent implements OnInit {
                     'name': student.fathersName,
                     'mobileNumber': student.mobileNumber,
                     'studentList': [student],
+                    'notification': student.notification
                 };
                 this.parentList.push(newParentObject);
             }
@@ -344,6 +348,7 @@ export class ViewDefaultersComponent implements OnInit {
         })
 
     }
+    
 
     checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
         if (this.filteredClassSectionList.find(classSection => {
@@ -370,12 +375,11 @@ export class ViewDefaultersComponent implements OnInit {
             if(this.extraDefaulterMessage){
                 message+="\n"+this.extraDefaulterMessage;
             }
-            alert("Doing")
             // console.log(this.filteredStudentList);
             let test = this.getFilteredStudentList().filter((item) => {
                 return item.selected;
             })
-            console.log(test);
+            // console.log(test);
             let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
                 return {
                 "mobileNumber": obj.mobileNumber,
@@ -385,7 +389,6 @@ export class ViewDefaultersComponent implements OnInit {
             });
             this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
         }else{
-            alert("this is parent");
             let message = "Hi, your fee is due. The total amount of due fees till month is <feesDueTillMonth>\n<childrenData>"
             // console.log(this.filteredParentList);
             if(this.extraDefaulterMessage){
@@ -402,7 +405,7 @@ export class ViewDefaultersComponent implements OnInit {
                 "childrenData": this.getStudentString(obj.studentList)
                 }
             });
-            console.log(mobile_numbers);
+            // console.log(mobile_numbers);
             this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
         }
     }
@@ -654,5 +657,81 @@ export class ViewDefaultersComponent implements OnInit {
 
         this.excelService.downloadFile(template, 'korangle_parent_fees.csv');
     }
+
+    getMessageFromTemplate = (message, obj) => {
+        let ret = message;
+        for(let key in obj){
+            ret = ret.replace("<"+key+">", obj[key]);
+        }
+        return ret;
+    }
+    
+    hasUnicode(message): boolean {
+        for (let i=0; i<message.length; ++i) {
+            if (message.charCodeAt(i) > 127) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    getMessageCount = (message) => {
+        if (this.hasUnicode(message)){
+            return Math.ceil(message.length/70);
+        }else{
+            return Math.ceil( message.length/160);
+        }
+    }
+
+    getExtraMessageLength = () => {
+        return this.extraDefaulterMessage.length;
+    }
+
+    getNumberOfMobileDevice = () => {
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            return this.getFilteredStudentList().filter((item) => {
+                return item.selected;
+            }).length;
+        }else{
+            return this.getFilteredParentList().filter((item) => {
+                return item.selected;
+            }).length;
+        }
+    }
+
+    getEstimatedNotificationCount = () => {
+        let count = 0;
+        if(this.selectedSentType==this.sentTypeList[0])return 0;
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            count = this.getFilteredStudentList().filter((item) => {
+                return item.selected && item.notification;
+            }).length;
+        }else{
+            count = this.getFilteredParentList().filter((item) => {
+                return item.selected && item.notification;
+            }).length;
+        }
+        return count;
+    }   
+
+    getEstimatedSMSCount = () => {
+        let count = 0;
+        if(this.selectedSentType==this.sentTypeList[1])return 0;
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            this.getFilteredStudentList().filter(item => item.selected).forEach((item, i) => {
+                if(this.selectedSentType==this.sentTypeList[0] || item.notification==false){
+                    count += this.getMessageCount(this.getMessageFromTemplate(this.studentMessage, item) + '\n' + this.extraDefaulterMessage);
+                }
+            })
+        }else{
+            this.getFilteredParentList().filter(item=>item.selected).forEach((item, i) => {
+                if(this.selectedSentType==this.sentTypeList[0] || item.notification==false){
+                    count += this.getMessageCount(this.getMessageFromTemplate(this.parentMessage, item) + '\n' + this.extraDefaulterMessage);
+                }
+            })
+        }
+        return count;
+    }
+
 
 }
