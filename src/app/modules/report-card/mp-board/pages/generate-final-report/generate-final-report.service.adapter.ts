@@ -94,7 +94,7 @@ export class GenerateFinalReportServiceAdapter {
                     this.extraFieldList = value2[5];
                     this.extraSubFieldList = value2[6];
                     this.vm.boardList = value2[7];
-                    this.vm.class_teacher_signature_list = value2[8];
+                    this.vm.classTeacherSignatureList = value2[8];
 
                     this.vm.subjectList = value2[4];
                     this.populateClassSectionStudentList();
@@ -359,7 +359,7 @@ export class GenerateFinalReportServiceAdapter {
                         this.populateStudentFinalReportCardHigh();
                         break;
                 }
-                const signature = this.vm.class_teacher_signature_list.find((sign) => {
+                const signature = this.vm.classTeacherSignatureList.find((sign) => {
                     return sign.parentSchool === this.vm.user.activeSchool.dbId &&
                         sign.parentClass === this.vm.getSelectedClassSection().classDbId
                     && sign.parentDivision === this.vm.getSelectedClassSection().sectionDbId

@@ -35,7 +35,7 @@ export class GenerateFinalReportComponent implements OnInit {
     reportCardMapping: any;
     classSectionStudentList = [];
 
-    class_teacher_signature_list = [];
+    classTeacherSignatureList = [];
 
     filteredStudentList = [];
 
