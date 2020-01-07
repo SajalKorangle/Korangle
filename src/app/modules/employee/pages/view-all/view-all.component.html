@@ -186,7 +186,11 @@
                         <td [class.hidden]="!columnFilter.showEmployeeNumber">{{employee.employeeNumber}}</td>
                         <td [class.hidden]="!columnFilter.showFatherName">{{employee.fatherName}}</td>
                         <td [class.hidden]="!columnFilter.showSpouseName">{{employee.spouseName}}</td>
-                        <td [class.hidden]="!columnFilter.showMobileNumber">{{employee.mobileNumber}}</td>
+                        <!-- Replaced by Harry Chhabra; 18-12-19 -->
+                        <td [class.hidden]="!columnFilter.showMobileNumber">
+                            <span class="hidden-xs hidden-sm">{{employee.mobileNumber}}</span>
+                            <a class="visible-xs visible-sm" href="tel:{{employee.mobileNumber}}">Call Me</a>
+                        </td>
                         <td [class.hidden]="!columnFilter.showDateOfBirth">
                             {{employee.dateOfBirth | date: 'dd - MMM - yyyy'}}
                         </td>
