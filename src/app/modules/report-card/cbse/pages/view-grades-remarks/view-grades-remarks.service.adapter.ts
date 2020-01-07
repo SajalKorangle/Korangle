@@ -8,7 +8,6 @@ export class ViewGradesRemarksServiceAdapter {
     // Data
     classList: any;
     sectionList: any;
-    studentSectionList: any;
     
     constructor() {}
     
@@ -44,8 +43,8 @@ export class ViewGradesRemarksServiceAdapter {
         ]).then(value => {
             this.classList = value[0];
             this.sectionList = value[1];
-            this.studentSectionList = value[2];
-            this.vm.studentSectionList = this.studentSectionList;
+            this.vm.studentSectionList = value[2].filter(item=> item.parentClass!==1 && item.parentClass!==3);
+            console.log(this.vm.studentSectionList);
             this.vm.extraFieldList = value[3];
             this.vm.termList = value[4];
             this.vm.employeeList = value[5];
@@ -95,7 +94,7 @@ export class ViewGradesRemarksServiceAdapter {
         this.classList.filter(classs => {
             this.sectionList.filter(section => {
                 if (this.vm.studentSectionList.find(studentSection => {
-                    return classs.orderNumber!=1 && classs.orderNumber!=3 && studentSection.parentClass == classs.id
+                    return studentSection.parentClass == classs.id
                     && studentSection.parentDivision == section.id;
                 }) != undefined) {
                     this.vm.classSectionList.push({

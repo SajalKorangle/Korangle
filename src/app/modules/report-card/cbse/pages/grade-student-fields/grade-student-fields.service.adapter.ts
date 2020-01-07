@@ -71,8 +71,6 @@ export class GradeStudentFieldsServiceAdapter {
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
             ]).then(value => {
                 this.populateStudentSectionList(value[0]);
-                this.populateClassSectionList();
-                this.vm.isInitialLoading=false;   
                 let student_data = {
                     'id__in': this.vm.studentSectionList.map(a => a.parentStudent).join(','),
                     'fields__korangle': 'id,profileImage,name',
@@ -85,6 +83,8 @@ export class GradeStudentFieldsServiceAdapter {
                 }, error => {
                 });                
                 this.populateSelectedExtraField();
+                this.populateClassSectionList();
+                this.vm.isInitialLoading=false;
             });
             
         }, error => {
