@@ -24,11 +24,6 @@ export class AddStudentRemarksServiceAdapter {
 
         let attendance_permission_data = {
             'parentEmployee': this.vm.user.activeSchool.employeeId,
-        };
-
-        let student_section_data = {
-            'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentStudent__parentTransferCertificate': 'null__korangle',
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
@@ -36,34 +31,70 @@ export class AddStudentRemarksServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
         ]).then(value => {
 
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.attendancePermissionList = value[2];
-            this.studentSectionList = value[3];
 
-            this.populateStudentSectionList();
-
-            let student_data = {
-                'id__in': this.vm.studentSectionList.map(a => a.parentStudent).join(','),
-                'fields__korangle': 'id,profileImage,name',
-            };
-
-            Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student,student_data),
-            ]).then(value2 => {
-
-                this.vm.studentList = value2[0];
-
-                this.vm.isInitialLoading=false;
-
-            }, error => {
-                this.vm.isInitialLoading = false;
+            let class_10_id, class_12_id;
+            this.classList.forEach(class_ =>{
+                if(class_.name == 'Class - 10'){
+                    class_10_id = class_.id;
+                }
+                if(class_.name == 'Class - 12'){ class_12_id = class_.id; }
             });
 
-            this.populateClassSectionList();
+            this.vm.attendancePermissionList = this.vm.attendancePermissionList.filter(permission =>{
+                if(permission.parentClass == class_10_id || permission.parentClass == class_12_id){return false}
+                return true;
+            });
+
+            if(this.vm.attendancePermissionList.length == 0){
+                this.vm.isInitialLoading = false;
+                return;
+            }
+
+            let request_student_section_data = {
+                'parentStudent__parentSchool':this.vm.user.activeSchool.dbId,
+                'parentDivision__in':Array.from(new Set(this.vm.attendancePermissionList.map(item=>{return item.parentDivision}))).join(),
+                'parentClass__in':Array.from(new Set(this.vm.attendancePermissionList.map(item=>{return item.parentClass}))).join(),
+                'parentSession':this.vm.user.activeSchool.currentSessionDbId,
+                'parentStudent__parentTransferCertificate':'null__korangle'
+            };
+            
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(value_studentSection=>{
+                this.studentSectionList = value_studentSection;
+                this.populateStudentSectionList();
+
+                if(this.studentSectionList.length == 0){
+                    alert('No students have been allocated in your permitted class');
+                    this.vm.isInitialLoading = false;
+                    return;
+                }
+
+                let request_student_data = {
+                    'id__in':this.studentSectionList.map(item=>{return item.parentStudent}).join(),
+                    'fields__korangle': 'id,profileImage,name',
+                };
+
+
+                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(
+                    value_student=>{
+
+                        this.vm.studentSectionList.forEach(item => {
+                            item['student'] = value_student.find(item_student=>{
+                                return item_student.id == item.parentStudent;
+                            });
+                        });
+                    this.vm.isInitialLoading = false;
+                        
+                    },
+                    error=>{this.vm.isInitialLoading = false;},
+                    );
+
+                this.populateClassSectionList();
+            },error=>{this.vm.isInitialLoading = false;});
 
         }, error => {
             this.vm.isInitialLoading = false;
@@ -71,68 +102,38 @@ export class AddStudentRemarksServiceAdapter {
 
     }
 
-    populateStudentSectionList(): void {
-
-        if (this.vm.attendancePermissionList.length > 0) {
-            this.vm.studentSectionList = this.studentSectionList.filter(studentSection => {
-                return this.vm.attendancePermissionList.find(attendancePermission => {
-                    return attendancePermission.parentClass == studentSection.parentClass
-                        && attendancePermission.parentDivision == studentSection.parentDivision;
-                }) != undefined;
+    populateStudentSectionList(studentSectionList: any): void{
+        this.vm.studentSectionList = studentSectionList.filter(eachStudentSection => {
+            return this.vm.attendancePermissionList.some(eachAttendancePermission => {
+                if(eachStudentSection.parentClass == eachAttendancePermission.parentClass 
+                    && eachStudentSection.parentDivision == eachAttendancePermission.parentDivision) return true;
+                return false;
             });
-        } else {
-            this.vm.studentSectionList = this.studentSectionList;
-        }
+        });
 
     }
-
-    populateClassSectionList(): void {
-        if (this.vm.attendancePermissionList.length > 0) {
-            this.classList.filter(classs => {
-                return this.vm.attendancePermissionList.find(attendancePermission => {
-                    return attendancePermission.parentClass == classs.id;
-                }) != undefined;
-            }).forEach(classs => {
-                this.sectionList.filter(section => {
-                    return this.vm.attendancePermissionList.find(attendancePermission => {
-                        return attendancePermission.parentClass == classs.id
-                            && attendancePermission.parentDivision == section.id;
-                    }) != undefined;
-                }).forEach(section => {
+    populateClassSectionList(): void{
+        this.classList.forEach(classs=>{
+            this.sectionList.forEach(section=>{
+                if(this.vm.studentSectionList.find(item=>{
+                    return item.parentClass == classs.id && item.parentDivision == section.id;
+                }) != undefined){
                     this.vm.classSectionList.push({
-                        'class': classs,
-                        'section': section,
+                        'class':classs,
+                        'section':section,
                     });
-                });
+                }
             });
-        } else {
-            this.classList.forEach(classs => {
-                this.sectionList.filter(section => {
-                    return this.vm.studentSectionList.find(studentSection => {
-                        return studentSection.parentClass == classs.id
-                            && studentSection.parentDivision == section.id;
-                    }) !=  undefined;
-                }).forEach(section => {
-                    this.vm.classSectionList.push({
-                        'class': classs,
-                        'section': section,
-                    });
-                });
-            });
-        }
-        if (this.vm.classSectionList.length > 0) {
-            this.vm.selectedClassSection = this.vm.classSectionList[0];
-        }
+        });
+        this.vm.selectedClassSection = this.vm.classSectionList[0];
     }
+    
 
     getStudentRemarkDetails(): void {
 
         let student_remark_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
-                return studentSection.parentClass == this.vm.selectedClassSection.class.id
-                    && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
-            }).map(item => item.parentStudent).join(','),
+            'parentStudent__in': this.vm.getFilteredStudentSectionList().map(item=>item.parentStudent).join(','),
         };
 
         this.vm.isLoading = true;

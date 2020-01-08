@@ -10,7 +10,6 @@ export class AddStudentRemarksServiceAdapter {
     // Data
     classList: any;
     sectionList: any;
-    studentSectionList: any;
 
 
     initializeAdapter(vm: AddStudentRemarksComponent): void {
@@ -31,16 +30,12 @@ export class AddStudentRemarksServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
-            // this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
         ]).then(value => {
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.attendancePermissionList = value[2];
+            
             // Filter attendancePermission List to remove class 10 and class 12
-
-            let unique_classes = []
-            let unique_division = []
-
             let class_10_id, class_12_id;
             this.classList.forEach(class_ =>{
                 if(class_.name == 'Class - 10'){
@@ -49,108 +44,59 @@ export class AddStudentRemarksServiceAdapter {
                 if(class_.name == 'Class - 12'){ class_12_id = class_.id; }
             });
 
-            let temp_classSectionList = []
             this.vm.attendancePermissionList = this.vm.attendancePermissionList.filter(permission =>{
                 if(permission.parentClass == class_10_id || permission.parentClass == class_12_id){return false}
-                unique_classes.push(permission.parentClass);
-                unique_division.push(permission.parentDivision);
-                temp_classSectionList.push({
-                    'classId': permission.parentClass,
-                    'sectionId': permission.parentDivision,
-                });
                 return true;
             });
 
-            unique_classes = Array.from(new Set(unique_classes));
-            unique_division = Array.from(new Set(unique_division));
-
             if(this.vm.attendancePermissionList.length == 0){
-                // Calling below function will me classSection list empty
-                alert('You do not have any permission');
+                this.vm.isInitialLoading = false;
                 return;
             }
 
             let request_student_section_data = {
                 'parentStudent__parentSchool':this.vm.user.activeSchool.dbId,
-                'parentDivision__in':unique_division.join(),
-                'parentClass__in':unique_classes.join(),
+                'parentDivision__in':Array.from(new Set(this.vm.attendancePermissionList.map(item=>{return item.parentDivision}))).join(),
+                'parentClass__in':Array.from(new Set(this.vm.attendancePermissionList.map(item=>{return item.parentClass}))).join(),
                 'parentSession':this.vm.user.activeSchool.currentSessionDbId,
+                'parentStudent__parentTransferCertificate':'null__korangle'
             };
 
-
-            let student_studentSection_map = {};
-            
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(value_studentSection=>{
-                
-                if(value_studentSection.length == 0){
-                    alert('No students have been allocated');
+
+                this.populateStudentSectionList(value_studentSection);
+
+                if(this.vm.studentSectionList.length == 0){
+                    alert('No students have been allocated in your permitted class');
                     this.vm.isInitialLoading = false;
                     return;
                 }
 
-                value_studentSection = value_studentSection.filter(eachStudentSection => {
-                    return this.vm.attendancePermissionList.some(eachAttendancePermission => {
-                        if(eachStudentSection.parentClass == eachAttendancePermission.parentClass 
-                            && eachStudentSection.parentDivision == eachAttendancePermission.parentDivision) return true;
-                        return false;
-                    });
-                });
-
-                let student_id = [];
-                value_studentSection.forEach(item=>{
-                    student_studentSection_map[item.parentStudent] = {
-                        'rollNumber':item.rollNumber,
-                        'studentSectionId':item.id,
-                        'classId':item.parentClass,
-                        'sectionId':item.parentDivision,
-                    };
-                    student_id.push(item.parentStudent);
-                });
-
                 let request_student_data = {
-                    'id__in':student_id.join(),
+                    'id__in':this.vm.studentSectionList.map(item=>{return item.parentStudent}).join(),
+                    'fields__korangle': 'id,profileImage,name',
                 };
 
-                // this.populateClassSectionList();
-                this.vm.isInitialLoading = false;
 
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(
                     value_student=>{
-                        // map student with roll number from student section
-                        let studentDetails = value_student.map(student => {
-                            student['rollNumber'] = student_studentSection_map[student.id].rollNumber;
-                            student['classId'] = student_studentSection_map[student.id].classId;
-                            student['sectionId'] = student_studentSection_map[student.id].sectionId;
-                            student['studentSectionId'] = student_studentSection_map[student.id].studentSectionId;
-                            // Below assignments ?
-                            if(student['profileImage'] == '' || student['profileImage'] == null) student['profileImage'] = null;
-                            if(student['parentTransferCertificate'] == '' || student['parentTransferCertificate'] == null) student['parentTransferCertificate'] = null;
-                            student['className'] = ''
-                            student['sectionName'] = ''
-                            return student;
+
+                        this.vm.studentSectionList.forEach(item => {
+                            item['student'] = value_student.find(item_student=>{
+                                return item_student.id == item.parentStudent;
+                            });
                         });
-                        this.studentSectionList = studentDetails;
-                        this.vm.studentSectionList = studentDetails;
+
+                    this.vm.isInitialLoading = false;
+                        
                     },
-                    error=>{console.log('Error fetching students');this.vm.isInitialLoading = false;},
+                    error=>{this.vm.isInitialLoading = false;},
                     );
+
+                this.populateClassSectionList();
+
+
             },error=>{this.vm.isInitialLoading = false;});
-
-            // Merging class section list from temp_classSectionList
-
-            temp_classSectionList = temp_classSectionList.map(classSection => {
-                let temp = {};
-                temp['class'] = this.classList.find(eachClass=>{
-                    return eachClass.id == classSection.classId;
-                });
-                temp['section'] = this.sectionList.find(eachSection=>{
-                    return eachSection.id == classSection.sectionId;
-                });
-                return temp;
-            });
-            this.vm.classSectionList = temp_classSectionList;
-            this.vm.selectedClassSection = this.vm.classSectionList[0];
-
 
         }, error => {
             this.vm.isInitialLoading = false;
@@ -158,14 +104,40 @@ export class AddStudentRemarksServiceAdapter {
 
     }
 
+    populateStudentSectionList(studentSectionList: any): void{
+        this.vm.studentSectionList = studentSectionList.filter(eachStudentSection => {
+            return this.vm.attendancePermissionList.some(eachAttendancePermission => {
+                if(eachStudentSection.parentClass == eachAttendancePermission.parentClass 
+                    && eachStudentSection.parentDivision == eachAttendancePermission.parentDivision) return true;
+                return false;
+            });
+        });
+
+    }
+    populateClassSectionList(): void{
+
+        this.classList.forEach(classs=>{
+            this.sectionList.forEach(section=>{
+                if(this.vm.studentSectionList.find(item=>{
+                    return item.parentClass == classs.id && item.parentDivision == section.id;
+
+                }) != undefined){
+                    this.vm.classSectionList.push({
+                        'class':classs,
+                        'section':section,
+                    });
+                }
+            });
+        });
+
+        this.vm.selectedClassSection = this.vm.classSectionList[0];
+    }
+
     getStudentRemarkDetails(): void {
 
         let student_remark_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentStudent__in': this.vm.studentSectionList.filter(studentSection => {
-                return studentSection.parentClass == this.vm.selectedClassSection.class.id
-                    && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
-            }).map(item => item.parentStudent).join(','),
+            'parentStudent__in': this.vm.getFilteredStudentSectionList().map(item=>item.parentStudent).join(','),
         };
 
         this.vm.isLoading = true;
@@ -175,7 +147,6 @@ export class AddStudentRemarksServiceAdapter {
         ]).then(value => {
 
             this.vm.studentRemarkList = value[0];
-
             this.vm.isLoading = false;
             this.vm.showStudentList = true;
         }, error => {
@@ -214,7 +185,6 @@ export class AddStudentRemarksServiceAdapter {
             element.classList.add('updatingField');
 
             Promise.all(service_list).then(value => {
-
                 if(prev_student_remark) {
                     this.vm.studentRemarkList.find(studentRemark => {
                         return studentRemark.id == value[0].id;

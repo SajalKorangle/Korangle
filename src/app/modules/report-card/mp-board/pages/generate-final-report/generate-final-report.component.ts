@@ -14,13 +14,13 @@ import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, 
 import { PrintService } from '../../../../../print/print-service';
 import {DataStorage} from "../../../../../classes/data-storage";
 import {SchoolService} from "../../../../../services/modules/school/school.service";
-import {ReportCardService} from "../../../../../services/modules/report-card/report-card.service";
+import {ReportCardMpBoardService} from "../../../../../services/modules/report-card/mp-board/report-card-mp-board.service";
 
 @Component({
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ReportCardService ],
+    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ReportCardMpBoardService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -54,7 +54,7 @@ export class GenerateFinalReportComponent implements OnInit {
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService,
-                public reportCardService: ReportCardService) {}
+                public reportCardMpBoardService: ReportCardMpBoardService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -77,8 +77,7 @@ export class GenerateFinalReportComponent implements OnInit {
             'showPrincipalSignature': this.showPrinicipalSignature,
             'boardList': this.boardList,
         };
-        console.log('Final data for print');
-        console.log(data);
+
         let selectedClassSection = this.getSelectedClassSection();
         let printRoute : string;
         
@@ -220,10 +219,5 @@ export class GenerateFinalReportComponent implements OnInit {
         this.timeout = setTimeout(() => {
             console.log('paged!', event);
         }, 100);
-    }
-
-    getStudentRemarks(data : any):any{
-        let url = '/mp-board/student-remark';
-        return this.reportCardService.getObjectList(url, data);
     }
 }

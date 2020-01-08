@@ -35,7 +35,6 @@ export class AddStudentRemarksComponent implements OnInit {
 
     classSectionList = [];
     attendancePermissionList = [];
-    studentList = [];
     studentSectionList = [];
     studentRemarkList = [];
 
@@ -77,11 +76,16 @@ export class AddStudentRemarksComponent implements OnInit {
             }
         });
     }
+    
+    getTotalStudents(): any {
+        return this.getFilteredStudentSectionList().length;
+    }
 
-    getStudent(studentSection: any): any {
-        return this.studentList.find(student => {
-            return student.id == studentSection.parentStudent;
-        });
+    getRemarkedStudentsCount(): any {
+        return this.studentRemarkList.filter(item=>{
+            if(item.remark != '') return true;
+            return false;
+        }).length;
     }
 
     getStudentRemark(studentSection: any): any {
