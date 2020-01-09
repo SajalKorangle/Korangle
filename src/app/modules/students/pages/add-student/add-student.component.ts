@@ -52,7 +52,7 @@ export class AddStudentComponent implements OnInit {
                  public studentService: StudentService,
                  public subjectService: SubjectService,
                  public vehicleService: VehicleOldService,
-                 public examinationOldService: ExaminationService,
+                 public examinationService: ExaminationService,
                  public feeService: FeeService) { }
 
     ngOnInit(): void {
