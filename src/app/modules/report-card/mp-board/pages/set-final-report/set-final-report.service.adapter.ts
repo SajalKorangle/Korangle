@@ -28,8 +28,8 @@ export class SetFinalReportServiceAdapter {
         this.vm.isLoading = true;
 
         let request_examination_data = {
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-            'schoolId': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
         let request_report_card_mapping_data = {
@@ -38,8 +38,8 @@ export class SetFinalReportServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
-            this.vm.examinationService.getMpBoardReportCardMapping(request_report_card_mapping_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
+            this.vm.examinationOldService.getMpBoardReportCardMapping(request_report_card_mapping_data, this.vm.user.jwt),
         ]).then(value => {
             this.examinationList = value[0];
             this.vm.examinationList = value[0];
@@ -143,7 +143,7 @@ export class SetFinalReportServiceAdapter {
 
         this.vm.isLoading = true;
 
-        this.vm.examinationService.createMpBoardReportCardMapping(data, this.vm.user.jwt).then(value => {
+        this.vm.examinationOldService.createMpBoardReportCardMapping(data, this.vm.user.jwt).then(value => {
             alert('Report Card set successfully');
             this.reportCardMapping = value;
             this.populateReportCardMapping();
@@ -169,7 +169,7 @@ export class SetFinalReportServiceAdapter {
 
         this.vm.isLoading = true;
 
-        this.vm.examinationService.updateMpBoardReportCardMapping(data, this.vm.user.jwt).then(value => {
+        this.vm.examinationOldService.updateMpBoardReportCardMapping(data, this.vm.user.jwt).then(value => {
             alert('Report Card set successfully');
             this.reportCardMapping = value;
             this.populateReportCardMapping();

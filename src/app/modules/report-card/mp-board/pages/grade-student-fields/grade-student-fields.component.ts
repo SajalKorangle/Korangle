@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
 import { ClassService } from '../../../../../services/modules/class/class.service';
+import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
 import { AttendanceOldService } from '../../../../../services/modules/attendance/attendance-old.service';
 
@@ -16,7 +17,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
     selector: 'grade-student-fields',
     templateUrl: './grade-student-fields.component.html',
     styleUrls: ['./grade-student-fields.component.css'],
-    providers: [ ExaminationOldService,ClassService, SubjectOldService, StudentOldService, AttendanceOldService ],
+    providers: [ ExaminationOldService,ClassService, SubjectOldService, StudentOldService, AttendanceOldService, ExaminationService ],
 })
 
 export class GradeStudentFieldsComponent implements OnInit {
@@ -43,8 +44,9 @@ export class GradeStudentFieldsComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService,                
-                public classService : ClassService,
+    constructor(public examinationOldService: ExaminationOldService,
+                public examinationService : ExaminationService,
+                public classService: ClassService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService,
                 public attendanceService: AttendanceOldService,

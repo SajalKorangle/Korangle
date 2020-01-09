@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
+import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 
 import { GeneratePatrakServiceAdapter } from './generate-patrak.service.adapter';
 import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
@@ -17,7 +18,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
     selector: 'generate-patrak',
     templateUrl: './generate-patrak.component.html',
     styleUrls: ['./generate-patrak.component.css'],
-    providers: [ ExaminationOldService, ClassService, StudentOldService, SubjectOldService, AttendanceOldService ],
+    providers: [ ExaminationOldService, ClassService, StudentOldService, SubjectOldService, AttendanceOldService, ExaminationService ],
 })
 
 export class GeneratePatrakComponent implements OnInit {
@@ -42,8 +43,9 @@ export class GeneratePatrakComponent implements OnInit {
     isLoading = true;
     timeout: any;
 
-    constructor(public examinationService: ExaminationOldService,                
-                public classService : ClassService,
+    constructor(public examinationOldService: ExaminationOldService,
+                public examinationService : ExaminationService,
+                public classService: ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 public attendanceService: AttendanceOldService,

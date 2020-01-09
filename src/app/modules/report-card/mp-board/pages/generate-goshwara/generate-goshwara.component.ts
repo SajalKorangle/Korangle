@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
+import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 
 import { GenerateGoshwaraServiceAdapter } from './generate-goshwara.service.adapter';
 import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
@@ -16,7 +17,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
     selector: 'generate-goshwara',
     templateUrl: './generate-goshwara.component.html',
     styleUrls: ['./generate-goshwara.component.css'],
-    providers: [ ExaminationOldService, ClassService, StudentOldService, SubjectOldService ],
+    providers: [ ExaminationOldService, ClassService, StudentOldService, SubjectOldService, ExaminationService ],
 })
 
 export class GenerateGoshwaraComponent implements OnInit {
@@ -41,8 +42,9 @@ export class GenerateGoshwaraComponent implements OnInit {
     isLoading = true;
     timeout: any;
 
-    constructor(public examinationService: ExaminationOldService,                
-                public classService : ClassService,
+    constructor(public examinationOldService: ExaminationOldService,
+                public examinationService : ExaminationService,
+                public classService: ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 private excelService: ExcelService,
