@@ -287,7 +287,7 @@ export class SendSmsComponent implements OnInit {
             return classSection.class.id == classId && classSection.section.id == sectionId;
         });
         let multipleSections = this.classSectionList.filter(classSection => {
-            return classSection.class.dbId == classId;
+            return classSection.class.id == classId;
         }).length > 1;
         return classSection.class.name + (multipleSections?', '+classSection.section.name:'');
     }
