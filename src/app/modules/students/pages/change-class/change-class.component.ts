@@ -81,9 +81,9 @@ export class ChangeClassComponent implements OnInit {
     changeClassSection(): void {
         let data = {
             id: this.selectedStudent.studentSectionDbId,
-            parentDivision: this.selectedClass.selectedSection.dbId,
+            parentDivision: this.selectedClass.selectedSection.id,
             parentStudent: this.selectedStudent.dbId,
-            parentClass: this.selectedClass.dbId,
+            parentClass: this.selectedClass.id,
             parentSession: this.selectedSessionDbId,
         };
         let studentDbId = this.selectedStudent.dbId;
@@ -95,7 +95,7 @@ export class ChangeClassComponent implements OnInit {
                 if (studentDbId === this.selectedStudent.dbId) {
                     this.selectedStudent.className = this.selectedClass.name;
                     this.selectedStudent.sectionName = this.selectedClass.selectedSection.name;
-                    this.selectedStudent.sectionDbId = this.selectedClass.selectedSection.dbId;
+                    this.selectedStudent.sectionDbId = this.selectedClass.selectedSection.id;
                 }
             }
         }, error => {

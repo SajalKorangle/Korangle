@@ -57,7 +57,7 @@ export class DiscountListComponent {
 
     getClassName(studentId: any, sessionId: any): any {
         return this.classList.find(classs => {
-            return classs.dbId == this.studentSectionList.find(studentSection => {
+            return classs.id == this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
             }).parentClass;
         }).name;

@@ -238,7 +238,7 @@ export class UpdateStudentFeesComponent implements OnInit {
 
     getClassName(classDbId: number): string {
         return this.classList.find(classs => {
-            return classs.dbId == classDbId;
+            return classs.id == classDbId;
         }).name;
     }
 
