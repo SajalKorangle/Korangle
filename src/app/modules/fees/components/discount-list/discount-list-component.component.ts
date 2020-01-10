@@ -22,10 +22,10 @@ export class DiscountListComponent implements OnInit{
     @Input() sectionList;
     @Input() employeeList;
     @Input() number = 3;
-
+    @Input() sessionList = [];
+    
     // Constant Lists
-    installmentList = INSTALLMENT_LIST;
-    sessionList = [];
+    installmentList = INSTALLMENT_LIST;    
 
     constructor(private schoolService: SchoolService) { }
 

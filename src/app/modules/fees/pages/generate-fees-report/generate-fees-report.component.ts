@@ -67,7 +67,7 @@ export class GenerateFeesReportComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
-    getSession(): any {        
+    getSession(): any {
         return this.sessionList.find(session => {            
             return session.id == this.user.activeSchool.currentSessionDbId;
         });
@@ -395,7 +395,7 @@ export class GenerateFeesReportComponent implements OnInit {
             + this.getTotalCollection();
     }
 
-    getTotalCollection(): number {        
+    getTotalCollection(): number {
         return this.secondSubFeeReceiptList.reduce((totalOne, subFeeReceipt) => {
             return totalOne + this.installmentList.reduce( (installmentAmount, installment) => {
                 return installmentAmount

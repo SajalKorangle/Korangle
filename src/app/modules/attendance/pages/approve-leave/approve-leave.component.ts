@@ -47,13 +47,7 @@ export class ApproveLeaveComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.schoolService.getObjectList(this.schoolService.session,{})
-            .then(session => {
-                this.sessionList = session
-                this.selectedSession = this.sessionList.find(item => item.id==this.user.activeSchool.currentSessionDbId);
-                console.log(this.selectedSession)
-            })                
-
+               
         LEAVE_STATUS_LIST.forEach(status => {
             this.statusList.push(status);
         });
@@ -62,8 +56,7 @@ export class ApproveLeaveComponent implements OnInit {
         this.selectedStatus = this.statusList[0];
 
         this.serviceAdapter = new ApproveLeaveServiceAdapter();
-        this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.getEmployeeLeaveDetails();
+        this.serviceAdapter.initializeAdapter(this);        ;
 
     }
 

@@ -9,6 +9,12 @@ export class ApproveLeaveServiceAdapter {
 
     initializeAdapter(vm: ApproveLeaveComponent): void {
         this.vm = vm;
+        this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
+            .then(session => {
+                this.vm.sessionList = session;
+                this.vm.selectedSession = this.vm.sessionList.find(item => item.id==this.vm.user.activeSchool.currentSessionDbId);                
+            }) 
+        this.vm.serviceAdapter.getEmployeeLeaveDetails()
     }
     
     // Server Handling - 1

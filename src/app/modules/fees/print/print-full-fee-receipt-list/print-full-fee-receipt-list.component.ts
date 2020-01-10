@@ -3,7 +3,6 @@ import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import { PrintService } from '../../../../print/print-service';
-import { SchoolService } from 'app/services/modules/school/school.service';
 
 @Component({
     templateUrl: './print-full-fee-receipt-list.component.html',
@@ -29,9 +28,8 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
 
     checkView = false;
 
-    constructor(public schoolService : SchoolService,
-         private cdRef: ChangeDetectorRef,
-         private printService: PrintService) {}
+    constructor(private cdRef: ChangeDetectorRef,
+                private printService: PrintService) {}
 
     ngOnInit(): void {
         // this.feeReceipt = new TempFee();
