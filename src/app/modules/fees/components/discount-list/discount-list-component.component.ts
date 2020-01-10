@@ -22,22 +22,14 @@ export class DiscountListComponent implements OnInit{
     @Input() sectionList;
     @Input() employeeList;
     @Input() number = 3;
-
+    @Input() sessionList = [];
+    
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
-    sessionList = [];
 
     constructor(private schoolService: SchoolService) { }
 
-    ngOnInit() {
-
-        this.schoolService.getObjectList(this.schoolService.session, {}).then(value => {
-            this.sessionList = value;
-        }, error => {
-            console.log(error);
-        });
-
-    }
+    ngOnInit() { }
 
     getDiscountTotalAmount(discount: any): number {
         return this.subDiscountList.filter(subDiscount => {

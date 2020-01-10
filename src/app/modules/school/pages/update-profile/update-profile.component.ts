@@ -9,7 +9,7 @@ import {SchoolOldService} from "../../../../services/modules/school/school-old.s
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
-    providers: [ SchoolService,SchoolOldService ],
+    providers: [ SchoolOldService,SchoolService ],
 })
 
 export class UpdateProfileComponent implements OnInit {
@@ -43,8 +43,8 @@ export class UpdateProfileComponent implements OnInit {
     sessionList: any;
     boardList: any;
 
-    constructor (private schoolService: SchoolService,
-                private schoolOldService : SchoolOldService) { }
+    constructor (private schoolOldService : SchoolOldService,
+                 private schoolService: SchoolService,) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();

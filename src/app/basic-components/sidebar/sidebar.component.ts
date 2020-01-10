@@ -128,8 +128,7 @@ export class SidebarComponent implements OnInit {
         });
     }
 
-    checkChangeSession(){  
-        //console.log(this.user.activeSchool)      
+    checkChangeSession(){
         return this.user.activeSchool && this.user.activeSchool.moduleList.find(module=>{
             return module.path=='school' && module.taskList.find(task=>{
                 return task.path=='change_session';
@@ -137,7 +136,7 @@ export class SidebarComponent implements OnInit {
         })!=undefined;
     }
 
-    handleSessionChange(){        
+    handleSessionChange(){
         this.router.navigateByUrl('');
         setTimeout(()=>{
             this.user.initializeTask();

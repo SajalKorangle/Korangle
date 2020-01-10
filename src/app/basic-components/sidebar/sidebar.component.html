@@ -56,7 +56,7 @@
                     style="padding: 0px; border: none; background-color: transparent;">
                 <option *ngFor="let session of session_list;"
                         [ngValue]="session.id">
-                    {{session.name}}
+                    {{session.name.slice(8)}}
                 </option>
             </select>
 
