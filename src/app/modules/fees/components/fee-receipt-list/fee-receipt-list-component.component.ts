@@ -28,29 +28,12 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() sessionList = [];
 
     // Constant Lists
-    installmentList = INSTALLMENT_LIST;    
+    installmentList = INSTALLMENT_LIST;
 
     constructor(private printService: PrintService,
                 private schoolService: SchoolService) { }
 
-    ngOnInit() {
-        console.log(this.sessionList)
-        // this.schoolService.getObjectList(this.schoolService.session,{})
-        //     .then(session =>{
-        //         this.sessionList = session;
-        //         //console.log("Session List initialized")
-        //     },
-        //     error=>{
-        //         console.log(error)
-        //     });
-
-        // this.schoolService.getObjectList(this.schoolService.board, {}).then(value => {
-        //     this.boardList = value;
-        // }, error => {
-        //     console.log(error)
-        // });
-
-    }
+    ngOnInit() { }
 
     printFeeReceipt(feeReceipt: any): void {
 

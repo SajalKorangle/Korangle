@@ -128,7 +128,7 @@ export class SidebarComponent implements OnInit {
         });
     }
 
-    checkChangeSession(){               
+    checkChangeSession(){
         return this.user.activeSchool && this.user.activeSchool.moduleList.find(module=>{
             return module.path=='school' && module.taskList.find(task=>{
                 return task.path=='change_session';

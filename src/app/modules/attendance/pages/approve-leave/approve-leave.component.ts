@@ -56,7 +56,7 @@ export class ApproveLeaveComponent implements OnInit {
         this.selectedStatus = this.statusList[0];
 
         this.serviceAdapter = new ApproveLeaveServiceAdapter();
-        this.serviceAdapter.initializeAdapter(this);        ;
+        this.serviceAdapter.initializeAdapter(this);
 
     }
 
