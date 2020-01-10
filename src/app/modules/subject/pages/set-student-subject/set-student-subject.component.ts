@@ -8,13 +8,14 @@ import { SchoolService } from '../../../../services/modules/school/school.servic
 
 import { SetStudentSubjectServiceAdapter } from './set-student-subject.service.adapter';
 import {ExaminationOldService} from '../../../../services/modules/examination/examination-old.service';
+import {ExaminationService} from '../../../../services/modules/examination/examination.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'set-student-subject',
     templateUrl: './set-student-subject.component.html',
     styleUrls: ['./set-student-subject.component.css'],
-    providers: [ SubjectOldService, ClassOldService, StudentOldService, SchoolService, ExaminationOldService ],
+    providers: [ SubjectOldService, ClassOldService, StudentOldService, SchoolService, ExaminationOldService, ExaminationService ],
 })
 
 export class SetStudentSubjectComponent implements OnInit {
@@ -36,7 +37,8 @@ export class SetStudentSubjectComponent implements OnInit {
                 public classService: ClassOldService,
                 public studentService: StudentOldService,
                 public schoolService: SchoolService,
-                public examinationService: ExaminationOldService) {}
+                public examinationOldService: ExaminationOldService,
+                public examinationService : ExaminationService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
