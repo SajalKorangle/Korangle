@@ -126,7 +126,7 @@ export class CollectFeeServiceAdapter {
         this.vm.studentFeeList = studentFeeList.sort( (a,b) => {
             let first = this.vm.getFeeTypeByStudentFee(a);
             let second = this.vm.getFeeTypeByStudentFee(b);
-            return a.orderNumber-b.orderNumber;
+            return first.orderNumber-second.orderNumber;
         });
     }
 
