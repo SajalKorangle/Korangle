@@ -3,6 +3,7 @@ import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter"
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import { SmsService } from "../../../../services/modules/sms/sms.service";
+import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
 import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {NotificationService} from "../../../../services/modules/notification/notification.service";
 import {UserService} from "../../../../services/modules/user/user.service";
@@ -16,7 +17,7 @@ import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService ],
+    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService ],
 })
 
 export class ViewDefaultersComponent implements OnInit {
@@ -39,6 +40,8 @@ export class ViewDefaultersComponent implements OnInit {
 
     selectedSentType = 'SMS';
     extraDefaulterMessage = '';
+
+    smsBalance = 0;
 
     subFeeReceiptList: any;
     subDiscountList: any;
@@ -87,6 +90,7 @@ export class ViewDefaultersComponent implements OnInit {
                 public notificationService: NotificationService,
                 public userService: UserService,
                 public smsService: SmsService,
+                public smsOldService: SmsOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -364,7 +368,7 @@ export class ViewDefaultersComponent implements OnInit {
     getStudentString = (studentList) => {
         let ret = "";
         studentList.forEach(student => {
-            ret += student.name +": "+ student.feesDueTillMonth+"\n";
+            ret += student.name +": "+ this.getCurrencyInINR(student.feesDueTillMonth)+"\n";
         })
         return ret;
     }
@@ -383,8 +387,8 @@ export class ViewDefaultersComponent implements OnInit {
             let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
                 return {
                 "mobileNumber": obj.mobileNumber,
-                "feesDueTillMonth": obj.feesDueTillMonth,
-                "feesDueOverall": obj.feesDueOverall
+                "feesDueTillMonth": this.getCurrencyInINR(obj.feesDueTillMonth),
+                "feesDueOverall": this.getCurrencyInINR(obj.feesDueOverall)
                 }
             });
             this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
@@ -400,8 +404,8 @@ export class ViewDefaultersComponent implements OnInit {
             let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
                 return {
                 "mobileNumber": obj.mobileNumber,
-                "feesDueTillMonth": this.getParentFeesDueTillMonth(obj),
-                "feesDueOverall": this.getParentFeesDueOverall(obj),
+                "feesDueTillMonth": this.getCurrencyInINR(this.getParentFeesDueTillMonth(obj)),
+                "feesDueOverall": this.getCurrencyInINR(this.getParentFeesDueOverall(obj)),
                 "childrenData": this.getStudentString(obj.studentList)
                 }
             });
@@ -731,6 +735,14 @@ export class ViewDefaultersComponent implements OnInit {
             })
         }
         return count;
+    }
+
+    getButtonText = () => {
+        return "Send " + this.getEstimatedSMSCount() + " SMS and " + this.getEstimatedNotificationCount() + " notifications";
+    }
+
+    getCurrencyInINR = (data) => {
+        return "Rs. " + Number(data).toLocaleString('en-IN');
     }
 
 

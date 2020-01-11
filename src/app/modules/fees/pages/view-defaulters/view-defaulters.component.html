@@ -1,7 +1,6 @@
 <div class="card-content table-responsive">
-    
+
     <ng-container *ngIf="!isLoading">
-        
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group form-black label-floating">
@@ -24,7 +23,7 @@
                 </div>
             </div>
             <div class="col-sm-3 hidden-sm">
-                
+
                 <!-- button type="button"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
                     style="padding: 12px 15px; margin-right: 17px;"
@@ -32,7 +31,7 @@
                     tooltip-position="left"
                     (click)="printFeesReport();">
                     Print<i class="material-icons" style="margin-left: 15px;">print</i></button -->
-                    
+
                     <button type="button"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
                     style="padding: 12px 15px; margin-right: 17px;"
@@ -40,8 +39,8 @@
                     tooltip-position="left"
                     (click)="downloadFeesReport();">
                     Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
-                    
-                    
+
+
                 </div>
                 <div class="col-sm-3" align="end">
                     <mat-form-field>
@@ -55,7 +54,7 @@
                 </mat-form-field>
             </div>
         </div>
-        
+
         <div class="row" *ngIf="selectedFilterType==filterTypeList[0]" style="margin-top: 10px; margin-bottom: 10px;">
             <div class="col-sm-3">
                 <mat-form-field>
@@ -70,48 +69,48 @@
             </mat-form-field>
         </div>
     </div>
+    <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
     <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group form-black label-floating">
+                <label class="control-label">Extra Message to append</label>
+                <textarea type="text" rows="5"
+                          class="form-control"
+                          [(ngModel)]="extraDefaulterMessage"></textarea>
+            </div>
+        </div>
         <div class="col-sm-3">
             <mat-form-field style="margin-top: 23px;">
-                <mat-select placeholder="Send via"
-                [(ngModel)]="selectedSentType">
+                <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
                 <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
                     {{sentType}}
                 </mat-option>
             </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="col-sm-3">
-        <div class="form-group form-black label-floating">
-            <label class="control-label">Extra Message to append</label>
-            <textarea type="text"
-            class="form-control"
-            [(ngModel)]="extraDefaulterMessage"></textarea>
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <span  style="font-size: 14px; margin-top: 5px;">
+            </mat-form-field>
+            <div  style="font-size: 14px; margin-top: 5px;">
             # of extra Characters/SMS: {{getExtraMessageLength()}}<br/>
             # of Mobile devices: {{getNumberOfMobileDevice()}}<br/>
             Estimated SMS Count: {{getEstimatedSMSCount()}}<br/>
             Estimated Notification Count: {{getEstimatedNotificationCount()}}<br/>
-        </span>
-    </div>
+        </div>
+            <button *ngIf="getEstimatedSMSCount()>0 || getEstimatedNotificationCount()>0"
+                    type="button"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px; margin-right: 17px;"
+                    matTooltip="Notify all the selected defaulters"
+                    tooltip-position="left"
+                    (click)="notifyDefaulters();">
+                {{this.getButtonText()}}</button>
+        </div>
     <div class="col-sm-3">
-        <button type="button"
-        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-        style="padding: 12px 15px; margin-right: 17px;"
-        matTooltip="Notify all the selected defaulters"
-        tooltip-position="left"
-        (click)="notifyDefaulters();">
-        Notify</button>
+
     </div>
 </div>
 
 <!-- Parent -->
 
 <ng-container *ngIf="selectedFilterType==filterTypeList[1]">
-    
+
     <div class="row">
         <div class="col-sm-6">
             Selected: <b>{{getSelectedParentCount()}}</b>, Showing: <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
@@ -227,7 +226,7 @@ style="padding: 4px 7px"
 <!-- Student -->
 
 <ng-container *ngIf="selectedFilterType==filterTypeList[0]">
-    
+
     <div class="row">
         <div class="col-sm-6">
             Selected:  <b>{{getSelectedChildrenCount()}}</b>, Showing: <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students

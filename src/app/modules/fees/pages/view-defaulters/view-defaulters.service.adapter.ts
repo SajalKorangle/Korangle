@@ -56,6 +56,10 @@ export class ViewDefaultersServiceAdapter {
                 'parentStudentFee__parentStudent__in': tempStudentIdList.join(),
                 'parentDiscount__cancelled': 'false__boolean',
             };
+
+            const sms_count_request_data = {
+                parentSchool: this.vm.user.activeSchool.dbId,
+            };
             
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, student_list),
@@ -64,6 +68,7 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
                 this.vm.classService.getClassList(this.vm.user.jwt),
                 this.vm.classService.getSectionList(this.vm.user.jwt),
+                this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
             ]).then(value => {
                 
                 this.vm.studentList = value[0];
@@ -72,6 +77,7 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.subDiscountList = value[3];
                 this.vm.classList = value[4];
                 this.vm.sectionList = value[5];
+                this.vm.smsBalance = value[6].count;
                 
                 this.fetchGCMDevices(this.vm.studentList);               
                 
@@ -126,7 +132,7 @@ export class ViewDefaultersServiceAdapter {
                 }) != undefined;
             })            
             
-            let notification_list = [];
+            let notification_list;
             
             notification_list = studentList.filter(obj => {
                 return notif_usernames.find(user => {
@@ -139,7 +145,6 @@ export class ViewDefaultersServiceAdapter {
             notification_list.forEach((item, i) => {
                 item.notification = true;
             })
-            console.log(studentList.filter(item => item.notification));
             this.vm.handleLoading();
             this.vm.filterTypeChanged(this.vm.filterTypeList[1]);
             
@@ -235,6 +240,9 @@ export class ViewDefaultersServiceAdapter {
                     })==undefined;
                 })
             }
+
+            console.log(sms_list);
+            console.log(notification_list);
             
             
             let notif_mobile_string = '';
@@ -261,7 +269,7 @@ export class ViewDefaultersServiceAdapter {
             
             
             if (sms_list.length>0) {
-                if (!confirm('Please confirm that you are sending ' + (number_of_messages) + ' SMS.')) {
+                if (!confirm('Please confirm that you are sending ' + (this.vm.getEstimatedSMSCount()) + ' SMS.')) {
                     return;
                 }
             }
@@ -302,13 +310,13 @@ export class ViewDefaultersServiceAdapter {
                 
                 alert("Operation Successful");
                 
-                // if ((this.vm.selectedSentType == this.vm.sentTypeList[0] || this.vm.selectedSentType == this.vm.sentTypeList[2]) && (this.vm.smsMobileNumberList.length > 0)) {
-                //     if (value[0].status == 'success') {
-                //         this.vm.smsBalance -= value[0].data.count;
-                //     } else if (value[0].status == 'failure') {
-                //         this.vm.smsBalance = value[0].count;
-                //     }
-                // }
+                if ((this.vm.selectedSentType == this.vm.sentTypeList[0] || this.vm.selectedSentType == this.vm.sentTypeList[2]) && (sms_list.length > 0)) {
+                    if (value[0].status == 'success') {
+                        this.vm.smsBalance -= value[0].data.count;
+                    } else if (value[0].status == 'failure') {
+                        this.vm.smsBalance = value[0].count;
+                    }
+                }
                 
                 this.vm.isLoading = false;
             }, error => {
