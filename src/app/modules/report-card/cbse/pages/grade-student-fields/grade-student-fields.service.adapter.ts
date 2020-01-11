@@ -2,46 +2,46 @@
 import {GradeStudentFieldsComponent} from './grade-student-fields.component';
 
 export class GradeStudentFieldsServiceAdapter {
-    
+
     vm: GradeStudentFieldsComponent;
-    
+
     constructor() {}
-    
+
     // Data
     classList: any;
     sectionList: any;
     studentSectionList: any;
-    
-    
+
+
     /*examinationList: any;
     classList: any;
     sectionList: any;
     fieldList: any;
     subFieldList: any;
     permissionList: any;
-    
+
     studentList: any;*/
-    
+
     initializeAdapter(vm: GradeStudentFieldsComponent): void {
         this.vm = vm;
     }
-    
+
     //initialize data
     initializeData(): void {
-        
+
         this.vm.isInitialLoading = true;
-        
+
         let attendance_permission_data = {
             'parentEmployee': this.vm.user.activeSchool.employeeId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
-        
+
         let student_section_data = {
             'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
             'parentStudent__parentTransferCertificate': 'null__korangle',
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
-        
+
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
@@ -50,7 +50,7 @@ export class GradeStudentFieldsServiceAdapter {
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
             // this.vm.employeeService.getObjectList(this.vm.employeeService.)
         ]).then(value => {
-            console.log(value[4]);
+
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.extraFieldList = value[2];
@@ -90,13 +90,13 @@ export class GradeStudentFieldsServiceAdapter {
         }, error => {
             this.vm.isInitialLoading = false;
         });
-        
+
     }
-    
+
     populateSelectedExtraField(): void {
         this.vm.selectedExtraField = this.vm.extraFieldList[0];
     }
-    
+
     populateStudentSectionList(studentSectionList): void {
         
         if (this.vm.attendancePermissionList.length > 0) {
@@ -109,9 +109,9 @@ export class GradeStudentFieldsServiceAdapter {
         } else {
             this.vm.studentSectionList = [];
         }
-        
+
     }
-    
+
     populateClassSectionList(): void {
         this.classList.forEach(classs => {
             this.sectionList.filter(section => {
@@ -135,9 +135,9 @@ export class GradeStudentFieldsServiceAdapter {
             }
         }
     }
-    
+
     getStudentFieldDetails(): void {
-        
+
         let student_extra_field_data = {
             'parentTerm': this.vm.selectedTerm.id,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
@@ -147,35 +147,35 @@ export class GradeStudentFieldsServiceAdapter {
                 && studentSection.parentDivision == this.vm.selectedClassSection.section.id;
             }).map(item => item.parentStudent).join(','),
         };
-        
+
         this.vm.isLoading = true;
-        
+
         Promise.all([
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_extra_field,student_extra_field_data),
         ]).then(value => {
-            
+
             this.vm.studentExtraFieldList = value[0];
-            
+
             this.vm.isLoading = false;
             this.vm.showStudentList = true;
         }, error => {
             this.vm.isLoading = false;
         });
-        
+
     }
-    
+
     updateStudentExtraFieldList(): void {
-        
+
         this.vm.isLoading = true;
-        
+
         let list_for_creation = this.vm.studentExtraFieldList.filter(studentExtraField => {
             return !studentExtraField.id;
         });
-        
+
         let list_for_updation = this.vm.studentExtraFieldList.filter(studentExtraField => {
             return studentExtraField.id;
         });
-        
+
         Promise.all([
             this.vm.reportCardCbseService.createObjectList(this.vm.reportCardCbseService.student_extra_field, list_for_creation),
             this.vm.reportCardCbseService.updateObjectList(this.vm.reportCardCbseService.student_extra_field, list_for_updation),
@@ -185,7 +185,7 @@ export class GradeStudentFieldsServiceAdapter {
         }, error => {
             this.vm.isLoading = false;
         });
-        
+
     }
-    
+
 }
