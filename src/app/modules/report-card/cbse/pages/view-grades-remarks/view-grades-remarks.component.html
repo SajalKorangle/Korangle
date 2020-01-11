@@ -44,8 +44,8 @@
                     <th>S No.</th>
                     <th>Student</th>
                     <th>Roll No.</th>
-                    <th *ngFor="let extraField of extraFieldList">{{extraField.name}}</th>
-                    <td *ngIf="showRemark">Remark</td>
+                    <th class="text-center" *ngFor="let extraField of extraFieldList">{{extraField.name}}</th>
+                    <th class="text-center" *ngIf="showRemark">Remark</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -58,10 +58,14 @@
                         <td>
                             {{studentSection.rollNumber}}
                         </td>
-                        <td *ngFor="let subject of extraFieldList; let i = index" [ngStyle]="{'background-color': (!(getGrade(studentSection, i))?'yellow':'')}">
+                        <td *ngFor="let subject of extraFieldList; let i = index"
+                            align="center"
+                            [ngStyle]="{'background-color': (!(getGrade(studentSection, i))?'yellow':'')}">
                             {{getGrade(studentSection, i)}}
                         </td>
-                        <td *ngIf="showRemark" [ngStyle]="{'background-color': (!(getStudentRemark(studentSection))?'yellow':'')}">
+                        <td *ngIf="showRemark"
+                            align="center"
+                            [ngStyle]="{'background-color': (!(getStudentRemark(studentSection))?'yellow':'')}">
                             {{getStudentRemark(studentSection)}}
                         </td>
                         <!--  -->
