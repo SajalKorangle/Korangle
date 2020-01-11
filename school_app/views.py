@@ -88,16 +88,6 @@ def update_working_days_view(request, school_session_id):
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
-############ Sessions ###############
-from .handlers.session import get_session_list
-
-@api_view(['GET'])
-def get_session_list_view(request):
-    if request.user.is_authenticated:
-        return JsonResponse({'response': get_success_response(get_session_list())})
-    else:
-        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
-
 ############ Profile Image ########################
 from .business.profile_image import update_profile_image
 
