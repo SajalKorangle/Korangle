@@ -267,8 +267,6 @@ export class GenerateFinalReportServiceAdapter {
                 'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             };
 
-
-
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt));
