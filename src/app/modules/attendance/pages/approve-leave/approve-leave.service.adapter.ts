@@ -12,9 +12,9 @@ export class ApproveLeaveServiceAdapter {
     }
     
     initializeData(){
+        this.vm.isLoading = true;
         this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
-            .then(session => {
-                this.vm.isLoading = true;
+            .then(session => {                
                 this.vm.sessionList = session;
                 this.vm.selectedSession = this.vm.sessionList.find(item => item.id==this.vm.user.activeSchool.currentSessionDbId);                
                 this.vm.serviceAdapter.getEmployeeLeaveDetails()
