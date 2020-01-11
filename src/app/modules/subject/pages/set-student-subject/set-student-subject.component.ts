@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
-import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 
 import { SetStudentSubjectServiceAdapter } from './set-student-subject.service.adapter';
@@ -15,7 +15,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'set-student-subject',
     templateUrl: './set-student-subject.component.html',
     styleUrls: ['./set-student-subject.component.css'],
-    providers: [ SubjectOldService, ClassService, StudentOldService, SchoolOldService, ExaminationOldService, ClassService ],
+    providers: [ SubjectOldService, ClassService, StudentOldService, SchoolService, ExaminationOldService, ExaminationService ],
 })
 
 export class SetStudentSubjectComponent implements OnInit {
@@ -36,7 +36,7 @@ export class SetStudentSubjectComponent implements OnInit {
     constructor(public subjectService: SubjectOldService,                
                 public classService : ClassService,
                 public studentService: StudentOldService,
-                public schoolService: SchoolOldService,
+                public schoolService: SchoolService,
                 public examinationOldService: ExaminationOldService,
                 public examinationService : ExaminationService) {}
 
@@ -47,7 +47,7 @@ export class SetStudentSubjectComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
 
         this.selectedSession = {
-            'dbId': this.user.activeSchool.currentSessionDbId,
+            'id': this.user.activeSchool.currentSessionDbId,
         };
 
         this.serviceAdapter.initializeData();

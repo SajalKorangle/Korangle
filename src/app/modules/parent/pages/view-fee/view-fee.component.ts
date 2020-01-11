@@ -13,7 +13,6 @@ import {
     MODE_OF_PAYMENT_LIST,
     ReceiptColumnFilter
 } from "../../../fees/classes/constants";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import {FeeType} from "../../../../services/modules/fees/models/fee-type";
 import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
 import {StudentFee} from "../../../../services/modules/fees/models/student-fee";
@@ -24,6 +23,7 @@ import {EmployeeService} from "../../../../services/modules/employee/employee.se
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {DataStorage} from "../../../../classes/data-storage";
+import { SchoolService } from 'app/services/modules/school/school.service';
 
 declare const $: any;
 
@@ -31,7 +31,7 @@ declare const $: any;
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [ FeeService, StudentService,ClassService, VehicleOldService, EmployeeService ],
+    providers: [ FeeService, StudentService,ClassService, VehicleOldService, EmployeeService, SchoolService ],
 })
 
 export class ViewFeeComponent implements OnInit {
@@ -40,7 +40,8 @@ export class ViewFeeComponent implements OnInit {
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
+    boardList = [];
     receiptColumnFilter = new ReceiptColumnFilter();
     discountColumnFilter = new DiscountColumnFilter();
 
@@ -70,7 +71,8 @@ export class ViewFeeComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public feeService: FeeService,
+    constructor (public schoolService : SchoolService,
+                 public feeService: FeeService,
                  public studentService: StudentService,
                  public vehicleService: VehicleOldService,
                  public employeeService: EmployeeService,                 

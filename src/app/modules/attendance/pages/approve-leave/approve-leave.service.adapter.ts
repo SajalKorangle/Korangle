@@ -11,6 +11,16 @@ export class ApproveLeaveServiceAdapter {
         this.vm = vm;
     }
     
+    initializeData(){
+        this.vm.isLoading = true;
+        this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
+            .then(session => {                
+                this.vm.sessionList = session;
+                this.vm.selectedSession = this.vm.sessionList.find(item => item.id==this.vm.user.activeSchool.currentSessionDbId);                
+                this.vm.serviceAdapter.getEmployeeLeaveDetails()
+            })
+    }
+
     // Server Handling - 1
     public getEmployeeLeaveDetails(): void {
 
@@ -22,8 +32,6 @@ export class ApproveLeaveServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
             sessionId: this.vm.user.activeSchool.currentSessionDbId,
         };
-
-        this.vm.isLoading = true;
 
         Promise.all([
             this.vm.employeeService.getEmployeeMiniProfileList(request_employee_mini_profile_data, this.vm.user.jwt),

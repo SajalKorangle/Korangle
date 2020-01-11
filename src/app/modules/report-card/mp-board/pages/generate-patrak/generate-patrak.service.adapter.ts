@@ -69,7 +69,7 @@ export class GeneratePatrakServiceAdapter {
                 };
 
                 Promise.all([
-                    this.vm.classService.getObjectList(this.vm.classService.classs,{}),                    
+                    this.vm.classService.getObjectList(this.vm.classService.classs,{}),
                     // this.vm.classOldService.getSectionList(this.vm.user.jwt),
                     this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
                     this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),

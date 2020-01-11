@@ -1,9 +1,9 @@
 import {Component, Input, OnInit } from '@angular/core';
 
-import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import {MEDIUM_LIST} from '../../../../classes/constants/medium';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
+import {SchoolOldService} from "../../../../services/modules/school/school-old.service";
 
 @Component({
   selector: 'update-profile',
@@ -68,7 +68,7 @@ export class UpdateProfileComponent implements OnInit {
         this.currentState = this.user.activeSchool.state;
 
 
-        this.schoolOldService.getSessionList(this.user.jwt).then( sessionList => {
+        this.schoolService.getObjectList(this.schoolService.session,{}).then( sessionList => {
             this.isLoading = false;
             this.sessionList = sessionList;
             this.selectedWorkingSession = this.getSessionFromList(this.user.activeSchool.currentWorkingSessionDbId);
@@ -139,7 +139,7 @@ export class UpdateProfileComponent implements OnInit {
     getSessionFromList(dbId: number): any {
         let resultSession = null;
         this.sessionList.every(session => {
-            if (dbId === session.dbId) {
+            if (dbId === session.id) {
                 resultSession = session;
                 return false;
             }

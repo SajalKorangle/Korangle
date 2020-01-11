@@ -61,6 +61,7 @@ export class AddStudentServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
         ]).then(value => {
 
             this.vm.classList = value[0];
@@ -71,6 +72,7 @@ export class AddStudentServiceAdapter {
             this.vm.schoolFeeRuleList = value[5];
             this.vm.classFilterFeeList = value[6];
             this.vm.busStopFilterFeeList = value[7];
+            this.vm.sessionList = value[8]
 
             this.vm.initializeVariable();
 

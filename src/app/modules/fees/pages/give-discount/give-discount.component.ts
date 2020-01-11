@@ -6,7 +6,6 @@ import {
     INSTALLMENT_LIST,
     ReceiptColumnFilter
 } from "../../classes/constants";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import {FeeType} from "../../../../services/modules/fees/models/fee-type";
 import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
 import {StudentFee} from "../../../../services/modules/fees/models/student-fee";
@@ -20,6 +19,7 @@ import {ClassService} from "../../../../services/modules/class/class.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {DataStorage} from "../../../../classes/data-storage";
+import { SchoolService } from 'app/services/modules/school/school.service';
 
 declare const $: any;
 
@@ -27,7 +27,7 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [ FeeService, StudentService, VehicleOldService,ClassService, EmployeeService ],
+    providers: [ FeeService, StudentService, VehicleOldService,ClassService, EmployeeService, SchoolService ],
 })
 
 export class GiveDiscountComponent implements OnInit {
@@ -36,7 +36,7 @@ export class GiveDiscountComponent implements OnInit {
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
     receiptColumnFilter = new ReceiptColumnFilter();
     discountColumnFilter = new DiscountColumnFilter();
 
@@ -74,7 +74,8 @@ export class GiveDiscountComponent implements OnInit {
 
     isStudentListLoading = false;
 
-    constructor(public feeService: FeeService,
+    constructor(public schoolService : SchoolService,
+                public feeService: FeeService,
                 public studentService: StudentService,
                 public vehicleService: VehicleOldService,                
                 public classService : ClassService,

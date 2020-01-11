@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
 import { ClassService } from '../../../../services/modules/class/class.service';
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {SubjectService} from "../../../../services/modules/subject/subject.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
@@ -12,17 +11,18 @@ import {StudentSection} from "../../../../services/modules/student/models/studen
 import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "./../../../../services/modules/school/school.service"
 
 @Component({
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
+    providers: [ SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
 
-    sessionList = SESSION_LIST;
+    sessionList = [];
     installmentList = INSTALLMENT_LIST;
 
     user;
@@ -54,8 +54,9 @@ export class PromoteStudentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public studentService: StudentService,                 
-                 public classService : ClassService,
+    constructor (public schoolService : SchoolService,
+                 public studentService: StudentService,
+                 public classService: ClassService,
                  public subjectService: SubjectService,
                  public feeService: FeeService,
                  public examinationService: ExaminationService) { }

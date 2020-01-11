@@ -55,7 +55,7 @@ export class SetClassSubjectServiceAdapter {
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
-            this.vm.schoolService.getSessionList(this.vm.user.jwt),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{}),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.employeeService.getEmployeeMiniProfileList(request_employee_data, this.vm.user.jwt),
         ]).then( value => {
@@ -138,7 +138,7 @@ export class SetClassSubjectServiceAdapter {
     populateSessionListAndSelectedSession(): void {
         this.vm.sessionList = this.sessionList;
         this.vm.sessionList.forEach(session => {
-            if (session.dbId === this.vm.user.activeSchool.currentSessionDbId) {
+            if (session.id === this.vm.user.activeSchool.currentSessionDbId) {
                 this.vm.selectedSession = session;
             }
         });
@@ -233,7 +233,7 @@ export class SetClassSubjectServiceAdapter {
         let class_subject_data = {
             'parentClass': this.vm.selectedClass.dbId,
             'parentDivision': this.vm.selectedClass.selectedSection.id,
-            'parentSession': this.vm.selectedSession.dbId,
+            'parentSession': this.vm.selectedSession.id,
             'parentSubject': this.vm.selectedSubject.id,
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentEmployee': this.vm.selectedEmployee.id,
@@ -277,7 +277,7 @@ export class SetClassSubjectServiceAdapter {
                             if (shouldBeAdded) {
                                 let tempData = {
                                     'parentStudent': student.dbId,
-                                    'parentSession': this.vm.selectedSession.dbId,
+                                    'parentSession': this.vm.selectedSession.id,
                                     'parentSubject': this.vm.selectedSubject.id,
                                 };
                                 data.push(tempData);

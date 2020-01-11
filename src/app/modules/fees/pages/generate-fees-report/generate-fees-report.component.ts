@@ -4,20 +4,20 @@ import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "./../../../../services/modules/school/school.service"
 
 @Component({
     selector: 'generate-fees-report',
     templateUrl: './generate-fees-report.component.html',
     styleUrls: ['./generate-fees-report.component.css'],
-    providers: [ FeeService, StudentService, ClassService ],
+    providers: [ FeeService, StudentService, ClassService, SchoolService ],
 })
 
 export class GenerateFeesReportComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
 
      user;
 
@@ -46,7 +46,8 @@ export class GenerateFeesReportComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public feeService: FeeService,
+    constructor(public schoolService: SchoolService,
+                public feeService: FeeService,
                 public studentService: StudentService,                
                 public classService : ClassService,
                 private cdRef: ChangeDetectorRef) {}
@@ -56,13 +57,7 @@ export class GenerateFeesReportComponent implements OnInit {
 
         this.serviceAdapter = new GenerateFeesReportServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
-
-        let todaysDate = new Date();
-        this.currentSession = this.sessionList.find(session => {
-            return new Date(session.startDate) <= todaysDate
-                && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
-        });
+        this.serviceAdapter.initializeData();        
 
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;

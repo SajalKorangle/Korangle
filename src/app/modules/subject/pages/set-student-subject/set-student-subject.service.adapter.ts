@@ -57,7 +57,7 @@ export class SetStudentSubjectServiceAdapter {
 
         const request_student_subject_data = {
             studentId: student.dbId,
-            sessionId: this.vm.selectedSession.dbId,
+            sessionId: this.vm.selectedSession.id,
         };
 
         const request_class_subject_data = {
@@ -68,7 +68,7 @@ export class SetStudentSubjectServiceAdapter {
             'classList': [student.classDbId],
             'sectionList': [student.sectionDbId],
             'schoolList': [this.vm.user.activeSchool.dbId],
-            'sessionList': [this.vm.selectedSession.dbId],
+            'sessionList': [this.vm.selectedSession.id],
         };
 
         const request_student_test_data = {
@@ -181,7 +181,7 @@ export class SetStudentSubjectServiceAdapter {
 
         let student_subject_data = {
             parentStudent: this.vm.selectedStudent.dbId,
-            parentSession: this.vm.selectedSession.dbId,
+            parentSession: this.vm.selectedSession.id,
             parentSubject: item.subjectId,
         };
 
