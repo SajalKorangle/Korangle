@@ -57,7 +57,7 @@ export class ApproveLeaveComponent implements OnInit {
 
         this.serviceAdapter = new ApproveLeaveServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-
+        this.serviceAdapter.initializeData();
     }
 
     showEmployeeList(employee: any): boolean {

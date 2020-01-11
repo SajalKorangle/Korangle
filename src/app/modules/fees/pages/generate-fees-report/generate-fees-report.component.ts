@@ -68,7 +68,7 @@ export class GenerateFeesReportComponent implements OnInit {
     }
 
     getSession(): any {
-        return this.sessionList.find(session => {            
+        return this.sessionList.find(session => {
             return session.id == this.user.activeSchool.currentSessionDbId;
         });
     }
