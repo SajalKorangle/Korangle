@@ -1,10 +1,17 @@
 <div class="card-content table-responsive">
 
-    <student-filter [user]="user"
+    <!-- <student-filter [user]="user"
                     (onStudentSelected)="handleStudentSelection($event)"
                     (onStudentLoading)="isLoading=$event"
                     [sessionChange]="false"
-                    [studentTcGenerated]="false"></student-filter>
+                    [studentTcGenerated]="false"></student-filter> -->
+    
+    <parent-student-filter [user]="user"
+                           (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+                           (onStudentListSelected)="handleStudentListSelection($event)"
+                           (onStudentListLoading)="isStudentListLoading=$event"
+                           [selectedFilterType]="'Student'"
+                           [studentTcGenerated]="false"></parent-student-filter>
 
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-md-12"

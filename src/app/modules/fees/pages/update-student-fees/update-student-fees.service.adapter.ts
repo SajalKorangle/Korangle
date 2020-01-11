@@ -81,6 +81,8 @@ export class UpdateStudentFeesServiceAdapter {
     // Get Student Fee Profile
     getStudentFeeProfile(): void {
 
+        let studentListId = this.vm.selectedStudentList.map(a => a.id).join();
+        
         let student_fee_data = {
             'parentStudent': this.vm.selectedStudent.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,

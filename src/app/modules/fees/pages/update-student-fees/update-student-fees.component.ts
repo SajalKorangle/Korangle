@@ -48,6 +48,7 @@ export class UpdateStudentFeesComponent implements OnInit {
     sectionList: any;
     busStopList: any;
 
+    selectedStudentList = [];
     studentFeeList: StudentFee[];
     subFeeReceiptList: SubFeeReceipt[];
     subDiscountList: SubDiscount[];
@@ -65,6 +66,8 @@ export class UpdateStudentFeesComponent implements OnInit {
     serviceAdapter: UpdateStudentFeesServiceAdapter;
 
     isLoading = false;
+    
+    isStudentListLoading = false;
 
     constructor(public feeService: FeeService,
                 public classService: ClassOldService,
@@ -79,16 +82,28 @@ export class UpdateStudentFeesComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
-    handleStudentSelection(student: any): void {
-        this.selectedStudent = student;
-        if (this.selectedStudent == null) {
-            this.showDetails = false;
-        } else {
-            this.serviceAdapter.getStudentFeeProfile();
-            this.selectedFeeType = null;
-            this.showDetails = true;
-        }
+    handleDetailsFromParentStudentFilter(details: any): void {
+        this.classList = details.classList;
+        this.sectionList = details.sectionList;
+        //this.studentSectionList = details.studentSectionList;
     }
+
+    handleStudentListSelection(studentList: any): void {
+        this.selectedStudentList = studentList;
+        this.serviceAdapter.getStudentFeeProfile();
+        this.showDetails = true;
+    }
+
+    // handleStudentSelection(student: any): void {
+    //     this.selectedStudent = student;
+    //     if (this.selectedStudent == null) {
+    //         this.showDetails = false;
+    //     } else {
+    //         this.serviceAdapter.getStudentFeeProfile();
+    //         this.selectedFeeType = null;
+    //         this.showDetails = true;
+    //     }
+    // }
 
     changeSelectedStudentFee(): void {
         this.selectedStudentFee = this.studentFeeList.find(studentFee => {
