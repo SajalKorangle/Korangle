@@ -19,6 +19,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
     studentFinalReportList: any;
     reportCardMapping: any;
     showPrincipalSignature: any;
+    classTeacherSignature: any;
     boardList: any;
 
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
@@ -30,6 +31,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
         this.studentFinalReportList = value['studentFinalReportList'];
         this.reportCardMapping = value['reportCardMapping'];
         this.showPrincipalSignature = value['showPrincipalSignature'];
+        this.classTeacherSignature = value['classTeacherSignature'];
         this.boardList = value['boardList'];
         this.viewChecked = false;
     }

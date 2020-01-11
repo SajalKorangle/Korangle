@@ -56,7 +56,7 @@
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
                     <th>S No.</th>
-                    <th>Selected</th>
+                    <th class="text-center">Selected</th>
                     <th>Photo</th>
                     <th>Name</th>
                     <th>Roll No.</th>
@@ -69,7 +69,7 @@
                     <tr>
                         <ng-container>
                             <td>{{i+1}}.</td>
-                            <td>
+                            <td align="center">
                                 <mat-checkbox [(ngModel)]="studentSection.selected"
                                               [disabled]="!studentSection.selected && getSelectedStudentNumber()>=10">
                                     <!-- span *ngIf="studentSection.selected">Selected</span>
@@ -107,6 +107,10 @@
         <img src="{{user.activeSchool.principalSignatureImage}}"
              *ngIf="user.activeSchool.principalSignatureImage != null"
              style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/>
+        <img *ngFor="let signature of classTeacherSignatureList" src="{{signature.signatureImage}}" style="display: none;
              bottom: 25px; left: 600px;
              width: 100px; height: 50px;
              z-index: 1;"/>

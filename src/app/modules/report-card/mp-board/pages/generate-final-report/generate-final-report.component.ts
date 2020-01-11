@@ -8,6 +8,7 @@ import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {ClassOldService} from '../../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
 import {SubjectOldService} from '../../../../../services/modules/subject/subject-old.service';
 import {AttendanceOldService} from '../../../../../services/modules/attendance/attendance-old.service';
@@ -20,7 +21,7 @@ import {SchoolService} from "../../../../../services/modules/school/school.servi
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService,ExaminationService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService ],
+    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ClassService, ExaminationService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -30,9 +31,12 @@ export class GenerateFinalReportComponent implements OnInit {
     reportCardTypeList = REPORT_CARD_TYPE_LIST;
 
     showPrinicipalSignature = true;
+    showClassTeacherSignature = true;
 
     reportCardMapping: any;
     classSectionStudentList = [];
+
+    classTeacherSignatureList = [];
 
     filteredStudentList = [];
 
@@ -40,6 +44,7 @@ export class GenerateFinalReportComponent implements OnInit {
     extraFieldList = [];
     studentFinalReportCardList = [];
     boardList: any;
+    currentClassTeacherSignature: any;
 
     serviceAdapter: GenerateFinalReportServiceAdapter;
 
@@ -48,7 +53,8 @@ export class GenerateFinalReportComponent implements OnInit {
 
     constructor(public examinationOldService: ExaminationOldService,
                 public examinationService : ExaminationService,
-                public classService: ClassOldService,
+                public classOldService: ClassOldService,
+                public classService: ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
                 public attendanceService: AttendanceOldService,
@@ -58,7 +64,6 @@ export class GenerateFinalReportComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
         this.serviceAdapter = new GenerateFinalReportServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -75,6 +80,7 @@ export class GenerateFinalReportComponent implements OnInit {
             'studentFinalReportList': this.studentFinalReportCardList,
             'reportCardMapping': this.reportCardMapping,
             'showPrincipalSignature': this.showPrinicipalSignature,
+            'classTeacherSignature': this.currentClassTeacherSignature,
             'boardList': this.boardList,
         };
         let selectedClassSection = this.getSelectedClassSection();
