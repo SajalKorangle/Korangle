@@ -67,9 +67,7 @@ export class GradeStudentFieldsServiceAdapter {
 
             this.permissionList = value[3];
 
-            let unique_classes = []
-            let unique_division = []
-
+            
             let class_10_id, class_12_id;
             this.classList.forEach(class_ =>{
                 if(class_.name == 'Class - 10'){
@@ -81,8 +79,6 @@ export class GradeStudentFieldsServiceAdapter {
             this.permissionList = this.permissionList.filter(permission =>{
                 if(permission.parentClass == class_10_id || permission.parentClass == class_12_id){return false}
                 // TODO: perform the same using set
-                if(unique_classes.includes(permission.parentClass) == false){unique_classes.push(permission.parentClass)}
-                if(unique_division.includes(permission.parentDivision) == false){unique_division.push(permission.parentDivision)}
                 return true;
             });
 
@@ -94,8 +90,8 @@ export class GradeStudentFieldsServiceAdapter {
 
             let request_student_section_data = {
                 'parentStudent__parentSchool':this.vm.user.activeSchool.dbId,
-                'parentDivision__in':unique_division.join(),
-                'parentClass__in':unique_classes.join(),
+                'parentDivision__in':Array.from(new Set(this.permissionList.map(item=>{return item.parentDivision}))).join(),
+                'parentClass__in':Array.from(new Set(this.permissionList.map(item=>{return item.parentClass}))).join(),
                 'parentSession':this.vm.user.activeSchool.currentSessionDbId,
             };
 
@@ -307,6 +303,7 @@ export class GradeStudentFieldsServiceAdapter {
 
 
     updateStudentField(studentSubField, element): any {
+        console.log(studentSubField);
         let current_value = element.target.value;
         if(current_value == null || current_value == NaN) return;
         
@@ -314,11 +311,26 @@ export class GradeStudentFieldsServiceAdapter {
         if(studentSubField.marksObtained != null){
             if(studentSubField.marksObtained == current_value) return;
         }
-        temp_studentSubField.marksObtained = parseFloat(current_value.toString()).toFixed(1);;
+        temp_studentSubField.marksObtained = parseFloat(current_value.toString()).toFixed(1);
+        let service_list = [];
+        if(studentSubField.id ==0){
+            let request_studentSubField_data = {
+                'parentStudent': temp_studentSubField.parentStudent,
+                'parentExamination': temp_studentSubField.parentExamination,
+                'parentExtraSubField': temp_studentSubField.parentExtraSubField,
+                'marksObtained': temp_studentSubField.marksObtained,
+            };
+            service_list.push(this.vm.examinationService.createObject(this.vm.examinationService.student_extra_sub_field, request_studentSubField_data));
+        }
+        else{
+            service_list.push(this.vm.examinationService.updateObject(this.vm.examinationService.student_extra_sub_field,temp_studentSubField));
+        }
+        Promise.all(service_list).then(value => {
+            
+            if(studentSubField.id == 0){
+                studentSubField = value[0];
+            }
 
-        Promise.all([
-            this.vm.examinationService.updateObject(this.vm.examinationService.student_extra_sub_field,temp_studentSubField),
-        ]).then(value => {
             alert('Student Fields updated successfully');
         }, error => {
             alert('Error updating marks');
