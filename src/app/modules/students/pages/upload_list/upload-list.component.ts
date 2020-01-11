@@ -767,7 +767,7 @@ export class UploadListComponent implements OnInit {
         let result = null;
         this.classList.every(classs => {
             if (classs.name === className) {
-                result = classs.dbId;
+                result = classs.id;
                 return false;
             }
             return true;

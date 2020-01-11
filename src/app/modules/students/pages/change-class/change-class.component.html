@@ -76,7 +76,7 @@
                                 (ngModelChange)="selectedClass=$event;">
                         <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
                             {{classs.name}}
-                            <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
+                            <span *ngIf="classs.selectedSection.id != classs.sectionList[0].id">
                                 , {{classs.selectedSection.name}}
                             </span>
                         </mat-option>

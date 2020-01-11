@@ -121,7 +121,7 @@ export class UpdateEnquiryComponent implements OnInit {
     getClass(dbId: number): any {
         let result = null;
         this.classList.every(classs => {
-            if (classs.dbId === dbId) {
+            if (classs.id === dbId) {
                 result = classs;
                 return false;
             }

@@ -278,7 +278,7 @@ export class GenerateFeesReportComponent implements OnInit {
             });
 
             student['class'] = this.classList.find(classs => {
-                return studentSection.parentClass == classs.dbId;
+                return studentSection.parentClass == classs.id;
             });
 
             student['section'] = this.sectionList.find(section => {

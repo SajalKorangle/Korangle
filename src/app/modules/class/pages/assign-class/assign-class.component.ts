@@ -134,8 +134,8 @@ export class AssignClassComponent implements OnInit {
     showAddButton(): boolean {
         let result = true;
         this.selectedEmployeeAttendancePermissionList.every(attendancePermission => {
-            if (attendancePermission.parentDivision === this.selectedClass.selectedSection.dbId
-                && attendancePermission.parentClass === this.selectedClass.dbId) {
+            if (attendancePermission.parentDivision === this.selectedClass.selectedSection.id
+                && attendancePermission.parentClass === this.selectedClass.id) {
                 result = false;
                 return false;
             }
@@ -167,8 +167,8 @@ export class AssignClassComponent implements OnInit {
         let data = {
             parentEmployee: this.selectedEmployee.id,
             parentSession: this.user.activeSchool.currentSessionDbId,
-            parentClass: this.selectedClass.dbId,
-            parentDivision: this.selectedClass.selectedSection.dbId,
+            parentClass: this.selectedClass.id,
+            parentDivision: this.selectedClass.selectedSection.id,
         };
 
         this.isLoading = true;
