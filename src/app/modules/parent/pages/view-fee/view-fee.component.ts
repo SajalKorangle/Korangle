@@ -41,6 +41,7 @@ export class ViewFeeComponent implements OnInit {
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
     sessionList = [];
+    boardList = [];
     receiptColumnFilter = new ReceiptColumnFilter();
     discountColumnFilter = new DiscountColumnFilter();
 
