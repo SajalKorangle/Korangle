@@ -59,8 +59,6 @@ export class UpdateStudentFeesComponent implements OnInit {
     selectedStudentFee: StudentFee;
     newStudentFee: StudentFee;
 
-    selectedStudent: any;
-
     showDetails = false;
 
     serviceAdapter: UpdateStudentFeesServiceAdapter;
@@ -84,8 +82,7 @@ export class UpdateStudentFeesComponent implements OnInit {
 
     handleDetailsFromParentStudentFilter(details: any): void {
         this.classList = details.classList;
-        this.sectionList = details.sectionList;
-        //this.studentSectionList = details.studentSectionList;
+        this.sectionList = details.sectionList;        
     }
 
     handleStudentListSelection(studentList: any): void {
@@ -93,17 +90,6 @@ export class UpdateStudentFeesComponent implements OnInit {
         this.serviceAdapter.getStudentFeeProfile();
         this.showDetails = true;
     }
-
-    // handleStudentSelection(student: any): void {
-    //     this.selectedStudent = student;
-    //     if (this.selectedStudent == null) {
-    //         this.showDetails = false;
-    //     } else {
-    //         this.serviceAdapter.getStudentFeeProfile();
-    //         this.selectedFeeType = null;
-    //         this.showDetails = true;
-    //     }
-    // }
 
     changeSelectedStudentFee(): void {
         this.selectedStudentFee = this.studentFeeList.find(studentFee => {
