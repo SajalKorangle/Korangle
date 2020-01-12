@@ -18,7 +18,7 @@ export class UpdateStudentFeesServiceAdapter {
     //initialize data
     initializeData(): void {
 
-        this.vm.isLoading = true;
+        this.vm.isLoading = true; 
 
         let schoolId = this.vm.user.activeSchool.dbId;
         let sessionId = this.vm.user.activeSchool.currentSessionDbId;
