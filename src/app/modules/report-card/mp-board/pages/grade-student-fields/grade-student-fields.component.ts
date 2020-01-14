@@ -66,16 +66,4 @@ export class GradeStudentFieldsComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
-    getStudentName(studentId: any): any {
-        let result = '';
-        this.studentList.every(item => {
-            if (item.dbId === studentId) {
-                result = item.name;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }
-
 }

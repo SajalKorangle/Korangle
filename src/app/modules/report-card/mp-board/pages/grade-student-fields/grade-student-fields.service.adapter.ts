@@ -78,12 +78,10 @@ export class GradeStudentFieldsServiceAdapter {
 
             this.permissionList = this.permissionList.filter(permission =>{
                 if(permission.parentClass == class_10_id || permission.parentClass == class_12_id){return false}
-                // TODO: perform the same using set
                 return true;
             });
 
             if(this.permissionList.length == 0){
-                // Calling below function will me classSection list empty
                 this.populateClassSectionList();
                 return;
             }
@@ -98,43 +96,43 @@ export class GradeStudentFieldsServiceAdapter {
             let student_studentSection_map = {}
             this.vm.studentService.getObjectList(this.vm.studentService.student_section,request_student_section_data).then(value_studentSection=>{
 
+                value_studentSection = value_studentSection.filter(item => {
+                    if(this.permissionList.find(permission=>{
+                        return permission.parentClass == item.parentClass && permission.parentDivision == item.parentDivision
+                    }) != undefined){
+                        return true;
+                    }
+                    return false;
+                });
+
                 if(value_studentSection.length == 0){
                     alert('No students have been allocated');
                     return;
                 }
-                // ToDo: filter the required class,section; un-necessary added due to permutation of class,section
+                
                 let student_id = []
                 value_studentSection.forEach(item=>{
-                    student_studentSection_map[item.parentStudent] = {
-                        'rollNumber':item.rollNumber,
-                        'studentSectionId':item.id,
-                        'classId':item.parentClass,
-                        'sectionId':item.parentDivision,
-                    };
+                    student_studentSection_map[item.parentStudent] = item;
                     student_id.push(item.parentStudent);
                 });
                 let request_student_data = {
                     'id__in':student_id.join(),
                 };
                 this.populateClassSectionList();
-                this.vm.isInitialLoading = false;
 
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(
                     value_student=>{
                         // map student with roll number from student section
                         let studentDetails = value_student.map(student => {
-                            student['rollNumber'] = student_studentSection_map[student.id].rollNumber;
-                            student['classId'] = student_studentSection_map[student.id].classId;
-                            student['sectionId'] = student_studentSection_map[student.id].sectionId;
-                            student['studentSectionId'] = student_studentSection_map[student.id].studentSectionId;
-                            // Below assignments ?
+                            student['studentSection'] = student_studentSection_map[student.id];
+
                             if(student['profileImage'] == '' || student['profileImage'] == null) student['profileImage'] = null;
                             if(student['parentTransferCertificate'] == '' || student['parentTransferCertificate'] == null) student['parentTransferCertificate'] = null;
-                            student['className'] = ''
-                            student['sectionName'] = ''
                             return student;
                         });
                         this.studentList = studentDetails;
+                        this.vm.isInitialLoading = false;
+
                     },
                     error=>{console.log('Error fetching students');},
                     );
@@ -171,12 +169,8 @@ export class GradeStudentFieldsServiceAdapter {
             this.sectionList.forEach(section => {
                 if (this.isClassSectionInPermissionList(classs, section)) {
                     temp_classSectionList.push({
-                        'className':classs.name,
-                        'classId':classs.id,
-                        'sectionName':section.name,
-                        'sectionId':section.id,
-                        'classOrderNumber':classs.orderNumber,
-                        'sectionOrderNumber':section.orderNumber,
+                        'class':classs,
+                        'section':section,
                     });
                 }
             });
@@ -230,8 +224,8 @@ export class GradeStudentFieldsServiceAdapter {
     getStudentIdListForSelectedItems(): any {
         let id_list = [];
         this.studentList.forEach(item => {
-            if (item.classId === this.vm.selectedClass.classId
-                && item.sectionId === this.vm.selectedClass.sectionId) {
+            if (item.studentSection.parentClass === this.vm.selectedClass.class.id
+                && item.studentSection.parentDivision === this.vm.selectedClass.section.id) {
                 id_list.push(item.id);
             }
         });
@@ -248,8 +242,8 @@ export class GradeStudentFieldsServiceAdapter {
         this.vm.studentList = [];
         
         this.studentList.filter(item => {
-            if (item.classId === this.vm.selectedClass.classId
-                && item.sectionId === this.vm.selectedClass.sectionId
+            if (item.studentSection.parentClass === this.vm.selectedClass.class.id
+                && item.studentSection.parentDivision === this.vm.selectedClass.section.id
                 && item.parentTransferCertificate === null) {
                 return true;
             }
@@ -303,7 +297,7 @@ export class GradeStudentFieldsServiceAdapter {
 
 
     updateStudentField(studentSubField, element): any {
-        console.log(studentSubField);
+
         let current_value = element.target.value;
         if(current_value == null || current_value == NaN) return;
         

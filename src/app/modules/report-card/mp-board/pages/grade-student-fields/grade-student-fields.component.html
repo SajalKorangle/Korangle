@@ -23,7 +23,7 @@
                                 [ngModel]="selectedClass"
                                 (ngModelChange)="selectedClass=$event;detectChanges();">
                         <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
-                            {{classs.className}} - {{classs.sectionName}}
+                            {{classs.class.name}} - {{classs.section.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -76,7 +76,7 @@
                 <tr *ngFor="let student of studentList; let i=index;">
                     <td>{{(i+1)}}.</td>
                     <td>{{student.name}}</td>
-                    <td>{{student.rollNumber}}</td>
+                    <td>{{student.studentSection.rollNumber}}</td>
                     <td *ngFor="let studentSubField of student.subFieldList">
                         <input type="number"
                                placeholder="Type marks here"
