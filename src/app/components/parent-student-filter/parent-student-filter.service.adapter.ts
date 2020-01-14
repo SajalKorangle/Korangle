@@ -18,13 +18,12 @@ export class ParentStudentFilterServiceAdapter {
 
         this.vm.handleOnStudentListLoading(true);
 
-        let student_section_data = {
+        let student_section_data = {            
             'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        let student_data = {
-            'parentTransferCertificate': 'null__korangle',
+        let student_data = {            
             'parentSchool': this.vm.user.activeSchool.dbId,
             'fields__korangle': 'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte'
         };
@@ -35,8 +34,6 @@ export class ParentStudentFilterServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
         ]).then(value => {
-
-            console.log(value);
 
             this.vm.classList = value[0];
             this.vm.sectionList = value[1];

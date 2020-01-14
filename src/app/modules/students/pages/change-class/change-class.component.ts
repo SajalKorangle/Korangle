@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ClassOldService } from '../../../../services/modules/class/class-old.service';
-import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
 
@@ -9,7 +9,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'change-class',
     templateUrl: './change-class.component.html',
     styleUrls: ['./change-class.component.css'],
-    providers: [ ClassOldService, StudentOldService ],
+    providers: [ ClassOldService, StudentService ],
 })
 
 export class ChangeClassComponent implements OnInit {
@@ -22,12 +22,19 @@ export class ChangeClassComponent implements OnInit {
 
     selectedClass: any;
     classSectionList = [];
+    selectedStudentList = [];
+    studentClassSection : any;
+
+    classList = [];
+    sectionList = [];
+    studentSectionList = [];
 
     isLoading = false;
     isStudentListLoading = false;
+    showDetails = false;
 
-    constructor (private classService: ClassOldService,
-                 private studentService: StudentOldService) { }
+    constructor (private classService: ClassOldService,                 
+                 private studentService: StudentService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -36,6 +43,40 @@ export class ChangeClassComponent implements OnInit {
         };
         this.selectedSessionDbId = this.user.activeSchool.currentSessionDbId;
         this.downloadClassSectionList(data);
+    }
+
+    handleDetailsFromParentStudentFilter(details: any): void {        
+        this.classList = details.classList;
+        this.sectionList = details.sectionList;
+        this.studentSectionList = details.studentSectionList;        
+     }
+
+    handleStudentListSelection(studentList: any): void {               
+        this.selectedStudent = studentList[0];
+        this.studentClassSection = this.getStudentClassSectionList(this.selectedStudent,this.selectedSessionDbId);
+        this.selectedStudent.studentSectionDbId = this.studentClassSection.id;
+        this.selectedStudent.className = this.getClassName(this.studentClassSection);        
+        this.selectedStudent.sectionName = this.getSectionName(this.studentClassSection);
+    }
+
+    getStudentClassSectionList(student: any,sessionId: any){
+        return this.studentSectionList.find(studentSection => {
+            return studentSection.parentStudent == student.id && studentSection.parentSession == sessionId;            
+        })
+    }
+
+    getClassName(studentClassSection: any): any{        
+        this.selectedStudent.classDbId = this.studentClassSection.parentClass;
+        return this.classList.find(classs => {
+            return classs.dbId == studentClassSection.parentClass;
+        }).name;        
+    }
+
+    getSectionName(studentClassSection: any): any {
+        this.selectedStudent.sectionDbId = this.studentClassSection.parentDivision;
+        return this.sectionList.find(section => {
+            return section.id == studentClassSection.parentDivision;
+        }).name;
     }
 
     onSessionChange(session: any): void {
@@ -49,7 +90,7 @@ export class ChangeClassComponent implements OnInit {
     downloadClassSectionList(data: any): void {
         this.selectedClass = null;
         this.isLoading = true;
-        this.classService.getClassSectionList(data, this.user.jwt).then(classSectionList => {
+        this.classService.getClassSectionList(data, this.user.jwt).then(classSectionList => {            
             this.isLoading = false;
             this.classSectionList = classSectionList;
             this.classSectionList.forEach( classs => {
@@ -71,19 +112,18 @@ export class ChangeClassComponent implements OnInit {
         };
         let studentDbId = this.selectedStudent.dbId;
         this.isLoading = true;
-        this.studentService.updateStudentSection(data, this.user.jwt).then(response => {
-            this.isLoading = false;
-            alert(response['message']);
-            if (response['status'] === 'success') {
-                if (studentDbId === this.selectedStudent.dbId) {
-                    this.selectedStudent.className = this.selectedClass.name;
-                    this.selectedStudent.sectionName = this.selectedClass.selectedSection.name;
-                    this.selectedStudent.sectionDbId = this.selectedClass.selectedSection.dbId;
-                }
+        this.studentService.partiallyUpdateObject(this.studentService.student_section,data).then(response => {
+            this.isLoading = false;            
+            alert('Class Updated Successfully');            
+            if (studentDbId === this.selectedStudent.dbId) {
+                this.selectedStudent.className = this.selectedClass.name;
+                this.selectedStudent.sectionName = this.selectedClass.selectedSection.name;
+                this.selectedStudent.sectionDbId = this.selectedClass.selectedSection.dbId;
             }
-        }, error => {
+            
+        },error =>{
             this.isLoading = false;
-        })
+        })        
     }
 
 }

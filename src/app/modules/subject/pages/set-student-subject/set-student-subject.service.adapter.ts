@@ -40,10 +40,45 @@ export class SetStudentSubjectServiceAdapter {
 
     }
 
+    handleDetailsFromParentStudentFilter(details: any): void {
+        this.vm.classList = details.classList;
+        this.vm.sectionList = details.sectionList;
+        this.vm.studentSectionList = details.studentSectionList;
+    }
+
+    handleStudentListSelection(studentList: any): void {
+        this.vm.selectedStudent = studentList[0];        
+        this.vm.studentClassSection = this.getStudentClassSectionList(this.vm.selectedStudent,this.vm.selectedSession.dbId);        
+        this.vm.selectedStudent.studentSectionDbId = this.vm.studentClassSection.id;
+        this.vm.selectedStudent.className = this.getClassName(this.vm.studentClassSection);        
+        this.vm.selectedStudent.sectionName = this.getSectionName(this.vm.studentClassSection);        
+        this.vm.selectedStudent.dbId = this.vm.selectedStudent.id;        
+        this.getStudentAndClassSubjectsAndTests(this.vm.selectedStudent);
+    }
+
+    getStudentClassSectionList(student: any,sessionId: any){
+        return this.vm.studentSectionList.find(studentSection => {
+            return studentSection.parentStudent == student.id && studentSection.parentSession == sessionId;            
+        })
+    }
+
+    getClassName(studentClassSection: any): any{        
+        this.vm.selectedStudent.classDbId = this.vm.studentClassSection.parentClass;
+        return this.vm.classList.find(classs => {
+            return classs.dbId == studentClassSection.parentClass;
+        }).name;        
+    }
+
+    getSectionName(studentClassSection: any): any {
+        this.vm.selectedStudent.sectionDbId = this.vm.studentClassSection.parentDivision;
+        return this.vm.sectionList.find(section => {
+            return section.id == studentClassSection.parentDivision;
+        }).name;
+    }
+
     // Get Student & Class Subjects & Tests
     getStudentAndClassSubjectsAndTests(student: any): void {
-
-        this.vm.selectedStudent = student;
+        
         if (student === null) {
             return;
         }

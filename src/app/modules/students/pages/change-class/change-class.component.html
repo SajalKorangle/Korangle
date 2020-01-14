@@ -1,9 +1,12 @@
-<div class="card-content">
+<div class="card-content">    
 
-    <student-filter [user]="user"
-                    (onStudentLoading)="isStudentListLoading=$event"
-                    (onSessionChange)="onSessionChange($event)"
-                    (onStudentSelected)="selectedStudent=$event"></student-filter>
+    <parent-student-filter [user]="user"
+                           (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+                           (onStudentListSelected)="handleStudentListSelection($event)"
+                           (onStudentListLoading)="isStudentListLoading=$event"
+                           [selectedFilterType]="'Student'"
+                           [bothFilters]="false"
+                           [studentTcGenerated]="false"></parent-student-filter>                    
 
     <ng-container *ngIf="selectedStudent && !isLoading && !isStudentListLoading">
 

@@ -28,6 +28,12 @@ export class SetStudentSubjectComponent implements OnInit {
     isSessionLoading = false;
     isLoading = false;
 
+    classList = [];
+    sectionList = [];
+    studentSectionList = [];
+    studentClassSection: any;
+    isStudentListLoading = false;
+
     selectedSession: any;
 
     selectedStudent: any;
