@@ -102,13 +102,14 @@ export class UpdateProfileComponent implements OnInit {
             'diseCode': this.currentDiseCode,
             'address': this.currentAddress,
             'opacity': this.currentOpacity,
-            'currentSessionDbId': this.currentWorkingSession.dbId,
+            'currentSessionDbId': this.currentWorkingSession.id,
             'pincode': this.currentPincode,
             'villageCity': this.currentVillageCity,
             'block': this.currentBlock,
             'district': this.currentDistrict,
             'state': this.currentState,
         };
+        console.log(data);
         this.isLoading = true;
         this.schoolOldService.updateSchoolProfile(data, this.user.jwt).then(schoolProfile => {
             this.isLoading = false;
