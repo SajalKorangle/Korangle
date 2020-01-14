@@ -32,15 +32,10 @@ def add_student_remark_row_mp_board(apps, schema_editor):
                            orderNumber=count,
                            parentBoard=mp_board_object)
         task_object.save()
-        print('Task Added')
-        print(task_object.id)
         # Adding in employee permission
-        emp_added_list = [] # To get unique employee id
         emp_per_list = EmployeePermission.objects.filter(parentEmployee__parentSchool__parentBoard__name='M.P. Board', parentTask__path = 'assign_task')
 
         for employee_permission_object in emp_per_list:
-            if employee_permission_object.parentEmployee.id in emp_added_list:
-                continue
             emp_added_list.append(employee_permission_object.parentEmployee.id)
             new_emp = EmployeePermission()
             new_emp.parentEmployee = employee_permission_object.parentEmployee
