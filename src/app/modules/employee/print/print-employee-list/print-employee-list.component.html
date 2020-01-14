@@ -5,6 +5,7 @@
         <th [class.hidden]="!columnFilter.showName">Name</th>
         <th [class.hidden]="!columnFilter.showEmployeeNumber">Employee Number</th>
         <th [class.hidden]="!columnFilter.showFatherName">Father's Name</th>
+        <th [class.hidden]="!columnFilter.showProfileImage">Profile Image</th>
         <th [class.hidden]="!columnFilter.showSpouseName">Spouse's Name</th>
         <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
         <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
@@ -33,6 +34,11 @@
                     <td [class.hidden]="!columnFilter.showName">{{employee.name}}</td>
                     <td [class.hidden]="!columnFilter.showEmployeeNumber">{{employee.employeeNumber}}</td>
                     <td [class.hidden]="!columnFilter.showFatherName">{{employee.fatherName}}</td>
+                    <td [class.hidden]="!columnFilter.showProfileImage">
+                                <img *ngIf="employee.profileImage"
+                                src="{{employee.profileImage}}"
+                                style="width: 25%">
+                    </td>
                     <td [class.hidden]="!columnFilter.showSpouseName">{{employee.spouseName}}</td>
                     <td [class.hidden]="!columnFilter.showMobileNumber">{{employee.mobileNumber}}</td>
                     <td [class.hidden]="!columnFilter.showDateOfBirth">

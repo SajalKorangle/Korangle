@@ -80,6 +80,11 @@
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showProfileImage" (click)="$event.stopPropagation();">Profile
+                        Image
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
                         <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation();">Mobile No.
                         </mat-checkbox>
                     </mat-option>
@@ -293,6 +298,7 @@
                 <th [class.hidden]="!columnFilter.showSectionName">Section</th>
                 <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
                 <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
+                <th [class.hidden]="!columnFilter.showProfileImage">Profile Image</th>
                 <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
                 <th [class.hidden]="!columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
                 <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
@@ -328,6 +334,16 @@
                         <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>
                         <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
                         <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
+                        <td [class.hidden]="!columnFilter.showProfileImage">
+                                <img *ngIf="student.profileImage"
+                                src="{{student.profileImage}}"
+                                style="width: 25%">
+
+                                <img *ngIf="!student.profileImage"
+                                src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                style="width: 25%"/>
+                        </td>
+
                         <td [class.hidden]="!columnFilter.showMobileNumber">
                             <span class="hidden-xs hidden-sm">{{student.mobileNumber}}</span>
                             <a class="visible-xs visible-sm" href="tel:{{student.mobileNumber}}">Call Me</a>

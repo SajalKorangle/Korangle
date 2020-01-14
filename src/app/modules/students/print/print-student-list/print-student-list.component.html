@@ -7,6 +7,7 @@
         <th [class.hidden]="!columnFilter.showSectionName">Section Name</th>
         <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
         <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
+        <th [class.hidden]="!columnFilter.showProfileImage">Profile Image</th>
         <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
         <th [class.hidden]="!columnFilter.showSecondMobileNumber">Mobile No.</th>
         <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
@@ -40,6 +41,11 @@
                     <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>
                     <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
                     <td [class.hidden]="!columnFilter.showFathersName">{{ student.fathersName | titlecase }}</td>
+                    <td [class.hidden]="!columnFilter.showProfileImage">
+                                <img *ngIf="student.profileImage"
+                                src="{{student.profileImage}}"
+                                style="width: 25%">
+                    </td>
                     <td [class.hidden]="!columnFilter.showMobileNumber">{{student.mobileNumber}}</td>
                     <td [class.hidden]="!columnFilter.showSecondMobileNumber">{{student.secondMobileNumber}}</td>
                     <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
