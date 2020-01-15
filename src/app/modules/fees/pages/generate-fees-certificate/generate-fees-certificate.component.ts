@@ -1,6 +1,8 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { GenerateFeesCertificateServiceAdapter } from "./generate-fees-certificate.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {PrintService} from "../../../../print/print-service";
+import { PRINT_FEES_CERTIFICATE } from '../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
@@ -12,7 +14,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 
 export class GenerateFeesCertificateComponent implements OnInit {
 
-     user;
+    user;
 
     classStudentCCEMarksList: any;
 
@@ -22,7 +24,12 @@ export class GenerateFeesCertificateComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public feeService: FeeService,
+    isStudentListLoading = false;
+    selectedStudent: any;
+    boardList: any;
+
+    constructor(public printService: PrintService,
+                public feeService: FeeService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -31,6 +38,24 @@ export class GenerateFeesCertificateComponent implements OnInit {
         this.serviceAdapter = new GenerateFeesCertificateServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+    }
+
+    handleDetailsFromParentStudentFilter(details: any){
+
+    }
+
+    handleStudentListSelection(selectedStudentList: any){
+
+    }
+
+    printFeesCertificate(){
+        const value = {
+            studentProfile: this.selectedStudent,
+            //transferCertificate: this.selectedTransferCertificate,
+            boardList: this.boardList,
+            //twoCopies: this.twoCopies,
+        };
+        this.printService.navigateToPrintRoute(PRINT_FEES_CERTIFICATE, {user: this.user, value});
     }
 
     detectChanges(): void {

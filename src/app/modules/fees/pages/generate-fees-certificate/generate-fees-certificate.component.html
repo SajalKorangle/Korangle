@@ -1,12 +1,21 @@
 <div class="card-content">
 
-    <ng-container *ngIf="!isLoading">
+    <parent-student-filter [user]="user"
+                           (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+                           (onStudentListSelected)="handleStudentListSelection($event)"
+                           (onStudentListLoading)="isStudentListLoading=$event"
+                           [selectedFilterType]="'Student'"
+                           [studentTcGenerated]="false"></parent-student-filter>
 
-        Coming Soon!
+    <ng-container *ngIf="!isLoading && !isStudentListLoading">
+        <!--                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"-->
+        <button type="button"
+                (click)="printFeesCertificate()"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Generate Fees Certificate</button>
 
     </ng-container>
 
-    <ng-container *ngIf="isLoading">
+    <ng-container *ngIf="isLoading || isStudentListLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
 

@@ -21,7 +21,7 @@ import {StudentService} from "../../../../services/modules/student/student.servi
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
+import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/modules/fees/print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
