@@ -51,7 +51,6 @@ export class GenerateFeesCertificateComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        console.log(this.user);
         this.serviceAdapter = new GenerateFeesCertificateServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -59,12 +58,12 @@ export class GenerateFeesCertificateComponent implements OnInit {
     }
 
     getSessionList(): void {
-        this.schoolOldService.getSessionList(this.user.jwt).then(sessionList => {
+        this.schoolService.getObjectList(this.schoolService.session,{}).then(sessionList => {
             this.sessionList = sessionList;
             this.sessionList.every(session => {
+                session.dbId = session.id;
                 if (session.dbId === this.user.activeSchool.currentSessionDbId) {
                     this.selectedSession = session;
-                    console.log(this.selectedSession);
                     return false;
                 }
                 return true;
@@ -84,16 +83,9 @@ export class GenerateFeesCertificateComponent implements OnInit {
             this.studentService.getStudentProfile(student_data, this.user.jwt).then(
                 student => {
                     this.isLoading = false;
-                    console.log(student)
                     if (this.selectedStudent.dbId === student.dbId) {
-                        // this.selectedStudent = new Student();
-                        // this.selectedStudent.copy(student);
                         this.selectedStudentList[i]=student;
-                        // this.selectedTransferCertificate.clean();
-                        // this.currentTransferCertificate.clean();
                     }
-                    // this.showDetails = true;
-                    // this.checkAllRequiredDetailsAreComing(this.selectedStudent);
                 }, error => {
                     this.isLoading = false;
                 }
@@ -109,7 +101,6 @@ export class GenerateFeesCertificateComponent implements OnInit {
         this.selectedStudentList = selectedStudents;
         this.getStudentProfile();
         this.serviceAdapter.getStudentFeeProfile();
-        console.log(this.selectedStudentList)
     }
 
     getSubFeeReciptTotalAmount(feeType: any, student:any): number {
@@ -140,23 +131,6 @@ export class GenerateFeesCertificateComponent implements OnInit {
             })
         })
     }
-
-    // getFeeReceiptTotalAmount(feeReceipt: any): number {
-    //         return this.subFeeReceiptList.filter(subFeeReceipt => {
-    //             if(this.selectedFeeType){
-    //                 return subFeeReceipt.parentFeeReceipt == feeReceipt.id &&
-    //                     subFeeReceipt.parentFeeType == this.selectedFeeType.id;
-    //             }else{
-    //                 return subFeeReceipt.parentFeeReceipt == feeReceipt.id ;
-    //             }
-    //         }).reduce((totalSubFeeReceipt, subFeeReceipt) => {
-    //             return totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
-    //                 return totalInstallment
-    //                     + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
-    //                     + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
-    //             }, 0);
-    //         }, 0);
-    // }
 
     printFeesCertificate(){
         let copies = 0;

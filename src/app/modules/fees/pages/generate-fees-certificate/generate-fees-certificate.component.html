@@ -9,9 +9,44 @@
 
     <ng-container *ngIf="!isLoading && !isStudentListLoading">
         <!--                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"-->
-        <button type="button"
+        <div class="row" style="margin-bottom: 10px">
+            <div class="col-md-12"
+                 style="border-bottom: 1px solid lightgrey;"></div>
+        </div>
+
+        <div *ngFor="let selectedStudent of selectedStudentList" class="row"
+             style="font-size: 16px; margin-bottom: 15px; margin-left: 5px">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <b>Student's Name : </b>
+                    {{selectedStudent.name}}
+                </div>
+                <div class="col-md-4">
+                    <b>Father's Name :</b>
+                    {{selectedStudent.fathersName}}
+                </div>
+                <div class="col-md-4">
+                    <b>Scholar No.:</b>
+                    {{selectedStudent.scholarNumber}}
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 8px; margin-bottom: 10px; margin-left: 1px">
+                <b>Certificate No. :</b>
+                    <input style="width: 150px;" type="number"
+                           [(ngModel)]="selectedStudent.certificateNumber"/>
+            </div>
+
+            <div class="row" style="margin-bottom: 10px;" *ngIf="selectedStudent != null">
+                <div style="border-bottom: 1px solid lightgrey;"></div>
+            </div>
+
+        </div>
+
+        <button type="button" *ngIf="selectedStudentList.length != 0"
                 (click)="printFeesCertificate()"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Generate Fees Certificate</button>
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Print Fees Certificate</button>
 
     </ng-container>
 

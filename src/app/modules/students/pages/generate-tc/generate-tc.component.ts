@@ -69,7 +69,6 @@ export class GenerateTcComponent implements OnInit {
             this.schoolService.getObjectList(this.schoolService.board,{}),
         ]).then(value => {
             this.boardList = value[0];
-            //console.log(this.boardList)
         }, error => {
         });
 
@@ -79,8 +78,6 @@ export class GenerateTcComponent implements OnInit {
     getSessionList(): void {
         this.schoolService.getObjectList(this.schoolService.session,{}).then(sessionList => {
             this.sessionList = sessionList;
-            //console.log(this.sessionList);
-            //console.log(this.user.activeSchool.currentSessionDbId)
             this.sessionList.every(session => {
                 if (session.id === this.user.activeSchool.currentSessionDbId) {
                     this.selectedSession = session;
@@ -257,7 +254,6 @@ export class GenerateTcComponent implements OnInit {
     handleStudentSelection(student: any): void {
         this.selectedStudent = student;
         this.studentFromFilter = student;
-       // console.log(this.selectedStudent);
         if (this.selectedStudent == null) {
             this.showDetails = false;
         } else {
