@@ -45,6 +45,7 @@ export class MyCollectionComponent implements OnInit {
     isInitialLoading = false;
     isLoading = false;
 
+
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
                 public studentService: StudentService,

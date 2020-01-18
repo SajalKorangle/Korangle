@@ -1,0 +1,203 @@
+<ng-container *ngFor="let student of studentProfileList">
+
+    <div class="container-fluid"
+         *ngIf="studentProfileList && student.feesPaid == true"
+         style="width: 100%; height: 100%;
+         border: 4px double blue;
+         border-radius: 8px;
+         outline: 1px solid blue;
+         outline-offset: -5px;
+         position: relative;
+         font-weight: 800 !important">
+
+        <!-- Reg. No. , Dise Code -->
+        <div class="row no-gutters">
+            <div class="col-xs-6 d-flex custom-padding">
+                Dise code : {{user.activeSchool.diseCode}}
+            </div>
+            <div class="col-xs-6 d-flex custom-padding" align="end">
+                <!-- span *ngIf="(user.activeSchool.affiliationNumber && user.activeSchool.affiliationNumber.toString().length > 3); else registrationNumber">Aff. No. : {{user.activeSchool.affiliationNumber}}</span>
+                <ng-template #registrationNumber>Reg. No. : {{user.activeSchool.registrationNumber}}</ng-template -->
+                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
+                    School Code :
+                </ng-container>
+                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
+                    Affiliation No. :
+                </ng-container>
+                {{user.activeSchool.affiliationNumber}}
+            </div>
+        </div>
+
+        <ng-container *ngIf="user.activeSchool.headerSize==='SMALL'">
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px; position: absolute;
+         top: 40px; left: 20px;
+         width: 80px; height: 80px;"/>
+
+            <!-- Background Watermark -->
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px; position: absolute;
+         top: 350px; left: 198px;
+         width: 350px; height: 350px;
+         opacity: 0.07;
+         filter: grayscale(100%);
+         z-index: 10;"/>
+
+            <!-- School Name -->
+            <div class="row no-gutters" style="margin-top: 20px;">
+                <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <span style="background-color: yellow; font-size: 35px">
+                {{user.activeSchool.printName}}
+            </span>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="user.activeSchool.headerSize==='BIG'">
+            <!-- Background Watermark -->
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px; position: absolute;
+         top: 460px; left: 198px;
+         width: 350px; height: 350px;
+         opacity: 0.07;
+         filter: grayscale(100%);
+         z-index: 10;"/>
+
+            <!-- School Name -->
+            <svg viewBox="0 0 500 115" style="padding-top: 0px;">
+                <path id="curve" d="M43.2,125c4-6.1,70.5-96.8,193.6-95.6c136.3,1.2,205.8,85.3,220.1,97" />
+                <text>
+                    <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle" fill="red">
+                        {{user.activeSchool.printName}}
+                    </textPath>
+                </text>
+            </svg>
+
+            <!-- School Logo -->
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px;
+                position: absolute; top: 100px; left: 314px;
+                opacity: 0.8;
+                width: 80px; height: 80px;"/>
+        </ng-container>
+
+        <!-- Address -->
+        <div class="row no-gutters">
+            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+            <span   style="font-size: 15px">
+                {{user.activeSchool.address}}<br/>
+                (Regd. and Recognised by M.P. Govt.)
+            </span>
+            </div>
+        </div>
+
+        <!-- School Transfer Certificate -->
+        <div class="row no-gutters" style="margin-top: 70px;">
+            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+                <span style="font-size: 28px;"><u>TO WHOMSOEVER IT MAY CONCERN</u></span><br/>
+            </div>
+        </div>
+
+        <div class="row no-gutters">
+            <div class="col-xs-12" style="height: 45px;"></div>
+        </div>
+
+        <!-- Date -->
+        <div class="row no-gutters">
+            <div class="col-xs-6 d-flex justify-content-start custom-padding fontHandle">
+
+            </div>
+            <div class="col-xs-6 d-flex justify-content-end custom-padding fontHandle" align="right">
+                Date : {{getCurrentDate() | date: 'dd/MM/yyyy'}}
+            </div>
+        </div>
+
+        <div class="row no-gutters">
+            <div class="col-xs-12" style="height: 35px;"></div>
+        </div>
+
+
+        <div class="row no-gutters" style="font-weight: normal !important; font-size: 16px;">
+            <div class="col-xs-12">
+
+                This is to certify that <i><b>
+                <span *ngIf="student.gender=='Male'">Mr.</span>
+                <span *ngIf="student.gender=='Female'">Ms.</span>
+                {{ student.name | titlecase }}</b></i>
+                <span *ngIf="student.gender=='Male'">&nbsp;s/o&nbsp;</span>
+                <span *ngIf="student.gender=='Female'">&nbsp;d/o&nbsp;</span>Mr.
+                <i><b>{{ student.fathersName | titlecase }} </b></i>
+                is a bonafide student in <b>{{student.className}}</b> in
+                <b>{{user.activeSchool.printName}}</b> for academic year
+                <b>{{currentSession.name.slice(7)}}</b>.
+                The total fees collected as part of
+                <span *ngIf="student.Admission_Fee > 0">Admission Fee</span>
+                <span *ngIf="student.Vehicle_Fee > 0">, Vehicle Fee</span>
+                <span *ngIf="student.Tution_Fee > 0">, Tution Fees</span>
+                <span *ngIf="student.Fine > 0">, Fine</span>
+                from him/her is
+                <b>Rs. {{getTotalFees(student)}}</b>
+                from
+                to. <b>{{getCurrentDate() | date: 'dd/MM/yyyy'}}</b>
+                The student has paid the following fees :
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-xs-12" style="margin-top: 10px !important;">
+                <table class="table updownBorder" style="padding-left: 5px;">
+                    <tbody style="font-weight: normal !important;">
+                        <tr>
+                            <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800;">SL. NO.</td>
+                            <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800;">FEE TYPE</td>
+                            <td class="leftBorder upBorder rightBorder" style="padding: 3px; font-weight: 800;">AMOUNT</td>
+                        </tr>
+                        <tr *ngIf="student.Admission_Fee > 0">
+                            <td class="leftBorder upBorder">{{getCounter()}}.</td>
+                            <td class="leftBorder upBorder">ADMISSION FEE</td>
+                            <td class="leftBorder upBorder rightBorder">{{student.Admission_Fee}}</td>
+                        </tr>
+                        <tr *ngIf="student.Vehicle_Fee">
+                            <td class="leftBorder upBorder">{{getCounter()}}.</td>
+                            <td class="leftBorder upBorder">VEHICLE FEE</td>
+                            <td class="leftBorder upBorder rightBorder">{{student.Vehicle_Fee}}</td>
+                        </tr>
+                        <tr *ngIf="student.Tution_Fee > 0">
+                            <td class="leftBorder upBorder">{{getCounter()}}.</td>
+                            <td class="leftBorder upBorder">TUTION FEE</td>
+                            <td class="leftBorder upBorder rightBorder">{{student.Tution_Fee}}</td>
+                        </tr>
+                        <tr *ngIf="student.Fine">
+                            <td class="leftBorder upBorder">{{getCounter()}}.</td>
+                            <td class="leftBorder upBorder">FINE</td>
+                            <td class="leftBorder upBorder rightBorder">{{student.Fine}}</td>
+                        </tr>
+                        <tr>
+                            <td class="leftBorder upBorder" colspan="2" style="text-transform: capitalize">
+                                Total Fees Paid : <b>{{numberToEnglish(getTotalFees(student),',')}} rupees only</b>
+                            </td>
+                            <td class="upBorder rightBorder">
+                                <b>{{getTotalFees(student)}}</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row no-gutters"
+             style="position: absolute; bottom: 70px; width: 100%;">
+            <div class="col-xs-12 custom-padding" style="padding-right: 40px" align="end">
+                <img src="{{user.activeSchool.principalSignatureImage}}"
+                     *ngIf="user.activeSchool.principalSignatureImage != null"
+                     style="width: 150px; height: 75px; margin-bottom: 5px;
+                 z-index: 1;"/><br>
+                Principal's Signature
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-xs-12" style="font-weight: normal; font-size: 18px; position: absolute; bottom: 10px;">
+                <p>*This certificate is being issued on the request on parent for the purpose of income tax.</p>
+            </div>
+        </div>
+    </div>
+
+</ng-container>

@@ -15,7 +15,7 @@ import { PrintService } from './print/print-service';
 @NgModule({
     declarations: [
         AppComponent,
-        LoginComponent,
+        LoginComponent
     ],
     imports: [
         BasicComponentsModule,

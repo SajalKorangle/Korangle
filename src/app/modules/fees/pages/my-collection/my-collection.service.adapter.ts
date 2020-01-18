@@ -32,8 +32,8 @@ export class MyCollectionServiceAdapter {
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
         ]).then(value => {
-
-            this.vm.feeTypeList = value[0]
+            //console.log(value[0]);
+            this.vm.feeTypeList = value[0];
             this.vm.employeeList = [value[1]];
             this.vm.classList = value[2];
             this.vm.sectionList = value[3];
@@ -69,7 +69,7 @@ export class MyCollectionServiceAdapter {
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
             this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
         ]).then(value => {
-
+            console.log(value[0],value[1]);
             this.vm.feeReceiptList = value[0].sort((a,b) => {return b.receiptNumber-a.receiptNumber});;
             this.vm.subFeeReceiptList = value[1];
 
@@ -82,12 +82,13 @@ export class MyCollectionServiceAdapter {
                     })
                 }).map(item => item.parentStudent),
             };
-
             if (student_list.id__in.length != 0) {
                 service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
             }
 
             let tempList = value[0].map(item => item.parentSession);
+            console.log(tempList);
+
             tempList.filter((item, index) => {
                 return tempList.indexOf(item) == index;
             }).forEach(item => {

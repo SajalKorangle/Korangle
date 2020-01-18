@@ -15,7 +15,69 @@ export class GenerateFeesCertificateServiceAdapter {
 
     //initialize data
     initializeData(): void {
-        // this.vm.isLoading = true;
+        this.vm.isLoading = true;
+
+        Promise.all([
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
+        ]).then(value => {
+            this.vm.boardList = value[0];
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
+        // let fee_receipt_list = {
+        //             //'generationDateTime__gte': this.vm.startDate + ' 00:00:00%2B05:30',
+        //             //'generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
+        //             'parentEmployee': this.vm.user.activeSchool.employeeId,
+        //             'cancelled': 'false__boolean',
+        //         };
+        //
+        //         let sub_fee_receipt_list = {
+        //             //'parentFeeReceipt__generationDateTime__gte': this.vm.startDate + ' 00:00:00%2B05:30',
+        //             //'parentFeeReceipt__generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
+        //             'parentFeeReceipt__parentEmployee': this.vm.user.activeSchool.employeeId,
+        //             'parentFeeReceipt__cancelled': 'false__boolean',
+        //         };
+
+
+    }
+
+    getStudentFeeProfile(): void {
+        let studentListId = this.vm.selectedStudentList.map(a => a.id).join();
+        let fee_type_list = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+        };
+
+        let fee_receipt_list = {
+            'parentStudent__in': studentListId,
+            'cancelled': 'false__boolean',
+        };
+
+        let sub_fee_receipt_list = {
+            'parentStudentFee__parentStudent__in': studentListId,
+            'parentFeeReceipt__cancelled': 'false__boolean',
+        };
+
+        Promise.all([
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
+            this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),
+            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+        ]).then(value => {
+            this.vm.feeTypeList = value[0];
+            this.populateFeeReceiptList(value[1]);
+            this.vm.subFeeReceiptList = value[2];
+            console.log(this.vm.feeTypeList);
+            console.log(this.vm.feeReceiptList);
+            console.log(this.vm.subFeeReceiptList);
+            this.vm.calculateTotalFeesPaid();
+        })
+    }
+
+    populateFeeReceiptList(feeReceiptList: any): void {
+        this.vm.feeReceiptList = feeReceiptList.sort((a,b) => {
+            return b.receiptNumber-a.receiptNumber;
+        });
     }
 
 }

@@ -6,6 +6,7 @@ import { FeeComponent } from './fee.component';
 import {  PRINT_FEE_RECIEPT_LIST, PRINT_FULL_FEE_RECIEPT_LIST, PRINT_FEES_CERTIFICATE } from '../fees/print/print-routes.constants';
 import { PrintFeeReceiptListComponent } from './print/print-fee-receipt-list/print-fee-receipt-list.component';
 import { PrintFullFeeReceiptListComponent } from './print/print-full-fee-receipt-list/print-full-fee-receipt-list.component';
+import { PrintFeesCertificateComponent } from './print/print-fees-certificate/print-fees-certificate.component'
 
 const routes: Routes = [
     {
