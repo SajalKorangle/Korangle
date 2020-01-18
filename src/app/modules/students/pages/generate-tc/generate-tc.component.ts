@@ -77,12 +77,12 @@ export class GenerateTcComponent implements OnInit {
     }
 
     getSessionList(): void {
-        this.schoolOldService.getSessionList(this.user.jwt).then(sessionList => {
+        this.schoolService.getObjectList(this.schoolService.session,{}).then(sessionList => {
             this.sessionList = sessionList;
             //console.log(this.sessionList);
             //console.log(this.user.activeSchool.currentSessionDbId)
             this.sessionList.every(session => {
-                if (session.dbId === this.user.activeSchool.currentSessionDbId) {
+                if (session.id === this.user.activeSchool.currentSessionDbId) {
                     this.selectedSession = session;
                     return false;
                 }
@@ -95,7 +95,7 @@ export class GenerateTcComponent implements OnInit {
         this.isLoading = true;
         const student_data = {
             studentDbId: this.selectedStudent.dbId,
-            sessionDbId: this.selectedSession.dbId,
+            sessionDbId: this.selectedSession.id,
         };
         if (this.selectedStudent.parentTransferCertificate) {
             const transfer_certificate_data = {

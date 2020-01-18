@@ -41,14 +41,14 @@ export class CollectFeeServiceAdapter {
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
-
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
         ]).then( value => {
 
             this.vm.feeTypeList = value[0];
             this.vm.busStopList = value[1];
             this.vm.employeeList = value[2];
             this.vm.boardList = value[3];
-
+            this.vm.sessionList = value[4]
             this.vm.isLoading = false;
 
         }, error => {
@@ -128,7 +128,7 @@ export class CollectFeeServiceAdapter {
         this.vm.studentFeeList = studentFeeList.sort( (a,b) => {
             let first = this.vm.getFeeTypeByStudentFee(a);
             let second = this.vm.getFeeTypeByStudentFee(b);
-            return a.orderNumber-b.orderNumber;
+            return first.orderNumber-second.orderNumber;
         });
     }
 

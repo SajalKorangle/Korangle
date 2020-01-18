@@ -5,11 +5,7 @@ import {Injectable} from '@angular/core';
 import { CommonServiceRequirements } from '../../common-service-requirements';
 
 @Injectable()
-export class SchoolOldService extends CommonServiceRequirements {
-
-    getSessionList(token: any): Promise<any> {
-        return super.getData(token, '/school/sessions');
-    }
+export class SchoolOldService extends CommonServiceRequirements {    
 
     updateSchoolProfile(data: any, token: any): Promise<any> {
         console.log(data);

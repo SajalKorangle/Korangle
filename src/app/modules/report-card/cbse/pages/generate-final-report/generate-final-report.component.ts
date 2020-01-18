@@ -46,6 +46,7 @@ export class GenerateFinalReportComponent implements OnInit {
     studentRemarkList = [];
     termStudentAttendanceList = [];
     classSubjectList = [];
+    classTeacherSignatureList = [];
     classTeacherSignature = null;
 
     showPrincipalSignature = true;

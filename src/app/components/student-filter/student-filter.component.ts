@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 import { StudentOldService } from '../../services/modules/student/student-old.service';
-import {SchoolOldService} from '../../services/modules/school/school-old.service';
+import {SchoolService} from '../../services/modules/school/school.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
@@ -10,7 +10,7 @@ import {map} from 'rxjs/operators';
     selector: 'student-filter',
     templateUrl: './student-filter.component.html',
     styleUrls: ['./student-filter.component.css'],
-    providers: [ StudentOldService, SchoolOldService ],
+    providers: [ StudentOldService, SchoolService ],
 })
 
 export class StudentFilterComponent implements OnInit {
@@ -38,7 +38,7 @@ export class StudentFilterComponent implements OnInit {
     isLoading = false;
 
     constructor (private studentService: StudentOldService,
-                 private schoolService: SchoolOldService) { }
+                 private schoolService: SchoolService) { }
 
     ngOnInit(): void {
         this.handleOnStudentLoading(true);
@@ -47,7 +47,7 @@ export class StudentFilterComponent implements OnInit {
             schoolDbId: this.user.activeSchool.dbId,
         };
         Promise.all([
-            this.schoolService.getSessionList(this.user.jwt),
+            this.schoolService.getObjectList(this.schoolService.session,{}),
             this.studentService.getStudentMiniProfileList(request_student_data, this.user.jwt),
         ]).then(value => {
             this.handleOnStudentLoading(false);
@@ -59,7 +59,7 @@ export class StudentFilterComponent implements OnInit {
     populateSessionList(sessionList: any): void {
         this.sessionList = sessionList;
         this.sessionList.every(session => {
-            if (session.dbId === this.user.activeSchool.currentSessionDbId) {
+            if (session.id === this.user.activeSchool.currentSessionDbId) {
                 this.selectedSession = session;
                 return false;
             }
@@ -142,7 +142,7 @@ export class StudentFilterComponent implements OnInit {
         this.handleStudentSelection(null);
         this.onSessionChange.emit(this.selectedSession);
         const request_student_data = {
-            sessionDbId: this.selectedSession.dbId,
+            sessionDbId: this.selectedSession.id,
             schoolDbId: this.user.activeSchool.dbId,
         };
         this.studentService.getStudentMiniProfileList(request_student_data, this.user.jwt).then( studentList => {
