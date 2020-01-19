@@ -2,7 +2,6 @@ import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import { PrintService } from '../../../../print/print-service';
 
 @Component({
@@ -13,7 +12,7 @@ import { PrintService } from '../../../../print/print-service';
 export class PrintFeeReceiptListComponent implements OnInit, AfterViewChecked {
 
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
 
     user: any;
 
@@ -25,8 +24,10 @@ export class PrintFeeReceiptListComponent implements OnInit, AfterViewChecked {
 
     ngOnInit(): void {
         const {user, value} = this.printService.getData();
+        console.log(value)
         this.user = user;
         this.data = value;
+        this.sessionList = this.data.sessionList
         this.checkView = true;
     }
 

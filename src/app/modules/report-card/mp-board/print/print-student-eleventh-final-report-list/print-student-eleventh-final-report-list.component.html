@@ -334,10 +334,16 @@
             </div -->
 
             <!-- Principal Signature Image -->
+            <img src="{{this.classTeacherSignature}}"
+                 *ngIf="this.classTeacherSignature != null"
+                 style="position: absolute;
+                 bottom: 30px; left: 50px;
+                 width: 150px; height: 75px;
+                 z-index: 1;"/>
             <img src="{{user.activeSchool.principalSignatureImage}}"
                  *ngIf="user.activeSchool.principalSignatureImage != null && showPrincipalSignature"
                  style="position: absolute;
-                 bottom: 25px; left: 525px;
+                 bottom: 30px; right: 50px;
                  width: 150px; height: 75px;
                  z-index: 1;"/>
             <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"

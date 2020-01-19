@@ -34,13 +34,21 @@ export class ViewGradesRemarksComponent implements OnInit {
     user;
 
     classSectionList = [];
-    attendancePermissionList = [];
     studentList = [];
     studentSectionList = [];
     studentRemarkList = [];
+    extraFieldList = [];
+    termList = [];
+    employeeList = [];
+    currentEmployeesList = [];
 
     selectedClassSection: any;
+    selectedExtraField: any;
+    selectedTerm: any;
 
+    studentExtraFieldList = [];
+
+    showRemark = true;
     showStudentList = false;
 
     serviceAdapter: ViewGradesRemarksServiceAdapter;
@@ -65,6 +73,26 @@ export class ViewGradesRemarksComponent implements OnInit {
 
     handleClassSectionChange(classSection: any): void {
         this.selectedClassSection = classSection;
+        if (this.selectedClassSection.class.orderNumber >= 5) {
+            this.selectedTerm = this.termList[0];
+        } else {
+            this.selectedTerm = this.termList[2];
+        }
+        this.handleTermChange(this.selectedTerm);
+    }
+
+    handleTermChange(term: any): void{
+        this.selectedTerm = term;
+        this.showStudentList = false;
+        if(this.showTermList() && this.selectedTerm ===this.termList[0]){
+            this.showRemark=false;
+        }else{
+            this.showRemark = true;
+        }
+    }
+
+    showTermList(): boolean {
+        return this.selectedClassSection.class.orderNumber >= 5;
     }
 
     getFilteredStudentSectionList(): any {
@@ -91,7 +119,18 @@ export class ViewGradesRemarksComponent implements OnInit {
         if (item) {
             return item.remark;
         } else {
-            return '';
+            return null;
+        }
+    }
+
+    getGrade(studentSection: any, index: number): any {
+        let item = this.studentExtraFieldList[index].find(studentExtraField => {
+            return studentExtraField.parentStudent == studentSection.parentStudent;
+        });
+        if (item) {
+            return item.grade;
+        } else {
+            return null;
         }
     }
 

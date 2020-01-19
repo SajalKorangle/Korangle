@@ -72,6 +72,7 @@ export class PromoteStudentServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
         ]).then(value => {
 
             console.log(value);
@@ -87,7 +88,8 @@ export class PromoteStudentServiceAdapter {
             this.vm.schoolFeeRuleList = value[6];
             this.vm.classFilterFeeList = value[7];
             this.vm.busStopFilterFeeList = value[8];
-
+            this.vm.sessionList = value[9];
+            
             this.populateFromAndToVariables();
 
             let student_list = {
