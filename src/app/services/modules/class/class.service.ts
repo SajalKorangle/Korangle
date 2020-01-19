@@ -6,9 +6,6 @@ import { CLASS_CONSTANT } from "./models/classs";
 import { DIVISION_CONSTANT } from "./models/division";
 import { HttpClient } from "@angular/common/http";
 
-import {CacheStorage} from "../../../classes/cache-storage";
-
-
 @Injectable()
 export class ClassService extends ServiceObject {
 
@@ -25,4 +22,5 @@ export class ClassService extends ServiceObject {
         this.constant_list[this.division] = DIVISION_CONSTANT;
         this.file_list[this.class_teacher_signature] = this.class_teacher_signature;
     }
+
 }
