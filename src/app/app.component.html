@@ -63,8 +63,8 @@
 
     </div>
 
-    <div *ngIf="!user.isAuthenticated" style="min-height: 100%;">
-        <app-login-form [user]="user"></app-login-form>
+    <div *ngIf="!user.isAuthenticated" style="min-height: 100%;background-color: white">
+        <app-frontpage [user]="user"></app-frontpage>
     </div>
 
 </div>

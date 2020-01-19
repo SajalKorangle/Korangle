@@ -1,0 +1,48 @@
+<div class="container-fluid" style="height:100vh">
+	<div class="row" style="height:100vh">
+		<!-- <div class="col-md-8" style="height:100vh;padding:5px;background: linear-gradient(60deg, #66bb6a, #43a047);"> -->
+		<div class="col-md-8" style="height:100vh;padding:5px;background: radial-gradient(closest-side at 35% 50%,#43a047 30%,#66bb6a);">
+			
+			<!-- Navbar starts -->
+			<div class="" style="background-color: white; border-radius: 5px;padding:5px;display: inline-block;">
+				<button style=""class="navbar-button">
+											About us
+				</button>
+				<button style=""class="navbar-button">
+											Why Korangle
+				</button>
+				<button style="" class="navbar-button">
+											Pricing
+				</button>
+				<button style="" class="navbar-button">
+											Contact us
+				</button>
+			</div>
+			<!-- Navbar ends -->
+
+			<div style="margin-top: 150px;padding: 10px;margin-bottom: 70px;margin-left: 80px">
+				<p class="brand-name">
+					<!-- Built for Educators -->
+					Korangle
+				</p>
+				<p style="margin-left:5px;
+									font-size: 30px;
+									margin-top:50px;
+									color: white">
+					Providing best solutions to Educational Institutes
+				</p>
+			</div>
+		</div>
+
+		<div class="col-md-4" style="height:100vh;background-color: white; padding: 0px">
+			<app-login-form [user]="user"></app-login-form>
+		</div>
+	</div>
+</div>
+
+<div class="" style="background-image: url('assets/img/background.svg');background-repeat: no-repeat;background-size: cover;background-position: center;">
+<app-about-us></app-about-us>
+<app-why-korangle></app-why-korangle>
+<app-pricing></app-pricing>
+<app-contact-us></app-contact-us>
+</div>

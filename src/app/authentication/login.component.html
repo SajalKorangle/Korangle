@@ -1,29 +1,33 @@
 <div class="main-content" style="min-height: 100vh;">
     <div class="container-fluid">
         <div class="card" style="min-height: 100vh; margin: 0;">
-            <div class="card-content" style="padding-top: 25vh" *ngIf="!isLoading">
+            <div class="card-content" style="padding-top: 20vh" *ngIf="!isLoading">
+
+                <div style="height: 100px;margin-bottom: 10vh" align="center">
+                    <img src="assets/img/korangle.jpg" style="height: 100%;width:100px;">
+                </div>
+
 
                 <form (ngSubmit)="submit()">
 
 
-                    <div class="row">
-                        <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"
-                             align="center">
-
+                    <div class="row" align="center">
+                        <!-- <div class="col-md-12 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" -->
+                             <!-- align="center"> -->
+                            <div style="width: 75%">
                             <mat-form-field class="example-full-width">
                                 <input matInput id="username" type="text"
                                        [(ngModel)]="username"
                                        placeholder="Mobile No."
                                        name="username">
                             </mat-form-field>
-
-                        </div>
+                            </div>
+                        <!-- </div> -->
 
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"
-                             align="center">
+                    <div class="row" align="center">
+                        <div style="width: 75%">
 
                             <mat-form-field class="example-full-width">
                                 <input matInput id="pass"
@@ -41,7 +45,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"
+                        <div class="col-md-12"
                              align="center">
                             <button type="submit" class="btn btn-danger">Login</button>
                         </div>
