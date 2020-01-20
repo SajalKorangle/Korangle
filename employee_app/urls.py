@@ -31,13 +31,13 @@ urlpatterns += [
 
 
 ######## Employee Permission ###############
-from .views import EmployeePermissionView, EmployeePermissionListView
+from .views import EmployeePermissionOldView, EmployeePermissionOldListView
 
 urlpatterns += [
-	url(r'^(?P<employee_id>[0-9]+)/employee-permissions', EmployeePermissionListView.as_view()),
-	url(r'^employee-permissions/(?P<employee_permission_id>[0-9]+)', EmployeePermissionView.as_view()),
-	url(r'^employee-permissions/batch', EmployeePermissionListView.as_view()),
-	url(r'^employee-permissions', EmployeePermissionView.as_view()),
+	url(r'^(?P<employee_id>[0-9]+)/employee-permissions-old', EmployeePermissionOldListView.as_view()),
+	url(r'^employee-permissions-old/(?P<employee_permission_id>[0-9]+)', EmployeePermissionOldView.as_view()),
+	url(r'^employee-permissions-old/batch', EmployeePermissionOldListView.as_view()),
+	url(r'^employee-permissions-old', EmployeePermissionOldView.as_view()),
 ]
 
 ######## Profile Image ############
@@ -57,4 +57,11 @@ from .views import EmployeeView, EmployeeListView
 urlpatterns += [
 	url(r'^employees/batch', EmployeeListView.as_view()),
 	url(r'^employees', EmployeeView.as_view()),
+]
+
+from .views import EmployeePermissionView, EmployeePermissionListView
+
+urlpatterns += [
+	url(r'^employee-permissions/batch', EmployeePermissionListView.as_view()),
+	url(r'^employee-permissions', EmployeePermissionView.as_view()),
 ]

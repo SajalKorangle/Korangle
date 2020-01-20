@@ -106,7 +106,7 @@ from .business.employee_permission import get_employee_permission_list, \
     create_employee_permission, delete_employee_permission, create_employee_permission_list
 
 
-class EmployeePermissionView(APIView):
+class EmployeePermissionOldView(APIView):
 
     @user_permission
     def post(request):
@@ -121,7 +121,7 @@ class EmployeePermissionView(APIView):
         return delete_employee_permission(data)
 
 
-class EmployeePermissionListView(APIView):
+class EmployeePermissionOldListView(APIView):
 
     @user_permission
     def get(request, employee_id):
@@ -156,4 +156,13 @@ class EmployeeView(CommonView, APIView):
 class EmployeeListView(CommonListView, APIView):
     Model = Employee
 
+########### EmployeePermission ############
+from .models import EmployeePermission
 
+
+class EmployeePermissionView(CommonView, APIView):
+    Model = EmployeePermission
+
+
+class EmployeePermissionListView(CommonListView, APIView):
+    Model = EmployeePermission
