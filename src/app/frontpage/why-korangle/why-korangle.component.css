@@ -12,9 +12,9 @@
 	box-sizing: border-box;
 }
 .feature-block:hover{
-	box-shadow: 3px 3px 3px lightgrey;
-	/*transition: 1s;*/
+	box-shadow: 0.5vh 0.5vh 1vh grey;
 }
+
 .feature-icon-size{
 	font-size: 100px;
 	line-height: 100px;

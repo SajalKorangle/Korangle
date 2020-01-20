@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../classes/user';
 import {registerForNotification} from "../classes/common.js";
@@ -16,6 +16,9 @@ import {environment} from "../../environments/environment";
 export class LoginComponent {
 
     @Input() user: User;
+
+    @Output() valueChange = new EventEmitter();
+
     username = '';
     password = '';
     visibilityMode = false;
@@ -28,8 +31,10 @@ export class LoginComponent {
         this.isLoading = true;
         this.authenticationService.loginUserDetails(this.username, this.password).then( data => {
             this.isLoading = false;
+            this.valueChange.emit('false');
             if (data.username === 'invalidUsername') {
                 alert('Login failed: Invalid username or password');
+
             } else {
                 localStorage.setItem('schoolJWT', data.token);
                 this.user.jwt = data.token;
@@ -52,8 +57,10 @@ export class LoginComponent {
             document.getElementById('pass').focus()
         }
         else {
+            this.valueChange.emit('true');
             this.login()
         }
+
     }
 
     toggleVisibilityMode(): void {

@@ -17,6 +17,8 @@ import { WhyKorangleComponent } from './frontpage/why-korangle/why-korangle.comp
 import { ContactUsComponent } from './frontpage/contact-us/contact-us.component';
 import { PricingComponent } from './frontpage/pricing/pricing.component';
 import { FoundedByComponent } from './frontpage/founded-by/founded-by.component';
+import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
+import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
 
 @NgModule({
     declarations: [
@@ -28,6 +30,8 @@ import { FoundedByComponent } from './frontpage/founded-by/founded-by.component'
         ContactUsComponent,
         PricingComponent,
         FoundedByComponent,
+        TextCarouselComponent,
+        WhatKorangleCanDoComponent,
     ],
     imports: [
         BasicComponentsModule,
