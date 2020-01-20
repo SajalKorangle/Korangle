@@ -1,29 +1,104 @@
 <div class="card-content">
 
     <ng-container>
+        <div class="row">
 
-        <app-employee-filter [user]="user"
-                             (employee)="getEmployeePermissionList($event)"></app-employee-filter>
+            <div class="col-sm-8">
+                <div class="col-sm-12" *ngIf="selectedAssignTaskOption==assignTaskOptions[0]">
+                    <app-employee-filter [user]="user"
+                                         (employee)="selectedEmployee=$event;serviceAdapter.getPermissionList()" (emitEmployeeList)="employeeList=$event"></app-employee-filter>
+                </div>
+                <div class="col-sm-6" *ngIf="selectedAssignTaskOption==assignTaskOptions[1]">
+                    <mat-form-field>
+                        <mat-select placeholder="Select module"
+                                    [ngModel]="selectedModule"
+                                    (ngModelChange)="selectedModule=$event;">
+                            <mat-option *ngFor='let module of moduleList;' [value]="module">
+                                {{module.title}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-6" *ngIf="selectedModule && selectedAssignTaskOption==assignTaskOptions[1]">
+                    <mat-form-field>
+                        <mat-select placeholder="Select task"
+                                    [ngModel]="selectedTask"
+                                    (ngModelChange)="selectedTask=$event;serviceAdapter.getPermissionList();">
+                            <mat-option *ngFor='let task of selectedModule.taskList;' [value]="task">
+                                {{task.title}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
 
-        <ng-container *ngIf="selectedEmployee && !isLoading">
+            <div class="col-sm-4" align="end">
+                <mat-form-field>
+                    <mat-select placeholder="Select Filter Type"
+                                [ngModel]="selectedAssignTaskOption"
+                                (ngModelChange)="changeFilterVal($event);">
+                        <mat-option *ngFor='let filter of assignTaskOptions;' [value]="filter">
+                            {{filter}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
 
-            <span style="font-weight: 800; font-size: 20px">{{selectedEmployee.name}}</span><br/>
+        <div class="row" *ngIf="selectedAssignTaskOption==assignTaskOptions[0]">
 
-            <ng-container *ngFor="let module of moduleList">
-                <span style="font-weight: 800">{{module.title}}</span><br/>
-                <ng-container *ngFor="let task of module.taskList">
-                    <mat-checkbox [ngModel]="task.employeePermissionId !== null"
-                                  (ngModelChange)="updateEmployeePermission(task)"
-                                  [disabled]="isDisabled(module,task)">
-                        {{task.title}}
+
+            <ng-container *ngIf="selectedEmployee && !isLoading">
+
+                <span style="font-weight: 800; font-size: 20px">{{selectedEmployee.name}}</span><br/>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="assignAllTasks(selectedEmployee); $event.stopPropagation();">Grant All
+                </button><button class="btn"
+                                 style="padding: 4px 7px"
+                                 (click)="removeAllPermissions(selectedEmployee); $event.stopPropagation();">Remove All
+            </button><br/>
+
+                <ng-container *ngFor="let module of moduleList">
+                    <span style="font-weight: 800">{{module.title}}</span><br/>
+                    <ng-container *ngFor="let task of module.taskList">
+                        <mat-checkbox [ngModel]="hasPermission(selectedEmployee, task)"
+                                      (ngModelChange)="updatePermission(selectedEmployee, task)"
+                                      [disabled]="isDisabled(module,task, selectedEmployee)">
+                            {{task.title}}
+                            <br/>
+                        </mat-checkbox>
+                        <div *ngIf="task.permissionLoading" class="loader-custom"></div>
                         <br/>
-                    </mat-checkbox>
-                    <div *ngIf="task.permissionLoading" class="loader-custom"></div>
-                    <br/>
+                    </ng-container>
                 </ng-container>
+
+            </ng-container>
+
+        </div>
+        <div class="row" *ngIf="selectedAssignTaskOption==assignTaskOptions[1]">
+            <div class="row">
+
+            </div>
+            <ng-container *ngIf="selectedTask && !isLoading">
+
+            <span style="font-weight: 800; font-size: 20px">{{selectedTask.title}}</span><br/>
+
+            <ng-container *ngFor="let employee of employeeList">
+                <mat-checkbox [ngModel]="hasPermission(employee, selectedTask)"
+                              (ngModelChange)="updatePermission(employee, selectedTask)"
+                              >
+                    {{employee.name}}
+                    <br/>
+                </mat-checkbox>
+                <div *ngIf="selectedTask.permissionLoading" class="loader-custom"></div>
+                <br/>
             </ng-container>
 
         </ng-container>
+
+        </div>
+
 
     </ng-container>
 

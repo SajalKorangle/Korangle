@@ -17,7 +17,7 @@ export class ViewPaymentServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
         this.vm.isInitialLoading = true;
-        this.vm.employeeService.getEmployeeMiniProfileList(data, this.vm.user.jwt).then(employeeList => {
+        this.vm.employeeOldService.getEmployeeMiniProfileList(data, this.vm.user.jwt).then(employeeList => {
             this.vm.employeeList = employeeList;
             this.vm.isInitialLoading = false;
         }, error => {

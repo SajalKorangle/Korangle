@@ -1,5 +1,5 @@
 
-import {AssignTaskComponent} from "./assign-task.component";
+import {AssignTaskComponent} from './assign-task.component';
 
 export class AssignTaskServiceAdapter {
 
@@ -59,6 +59,26 @@ export class AssignTaskServiceAdapter {
             this.vm.isLoading = false;
         });*/
 
+    }
+
+    getPermissionList(): void {
+        const data = {};
+        if (this.vm.selectedAssignTaskOption === this.vm.assignTaskOptions[0]){
+            data['parentEmployee'] = this.vm.selectedEmployee.id;
+        } else {
+            data['parentTask'] = this.vm.selectedTask.id;
+        }
+        this.vm.isLoading = true;
+        // this.vm.employeeService.getObjectList()
+        Promise.all([
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_permissions, data)
+            ]).then(value => {
+                this.vm.currentPermissionList = value[0];
+                console.log(this.vm.currentPermissionList);
+                this.vm.isLoading = false;
+        }, error => {
+                this.vm.isLoading = false;
+        });
     }
 
     initializeModuleList(moduleList: any, taskList: any): void {

@@ -62,22 +62,22 @@ export class EmployeeOldService extends CommonServiceRequirements {
 
     // Employee Permission
     getEmployeePermissionList(data: any, token: any): Promise<any> {
-        const url = '/employee/' + data['parentEmployee'] + '/employee-permissions';
+        const url = '/employee/' + data['parentEmployee'] + '/employee-permissions-old';
         return super.getData(token, url)
     }
 
     addEmployeePermission(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-permissions';
+        const url = '/employee/employee-permissions-old';
         return super.postData(data, token, url);
     }
 
     addEmployeePermissionList(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-permissions/batch';
+        const url = '/employee/employee-permissions-old/batch';
         return super.postData(data, token, url);
     }
 
     deleteEmployeePermission(data: any, token: any): Promise<any> {
-        const url = '/employee/employee-permissions/' + data['id'];
+        const url = '/employee/employee-permissions-old/' + data['id'];
         return super.deleteData(token, url);
     }
 
