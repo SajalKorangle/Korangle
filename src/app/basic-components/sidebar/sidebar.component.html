@@ -186,7 +186,7 @@
                         <a (click)="module.showTaskList = !module.showTaskList;">
                             <i class="material-icons">{{module.icon}}</i>
                             <p>
-                                {{module.title}}
+                                <span id="{{module.title}}">{{module.title}}</span>
                                 <i *ngIf="!module.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
                                 <i *ngIf="module.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
                             </p>
@@ -198,7 +198,7 @@
                                  class="subsectionDiv"
                                  (click)="changePage(task, module);">
                                 <i class="material-icons">remove</i>
-                                <p>{{task.title}}</p>
+                                <p id="{{task.title}}">{{task.title}}</p>
                             </div>
                         </ng-container>
                     </li>
