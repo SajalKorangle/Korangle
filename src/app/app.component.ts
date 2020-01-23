@@ -11,7 +11,6 @@ import {NotificationService} from "./services/modules/notification/notification.
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
 import {EmitterService} from "./services/emitter.service";
-import {CommonFunctions} from "./classes/common-functions";
 
 declare const $: any;
 

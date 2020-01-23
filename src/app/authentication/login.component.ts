@@ -6,6 +6,7 @@ import {NotificationService} from "../services/modules/notification/notification
 import {Constants} from "../classes/constants";
 import {environment} from "../../environments/environment";
 
+declare const $:any;
 @Component({
     selector: 'app-login-form',
     providers: [AuthenticationService, NotificationService],
@@ -74,6 +75,14 @@ export class LoginComponent {
         } else {
             return "visibility";
         }
+    }
+
+    isMobile(): boolean {
+        //return isMobile();
+        if ($(window).width() > 991) {
+            return false;
+        }
+        return true;
     }
 
 }
