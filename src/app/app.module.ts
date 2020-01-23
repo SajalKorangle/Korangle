@@ -16,7 +16,6 @@ import { AboutUsComponent } from './frontpage/about-us/about-us.component';
 import { WhyKorangleComponent } from './frontpage/why-korangle/why-korangle.component';
 import { ContactUsComponent } from './frontpage/contact-us/contact-us.component';
 import { PricingComponent } from './frontpage/pricing/pricing.component';
-import { FoundedByComponent } from './frontpage/founded-by/founded-by.component';
 import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
 import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
 
@@ -29,7 +28,6 @@ import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/wha
         WhyKorangleComponent,
         ContactUsComponent,
         PricingComponent,
-        FoundedByComponent,
         TextCarouselComponent,
         WhatKorangleCanDoComponent,
     ],

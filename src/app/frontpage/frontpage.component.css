@@ -9,14 +9,11 @@
 	margin-right: 5px;								 
 	margin-left: 5px;
 	border-right: 1px solid green;								 
-};
-.navbar-button:last-child{
-	border:0px;
-}
-.navbar-button-active{
-	background-color: 
 }
 
+.navbar-button:hover{
+	color:#ff7131;
+}
 
 @font-face{
 	font-family: KorangleLogo;

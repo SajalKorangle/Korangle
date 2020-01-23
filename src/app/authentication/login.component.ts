@@ -17,7 +17,7 @@ export class LoginComponent {
 
     @Input() user: User;
 
-    @Output() valueChange = new EventEmitter();
+    @Output() showFrontPageProgressBar = new EventEmitter();
 
     username = '';
     password = '';
@@ -31,7 +31,7 @@ export class LoginComponent {
         this.isLoading = true;
         this.authenticationService.loginUserDetails(this.username, this.password).then( data => {
             this.isLoading = false;
-            this.valueChange.emit('false');
+            this.showFrontPageProgressBar.emit('false');
             if (data.username === 'invalidUsername') {
                 alert('Login failed: Invalid username or password');
 
@@ -47,6 +47,7 @@ export class LoginComponent {
                 });
             }
         }, error => {
+            this.showFrontPageProgressBar.emit('false');
             this.isLoading = false;
         });
     }
@@ -57,7 +58,7 @@ export class LoginComponent {
             document.getElementById('pass').focus()
         }
         else {
-            this.valueChange.emit('true');
+            this.showFrontPageProgressBar.emit('true');
             this.login()
         }
 
