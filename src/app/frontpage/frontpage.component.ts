@@ -33,7 +33,7 @@ export class FrontpageComponent implements OnInit {
   handleScroll(){
     let element = document.getElementById('section-1');
     if(element == null || element == undefined) return;
-    let section1Height = element.offsetHeight;
+    let section1Height = element.offsetHeight/2;
     if(window.scrollY > section1Height){
       document.getElementById('top-button').style.display='block';
     }

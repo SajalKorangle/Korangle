@@ -3,9 +3,7 @@
         <div class="card" style="min-height: 100vh; margin: 0;">
             <div class="card-content" style="padding-top: 20vh" *ngIf="!isLoading">
 
-                <div style="height: 100px;margin-bottom: 10vh" align="center">
-                    <img src="assets/img/korangle.jpg" style="height: 100%;width:100px;">
-                </div>
+                
 
 
                 <form (ngSubmit)="submit()">
@@ -24,6 +22,9 @@
                         </ng-container>
 
                         <ng-container *ngIf="!isMobile()">
+                            <div style="height: 100px;margin-bottom: 10vh" align="center">
+                                <img src="assets/img/korangle.jpg" style="height: 100%;width:100px;">
+                            </div>
                             <div style="width: 75%">
                                 <mat-form-field class="example-full-width">
                                     <input matInput id="username" type="text"

@@ -5,8 +5,8 @@ import {registerForNotification} from "../classes/common.js";
 import {NotificationService} from "../services/modules/notification/notification.service";
 import {Constants} from "../classes/constants";
 import {environment} from "../../environments/environment";
+import {CommonFunctions} from "../classes/common-functions";
 
-declare const $:any;
 @Component({
     selector: 'app-login-form',
     providers: [AuthenticationService, NotificationService],
@@ -78,11 +78,8 @@ export class LoginComponent {
     }
 
     isMobile(): boolean {
-        //return isMobile();
-        if ($(window).width() > 991) {
-            return false;
-        }
-        return true;
+        return CommonFunctions.getInstance().isMobileMenu();
+        
     }
 
 }

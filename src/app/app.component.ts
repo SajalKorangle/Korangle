@@ -11,8 +11,8 @@ import {NotificationService} from "./services/modules/notification/notification.
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
 import {EmitterService} from "./services/emitter.service";
+import {CommonFunctions} from './classes/common-functions';
 
-declare const $: any;
 
 @Component({
     selector: 'app-root',
@@ -101,9 +101,6 @@ export class AppComponent implements OnInit {
     }
     isMobile(): boolean {
         //return isMobile();
-        if ($(window).width() > 991) {
-            return false;
-        }
-        return true;
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 }
