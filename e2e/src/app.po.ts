@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class AppPage {
+export class AppPage {  
   navigateToURL(url) {
     return browser.get(browser.baseUrl + url) as Promise<any>;
   }
@@ -11,5 +11,9 @@ export class AppPage {
 
   getTitleText() {
     return element(by.css('app-root .content span')).getText() as Promise<string>;
+  }
+
+  scrollView(position){
+    
   }
 }
