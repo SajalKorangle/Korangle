@@ -16,12 +16,11 @@
                     </mat-select>
                 </mat-form-field>
 
-
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
                     <mat-select placeholder="Select Class"
                                 [disabled]="isLoading"
-                                [ngModel]="selectedClass"
-                                (ngModelChange)="selectedClass=$event;detectChanges();">
+                                [ngModel]="selectedClassSection"
+                                (ngModelChange)="selectedClassSection=$event;detectChanges();">
                         <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
                             {{classs.class.name}} - {{classs.section.name}}
                         </mat-option>
@@ -80,6 +79,7 @@
                     <td *ngFor="let studentSubField of student.subFieldList">
                         <input type="number"
                                placeholder="Type marks here"
+                               [attr.id]="student.id+'_'+studentSubField.parentExtraSubField"
                                [ngModel]="studentSubField.marksObtained"
                                min="0"
                                max="2"

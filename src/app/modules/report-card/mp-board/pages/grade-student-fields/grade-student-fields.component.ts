@@ -29,16 +29,16 @@ export class GradeStudentFieldsComponent implements OnInit {
     showTestDetails = false;
 
     selectedExamination: any;
-    selectedClass: any;
+    selectedClassSection: any;
     selectedField: any;
 
-    examinationList: any;
-    classSectionList: any;
+    examinationList = [];
+    classSectionList = [];
     fieldList: any;
 
-    studentList: any;
+    studentList = [];
 
-    subjectList: any;
+    // subjectList: any;
 
     serviceAdapter: GradeStudentFieldsServiceAdapter;
 
@@ -64,6 +64,13 @@ export class GradeStudentFieldsComponent implements OnInit {
     detectChanges(): void {
         this.showTestDetails = false;
         this.cdRef.detectChanges();
+    }
+
+    getFilteredStudentList(): any {
+        return this.studentList.filter(student => {
+            return student.studentSection.parentClass == this.selectedClassSection.class.id
+                && student.studentSection.parentDivision == this.selectedClassSection.section.id;
+        });
     }
 
 }
