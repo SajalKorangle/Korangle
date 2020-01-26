@@ -83,18 +83,28 @@ export class UpdateMarksServiceAdapter {
 
             this.classSubjectList.forEach(item => {
 
-                let request_class_test_data = {
-                    'examinationList': [examination_id_list],
-                    'subjectList': [item.parentSubject],
-                    'classList': [item.parentClass],
-                    'sectionList': [item.parentDivision],
-                    'startTimeList': [],
-                    'endTimeList': [],
-                    'testTypeList': [],
-                    'maximumMarksList': [],
+                let request_class_test_data = {            
+                    /*'examinationId': this.vm.selectedExamination.id,
+                    'classId': this.vm.selectedExamination.selectedClass.dbId,
+                    'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+                    'parentExamination__in': examination_id_list,
+                    'parentClass__in': item.parentClass,
+                    'parentDivision__in': item.parentDivision,
+                    'parentSubject__in' : item.parentSubject
                 };
 
-                service_list.push(this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt));
+                // let request_class_test_data = {
+                //     'examinationList': [examination_id_list],
+                //     'subjectList': [item.parentSubject],
+                //     'classList': [item.parentClass],
+                //     'sectionList': [item.parentDivision],
+                //     'startTimeList': [],
+                //     'endTimeList': [],
+                //     'testTypeList': [],
+                //     'maximumMarksList': [],
+                // };
+
+                service_list.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data));
 
             });
 

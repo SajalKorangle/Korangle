@@ -79,7 +79,16 @@ export class SetStudentSubjectServiceAdapter {
             'marksObtainedList': [],
         };
 
-        let request_class_test_data = {
+        let request_class_test_data = {            
+            /*'examinationId': this.vm.selectedExamination.id,
+            'classId': this.vm.selectedExamination.selectedClass.dbId,
+            'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+            'parentExamination__in': this.prepareExaminationList(),
+            'parentClass__in': student.classDbId,
+            'parentDivision__in': student.sectionDbId,            
+        };
+
+        /*let request_class_test_data = {
             'examinationList': this.prepareExaminationList(),
             'subjectList': [],
             'classList': [student.classDbId],
@@ -88,13 +97,13 @@ export class SetStudentSubjectServiceAdapter {
             'endTimeList': [],
             'testTypeList': [],
             'maximumMarksList': [],
-        };
+        };*/
 
         Promise.all([
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
-            this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_class_test_data),
         ]).then(value => {
             this.studentSubjectList = value[0];
             this.classSubjectList = value[1];

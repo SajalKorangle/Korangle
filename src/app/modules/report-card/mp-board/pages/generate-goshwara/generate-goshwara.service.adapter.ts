@@ -215,6 +215,16 @@ export class GenerateGoshwaraServiceAdapter {
             };
 
             let request_class_test_data = {
+                /*'examinationId': this.vm.selectedExamination.id,
+                'classId': this.vm.selectedExamination.selectedClass.dbId,
+                'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+                'parentExamination__in': this.getExaminationIdList(),
+                'parentClass__in': this.vm.selectedClass.dbId,
+                'parentDivision__in': 1,
+                'parentSubject__in':this.classSubjectList.map(a => a.parentSubject),
+            };
+
+            /*let request_class_test_data = {
                 'examinationList': this.getExaminationIdList(),
                 'subjectList': this.classSubjectList.map(a => a.parentSubject),
                 'classList': [this.vm.selectedClass.dbId],
@@ -223,7 +233,7 @@ export class GenerateGoshwaraServiceAdapter {
                 'endTimeList': [],
                 'testTypeList': [],
                 'maximumMarksList': [],
-            };
+            };*/
 
             let request_student_test_data = {
                 'studentList': this.vm.selectedClass.studentList.map(a => a.dbId),
@@ -240,7 +250,7 @@ export class GenerateGoshwaraServiceAdapter {
 
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_class_test_data));
             request_array.push(this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationOldService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
 
