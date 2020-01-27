@@ -83,3 +83,27 @@ input {
     max-height: 88vh;
     overflow: scroll;
 }
+
+.updatingField {
+    animation: colorchange infinite 15s; /* animation-name followed by duration in seconds*/
+    /* you could also use milliseconds (ms) or something like 2.5s */
+    -webkit-animation: colorchange infinite 15s; /* Chrome and Safari */
+}
+
+@keyframes colorchange
+{
+    0%   {background: lightpink;}
+    25%  {background: lightyellow;}
+    50%  {background: lightblue;}
+    75%  {background: lightgreen;}
+    100% {background: lightpink;}
+}
+
+@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
+{
+    0%   {background: lightpink;}
+    25%  {background: lightyellow;}
+    50%  {background: lightblue;}
+    75%  {background: lightgreen;}
+    100% {background: lightpink;}
+}
