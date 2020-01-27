@@ -46,7 +46,7 @@ export class UpdateProfileComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
+        console.log(this.user);
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
