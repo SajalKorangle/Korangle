@@ -57,8 +57,9 @@ describe('Testing', () => {
     browser.sleep(7000);
 
     element(by.cssContainingText('mat-option', 'Class - 7, Section - A')).click();    
-
     element(by.buttonText('GET')).click();
+    browser.sleep(7000);
+    expect(element.all(by.id('students')).count()).toBe(29);
     browser.sleep(20000);    
   })
 
