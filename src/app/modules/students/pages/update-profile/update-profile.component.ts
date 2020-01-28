@@ -5,6 +5,7 @@ import { Classs } from '../../../../classes/classs';
 import { Section } from '../../../../classes/section';
 
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
 import {BusStopService} from '../../../../services/modules/school/bus-stop.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -12,7 +13,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
-    providers: [ StudentOldService, BusStopService ],
+    providers: [ StudentOldService, BusStopService, StudentService ],
 })
 
 export class UpdateProfileComponent implements OnInit {
@@ -25,61 +26,33 @@ export class UpdateProfileComponent implements OnInit {
 
     classSectionStudentList: Classs[] = [];
 
-    currentStudent: Student = new Student();
+    // currentStudent: Student = new Student();
+    currentStudent: any;
 
     busStopList = [];
 
     isLoading = false;
-
+    // classList: any;
+    // sectionList: any;
+    selectedStudentSection:any;
+    currentStudentSection:any;
     constructor (private studentService: StudentOldService,
-                 private busStopService: BusStopService) { }
+                 private busStopService: BusStopService,
+                 private studentServiceN: StudentService,
+                 ) { }
 
-    changeSelectedSectionToFirst(): void {
-        this.selectedSection = this.selectedClass.sectionList[0];
-        this.changeSelectedStudentToFirst();
-    }
+    // changeSelectedSectionToFirst(): void {
+    //     this.selectedSection = this.selectedClass.sectionList[0];
+    //     this.changeSelectedStudentToFirst();
+    // }
 
-    changeSelectedStudentToFirst(): void {
-        this.selectedStudent = this.selectedSection.studentList[0];
-        this.currentStudent.copy(this.selectedStudent);
-    }
+    // changeSelectedStudentToFirst(): void {
+    //     this.selectedStudent = this.selectedSection.studentList[0];
+    //     this.currentStudent.copy(this.selectedStudent);
+    // }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
-        const data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-            schoolDbId: this.user.activeSchool.dbId,
-        };
-        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
-            classSectionStudentList => {
-                classSectionStudentList.forEach( classs => {
-                    const tempClass = new Classs();
-                    tempClass.name = classs.name;
-                    tempClass.dbId = classs.dbId;
-                    classs.sectionList.forEach( section => {
-                        const tempSection = new Section();
-                        tempSection.name = section.name;
-                        tempSection.dbId = section.dbId;
-                        section.studentList.forEach( student => {
-                            const tempStudent = new Student();
-                            tempStudent.name = student.name;
-                            tempStudent.dbId = student.dbId;
-                            tempSection.studentList.push(tempStudent);
-                        });
-                        tempClass.sectionList.push(tempSection);
-                    });
-                    this.classSectionStudentList.push(tempClass);
-                });
-                if (this.classSectionStudentList.length > 0) {
-                    this.selectedClass = this.classSectionStudentList[0];
-                    this.changeSelectedSectionToFirst();
-                } else {
-                    alert('Student needs to be added first, before profile updation');
-                }
-
-            }
-        );
 
         const dataForBusStop = {
             schoolDbId: this.user.activeSchool.dbId,
@@ -89,34 +62,62 @@ export class UpdateProfileComponent implements OnInit {
             this.busStopList = busStopList;
         });
     }
+// classes/common function
+    copyObject(object: any): any {
+        let tempObject = {};
+        Object.keys(object).forEach(key => {
+            tempObject[key] = object[key];
+        });
+        return tempObject;
+    }
 
-    getStudentProfile(): void {
+    handleDetailsFromParentStudentFilter(value): void{
+        console.log(value);
+        return;
+    }
+
+
+    handleStudentSectionListSelection(value): void{
+        console.log('Value of student section');
+        console.log(value);
+        this.selectedStudentSection = value[0];
+    }
+
+    handleStudentListSelection(value): void{
+        if(value == undefined || value.length == 0) return;
+        console.log('Value from handle studentSelection');
+        console.log(value);
+        if(this.selectedStudentSection == undefined || this.selectedStudentSection == '') return;
+        this.getStudentProfile(value[0].id);
+    }
+
+    getStudentProfile(studentId ?: any): void {
         this.isLoading = true;
-        const data = {
-            studentDbId: this.selectedStudent.dbId,
+        // const data = {
+        //     studentDbId: studentId?studentId:this.selectedStudent.dbId,
+        //     sessionDbId: this.user.activeSchool.currentSessionDbId
+        // };
+        let dataN = {
+            'id': studentId?studentId:this.selectedStudent.dbId,
             sessionDbId: this.user.activeSchool.currentSessionDbId
-        };
-        this.studentService.getStudentProfile(data, this.user.jwt).then(
-            student => {
-                this.isLoading = false;
-                const breakLoop = false;
-                if (this.selectedStudent.dbId === student.dbId) {
-                    this.selectedStudent.copy(student);
-                    this.currentStudent.copy(student);
-                    console.log(this.selectedStudent);
-                }
-            }, error => {
-                this.isLoading = false;
-            }
-        );
+        }
+        this.studentServiceN.getObject(this.studentServiceN.student, dataN).then(value=>{
+            console.log('Value from new service');
+            console.table(value);
+            this.currentStudent = this.copyObject(value);
+            this.selectedStudent = this.copyObject(value);
+            this.currentStudentSection = this.copyObject(this.selectedStudentSection);
+            this.isLoading = false;
+            // roll number, id->dbId, newcategory->category(similar for religin), busStopId->busstopdbId(similar admissionSession, sectionDbID ?,sectionName?,classname,classDbId?)
+        });
     }
 
     updateProfile(): void {
-        if (this.currentStudent.busStopDbId == 0) {
-            this.currentStudent.busStopDbId = null;
+        if (this.currentStudent.currentBusStop == 0) {
+            this.currentStudent.currentBusStop = null;
         }
-        if (this.currentStudent.admissionSessionDbId == 0) {
-            this.currentStudent.admissionSessionDbId = null;
+        if (this.currentStudent.admissionSession == 0) {
+            this.currentStudent.admissionSession = null;
         }
         if (this.currentStudent.familySSMID
             && this.currentStudent.familySSMID.toString().length !== 0
@@ -150,31 +151,51 @@ export class UpdateProfileComponent implements OnInit {
             alert('Number of digits in Aadhar No. should be 12');
             return;
         }
-        // this.currentStudent.classDbId = this.selectedClass.dbId;
-        this.currentStudent.sessionDbId = this.user.activeSchool.currentSessionDbId;
+        // this.currentStudent.studentSection.parentClass = this.selectedClass.dbId;
+        // this.currentStudent.sessionDbId = this.user.activeSchool.currentSessionDbId;
         this.isLoading = true;
-        this.studentService.updateStudentProfileOld(this.currentStudent, this.user.jwt).then(
-            student => {
+        console.log(this.currentStudent);
+        console.log(this.currentStudentSection);
+        this.studentServiceN.updateObject(this.studentServiceN.student,this.currentStudent).then(student=>{
+            console.table(student);
+            this.selectedStudent = this.copyObject(student);
+            if(this.selectedStudentSection.rollNumber != this.currentStudentSection.rollNumber
+                && this.currentStudent.id == this.currentStudentSection.parentStudent){
+                this.studentServiceN.updateObject(this.studentServiceN.student_section,this.currentStudentSection).then(
+                    studentSection=>{
+                        this.selectedStudentSection = this.copyObject(studentSection);
+                        alert('Student: ' + student.name + 'updated successfully');
+                        this.isLoading = false;
+                });
+            }else{
+                alert('Student: ' + student.name + 'updated successfully without');
                 this.isLoading = false;
-                let breakLoop = false;
-                if (this.selectedStudent.dbId === student.dbId) {
-                    this.selectedStudent.copy(student);
-                    alert('Student updated successfully');
-                } else {
-                    this.classSectionStudentList.forEach( classs => {
-                        classs.studentList.forEach( tempStudent => {
-                            if (tempStudent.dbId === student.dbId) {
-                                tempStudent.copy(student);
-                                breakLoop = true;
-                                return;
-                            }
-                        });
-                        if (breakLoop) { return; }
-                    });
-                    alert('Student: ' + student.name + ' updated successfully');
-                }
             }
-        );
+            
+        });
+        return;
+        // this.studentService.updateStudentProfileOld(this.currentStudent, this.user.jwt).then(
+        //     student => {
+        //         this.isLoading = false;
+        //         let breakLoop = false;
+        //         if (this.selectedStudent.dbId === student.dbId) {
+        //             this.selectedStudent.copy(student);
+        //             alert('Student updated successfully');
+        //         } else {
+        //             this.classSectionStudentList.forEach( classs => {
+        //                 classs.studentList.forEach( tempStudent => {
+        //                     if (tempStudent.dbId === student.dbId) {
+        //                         tempStudent.copy(student);
+        //                         breakLoop = true;
+        //                         return;
+        //                     }
+        //                 });
+        //                 if (breakLoop) { return; }
+        //             });
+        //             alert('Student: ' + student.name + ' updated successfully');
+        //         }
+        //     }
+        // );
     }
 
     getBusStopName(busStopDbId: any) {

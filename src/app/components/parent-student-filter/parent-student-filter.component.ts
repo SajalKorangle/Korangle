@@ -29,6 +29,8 @@ export class ParentStudentFilterComponent implements OnInit {
 
     @Output() onStudentListSelected = new EventEmitter<any>();
 
+    @Output() onStudentListSelectedStudentSection = new EventEmitter<any>();
+
     classList = [];
     sectionList = [];
     studentSectionList = [];
@@ -146,6 +148,10 @@ export class ParentStudentFilterComponent implements OnInit {
     }
 
     handleStudentSelection(student: any): void {
+        let studentSection = this.studentSectionList.find(item => {
+            return item.parentStudent == student.id;
+        });
+        this.onStudentListSelectedStudentSection.emit([studentSection]);
         this.onStudentListSelected.emit([student]);
     }
 
