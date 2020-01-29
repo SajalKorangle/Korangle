@@ -2,7 +2,7 @@
 
   <parent-student-filter [user]="user"
                          (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
-                         (onStudentListSelected)="serviceAdapter.getStudentDetails($event)"
+                         (onStudentListSelectedOld)="serviceAdapter.getStudentDetails($event)"
                          (onStudentListLoading)="isStudentListLoading=$event;"
                          [selectedFilterType]="'Student'"
                          [bothFilters]="bothFilters"

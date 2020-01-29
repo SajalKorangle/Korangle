@@ -4,13 +4,13 @@
                                (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
                                (onStudentListSelected)="handleStudentListSelection($event)"
                                (onStudentListLoading)="isLoading=$event"
-                               (onStudentListSelectedStudentSection)="handleStudentSectionListSelection($event)"
                                [selectedFilterType]="'Student'"
                                [studentTcGenerated]="false"
                                [bothFilters]="false"></parent-student-filter>
 
     
-
+    <hr>
+    
     <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
 
         <div class="row hidden-md hidden-lg hidden-sm"
@@ -185,7 +185,7 @@
                                 [ngModel]="selectedStudent.currentBusStop"
                                 (ngModelChange)="currentStudent.currentBusStop = $event">
                         <mat-option [value]=0>None</mat-option>
-                        <mat-option *ngFor="let busStop of busStopList" [value]="busStop.dbId">
+                        <mat-option *ngFor="let busStop of busStopList" [value]="busStop.id">
                             {{busStop.stopName}}
                         </mat-option>
                     </mat-select>
