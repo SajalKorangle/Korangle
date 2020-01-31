@@ -16,7 +16,7 @@ describe('workspace-project App', () => {
 
   it('check',()=>{
     browser.waitForAngularEnabled(false);
-    page.navigateTo();    
+    page.navigateTo();
 
     element(by.name('username')).sendKeys('6264439636');
     element(by.name('password')).sendKeys('6264439636');
@@ -24,20 +24,20 @@ describe('workspace-project App', () => {
     browser.sleep(5000);
     console.log('Logged In');
 
-    console.log('Openening Student');    
-    element(by.id('Students')).click();
+    console.log('Opening Student');
+    element(by.id('Employee-Students')).click();
     browser.sleep(2000);    
-    element(by.id('Update Profile')).click();
+    element(by.id('Students-Update Profile')).click();
     console.log('Clicked On update profile');
     browser.sleep(10000);
     element(by.buttonText('Get')).click();
     
-    browser.executeScript(scrollIntoView,element(by.id('settings')));
-    element(by.id('settings')).click();
+    browser.executeScript(scrollIntoView,element(by.id('Settings')));
+    element(by.id('Settings')).click();
     browser.sleep(1000);
   
-    browser.executeScript(scrollIntoView,element(by.id('Contact Us')));
-    element(by.id('Contact Us')).click();
+    browser.executeScript(scrollIntoView,element(by.id('Settings-Contact Us')));
+    element(by.id('Settings-Contact Us')).click();
     browser.sleep(1000);
 
     browser.executeScript(scrollIntoView,element(by.id('Logout')));
