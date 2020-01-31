@@ -183,10 +183,10 @@
                     <li [class.active]="module.path === user.section.route"
                         [attr.data-color]='user.activeSchool.primaryThemeColor'
                         style="border-bottom: 0.1px solid lightgrey;">
-                        <a id="{{module.title}}" (click)="module.showTaskList = !module.showTaskList;">
+                        <a [attr.id]="'employee-'+module.title" (click)="module.showTaskList = !module.showTaskList;">
                             <i class="material-icons">{{module.icon}}</i>
                             <p>
-                                <span>{{module.title}}</span>
+                                {{module.title}}
                                 <i *ngIf="!module.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
                                 <i *ngIf="module.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
                             </p>
@@ -197,7 +197,7 @@
                                  [class.active]="module.path===user.section.route && task.title===user.section.subTitle"
                                  class="subsectionDiv"
                                  (click)="changePage(task, module);"
-                                 id="{{task.title}}">
+                                 [attr.id]="module.title+'-'+task.title">
                                 <i class="material-icons">remove</i>
                                 <p>{{task.title}}</p>
                             </div>
@@ -225,7 +225,7 @@
                          class="subsectionDiv"
                          (click)="changePage(task, settings);">
                         <i class="material-icons">remove</i>
-                        <p id="{{task.title}}">{{task.title}}</p>
+                        <p [attr.id]="'settings-'+{{task.title}}">{{task.title}}</p>
                     </div>
                 </ng-container>
             </li>
