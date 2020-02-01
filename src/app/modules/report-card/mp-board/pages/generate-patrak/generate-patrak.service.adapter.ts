@@ -450,7 +450,7 @@ export class GeneratePatrakServiceAdapter {
             if (item.parentStudent == studentId
                 && item.parentExtraSubField == extraSubFieldId
                 && item.parentExamination == examinationId) {
-                studentMarks = (parseFloat(item.marksObtained)*2)/10;
+                studentMarks = parseFloat(item.marksObtained);
                 return false;
             }
             return true;
