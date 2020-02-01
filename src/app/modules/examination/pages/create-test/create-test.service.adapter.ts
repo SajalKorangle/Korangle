@@ -108,9 +108,9 @@ export class CreateTestServiceAdapter {
             /*'examinationId': this.vm.selectedExamination.id,
             'classId': this.vm.selectedExamination.selectedClass.dbId,
             'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
-            'parentExamination__in': this.vm.selectedExamination.id,
-            'parentClass__in': this.vm.selectedExamination.selectedClass.dbId,
-            'parentDivision__in': this.vm.selectedExamination.selectedClass.selectedSection.id,
+            'parentExamination': this.vm.selectedExamination.id,
+            'parentClass': this.vm.selectedExamination.selectedClass.dbId,
+            'parentDivision': this.vm.selectedExamination.selectedClass.selectedSection.id,
         };
 
         let request_class_subject_data = {
@@ -372,7 +372,7 @@ export class CreateTestServiceAdapter {
         let student_test_data = this.prepareStudentTestDataToRemove(test);
 
         let service_list = [];
-        service_list.push(this.vm.examinationService.deleteObject(this.vm.examinationService.test_second, test.id));
+        service_list.push(this.vm.examinationService.deleteObject(this.vm.examinationService.test_second, test));
 
         if (student_test_data.length > 0) {
             service_list.push(this.vm.examinationOldService.deleteStudentTestList(student_test_data, this.vm.user.jwt));

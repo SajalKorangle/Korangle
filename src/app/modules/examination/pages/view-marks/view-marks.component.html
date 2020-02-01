@@ -58,7 +58,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr id="students" *ngFor="let studentSection of getSortedFilteredStudentSectionList(); let i=index;">
+                <tr *ngFor="let studentSection of getSortedFilteredStudentSectionList(); let i=index;">
                     <td>{{(i+1)}}.</td>
                     <td>{{getStudent(studentSection).name}}</td>
                     <td>{{studentSection.rollNumber}}</td>

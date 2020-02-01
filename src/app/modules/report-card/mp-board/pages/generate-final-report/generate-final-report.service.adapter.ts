@@ -238,26 +238,12 @@ export class GenerateFinalReportServiceAdapter {
                 'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             };
 
-            let request_class_test_data = {            
-                /*'examinationId': this.vm.selectedExamination.id,
-                'classId': this.vm.selectedExamination.selectedClass.dbId,
-                'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+            let request_class_test_data = {
                 'parentExamination__in': this.getExaminationIdList(),
-                'parentClass__in': selectedClassSection['classDbId'],
-                'parentDivision__in': selectedClassSection['sectionDbId'],
-                'parentSubject__in':valueOne.map(a => a.parentSubject),
+                'parentClass': selectedClassSection['classDbId'],
+                'parentDivision': selectedClassSection['sectionDbId'],
+                'parentSubject':valueOne.map(a => a.parentSubject),
             };
-
-            /*let request_class_test_data = {
-                'examinationList': this.getExaminationIdList(),
-                'subjectList': valueOne.map(a => a.parentSubject),
-                'classList': [selectedClassSection['classDbId']],
-                'sectionList': [selectedClassSection['sectionDbId']],
-                'startTimeList': [],
-                'endTimeList': [],
-                'testTypeList': [],
-                'maximumMarksList': [],
-            };*/
 
             let request_student_test_data = {
                 'studentList': this.vm.filteredStudentList.filter(student => {return student.selected;}).map(a => a.dbId),

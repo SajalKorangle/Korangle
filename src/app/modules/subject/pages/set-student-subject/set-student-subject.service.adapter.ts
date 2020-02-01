@@ -79,25 +79,11 @@ export class SetStudentSubjectServiceAdapter {
             'marksObtainedList': [],
         };
 
-        let request_class_test_data = {            
-            /*'examinationId': this.vm.selectedExamination.id,
-            'classId': this.vm.selectedExamination.selectedClass.dbId,
-            'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+        let request_class_test_data = {
             'parentExamination__in': this.prepareExaminationList(),
-            'parentClass__in': student.classDbId,
-            'parentDivision__in': student.sectionDbId,            
+            'parentClass': student.classDbId,
+            'parentDivision': student.sectionDbId,
         };
-
-        /*let request_class_test_data = {
-            'examinationList': this.prepareExaminationList(),
-            'subjectList': [],
-            'classList': [student.classDbId],
-            'sectionList': [student.sectionDbId],
-            'startTimeList': [],
-            'endTimeList': [],
-            'testTypeList': [],
-            'maximumMarksList': [],
-        };*/
 
         Promise.all([
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),

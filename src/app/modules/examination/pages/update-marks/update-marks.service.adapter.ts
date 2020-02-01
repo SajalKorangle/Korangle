@@ -88,9 +88,9 @@ export class UpdateMarksServiceAdapter {
                     'classId': this.vm.selectedExamination.selectedClass.dbId,
                     'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
                     'parentExamination__in': examination_id_list,
-                    'parentClass__in': item.parentClass,
-                    'parentDivision__in': item.parentDivision,
-                    'parentSubject__in' : item.parentSubject
+                    'parentClass': item.parentClass,
+                    'parentDivision': item.parentDivision,
+                    'parentSubject' : item.parentSubject
                 };
 
                 // let request_class_test_data = {
@@ -309,10 +309,8 @@ export class UpdateMarksServiceAdapter {
             return false;
         }).sort((a,b) => {
             if (a.rollNumber && b.rollNumber) {
-                // console.log("here: "+a.rollNumber+", "+b.rollNumber);
                 return (a.rollNumber.toString() < b.rollNumber.toString())? -1:1;
             }
-            console.log("not here: "+a.rollNumber+", "+b.rollNumber);
             return (b.rollNumber)? -1:1;
         }).forEach(item => {
             let tempItem = {};

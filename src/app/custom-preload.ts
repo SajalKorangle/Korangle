@@ -6,9 +6,7 @@ import {DataStorage} from './classes/data-storage';
 
 export class CustomPreload implements PreloadingStrategy {
     preload(route: Route, load: Function): Observable<any> {
-        console.log(route.path+' - '+route.data);
         if (route.path === 'user-settings' || route.path === 'notification') {
-            console.log(true);
             return load();
         }
         let user = DataStorage.getInstance().getUser();
@@ -33,7 +31,6 @@ export class CustomPreload implements PreloadingStrategy {
             }
         }
         // return result ? timer(10000).pipe(flatMap( _ => load())) : observableOf(null);
-        console.log(result);
         return result ? load() : observableOf(null);
     }
 }

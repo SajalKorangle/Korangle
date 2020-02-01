@@ -85,8 +85,8 @@ export class ViewMarksServiceAdapter {
                 'classId': this.vm.selectedExamination.selectedClass.dbId,
                 'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
                 'parentExamination__in': this.getExaminationIdList(),
-                'parentClass__in': this.student_full_profile.classDbId,
-                'parentDivision__in': this.student_full_profile.sectionDbId,            
+                'parentClass': this.student_full_profile.classDbId,
+                'parentDivision': this.student_full_profile.sectionDbId,
             };            
 
             let request_student_test_data = {

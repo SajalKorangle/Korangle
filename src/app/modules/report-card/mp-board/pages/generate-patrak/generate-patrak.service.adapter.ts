@@ -206,25 +206,11 @@ export class GeneratePatrakServiceAdapter {
             };
 
             let request_class_test_data = {
-                /*'examinationId': this.vm.selectedExamination.id,
-                'classId': this.vm.selectedExamination.selectedClass.dbId,
-                'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
                 'parentExamination__in': this.getExaminationIdList(),
-                'parentClass__in': this.vm.selectedClass.dbId,
-                'parentDivision__in': 1,
+                'parentClass': this.vm.selectedClass.dbId,
+                'parentDivision': 1,
                 'parentSubject__in':this.classSubjectList.map(a => a.parentSubject),
             };
-
-            /*let request_class_test_data = {
-                'examinationList': this.getExaminationIdList(),
-                'subjectList': this.classSubjectList.map(a => a.parentSubject),
-                'classList': [this.vm.selectedClass.dbId],
-                'sectionList': [1],
-                'startTimeList': [],
-                'endTimeList': [],
-                'testTypeList': [],
-                'maximumMarksList': [],
-            };*/
 
             let request_student_test_data = {
                 'studentList': this.vm.selectedClass.studentList.map(a => a.dbId),
