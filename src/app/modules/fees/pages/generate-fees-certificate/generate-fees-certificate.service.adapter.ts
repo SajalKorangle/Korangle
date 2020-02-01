@@ -34,25 +34,32 @@ export class GenerateFeesCertificateServiceAdapter {
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
+        let currentSession = this.vm.selectedSession;
+        let sessionStart = currentSession.startDate;
+        let sessionEnd = currentSession.endDate;
+
         let fee_receipt_list = {
             'parentStudent__in': studentListId,
             'cancelled': 'false__boolean',
+            'parentFeeReceipt__generationDateTime__date__gte':sessionStart,
+            'parentFeeReceipt__generationDateTime__date__lte':sessionEnd,
         };
-
         let sub_fee_receipt_list = {
             'parentStudentFee__parentStudent__in': studentListId,
             'parentFeeReceipt__cancelled': 'false__boolean',
+            'parentFeeReceipt__generationDateTime__date__gte':sessionStart,
+            'parentFeeReceipt__generationDateTime__date__lte':sessionEnd,
         };
-
+        
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
-            this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list), // dep
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list), // ?
         ]).then(value => {
             this.vm.feeTypeList = value[0];
             this.populateFeeReceiptList(value[1]);
             this.vm.subFeeReceiptList = value[2];
-            this.vm.calculateTotalFeesPaid();
+            this.vm.isLoading = false;
         })
     }
 
