@@ -152,7 +152,7 @@ class StudentExtraSubField(models.Model):
     parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
     parentExtraSubField = models.ForeignKey(ExtraSubField, models.PROTECT, null=False, default=0, verbose_name='parentExtraSubField')
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
-    marksObtained = models.DecimalField(max_digits=6, decimal_places=1, null=False, verbose_name='marksObtained', default=0)
+    marksObtained = models.DecimalField(max_digits=6, decimal_places=2, null=False, verbose_name='marksObtained', default=0)
 
     class Meta:
         db_table = 'student_extra_sub_field'

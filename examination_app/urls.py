@@ -17,14 +17,6 @@ urlpatterns += [
 ]
 
 
-from examination_app.views import ExaminationListOldView, ExaminationOldView
-
-urlpatterns += [
-    url(r'^examinations/batch', ExaminationListOldView.as_view()),
-    url(r'^examinations', ExaminationOldView.as_view()),
-]
-
-
 from examination_app.views import TestListView, TestView
 
 urlpatterns += [
