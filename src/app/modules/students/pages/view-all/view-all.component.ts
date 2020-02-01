@@ -10,12 +10,12 @@ import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnFilter {
     showSerialNumber = true;
+    showProfileImage = false;
     showName = true;
     showClassName = false;
     showSectionName = false;
     showRollNumber = false;
     showFathersName = true;
-    showProfileImage = false;
     showMobileNumber = true;
     showSecondMobileNumber = false;
     showScholarNumber = false;
@@ -358,12 +358,12 @@ export class ViewAllComponent implements OnInit {
     getHeaderValues(): any {
         let headerValues = [];
         this.columnFilter.showSerialNumber?headerValues.push('Serial No.'):'';
+        this.columnFilter.showProfileImage?headerValues.push('Profile Image'):'';
         this.columnFilter.showName?headerValues.push('Name'):'';
         this.columnFilter.showClassName?headerValues.push('Class Name'):'';
         this.columnFilter.showSectionName?headerValues.push('Section Name'):'';
         this.columnFilter.showRollNumber?headerValues.push('Roll Number'):'';
         this.columnFilter.showFathersName?headerValues.push('Father\'s Name'):'';
-        this.columnFilter.showProfileImage?headerValues.push('Profile Image'):'';
         this.columnFilter.showMobileNumber?headerValues.push('Mobile No.'):'';
         this.columnFilter.showSecondMobileNumber?headerValues.push('Alt. Mobile No.'):'';
         this.columnFilter.showScholarNumber?headerValues.push('Scholar No.'):'';
@@ -392,12 +392,12 @@ export class ViewAllComponent implements OnInit {
     getStudentDisplayInfo(student: any): any {
         let studentDisplay = [];
         this.columnFilter.showSerialNumber?studentDisplay.push(student.serialNumber):'';
+        this.columnFilter.showProfileImage?studentDisplay.push(student.profileImage):'';
         this.columnFilter.showName?studentDisplay.push(student.name):'';
         this.columnFilter.showClassName?studentDisplay.push(student.className):'';
         this.columnFilter.showSectionName?studentDisplay.push(student.sectionName):'';
         this.columnFilter.showRollNumber?studentDisplay.push(student.rollNumber):'';
         this.columnFilter.showFathersName?studentDisplay.push(student.fathersName):'';
-        this.columnFilter.showProfileImage?studentDisplay.push(student.profileImage):'';
         this.columnFilter.showMobileNumber?studentDisplay.push(student.mobileNumber):'';
         this.columnFilter.showSecondMobileNumber?studentDisplay.push(student.secondMobileNumber):'';
         this.columnFilter.showScholarNumber?studentDisplay.push(student.scholarNumber):'';

@@ -18,6 +18,11 @@
                 </mat-checkbox>
             </mat-option>
             <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showProfileImage" (click)="$event.stopPropagation();">Profile
+                    Image
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
                 <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation();">Name
                 </mat-checkbox>
             </mat-option>
@@ -31,10 +36,6 @@
                     Name
                 </mat-checkbox>
             </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showProfileImage" (click)="$event.stopPropagation();">Profile
-                    Image
-                </mat-checkbox>
             <mat-option>
                 <mat-checkbox [(ngModel)]="columnFilter.showSpouseName" (click)="$event.stopPropagation();">Spouse's
                     Name
@@ -158,10 +159,10 @@
             <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
             <tr>
                 <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+                <th [class.hidden]="!columnFilter.showProfileImage" style="text-align: center">Profile Image</th>
                 <th [class.hidden]="!columnFilter.showName">Name</th>
                 <th [class.hidden]="!columnFilter.showEmployeeNumber">Employee No.</th>
                 <th [class.hidden]="!columnFilter.showFatherName">Father's Name</th>
-                <th [class.hidden]="!columnFilter.showProfileImage">Profile Image</th>
                 <th [class.hidden]="!columnFilter.showSpouseName">Spouse's Name</th>
                 <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
                 <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
@@ -187,18 +188,17 @@
                 <tr>
                     <ng-container>
                         <td [class.hidden]="!columnFilter.showSerialNumber">{{i+1}}.</td>
+                        <td [class.hidden]="!columnFilter.showProfileImage" align="center">
+                            <img *ngIf="employee.profileImage"
+                                 src="{{employee.profileImage}}"
+                                 style="width: 50px">
+                            <img *ngIf="!employee.profileImage"
+                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                 style="width: 50px"/>
+                        </td>
                         <td [class.hidden]="!columnFilter.showName">{{employee.name}}</td>
                         <td [class.hidden]="!columnFilter.showEmployeeNumber">{{employee.employeeNumber}}</td>
                         <td [class.hidden]="!columnFilter.showFatherName">{{employee.fatherName}}</td>
-                        <td [class.hidden]="!columnFilter.showProfileImage">
-                                <img *ngIf="employee.profileImage"
-                                src="{{employee.profileImage}}"
-                                style="width: 25%">
-
-                                <img *ngIf="!student.profileImage"
-                                src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
-                                style="width: 25%"/>
-                        </td>
                         <td [class.hidden]="!columnFilter.showSpouseName">{{employee.spouseName}}</td>
                         <!-- Replaced by Harry Chhabra; 18-12-19 -->
                         <td [class.hidden]="!columnFilter.showMobileNumber">

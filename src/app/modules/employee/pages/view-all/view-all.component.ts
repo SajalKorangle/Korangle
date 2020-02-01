@@ -9,10 +9,10 @@ import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnFilter {
     showSerialNumber = true;
+    showProfileImage = false;
     showName = true;
     showEmployeeNumber = false;
     showFatherName = true;
-    showProfileImage = false;
     showSpouseName = false;
     showMobileNumber = true;
     showDateOfBirth = false;
@@ -113,10 +113,10 @@ export class ViewAllComponent implements OnInit {
 
     getHeaderValues(): any {
         let headerValues = [];
+        (this.columnFilter.showProfileImage)?headerValues.push('Profile Image'):'';
         (this.columnFilter.showName)? headerValues.push('Name'): '';
         (this.columnFilter.showEmployeeNumber)? headerValues.push('Employee Number'): '';
         (this.columnFilter.showFatherName)? headerValues.push('Father\'s Name'): '';
-        this.columnFilter.showProfileImage?headerValues.push('Profile Image'):'';
         (this.columnFilter.showSpouseName)? headerValues.push('Spouse\'s Name'): '';
         (this.columnFilter.showMobileNumber)? headerValues.push('Mobile No.'): '';
         (this.columnFilter.showDateOfBirth)? headerValues.push('Date of Birth'): '';
@@ -143,10 +143,10 @@ export class ViewAllComponent implements OnInit {
      getEmployeeDisplayInfo(employee: any): any {
         let employeeDisplay = [];
 
+        (this.columnFilter.showProfileImage)?employeeDisplay.push(employee.profileImage):'';
         (this.columnFilter.showName)? employeeDisplay.push(employee.name): '';
         (this.columnFilter.showEmployeeNumber)? employeeDisplay.push(employee.employeeNumber): '';
         (this.columnFilter.showFatherName)? employeeDisplay.push(employee.fatherName): '';
-        this.columnFilter.showProfileImage?employeeDisplay.push(employee.profileImage):'';
         (this.columnFilter.showSpouseName)? employeeDisplay.push(employee.spouseName): '';
         (this.columnFilter.showMobileNumber)? employeeDisplay.push(employee.mobileNumber): '';
         (this.columnFilter.showDateOfBirth)? employeeDisplay.push(employee.dateOfBirth): '';
