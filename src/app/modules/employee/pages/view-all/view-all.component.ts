@@ -9,6 +9,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnFilter {
     showSerialNumber = true;
+    showProfileImage = false;
     showName = true;
     showEmployeeNumber = false;
     showFatherName = true;
@@ -112,6 +113,7 @@ export class ViewAllComponent implements OnInit {
 
     getHeaderValues(): any {
         let headerValues = [];
+        (this.columnFilter.showProfileImage)?headerValues.push('Profile Image'):'';
         (this.columnFilter.showName)? headerValues.push('Name'): '';
         (this.columnFilter.showEmployeeNumber)? headerValues.push('Employee Number'): '';
         (this.columnFilter.showFatherName)? headerValues.push('Father\'s Name'): '';
@@ -141,6 +143,7 @@ export class ViewAllComponent implements OnInit {
      getEmployeeDisplayInfo(employee: any): any {
         let employeeDisplay = [];
 
+        (this.columnFilter.showProfileImage)?employeeDisplay.push(employee.profileImage):'';
         (this.columnFilter.showName)? employeeDisplay.push(employee.name): '';
         (this.columnFilter.showEmployeeNumber)? employeeDisplay.push(employee.employeeNumber): '';
         (this.columnFilter.showFatherName)? employeeDisplay.push(employee.fatherName): '';
