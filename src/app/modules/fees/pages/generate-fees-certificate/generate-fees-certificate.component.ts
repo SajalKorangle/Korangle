@@ -67,11 +67,13 @@ export class GenerateFeesCertificateComponent implements OnInit {
     }
 
     handleDetailsFromParentStudentFilter(details: any){
-
+        this.classList = details['classList'];
+        this.sectionList = details['sectionList'];
     }
 
-    handleStudentListSelection(selectedStudentList: any){
-        this.serviceAdapter.getStudentProfile(selectedStudentList);
+    handleStudentListSelection(selectedList: any){
+        this.selectedStudentSectionList = selectedList[1];
+        this.serviceAdapter.getStudentProfile(selectedList[0]);
     }
 
     getFeesPaidByFeeTypeAndStudent(feeType: any, student: any):number {
@@ -133,17 +135,20 @@ export class GenerateFeesCertificateComponent implements OnInit {
             this.printService.navigateToPrintRoute(PRINT_FEES_CERTIFICATE, {user: this.user, value});
         }*/
         let data = {
-            'studentList': this.selectedStudentList,
+            'studentList': this.selectedStudentList.filter(student => {
+                return this.getTotalFeesPaidByStudent(student) > 0;
+            }),
             'boardList': this.boardList,
             'selectedSession': this.selectedSession,
             'subFeeReceiptList': this.subFeeReceiptList,
             'feeReceiptList': this.feeReceiptList,
             'certificateNumber': this.certificateNumber,
-            'selectedStudentSectionList': this.selectedStudentSectionList,
+            'studentSectionList': this.selectedStudentSectionList,
             'classList': this.classList,
             'sectionList': this.sectionList,
+            'feeTypeList': this.feeTypeList,
         };
-        this.printService.navigateToPrintRoute(PRINT_FEES_CERTIFICATE, {user: this.user, data});
+        this.printService.navigateToPrintRoute(PRINT_FEES_CERTIFICATE, {user: this.user, value: data});
     }
 
     detectChanges(): void {

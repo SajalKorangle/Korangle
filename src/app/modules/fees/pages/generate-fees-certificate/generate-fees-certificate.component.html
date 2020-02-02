@@ -8,11 +8,6 @@
                            [studentTcGenerated]="false"></parent-student-filter>
 
     <ng-container *ngIf="!isLoading && !isStudentListLoading">
-        <!--                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"-->
-        <!-- <div class="row" style="margin-bottom: 10px">
-            <div class="col-md-12"
-                 style="border-bottom: 1px solid lightgrey;"></div>
-        </div> -->
 
         <div class="row" *ngIf="selectedStudentList.length != 0" style="margin-bottom: 2vh;border-bottom:1px solid lightgrey;padding-bottom: 5vh; padding-top: 2.5vh">
             <div class="col-md-6">
@@ -67,6 +62,13 @@
         <button type="button" *ngIf="selectedStudentList.length != 0 && getTotalFeesPaid()"
                 (click)="printFeesCertificate()"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Print Fees Certificate</button>
+
+        <img src="{{user.activeSchool.principalSignatureImage}}"
+             *ngIf="user.activeSchool.principalSignatureImage != null"
+             style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/>
 
     </ng-container>
 
