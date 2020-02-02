@@ -239,14 +239,10 @@ export class GenerateFinalReportServiceAdapter {
             };
 
             let request_class_test_data = {
-                'examinationList': this.getExaminationIdList(),
-                'subjectList': valueOne.map(a => a.parentSubject),
-                'classList': [selectedClassSection['classDbId']],
-                'sectionList': [selectedClassSection['sectionDbId']],
-                'startTimeList': [],
-                'endTimeList': [],
-                'testTypeList': [],
-                'maximumMarksList': [],
+                'parentExamination__in': this.getExaminationIdList(),
+                'parentClass': selectedClassSection['classDbId'],
+                'parentDivision': selectedClassSection['sectionDbId'],
+                'parentSubject':valueOne.map(a => a.parentSubject),
             };
 
             let request_student_test_data = {
@@ -269,7 +265,7 @@ export class GenerateFinalReportServiceAdapter {
 
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_class_test_data));
             request_array.push(this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationOldService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationOldService.getCCEMarksList(request_student_cce_marks_data, this.vm.user.jwt));
@@ -584,7 +580,7 @@ export class GenerateFinalReportServiceAdapter {
             if (item.parentStudent == studentId
                 && item.parentExtraSubField == extraSubFieldId
                 && item.parentExamination == examinationId) {
-                studentMarks = (parseFloat(item.marksObtained)*2)/10;
+                studentMarks = parseFloat(item.marksObtained);
                 return false;
             }
             return true;
