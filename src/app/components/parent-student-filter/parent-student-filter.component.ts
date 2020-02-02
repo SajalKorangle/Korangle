@@ -32,7 +32,6 @@ export class ParentStudentFilterComponent implements OnInit {
 
     @Output() onStudentListSelected = new EventEmitter<any>();
 
-
     classList = [];
     sectionList = [];
     studentSectionList = [];
@@ -102,14 +101,13 @@ export class ParentStudentFilterComponent implements OnInit {
             return student.mobileNumber == mobileNumber || student.secondMobileNumber == mobileNumber;
         });
     }
+
     getFilteredStudentSectionListByStudentList(studentList: any): any {
-        let studentSectionList = [];
-        studentList.forEach(student =>{
-            studentSectionList.push(
-                this.studentSectionList.find(studentSection=> { return studentSection.parentStudent == student.id})
-                );
-        });
-        return studentSectionList;
+        return this.studentSectionList.filter(studentSection => {
+            return studentList.find(student => {
+                return student.id == studentSection.parentStudent;
+            }) != undefined;
+        })
     }
 
     handleDataLoading(): void {
@@ -160,11 +158,7 @@ export class ParentStudentFilterComponent implements OnInit {
 
     handleStudentSelection(student: any): void {
         this.onStudentListSelectedOld.emit([student]);
-        let studentSection = this.studentSectionList.find(item => {
-            return item.parentStudent == student.id;
-        });
-
-        this.onStudentListSelected.emit([[student], [studentSection]]);
+        this.onStudentListSelected.emit([[student], this.getFilteredStudentSectionListByStudentList([student])]);
     }
 
     // Parent

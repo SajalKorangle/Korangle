@@ -3,9 +3,8 @@ import { GenerateFeesCertificateServiceAdapter } from "./generate-fees-certifica
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {PrintService} from "../../../../print/print-service";
 import { PRINT_FEES_CERTIFICATE } from '../../print/print-routes.constants';
-import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
+import {INSTALLMENT_LIST} from "../../classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
-import {Student} from '../../../../classes/student';
 import {StudentService} from '../../../../services/modules/student/student.service';
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
@@ -114,26 +113,6 @@ export class GenerateFeesCertificateComponent implements OnInit {
     }
 
     printFeesCertificate() {
-        /*let copies = 0;
-        this.selectedStudentList.forEach(student => {
-            if(student){
-                student.feesPaid = true;
-                copies++;
-            }
-            else{
-                student.feesPaid = false;
-                alert(student.name + "'s Fees Not Paid");
-            }
-        });
-        if(copies > 0){
-            const value = {
-                studentProfileList: this.selectedStudentList,
-                boardList: this.boardList,
-                numberOfCopies: this.selectedStudentList.length,
-                session: this.selectedSession,
-            };
-            this.printService.navigateToPrintRoute(PRINT_FEES_CERTIFICATE, {user: this.user, value});
-        }*/
         let data = {
             'studentList': this.selectedStudentList.filter(student => {
                 return this.getTotalFeesPaidByStudent(student) > 0;

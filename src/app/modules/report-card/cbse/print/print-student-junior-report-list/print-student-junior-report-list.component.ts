@@ -39,6 +39,7 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
         const {user, value} = this.printService.getData();
         this.user = user;
 
+        console.log(value);
 
         this.termList = value['termList'];
         this.extraFieldList = value['extraFieldList'];

@@ -103,6 +103,7 @@ export class CollectFeeServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list),
 
         ]).then( value => {
+
             this.populateStudentFeeList(value[0]);
             this.populateFeeReceiptList(value[1]);
             this.vm.subFeeReceiptList = value[2];

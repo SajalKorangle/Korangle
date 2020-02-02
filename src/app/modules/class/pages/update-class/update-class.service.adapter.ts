@@ -224,7 +224,7 @@ export class UpdateClassServiceAdapter {
                 type: 'application/json'
             }));
             signature_data.append('signatureImage', image);
-            console.log(signature_data);
+
             service = this.vm.classService.partiallyUpdateObject(this.vm.classService.class_teacher_signature, signature_data);
 
         }
