@@ -4,119 +4,88 @@ import { Student } from '../../../../classes/student';
 import { Classs } from '../../../../classes/classs';
 import { Section } from '../../../../classes/section';
 
-import { StudentOldService } from '../../../../services/modules/student/student-old.service';
-import {BusStopService} from '../../../../services/modules/school/bus-stop.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import { CommonFunctions } from "../../../../classes/common-functions";
 
 @Component({
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
-    providers: [ StudentOldService, BusStopService ],
+    providers: [ SchoolService, StudentService ],
 })
 
 export class UpdateProfileComponent implements OnInit {
 
    user;
 
-    selectedClass: Classs;
-    selectedSection: Section;
-    selectedStudent: Student;
+    selectedStudent: any;
 
-    classSectionStudentList: Classs[] = [];
-
-    currentStudent: Student = new Student();
+    currentStudent: any;
 
     busStopList = [];
 
     isLoading = false;
 
-    constructor (private studentService: StudentOldService,
-                 private busStopService: BusStopService) { }
+    selectedStudentSection:any;
+    currentStudentSection:any;
 
-    changeSelectedSectionToFirst(): void {
-        this.selectedSection = this.selectedClass.sectionList[0];
-        this.changeSelectedStudentToFirst();
-    }
+    studentList: any;
+    studentSectionList: any;
 
-    changeSelectedStudentToFirst(): void {
-        this.selectedStudent = this.selectedSection.studentList[0];
-        this.currentStudent.copy(this.selectedStudent);
-    }
+    commonFunctions: CommonFunctions;
+
+    constructor (private studentService: StudentService,
+                 private schoolService: SchoolService) { }
+
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        const data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-            schoolDbId: this.user.activeSchool.dbId,
-        };
-        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(
-            classSectionStudentList => {
-                classSectionStudentList.forEach( classs => {
-                    const tempClass = new Classs();
-                    tempClass.name = classs.name;
-                    tempClass.dbId = classs.dbId;
-                    classs.sectionList.forEach( section => {
-                        const tempSection = new Section();
-                        tempSection.name = section.name;
-                        tempSection.dbId = section.dbId;
-                        section.studentList.forEach( student => {
-                            const tempStudent = new Student();
-                            tempStudent.name = student.name;
-                            tempStudent.dbId = student.dbId;
-                            tempSection.studentList.push(tempStudent);
-                        });
-                        tempClass.sectionList.push(tempSection);
-                    });
-                    this.classSectionStudentList.push(tempClass);
-                });
-                if (this.classSectionStudentList.length > 0) {
-                    this.selectedClass = this.classSectionStudentList[0];
-                    this.changeSelectedSectionToFirst();
-                } else {
-                    alert('Student needs to be added first, before profile updation');
-                }
-
-            }
-        );
+        this.commonFunctions = CommonFunctions.getInstance();
 
         const dataForBusStop = {
-            schoolDbId: this.user.activeSchool.dbId,
+            'parentSchool': this.user.activeSchool.dbId,
         };
 
-        this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then( busStopList => {
+        this.schoolService.getObjectList(this.schoolService.bus_stop,dataForBusStop).then( busStopList => {
             this.busStopList = busStopList;
         });
     }
 
-    getStudentProfile(): void {
+
+    handleDetailsFromParentStudentFilter(value): void{
+        return;
+    }
+
+    handleStudentListSelection(value): void{
+        this.selectedStudent = value[0][0];
+        this.selectedStudentSection = value[1][0];
+        this.getStudentProfile(this.selectedStudent.id);
+    }
+
+    getStudentProfile(studentId : any): void {
         this.isLoading = true;
-        const data = {
-            studentDbId: this.selectedStudent.dbId,
-            sessionDbId: this.user.activeSchool.currentSessionDbId
-        };
-        this.studentService.getStudentProfile(data, this.user.jwt).then(
-            student => {
-                this.isLoading = false;
-                const breakLoop = false;
-                if (this.selectedStudent.dbId === student.dbId) {
-                    this.selectedStudent.copy(student);
-                    this.currentStudent.copy(student);
-                    console.log(this.selectedStudent);
-                }
-            }, error => {
-                this.isLoading = false;
-            }
-        );
+        let data = {
+            'id': studentId,
+        }
+        this.studentService.getObject(this.studentService.student, data).then(value=>{
+            this.currentStudent = this.commonFunctions.copyObject(value);
+            Object.keys(value).forEach(key => {
+                this.selectedStudent[key] = value[key];
+            });
+            this.currentStudentSection = this.commonFunctions.copyObject(this.selectedStudentSection);
+            this.isLoading = false;
+        });
     }
 
     updateProfile(): void {
-        if (this.currentStudent.busStopDbId == 0) {
-            this.currentStudent.busStopDbId = null;
+        if (this.currentStudent.currentBusStop == 0) {
+            this.currentStudent.currentBusStop = null;
         }
-        if (this.currentStudent.admissionSessionDbId == 0) {
-            this.currentStudent.admissionSessionDbId = null;
+        if (this.currentStudent.admissionSession == 0) {
+            this.currentStudent.admissionSession = null;
         }
         if (this.currentStudent.familySSMID
             && this.currentStudent.familySSMID.toString().length !== 0
@@ -150,38 +119,42 @@ export class UpdateProfileComponent implements OnInit {
             alert('Number of digits in Aadhar No. should be 12');
             return;
         }
-        // this.currentStudent.classDbId = this.selectedClass.dbId;
-        this.currentStudent.sessionDbId = this.user.activeSchool.currentSessionDbId;
+
         this.isLoading = true;
-        this.studentService.updateStudentProfileOld(this.currentStudent, this.user.jwt).then(
-            student => {
-                this.isLoading = false;
-                let breakLoop = false;
-                if (this.selectedStudent.dbId === student.dbId) {
-                    this.selectedStudent.copy(student);
-                    alert('Student updated successfully');
-                } else {
-                    this.classSectionStudentList.forEach( classs => {
-                        classs.studentList.forEach( tempStudent => {
-                            if (tempStudent.dbId === student.dbId) {
-                                tempStudent.copy(student);
-                                breakLoop = true;
-                                return;
-                            }
-                        });
-                        if (breakLoop) { return; }
-                    });
-                    alert('Student: ' + student.name + ' updated successfully');
-                }
+        let service_list = [];
+        
+        service_list.push(this.studentService.updateObject(this.studentService.student,this.currentStudent));
+
+        if(this.selectedStudentSection.rollNumber != this.currentStudentSection.rollNumber
+            && this.currentStudent.id == this.currentStudentSection.parentStudent){
+            service_list.push(this.studentService.updateObject(this.studentService.student_section,this.currentStudentSection));
+        }
+
+        Promise.all(service_list).then(value =>{
+            Object.keys(value[0]).forEach(key =>{
+                this.selectedStudent[key] = value[0][key];
+            });
+            this.currentStudent = this.commonFunctions.copyObject(this.selectedStudent);
+            if(value.length == 2){
+                Object.keys(value[1]).forEach(key => {
+                    this.selectedStudentSection[key] = value[1][key];
+                });
+
+                this.currentStudentSection = this.commonFunctions.copyObject(this.selectedStudentSection);
             }
-        );
+            alert('Student: ' + this.selectedStudent.name + ' updated successfully');
+            this.isLoading = false;
+
+        },error => {
+            this.isLoading = false;
+        });
     }
 
     getBusStopName(busStopDbId: any) {
         let stopName = 'None';
         if (busStopDbId !== null) {
             this.busStopList.forEach(busStop => {
-                if (busStop.dbId == busStopDbId) {
+                if (busStop.id == busStopDbId) {
                     stopName = busStop.stopName;
                     console.log(stopName);
                     return;
@@ -210,15 +183,6 @@ export class UpdateProfileComponent implements OnInit {
             return true;
         }
         return false;
-    }
-
-    getSessionName(dbId: number): string {
-        if (dbId=1) {
-            return 'Session 2017-18';
-        } else if (dbId=2) {
-            return 'Session 2018-19';
-        } else if (dbId=3) {}
-        return '';
     }
 
     cropImage(file: File, aspectRatio: any): Promise<Blob> {
@@ -280,17 +244,20 @@ export class UpdateProfileComponent implements OnInit {
             return;
         }
 
-        let data = {
-            id: this.selectedStudent.dbId,
-        };
         this.isLoading = true;
-        this.studentService.uploadProfileImage(image, data, this.user.jwt).then( response => {
+        let profile_image_data = new FormData();
+        profile_image_data.append('id', new Blob([this.selectedStudent.id], {
+            type: 'application/json'
+        }));
+        profile_image_data.append('profileImage', image);
+
+
+        this.studentService.partiallyUpdateObject(this.studentService.student, profile_image_data).then(value => {
+            Object.keys(value).forEach(key => {
+                this.selectedStudent[key] = value[key];
+            });
             this.isLoading = false;
-            alert(response.message);
-            if (response.status === 'success') {
-                this.selectedStudent.profileImage = response.url + '?random+\=' + Math.random();
-            }
-        }, error => {
+        }, error =>{
             this.isLoading = false;
         });
     }
