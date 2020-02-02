@@ -13,27 +13,26 @@ export class PrintFeesCertificateComponent implements OnInit {
 
   mediumList = MEDIUM_LIST;
 
-  boardList;
+  certificateNumber: any;
+  boardList = [];
+  studentList = [];
+  subFeeReceiptList = [];
+  feeReceiptList = [];
+  selectedSession: any;
 
   viewChecked = true;
-
-  studentProfileList: any;
-
-  numberOfCopies = 0;
-  feesCertificate: any;
-  currentSession: any;
-  count = 0;
 
   constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
   ngOnInit(): void {
     const {user, value} = this.printService.getData();
     this.user = user;
-    this.feesCertificate = value;
-    this.numberOfCopies = 1;
-    this.studentProfileList = value.studentProfileList;
+    this.certificateNumber = value.certificateNumber;
+    this.studentList = value.studentList;
     this.boardList = value.boardList;
-    this.currentSession = value.session;
+    this.selectedSession = value.selectedSession;
+    this.subFeeReceiptList = value.subFeeReceiptList;
+    this.feeReceiptList = value.feeReceiptList;
     this.viewChecked = false;
   }
 

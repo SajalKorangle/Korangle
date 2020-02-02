@@ -50,9 +50,9 @@
                         </div>
                         <p>
                             <ng-container *ngFor="let feeType of feeTypeList">
-                                <ng-container *ngIf="getFeesPaidByFeeType(feeType,selectedStudent)">
+                                <ng-container *ngIf="getFeesPaidByFeeTypeAndStudent(feeType,selectedStudent)">
                                     <span style="display: inline-block;padding: 2vh 3vh;">
-                                        {{feeType.name}}: {{getFeesPaidByFeeType(feeType,selectedStudent)}}
+                                        {{feeType.name}}: {{getFeesPaidByFeeTypeAndStudent(feeType,selectedStudent)}}
                                     </span>
                                 </ng-container>
                             </ng-container>

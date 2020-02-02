@@ -26,6 +26,9 @@ export class GenerateFeesCertificateComponent implements OnInit {
 
     isStudentListLoading = false;
     boardList: any;
+    classList: any;
+    sectionList: any;
+    selectedStudentSectionList = [];
     selectedStudentList = [];
     sessionList: any;
     selectedSession: any;
@@ -63,70 +66,33 @@ export class GenerateFeesCertificateComponent implements OnInit {
         });
     }
 
-    getStudentProfile(selectedStudentList): void {
-        this.isLoading = true;
-
-        let request_student_data = {
-            'id__in': selectedStudentList.map(student => {return student.id}).join(),
-        }
-
-        this.studentService.getObjectList(this.studentService.student ,request_student_data).then(
-            value =>{
-                this.selectedStudentList = value;
-                this.serviceAdapter.getStudentFeeProfile();
-            },
-            error => {
-                this.isLoading = false;
-            }
-        );
-    }
-
     handleDetailsFromParentStudentFilter(details: any){
 
     }
 
-    handleStudentListSelection(selectedStudents: any){
-        this.getStudentProfile(selectedStudents);
+    handleStudentListSelection(selectedStudentList: any){
+        this.serviceAdapter.getStudentProfile(selectedStudentList);
     }
 
-    getFeesPaidByFeeType(feeType: any, student: any):number {
-        let studentFeeReceiptList = this.feeReceiptList.filter(feeReceipt =>{
-            return feeReceipt.parentStudent == student.id;
-        });
-
-        let studentSubFeeReceiptList = this.subFeeReceiptList.filter(item => {
-            return studentFeeReceiptList.find(feeRecipt => { return feeRecipt.id == item.parentFeeReceipt}) != undefined;
-        });
-
-        let totalAmountPaid = 0;
-        studentSubFeeReceiptList.forEach(subFeeReceipt => {
-            if(subFeeReceipt.parentFeeType == feeType.id){
-                this.installmentList.forEach(installment => {
-                    totalAmountPaid += (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0);
-                    totalAmountPaid += (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
-                });                
-            }
-        });
-        return totalAmountPaid;
+    getFeesPaidByFeeTypeAndStudent(feeType: any, student: any):number {
+        return this.subFeeReceiptList.filter(subFeeReceipt => {
+            return subFeeReceipt.parentFeeType == feeType.id
+                && student.id == this.feeReceiptList.find(feeReceipt => {
+                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+                }).parentStudent;
+        }).reduce((totalAmount, subFeeReceipt) => {
+            return totalAmount + this.getSubFeeReceiptTotalAmount(subFeeReceipt);
+        }, 0);
     }
 
     getTotalFeesPaidByStudent(student: any):number {
-        let studentFeeReceiptList = this.feeReceiptList.filter(feeReceipt =>{
-            return feeReceipt.parentStudent == student.id;
-        });
-
-        let studentSubFeeReceiptList = this.subFeeReceiptList.filter(item => {
-            return studentFeeReceiptList.find(feeRecipt => { return feeRecipt.id == item.parentFeeReceipt}) != undefined;
-        });
-
-        let totalAmountPaid = 0;
-        studentSubFeeReceiptList.forEach(subFeeReceipt => {
-            this.installmentList.forEach(installment => {
-                totalAmountPaid += (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0);
-                totalAmountPaid += (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
-            });                
-        });
-        return totalAmountPaid;
+        return this.subFeeReceiptList.filter(subFeeReceipt => {
+            return student.id == this.feeReceiptList.find(feeReceipt => {
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+            }).parentStudent;
+        }).reduce((totalAmount, subFeeReceipt) => {
+            return totalAmount + this.getSubFeeReceiptTotalAmount(subFeeReceipt);
+        }, 0);
     }
 
     getTotalFeesPaid(): number {
@@ -136,10 +102,17 @@ export class GenerateFeesCertificateComponent implements OnInit {
         });
         return totalAmount;
     }
-    printFeesCertificate(){
-        // not modified
-        let copies = 0;
-        console.log(this.selectedStudentList);
+
+    getSubFeeReceiptTotalAmount(subFeeReceipt: any): number {
+        return this.installmentList.reduce((totalAmount, installment) => {
+            return totalAmount
+                + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
+                + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
+        }, 0);
+    }
+
+    printFeesCertificate() {
+        /*let copies = 0;
         this.selectedStudentList.forEach(student => {
             if(student){
                 student.feesPaid = true;
@@ -158,7 +131,19 @@ export class GenerateFeesCertificateComponent implements OnInit {
                 session: this.selectedSession,
             };
             this.printService.navigateToPrintRoute(PRINT_FEES_CERTIFICATE, {user: this.user, value});
-        }
+        }*/
+        let data = {
+            'studentList': this.selectedStudentList,
+            'boardList': this.boardList,
+            'selectedSession': this.selectedSession,
+            'subFeeReceiptList': this.subFeeReceiptList,
+            'feeReceiptList': this.feeReceiptList,
+            'certificateNumber': this.certificateNumber,
+            'selectedStudentSectionList': this.selectedStudentSectionList,
+            'classList': this.classList,
+            'sectionList': this.sectionList,
+        };
+        this.printService.navigateToPrintRoute(PRINT_FEES_CERTIFICATE, {user: this.user, data});
     }
 
     detectChanges(): void {
