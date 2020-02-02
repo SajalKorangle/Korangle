@@ -43,3 +43,10 @@ urlpatterns += [
 	url(r'^school-profile', SchoolProfileView.as_view()),
 
 ]
+
+from .views import BusStopView, BusStopListView
+
+urlpatterns += [
+	url(r'^bus-stops/batch', BusStopListView.as_view()),
+	url(r'^bus-stops', BusStopView.as_view()),
+]

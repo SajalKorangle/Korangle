@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 import json
 
 from common.common_views import CommonView, CommonListView
-from decorators import user_permission
+from decorators import user_permission, user_permission_new
 from student_app.models import Student, StudentSection
 
 
@@ -198,10 +198,18 @@ class TransferCertificateView(APIView):
 
 ########### Student #############
 
+from .business.profile_image import partial_update_profile_image
+
 
 class StudentView(CommonView, APIView):
     Model = Student
 
+    @user_permission_new
+    def patch(self,request):
+        if 'profileImage' in request.FILES:
+            return partial_update_profile_image(request,self.Model,self.ModelSerializer)
+        else:
+            return super.patch(request)
 
 class StudentListView(CommonListView, APIView):
     Model = Student
@@ -216,5 +224,3 @@ class StudentSectionView(CommonView, APIView):
 
 class StudentSectionListView(CommonListView, APIView):
     Model = StudentSection
-
-
