@@ -136,8 +136,8 @@ export class CollectFeeComponent implements OnInit {
         this.studentSectionList = details.studentSectionList;
     }
 
-    handleStudentListSelection(studentList: any): void {
-        this.selectedStudentList = studentList;
+    handleStudentListSelection(selectedList: any): void {
+        this.selectedStudentList = selectedList[0];
         this.serviceAdapter.getStudentFeeProfile();
         this.showDetails = true;
     }

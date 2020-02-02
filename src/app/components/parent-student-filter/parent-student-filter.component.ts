@@ -27,9 +27,6 @@ export class ParentStudentFilterComponent implements OnInit {
 
     @Output() onStudentListLoading = new EventEmitter<boolean>();
 
-    // Depreciated
-    @Output() onStudentListSelectedOld = new EventEmitter<any>();
-
     @Output() onStudentListSelected = new EventEmitter<any>();
 
     classList = [];
@@ -157,7 +154,6 @@ export class ParentStudentFilterComponent implements OnInit {
     }
 
     handleStudentSelection(student: any): void {
-        this.onStudentListSelectedOld.emit([student]);
         this.onStudentListSelected.emit([[student], this.getFilteredStudentSectionListByStudentList([student])]);
     }
 
@@ -180,7 +176,6 @@ export class ParentStudentFilterComponent implements OnInit {
 
     handleMobileNumberSelection(mobileNumber: any): void {
         let studentList = this.getFilteredStudentListByMobileNumber(mobileNumber);
-        this.onStudentListSelectedOld.emit(studentList);
         this.onStudentListSelected.emit([studentList, this.getFilteredStudentSectionListByStudentList(studentList)]);
     }
 

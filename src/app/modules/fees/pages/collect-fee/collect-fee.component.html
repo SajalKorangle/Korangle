@@ -2,7 +2,7 @@
 
     <parent-student-filter [user]="user"
                            (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
-                           (onStudentListSelectedOld)="handleStudentListSelection($event)"
+                           (onStudentListSelected)="handleStudentListSelection($event)"
                            (onStudentListLoading)="isStudentListLoading=$event"
                            [selectedFilterType]="'Student'"
                            [studentTcGenerated]="false"></parent-student-filter>
