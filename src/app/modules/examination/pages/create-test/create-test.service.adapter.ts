@@ -108,9 +108,9 @@ export class CreateTestServiceAdapter {
             /*'examinationId': this.vm.selectedExamination.id,
             'classId': this.vm.selectedExamination.selectedClass.dbId,
             'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
-            'examinationList': [this.vm.selectedExamination.id],
-            'classList': [this.vm.selectedExamination.selectedClass.dbId],
-            'sectionList': [this.vm.selectedExamination.selectedClass.selectedSection.id],
+            'parentExamination': this.vm.selectedExamination.id,
+            'parentClass': this.vm.selectedExamination.selectedClass.dbId,
+            'parentDivision': this.vm.selectedExamination.selectedClass.selectedSection.id,
         };
 
         let request_class_subject_data = {
@@ -125,11 +125,9 @@ export class CreateTestServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationOldService.getTestList(request_test_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
         ]).then(value => {
-
-            // console.log(value);
 
             let student_id_list = this.getStudentIdListForSelectedItems();
 
@@ -282,7 +280,7 @@ export class CreateTestServiceAdapter {
         let student_test_data = this.prepareStudentTestDataToAdd();
 
         Promise.all([
-            this.vm.examinationOldService.createTest(data, this.vm.user.jwt),
+            this.vm.examinationService.createObject(this.vm.examinationService.test_second, data),
             this.vm.examinationOldService.createStudentTestList(student_test_data, this.vm.user.jwt),
         ]).then(value => {
             this.addTestToTestList(value[0]);
@@ -374,7 +372,7 @@ export class CreateTestServiceAdapter {
         let student_test_data = this.prepareStudentTestDataToRemove(test);
 
         let service_list = [];
-        service_list.push(this.vm.examinationOldService.deleteTest(test.id, this.vm.user.jwt));
+        service_list.push(this.vm.examinationService.deleteObject(this.vm.examinationService.test_second, test));
 
         if (student_test_data.length > 0) {
             service_list.push(this.vm.examinationOldService.deleteStudentTestList(student_test_data, this.vm.user.jwt));
@@ -458,7 +456,7 @@ export class CreateTestServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationOldService.updateTest(data, this.vm.user.jwt),
+            this.vm.examinationService.updateObject(this.vm.examinationService.test_second, data)
         ]).then(value => {
             test.startTime = value[0].startTime;
             test.endTime = value[0].endTime;
