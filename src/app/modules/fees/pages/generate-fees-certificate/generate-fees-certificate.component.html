@@ -9,42 +9,62 @@
 
     <ng-container *ngIf="!isLoading && !isStudentListLoading">
         <!--                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"-->
-        <div class="row" style="margin-bottom: 10px">
+        <!-- <div class="row" style="margin-bottom: 10px">
             <div class="col-md-12"
                  style="border-bottom: 1px solid lightgrey;"></div>
+        </div> -->
+
+        <div class="row" *ngIf="selectedStudentList.length != 0" style="margin-bottom: 2vh;border-bottom:1px solid lightgrey;padding-bottom: 5vh; padding-top: 2.5vh">
+            <div class="col-md-6">
+                <b>Certificate No. : </b>
+                <input style="width: 150px;" type="text" [(ngModel)]="certificateNumber"/>
+            </div>
+            <div class="col-md-6">
+                <b>Father's Name :</b>
+                {{selectedStudentList[0].fathersName}}
+            </div>
         </div>
 
-        <div *ngFor="let selectedStudent of selectedStudentList" class="row"
-             style="font-size: 16px; margin-bottom: 15px; margin-left: 5px">
+        <div *ngFor="let selectedStudent of selectedStudentList; let i = index" class="row"
+             style="font-size: 16px; margin-bottom: 15px; margin-left: 5px;margin-top: 15px;border-bottom: 1px solid lightgrey;
+             padding: 3.2vh 0vh;">
 
             <div class="row">
-                <div class="col-md-4">
-                    <b>Student's Name : </b>
-                    {{selectedStudent.name}}
-                </div>
-                <div class="col-md-4">
-                    <b>Father's Name :</b>
-                    {{selectedStudent.fathersName}}
-                </div>
-                <div class="col-md-4">
-                    <b>Scholar No.:</b>
-                    {{selectedStudent.scholarNumber}}
-                </div>
-            </div>
+                <div class="col-md-1">{{i+1}}</div>
+                <div class="col-md-11">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>Student's Name : </b>
+                            {{selectedStudent.name}}
+                        </div>
+                        <div class="col-md-6">
+                            <b>Scholar No.:</b>
+                            {{selectedStudent.scholarNumber}}
+                        </div>
+                        
+                    </div>
+                    <div class="row" style="margin-top: 1.5vh">
+                        <div class="col-md-12" [style.color]="getTotalFeesPaidByStudent(selectedStudent)?'initial':'red'">
+                            <b>Total fees paid: </b>
+                            {{ getTotalFeesPaidByStudent(selectedStudent)}}
+                        </div>
+                        <p>
+                            <ng-container *ngFor="let feeType of feeTypeList">
+                                <ng-container *ngIf="getFeesPaidByFeeType(feeType,selectedStudent)">
+                                    <span style="display: inline-block;padding: 2vh 3vh;">
+                                        {{feeType.name}}: {{getFeesPaidByFeeType(feeType,selectedStudent)}}
+                                    </span>
+                                </ng-container>
+                            </ng-container>
+                        </p>
+                    </div>
 
-            <div class="row" style="margin-top: 8px; margin-bottom: 10px; margin-left: 1px">
-                <b>Certificate No. :</b>
-                    <input style="width: 150px;" type="number"
-                           [(ngModel)]="selectedStudent.certificateNumber"/>
-            </div>
-
-            <div class="row" style="margin-bottom: 10px;" *ngIf="selectedStudent != null">
-                <div style="border-bottom: 1px solid lightgrey;"></div>
+                </div>
             </div>
 
         </div>
 
-        <button type="button" *ngIf="selectedStudentList.length != 0"
+        <button type="button" *ngIf="selectedStudentList.length != 0 && getTotalFeesPaid()"
                 (click)="printFeesCertificate()"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Print Fees Certificate</button>
 
