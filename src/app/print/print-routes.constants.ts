@@ -33,10 +33,6 @@ export const PRINT_STUDENT_SENIOR_REPORT = 'print-student-senior-report';
 //salary
 export const PRINT_SALARY_SHEET = 'print-salary-sheet';
 
-//fees
-export const PRINT_FEE_RECIEPT_LIST = 'print-fee-receipt-list';
-export const PRINT_FULL_FEE_RECIEPT_LIST = 'print-full-fee-receipt-list';
-
 //expenses
 export const PRINT_EXPENSES = 'print-expenses';
 

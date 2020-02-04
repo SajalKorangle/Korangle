@@ -7,25 +7,25 @@ import { BusStopService } from '../../../../services/modules/school/bus-stop.ser
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {Student} from "../../../../services/modules/student/models/student";
 import {StudentSection} from "../../../../services/modules/student/models/student-section";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
 import {SubjectService} from "../../../../services/modules/subject/subject.service";
 import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service"
 
 @Component({
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ ClassOldService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService ],
+    providers: [ SchoolService, ClassOldService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService ],
 })
 
 export class AddStudentComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [] ;
     nullValue = null;
 
     user:any;
@@ -47,12 +47,13 @@ export class AddStudentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public classService: ClassOldService,
+    constructor (public schoolService : SchoolService,
+                 public classService: ClassOldService,
                  public busStopService: BusStopService,
                  public studentService: StudentService,
                  public subjectService: SubjectService,
                  public vehicleService: VehicleOldService,
-                 public examinationOldService: ExaminationService,
+                 public examinationService: ExaminationService,
                  public feeService: FeeService) { }
 
     ngOnInit(): void {

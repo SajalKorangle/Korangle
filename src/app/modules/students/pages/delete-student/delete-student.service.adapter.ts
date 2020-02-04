@@ -16,7 +16,9 @@ export class DeleteStudentServiceAdapter {
 
     }
 
-    getStudentDetails(studentList: any): void {
+    getStudentDetails(selectedList: any): void {
+
+        let studentList = selectedList[0];
 
         let student_data = {
             'id': studentList[0].id,

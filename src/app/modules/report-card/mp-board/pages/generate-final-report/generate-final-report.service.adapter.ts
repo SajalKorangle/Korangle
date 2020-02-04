@@ -69,19 +69,23 @@ export class GenerateFinalReportServiceAdapter {
                     'id__in': this.getExaminationIdList(),
                 };
 
+                const teacher_signature_data = {
+                    parentSchool: this.vm.user.activeSchool.dbId,
+                };
+
                 console.log(request_examination_data);
 
                 Promise.all([
-                    this.vm.classService.getClassList(this.vm.user.jwt),
-                    this.vm.classService.getSectionList(this.vm.user.jwt),
+                    this.vm.classOldService.getClassList(this.vm.user.jwt),
+                    this.vm.classOldService.getSectionList(this.vm.user.jwt),
                     this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
                     this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
                     this.vm.subjectService.getSubjectList(this.vm.user.jwt),
                     this.vm.subjectService.getExtraFieldList({}, this.vm.user.jwt),
                     this.vm.subjectService.getExtraSubFieldList({}, this.vm.user.jwt),
                     this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
+                    this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, teacher_signature_data)
                 ]).then(value2 => {
-                    console.log(value2);
                     this.classList = value2[0];
                     this.sectionList = value2[1];
                     this.studentList = value2[2];
@@ -90,6 +94,7 @@ export class GenerateFinalReportServiceAdapter {
                     this.extraFieldList = value2[5];
                     this.extraSubFieldList = value2[6];
                     this.vm.boardList = value2[7];
+                    this.vm.classTeacherSignatureList = value2[8];
 
                     this.vm.subjectList = value2[4];
                     this.populateClassSectionStudentList();
@@ -234,14 +239,10 @@ export class GenerateFinalReportServiceAdapter {
             };
 
             let request_class_test_data = {
-                'examinationList': this.getExaminationIdList(),
-                'subjectList': valueOne.map(a => a.parentSubject),
-                'classList': [selectedClassSection['classDbId']],
-                'sectionList': [selectedClassSection['sectionDbId']],
-                'startTimeList': [],
-                'endTimeList': [],
-                'testTypeList': [],
-                'maximumMarksList': [],
+                'parentExamination__in': this.getExaminationIdList(),
+                'parentClass': selectedClassSection['classDbId'],
+                'parentDivision': selectedClassSection['sectionDbId'],
+                'parentSubject':valueOne.map(a => a.parentSubject),
             };
 
             let request_student_test_data = {
@@ -264,7 +265,7 @@ export class GenerateFinalReportServiceAdapter {
 
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_class_test_data));
             request_array.push(this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationOldService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationOldService.getCCEMarksList(request_student_cce_marks_data, this.vm.user.jwt));
@@ -318,9 +319,6 @@ export class GenerateFinalReportServiceAdapter {
             }
 
             Promise.all(request_array).then(valueTwo => {
-
-                console.log(valueTwo);
-
                 this.studentSubjectList = valueTwo[0];
                 this.classTestList = valueTwo[1];
                 this.studentTestList = valueTwo[2];
@@ -354,6 +352,16 @@ export class GenerateFinalReportServiceAdapter {
                     case 'Class - 12':
                         this.populateStudentFinalReportCardHigh();
                         break;
+                }
+                const signature = this.vm.classTeacherSignatureList.find((sign) => {
+                    return sign.parentSchool === this.vm.user.activeSchool.dbId &&
+                        sign.parentClass === this.vm.getSelectedClassSection().classDbId
+                    && sign.parentDivision === this.vm.getSelectedClassSection().sectionDbId
+                });
+                if(signature && this.vm.showClassTeacherSignature){
+                    this.vm.currentClassTeacherSignature = signature["signatureImage"];
+                }else{
+                    this.vm.currentClassTeacherSignature = null;
                 }
                 this.vm.printStudentFinalReport();
                 this.vm.isLoading = false;
@@ -572,7 +580,7 @@ export class GenerateFinalReportServiceAdapter {
             if (item.parentStudent == studentId
                 && item.parentExtraSubField == extraSubFieldId
                 && item.parentExamination == examinationId) {
-                studentMarks = (parseFloat(item.marksObtained)*2)/10;
+                studentMarks = parseFloat(item.marksObtained);
                 return false;
             }
             return true;

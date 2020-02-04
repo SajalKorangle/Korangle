@@ -48,14 +48,13 @@ export class GenerateHallTicketServiceAdapter {
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
-            // this.vm.examinationOldService.getTestList(request_test_data, this.vm.user.jwt),
         ]).then(value => {
 
             let request_test_data = {
-                'examinationList': value[0].map(a => a.id),
+                'parentExamination__in': value[0].map(a => a.id),
             };
 
-            this.vm.examinationOldService.getTestList(request_test_data, this.vm.user.jwt).then(value2 => {
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data).then(value2 => {
 
                 this.examinationList = value[0];
                 this.classList = value[1];
