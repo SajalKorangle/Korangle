@@ -2,13 +2,13 @@
 
     <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
 
-        <ng-container *ngIf="examinationList.length <= 0 || selectedExamination.status != Declared ">
+        <ng-container *ngIf="examinationList.length <= 0">
 
             No Examinations to display yet!
 
         </ng-container>
 
-        <ng-container *ngIf="examinationList.length > 0 && selectedExamination.status == Declared ">
+        <ng-container *ngIf="examinationList.length > 0">
 
             <mat-form-field>
                 <mat-select placeholder="Select Examination"
