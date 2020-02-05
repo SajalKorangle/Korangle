@@ -31,6 +31,9 @@ export class UpdateProfileComponent implements OnInit {
     selectedStudentSection:any;
     currentStudentSection:any;
 
+    classList: any;
+    sectionList: any;
+
     studentList: any;
     studentSectionList: any;
 
@@ -55,8 +58,9 @@ export class UpdateProfileComponent implements OnInit {
     }
 
 
-    handleDetailsFromParentStudentFilter(value): void{
-        return;
+    handleDetailsFromParentStudentFilter(value): void {
+        this.classList = value['classList'];
+        this.sectionList = value['sectionList'];
     }
 
     handleStudentListSelection(value): void{
@@ -69,7 +73,7 @@ export class UpdateProfileComponent implements OnInit {
         this.isLoading = true;
         let data = {
             'id': studentId,
-        }
+        };
         this.studentService.getObject(this.studentService.student, data).then(value=>{
             this.currentStudent = this.commonFunctions.copyObject(value);
             Object.keys(value).forEach(key => {
@@ -162,6 +166,18 @@ export class UpdateProfileComponent implements OnInit {
             });
         }
         return stopName;
+    }
+
+    getClassName(): any {
+        return this.classList.find(classs => {
+            return this.selectedStudentSection.parentClass = classs.dbId;
+        }).name;
+    }
+
+    getSectionName(): any {
+        return this.sectionList.find(section => {
+            return this.selectedStudentSection.parentDivision = section.id;
+        }).name;
     }
 
     checkFieldChanged(selectedValue, currentValue): boolean {
