@@ -16,7 +16,9 @@ export class DeleteStudentServiceAdapter {
 
     }
 
-    getStudentDetails(studentList: any): void {
+    getStudentDetails(selectedList: any): void {
+
+        let studentList = selectedList[0];
 
         let student_data = {
             'id': studentList[0].id,
@@ -127,9 +129,9 @@ export class DeleteStudentServiceAdapter {
 
         Promise.all([
             this.vm.subjectService.deleteObjectList(this.vm.subjectService.student_subject,student_subject_data),
-            this.vm.examinationService.deleteObjectList(this.vm.examinationService.student_test,student_test_data),
-            this.vm.examinationService.deleteObjectList(this.vm.examinationService.student_extra_sub_field,student_extra_sub_field_data),
-            this.vm.examinationService.deleteObjectList(this.vm.examinationService.cce_marks,cceMarks_data),
+            this.vm.examinationOldService.deleteObjectList(this.vm.examinationOldService.student_test,student_test_data),
+            this.vm.examinationOldService.deleteObjectList(this.vm.examinationOldService.student_extra_sub_field,student_extra_sub_field_data),
+            this.vm.examinationOldService.deleteObjectList(this.vm.examinationOldService.cce_marks,cceMarks_data),
             this.vm.feeService.deleteObjectList(this.vm.feeService.student_fees,student_fee_data),
             this.vm.studentService.deleteObjectList(this.vm.studentService.student_section,student_section_data),
         ]).then(value => {

@@ -255,7 +255,12 @@
                 </div>
             </div>
 
-
+            <img src="{{this.classTeacherSignature}}"
+                 *ngIf="this.classTeacherSignature != null"
+                 style="position: absolute;
+                 /*bottom: 25px; left: 525px;*/
+                 width: 150px; height: 75px;
+                 z-index: 1;"/>
 
             <!-- Principal Signature Image -->
             <img src="{{user.activeSchool.principalSignatureImage}}"

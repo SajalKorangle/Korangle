@@ -7,7 +7,7 @@ import {ClassOldService} from "../../../../services/modules/class/class-old.serv
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
+import { PRINT_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
@@ -42,6 +42,7 @@ export class TotalCollectionComponent implements OnInit {
     studentSectionList = [];
 
     boardList;
+    sessionList;
 
     serviceAdapter: TotalCollectionServiceAdapter;
 
@@ -103,6 +104,7 @@ export class TotalCollectionComponent implements OnInit {
             'selectedEmployee': this.selectedEmployee,
             'selectedModeOfPayment': this.selectedModeOfPayment,
             'selectedFeeType':this.selectedFeeType,
+            'sessionList':this.sessionList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
