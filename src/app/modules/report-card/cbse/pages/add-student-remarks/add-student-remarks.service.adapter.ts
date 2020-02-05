@@ -65,7 +65,7 @@ export class AddStudentRemarksServiceAdapter {
             
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(value_studentSection=>{
                 this.studentSectionList = value_studentSection;
-                this.populateStudentSectionList();
+                this.populateStudentSectionList(this.studentSectionList);
 
                 if(this.studentSectionList.length == 0){
                     alert('No students have been allocated in your permitted class');
