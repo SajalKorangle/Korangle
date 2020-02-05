@@ -85,7 +85,6 @@ export class GenerateFinalReportComponent implements OnInit {
             'classTeacherSignature': this.currentClassTeacherSignature,
             'boardList': this.boardList,
         };
-
         let selectedClassSection = this.getSelectedClassSection();
         let printRoute : string;
         

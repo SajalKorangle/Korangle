@@ -271,11 +271,12 @@ export class GenerateFinalReportServiceAdapter {
 
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
-            request_array.push(this.vm.examinationService.getCCEMarksList(request_student_cce_marks_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_class_test_data));
+            request_array.push(this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationOldService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
+            request_array.push(this.vm.examinationOldService.getCCEMarksList(request_student_cce_marks_data, this.vm.user.jwt));
             request_array.push(this.vm.reportCardMpBoardService.getObjectList(this.vm.reportCardMpBoardService.student_remark,request_student_remarks_data));
+
             // Call attendance data from here
             if (this.vm.reportCardMapping.autoAttendance) {
                 switch(selectedClassSection['className']) {
