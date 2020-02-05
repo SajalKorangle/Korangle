@@ -23,4 +23,3 @@ def add_mp_board_report_card_module(apps, schema_editor):
         task_object.parentModule = module_object
         task_object.save()
 
-    

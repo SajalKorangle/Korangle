@@ -36,7 +36,7 @@ def add_student_remark_row_mp_board(apps, schema_editor):
         emp_per_list = EmployeePermission.objects.filter(parentEmployee__parentSchool__parentBoard__name='M.P. Board', parentTask__path = 'assign_task')
 
         for employee_permission_object in emp_per_list:
-            emp_added_list.append(employee_permission_object.parentEmployee.id)
+            # emp_added_list.append(employee_permission_object.parentEmployee.id)
             new_emp = EmployeePermission()
             new_emp.parentEmployee = employee_permission_object.parentEmployee
             new_emp.parentTask = task_object
