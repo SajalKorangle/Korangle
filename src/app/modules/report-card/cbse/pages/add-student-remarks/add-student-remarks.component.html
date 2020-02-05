@@ -29,7 +29,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <i>Left {{this.getTotalStudentsCount() - this.getRemarkedStudentsCount()}} out of {{this.getTotalStudentsCount()}}</i>
+                    <i>Left {{getTotalStudentsCount() - getRemarkedStudentsCount()}} out of {{getTotalStudentsCount()}}</i>
                 </div>
             </div>
             
@@ -73,9 +73,9 @@
                         <mat-card-content style="font-weight: 400; font-size: 20px;">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <img *ngIf="getStudent(studentSection).profileImage"
-                                         src="{{getStudent(studentSection).profileImage}}">
-                                    <img *ngIf="!getStudent(studentSection).profileImage"
+                                    <img *ngIf="studentSection.student.profileImage"
+                                         src="{{studentSection.student.profileImage}}">
+                                    <img *ngIf="!studentSection.student.profileImage"
                                          src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
                                 </div>
                                 <div class="col-xs-9" align="right">

@@ -77,7 +77,7 @@ export class AddStudentRemarksComponent implements OnInit {
         });
     }
     
-    getTotalStudents(): any {
+    getTotalStudentsCount(): any {
         return this.getFilteredStudentSectionList().length;
     }
 
