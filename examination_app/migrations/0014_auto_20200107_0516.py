@@ -3,15 +3,17 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+from examination_app.db_script.exam_status_not_null import exam_status_not_null
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('examination_app', '0013_auto_20200107_0513'),
+        ('examination_app', '0013_auto_20200125_1907'),
     ]
 
     operations = [
+        migrations.RunPython(exam_status_not_null),
         migrations.AlterField(
             model_name='examination',
             name='status',
