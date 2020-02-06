@@ -8,7 +8,7 @@ import {ClassOldService} from '../../../../services/modules/class/class-old.serv
 
 import { GenerateHallTicketServiceAdapter } from './generate-hall-ticket.service.adapter';
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_HALL_TICKET } from '../../../../print/print-routes.constants';
+import { PRINT_HALL_TICKET } from '../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
@@ -28,7 +28,7 @@ export class GenerateHallTicketComponent implements OnInit {
     examinationList: any;
 
     boardList: any;
-
+    studentList: any;
     serviceAdapter: GenerateHallTicketServiceAdapter;
 
     isLoading = false;
@@ -47,11 +47,13 @@ export class GenerateHallTicketComponent implements OnInit {
         this.serviceAdapter = new GenerateHallTicketServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        this.getFilteredStudentSectionList();
+
     }
 
     printHallTicket(): void {
         let data = {
-            'studentList': this.selectedExamination.selectedClass.selectedSection.studentList,
+            'studentList': this.getSelectedStudentList(),
             'examination': this.selectedExamination,
             'boardList': this.boardList,
         };
@@ -59,4 +61,14 @@ export class GenerateHallTicketComponent implements OnInit {
         alert('This may take a while');
     }
 
+    getFilteredStudentSectionList(): void {
+        this.studentList = this.selectedExamination.selectedClass.selectedSection.studentList
+        this.studentList.forEach(item => item["selected"]= true);
+    }
+
+    getSelectedStudentList(): any {
+        return this.studentList.filter(studentSection => {
+            return studentSection.selected == true;
+        });
+    }
 }

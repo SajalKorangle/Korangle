@@ -13,10 +13,6 @@ export const PRINT_EMPLOYEE_LIST = 'print-employee-list';
 export const PRINT_EMPLOYEE_ATTENDANCE = 'print-employee-attendance';
 export const PRINT_STUDENT_ATTENDANCE = 'print-student-attendance';
 
-// Examination
-export const PRINT_HALL_TICKET = 'print-hall-ticket';
-export const PRINT_STUDENT_MARKSHEET = 'print-student-marksheet';
-
 // Report Card
 
     // M.P. Board

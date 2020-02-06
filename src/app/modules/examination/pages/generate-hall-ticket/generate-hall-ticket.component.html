@@ -8,7 +8,9 @@
                     <mat-select placeholder="Select Examination"
                                 [ngModel]="selectedExamination"
                                 [disabled]="isLoading"
-                                (ngModelChange)="selectedExamination=$event;">
+                                (ngModelChange)="selectedExamination=$event;"
+                                (ngModelChange) = "getFilteredStudentSectionList()"
+                                >
                         <mat-option *ngFor='let examination of examinationList;' [value]="examination">
                             {{examination.name}}
                         </mat-option>
@@ -19,7 +21,9 @@
                     <mat-select placeholder="Change to -"
                                 #selectClassSection
                                 [ngModel]="selectedExamination.selectedClass"
-                                (ngModelChange)="selectedExamination.selectedClass=$event;">
+                                (ngModelChange)="selectedExamination.selectedClass=$event;"
+                                (ngModelChange) = "getFilteredStudentSectionList()"
+                                >
                         <mat-option *ngFor='let classs of selectedExamination.classList;' [value]="classs">
                             {{classs.name}}, {{classs.selectedSection.name}}
                         </mat-option>
@@ -37,7 +41,8 @@
                             mat-menu-item
                             (click)="selectClassSection.open();
                              selectClassSection.close();
-                             selectedExamination.selectedClass.selectedSection=section;">
+                             selectedExamination.selectedClass.selectedSection=section;"
+                             >
                         {{section.name}}
                     </button>
                 </mat-menu>
@@ -53,6 +58,12 @@
                     No Student presents in this class.
                 </ng-container>
 
+            </div>
+
+            <div class="col-md-9">
+                <mat-checkbox [(ngModel)]="showPrincipalSignature">
+                    Show Principal Signature
+                </mat-checkbox>
             </div>
             <div class="col-md-9" *ngIf="examinationList.length === 0">
                 No Examination created yet!
@@ -70,8 +81,50 @@
              bottom: 25px; left: 600px;
              width: 100px; height: 50px;
              z-index: 1;"/ -->
+</ng-container>
+<br/>
+<table class="table table-hover">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th>S No.</th>
+                    <th class="text-center">Selected</th>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Roll No.</th>
+                    <th>Father's Name</th>
+                    <th>Scholar No.</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngFor="let student of studentList; let i=index;">
+                    <tr>
+                        <ng-container>
+                            <td>{{i+1}}.</td>
+                            <td align="center">
+                                <mat-checkbox [(ngModel)]="student.selected"
+                                              [disabled]="!student.selected"
+                                              (ngModelChange) = "getSelectedStudentList()">
+                                    <!-- span *ngIf="studentSection.selected">Selected</span>
+                                    <span *ngIf="!studentSection.selected">Unselected</span -->
+                                </mat-checkbox>
+                            </td>
+                            <td>
+                                <img src="{{student.profileImage}}" style="width: 30px; height: 30px;">
+                            </td>
+                            <td>{{student.name}}</td>
+                            <td>{{student.rollNumber}}</td>
+                            <td>{{student.fathersName}}</td>
+                            <td>{{student.scholarNumber}}</td>
+                        </ng-container>
+                    </tr>
+                </ng-container>
+                </tbody>
+            </table>
 
-    </ng-container>
+
+
+
+
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
