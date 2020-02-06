@@ -25,10 +25,11 @@ export class GenerateHallTicketComponent implements OnInit {
 
     selectedExamination: any;
 
-    examinationList: any;
+    examinationList = [];
+    showPrincipalSignature = true;
 
     boardList: any;
-    studentList: any;
+
     serviceAdapter: GenerateHallTicketServiceAdapter;
 
     isLoading = false;
@@ -47,8 +48,6 @@ export class GenerateHallTicketComponent implements OnInit {
         this.serviceAdapter = new GenerateHallTicketServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        this.getFilteredStudentSectionList();
-
     }
 
     printHallTicket(): void {
@@ -56,19 +55,33 @@ export class GenerateHallTicketComponent implements OnInit {
             'studentList': this.getSelectedStudentList(),
             'examination': this.selectedExamination,
             'boardList': this.boardList,
+            'showPrincipalSignature': this.showPrincipalSignature,
         };
         this.printService.navigateToPrintRoute(PRINT_HALL_TICKET, {user: this.user, value: data});
         alert('This may take a while');
     }
 
-    getFilteredStudentSectionList(): void {
-        this.studentList = this.selectedExamination.selectedClass.selectedSection.studentList
-        this.studentList.forEach(item => item["selected"]= true);
+    getFilteredStudentSectionList(): any {
+        return this.selectedExamination.selectedClass.selectedSection.studentList;
+        // this.studentList.forEach(item => item["selected"]= true);
     }
 
     getSelectedStudentList(): any {
-        return this.studentList.filter(studentSection => {
+        return this.getFilteredStudentSectionList().filter(studentSection => {
             return studentSection.selected == true;
         });
     }
+
+    selectAllStudents(): void {
+        this.getFilteredStudentSectionList().forEach(student => {
+            student['selected'] = true;
+        })
+    }
+
+    unselectAllStudents(): void {
+        this.getFilteredStudentSectionList().forEach(student => {
+            student['selected'] = false;
+        })
+    }
+
 }
