@@ -7,7 +7,7 @@ import { isMobile } from '../../../../../classes/common.js'
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../../classes/data-storage";
 import {ExaminationService} from "../../../../../services/modules/examination/examination.service";
-import {ReportCardCbseService} from "../../../../../services/modules/report-card/cbse/report-card-cbse.service";
+import {ReportCardMpBoardService} from "../../../../../services/modules/report-card/mp-board/report-card-mp-board.service";
 import {ClassService} from "../../../../../services/modules/class/class.service";
 import {EmployeeService} from "../../../../../services/modules/employee/employee.service";
 import {AttendanceService} from "../../../../../services/modules/attendance/attendance.service";
@@ -20,7 +20,7 @@ declare const $: any;
     templateUrl: './add-student-remarks.component.html',
     styleUrls: ['./add-student-remarks.component.css'],
     providers: [
-        ReportCardCbseService,
+        ReportCardMpBoardService,
         ExaminationService,
         ClassService,
         EmployeeService,
@@ -42,13 +42,14 @@ export class AddStudentRemarksComponent implements OnInit {
 
     showStudentList = false;
 
+    
     serviceAdapter: AddStudentRemarksServiceAdapter;
 
     isInitialLoading = false;
 
     isLoading = false;
 
-    constructor(public reportCardCbseService: ReportCardCbseService,
+    constructor(public reportCardMpBoardService: ReportCardMpBoardService,
                 public classService: ClassService,
                 public employeeService: EmployeeService,
                 public attendanceService: AttendanceService,
@@ -67,6 +68,7 @@ export class AddStudentRemarksComponent implements OnInit {
     }
 
     getFilteredStudentSectionList(): any {
+        
         return this.studentSectionList.filter(studentSection => {
             return studentSection.parentClass == this.selectedClassSection.class.id
                 && studentSection.parentDivision == this.selectedClassSection.section.id;
@@ -76,7 +78,7 @@ export class AddStudentRemarksComponent implements OnInit {
             }
         });
     }
-    
+
     getTotalStudentsCount(): any {
         return this.getFilteredStudentSectionList().length;
     }

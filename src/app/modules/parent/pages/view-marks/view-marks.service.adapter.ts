@@ -37,6 +37,7 @@ export class ViewMarksServiceAdapter {
         let request_examination_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'status': 'Declared',
         };
 
         const request_student_data = {

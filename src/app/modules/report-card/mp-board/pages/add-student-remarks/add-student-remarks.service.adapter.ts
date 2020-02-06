@@ -10,7 +10,6 @@ export class AddStudentRemarksServiceAdapter {
     // Data
     classList: any;
     sectionList: any;
-    studentSectionList: any;
 
 
     initializeAdapter(vm: AddStudentRemarksComponent): void {
@@ -32,11 +31,11 @@ export class AddStudentRemarksServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
         ]).then(value => {
-
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.attendancePermissionList = value[2];
-
+            
+            // Filter attendancePermission List to remove class 10 and class 12
             let class_10_id, class_12_id;
             this.classList.forEach(class_ =>{
                 if(class_.name == 'Class - 10'){
@@ -62,19 +61,19 @@ export class AddStudentRemarksServiceAdapter {
                 'parentSession':this.vm.user.activeSchool.currentSessionDbId,
                 'parentStudent__parentTransferCertificate':'null__korangle'
             };
-            
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(value_studentSection=>{
-                this.studentSectionList = value_studentSection;
-                this.populateStudentSectionList(this.studentSectionList);
 
-                if(this.studentSectionList.length == 0){
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(value_studentSection=>{
+
+                this.populateStudentSectionList(value_studentSection);
+
+                if(this.vm.studentSectionList.length == 0){
                     alert('No students have been allocated in your permitted class');
                     this.vm.isInitialLoading = false;
                     return;
                 }
 
                 let request_student_data = {
-                    'id__in':this.studentSectionList.map(item=>{return item.parentStudent}).join(),
+                    'id__in':this.vm.studentSectionList.map(item=>{return item.parentStudent}).join(),
                     'fields__korangle': 'id,profileImage,name',
                 };
 
@@ -87,6 +86,7 @@ export class AddStudentRemarksServiceAdapter {
                                 return item_student.id == item.parentStudent;
                             });
                         });
+
                     this.vm.isInitialLoading = false;
                         
                     },
@@ -94,6 +94,8 @@ export class AddStudentRemarksServiceAdapter {
                     );
 
                 this.populateClassSectionList();
+
+
             },error=>{this.vm.isInitialLoading = false;});
 
         }, error => {
@@ -113,10 +115,12 @@ export class AddStudentRemarksServiceAdapter {
 
     }
     populateClassSectionList(): void{
+
         this.classList.forEach(classs=>{
             this.sectionList.forEach(section=>{
                 if(this.vm.studentSectionList.find(item=>{
                     return item.parentClass == classs.id && item.parentDivision == section.id;
+
                 }) != undefined){
                     this.vm.classSectionList.push({
                         'class':classs,
@@ -125,9 +129,9 @@ export class AddStudentRemarksServiceAdapter {
                 }
             });
         });
+
         this.vm.selectedClassSection = this.vm.classSectionList[0];
     }
-    
 
     getStudentRemarkDetails(): void {
 
@@ -139,11 +143,10 @@ export class AddStudentRemarksServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.student_remark,student_remark_data),
+            this.vm.reportCardMpBoardService.getObjectList(this.vm.reportCardMpBoardService.student_remark,student_remark_data),
         ]).then(value => {
 
             this.vm.studentRemarkList = value[0];
-
             this.vm.isLoading = false;
             this.vm.showStudentList = true;
         }, error => {
@@ -169,20 +172,19 @@ export class AddStudentRemarksServiceAdapter {
                     'parentSession': prev_student_remark.parentSession,
                     'remark': newRemark,
                 };
-                service_list.push(this.vm.reportCardCbseService.updateObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
+                service_list.push(this.vm.reportCardMpBoardService.updateObject(this.vm.reportCardMpBoardService.student_remark,student_remark_data));
             } else {
                 let student_remark_data = {
                     'parentStudent': studentSection.parentStudent,
                     'parentSession': studentSection.parentSession,
                     'remark': newRemark,
                 };
-                service_list.push(this.vm.reportCardCbseService.createObject(this.vm.reportCardCbseService.student_remark,student_remark_data));
+                service_list.push(this.vm.reportCardMpBoardService.createObject(this.vm.reportCardMpBoardService.student_remark,student_remark_data));
             }
 
             element.classList.add('updatingField');
 
             Promise.all(service_list).then(value => {
-
                 if(prev_student_remark) {
                     this.vm.studentRemarkList.find(studentRemark => {
                         return studentRemark.id == value[0].id;

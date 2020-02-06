@@ -16,12 +16,13 @@ import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, 
 import { PrintService } from '../../../../../print/print-service';
 import {DataStorage} from "../../../../../classes/data-storage";
 import {SchoolService} from "../../../../../services/modules/school/school.service";
+import {ReportCardMpBoardService} from "../../../../../services/modules/report-card/mp-board/report-card-mp-board.service";
 
 @Component({
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ClassService, ExaminationService ],
+    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ReportCardMpBoardService, ClassService, ExaminationService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -60,7 +61,8 @@ export class GenerateFinalReportComponent implements OnInit {
                 public attendanceService: AttendanceOldService,
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
-                private printService: PrintService) {}
+                private printService: PrintService,
+                public reportCardMpBoardService: ReportCardMpBoardService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -225,5 +227,4 @@ export class GenerateFinalReportComponent implements OnInit {
             console.log('paged!', event);
         }, 100);
     }
-
 }

@@ -26,6 +26,7 @@ export class GenerateFinalReportServiceAdapter {
     studentCCEMarksList: any;
     studentAttendanceList: any;
 
+    studentRemarksList: any;
 
     initializeAdapter(vm: GenerateFinalReportComponent): void {
         this.vm = vm;
@@ -263,12 +264,18 @@ export class GenerateFinalReportServiceAdapter {
                 'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             };
 
+            let request_student_remarks_data = {
+                'parentStudent__in':this.vm.filteredStudentList.filter(student => {return student.selected}).map(a => a.dbId).join(),
+                'parentSession':[this.vm.user.activeSchool.currentSessionDbId].join(),
+            };
+
             let request_array = [];
             request_array.push(this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_class_test_data));
             request_array.push(this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationOldService.getStudentExtraSubFieldList(request_student_extra_sub_field_data, this.vm.user.jwt));
             request_array.push(this.vm.examinationOldService.getCCEMarksList(request_student_cce_marks_data, this.vm.user.jwt));
+            request_array.push(this.vm.reportCardMpBoardService.getObjectList(this.vm.reportCardMpBoardService.student_remark,request_student_remarks_data));
 
             // Call attendance data from here
             if (this.vm.reportCardMapping.autoAttendance) {
@@ -324,9 +331,10 @@ export class GenerateFinalReportServiceAdapter {
                 this.studentTestList = valueTwo[2];
                 this.studentExtraSubFieldList = valueTwo[3];
                 this.studentCCEMarksList = valueTwo[4];
+                this.studentRemarksList = valueTwo[5];
                 this.studentAttendanceList = [];
-                if (valueTwo.length > 4) {
-                    valueTwo.slice(5, valueTwo.length).forEach(item => {
+                if (valueTwo.length > 6) { // Earlier 4
+                    valueTwo.slice(6, valueTwo.length).forEach(item => { // Earlier 5
                         this.studentAttendanceList = this.studentAttendanceList.concat(item);
                     });
                 }
@@ -433,6 +441,9 @@ export class GenerateFinalReportServiceAdapter {
                             .push(this.getStudentSubjectMarks(student.dbId, item.parentSubject, this.vm.reportCardMapping[key], maximumMarks));
                     });
                     student[key]['extraSubFieldMarksList'] = [];
+
+                    student['remark'] = this.extractStudentRemark(student.dbId);
+
                     if (key != 'parentExaminationProject') {
                         this.vm.extraFieldList.forEach(extraField => {
                             extraField['extraSubFieldList'].forEach(extraSubField => {
@@ -483,15 +494,22 @@ export class GenerateFinalReportServiceAdapter {
             }).sort((a,b) => {
                 return a.orderNumber - b.orderNumber;
             });*/
-            student['cceMarks'] = this.studentCCEMarksList.filter(item => {
+
+            student['cceMarks'] = this.studentCCEMarksList.find(item => {
                 return item.parentStudent == student.dbId;
-            }).reduce((total, item) => {
-                return total + parseFloat(item.marksObtained);
-            }, 0);
+            });
+            if(student['cceMarks'] == undefined){
+                student['cceMarks'] = 0;
+            }else{
+                student['cceMarks'] = parseFloat(student['cceMarks'].marksObtained);
+            }
             student['attendanceData'] = {
                 'attendance': 0,
                 'workingDays': 0,
             };
+
+            student['remark'] = this.extractStudentRemark(student.dbId);
+
             this.studentAttendanceList.forEach(studentAttendance => {
                 if (studentAttendance.status === ATTENDANCE_STATUS_LIST[0]) {
                     student['attendanceData']['attendance'] += 1;
@@ -616,6 +634,12 @@ export class GenerateFinalReportServiceAdapter {
             });
         }
         return result;
+    }
+
+    extractStudentRemark(studentDbId):string {
+        let remark = this.studentRemarksList.find(item => {return item.parentStudent == studentDbId });
+        if(remark == undefined) return '';
+        return remark.remark
     }
 
 }

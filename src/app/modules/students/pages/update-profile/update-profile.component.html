@@ -8,7 +8,7 @@
                                [studentTcGenerated]="true"
                                [bothFilters]="false"></parent-student-filter>
 
-    
+
     <hr>
     
     <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
@@ -24,6 +24,12 @@
              *ngIf="selectedStudent.secondMobileNumber && selectedStudent.secondMobileNumber != 0">
             <div class="col-xs-3">
                 <a href="tel:{{selectedStudent.secondMobileNumber}}">Call Me 2</a>
+            </div>
+        </div>
+
+        <div class="row  visible-md visible-lg visible-xl">
+            <div class="col-md-12">
+                <b>{{getClassName()}}, {{getSectionName()}}</b>
             </div>
         </div>
 
@@ -54,6 +60,12 @@
             </div>
 
             <div class="col-md-9">
+
+                <div class="row hidden-md hidden-lg hidden-sm" style="margin-top: 10px;">
+                    <div class="col-md-12">
+                        <b>{{getClassName()}}, {{getSectionName()}}</b>
+                    </div>
+                </div>
 
                 <!-- Name, Father's Name, Mother's Name -->
                 <div class="row">
