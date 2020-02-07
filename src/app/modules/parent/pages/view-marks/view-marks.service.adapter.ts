@@ -37,6 +37,7 @@ export class ViewMarksServiceAdapter {
         let request_examination_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'status': 'Declared',
         };
 
         const request_student_data = {
@@ -80,16 +81,14 @@ export class ViewMarksServiceAdapter {
                 'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             };
 
-            let request_class_test_data = {
-                'examinationList': this.getExaminationIdList(),
-                'subjectList': [],
-                'classList': [this.student_full_profile.classDbId],
-                'sectionList': [this.student_full_profile.sectionDbId],
-                'startTimeList': [],
-                'endTimeList': [],
-                'testTypeList': [],
-                'maximumMarksList': [],
-            };
+            let request_class_test_data = {            
+                /*'examinationId': this.vm.selectedExamination.id,
+                'classId': this.vm.selectedExamination.selectedClass.dbId,
+                'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+                'parentExamination__in': this.getExaminationIdList(),
+                'parentClass': this.student_full_profile.classDbId,
+                'parentDivision': this.student_full_profile.sectionDbId,
+            };            
 
             let request_student_test_data = {
                 'studentList': [this.student_full_profile.dbId],
@@ -102,7 +101,7 @@ export class ViewMarksServiceAdapter {
             Promise.all([
                 this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
                 this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
-                this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt),
+                this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data),
                 this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
             ]).then(value2 => {
 

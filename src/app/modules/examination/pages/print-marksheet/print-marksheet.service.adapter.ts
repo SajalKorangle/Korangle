@@ -87,7 +87,17 @@ export class PrintMarksheetServiceAdapter {
 
             this.classSubjectList.forEach(item => {
 
-                let request_class_test_data = {
+                let request_class_test_data = {            
+                    /*'examinationId': this.vm.selectedExamination.id,
+                    'classId': this.vm.selectedExamination.selectedClass.dbId,
+                    'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+                    'parentExamination__in': examination_id_list,
+                    'parentClass': item.parentClass,
+                    'parentDivision': item.parentDivision,
+                    'parentSubject' : item.parentSubject,
+                };
+                
+                /*let request_class_test_data = {
                     'examinationList': [examination_id_list],
                     'subjectList': [item.parentSubject],
                     'classList': [item.parentClass],
@@ -96,9 +106,9 @@ export class PrintMarksheetServiceAdapter {
                     'endTimeList': [],
                     'testTypeList': [],
                     'maximumMarksList': [],
-                };
+                };*/
 
-                service_list.push(this.vm.examinationOldService.getTestList(request_class_test_data, this.vm.user.jwt));
+                service_list.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data));
 
             });
 

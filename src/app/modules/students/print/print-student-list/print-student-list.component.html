@@ -2,6 +2,7 @@
     <thead style="font-weight: 400">
     <tr>
         <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+        <th [class.hidden]="!columnFilter.showProfileImage" style="text-align: center">Profile Image</th>
         <th [class.hidden]="!columnFilter.showName">Name</th>
         <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
         <th [class.hidden]="!columnFilter.showSectionName">Section Name</th>
@@ -35,6 +36,14 @@
             <tr [class.hidden]="!student.show">
                 <ng-container>
                     <td [class.hidden]="!columnFilter.showSerialNumber">{{i+1}}.</td>
+                    <td [class.hidden]="!columnFilter.showProfileImage" align="center">
+                        <img *ngIf="student.profileImage"
+                             src="{{student.profileImage}}"
+                             style="width: 50px">
+                        <img *ngIf="!student.profileImage"
+                             src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                             style="width: 50px"/>
+                    </td>
                     <td [class.hidden]="!columnFilter.showName">{{ student.name | titlecase }}</td>
                     <td [class.hidden]="!columnFilter.showClassName">{{student.className}}<!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span --></td>
                     <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>

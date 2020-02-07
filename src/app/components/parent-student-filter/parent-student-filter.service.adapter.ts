@@ -24,10 +24,14 @@ export class ParentStudentFilterServiceAdapter {
         };
 
         let student_data = {
-            'parentTransferCertificate': 'null__korangle',
             'parentSchool': this.vm.user.activeSchool.dbId,
             'fields__korangle': 'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte'
         };
+
+        if (!this.vm.studentTcGenerated) {
+            student_section_data['parentStudent__parentTransferCertificate'] = 'null__korangle';
+            student_data['parentTransferCertificate'] = 'null__korangle';
+        }
 
         Promise.all([
             this.vm.classService.getClassList(this.vm.user.jwt),

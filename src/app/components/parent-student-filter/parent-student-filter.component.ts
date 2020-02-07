@@ -99,6 +99,14 @@ export class ParentStudentFilterComponent implements OnInit {
         });
     }
 
+    getFilteredStudentSectionListByStudentList(studentList: any): any {
+        return this.studentSectionList.filter(studentSection => {
+            return studentList.find(student => {
+                return student.id == studentSection.parentStudent;
+            }) != undefined;
+        })
+    }
+
     handleDataLoading(): void {
         let data = {
             'classList': this.classList,
@@ -146,7 +154,7 @@ export class ParentStudentFilterComponent implements OnInit {
     }
 
     handleStudentSelection(student: any): void {
-        this.onStudentListSelected.emit([student]);
+        this.onStudentListSelected.emit([[student], this.getFilteredStudentSectionListByStudentList([student])]);
     }
 
     // Parent
@@ -167,7 +175,8 @@ export class ParentStudentFilterComponent implements OnInit {
     }
 
     handleMobileNumberSelection(mobileNumber: any): void {
-        this.onStudentListSelected.emit(this.getFilteredStudentListByMobileNumber(mobileNumber));
+        let studentList = this.getFilteredStudentListByMobileNumber(mobileNumber);
+        this.onStudentListSelected.emit([studentList, this.getFilteredStudentSectionListByStudentList(studentList)]);
     }
 
 }
