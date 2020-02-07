@@ -4,11 +4,11 @@
         <div class="row">
 
             <div class="col-sm-8">
-                <div class="col-sm-12" *ngIf="selectedAssignTaskOption==assignTaskOptions[0]">
+                <ng-container *ngIf="selectedAssignTaskOption==assignTaskOptions[0]">
                     <app-employee-filter [user]="user"
                                          (employee)="selectedEmployee=$event;serviceAdapter.getPermissionList()" (emitEmployeeList)="employeeList=$event"></app-employee-filter>
-                </div>
-                <div class="col-sm-6" *ngIf="selectedAssignTaskOption==assignTaskOptions[1]">
+                </ng-container>
+                <ng-container *ngIf="selectedAssignTaskOption==assignTaskOptions[1]">
                     <mat-form-field>
                         <mat-select placeholder="Select module"
                                     [ngModel]="selectedModule"
@@ -18,9 +18,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-                <div class="col-sm-6" *ngIf="selectedModule && selectedAssignTaskOption==assignTaskOptions[1]">
-                    <mat-form-field>
+                    <mat-form-field *ngIf="selectedModule && selectedAssignTaskOption==assignTaskOptions[1]"
+                                    style="margin-left: 20px;">
                         <mat-select placeholder="Select task"
                                     [ngModel]="selectedTask"
                                     (ngModelChange)="selectedTask=$event;serviceAdapter.getPermissionList();">
@@ -29,7 +28,7 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
+                </ng-container>
             </div>
 
             <div class="col-sm-4" align="end">
@@ -82,7 +81,7 @@
             </div>
             <ng-container *ngIf="selectedTask && !isLoading">
 
-            <span style="font-weight: 800; font-size: 20px">{{selectedTask.title}}</span><br/>
+            <span style="font-weight: 800; font-size: 20px">{{selectedModule.title}} - {{selectedTask.title}}</span><br/>
 
             <ng-container *ngFor="let employee of employeeList">
                 <mat-checkbox [ngModel]="hasPermission(employee, selectedTask)"

@@ -48,7 +48,7 @@ export class GradeStudentFieldsServiceAdapter {
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.extra_field, {}),
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.term, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data),
-            // this.vm.employeeOldService.getObjectList(this.vm.employeeOldService.)
+            // this.vm.employeeService.getObjectList(this.vm.employeeService.)
         ]).then(value => {
 
             this.classList = value[0];

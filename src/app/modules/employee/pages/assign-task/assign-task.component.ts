@@ -117,6 +117,7 @@ export class AssignTaskComponent implements OnInit {
         this.moduleList.forEach(module => {
             module.taskList.forEach( task=>{
                 if (!this.hasPermission(employee, task)){
+                    task.permissionLoading = true;
                     this.addPermission(employee, task);
                 }
             })
@@ -127,6 +128,7 @@ export class AssignTaskComponent implements OnInit {
         this.moduleList.forEach(module => {
             module.taskList.forEach( task=>{
                 if (this.hasPermission(employee, task) && !this.isDisabled(module, task, employee)){
+                    task.permissionLoading = true;
                     this.deletePermission(employee, task);
                 }
             })
