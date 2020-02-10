@@ -72,7 +72,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let student of studentList; let i=index;">
+                <tr *ngFor="let student of getFilteredStudentList(); let i=index;">
                     <td>{{(i+1)}}.</td>
                     <td>{{student.name}}</td>
                     <td>{{student.studentSection.rollNumber}}</td>

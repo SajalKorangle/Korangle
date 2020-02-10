@@ -9,7 +9,6 @@ import { AttendanceOldService } from '../../../../../services/modules/attendance
 import { ReportCardMpBoardService } from '../../../../../services/modules/report-card/mp-board/report-card-mp-board.service';
 
 import { GradeStudentFieldsServiceAdapter } from './grade-student-fields.service.adapter';
-import {TEST_TYPE_LIST} from '../../../../../classes/constants/test-type';
 import {StudentService} from '../../../../../services/modules/student/student.service';
 
 import { ChangeDetectorRef } from '@angular/core';
