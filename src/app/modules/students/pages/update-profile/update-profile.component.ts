@@ -64,6 +64,7 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     handleStudentListSelection(value): void{
+        console.log(value);
         this.selectedStudent = value[0][0];
         this.selectedStudentSection = value[1][0];
         this.getStudentProfile(this.selectedStudent.id);
@@ -170,13 +171,13 @@ export class UpdateProfileComponent implements OnInit {
 
     getClassName(): any {
         return this.classList.find(classs => {
-            return this.selectedStudentSection.parentClass = classs.dbId;
+            return this.selectedStudentSection.parentClass == classs.dbId;
         }).name;
     }
 
     getSectionName(): any {
         return this.sectionList.find(section => {
-            return this.selectedStudentSection.parentDivision = section.id;
+            return this.selectedStudentSection.parentDivision == section.id;
         }).name;
     }
 
