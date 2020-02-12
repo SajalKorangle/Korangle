@@ -57,7 +57,7 @@ export class AssignTaskComponent implements OnInit {
     }
 
     updatePermission(employee: any, task: any): void {
-        task.permissionLoading = true;
+        this.updatePermissionLoading(employee, task, true);
         if (this.hasPermission(employee, task)) {
             this.deletePermission(employee, task);
         } else {
@@ -72,10 +72,10 @@ export class AssignTaskComponent implements OnInit {
         };
         this.employeeOldService.deleteEmployeePermission(data, this.user.jwt).then(response => {
             this.currentPermissionList = this.currentPermissionList.filter(value => value.id!==perm_id);
-            task.permissionLoading = false;
+            this.updatePermissionLoading(employee, task, false);
         }, error => {
             alert('Not able to remove employee permission');
-            task.permissionLoading = false;
+            this.updatePermissionLoading(employee, task, false);
         });
     }
 
@@ -92,15 +92,15 @@ export class AssignTaskComponent implements OnInit {
                     parentTask: task.id
                 });
             }
-            task.permissionLoading = false;
+            this.updatePermissionLoading(employee, task, false);
         }, error => {
             alert('Not able to add employee permission');
-            task.permissionLoading = false;
+            this.updatePermissionLoading(employee, task, false);
         });
     }
 
     isDisabled(module: any, task: any, employee: any): boolean {
-        return task.permissionLoading
+        return this.isPermissionLoading(employee, task)
             || (parseInt(this.user.username) === employee.mobileNumber
                 && module.path === 'employees'
                 && task.path === 'assign_task');
@@ -117,7 +117,7 @@ export class AssignTaskComponent implements OnInit {
         this.moduleList.forEach(module => {
             module.taskList.forEach( task=>{
                 if (!this.hasPermission(employee, task)){
-                    task.permissionLoading = true;
+                    this.updatePermissionLoading(employee, task, true);
                     this.addPermission(employee, task);
                 }
             })
@@ -128,11 +128,20 @@ export class AssignTaskComponent implements OnInit {
         this.moduleList.forEach(module => {
             module.taskList.forEach( task=>{
                 if (this.hasPermission(employee, task) && !this.isDisabled(module, task, employee)){
-                    task.permissionLoading = true;
+                    this.updatePermissionLoading(employee, task, true);
                     this.deletePermission(employee, task);
                 }
             })
         })
+    }
+
+    updatePermissionLoading(employee: any, task: any, permission: boolean): void {
+        employee.permissionLoading = permission;
+        task.permissionLoading = permission;
+    }
+
+    isPermissionLoading(employee: any, task: any): boolean {
+        return employee.permissionLoading && task.permissionLoading;
     }
 
 }

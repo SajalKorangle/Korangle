@@ -67,7 +67,7 @@
                             {{task.title}}
                             <br/>
                         </mat-checkbox>
-                        <div *ngIf="task.permissionLoading" class="loader-custom"></div>
+                        <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom"></div>
                         <br/>
                     </ng-container>
                 </ng-container>
@@ -81,20 +81,20 @@
             </div>
             <ng-container *ngIf="selectedTask && !isLoading">
 
-            <span style="font-weight: 800; font-size: 20px">{{selectedModule.title}} - {{selectedTask.title}}</span><br/>
+                <span style="font-weight: 800; font-size: 20px">{{selectedModule.title}} - {{selectedTask.title}}</span><br/>
 
-            <ng-container *ngFor="let employee of employeeList">
-                <mat-checkbox [ngModel]="hasPermission(employee, selectedTask)"
-                              (ngModelChange)="updatePermission(employee, selectedTask)"
-                              >
-                    {{employee.name}}
+                <ng-container *ngFor="let employee of employeeList">
+                    <mat-checkbox [ngModel]="hasPermission(employee, selectedTask)"
+                                  (ngModelChange)="updatePermission(employee, selectedTask)"
+                                  >
+                        {{employee.name}}
+                        <br/>
+                    </mat-checkbox>
+                    <div *ngIf="isPermissionLoading(employee, selectedTask)" class="loader-custom"></div>
                     <br/>
-                </mat-checkbox>
-                <div *ngIf="selectedTask.permissionLoading" class="loader-custom"></div>
-                <br/>
-            </ng-container>
+                </ng-container>
 
-        </ng-container>
+            </ng-container>
 
         </div>
 

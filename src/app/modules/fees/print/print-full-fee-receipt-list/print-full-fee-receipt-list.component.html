@@ -147,7 +147,7 @@
                              *ngIf="(subFeeReceipt.isAnnually && subFeeReceipt['aprilAmount'] > 0) || !subFeeReceipt.isAnnually">
                             <div class="col-xs-2" align="center">{{subFeeReceiptIndex+1}}.</div>
                             <div class="col-xs-6">
-                                {{getFeeTypeName(subFeeReceipt)}}&nbsp;
+                                {{getFeeType(subFeeReceipt).name}}&nbsp;
                                 <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
                             </div>
                             <div class="col-xs-4"
@@ -164,7 +164,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <ng-container *ngIf="subFeeReceipt['aprilAmount'] == 0">
-                                    {{getFeeTypeName(subFeeReceipt)}}&nbsp;
+                                    {{getFeeType(subFeeReceipt).name}}&nbsp;
                                     <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
                                     - <i>Late Fee</i>
                                 </ng-container>
@@ -386,7 +386,7 @@
                              *ngIf="(subFeeReceipt.isAnnually && subFeeReceipt['aprilAmount'] > 0) || !subFeeReceipt.isAnnually">
                             <div class="col-xs-2" align="center">{{subFeeReceiptIndex+1}}.</div>
                             <div class="col-xs-6">
-                                {{getFeeTypeName(subFeeReceipt)}}&nbsp;
+                                {{getFeeType(subFeeReceipt).name}}&nbsp;
                                 <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
                             </div>
                             <div class="col-xs-4"
@@ -403,7 +403,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <ng-container *ngIf="subFeeReceipt['aprilAmount'] == 0">
-                                    {{getFeeTypeName(subFeeReceipt)}}&nbsp;
+                                    {{getFeeType(subFeeReceipt).name}}&nbsp;
                                     <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
                                     - <i>Late Fee</i>
                                 </ng-container>
