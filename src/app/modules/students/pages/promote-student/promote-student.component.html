@@ -59,7 +59,7 @@
                         <mat-select placeholder="Select Class"
                                     #selectClassSectionTwo
                                     [ngModel]="toSelectedClass"
-                                    (ngModelChange)="toSelectedClass=$event;">
+                                    (ngModelChange)="handleToSelectedClassChange($event);">
                             <mat-option *ngFor='let classs of getToClassList();' [value]="classs">
                                 {{classs.name}}, {{toSelectedSection.name}}
                             </mat-option>
@@ -74,7 +74,7 @@
                     <mat-menu #classSectionMenuTwo="matMenu">
                         <button *ngFor="let section of sectionList"
                                 mat-menu-item
-                                (click)="selectClassSectionTwo.open(); selectClassSectionTwo.close(); toSelectedSection=section">
+                                (click)="selectClassSectionTwo.open(); selectClassSectionTwo.close(); handleToSelectedSectionChange(section)">
                             {{section.name}}
                         </button>
                     </mat-menu>
