@@ -27,7 +27,7 @@ export class DiscountListComponent implements OnInit{
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
 
-    constructor(private schoolService: SchoolService) { }
+    constructor() { }
 
     ngOnInit() { }
 

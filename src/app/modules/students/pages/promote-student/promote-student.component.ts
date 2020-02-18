@@ -93,6 +93,20 @@ export class PromoteStudentComponent implements OnInit {
         this.newPromotedList = [];
     }
 
+    handleToSelectedClassChange(value: any): void {
+        this.toSelectedClass = value;
+        this.newPromotedList.forEach(studentSection => {
+            studentSection.parentClass = this.toSelectedClass.dbId;
+        });
+    }
+
+    handleToSelectedSectionChange(value: any): void {
+        this.toSelectedSection = value;
+        this.newPromotedList.forEach(studentSection => {
+            studentSection.parentDivision = this.toSelectedSection.id;
+        });
+    }
+
     getToClassList(): any {
         return this.classList.filter(classs => {
             return classs.orderNumber == this.fromSelectedClass.orderNumber
