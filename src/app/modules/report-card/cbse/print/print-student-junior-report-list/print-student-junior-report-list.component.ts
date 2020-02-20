@@ -84,7 +84,7 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
         });
         return result;
     }
-    
+
     getDate(): any {
         return new Date();
     }
@@ -267,16 +267,21 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getPresentDays(student: any, termIndex: any): any {
-        return this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
+        let attendance = this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
             return termStudentAttendance.parentStudent == student.id
                 && termStudentAttendance.status == this.attendance_status_list[0];
         }).length;
+        console.log(attendance);
+        return attendance;
     }
 
     getWorkingDays(student: any, termIndex: any): any {
-        return this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
+        let total_attendance = this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
             return termStudentAttendance.parentStudent == student.id;
         }).length;
+
+        console.log(total_attendance);
+        return total_attendance;
     }
 
 }

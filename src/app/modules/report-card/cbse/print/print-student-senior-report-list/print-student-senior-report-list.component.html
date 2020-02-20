@@ -159,7 +159,7 @@
                         <tbody>
                         <tr>
                             <td style="padding: 2px;"><b>Attendance: Term-1</b> Total Present/Working Days</td>
-                            <td class="leftBorder" style="padding: 2px;" align="center">{{getPresentDays(student, 2)}}/{{getWorkingDays(student, 2)}}</td>
+                            <td class="leftBorder" style="padding: 2px;" align="center"     *ngIf="getPresentDays(student, 2) != 0 || getWorkingDays(student, 2)!= 0" >{{getPresentDays(student, 2)}}/{{getWorkingDays(student, 2)}}</td>
                         </tr>
                         </tbody>
                     </table>

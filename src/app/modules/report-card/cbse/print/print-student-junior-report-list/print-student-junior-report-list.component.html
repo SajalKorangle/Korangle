@@ -107,7 +107,7 @@
                             <td class="rightBorder downBorder">Per Test (10)</td>
                             <td class="rightBorder downBorder">Note Book (5)</td>
                             <td class="rightBorder downBorder">Sub Enrichment (5)</td>
-                            <td class="rightBorder downBorder">Half Yearly Exam (80)</td>
+                            <td class="rightBorder downBorder">Yearly Exam (80)</td>
                             <td class="rightBorder downBorder">Marks Obtained (100)</td>
                             <td class="rightBorder downBorder">Gr</td>
                         </tr>
@@ -184,9 +184,9 @@
                         <tbody>
                         <tr>
                             <td style="padding: 2px;"><b>Attendance: Term-1</b> Total Present/Working Days</td>
-                            <td class="leftBorder" style="padding: 2px;" align="center">{{getPresentDays(student, 0)}}/{{getWorkingDays(student, 0)}}</td>
+                            <td class="leftBorder" style="padding: 2px;" align="center"     *ngIf="getPresentDays(student, 0) != 0 || getWorkingDays(student, 0)!= 0" >{{getPresentDays(student, 0)}}/{{getWorkingDays(student, 0)}}</td>
                             <td class="leftBorder" style="padding: 2px;"><b>Attendance: Term-2</b> Total Present/Working Days</td>
-                            <td class="leftBorder" style="padding: 2px;" align="center">{{getPresentDays(student, 1)}}/{{getWorkingDays(student, 1)}}</td>
+                            <td class="leftBorder" style="padding: 2px;" align="center"     *ngIf="getPresentDays(student, 1) != 0 || getWorkingDays(student, 1)!= 0" >{{getPresentDays(student, 1)}}/{{getWorkingDays(student, 1)}}</td>
                         </tr>
                         </tbody>
                     </table>
