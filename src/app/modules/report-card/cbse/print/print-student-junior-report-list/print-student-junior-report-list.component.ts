@@ -124,7 +124,11 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
 
     getExaminationMarks(student: any, classSubject: any, examinationId: any, baseMarks: any): any {
         let maximumMarks = this.testList.filter(test => {
-            return test.parentExamination == examinationId && test.parentSubject == classSubject.parentSubject;
+            // return test.parentExamination == examinationId && test.parentSubject == classSubject.parentSubject;
+            return test.parentExamination == examinationId
+                && test.parentSubject == classSubject.parentSubject
+                && test.parentClass == classSubject.parentClass
+                && test.parentDivision == classSubject.parentDivision;
         }).reduce((total, a) => {
             return total+a.maximumMarks;
         }, 0);
@@ -153,21 +157,21 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
         let examinationId = this.reportCardMappingList.find(reportCardMapping => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationNoteBook;
-        return this.getExaminationMarks(student, classSubject, examinationId, 10);
+        return this.getExaminationMarks(student, classSubject, examinationId, 5);
     }
 
     getSubEnrichmentMarks(student: any, classSubject: any, term: any): any {
         let examinationId = this.reportCardMappingList.find(reportCardMapping => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationSubEnrichment;
-        return this.getExaminationMarks(student, classSubject, examinationId, 10);
+        return this.getExaminationMarks(student, classSubject, examinationId, 5);
     }
 
     getFinalTermMarks(student: any, classSubject: any, term: any): any {
         let examinationId = this.reportCardMappingList.find(reportCardMapping => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationFinalTerm;
-        return this.getExaminationMarks(student, classSubject, examinationId, 10);
+        return this.getExaminationMarks(student, classSubject, examinationId, 80);
     }
 
     getOverallMarks(student: any, classSubject: any, term: any): any {
