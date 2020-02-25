@@ -271,21 +271,16 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getPresentDays(student: any, termIndex: any): any {
-        let attendance = this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
+        return this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
             return termStudentAttendance.parentStudent == student.id
                 && termStudentAttendance.status == this.attendance_status_list[0];
         }).length;
-        console.log(attendance);
-        return attendance;
     }
 
     getWorkingDays(student: any, termIndex: any): any {
-        let total_attendance = this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
+        return this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
             return termStudentAttendance.parentStudent == student.id;
         }).length;
-
-        console.log(total_attendance);
-        return total_attendance;
     }
 
 }
