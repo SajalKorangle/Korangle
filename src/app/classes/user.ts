@@ -78,6 +78,10 @@ export class User {
             return 'Session 2018-19';
         } else if (this.activeSchool.currentSessionDbId==3) {
             return 'Session 2019-20';
+        } else if (this.activeSchool.currentSessionDbId==4) {
+            return 'Session 2020-21';
+        } else if (this.activeSchool.currentSessionDbId==5) {
+            return 'Session 2021-22';
         }
         return '';
     }
