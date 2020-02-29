@@ -114,17 +114,17 @@
                         <ng-container *ngFor="let classSubject of classSubjectList;">
                             <tr>
                                 <td class="leftBorder rightBorder" style="padding: 5px;">{{getSubjectName(classSubject.parentSubject)}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[0])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[0])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[0])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[0])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[0])}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[0]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[0]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[0]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[0]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[0]) | number:'1.0-2'}}</td>
                                 <td class="rightBorder" style="padding: 5px;" align="center">{{getOverallGrade(student, classSubject, termList[0])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[1])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[1])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[1])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[1])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[1])}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[1]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[1]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[1]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[1]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[1]) | number:'1.0-2'}}</td>
                                 <td class="rightBorder" style="padding: 5px;" align="center">{{getOverallGrade(student, classSubject, termList[1])}}</td>
                             </tr>
                         </ng-container>
