@@ -37,6 +37,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/subject/subject.module#SubjectModule',
     },
     {
+        path: 'grade',
+        loadChildren: 'app/modules/grade/grade.module#GradeModule',
+    },
+    {
         path: 'examinations',
         loadChildren: 'app/modules/examination/examination.module#ExaminationModule',
     },
