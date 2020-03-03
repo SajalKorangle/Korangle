@@ -6,7 +6,7 @@ import { GradeRoutingModule } from './grade.routing';
 
 @NgModule({
   declarations: [
-      GradeComponent
+      GradeComponent,
   ],
   imports: [
     GradeRoutingModule,
