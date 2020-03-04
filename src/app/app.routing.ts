@@ -53,6 +53,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule',
     },
     {
+        path: 'custom_reportcard',
+        loadChildren: 'app/modules/report-card/custom_reportcard/custom_reportcard.module#CustomReportCardModule',
+    },
+    {
         path: 'salary',
         loadChildren: 'app/modules/salary/salary.module#SalaryModule',
     },
