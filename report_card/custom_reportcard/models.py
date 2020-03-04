@@ -1,7 +1,7 @@
 from django.db import models
 
 from school_app.model.models import School, Session
-from examination_app.model.models import Examination
+from examination_app.models import Examination
 
 
 
@@ -45,14 +45,14 @@ class LayoutExamColumn(models.Model):
 	parentExamination = models.ForeignKey(Examination, on_delete=models.PROTECT, default=0, verbose_name='parentExamination')
 	orderNumber = models.IntegerField(null=True, default=0)
 	name = models.TextField() 
-	maximumMarksObtainedOne = models.Integer(null=True, default=0)
-	maximumMarksObtainedTwo = models.Integer(null=True, default=0)
+	maximumMarksObtainedOne = models.IntegerField(null=True, default=0)
+	maximumMarksObtainedTwo = models.IntegerField(null=True, default=0)
 
-	EXAM_COLUMN_TYPE = (
-		(‘Simple’,  ‘Simple’),
-		(‘Oral/Written’, ‘Oral/Written’),
-		(‘Practical/Theory’, ‘Practical/Theory’)
-	)
+	EXAM_COLUMN_TYPE = [
+		('Simple','Simple'),
+		('Oral/Written','Oral/Written'),
+		('Practical/Theory','Practical/Theory')
+	]
 	columnType = models.CharField(choices=EXAM_COLUMN_TYPE, max_length=255, null=True, default='Simple')
 
 	class Meta:
