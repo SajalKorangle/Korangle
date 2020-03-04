@@ -6,32 +6,28 @@ from student_app.models import Student
 from django.contrib.auth.models import User
 
 class Grade(models.Model):
-    name = models.CharField(max_length=100)
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
+    name = models.TextField(verbose_name='name')
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0,verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, on_delete=models.CASCADE, null=False, default=0,verbose_name='parentSession')
 
     class Meta:
         db_table = 'grades'
+        unique_together = ('name','parentSchool','parentSession')
 
 class SubGrade(models.Model):
-    parentGrade = models.ForeignKey(Grade,on_delete=models.CASCADE,default=0)
-    name = models.CharField(max_length=100)
+    parentGrade = models.ForeignKey(Grade,on_delete=models.CASCADE,default=0,verbose_name='parentGrade')
+    name = models.TextField(verbose_name='name')
 
     class Meta:
         db_table = 'sub_grade'
+        unique_together = ('name', 'parentGrade')
 
 class StudentSubGrade(models.Model):
 
-    GRADES = (
-        ('A', 'A'),
-        ('B', 'B'),
-        ('C', 'C'),
-        ('D', 'D'),
-        ('E', 'E'),
-    )
-    gradeObtained = models.CharField(max_length=1, choices=GRADES, null=False, default='A')
+    gradeObtained = models.TextField(verbose_name='gradeObtained')
     parentSubGrade = models.ForeignKey(SubGrade,on_delete=models.CASCADE,null=False,default=0, verbose_name='parentSubGrade')
     parentStudent = models.ForeignKey(Student,on_delete=models.CASCADE,null=False,default=0, verbose_name='parentStudent')
 
     class Meta:
         db_table = 'student_sub_grade'
+        unique_together = ('parentSubGrade', 'parentStudent')
