@@ -1,6 +1,107 @@
 <div class="card-content">
 
-    <p>Works</p>
+<!--    Grade Selector-->
+    <mat-form-field style="margin-right: 15px;">
+        <mat-select placeholder="Select Grade" style="width: 100%;">
+
+<!--            <mat-option>-->
+<!--                <button class="btn"-->
+<!--                        style="padding: 4px 7px"-->
+<!--                        (click)="selectAllClasses(); $event.stopPropagation();">Select All-->
+<!--                </button>-->
+<!--                <button class="btn"-->
+<!--                        style="padding: 4px 7px"-->
+<!--                        (click)="unselectAllClasses(); $event.stopPropagation();">Clear All-->
+<!--                </button>-->
+<!--            </mat-option>-->
+
+            <ng-container *ngFor="let grade of gradeList">
+                    <mat-option style="width: 100%;" (click)="handleSubGradeDisplay(grade)">
+                            {{grade.name}}
+                    </mat-option>
+            </ng-container>
+
+<!--            <mat-option>-->
+<!--                <button class="btn"-->
+<!--                        style="padding: 4px 7px"-->
+<!--                        (click)="selectAllClasses(); $event.stopPropagation();">Select All-->
+<!--                </button>-->
+<!--                <button class="btn"-->
+<!--                        style="padding: 4px 7px"-->
+<!--                        (click)="unselectAllClasses(); $event.stopPropagation();">Clear All-->
+<!--                </button>-->
+<!--            </mat-option>-->
+
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <ng-container *ngIf="selectedGrade!=null">
+        <table class="table table-hover">
+            <tbody>
+                <tr *ngFor="let subGrade of selectedGrade.subGradeList; index as i">
+                    <td>{{(i+1)}}.</td>
+                    <td>
+                        <input type="text"
+                               [(ngModel)]="subGrade.newName" [disabled]="subGrade.updating"/>
+                    </td>
+                    <td>
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                [disabled]="isGradeUpdateDisabled(subGrade)"
+                                style="padding: 3px 8px;"
+                                (click)="serviceAdapter.updateFeeType(feeType)">Update</button>
+                        <div *ngIf="subGrade.updating" class="loader-custom"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+<!--        <p *ngFor="let subGrade of subGradeSelected; index as i">{{i+1}}. {{subGrade.name}}</p>-->
+        <br>
+        <b>Create New Sub-Grade Below :- </b><br/>
+
+        <table class="table table-hover">
+            <tbody>
+            <tr>
+                <td>
+                    <input type="text"
+                           placeholder="Type Sub-Grade name here ...."
+                           [(ngModel)]="subGradeNameToBeAdded"/>
+                </td>
+                <td>
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="padding: 3px 8px;"
+                            (click)="serviceAdapter.createSubGrade()">Add</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </ng-container>
+
+    <br>
+    <b>Create New Grade Below :- </b><br/>
+
+    <table class="table table-hover">
+        <tbody>
+        <tr>
+            <td>
+                <input type="text"
+                       placeholder="Type Grade name here ...."
+                       [(ngModel)]="gradeNameToBeAdded"/>
+            </td>
+            <td>
+                <button type="submit"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        style="padding: 3px 8px;"
+                        (click)="serviceAdapter.createGrade()">Add</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
 
 </div>
 
