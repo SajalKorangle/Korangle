@@ -6,6 +6,8 @@ import { ManageLayoutRouting } from './manage-layout.routing';
 import {ManageLayoutComponent} from "./manage-layout.component";
 
 
+import {DragDropModule} from '@angular/cdk/drag-drop';
+
 @NgModule({
     declarations: [
         ManageLayoutComponent
@@ -14,6 +16,7 @@ import {ManageLayoutComponent} from "./manage-layout.component";
     imports: [
         ManageLayoutRouting ,
         ComponentsModule,
+        DragDropModule,
     ],
     exports: [
     ],
