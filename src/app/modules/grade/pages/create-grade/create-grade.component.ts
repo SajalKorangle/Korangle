@@ -18,9 +18,10 @@ export class CreateGradeComponent implements OnInit {
   serviceAdapter: CreateGradeServiceAdapter;
 
   gradeList = [];
-  gradeNameToBeAdded:any;
-  selectedGrade = null;
-  subGradeNameToBeAdded : any;
+  subGradeList = [];
+  gradeNameToBeAdded: any;
+  subGradeNameToBeAdded: any;
+  newSubGradeName= "";
 
 
   constructor(public gradeService:GradeService) { }
@@ -32,14 +33,4 @@ export class CreateGradeComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
-  handleSubGradeDisplay(grade: any){
-    this.selectedGrade = grade;
-  }
-
-  isGradeUpdateDisabled(subGrade: any){
-    if(subGrade['newName']==subGrade['name']){
-      return true;
-    }
-    return false;
-  }
 }

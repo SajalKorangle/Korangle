@@ -1,0 +1,8 @@
+td{
+    width: 20%;
+}
+input[readonly] {
+    color: black;
+    background-color: white;
+    border: 0;
+}
