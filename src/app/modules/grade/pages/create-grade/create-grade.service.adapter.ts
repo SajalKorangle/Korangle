@@ -23,13 +23,12 @@ export class CreateGradeServiceAdapter {
 
         this.vm.isLoading = true;
         this.vm.gradeService.getObjectList(this.vm.gradeService.grades, request_grade_data).then(value => {
-            this.vm.gradeList = value;
+            this.populateGradeList(value);
             let request_sub_grade_data = {
                 'parentGrade__in': value.map(a => a.id)
             };
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grades,request_sub_grade_data).then(value1=>{
                 this.populateSubGradeList(value1);
-                this.vm.subGradeList = value1;
                 this.vm.isLoading = false;
             });
         }, error => {
@@ -40,33 +39,24 @@ export class CreateGradeServiceAdapter {
 
     getSubGradeListOfAnyGrade(gradeId: any){
         return this.vm.subGradeList.filter(a => {
-            return gradeId == a.parentGrade
+            return gradeId == a.parentGrade;
         })
     }
 
     populateSubGradeList(subGradeList: any): void{
         subGradeList.forEach(subGrade => {
-            subGrade["isUpdating"] = false;
+            subGrade["newName"]=subGrade["name"];
+            // subGrade["isUpdating"] = false;
         });
         this.vm.subGradeList = subGradeList;
     }
 
-    // populateGradeList(data: any): void {
-    //     this.vm.gradeList = data;
-    //     console.log(this.vm.gradeList);
-    //     this.vm.gradeList.forEach(grade => {
-    //         grade['newName'] = grade['name'];
-    //         grade['updating'] = false;
-    //         // if(grade['subGradeList']==null){
-    //         //     console.log(grade);
-    //         // }
-    //         console.log(grade['subGradeList']);
-    //         grade['subGradeList'].forEach(subGrade => {
-    //             subGrade['newName'] = subGrade['name'];
-    //             subGrade['updating'] = false;
-    //         })
-    //     });
-    // }
+    populateGradeList(gradeList: any){
+        // gradeList.forEach(grade => {
+        //     grade['isNewSubGradeGettingAdded'] = false;
+        // });
+        this.vm.gradeList = gradeList;
+    }
 
     createGrade(){
         if (this.vm.gradeNameToBeAdded == null
@@ -89,7 +79,7 @@ export class CreateGradeServiceAdapter {
             return;
         }
 
-        this.vm.isLoading = true;
+        this.vm.isGradeGettingAdded = true;
 
         let data = {
             'name': this.vm.gradeNameToBeAdded,
@@ -100,13 +90,13 @@ export class CreateGradeServiceAdapter {
         this.vm.gradeService.createObject(this.vm.gradeService.grades,data).then(value => {
             this.addToGradelist(value);
             this.vm.gradeNameToBeAdded = null;
-            this.vm.isLoading = false;
+            this.vm.isGradeGettingAdded = false;
         }, error => {
-            this.vm.isLoading = false;
         });
     }
 
     addToGradelist(grade:any){
+        // grade['isNewSubGradeGettingAdded'] = false;
         this.vm.gradeList.push(grade);
     }
 
@@ -117,9 +107,8 @@ export class CreateGradeServiceAdapter {
             return;
         }
 
-
         let nameAlreadyExists = false;
-        this.vm.subGradeList.every(subGrade => {
+        this.getSubGradeListOfAnyGrade(grade.id).every(subGrade => {
             if (subGrade.name === this.vm.subGradeNameToBeAdded) {
                 nameAlreadyExists = true;
                 return false;
@@ -132,68 +121,76 @@ export class CreateGradeServiceAdapter {
             return;
         }
 
-        this.vm.isLoading = true;
+        // grade['isNewSubGradeGettingAdded'] = true;
+        this.vm.whichGradeIsUpdated = grade;
 
         let data = {
             'name': this.vm.subGradeNameToBeAdded,
             'parentGrade' : grade.id
         };
-        console.log(data);
         this.vm.subGradeNameToBeAdded = "";
 
         this.vm.gradeService.createObject(this.vm.gradeService.sub_grades,data).then(value => {
             this.addToSubGradelist(value);
-            this.vm.isLoading = false;
+            this.vm.whichGradeIsUpdated = null;
+            // grade['isNewSubGradeGettingAdded'] = false;
         }, error => {
-            this.vm.isLoading = false;
+
         });
     }
 
     addToSubGradelist(subGrade: any){
-        subGrade["isUpdating"] = false;
+        subGrade["newName"] = subGrade["name"];
+        // subGrade["isUpdating"] = false;
         this.vm.subGradeList.push(subGrade)
     }
 
 
-    editSubGrade(grade:any,subGrade:any){
-        if(subGrade['isUpdating']==false){
-            subGrade['isUpdating'] = true;
-            return ;
-        }
-        if(this.vm.newSubGradeName == null
-            || this.vm.newSubGradeName == ""
-            || this.vm.newSubGradeName == subGrade.name){
+    updateSubGrade(grade:any,subGrade:any){
+        if(subGrade.newName == null || subGrade.newName == ""){
             alert("Nothing to update");
-            this.vm.newSubGradeName = "";
-            subGrade['isUpdating'] = false;
             return;
         }
-        else if(subGrade.name != this.vm.newSubGradeName){
-            let data = {
-                'id': subGrade.id,
-                'name' : this.vm.newSubGradeName,
-            };
-            this.vm.gradeService.partiallyUpdateObject(this.vm.gradeService.sub_grades,data).then(value =>{
-                alert("Name Updated");
-                subGrade.name = value.name;
-            })
+
+        let nameAlreadyExists = false;
+        this.vm.subGradeList.every(value => {
+            if (value.name === subGrade.newName) {
+                nameAlreadyExists = true;
+                return false;
+            }
+            return true;
+        });
+
+        if (nameAlreadyExists) {
+            alert('Name already Exists');
+            return;
         }
-        this.vm.newSubGradeName = "";
-        subGrade['isUpdating'] = false;
+
+        // subGrade['isUpdating'] = true;
+        this.vm.whichSubGradeIsUpdated = subGrade;
+        let data = {
+            'id': subGrade.id,
+            'name' : subGrade.newName,
+        };
+        this.vm.gradeService.partiallyUpdateObject(this.vm.gradeService.sub_grades,data).then(value =>{
+            subGrade.name = value.name;
+            // subGrade.isUpdating = false;
+            this.vm.whichSubGradeIsUpdated = null;
+        })
     }
 
     deleteSubGrade(grade: any,subGrade: any){
-        this.vm.isLoading = true;
+        // subGrade['isUpdating'] = true;
+        this.vm.whichSubGradeIsUpdated = subGrade;
         let data = {
             'id':subGrade.id
         };
         this.vm.gradeService.deleteObject(this.vm.gradeService.sub_grades,data).then(value => {
+            this.vm.whichSubGradeIsUpdated = null;
             this.removeFromSubGradeList(grade,subGrade);
-            this.vm.isLoading = false;
         })
         .catch(err => {
             alert("An error Occurred");
-            this.vm.isLoading = false;
         })
     }
 
@@ -216,50 +213,47 @@ export class CreateGradeServiceAdapter {
         if(this.getSubGradeListOfAnyGrade(grade.id).length > 0){
             alert("Warning : All student marks of this grade will be deleted")
         }
-        this.vm.isLoading = true;
-        let data = {
-            'parentGrade': grade.id
+        // this.vm.isLoading = true;
+        this.vm.whichGradeIsDeleted = grade;
+        let grade_data = {
+            'id': grade.id
         };
-        this.vm.gradeService.deleteObjectList(this.vm.gradeService.sub_grades,data).then(value => {
-            let grade_data = {
-                'id': grade.id
-            };
-            this.vm.gradeService.deleteObject(this.vm.gradeService.grades,grade_data).then(value => {
-                let countOfSubGrade = 0;
-                this.vm.subGradeList.every((subGradee) => {
-                    if(subGradee.parentGrade == grade.id){
-                        countOfSubGrade = countOfSubGrade + 1;
-                    }
-                    return true;
-                });
-
-                for(var i=0;i<=countOfSubGrade;i++){
-                    let indexOfSubGrade = null;
-                    this.vm.subGradeList.every((subGradee,index) => {
-                        if(subGradee.parentGrade == grade.id){
-                            indexOfSubGrade = index;
-                            return false;
-                        }
-                        return true;
-                    });
-                    if(indexOfSubGrade != null){
-                        this.vm.subGradeList.splice(indexOfSubGrade,1);
-                    }
+        this.vm.gradeService.deleteObject(this.vm.gradeService.grades,grade_data).then(value => {
+            let countOfSubGrade = 0;
+            this.vm.subGradeList.every((subGradee) => {
+                if(subGradee.parentGrade == grade.id){
+                    countOfSubGrade = countOfSubGrade + 1;
                 }
+                return true;
+            });
 
-                let indexOfGrade = null;
-                this.vm.gradeList.every((value,index) => {
-                    if(value.id == grade.id){
-                        indexOfGrade = index;
+            for(var i=0;i<=countOfSubGrade;i++){
+                let indexOfSubGrade = null;
+                this.vm.subGradeList.every((subGradee,index) => {
+                    if(subGradee.parentGrade == grade.id){
+                        indexOfSubGrade = index;
                         return false;
                     }
                     return true;
                 });
-                if(indexOfGrade != null){
-                    this.vm.gradeList.splice(indexOfGrade,1);
+                if(indexOfSubGrade != null){
+                    this.vm.subGradeList.splice(indexOfSubGrade,1);
                 }
-                this.vm.isLoading = false;
+            }
+
+            let indexOfGrade = null;
+            this.vm.gradeList.every((value,index) => {
+                if(value.id == grade.id){
+                    indexOfGrade = index;
+                    return false;
+                }
+                return true;
             });
+            if(indexOfGrade != null){
+                this.vm.gradeList.splice(indexOfGrade,1);
+            }
+            // this.vm.isLoading = false;
+            this.vm.whichGradeIsDeleted = null;
         })
     }
 }

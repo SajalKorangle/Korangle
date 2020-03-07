@@ -6,6 +6,7 @@
                     <tr>
                         <td style="font-weight: bold;font-size: 2.5vh">
                             {{j+1}}. {{grade.name}}
+                            <div *ngIf = "isThisGradeGettingDeleted(grade)" class="loader-custom"></div>
                         </td>
                         <td>
                             <button type="submit"
@@ -17,55 +18,68 @@
                     <tr *ngFor="let subGrade of serviceAdapter.getSubGradeListOfAnyGrade(grade.id);index as i">
                         <td style="padding-left: 5vw">
                             <span>{{i+1}}</span>.
-                            <input type="text"
-                                   matInput
-                                   placeholder="Type Sub-grade name here ...."
-                                   [ngModel]="subGrade.name"
-                                   [readonly] = "!subGrade.isUpdating"
-                                   (input)="newSubGradeName = $event.target.value"/>
+                            <mat-form-field style="margin-left: 1vw">
+                                <input type="text"
+                                       matInput
+                                       placeholder="Type Sub-grade name here ...."
+                                       [(ngModel)]="subGrade.newName"
+                                       [disabled]="isThisSubGradeGettingUpdated(subGrade)"/>
+                            </mat-form-field>
+                            <div *ngIf = "isThisSubGradeGettingUpdated(subGrade)" class="loader-custom"></div>
                         </td>
                         <td>
                             <button type="submit"
                                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                     style="padding: 3px 8px;margin-right:10px "
-                                    (click)="serviceAdapter.editSubGrade(grade,subGrade)">{{subGrade.isUpdating==false ? 'Edit' : 'Update'}}</button>
+                                    [disabled] = "isSubgradeUpdateDisabled(subGrade)"
+                                    (click)="serviceAdapter.updateSubGrade(grade,subGrade)">Update</button>
                             <button type="submit"
                                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                     style="padding: 3px 8px;"
+                                    [disabled] = "isThisSubGradeGettingUpdated(subGrade)"
                                     (click)="serviceAdapter.deleteSubGrade(grade,subGrade)">Delete</button>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding-left: 5vw">
-                            <input type="text"
-                                   matInput
-                                   placeholder="Type Sub-Grade name here ...."
-                                   (input)="subGradeNameToBeAdded = $event.target.value"/>
+                            <mat-form-field>
+                                <input type="text"
+                                       matInput
+                                       placeholder="Type Sub-Grade name here ...."
+                                       [ngModel] = "isNewSubGradeAdded(grade)"
+                                       (input)="subGradeNameToBeAdded = $event.target.value"/>
+                            </mat-form-field>
+                            <div *ngIf = "isThisGradeGettingUpdated(grade)" class="loader-custom"></div>
                         </td>
                         <td>
                             <button type="submit"
                                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                     style="padding: 3px 8px;"
+                                    [disabled]="isThisGradeGettingUpdated(grade)"
                                     (click)="serviceAdapter.createSubGrade(grade)">Add</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </ng-container>
-        <hr style="border-top: 2px dashed #404040">
+        <hr *ngIf="gradeList.length > 0" style="border-top: 2px dashed #404040">
         <ng-container>
             <table class="table table-hover">
                 <tr>
                     <td>
-                        <input type="text"
-                               matInput
-                               placeholder="Type Grade name here ...."
-                               [(ngModel)]="gradeNameToBeAdded"/>
+                        <mat-form-field>
+                            <input type="text"
+                                   matInput
+                                   placeholder="Type Grade name here ...."
+                                   [(ngModel)]="gradeNameToBeAdded"/>
+                        </mat-form-field>
+                        <div *ngIf = "isGradeGettingAdded" class="loader-custom"></div>
                     </td>
                     <td>
                         <button type="submit"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 6px 10px;"
+                                [disabled]="isGradeGettingAdded"
                                 (click)="serviceAdapter.createGrade()">Add</button>
                     </td>
                 </tr>
