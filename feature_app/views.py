@@ -9,7 +9,6 @@ from .models import Feature
 
 
 ########### Feature #############
-from feature_app.business.photo import partial_update_photo
 
 
 class FeatureView(CommonView, APIView):
