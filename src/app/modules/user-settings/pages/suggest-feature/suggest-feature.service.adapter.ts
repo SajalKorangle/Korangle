@@ -14,7 +14,7 @@ export class SuggestFeatureServiceAdapter {
     public initializeData(): void {
 
         let feature_data = {
-            parentUser: this.vm.user.dbId,
+            parentUser: this.vm.user.id,
         };
 
         this.vm.isLoading = true;
@@ -24,8 +24,6 @@ export class SuggestFeatureServiceAdapter {
         }, error => {
             this.vm.isLoading = false;
         });
-
-        this.vm.schoolProfile.medium = this.vm.mediumList[0];
 
     }
 
@@ -50,9 +48,9 @@ export class SuggestFeatureServiceAdapter {
 
         this.vm.featureService.createObject(this.vm.featureService.feature, this.vm.currentFeature).then(value => {
             alert('Feature submitted successfully');
-            Object.keys(this.vm.currentFeature).forEach(key => {
-                this.vm.currentFeature[key] = null;
-            });
+            this.vm.featureList.push(value);
+            this.vm.initializeCurrentFeature();
+            this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
         });
@@ -62,11 +60,10 @@ export class SuggestFeatureServiceAdapter {
     public deleteFeature(feature: any): void {
 
         this.vm.featureService.deleteObject(this.vm.featureService.feature, feature).then(value => {
-            this.vm.featureList.filter(item => {
+            this.vm.featureList = this.vm.featureList.filter(item => {
                 return item.id != feature.id;
             });
         }, error => {
-            this.vm.isLoading = false;
         });
 
     }
