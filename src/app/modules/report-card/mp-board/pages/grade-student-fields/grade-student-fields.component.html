@@ -60,6 +60,32 @@
                 <div class="col-md-12"><b>Alert : </b><i>Marks scaling has been changed from 10 to 2</i></div>
             </div>
 
+            <div class="row"
+                 *ngIf="unpopulatedFieldsLength() > 0"
+                 style="border-bottom: 0px solid black; margin-top: 15px; margin-bottom: 15px;box-shadow: 5px;">
+                <div class="col-md-12">
+                    Generate Random Marks b/w
+                    <input type="number"
+                           placeholder="Min. marks"
+                           style="border-bottom: 1px solid black; width: 35px;"
+                           [(ngModel)]="minimumMarks"
+                           min="0"
+                           max="2"/>
+                    &
+                    <input type="number"
+                           placeholder="Min. marks"
+                           style="border-bottom: 1px solid black; width: 35px;"
+                           [(ngModel)]="maximumMarks"
+                           min="0"
+                           max="2"/>
+                    <br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
+                    <button type="submit"
+                            style="padding: 3px 8px;"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="serviceAdapter.updateAllRemainingStudentFields()">Generate</button>
+                </div>
+            </div>
+
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
@@ -83,7 +109,7 @@
                                [ngModel]="studentSubField.marksObtained"
                                min="0"
                                max="2"
-                               (blur)="serviceAdapter.updateStudentField(studentSubField,$event)"/>
+                               (blur)="serviceAdapter.updateStudentField(studentSubField,$event.target.value)"/>
                     </td>
                 </tr>
                 </tbody>
