@@ -13,6 +13,7 @@ import { PrintFeeReceiptListComponent } from './print/print-fee-receipt-list/pri
 import { PrintFullFeeReceiptListComponent } from './print/print-full-fee-receipt-list/print-full-fee-receipt-list.component';
 import { ExcelService } from "../../excel/excel-service";
 import {FeesComponentsModule} from "./components/fees-components.module";
+import { PrintFeesCertificateComponent } from './print/print-fees-certificate/print-fees-certificate.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import {FeesComponentsModule} from "./components/fees-components.module";
         FeeComponent,
 
         PrintFeeReceiptListComponent,
-        PrintFullFeeReceiptListComponent
+        PrintFullFeeReceiptListComponent,
+        PrintFeesCertificateComponent
 
     ],
 

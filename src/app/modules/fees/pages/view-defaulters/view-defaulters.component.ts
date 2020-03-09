@@ -8,22 +8,22 @@ import {ClassOldService} from "../../../../services/modules/class/class-old.serv
 import {NotificationService} from "../../../../services/modules/notification/notification.service";
 import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
 import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
+import { SchoolService } from 'app/services/modules/school/school.service';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService ],
+    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService, SchoolService ],
 })
 
 export class ViewDefaultersComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
 
     nullValue = null;
 
@@ -83,7 +83,8 @@ export class ViewDefaultersComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public feeService: FeeService,
+    constructor(public schoolService : SchoolService,
+                public feeService: FeeService,
                 public studentService: StudentService,
                 public classService: ClassOldService,
                 private excelService: ExcelService,
@@ -99,13 +100,10 @@ export class ViewDefaultersComponent implements OnInit {
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
-        let todaysDate = new Date();
-        this.currentSession = this.sessionList.find(session => {
-            return new Date(session.startDate) <= todaysDate
-                && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
-        });
-
+        //console.log(this.sessionList)
+    
+        
+                
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
     }

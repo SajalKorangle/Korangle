@@ -683,9 +683,15 @@
                         font-size: 15px;">
                 <div class="col-xs-12">
                     Teacher's Remark:
+                    &nbsp;<i>{{student.remark}}</i>
                 </div>
             </div>
-
+            <img src="{{this.classTeacherSignature}}"
+                 *ngIf="this.classTeacherSignature != null"
+                 style="position: absolute;
+                 /*bottom: 25px; left: 525px;*/
+                 width: 150px; height: 75px;
+                 z-index: 1;"/>
             <img src="{{user.activeSchool.principalSignatureImage}}"
                  *ngIf="user.activeSchool.principalSignatureImage != null && showPrincipalSignature"
                  style="position: absolute;

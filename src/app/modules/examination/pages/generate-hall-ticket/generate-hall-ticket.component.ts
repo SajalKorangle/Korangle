@@ -8,7 +8,7 @@ import {ClassOldService} from '../../../../services/modules/class/class-old.serv
 
 import { GenerateHallTicketServiceAdapter } from './generate-hall-ticket.service.adapter';
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_HALL_TICKET } from '../../../../print/print-routes.constants';
+import { PRINT_HALL_TICKET } from '../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
@@ -25,7 +25,8 @@ export class GenerateHallTicketComponent implements OnInit {
 
     selectedExamination: any;
 
-    examinationList: any;
+    examinationList = [];
+    showPrincipalSignature = true;
 
     boardList: any;
 
@@ -51,12 +52,36 @@ export class GenerateHallTicketComponent implements OnInit {
 
     printHallTicket(): void {
         let data = {
-            'studentList': this.selectedExamination.selectedClass.selectedSection.studentList,
+            'studentList': this.getSelectedStudentList(),
             'examination': this.selectedExamination,
             'boardList': this.boardList,
+            'showPrincipalSignature': this.showPrincipalSignature,
         };
         this.printService.navigateToPrintRoute(PRINT_HALL_TICKET, {user: this.user, value: data});
         alert('This may take a while');
+    }
+
+    getFilteredStudentSectionList(): any {
+        return this.selectedExamination.selectedClass.selectedSection.studentList;
+        // this.studentList.forEach(item => item["selected"]= true);
+    }
+
+    getSelectedStudentList(): any {
+        return this.getFilteredStudentSectionList().filter(studentSection => {
+            return studentSection.selected == true;
+        });
+    }
+
+    selectAllStudents(): void {
+        this.getFilteredStudentSectionList().forEach(student => {
+            student['selected'] = true;
+        })
+    }
+
+    unselectAllStudents(): void {
+        this.getFilteredStudentSectionList().forEach(student => {
+            student['selected'] = false;
+        })
     }
 
 }

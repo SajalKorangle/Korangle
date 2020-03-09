@@ -100,18 +100,18 @@
                             <td class="rightBorder downBorder">Per Test (10)</td>
                             <td class="rightBorder downBorder">Note Book (5)</td>
                             <td class="rightBorder downBorder">Sub Enrichment (5)</td>
-                            <td class="rightBorder downBorder">Half Yearly Exam (80)</td>
+                            <td class="rightBorder downBorder">Yearly Exam (80)</td>
                             <td class="rightBorder downBorder">Marks Obtained (100)</td>
                             <td class="rightBorder downBorder">Gr</td>
                         </tr>
                         <ng-container *ngFor="let classSubject of classSubjectList;">
                             <tr>
                                 <td class="leftBorder rightBorder" style="padding: 5px;">{{getSubjectName(classSubject.parentSubject)}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[2])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[2])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[2])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[2])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[2])}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[2]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[2]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[2]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[2]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[2]) | number:'1.0-2'}}</td>
                                 <td class="rightBorder" style="padding: 5px;" align="center">{{getOverallGrade(student, classSubject, termList[2])}}</td>
                             </tr>
                         </ng-container>
@@ -159,7 +159,7 @@
                         <tbody>
                         <tr>
                             <td style="padding: 2px;"><b>Attendance: Term-1</b> Total Present/Working Days</td>
-                            <td class="leftBorder" style="padding: 2px;" align="center">{{getPresentDays(student, 2)}}/{{getWorkingDays(student, 2)}}</td>
+                            <td class="leftBorder" style="padding: 2px;" align="center"     *ngIf="getWorkingDays(student, 2)!= 0" >{{getPresentDays(student, 2)}}/{{getWorkingDays(student, 2)}}</td>
                         </tr>
                         </tbody>
                     </table>

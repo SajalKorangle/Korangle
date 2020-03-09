@@ -66,21 +66,23 @@ export class CreateExaminationServiceAdapter {
 
         this.vm.isLoading = true;
 
-        if (this.vm.examinationStatusToBeAdded == 'None') {
+        /*if (this.vm.examinationStatusToBeAdded == 'None') {
             this.vm.examinationStatusToBeAdded = null;
-        }
+        }*/
 
         let data = {
             'name': this.vm.examinationNameToBeAdded,
-            'status': this.vm.examinationStatusToBeAdded,
+            'status': 'Created', // this.vm.examinationStatusToBeAdded,
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        console.log(data);
+
         this.vm.examinationService.createObject(this.vm.examinationService.examination, data).then(value => {
             this.addToExaminationList(value);
             this.vm.examinationNameToBeAdded = null;
-            this.vm.examinationStatusToBeAdded = null;
+            // this.vm.examinationStatusToBeAdded = null;
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;

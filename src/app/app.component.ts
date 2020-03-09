@@ -11,6 +11,8 @@ import {NotificationService} from "./services/modules/notification/notification.
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
 import {EmitterService} from "./services/emitter.service";
+import {CommonFunctions} from './classes/common-functions';
+
 
 @Component({
     selector: 'app-root',
@@ -18,12 +20,15 @@ import {EmitterService} from "./services/emitter.service";
     styleUrls: ['./app.component.css'],
     providers: [ AuthenticationService, VersionCheckService, NotificationService ],
 })
+
 export class AppComponent implements OnInit {
     subRouteValue: string;
     isLoading = false;
     countDownForValidity = -1;
 
 	public user = new User();
+
+
 
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
@@ -93,5 +98,9 @@ export class AppComponent implements OnInit {
                 return false;
             }
         }
+    }
+    isMobile(): boolean {
+        //return isMobile();
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 }

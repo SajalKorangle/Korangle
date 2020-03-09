@@ -204,7 +204,7 @@
                         <!-- Session -->
 
                         <tr style="font-weight: 500 !important; font-size: 16px !important;">
-                            <td align="left">{{sessionIndex+1}}. Session {{session.name}}</td>
+                            <td align="left">{{sessionIndex+1}}. {{session.name}}</td>
                             <td align="right">
                                 <input class='paymentInput'
                                        *ngIf="getSessionFeesDue(student, session, false) != 0"
@@ -438,7 +438,9 @@
                                       [employeeList]="employeeList"
                                       [classList]="classList"
                                       [number]="3"
-                                      [sectionList]="sectionList"></app-fee-receipt-list>
+                                      [sectionList]="sectionList"
+                                      [sessionList]="sessionList"
+                                      [boardList]="boardList"></app-fee-receipt-list>
 
             </mat-expansion-panel>
 
@@ -459,7 +461,8 @@
                                    [studentSectionList]="selectedStudentSectionList"
                                    [employeeList]="employeeList"
                                    [classList]="classList"
-                                   [sectionList]="sectionList"></app-discount-list>
+                                   [sectionList]="sectionList"
+                                   [sessionList]="sessionList"></app-discount-list>
 
             </mat-expansion-panel>
 

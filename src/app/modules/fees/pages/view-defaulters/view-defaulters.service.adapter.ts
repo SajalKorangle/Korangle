@@ -26,6 +26,16 @@ export class ViewDefaultersServiceAdapter {
             'parentStudent__parentTransferCertificate': 'null__korangle',
         };
         
+        this.vm.schoolService.getObjectList(this.vm.schoolService.session,{}).then(sessionList =>{
+            this.vm.sessionList = sessionList
+            console.log(this.vm.sessionList)
+            let todaysDate = new Date();
+            this.vm.currentSession = this.vm.sessionList.find(session => {
+                return new Date(session.startDate) <= todaysDate
+                    && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
+            });
+        })
+
         this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list).then(valueList => {
             
             this.vm.studentSectionList = valueList;
@@ -81,6 +91,10 @@ export class ViewDefaultersServiceAdapter {
                 
                 this.fetchGCMDevices(this.vm.studentList);               
                 
+                this.vm.handleLoading();
+
+                this.vm.isLoading = false;
+
                 // this.vm.d2 = new Date();
                 
             }, error => {

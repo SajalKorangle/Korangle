@@ -56,11 +56,12 @@ export class AddStudentServiceAdapter {
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
-            this.vm.examinationOldService.getObjectList(this.vm.examinationOldService.test_second, test_second_list),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
         ]).then(value => {
 
             this.vm.classList = value[0];
@@ -71,6 +72,7 @@ export class AddStudentServiceAdapter {
             this.vm.schoolFeeRuleList = value[5];
             this.vm.classFilterFeeList = value[6];
             this.vm.busStopFilterFeeList = value[7];
+            this.vm.sessionList = value[8]
 
             this.vm.initializeVariable();
 
@@ -219,7 +221,7 @@ export class AddStudentServiceAdapter {
             Promise.all([
                 this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),
                 this.vm.subjectService.createObjectList(this.vm.subjectService.student_subject, student_subject_list),
-                this.vm.examinationOldService.createObjectList(this.vm.examinationOldService.student_test, student_test_list),
+                this.vm.examinationService.createObjectList(this.vm.examinationService.student_test, student_test_list),
                 this.vm.feeService.createObjectList(this.vm.feeService.student_fees, student_fee_list),
             ]).then( valueTwo => {
 
