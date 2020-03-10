@@ -15,8 +15,6 @@ export class ViewDefaultersServiceAdapter {
 
     initializeData(): void {
 
-        // this.vm.d1 = new Date();
-
         this.vm.isLoading = true;
 
         let student_section_list = {
@@ -27,7 +25,6 @@ export class ViewDefaultersServiceAdapter {
         
         this.vm.schoolService.getObjectList(this.vm.schoolService.session,{}).then(sessionList =>{
             this.vm.sessionList = sessionList
-            console.log(this.vm.sessionList)
             let todaysDate = new Date();
             this.vm.currentSession = this.vm.sessionList.find(session => {
                 return new Date(session.startDate) <= todaysDate
@@ -159,30 +156,7 @@ export class ViewDefaultersServiceAdapter {
         })
     }
     
-    getMessageFromTemplate = (message, obj) => {
-        let ret = message;
-        for(let key in obj){
-            ret = ret.replace("<"+key+">", obj[key]);
-        }
-        return ret;
-    }
     
-    hasUnicode(message): boolean {
-        for (let i=0; i<message.length; ++i) {
-            if (message.charCodeAt(i) > 127) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    getMessageCount = (message) => {
-        if (this.hasUnicode(message)){
-            return Math.ceil(message.length/70);
-        }else{
-            return Math.ceil( message.length/160);
-        }
-    }
     
     sendSMSNotificationDefaulter: any = (mobile_list: any, message: string) => {
         let only_mobile_number_list = mobile_list.map(obj => obj.mobileNumber);
@@ -206,7 +180,6 @@ export class ViewDefaultersServiceAdapter {
             
             loopVariable=loopVariable+1;
         }
-        console.log("Hi");
         
         Promise.all(service_list).then((value) => {
             let temp_gcm_list = [];
@@ -246,11 +219,7 @@ export class ViewDefaultersServiceAdapter {
                         return obj==user;
                     })==undefined;
                 })
-            }
-
-            console.log(sms_list);
-            console.log(notification_list);
-            
+            }            
             
             let notif_mobile_string = '';
             let sms_mobile_string = '';
@@ -264,12 +233,9 @@ export class ViewDefaultersServiceAdapter {
             sms_mobile_string = sms_mobile_string.slice(0, -2);
             notif_mobile_string = notif_mobile_string.slice(0, -2);
             
-            console.log(sms_mobile_string);
-            console.log(notif_mobile_string);
-            
             let number_of_messages = 0;
             if(sms_list.length!=0){
-                number_of_messages = sms_list.map(item => this.getMessageCount(this.getMessageFromTemplate(message, item))).reduce((a, b)=> a+b);
+                number_of_messages = this.vm.getEstimatedSMSCount();
             }else{
                 number_of_messages = 0;
             }
@@ -296,14 +262,11 @@ export class ViewDefaultersServiceAdapter {
             let notification_data = notification_list.map(item => {
                 return {
                     'message_type': 'Defaulter',
-                    'content': this.getMessageFromTemplate(message, item),
+                    'content': this.vm.getMessageFromTemplate(message, item),
                     'parentUser': notif_usernames.find(user => { return user.username == item.mobileNumber.toString();}).id,
                     'parentSchool': this.vm.user.activeSchool.dbId,
                 };
             });
-            
-            console.log(sms_data);
-            console.log(notification_data);
 
             service_list = []
             service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, sms_data));

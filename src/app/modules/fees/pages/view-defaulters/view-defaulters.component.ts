@@ -92,10 +92,7 @@ export class ViewDefaultersComponent implements OnInit {
 
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
-        //console.log(this.sessionList)
-    
-        
+        this.serviceAdapter.initializeData();       
                 
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
@@ -363,17 +360,40 @@ export class ViewDefaultersComponent implements OnInit {
         return ret;
     }
 
+    getMessageFromTemplate = (message, obj) => {
+        let ret = message;
+        for(let key in obj){
+            ret = ret.replace("<"+key+">", obj[key]);
+        }
+        return ret;
+    }
+    
+    hasUnicode(message): boolean {
+        for (let i=0; i<message.length; ++i) {
+            if (message.charCodeAt(i) > 127) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    getMessageCount = (message) => {
+        if (this.hasUnicode(message)){
+            return Math.ceil(message.length/70);
+        }else{
+            return Math.ceil( message.length/160);
+        }
+    }
+
     notifyDefaulters(): void{
         if(this.selectedFilterType == this.filterTypeList[0]){
             let message = "Hi, your fee is due. The amount of due fees till month is <feesDueTillMonth>"
             if(this.extraDefaulterMessage){
                 message+="\n"+this.extraDefaulterMessage;
             }
-            // console.log(this.filteredStudentList);
             let test = this.getFilteredStudentList().filter((item) => {
                 return item.selected;
             })
-            // console.log(test);
             let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
                 return {
                 "mobileNumber": obj.mobileNumber,
@@ -384,9 +404,8 @@ export class ViewDefaultersComponent implements OnInit {
             this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
         }else{
             let message = "Hi, your fee is due. The total amount of due fees till month is <feesDueTillMonth>\n<childrenData>"
-            // console.log(this.filteredParentList);
             if(this.extraDefaulterMessage){
-                message+="\n"+this.extraDefaulterMessage;
+                message+=this.extraDefaulterMessage;
             }
             let test = this.getFilteredParentList().filter((item) => {
                 return item.selected;
@@ -399,7 +418,6 @@ export class ViewDefaultersComponent implements OnInit {
                 "childrenData": this.getStudentString(obj.studentList)
                 }
             });
-            // console.log(mobile_numbers);
             this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
         }
     }
@@ -624,31 +642,6 @@ export class ViewDefaultersComponent implements OnInit {
         });
 
         this.excelService.downloadFile(template, 'korangle_parent_fees.csv');
-    }
-
-    getMessageFromTemplate = (message, obj) => {
-        let ret = message;
-        for(let key in obj){
-            ret = ret.replace("<"+key+">", obj[key]);
-        }
-        return ret;
-    }
-    
-    hasUnicode(message): boolean {
-        for (let i=0; i<message.length; ++i) {
-            if (message.charCodeAt(i) > 127) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    getMessageCount = (message) => {
-        if (this.hasUnicode(message)){
-            return Math.ceil(message.length/70);
-        }else{
-            return Math.ceil( message.length/160);
-        }
     }
 
     getExtraMessageLength = () => {
