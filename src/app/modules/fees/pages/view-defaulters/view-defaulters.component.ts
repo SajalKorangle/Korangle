@@ -10,7 +10,6 @@ import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
-import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
 import { SchoolService } from 'app/services/modules/school/school.service';
 
 @Component({
@@ -50,12 +49,6 @@ export class ViewDefaultersComponent implements OnInit {
     studentList: any;
     classList: any;
     sectionList: any;
-
-    selectedParentNumber: number;
-    selectedChildrenNumber: number;
-
-    filteredStudentList: any;
-    filteredParentList: any;
 
     parentList = [];
 
@@ -350,7 +343,6 @@ export class ViewDefaultersComponent implements OnInit {
         })
 
     }
-    
 
     checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
         if (this.filteredClassSectionList.find(classSection => {
@@ -431,15 +423,6 @@ export class ViewDefaultersComponent implements OnInit {
         return tempList;
     }
 
-    filterTypeChanged = (event) => {
-        this.selectedFilterType = event;
-        // if(this.selectedFilterType == this.filterTypeList[0]){
-        //     this.setFilteredStudentList();
-        // }else{
-        //     this.setFilteredParentList();
-        // }
-    }
-
     selectAllHandler = () => {
         if(this.selectedFilterType == this.filterTypeList[0]){
             this.getFilteredStudentList().forEach(item => {
@@ -490,21 +473,6 @@ export class ViewDefaultersComponent implements OnInit {
             });
         }
         return tempList;
-    }
-
-    setFilteredParentList(): any {
-        let tempList = this.parentList;
-        if ((this.maximumNumber && this.maximumNumber != '')
-            || (this.minimumNumber && this.minimumNumber != '')) {
-            tempList = tempList.filter(parent => {
-                let amount = parent.studentList.reduce((amount, student) => {
-                    return amount + student['feesDueTillMonth'];
-                }, 0);
-                return ((this.maximumNumber && this.maximumNumber != '')?amount<=this.maximumNumber:true)
-                    && ((this.minimumNumber && this.minimumNumber != '')?amount>=this.minimumNumber:true)
-            });
-        }
-        this.filteredParentList = tempList;
     }
 
     getParentFeesDueTillMonth(parent: any): any {
@@ -584,9 +552,7 @@ export class ViewDefaultersComponent implements OnInit {
         ];
 
         let count = 0;
-        // this
-        // this.setFilteredStudentList();
-        this.filteredStudentList.forEach(student => {
+        this.getFilteredStudentList().forEach(student => {
             let row = [];
             row.push(++count);
             row.push(student.name);
@@ -617,7 +583,7 @@ export class ViewDefaultersComponent implements OnInit {
         ];
 
         let count = 0;
-        this.filteredParentList.forEach(parent => {
+        this.getFilteredParentList().forEach(parent => {
             let row = [];
             row.push(++count);
             row.push(parent.name);
@@ -735,13 +701,12 @@ export class ViewDefaultersComponent implements OnInit {
         return count;
     }
 
-    getButtonText = () => {
+    getButtonText(): any {
         return "Send " + this.getEstimatedSMSCount() + " SMS and " + this.getEstimatedNotificationCount() + " notifications";
     }
 
     getCurrencyInINR = (data) => {
         return "Rs. " + Number(data).toLocaleString('en-IN');
     }
-
 
 }

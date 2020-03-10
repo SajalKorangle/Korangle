@@ -1,25 +1,24 @@
 
 import { ViewDefaultersComponent } from './view-defaulters.component';
-import { count } from 'rxjs/operators';
 
 export class ViewDefaultersServiceAdapter {
-    
+
     vm: ViewDefaultersComponent;
-    
+
     constructor() {}
-    
+
     // Data
-    
+
     initializeAdapter(vm: ViewDefaultersComponent): void {
         this.vm = vm;
     }
-    
+
     initializeData(): void {
-        
+
         // this.vm.d1 = new Date();
-        
+
         this.vm.isLoading = true;
-        
+
         let student_section_list = {
             'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
@@ -37,29 +36,29 @@ export class ViewDefaultersServiceAdapter {
         })
 
         this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list).then(valueList => {
-            
+
             this.vm.studentSectionList = valueList;
-            
+
             let tempStudentIdList = valueList.map(a => a.parentStudent);
-            
+
             let student_list = {
                 'id__in': tempStudentIdList.join(),
                 'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber',
             };
-            
+
             let student_fee_list = {
                 'parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
                 'cleared': 'false__boolean',
                 'parentStudent__in': tempStudentIdList.join(),
             };
-            
+
             let sub_fee_receipt_list = {
                 'parentStudentFee__parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
                 'parentStudentFee__cleared': 'false__boolean',
                 'parentStudentFee__parentStudent__in': tempStudentIdList.join(),
                 'parentFeeReceipt__cancelled': 'false__boolean',
             };
-            
+
             let sub_discount_list = {
                 'parentStudentFee__parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
                 'parentStudentFee__cleared': 'false__boolean',
@@ -80,7 +79,7 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.classService.getSectionList(this.vm.user.jwt),
                 this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
             ]).then(value => {
-                
+
                 this.vm.studentList = value[0];
                 this.vm.studentFeeList = value[1];
                 this.vm.subFeeReceiptList = value[2];
@@ -89,22 +88,16 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.sectionList = value[5];
                 this.vm.smsBalance = value[6].count;
                 
-                this.fetchGCMDevices(this.vm.studentList);               
-                
-                this.vm.handleLoading();
+                this.fetchGCMDevices(this.vm.studentList);
 
-                this.vm.isLoading = false;
-
-                // this.vm.d2 = new Date();
-                
             }, error => {
                 this.vm.isLoading = false;
             });
-            
+
         }, error => {
             this.vm.isLoading = false;
         });
-        
+
     }
     
     fetchGCMDevices = (studentList) => {
@@ -160,7 +153,7 @@ export class ViewDefaultersServiceAdapter {
                 item.notification = true;
             })
             this.vm.handleLoading();
-            this.vm.filterTypeChanged(this.vm.filterTypeList[1]);
+            this.vm.selectedFilterType = this.vm.filterTypeList[1];
             
             this.vm.isLoading = false;
         })
@@ -311,7 +304,7 @@ export class ViewDefaultersServiceAdapter {
             
             console.log(sms_data);
             console.log(notification_data);
-            
+
             service_list = []
             service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, sms_data));
             if (notification_data.length > 0 ) {
@@ -339,5 +332,5 @@ export class ViewDefaultersServiceAdapter {
             
         });
     }
-    
+
 }
