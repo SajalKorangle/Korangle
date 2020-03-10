@@ -12,7 +12,12 @@ const routes: Routes = [
         path: 'grade_student',
         loadChildren: 'app/modules/grade/pages/grade-student/grade-student.module#GradeStudentModule',
         data: {moduleName: 'grade'},
-    }
+    },
+    {
+        path: 'view_grade',
+        loadChildren: 'app/modules/grade/pages/view-grade/view-grade.module#ViewGradeModule',
+        data: {moduleName: 'grade'},
+    },
 ];
 
 @NgModule({

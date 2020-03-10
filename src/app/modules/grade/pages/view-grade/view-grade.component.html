@@ -2,13 +2,13 @@
     <ng-container *ngIf="!isInitialLoading">
 
         <div class="row">
-            <div class="col-md-12" *ngIf="gradeList.length > 0 && attendencePermissionList.length > 0">
+            <div class="col-md-12" *ngIf="gradeList.length > 0">
 
                 <mat-form-field style="margin-right: 5px;">
                     <mat-select placeholder="Select Class"
                                 [ngModel]="selectedClass"
                                 (ngModelChange)="selectClass($event)">
-                        <mat-option *ngFor="let classs of serviceAdapter.populateClassList();" [value]="classs.id">
+                        <mat-option *ngFor="let classs of classList;" [value]="classs.id">
                             {{classs.name}}
                         </mat-option>
                     </mat-select>
@@ -18,7 +18,7 @@
                     <mat-select placeholder="Select Section"
                                 [ngModel]="selectedSection"
                                 (ngModelChange)="selectedSection = $event; showTestDetails = false">
-                        <mat-option *ngFor='let section of serviceAdapter.getSectionList(selectedClass);' [value]="section.id">
+                        <mat-option *ngFor='let section of sectionList;' [value]="section.id">
                             {{section.name}}
                         </mat-option>
                     </mat-select>
@@ -41,11 +41,7 @@
             </div>
 
             <div class="col-md-9" *ngIf="gradeList.length === 0">
-                No Grade Present for you to update fields!
-            </div>
-
-            <div class="col-md-9" *ngIf="attendencePermissionList.length === 0">
-                No Class permission for you to update fields!
+                No Grade Present
             </div>
 
         </div>
@@ -53,7 +49,7 @@
 
         <ng-container *ngIf="showTestDetails && !isLoading">
 
-            <table class="table table-hover">
+            <table *ngIf="!noStudentPresent" class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
                     <th>S No.</th>
@@ -71,14 +67,20 @@
                     <td>{{student.studentSection.rollNumber}}</td>
                     <td *ngFor="let studentSubGrade of student.subGradeList">
                         <input type="text"
-                               placeholder="Type marks here"
+                               placeholder=""
+                               [readOnly]="true"
                                [attr.id]="student.id+'_'+studentSubGrade.parentSubGrade"
-                               [ngModel]="studentSubGrade.gradeObtained"
-                               (blur)="serviceAdapter.updateStudentField(studentSubGrade,$event)"/>
+                               [ngModel]="studentSubGrade.gradeObtained"/>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
+            <div class="row" *ngIf="noStudentPresent">
+                <div class="col-md-9">
+                    No Student Present
+                </div>
+            </div>
 
         </ng-container>
 
