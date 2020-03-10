@@ -17,7 +17,7 @@ class Notification(models.Model):
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
 
-    message_type = models.CharField(max_length=20, choices=MESSAGE_TYPE, default='CST')
+    message_type = models.CharField(max_length=20, choices=MESSAGE_TYPE, default='Custom')
 
     # Sent Date & Time
     sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')

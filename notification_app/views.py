@@ -43,9 +43,7 @@ class NotificationListView(CommonListView, APIView):
 
     @user_permission_new
     def post(self, request):
-        print("hi")
         data = json.loads(request.body.decode('utf-8'))
-        print(data)
         send_notification(data)
         return create_list(data, self.Model, self.ModelSerializer)
 

@@ -15,7 +15,7 @@ MESSAGE_TYPE = (
 
 class SMS(models.Model):
 
-    message_type = models.CharField(max_length=15, choices=MESSAGE_TYPE, default='CST')
+    message_type = models.CharField(max_length=15, choices=MESSAGE_TYPE, default='Custom')
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')
