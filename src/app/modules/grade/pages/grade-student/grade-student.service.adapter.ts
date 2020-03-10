@@ -36,11 +36,6 @@ export class GradeStudentServiceAdapter {
             this.vm.classList = value[0];
             this.vm.sectionList = value[1];
             this.vm.attendencePermissionList = value[2];
-            // this.vm.gradeList = value[3];
-            console.log(this.vm.attendencePermissionList);
-            console.log(this.vm.classList);
-            console.log(this.vm.sectionList);
-            console.log(this.getClassList());
 
             if(this.vm.attendencePermissionList.length == 0){
                 this.vm.isInitialLoading = false;
@@ -118,7 +113,7 @@ export class GradeStudentServiceAdapter {
                 }
             });
         });
-        console.log(this.vm.gradeList);
+        // console.log(this.vm.gradeList);
         this.vm.selectedGrade = this.vm.gradeList[0];
     }
 
@@ -129,10 +124,9 @@ export class GradeStudentServiceAdapter {
 
         let request_student_sub_grade_data = {
             'parentStudent__in': this.vm.getFilteredStudentList().map(item => item.id).join(),
-            'parentSubGrade__parentGrade' : this.vm.selectedGrade
+            'parentSubGrade__parentGrade' : this.vm.selectedGrade.id
         };
         this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grades,request_student_sub_grade_data).then(value2 => {
-            console.log(value2);
             this.populateStudentList(value2);
             this.vm.showTestDetails = true;
             this.vm.isLoading = false;
@@ -149,9 +143,6 @@ export class GradeStudentServiceAdapter {
             this.vm.selectedGrade.subGradeList.forEach(subGrade => {
                 let result = this.getStudentSubGrade(item, subGrade, student_sub_grade_list);
                 if (result) {
-                    // if (result.gradeObtained == '') {
-                    //     result.gradeObtained = '';
-                    // }
                     item['subGradeList'].push(result);
                 } else {
                     result = {
@@ -189,54 +180,44 @@ export class GradeStudentServiceAdapter {
     }
 
 
-    getClassList(){
+    populateClassList(){
         if(this.vm.attendencePermissionList.length > 0){
-            this.vm.classList.forEach(classs =>{
+            return this.vm.classList.filter(classs =>{
                 if(this.vm.attendencePermissionList.find(attendencePermission => {
                     return attendencePermission.parentClass == classs.id;
                 }) != undefined ){
-                    this.vm.filteredClassList.push(classs)
+                    return true;
                 }
+                return false;
             });
         }
         else{
-            this.vm.filteredClassList = [];
+            return [];
         }
-        return this.vm.filteredClassList;
     }
 
-    getSectionList(allSecions: any){
-        this.vm.filteredSectionList = [];
-        if(allSecions.length > 0){
-            this.vm.sectionList.forEach(section =>{
-                if(allSecions.find(sectionn => {
+    getSectionList(classs: any){
+        let allSections = this.vm.attendencePermissionList.filter(attendencePermission => {
+            return attendencePermission.parentClass == classs;
+        });
+        if(allSections.length > 0){
+            return this.vm.sectionList.filter(section =>{
+                if(allSections.find(sectionn => {
                     return sectionn.parentDivision == section.id;
                 }) != undefined ){
-                    this.vm.filteredSectionList.push(section)
+                    return true;
                 }
+                return false;
             });
         }
         else{
-            this.vm.filteredSectionList = [];
+            return [];
         }
-    }
-
-    // Filter Only, No Service call
-    getSubGradeList(gradeId: any){
-        let request_sub_grade = {
-            'parentGrade' : gradeId
-        };
-        this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grades,request_sub_grade).then(value => {
-            this.vm.subGradeList = value;
-        })
     }
 
     updateStudentField(studentSubGrade, element){
 
         let current_value = element.target.value;
-
-        console.log(studentSubGrade);
-        console.log(current_value);
 
         if (current_value == studentSubGrade.gradeObtained) return;
 

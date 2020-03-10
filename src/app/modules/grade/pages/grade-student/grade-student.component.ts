@@ -29,14 +29,12 @@ export class GradeStudentComponent implements OnInit {
 
   classList = [];
   sectionList = [];
-  filteredClassList = [];
-  filteredSectionList = [];
   selectedClass = null ;
   selectedSection = null;
   attendencePermissionList = [];
   gradeList = [];
   selectedGrade = null;
-  subGradeList = [];
+  // subGradeList = [];
   studentList = [];
 
   constructor(public gradeService:GradeService,
@@ -57,16 +55,6 @@ export class GradeStudentComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  changeClass(classs: any){
-    this.selectedClass = classs;
-    let allSection = [];
-    allSection = this.attendencePermissionList.filter(attendencePermission => {
-      return attendencePermission.parentClass == classs;
-    });
-    this.serviceAdapter.getSectionList(allSection);
-    console.log(this.filteredSectionList);
-  }
-
   getFilteredStudentList(): any {
     return this.studentList.filter(student => {
       return student.studentSection.parentClass == this.selectedClass
@@ -74,10 +62,10 @@ export class GradeStudentComponent implements OnInit {
     });
   }
 
-  selectSection(section: any){
-    this.selectedSection = section;
-    console.log(this.selectedClass);
-    console.log(this.selectedSection);
+  selectClass(classs: any){
+    this.selectedClass = classs;
+    this.showTestDetails = false;
+    this.selectedSection = this.serviceAdapter.getSectionList(this.selectedClass)[0].id;
   }
 
 }
