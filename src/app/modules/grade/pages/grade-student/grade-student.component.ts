@@ -34,7 +34,6 @@ export class GradeStudentComponent implements OnInit {
   attendencePermissionList = [];
   gradeList = [];
   selectedGrade = null;
-  // subGradeList = [];
   studentList = [];
 
   constructor(public gradeService:GradeService,

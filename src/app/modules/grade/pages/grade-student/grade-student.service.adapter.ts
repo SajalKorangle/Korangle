@@ -180,7 +180,7 @@ export class GradeStudentServiceAdapter {
     }
 
 
-    populateClassList(){
+    getFilteredClassList(){
         if(this.vm.attendencePermissionList.length > 0){
             return this.vm.classList.filter(classs =>{
                 if(this.vm.attendencePermissionList.find(attendencePermission => {

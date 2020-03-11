@@ -66,11 +66,7 @@
                     <td>{{student.name}}</td>
                     <td>{{student.studentSection.rollNumber}}</td>
                     <td *ngFor="let studentSubGrade of student.subGradeList">
-                        <input type="text"
-                               placeholder=""
-                               [readOnly]="true"
-                               [attr.id]="student.id+'_'+studentSubGrade.parentSubGrade"
-                               [ngModel]="studentSubGrade.gradeObtained"/>
+                        {{studentSubGrade.gradeObtained}}
                     </td>
                 </tr>
                 </tbody>

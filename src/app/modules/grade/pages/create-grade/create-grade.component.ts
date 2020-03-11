@@ -22,6 +22,7 @@ export class CreateGradeComponent implements OnInit {
   gradeNameToBeAdded: any;
   subGradeNameToBeAdded: any;
   isGradeGettingAdded = false;
+
   whichGradeIsDeleted = null;
   whichGradeIsUpdated = null;
   whichSubGradeIsUpdated = null;
@@ -47,6 +48,7 @@ export class CreateGradeComponent implements OnInit {
     if(this.isThisGradeGettingUpdated(grade)==false && this.subGradeNameToBeAdded == ""){
       return "";
     }
+    return this.subGradeNameToBeAdded;
   }
 
   isThisGradeGettingDeleted(grade: any){
