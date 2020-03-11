@@ -18,9 +18,13 @@ export class CreateGradeComponent implements OnInit {
   serviceAdapter: CreateGradeServiceAdapter;
 
   gradeList = [];
-  gradeNameToBeAdded:any;
-  selectedGrade = null;
-  subGradeNameToBeAdded : any;
+  subGradeList = [];
+  gradeNameToBeAdded: any;
+  subGradeNameToBeAdded: any;
+  isGradeGettingAdded = false;
+  whichGradeIsDeleted = null;
+  whichGradeIsUpdated = null;
+  whichSubGradeIsUpdated = null;
 
 
   constructor(public gradeService:GradeService) { }
@@ -32,14 +36,44 @@ export class CreateGradeComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
-  handleSubGradeDisplay(grade: any){
-    this.selectedGrade = grade;
-  }
-
-  isGradeUpdateDisabled(subGrade: any){
-    if(subGrade['newName']==subGrade['name']){
+  isSubgradeUpdateDisabled(subgrade: any){
+    if (subgrade.newName == subgrade.name || this.isThisSubGradeGettingUpdated(subgrade)) {
       return true;
     }
     return false;
+  }
+
+  isNewSubGradeAdded(grade: any){
+    if(this.isThisGradeGettingUpdated(grade)==false && this.subGradeNameToBeAdded == ""){
+      return "";
+    }
+  }
+
+  isThisGradeGettingDeleted(grade: any){
+    if(this.whichGradeIsDeleted == null){
+      return false;
+    }
+    if(grade.id == this.whichGradeIsDeleted.id){
+      return true;
+    }
+  }
+
+
+  isThisGradeGettingUpdated(grade: any){
+    if(this.whichGradeIsUpdated == null){
+      return false;
+    }
+    if(grade.id == this.whichGradeIsUpdated.id){
+      return true;
+    }
+  }
+
+  isThisSubGradeGettingUpdated(subGrade: any){
+    if(this.whichSubGradeIsUpdated == null){
+      return false;
+    }
+    if(subGrade.id == this.whichSubGradeIsUpdated.id){
+      return true;
+    }
   }
 }
