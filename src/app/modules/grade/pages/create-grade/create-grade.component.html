@@ -74,6 +74,13 @@
                                    [(ngModel)]="gradeNameToBeAdded"/>
                         </mat-form-field>
                         <div *ngIf = "isGradeGettingAdded" class="loader-custom"></div>
+                        <mat-form-field>
+                            <input type="text"
+                                   matInput
+                                   placeholder="Type Sub-Grade name here ...."
+                                   [(ngModel)]="subGradeNameToBeAdded"/>
+                        </mat-form-field>
+                        <div *ngIf = "isGradeGettingAdded" class="loader-custom"></div>
                     </td>
                     <td>
                         <button type="submit"

@@ -74,6 +74,14 @@ export class CreateGradeServiceAdapter {
             return true;
         });
 
+        this.vm.gradeList.every(grade => {
+            if (grade.name === this.vm.subGradeNameToBeAdded) {
+                nameAlreadyExists = true;
+                return false;
+            }
+            return true;
+        });
+
         if (nameAlreadyExists) {
             alert('Name already Exists');
             return;
@@ -89,6 +97,20 @@ export class CreateGradeServiceAdapter {
 
         this.vm.gradeService.createObject(this.vm.gradeService.grades,data).then(value => {
             this.addToGradelist(value);
+
+            let sub_grade_data = {
+                'name': this.vm.subGradeNameToBeAdded,
+                'parentGrade' : value.id
+            };
+            this.vm.subGradeNameToBeAdded = "";
+
+            this.vm.gradeService.createObject(this.vm.gradeService.sub_grades,sub_grade_data).then(value_subgrade => {
+                this.addToSubGradelist(value_subgrade);
+                // grade['isNewSubGradeGettingAdded'] = false;
+            }, error => {
+
+            });
+
             this.vm.gradeNameToBeAdded = null;
             this.vm.isGradeGettingAdded = false;
         }, error => {
