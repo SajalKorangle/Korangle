@@ -15,7 +15,7 @@ def send_sms(data):
     sms_count_left = get_sms_count(data)
 
     if data['count'] > sms_count_left['count']:
-        return {'status': 'failure', 'count': sms_count_left, 'message': 'Not enough sms left'}
+        return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
 
     school_object = School.objects.get(id=data['parentSchool'])
 
@@ -52,7 +52,7 @@ def send_sms_old(data):
     sms_count_left = get_sms_count(data)
 
     if data['estimatedCount'] > sms_count_left['count']:
-        return {'status': 'failure', 'count': sms_count_left, 'message': 'Not enough sms left'}
+        return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
 
     sms_data = {
         'content': data['message'],
@@ -171,7 +171,7 @@ def send_different_sms(data):
     sms_count_left = get_sms_count(data)
     print("no")
     if data['count'] > sms_count_left['count']:
-        return {'status': 'failure', 'count': sms_count_left, 'message': 'Not enough sms left'}
+        return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
 
     school_object = School.objects.get(id=data['parentSchool'])
 
