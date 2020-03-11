@@ -4,7 +4,7 @@ from school_app.model.models import School, Session
 from examination_app.models import Examination
 from class_app.models import Class
 from grade_app.models import Grade, SubGrade
-
+from student_app.models import Student
 
 class Layout(models.Model):
 	name = models.TextField(verbose_name='name')
@@ -92,3 +92,12 @@ class ClassLayout(models.Model):
 	class Meta:
 		db_table='class_layout'
 		unique_together=('parentLayout','parentClass')
+
+class StudentRemarks(models.Model):
+	parentStudent = models.ForeignKey(Student,on_delete=models.CASCADE,default=0,verbose_name='parentStudent')
+	parentSession = models.ForeignKey(Session,on_delete=models.CASCADE,default=0,verbose_name='parentSession')
+	remark = models.TextField(null=False, default='-', verbose_name='remark', blank=True)
+
+	class Meta:
+		db_table='student_remarks'
+		unique_together=('parentStudent','parentSession')

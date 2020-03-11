@@ -18,3 +18,11 @@ class LayoutExamColumnView(CommonView,APIView):
 
 class LayoutExamColumnListView(CommonListView,APIView):
     Model = LayoutExamColumn
+
+from report_card.custom_reportcard.models import StudentRemarks
+
+class StudentRemarksView(CommonView,APIView):
+    Model = StudentRemarks
+
+class StudentRemarksListView(CommonListView,APIView):
+    Model = StudentRemarks
