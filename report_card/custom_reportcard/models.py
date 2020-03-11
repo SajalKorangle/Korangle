@@ -2,14 +2,17 @@ from django.db import models
 
 from school_app.model.models import School, Session
 from examination_app.models import Examination
-
+from class_app.models import Class
+from grade_app.models import Grade, SubGrade
 
 
 class Layout(models.Model):
 	name = models.TextField(verbose_name='name')
-	showLetterHead = models.ImageField(null=True)
+	reportCardHeading = models.TextField(default='')
 	parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 	parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
+	
+	letterHeadImage = models.ImageField(null=True)
 	showAttendanceStartDate = models.IntegerField(null=True, default =0, verbose_name='showAttendanceStartDate')
 	showAttendanceEndDate = models.IntegerField(null=True, default =0,verbose_name='showAttendanceEndDate')
 	# Header
@@ -35,13 +38,16 @@ class Layout(models.Model):
 	showPercentage = models.IntegerField(null=True, default =0, verbose_name='showPercentage')
 	showAttendance = models.IntegerField(null=True, default =0, verbose_name='showAttendance')
 	showPromotedToClass = models.IntegerField(null=True, default =0, verbose_name='showPromotedToClass')
+	showClassAndSection = models.IntegerField(null=True, default =0, verbose_name='showClassAndSection')
+	showAddress = models.IntegerField(null=True, default =0, verbose_name='showAddress')
+	showDecimal = models.IntegerField(null=True, default =0, verbose_name='showDecimal')
 
 	class Meta:
 		db_table='layout'
 		unique_together = ('name','parentSchool','parentSession')
 
 class LayoutExamColumn(models.Model):
-	parentLayout = models.ForeignKey(Layout, on_delete=models.PROTECT, default=0, verbose_name='parentLayout') 
+	parentLayout = models.ForeignKey(Layout, on_delete=models.CASCADE, default=0, verbose_name='parentLayout') 
 	parentExamination = models.ForeignKey(Examination, on_delete=models.PROTECT, default=0, verbose_name='parentExamination')
 	orderNumber = models.IntegerField(null=True, default=0)
 	name = models.TextField() 
@@ -59,3 +65,30 @@ class LayoutExamColumn(models.Model):
 		db_table='layout_exam_column'
 		unique_together=('parentLayout','parentExamination')
 
+
+class LayoutGrade(models.Model):
+	parentLayout = models.ForeignKey(Layout, on_delete=models.CASCADE, default=0, verbose_name='parentLayout')
+	parentGrade = models.ForeignKey(Grade, on_delete=models.CASCADE, default=0, verbose_name='parentGrade')
+	orderNumber = models.IntegerField(null=True, default=0)
+
+	class Meta:
+		db_table='layout_grade'
+		unique_together=('parentLayout','parentGrade')
+
+class LayoutSubGrade(models.Model):
+	parentLayoutGrade = models.ForeignKey(LayoutGrade, on_delete=models.CASCADE, default=0, verbose_name='parentLayoutGrade')
+	parentSubGrade = models.ForeignKey(SubGrade, on_delete=models.CASCADE, default=0, verbose_name='parentSubGrade')
+	orderNumber = models.IntegerField(null=True, default=0)
+
+	class Meta:
+		db_table='layout_sub_grade'
+		unique_together=('parentLayoutGrade','parentSubGrade')
+
+
+class ClassLayout(models.Model):
+	parentLayout = models.ForeignKey(Layout, on_delete=models.CASCADE, default=0, verbose_name='parentLayout')
+	parentClass = models.ForeignKey(Class, on_delete=models.CASCADE, default=0, verbose_name='parentClass')
+
+	class Meta:
+		db_table='class_layout'
+		unique_together=('parentLayout','parentClass')
