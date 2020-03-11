@@ -19,13 +19,16 @@ export class CreateGradeComponent implements OnInit {
 
   gradeList = [];
   subGradeList = [];
-  gradeNameToBeAdded: any;
-  subGradeNameToBeAdded: any;
-  isGradeGettingAdded = false;
+  newGradeName: any;   //For New Grade Name
+  newSubGradeName : any;  //For New SubGrade Name
+  subGradeNameToBeAdded: any;   //To Update SubGrade Name
 
-  whichGradeIsDeleted = null;
-  whichGradeIsUpdated = null;
-  whichSubGradeIsUpdated = null;
+  isGradeGettingAdded = false;    //Boolean If Grade is Getting Added Or Not
+
+  whichGradeIsUpdated = null;     //Used when Grade is deleted or its name is changed
+
+  gradeToWhichSubGradeIsAdded = null;     //Used to track to which grade new subgrade is getting added
+  whichSubGradeIsUpdated = null;     //Used when Sub-Grade is deleted or its name is changed
 
 
   constructor(public gradeService:GradeService) { }
@@ -37,29 +40,12 @@ export class CreateGradeComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
-  isSubgradeUpdateDisabled(subgrade: any){
-    if (subgrade.newName == subgrade.name || this.isThisSubGradeGettingUpdated(subgrade)) {
+  isGradeUpdateDisabled(grade: any){
+    if(grade.newName == grade.name || this.isThisGradeGettingUpdated(grade)){
       return true;
     }
     return false;
   }
-
-  isNewSubGradeAdded(grade: any){
-    if(this.isThisGradeGettingUpdated(grade)==false && this.subGradeNameToBeAdded == ""){
-      return "";
-    }
-    return this.subGradeNameToBeAdded;
-  }
-
-  isThisGradeGettingDeleted(grade: any){
-    if(this.whichGradeIsDeleted == null){
-      return false;
-    }
-    if(grade.id == this.whichGradeIsDeleted.id){
-      return true;
-    }
-  }
-
 
   isThisGradeGettingUpdated(grade: any){
     if(this.whichGradeIsUpdated == null){
@@ -69,6 +55,33 @@ export class CreateGradeComponent implements OnInit {
       return true;
     }
   }
+
+  // To check if sub grade update is disabled or enbled
+  isSubgradeUpdateDisabled(subgrade: any){
+    if (subgrade.newName == subgrade.name || this.isThisSubGradeGettingUpdated(subgrade)) {
+      return true;
+    }
+    return false;
+  }
+
+  // To make input text box empty after sub grade has been added
+  isNewSubGradeAdded(grade: any){
+    if(this.isNewSubGradeGettingUpdated(grade)==false){
+      return "";
+    }
+  }
+
+
+
+  isNewSubGradeGettingUpdated(grade: any){
+    if(this.gradeToWhichSubGradeIsAdded == null){
+      return false;
+    }
+    if(grade.id == this.gradeToWhichSubGradeIsAdded.id){
+      return true;
+    }
+  }
+
 
   isThisSubGradeGettingUpdated(subGrade: any){
     if(this.whichSubGradeIsUpdated == null){

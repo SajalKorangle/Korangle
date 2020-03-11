@@ -52,30 +52,28 @@ export class CreateGradeServiceAdapter {
     }
 
     populateGradeList(gradeList: any){
-        // gradeList.forEach(grade => {
-        //     grade['isNewSubGradeGettingAdded'] = false;
-        // });
+        gradeList.forEach(grade => {
+            grade['newName'] = grade['name'];
+        });
         this.vm.gradeList = gradeList;
     }
 
     createGrade(){
-        if (this.vm.gradeNameToBeAdded == null
-            || this.vm.gradeNameToBeAdded == "") {
+        if (this.vm.newGradeName == null
+            || this.vm.newGradeName == "") {
             alert('Name should be populated');
+            return;
+        }
+
+        if (this.vm.newSubGradeName == null
+            || this.vm.newSubGradeName == "") {
+            alert('Please add atleast one Sub-Grade');
             return;
         }
 
         let nameAlreadyExists = false;
         this.vm.gradeList.every(grade => {
-            if (grade.name === this.vm.gradeNameToBeAdded) {
-                nameAlreadyExists = true;
-                return false;
-            }
-            return true;
-        });
-
-        this.vm.gradeList.every(grade => {
-            if (grade.name === this.vm.subGradeNameToBeAdded) {
+            if (grade.name === this.vm.newGradeName) {
                 nameAlreadyExists = true;
                 return false;
             }
@@ -90,7 +88,7 @@ export class CreateGradeServiceAdapter {
         this.vm.isGradeGettingAdded = true;
 
         let data = {
-            'name': this.vm.gradeNameToBeAdded,
+            'name': this.vm.newGradeName,
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId
         };
@@ -99,19 +97,18 @@ export class CreateGradeServiceAdapter {
             this.addToGradelist(value);
 
             let sub_grade_data = {
-                'name': this.vm.subGradeNameToBeAdded,
+                'name': this.vm.newSubGradeName,
                 'parentGrade' : value.id
             };
-            this.vm.subGradeNameToBeAdded = "";
 
             this.vm.gradeService.createObject(this.vm.gradeService.sub_grades,sub_grade_data).then(value_subgrade => {
+                this.vm.newSubGradeName = "";
                 this.addToSubGradelist(value_subgrade);
-                // grade['isNewSubGradeGettingAdded'] = false;
             }, error => {
 
             });
 
-            this.vm.gradeNameToBeAdded = null;
+            this.vm.newGradeName = null;
             this.vm.isGradeGettingAdded = false;
         }, error => {
         });
@@ -119,6 +116,7 @@ export class CreateGradeServiceAdapter {
 
     addToGradelist(grade:any){
         // grade['isNewSubGradeGettingAdded'] = false;
+        grade['newName'] = grade['name'];
         this.vm.gradeList.push(grade);
     }
 
@@ -144,7 +142,7 @@ export class CreateGradeServiceAdapter {
         }
 
         // grade['isNewSubGradeGettingAdded'] = true;
-        this.vm.whichGradeIsUpdated = grade;
+        this.vm.gradeToWhichSubGradeIsAdded = grade;
 
         let data = {
             'name': this.vm.subGradeNameToBeAdded,
@@ -154,7 +152,7 @@ export class CreateGradeServiceAdapter {
 
         this.vm.gradeService.createObject(this.vm.gradeService.sub_grades,data).then(value => {
             this.addToSubGradelist(value);
-            this.vm.whichGradeIsUpdated = null;
+            this.vm.gradeToWhichSubGradeIsAdded = null;
             // grade['isNewSubGradeGettingAdded'] = false;
         }, error => {
 
@@ -170,12 +168,13 @@ export class CreateGradeServiceAdapter {
 
     updateSubGrade(grade:any,subGrade:any){
         if(subGrade.newName == null || subGrade.newName == ""){
+            subGrade.newName = subGrade.name;
             alert("Nothing to update");
             return;
         }
 
         let nameAlreadyExists = false;
-        this.vm.subGradeList.every(value => {
+        this.getSubGradeListOfAnyGrade(grade.id).every(value => {
             if (value.name === subGrade.newName) {
                 nameAlreadyExists = true;
                 return false;
@@ -233,10 +232,12 @@ export class CreateGradeServiceAdapter {
 
     deleteGrade(grade: any){
         if(this.getSubGradeListOfAnyGrade(grade.id).length > 0){
-            alert("Warning : All student marks of this grade will be deleted")
+            if(!confirm("Warning : All student marks of this grade will be deleted")){
+                return;
+            }
         }
         // this.vm.isLoading = true;
-        this.vm.whichGradeIsDeleted = grade;
+        this.vm.whichGradeIsUpdated = grade;
         let grade_data = {
             'id': grade.id
         };
@@ -275,7 +276,41 @@ export class CreateGradeServiceAdapter {
                 this.vm.gradeList.splice(indexOfGrade,1);
             }
             // this.vm.isLoading = false;
-            this.vm.whichGradeIsDeleted = null;
+            this.vm.whichGradeIsUpdated = null;
+        })
+    }
+
+    updateGrade(grade: any){
+        if(grade.newName == null || grade.newName == ""){
+            grade.newName = grade.name;
+            alert("Nothing to update");
+            return;
+        }
+
+        let nameAlreadyExists = false;
+        this.vm.gradeList.every(value => {
+            if (value.name === grade.newName) {
+                nameAlreadyExists = true;
+                return false;
+            }
+            return true;
+        });
+
+        if (nameAlreadyExists) {
+            alert('Name already Exists');
+            return;
+        }
+
+        // grade['isUpdating'] = true;
+        this.vm.whichGradeIsUpdated = grade;
+        let data = {
+            'id': grade.id,
+            'name' : grade.newName,
+        };
+        this.vm.gradeService.partiallyUpdateObject(this.vm.gradeService.grades,data).then(value =>{
+            grade.name = value.name;
+            // subGrade.isUpdating = false;
+            this.vm.whichGradeIsUpdated = null;
         })
     }
 }
