@@ -1,42 +1,144 @@
-<div class="card-content" style="height: 100%">
+<div class="card-content" style="height: 88vh; overflow: auto"> <!-- 88vh -->
 	
-	<div class="row" style="height: 100%;">
+	<div class="row" style="" *ngIf="!isLoading" style="height: 100%;overflow: auto;">
 		
-		<div class="col-md-3">
-			<mat-form-field>
-				<mat-label>Layout Name</mat-label>
-				<input matInput
-				          placeholder="Enter Layout Name"
-				>
+		<div class="col-md-12" *ngIf="examinationList.length == 0">
+			No examination created.
+		</div>
+
+		<!-- Parameter Section  -->
+		<div class="col-md-6" style="height: 100%; overflow: auto;">
+
+			<!-- Existing layouts dropdown -->
+			<mat-form-field *ngIf="selectedLayout == null && layoutList.length != 0">
+				<mat-label>
+					Existing layouts
+				</mat-label>
+				<mat-select (selectionChange)="initializeExistingLayout($event.value)">
+					<mat-option *ngFor="let layout of layoutList" [value]="layout">
+						{{layout.name}}
+					</mat-option>
+				</mat-select>
 			</mat-form-field>
 
-			<mat-form-field>
+			<!-- Create new layout button -->
+			<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="selectedLayout == null" (click)="initializeNewLayout()">
+				Create new layout
+			</button>
+
+			<!-- Reset Layout button -->
+			<button class="btn btn-danger" *ngIf="selectedLayout != null" (click)="selectedLayout = null">
+				Reset
+			</button>
+
+			<!-- Save/Update Layout button -->
+			<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="selectedLayout" (click)="serviceAdapter.updateLayout()">
+				<ng-container *ngIf="selectedLayout.id == 0">
+					Save
+				</ng-container>
+				<ng-container *ngIf="selectedLayout.id != 0">
+					Update
+				</ng-container>
+			</button>
+
+			<mat-form-field *ngIf="selectedLayout != null">
+				<mat-label>Layout Name</mat-label>
+				<input matInput placeholder="Enter Layout Name" [(ngModel)]="selectedLayout.name" required>
+			</mat-form-field>
+			<p *ngIf="selectedLayout && !isNameUnqiue(selectedLayout,layoutList)" style="color: red;">
+				Layout name must be unique
+			</p>
+
+			<mat-form-field *ngIf="selectedLayout != null">
 				<mat-label>Report Card Heading</mat-label>
 				<input matInput
-				          [(ngModel)]="reportCardName"
-				>
+				          [(ngModel)]="selectedLayout.reportCardHeading">
 			</mat-form-field>
-			<hr>
-			
-			<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-			  <div class="example-box" *ngFor="let studentDetail of studentDetailHeader" cdkDrag>
-			  	<mat-checkbox [(ngModel)]="studentDetail[1]">
-			  		{{studentDetail[0]}}
-			  	</mat-checkbox>
-			  </div>
+
+			<p *ngIf="selectedLayout != null">Student Header Section</p>
+			<!-- Student Detail Header Parameter -->
+			<div cdkDropList 
+				class="example-list" 
+				(cdkDropListDropped)="drop($event, selectedLayout.studentDetailsHeader)" *ngIf="selectedLayout != null">
+				  <div class="example-box" *ngFor="let studentDetail of selectedLayout.studentDetailsHeader;" cdkDrag>
+				  	<mat-checkbox [(ngModel)]="studentDetail.show">
+				  		{{studentDetail.parameter}}
+				  	</mat-checkbox>
+				  </div>
 			</div>
+
+			<p *ngIf="selectedLayout != null">Examination Mapping Section</p>
+			<!-- Subject Count input -->
+			<div *ngIf="selectedLayout">
+				<mat-form-field>
+					<label>No of Subjects</label>
+					<input matInput type="number" min="0" max="10" step="1" [value]="subjectCountArray.length" (change)="updateSubjectCountArray($event.target.value)">
+				</mat-form-field>
+			</div>
+
+			<!-- LayoutExamColumn  parameter -->
+			<div *ngIf="selectedLayout" cdkDropList class="example-list" (cdkDropListDropped)="drop($event, selectedLayout.layoutExamColumnList)">
+			  <ng-container *ngFor="let layoutExam of selectedLayout.layoutExamColumnList">
+				  <div class="example-box" cdkDrag>
+				  		{{getExaminationName(layoutExam.parentExamination)}}
+				  		<br>
+				  		<mat-form-field>
+				  			<mat-label>
+				  				Report card exam name
+				  			</mat-label>
+				  			<input matInput [(ngModel)]="layoutExam.name">
+				  		</mat-form-field>
+
+				  		<mat-form-field>
+				  			<mat-select [(value)]="layoutExam.columnType">
+				  				<mat-option *ngFor="let exam_type of EXAM_COLUMN_TYPE" [value]="exam_type">
+				  					{{exam_type}}
+				  				</mat-option>
+				  			</mat-select>
+				  		</mat-form-field>
+
+				  		<mat-form-field>
+				  			<mat-label>{{layoutExam.columnType.split('/')[0]}}  Maximum Marks</mat-label>
+				  			<input matInput type="number" min="0" [(ngModel)]="layoutExam.maximumMarksObtainedOne">
+				  		</mat-form-field>
+
+				  		<mat-form-field *ngIf="layoutExam.columnType.split('/').length == 2">
+				  			<mat-label>
+				  				{{layoutExam.columnType.split('/')[1]}} Maximum Marks
+				  			</mat-label>
+				  			<input matInput type="number" min="0" [(ngModel)]="layoutExam.maximumMarksObtainedTwo">
+				  		</mat-form-field>
+				  </div>
+			  </ng-container>
+			</div>
+			<!-- Examination List -->
+			<mat-form-field *ngIf="selectedLayout">
+				<mat-label>Select Examination to map</mat-label>
+				<mat-select (selectionChange)="addExamToMapping($event.value)">
+					<ng-container *ngFor="let examination of getFilteredExaminationList()" >
+						<mat-option [value]="examination">
+								{{examination.name}}
+						</mat-option>
+					</ng-container>
+				</mat-select>
+			</mat-form-field>
 
 		</div>
 
-		<div class="col-md-9" style="height: 100%">
+<!-------------------------------------------------------- Preview section -------------------------------------------------------->
+<!-------------------------------------------------------- Preview section -------------------------------------------------------->
+<!-------------------------------------------------------- Preview section -------------------------------------------------------->
+
+		<div class="col-md-6" style="height: 81.76vh; overflow-y: auto;">
 			
 			<div class="container-fluid"
-			     style="width: 100%; height: 100%;
+			     style="width: 57.75vh; /*height: 100%;*/ /*h-81.675vh, w-57.75*/
 			     border: 6px double #b87333;
 			     position: relative;
-			     overflow: hidden;
+			     /*overflow: hidden;*/
 			     border-radius: 8px;
-			     font-weight: 800 !important;">
+			     font-weight: 800 !important;
+			     font-size:1.5vh">
 			     
 			     <!-- Reg. No. , Dise Code -->
 			     <div class="row no-gutters" style="margin-bottom: 0px !important;">
@@ -51,10 +153,10 @@
 			     		<img src="{{user.activeSchool.profileImage}}" style="">
 			     	</div>
 			     	<div class="col-md-8" style="line-height: normal !important; margin-top: 5px !important; text-align: center;">
-			     		<p style="font-size:45px; font-weight:800; color: red !important;">
+			     		<p style="/*font-size:45px*/font-size: 2.8vh; font-weight:800; color: red !important;">
 			     			{{user.activeSchool.printName}}	
 			     		</p>
-			     		<p style="font-size: 22px;">
+			     		<p style="/*font-size: 22px;*/font-size: 2vh;">
 			     			{{user.activeSchool.address}}
 			     		</p>
 			     	</div>
@@ -62,33 +164,33 @@
 			     </div>
 
 
-			     <!-- Annual Report -->
-			     <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
+			     <!-- Report Card Heading -->
+			     <div class="row no-gutters"  *ngIf="selectedLayout != null" style="margin-top: 3px !important; line-height: normal !important;">
 			         <div class="col-xs-12" align="center">
-			             <span style="font-size: 35px;">{{reportCardName}}</span>
+			             <span style="/*font-size: 35px;*/font-size:2.2vh">{{selectedLayout.reportCardHeading}}</span>
 			         </div>
 			     </div>
 
 			     <!-- Session -->
 			     <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
 			         <div class="col-xs-12" align="center">
-			             <span style="font-size: 25px">{{getSessionName(user.activeSchool.currentSessionDbId)}}</span>
+			             <span style="/*font-size: 25px*/font-size: 2vh">{{getSessionName(user.activeSchool.currentSessionDbId)}}</span>
 			         </div>
 			     </div>
 
 			     <!-- Student Detail header -->
 			     <!-- First four rows -->
-			     <div class="row" style="font-size:14px;">
+			     <div class="row" style="/*font-size:14px;*/ font-size: 1.7vh"  *ngIf="selectedLayout != null">
 			     	<div class="col-md-10" style="margin-bottom: 0.5vh">
 			     		
 			     		<ng-container *ngFor="let studentDetail of getFilteredStudentDetailHeader();let i = index">
 			     			<ng-container *ngIf="i<=3">
 			     				<div style="display:flex;margin-bottom:0.5vh;">
 				     				<div style="width:31%; font-weight: bold;">
-				     					{{studentDetail[0]}}
+				     					{{studentDetail.parameter}}
 				     				</div>
 				     				<div style="width: 100%; font-weight: normal;">
-				     					{{studentDetail[0]}} Value
+				     					{{studentDetail.parameter}} Value
 				     				</div>
 				     			</div>
 			     			</ng-container>
@@ -96,31 +198,31 @@
 
 			     	</div>
 			     	<div class="col-md-2" style="padding-left:0px;">
-			     		<img src="user.activeSchool.profileImage">
+			     		<img src="{{user.activeSchool.profileImage}}">
 			     	</div>
 			     	
 			     </div>
 
 			     <!-- Remaining rows -->
-			     <div class="row" style="font-size:14px;">
+			     <div class="row" style="/*font-size:14px;*/ font-size:1.7vh;"  *ngIf="selectedLayout != null">
 			     		<ng-container *ngFor="let studentDetail of getFilteredStudentDetailHeader();let i = index">
 			     			<ng-container *ngIf="i>3 && i%2 == 0">
 			     				<div class="col-md-8" style="display: flex;margin-bottom: 0.5vh">
 			     					<div style="width:30%; font-weight: bold;">
-			     						{{studentDetail[0]}}
+			     						{{studentDetail.parameter}}
 			     					</div>
 			     					<div style="width:70%; font-weight: normal">
-			     						{{studentDetail[0]}} Value
+			     						{{studentDetail.parameter}} Value
 			     					</div>
 			     				</div>
 			     			</ng-container>
 			     			<ng-container *ngIf="i>3 && i%2 != 0">
 			     				<div class="col-md-4" style="display: flex;margin-bottom: 0.5vh;padding-left:0px;">
 			     					<div style="width:30%; font-weight: bold">
-			     						{{studentDetail[0]}}
+			     						{{studentDetail.parameter}}
 			     					</div>
 			     					<div style="width:70%;font-weight: normal">
-			     						{{studentDetail[0]}} Value
+			     						{{studentDetail.parameter}} Value
 			     					</div>
 			     				</div>
 			     			</ng-container>
@@ -128,41 +230,67 @@
 
 			     </div>
 
-			     <!-- Header Parameter -->
-			     <!-- <div class="row" style="font-size: 14px;">
 
+			     <!-- Examination wing -->
+			     <div class="row" *ngIf="selectedLayout && selectedLayout.layoutExamColumnList && selectedLayout.layoutExamColumnList.length != 0">
+			     	<div classs="col-md-12" style="text-align: center;">
+			     		<table class="table table-bordered table-responsive">
+			     			<tr>
+			     				<td rowspan="2">Subject Name</td>
+			     				<ng-container *ngFor="let examination of selectedLayout.layoutExamColumnList">
+			     					<td [attr.colspan]="examination.columnType.split('/').length">
+			     						{{examination.name}}
+			     					</td>
+			     				</ng-container>
+			     			</tr>
+			     			<tr>
+			     				<ng-container *ngFor="let examination of selectedLayout.layoutExamColumnList">
+			     					<td  *ngFor="let exam_type of examination.columnType.split('/')">
+			     						{{exam_type}}
+			     					</td>
+			     				</ng-container>
+			     			</tr>
 
-			     	<ng-container *ngFor="let studentDetail of getFilteredStudentDetailHeader();let i = index">
-			     		
-			     		<ng-container *ngIf="i > 3">
-			     			<div class="col-md-6" style="display: flex;margin-bottom: 0.8vh">
-			     				<div style="width:30%;font-weight:bold;">
-			     					{{studentDetail[0]}}
-			     				</div>
-			     				<div style="width:70%;font-weight:normal;">
-			     					{{studentDetail[0]}} Value
-			     				</div>
-			     			</div>
-			     		</ng-container>
+			     			<tr *ngFor="let subjectNo of subjectCountArray;let i = index">
+			     				<td>
+			     					Subject-{{i+1}}
+			     				</td>
+			     				<ng-container *ngFor="let examination of selectedLayout.layoutExamColumnList">
+			     					<td *ngFor="let exam_type of examination.columnType.split('/')">
+			     						10
+			     					</td>
+			     				</ng-container>
+			     			</tr>
 
-			     		<ng-container *ngIf="i <= 3">
-			     			<div class="col-md-12" style="display: flex;margin-bottom: 0.8vh">
-			     				<div style="width:15%;">
-			     					{{studentDetail[0]}}
-			     				</div>
-			     				<div style="width:85%;">
-			     					{{studentDetail[0]}} Value
-			     				</div>
-			     			</div>
-			     		</ng-container>
+			     			<tr>
+			     				<td>
+			     					Total
+			     				</td>
+			     				<ng-container *ngFor="let examination of selectedLayout.layoutExamColumnList">
+			     					<td [attr.colspan]="examination.columnType.split('/').length" style="text-align: right">
+			     						10
+			     					</td>
+			     				</ng-container>
+			     			</tr>
 
-			     	</ng-container>
+			     			<tr>
+			     				<!-- TODO: Hanlde its colspan -->
+			     				<td [attr.colspan]="selectedLayout.layoutExamColumnList.length + 1" style="text-align: left;">
+			     					Total( in words): 
+			     				</td>
+			     			</tr>
 
+			     		</table>
+			     	</div>
 			     </div>
- -->
 
 			 </div>
 		</div>
 	</div>
+
+	<ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
 
 </div>
