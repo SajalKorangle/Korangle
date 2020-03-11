@@ -10,6 +10,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/report-card/custom_reportcard/pages/manage-layout/manage-layout.module#ManageLayoutModule',
         data: {moduleName: 'custom_reportcard'},
     },
+    {
+        path: 'student_remarks',
+        loadChildren: 'app/modules/report-card/custom_reportcard/pages/student-remarks/student-remarks.module#StudentRemarksModule',
+        data: {moduleName: 'custom_reportcard'},
+    },
 ];
 
 @NgModule({

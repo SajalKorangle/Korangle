@@ -11,6 +11,7 @@ import { CustomReportCardRoutingModule } from './custom_reportcard.routing';
     declarations: [
 
         CustomReportCardComponent,
+
     ],
 
     imports: [
