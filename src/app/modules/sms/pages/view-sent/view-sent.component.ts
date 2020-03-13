@@ -23,7 +23,7 @@ export class ViewSentComponent implements OnInit {
     selectedStatus;
     selectedMessageType = undefined;
 
-    messageTypeList = ['Defaulter', 'Custom', 'CST', 'Attendance', 'Fees', 'Examination'];
+    messageTypeList = ['Defaulter', 'General', 'Fee Receipt'];
 
     serviceAdapter: ViewSentServiceAdapter;
 

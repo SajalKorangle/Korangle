@@ -35,7 +35,7 @@ export class ViewDefaultersComponent implements OnInit {
     ];
 
     studentMessage = "Hi, your fee is due. The amount of due fees till month is <feesDueTillMonth>";
-    parentMessage = "Hi, your fee is due. The total amount of due fees till month is <feesDueTillMonth>\n<childrenData>";
+    parentMessage = "Hi <name>,\n Your fees due till date is <feesDueTillMonth>\n<childrenData>";
 
     selectedSentType = 'SMS';
     extraDefaulterMessage = '';
@@ -387,7 +387,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     notifyDefaulters(): void{
         if(this.selectedFilterType == this.filterTypeList[0]){
-            let message = "Hi, your fee is due. The amount of due fees till month is <feesDueTillMonth>"
+            let message = this.studentMessage;
             if(this.extraDefaulterMessage){
                 message+="\n"+this.extraDefaulterMessage;
             }
@@ -403,7 +403,7 @@ export class ViewDefaultersComponent implements OnInit {
             });
             this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
         }else{
-            let message = "Hi, your fee is due. The total amount of due fees till month is <feesDueTillMonth>\n<childrenData>"
+            let message = this.parentMessage;
             if(this.extraDefaulterMessage){
                 message+=this.extraDefaulterMessage;
             }
@@ -412,6 +412,7 @@ export class ViewDefaultersComponent implements OnInit {
             })
             let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
                 return {
+                "name": obj.name,
                 "mobileNumber": obj.mobileNumber,
                 "feesDueTillMonth": this.getCurrencyInINR(this.getParentFeesDueTillMonth(obj)),
                 "feesDueOverall": this.getCurrencyInINR(this.getParentFeesDueOverall(obj)),
