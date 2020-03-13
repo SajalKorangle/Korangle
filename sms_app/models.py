@@ -5,17 +5,15 @@ from school_app.model.models import School
 # Create your models here.
 
 MESSAGE_TYPE = (
-    ('Custom', 'Custom'),
+    ('General', 'General'),
     ('Defaulter', 'Defaulter'),
-    ('Attendance', 'Attendance'),
-    ('Fees', 'Fees'),
-    ('Examination', 'Examination')
+    ('Fee Receipt', 'Fee Receipt'),
 )
 
 
 class SMS(models.Model):
 
-    message_type = models.CharField(max_length=15, choices=MESSAGE_TYPE, default='Custom')
+    message_type = models.CharField(max_length=15, choices=MESSAGE_TYPE, default='General')
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')
