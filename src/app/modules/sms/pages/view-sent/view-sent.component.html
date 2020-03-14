@@ -30,7 +30,7 @@
                     <mat-select placeholder="Message Type"
                                 [(ngModel)]="selectedMessageType">
                         <mat-option *ngFor="let messageType of messageTypeList;" [value]="messageType">
-                            {{messageType}}
+                            {{messageType.name}}
                         </mat-option>
                         <mat-option [value]="nullValue">
                             All
@@ -54,7 +54,7 @@
                 <tr *ngFor="let sms of  getFilteredSMSList(); let i = index;" style="padding: 0px;">
                     <td>{{i+1}}</td>
                     <td style="padding-right: 15px;" align="right">{{sms.count}}/{{sms.notificationCount}}</td>
-                    <td>{{sms.messageType}}</td>
+                    <td>{{getMessageType(sms)}}</td>
                     <td align="center">{{sms.sentDateTime | date: 'dd - MMM - yyyy'}}</td>
                     <td align="left" style="white-space: pre-line;">
                         {{sms.content}}
@@ -81,7 +81,7 @@
                     <mat-expansion-panel-header class="mat-row">
                         <span class="mat-cell">{{i+1}}.</span>
                         <span class="mat-cell">{{sms.count}}/{{sms.notificationCount}}</span>
-                        <span class="mat-cell">{{sms.message_type}}</span>
+                        <span class="mat-cell">{{getMessageType(sms)}}</span>
                         <span class="mat-cell" >{{sms.sentDateTime | date: 'dd - MMM - yyyy'}}</span>
                         <span class="mat-cell">{{sms.content.substring(0,20)}}</span>
                     </mat-expansion-panel-header>

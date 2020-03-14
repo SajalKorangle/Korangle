@@ -34,8 +34,8 @@ export class ViewDefaultersComponent implements OnInit {
         'NOTIF./SMS',
     ];
 
-    studentMessage = "Hi, your fee is due. The amount of due fees till month is <feesDueTillMonth>";
-    parentMessage = "Hi <name>,\n Your fees due till date is <feesDueTillMonth>\n<childrenData>";
+    studentMessage = "Hi <fathersName>,\n<name>'s fees due till date is <feesDueTillMonth>";
+    parentMessage = "Hi <name>,\nYour fees due till date is <feesDueTillMonth>\n<childrenData>";
 
     selectedSentType = 'SMS';
     extraDefaulterMessage = '';
@@ -49,6 +49,8 @@ export class ViewDefaultersComponent implements OnInit {
     studentList: any;
     classList: any;
     sectionList: any;
+
+    notif_usernames = [];
 
     parentList = [];
 
@@ -396,6 +398,8 @@ export class ViewDefaultersComponent implements OnInit {
             })
             let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
                 return {
+                    "fathersName": obj.fathersName,
+                    "name": obj.name,
                 "mobileNumber": obj.mobileNumber,
                 "feesDueTillMonth": this.getCurrencyInINR(obj.feesDueTillMonth),
                 "feesDueOverall": this.getCurrencyInINR(obj.feesDueOverall)
@@ -666,11 +670,11 @@ export class ViewDefaultersComponent implements OnInit {
         if(this.selectedSentType==this.sentTypeList[0])return 0;
         if(this.selectedFilterType == this.filterTypeList[0]){
             count = this.getFilteredStudentList().filter((item) => {
-                return item.selected && item.notification;
+                return item.mobileNumber && item.selected && item.notification;
             }).length;
         }else{
             count = this.getFilteredParentList().filter((item) => {
-                return item.selected && item.notification;
+                return item.mobileNumber && item.selected && item.notification;
             }).length;
         }
         return count;
@@ -680,13 +684,13 @@ export class ViewDefaultersComponent implements OnInit {
         let count = 0;
         if(this.selectedSentType==this.sentTypeList[1])return 0;
         if(this.selectedFilterType == this.filterTypeList[0]){
-            this.getFilteredStudentList().filter(item => item.selected).forEach((item, i) => {
+            this.getFilteredStudentList().filter(item => item.mobileNumber && item.selected).forEach((item, i) => {
                 if(this.selectedSentType==this.sentTypeList[0] || item.notification==false){
                     count += this.getMessageCount(this.getMessageFromTemplate(this.studentMessage, item) + '\n' + this.extraDefaulterMessage);
                 }
             })
         }else{
-            this.getFilteredParentList().filter(item=>item.selected).forEach((item, i) => {
+            this.getFilteredParentList().filter(item=>item.mobileNumber && item.selected).forEach((item, i) => {
                 if(this.selectedSentType==this.sentTypeList[0] || item.notification==false){
                     count += this.getMessageCount(this.getMessageFromTemplate(this.parentMessage, item) + '\n' + this.extraDefaulterMessage);
                 }
