@@ -26,3 +26,30 @@ urlpatterns += [
 ]
 
 
+
+from report_card.custom_reportcard.views import ClassLayoutView, ClassLayoutListView
+
+urlpatterns += [
+    url(r'^class-layouts/batch',ClassLayoutListView.as_view()),
+    url(r'^class-layouts',ClassLayoutView.as_view()),
+]
+
+
+
+from report_card.custom_reportcard.views import LayoutSubGradeView, LayoutSubGradeListView
+
+urlpatterns += [
+    url(r'^layout-sub-grades/batch',LayoutSubGradeListView.as_view()),
+    url(r'^layout-sub-grades',LayoutSubGradeView.as_view()),
+]
+
+
+
+from report_card.custom_reportcard.views import LayoutGradeView, LayoutGradeListView
+
+urlpatterns += [
+    url(r'^layout-grades/batch',LayoutGradeListView.as_view()),
+    url(r'^layout-grades',LayoutGradeView.as_view()),
+]
+
+
