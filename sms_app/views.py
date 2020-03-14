@@ -12,7 +12,6 @@ import json
 ############## SMS Old ##############
 from sms_app.models import SMS
 from .business.sms import get_sms_list
-from .business.utils import get_data_from_template
 
 
 class SMSOldListView(APIView):
@@ -122,12 +121,10 @@ class SmsDifferentView(CommonView, APIView):
         # data = json.loads(request.body.decode('utf-8'))
         return_data = {'status': 'success'}
         if len(data["data"]) > 0:
-            data["data"] = get_data_from_template(data)
             return_data = send_different_sms(data)
             if return_data["status"] == 'success':
                 data['requestId'] = return_data['requestId']
                 return_data["data"] = create_object(data, self.Model, self.ModelSerializer)
-        print(return_data)
         return return_data
 
 

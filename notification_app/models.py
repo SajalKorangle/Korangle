@@ -3,21 +3,15 @@ from django.db import models
 # Create your models here.
 from school_app.model.models import School
 from django.contrib.auth.models import User
+from information_app.models import MessageType
 
-MESSAGE_TYPE = (
-    ('Custom', 'Custom'),
-    ('Defaulter', 'Defaulter'),
-    ('Attendance', 'Attendance'),
-    ('Fees', 'Fees'),
-    ('Examination', 'Examination')
-)
 
 class Notification(models.Model):
 
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
 
-    message_type = models.CharField(max_length=20, choices=MESSAGE_TYPE, default='Custom')
+    parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1)
 
     # Sent Date & Time
     sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')

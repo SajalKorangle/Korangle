@@ -154,22 +154,9 @@ def send_sms_old(data):
 
 def send_different_sms(data):
     """
-    Function send different SMS
-    Needs data in the format
-    data = {
-        'count': 12,
-        'parentSchool': 12,
-        'messages': [
-            {'mobileNumber': XXXXXXXXXX, 'isAdvanceSms': "Your message here"},
-            {'mobileNumber': XXXXXXXXXX, 'isAdvanceSms': "Your message here"},
-        ],
-        'smsContentType': 'english'
-    }
-    # Note: Alos add the other fields needed for the sms count
+    Function sends different SMS
     """
-    print("yo")
     sms_count_left = get_sms_count(data)
-    print("no")
     if data['count'] > sms_count_left['count']:
         return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
 
@@ -191,12 +178,9 @@ def send_different_sms(data):
         'Cache-Control': "no-cache"
     }
 
-    print(anotherPayload)
-
     conn.request("POST", "/rest/services/sendSMS/sendCustomGroupSms?AUTH_KEY=fbe5746e5505757b176a1cf914110c3", payloadJson, headers)
 
     response = conn.getresponse().read()
-    print(response)
 
     requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
 
