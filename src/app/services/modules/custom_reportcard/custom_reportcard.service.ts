@@ -13,5 +13,8 @@ export class CustomReportCardService extends ServiceObject {
     public student_remarks = '/student-remarks';
 
     public layout_exam_column = '/layout-exam-columns';
+    public layout_grade = '/layout-grades';
+    public class_layout = '/class-layouts';
+    public layout_sub_grade = '/layout-sub-grades';
 
 }

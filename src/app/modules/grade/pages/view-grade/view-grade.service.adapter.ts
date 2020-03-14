@@ -25,8 +25,8 @@ export class ViewGradeServiceAdapter {
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.gradeService.getObjectList(this.vm.gradeService.grades,grade_data),
-            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grades,{})
+            this.vm.gradeService.getObjectList(this.vm.gradeService.grade,grade_data),
+            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade,{})
         ]).then(value => {
             this.vm.classList = value[0];
             this.vm.sectionList = value[1];
@@ -108,7 +108,7 @@ export class ViewGradeServiceAdapter {
                 'parentStudent__in': this.vm.studentList.map(item => item.id).join(),
                 'parentSubGrade__parentGrade' : this.vm.selectedGrade.id
             };
-            this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grades,request_student_sub_grade_data).then(value2 => {
+            this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade,request_student_sub_grade_data).then(value2 => {
                 this.populateStudentList(value2);
                 this.vm.showTestDetails = true;
                 this.vm.isLoading = false;

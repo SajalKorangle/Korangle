@@ -9,8 +9,8 @@ export class GradeService extends ServiceObject {
   protected module_url = '/grade';
 
   // objects urls
-  public grades = '/grades';
-  public sub_grades = '/sub-grades';
-  public student_sub_grades = '/student-sub-grades'
+  public grade = '/grades';
+  public sub_grade = '/sub-grades';
+  public student_sub_grade = '/student-sub-grades'
 
 }

@@ -22,12 +22,12 @@ export class CreateGradeServiceAdapter {
         };
 
         this.vm.isLoading = true;
-        this.vm.gradeService.getObjectList(this.vm.gradeService.grades, request_grade_data).then(value => {
+        this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data).then(value => {
             this.populateGradeList(value);
             let request_sub_grade_data = {
                 'parentGrade__in': value.map(a => a.id)
             };
-            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grades,request_sub_grade_data).then(value1=>{
+            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade,request_sub_grade_data).then(value1=>{
                 this.populateSubGradeList(value1);
                 this.vm.isLoading = false;
             });
@@ -93,7 +93,7 @@ export class CreateGradeServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId
         };
 
-        this.vm.gradeService.createObject(this.vm.gradeService.grades,data).then(value => {
+        this.vm.gradeService.createObject(this.vm.gradeService.grade,data).then(value => {
             this.addToGradelist(value);
 
             let sub_grade_data = {
@@ -101,7 +101,7 @@ export class CreateGradeServiceAdapter {
                 'parentGrade' : value.id
             };
 
-            this.vm.gradeService.createObject(this.vm.gradeService.sub_grades,sub_grade_data).then(value_subgrade => {
+            this.vm.gradeService.createObject(this.vm.gradeService.sub_grade,sub_grade_data).then(value_subgrade => {
                 this.vm.newSubGradeName = "";
                 this.addToSubGradelist(value_subgrade);
             }, error => {
@@ -150,7 +150,7 @@ export class CreateGradeServiceAdapter {
         };
         this.vm.subGradeNameToBeAdded = "";
 
-        this.vm.gradeService.createObject(this.vm.gradeService.sub_grades,data).then(value => {
+        this.vm.gradeService.createObject(this.vm.gradeService.sub_grade,data).then(value => {
             this.addToSubGradelist(value);
             this.vm.gradeToWhichSubGradeIsAdded = null;
             // grade['isNewSubGradeGettingAdded'] = false;
@@ -193,7 +193,7 @@ export class CreateGradeServiceAdapter {
             'id': subGrade.id,
             'name' : subGrade.newName,
         };
-        this.vm.gradeService.partiallyUpdateObject(this.vm.gradeService.sub_grades,data).then(value =>{
+        this.vm.gradeService.partiallyUpdateObject(this.vm.gradeService.sub_grade,data).then(value =>{
             subGrade.name = value.name;
             // subGrade.isUpdating = false;
             this.vm.whichSubGradeIsUpdated = null;
@@ -206,7 +206,7 @@ export class CreateGradeServiceAdapter {
         let data = {
             'id':subGrade.id
         };
-        this.vm.gradeService.deleteObject(this.vm.gradeService.sub_grades,data).then(value => {
+        this.vm.gradeService.deleteObject(this.vm.gradeService.sub_grade,data).then(value => {
             this.vm.whichSubGradeIsUpdated = null;
             this.removeFromSubGradeList(grade,subGrade);
         })
@@ -241,7 +241,7 @@ export class CreateGradeServiceAdapter {
         let grade_data = {
             'id': grade.id
         };
-        this.vm.gradeService.deleteObject(this.vm.gradeService.grades,grade_data).then(value => {
+        this.vm.gradeService.deleteObject(this.vm.gradeService.grade,grade_data).then(value => {
             let countOfSubGrade = 0;
             this.vm.subGradeList.every((subGradee) => {
                 if(subGradee.parentGrade == grade.id){
@@ -307,7 +307,7 @@ export class CreateGradeServiceAdapter {
             'id': grade.id,
             'name' : grade.newName,
         };
-        this.vm.gradeService.partiallyUpdateObject(this.vm.gradeService.grades,data).then(value =>{
+        this.vm.gradeService.partiallyUpdateObject(this.vm.gradeService.grade,data).then(value =>{
             grade.name = value.name;
             // subGrade.isUpdating = false;
             this.vm.whichGradeIsUpdated = null;

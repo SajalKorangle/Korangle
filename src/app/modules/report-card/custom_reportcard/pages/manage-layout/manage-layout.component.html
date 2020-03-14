@@ -10,7 +10,7 @@
 		<div class="col-md-6" style="height: 100%; overflow: auto;">
 
 			<!-- Existing layouts dropdown -->
-			<mat-form-field *ngIf="selectedLayout == null && layoutList.length != 0">
+			<mat-form-field *ngIf="selectedLayout == null && layoutList.length != 0" style="">
 				<mat-label>
 					Existing layouts
 				</mat-label>
@@ -19,6 +19,7 @@
 						{{layout.name}}
 					</mat-option>
 				</mat-select>
+				<br>
 			</mat-form-field>
 
 			<!-- Create new layout button -->
@@ -27,7 +28,7 @@
 			</button>
 
 			<!-- Reset Layout button -->
-			<button class="btn btn-danger" *ngIf="selectedLayout != null" (click)="selectedLayout = null">
+			<button class="btn btn-danger" *ngIf="selectedLayout != null" (click)="resetCurrentLayout()">
 				Reset
 			</button>
 
@@ -40,7 +41,7 @@
 					Update
 				</ng-container>
 			</button>
-
+			<br>
 			<mat-form-field *ngIf="selectedLayout != null">
 				<mat-label>Layout Name</mat-label>
 				<input matInput placeholder="Enter Layout Name" [(ngModel)]="selectedLayout.name" required>
@@ -77,8 +78,8 @@
 			</div>
 
 			<!-- LayoutExamColumn  parameter -->
-			<div *ngIf="selectedLayout" cdkDropList class="example-list" (cdkDropListDropped)="drop($event, selectedLayout.layoutExamColumnList)">
-			  <ng-container *ngFor="let layoutExam of selectedLayout.layoutExamColumnList">
+			<div *ngIf="selectedLayout" cdkDropList class="example-list" (cdkDropListDropped)="drop($event,currentLayout_LayoutExamColumnList)">
+			  <ng-container *ngFor="let layoutExam of currentLayout_LayoutExamColumnList">
 				  <div class="example-box" cdkDrag>
 				  		{{getExaminationName(layoutExam.parentExamination)}}
 				  		<br>
@@ -120,6 +121,41 @@
 								{{examination.name}}
 						</mat-option>
 					</ng-container>
+				</mat-select>
+			</mat-form-field>
+
+
+			<!-- Grade List  -->
+			
+			<div cdkDropList 
+				class="example-list" 
+				(cdkDropListDropped)="drop($event, currentLayout_LayoutGradeList)" *ngIf="selectedLayout && currentLayout_LayoutGradeList.length != 0 ">
+				  <div class="example-box" *ngFor="let layoutGrade of currentLayout_LayoutGradeList;" cdkDrag>
+  					  {{getGradeName(layoutGrade.parentGrade)}}
+  					  <hr>
+  					  <mat-card *ngFor="let layoutSubGrade of getFilteredLayoutSubGradeList(layoutGrade)">
+  					  		{{getSubGradeName(layoutSubGrade.parentSubGrade)}}
+  					  </mat-card>
+
+  					  <mat-form-field>
+  					  	<mat-label>Add Sub grade</mat-label>
+  					  	<mat-select (selectionChange)="addSubGradeMapping($event.value, layoutGrade)">
+  					  		<mat-option *ngFor="let subGrade of getFilteredSubGradeList(layoutGrade)" [value]="subGrade">
+  					  			{{subGrade.name}}
+  					  		</mat-option>
+  					  	</mat-select>
+  					  </mat-form-field>
+				  </div>
+			
+			</div>
+
+			<br>
+			<mat-form-field *ngIf="selectedLayout">
+				<mat-label>Avaliable Grades</mat-label>
+				<mat-select (selectionChange)="addGradeMapping($event.value)">
+					<mat-option *ngFor="let grade of getFilteredGradeList()" [value]="grade">
+						{{grade.name}}
+					</mat-option>
 				</mat-select>
 			</mat-form-field>
 
@@ -232,19 +268,19 @@
 
 
 			     <!-- Examination wing -->
-			     <div class="row" *ngIf="selectedLayout && selectedLayout.layoutExamColumnList && selectedLayout.layoutExamColumnList.length != 0">
+			     <div class="row" *ngIf="selectedLayout && currentLayout_LayoutExamColumnList.length != 0">
 			     	<div classs="col-md-12" style="text-align: center;">
 			     		<table class="table table-bordered table-responsive">
 			     			<tr>
 			     				<td rowspan="2">Subject Name</td>
-			     				<ng-container *ngFor="let examination of selectedLayout.layoutExamColumnList">
+			     				<ng-container *ngFor="let examination of currentLayout_LayoutExamColumnList">
 			     					<td [attr.colspan]="examination.columnType.split('/').length">
 			     						{{examination.name}}
 			     					</td>
 			     				</ng-container>
 			     			</tr>
 			     			<tr>
-			     				<ng-container *ngFor="let examination of selectedLayout.layoutExamColumnList">
+			     				<ng-container *ngFor="let examination of currentLayout_LayoutExamColumnList">
 			     					<td  *ngFor="let exam_type of examination.columnType.split('/')">
 			     						{{exam_type}}
 			     					</td>
@@ -255,7 +291,7 @@
 			     				<td>
 			     					Subject-{{i+1}}
 			     				</td>
-			     				<ng-container *ngFor="let examination of selectedLayout.layoutExamColumnList">
+			     				<ng-container *ngFor="let examination of currentLayout_LayoutExamColumnList">
 			     					<td *ngFor="let exam_type of examination.columnType.split('/')">
 			     						10
 			     					</td>
@@ -266,7 +302,7 @@
 			     				<td>
 			     					Total
 			     				</td>
-			     				<ng-container *ngFor="let examination of selectedLayout.layoutExamColumnList">
+			     				<ng-container *ngFor="let examination of currentLayout_LayoutExamColumnList">
 			     					<td [attr.colspan]="examination.columnType.split('/').length" style="text-align: right">
 			     						10
 			     					</td>
@@ -283,6 +319,19 @@
 			     		</table>
 			     	</div>
 			     </div>
+
+
+			     <!-- Grade Section -->
+			     <ng-container *ngIf="selectedLayout && currentLayout_LayoutGradeList.length != 0">
+			     	<div style="" *ngFor="let layoutGrade of currentLayout_LayoutGradeList">
+			     		{{getGradeName(layoutGrade.parentGrade)}}
+			     		<div class="row">
+			     			<div class="col-md-6 border" *ngFor="let layoutSubGrade of getFilteredLayoutSubGradeList(layoutGrade)">
+			     				{{getSubGradeName(layoutSubGrade.parentSubGrade)}} - 10
+			     			</div>
+			     		</div>
+			     	</div>
+			     </ng-container>
 
 			 </div>
 		</div>

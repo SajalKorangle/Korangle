@@ -7,6 +7,7 @@ import {DataStorage} from "../../../../../classes/data-storage";
 
 import { ExaminationService} from '../../../../../services/modules/examination/examination.service';
 import { CustomReportCardService } from '../../../../../services/modules/custom_reportcard/custom_reportcard.service';
+import { GradeService } from '../../../../../services/modules/grade/grade.service';
 
 
 
@@ -16,7 +17,9 @@ import { CustomReportCardService } from '../../../../../services/modules/custom_
 // TODO: Layout name to be unique
 // TODO: Examination names for mapped examination must be unique
 // TODO: Update the LayoutList after creating or updating the layout
-
+// TODO: Handle initialization of data properly
+// TODO: Handle class&section, decimal, address layout parameters
+// TODO: Handle updating of sub grades
 
 class StudentDetailsHeaderHandle{
     parameter:any;
@@ -43,6 +46,25 @@ class LayoutExamColumnHandle{
     columnType:any;
 }
 
+class LayoutGradeHandle{
+    id:Number = 0;
+    parentLayout:Number = 0;
+    parentGrade:Number = 0;
+    orderNumber:Number = 0;
+}
+
+class LayoutSubGradeHandle{
+    id:Number = 0;
+    parentLayoutGrade:Number = 0;
+    parentSubGrade:Number = 0;
+    orderNumber:Number = 0;
+}
+
+// class LayoutHandle{
+//     id:Number;
+//     name:String;
+//     reportCardHeading:String;
+// }
 
 class LayoutParameter{
     id:Number;
@@ -50,6 +72,7 @@ class LayoutParameter{
     reportCardHeading:String;
     studentDetailsHeader:any;
     layoutExamColumnList:any;
+
 }
 
 
@@ -57,7 +80,7 @@ class LayoutParameter{
     selector: 'app-manage-layout',
     templateUrl: './manage-layout.component.html',
     styleUrls: ['./manage-layout.component.css'],
-    providers: [ExaminationService, CustomReportCardService],
+    providers: [ExaminationService, CustomReportCardService, GradeService],
 })
 
 export class ManageLayoutComponent implements OnInit {
@@ -69,6 +92,22 @@ export class ManageLayoutComponent implements OnInit {
 
     examinationList = [];
     layoutExamColumnList = [];
+    currentLayout_LayoutExamColumnList:LayoutExamColumnHandle[] = [];
+    subjectCountArray:Number[]; // Used in preview to show the no of rows in exam table
+
+
+    // Grades
+    gradeList = [];
+    layoutGradeList = [];
+
+    // This variable will have all the mapped LayoutGrades for current layout
+    // Both: already created and newly created
+    currentLayout_LayoutGradeList:LayoutGradeHandle[]=[];
+    
+    // SubGrades
+    subGradeList = [];
+    layoutSubGradeList = [];
+    currentLayout_LayoutSubGradeList:LayoutSubGradeHandle[]=[];
 
     EXAM_COLUMN_TYPE = [
         'Simple', // Default selected
@@ -76,14 +115,14 @@ export class ManageLayoutComponent implements OnInit {
         'Practical/Theory',
     ];
     
-    subjectCountArray:Number[]; // Used in preview to show the no of rows in exam table
 
     serviceAdapter: ManageLayoutServiceAdapter;
 
 
     constructor(public examinationService:ExaminationService,
                 private cdRef: ChangeDetectorRef,
-                public customReportCardService: CustomReportCardService) {}
+                public customReportCardService: CustomReportCardService,
+                public gradeService: GradeService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -94,6 +133,13 @@ export class ManageLayoutComponent implements OnInit {
         this.serviceAdapter.initializeData();
         this.selectedLayout = null;
     }
+
+    resetCurrentLayout(){
+        this.selectedLayout = null;
+        this.currentLayout_LayoutExamColumnList = [];
+        this.currentLayout_LayoutGradeList = [];
+        this.currentLayout_LayoutSubGradeList = [];
+    }    
 
     initializeNewLayout(){
         let new_layout = new LayoutParameter();
@@ -123,8 +169,13 @@ export class ManageLayoutComponent implements OnInit {
 
         // Creating LayoutExamColumnHandle
         new_layout.layoutExamColumnList = [];
-
+        this.currentLayout_LayoutExamColumnList = [];
         this.updateSubjectCountArray(6);
+
+
+        this.currentLayout_LayoutGradeList = [];
+        this.currentLayout_LayoutSubGradeList = [];
+
         this.selectedLayout = new_layout;
         console.log(this.selectedLayout);
     }
@@ -194,6 +245,19 @@ export class ManageLayoutComponent implements OnInit {
         });
 
         new_layout.layoutExamColumnList = temp;
+        this.currentLayout_LayoutExamColumnList = temp;
+
+        // Grades and sub grades
+        this.currentLayout_LayoutGradeList = this.layoutGradeList.filter(item=>{
+            return item.parentLayout == new_layout.id;
+        })
+
+        this.currentLayout_LayoutSubGradeList =  this.layoutSubGradeList.filter(item=>{
+            return this.currentLayout_LayoutGradeList.find(layoutGrade=>{
+                return layoutGrade.id == item.parentLayoutGrade;
+            }) != undefined;
+        })
+
         console.log(new_layout);
         this.selectedLayout = new_layout;
     }
@@ -229,13 +293,21 @@ export class ManageLayoutComponent implements OnInit {
     // selectedLayout should not be null before calling this function
     getFilteredExaminationList(){
         if(this.selectedLayout == null || this.selectedLayout == undefined) return [];
-        return this.examinationList.filter(exam =>{
-            if(this.selectedLayout.layoutExamColumnList.find(item=>{
-                if(item.parentExamination == exam.id) return true;
-                return false;
+
+        return this.examinationList.filter(examination=>{
+            if(this.currentLayout_LayoutExamColumnList.find(layoutExam=>{
+                return layoutExam.parentExamination == examination.id;
             }) == undefined) return true;
             return false;
         });
+
+        // return this.examinationList.filter(exam =>{
+        //     if(this.selectedLayout.layoutExamColumnList.find(item=>{
+        //         if(item.parentExamination == exam.id) return true;
+        //         return false;
+        //     }) == undefined) return true;
+        //     return false;
+        // });
 
     }
 
@@ -256,7 +328,8 @@ export class ManageLayoutComponent implements OnInit {
         new_layout_exam_column_handle.parentExamination = examination.id;
         new_layout_exam_column_handle.name = examination.name;
         new_layout_exam_column_handle.columnType = this.EXAM_COLUMN_TYPE[0];
-        this.selectedLayout.layoutExamColumnList.push(new_layout_exam_column_handle);
+        this.currentLayout_LayoutExamColumnList.push(new_layout_exam_column_handle);
+        // this.selectedLayout.layoutExamColumnList.push(new_layout_exam_column_handle);
     }
 
     // Used for no of rows in examination table preview
@@ -278,4 +351,80 @@ export class ManageLayoutComponent implements OnInit {
         moveItemInArray(objectList, event.previousIndex, event.currentIndex);
     }
 
+
+
+    // Grades and subgrades
+    getGradeName(grade_id){
+        let grade = this.gradeList.find(item=>{
+            if(item.id == grade_id) return true;
+            return false;
+        });
+        if(grade == undefined) return '';
+        return grade.name;
+    }
+
+    // Returns list of Grades not present in currentLayout_LayoutGradeList
+    getFilteredGradeList(){
+        return this.gradeList.filter(item=>{
+            if(this.currentLayout_LayoutGradeList.find(layoutGrade=>{
+                return layoutGrade.parentGrade == item.id;
+            }) == undefined) return true;
+            return false;
+        });
+    }
+
+    addGradeMapping(grade){
+        let new_grade = new LayoutGradeHandle();
+        new_grade.id = 0;
+        new_grade.parentLayout=this.selectedLayout.id;
+        new_grade.parentGrade = grade.id;
+        new_grade.orderNumber = 0;
+        this.currentLayout_LayoutGradeList.push(new_grade);
+    }
+
+    // Returns the list of sub grades mapped for that grade in layout
+    // Grades mapped for selected layout will be in currentLayout_LayoutGradeList
+    // For newly created layoutGrades, compare the them by Grade id 
+    getFilteredLayoutSubGradeList(layoutGrade){
+        return this.currentLayout_LayoutSubGradeList.filter(item=>{
+            if(layoutGrade.id == 0){
+                // newly created grade mapping
+                let subGrade_id = item.parentSubGrade;
+                let grade_id = this.subGradeList.find(subGrade=>{return subGrade.id == subGrade_id}).parentGrade;
+                if(layoutGrade.parentGrade == grade_id) return true;
+                return false;
+            }
+            return item.parentLayoutGrade == layoutGrade.id;
+        });
+    }
+
+    // Returns list of all the sub grades in the grade that are not mapped
+    getFilteredSubGradeList(layoutGrade){
+        return this.subGradeList.filter(subGrade=>{
+            return subGrade.parentGrade == layoutGrade.parentGrade;
+        }).filter(subGrade=>{
+            return this.currentLayout_LayoutSubGradeList.find(item=>{
+                return item.parentSubGrade == subGrade.id;
+            }) == undefined;
+        });
+    }
+
+    // Mapps the SubGrade with the Grade
+    addSubGradeMapping(subGrade, layoutGrade){
+        let new_subgrade = new LayoutSubGradeHandle();
+        new_subgrade.id = 0;
+        new_subgrade.parentLayoutGrade = layoutGrade.id;
+        new_subgrade.parentSubGrade = subGrade.id;
+        new_subgrade.orderNumber = 0;
+
+        this.currentLayout_LayoutSubGradeList.push(new_subgrade);
+    }
+
+    getSubGradeName(subGrade_id){
+        let temp = this.subGradeList.find(item=>{
+            return item.id == subGrade_id;
+        });
+        if(temp == undefined) return '';
+        return temp.name;
+    }
 }
