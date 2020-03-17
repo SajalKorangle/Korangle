@@ -7,6 +7,7 @@ import {ManageLayoutComponent} from "./manage-layout.component";
 
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatStepperModule} from '@angular/material/stepper';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
         ManageLayoutRouting ,
         ComponentsModule,
         DragDropModule,
+        MatStepperModule,
     ],
     exports: [
     ],

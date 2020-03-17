@@ -84,245 +84,228 @@ export class ManageLayoutServiceAdapter {
 
     // Return the position of the key in selectedLayout.studentDetailsHeader
     // if it's show true
-    getOrderNumber(key){
+    updateOrderNumber(){
         if(this.vm.selectedLayout == null || this.vm.selectedLayout == undefined) return;
 
-
-        for(let i = 0; i<this.vm.selectedLayout.studentDetailsHeader.length; i++){
-            if(this.vm.selectedLayout.studentDetailsHeader[i].key == key){
-                if(this.vm.selectedLayout.studentDetailsHeader[i].show == false) return 0;
-                return i+1;
-            }
-        }
-
-        return 0;
+        this.vm.selectedLayout.selectedStudentDetailsHeader.forEach((key,index)=>{
+            this.vm.selectedLayout.layout[key] = index+1;
+        });
 
     }
+
+    createNewLayout(){
+        if(this.vm.selectedLayout == null || this.vm.selectedLayout == undefined) return;
+        if(this.vm.selectedLayout.layout.id != 0) return;
+
+        if(this.vm.selectedLayout.layout.name == '' || this.vm.isNameUnqiue(this.vm.selectedLayout, this.vm.layoutList) == false){
+            alert('Layout Name must be unique and not empty');
+            return;
+        }
+
+        this.updateOrderNumber();
+        this.vm.isLoading = true;
+
+        let request_data = this.vm.selectedLayout.layout;
+        Object.keys(request_data).forEach(key=>{
+            if(typeof request_data[key] == 'number' && request_data[key] == 0){
+                delete request_data[key];
+            }
+            if(typeof request_data[key] == 'string' && request_data[key] == ''){
+                delete request_data[key];
+            }
+        });
+
+        this.vm.customReportCardService.createObject(this.vm.customReportCardService.layout,request_data).then(
+            value=>{
+                console.log(value);
+                this.vm.selectedLayout.layout.id = value.id;
+                this.vm.layoutList.push(value);
+                
+                this.vm.selectedLayout.layoutExamColumnList.forEach(item=>{
+                    this.vm.layoutExamColumnList.push(item);
+                });
+
+                this.vm.selectedLayout.layoutGradeList.forEach(item=>{
+                    this.vm.layoutGradeList.push(item);
+                });
+
+                this.vm.selectedLayout.layoutSubGradeList.forEach(item=>{
+                    this.vm.layoutSubGradeList.push(item);
+                });
+
+                this.createLayoutExamColumnsAndLayoutGrades();
+                
+            },
+            error => {
+                this.vm.isLoading = false;
+            }
+        );
+
+    }
+
+
     // Updating or saving a new layout
     updateLayout(){
         if(this.vm.selectedLayout == null || this.vm.selectedLayout == undefined) return;
         
         // Check if name is unique
-        if(this.vm.selectedLayout.name == '' || this.vm.isNameUnqiue(this.vm.selectedLayout, this.vm.layoutList) == false){
+        if(this.vm.selectedLayout.layout.name == '' || this.vm.isNameUnqiue(this.vm.selectedLayout, this.vm.layoutList) == false){
             alert('Layout Name must be unique and not empty');
             return;
         }
+        
+        this.updateOrderNumber();
         this.vm.isLoading = true;
 
-        if(this.vm.selectedLayout.id == 0){
-            let request_data = this.prepareReturnData();
-            this.vm.customReportCardService.createObject(this.vm.customReportCardService.layout,request_data).then(
-                value=>{
-                    this.vm.layoutList.push(value);
+        let request_data = this.vm.selectedLayout.layout;
 
-                    let request_layout_exam_data = this.vm.currentLayout_LayoutExamColumnList.map((item, index)=>{
-                        item.parentLayout = value.id;
-                        item.orderNumber = index +1;
-                        return item;
-                    });
+        let service_list = [];
 
-                    let request_layout_grade_data = this.vm.currentLayout_LayoutGradeList.map((item,index)=>{
-                        item.parentLayout = value.id;
-                        item.orderNumber = index+1;
-                        return item;
-                    });
+        service_list.push(this.vm.customReportCardService.updateObject(this.vm.customReportCardService.layout, request_data));
 
-                    Promise.all([
-                    this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_data),
-                    this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade_data),
-                    ]).then(
-                        value=>{
-                            value[0].forEach(item=>{
-                                this.vm.layoutExamColumnList.push(item);
-                            });
-                            value[1].forEach(item=>{
-                                this.vm.layoutGradeList.push(item);
-                            });
-
-                            let layoutGradeList = value[1];
-
-                            let request_layout_sub_grade_data = this.vm.currentLayout_LayoutSubGradeList.map(layoutSubGrade=>{
-                                
-                                let subGrade_id = layoutSubGrade.parentSubGrade;
-                                let grade_id = this.vm.subGradeList.find(item=>{return item.id == subGrade_id}).parentGrade;
-                                
-                                layoutSubGrade.parentLayoutGrade = layoutGradeList.find(layoutGrade=>{
-                                    return layoutGrade.parentGrade == grade_id;
-                                }).id;
-
-                                return layoutSubGrade;
-                            });
-
-                            this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_sub_grade, request_layout_sub_grade_data).then(
-                                value=>{
-                                    value.forEach(item=>{
-                                        this.vm.layoutSubGradeList.push(item);
-                                    })
-                                    console.log(value);
-                                    alert('Layout Created');
-                                    this.vm.resetCurrentLayout();
-                                    this.vm.isLoading = false;
-                                }
-                            );
-
-                        },
-                        error=>{
-
-                        }
-                    );
-                },
-                error => {
-                    alert('Error');
-                    console.log(error);
-                }
-            );
-        }else{
-            // Updating the data
-            let request_data = this.prepareReturnData();
-            request_data['id'] = this.vm.selectedLayout.id;
-
-            // Handle the orderNumber
-            this.vm.selectedLayout.layoutExamColumnList.forEach((item,index)=>{
-                item.orderNumber = index + 1;
-            });
-
-
-            let request_layout_exam_column_create_data = this.vm.selectedLayout.layoutExamColumnList.filter(
-                item=>{
-                    return item.id == 0;
-                }
-            );
-
-            let request_layout_exam_column_update_data = this.vm.selectedLayout.layoutExamColumnList.filter(
-                item=>{
-                    return item.id != 0;
-                }
-            );
-
-            let request_layout_grade_create_data = this.vm.currentLayout_LayoutGradeList.filter(item=>{
-                return item.id == 0;
-            });
-            let request_layout_grade_update_data = this.vm.currentLayout_LayoutGradeList.filter(item=>{
-                return item.id != 0;
-            });
-
-            let service_list = [];
-            // layout data
-            service_list.push(this.vm.customReportCardService.updateObject(this.vm.customReportCardService.layout, request_data));
-            // layout exam column data
-            service_list.push(this.vm.customReportCardService.updateObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_column_update_data));
-            service_list.push(this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_column_create_data));
-            // layout grade data
-            service_list.push(this.vm.customReportCardService.updateObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade_update_data))
-            service_list.push(this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade_create_data))
-            
-            // layout sub grade data
-            Promise.all(service_list).then(
-                value=>{
-                    console.log(value);
-                    // updating layout
-                    this.vm.layoutList = this.vm.layoutList.map(item=>{
-                        if(value[0].id == item.id) return value[0];
-                        return item;
-                    });
-
-                    // Updating exams
-                    this.vm.layoutExamColumnList = this.vm.layoutExamColumnList.map(layoutExam=>{
-                        let new_item = value[1].find(item=>{return item.id == layoutExam.id});
-                        if(new_item != undefined) return new_item;
-                        return layoutExam;
-                    });
-                    value[2].forEach(item=>{
-                        this.vm.layoutExamColumnList.push(item);
-                    });
-
-                    // updating grades
-                    this.vm.layoutGradeList = this.vm.layoutGradeList.map(layoutGrade=>{
-                        let new_item = value[3].find(item=>{return item.id == layoutGrade.id});
-                        if(new_item != undefined) return new_item;
-                        return layoutGrade;
-                    });
-                    value[4].forEach(item=>{
-                        this.vm.layoutGradeList.push(item);
-                    });
-
-
-                    let request_layout_sub_grade_create_data = this.vm.currentLayout_LayoutSubGradeList.filter(layoutSubGrade=>{
-                        if(layoutSubGrade.id == 0) return true;
-                        return false;
-                    }).map(layoutSubGrade=>{
-                        let grade_id = this.vm.subGradeList.find(item=>{return item.id == layoutSubGrade.parentSubGrade}).parentGrade;
-
-                        layoutSubGrade.parentLayoutGrade = this.vm.layoutGradeList.find(item=>{
-                            return item.parentLayout == this.vm.selectedLayout.id && item.parentGrade == grade_id;
-                        }).id;
-                        return layoutSubGrade;
-                    });
-
-                    let request_layout_sub_grade_update_data = this.vm.currentLayout_LayoutSubGradeList.filter(layoutSubGrade=>{
-                        return layoutSubGrade.id != 0; 
-                    });
-                    console.log(request_layout_sub_grade_update_data);
-                    Promise.all([
-                        this.vm.customReportCardService.updateObjectList(this.vm.customReportCardService.layout_sub_grade,request_layout_sub_grade_update_data),
-                        this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_sub_grade,request_layout_sub_grade_create_data),
-                    ]).then(
-                        value_layout_subGrade=>{
-                            console.log(value_layout_subGrade);
-                            this.vm.layoutSubGradeList = this.vm.layoutSubGradeList.map(layoutSubGrade=>{
-                                let new_item = value_layout_subGrade[0].find(item=>{return item.id == layoutSubGrade.id});
-                                if(new_item != undefined) return new_item;
-                                return layoutSubGrade;
-                            });
-
-                            value_layout_subGrade[1].forEach(item=>{
-                                this.vm.layoutSubGradeList.push(item);
-                            })
-                            alert('Layout Updated');
-                            this.vm.resetCurrentLayout();
-                            this.vm.isLoading = false;
-                        },
-                        error=>{
-
-                        }
-                    );
-                },
-                error=>{
-
-                }
-            );
+        // Delete existing layout exams columns data
+        let request_layout_exam_column_delete_data = this.vm.layoutExamColumnList.filter(item=>{
+            return item.parentLayout == this.vm.selectedLayout.layout.id;
+        });
+        if(request_layout_exam_column_delete_data.length != 0){
+            service_list.push(this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_column_delete_data))
         }
+
+        // Delete existing layout grade data
+        // Deleting this will also delete the layout sub grade data because of cascade property
+        let request_layout_grade_delete_data = this.vm.layoutGradeList.filter(item=>{
+            return item.parentLayout == this.vm.selectedLayout.layout.id;
+        });
+
+        if(request_layout_grade_delete_data.length != 0){
+            service_list.push(this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade_delete_data))
+        }
+
+
+        Promise.all(service_list).then(
+            value=>{
+
+                // Sync the data
+                this.vm.layoutExamColumnList = this.vm.layoutExamColumnList.filter(item=>{
+                    return item.parentLayout != this.vm.selectedLayout.layout.id;
+                });
+
+                this.vm.layoutGradeList = this.vm.layoutGradeList.filter(item=>{
+                    return item.parentLayout != this.vm.selectedLayout.layout.id;
+                });
+
+                this.createLayoutExamColumnsAndLayoutGrades();
+            },
+            error=>{
+                this.vm.isLoading = false;
+            }
+        );
+
+
+        return;
+          
     }
 
-    prepareReturnData(){
-        return {
-                'name': this.vm.selectedLayout.name,
-                'reportCardHeading': this.vm.selectedLayout.reportCardHeading,
-                'parentSchool': this.vm.user.activeSchool.dbId,
-                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                'showStudentName': this.getOrderNumber('showStudentName'),
-                'showFatherName': this.getOrderNumber('showFatherName'),
-                'showMotherName': this.getOrderNumber('showMotherName'),
-                'showRollNo': this.getOrderNumber('showRollNo'),
-                'showScholarNo': this.getOrderNumber('showScholarNo'),
-                'showDateOfBirth': this.getOrderNumber('showDateOfBirth'),
-                'showDateOfBirthInWords': this.getOrderNumber('showDateOfBirthInWords'),
-                'showAadharNumber': this.getOrderNumber('showAadharNumber'),
-                'showCategory': this.getOrderNumber('showCategory'),
-                'showFamilySSMID': this.getOrderNumber('showFamilySSMID'),
-                'showChildSSMID': this.getOrderNumber('showChildSSMID'),
-                'showClass': this.getOrderNumber('showClass'),
-                'showSection': this.getOrderNumber('showSection'),
-                'showCaste': this.getOrderNumber('showCaste'),
-                'showAttendanceStartDate': this.getOrderNumber('showAttendanceStartDate'),
-                'showAttendanceEndDate': this.getOrderNumber('showAttendanceEndDate'),
-                'showRemarks': this.getOrderNumber('showRemarks'),
-                'showOverallMarks': this.getOrderNumber('showOverallMarks'),
-                'showAttendance': this.getOrderNumber('showAttendance'),
-                'showResult': this.getOrderNumber('showResult'),
-                'showPercentage': this.getOrderNumber('showPercentage'),
-                'showPromotedToClass': this.getOrderNumber('showPromotedToClass'),
-            };
+    createLayoutExamColumnsAndLayoutGrades(){
+
+        // Handle  the orderNumber
+        this.vm.selectedLayout.layoutExamColumnList.forEach((item, index)=>{
+            item.orderNumber = index + 1;
+            item.id = 0;
+            item.parentLayout = this.vm.selectedLayout.layout.id;
+        });
+
+        this.vm.selectedLayout.layoutGradeList.forEach((item, index)=>{
+            item.orderNumber = index + 1;
+            item.id = 0;
+            item.parentLayout = this.vm.selectedLayout.layout.id;
+        });
+
+        let request_layout_exam_column_create_data = this.vm.selectedLayout.layoutExamColumnList;
+        let request_layout_grade_create_data = this.vm.selectedLayout.layoutGradeList;
+
+        Promise.all([
+            this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_exam_column,request_layout_exam_column_create_data),
+            this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_grade,request_layout_grade_create_data),
+        ]).then(
+            value=>{
+
+
+                // Sync with the list present here
+                value[0].forEach(item=>{
+                    this.vm.layoutExamColumnList.push(item);
+                    this.vm.selectedLayout.layoutExamColumnList.forEach(layoutExam=>{
+                        if(layoutExam.parentExamination == item.parentExamination && layoutExam.parentLayout == item.parentLayout){
+                            layoutExam.id = item.id;
+                        }
+                    });
+                });
+
+                value[1].forEach(item=>{
+                    this.vm.layoutGradeList.push(item);
+                    this.vm.selectedLayout.layoutGradeList.forEach(layoutGrade=>{
+                        if(layoutGrade.parentGrade == item.parentGrade && layoutGrade.parentLayout == item.parentLayout){
+                            layoutGrade.id = item.id;
+                        }
+                    });
+                });
+
+                this.createLayoutSubGrades(value[1]);
+
+            },
+            error=>{
+
+            }
+        );
+
+
+    }
+
+    createLayoutSubGrades(layoutGradeList){
+        if(layoutGradeList.length == 0 || this.vm.selectedLayout.layoutSubGradeList.length == 0){
+            this.vm.resetCurrentLayout();
+            alert('Task successfull');
+            this.vm.isLoading = false;
+
+            return;
+        }
+
+        let request_layout_sub_grade_create_data = this.vm.selectedLayout.layoutSubGradeList.map((layoutSubGrade, index)=>{
+            
+            layoutSubGrade.id = 0;
+
+            let subGrade_id = layoutSubGrade.parentSubGrade;
+            let grade_id = this.vm.subGradeList.find(item=>{return item.id == subGrade_id}).parentGrade;
+            let layoutGrade = layoutGradeList.find(item=>{
+                return item.parentGrade == grade_id && item.parentLayout == this.vm.selectedLayout.layout.id;
+            });
+
+            layoutSubGrade.parentLayoutGrade = layoutGrade.id;
+
+            layoutSubGrade.orderNumber = index+1;
+
+            return layoutSubGrade;
+        });
+
+        this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_sub_grade, request_layout_sub_grade_create_data).then(
+            value=>{
+
+
+                // Sync with the list present here
+                this.vm.selectedLayout.layoutSubGradeList.forEach(layoutSubGrade=>{
+                    layoutSubGrade.id = value.find(item=>{
+                        return item.parentSubGrade == layoutSubGrade.parentSubGrade && item.parentLayoutGrade == layoutSubGrade.parentLayoutGrade;
+                    }).id;                    
+                });
+
+                this.vm.resetCurrentLayout();
+                alert('Task successfull');
+                this.vm.isLoading = false; 
+            },
+            error=>{
+
+            }
+        );
     }
 
 
