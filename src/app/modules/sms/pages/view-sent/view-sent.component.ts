@@ -23,7 +23,8 @@ export class ViewSentComponent implements OnInit {
     smsList: any;
 
     selectedStatus;
-    selectedMessageType = undefined;
+    selectedMessageType = null;
+    nullValue = null;
 
     messageTypeList = [];
 
@@ -84,7 +85,7 @@ export class ViewSentComponent implements OnInit {
 
     getFilteredSMSList(): any{
         // console.log(this.selectedMessageType);
-        if (this.selectedMessageType==undefined){
+        if (this.selectedMessageType==null){
             return this.smsList;
         }
         // console.log(this.smsList);
