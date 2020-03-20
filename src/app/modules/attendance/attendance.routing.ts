@@ -9,6 +9,26 @@ import { PRINT_EMPLOYEE_ATTENDANCE, PRINT_STUDENT_ATTENDANCE } from 'app/print/p
 
 const routes: Routes = [
     {
+        path: 'record_student_attendance',
+        loadChildren: 'app/modules/attendance/pages/record-attendance/record-attendance.module#RecordAttendanceModule',
+        data: {moduleName: 'attendance'},
+    },
+    {
+        path: 'declare_holidays',
+        loadChildren: 'app/modules/attendance/pages/declare-holidays/declare-holidays.module#DeclareHolidaysModule',
+        data: {moduleName: 'attendance'},
+    },
+    {
+        path: 'record_employee_attendance',
+        loadChildren: 'app/modules/attendance/pages/record-employee-attendance/record-employee-attendance.module#RecordEmployeeAttendanceModule',
+        data: {moduleName: 'attendance'},
+    },
+    {
+        path: 'approve_leave',
+        loadChildren: 'app/modules/attendance/pages/approve-leave/approve-leave.module#ApproveLeaveModule',
+        data: {moduleName: 'attendance'},
+    },
+    {
         path: '',
         component: AttendanceComponent,
     },
@@ -20,6 +40,7 @@ const routes: Routes = [
         path: PRINT_STUDENT_ATTENDANCE,
         component: PrintStudentAttendanceListComponent,
     },
+
 ];
 
 @NgModule({

@@ -1,27 +1,28 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { SetSchoolFeesServiceAdapter } from "./set-school-fees.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
-import {StudentOldService} from "../../../students/student-old.service";
-import {ClassService} from "../../../../services/class.service";
-import {VehicleService} from "../../../vehicle/vehicle.service";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
-import {ClassFilterFee} from "../../../../services/fees/class-filter-fee";
-import {BusStopFilterFee} from "../../../../services/fees/bus-stop-filter-fee";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {StudentOldService} from "../../../../services/modules/student/student-old.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
+import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
+import {ClassFilterFee} from "../../../../services/modules/fees/models/class-filter-fee";
+import {BusStopFilterFee} from "../../../../services/modules/fees/models/bus-stop-filter-fee";
 import {FormControl} from "@angular/forms";
 import {INSTALLMENT_LIST} from "../../classes/constants";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'set-school-fees',
     templateUrl: './set-school-fees.component.html',
     styleUrls: ['./set-school-fees.component.css'],
-    providers: [ FeeService, StudentOldService, ClassService, VehicleService ],
+    providers: [ FeeService, StudentOldService, ClassOldService, VehicleOldService ],
 })
 
 export class SetSchoolFeesComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+    user;
 
     feeTypeList: any;
     classList: any;
@@ -53,12 +54,14 @@ export class SetSchoolFeesComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 public studentService: StudentOldService,
-                public vehicleService: VehicleService,
+                public vehicleService: VehicleOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.initializeNewSchoolFeeRule();
         this.serviceAdapter = new SetSchoolFeesServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

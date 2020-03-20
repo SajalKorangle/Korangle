@@ -10,16 +10,16 @@ import { UpdateBusStopComponent } from './pages/update-bus-stop/update-bus-stop.
 
 import { VehicleRoutingModule } from './vehicle.routing';
 
-import { VehicleService } from './vehicle.service';
+import { VehicleOldService } from '../../services/modules/vehicle/vehicle-old.service';
 
 @NgModule({
     declarations: [
 
         VehicleComponent,
 
-        AddBusStopComponent,
-        DeleteBusStopComponent,
-        UpdateBusStopComponent,
+        // AddBusStopComponent,
+        // DeleteBusStopComponent,
+        // UpdateBusStopComponent,
 
     ],
 
@@ -31,7 +31,7 @@ import { VehicleService } from './vehicle.service';
     ],
     exports: [
     ],
-    providers: [VehicleService],
+    providers: [VehicleOldService],
     bootstrap: [VehicleComponent]
 })
 export class VehicleModule { }

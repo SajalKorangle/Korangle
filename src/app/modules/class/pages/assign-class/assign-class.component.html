@@ -1,0 +1,95 @@
+<div class="card-content">
+
+    <ng-container *ngIf="employeeList && employeeList.length>0">
+
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+                <input type="text"
+                       placeholder="Type employee name here...."
+                       aria-label="Employee"
+                       matInput
+                       [formControl]="myControl"
+                       [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete"
+                                  (optionSelected)="getEmployeeAttendancePermissionList($event.option.value)"
+                                  [displayWith]="displayFn">
+                    <mat-option *ngFor="let employee of filteredEmployeeList | async" [value]="employee">
+                        {{ employee.name }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </form>
+
+        <ng-container *ngIf="selectedEmployee && !isLoading">
+
+            <span style="font-weight: 800; font-size: 20px">{{selectedEmployee.name | titlecase}}</span><br/>
+
+            <div class="row" *ngFor="let attendancePermission of selectedEmployeeAttendancePermissionList">
+                <div class="col-md-3">
+                    {{showClassSectionName(attendancePermission.parentClass, attendancePermission.parentDivision)}}
+                </div>
+                <div class="col-md-3">
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="deleteAttendancePermission(attendancePermission)">Delete</button>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-3" *ngIf="selectedClass">
+                    <mat-form-field style="margin-top: 23px;">
+                        <mat-select placeholder="Select Class"
+                                    #selectClassSection
+                                    [ngModel]="selectedClass"
+                                    (ngModelChange)="selectedClass=$event;">
+                            <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
+                                {{classs.name}}, {{classs.selectedSection.name}}
+                                <!-- span *ngIf="classs.dbId != classs.sectionList[0].dbId">
+                                            , {{classs.selectedSection.name}}
+                                        </span -->
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button class="btn"
+                            style="padding: 2px 11px; background-color: transparent;"
+                            matTooltip="Choose Section"
+                            mat-icon-button
+                            [matMenuTriggerFor]="classSectionMenu">
+                        <i class="material-icons" style="color: black;">expand_more</i>
+                    </button>
+                    <mat-menu #classSectionMenu="matMenu">
+                        <button *ngFor="let section of selectedClass.sectionList"
+                                mat-menu-item
+                                (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
+                            {{section.name}}
+                        </button>
+                    </mat-menu>
+                </div>
+
+                <div class="col-md-3" *ngIf="showAddButton()">
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="addAttendancePermission()">Add</button>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    Following pages will be affected :-<br/>
+                    <ng-container *ngFor="let page of pageList; let i=index;">
+                        {{i+1}}. {{page}}<br/>
+                    </ng-container>
+                </div>
+            </div>
+
+        </ng-container>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

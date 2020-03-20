@@ -18,6 +18,10 @@ export class LockFeesServiceAdapter {
 
         this.vm.isLoading = true;
 
+        this.vm.schoolService.getObjectList(this.vm.schoolService.session,{}).then(session=>{
+            this.vm.sessionList = session;
+        })
+
         let lock_fee_list = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,

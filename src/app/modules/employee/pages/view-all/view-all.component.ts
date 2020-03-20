@@ -1,13 +1,15 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { EmployeeService } from '../../employee.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_LIST } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnFilter {
     showSerialNumber = true;
+    showProfileImage = false;
     showName = true;
     showEmployeeNumber = false;
     showFatherName = true;
@@ -39,7 +41,7 @@ class ColumnFilter {
 
 export class ViewAllComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     columnFilter: ColumnFilter;
 
@@ -47,11 +49,12 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private employeeService: EmployeeService,
+    constructor(private employeeService: EmployeeOldService,
                 private excelService: ExcelService,
                 private printService: PrintService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.columnFilter = new ColumnFilter();
 
@@ -110,6 +113,7 @@ export class ViewAllComponent implements OnInit {
 
     getHeaderValues(): any {
         let headerValues = [];
+        (this.columnFilter.showProfileImage)?headerValues.push('Profile Image'):'';
         (this.columnFilter.showName)? headerValues.push('Name'): '';
         (this.columnFilter.showEmployeeNumber)? headerValues.push('Employee Number'): '';
         (this.columnFilter.showFatherName)? headerValues.push('Father\'s Name'): '';
@@ -139,6 +143,7 @@ export class ViewAllComponent implements OnInit {
      getEmployeeDisplayInfo(employee: any): any {
         let employeeDisplay = [];
 
+        (this.columnFilter.showProfileImage)?employeeDisplay.push(employee.profileImage):'';
         (this.columnFilter.showName)? employeeDisplay.push(employee.name): '';
         (this.columnFilter.showEmployeeNumber)? employeeDisplay.push(employee.employeeNumber): '';
         (this.columnFilter.showFatherName)? employeeDisplay.push(employee.fatherName): '';

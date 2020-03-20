@@ -1,24 +1,25 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { SubjectOldService } from '../../../../services/subject-old.service';
-import { ClassService } from '../../../../services/class.service';
-import { StudentOldService } from '../../../students/student-old.service';
-import { SchoolService } from '../../../../services/school.service';
+import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 
 import { SetClassSubjectServiceAdapter } from './set-class-subject.service.adapter';
-import {EmployeeService} from '../../../employee/employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'set-class-subject',
     templateUrl: './set-class-subject.component.html',
     styleUrls: ['./set-class-subject.component.css'],
-    providers: [ SubjectOldService, ClassService, StudentOldService, SchoolService, EmployeeService ],
+    providers: [ SubjectOldService, ClassOldService, StudentOldService, SchoolService, EmployeeOldService ],
 })
 
 export class SetClassSubjectComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     serviceAdapter: SetClassSubjectServiceAdapter;
 
@@ -42,12 +43,14 @@ export class SetClassSubjectComponent implements OnInit {
     employeeList: any;
 
     constructor(public subjectService: SubjectOldService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 public studentService: StudentOldService,
                 public schoolService: SchoolService,
-                public employeeService: EmployeeService) {}
+                public employeeService: EmployeeOldService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new SetClassSubjectServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

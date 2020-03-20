@@ -2,8 +2,6 @@
 import {School} from './school';
 
 import { EmitterService } from '../services/emitter.service';
-import {CommonFunctions} from "./common-functions";
-import {sendDataToAndroid} from "./common.js";
 
 export class User {
 
@@ -16,8 +14,6 @@ export class User {
     email: string;
     isAuthenticated = false;
     jwt = '';
-    // displayName: string;
-    // route = '';
 
     section: any;
 
@@ -30,7 +26,6 @@ export class User {
 
     emptyUserDetails(): void {
         this.username = null;
-        // this.displayName = null;
         this.first_name = null;
         this.last_name = null;
         this.id = null;
@@ -46,7 +41,6 @@ export class User {
 
     checkAuthentication(): boolean {
         this.jwt = localStorage.getItem('schoolJWT');
-        sendDataToAndroid(this.jwt);
         if (this.jwt === null || this.jwt.length === 0) {
             this.isAuthenticated = false;
             return false;
@@ -71,7 +65,6 @@ export class User {
         this.username = data.username;
         this.first_name = data.first_name;
         this.last_name = data.last_name;
-        // this.displayName = data.displayName;
         this.email = data.email;
         this.initializeSchoolList(data.schoolList);
         this.activeSchool = this.schoolList[0];
@@ -85,12 +78,16 @@ export class User {
             return 'Session 2018-19';
         } else if (this.activeSchool.currentSessionDbId==3) {
             return 'Session 2019-20';
+        } else if (this.activeSchool.currentSessionDbId==4) {
+            return 'Session 2020-21';
+        } else if (this.activeSchool.currentSessionDbId==5) {
+            return 'Session 2021-22';
         }
         return '';
     }
 
     initializeTask(): void {
-        if (this.schoolList.length > 0) {
+        /*if (this.schoolList.length > 0) {
             if (this.activeSchool.role === 'Parent') {
                 this.populateSection(this.activeSchool.studentList[0].taskList[0], this.activeSchool.studentList[0]);
             } else if (this.activeSchool.role === 'Employee') {
@@ -105,12 +102,18 @@ export class User {
                 subTitle: 'Update Profile',
             };
             EmitterService.get('initialize-router').emit('');
-        }
-
+        }*/
+        this.section = {
+            route: 'notification',
+            subRoute: 'view_notification',
+            title: 'Notification',
+            subTitle: 'View Notification',
+        };
+        EmitterService.get('initialize-router').emit('');
     }
 
     populateSection(task: any, module: any): void {
-        if (module.path === 'user-settings') {
+        if (module.path === 'user-settings' || module.path === 'notification') {
             this.section = {
                 route: module.path,
                 subRoute: task.path,
@@ -139,5 +142,5 @@ export class User {
 
 /*
     9926085773
-    9926718657
+    6264439636
 */

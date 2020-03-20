@@ -1,31 +1,34 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationOldService } from '../../../../services/examination-old.service';
+import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 
 import { CreateExaminationServiceAdapter } from './create-examination.service.adapter';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'create-examination',
     templateUrl: './create-examination.component.html',
     styleUrls: ['./create-examination.component.css'],
-    providers: [ ExaminationOldService ],
+    providers: [ExaminationService ],
 })
 
 export class CreateExaminationComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     examinationList: any;
     examinationNameToBeAdded = null;
-    examinationStatusToBeAdded = null;
+    // examinationStatusToBeAdded = null;
 
     serviceAdapter: CreateExaminationServiceAdapter;
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService) {}
+    constructor(public examinationService : ExaminationService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new CreateExaminationServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

@@ -30,10 +30,16 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
+                    <mat-label>Mobile Number
+                        <span *ngIf="checkLength(newEmployee.mobileNumber)"
+                              [class.fieldRight]="checkRight(newEmployee.mobileNumber,10)">
+                                        - {{newEmployee.mobileNumber.toString().length}}</span>
+                    </mat-label>
                     <input matInput
                            type="number"
-                           placeholder="Mobile Number"
-                           [(ngModel)]="newEmployee.mobileNumber">
+                           (keypress)="policeNumberInput($event)"
+                           [ngModel]="newEmployee.mobileNumber"
+                           (ngModelChange)="newEmployee.mobileNumber=$event;">
                 </mat-form-field>
             </div>
         </div>
@@ -61,10 +67,16 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
+                    <mat-label>Aadhar Number
+                        <span *ngIf="checkLength(newEmployee.aadharNumber)"
+                              [class.fieldRight]="checkRight(newEmployee.aadharNumber,12)">
+                                        - {{newEmployee.aadharNumber.toString().length}}</span>
+                    </mat-label>
                     <input matInput
                            type="number"
-                           placeholder="Aadhar Number"
-                           [(ngModel)]="newEmployee.aadharNumber">
+                           (keypress)="policeNumberInput($event)"
+                           [ngModel]="newEmployee.aadharNumber"
+                           (ngModelChange)="newEmployee.aadharNumber=$event;">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -155,16 +167,20 @@
                 <mat-form-field>
                     <input matInput
                            type="number"
+                           (keypress)="policeNumberInput($event)"
                            placeholder="Monthly Salary"
-                           [(ngModel)]="newEmployee.monthlySalary">
+                           [ngModel]="newEmployee.monthlySalary"
+                           (ngModelChange)="newEmployee.monthlySalary=$event;">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
                            type="number"
+                           (keypress)="policeNumberInput($event)"
                            placeholder="Paid Leave"
-                           [(ngModel)]="newEmployeeSessionDetail.paidLeaveNumber">
+                           [ngModel]="newEmployeeSessionDetail.paidLeaveNumber"
+                           (ngModelChange)="newEmployeeSessionDetail.paidLeaveNumber=$event;">
                 </mat-form-field>
             </div>
             <div class="col-md-3">

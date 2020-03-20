@@ -11,16 +11,16 @@ import { ViewPurchasesComponent } from './pages/view-purchases/view-purchases.co
 
 import { SmsRoutingModule} from './sms.routing';
 
-import { SmsService } from './sms.service';
+import { SmsOldService } from '../../services/modules/sms/sms-old.service';
 
 @NgModule({
     declarations: [
 
         SmsComponent,
 
-        SendSmsComponent,
-        ViewSentComponent,
-        ViewPurchasesComponent,
+        // SendSmsComponent,
+        // ViewSentComponent,
+        // ViewPurchasesComponent,
 
     ],
 
@@ -33,7 +33,7 @@ import { SmsService } from './sms.service';
     ],
     exports: [
     ],
-    providers: [SmsService],
+    providers: [SmsOldService],
     bootstrap: [SmsComponent]
 })
 export class SmsModule { }

@@ -1,18 +1,20 @@
 import {Component, Input, OnInit } from '@angular/core';
 
-import { SchoolService } from '../../../../services/school.service';
 import {MEDIUM_LIST} from '../../../../classes/constants/medium';
+import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
+import {SchoolOldService} from "../../../../services/modules/school/school-old.service";
 
 @Component({
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
-    providers: [ SchoolService ],
+    providers: [ SchoolOldService, SchoolService ],
 })
 
 export class UpdateProfileComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     mediumList = MEDIUM_LIST;
 
@@ -28,14 +30,25 @@ export class UpdateProfileComponent implements OnInit {
     currentAddress: any;
     currentOpacity: any;
 
+    currentPincode: any;
+    currentVillageCity: any;
+    currentBlock: any;
+    currentDistrict: any;
+    currentState: any;
+
+
     currentWorkingSession: any;
     selectedWorkingSession: any;
 
     sessionList: any;
+    boardList: any;
 
-    constructor (private schoolService: SchoolService) { }
+    constructor (private schoolOldService: SchoolOldService,
+                 private schoolService: SchoolService) { }
 
     ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
+
         this.isLoading = true;
 
         this.currentName = this.user.activeSchool.name;
@@ -48,14 +61,24 @@ export class UpdateProfileComponent implements OnInit {
         this.currentAddress = this.user.activeSchool.address;
         this.currentOpacity = this.user.activeSchool.opacity;
 
+        this.currentPincode = this.user.activeSchool.pincode;
+        this.currentVillageCity = this.user.activeSchool.villageCity;
+        this.currentBlock = this.user.activeSchool.block;
+        this.currentDistrict = this.user.activeSchool.district;
+        this.currentState = this.user.activeSchool.state;
 
-        this.schoolService.getSessionList(this.user.jwt).then( sessionList => {
+
+        this.schoolService.getObjectList(this.schoolService.session,{}).then( sessionList => {
             this.isLoading = false;
             this.sessionList = sessionList;
             this.selectedWorkingSession = this.getSessionFromList(this.user.activeSchool.currentWorkingSessionDbId);
             this.currentWorkingSession = this.selectedWorkingSession;
         }, error => {
             this.isLoading = false;
+        });
+
+        this.schoolService.getObjectList(this.schoolService.board,{}).then(value => {
+            this.boardList = value;
         });
     }
 
@@ -79,10 +102,16 @@ export class UpdateProfileComponent implements OnInit {
             'diseCode': this.currentDiseCode,
             'address': this.currentAddress,
             'opacity': this.currentOpacity,
-            'currentSessionDbId': this.currentWorkingSession.dbId,
+            'currentSessionDbId': this.currentWorkingSession.id,
+            'pincode': this.currentPincode,
+            'villageCity': this.currentVillageCity,
+            'block': this.currentBlock,
+            'district': this.currentDistrict,
+            'state': this.currentState,
         };
+        console.log(data);
         this.isLoading = true;
-        this.schoolService.updateSchoolProfile(data, this.user.jwt).then(schoolProfile => {
+        this.schoolOldService.updateSchoolProfile(data, this.user.jwt).then(schoolProfile => {
             this.isLoading = false;
             this.user.activeSchool.name = schoolProfile.name;
             this.user.activeSchool.printName = schoolProfile.printName;
@@ -94,6 +123,13 @@ export class UpdateProfileComponent implements OnInit {
             this.user.activeSchool.address = schoolProfile.address;
             this.user.activeSchool.opacity = schoolProfile.opacity;
             this.user.activeSchool.currentWorkingSessionDbId = schoolProfile.currentSessionDbId;
+
+            this.user.activeSchool.pincode = schoolProfile.pincode;
+            this.user.activeSchool.villageCity = schoolProfile.villageCity;
+            this.user.activeSchool.block = schoolProfile.block;
+            this.user.activeSchool.district = schoolProfile.district;
+            this.user.activeSchool.state = schoolProfile.state;
+
             this.selectedWorkingSession = this.getSessionFromList(schoolProfile.currentSessionDbId);
             alert('School Profile updated successfully');
         }, error => {
@@ -104,7 +140,7 @@ export class UpdateProfileComponent implements OnInit {
     getSessionFromList(dbId: number): any {
         let resultSession = null;
         this.sessionList.every(session => {
-            if (dbId === session.dbId) {
+            if (dbId === session.id) {
                 resultSession = session;
                 return false;
             }
@@ -209,7 +245,7 @@ export class UpdateProfileComponent implements OnInit {
         };
 
         this.isLoading = true;
-        this.schoolService.uploadProfileImage(image, data, this.user.jwt).then( response => {
+        this.schoolOldService.uploadProfileImage(image, data, this.user.jwt).then( response => {
             this.isLoading = false;
             alert('Logo Uploaded Successfully');
             if (response.status === 'success') {
@@ -241,7 +277,7 @@ export class UpdateProfileComponent implements OnInit {
         };
 
         this.isLoading = true;
-        this.schoolService.uploadPrincipalSignatureImage(image, data, this.user.jwt).then( response => {
+        this.schoolOldService.uploadPrincipalSignatureImage(image, data, this.user.jwt).then( response => {
             this.isLoading = false;
             alert('Principal\'s signature uploaded Successfully');
             if (response.status === 'success') {

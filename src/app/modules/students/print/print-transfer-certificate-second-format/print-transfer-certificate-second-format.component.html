@@ -16,8 +16,15 @@
                 Dise code : {{user.activeSchool.diseCode}}
             </div>
             <div class="col-xs-6 d-flex custom-padding" align="end">
-                <span *ngIf="(user.activeSchool.affiliationNumber && user.activeSchool.affiliationNumber.toString().length > 3); else registrationNumber">Aff. No. : {{user.activeSchool.affiliationNumber}}</span>
-                <ng-template #registrationNumber>Reg. No. : {{user.activeSchool.registrationNumber}}</ng-template>
+                <!-- span *ngIf="(user.activeSchool.affiliationNumber && user.activeSchool.affiliationNumber.toString().length > 3); else registrationNumber">Aff. No. : {{user.activeSchool.affiliationNumber}}</span>
+                <ng-template #registrationNumber>Reg. No. : {{user.activeSchool.registrationNumber}}</ng-template -->
+                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
+                    School Code :
+                </ng-container>
+                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
+                    Affiliation No. :
+                </ng-container>
+                {{user.activeSchool.affiliationNumber}}
             </div>
         </div>
 
@@ -64,8 +71,6 @@
                         {{user.activeSchool.printName}}
                     </textPath>
                 </text>
-                <!-- image xlink:href="http://localhost:4200/assets/img/angular2-logo.png"
-                       x="210" y="45" width="80" height="80"/ -->
             </svg>
 
             <!-- School Logo -->

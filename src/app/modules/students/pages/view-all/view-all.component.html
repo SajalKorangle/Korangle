@@ -59,6 +59,11 @@
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showProfileImage" (click)="$event.stopPropagation();">Profile
+                            Image
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
                         <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation();">Name
                         </mat-checkbox>
                     </mat-option>
@@ -167,6 +172,11 @@
                     <mat-option>
                         <mat-checkbox [(ngModel)]="columnFilter.showRTE" (click)="$event.stopPropagation();">
                             RTE
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showRemark" (click)="$event.stopPropagation();">
+                            Remark
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
@@ -283,6 +293,7 @@
             <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
             <tr>
                 <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+                <th [class.hidden]="!columnFilter.showProfileImage" style="text-align: center">Profile Image</th>
                 <th [class.hidden]="!columnFilter.showName">Name</th>
                 <th [class.hidden]="!columnFilter.showClassName">Class</th>
                 <th [class.hidden]="!columnFilter.showSectionName">Section</th>
@@ -308,6 +319,7 @@
                 <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
                 <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
                 <th [class.hidden]="!columnFilter.showRTE">RTE</th>
+                <th [class.hidden]="!columnFilter.showRemark">Remark</th>
             </tr>
             </thead>
             <tbody>
@@ -315,6 +327,14 @@
                 <tr [class.hidden]="!student.show">
                     <ng-container>
                         <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
+                        <td [class.hidden]="!columnFilter.showProfileImage" align="center">
+                            <img *ngIf="student.profileImage"
+                                 src="{{student.profileImage}}"
+                                 style="width: 50px">
+                            <img *ngIf="!student.profileImage"
+                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                 style="width: 50px"/>
+                        </td>
                         <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
                         <td [class.hidden]="!columnFilter.showClassName">{{student.className}}
                             <!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->
@@ -351,6 +371,7 @@
                         <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{student.fatherAnnualIncome}}
                         </td>
                         <td [class.hidden]="!columnFilter.showRTE">{{student.rte}}</td>
+                        <td [class.hidden]="!columnFilter.showRemark">{{student.remark}}</td>
                     </ng-container>
                 </tr>
             </ng-container>

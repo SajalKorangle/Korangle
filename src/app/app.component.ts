@@ -7,13 +7,20 @@ import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
 import moment = require('moment');
+import {NotificationService} from "./services/modules/notification/notification.service";
+import {Constants} from "./classes/constants";
+import {registerForNotification} from "./classes/common";
+import {EmitterService} from "./services/emitter.service";
+import {CommonFunctions} from './classes/common-functions';
+
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [ AuthenticationService, VersionCheckService ],
+    providers: [ AuthenticationService, VersionCheckService, NotificationService ],
 })
+
 export class AppComponent implements OnInit {
     subRouteValue: string;
     isLoading = false;
@@ -21,8 +28,11 @@ export class AppComponent implements OnInit {
 
 	public user = new User();
 
+
+
     constructor(private authenticationService: AuthenticationService,
-                private versionCheckService: VersionCheckService) {}
+                private versionCheckService: VersionCheckService,
+                private notificationService: NotificationService) {}
 
     ngOnInit() {
 
@@ -37,6 +47,11 @@ export class AppComponent implements OnInit {
                 } else {
                     this.user.initializeUserData(data);
                     this.lastMonthIsGoingOn();
+                    registerForNotification({
+                        'user': this.user.id,
+                        'jwt': this.user.jwt,
+                        'url': environment.DJANGO_SERVER + Constants.api_version + '/notification/gcm-devices'
+                    });
                 }
             });
         }
@@ -83,5 +98,9 @@ export class AppComponent implements OnInit {
                 return false;
             }
         }
+    }
+    isMobile(): boolean {
+        //return isMobile();
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 }

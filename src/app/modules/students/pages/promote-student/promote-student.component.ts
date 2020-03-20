@@ -2,29 +2,30 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
-import { ClassService } from '../../../../services/class.service';
-import {SESSION_LIST} from "../../../../classes/constants/session";
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {SubjectService} from "../../../../services/subject.service";
-import {ExaminationService} from "../../../../services/examination.service";
-import {StudentService} from "../../../../services/student.service";
-import {StudentSection} from "../../../../services/student/student-section";
-import {FeeService} from "../../../../services/fee.service";
+import {SubjectService} from "../../../../services/modules/subject/subject.service";
+import {ExaminationService} from "../../../../services/modules/examination/examination.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {StudentSection} from "../../../../services/modules/student/models/student-section";
+import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
+import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "./../../../../services/modules/school/school.service"
 
 @Component({
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
+    providers: [ SchoolService, StudentService, ClassOldService, SubjectService, ExaminationService, FeeService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
 
-    sessionList = SESSION_LIST;
+    sessionList = [];
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+    user;
 
     // From Service Adapter
     classList: any;
@@ -53,13 +54,15 @@ export class PromoteStudentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public studentService: StudentService,
-                 public classService: ClassService,
+    constructor (public schoolService : SchoolService,
+                 public studentService: StudentService,
+                 public classService: ClassOldService,
                  public subjectService: SubjectService,
                  public feeService: FeeService,
                  public examinationService: ExaminationService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         if (this.isMobileMenu()) { return; }
 
@@ -88,6 +91,20 @@ export class PromoteStudentComponent implements OnInit {
     handleFromSelectedSectionChange(value: any): void {
         this.fromSelectedSection = value;
         this.newPromotedList = [];
+    }
+
+    handleToSelectedClassChange(value: any): void {
+        this.toSelectedClass = value;
+        this.newPromotedList.forEach(studentSection => {
+            studentSection.parentClass = this.toSelectedClass.dbId;
+        });
+    }
+
+    handleToSelectedSectionChange(value: any): void {
+        this.toSelectedSection = value;
+        this.newPromotedList.forEach(studentSection => {
+            studentSection.parentDivision = this.toSelectedSection.id;
+        });
     }
 
     getToClassList(): any {

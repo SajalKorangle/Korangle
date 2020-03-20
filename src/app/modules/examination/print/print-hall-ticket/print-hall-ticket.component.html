@@ -1,16 +1,22 @@
-<ng-container *ngFor="let student of studentList; let isLast = last;">
+<ng-container *ngFor="let student of studentList; let i=index;let isLast = last;">
 
-    <div class="container-fluid" [class.pageBreakAfter]="!isLast"
-         style="width: 100%; height: 100%;
+    <div class="container-fluid" [class.pageBreakAfter]="auto"
+         style="width: 100%; height: 48%;
          border-radius: 20px;
          position: relative;
          overflow: hidden;
          font-weight: 800 !important">
 
+
         <img src="{{user.activeSchool.profileImage}}"
              style="border-radius: 2px; position: absolute;
-         top: 28px; left: 14px;
-         width: 52px; height: 52px;"/>
+             top: 40px; left: 14px;
+             width: 70px; height: 70px;"/>
+
+         <img src="{{student.profileImage}}"
+             style="border-radius: 4px; position: absolute;
+             top: 40px; right: 14px;
+             height: 70px;"/>
 
         <img src="{{user.activeSchool.profileImage}}"
              [ngStyle]="opacity"
@@ -24,10 +30,16 @@
         <!-- Reg. No. , Dise Code -->
         <div class="row " style="margin-top: 0px;">
             <div class="col-xs-6 d-flex custom-padding">
-                Reg. No. : {{user.activeSchool.registrationNumber}}
+                Dise code : {{user.activeSchool.diseCode}}
             </div>
             <div class="col-xs-6 d-flex custom-padding" align="end">
-                Dise code : {{user.activeSchool.diseCode}}
+                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
+                    School Code :
+                </ng-container>
+                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
+                    Affiliation No. :
+                </ng-container>
+                {{user.activeSchool.affiliationNumber}}
             </div>
         </div>
 
@@ -168,7 +180,7 @@
 
         <!-- Principal Signature Image -->
         <img src="{{user.activeSchool.principalSignatureImage}}"
-             *ngIf="user.activeSchool.principalSignatureImage != null"
+             *ngIf="showPrincipalSignature && user.activeSchool.principalSignatureImage != null"
              style="position: absolute;
              bottom: 25px; left: 600px;
              width: 100px; height: 50px;
@@ -187,6 +199,10 @@
         </div>
 
     </div>
+    <hr *ngIf = "i%2 == 0">
+
+
+
 
 </ng-container>
 

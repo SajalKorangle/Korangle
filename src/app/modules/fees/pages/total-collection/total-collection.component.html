@@ -4,14 +4,14 @@
 
         <div class="row" style="margin-top: 15px;">
             <div class="col-sm-3">
-                <day-date [formattedDateOutput]="true"
-                          [placeHolder]="'Start Date'"
-                          (onDateSelected)="startDate=$event"></day-date>
+                <day-date-old [formattedDateOutput]="true"
+                              [placeHolder]="'Start Date'"
+                              (onDateSelected)="startDate=$event"></day-date-old>
             </div>
             <div class="col-sm-3">
-                <day-date [formattedDateOutput]="true"
-                          [placeHolder]="'End Date'"
-                          (onDateSelected)="endDate=$event"></day-date>
+                <day-date-old [formattedDateOutput]="true"
+                              [placeHolder]="'End Date'"
+                              (onDateSelected)="endDate=$event"></day-date-old>
             </div>
             <div class="col-sm-3">
                 <button type="button"
@@ -75,6 +75,19 @@
                 </mat-form-field>
 
                 <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Select Fee Type"
+                                [(ngModel)]="selectedFeeType">
+                        <mat-option *ngFor="let feeType of filteredFeeTypeList;" [value]="feeType">
+                            {{feeType.name}}
+                        </mat-option>
+                        <mat-option [value]="nullValue">
+                            All
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+
+                <mat-form-field style="margin-right: 15px;">
                     <mat-select placeholder="Select Columns">
                         <ng-container *ngFor="let key of getReceiptColumnFilterKeys();">
                             <mat-option>
@@ -103,7 +116,10 @@
                                       [studentSectionList]="studentSectionList"
                                       [employeeList]="filteredEmployeeList"
                                       [classList]="classList"
-                                      [sectionList]="sectionList"></app-fee-receipt-list>
+                                      [sectionList]="sectionList"
+                                      [selectedFeeType]="selectedFeeType"
+                                      [sessionList]="sessionList"
+                                      [boardList]="boardList"></app-fee-receipt-list>
 
             </ng-container>
 

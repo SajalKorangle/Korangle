@@ -1,5 +1,3 @@
-import { Fee } from './fee';
-import {Concession} from "./concession";
 
 export class Student {
 
@@ -13,8 +11,6 @@ export class Student {
     dateOfBirth: any;
     rollNumber: any;
     scholarNumber: any;
-    // totalFees: number;
-    // feesDue: number;
     sectionDbId: number;
     remark: string;
     motherName: string;
@@ -58,8 +54,6 @@ export class Student {
         this.dateOfBirth = student.dateOfBirth;
         this.rollNumber = student.rollNumber;
         this.scholarNumber = student.scholarNumber;
-        // this.totalFees = student.totalFees;
-        // this.feesDue = student.feesDue;
         this.sectionDbId = student.sectionDbId;
         this.remark = student.remark;
         this.motherName = student.motherName;
@@ -90,17 +84,5 @@ export class Student {
         this.sessionDbId = student.sessionDbId;
 
     }
-
-    /*public static getThumbnail(student: any): any {
-        if (student.profileImage) {
-            let url = student.profileImage;
-            if (url.substr(url.length-4) === "main") {
-                return url + "_thumb";
-            }
-            return url.substr(0, url.length-4) + "_thumb" + url.substr(url.length-4);
-        } else {
-            return '';
-        }
-    }*/
 
 }

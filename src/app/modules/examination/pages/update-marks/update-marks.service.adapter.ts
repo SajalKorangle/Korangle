@@ -1,7 +1,7 @@
 
 import {UpdateMarksComponent} from './update-marks.component';
 
-import { TEST_TYPE_LIST } from '../../classes/constants';
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
 export class UpdateMarksServiceAdapter {
 
@@ -40,8 +40,8 @@ export class UpdateMarksServiceAdapter {
         this.vm.isInitialLoading = true;
 
         let request_examination_data = {
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-            'schoolId': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
         let request_class_subject_data = {
@@ -61,7 +61,7 @@ export class UpdateMarksServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
@@ -83,18 +83,28 @@ export class UpdateMarksServiceAdapter {
 
             this.classSubjectList.forEach(item => {
 
-                let request_class_test_data = {
-                    'examinationList': [examination_id_list],
-                    'subjectList': [item.parentSubject],
-                    'classList': [item.parentClass],
-                    'sectionList': [item.parentDivision],
-                    'startTimeList': [],
-                    'endTimeList': [],
-                    'testTypeList': [],
-                    'maximumMarksList': [],
+                let request_class_test_data = {            
+                    /*'examinationId': this.vm.selectedExamination.id,
+                    'classId': this.vm.selectedExamination.selectedClass.dbId,
+                    'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+                    'parentExamination__in': examination_id_list,
+                    'parentClass': item.parentClass,
+                    'parentDivision': item.parentDivision,
+                    'parentSubject' : item.parentSubject
                 };
 
-                service_list.push(this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt));
+                // let request_class_test_data = {
+                //     'examinationList': [examination_id_list],
+                //     'subjectList': [item.parentSubject],
+                //     'classList': [item.parentClass],
+                //     'sectionList': [item.parentDivision],
+                //     'startTimeList': [],
+                //     'endTimeList': [],
+                //     'testTypeList': [],
+                //     'maximumMarksList': [],
+                // };
+
+                service_list.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data));
 
             });
 
@@ -268,7 +278,7 @@ export class UpdateMarksServiceAdapter {
             'testTypeList': [],
         };
 
-        this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt).then(value2 => {
+        this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt).then(value2 => {
             this.populateStudentList(value2);
             this.vm.showTestDetails = true;
             this.vm.isLoading = false;
@@ -299,10 +309,8 @@ export class UpdateMarksServiceAdapter {
             return false;
         }).sort((a,b) => {
             if (a.rollNumber && b.rollNumber) {
-                console.log("here: "+a.rollNumber+", "+b.rollNumber);
                 return (a.rollNumber.toString() < b.rollNumber.toString())? -1:1;
             }
-            console.log("not here: "+a.rollNumber+", "+b.rollNumber);
             return (b.rollNumber)? -1:1;
         }).forEach(item => {
             let tempItem = {};
@@ -352,7 +360,7 @@ export class UpdateMarksServiceAdapter {
 
         this.vm.isLoading = true;
 
-        this.vm.examinationService.updateStudentTestList(data, this.vm.user.jwt).then(value => {
+        this.vm.examinationOldService.updateStudentTestList(data, this.vm.user.jwt).then(value => {
             alert('Student Marks updated successfully');
             this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(item => {
                 item.testDetails.forEach(itemTwo => {

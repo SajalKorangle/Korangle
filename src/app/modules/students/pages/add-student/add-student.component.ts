@@ -2,32 +2,33 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { AddStudentServiceAdapter } from './add-student-service.adapter';
 
-import { ClassService } from '../../../../services/class.service';
-import { BusStopService } from '../../../../services/bus-stop.service';
-import {StudentService} from "../../../../services/student.service";
-import {Student} from "../../../../services/student/student";
-import {StudentSection} from "../../../../services/student/student-section";
-import {SESSION_LIST} from "../../../../classes/constants/session";
-import {VehicleService} from "../../../vehicle/vehicle.service";
-import {ExaminationService} from "../../../../services/examination.service";
-import {SubjectService} from "../../../../services/subject.service";
-import {FeeService} from "../../../../services/fee.service";
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { BusStopService } from '../../../../services/modules/school/bus-stop.service';
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {Student} from "../../../../services/modules/student/models/student";
+import {StudentSection} from "../../../../services/modules/student/models/student-section";
+import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
+import {ExaminationService} from "../../../../services/modules/examination/examination.service";
+import {SubjectService} from "../../../../services/modules/subject/subject.service";
+import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
+import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service"
 
 @Component({
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ ClassService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleService, FeeService ],
+    providers: [ SchoolService, ClassOldService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService ],
 })
 
 export class AddStudentComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [] ;
     nullValue = null;
 
-    @Input() user;
+    user:any;
 
     // From Service Adapter
     classList = [];
@@ -46,15 +47,17 @@ export class AddStudentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public classService: ClassService,
+    constructor (public schoolService : SchoolService,
+                 public classService: ClassOldService,
                  public busStopService: BusStopService,
                  public studentService: StudentService,
                  public subjectService: SubjectService,
-                 public vehicleService: VehicleService,
+                 public vehicleService: VehicleOldService,
                  public examinationService: ExaminationService,
                  public feeService: FeeService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new AddStudentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

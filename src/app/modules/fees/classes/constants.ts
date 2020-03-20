@@ -17,7 +17,7 @@ export const INSTALLMENT_LIST = [
 
 export const MODE_OF_PAYMENT_LIST = [
     'Cash',
-    'Check',
+    'Cheque',
     'Online',
 ];
 
@@ -28,7 +28,7 @@ export class ReceiptColumnFilter {
     'class'= true;
     'amount'= true;
     'modeOfPayment' = false;
-    'checkNumber' = false;
+    'chequeNumber' = false;
     'date'= true;
     'remark'= true;
     'employee'= true;

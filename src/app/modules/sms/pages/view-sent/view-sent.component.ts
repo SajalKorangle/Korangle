@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import { SmsService } from '../../sms.service';
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ViewSentServiceAdapter } from './view-sent.service.adapter';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'view-sent',
@@ -12,7 +13,7 @@ export class ViewSentComponent implements OnInit {
 
     STATUS_UNKNOWN = 'Unknown';
 
-    @Input() user;
+    user;
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
@@ -25,10 +26,12 @@ export class ViewSentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public smsService: SmsService,
+    constructor(public smsService: SmsOldService,
                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new ViewSentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

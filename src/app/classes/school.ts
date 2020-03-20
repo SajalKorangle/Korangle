@@ -1,20 +1,23 @@
 
-
-// import {Constants} from './constants';
-
 export class School {
 
     dbId = 0;
     name: string; // School Name (for sidebar)
     printName: string;
-    //logo: string;
     profileImage: string;
     principalSignatureImage: string;
     mobileNumber: number;
     primaryThemeColor = 'red';
     secondaryThemeColor = 'danger';
     diseCode = 0;
+
     address = '';
+    pincode: number;
+    villageCity: string;
+    block: string;
+    district: string;
+    state: string;
+
     currentSessionDbId: number;
     currentWorkingSessionDbId: number;
     registrationNumber: string;
@@ -25,6 +28,8 @@ export class School {
     opacity: number;
 
     headerSize: string;
+
+    parentBoard: number;
 
     medium: string;
 
@@ -46,7 +51,14 @@ export class School {
         this.primaryThemeColor = schoolData.primaryThemeColor;
         this.secondaryThemeColor = schoolData.secondaryThemeColor;
         this.diseCode = schoolData.schoolDiseCode;
+
         this.address = schoolData.schoolAddress;
+        this.pincode = schoolData.pincode;
+        this.villageCity = schoolData.villageCity;
+        this.block = schoolData.block;
+        this.district = schoolData.district;
+        this.state = schoolData.state;
+
         this.opacity = schoolData.opacity;
         this.currentSessionDbId = schoolData.currentSessionDbId;
         this.currentWorkingSessionDbId = schoolData.currentSessionDbId;
@@ -62,6 +74,8 @@ export class School {
         this.employeeId = schoolData.employeeId;
 
         this.dateOfExpiration = schoolData.dateOfExpiration;
+
+        this.parentBoard = schoolData.parentBoard;
 
         if ('employeeId' in schoolData && schoolData['employeeId'] !== null) {
             this.moduleList = schoolData.moduleList;
@@ -107,11 +121,6 @@ export class School {
                     path: 'view_profile',
                     icon: 'account_circle',
                 },
-                /*{
-                    title: 'Fees',
-                    path: 'view_fee',
-                    icon: 'receipt',
-                },*/
                 {
                     title: 'Attendance',
                     path: 'view_attendance',

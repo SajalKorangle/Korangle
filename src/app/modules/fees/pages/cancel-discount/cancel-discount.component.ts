@@ -1,24 +1,25 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CancelDiscountServiceAdapter } from "./cancel-discount.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
-import {INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST} from "../../classes/constants";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {INSTALLMENT_LIST} from "../../classes/constants";
 import {FormControl} from "@angular/forms";
-import {ClassService} from "../../../../services/class.service";
-import {StudentService} from "../../../../services/student.service";
-import {EmployeeService} from "../../../../services/employee.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'cancel-discount',
     templateUrl: './cancel-discount.component.html',
     styleUrls: ['./cancel-discount.component.css'],
-    providers: [ FeeService, ClassService, StudentService, EmployeeService ],
+    providers: [ FeeService, ClassOldService, StudentService, EmployeeService ],
 })
 
 export class CancelDiscountComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+    user;
 
     searchParameter = new FormControl();
 
@@ -35,12 +36,14 @@ export class CancelDiscountComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public classService: ClassService,
+                public classService: ClassOldService,
                 public studentService: StudentService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new CancelDiscountServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

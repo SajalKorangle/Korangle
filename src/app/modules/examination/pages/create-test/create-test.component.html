@@ -78,10 +78,10 @@
                         <td>{{(i+1)}}.</td>
                         <td>{{test.subjectName}}</td>
                         <td>
-                            <day-date [initialValue]="getTestDate(test)"
-                                      (onDateSelected)="onTestDateUpdation(test, $event)">
+                            <day-date-old [initialValue]="getTestDate(test)"
+                                          (onDateSelected)="onTestDateUpdation(test, $event)">
 
-                            </day-date>
+                            </day-date-old>
                         </td>
                         <td>
                             <input type="time" [(ngModel)]="test.newStartTime"/>
@@ -154,7 +154,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <day-date (onDateSelected)="onDateSelected($event)"></day-date>
+                        <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
                     </td>
                     <td>
                         <span style="margin-left: 20px">
@@ -207,7 +207,7 @@
 
                     <br/><br/>
 
-                    <day-date (onDateSelected)="onDateSelected($event)"></day-date>
+                    <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
 
                     <span style="margin-left: 20px">
                         Start Time:

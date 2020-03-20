@@ -1,29 +1,31 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { AttendanceService } from '../../attendance.service';
-import {ClassService} from '../../../../services/class.service';
-import {StudentOldService} from '../../../students/student-old.service';
+import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 
 import { ExcelService } from "../../../../excel/excel-service";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'record-attendance',
   templateUrl: './record-attendance.component.html',
   styleUrls: ['./record-attendance.component.css'],
     providers: [
-        AttendanceService,
-        ClassService,
+        AttendanceOldService,
+        ClassOldService,
         StudentOldService,
     ],
 })
 
 export class RecordAttendanceComponent implements OnInit {
 
-    @Input() user;
+    // @Input() user;
+    user: any;
 
     classSectionStudentList = [];
 
@@ -46,7 +48,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
-    constructor (private attendanceService: AttendanceService,
+    constructor (private attendanceService: AttendanceOldService,
                  private studentService: StudentOldService,
                  private excelService: ExcelService,
                  private printServie: PrintService) { }
@@ -58,7 +60,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     // Server Handling - Initial
     ngOnInit(): void {
-
+        this.user = DataStorage.getInstance().getUser();
         let request_attendance_permission_list_data = {
             parentEmployee: this.user.activeSchool.employeeId,
             sessionId: this.user.activeSchool.currentSessionDbId,

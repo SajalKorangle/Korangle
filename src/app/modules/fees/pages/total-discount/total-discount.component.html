@@ -4,12 +4,12 @@
 
         <div class="row">
             <div class="col-sm-3">
-                <day-date [formattedDateOutput]="true"
-                          (onDateSelected)="startDate=$event"></day-date>
+                <day-date-old [formattedDateOutput]="true"
+                              (onDateSelected)="startDate=$event"></day-date-old>
             </div>
             <div class="col-sm-3">
-                <day-date [formattedDateOutput]="true"
-                          (onDateSelected)="endDate=$event"></day-date>
+                <day-date-old [formattedDateOutput]="true"
+                              (onDateSelected)="endDate=$event"></day-date-old>
             </div>
             <div class="col-sm-3">
                 <button type="button"
@@ -77,7 +77,8 @@
                                    [studentSectionList]="studentSectionList"
                                    [employeeList]="getFilteredEmployeeList()"
                                    [classList]="classList"
-                                   [sectionList]="sectionList"></app-discount-list>
+                                   [sectionList]="sectionList"
+                                   [sessionList]="sessionList"></app-discount-list>
 
             </ng-container>
 

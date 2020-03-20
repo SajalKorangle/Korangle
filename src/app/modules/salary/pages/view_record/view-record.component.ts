@@ -1,21 +1,22 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {EmployeeService} from '../../../employee/employee.service';
-import {SalaryService} from '../../salary.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
+import {SalaryOldService} from '../../../../services/modules/salary/salary-old.service';
 import { ViewRecordServiceAdapter } from './view-record.service.adapter';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'view-record',
   templateUrl: './view-record.component.html',
   styleUrls: ['./view-record.component.css'],
     providers: [
-        EmployeeService, SalaryService
+        EmployeeOldService, SalaryOldService
     ],
 })
 
 export class ViewRecordComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     employeeList = null;
 
@@ -23,10 +24,12 @@ export class ViewRecordComponent implements OnInit {
 
     serviceAdapter = new ViewRecordServiceAdapter();
 
-    constructor (public employeeService: EmployeeService,
-                 public salaryService: SalaryService) { }
+    constructor (public employeeService: EmployeeOldService,
+                 public salaryService: SalaryOldService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.getEmployeeList();
     }

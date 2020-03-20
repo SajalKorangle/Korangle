@@ -3,21 +3,22 @@ import {Injectable} from '@angular/core';
 import { Constants } from '../classes/constants';
 import { environment } from '../../environments/environment';
 
-import { Headers, Http, RequestOptions } from '@angular/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 
 
 
 @Injectable()
 export class CommonServiceRequirements {
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) { }
 
     public getToken(): any {
         return localStorage.getItem('schoolJWT');
     }
 
     public returnResponse(response: any): any {
-        const jsonResponse = response.json().response;
+        // const jsonResponse = response.json().response;
+        const jsonResponse = response.response;
         if (jsonResponse.status === 'success') {
             if (jsonResponse.data) return jsonResponse.data;
             else return jsonResponse.message;
@@ -32,7 +33,7 @@ export class CommonServiceRequirements {
     }
 
     public deleteData(token=this.getToken() , url: any): Promise<any> {
-        const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.delete(environment.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
             .toPromise()
             .then(response => {
@@ -45,7 +46,7 @@ export class CommonServiceRequirements {
     }
 
     public putData(body: any, token=this.getToken() , url: any): Promise<any> {
-        const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.put(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
             .then(response => {
@@ -58,7 +59,7 @@ export class CommonServiceRequirements {
     }
 
     public patchData(body: any, token=this.getToken() , url: any): Promise<any> {
-        const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.patch(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
             .then(response => {
@@ -71,7 +72,7 @@ export class CommonServiceRequirements {
     }
 
     public postData(body: any, token=this.getToken() , url: any): Promise<any> {
-        const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
             .toPromise()
             .then(response => {
@@ -84,7 +85,7 @@ export class CommonServiceRequirements {
     }
 
     public fileData(file: any, token=this.getToken() , url: any): Promise<any> {
-        const headers = new Headers({'Authorization' : 'JWT ' + token, 'Accept': 'application/json' });
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + token, 'Accept': 'application/json' });
         let uploadData = new FormData();
         uploadData.append('myFile', file);
         return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, uploadData, {headers: headers})
@@ -99,7 +100,7 @@ export class CommonServiceRequirements {
     }
 
     public getData(token=this.getToken() , url: any, params?: any): Promise<any> {
-        const headers = new Headers({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
+        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + token });
         return this.http.get(environment.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
             .toPromise()
             .then(response => {

@@ -74,17 +74,17 @@
                                            (keypress)="policeAmountInput($event)"/>
                                 </td>
                                 <td>
-                                    <day-date *ngIf="!disableNewStudentFeeMonthLastDate(installment)"
-                                              [initialValue]="selectedStudentFee[installment+'LastDate']"
-                                              [acceptNull]="true"
-                                              [formattedDateOutput]="true"
-                                              (onDateSelected)="newStudentFee[installment+'LastDate']=$event">
-                                    </day-date>
-                                    <day-date *ngIf="disableNewStudentFeeMonthLastDate(installment)"
-                                              [acceptNull]="true"
-                                              [initialValue]="newStudentFee[installment+'LastDate']"
-                                              [disableDatePicker]="true">
-                                    </day-date>
+                                    <day-date-old *ngIf="!disableNewStudentFeeMonthLastDate(installment)"
+                                                  [initialValue]="selectedStudentFee[installment+'LastDate']"
+                                                  [acceptNull]="true"
+                                                  [formattedDateOutput]="true"
+                                                  (onDateSelected)="newStudentFee[installment+'LastDate']=$event">
+                                    </day-date-old>
+                                    <day-date-old *ngIf="disableNewStudentFeeMonthLastDate(installment)"
+                                                  [acceptNull]="true"
+                                                  [initialValue]="newStudentFee[installment+'LastDate']"
+                                                  [disableDatePicker]="true">
+                                    </day-date-old>
                                 </td>
                                 <td>
                                     <input type="number"
@@ -160,17 +160,17 @@
                                        (keypress)="policeAmountInput($event)"/>
                             </td>
                             <td>
-                                <day-date *ngIf="!disableNewStudentFeeMonthLastDate('april')"
-                                          [initialValue]="selectedStudentFee['aprilLastDate']"
-                                          [acceptNull]="true"
-                                          [formattedDateOutput]="true"
-                                          (onDateSelected)="newStudentFee['aprilLastDate']=$event">
-                                </day-date>
-                                <day-date *ngIf="disableNewStudentFeeMonthLastDate('april')"
-                                          [acceptNull]="true"
-                                          [initialValue]="newStudentFee['aprilLastDate']"
-                                          [disableDatePicker]="true">
-                                </day-date>
+                                <day-date-old *ngIf="!disableNewStudentFeeMonthLastDate('april')"
+                                              [initialValue]="selectedStudentFee['aprilLastDate']"
+                                              [acceptNull]="true"
+                                              [formattedDateOutput]="true"
+                                              (onDateSelected)="newStudentFee['aprilLastDate']=$event">
+                                </day-date-old>
+                                <day-date-old *ngIf="disableNewStudentFeeMonthLastDate('april')"
+                                              [acceptNull]="true"
+                                              [initialValue]="newStudentFee['aprilLastDate']"
+                                              [disableDatePicker]="true">
+                                </day-date-old>
                             </td>
                             <td>
                                 <input type="number"

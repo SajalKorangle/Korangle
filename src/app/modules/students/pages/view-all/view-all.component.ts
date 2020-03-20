@@ -1,14 +1,16 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassService} from '../../../../services/class.service';
-import {StudentOldService} from '../../student-old.service';
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnFilter {
     showSerialNumber = true;
+    showProfileImage = false;
     showName = true;
     showClassName = false;
     showSectionName = false;
@@ -34,18 +36,19 @@ class ColumnFilter {
     showBloodGroup = false;
     showFatherAnnualIncome = false;
     showRTE = false;
+    showRemark = false;
 }
 
 @Component({
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassService, ExcelService],
+    providers: [StudentOldService, ClassOldService, ExcelService],
 })
 
 export class ViewAllComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     columnFilter: ColumnFilter;
 
@@ -82,11 +85,12 @@ export class ViewAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassService,
+                private classService: ClassOldService,
                 private excelService: ExcelService,
                 private printService: PrintService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.columnFilter = new ColumnFilter();
 
@@ -354,6 +358,7 @@ export class ViewAllComponent implements OnInit {
     getHeaderValues(): any {
         let headerValues = [];
         this.columnFilter.showSerialNumber?headerValues.push('Serial No.'):'';
+        this.columnFilter.showProfileImage?headerValues.push('Profile Image'):'';
         this.columnFilter.showName?headerValues.push('Name'):'';
         this.columnFilter.showClassName?headerValues.push('Class Name'):'';
         this.columnFilter.showSectionName?headerValues.push('Section Name'):'';
@@ -379,6 +384,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup?headerValues.push('Blood Group'):'';
         this.columnFilter.showFatherAnnualIncome?headerValues.push('Father\'s Annual Income'):'';
         this.columnFilter.showRTE?headerValues.push('RTE'):'';
+        this.columnFilter.showRemark?headerValues.push('remark'):'';
 
         return headerValues;
     }
@@ -386,6 +392,7 @@ export class ViewAllComponent implements OnInit {
     getStudentDisplayInfo(student: any): any {
         let studentDisplay = [];
         this.columnFilter.showSerialNumber?studentDisplay.push(student.serialNumber):'';
+        this.columnFilter.showProfileImage?studentDisplay.push(student.profileImage):'';
         this.columnFilter.showName?studentDisplay.push(student.name):'';
         this.columnFilter.showClassName?studentDisplay.push(student.className):'';
         this.columnFilter.showSectionName?studentDisplay.push(student.sectionName):'';
@@ -411,6 +418,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup?studentDisplay.push(student.bloodGroup):'';
         this.columnFilter.showFatherAnnualIncome?studentDisplay.push(student.fatherAnnualIncome):'';
         this.columnFilter.showRTE?studentDisplay.push(student.rte):'';
+        this.columnFilter.showRemark?studentDisplay.push(student.remark):'';
 
         return studentDisplay;
     }

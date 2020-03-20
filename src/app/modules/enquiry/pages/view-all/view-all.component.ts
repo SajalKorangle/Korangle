@@ -1,36 +1,56 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { EnquiryService } from '../../enquiry.service';
-import { ClassService } from '../../../../services/class.service';
+import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import {PrintService} from "../../../../print/print-service";
 import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
+    providers: [EmployeeOldService],
 })
 
 export class ViewAllComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     enquiryList = [];
 
     classList = [];
+    employeeList = []; 
+
+    selectedEmployee = null;
+    filteredEmployeeList = [];
+
+    selectedClass = null;
+    filteredClassList = [];
 
     startDate = this.todaysDate();
     endDate = this.todaysDate();
 
     isLoading = false;
 
-    constructor(private enquiryService: EnquiryService,
-                private classService: ClassService,
-                private printService: PrintService) { }
+    constructor(private enquiryService: EnquiryOldService,
+                private classService: ClassOldService,
+                private printService: PrintService,
+                private employeeService: EmployeeOldService) { }
 
     ngOnInit(): void {
-        this.classService.getClassList(this.user.jwt).then(classList => {
-            this.classList = classList;
+        this.user = DataStorage.getInstance().getUser();
+        let data = {
+            parentSchool: this.user.activeSchool.dbId
+        };
+
+        Promise.all([
+            this.classService.getClassList(this.user.jwt),
+            this.employeeService.getEmployeeProfileList(data, this.user.jwt)
+        ]).then(res => {
+            this.classList = res[0];
+            this.employeeList = res[1];
         });
     }
 
@@ -54,7 +74,6 @@ export class ViewAllComponent implements OnInit {
             parentSchool: this.user.activeSchool.dbId,
         };
 
-        this.enquiryList = [];
         this.isLoading = true;
         this.enquiryService.getEnquiryList(data, this.user.jwt).then(enquiryList => {
             this.isLoading = false;
@@ -65,8 +84,45 @@ export class ViewAllComponent implements OnInit {
 
     }
 
+    getEmployeeName(employeeId: number): string {
+        let employee = this.employeeList.find(employee => {
+            return employeeId == employee.id;
+        });
+        if (employee) {
+            return employee.name;
+        }
+        return '';
+    }
+    
+    getFilteredEmployeeList() {
+        this.filteredEmployeeList = this.employeeList.filter(employee => {
+            return this.enquiryList.map(a => a.parentEmployee).filter((item, index, final) => {
+                return final.indexOf(item) == index;
+            }).includes(employee.id);
+        });
+    
+        return this.filteredEmployeeList
+    }
+
+    getFilteredEnquiryList(): any {
+        let tempList = this.enquiryList;
+        if (this.selectedEmployee) {
+            tempList = tempList.filter(enqList => {
+                return enqList.parentEmployee == this.selectedEmployee.id;
+            });
+        }
+
+        if (this.selectedClass) {
+            tempList = tempList.filter(enqList => {
+                return enqList.parentClass == this.selectedClass.dbId
+            });
+        }
+        return tempList;
+    }
+
+
     printEnquiryList(){
-        this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {user: this.user, value: [this.enquiryList,this.classList]});
+        this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {user: this.user, value: [this.getFilteredEnquiryList(), this.getFilteredClassList(), this.getFilteredEmployeeList()]});
     }
 
     getClassName(dbId: number): string {
@@ -79,6 +135,15 @@ export class ViewAllComponent implements OnInit {
             return true;
         });
         return className;
+    }
+
+    getFilteredClassList() {
+        this.filteredClassList = this.classList.filter(className => {
+            return this.enquiryList.map(a => a.parentClass).filter((item, index, final) => {
+                return final.indexOf(item) == index;
+            }).includes(className.dbId)
+        });
+        return this.filteredClassList
     }
 
 }

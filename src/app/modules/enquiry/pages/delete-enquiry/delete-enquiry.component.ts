@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { EnquiryService } from '../../enquiry.service';
-import { ClassService } from '../../../../services/class.service';
+import { EnquiryOldService } from "../../../../services/modules/enquiry/enquiry-old.service";
+import { ClassOldService } from "../../../../services/modules/class/class-old.service";
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
+import {DataStorage} from "../../../../classes/data-storage";
 
 
 @Component({
@@ -24,18 +25,16 @@ export class DeleteEnquiryComponent implements OnInit {
 
     selectedEnquiry: any;
 
-    currentEnquiry: any;
-
     myControl = new FormControl();
 
     isLoading = false;
 
-    constructor (private enquiryService: EnquiryService,
-                 private classService: ClassService) { }
+    constructor (private enquiryService: EnquiryOldService,
+                 private classService: ClassOldService) { }
 
     ngOnInit(): void {
 
-        this.currentEnquiry = {};
+        this.user = DataStorage.getInstance().getUser();
 
         const data = {
             parentSchool: this.user.activeSchool.dbId,
@@ -60,12 +59,12 @@ export class DeleteEnquiryComponent implements OnInit {
         if (value === '' || value==null) {
             return [];
         }
-        return this.enquiryList.filter( enquiry => enquiry.studentName.toLowerCase().indexOf(value.toLowerCase()) === 0 );
+        return this.enquiryList.filter( enquiry => enquiry.enquirerName.toLowerCase().indexOf(value.toLowerCase()) === 0 );
     }
 
     displayFn(enquiry?: any) {
         if (enquiry) {
-            return enquiry.studentName + ', ' + enquiry.dateOfEnquiry;
+            return enquiry.enquirerName + ', ' + enquiry.dateOfEnquiry;
         } else {
             return '';
         }
@@ -82,9 +81,6 @@ export class DeleteEnquiryComponent implements OnInit {
         this.enquiryService.getEnquiry(data, this.user.jwt).then( enquiry => {
             this.isLoading = false;
             this.selectedEnquiry = enquiry;
-            Object.keys(this.selectedEnquiry).forEach(key => {
-                this.currentEnquiry[key] = this.selectedEnquiry[key];
-            });
         }, error => {
             this.isLoading = false;
         });
@@ -94,13 +90,14 @@ export class DeleteEnquiryComponent implements OnInit {
 
     deleteEnquiry(): void {
 
-        let id = this.currentEnquiry.id;
-
         this.isLoading = true;
-        this.enquiryService.deleteEnquiry(this.currentEnquiry, this.user.jwt).then(message => {
+        this.enquiryService.deleteEnquiry(this.selectedEnquiry, this.user.jwt).then(message => {
+            this.enquiryList = this.enquiryList.filter(enquiry => {
+                return enquiry.id != this.selectedEnquiry.id;
+            });
+            this.selectedEnquiry=null;
             this.isLoading = false;
             alert(message);
-            this.selectedEnquiry=null;
         }, error => {
             this.isLoading = false;
         });

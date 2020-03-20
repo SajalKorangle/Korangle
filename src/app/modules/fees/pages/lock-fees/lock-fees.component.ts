@@ -1,20 +1,21 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { LockFeesServiceAdapter } from "./lock-fees.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
-import {SESSION_LIST} from "../../../../classes/constants/session";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {DataStorage} from "../../../../classes/data-storage";
+import { SchoolService } from 'app/services/modules/school/school.service';
 
 @Component({
     selector: 'lock-fees',
     templateUrl: './lock-fees.component.html',
     styleUrls: ['./lock-fees.component.css'],
-    providers: [ FeeService ],
+    providers: [ FeeService, SchoolService ],
 })
 
 export class LockFeesComponent implements OnInit {
 
-    sessionList = SESSION_LIST;
+    sessionList = [] ;
 
-    @Input() user;
+    user;
 
     serviceAdapter: LockFeesServiceAdapter;
 
@@ -22,10 +23,13 @@ export class LockFeesComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public feeService: FeeService,
+    constructor(public schoolService : SchoolService,
+                public feeService: FeeService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new LockFeesServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

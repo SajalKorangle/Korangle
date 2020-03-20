@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import {TEST_TYPE_LIST} from '../../classes/constants';
+import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
 import { PrintService } from '../../../../print/print-service';
 
 @Component({
@@ -13,6 +13,8 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     user : any;
 
+    boardList: any;
+
     viewChecked = true;
 
     examination: any;
@@ -22,7 +24,8 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
         this.user = user;
-        this.examination = value;
+        this.examination = value.examination;
+        this.boardList = value.boardList;
         this.viewChecked = false;
     }
 
@@ -388,6 +391,37 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
                 break;
         }
         return result;
+    }
+
+    getRomanClassName(className: any): any {
+        switch(className) {
+            case 'Class - 1':
+                return 'Class - I';
+            case 'Class - 2':
+                return 'Class - II';
+            case 'Class - 3':
+                return 'Class - III';
+            case 'Class - 4':
+                return 'Class - IV';
+            case 'Class - 5':
+                return 'Class - V';
+            case 'Class - 6':
+                return 'Class - VI';
+            case 'Class - 7':
+                return 'Class - VII';
+            case 'Class - 8':
+                return 'Class - VIII';
+            case 'Class - 9':
+                return 'Class - IX';
+            case 'Class - 10':
+                return 'Class - X';
+            case 'Class - 11':
+                return 'Class - XI';
+            case 'Class - 12':
+                return 'Class - XII';
+            default:
+                return className;
+        }
     }
 
 }

@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { EnquiryService } from '../../enquiry.service';
-import { ClassService } from '../../../../services/class.service';
+import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
-
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'update-enquiry',
@@ -15,7 +15,7 @@ import {map} from 'rxjs/operators';
 
 export class UpdateEnquiryComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     classList: any;
 
@@ -30,10 +30,12 @@ export class UpdateEnquiryComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private enquiryService: EnquiryService,
-                 private classService: ClassService) { }
+    constructor (private enquiryService: EnquiryOldService,
+                 private classService: ClassOldService) { }
 
     ngOnInit(): void {
+
+        this.user = DataStorage.getInstance().getUser();
 
         this.currentEnquiry = {};
 
@@ -59,12 +61,12 @@ export class UpdateEnquiryComponent implements OnInit {
         if (value === '') {
             return [];
         }
-        return this.enquiryList.filter( enquiry => enquiry.studentName.toLowerCase().indexOf(value.toLowerCase()) === 0 );
+        return this.enquiryList.filter( enquiry => enquiry.enquirerName.toLowerCase().indexOf(value.toLowerCase()) === 0 );
     }
 
     displayFn(enquiry?: any) {
         if (enquiry) {
-            return enquiry.studentName + ', ' + enquiry.dateOfEnquiry;
+            return enquiry.enquirerName + ', ' + enquiry.dateOfEnquiry;
         } else {
             return '';
         }
@@ -75,7 +77,6 @@ export class UpdateEnquiryComponent implements OnInit {
         const data = {
             id: enquiry.id,
         };
-
 
         this.isLoading = true;
         this.enquiryService.getEnquiry(data, this.user.jwt).then( enquiry => {
@@ -89,8 +90,6 @@ export class UpdateEnquiryComponent implements OnInit {
         });
 
     }
-
-
 
     updateEnquiry(): void {
 
@@ -118,8 +117,6 @@ export class UpdateEnquiryComponent implements OnInit {
         });
 
     }
-
-
 
     getClass(dbId: number): any {
         let result = null;

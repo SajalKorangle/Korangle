@@ -1,23 +1,24 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {EmployeeService} from '../../../employee/employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import {GeneratePayslipServiceAdapter} from './generate-payslip.service.adapter';
 import {MONTH_LIST} from '../../../../classes/constants/month';
-import {AttendanceService} from '../../../attendance/attendance.service';
-import {SalaryService} from '../../salary.service';
+import {AttendanceOldService} from '../../../../services/modules/attendance/attendance-old.service';
+import {SalaryOldService} from '../../../../services/modules/salary/salary-old.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'generate-payslip',
   templateUrl: './generate-payslip.component.html',
   styleUrls: ['./generate-payslip.component.css'],
     providers: [
-        EmployeeService, AttendanceService, SalaryService
+        EmployeeOldService, AttendanceOldService, SalaryOldService
     ],
 })
 
 export class GeneratePayslipComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     employeeList = null;
 
@@ -37,11 +38,13 @@ export class GeneratePayslipComponent implements OnInit {
     isInitialLoading = false;
     isLoading = false;
 
-    constructor (public employeeService: EmployeeService,
-                 public attendanceService: AttendanceService,
-                 public salaryService: SalaryService) { }
+    constructor (public employeeService: EmployeeOldService,
+                 public attendanceService: AttendanceOldService,
+                 public salaryService: SalaryOldService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.getEmployeeList();
     }

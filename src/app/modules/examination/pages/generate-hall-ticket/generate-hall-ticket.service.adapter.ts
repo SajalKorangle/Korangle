@@ -26,8 +26,8 @@ export class GenerateHallTicketServiceAdapter {
         this.vm.isLoading = true;
 
         let request_examination_data = {
-            'schoolId': this.vm.user.activeSchool.dbId,
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         let request_student_section_data = {
@@ -41,20 +41,20 @@ export class GenerateHallTicketServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
-            // this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
         ]).then(value => {
 
             let request_test_data = {
-                'examinationList': value[0].map(a => a.id),
+                'parentExamination__in': value[0].map(a => a.id),
             };
 
-            this.vm.examinationService.getTestList(request_test_data, this.vm.user.jwt).then(value2 => {
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data).then(value2 => {
 
                 this.examinationList = value[0];
                 this.classList = value[1];
@@ -62,6 +62,7 @@ export class GenerateHallTicketServiceAdapter {
                 this.subjectList = value[3];
                 this.studentSectionList = value[4];
                 this.studentSubjectList = value[5];
+                this.vm.boardList = value[6];
                 this.testList = value2;
 
                 this.populateExaminationList();
@@ -106,6 +107,7 @@ export class GenerateHallTicketServiceAdapter {
                             Object.keys(student).forEach(key => {
                                 tempStudent[key] = student[key];
                             });
+                            tempStudent['selected'] = true;
                             tempStudent['subjectList'] = [];
                             this.studentSubjectList.forEach(studentSubject => {
                                 if (studentSubject.parentStudent === student.dbId) {
@@ -158,15 +160,23 @@ export class GenerateHallTicketServiceAdapter {
                             tempSection['studentList'].push(tempStudent);
                         }
                     });
-                    tempClass['sectionList'].push(tempSection);
+                    if (tempSection['studentList'].length > 0) {
+                        tempClass['sectionList'].push(tempSection);
+                    }
                 });
-                tempClass['selectedSection'] = tempClass['sectionList'][0];
-                tempExamination['classList'].push(tempClass);
+                if (tempClass['sectionList'].length > 0) {
+                    tempClass['selectedSection'] = tempClass['sectionList'][0];
+                    tempExamination['classList'].push(tempClass);
+                }
             });
-            tempExamination['selectedClass'] = tempExamination['classList'][0];
-            this.vm.examinationList.push(tempExamination);
+            if (tempExamination['classList'].length > 0) {
+                tempExamination['selectedClass'] = tempExamination['classList'][0];
+                this.vm.examinationList.push(tempExamination);
+            }
         });
-        this.vm.selectedExamination = this.vm.examinationList[0];
+        if (this.vm.examinationList.length > 0) {
+            this.vm.selectedExamination = this.vm.examinationList[0];
+        }
 
         console.log(this.vm.examinationList);
 

@@ -1,0 +1,731 @@
+<ng-container *ngIf="studentFinalReportList">
+
+    <ng-container *ngFor="let student of studentFinalReportList; let isLast = last;">
+
+        <div class="container-fluid" class="pageBreakAfter"
+             style="width: 100%; height: 100%;
+             position: relative;
+             overflow: hidden;">
+
+            <div class="row"
+                 style="margin: 0px 0px 0px 0px !important;
+                        padding: 0px 0px 0px 0px !important;
+                        height: 100% !important;">
+
+                <div class="col-xs-6 customLineHeight"
+                     style="margin: 0px 0px 0px 0px !important;
+                            padding: 0px 0px 0px 0px !important;
+                            border-right: 1px solid whitesmoke;
+                            height: 100% !important;">
+                    <div class="backSidePage"
+                         style="margin: 0px 40px 0px 0px !important;
+                                padding: 0px 10px 0px 10px !important;
+                                height: 100% !important;
+                                font-size: 12px !important;
+                                border: 6px double #b87333;
+                                border-radius: 8px;">
+
+                        <div class="row no-gutters"
+                             style="font-size: 20px;
+                                    font-weight: 800;
+                                    margin-top: 5px;
+                                    margin-bottom: 5px;
+                                    color: red !important;">
+                            <div class="col-xs-12" align="center">
+                                <span style="color: red !important;">For Students & Parents</span>
+                            </div>
+                        </div>
+
+                        <div class="row no-gutters"
+                             style="margin: 0px 0px 0px 0px !important;
+                                    padding: 0px 0px 0px 0px !important;">
+
+                            <div class="col-xs-6"
+                                 style="margin: 0px 0px 0px 0px !important;
+                                        padding: 0px 0px 0px 0px !important;">
+                                <table style="margin: 0px 2.5px 0px 0px !important;
+                                                font-size: 12px !important;
+                                                font-weight: 200 !important;
+                                                padding: 0px 0px 0px 0px !important;">
+                                    <tbody>
+                                    <tr>
+                                        <td style="width: 36%; padding: 1px 1px 1px 5px !important;" align="left">Percent</td>
+                                        <td style="width: 18%" align="center">Grade</td>
+                                        <td style="width: 46%" align="center">Description</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 1px 1px 1px 5px !important;" align="left">75-100</td>
+                                        <td align="center">A</td>
+                                        <td align="center">Excellent</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 1px 1px 1px 5px !important;" align="left">60-75</td>
+                                        <td align="center">B</td>
+                                        <td align="center">Super</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 1px 1px 1px 5px !important;" align="left">45-60</td>
+                                        <td align="center">C</td>
+                                        <td align="center">Good</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 1px 1px 1px 5px !important;" align="left">33-45</td>
+                                        <td align="center">D</td>
+                                        <td align="center">Average</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 1px 1px 1px 5px !important;" align="left">Less than 33</td>
+                                        <td align="center">E</td>
+                                        <td align="center">Needs Improvement</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-xs-6"
+                                 style="margin: 0px 0px 0px 0px !important;
+                                        padding: 0px 0px 0px 0px !important;">
+                                <div style="margin: 0px 0px 0px 2.5px !important;
+                                            padding: 5px 0px 9px 5px !important;
+                                            font-size: 10.2px !important;
+                                            border: 1px solid navy;">
+                                    Code for Child With Special Needs (CWSN)<br/>
+                                    HI - (Hearing Impaired)<br/>
+                                    LV - (Low Vision)<br/>
+                                    VI - (Visual Impaired)<br/>
+                                    OH - (Orthopaedically Handicap)<br/>
+                                    MR - (Mentally Retarded)<br/>
+                                    LD - (Learning Disabled)<br/>
+                                    MD - (Multiple Disabilities)<br/>
+                                    CP - (Cerebral Palsy)<br/>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row no-gutters"
+                             style="font-size: 16px;
+                                    font-weight: 800;
+                                    margin-top: 5px;
+                                    margin-bottom: 5px;
+                                    color: red !important;">
+                            <div class="col-xs-12">
+                                <span style="color: red !important;">Co - Scholastic Areas</span>
+                            </div>
+                        </div>
+
+                        <table style="width: 100%; font-size: 13px !important; font-weight: 200 !important;">
+                            <tr>
+                                <td style="width: 5%"></td>
+                                <td style="width: 25%; padding: 1px 1px 1px 5px !important;">Area</td>
+                                <td style="width: 70%; padding: 1px 1px 1px 5px !important;">Activities on which evaluation is based</td>
+                            </tr>
+                            <tr>
+                                <td align="center">1.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Literary</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Extempore/Debate, Essay/Letter/Poem/Report Writing etc.</td>
+                            </tr>
+                            <tr>
+                                <td align="center">2.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Cultural</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Singing, Dance, Acting etc.</td>
+                            </tr>
+                            <tr>
+                                <td align="center">3.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Scientific</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Discovery, Natural Grasp, Computer Education etc.</td>
+                            </tr>
+                            <tr>
+                                <td align="center">4.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Creativity</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Creation of different things out of paper/soil, Drawing, Painting, Mehendi, Rangoli, Stitching </td>
+                            </tr>
+                            <tr>
+                                <td align="center">5.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Sports, Yoga<br/>Scout/Red Cross</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">
+                                    Kabaddi, Kho-kho, Running, Long/High Jump, Football, Cricket,
+                                    Badminton, Scout Guide, Red Cross.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="row no-gutters"
+                             style="font-size: 16px;
+                                    font-weight: 800;
+                                    margin-top: 5px;
+                                    margin-bottom: 5px;">
+                            <div class="col-xs-12">
+                                <span style="color: red !important;">Personal-Social Qualities</span>
+                            </div>
+                        </div>
+
+                        <table style="width: 100%; font-size: 13px !important; font-weight: 200 !important;">
+                            <tr>
+                                <td style="width: 5%"></td>
+                                <td style="width: 25%; padding: 1px 1px 1px 5px !important;">Qualities</td>
+                                <td style="width: 70%; padding: 1px 1px 1px 5px !important;">Activities on which evaluation is based</td>
+                            </tr>
+                            <tr>
+                                <td align="center">1.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Regularity</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Daily Attendance in institute and different events.</td>
+                            </tr>
+                            <tr>
+                                <td align="center">2.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Punctuality</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Being present and completion of homework on time.</td>
+                            </tr>
+                            <tr>
+                                <td align="center">3.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Cleanliness</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Dress, Nails, Hair, Teeth, Eyes, Nose, Ears cleanliness. Keeping books and other things organized in bags.</td>
+                            </tr>
+                            <tr>
+                                <td align="center">4.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Discipline/<br/>Dutifulness</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Completion of work given by teachers. Following institute rules. Keeping things organized in class. Peaceful nature with others.</td>
+                            </tr>
+                            <tr>
+                                <td align="center">5.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Helpfulness</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">
+                                    Helping nature towards teachers, co - students, parents and elderly.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">6.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Environment Sensitive</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">
+                                    Sensitive towards plants, trees, animals and all natural things. Sensitive towards water conservation.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">7.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Leadership</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">
+                                    Leading during cultural, sports, literary activities. Helding various positions like Class Monitor, Team Leader, Captain.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">8.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Truthfulness</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">
+                                    Speaking truth even in difficult situations.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">9.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Honesty</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">
+                                    Being honest towards work, and in various activities.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">10.</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">Representation</td>
+                                <td style="padding: 1px 1px 1px 5px !important;">
+                                    Love towards country. Respectfulness towards Teachers, co - students. Protectiveness towards public property.
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="col-xs-6"
+                     style="margin: 0px 0px 0px 0px !important;
+                            padding: 0px 0px 0px 0px !important;
+                            border-left: 1px solid whitesmoke;
+                            height: 100% !important;">
+                    <div style="margin: 0px 0px 0px 40px !important;
+                                padding: 0px 0px 0px 0px !important;
+                                height: 100% !important;
+                                border: 6px double #b87333;
+                                border-radius: 8px;">
+
+                        <!-- School Logo -->
+                        <img src="{{user.activeSchool.profileImage}}"
+                             style="border-radius: 2px;
+                             position: absolute; top: 140px; left: 70px;
+                             opacity: 0.8 !important;
+                             width: 100px; height: 100px;"/>
+
+                        <!-- Student Photo -->
+                        <img src="{{student.profileImage}}"
+                             style="border: 1px solid black;
+                             border-radius: 10px;
+                             position: absolute; top: 140px; left: 390px;
+                             width: 100px; height: 100px;"/>
+
+                        <!-- Reg. No. , Dise Code -->
+                        <div class="row no-gutters" style="margin: 10px 5px 0px 5px;">
+                            <div class="col-xs-6 d-flex custom-padding">
+                                Dise code : {{user.activeSchool.diseCode}}
+                            </div>
+                            <div class="col-xs-6 d-flex custom-padding" align="end">
+                                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
+                                    School Code :
+                                </ng-container>
+                                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
+                                    Affiliation No. :
+                                </ng-container>
+                                {{user.activeSchool.affiliationNumber}}
+                            </div>
+                        </div>
+
+                        <!-- School Name -->
+                        <div class="row no-gutters" style="margin-top: 25px;">
+                            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+                                <span class="schoolColorName"
+                                      style="font-size: 30px; font-weight: 800;">
+                                    {{user.activeSchool.printName}}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="row no-gutters" style="margin-top: 7px !important; line-height: normal !important;">
+                            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+                                <span style="font-size: 18px;">
+                                    {{user.activeSchool.address}}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Annual Report -->
+                        <div class="row no-gutters" style="margin-top: 25px !important; line-height: normal !important;">
+                            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+                                <span style="font-size: 20px; font-weight: 800;">
+                                    Annual Report
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Session Name -->
+                        <div class="row no-gutters" style="margin-top: 14px !important; line-height: normal !important;">
+                            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+                                <span style="font-size: 20px; font-weight: 400;">
+                                    {{getSessionName(user.activeSchool.currentSessionDbId)}}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Class Name -->
+                        <div class="row no-gutters" style="margin-top: 14px !important; line-height: normal !important;">
+                            <div class="col-xs-12" align="center">
+                                <span style="font-size: 20px; font-weight: 800;">
+                                    {{student.className}}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Student Profile -->
+                        <div class="row no-gutters"
+                             style="border: 1px solid navy;
+                                    font-size: 15px !important;
+                                    margin: 41px 10px 0px 10px !important;
+                                    padding: 0px 0px 0px 0px !important;">
+                            <div class="col-xs-12"
+                                 style="margin: 0px 0px 0px 0px !important;
+                                        padding: 0px 0px 0px 0px !important;">
+
+                                <!-- Roll No. , Scholar No. -->
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-6">
+                                        Roll No. : <b>{{student.rollNumber}}</b>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        Scholar No. : <b>{{student.scholarNumber}}</b>
+                                    </div>
+                                </div>
+
+                                <!-- Name -->
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-4">
+                                        Name
+                                        <span style="float: right;">
+                                            :
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-8" style="font-size: 20px !important;">
+                                        <b><span *ngIf="student.gender=='Male'">Master</span>
+                                        <span *ngIf="student.gender=='Female'">Miss</span>
+                                        {{student.name | titlecase}}</b>
+                                    </div>
+                                </div>
+
+                                <!-- Father's Name -->
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-4">
+                                        Father's Name
+                                        <span style="float: right;">
+                                            :
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <b>Mr. {{student.fathersName | titlecase}}</b>
+                                    </div>
+                                </div>
+
+                                <!-- Mother's Name -->
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-4">
+                                        Mother's Name
+                                        <span style="float: right;">
+                                            :
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <b>Mrs. {{student.motherName | titlecase}}</b>
+                                    </div>
+                                </div>
+
+                                <!-- Date of Birth -->
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-4">
+                                        Date of Birth
+                                        <span style="float: right;">
+                                            :
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <b>{{student.dateOfBirth | date: 'dd - MM - yyyy'}}</b>
+                                    </div>
+                                </div>
+
+                                <!-- Date of Birth (in words) -->
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-4">
+                                        In Words
+                                        <span style="float: right;">
+                                            :
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <b>{{student.dateOfBirth | dateInWords}}</b>
+                                    </div>
+                                </div>
+
+                                <!-- Aadhar No., Category -->
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-6">
+                                        <span style="font-size: 15px;">
+                                            Aadhar No. : <b>{{student.aadharNum}}</b>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span style="font-size: 15px;">
+                                            Category : <b>{{student.category}}</b>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Family SSMID, Child SSMID -->
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-6">
+                                        <span style="font-size: 15px;">
+                                            Family SSMID : <b>{{student.familySSMID}}</b>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span style="font-size: 15px;">
+                                            Child SSMID : <b>{{student.childSSMID}}</b>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row no-gutters" style="margin: 10px 5px 0px 5px !important;">
+                                    <div class="col-xs-12">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Summary -->
+                        <div class="row no-gutters" style="margin: 25px 5px 0px 5px;">
+                            <div class="col-xs-12" style="font-weight: 800; font-size: 17px !important;" align="center">
+                                Summary
+                            </div>
+                        </div>
+
+                        <div class="row no-gutters" style="margin: 15px 5px 0px 5px;">
+                            <div class="col-xs-6">
+                                Attendance :
+                                <ng-container *ngIf="reportCardMapping.autoAttendance">
+                                    {{getOverallStudentAttendance(student)}} / {{getOverallStudentWorkingDays(student)}}
+                                </ng-container>
+                            </div>
+                            <div class="col-xs-6" align="end">
+                                Overall Marks : {{getOverallStudentMarks(student) | number: '1.0-1'}} / {{getOverallStudentMaxMarks(student) | number: '1.0-1'}}
+                            </div>
+                        </div>
+
+                        <div class="row no-gutters" style="margin: 5px 5px 0px 5px;">
+                            <div class="col-xs-6">
+                                Overall Grade : {{getGrade(getOverallStudentMarks(student), getOverallStudentMaxMarks(student))}}
+                            </div>
+                            <div class="col-xs-6" align="end">
+                                {{getNextStep(student)}}
+                            </div>
+                        </div>
+
+                        <div class="row no-gutters"
+                             style="position: absolute;
+                                    bottom: 10px;
+                                    margin-left: 25px;
+                                    width: 100%;
+                                    font-size: 10px; ">
+                            <div class="col-xs  -12">
+                                Special Need (CWSN) (if present, tick the field accordingly) - HI/LV/VI/OH/MR/LD/MD/CP/Other
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="container-fluid" [class.pageBreakAfter]="!isLast"
+             style="width: 100%; height: 100%;
+             position: relative;
+             border: 6px double #b87333;
+             border-radius: 8px;
+             overflow: hidden;">
+
+            <!-- Background Watermark -->
+            <img src="{{user.activeSchool.profileImage}}"
+                 style="border-radius: 2px; position: absolute;
+                 top: 135px; left: 335px;
+                 width: 380px; height: 380px;
+                 opacity: 0.15 !important;
+                 filter: grayscale(100%);
+                 z-index: 10;"/>
+
+            <!-- School Name -->
+            <div class="row no-gutters"
+                 *ngIf="student.mainSubjectList.length+student.extraSubjectList.length < 9"
+                 style="width: 100%;
+                        font-weight: bold !important;
+                        margin: 10px 0px 5px 0px !important;
+                        font-size: 25px !important;">
+                <div class="col-xs-12" align="center">
+                   <span class="schoolColorName">{{user.activeSchool.printName}}</span>
+                </div>
+            </div>
+
+            <!-- Student's Name, Class Name, Roll Number -->
+            <div class="row no-gutters"
+                 style="width: 100%;
+                        font-weight: bold !important;
+                        margin: 0px 0px 5px 0px !important;
+                        font-size: 15px !important;">
+                <div class="col-xs-4"
+                     style="padding: 0px 0px 0px 20px !important;">
+                    Student's Name : {{student.name}}
+                </div>
+                <div class="col-xs-4"
+                     style="padding: 0px 0px 0px 20px !important;" align="center">
+                    {{student.className}}, {{student.sectionName}}
+                </div>
+                <div class="col-xs-4"
+                     style="padding: 0px 20px 0px 0px !important;" align="end">
+                    Roll No. : {{student.rollNumber}}
+                </div>
+            </div>
+
+            <!-- Academinc Performance -->
+            <div class="row no-gutters"
+                 style="width: 100%; font-weight: bold !important;">
+                <div class="col-xs-12"
+                     style="font-size: 18px !important;">
+                    <span style="color: red !important;">I. Academic Performance</span>
+                </div>
+            </div>
+
+            <!-- Subjects -->
+            <table class="table" style="font-size: 15px !important; font-weight: 200 !important;">
+                <tbody>
+                <tr>
+                    <td align="center" rowspan="2">Subject</td>
+                    <td align="center" colspan="2">Monthly Test (70)</td>
+                    <td align="center" colspan="2">Half-Yearly (50)</td>
+                    <td align="center" colspan="2">Final (100)</td>
+                    <td align="center" colspan="2" *ngIf="includeProject">Project (20)</td>
+                    <td align="center" colspan="2">Overall ({{getOverallStudentSubjectMaxMarks()}})</td>
+                </tr>
+                <tr>
+                    <!-- td align="center" rowspan="2">Subject</td -->
+                    <td align="center">M.O.</td> <!-- Monthly Test -->
+                    <td align="center">Grade</td> <!-- Monthly Test -->
+                    <td align="center">M.O.</td> <!-- Half-Yearly -->
+                    <td align="center">Grade</td> <!-- Half-Yearly -->
+                    <td align="center">M.O.</td> <!-- Annual -->
+                    <td align="center">Grade</td> <!-- Annual -->
+                    <td align="center" *ngIf="includeProject">M.O.</td> <!-- Project -->
+                    <td align="center" *ngIf="includeProject">Grade</td> <!-- Project -->
+                    <td align="center">M.O.</td> <!-- Overall -->
+                    <td align="center">Grade</td> <!-- Overall -->
+                </tr>
+                <ng-container *ngFor="let subject of student.mainSubjectList; let i = index;">
+                    <tr>
+                        <td align="left" style="padding-left: 5px !important;">{{i+1}}. {{getSubjectName(subject.parentSubject)}}</td>
+                        <td align="center">{{getMonthlyStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td> <!-- Monthly Test -->
+                        <td align="center">{{getGrade(getMonthlyStudentSubjectMarks(student, subject, i), 70)}}</td> <!-- Monthly Test -->
+                        <td align="center">{{student.parentExaminationHalfYearly.mainSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Half-Yearly -->
+                        <td align="center">{{getGrade(student.parentExaminationHalfYearly.mainSubjectMarksList[i], 50)}}</td> <!-- Half-Yearly -->
+                        <td align="center">{{student.parentExaminationFinal.mainSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Final -->
+                        <td align="center">{{getGrade(student.parentExaminationFinal.mainSubjectMarksList[i], 100)}}</td> <!-- Final -->
+                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.mainSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Project -->
+                        <td align="center" *ngIf="includeProject">{{getGrade(student.parentExaminationProject.mainSubjectMarksList[i], 20)}}</td> <!-- Project -->
+                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td> <!-- Overall -->
+                        <td align="center">{{getGrade(getOverallStudentSubjectMarks(student, subject, i), getOverallStudentSubjectMaxMarks())}}</td> <!-- Overall -->
+                    </tr>
+                </ng-container>
+                <tr>
+                    <td align="left" style="padding-left: 20px !important;" colspan="7" *ngIf="!includeProject">Total (out of {{getOverallStudentTotalSubjectMaxMarks(student)}})</td>
+                    <td align="left" style="padding-left: 20px !important;" colspan="9" *ngIf="includeProject">Total (out of {{getOverallStudentTotalSubjectMaxMarks(student)}})</td>
+                    <td align="center">{{getOverallStudentTotalSubjectMarks(student) | number: '1.0-1'}}</td>
+                    <td align="center">{{getGrade(getOverallStudentTotalSubjectMarks(student), getOverallStudentTotalSubjectMaxMarks(student))}}</td>
+                </tr>
+                <ng-container *ngFor="let subject of student.extraSubjectList; let i = index;">
+                    <tr>
+                        <td align="left" style="padding-left: 5px !important;">{{student.mainSubjectList.length+i+1}}. {{getSubjectName(subject.parentSubject)}}</td>
+                        <td align="center">{{getMonthlyStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td> <!-- Monthly Test -->
+                        <td align="center">{{getGrade(getMonthlyStudentSubjectMarks(student, subject, i), 70)}}</td> <!-- Monthly Test -->
+                        <td align="center">{{student.parentExaminationHalfYearly.extraSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Half-Yearly -->
+                        <td align="center">{{getGrade(student.parentExaminationHalfYearly.extraSubjectMarksList[i], 50)}}</td> <!-- Half-Yearly -->
+                        <td align="center">{{student.parentExaminationFinal.extraSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Final -->
+                        <td align="center">{{getGrade(student.parentExaminationFinal.extraSubjectMarksList[i], 100)}}</td> <!-- Final -->
+                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.extraSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Project -->
+                        <td align="center" *ngIf="includeProject">{{getGrade(student.parentExaminationProject.extraSubjectMarksList[i], 20)}}</td> <!-- Project -->
+                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td> <!-- Overall -->
+                        <td align="center">{{getGrade(getOverallStudentSubjectMarks(student, subject, i), getOverallStudentSubjectMaxMarks())}}</td> <!-- Overall -->
+                    </tr>
+                </ng-container>
+                </tbody>
+            </table>
+
+            <!-- Extra Fields Heading -->
+            <div class="row no-gutters" style="font-weight: bold !important;">
+                <div class="col-xs-5">
+                    <span style="font-size: 18px !important; color: red !important;">II. {{extraFieldList[0].name}}</span>
+                </div>
+                <div class="col-xs-7">
+                    <span style="font-size: 18px !important; color: red !important;">III. {{extraFieldList[1].name}}</span>
+                </div>
+            </div>
+
+            <!-- Extra Fields -->
+            <div class="row no-gutters">
+                <div class="col-xs-5">
+                    <table class="table" style="font-size: 15px !important; font-weight: 200 !important;">
+                        <tbody>
+                        <ng-container *ngFor="let extraSubField of extraFieldList[0].extraSubFieldList; let i = index;">
+                            <tr>
+                                <td>{{i+1}}. {{extraSubField.name}}</td>
+                                <!-- td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i], 2)}}</td -->
+                                <td align="center">{{getGrade(getOverallStudentExtraSubFieldMarks(student, i), 18)}}</td>
+                            </tr>
+                        </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-xs-7">
+                    <table class="table" style="font-size: 15px !important; font-weight: 200 !important;">
+                        <tbody>
+                        <ng-container *ngFor="let extraSubField of extraFieldList[1].extraSubFieldList.slice(0,5); let i = index;">
+                            <tr>
+                                <td>{{i+1}}. {{extraSubField.name}}</td>
+                                <!-- td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i+5], 2)}}</td -->
+                                <td align="center">{{getGrade(getOverallStudentExtraSubFieldMarks(student, i+5), 18)}}</td>
+                                <td>{{i+1+5}}. {{extraFieldList[1].extraSubFieldList[i+5].name}}</td>
+                                <!-- td align="center">{{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[i+10], 2)}}</td -->
+                                <td align="center">{{getGrade(getOverallStudentExtraSubFieldMarks(student, i+10), 18)}}</td>
+                            </tr>
+                        </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Attendance -->
+            <div class="row no-gutters"
+                 style="width: 100%;
+                        font-weight: bold !important;
+                        margin-right: 0px;
+                        font-size: 15px !important;">
+                <div class="col-xs-3">
+                    Attendance:
+                    <ng-container *ngIf="reportCardMapping.autoAttendance">
+                        {{getOverallStudentAttendance(student)}} / {{getOverallStudentWorkingDays(student)}}
+                    </ng-container>
+                </div>
+                <div class="col-xs-3" align="center">
+                    Overall Marks: {{getOverallStudentMarks(student) | number: '1.0-1'}} / {{getOverallStudentMaxMarks(student) | number: '1.0-1'}}
+                </div>
+                <div class="col-xs-3" align="center">
+                    Percentage: {{getOverallStudentPercentage(student) | number: '1.0-1'}}%
+                </div>
+                <div class="col-xs-3" align="end" style="padding-right: 0px !important;">
+                    Overall Grade: {{getGrade(getOverallStudentMarks(student), getOverallStudentMaxMarks(student))}}
+                </div>
+            </div>
+
+            <!-- Teacher's Remarks, Overall Performance, Signature -->
+            <div class="row no-gutters"
+                 style="width: 100%;
+                        margin-top: 10px;
+                        font-weight: bold!important;
+                        font-size: 15px;">
+                <div class="col-xs-12">
+                    Teacher's Remark:
+                    &nbsp;<i>{{student.remark}}</i>
+                </div>
+            </div>
+            <img src="{{this.classTeacherSignature}}"
+                 *ngIf="this.classTeacherSignature != null"
+                 style="position: absolute;
+                 bottom: 25px; left: 585px;
+                 width: 150px; height: 75px;
+                 z-index: 1;"/>
+            <img src="{{user.activeSchool.principalSignatureImage}}"
+                 *ngIf="user.activeSchool.principalSignatureImage != null && showPrincipalSignature"
+                 style="position: absolute;
+                 bottom: 25px; left: 870px;
+                 width: 150px; height: 75px;
+                 z-index: 1;"/>
+            <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
+                 style="position: absolute;
+                 bottom: 25px; left: 585px;
+                 width: 150px; height: 75px;
+                 z-index: 1;"/ -->
+
+            <div class="row no-gutters"
+                 style="width: 100%;
+                        position: absolute;
+                        bottom: 5px;
+                        font-weight: bold !important;
+                        font-size: 15px !important;">
+                <div class="col-xs-6" style="font-size: 18px !important;">
+                    {{getNextStep(student)}}
+                </div>
+                <div class="col-xs-3"
+                     style="padding: 0px 0px 0px 20px !important;" align="center">
+                    Class Teacher's Signature
+                </div>
+                <div class="col-xs-3" align="end">
+                    Principal's Signature
+                </div>
+            </div>
+
+        </div>
+
+    </ng-container>
+
+</ng-container>
+
+

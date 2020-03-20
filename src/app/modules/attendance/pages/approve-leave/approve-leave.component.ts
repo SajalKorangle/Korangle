@@ -1,22 +1,23 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import {AttendanceService} from '../../attendance.service';
-import {EmployeeService} from '../../../employee/employee.service';
+import {AttendanceOldService} from '../../../../services/modules/attendance/attendance-old.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 
 import { ApproveLeaveServiceAdapter } from './approve-leave.service.adapter';
-import {SESSION_LIST} from '../../../../classes/constants/session';
+import {SchoolService} from './../../../../services/modules/school/school.service'
 import {LEAVE_OPTION_LIST, LEAVE_STATUS_LIST} from '../../classes/constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'approve-leave',
     templateUrl: './approve-leave.component.html',
     styleUrls: ['./approve-leave.component.css'],
-    providers: [ AttendanceService, EmployeeService ],
+    providers: [ AttendanceOldService, EmployeeOldService,SchoolService ],
 })
 
 export class ApproveLeaveComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     employeeMiniProfileList: any;
 
@@ -30,23 +31,23 @@ export class ApproveLeaveComponent implements OnInit {
 
     selectedStatus: any;
 
-    sessionList = SESSION_LIST;
+    sessionList = [];
 
     leave_status_list = LEAVE_STATUS_LIST;
 
     leave_option_list = LEAVE_OPTION_LIST;
 
-    selectedSession = SESSION_LIST[1];
+    selectedSession : any;
 
     isLoading = false;
 
-    constructor(public attenendanceService: AttendanceService,
-                public employeeService: EmployeeService) {}
+    constructor(public attenendanceService: AttendanceOldService,
+                public employeeService: EmployeeOldService,
+                public schoolService : SchoolService) {}
 
     ngOnInit(): void {
-
-        this.selectedSession = this.sessionList.find(item => item.id==this.user.activeSchool.currentSessionDbId);
-
+        this.user = DataStorage.getInstance().getUser();
+               
         LEAVE_STATUS_LIST.forEach(status => {
             this.statusList.push(status);
         });
@@ -56,8 +57,7 @@ export class ApproveLeaveComponent implements OnInit {
 
         this.serviceAdapter = new ApproveLeaveServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.getEmployeeLeaveDetails();
-
+        this.serviceAdapter.initializeData();
     }
 
     showEmployeeList(employee: any): boolean {

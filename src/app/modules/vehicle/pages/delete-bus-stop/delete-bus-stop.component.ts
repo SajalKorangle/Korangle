@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { VehicleService } from '../../vehicle.service';
+import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'delete-bus-stop',
@@ -13,7 +14,7 @@ import {map} from 'rxjs/operators';
 
 export class DeleteBusStopComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     busStopList: any;
     filteredBusStopList: any;
@@ -26,9 +27,10 @@ export class DeleteBusStopComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private vehicleService: VehicleService) { }
+    constructor (private vehicleService: VehicleOldService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         const data = {
             parentSchool: this.user.activeSchool.dbId,

@@ -1,7 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { ClassService } from '../../../../services/class.service';
-import { EnquiryService } from '../../enquiry.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'add-enquiry',
@@ -11,7 +12,7 @@ import { EnquiryService } from '../../enquiry.service';
 
 export class AddEnquiryComponent implements OnInit {
 
-    @Input() user;
+    user: any;
 
     newEnquiry: any;
 
@@ -19,10 +20,11 @@ export class AddEnquiryComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private enquiryService: EnquiryService,
-                 private classService: ClassService) { }
+    constructor (private enquiryService: EnquiryOldService,
+                 private classService: ClassOldService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
         this.newEnquiry = {};
 
         this.classService.getClassList(this.user.jwt).then(classList => {
@@ -49,6 +51,7 @@ export class AddEnquiryComponent implements OnInit {
         }
 
         this.newEnquiry.parentSchool = this.user.activeSchool.dbId;
+        this.newEnquiry.parentEmployee = this.user.activeSchool.employeeId;
 
         this.isLoading = true;
 

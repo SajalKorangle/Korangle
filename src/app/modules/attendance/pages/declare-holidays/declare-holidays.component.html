@@ -109,11 +109,11 @@
             </div>
             <div class="col-md-10">
                 <ng-container *ngIf="by==='date'">
-                    <day-date (onDateSelected)="onDateSelected($event)"></day-date>
+                    <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
                 </ng-container>
                 <ng-container *ngIf="by==='range'">
-                    <span style="margin-left: 10px; margin-right: 5px;">From:</span><day-date (onDateSelected)="onStartDateSelected($event)"></day-date>
-                    <span style="margin-left: 10px; margin-right: 5px;">To:</span><day-date (onDateSelected)="onEndDateSelected($event)"></day-date>
+                    <span style="margin-left: 10px; margin-right: 5px;">From:</span><day-date-old (onDateSelected)="onStartDateSelected($event)"></day-date-old>
+                    <span style="margin-left: 10px; margin-right: 5px;">To:</span><day-date-old (onDateSelected)="onEndDateSelected($event)"></day-date-old>
                 </ng-container>
             </div>
         </div>

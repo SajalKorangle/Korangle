@@ -1,11 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassService} from '../../../../services/class.service';
-import {StudentOldService} from '../../student-old.service';
-import {VehicleService} from '../../../vehicle/vehicle.service';
-import {SchoolService} from '../../../../services/school.service';
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
+import {VehicleOldService} from '../../../../services/modules/vehicle/vehicle-old.service';
+import {SchoolService} from '../../../../services/modules/school/school.service'
 
 import {ExcelService} from "../../../../excel/excel-service";
+import {DataStorage} from "../../../../classes/data-storage";
 
 // Constants
 const NAME = 0;
@@ -167,12 +168,12 @@ const RTE_VALUES = [
     selector: 'upload-list',
     templateUrl: './upload-list.component.html',
     styleUrls: ['./upload-list.component.css'],
-    providers: [StudentOldService, ClassService, VehicleService, SchoolService],
+    providers: [SchoolService, StudentOldService, ClassOldService, VehicleOldService,],
 })
 
 export class UploadListComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     displayStudentNumber = 0;
 
@@ -205,12 +206,14 @@ export class UploadListComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassService,
+                private classService: ClassOldService,
                 private schoolService: SchoolService,
                 private excelService: ExcelService,
-                private vehicleService: VehicleService) { }
+                private vehicleService: VehicleOldService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         let request_bus_stop_data = {
             parentSchool: this.user.activeSchool.dbId,
         };
@@ -221,7 +224,7 @@ export class UploadListComponent implements OnInit {
         Promise.all([
             this.vehicleService.getBusStopList(request_bus_stop_data, this.user.jwt),
             this.classService.getClassList(this.user.jwt),
-            this.schoolService.getSessionList(this.user.jwt),
+            this.schoolService.getObjectList(this.schoolService.session,{}),
             this.classService.getSectionList(this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
@@ -239,7 +242,7 @@ export class UploadListComponent implements OnInit {
     populateSessionList(sessionList: any): void {
         this.sessionList = sessionList;
         this.sessionList.every(session => {
-            if (session.dbId === this.user.activeSchool.currentSessionDbId) {
+            if (session.id === this.user.activeSchool.currentSessionDbId) {
                 this.selectedSession = session;
                 return false;
             }
@@ -651,7 +654,7 @@ export class UploadListComponent implements OnInit {
             'remark': student[REMARK],
             'parentSchool': this.user.activeSchool.dbId,
             'parentClass': this.getParentClass(student[CLASS]),
-            'parentSession': this.selectedSession.dbId,
+            'parentSession': this.selectedSession.id,
         };
         Object.keys(data).forEach(keys => {
             if (data[keys] === undefined) {
@@ -681,7 +684,7 @@ export class UploadListComponent implements OnInit {
         let result = null;
         this.sessionList.every(session => {
             if (session.name === data) {
-                result = session.dbId;
+                result = session.id;
                 return false;
             }
             return true;

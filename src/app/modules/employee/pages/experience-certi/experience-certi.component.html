@@ -29,8 +29,8 @@
                 </div>
             </div>
             <div class="col-md-3" style="margin-top: 23px;">
-                <day-date [placeHolder]="'Issue Date'"
-                          (onDateSelected)="handleEmployeeCertiIssueDate($event)"></day-date>
+                <day-date-old [placeHolder]="'Issue Date'"
+                              (onDateSelected)="handleEmployeeCertiIssueDate($event)"></day-date-old>
             </div>
         </div>
 
@@ -50,12 +50,12 @@
             <div style="padding-left: 15px">
                 <div *ngIf="numberOfMissingParameters === 1" style="color: red">
                     <span *ngIf="dateOfJoiningMissing">Date of Joining&nbsp;</span>
-                    <span *ngIf="currentPostMissing">Current Post&nbsp;</span>
+                    <span *ngIf="currentPostMissing">Job Title&nbsp;</span>
                     <span *ngIf="fatherNameMissing">Father Name&nbsp;</span>is missing.
                 </div>
                 <div *ngIf="numberOfMissingParameters > 1" style="color: red">
                     <span *ngIf="dateOfJoiningMissing">Date of Joining ,&nbsp;</span>
-                    <span *ngIf="currentPostMissing">Current Post ,&nbsp;</span>
+                    <span *ngIf="currentPostMissing">Job Title ,&nbsp;</span>
                     <span *ngIf="fatherNameMissing">Father Name ,&nbsp;</span>are missing.
                 </div>
             </div>

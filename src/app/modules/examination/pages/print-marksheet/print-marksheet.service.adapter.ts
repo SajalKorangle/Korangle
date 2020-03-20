@@ -1,7 +1,7 @@
 
 import { PrintMarksheetComponent } from './print-marksheet.component';
 
-import { TEST_TYPE_LIST } from '../../classes/constants';
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
 export class PrintMarksheetServiceAdapter {
 
@@ -40,8 +40,8 @@ export class PrintMarksheetServiceAdapter {
         this.vm.isInitialLoading = true;
 
         let request_examination_data = {
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-            'schoolId': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
         let request_class_subject_data = {
@@ -61,12 +61,13 @@ export class PrintMarksheetServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentFullProfileList(request_student_mini_profile_data, this.vm.user.jwt),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
         ]).then(value => {
 
             console.log(value);
@@ -78,6 +79,7 @@ export class PrintMarksheetServiceAdapter {
             this.classSubjectList = value[4];
             this.student_full_profile_list = value[5];
             this.vm.student_full_profile_list = value[5];
+            this.vm.boardList = value[6];
 
             let service_list = [];
 
@@ -85,7 +87,17 @@ export class PrintMarksheetServiceAdapter {
 
             this.classSubjectList.forEach(item => {
 
-                let request_class_test_data = {
+                let request_class_test_data = {            
+                    /*'examinationId': this.vm.selectedExamination.id,
+                    'classId': this.vm.selectedExamination.selectedClass.dbId,
+                    'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+                    'parentExamination__in': examination_id_list,
+                    'parentClass': item.parentClass,
+                    'parentDivision': item.parentDivision,
+                    'parentSubject' : item.parentSubject,
+                };
+                
+                /*let request_class_test_data = {
                     'examinationList': [examination_id_list],
                     'subjectList': [item.parentSubject],
                     'classList': [item.parentClass],
@@ -94,9 +106,9 @@ export class PrintMarksheetServiceAdapter {
                     'endTimeList': [],
                     'testTypeList': [],
                     'maximumMarksList': [],
-                };
+                };*/
 
-                service_list.push(this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt));
+                service_list.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data));
 
             });
 
@@ -311,7 +323,7 @@ export class PrintMarksheetServiceAdapter {
             'testTypeList': [],
         };
 
-        this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt).then(value2 => {
+        this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt).then(value2 => {
             console.log(value2);
             this.populateStudentList(value2);
             this.vm.showTestDetails = true;

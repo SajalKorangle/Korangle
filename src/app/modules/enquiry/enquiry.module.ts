@@ -1,29 +1,18 @@
 import { NgModule } from '@angular/core';
-
 import { ComponentsModule } from '../../components/components.module';
 
 import { EnquiryComponent } from './enquiry.component';
 
-import { AddEnquiryComponent } from './pages/add-enquiry/add-enquiry.component';
-import { ViewAllComponent } from './pages/view-all/view-all.component';
-import { UpdateEnquiryComponent } from './pages/update-enquiry/update-enquiry.component';
-
 import { EnquiryRoutingModule } from './enquiry.routing';
 
-import { ClassService } from '../../services/class.service';
-import { EnquiryService } from './enquiry.service';
-import {PrintEnquiryListComponent} from "./print/print-enquiry-list/print-enquiry-list.component";
-import {DeleteEnquiryComponent} from "./pages/delete-enquiry/delete-enquiry.component";
+import { ClassOldService } from '../../services/modules/class/class-old.service';
+import { EnquiryOldService } from '../../services/modules/enquiry/enquiry-old.service';
+import { PrintEnquiryListComponent } from "./print/print-enquiry-list/print-enquiry-list.component";
 
 @NgModule({
     declarations: [
 
         EnquiryComponent,
-
-        AddEnquiryComponent,
-        ViewAllComponent,
-        UpdateEnquiryComponent,
-        DeleteEnquiryComponent,
         PrintEnquiryListComponent
 
     ],
@@ -36,7 +25,7 @@ import {DeleteEnquiryComponent} from "./pages/delete-enquiry/delete-enquiry.comp
     ],
     exports: [
     ],
-    providers: [EnquiryService, ClassService],
+    providers: [EnquiryOldService, ClassOldService],
     bootstrap: [EnquiryComponent]
 })
 export class EnquiryModule { }

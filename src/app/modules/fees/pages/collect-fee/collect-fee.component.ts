@@ -1,27 +1,28 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CollectFeeServiceAdapter } from "./collect-fee-service.adapter";
-import { FeeService } from "../../../../services/fee.service";
-import {StudentFee} from "../../../../services/fees/student-fee";
-import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
-import {SubDiscount} from "../../../../services/fees/sub-discount";
-import {FeeReceipt} from "../../../../services/fees/fee-receipt";
-import {Discount} from "../../../../services/fees/discount";
-import {VehicleService} from "../../../vehicle/vehicle.service";
-import {SESSION_LIST} from "../../../../classes/constants/session";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {StudentFee} from "../../../../services/modules/fees/models/student-fee";
+import {SubFeeReceipt} from "../../../../services/modules/fees/models/sub-fee-receipt";
+import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount";
+import {FeeReceipt} from "../../../../services/modules/fees/models/fee-receipt";
+import {Discount} from "../../../../services/modules/fees/models/discount";
+import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {
     DiscountColumnFilter,
     INSTALLMENT_LIST,
     MODE_OF_PAYMENT_LIST,
     ReceiptColumnFilter
 } from "../../classes/constants";
-import {FeeType} from "../../../../services/fees/fee-type";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
-import {ClassService} from "../../../../services/class.service";
-import {StudentService} from "../../../../services/student.service";
-import {EmployeeService} from "../../../../services/employee.service";
+import {FeeType} from "../../../../services/modules/fees/models/fee-type";
+import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
+import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/modules/fees/print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 declare const $: any;
 
@@ -29,16 +30,16 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [ FeeService, StudentService, VehicleService, ClassService, EmployeeService ],
+    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService, SchoolService ],
 })
 
 export class CollectFeeComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
     modeOfPaymentList = MODE_OF_PAYMENT_LIST;
     receiptColumnFilter = new ReceiptColumnFilter();
     discountColumnFilter = new DiscountColumnFilter();
@@ -53,6 +54,7 @@ export class CollectFeeComponent implements OnInit {
     subDiscountList: SubDiscount[];
     busStopList = [];
     employeeList = [];
+    boardList = [];
 
     // Data from Parent Student Filter
     classList = [];
@@ -67,7 +69,7 @@ export class CollectFeeComponent implements OnInit {
     newSubFeeReceiptList = [];
     newRemark = null;
     newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
-    newCheckNumber = null;
+    newChequeNumber = null;
 
     studentFeeDetailsVisibleList = [];
 
@@ -81,32 +83,36 @@ export class CollectFeeComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
-                public vehicleService: VehicleService,
-                public classService: ClassService,
+                public vehicleService: VehicleOldService,
+                public classService: ClassOldService,
                 public employeeService: EmployeeService,
+                public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new CollectFeeServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.receiptColumnFilter.receiptNumber = false;
+        this.receiptColumnFilter.receiptNumber = true;
         this.receiptColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.receiptColumnFilter.receiptNumber = false;
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
             this.receiptColumnFilter.printButton = false;
         }
 
-        this.discountColumnFilter.discountNumber = false;
+        this.discountColumnFilter.discountNumber = true;
         this.discountColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.discountColumnFilter.discountNumber = false;
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }
@@ -130,8 +136,8 @@ export class CollectFeeComponent implements OnInit {
         this.studentSectionList = details.studentSectionList;
     }
 
-    handleStudentListSelection(studentList: any): void {
-        this.selectedStudentList = studentList;
+    handleStudentListSelection(selectedList: any): void {
+        this.selectedStudentList = selectedList[0];
         this.serviceAdapter.getStudentFeeProfile();
         this.showDetails = true;
     }
@@ -158,7 +164,7 @@ export class CollectFeeComponent implements OnInit {
         this.studentFeeDetailsVisibleList = [];
         this.newRemark = null;
         this.newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
-        this.newCheckNumber = null;
+        this.newChequeNumber = null;
     
     
     }
@@ -248,6 +254,8 @@ export class CollectFeeComponent implements OnInit {
             'classList': this.classList,
             'sectionList': this.sectionList,
             'employeeList': this.employeeList,
+            'boardList': this.boardList,
+            'sessionList' : this.sessionList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, {user: this.user, value: data});
@@ -903,7 +911,7 @@ export class CollectFeeComponent implements OnInit {
             if (studentFee[installment+'ClearanceDate']) {
                 clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
             }
-            let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+            let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
             if (numberOfLateDays > 0) {
                 amount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
                 if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < amount) {
@@ -1153,15 +1161,15 @@ export class CollectFeeComponent implements OnInit {
         this.newFeeReceiptList.forEach(feeReceipt => {
             feeReceipt.modeOfPayment = this.newModeOfPayment;
             if (feeReceipt.modeOfPayment != this.modeOfPaymentList[1]) {
-                this.newCheckNumber = null;
-                feeReceipt.checkNumber = null;
+                this.newChequeNumber = null;
+                feeReceipt.chequeNumber = null;
             }
         });
     }
 
-    updateNewFeeReceiptCheckNumber(): void {
+    updateNewFeeReceiptChequeNumber(): void {
         this.newFeeReceiptList.forEach(feeReceipt => {
-            feeReceipt.checkNumber = this.newCheckNumber;
+            feeReceipt.chequeNumber = this.newChequeNumber;
         });
     }
 

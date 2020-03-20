@@ -13,23 +13,21 @@ export const PRINT_EMPLOYEE_LIST = 'print-employee-list';
 export const PRINT_EMPLOYEE_ATTENDANCE = 'print-employee-attendance';
 export const PRINT_STUDENT_ATTENDANCE = 'print-student-attendance';
 
-//examination
+// Report Card
+
+    // M.P. Board
 export const PRINT_STUDENT_NINTH_FINAL_REPORT = 'print-student-ninth-final-report';
 export const PRINT_STUDENT_ELEVENTH_FINAL_REPORT = 'print-student-eleventh-final-report';
 export const PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT = 'print-student-comprehensive-final-report';
 export const PRINT_STUDENT_ELEGANT_FINAL_REPORT = 'print-student-elegant-final-report';
 export const PRINT_STUDENT_CLASSIC_FINAL_REPORT = 'print-student-classic-final-report';
-export const PRINT_HALL_TICKET = 'print-hall-ticket';
-export const PRINT_STUDENT_MARKSHEET = 'print-student-marksheet';
+
+    // C.B.S.E.
+export const PRINT_STUDENT_JUNIOR_REPORT = 'print-student-junior-report';
+export const PRINT_STUDENT_SENIOR_REPORT = 'print-student-senior-report';
 
 //salary
 export const PRINT_SALARY_SHEET = 'print-salary-sheet';
-
-//fees-second
-export const PRINT_OLD_FEE_RECIEPT_LIST = 'print-old-fee-receipt-list';
-//fees
-export const PRINT_FEE_RECIEPT_LIST = 'print-fee-receipt-list';
-export const PRINT_FULL_FEE_RECIEPT_LIST = 'print-full-fee-receipt-list';
 
 //expenses
 export const PRINT_EXPENSES = 'print-expenses';

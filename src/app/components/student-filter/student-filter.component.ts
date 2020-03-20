@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import { StudentOldService } from '../../modules/students/student-old.service';
-import {SchoolService} from '../../services/school.service';
+import { StudentOldService } from '../../services/modules/student/student-old.service';
+import {SchoolService} from '../../services/modules/school/school.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
@@ -46,11 +46,8 @@ export class StudentFilterComponent implements OnInit {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
             schoolDbId: this.user.activeSchool.dbId,
         };
-        const request_class_section_data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
         Promise.all([
-            this.schoolService.getSessionList(this.user.jwt),
+            this.schoolService.getObjectList(this.schoolService.session,{}),
             this.studentService.getStudentMiniProfileList(request_student_data, this.user.jwt),
         ]).then(value => {
             this.handleOnStudentLoading(false);
@@ -62,7 +59,7 @@ export class StudentFilterComponent implements OnInit {
     populateSessionList(sessionList: any): void {
         this.sessionList = sessionList;
         this.sessionList.every(session => {
-            if (session.dbId === this.user.activeSchool.currentSessionDbId) {
+            if (session.id === this.user.activeSchool.currentSessionDbId) {
                 this.selectedSession = session;
                 return false;
             }
@@ -145,7 +142,7 @@ export class StudentFilterComponent implements OnInit {
         this.handleStudentSelection(null);
         this.onSessionChange.emit(this.selectedSession);
         const request_student_data = {
-            sessionDbId: this.selectedSession.dbId,
+            sessionDbId: this.selectedSession.id,
             schoolDbId: this.user.activeSchool.dbId,
         };
         this.studentService.getStudentMiniProfileList(request_student_data, this.user.jwt).then( studentList => {

@@ -3,7 +3,7 @@
     <form class="example-form" *ngIf="enquiryList">
         <mat-form-field class="example-full-width">
             <input type="text"
-                   placeholder="Type student name here...."
+                   placeholder="Type eqnuirer name here...."
                    aria-label="Student"
                    matInput
                    [formControl]="myControl"
@@ -20,7 +20,7 @@
     </form>
 
 
-    <ng-container *ngIf= " selectedEnquiry!=null &&  selectedEnquiry && !isLoading">
+    <ng-container *ngIf="selectedEnquiry && !isLoading">
 
         <div class="row hidden-md hidden-lg hidden-sm">
             <div class="col-xs-3">

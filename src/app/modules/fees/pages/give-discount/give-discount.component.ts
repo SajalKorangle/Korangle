@@ -1,26 +1,25 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { GiveDiscountServiceAdapter } from "./give-discount-service.adapter";
-import { FeeService } from "../../../../services/fee.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {
     DiscountColumnFilter,
     INSTALLMENT_LIST,
-    MODE_OF_PAYMENT_LIST,
     ReceiptColumnFilter
 } from "../../classes/constants";
-import {SESSION_LIST} from "../../../../classes/constants/session";
-import {FeeType} from "../../../../services/fees/fee-type";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
-import {StudentFee} from "../../../../services/fees/student-fee";
-import {FeeReceipt} from "../../../../services/fees/fee-receipt";
-import {SubFeeReceipt} from "../../../../services/fees/sub-fee-receipt";
-import {Discount} from "../../../../services/fees/discount";
-import {SubDiscount} from "../../../../services/fees/sub-discount";
-import {StudentService} from "../../../../services/student.service";
-import {VehicleService} from "../../../vehicle/vehicle.service";
-import {ClassService} from "../../../../services/class.service";
-import {EmployeeService} from "../../../../services/employee.service";
+import {FeeType} from "../../../../services/modules/fees/models/fee-type";
+import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
+import {StudentFee} from "../../../../services/modules/fees/models/student-fee";
+import {FeeReceipt} from "../../../../services/modules/fees/models/fee-receipt";
+import {SubFeeReceipt} from "../../../../services/modules/fees/models/sub-fee-receipt";
+import {Discount} from "../../../../services/modules/fees/models/discount";
+import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {EmitterService} from "../../../../services/emitter.service";
+import {DataStorage} from "../../../../classes/data-storage";
+import { SchoolService } from 'app/services/modules/school/school.service';
 
 declare const $: any;
 
@@ -28,16 +27,16 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [ FeeService, StudentService, VehicleService, ClassService, EmployeeService ],
+    providers: [SchoolService, FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService ],
 })
 
 export class GiveDiscountComponent implements OnInit {
 
-    @Input() user;
+     user;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
     receiptColumnFilter = new ReceiptColumnFilter();
     discountColumnFilter = new DiscountColumnFilter();
 
@@ -75,32 +74,37 @@ export class GiveDiscountComponent implements OnInit {
 
     isStudentListLoading = false;
 
-    constructor(public feeService: FeeService,
+    constructor(public schoolService : SchoolService,
+                public feeService: FeeService,
                 public studentService: StudentService,
-                public vehicleService: VehicleService,
-                public classService: ClassService,
+                public vehicleService: VehicleOldService,
+                public classService: ClassOldService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new GiveDiscountServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.receiptColumnFilter.receiptNumber = false;
+        this.receiptColumnFilter.receiptNumber = true;
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.printButton = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.receiptColumnFilter.receiptNumber = false;
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }
 
-        this.discountColumnFilter.discountNumber = false;
+        this.discountColumnFilter.discountNumber = true;
         this.discountColumnFilter.scholarNumber = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
+            this.discountColumnFilter.discountNumber = false;
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }
@@ -124,8 +128,8 @@ export class GiveDiscountComponent implements OnInit {
         this.studentSectionList = details.studentSectionList;
     }
 
-    handleStudentListSelection(studentList: any): void {
-        this.selectedStudentList = studentList;
+    handleStudentListSelection(selectedList: any): void {
+        this.selectedStudentList = selectedList[0];
         this.serviceAdapter.getStudentFeeProfile();
         this.showDetails = true;
     }
@@ -878,7 +882,7 @@ export class GiveDiscountComponent implements OnInit {
             if (studentFee[installment+'ClearanceDate']) {
                 clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
             }
-            let numberOfLateDays = Math.ceil((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
+            let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
             if (numberOfLateDays > 0) {
                 amount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
                 if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < amount) {

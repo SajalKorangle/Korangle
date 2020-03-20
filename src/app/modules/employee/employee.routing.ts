@@ -10,6 +10,37 @@ import { PrintEmployeeListComponent } from './print/print-employee-list/print-em
 
 const routes: Routes = [
     {
+        path: 'update_profile',
+        loadChildren: 'app/modules/employee/pages/update-profile/update-profile.module#UpdateProfileModule',
+        data: {moduleName: 'employee'},
+    },
+    {
+        path: 'view_all',
+        loadChildren: 'app/modules/employee/pages/view-all/view-all.module#ViewAllModule',
+        data: {moduleName: 'employee'},
+    },
+    {
+        path: 'add_employee',
+        loadChildren: 'app/modules/employee/pages/add-employee/add-employee.module#AddEmployeeModule',
+        data: {moduleName: 'employee'},
+    },
+    {
+        path: 'assign_task',
+        loadChildren: 'app/modules/employee/pages/assign-task/assign-task.module#AssignTaskModule',
+        data: {moduleName: 'employee'},
+    },
+    {
+        path: 'employee_i_card',
+        loadChildren: 'app/modules/employee/pages/i-cards/i-cards.module#ICardsModule',
+        data: {moduleName: 'employee'},
+    },
+    {
+        path: 'employee_experience_certi',
+        loadChildren: 'app/modules/employee/pages/experience-certi/experience-certi.module#ExperienceCertiModule',
+        data: {moduleName: 'employee'},
+    },
+
+    {
         path: '',
         component: EmployeeComponent,
     },

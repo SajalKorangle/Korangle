@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import {EmployeeService} from '../../modules/employee/employee.service';
+import {EmployeeOldService} from '../../services/modules/employee/employee-old.service';
 
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
@@ -9,7 +9,7 @@ import {map} from 'rxjs/operators';
     selector: 'app-employee-filter',
     templateUrl: './employee-filter.component.html',
     styleUrls: ['./employee-filter.component.css'],
-    providers: [ EmployeeService ],
+    providers: [ EmployeeOldService ],
 })
 
 export class EmployeeFilterComponent implements OnInit {
@@ -29,7 +29,7 @@ export class EmployeeFilterComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeService) { }
+    constructor (private employeeService: EmployeeOldService) { }
 
     ngOnInit(): void {
         const data = {

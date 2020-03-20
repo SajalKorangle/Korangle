@@ -1,8 +1,5 @@
 <div class="logo">
     <span style="margin-left: 10px;">Hi {{user.first_name}}!</span>
-    <!--<a style="float: right; cursor: pointer;"-->
-       <!--*ngIf="!user.section"-->
-       <!--(click)="logout()">Logout</a>-->
     <br/>
     <a class="simple-text" disabled="true" *ngIf="user.schoolList.length > 0">
         <div class="logo-img" *ngIf="user.activeSchool">
@@ -59,7 +56,7 @@
                     style="padding: 0px; border: none; background-color: transparent;">
                 <option *ngFor="let session of session_list;"
                         [ngValue]="session.id">
-                    {{session.name}}
+                    {{session.name.slice(8)}}
                 </option>
             </select>
 
@@ -91,6 +88,30 @@
     <div class="nav-container">
 
         <ul class="nav" *ngIf="user.activeSchool">
+
+            <!-- Notification -->
+            <li [class.active]="notification.path === user.section.route"
+                [attr.data-color]='user.activeSchool.primaryThemeColor'
+                style="border-bottom: 0.1px solid lightgrey;">
+                <a (click)="notification.showTaskList = !notification.showTaskList;">
+                    <i class="material-icons">{{notification.icon}}</i>
+                    <p>
+                        {{notification.title}}
+                        <i *ngIf="!notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                        <i *ngIf="notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                    </p>
+                </a>
+                <ng-container *ngIf="notification.showTaskList">
+                    <div *ngFor="let task of notification.taskList"
+                         [attr.data-color]="user.activeSchool.secondaryThemeColor"
+                         [class.active]="notification.path===user.section.route && task.title===user.section.subTitle"
+                         class="subsectionDiv"
+                         (click)="changePage(task, notification);">
+                        <i class="material-icons">remove</i>
+                        <p>{{task.title}}</p>
+                    </div>
+                </ng-container>
+            </li>
 
             <!-- Parent -->
             <ng-container *ngIf="user.activeSchool.role==='Parent'">
@@ -162,7 +183,7 @@
                     <li [class.active]="module.path === user.section.route"
                         [attr.data-color]='user.activeSchool.primaryThemeColor'
                         style="border-bottom: 0.1px solid lightgrey;">
-                        <a (click)="module.showTaskList = !module.showTaskList;">
+                        <a [attr.id]="'Employee-'+module.title" (click)="module.showTaskList = !module.showTaskList;">
                             <i class="material-icons">{{module.icon}}</i>
                             <p>
                                 {{module.title}}
@@ -175,7 +196,8 @@
                                  [attr.data-color]="user.activeSchool.secondaryThemeColor"
                                  [class.active]="module.path===user.section.route && task.title===user.section.subTitle"
                                  class="subsectionDiv"
-                                 (click)="changePage(task, module);">
+                                 (click)="changePage(task, module);"
+                                 [attr.id]="module.title+'-'+task.title">
                                 <i class="material-icons">remove</i>
                                 <p>{{task.title}}</p>
                             </div>
@@ -190,7 +212,7 @@
                 style="border-bottom: 0.1px solid lightgrey;">
                 <a (click)="settings.showTaskList = !settings.showTaskList;">
                     <i class="material-icons">{{settings.icon}}</i>
-                    <p>
+                    <p id="Settings">
                         {{settings.title}}
                         <i *ngIf="!settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
                         <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
@@ -203,14 +225,14 @@
                          class="subsectionDiv"
                          (click)="changePage(task, settings);">
                         <i class="material-icons">remove</i>
-                        <p>{{task.title}}</p>
+                        <p [attr.id]="'Settings-'+task.title">{{task.title}}</p>
                     </div>
                 </ng-container>
             </li>
 
             <!-- Logout -->
             <li style="margin-bottom: 80px;">
-                <a (click)="logout()">
+                <a (click)="logout()" id="Logout">
                     <i class="material-icons">exit_to_app</i>
                     <p>Log out</p>
                 </a>

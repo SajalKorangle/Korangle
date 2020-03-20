@@ -1,23 +1,25 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationOldService } from '../../../../services/examination-old.service';
-import { ClassService } from '../../../../services/class.service';
-import { SubjectOldService } from '../../../../services/subject-old.service';
+import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
+import { ExaminationService } from '../../../../services/modules/examination/examination.service';
+import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
-import {TEST_TYPE_LIST} from '../../classes/constants';
-import {StudentOldService} from '../../../students/student-old.service';
+import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
     selector: 'create-test',
     templateUrl: './create-test.component.html',
     styleUrls: ['./create-test.component.css'],
-    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService ],
+    providers: [ ExaminationOldService, ClassOldService, SubjectOldService, StudentOldService,ExaminationService ],
 })
 
 export class CreateTestComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     showTestDetails = false;
 
@@ -42,12 +44,15 @@ export class CreateTestComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationOldService,
-                public classService: ClassService,
+    constructor(public examinationOldService: ExaminationOldService,
+                public examinationService : ExaminationService,
+                public classService: ClassOldService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
         this.serviceAdapter = new CreateTestServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

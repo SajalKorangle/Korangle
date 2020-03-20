@@ -13,6 +13,7 @@ export class PrintEnquiryListComponent implements OnInit, AfterViewChecked {
 
     user: any;
     classList = [];
+    employeeList = [];
 
     data: any;
 
@@ -25,6 +26,7 @@ export class PrintEnquiryListComponent implements OnInit, AfterViewChecked {
         this.user = user;
         this.data = value[0];
         this.classList=value[1];
+        this.employeeList = value[2];
         this.checkView = true;
     }
 
@@ -46,5 +48,17 @@ export class PrintEnquiryListComponent implements OnInit, AfterViewChecked {
             return true;
         });
         return className;
+    }
+
+    getEmployeeName(employeeId: number): string {
+        let employeeName = '';
+        this.employeeList.every(employee => {
+            if (employeeId === employee.id) {
+                employeeName = employee.name;
+                return false;
+            }
+            return true;
+        });
+        return employeeName;
     }
 }

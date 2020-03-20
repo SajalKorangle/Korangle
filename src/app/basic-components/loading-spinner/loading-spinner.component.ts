@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import {d} from "@angular/core/src/render3";
+// import {d} from "@angular/core/src/render3";
 
 @Component({
     selector: 'app-loading-spinner',

@@ -1,7 +1,7 @@
 
 import { SetSchoolFeesComponent } from './set-school-fees.component';
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {SchoolFeeRule} from "../../../../services/fees/school-fee-rule";
+import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
 
 export class SetSchoolFeesServiceAdapter {
 
@@ -130,14 +130,14 @@ export class SetSchoolFeesServiceAdapter {
         // Any conditions to check
 
         if (!this.vm.newSchoolFeeRule.ruleNumber) {
-            alert('Rule number should be populated');
+            alert('Group number should be populated');
             return;
         }
 
         if (this.vm.schoolFeeRuleList.filter(schoolFeeRule => {
             return schoolFeeRule.parentFeeType == this.vm.selectedFeeType.id;
         }).map(a => a.ruleNumber).includes(this.vm.newSchoolFeeRule.ruleNumber)) {
-            alert('Rule number already exists');
+            alert('Group number already exists');
             return;
         }
 
@@ -258,7 +258,7 @@ export class SetSchoolFeesServiceAdapter {
             id: schoolFeeRule.id,
         };
 
-        let class_filter_fee_list;
+        /*let class_filter_fee_list;
         if (schoolFeeRule.isClassFilter) {
             class_filter_fee_list = {
                 id: this.vm.classFilterFeeList.filter(class_filter_fee => {
@@ -280,12 +280,12 @@ export class SetSchoolFeesServiceAdapter {
             id: this.vm.studentFeeList.filter(studentFee => {
                 return studentFee.parentSchoolFeeRule == schoolFeeRule.id;
             }).map(a => a.id).join(','),
-        };
+        };*/
 
         let service_list = [];
 
         service_list.push(this.vm.feeService.delete(this.vm.feeService.school_fee_rules, school_fee_rule_data));
-        if (class_filter_fee_list) {
+        /*if (class_filter_fee_list) {
             service_list.push(this.vm.feeService.deleteList(this.vm.feeService.class_filter_fees, class_filter_fee_list));
         }
         if (bus_stop_filter_fee_list) {
@@ -293,7 +293,7 @@ export class SetSchoolFeesServiceAdapter {
         }
         if (student_fee_list['id'] != '') {
             service_list.push(this.vm.feeService.deleteList(this.vm.feeService.student_fees, student_fee_list));
-        }
+        }*/
 
         this.vm.isLoading = true;
 
@@ -302,7 +302,10 @@ export class SetSchoolFeesServiceAdapter {
             console.log(value);
             this.deleteFromSchoolFeeRuleList(schoolFeeRule.id);
 
-            if (class_filter_fee_list) {
+            this.deleteFromClassFilterFeeListBySchoolFeeRuleId(schoolFeeRule.id);
+            this.deleteFromBusStopFilterFeeListBySchoolFeeRuleId(schoolFeeRule.id);
+            this.deleteFromStudentFeeListBySchoolFeeRuleId(schoolFeeRule.id);
+            /*if (class_filter_fee_list) {
                 this.deleteFromClassFilterFeeListBySchoolFeeRuleId(schoolFeeRule.id);
             }
 
@@ -312,7 +315,7 @@ export class SetSchoolFeesServiceAdapter {
 
             if (student_fee_list['id'] != '') {
                 this.deleteFromStudentFeeListBySchoolFeeRuleId(schoolFeeRule.id);
-            }
+            }*/
 
             this.vm.isLoading = false;
 

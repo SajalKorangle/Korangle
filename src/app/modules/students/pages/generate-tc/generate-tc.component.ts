@@ -1,37 +1,33 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { Student } from '../../../../classes/student';
-import { Classs } from '../../../../classes/classs';
-import { Section } from '../../../../classes/section';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
 
-import { StudentOldService } from '../../student-old.service';
-import { SchoolService } from '../../../../services/school.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_TC } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
-  selector: 'generate-tc',
-  templateUrl: './generate-tc.component.html',
-  styleUrls: ['./generate-tc.component.css'],
-    providers: [ StudentOldService, SchoolService ],
+    selector: 'generate-tc',
+    templateUrl: './generate-tc.component.html',
+    styleUrls: ['./generate-tc.component.css'],
+    providers: [ StudentOldService, SchoolOldService, SchoolService ],
 })
 
 export class GenerateTcComponent implements OnInit {
 
-    @Input() user;
+    user;
 
-    selectedClass: Classs;
-    selectedSection: Section;
     selectedStudent: Student;
     studentFromFilter: any;
 
     selectedTransferCertificate: TransferCertificate = new TransferCertificate();
 
     currentTransferCertificate: TransferCertificate = new TransferCertificate();
-
-    classSectionStudentList: Classs[] = [];
 
     showDetails: boolean = false;
 
@@ -42,6 +38,8 @@ export class GenerateTcComponent implements OnInit {
 
     selectedSession: any;
     sessionList: any;
+
+    boardList: any;
 
     // Boolean variable to check if all the required fields are coming from student profile
     fatherNameIsComing = false;
@@ -59,39 +57,29 @@ export class GenerateTcComponent implements OnInit {
     flag = false;
     count = 0;
 
-
-
     constructor (private studentService: StudentOldService,
                  private schoolService: SchoolService,
+                 private schoolOldService: SchoolOldService,
                  private printService: PrintService) { }
-/*
-    changeSelectedSectionToFirst(): void {
-        this.selectedSection = this.selectedClass.sectionList[0];
-        this.changeSelectedStudentToFirst();
-    }
-
-    changeSelectedStudentToFirst(): void {
-        this.selectedStudent = this.selectedSection.studentList[0];
-        // this.currentTransferCertificate.copy(this.selectedStudent);
-        this.showDetails = false;
-    }
-
-
-    handleSessionChange(): void {
-        this.getStudentList(this.selectedSession.dbId);
-    }
-*/
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+
+        Promise.all([
+            this.schoolService.getObjectList(this.schoolService.board,{}),
+        ]).then(value => {
+            this.boardList = value[0];
+        }, error => {
+        });
+
         this.getSessionList();
-        // this.getStudentList(this.user.activeSchool.currentSessionDbId);
     }
 
     getSessionList(): void {
-        this.schoolService.getSessionList(this.user.jwt).then(sessionList => {
+        this.schoolService.getObjectList(this.schoolService.session,{}).then(sessionList => {
             this.sessionList = sessionList;
             this.sessionList.every(session => {
-                if (session.dbId === this.user.activeSchool.currentSessionDbId) {
+                if (session.id === this.user.activeSchool.currentSessionDbId) {
                     this.selectedSession = session;
                     return false;
                 }
@@ -100,50 +88,11 @@ export class GenerateTcComponent implements OnInit {
         });
     }
 
-    /*getStudentList(sessionDbId: number): void {
-        const data = {
-            sessionDbId: sessionDbId,
-            schoolDbId: this.user.activeSchool.dbId,
-        };
-        this.isStudentListLoading = true;
-        this.studentService.getClassSectionStudentList(data, this.user.jwt).then(classSectionStudentList => {
-            this.isStudentListLoading = false;
-            this.classSectionStudentList = [];
-            classSectionStudentList.forEach( classs => {
-                const tempClass = new Classs();
-                tempClass.name = classs.name;
-                tempClass.dbId = classs.dbId;
-                classs.sectionList.forEach( section => {
-                    const tempSection = new Section();
-                    tempSection.name = section.name;
-                    tempSection.dbId = section.dbId;
-                    section.studentList.forEach( student => {
-                        const tempStudent = new Student();
-                        tempStudent.name = student.name;
-                        tempStudent.dbId = student.dbId;
-                        tempStudent.parentTransferCertificate = student.parentTransferCertificate;
-                        tempSection.studentList.push(tempStudent);
-                    });
-                    tempClass.sectionList.push(tempSection);
-                });
-                this.classSectionStudentList.push(tempClass);
-            });
-            if (this.classSectionStudentList.length > 0) {
-                this.selectedClass = this.classSectionStudentList[0];
-                this.changeSelectedSectionToFirst();
-            } else {
-                alert('Student needs to be added first, before profile updation');
-            }
-        }, error => {
-            this.isStudentListLoading = false;
-        });
-    }*/
-
     getStudentProfile(): void {
         this.isLoading = true;
         const student_data = {
             studentDbId: this.selectedStudent.dbId,
-            sessionDbId: this.selectedSession.dbId,
+            sessionDbId: this.selectedSession.id,
         };
         if (this.selectedStudent.parentTransferCertificate) {
             const transfer_certificate_data = {
@@ -277,6 +226,7 @@ export class GenerateTcComponent implements OnInit {
         const value = {
             studentProfile: this.selectedStudent,
             transferCertificate: this.selectedTransferCertificate,
+            boardList: this.boardList,
             twoCopies: this.twoCopies,
         };
         this.printService.navigateToPrintRoute(PRINT_TC, {user: this.user, value});

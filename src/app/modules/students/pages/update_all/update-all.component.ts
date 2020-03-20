@@ -1,8 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassService} from '../../../../services/class.service';
-import {StudentOldService} from '../../student-old.service';
+import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import { ChangeDetectorRef } from '@angular/core';
+import {DataStorage} from "../../../../classes/data-storage";
 
 class ColumnHandle {
     name: any;
@@ -60,12 +61,12 @@ const RELIGION_LIST = [
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentOldService, ClassService],
+    providers: [StudentOldService, ClassOldService],
 })
 
 export class UpdateAllComponent implements OnInit {
 
-    @Input() user;
+    user:any ;
 
     COLUMNHANDLES: ColumnHandle[] = [
         // value, key, inputType, show, selectedList
@@ -76,7 +77,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Father\'s Name', 'fathersName', 'text', true, ''), // 4
         new ColumnHandle('Mobile No.', 'mobileNumber', 'number', true, ''), // 5
         new ColumnHandle('Alternate Mobile No.', 'secondMobileNumber', 'number', true, ''), // 5
-        new ColumnHandle('Scholar No.', 'scholarNumber', 'number', false, ''), // 6
+        new ColumnHandle('Scholar No.', 'scholarNumber', 'text', false, ''), // 6
         new ColumnHandle('Date of Birth', 'dateOfBirth', 'date', false, ''), // 7
         new ColumnHandle('Mother\'s Name', 'motherName', 'text', false, ''), // 10
         new ColumnHandle('Gender', 'gender', 'list', false, GENDER_LIST), // 11
@@ -130,11 +131,11 @@ export class UpdateAllComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassService,
+                private classService: ClassOldService,
                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
-
+        this.user = DataStorage.getInstance().getUser();
         const student_full_profile_request_data = {
             schoolDbId: this.user.activeSchool.dbId,
             sessionDbId: this.user.activeSchool.currentSessionDbId,

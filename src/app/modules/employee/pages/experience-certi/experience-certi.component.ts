@@ -1,16 +1,19 @@
 import {Component, Input} from '@angular/core';
-import {EmployeeService} from '../../employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_EXP_CERT } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
     selector: 'app-experience-certi',
     templateUrl: './experience-certi.component.html',
     styleUrls: ['./experience-certi.component.css'],
+    providers: [ SchoolService ],
 })
 
 export class ExperienceCertiComponent {
-    @Input() user;
+    user;
 
     employee: any;
     employeeFullProfile: any;
@@ -19,6 +22,7 @@ export class ExperienceCertiComponent {
     certificateNumber: number;
     certificateIssueDate;
     remark = 'His general conduct was good during the work.';
+    boardList;
 
     isLoading = false;
     numberOfMissingParameters = 0;
@@ -28,7 +32,12 @@ export class ExperienceCertiComponent {
     currentPostMissing = false;
 
 
-    constructor (private employeeService: EmployeeService, private printService: PrintService) { }
+    constructor (private employeeService: EmployeeOldService,
+                 private schoolService: SchoolService,
+                 private printService: PrintService) { }
+    ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
+    }
 
     getEmployeeProfile(employee: any): void {
 
@@ -42,9 +51,12 @@ export class ExperienceCertiComponent {
 
         this.isLoading = true;
         Promise.all([
-            this.employeeService.getEmployeeProfile(data, this.user.jwt) ]).then(value => {
+            this.employeeService.getEmployeeProfile(data, this.user.jwt),
+            this.schoolService.getObjectList(this.schoolService.board, {}),
+        ]).then(value => {
             this.isLoading = false;
             this.employeeFullProfile = value[0];
+            this.boardList = value[1];
             this.validateAllParameters(this.employeeFullProfile);
             this.populateRemark();
         }, error => {
@@ -66,6 +78,7 @@ export class ExperienceCertiComponent {
             certificateNumber: this.certificateNumber,
             certificateIssueDate: this.certificateIssueDate,
             remark: this.remark,
+            boardList: this.boardList,
         };
         this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_EXP_CERT, {user:this.user, value})
     }

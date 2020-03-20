@@ -33,21 +33,24 @@ export class DayDateComponent implements OnInit {
 
     @Input() placeHolder = "Choose a date";
 
-    @Input() initialValue = null;
+    @Input() initialValue = new Date();
 
-    @Input() acceptNull = false;
+    // @Input() acceptNull = false;
 
-    @Input() formattedDateOutput = false;
+    @Input() formattedDateOutput = true;
 
     @Input() disableDatePicker = false;
 
     @Output() onDateSelected = new EventEmitter<any>();
 
 
-    date = new FormControl({value: new Date(), disabled: true});
+    // date = new FormControl({value: new Date(), disabled: true});
+    date: any;
 
     ngOnInit(): void {
-        if (!this.acceptNull) {
+        this.date = new FormControl({value: this.initialValue, disabled: true});
+        this.onDateChanged(this.date);
+        /*if (!this.acceptNull) {
             if (this.initialValue) {
                 this.date = new FormControl({value: this.initialValue, disabled: true});
             }
@@ -58,7 +61,12 @@ export class DayDateComponent implements OnInit {
             this.onDateSelected.emit(this.formatDate(this.date.value));
         } else {
             this.onDateSelected.emit(this.date.value);
-        }
+        }*/
+    }
+
+    nullDate(): void {
+        this.date = new FormControl({value: null, disabled: true});
+        this.onDateChanged(this.date);
     }
 
     onDateChanged(event: any): void {

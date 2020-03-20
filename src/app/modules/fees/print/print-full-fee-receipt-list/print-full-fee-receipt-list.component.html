@@ -30,16 +30,17 @@
 
                     <!-- Reg. No. , Dise Code -->
                     <div class="row" style="margin-top: 0px;">
-                        <div *ngIf="user.activeSchool.affiliationNumber && user.activeSchool.affiliationNumber.length > 4"
-                             class="col-xs-6">
-                            Aff. No. : {{user.activeSchool.affiliationNumber}}
-                        </div>
-                        <div *ngIf="!user.activeSchool.affiliationNumber || user.activeSchool.affiliationNumber.length <= 4"
-                             class="col-xs-6">
-                            Reg. No. : {{user.activeSchool.registrationNumber}}
-                        </div>
-                        <div class="col-xs-6" align="end">
+                        <div class="col-xs-6">
                             Dise code : {{user.activeSchool.diseCode}}
+                        </div>
+                        <div class="col-xs-6 d-flex custom-padding" align="end">
+                            <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
+                                School Code :
+                            </ng-container>
+                            <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
+                                Affiliation No. :
+                            </ng-container>
+                            {{user.activeSchool.affiliationNumber}}
                         </div>
                     </div>
 
@@ -70,7 +71,7 @@
                     <div class="row " style="margin-top: 10px;">
                         <div class="col-xs-12" align="center">
                             <span style="font-size: 21px;">
-                                <u>Session {{getSessionName(feeReceipt.parentSession)}}</u>
+                                <u>{{getSessionName(feeReceipt.parentSession)}}</u>
                             </span><br/>
                         </div>
                     </div>
@@ -146,7 +147,7 @@
                              *ngIf="(subFeeReceipt.isAnnually && subFeeReceipt['aprilAmount'] > 0) || !subFeeReceipt.isAnnually">
                             <div class="col-xs-2" align="center">{{subFeeReceiptIndex+1}}.</div>
                             <div class="col-xs-6">
-                                {{getFeeTypeName(subFeeReceipt)}}&nbsp;
+                                {{getFeeType(subFeeReceipt).name}}&nbsp;
                                 <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
                             </div>
                             <div class="col-xs-4"
@@ -163,7 +164,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <ng-container *ngIf="subFeeReceipt['aprilAmount'] == 0">
-                                    {{getFeeTypeName(subFeeReceipt)}}&nbsp;
+                                    {{getFeeType(subFeeReceipt).name}}&nbsp;
                                     <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
                                     - <i>Late Fee</i>
                                 </ng-container>
@@ -309,7 +310,7 @@
                     <div class="row " style="margin-top: 10px;">
                         <div class="col-xs-12" align="center">
                             <span style="font-size: 21px;">
-                                <u>Session {{getSessionName(feeReceipt.parentSession)}}</u>
+                                <u>{{getSessionName(feeReceipt.parentSession)}}</u>
                             </span><br/>
                         </div>
                     </div>
@@ -385,7 +386,7 @@
                              *ngIf="(subFeeReceipt.isAnnually && subFeeReceipt['aprilAmount'] > 0) || !subFeeReceipt.isAnnually">
                             <div class="col-xs-2" align="center">{{subFeeReceiptIndex+1}}.</div>
                             <div class="col-xs-6">
-                                {{getFeeTypeName(subFeeReceipt)}}&nbsp;
+                                {{getFeeType(subFeeReceipt).name}}&nbsp;
                                 <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
                             </div>
                             <div class="col-xs-4"
@@ -402,7 +403,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <ng-container *ngIf="subFeeReceipt['aprilAmount'] == 0">
-                                    {{getFeeTypeName(subFeeReceipt)}}&nbsp;
+                                    {{getFeeType(subFeeReceipt).name}}&nbsp;
                                     <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
                                     - <i>Late Fee</i>
                                 </ng-container>

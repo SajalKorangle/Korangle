@@ -31,12 +31,16 @@ export class TotalCollectionServiceAdapter {
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
             this.vm.classService.getClassList(this.vm.user.jwt),
             this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
         ]).then(value => {
 
             this.vm.feeTypeList = value[0]
             this.vm.employeeList = value[1];
             this.vm.classList = value[2];
             this.vm.sectionList = value[3];
+            this.vm.boardList = value[4];
+            this.vm.sessionList = value[5]
 
             this.vm.isInitialLoading = false;
         }, error => {
@@ -165,6 +169,13 @@ export class TotalCollectionServiceAdapter {
 
         // Filtered Mode of Payment List
         this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {return a != null;});
+
+        //Filtered Fee Type list
+        this.vm.filteredFeeTypeList=this.vm.feeTypeList.filter(feeType=>{
+            return this.vm.subFeeReceiptList.find(subFeeReceipt =>{
+                return subFeeReceipt.parentFeeType==feeType.id;
+            }) != undefined;
+        });
 
     }
 

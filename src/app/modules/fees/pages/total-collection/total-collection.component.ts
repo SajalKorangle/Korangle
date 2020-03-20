@@ -1,19 +1,21 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { TotalCollectionServiceAdapter } from "./total-collection.service.adapter";
-import { FeeService } from "../../../../services/fee.service";
-import {EmployeeService} from "../../../../services/employee.service";
-import {StudentService} from "../../../../services/student.service";
-import {ClassService} from "../../../../services/class.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import {EmployeeService} from "../../../../services/modules/employee/employee.service";
+import {StudentService} from "../../../../services/modules/student/student.service";
+import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
+import { PRINT_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
+import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
     selector: 'total-collection',
     templateUrl: './total-collection.component.html',
     styleUrls: ['./total-collection.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService, ClassService ],
+    providers: [ FeeService, EmployeeService, StudentService, ClassOldService, SchoolService ],
 })
 
 export class TotalCollectionComponent implements OnInit {
@@ -23,7 +25,7 @@ export class TotalCollectionComponent implements OnInit {
     nullValue = null;
     installmentList = INSTALLMENT_LIST;
 
-    @Input() user;
+    user;
 
     startDate: any;
     endDate: any;
@@ -39,6 +41,9 @@ export class TotalCollectionComponent implements OnInit {
     studentList = [];
     studentSectionList = [];
 
+    boardList;
+    sessionList;
+
     serviceAdapter: TotalCollectionServiceAdapter;
 
     selectedEmployee = null;
@@ -50,17 +55,22 @@ export class TotalCollectionComponent implements OnInit {
     selectedClassSection=null;
     filteredClassSectionList = [];
 
+    selectedFeeType=null;
+    filteredFeeTypeList=[];
+
     isInitialLoading = false;
     isLoading = false;
 
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
                 public studentService: StudentService,
-                public classService: ClassService,
+                public classService: ClassOldService,
+                public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new TotalCollectionServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -93,6 +103,8 @@ export class TotalCollectionComponent implements OnInit {
             'sectionList': this.sectionList,
             'selectedEmployee': this.selectedEmployee,
             'selectedModeOfPayment': this.selectedModeOfPayment,
+            'selectedFeeType':this.selectedFeeType,
+            'sessionList':this.sessionList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
@@ -133,6 +145,7 @@ export class TotalCollectionComponent implements OnInit {
 
     getFilteredFeeReceiptList(): any {
         let tempList = this.feeReceiptList;
+
         if (this.selectedEmployee) {
             tempList = tempList.filter(feeReceipt => {
                 return feeReceipt.parentEmployee == this.selectedEmployee.id;
@@ -150,6 +163,18 @@ export class TotalCollectionComponent implements OnInit {
                     && classSection.section.id == this.selectedClassSection.section.id;
             });
         }
+
+        if(this.selectedFeeType){
+            let filteredSubFeeList=this.subFeeReceiptList.filter(subFeeRecipt=>{
+                return subFeeRecipt.parentFeeType==this.selectedFeeType.id;
+            }).map(a=>a.parentFeeReceipt);
+            tempList = tempList.filter(feeReceipt => {
+                return filteredSubFeeList.find(parentFeeId => {
+                    return parentFeeId == feeReceipt.id;
+                }) != undefined;
+            });
+        }
+
         return tempList;
     }
 
@@ -161,7 +186,13 @@ export class TotalCollectionComponent implements OnInit {
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
         return this.subFeeReceiptList.filter(subFeeReceipt => {
-            return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+            if(this.selectedFeeType){
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id &&
+                    subFeeReceipt.parentFeeType == this.selectedFeeType.id;
+            }else{
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id ;
+            }
+
         }).reduce((totalSubFeeReceipt, subFeeReceipt) => {
             return totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
                 return totalInstallment

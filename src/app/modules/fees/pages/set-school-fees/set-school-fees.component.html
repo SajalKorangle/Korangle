@@ -96,17 +96,17 @@
                                             </td>
                                             <td>
                                                 {{schoolFeeRule[installment+'LastDate'] | date : 'dd - MMM - yyyy'}}
-                                                <!-- day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(schoolFeeRule, installment)"
+                                                <!-- day-date-old *ngIf="!disableSchoolFeeRuleMonthLastDate(schoolFeeRule, installment)"
                                                           [initialValue]="schoolFeeRule[installment+'LastDate']"
                                                           [acceptNull]="true"
                                                           [formattedDateOutput]="true"
                                                           (onDateSelected)="schoolFeeRule[installment+'LastDate']=$event">
-                                                </day-date>
-                                                <day-date *ngIf="disableSchoolFeeRuleMonthLastDate(schoolFeeRule, installment)"
+                                                </day-date-old>
+                                                <day-date-old *ngIf="disableSchoolFeeRuleMonthLastDate(schoolFeeRule, installment)"
                                                           [acceptNull]="true"
                                                           [initialValue]="null"
                                                           [disableDatePicker]="true">
-                                                </day-date -->
+                                                </day-date-old -->
                                             </td>
                                             <td>
                                                 {{schoolFeeRule[installment+'LateFee']}}
@@ -146,17 +146,17 @@
                                         </td>
                                         <td>
                                             {{schoolFeeRule['aprilLastDate'] | date : 'dd - MMM - yyyy'}}
-                                            <!-- day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(schoolFeeRule, 'april')"
+                                            <!-- day-date-old *ngIf="!disableSchoolFeeRuleMonthLastDate(schoolFeeRule, 'april')"
                                                       [initialValue]="schoolFeeRule['aprilLastDate']"
                                                       [acceptNull]="true"
                                                       [formattedDateOutput]="true"
                                                       (onDateSelected)="schoolFeeRule['aprilLastDate']=$event">
-                                            </day-date>
-                                            <day-date *ngIf="disableSchoolFeeRuleMonthLastDate(schoolFeeRule, 'april')"
+                                            </day-date-old>
+                                            <day-date-old *ngIf="disableSchoolFeeRuleMonthLastDate(schoolFeeRule, 'april')"
                                                       [acceptNull]="true"
                                                       [initialValue]="null"
                                                       [disableDatePicker]="true">
-                                            </day-date -->
+                                            </day-date-old -->
                                         </td>
                                         <td>
                                             {{schoolFeeRule['aprilLateFee']}}
@@ -376,17 +376,17 @@
                                            (keypress)="policeAmountInput($event)"/>
                                 </td>
                                 <td>
-                                    <day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
-                                              [initialValue]="newSchoolFeeRule[installment+'LastDate']"
-                                              [acceptNull]="true"
-                                              [formattedDateOutput]="true"
-                                              (onDateSelected)="newSchoolFeeRule[installment+'LastDate']=$event">
-                                    </day-date>
-                                    <day-date *ngIf="disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
-                                              [acceptNull]="true"
-                                              [initialValue]="null"
-                                              [disableDatePicker]="true">
-                                    </day-date>
+                                    <day-date-old *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
+                                                  [initialValue]="newSchoolFeeRule[installment+'LastDate']"
+                                                  [acceptNull]="true"
+                                                  [formattedDateOutput]="true"
+                                                  (onDateSelected)="newSchoolFeeRule[installment+'LastDate']=$event">
+                                    </day-date-old>
+                                    <day-date-old *ngIf="disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, installment)"
+                                                  [acceptNull]="true"
+                                                  [initialValue]="null"
+                                                  [disableDatePicker]="true">
+                                    </day-date-old>
                                 </td>
                                 <td>
                                     <input type="number"
@@ -427,17 +427,17 @@
                                            (keypress)="policeAmountInput($event)"/>
                                 </td>
                                 <td>
-                                    <day-date *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
-                                              [initialValue]="newSchoolFeeRule['aprilLastDate']"
-                                              [acceptNull]="true"
-                                              [formattedDateOutput]="true"
-                                              (onDateSelected)="newSchoolFeeRule['aprilLastDate']=$event">
-                                    </day-date>
-                                    <day-date *ngIf="disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
-                                              [acceptNull]="true"
-                                              [initialValue]="null"
-                                              [disableDatePicker]="true">
-                                    </day-date>
+                                    <day-date-old *ngIf="!disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
+                                                  [initialValue]="newSchoolFeeRule['aprilLastDate']"
+                                                  [acceptNull]="true"
+                                                  [formattedDateOutput]="true"
+                                                  (onDateSelected)="newSchoolFeeRule['aprilLastDate']=$event">
+                                    </day-date-old>
+                                    <day-date-old *ngIf="disableSchoolFeeRuleMonthLastDate(newSchoolFeeRule, 'april')"
+                                                  [acceptNull]="true"
+                                                  [initialValue]="null"
+                                                  [disableDatePicker]="true">
+                                    </day-date-old>
                                 </td>
                                 <td>
                                     <input type="number"

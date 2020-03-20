@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {EmployeeService} from '../../employee.service';
+import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_I_CARD } from '../../../../print/print-routes.constants';
+import {DataStorage} from "../../../../classes/data-storage";
 
 export class ColumnFilter {
     showName = true;
@@ -27,7 +28,7 @@ export class ColumnFilter {
 
 export class ICardsComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     // Gender options
     maleSelected = true;
@@ -42,13 +43,15 @@ export class ICardsComponent implements OnInit {
 
     timeout: any;
 
-    constructor(private employeeService: EmployeeService ,
+    constructor(private employeeService: EmployeeOldService ,
                 public columnFilter: ColumnFilter,
                 private printService: PrintService) {
     }
 
     ngOnInit(): void {
-       const data = {
+        this.user = DataStorage.getInstance().getUser();
+
+        const data = {
            'parentSchool': this.user.activeSchool.dbId,
        };
        this.isLoading = true;

@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { EmployeeService } from '../../employee.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 
 import {FormControl} from '@angular/forms';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'update-profile',
@@ -12,7 +13,7 @@ import {FormControl} from '@angular/forms';
 
 export class UpdateProfileComponent implements OnInit {
 
-    @Input() user;
+    user;
 
     employeeList: any;
 
@@ -26,9 +27,10 @@ export class UpdateProfileComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeService) { }
+    constructor (private employeeService: EmployeeOldService) { }
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
         this.currentEmployeeProfile = {};
         this.currentEmployeeSessionProfile = {};
@@ -69,6 +71,40 @@ export class UpdateProfileComponent implements OnInit {
 
     }
 
+
+    checkFieldChanged(selectedValue, currentValue): boolean {
+        if(selectedValue!==null && currentValue!==null ){
+            if (selectedValue !== currentValue){
+                return true;
+            }
+            return false;
+        }
+    }
+
+    checkLength(value: any) {
+        if (value && value.toString().length > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    checkRight(value: any, rightValue: number) {
+        if (value && value.toString().length === rightValue) {
+            return true;
+        }
+        return false;
+    }
+
+    policeNumberInput(event: any): boolean {
+        let value = event.key;
+        if (value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
+            value !== '4' && value !== '5' && value !== '6' && value !== '7' &&
+            value !== '8' && value !== '9') {
+            return false;
+        }
+        return true;
+    }
+
     updateEmployeeProfile(): void {
 
         if (this.currentEmployeeProfile.name === undefined || this.currentEmployeeProfile.name === '') {
@@ -97,6 +133,9 @@ export class UpdateProfileComponent implements OnInit {
             this.currentEmployeeProfile.mobileNumber = null;
             alert('Mobile number is required.');
             return;
+        } else if (this.currentEmployeeProfile.mobileNumber.toString().length != 10) {
+            alert('Mobile number should be 10 digits');
+            return;
         } else {
             let selectedEmployee = null;
             this.employeeList.forEach(employee => {
@@ -109,6 +148,12 @@ export class UpdateProfileComponent implements OnInit {
                 alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
                 return;
             }
+        }
+
+        if (this.currentEmployeeProfile.aadharNumber != null
+            && this.currentEmployeeProfile.aadharNumber.toString().length != 12) {
+            alert("Aadhar No. should be 12 digits");
+            return;
         }
 
         this.isLoading = true;
