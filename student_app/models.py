@@ -149,7 +149,7 @@ class StudentSection(models.Model):
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
 
-    rollNumber = models.TextField(null=True)
+    rollNumber = models.TextField(null=True, blank=True)
     attendance = models.IntegerField(null=True)
 
     class Meta:
