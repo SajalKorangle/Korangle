@@ -3,7 +3,7 @@
     <form class="example-form" *ngIf="enquiryList">
         <mat-form-field class="example-full-width">
             <input type="text"
-                   placeholder="Type eqnuirer name here...."
+                   placeholder="Type enquirer name here...."
                    aria-label="Student"
                    matInput
                    [formControl]="myControl"
@@ -20,7 +20,7 @@
     </form>
 
 
-    <ng-container *ngIf="selectedEnquiry && !isLoading">
+    <ng-container *ngIf= " selectedEnquiry!=null &&  selectedEnquiry && !isLoading">
 
         <div class="row hidden-md hidden-lg hidden-sm">
             <div class="col-xs-3">
@@ -35,7 +35,7 @@
                     <input matInput
                            type="text"
                            placeholder="Enquirer's Name"
-                           (ngModelChange)="currentEnquiry.enquirerName=$event"
+                           disabled
                            [ngModel]="selectedEnquiry.enquirerName">
                 </mat-form-field>
             </div>
@@ -44,7 +44,7 @@
                     <input matInput
                            type="text"
                            placeholder="Student Name"
-                           (ngModelChange)="currentEnquiry.studentName=$event"
+                           disabled
                            [ngModel]="selectedEnquiry.studentName">
                 </mat-form-field>
             </div>
@@ -52,7 +52,7 @@
                 <mat-form-field>
                     <mat-select placeholder="Select Class"
                                 [ngModel]="getClass(selectedEnquiry.parentClass)"
-                                (ngModelChange)="currentEnquiry.parentClass=$event.dbId;">
+                                disabled>
                         <mat-option *ngFor='let classs of classList;' [value]="classs">
                             {{classs.name}}
                         </mat-option>
@@ -64,7 +64,7 @@
                     <input matInput
                            type="number"
                            placeholder="Mobile Number"
-                           (ngModelChange)="currentEnquiry.mobileNumber=$event"
+                           disabled
                            [ngModel]="selectedEnquiry.mobileNumber">
                 </mat-form-field>
             </div>
@@ -77,7 +77,7 @@
                     <textarea matInput
                               rows="4"
                               placeholder="Address"
-                              (ngModelChange)="currentEnquiry.address=$event"
+                              disabled
                               [ngModel]="selectedEnquiry.address"></textarea>
                 </mat-form-field>
             </div>
@@ -86,13 +86,13 @@
                     <textarea matInput
                               rows="4"
                               placeholder="Remark"
-                              (ngModelChange)="currentEnquiry.remark=$event"
+                              disabled
                               [ngModel]="selectedEnquiry.remark"></textarea>
                 </mat-form-field>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateEnquiry();">Update</button>
+        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="deleteEnquiry();">Delete</button>
 
         <div class="clearfix"></div>
 

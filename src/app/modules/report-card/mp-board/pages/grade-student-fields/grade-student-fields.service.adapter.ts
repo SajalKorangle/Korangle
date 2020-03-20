@@ -312,22 +312,21 @@ export class GradeStudentFieldsServiceAdapter {
         return result;
     }
 
-    updateStudentField(studentSubField, element): any {
+    updateStudentField(studentSubField, current_value): any {
 
-        let current_value = element.target.value;
-
-        console.log(studentSubField);
-        console.log(current_value);
-
-        // if(current_value == null || current_value == NaN) return;
         if (current_value == studentSubField.marksObtained) return;
-
-        document.getElementById(studentSubField.parentStudent+'_'+studentSubField.parentExtraSubField).classList.add('updatingField');
 
         if (current_value == null || current_value == NaN || current_value == '') {
             current_value = 0.0;
         }
         studentSubField.marksObtained = parseFloat(current_value.toString()).toFixed(2);
+
+        if (studentSubField.marksObtained > 2.00 || studentSubField.marksObtained < 0.00) {
+            alert("Marks should be b/w 0 & 2");
+            return;
+        }
+
+        document.getElementById(studentSubField.parentStudent+'_'+studentSubField.parentExtraSubField).classList.add('updatingField');
 
         let service_list = [];
         if(studentSubField.id ==0){
@@ -351,12 +350,74 @@ export class GradeStudentFieldsServiceAdapter {
                 return subField.parentExtraSubField == studentSubField.parentExtraSubField;
             });
             item.id = value[0].id;
-            item.marksObtained = value[0].marksObtained;
+            if (value[0].marksObtained == 0.00) {
+                item.marksObtained = '';
+            } else {
+                item.marksObtained = value[0].marksObtained;
+            }
 
             document.getElementById(studentSubField.parentStudent+'_'+studentSubField.parentExtraSubField).classList.remove('updatingField');
 
         }, error => {
             alert('Error updating marks');
         });
+    }
+
+    updateAllRemainingStudentFields(): void {
+
+        if (this.vm.minimumMarks < 0.00 || this.vm.minimumMarks > 2.00) {
+            this.vm.minimumMarks == 0.00;
+        }
+        if (this.vm.maximumMarks < 0.00 || this.vm.maximumMarks > 2.00) {
+            this.vm.minimumMarks == 2.00;
+        }
+        if (this.vm.maximumMarks < this.vm.minimumMarks) {
+            this.vm.minimumMarks == 0.00;
+            this.vm.maximumMarks == 0.00;
+        }
+
+        let request_student_subfield_data = [];
+
+        this.vm.getFilteredStudentList().forEach(student => {
+            student.subFieldList.filter(subField => {
+                return subField.id == 0;
+            }).forEach(studentSubField => {
+                let randomMarks = (Math.random()*(this.vm.maximumMarks-this.vm.minimumMarks)+this.vm.minimumMarks).toFixed(2);
+                request_student_subfield_data.push({
+                    'id': studentSubField.id,
+                    'parentStudent': studentSubField.parentStudent,
+                    'parentExamination': studentSubField.parentExamination,
+                    'parentExtraSubField': studentSubField.parentExtraSubField,
+                    'marksObtained': randomMarks,
+                });
+                document.getElementById(studentSubField.parentStudent+'_'+studentSubField.parentExtraSubField).classList.add('updatingField');
+            });
+        });
+
+        this.vm.examinationService.createObjectList(this.vm.examinationService.student_extra_sub_field, request_student_subfield_data).then(value => {
+
+            this.vm.getFilteredStudentList().forEach(student => {
+                student.subFieldList.filter(subField => {
+                    return subField.id == 0;
+                }).forEach(studentSubField => {
+                    let studentSubFieldNew = value.find(item => {
+                        return item.parentStudent == studentSubField.parentStudent
+                            && item.parentExamination == studentSubField.parentExamination
+                            && item.parentExtraSubField == studentSubField.parentExtraSubField;
+                    });
+                    studentSubField.id = studentSubFieldNew.id;
+                    if (studentSubFieldNew.marksObtained == 0.00) {
+                        studentSubField.marksObtained = '';
+                    } else {
+                        studentSubField.marksObtained = studentSubFieldNew.marksObtained;
+                    }
+                    document.getElementById(studentSubField.parentStudent+'_'+studentSubField.parentExtraSubField).classList.remove('updatingField');
+                });
+            });
+
+        }, error => {
+            alert("Error updating marks");
+        });
+
     }
 }

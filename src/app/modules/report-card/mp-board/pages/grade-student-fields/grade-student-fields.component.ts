@@ -35,6 +35,9 @@ export class GradeStudentFieldsComponent implements OnInit {
     classSectionList = [];
     fieldList: any;
 
+    minimumMarks = 0.00;
+    maximumMarks =2.00;
+
     studentList = [];
 
     // subjectList: any;
@@ -70,6 +73,16 @@ export class GradeStudentFieldsComponent implements OnInit {
             return student.studentSection.parentClass == this.selectedClassSection.class.id
                 && student.studentSection.parentDivision == this.selectedClassSection.section.id;
         });
+    }
+
+    unpopulatedFieldsLength(): number {
+        let number = 0;
+        this.getFilteredStudentList().forEach(student => {
+            number += student.subFieldList.filter(subField => {
+                return subField.id == 0;
+            }).length;
+        });
+        return number;
     }
 
 }

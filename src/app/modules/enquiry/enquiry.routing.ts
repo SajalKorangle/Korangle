@@ -22,6 +22,11 @@ const routes: Routes = [
         data: {moduleName: 'enquiries'},
     },
     {
+        path: 'delete_enquiry',
+        loadChildren: 'app/modules/enquiry/pages/delete-enquiry/delete-enquiry.module#DeleteEnquiryModule',
+        data: {moduleName: 'enquiries'},
+    },
+    {
         path: PRINT_ENQUIRY_LIST,
         component: PrintEnquiryListComponent,
     },
