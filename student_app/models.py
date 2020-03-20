@@ -98,7 +98,7 @@ class Student(models.Model):
         ('NO', 'No'),
     )
 
-    rte = models.CharField(max_length=10, choices=RTE)
+    rte = models.CharField(max_length=10, choices=RTE, null=True)
 
     admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession')
     dateOfAdmission = models.DateField(null=True, verbose_name='dateOfAdmission')
