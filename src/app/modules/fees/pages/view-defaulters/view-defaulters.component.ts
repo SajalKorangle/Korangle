@@ -400,9 +400,10 @@ export class ViewDefaultersComponent implements OnInit {
                 return {
                     "fathersName": obj.fathersName,
                     "name": obj.name,
-                "mobileNumber": obj.mobileNumber,
-                "feesDueTillMonth": this.getCurrencyInINR(obj.feesDueTillMonth),
-                "feesDueOverall": this.getCurrencyInINR(obj.feesDueOverall)
+                    "mobileNumber": obj.mobileNumber,
+                    "notification": obj.notification,
+                    "feesDueTillMonth": this.getCurrencyInINR(obj.feesDueTillMonth),
+                    "feesDueOverall": this.getCurrencyInINR(obj.feesDueOverall)
                 }
             });
             this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
@@ -416,11 +417,12 @@ export class ViewDefaultersComponent implements OnInit {
             })
             let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
                 return {
-                "name": obj.name,
-                "mobileNumber": obj.mobileNumber,
-                "feesDueTillMonth": this.getCurrencyInINR(this.getParentFeesDueTillMonth(obj)),
-                "feesDueOverall": this.getCurrencyInINR(this.getParentFeesDueOverall(obj)),
-                "childrenData": this.getStudentString(obj.studentList)
+                    "name": obj.name,
+                    "mobileNumber": obj.mobileNumber,
+                    "notification": obj.notification,
+                    "feesDueTillMonth": this.getCurrencyInINR(this.getParentFeesDueTillMonth(obj)),
+                    "feesDueOverall": this.getCurrencyInINR(this.getParentFeesDueOverall(obj)),
+                    "childrenData": this.getStudentString(obj.studentList)
                 }
             });
             this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
