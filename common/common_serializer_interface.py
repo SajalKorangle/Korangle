@@ -15,12 +15,18 @@ def get_list(data, Model, ModelSerializer):
 
     filter_var_list = []
     filter_var = ''
+    order_var = ''
+    count_var = ''
 
     if data != '' and data is not None:
         for index, attr in enumerate(data):
 
             if attr == 'e' or attr == 'fields__korangle':
                 continue
+            elif attr[:15] == 'korangle__order':
+                order_var = ''
+            elif attr == 'korangle__count':
+                count_var = ''
             elif attr[-4:] == '__in':
                 if data[attr] != '':
                     filter_var = {attr: list(map(int, data[attr].split(',')))}
@@ -51,6 +57,19 @@ def get_list(data, Model, ModelSerializer):
                     print('filter exception in or:')
                     print(filter_var_list)
                 filter_var_list = []
+            elif attr[:15] == 'korangle__order':
+                try:
+                    query = query.order_by(data[attr])
+                except:
+                    print('order exception:')
+                    print(data[attr])
+            elif attr == 'korangle__count':
+                try:
+                    count_array = list(map(int, data[attr].split(',')))
+                    query = query[count_array[0]:count_array[1]]
+                except:
+                    print('count exception: ')
+                    print(data[attr])
             else:
                 try:
                     query = query.filter(**filter_var)
@@ -128,8 +147,68 @@ def delete_object(data, Model, ModelSerializer):
     return data['id']
 
 
-def delete_list(data, Model, ModelSerializer):
+'''def delete_list(data, Model, ModelSerializer):
     if data['id'] is not None and data['id'] != '':
         Model.objects.filter(id__in=data['id'].split(',')).delete()
-    return data['id']
+    return data['id']'''
+
+
+def delete_list(data, Model, ModelSerializer):
+
+    query = Model.objects.all()
+
+    filter_var_list = []
+    filter_var = ''
+
+    if data != '' and data is not None:
+        for index, attr in enumerate(data):
+
+            if attr == 'e':
+                continue
+            elif attr[-4:] == '__in':
+                if data[attr] != '':
+                    filter_var = {attr: list(map(int, data[attr].split(',')))}
+                else:
+                    filter_var = {attr: []}
+            elif attr[-4:] == '__or':
+                filter_var = {attr[:-4]: data[attr]}
+                filter_var_list.append(filter_var)
+                continue
+            else:
+                if data[attr] == 'null__korangle':
+                    filter_var = {attr: None}
+                elif data[attr] == 'false__boolean':
+                    filter_var = {attr: False}
+                elif data[attr] == 'true__boolean':
+                    filter_var = {attr: True}
+                else:
+                    filter_var = {attr: data[attr]}
+
+            if filter_var_list.__len__() > 0:
+                filter_var_list.append(filter_var)
+                q_total = Q()
+                for q_variable in filter_var_list:
+                    q_total = q_total | Q(**q_variable)
+                try:
+                    query = query.filter(q_total)
+                except:
+                    print('filter exception in or:')
+                    print(filter_var_list)
+                filter_var_list = []
+            else:
+                try:
+                    query = query.filter(**filter_var)
+                except:
+                    print('filter exception:')
+                    print(filter_var)
+
+    return_data = query.count()
+
+    print(data)
+    print(return_data)
+
+    if return_data > 0:
+        query.delete()
+
+    return return_data
 

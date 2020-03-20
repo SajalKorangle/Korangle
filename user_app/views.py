@@ -4,7 +4,10 @@ from rest_framework.views import APIView
 
 import json
 
+from common.common_views import CommonView, CommonListView
 from decorators import user_permission
+
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -29,3 +32,16 @@ class ChangePasswordView(APIView):
         data = json.loads(request.body.decode('utf-8'))
         data['id'] = request.user.id
         return change_password(data)
+
+
+########### Sub Fee Receipt #############
+
+
+class UserView(CommonView, APIView):
+    Model = User
+
+
+class UserListView(CommonListView, APIView):
+    Model = User
+
+

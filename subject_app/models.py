@@ -54,7 +54,7 @@ class ClassSubject(models.Model):
 class StudentSubject(models.Model):
 
     parentSubject = models.ForeignKey(SubjectSecond, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSubject')
-    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
 
     class Meta:

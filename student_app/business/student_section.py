@@ -1,7 +1,7 @@
 
 from student_app.models import StudentSection
 
-from fee_second_app.business.initialize_student_fees import initialize_student_fees
+# from fee_second_app.business.initialize_student_fees import initialize_student_fees
 
 from rest_framework import serializers
 
@@ -58,7 +58,7 @@ def update_student_section(data):
         return {'status': 'failure', 'message': 'Class updation failed'}
 
 
-def create_student_section_list(data):
+"""def create_student_section_list(data):
 
     for student_data in data['studentList']:
 
@@ -79,7 +79,7 @@ def create_student_section_list(data):
 
         initialize_student_fees(student_section_object.parentStudent,
                                 student_section_object.parentSession)'''
-
+"""
 
 def create_student_section(data):
 
@@ -87,8 +87,8 @@ def create_student_section(data):
     if student_section_serializer.is_valid():
         student_section_serializer.save()
         student_section_object = StudentSection.objects.get(id=student_section_serializer.data['id'])
-        initialize_student_fees(student_section_object.parentStudent,
-                                student_section_object.parentSession)
+        '''initialize_student_fees(student_section_object.parentStudent,
+                                student_section_object.parentSession)'''
         return {
             'status': 'success',
             'message': 'Student added in class successfully',

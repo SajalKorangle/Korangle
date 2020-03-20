@@ -10,3 +10,11 @@ urlpatterns = [
     url(r'^classes$', ClassView.as_view()),
     url(r'^sections$', SectionListView.as_view()),
 ]
+
+
+from .views import ClassTeacherSignatureView, ClassTeacherSignatureListView
+
+urlpatterns += [
+    url(r'^class-teacher-signature/batch', ClassTeacherSignatureListView.as_view()),
+    url(r'^class-teacher-signature', ClassTeacherSignatureView.as_view()),
+]

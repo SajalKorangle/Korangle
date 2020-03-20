@@ -50,16 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-	'rest_framework',
+    'rest_framework',
 
-	# 'message_app',
-
-	'school_app',
+    'school_app',
     'class_app',
     'subject_app',
     'student_app',
     'expense_app',
-    # 'fee_app',
     'fee_second_app',
     'fees_third_app',
     'examination_app',
@@ -71,12 +68,19 @@ INSTALLED_APPS = [
     'attendance_app',
     'salary_app',
     'user_app',
+    'notification_app',
 
-	'corsheaders',
+    'report_card_app',
+    'report_card_app.report_card_cbse_app',
+    'report_card_app.report_card_mp_board_app',
 
-	'django_extensions',
+    'corsheaders',
+
+    'django_extensions',
 
     'storages',
+
+    'push_notifications',
 
 ]
 
@@ -85,9 +89,9 @@ SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E307']
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-		'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-		# 'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -121,6 +125,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'CONN_MAX_AGE': None,
+        'OPTIONS': {
+            'timeout': 20,
+        },
     }
 }
 
@@ -188,6 +196,10 @@ AWS_SECRET_ACCESS_KEY = 'oLYa8rZF9O3DwW/l4HBCFqF5PuEEJxCX0EkUI1gk'
 AWS_STORAGE_BUCKET_NAME = 'korangleplus'
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_SECURE_URLS = False # to use http instead of https
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "FCM_API_KEY": "AAAAKdpMXv4:APA91bFqo9G8GT8FELpCT7zsDTR9Whu4kZNOyQUaUo-HNqQwe7Jl2MxOLxGO8YPqaaeu_MjVM5uzzfcte7i32bgeXvlZFacSXAhGMFfUrLdzbJim11PyZ7tNmsdaBtaum1ieUHZdrs_3",
+}
 
 # the next monkey patch is necessary if you use dots in the bucket name
 import ssl

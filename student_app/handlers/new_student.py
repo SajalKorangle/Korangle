@@ -1,4 +1,4 @@
-
+""""
 from student_app.models import Student
 
 from student_app.handlers.common import populate_student_field
@@ -7,7 +7,7 @@ from student_app.models import StudentSection
 
 from school_app.model.models import School
 
-from fee_second_app.business.initialize_student_fees import initialize_student_fees
+# from fee_second_app.business.initialize_student_fees import initialize_student_fees
 
 
 def create_new_student(data):
@@ -30,7 +30,7 @@ def create_new_student(data):
         student_section_object.rollNumber = data['rollNumber']
     student_section_object.save()
 
-    initialize_student_fees(student_object, student_section_object.parentSession)
+    # initialize_student_fees(student_object, student_section_object.parentSession)
 
 
     response = {}
@@ -38,3 +38,4 @@ def create_new_student(data):
     response['id'] = student_object.id
 
     return response
+"""

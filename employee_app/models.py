@@ -108,7 +108,7 @@ class EmployeePermission(models.Model):
     parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=False, verbose_name='parentEmployee', default=0)
 
     def __str__(self):
-        return self.parentSchool.name + ' -- ' + self.parentEmployee.name + ' -- ' + str(self.parentTask)
+        return self.parentEmployee.parentSchool.name + ' -- ' + self.parentEmployee.name + ' -- ' + str(self.parentTask)
 
     class Meta:
         db_table = 'employee_permission'

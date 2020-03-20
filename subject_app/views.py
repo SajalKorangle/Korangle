@@ -10,7 +10,7 @@ from decorators import user_permission
 
 import json
 
-from subject_app.models import StudentSubject, ClassSubject
+from subject_app.models import StudentSubject, ClassSubject, SubjectSecond
 
 
 def get_error_response(message):
@@ -41,7 +41,7 @@ def get_subjects_view(request):
 from subject_app.business.subject import get_subject_list
 
 
-class SubjectListView(APIView):
+class SubjectOldListView(APIView):
 
     @user_permission
     def get(request):
@@ -145,6 +145,17 @@ class ExtraSubFieldListView(APIView):
     @user_permission
     def get(request):
         return get_extra_sub_field_list(request.GET)
+
+
+########### Subject #############
+
+
+class SubjectView(CommonView, APIView):
+    Model = SubjectSecond
+
+
+class SubjectListView(CommonListView, APIView):
+    Model = SubjectSecond
 
 
 ########### Class Subject #############

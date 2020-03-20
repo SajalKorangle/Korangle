@@ -14,10 +14,10 @@ urlpatterns += [
 ]
 
 ########## New Student ###########
-from .views import create_new_student_view
+'''from .views import create_new_student_view
 urlpatterns += [
     url(r'^create_new_student/', create_new_student_view),
-]
+]'''
 
 ####################################
 ####### Trying Rest Api Below ######
@@ -39,10 +39,10 @@ urlpatterns += [
 ]
 
 ######## Student Section ###########
-from .views import StudentSectionListOldView, StudentSectionOldView
+from .views import StudentSectionOldView
 urlpatterns += [
     url(r'^student-sections-old/(?P<student_section_id>[0-9]+)', StudentSectionOldView.as_view()),
-    url(r'^student-sections-old/batch', StudentSectionListOldView.as_view()),
+    # url(r'^student-sections-old/batch', StudentSectionListOldView.as_view()),
 ]
 
 ######## Profile Image ############

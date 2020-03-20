@@ -1,33 +1,21 @@
 from django.conf.urls import url
 
-from .views import ModuleView, UserView, ModuleListView
-
 urlpatterns = []
 
-######## User ###############
+
+from team_app.views import ModuleView, ModuleListView
 
 urlpatterns += [
-	url(r'^users', UserView.as_view()),
+    url(r'^module/batch', ModuleListView.as_view()),
+    url(r'^module', ModuleView.as_view()),
 ]
 
 
-######## Module ###############
+from team_app.views import TaskListView, TaskView
 
 urlpatterns += [
-	url(r'^school/(?P<school_id>[0-9]+)/modules', ModuleView.as_view()),
-	url(r'^modules', ModuleListView.as_view()),
+    url(r'^task/batch', TaskListView.as_view()),
+    url(r'^task', TaskView.as_view()),
 ]
 
-######## Access ###############
-from .views import AccessListView
 
-urlpatterns += [
-	url(r'^access/batch', AccessListView.as_view()),
-]
-
-######## Task ###############
-from .views import TaskListView
-
-urlpatterns += [
-	url(r'^tasks', TaskListView.as_view()),
-]

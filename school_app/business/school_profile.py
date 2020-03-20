@@ -14,7 +14,7 @@ class SchoolModelSerializer(serializers.ModelSerializer):
 
 def create_school_profile(data):
 
-    data['dateOfExpiration'] = date.today() + timedelta(30)
+    data['dateOfExpiration'] = date.today() + timedelta(10)
 
     school_serializer = SchoolModelSerializer(data=data)
     if school_serializer.is_valid():

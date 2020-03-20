@@ -62,7 +62,7 @@ class Test(models.Model):
 
 class StudentTestResult(models.Model):
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, null=False, verbose_name='parentStudent', default=0)
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, verbose_name='parentStudent', default=0)
     parentTest = models.ForeignKey(Test, on_delete=models.PROTECT, null=False, verbose_name='parentTest', default=0)
     marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
     absent = models.BooleanField(default=False, verbose_name='absent')
@@ -100,7 +100,7 @@ class Examination(models.Model):
     name = models.TextField(null=False, default='-', verbose_name='name')
     parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    status = models.CharField(max_length=20, choices=EXAMINATION_STATUS, null=True, default='Created', verbose_name='examinationStatus')
+    status = models.CharField(max_length=20, choices=EXAMINATION_STATUS, null=False, default='Created', verbose_name='examinationStatus')
 
     def __str__(self):
         return self.name
@@ -138,7 +138,7 @@ class StudentTest(models.Model):
 
     parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
     parentSubject = models.ForeignKey(SubjectSecond, models.PROTECT, null=False, default=0, verbose_name='parentSubject')
-    parentStudent = models.ForeignKey(Student, models.PROTECT, null=False, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     testType = models.CharField(max_length=10, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
     marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
 
@@ -151,8 +151,8 @@ class StudentExtraSubField(models.Model):
 
     parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
     parentExtraSubField = models.ForeignKey(ExtraSubField, models.PROTECT, null=False, default=0, verbose_name='parentExtraSubField')
-    parentStudent = models.ForeignKey(Student, models.PROTECT, null=False, default=0, verbose_name='parentStudent')
-    marksObtained = models.DecimalField(max_digits=6, decimal_places=1, null=False, verbose_name='marksObtained', default=0)
+    parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
+    marksObtained = models.DecimalField(max_digits=6, decimal_places=2, null=False, verbose_name='marksObtained', default=0)
 
     class Meta:
         db_table = 'student_extra_sub_field'
@@ -244,7 +244,7 @@ class MpBoardReportCardMapping(models.Model):
 
 class CCEMarks(models.Model):
 
-    parentStudent = models.ForeignKey(Student, models.PROTECT, null=False, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
     marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
 

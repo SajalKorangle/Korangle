@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Create your models here.
 
-from school_app.model.models import School, Session, BusStop
+"""from school_app.model.models import School, Session, BusStop
 
 from student_app.models import Student, StudentSection
 
@@ -149,7 +149,7 @@ class BusStopBasedFilter(models.Model):
 
 ##### Student Fees #####
 class StudentFeeComponent(models.Model):
-    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
     parentFeeDefinition = models.ForeignKey(FeeDefinition, on_delete=models.PROTECT, default=0,
                                             verbose_name='parentFeeDefinition')
     amount = models.IntegerField(null=True, verbose_name='amount')
@@ -301,7 +301,8 @@ class FeeReceiptOld(models.Model):
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     remark = models.TextField(null=True, verbose_name='remark')
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
-    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(
+        Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
 
     # parentReceiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='parentReceiver')
 
@@ -312,8 +313,8 @@ class FeeReceiptOld(models.Model):
 
 
 class SubFeeReceipt(models.Model):
-    parentFeeReceipt = models.ForeignKey(FeeReceiptOld, models.PROTECT, default=0, verbose_name='parentFeeReceipt')
-    parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.PROTECT, default=0,
+    parentFeeReceipt = models.ForeignKey(FeeReceiptOld, models.CASCADE, default=0, verbose_name='parentFeeReceipt')
+    parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.CASCADE, default=0,
                                                   verbose_name='parentStudentFeeComponent')
     amount = models.IntegerField(null=True, verbose_name='amount')
 
@@ -339,7 +340,8 @@ class ConcessionSecond(models.Model):
     remark = models.TextField(null=True, verbose_name='remark')
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
-    parentStudent = models.ForeignKey(Student, on_delete=models.PROTECT, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(
+        Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
 
     # parentReceiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='parentReceiver')
 
@@ -350,8 +352,8 @@ class ConcessionSecond(models.Model):
 
 
 class SubConcession(models.Model):
-    parentConcessionSecond = models.ForeignKey(ConcessionSecond, models.PROTECT, default=0, verbose_name='parentConcessionSecond')
-    parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.PROTECT, default=0,
+    parentConcessionSecond = models.ForeignKey(ConcessionSecond, models.CASCADE, default=0, verbose_name='parentConcessionSecond')
+    parentStudentFeeComponent = models.ForeignKey(StudentFeeComponent, models.CASCADE, default=0,
                                                   verbose_name='parentStudent')
     amount = models.IntegerField(null=True, verbose_name='amount')
 
@@ -375,9 +377,10 @@ class SubConcessionMonthly(models.Model):
 ####### Student Fee Dues - Redundant Data ##########
 class StudentFeeDues(models.Model):
 
-    parentStudent = models.ForeignKey(Student, models.PROTECT, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(
+        Student, models.CASCADE, default=0, verbose_name='parentStudent')
     amount = models.IntegerField(default=0, verbose_name='amount')
 
     class Meta:
         db_table = 'student_fee_dues'
-
+        """

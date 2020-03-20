@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 import json
 
-from examination_app.models import Examination, TestSecond, StudentTest
+from examination_app.models import Examination, TestSecond, StudentTest, StudentExtraSubField, CCEMarks
 
 
 def get_error_response(message):
@@ -74,38 +74,6 @@ def create_student_result_view(request):
         return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
 
 
-
-########### Examination #############
-from examination_app.business.examination import get_examination_list, create_examination, update_examination
-
-
-class ExaminationOldView(APIView):
-
-    @user_permission
-    def post(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_examination(data)
-
-    @user_permission
-    def put(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return update_examination(data)
-
-
-class ExaminationListOldView(APIView):
-
-    @user_permission
-    def get(request):
-        if 'sessionId' in request.GET:
-            data = {
-                'sessionId': request.GET['sessionId'],
-                'schoolId': request.GET['schoolId'],
-            }
-        else:
-            data = request.GET
-        return get_examination_list(data)
-
-
 ########### Test #############
 from examination_app.business.test import get_test_list, create_test, delete_test, update_test
 
@@ -165,7 +133,7 @@ from examination_app.business.student_extra_sub_field import get_student_extra_s
     create_student_extra_sub_field_list, update_student_extra_sub_field_list
 
 
-class StudentExtraSubFieldListView(APIView):
+class StudentExtraSubFieldOldListView(APIView):
 
     @user_permission
     def get(request):
@@ -209,7 +177,7 @@ from examination_app.business.cce_marks import get_cce_marks_list, create_cce_ma
     delete_cce_marks_list, update_cce_marks_list
 
 
-class CCEMarksListView(APIView):
+class CCEMarksOldListView(APIView):
 
     @user_permission
     def get(request):
@@ -261,5 +229,27 @@ class StudentTestView(CommonView, APIView):
 
 class StudentTestListView(CommonListView, APIView):
     Model = StudentTest
+
+
+########### Student Extra Sub Field #############
+
+
+class StudentExtraSubFieldView(CommonView, APIView):
+    Model = StudentExtraSubField
+
+
+class StudentExtraSubFieldListView(CommonListView, APIView):
+    Model = StudentExtraSubField
+
+
+########### CCE Marks #############
+
+
+class CCEMarksView(CommonView, APIView):
+    Model = CCEMarks
+
+
+class CCEMarksListView(CommonListView, APIView):
+    Model = CCEMarks
 
 

@@ -10,10 +10,10 @@ urlpatterns += [
 ]
 
 
-from subject_app.views import SubjectListView
+from subject_app.views import SubjectOldListView
 
 urlpatterns += [
-    url(r'^subjects', SubjectListView.as_view()),
+    url(r'^subjects', SubjectOldListView.as_view()),
 ]
 
 
@@ -51,6 +51,14 @@ urlpatterns += [
 ####################################
 ##### Trying Common Views Below ####
 ####################################
+
+from subject_app.views import SubjectView, SubjectListView
+
+urlpatterns += [
+    url(r'^subject/batch', SubjectListView.as_view()),
+    url(r'^subject', SubjectView.as_view()),
+]
+
 
 from subject_app.views import ClassSubjectView, ClassSubjectListView
 

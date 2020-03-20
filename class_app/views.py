@@ -3,7 +3,9 @@ from rest_framework.decorators import api_view
 
 from decorators import user_permission
 
-from rest_framework.views import APIView
+from common.common_views import CommonView, CommonListView, APIView
+from decorators import user_permission_new
+from class_app.models import ClassTeacherSignature
 
 def get_error_response(message):
     error_response = {}
@@ -48,3 +50,24 @@ class SectionListView(APIView):
     @user_permission
     def get(request):
         return get_section_list()
+
+
+############ ClassTeacherSignature ###########
+from .business.class_teacher_signature import create_class_teacher_signature_object, partial_update_class_teacher_signature_object
+
+
+class ClassTeacherSignatureView(CommonView, APIView):
+    Model = ClassTeacherSignature
+
+    @user_permission_new
+    def post(self, request):
+        return create_class_teacher_signature_object(request, self.Model, self.ModelSerializer)
+
+    @user_permission_new
+    def patch(self, request):
+        return partial_update_class_teacher_signature_object(request, self.Model, self.ModelSerializer)
+
+
+class ClassTeacherSignatureListView(CommonListView, APIView):
+    Model = ClassTeacherSignature
+

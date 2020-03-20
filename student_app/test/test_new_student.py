@@ -1,3 +1,4 @@
+"""
 from parent_test import ParentTestCase
 
 from django.contrib.auth.models import User
@@ -99,3 +100,4 @@ class NewStudentTestCase(ParentTestCase):
 
             self.assertEqual(student_object.get_section_id(session_object),data['sectionDbId'])
 
+"""

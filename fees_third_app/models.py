@@ -241,18 +241,19 @@ class FeeReceipt(models.Model):
     remark = models.TextField(null=True, verbose_name='remark')
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
 
-    # Added for the unique together field
+    # Added for the unique together field,
+    # Also required in case fee receipt is cancelled, student is deleted, and we need to calculate the maximum receipt number
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
     parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, verbose_name='parentStudent')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee')
 
-    checkNumber = models.IntegerField(null=True, verbose_name='checkNumber')
+    chequeNumber = models.IntegerField(null=True, verbose_name='chequeNumber')
 
     MODE_OF_PAYMENT = (
         ( 'Cash', 'Cash' ),
-        ( 'Check', 'Check' ),
+        ( 'Cheque', 'Cheque' ),
         ( 'Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
@@ -329,7 +330,11 @@ class Discount(models.Model):
     remark = models.TextField(null=True, verbose_name='remark')
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
     parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, verbose_name='parentStudent')
+
+    # Added for the unique together field,
+    # Also required in case discount is cancelled, student is deleted, and we need to calculate the maximum discount number
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
     parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, verbose_name='parentEmployee')
 

@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 import json
 
 from common.common_views import CommonView, CommonListView
-from decorators import user_permission
+from decorators import user_permission, user_permission_new
 from student_app.models import Student, StudentSection
 
 
@@ -66,14 +66,14 @@ def delete_student_view(request):
 
 
 ############### New Student ######################
-from .handlers.new_student import create_new_student
+'''from .handlers.new_student import create_new_student
 @api_view(['POST'])
 def create_new_student_view(request):
     if request.user.is_authenticated:
         data = json.loads(request.body.decode('utf-8'))
         return JsonResponse({'response': get_success_response(create_new_student(data))})
     else:
-        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+        return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 
 ############## Student Full Profile ##############
@@ -132,7 +132,7 @@ class StudentMiniProfileView(APIView):
 
 
 ############# Student Section #####################
-from .business.student_section import create_student_section_list, update_student_section, get_student_section_list
+from .business.student_section import update_student_section
 
 
 class StudentSectionOldView(APIView):
@@ -143,7 +143,7 @@ class StudentSectionOldView(APIView):
         return update_student_section(data)
 
 
-class StudentSectionListOldView(APIView):
+'''class StudentSectionListOldView(APIView):
 
     @user_permission
     def get(request):
@@ -154,7 +154,7 @@ class StudentSectionListOldView(APIView):
             data = json.loads(request.body.decode('utf-8'))
             return JsonResponse({'response': get_success_response(create_student_section_list(data))})
         else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})
+            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 
 ############ Profile Image ########################
@@ -198,10 +198,18 @@ class TransferCertificateView(APIView):
 
 ########### Student #############
 
+from .business.profile_image import partial_update_profile_image
+
 
 class StudentView(CommonView, APIView):
     Model = Student
 
+    @user_permission_new
+    def patch(self,request):
+        if 'profileImage' in request.FILES:
+            return partial_update_profile_image(request,self.Model,self.ModelSerializer)
+        else:
+            return super.patch(request)
 
 class StudentListView(CommonListView, APIView):
     Model = Student
@@ -216,5 +224,3 @@ class StudentSectionView(CommonView, APIView):
 
 class StudentSectionListView(CommonListView, APIView):
     Model = StudentSection
-
-

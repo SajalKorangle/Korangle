@@ -1,6 +1,4 @@
-db.sqlite3*
-change-session_db.sqlite3*
-enquiry-fix_db.sqlite3*
+*db.sqlite3*
 *.pyc
 *.swp
 *DS_Store
@@ -19,3 +17,4 @@ stop_server.sh
 helloworld_project/logs
 helloworld_project/nginx.conf
 helloworld_project/gunicorn.conf.py
+backup_database.sh
