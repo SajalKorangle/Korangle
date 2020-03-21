@@ -93,11 +93,9 @@ class Student(models.Model):
 
     RTE_YES = 'YES'
     RTE_NO = 'NO'
-    RTE_UNKNOWN = 'UNKNOWN'
     RTE = (
         ('YES', 'Yes'),
         ('NO', 'No'),
-        ('UNKNOWN', 'Unknown')
     )
 
     rte = models.CharField(max_length=10, choices=RTE, null=True)
