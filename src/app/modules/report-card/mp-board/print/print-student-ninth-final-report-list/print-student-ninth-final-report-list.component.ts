@@ -22,6 +22,8 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
     classTeacherSignature: any;
     boardList: any;
 
+    marksDecimalPoint: any;
+
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
@@ -33,6 +35,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
         this.showPrincipalSignature = value['showPrincipalSignature'];
         this.classTeacherSignature = value['classTeacherSignature'];
         this.boardList = value['boardList'];
+        this.marksDecimalPoint = '1.'+this.reportCardMapping.minimumDecimalPoints.toString()+'-'+this.reportCardMapping.maximumDecimalPoints;
         this.viewChecked = false;
     }
 

@@ -458,7 +458,7 @@
                                 </ng-container>
                             </div>
                             <div class="col-xs-6" align="end">
-                                Overall Marks : {{getOverallStudentMarks(student) | number: '1.0-1'}} / {{getOverallStudentMaxMarks(student) | number: '1.0-1'}}
+                                Overall Marks : {{getOverallStudentMarks(student) | number: marksDecimalPoint}} / {{getOverallStudentMaxMarks(student) | number: marksDecimalPoint}}
                             </div>
                         </div>
 
@@ -573,36 +573,36 @@
                 <ng-container *ngFor="let subject of student.mainSubjectList; let i = index;">
                     <tr>
                         <td align="left" style="padding-left: 5px !important;">{{i+1}}. {{getSubjectName(subject.parentSubject)}}</td>
-                        <td align="center">{{getMonthlyStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td> <!-- Monthly Test -->
+                        <td align="center">{{getMonthlyStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}}</td> <!-- Monthly Test -->
                         <td align="center">{{getGrade(getMonthlyStudentSubjectMarks(student, subject, i), 70)}}</td> <!-- Monthly Test -->
-                        <td align="center">{{student.parentExaminationHalfYearly.mainSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Half-Yearly -->
+                        <td align="center">{{student.parentExaminationHalfYearly.mainSubjectMarksList[i] | number: marksDecimalPoint}}</td> <!-- Half-Yearly -->
                         <td align="center">{{getGrade(student.parentExaminationHalfYearly.mainSubjectMarksList[i], 50)}}</td> <!-- Half-Yearly -->
-                        <td align="center">{{student.parentExaminationFinal.mainSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Final -->
+                        <td align="center">{{student.parentExaminationFinal.mainSubjectMarksList[i] | number: marksDecimalPoint}}</td> <!-- Final -->
                         <td align="center">{{getGrade(student.parentExaminationFinal.mainSubjectMarksList[i], 100)}}</td> <!-- Final -->
-                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.mainSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Project -->
+                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.mainSubjectMarksList[i] | number: marksDecimalPoint}}</td> <!-- Project -->
                         <td align="center" *ngIf="includeProject">{{getGrade(student.parentExaminationProject.mainSubjectMarksList[i], 20)}}</td> <!-- Project -->
-                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td> <!-- Overall -->
+                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}}</td> <!-- Overall -->
                         <td align="center">{{getGrade(getOverallStudentSubjectMarks(student, subject, i), getOverallStudentSubjectMaxMarks())}}</td> <!-- Overall -->
                     </tr>
                 </ng-container>
                 <tr>
                     <td align="left" style="padding-left: 20px !important;" colspan="7" *ngIf="!includeProject">Total (out of {{getOverallStudentTotalSubjectMaxMarks(student)}})</td>
                     <td align="left" style="padding-left: 20px !important;" colspan="9" *ngIf="includeProject">Total (out of {{getOverallStudentTotalSubjectMaxMarks(student)}})</td>
-                    <td align="center">{{getOverallStudentTotalSubjectMarks(student) | number: '1.0-1'}}</td>
+                    <td align="center">{{getOverallStudentTotalSubjectMarks(student) | number: marksDecimalPoint}}</td>
                     <td align="center">{{getGrade(getOverallStudentTotalSubjectMarks(student), getOverallStudentTotalSubjectMaxMarks(student))}}</td>
                 </tr>
                 <ng-container *ngFor="let subject of student.extraSubjectList; let i = index;">
                     <tr>
                         <td align="left" style="padding-left: 5px !important;">{{student.mainSubjectList.length+i+1}}. {{getSubjectName(subject.parentSubject)}}</td>
-                        <td align="center">{{getMonthlyStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td> <!-- Monthly Test -->
+                        <td align="center">{{getMonthlyStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}}</td> <!-- Monthly Test -->
                         <td align="center">{{getGrade(getMonthlyStudentSubjectMarks(student, subject, i), 70)}}</td> <!-- Monthly Test -->
-                        <td align="center">{{student.parentExaminationHalfYearly.extraSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Half-Yearly -->
+                        <td align="center">{{student.parentExaminationHalfYearly.extraSubjectMarksList[i] | number: marksDecimalPoint}}</td> <!-- Half-Yearly -->
                         <td align="center">{{getGrade(student.parentExaminationHalfYearly.extraSubjectMarksList[i], 50)}}</td> <!-- Half-Yearly -->
-                        <td align="center">{{student.parentExaminationFinal.extraSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Final -->
+                        <td align="center">{{student.parentExaminationFinal.extraSubjectMarksList[i] | number: marksDecimalPoint}}</td> <!-- Final -->
                         <td align="center">{{getGrade(student.parentExaminationFinal.extraSubjectMarksList[i], 100)}}</td> <!-- Final -->
-                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.extraSubjectMarksList[i] | number: '1.0-1'}}</td> <!-- Project -->
+                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.extraSubjectMarksList[i] | number: marksDecimalPoint}}</td> <!-- Project -->
                         <td align="center" *ngIf="includeProject">{{getGrade(student.parentExaminationProject.extraSubjectMarksList[i], 20)}}</td> <!-- Project -->
-                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td> <!-- Overall -->
+                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}}</td> <!-- Overall -->
                         <td align="center">{{getGrade(getOverallStudentSubjectMarks(student, subject, i), getOverallStudentSubjectMaxMarks())}}</td> <!-- Overall -->
                     </tr>
                 </ng-container>
@@ -665,10 +665,10 @@
                     </ng-container>
                 </div>
                 <div class="col-xs-3" align="center">
-                    Overall Marks: {{getOverallStudentMarks(student) | number: '1.0-1'}} / {{getOverallStudentMaxMarks(student) | number: '1.0-1'}}
+                    Overall Marks: {{getOverallStudentMarks(student) | number: marksDecimalPoint}} / {{getOverallStudentMaxMarks(student) | number: marksDecimalPoint}}
                 </div>
                 <div class="col-xs-3" align="center">
-                    Percentage: {{getOverallStudentPercentage(student) | number: '1.0-1'}}%
+                    Percentage: {{getOverallStudentPercentage(student) | number: marksDecimalPoint}}%
                 </div>
                 <div class="col-xs-3" align="end" style="padding-right: 0px !important;">
                     Overall Grade: {{getGrade(getOverallStudentMarks(student), getOverallStudentMaxMarks(student))}}

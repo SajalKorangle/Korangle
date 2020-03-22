@@ -193,26 +193,26 @@
                             <tr>
                                 <td class="leftBorder" style="padding: 5px;">{{getSubjectName(subject.parentSubject)}}</td>
                                 <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMaxMarks()}}</td>
-                                <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td>
+                                <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}}</td>
                                 <td class="rightBorder" style="padding: 5px;" align="center">{{getGrade(getOverallStudentSubjectMarks(student, subject, i),getOverallStudentSubjectMaxMarks())}}</td>
                             </tr>
                         </ng-container>
                         <tr>
                             <td class="leftBorder" style="padding: 5px;">{{extraFieldList[0].name}}</td>
                             <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMaxMarks(0)}}</td>
-                            <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMarks(student, 0) | number: '1.0-1'}}</td>
+                            <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMarks(student, 0) | number: marksDecimalPoint}}</td>
                             <td class="rightBorder" style="padding: 5px;" align="center">{{getGrade(getOverallStudentTotalExtraFieldMarks(student, 0),getOverallStudentTotalExtraFieldMaxMarks(0))}}</td>
                         </tr>
                         <tr>
                             <td class="leftBorder" style="padding: 5px;">{{extraFieldList[1].name}}</td>
                             <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMaxMarks(1)}}</td>
-                            <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMarks(student, 1) | number: '1.0-1'}}</td>
+                            <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMarks(student, 1) | number: marksDecimalPoint}}</td>
                             <td class="rightBorder" style="padding: 5px;" align="center">{{getGrade(getOverallStudentTotalExtraFieldMarks(student, 1),getOverallStudentTotalExtraFieldMaxMarks(1))}}</td>
                         </tr>
                         <tr>
                             <td class="updownBorder leftBorder bold" style="padding: 5px;">Total</td>
                             <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMaxMarks(student)}}</td>
-                            <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMarks(student) | number: '1.0-1'}}</td>
+                            <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMarks(student) | number: marksDecimalPoint}}</td>
                             <td class="updownBorder rightBorder bold" style="padding: 5px;" align="center">{{getGrade(getOverallStudentMarks(student),getOverallStudentMaxMarks(student))}}</td>
                         </tr>
                         <tr>
@@ -226,7 +226,7 @@
                             <tr>
                                 <td [class.upBorder]="i==0" class="leftBorder" style="padding: 5px;">{{getSubjectName(subject.parentSubject)}}</td>
                                 <td [class.upBorder]="i==0" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMaxMarks()}}</td>
-                                <td [class.upBorder]="i==0" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td>
+                                <td [class.upBorder]="i==0" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}}</td>
                                 <td [class.upBorder]="i==0" class="rightBorder" style="padding: 5px;" align="center">{{getGrade(getOverallStudentSubjectMarks(student, subject, i),getOverallStudentSubjectMaxMarks())}}</td>
                             </tr>
                         </ng-container>
@@ -244,7 +244,7 @@
                     </ng-container>
                 </div>
                 <div class="col-xs-6 custom-padding"  align="end">
-                    Percentage - {{getPercentage(getOverallStudentMarks(student),getOverallStudentMaxMarks(student)) | number: '1.0-1'}}%
+                    Percentage - {{getPercentage(getOverallStudentMarks(student),getOverallStudentMaxMarks(student)) | number: marksDecimalPoint}}%
                 </div>
             </div>
 

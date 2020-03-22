@@ -62,6 +62,10 @@ export class SetFinalReportServiceAdapter {
                 'parentSchool': this.vm.user.activeSchool.dbId,
                 'parentSession': this.vm.user.activeSchool.currentSessionDbId,
 
+                // Decimal Points
+                'minimumDecimalPoints': 0,
+                'maximumDecimalPoints': 1,
+
                 // July
                 'parentExaminationJuly': null,
                 'attendanceJulyStart': null,
@@ -141,6 +145,10 @@ export class SetFinalReportServiceAdapter {
 
         let data = this.vm.newReportCardMapping;
 
+        if (!this.checkDecimalPoints()) {
+            return;
+        }
+
         this.vm.isLoading = true;
 
         this.vm.examinationOldService.createMpBoardReportCardMapping(data, this.vm.user.jwt).then(value => {
@@ -157,9 +165,13 @@ export class SetFinalReportServiceAdapter {
     // Update Report Card Mapping
     updateReportCardMapping(): void {
 
-         let data = this.vm.newReportCardMapping;
+        let data = this.vm.newReportCardMapping;
 
-         Object.keys(data).forEach(key => {
+        if (!this.checkDecimalPoints()) {
+            return;
+        }
+
+        Object.keys(data).forEach(key => {
              if (key.match('Start') || key.match('End')) {
                  if (data[key] == '') {
                      data[key] = null;
@@ -178,6 +190,32 @@ export class SetFinalReportServiceAdapter {
             this.vm.isLoading = false;
         });
 
+    }
+
+    checkDecimalPoints(): boolean {
+
+        console.log(this.vm.newReportCardMapping);
+
+        if (this.vm.newReportCardMapping.minimumDecimalPoints != 0
+            && this.vm.newReportCardMapping.minimumDecimalPoints != 1
+            && this.vm.newReportCardMapping.minimumDecimalPoints != 2) {
+            alert('Minimum Decimal points should be b/w 0 and 2');
+            return false;
+        }
+
+        if (this.vm.newReportCardMapping.maximumDecimalPoints != 0
+            && this.vm.newReportCardMapping.maximumDecimalPoints != 1
+            && this.vm.newReportCardMapping.maximumDecimalPoints != 2) {
+            alert('Maximum Decimal points should be b/w 0 and 2');
+            return false;
+        }
+
+        if (this.vm.newReportCardMapping.minimumDecimalPoints > this.vm.newReportCardMapping.maximumDecimalPoints) {
+            alert('Min. Decimal Points should be less than equal to Max. Decimal points');
+            return false;
+        }
+
+        return true;
     }
 
 }

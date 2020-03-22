@@ -501,7 +501,7 @@ export class GenerateFinalReportServiceAdapter {
             if(student['cceMarks'] == undefined){
                 student['cceMarks'] = 0;
             }else{
-                student['cceMarks'] = parseFloat(student['cceMarks'].marksObtained);
+                student['cceMarks'] = parseFloat(parseFloat(student['cceMarks'].marksObtained).toFixed(this.vm.reportCardMapping.maximumDecimalPoints));
             }
             student['attendanceData'] = {
                 'attendance': 0,
@@ -589,7 +589,7 @@ export class GenerateFinalReportServiceAdapter {
             }
         });
         if (classMarks==0) {classMarks = 1};
-        return (studentMarks*maximumMarks)/classMarks;
+        return parseFloat(((studentMarks*maximumMarks)/classMarks).toFixed(this.vm.reportCardMapping.maximumDecimalPoints));
     }
 
     getStudentExtraSubFieldMarks(studentId: any, extraSubFieldId: any, examinationId: any): any {
