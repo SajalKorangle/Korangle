@@ -170,6 +170,8 @@ class MpBoardReportCardMapping(models.Model):
 
     parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
+    minimumDecimalPoints = models.IntegerField(default=0, verbose_name='minimumDecimalPoint')
+    maximumDecimalPoints = models.IntegerField(default=1, verbose_name='maximumDecimalPoint')
 
     # July
     parentExaminationJuly = models.ForeignKey(Examination, models.PROTECT, related_name='%(class)s_july', null=True, verbose_name='parentExaminationJuly')
