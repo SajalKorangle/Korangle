@@ -82,7 +82,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getHalfYearlyMarks(student: any, subjectId: any, maxMarks: any): number {
@@ -101,7 +101,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getFinalMarks(student: any, subjectId: any, maxMarks: any): number {
@@ -129,7 +129,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
             }).reduce((total, item) => {
                 return total + parseFloat(item.marksObtained);
             }, 0);
-            return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+            return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
         }
     }
 
@@ -149,7 +149,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getFinalPracticalMarks(student: any, subjectId: any, maxMarks: any): number {
@@ -168,7 +168,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getTotalSubjectMarks(student: any, subjectId: any): number {

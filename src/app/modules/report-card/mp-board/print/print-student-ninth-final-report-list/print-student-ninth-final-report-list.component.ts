@@ -82,7 +82,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getHalfYearlyMarks(student: any, subjectId: any, maxMarks: any): number {
@@ -101,7 +101,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getFinalMarks(student: any, subjectId: any, maxMarks: any): number {
@@ -129,7 +129,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
             }).reduce((total, item) => {
                 return total + parseFloat(item.marksObtained);
             }, 0);
-            return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+            return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
         }
     }
 
@@ -149,7 +149,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getFinalPracticalMarks(student: any, subjectId: any, maxMarks: any): number {
@@ -168,7 +168,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
         }).reduce((total, item) => {
             return total + parseFloat(item.marksObtained);
         }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(1));
+        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getTotalSubjectMarks(student: any, subjectId: any): number {
@@ -264,6 +264,12 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
                 break;
             case 3:
                 result = 'Session 2019-20';
+                break;
+            case 4:
+                result = 'Session 2020-21';
+                break;
+            case 5:
+                result = 'Session 2021-22';
                 break;
         }
         return result;
