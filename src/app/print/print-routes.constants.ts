@@ -17,6 +17,7 @@ export const PRINT_STUDENT_ATTENDANCE = 'print-student-attendance';
 
     // M.P. Board
 export const PRINT_STUDENT_NINTH_FINAL_REPORT = 'print-student-ninth-final-report';
+export const PRINT_STUDENT_NINTH_FINAL_REPORT_2019 = 'print-student-ninth-final-report-2019';
 export const PRINT_STUDENT_ELEVENTH_FINAL_REPORT = 'print-student-eleventh-final-report';
 export const PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT = 'print-student-comprehensive-final-report';
 export const PRINT_STUDENT_ELEGANT_FINAL_REPORT = 'print-student-elegant-final-report';
