@@ -13,6 +13,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/class/pages/assign-class/assign-class.module#AssignClassModule',
         data: {moduleName: 'assign_class'},
     },
+    {
+        path: 'set_rollnumber',
+        loadChildren: 'app/modules/class/pages/set-rollnumber/set-rollnumber.module#SetRollnumberModule',
+        data: {moduleName: 'set_rollnumber'},
+    },
 ];
 
 @NgModule({
