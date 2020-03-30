@@ -1,3 +1,133 @@
 <div class="card-content">
-    <p>set-rollnumber works!</p>
+    <ng-container *ngIf="!isInitialLoading">
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <mat-form-field style="margin-right: 5px;">
+                    <mat-select placeholder="Select Class & Section"
+                                [ngModel]="selectedOption"
+                                (ngModelChange)="selectOption($event)">
+                        <ng-container *ngFor="let class of classList">
+                            <ng-container *ngFor="let section of sectionList">
+                                <mat-option *ngIf="containsStudent(class,section)" [value]="[class,section]">
+                                    {{class.name}} <span *ngIf="showSectionName(class)">, {{section.name}}</span>
+                                </mat-option>
+                            </ng-container>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+
+                <button type="submit"
+                        style="margin-left: 20px;"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="serviceAdapter.getStudentDetails()">GET</button>
+            </div>
+
+        </div>
+
+        <div *ngIf="showTestDetails">
+            <div  *ngIf="!isMobileMenu()">
+                <div class="row">
+                    <div class="col-md-12">
+                        <mat-form-field>
+                            <input type="text"
+                                   matInput
+                                   placeholder="Type prefix here"
+                                   [(ngModel)]="prefix"/>
+                        </mat-form-field>
+
+                        <mat-form-field style="margin-left: 22px;">
+                            <input type="number"
+                                   matInput
+                                   placeholder="Type minimum number of digits here"
+                                   [(ngModel)]="minDigits"/>
+                        </mat-form-field>
+
+                        <button style="margin-left: 20px;"
+                                type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="autogenerate()">AUTO-GENERATE</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="serviceAdapter.updateStudentRollNumbers()">UPDATE</button>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="isMobileMenu()">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <mat-form-field style="width: 100%">
+                            <input type="text"
+                                   matInput
+                                   placeholder="Type prefix here"
+                                   [(ngModel)]="prefix"/>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <mat-form-field style="width: 100%">
+                            <input type="number"
+                                   matInput
+                                   placeholder="Type minimum number of digits here"
+                                   [(ngModel)]="minDigits"/>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12" >
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="autogenerate()">AUTO-GENERATE</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <ng-container *ngIf="showTestDetails">
+
+            <table class="table table-hover">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th>S No.</th>
+                    <th>Student</th>
+                    <th>Roll No.</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let student of filteredStudents; let i=index;">
+                    <td>{{(i+1)}}.</td>
+                    <td>{{student.name}}</td>
+                    <td>
+                        <mat-form-field>
+                            <input type="text"
+                                   matInput
+                                   placeholder="Type roll number here"
+                                   [(ngModel)]="student.studentSection.newRollNumber"/>
+                        </mat-form-field>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button type="submit"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="serviceAdapter.updateStudentRollNumbers()">UPDATE</button>
+
+        </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="isInitialLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
 </div>

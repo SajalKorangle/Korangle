@@ -107,6 +107,7 @@ export class ViewAllComponent implements OnInit {
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
+            console.log(value[0]);
             this.initializeClassSectionList(value[0]);
             this.initializeStudentFullProfileList(value[1]);
         }, error => {
@@ -141,6 +142,7 @@ export class ViewAllComponent implements OnInit {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
         });
+        console.log(this.studentFullProfileList);
         this.handleStudentDisplay();
     }
 
