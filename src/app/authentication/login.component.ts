@@ -1,10 +1,11 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../classes/user';
 import {registerForNotification} from "../classes/common.js";
 import {NotificationService} from "../services/modules/notification/notification.service";
 import {Constants} from "../classes/constants";
 import {environment} from "../../environments/environment";
+import {CommonFunctions} from "../classes/common-functions";
 
 @Component({
     selector: 'app-login-form',
@@ -16,6 +17,9 @@ import {environment} from "../../environments/environment";
 export class LoginComponent {
 
     @Input() user: User;
+
+    @Output() showFrontPageProgressBar = new EventEmitter();
+
     username = '';
     password = '';
     visibilityMode = false;
@@ -28,8 +32,10 @@ export class LoginComponent {
         this.isLoading = true;
         this.authenticationService.loginUserDetails(this.username, this.password).then( data => {
             this.isLoading = false;
+            this.showFrontPageProgressBar.emit('false');
             if (data.username === 'invalidUsername') {
                 alert('Login failed: Invalid username or password');
+
             } else {
                 localStorage.setItem('schoolJWT', data.token);
                 this.user.jwt = data.token;
@@ -42,6 +48,7 @@ export class LoginComponent {
                 });
             }
         }, error => {
+            this.showFrontPageProgressBar.emit('false');
             this.isLoading = false;
         });
     }
@@ -52,8 +59,10 @@ export class LoginComponent {
             document.getElementById('pass').focus()
         }
         else {
+            this.showFrontPageProgressBar.emit('true');
             this.login()
         }
+
     }
 
     toggleVisibilityMode(): void {
@@ -66,6 +75,11 @@ export class LoginComponent {
         } else {
             return "visibility";
         }
+    }
+
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
+        
     }
 
 }

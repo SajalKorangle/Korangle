@@ -15,6 +15,7 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
 
     studentList: any;
     examination: any;
+    showPrincipalSignature: any;
 
     boardList: any;
 
@@ -31,6 +32,7 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
         this.opacity = {
             opacity: this.user.activeSchool.opacity,
         };
+        this.showPrincipalSignature = value.showPrincipalSignature,
         this.viewChecked = false;
     }
 

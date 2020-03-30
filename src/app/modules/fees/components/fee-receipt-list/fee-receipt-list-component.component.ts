@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
+import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({
@@ -26,23 +25,15 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() number;
     @Input() selectedFeeType;
     @Input() boardList;
+    @Input() sessionList = [];
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
 
     constructor(private printService: PrintService,
                 private schoolService: SchoolService) { }
 
-    ngOnInit() {
-
-        this.schoolService.getObjectList(this.schoolService.board, {}).then(value => {
-            this.boardList = value;
-        }, error => {
-
-        });
-
-    }
+    ngOnInit() { }
 
     printFeeReceipt(feeReceipt: any): void {
 
@@ -56,6 +47,7 @@ export class FeeReceiptListComponent implements OnInit {
             'sectionList': this.sectionList,
             'employeeList': this.employeeList,
             'boardList': this.boardList,
+            'sessionList' : this.sessionList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, {user: this.user, value: data});

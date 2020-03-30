@@ -2,27 +2,45 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
+import { SmsService } from "../../../../services/modules/sms/sms.service";
+import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
 import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {NotificationService} from "../../../../services/modules/notification/notification.service";
+import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
-import {SESSION_LIST} from "../../../../classes/constants/session";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
+import { SchoolService } from 'app/services/modules/school/school.service';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService ],
+    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService, SchoolService ],
 })
 
 export class ViewDefaultersComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
-    sessionList = SESSION_LIST;
+    sessionList = [];
 
     nullValue = null;
 
      user;
+
+     sentTypeList = [
+        'SMS',
+        'NOTIFICATION',
+        'NOTIF./SMS',
+    ];
+
+    studentMessage = "Hi <fathersName>,\n<name>'s fees due till date is <feesDueTillMonth>";
+    parentMessage = "Hi <name>,\nYour fees due till date is <feesDueTillMonth>\n<childrenData>";
+
+    selectedSentType = 'SMS';
+    extraDefaulterMessage = '';
+
+    smsBalance = 0;
 
     subFeeReceiptList: any;
     subDiscountList: any;
@@ -31,6 +49,8 @@ export class ViewDefaultersComponent implements OnInit {
     studentList: any;
     classList: any;
     sectionList: any;
+
+    notif_usernames = [];
 
     parentList = [];
 
@@ -58,10 +78,15 @@ export class ViewDefaultersComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public feeService: FeeService,
+    constructor(public schoolService : SchoolService,
+                public feeService: FeeService,
                 public studentService: StudentService,
                 public classService: ClassOldService,
                 private excelService: ExcelService,
+                public notificationService: NotificationService,
+                public userService: UserService,
+                public smsService: SmsService,
+                public smsOldService: SmsOldService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -69,14 +94,8 @@ export class ViewDefaultersComponent implements OnInit {
 
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
-
-        let todaysDate = new Date();
-        this.currentSession = this.sessionList.find(session => {
-            return new Date(session.startDate) <= todaysDate
-                && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
-        });
-
+        this.serviceAdapter.initializeData();       
+                
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
     }
@@ -283,6 +302,7 @@ export class ViewDefaultersComponent implements OnInit {
                     'name': student.fathersName,
                     'mobileNumber': student.mobileNumber,
                     'studentList': [student],
+                    'notification': student.notification
                 };
                 this.parentList.push(newParentObject);
             }
@@ -334,6 +354,81 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
+    getStudentString = (studentList) => {
+        let ret = "";
+        studentList.forEach(student => {
+            ret += student.name +": "+ this.getCurrencyInINR(student.feesDueTillMonth)+"\n";
+        })
+        return ret;
+    }
+
+    getMessageFromTemplate = (message, obj) => {
+        let ret = message;
+        for(let key in obj){
+            ret = ret.replace("<"+key+">", obj[key]);
+        }
+        return ret;
+    }
+    
+    hasUnicode(message): boolean {
+        for (let i=0; i<message.length; ++i) {
+            if (message.charCodeAt(i) > 127) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    getMessageCount = (message) => {
+        if (this.hasUnicode(message)){
+            return Math.ceil(message.length/70);
+        }else{
+            return Math.ceil( message.length/160);
+        }
+    }
+
+    notifyDefaulters(): void{
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            let message = this.studentMessage;
+            if(this.extraDefaulterMessage){
+                message+="\n"+this.extraDefaulterMessage;
+            }
+            let test = this.getFilteredStudentList().filter((item) => {
+                return item.selected;
+            })
+            let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
+                return {
+                    "fathersName": obj.fathersName,
+                    "name": obj.name,
+                    "mobileNumber": obj.mobileNumber,
+                    "notification": obj.notification,
+                    "feesDueTillMonth": this.getCurrencyInINR(obj.feesDueTillMonth),
+                    "feesDueOverall": this.getCurrencyInINR(obj.feesDueOverall)
+                }
+            });
+            this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
+        }else{
+            let message = this.parentMessage;
+            if(this.extraDefaulterMessage){
+                message+=this.extraDefaulterMessage;
+            }
+            let test = this.getFilteredParentList().filter((item) => {
+                return item.selected;
+            })
+            let mobile_numbers = test.filter((item)=> item.mobileNumber).map((obj) => {
+                return {
+                    "name": obj.name,
+                    "mobileNumber": obj.mobileNumber,
+                    "notification": obj.notification,
+                    "feesDueTillMonth": this.getCurrencyInINR(this.getParentFeesDueTillMonth(obj)),
+                    "feesDueOverall": this.getCurrencyInINR(this.getParentFeesDueOverall(obj)),
+                    "childrenData": this.getStudentString(obj.studentList)
+                }
+            });
+            this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
+        }
+    }
+
     getFilteredStudentList(): any {
         let tempList = this.studentList;
         if (this.selectedClassSection) {
@@ -351,6 +446,30 @@ export class ViewDefaultersComponent implements OnInit {
             });
         }
         return tempList;
+    }
+
+    selectAllHandler = () => {
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            this.getFilteredStudentList().forEach(item => {
+                item.selected = true;
+            });
+        }else{
+            this.getFilteredParentList().forEach(item => {
+                item.selected = true;
+            });
+        }
+    }
+
+    clearAllHandler = () => {
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            this.getFilteredStudentList().forEach(item => {
+                item.selected = false;
+            });
+        }else{
+            this.getFilteredParentList().forEach(item => {
+                item.selected = false;
+            });
+        }
     }
 
     getFilteredStudentListFeesDueTillMonth(): any {
@@ -437,6 +556,16 @@ export class ViewDefaultersComponent implements OnInit {
 
     }
 
+    getSelectedParentCount = () =>{
+        return this.getFilteredParentList().filter(item => {
+            return item.selected && item.selected==true;
+        }).length;
+    }
+
+    getSelectedChildrenCount = () => {
+        return this.getFilteredStudentList().filter(item => item.selected).length;
+    }
+
     downloadStudentFeesReport(): void {
 
         let template: any;
@@ -520,6 +649,64 @@ export class ViewDefaultersComponent implements OnInit {
         });
 
         this.excelService.downloadFile(template, 'korangle_parent_fees.csv');
+    }
+
+    getExtraMessageLength = () => {
+        return this.extraDefaulterMessage.length;
+    }
+
+    getNumberOfMobileDevice = () => {
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            return this.getFilteredStudentList().filter((item) => {
+                return item.selected;
+            }).length;
+        }else{
+            return this.getFilteredParentList().filter((item) => {
+                return item.selected;
+            }).length;
+        }
+    }
+
+    getEstimatedNotificationCount = () => {
+        let count = 0;
+        if(this.selectedSentType==this.sentTypeList[0])return 0;
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            count = this.getFilteredStudentList().filter((item) => {
+                return item.mobileNumber && item.selected && item.notification;
+            }).length;
+        }else{
+            count = this.getFilteredParentList().filter((item) => {
+                return item.mobileNumber && item.selected && item.notification;
+            }).length;
+        }
+        return count;
+    }   
+
+    getEstimatedSMSCount = () => {
+        let count = 0;
+        if(this.selectedSentType==this.sentTypeList[1])return 0;
+        if(this.selectedFilterType == this.filterTypeList[0]){
+            this.getFilteredStudentList().filter(item => item.mobileNumber && item.selected).forEach((item, i) => {
+                if(this.selectedSentType==this.sentTypeList[0] || item.notification==false){
+                    count += this.getMessageCount(this.getMessageFromTemplate(this.studentMessage, item) + '\n' + this.extraDefaulterMessage);
+                }
+            })
+        }else{
+            this.getFilteredParentList().filter(item=>item.mobileNumber && item.selected).forEach((item, i) => {
+                if(this.selectedSentType==this.sentTypeList[0] || item.notification==false){
+                    count += this.getMessageCount(this.getMessageFromTemplate(this.parentMessage, item) + '\n' + this.extraDefaulterMessage);
+                }
+            })
+        }
+        return count;
+    }
+
+    getButtonText(): any {
+        return "Send " + this.getEstimatedSMSCount() + " SMS and " + this.getEstimatedNotificationCount() + " notifications";
+    }
+
+    getCurrencyInINR = (data) => {
+        return "Rs. " + Number(data).toLocaleString('en-IN');
     }
 
 }

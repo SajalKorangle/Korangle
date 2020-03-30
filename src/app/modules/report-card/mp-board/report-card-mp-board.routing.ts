@@ -3,9 +3,13 @@ import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import {ReportCardMpBoardComponent} from './report-card-mp-board.component';
-import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT, PRINT_STUDENT_ELEGANT_FINAL_REPORT, PRINT_STUDENT_CLASSIC_FINAL_REPORT } from '../../../print/print-routes.constants';
+import {
+    PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT,
+    PRINT_STUDENT_ELEGANT_FINAL_REPORT, PRINT_STUDENT_CLASSIC_FINAL_REPORT, PRINT_STUDENT_NINTH_FINAL_REPORT_2019
+} from '../../../print/print-routes.constants';
 
 import { PrintStudentNinthFinalReportListComponent } from './print/print-student-ninth-final-report-list/print-student-ninth-final-report-list.component';
+import { PrintStudentNinthFinalReportList2019Component } from './print/print-student-ninth-final-report-list-2019/print-student-ninth-final-report-list-2019.component';
 import { PrintStudentClassicFinalReportListComponent } from './print/print-student-classic-final-report-list/print-student-classic-final-report-list.component';
 import { PrintStudentComprehensiveFinalReportListComponent } from './print/print-student-comprehensive-final-report-list/print-student-comprehensive-final-report-list.component';
 import { PrintStudentElegantFinalReportListComponent } from './print/print-student-elegant-final-report-list/print-student-elegant-final-report-list.component';
@@ -43,12 +47,21 @@ const routes: Routes = [
         data: {moduleName: 'report_card_mp_board'},
     },
     {
+        path:'add_student_remarks',
+        loadChildren:'app/modules/report-card/mp-board/pages/add-student-remarks/add-student-remarks.module#AddStudentRemarksModule',
+        data: {moduleName: 'report_card_mp_board'},
+    },
+    {
         path: '',
         component: ReportCardMpBoardComponent,
     },
     {
         path: PRINT_STUDENT_NINTH_FINAL_REPORT,
         component: PrintStudentNinthFinalReportListComponent,
+    },
+    {
+        path: PRINT_STUDENT_NINTH_FINAL_REPORT_2019,
+        component: PrintStudentNinthFinalReportList2019Component,
     },
     {
         path: PRINT_STUDENT_ELEVENTH_FINAL_REPORT,

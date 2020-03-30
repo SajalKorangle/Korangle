@@ -55,7 +55,7 @@ export class ServiceObject extends RestApiGateway {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
         } else if (object_url in this.file_list) {
-            return super.putFileData(data, this.module_url+this.object_url);
+            return super.putFileData(data, this.module_url+object_url);
         }
         return super.putData(data, this.module_url+object_url);
     }

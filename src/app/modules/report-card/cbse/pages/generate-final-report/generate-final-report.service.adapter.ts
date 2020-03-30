@@ -39,57 +39,52 @@ export class GenerateFinalReportServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        const teacher_signature_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
         Promise.all([
             this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.report_card_mapping, report_card_mapping_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.classService.getObjectList(this.vm.classService.classs, ''),
             this.vm.classService.getObjectList(this.vm.classService.division, ''),
+            this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, teacher_signature_data)
         ]).then(value => {
-
+            console.log(value);
+            this.vm.classTeacherSignatureList = value[4];
             if (value[0].length > 0 || value[1].length > 0) {
-
                 this.vm.reportCardMappingList = value[0];
                 this.vm.studentSectionList = value[1];
-
                 this.vm.studentSectionList.forEach(studentSection => {
                     studentSection['selected'] = false;
                 });
-
                 let student_data = {
                     'id__in': this.vm.studentSectionList.map(a => a.parentStudent),
                     'fields__korangle': 'id,profileImage,name,fathersName,scholarNumber,dateOfBirth',
                 };
-
                 Promise.all([
                     this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
                 ]).then(value2 => {
-
                     this.vm.studentList = value2[0];
-
                     Promise.all([
                         this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.term, ''),
                         this.vm.reportCardCbseService.getObjectList(this.vm.reportCardCbseService.extra_field, ''),
                         this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
                     ]).then(value3 => {
-
                         this.vm.termList = value3[0];
                         this.vm.extraFieldList = value3[1];
                         this.vm.subjectList = value3[2];
-
                     });
-
                     this.vm.studentSectionList.forEach(studentSection => {
                         studentSection['student'] = value2[0].find(student => {
                             return student.id == studentSection.parentStudent;
                         });
                         studentSection['selected'] = false;
                     });
-
                     this.vm.isLoading = false;
                 }, error => {
                     this.vm.isLoading = false;
                 });
-
                 this.vm.classSectionList = [];
                 value[2].filter(classs => {
                     value[3].filter(section => {
@@ -108,11 +103,9 @@ export class GenerateFinalReportServiceAdapter {
                 if(this.vm.classSectionList.length > 0) {
                     this.vm.selectedClassSection = this.vm.classSectionList[0];
                 }
-
             } else {
                 this.vm.isLoading = false;
             }
-
         }, error => {
             this.vm.isLoading = false;
         });
@@ -203,19 +196,9 @@ export class GenerateFinalReportServiceAdapter {
 
         service_list.push(this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_data));
 
-        let class_teacher_signature_data = {
-            'parentClass': this.vm.selectedClassSection.class.id,
-            'parentDivision': this.vm.selectedClassSection.section.id,
-            'parentSchool': this.vm.user.activeSchool.dbId,
-        };
-
-        service_list.push(this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, class_teacher_signature_data));
-
         this.vm.isLoading = true;
 
         Promise.all(service_list).then(value => {
-
-            console.log(value);
 
             this.vm.testList = value[0];
             this.vm.studentTestList = value[1];
@@ -227,8 +210,14 @@ export class GenerateFinalReportServiceAdapter {
             this.vm.classSubjectList = value[7].sort((a,b) => {
                 return a.orderNumber - b.orderNumber;
             });
-            if (value[8].length > 0) {
-                this.vm.classTeacherSignature = value[8][0];
+            const signature = this.vm.classTeacherSignatureList.find((sign) => {
+                return sign.parentClass === this.vm.selectedClassSection.class.id
+                && sign.parentDivision === this.vm.selectedClassSection.section.id
+            });
+            if(signature && this.vm.showClassTeacherSignature){
+                this.vm.classTeacherSignature = signature;
+            }else{
+                this.vm.classTeacherSignature = null;
             }
 
             this.vm.isLoading = false;

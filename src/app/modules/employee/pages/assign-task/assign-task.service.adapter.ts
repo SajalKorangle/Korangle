@@ -35,8 +35,6 @@ export class AssignTaskServiceAdapter {
             this.vm.teamService.getObjectList(this.vm.teamService.task, task_data),
         ]).then(value => {
 
-            console.log(value);
-
             this.initializeModuleList(value[0],value[1]);
             this.vm.isLoading = false;
 
@@ -44,21 +42,24 @@ export class AssignTaskServiceAdapter {
             this.vm.isLoading = false;
         });
 
-        /*const request_module_data = {
-            schoolDbId: this.vm.user.activeSchool.dbId,
-        };
+    }
 
+    getPermissionList(): void {
+        const data = {};
+        if (this.vm.selectedAssignTaskOption === this.vm.assignTaskOptions[0]){
+            data['parentEmployee'] = this.vm.selectedEmployee.id;
+        } else {
+            data['parentTask'] = this.vm.selectedTask.id;
+        }
         this.vm.isLoading = true;
         Promise.all([
-            this.vm.teamOldService.getSchoolModuleList(request_module_data, this.vm.user.jwt),
-        ]).then(value => {
-            console.log(value);
-            this.vm.isLoading = false;
-            this.initializeModuleList(value[0]);
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_permissions, data)
+            ]).then(value => {
+                this.vm.currentPermissionList = value[0];
+                this.vm.isLoading = false;
         }, error => {
-            this.vm.isLoading = false;
-        });*/
-
+                this.vm.isLoading = false;
+        });
     }
 
     initializeModuleList(moduleList: any, taskList: any): void {
@@ -75,14 +76,5 @@ export class AssignTaskServiceAdapter {
             return a.orderNumber - b.orderNumber;
         });
     }
-
-    /*initializeModuleList(moduleList: any): void {
-        this.vm.moduleList = moduleList;
-        this.vm.moduleList.forEach(module => {
-            module.taskList.forEach(task => {
-                task.selected = false;
-            })
-        })
-    }*/
 
 }

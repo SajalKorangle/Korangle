@@ -29,6 +29,11 @@ export class EnquiryOldService extends CommonServiceRequirements {
         return super.putData(data, token, url);
     }
 
+    deleteEnquiry(data: any, token: any): Promise<any> {
+        const url = '/enquiry/enquiries/' + data['id'];
+        return super.deleteData(token, url);
+    }
+
     // Mini Enquiry
     getMiniEnquiryList(data: any, token: any): Promise<any> {
         const url = '/enquiry/school/' + data['parentSchool'] + '/mini-enquiries';

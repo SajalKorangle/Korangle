@@ -19,7 +19,10 @@ export class PrintStudentComprehensiveFinalReportListComponent implements OnInit
     reportCardMapping: any;
     includeProject: any;
     showPrincipalSignature: any;
+    classTeacherSignature: any;
     boardList: any;
+
+    marksDecimalPoint: any;
 
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
@@ -31,6 +34,9 @@ export class PrintStudentComprehensiveFinalReportListComponent implements OnInit
         this.studentFinalReportList = value['studentFinalReportList'];
         this.reportCardMapping = value['reportCardMapping'];
         this.showPrincipalSignature = value['showPrincipalSignature'];
+        this.classTeacherSignature = value['classTeacherSignature'];
+        this.marksDecimalPoint = '1.'+this.reportCardMapping.minimumDecimalPoints.toString()+'-'+this.reportCardMapping.maximumDecimalPoints;
+        // console.log(this.classTeacherSignature);
         this.boardList = value['boardList'];
         this.populateIncludeProject();
         this.viewChecked = false;

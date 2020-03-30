@@ -26,13 +26,13 @@ export class SetStudentSubjectServiceAdapter {
 
 
         let request_examination_data = {
-            'schoolId': this.vm.user.activeSchool.dbId,
-            'sessionId': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         Promise.all([
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
-            this.vm.examinationService.getExaminationList(request_examination_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
         ]).then(value => {
             this.subjectList = value[0];
             this.examinationList = value[1];
@@ -92,7 +92,7 @@ export class SetStudentSubjectServiceAdapter {
 
         const request_student_subject_data = {
             studentId: student.dbId,
-            sessionId: this.vm.selectedSession.dbId,
+            sessionId: this.vm.selectedSession.id,
         };
 
         const request_class_subject_data = {
@@ -103,7 +103,7 @@ export class SetStudentSubjectServiceAdapter {
             'classList': [student.classDbId],
             'sectionList': [student.sectionDbId],
             'schoolList': [this.vm.user.activeSchool.dbId],
-            'sessionList': [this.vm.selectedSession.dbId],
+            'sessionList': [this.vm.selectedSession.id],
         };
 
         const request_student_test_data = {
@@ -115,21 +115,16 @@ export class SetStudentSubjectServiceAdapter {
         };
 
         let request_class_test_data = {
-            'examinationList': this.prepareExaminationList(),
-            'subjectList': [],
-            'classList': [student.classDbId],
-            'sectionList': [student.sectionDbId],
-            'startTimeList': [],
-            'endTimeList': [],
-            'testTypeList': [],
-            'maximumMarksList': [],
+            'parentExamination__in': this.prepareExaminationList(),
+            'parentClass': student.classDbId,
+            'parentDivision': student.sectionDbId,
         };
 
         Promise.all([
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
-            this.vm.examinationService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
-            this.vm.examinationService.getTestList(request_class_test_data, this.vm.user.jwt),
+            this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_class_test_data),
         ]).then(value => {
             this.studentSubjectList = value[0];
             this.classSubjectList = value[1];
@@ -216,7 +211,7 @@ export class SetStudentSubjectServiceAdapter {
 
         let student_subject_data = {
             parentStudent: this.vm.selectedStudent.dbId,
-            parentSession: this.vm.selectedSession.dbId,
+            parentSession: this.vm.selectedSession.id,
             parentSubject: item.subjectId,
         };
 
@@ -224,7 +219,7 @@ export class SetStudentSubjectServiceAdapter {
 
         Promise.all([
             this.vm.subjectService.createStudentSubject(student_subject_data, this.vm.user.jwt),
-            this.vm.examinationService.createStudentTestList(student_test_data, this.vm.user.jwt),
+            this.vm.examinationOldService.createStudentTestList(student_test_data, this.vm.user.jwt),
         ]).then(value => {
             item.studentSubjectId = value[0].id;
             value[1].forEach(itemTwo => {
@@ -262,7 +257,7 @@ export class SetStudentSubjectServiceAdapter {
         request_array.push(this.vm.subjectService.deleteStudentSubject(subject_data, this.vm.user.jwt));
 
         if (student_test_data.length > 0) {
-            request_array.push(this.vm.examinationService.deleteStudentTestList(student_test_data.join(), this.vm.user.jwt))
+            request_array.push(this.vm.examinationOldService.deleteStudentTestList(student_test_data.join(), this.vm.user.jwt))
         }
 
         Promise.all(request_array).then(value => {

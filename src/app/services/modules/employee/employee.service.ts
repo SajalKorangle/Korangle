@@ -11,4 +11,6 @@ export class EmployeeService extends ServiceObject {
     // objects urls
     public employees = '/employees';
 
+    public employee_permissions = '/employee-permissions';
+
 }

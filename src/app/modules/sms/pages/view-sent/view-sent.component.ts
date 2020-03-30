@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
+import { InformationService } from '../../../../services/modules/information/information.service';
 import { ViewSentServiceAdapter } from './view-sent.service.adapter';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -8,6 +9,7 @@ import {DataStorage} from "../../../../classes/data-storage";
   selector: 'view-sent',
   templateUrl: './view-sent.component.html',
   styleUrls: ['./view-sent.component.css', './view-sent.component.scss'],
+  providers: [InformationService]
 })
 export class ViewSentComponent implements OnInit {
 
@@ -21,12 +23,17 @@ export class ViewSentComponent implements OnInit {
     smsList: any;
 
     selectedStatus;
+    selectedMessageType = null;
+    nullValue = null;
+
+    messageTypeList = [];
 
     serviceAdapter: ViewSentServiceAdapter;
 
     isLoading = false;
 
     constructor(public smsService: SmsOldService,
+        public informationService: InformationService,
                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
@@ -65,6 +72,32 @@ export class ViewSentComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
+    }
+
+    getMessageType(sms: any): string {
+        const messageType = this.messageTypeList.find(val => val.id==sms.parentMessageType);
+        if (messageType){
+            return messageType["name"];
+        }else{
+            return "";
+        }
+    }
+
+    getFilteredSMSList(): any{
+        // console.log(this.selectedMessageType);
+        if (this.selectedMessageType==null){
+            return this.smsList;
+        }
+        // console.log(this.smsList);
+        let tempList = [];
+        this.smsList.forEach(sms => {
+            if (sms.parentMessageType==this.selectedMessageType.id){
+                tempList.push(sms);
+            }
+        });
+        // console.log(this.selectedMessageType);
+        // console.log(tempList);
+        return tempList;;
     }
 
     getStatusList(sms: any): any {

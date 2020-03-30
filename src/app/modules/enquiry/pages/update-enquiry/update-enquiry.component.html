@@ -3,11 +3,12 @@
     <form class="example-form" *ngIf="enquiryList">
         <mat-form-field class="example-full-width">
             <input type="text"
-                   placeholder="Type student name here...."
+                   placeholder="Type eqnuirer name here...."
                    aria-label="Student"
                    matInput
                    [formControl]="myControl"
-                   [matAutocomplete]="auto">
+                   [matAutocomplete]="auto"
+                   [ngModel]="selectedEnquiry">
             <mat-autocomplete #auto="matAutocomplete"
                               (optionSelected)="getEnquiry($event.option.value)"
                               [displayWith]="displayFn">
@@ -92,6 +93,7 @@
         </div>
 
         <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateEnquiry();">Update</button>
+
         <div class="clearfix"></div>
 
     </ng-container>

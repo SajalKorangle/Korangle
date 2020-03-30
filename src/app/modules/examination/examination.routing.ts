@@ -3,7 +3,7 @@ import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ExaminationComponent } from './examination.component';
-import { PRINT_HALL_TICKET, PRINT_STUDENT_MARKSHEET } from '../../print/print-routes.constants';
+import { PRINT_HALL_TICKET, PRINT_STUDENT_MARKSHEET } from './print/print-routes.constants';
 
 import { PrintHallTicketComponent } from './print/print-hall-ticket/print-hall-ticket.component';
 import { PrintStudentMarksheetListComponent } from './print/print-student-marksheet-list/print-student-marksheet-list.component';

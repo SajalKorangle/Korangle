@@ -81,9 +81,9 @@ export class ChangeClassComponent implements OnInit {
 
     onSessionChange(session: any): void {
         const data = {
-            sessionDbId : session.dbId,
+            sessionDbId : session.id,
         };
-        this.selectedSessionDbId = session.dbId;
+        this.selectedSessionDbId = session.id;
         this.downloadClassSectionList(data);
     }
 

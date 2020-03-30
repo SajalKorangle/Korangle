@@ -25,23 +25,36 @@
         </div>
     </div>
 
-    <ng-container *ngIf="!isLoading && smsList">
+    <ng-container *ngIf="!isLoading &&  smsList">
+            <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Message Type"
+                                [(ngModel)]="selectedMessageType">
+                        <mat-option *ngFor="let messageType of messageTypeList;" [value]="messageType">
+                            {{messageType.name}}
+                        </mat-option>
+                        <mat-option [value]="nullValue">
+                            All
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
-        <ng-container *ngIf="smsList.length>0">
-
+        <ng-container *ngIf="getFilteredSMSList().length>0">
+                
             <table class="table table-hover visible-sm visible-xs">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
                     <th>S No.</th>
                     <th class="text-right">Sms/Notif.</th>
+                    <th class="text-center">Message Type</th>
                     <th class="text-center">Date</th>
                     <th class="text-left">Message</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let sms of smsList; let i = index;" style="padding: 0px;">
+                <tr *ngFor="let sms of  getFilteredSMSList(); let i = index;" style="padding: 0px;">
                     <td>{{i+1}}</td>
                     <td style="padding-right: 15px;" align="right">{{sms.count}}/{{sms.notificationCount}}</td>
+                    <td>{{getMessageType(sms)}}</td>
                     <td align="center">{{sms.sentDateTime | date: 'dd - MMM - yyyy'}}</td>
                     <td align="left" style="white-space: pre-line;">
                         {{sms.content}}
@@ -56,17 +69,19 @@
                 <section class="mat-elevation-z2 mat-header-row">
                 <span class="mat-header-cell">S No.</span>
                 <span class="mat-header-cell">Sms/Notif.</span>
+                <th class="mat-header-cell">Message Type</th>
                 <span class="mat-header-cell">Date</span>
                 <span class="mat-header-cell">Message</span>
                 </section>
         
-                <mat-expansion-panel *ngFor="let sms of smsList; let i=index;"
+                <mat-expansion-panel *ngFor="let sms of  getFilteredSMSList(); let i=index;"
                                     (opened)="sms.isOpen=true; serviceAdapter.getDeliveryReport(sms);"
                                     (closed)="sms.isOpen=false;">
 
                     <mat-expansion-panel-header class="mat-row">
                         <span class="mat-cell">{{i+1}}.</span>
                         <span class="mat-cell">{{sms.count}}/{{sms.notificationCount}}</span>
+                        <span class="mat-cell">{{getMessageType(sms)}}</span>
                         <span class="mat-cell" >{{sms.sentDateTime | date: 'dd - MMM - yyyy'}}</span>
                         <span class="mat-cell">{{sms.content.substring(0,20)}}</span>
                     </mat-expansion-panel-header>
@@ -113,7 +128,7 @@
         
         </ng-container>
 
-        <ng-container *ngIf="smsList.length==0">
+        <ng-container *ngIf=" getFilteredSMSList().length==0">
             No SMS sent b/w {{startDate | date: 'dd - MMM - yyyy'}} to {{endDate | date: 'dd - MMM - yyyy'}}
         </ng-container>
 

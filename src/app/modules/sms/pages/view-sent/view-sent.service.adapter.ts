@@ -15,6 +15,11 @@ export class ViewSentServiceAdapter {
 
     //initialize data
     initializeData(): void {
+        Promise.all([
+            this.vm.informationService.getObjectList(this.vm.informationService.message_type, {})
+        ]).then(value => {
+            this.vm.messageTypeList = value[0];
+        })
     }
 
     // Get Delivery Report
