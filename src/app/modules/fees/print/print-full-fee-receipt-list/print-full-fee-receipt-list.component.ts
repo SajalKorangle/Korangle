@@ -81,10 +81,10 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
         }).name;
     }
 
-    getFeeTypeName(subFeeReceipt: any): any {
+    getFeeType(subFeeReceipt: any): any {
         return this.feeTypeList.find(feeType => {
             return subFeeReceipt.parentFeeType == feeType.id;
-        }).name;
+        });
     }
 
     getSessionName(sessionId: any): any {
@@ -103,6 +103,8 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
     getSubFeeReceiptList(feeReceipt: any): any {
         return this.subFeeReceiptList.filter(subFeeReceipt => {
             return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+        }).sort((a,b) => {
+            return this.getFeeType(a).orderNumber - this.getFeeType(b).orderNumber;
         });
     }
 

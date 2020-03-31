@@ -202,7 +202,7 @@
                         <!-- Session -->
 
                         <tr style="font-weight: 500 !important; font-size: 16px !important;">
-                            <td align="left">{{sessionIndex+1}}. Session {{session.name}}</td>
+                            <td align="left">{{sessionIndex+1}}. {{session.name}}</td>
                             <td align="right">
                                 <input class='paymentInput'
                                        *ngIf="getSessionFeesDue(student, session, false) != 0"

@@ -12,16 +12,17 @@ import {ClassService} from '../../../../../services/modules/class/class.service'
 import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
 import {SubjectOldService} from '../../../../../services/modules/subject/subject-old.service';
 import {AttendanceOldService} from '../../../../../services/modules/attendance/attendance-old.service';
-import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, PRINT_STUDENT_CLASSIC_FINAL_REPORT, PRINT_STUDENT_ELEGANT_FINAL_REPORT, PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT } from '../../../../../print/print-routes.constants';
+import { PRINT_STUDENT_NINTH_FINAL_REPORT, PRINT_STUDENT_NINTH_FINAL_REPORT_2019, PRINT_STUDENT_ELEVENTH_FINAL_REPORT, PRINT_STUDENT_CLASSIC_FINAL_REPORT, PRINT_STUDENT_ELEGANT_FINAL_REPORT, PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT } from '../../../../../print/print-routes.constants';
 import { PrintService } from '../../../../../print/print-service';
 import {DataStorage} from "../../../../../classes/data-storage";
 import {SchoolService} from "../../../../../services/modules/school/school.service";
+import {ReportCardMpBoardService} from "../../../../../services/modules/report-card/mp-board/report-card-mp-board.service";
 
 @Component({
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService,ClassService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ExaminationService ],
+    providers: [ ExaminationOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ReportCardMpBoardService, ClassService, ExaminationService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -29,6 +30,8 @@ export class GenerateFinalReportComponent implements OnInit {
     user;
 
     reportCardTypeList = REPORT_CARD_TYPE_LIST;
+
+    sessionList = [];
 
     showPrinicipalSignature = true;
     showClassTeacherSignature = true;
@@ -59,7 +62,8 @@ export class GenerateFinalReportComponent implements OnInit {
                 public attendanceService: AttendanceOldService,
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
-                private printService: PrintService) {}
+                private printService: PrintService,
+                public reportCardMpBoardService: ReportCardMpBoardService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -86,7 +90,11 @@ export class GenerateFinalReportComponent implements OnInit {
         let printRoute : string;
         
         if (selectedClassSection.className == 'Class - 9') {
-            printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT;
+            if (this.getSession(this.user.activeSchool.currentSessionDbId).orderNumber >= 3) {
+                printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT_2019;
+            } else {
+                printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT;
+            }
         } else if( selectedClassSection.className == 'Class - 11'){
             printRoute = PRINT_STUDENT_ELEVENTH_FINAL_REPORT;
         } else if (this.reportCardMapping.reportCardType == REPORT_CARD_TYPE_LIST[2]) {
@@ -99,6 +107,12 @@ export class GenerateFinalReportComponent implements OnInit {
 
         this.printService.navigateToPrintRoute(printRoute, {user: this.user, value: data});
         alert('This may take a while');
+    }
+
+    getSession(sessionId: any): any {
+        return this.sessionList.find(session => {
+            return session.id == sessionId;
+        });
     }
 
     showSectionName(className: any): boolean {
@@ -224,5 +238,4 @@ export class GenerateFinalReportComponent implements OnInit {
             console.log('paged!', event);
         }, 100);
     }
-
 }

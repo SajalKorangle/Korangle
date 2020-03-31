@@ -160,7 +160,6 @@ const RTE_VALUES = [
     'RTE Values',
     'YES',
     'NO',
-    'UNKNOWN',
 ];
 
 

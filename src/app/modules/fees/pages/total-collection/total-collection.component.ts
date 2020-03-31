@@ -7,7 +7,7 @@ import {ClassService} from "../../../../services/modules/class/class.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
+import { PRINT_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 

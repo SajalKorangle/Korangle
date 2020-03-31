@@ -130,14 +130,14 @@ export class SetSchoolFeesServiceAdapter {
         // Any conditions to check
 
         if (!this.vm.newSchoolFeeRule.ruleNumber) {
-            alert('Rule number should be populated');
+            alert('Group number should be populated');
             return;
         }
 
         if (this.vm.schoolFeeRuleList.filter(schoolFeeRule => {
             return schoolFeeRule.parentFeeType == this.vm.selectedFeeType.id;
         }).map(a => a.ruleNumber).includes(this.vm.newSchoolFeeRule.ruleNumber)) {
-            alert('Rule number already exists');
+            alert('Group number already exists');
             return;
         }
 

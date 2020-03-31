@@ -274,6 +274,7 @@ export class SendSmsServiceAdapter {
         let sms_data = {
             'contentType': (this.vm.hasUnicode()? 'unicode':'english'),
             'content': this.vm.message,
+            'parentMessageType': 1,
             'count': this.vm.getSMSCount()*this.vm.smsMobileNumberList.length,
             'notificationCount': this.vm.notificationMobileNumberList.length,
             'mobileNumberList': mobileNumberList,
@@ -283,6 +284,7 @@ export class SendSmsServiceAdapter {
 
         let notification_data = this.vm.notificationMobileNumberList.map(mobileNumber => {
             return {
+                'parentMessageType': 1,
                 'content': this.vm.message,
                 'parentUser': this.vm.filteredUserList.find(user => { return user.username == mobileNumber.toString();}).id,
                 'parentSchool': this.vm.user.activeSchool.dbId,

@@ -193,26 +193,26 @@
                             <tr>
                                 <td class="leftBorder" style="padding: 5px;">{{getSubjectName(subject.parentSubject)}}</td>
                                 <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMaxMarks()}}</td>
-                                <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td>
+                                <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}}</td>
                                 <td class="rightBorder" style="padding: 5px;" align="center">{{getGrade(getOverallStudentSubjectMarks(student, subject, i),getOverallStudentSubjectMaxMarks())}}</td>
                             </tr>
                         </ng-container>
                         <tr>
                             <td class="leftBorder" style="padding: 5px;">{{extraFieldList[0].name}}</td>
                             <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMaxMarks(0)}}</td>
-                            <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMarks(student, 0) | number: '1.0-1'}}</td>
+                            <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMarks(student, 0) | number: marksDecimalPoint}}</td>
                             <td class="rightBorder" style="padding: 5px;" align="center">{{getGrade(getOverallStudentTotalExtraFieldMarks(student, 0),getOverallStudentTotalExtraFieldMaxMarks(0))}}</td>
                         </tr>
                         <tr>
                             <td class="leftBorder" style="padding: 5px;">{{extraFieldList[1].name}}</td>
                             <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMaxMarks(1)}}</td>
-                            <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMarks(student, 1) | number: '1.0-1'}}</td>
+                            <td style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentTotalExtraFieldMarks(student, 1) | number: marksDecimalPoint}}</td>
                             <td class="rightBorder" style="padding: 5px;" align="center">{{getGrade(getOverallStudentTotalExtraFieldMarks(student, 1),getOverallStudentTotalExtraFieldMaxMarks(1))}}</td>
                         </tr>
                         <tr>
                             <td class="updownBorder leftBorder bold" style="padding: 5px;">Total</td>
                             <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMaxMarks(student)}}</td>
-                            <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMarks(student) | number: '1.0-1'}}</td>
+                            <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentMarks(student) | number: marksDecimalPoint}}</td>
                             <td class="updownBorder rightBorder bold" style="padding: 5px;" align="center">{{getGrade(getOverallStudentMarks(student),getOverallStudentMaxMarks(student))}}</td>
                         </tr>
                         <tr>
@@ -226,7 +226,7 @@
                             <tr>
                                 <td [class.upBorder]="i==0" class="leftBorder" style="padding: 5px;">{{getSubjectName(subject.parentSubject)}}</td>
                                 <td [class.upBorder]="i==0" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMaxMarks()}}</td>
-                                <td [class.upBorder]="i==0" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}}</td>
+                                <td [class.upBorder]="i==0" style="padding: 5px; padding-right: 30px;" align="right">{{getOverallStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}}</td>
                                 <td [class.upBorder]="i==0" class="rightBorder" style="padding: 5px;" align="center">{{getGrade(getOverallStudentSubjectMarks(student, subject, i),getOverallStudentSubjectMaxMarks())}}</td>
                             </tr>
                         </ng-container>
@@ -244,21 +244,21 @@
                     </ng-container>
                 </div>
                 <div class="col-xs-6 custom-padding"  align="end">
-                    Percentage - {{getPercentage(getOverallStudentMarks(student),getOverallStudentMaxMarks(student)) | number: '1.0-1'}}%
+                    Percentage - {{getPercentage(getOverallStudentMarks(student),getOverallStudentMaxMarks(student)) | number: marksDecimalPoint}}%
                 </div>
             </div>
 
             <!-- Promotion Info -->
-            <div class="row no-gutters" style="font-size: 20px !important;">
-                <div class="col-xs-12 d-flex custom-padding" align="center">
-                    {{getNextStep(student)}}
+            <div class="row no-gutters" style="margin-top: 5px;">
+                <div class="col-xs-12 d-flex custom-padding">
+                    Teacher's Remark:&nbsp;<i>{{student.remark}}</i>
                 </div>
             </div>
 
             <img src="{{this.classTeacherSignature}}"
                  *ngIf="this.classTeacherSignature != null"
                  style="position: absolute;
-                 /*bottom: 25px; left: 525px;*/
+                 bottom: 25px; left: 273px;
                  width: 150px; height: 75px;
                  z-index: 1;"/>
 
@@ -271,17 +271,20 @@
                  z-index: 1;"/>
             <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
                  style="position: absolute;
-                 bottom: 25px; left: 525px;
+                 bottom: 25px; left: 273px;
                  width: 150px; height: 75px;
                  z-index: 1;"/ -->
 
             <!-- Class Teacher's Sign. , Headmaster's Sign. -->
             <div class="row no-gutters"
                  style="position: absolute; bottom: 10px; width: 100%;">
-                <div class="col-xs-6 custom-padding" style="padding-left: 30px">
+                <div class="col-xs-4 custom-padding" style="padding-left: 30px">
+                    {{getNextStep(student)}}
+                </div>
+                <div class="col-xs-4 custom-padding" style="padding-left: 30px">
                     Class Teacher's Signature
                 </div>
-                <div class="col-xs-6 custom-padding" style="padding-right: 40px" align="end">
+                <div class="col-xs-4 custom-padding" style="padding-right: 40px" align="end">
                     Principal's Signature
                 </div>
             </div>

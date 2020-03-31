@@ -19,21 +19,10 @@
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
                     <mat-select placeholder="Select Class"
                                 [disabled]="isLoading"
-                                [ngModel]="selectedClass"
-                                (ngModelChange)="selectedClass=$event;detectChanges();">
+                                [ngModel]="selectedClassSection"
+                                (ngModelChange)="selectedClassSection=$event;detectChanges();">
                         <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
-                            {{classs.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Section"
-                                [disabled]="isLoading"
-                                [ngModel]="selectedClass.selectedSection"
-                                (ngModelChange)="selectedClass.selectedSection=$event;detectChanges();">
-                        <mat-option *ngFor='let section of selectedClass.sectionList;' [value]="section">
-                            {{section.name}}
+                            {{classs.class.name}} - {{classs.section.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -67,8 +56,34 @@
 
         <ng-container *ngIf="showTestDetails && !isLoading">
 
-            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
-                <div class="col-md-12"></div>
+            <div class="row" style="border-bottom: 0px solid black; margin-top: 15px; margin-bottom: 15px;box-shadow: 5px;">
+                <div class="col-md-12"><b>Alert : </b><i>Marks scaling has been changed from 10 to 2</i></div>
+            </div>
+
+            <div class="row"
+                 *ngIf="unpopulatedFieldsLength() > 0"
+                 style="border-bottom: 0px solid black; margin-top: 15px; margin-bottom: 15px;box-shadow: 5px;">
+                <div class="col-md-12">
+                    Generate Random Marks b/w
+                    <input type="number"
+                           placeholder="Min. marks"
+                           style="border-bottom: 1px solid black; width: 35px;"
+                           [(ngModel)]="minimumMarks"
+                           min="0"
+                           max="2"/>
+                    &
+                    <input type="number"
+                           placeholder="Min. marks"
+                           style="border-bottom: 1px solid black; width: 35px;"
+                           [(ngModel)]="maximumMarks"
+                           min="0"
+                           max="2"/>
+                    <br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
+                    <button type="submit"
+                            style="padding: 3px 8px;"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="serviceAdapter.updateAllRemainingStudentFields()">Generate</button>
+                </div>
             </div>
 
             <table class="table table-hover">
@@ -78,32 +93,27 @@
                     <th>Student</th>
                     <th>Roll No.</th>
                     <th *ngFor="let subField of selectedField.subFieldList">
-                        {{subField.name}} (10)
+                        {{subField.name}} (2)
                     </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let student of studentList; let i=index;">
+                <tr *ngFor="let student of getFilteredStudentList(); let i=index;">
                     <td>{{(i+1)}}.</td>
                     <td>{{student.name}}</td>
-                    <td>{{student.rollNumber}}</td>
+                    <td>{{student.studentSection.rollNumber}}</td>
                     <td *ngFor="let studentSubField of student.subFieldList">
                         <input type="number"
                                placeholder="Type marks here"
-                               [(ngModel)]="studentSubField.marksObtained"/>
+                               [attr.id]="student.id+'_'+studentSubField.parentExtraSubField"
+                               [ngModel]="studentSubField.marksObtained"
+                               min="0"
+                               max="2"
+                               (blur)="serviceAdapter.updateStudentField(studentSubField,$event.target.value)"/>
                     </td>
                 </tr>
                 </tbody>
             </table>
-
-            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
-                <div class="col-md-12"></div>
-            </div>
-
-            <button type="submit"
-                    style="margin-left: 20px;"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.updateStudentFieldDetails()">Update</button>
 
         </ng-container>
 

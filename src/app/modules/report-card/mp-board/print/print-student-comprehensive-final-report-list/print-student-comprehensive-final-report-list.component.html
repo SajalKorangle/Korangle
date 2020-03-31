@@ -456,7 +456,7 @@
                                 </ng-container>
                             </div>
                             <div class="col-xs-6" align="end">
-                                Overall Marks : {{getOverallStudentMarks(student) | number: '1.0-1'}} / {{getOverallStudentMaxMarks(student) | number: '1.0-1'}}
+                                Overall Marks : {{getOverallStudentMarks(student) | number: marksDecimalPoint}} / {{getOverallStudentMaxMarks(student) | number: marksDecimalPoint}}
                             </div>
                         </div>
 
@@ -537,38 +537,38 @@
                 <ng-container *ngFor="let subject of student.mainSubjectList; let i = index;">
                     <tr>
                         <td align="left" style="padding-left: 5px !important;">{{i+1}}. {{getSubjectName(subject.parentSubject)}}</td>
-                        <td align="center">{{student.parentExaminationJuly.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationJuly.mainSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationAugust.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationAugust.mainSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationSeptember.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationSeptember.mainSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationOctober.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationOctober.mainSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationHalfYearly.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationHalfYearly.mainSubjectMarksList[i], 50)}}</td>
-                        <td align="center">{{student.parentExaminationDecember.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationDecember.mainSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationJanuary.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationJanuary.mainSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationFebruary.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationFebruary.mainSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationFinal.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationFinal.mainSubjectMarksList[i], 100)}}</td>
-                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.mainSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationProject.mainSubjectMarksList[i], 20)}}</td>
-                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}} / {{getGrade(getOverallStudentSubjectMarks(student, subject, i), getOverallStudentSubjectMaxMarks())}}</td>
+                        <td align="center">{{student.parentExaminationJuly.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationJuly.mainSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationAugust.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationAugust.mainSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationSeptember.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationSeptember.mainSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationOctober.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationOctober.mainSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationHalfYearly.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationHalfYearly.mainSubjectMarksList[i], 50)}}</td>
+                        <td align="center">{{student.parentExaminationDecember.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationDecember.mainSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationJanuary.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationJanuary.mainSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationFebruary.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationFebruary.mainSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationFinal.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationFinal.mainSubjectMarksList[i], 100)}}</td>
+                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.mainSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationProject.mainSubjectMarksList[i], 20)}}</td>
+                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}} / {{getGrade(getOverallStudentSubjectMarks(student, subject, i), getOverallStudentSubjectMaxMarks())}}</td>
                     </tr>
                 </ng-container>
                 <tr>
                     <td align="left" style="padding-left: 20px !important;" colspan="10" *ngIf="!includeProject">Total (out of {{getOverallStudentTotalSubjectMaxMarks(student)}})</td>
                     <td align="left" style="padding-left: 20px !important;" colspan="11" *ngIf="includeProject">Total (out of {{getOverallStudentTotalSubjectMaxMarks(student)}})</td>
-                    <td align="center">{{getOverallStudentTotalSubjectMarks(student) | number: '1.0-1'}} / {{getGrade(getOverallStudentTotalSubjectMarks(student), getOverallStudentTotalSubjectMaxMarks(student))}}</td>
+                    <td align="center">{{getOverallStudentTotalSubjectMarks(student) | number: marksDecimalPoint}} / {{getGrade(getOverallStudentTotalSubjectMarks(student), getOverallStudentTotalSubjectMaxMarks(student))}}</td>
                 </tr>
                 <ng-container *ngFor="let subject of student.extraSubjectList; let i = index;">
                     <tr>
                         <td align="left" style="padding-left: 5px !important;">{{student.mainSubjectList.length + i+1}}. {{getSubjectName(subject.parentSubject)}}</td>
-                        <td align="center">{{student.parentExaminationJuly.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationJuly.extraSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationAugust.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationAugust.extraSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationSeptember.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationSeptember.extraSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationOctober.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationOctober.extraSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationHalfYearly.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationHalfYearly.extraSubjectMarksList[i], 50)}}</td>
-                        <td align="center">{{student.parentExaminationDecember.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationDecember.extraSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationJanuary.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationJanuary.extraSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationFebruary.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationFebruary.extraSubjectMarksList[i], 10)}}</td>
-                        <td align="center">{{student.parentExaminationFinal.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationFinal.extraSubjectMarksList[i], 100)}}</td>
-                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.extraSubjectMarksList[i] | number: '1.0-1'}} / {{getGrade(student.parentExaminationProject.extraSubjectMarksList[i], 20)}}</td>
-                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: '1.0-1'}} / {{getGrade(getOverallStudentSubjectMarks(student, subject, i), getOverallStudentSubjectMaxMarks())}}</td>
+                        <td align="center">{{student.parentExaminationJuly.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationJuly.extraSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationAugust.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationAugust.extraSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationSeptember.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationSeptember.extraSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationOctober.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationOctober.extraSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationHalfYearly.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationHalfYearly.extraSubjectMarksList[i], 50)}}</td>
+                        <td align="center">{{student.parentExaminationDecember.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationDecember.extraSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationJanuary.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationJanuary.extraSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationFebruary.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationFebruary.extraSubjectMarksList[i], 10)}}</td>
+                        <td align="center">{{student.parentExaminationFinal.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationFinal.extraSubjectMarksList[i], 100)}}</td>
+                        <td align="center" *ngIf="includeProject">{{student.parentExaminationProject.extraSubjectMarksList[i] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationProject.extraSubjectMarksList[i], 20)}}</td>
+                        <td align="center">{{getOverallStudentSubjectMarks(student, subject, i) | number: marksDecimalPoint}} / {{getGrade(getOverallStudentSubjectMarks(student, subject, i), getOverallStudentSubjectMaxMarks())}}</td>
                     </tr>
                 </ng-container>
                 </tbody>
@@ -594,21 +594,21 @@
                         <ng-container *ngFor="let extraSubField of extraField.extraSubFieldList; let index2 = index;">
                             <tr>
                                 <td align="left" style="padding-left: 5px !important;">{{index2+1}}. {{extraSubField.name}}</td>
-                                <td align="center">{{student.parentExaminationJuly.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationJuly.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{student.parentExaminationAugust.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationAugust.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{student.parentExaminationSeptember.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationSeptember.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{student.parentExaminationOctober.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationOctober.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{student.parentExaminationHalfYearly.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationHalfYearly.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{student.parentExaminationDecember.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationDecember.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{student.parentExaminationJanuary.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationJanuary.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{student.parentExaminationFebruary.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationFebruary.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{student.parentExaminationFinal.extraSubFieldMarksList[index1*5+index2] | number: '1.0-1'}} / {{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
-                                <td align="center">{{getOverallStudentExtraSubFieldMarks(student, index1*5+index2) | number: '1.0-1'}} / {{getGrade(getOverallStudentExtraSubFieldMarks(student, index1*5+index2), 18)}}</td>
+                                <td align="center">{{student.parentExaminationJuly.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationJuly.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{student.parentExaminationAugust.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationAugust.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{student.parentExaminationSeptember.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationSeptember.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{student.parentExaminationOctober.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationOctober.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{student.parentExaminationHalfYearly.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationHalfYearly.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{student.parentExaminationDecember.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationDecember.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{student.parentExaminationJanuary.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationJanuary.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{student.parentExaminationFebruary.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationFebruary.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{student.parentExaminationFinal.extraSubFieldMarksList[index1*5+index2] | number: marksDecimalPoint}} / {{getGrade(student.parentExaminationFinal.extraSubFieldMarksList[index1*5+index2], 2)}}</td>
+                                <td align="center">{{getOverallStudentExtraSubFieldMarks(student, index1*5+index2) | number: marksDecimalPoint}} / {{getGrade(getOverallStudentExtraSubFieldMarks(student, index1*5+index2), 18)}}</td>
                             </tr>
                         </ng-container>
                         <!-- tr>
                             <td align="left" style="padding-left: 20px !important;" colspan="10">Total (out of {{getOverallStudentTotalExtraFieldMaxMarks(index1)}})</td>
-                            <td align="center">{{getOverallStudentTotalExtraFieldMarks(student, index1) | number: '1.0-1'}} / {{getGrade(getOverallStudentTotalExtraFieldMarks(student, index1), getOverallStudentTotalExtraFieldMaxMarks(index1))}}</td>
+                            <td align="center">{{getOverallStudentTotalExtraFieldMarks(student, index1) | number: marksDecimalPoint}} / {{getGrade(getOverallStudentTotalExtraFieldMarks(student, index1), getOverallStudentTotalExtraFieldMaxMarks(index1))}}</td>
                         </tr -->
                     </tbody>
                 </table>
@@ -664,6 +664,7 @@
                  style="width: 100%; margin-top: 5px !important;">
                 <div class="col-xs-12">
                     Teacher's Remark:
+                    &nbsp;<i>{{student.remark}}</i>
                 </div>
             </div>
             <img src="{{classTeacherSignature}}"
@@ -690,7 +691,7 @@
                     Overall Grade: {{getGrade(getOverallStudentMarks(student), getOverallStudentMaxMarks(student))}}
                 </div>
                 <div class="col-xs-3">
-                    Overall Marks: {{getOverallStudentMarks(student) | number: '1.0-1'}} / {{getOverallStudentMaxMarks(student) | number: '1.0-1'}}
+                    Overall Marks: {{getOverallStudentMarks(student) | number: marksDecimalPoint}} / {{getOverallStudentMaxMarks(student) | number: marksDecimalPoint}}
                 </div>
                 <div class="col-xs-2">
                     {{getNextStep(student)}}

@@ -11,7 +11,7 @@ import {StudentOldService} from '../../../../services/modules/student/student-ol
 
 import { ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_STUDENT_MARKSHEET } from '../../../../print/print-routes.constants';
+import { PRINT_STUDENT_MARKSHEET } from '../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 

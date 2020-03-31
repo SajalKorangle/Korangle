@@ -4,20 +4,24 @@ import { ExaminationOldService } from '../../../../../services/modules/examinati
 import { ClassService } from '../../../../../services/modules/class/class.service';
 import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
+import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
+import { SubjectService } from '../../../../../services/modules/subject/subject.service';
 import { AttendanceOldService } from '../../../../../services/modules/attendance/attendance-old.service';
 
+import { ReportCardMpBoardService } from '../../../../../services/modules/report-card/mp-board/report-card-mp-board.service';
+
 import { GradeStudentFieldsServiceAdapter } from './grade-student-fields.service.adapter';
-import {TEST_TYPE_LIST} from '../../../../../classes/constants/test-type';
-import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
+import {StudentService} from '../../../../../services/modules/student/student.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../../classes/data-storage";
+import {StudentOldService} from "../../../../../services/modules/student/student-old.service";
 
 @Component({
     selector: 'grade-student-fields',
     templateUrl: './grade-student-fields.component.html',
     styleUrls: ['./grade-student-fields.component.css'],
-    providers: [ ExaminationOldService,ClassService, SubjectOldService, StudentOldService, AttendanceOldService, ExaminationService ],
+    providers: [ ExaminationService, ExaminationOldService, ClassService, SubjectOldService, SubjectService, StudentService, StudentOldService, AttendanceOldService, ReportCardMpBoardService ],
 })
 
 export class GradeStudentFieldsComponent implements OnInit {
@@ -27,16 +31,19 @@ export class GradeStudentFieldsComponent implements OnInit {
     showTestDetails = false;
 
     selectedExamination: any;
-    selectedClass: any;
+    selectedClassSection: any;
     selectedField: any;
 
-    examinationList: any;
-    classSectionList: any;
+    examinationList = [];
+    classSectionList = [];
     fieldList: any;
 
-    studentList: any;
+    minimumMarks = 0.00;
+    maximumMarks =2.00;
 
-    subjectList: any;
+    studentList = [];
+
+    // subjectList: any;
 
     serviceAdapter: GradeStudentFieldsServiceAdapter;
 
@@ -46,11 +53,13 @@ export class GradeStudentFieldsComponent implements OnInit {
 
     constructor(public examinationOldService: ExaminationOldService,
                 public examinationService : ExaminationService,
+                public examinationService: ExaminationService,
                 public classService: ClassService,
-                public subjectService: SubjectOldService,
-                public studentService: StudentOldService,
+                public subjectService: SubjectService,
+                public studentService: StudentService,
                 public attendanceService: AttendanceOldService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                public reportCardMpBoardService: ReportCardMpBoardService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -64,16 +73,21 @@ export class GradeStudentFieldsComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
-    getStudentName(studentId: any): any {
-        let result = '';
-        this.studentList.every(item => {
-            if (item.dbId === studentId) {
-                result = item.name;
-                return false;
-            }
-            return true;
+    getFilteredStudentList(): any {
+        return this.studentList.filter(student => {
+            return student.studentSection.parentClass == this.selectedClassSection.class.id
+                && student.studentSection.parentDivision == this.selectedClassSection.section.id;
         });
-        return result;
+    }
+
+    unpopulatedFieldsLength(): number {
+        let number = 0;
+        this.getFilteredStudentList().forEach(student => {
+            number += student.subFieldList.filter(subField => {
+                return subField.id == 0;
+            }).length;
+        });
+        return number;
     }
 
 }

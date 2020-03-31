@@ -18,7 +18,7 @@ export class CreateExaminationComponent implements OnInit {
 
     examinationList: any;
     examinationNameToBeAdded = null;
-    examinationStatusToBeAdded = null;
+    // examinationStatusToBeAdded = null;
 
     serviceAdapter: CreateExaminationServiceAdapter;
 

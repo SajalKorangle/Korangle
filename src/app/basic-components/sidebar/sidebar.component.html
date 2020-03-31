@@ -183,7 +183,7 @@
                     <li [class.active]="module.path === user.section.route"
                         [attr.data-color]='user.activeSchool.primaryThemeColor'
                         style="border-bottom: 0.1px solid lightgrey;">
-                        <a (click)="module.showTaskList = !module.showTaskList;">
+                        <a [attr.id]="'Employee-'+module.title" (click)="module.showTaskList = !module.showTaskList;">
                             <i class="material-icons">{{module.icon}}</i>
                             <p>
                                 {{module.title}}
@@ -196,7 +196,8 @@
                                  [attr.data-color]="user.activeSchool.secondaryThemeColor"
                                  [class.active]="module.path===user.section.route && task.title===user.section.subTitle"
                                  class="subsectionDiv"
-                                 (click)="changePage(task, module);">
+                                 (click)="changePage(task, module);"
+                                 [attr.id]="module.title+'-'+task.title">
                                 <i class="material-icons">remove</i>
                                 <p>{{task.title}}</p>
                             </div>
@@ -211,7 +212,7 @@
                 style="border-bottom: 0.1px solid lightgrey;">
                 <a (click)="settings.showTaskList = !settings.showTaskList;">
                     <i class="material-icons">{{settings.icon}}</i>
-                    <p>
+                    <p id="Settings">
                         {{settings.title}}
                         <i *ngIf="!settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
                         <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
@@ -224,14 +225,14 @@
                          class="subsectionDiv"
                          (click)="changePage(task, settings);">
                         <i class="material-icons">remove</i>
-                        <p>{{task.title}}</p>
+                        <p [attr.id]="'Settings-'+task.title">{{task.title}}</p>
                     </div>
                 </ng-container>
             </li>
 
             <!-- Logout -->
             <li style="margin-bottom: 80px;">
-                <a (click)="logout()">
+                <a (click)="logout()" id="Logout">
                     <i class="material-icons">exit_to_app</i>
                     <p>Log out</p>
                 </a>

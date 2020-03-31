@@ -20,7 +20,7 @@ import {StudentService} from "../../../../services/modules/student/student.servi
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/print/print-routes.constants';
+import { PRINT_FULL_FEE_RECIEPT_LIST } from 'app/modules/fees/print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
@@ -136,8 +136,8 @@ export class CollectFeeComponent implements OnInit {
         this.studentSectionList = details.studentSectionList;
     }
 
-    handleStudentListSelection(studentList: any): void {
-        this.selectedStudentList = studentList;
+    handleStudentListSelection(selectedList: any): void {
+        this.selectedStudentList = selectedList[0];
         this.serviceAdapter.getStudentFeeProfile();
         this.showDetails = true;
     }

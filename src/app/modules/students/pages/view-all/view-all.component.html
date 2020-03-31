@@ -59,6 +59,11 @@
                         </mat-checkbox>
                     </mat-option>
                     <mat-option>
+                        <mat-checkbox [(ngModel)]="columnFilter.showProfileImage" (click)="$event.stopPropagation();">Profile
+                            Image
+                        </mat-checkbox>
+                    </mat-option>
+                    <mat-option>
                         <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation();">Name
                         </mat-checkbox>
                     </mat-option>
@@ -270,11 +275,6 @@
                                       (ngModelChange)="handleStudentDisplay()"
                                       (click)="$event.stopPropagation();">No
                         </mat-checkbox>
-                        <mat-checkbox [(ngModel)]="unknownRTE"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">Unknown
-                        </mat-checkbox>
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -288,6 +288,7 @@
             <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
             <tr>
                 <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+                <th [class.hidden]="!columnFilter.showProfileImage" style="text-align: center">Profile Image</th>
                 <th [class.hidden]="!columnFilter.showName">Name</th>
                 <th [class.hidden]="!columnFilter.showClassName">Class</th>
                 <th [class.hidden]="!columnFilter.showSectionName">Section</th>
@@ -321,6 +322,14 @@
                 <tr [class.hidden]="!student.show">
                     <ng-container>
                         <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
+                        <td [class.hidden]="!columnFilter.showProfileImage" align="center">
+                            <img *ngIf="student.profileImage"
+                                 src="{{student.profileImage}}"
+                                 style="width: 50px">
+                            <img *ngIf="!student.profileImage"
+                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                 style="width: 50px"/>
+                        </td>
                         <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
                         <td [class.hidden]="!columnFilter.showClassName">{{student.className}}
                             <!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->

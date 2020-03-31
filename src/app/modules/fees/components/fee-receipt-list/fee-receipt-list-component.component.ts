@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../../../print/print-routes.constants';
+import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
 @Component({

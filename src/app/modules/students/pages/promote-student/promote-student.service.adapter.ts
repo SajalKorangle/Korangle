@@ -194,8 +194,7 @@ export class PromoteStudentServiceAdapter {
                     }) == undefined) {
                         return true;
                     }
-                    if (schoolFeeRule.onlyNewAdmission
-                        && this.vm.getStudent(studentSection.parentStudent).admissionSession != this.vm.user.activeSchool.currentSessionDbId) {
+                    if (schoolFeeRule.onlyNewAdmission) {
                         return true;
                     }
                     if (!schoolFeeRule.includeRTE && this.vm.getStudent(studentSection.parentStudent).rte == "YES") {

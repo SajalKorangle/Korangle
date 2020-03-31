@@ -14,7 +14,8 @@ export class SchoolService extends ServiceObject {
 
     // objects urls
     public board = '/board';
-    public session = '/session'
+    public session = '/session';
+    public bus_stop = '/bus-stops';
 
     constructor(private http_class: HttpClient) {
         super(http_class);
