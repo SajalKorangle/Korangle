@@ -3,13 +3,12 @@
 	<ng-container *ngFor="let student of selectedStudentList; let isLast = last;">
 		
 		<div class="container-fluid"
-		     style="width:100%; height: 100%; /*h-81.675vh, w-57.75*/
+		     style="width:100%; height: 100%;
 		     border: 6px double #b87333;
 		     position: relative;
 		     overflow: hidden;
 		     border-radius: 8px;
-		     /*font-weight: 800 !important;*/
-		     font-size:1.5vh; /* 1.5/2.8cm*/
+		     font-size:1.5vh;
 		     " [class.pageBreakAfter]="!isLast">
 		     
 		     
@@ -18,7 +17,6 @@
 		          style="border-radius: 2px; position: absolute;
 		          top: 50%; left: 50%;
 		          width: 30vh; height: 30vh;
-		          /*width: 350px; height: 350px;*/
 		          opacity: 0.15 !important;
 		          filter: grayscale(100%) !important;
 		          z-index: 10;
@@ -53,10 +51,10 @@
 		     			<img src="{{user.activeSchool.profileImage}}" style="">
 		     		</div>
 		     		<div class="col-xs-8" style="line-height: normal !important; margin-top: 5px !important; text-align: center;">
-		     			<p style="/*font-size:45px*/font-size: 2.8vh; font-weight:800; color: red !important;">
+		     			<p style="font-size: 2.8vh; font-weight:800; color: red !important;">
 		     				{{user.activeSchool.printName}}	
 		     			</p>
-		     			<p style="/*font-size: 22px;*/font-size: 2vh;">
+		     			<p style="font-size: 2vh;">
 		     				{{user.activeSchool.address}}
 		     			</p>
 		     		</div>
@@ -68,20 +66,20 @@
 		     <!-- Report Card Heading -->
 		     <div class="row no-gutters"  *ngIf="layout != null" style="margin-top: 3px !important; line-height: normal !important;">
 		         <div class="col-xs-12" align="center">
-		             <span style="/*font-size: 35px;*/font-size:2.2vh">{{layout.reportCardHeading}}</span>
+		             <span style="font-size:2.2vh">{{layout.reportCardHeading}}</span>
 		         </div>
 		     </div>
 
 		     <!-- Session -->
 		     <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
 		         <div class="col-xs-12" align="center">
-		             <span style="/*font-size: 25px*/font-size: 2vh">{{session.name}}</span>
+		             <span style="font-size: 2vh">{{session.name}}</span>
 		         </div>
 		     </div>
 
 		     <!-- Student Detail header -->
 		     <!-- First four rows -->
-		     <div class="row" style="/*font-size:14px;*/ font-size: 1.75vh"  *ngIf="layout != null">
+		     <div class="row" style="font-size: 1.75vh"  *ngIf="layout != null">
 		     	<div class="col-xs-10" style="margin-bottom: 0.5vh">
 		     		
 		     		<ng-container *ngFor="let studentHeaderKey of getActiveKeys(STUDENT_DETAILS_HEADER);let i = index">
@@ -105,7 +103,7 @@
 		     </div>
 
 		     <!-- Remaining rows -->
-		     <div class="row" style="/*font-size:14px;*/ font-size:1.75vh;"  *ngIf="layout != null">
+		     <div class="row" style="font-size:1.75vh;"  *ngIf="layout != null">
 		     		<ng-container *ngFor="let studentHeaderKey of getActiveKeys(STUDENT_DETAILS_HEADER);let i = index">
 		     			<ng-container *ngIf="i>3 && i%2 == 0">
 		     				<div class="col-xs-8" style="display: flex;margin-bottom: 0.5vh">

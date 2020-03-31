@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { PRINT_CUSTOM_REPORTCARD } from '../../../print/print-routes.constants';
 import { PrintCustomReportCardComponent } from './print/print-custom_reportcard/print-custom_reportcard.component';
 
-// import {CustomReportCardComponent} from './custom_reportcard.component';
 
 const routes: Routes = [
     {

@@ -1,5 +1,5 @@
-<div class="card-content" style="height: 88vh; overflow: auto"> <!-- 88vh -->
-	
+<div class="card-content" style="height: 88vh; overflow: auto">
+
 	<div class="row" *ngIf="!isLoading && examinationList.length == 0">
 		<div class="col-md-12" *ngIf="examinationList.length == 0">
 			No examination created.
@@ -332,16 +332,16 @@
 <!-------------------------------------------------------- Preview section -------------------------------------------------------->
 
 		<div class="col-xs-6" style="height: 81.2vh; overflow-y: auto;">
-		<!-- 29*2.8=81.2 -->
+
 			<!-- Preview div starts -->
 			<div class="container-fluid"
-			     style="width: 57.75vh; height: 100%; /*h-81.675vh, w-57.75*/
+			     style="width: 57.75vh; height: 100%;
 			     border: 6px double #b87333;
 			     position: relative;
 			     overflow: hidden;
 			     border-radius: 8px;
 			     font-weight: 800 !important;
-			     font-size:1.5vh; /* 1.5/2.8cm*/
+			     font-size:1.5vh;
 			     ">
 			     
 			     
@@ -350,7 +350,6 @@
 			          style="border-radius: 2px; position: absolute;
 			          top: 50%; left: 50%;
 			          width: 30vh; height: 30vh;
-			          /*width: 350px; height: 350px;*/
 			          opacity: 0.15 !important;
 			          filter: grayscale(100%) !important;
 			          z-index: 10;
@@ -385,10 +384,10 @@
 			     			<img src="{{user.activeSchool.profileImage}}" style="">
 			     		</div>
 			     		<div class="col-md-8" style="line-height: normal !important; margin-top: 5px !important; text-align: center;">
-			     			<p style="/*font-size:45px*/font-size: 2.8vh; font-weight:800; color: red !important;">
+			     			<p style="font-size: 2.8vh; font-weight:800; color: red !important;">
 			     				{{user.activeSchool.printName}}	
 			     			</p>
-			     			<p style="/*font-size: 22px;*/font-size: 2vh;">
+			     			<p style="font-size: 2vh;">
 			     				{{user.activeSchool.address}}
 			     			</p>
 			     		</div>
@@ -400,20 +399,20 @@
 			     <!-- Report Card Heading -->
 			     <div class="row no-gutters"  *ngIf="selectedLayout != null" style="margin-top: 3px !important; line-height: normal !important;">
 			         <div class="col-xs-12" align="center">
-			             <span style="/*font-size: 35px;*/font-size:2.2vh">{{selectedLayout.layout.reportCardHeading}}</span>
+			             <span style="font-size:2.2vh">{{selectedLayout.layout.reportCardHeading}}</span>
 			         </div>
 			     </div>
 
 			     <!-- Session -->
 			     <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
 			         <div class="col-xs-12" align="center">
-			             <span style="/*font-size: 25px*/font-size: 2vh">{{getSessionName(user.activeSchool.currentSessionDbId)}}</span>
+			             <span style="font-size: 2vh">{{getSessionName(user.activeSchool.currentSessionDbId)}}</span>
 			         </div>
 			     </div>
 
 			     <!-- Student Detail header -->
 			     <!-- First four rows -->
-			     <div class="row" style="/*font-size:14px;*/ font-size: 1.0vh"  *ngIf="selectedLayout != null">
+			     <div class="row" style="font-size: 1.0vh"  *ngIf="selectedLayout != null">
 			     	<div class="col-md-10" style="margin-bottom: 0.5vh">
 			     		
 			     		<ng-container *ngFor="let studentHeaderKey of selectedLayout.selectedStudentDetailsHeader;let i = index">
@@ -437,7 +436,7 @@
 			     </div>
 
 			     <!-- Remaining rows -->
-			     <div class="row" style="/*font-size:14px;*/ font-size:1.0vh;"  *ngIf="selectedLayout != null">
+			     <div class="row" style="font-size:1.0vh;"  *ngIf="selectedLayout != null">
 			     		<ng-container *ngFor="let studentHeaderKey of selectedLayout.selectedStudentDetailsHeader;let i = index">
 			     			<ng-container *ngIf="i>3 && i%2 == 0">
 			     				<div class="col-md-8" style="display: flex;margin-bottom: 0.5vh">

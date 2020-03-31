@@ -47,7 +47,7 @@ export class GenerateFinalReportServiceAdapter {
 
     	let request_grade_data = {
     		'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentSchool': this.vm.user.activeSchool.dbId,
+        'parentSchool': this.vm.user.activeSchool.dbId,
     	};
     	let request_sub_grade_data = {
     		'parentSession': this.vm.user.activeSchool.currentSessionDbId,
@@ -84,7 +84,6 @@ export class GenerateFinalReportServiceAdapter {
     		this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
 		]).then(
     		value=>{
-    			console.log(value);
 
     			// class
     			this.vm.classList = value[0];
@@ -250,7 +249,6 @@ export class GenerateFinalReportServiceAdapter {
 
       Promise.all(service_list).then(
         value=>{
-          console.log(value);
 
           data['classSubjectList'] = value[0];
           data['testSecondList'] = value[1];
@@ -270,7 +268,9 @@ export class GenerateFinalReportServiceAdapter {
           this.vm.printReportCard(data);
           this.vm.isLoading = false;
         },
-        error=>{}
+        error=>{
+          this.vm.isLoading = false;
+        }
       );
 
     }

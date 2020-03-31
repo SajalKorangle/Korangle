@@ -49,6 +49,7 @@ export class ManageLayoutServiceAdapter {
             'parentLayoutGrade__parentLayout__parentSchool':this.vm.user.activeSchool.dbId,
         };
 
+        let request_session_data = {};
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
             this.vm.gradeService.getObjectList(this.vm.gradeService.grade,request_grade_data),
@@ -57,9 +58,10 @@ export class ManageLayoutServiceAdapter {
             this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_column_data),
             this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade_data),
             this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_sub_grade, request_layout_sub_grade_data),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, request_session_data),
         ]).then(
             value=>{
-                console.log(value);
+
                 this.vm.examinationList = value[0];
                 if(value[0].length == 0){
                     this.vm.isLoading = false;
@@ -71,11 +73,11 @@ export class ManageLayoutServiceAdapter {
                 this.vm.layoutExamColumnList = value[4];
                 this.vm.layoutGradeList = value[5];
                 this.vm.layoutSubGradeList = value[6];
-
+                this.vm.sessionList = value[7];
                 this.vm.isLoading = false;
             },
             error=>{
-
+                this.vm.isLoading = false;
             }
         );
         

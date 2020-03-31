@@ -155,7 +155,7 @@ export class GenerateFinalReportComponent implements OnInit {
   getStudentRollNo(student):any{
     let temp = this.studentSectionList.find(item=>{return item.parentStudent == student.id});
 
-    // if(temp == undefined) return '';
+    if(temp == undefined) return '';
     return temp.rollNumber;
   }
 

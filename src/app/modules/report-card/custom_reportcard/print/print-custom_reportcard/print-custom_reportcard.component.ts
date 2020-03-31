@@ -142,7 +142,11 @@ export class PrintCustomReportCardComponent implements OnInit, OnDestroy, AfterV
                 result = this.selectedClass.name;
                 break;
             case 'rollNoOrderNumber':
-                result = this.studentSectionList.find(item=>{return item.parentStudent == student.id}).rollNumber;
+                let temp = this.studentSectionList.find(item=>{return item.parentStudent == student.id});
+                if(temp == undefined) result = '';
+                else {
+                    result = temp.rollNumber;
+                }
                 break;
             case 'scholarNoOrderNumber':
                 result = student.scholarNumber;
@@ -189,7 +193,8 @@ export class PrintCustomReportCardComponent implements OnInit, OnDestroy, AfterV
                 result = ''; // one subject fail then supplementary,if two then fail, Do it in manage layout=(minimum passing percentage, no of suplementary subjects)
                 break;
             case 'percentageOrderNumber':
-                result = this.getGrandTotal(student) + '/' + this.layoutExamColumnList.map(item=>{
+            let marks_obtained = this.getGrandTotal(student);
+            let total_marks = this.layoutExamColumnList.map(item=>{
                     let total = 0;
                     if(item.columnType.split('/').length == 1){
                         total += parseInt(item.maximumMarksObtainedOne);
@@ -201,6 +206,9 @@ export class PrintCustomReportCardComponent implements OnInit, OnDestroy, AfterV
                 }).reduce(((total,item)=>{
                     return total + item;
                 }),0.0);
+
+                result = ((marks_obtained*1.0)/total_marks)*100;
+                result = result.toFixed(this.layout.decimalPlaces); 
                 break;
             case 'promotedToClassOrderNumber':
                 result = this.getNextStep(student);
@@ -397,7 +405,7 @@ export class PrintCustomReportCardComponent implements OnInit, OnDestroy, AfterV
             else
                 total += parseFloat(marks[2]);
         });
-
+        
         return total;
     }
 

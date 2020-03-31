@@ -9,6 +9,7 @@ import { ExaminationService} from '../../../../../services/modules/examination/e
 import { CustomReportCardService } from '../../../../../services/modules/custom_reportcard/custom_reportcard.service';
 import { GradeService } from '../../../../../services/modules/grade/grade.service';
 import { ClassService } from '../../../../../services/modules/class/class.service';
+import { SchoolService } from '../../../../../services/modules/school/school.service';
 
 
 class LayoutExamColumnHandle{
@@ -92,7 +93,7 @@ class LayoutParameter{
     selector: 'app-manage-layout',
     templateUrl: './manage-layout.component.html',
     styleUrls: ['./manage-layout.component.css'],
-    providers: [ExaminationService, CustomReportCardService, GradeService, ClassService],
+    providers: [ExaminationService, CustomReportCardService, GradeService, ClassService, SchoolService],
 })
 
 export class ManageLayoutComponent implements OnInit {
@@ -110,6 +111,7 @@ export class ManageLayoutComponent implements OnInit {
     gradeList = [];
     layoutGradeList = [];
 
+    sessionList = [];
     
     // SubGrades
     subGradeList = [];
@@ -161,6 +163,7 @@ export class ManageLayoutComponent implements OnInit {
                 private cdRef: ChangeDetectorRef,
                 public customReportCardService: CustomReportCardService,
                 public gradeService: GradeService,
+                public schoolService: SchoolService,
                 public classService: ClassService) {}
 
     ngOnInit(): void {
@@ -272,21 +275,8 @@ export class ManageLayoutComponent implements OnInit {
         this.selectedLayout = new_layout;
     }
 
-    // Todo: function is updated
     getSessionName(sessionId: any): any {
-        let result = '';
-        switch(sessionId) {
-            case 1:
-                result = 'Session 2017-18';
-                break;
-            case 2:
-                result = 'Session 2018-19';
-                break;
-            case 3:
-                result = 'Session 2019-20';
-                break;
-        }
-        return result;
+        return this.sessionList.find(item=>{return item.id == sessionId}).name;        
     }
 
     // Returns the studentDetailHeader which are set to true
