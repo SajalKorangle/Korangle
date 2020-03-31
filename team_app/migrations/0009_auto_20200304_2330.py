@@ -6,6 +6,9 @@ from django.db import migrations
 
 from team_app.db_script.add_custom_report_card_module import add_custom_report_card_module
 from team_app.db_script.add_manage_layout_task import add_manage_layout_task
+from team_app.db_script.add_set_class_layout_task import add_set_class_layout_task
+from team_app.db_script.add_student_remarks_task import add_student_remarks_task
+from team_app.db_script.add_generate_final_report_task import add_generate_final_report_task
 
 class Migration(migrations.Migration):
 
@@ -16,4 +19,7 @@ class Migration(migrations.Migration):
     operations = [
     	migrations.RunPython(add_custom_report_card_module),
     	migrations.RunPython(add_manage_layout_task),
+        migrations.RunPython(add_set_class_layout_task),
+        migrations.RunPython(add_student_remarks_task),
+        migrations.RunPython(add_generate_final_report_task),
     ]

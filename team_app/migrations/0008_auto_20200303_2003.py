@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 from team_app.db_script.add_create_grade_task import add_create_grade_task_and_permission
+from team_app.db_script.add_grade_student_task import add_grade_student_and_permission
+from team_app.db_script.add_view_grade_and_permission import add_view_grade_and_permission
 
 class Migration(migrations.Migration):
 
@@ -13,4 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(add_create_grade_task_and_permission),
+        migrations.RunPython(add_grade_student_and_permission),
+        migrations.RunPython(add_view_grade_and_permission)
+        
     ]

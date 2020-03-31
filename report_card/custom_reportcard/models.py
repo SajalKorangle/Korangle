@@ -9,12 +9,14 @@ from student_app.models import Student
 class Layout(models.Model):
 	name = models.TextField(verbose_name='name')
 	reportCardHeading = models.TextField(null = True, default='', verbose_name='reportCardHeading')
-	parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
-	parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
+	parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
+	parentSession = models.ForeignKey(Session, on_delete=models.CASCADE, default=0, verbose_name='parentSession')
 	
-	letterHeadImage = models.ImageField(null=True, verbose_name='letterHeadImage')
-	attendanceStartDateOrderNumber = models.IntegerField(null=True, default =0, verbose_name='attendanceStartDateOrderNumber')
-	attendanceEndDateOrderNumber = models.IntegerField(null=True, default =0,verbose_name='attendanceEndDateOrderNumber')
+	showLetterHeadImage = models.BooleanField(null=False,default=False, verbose_name='showLetterHeadImage')
+
+	attendanceStartDate = models.DateField(null=True, verbose_name='attendanceStartDate')
+	attendanceEndDate = models.DateField(null=True, verbose_name='attendanceEndDate')
+	decimalPlaces = models.IntegerField(null=True, default =0, verbose_name='decimalPlaces')
 	# Header
 	studentNameOrderNumber = models.IntegerField(null=True, default =0, verbose_name='studentNameOrderNumber')
 	fatherNameOrderNumber = models.IntegerField(null=True, default =0, verbose_name='fatherNameOrderNumber')
@@ -30,25 +32,23 @@ class Layout(models.Model):
 	classOrderNumber = models.IntegerField(null=True, default =0, verbose_name='classOrderNumber')
 	sectionOrderNumber = models.IntegerField(null=True, default =0, verbose_name='sectionOrderNumber')
 	casteOrderNumber = models.IntegerField(null=True, default =0, verbose_name='casteOrderNumber')
+	classAndSectionOrderNumber = models.IntegerField(null=True, default =0, verbose_name='classAndSectionOrderNumber')
+	addressOrderNumber = models.IntegerField(null=True, default =0, verbose_name='addressOrderNumber')
 	#Footer
-	remarksOrderNumber = models.IntegerField(null=True, default =0, verbose_name='remarksOrderNumber')
 	overallMarksOrderNumber = models.IntegerField(null=True, default =0, verbose_name='overallMarksOrderNumber')
 	attendanceOrderNumber = models.IntegerField(null=True, default =0, verbose_name='attendanceOrderNumber')
 	resultOrderNumber = models.IntegerField(null=True, default =0, verbose_name='resultOrderNumber')
 	percentageOrderNumber = models.IntegerField(null=True, default =0, verbose_name='percentageOrderNumber')
-	attendanceOrderNumber = models.IntegerField(null=True, default =0, verbose_name='attendanceOrderNumber')
 	promotedToClassOrderNumber = models.IntegerField(null=True, default =0, verbose_name='promotedToClassOrderNumber')
-	classAndSectionOrderNumber = models.IntegerField(null=True, default =0, verbose_name='classAndSectionOrderNumber')
-	addressOrderNumber = models.IntegerField(null=True, default =0, verbose_name='addressOrderNumber')
-	decimalOrderNumber = models.IntegerField(null=True, default =0, verbose_name='decimalOrderNumber')
 
+	remarksOrderNumber = models.IntegerField(null=True, default =0, verbose_name='remarksOrderNumber')
 	class Meta:
 		db_table='layout'
 		unique_together = ('name','parentSchool','parentSession')
 
 class LayoutExamColumn(models.Model):
 	parentLayout = models.ForeignKey(Layout, on_delete=models.CASCADE, default=0, verbose_name='parentLayout') 
-	parentExamination = models.ForeignKey(Examination, on_delete=models.PROTECT, default=0, verbose_name='parentExamination')
+	parentExamination = models.ForeignKey(Examination, on_delete=models.CASCADE, default=0, verbose_name='parentExamination')
 	orderNumber = models.IntegerField(null=True, default=0)
 	name = models.TextField() 
 	maximumMarksObtainedOne = models.IntegerField(null=True, default=0)
