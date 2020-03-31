@@ -83,6 +83,15 @@ export class AddStudentServiceAdapter {
 
     }
 
+    getBankDetails(){
+        if(this.vm.newStudent.bankIfscCode.length < 11){
+            return ;
+        }
+        this.vm.bankService.getDetailsFromIFSCCode(this.vm.newStudent.bankIfscCode.toString()).then(value=>{
+            this.vm.newStudent.bankName = value ;
+        });
+    }
+
     createNewStudent(): void {
 
         if (this.vm.newStudent.name == null || this.vm.newStudent.name == '') {
