@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from examination_app.models import MpBoardReportCardMapping, CCEMarks, StudentExtraSubField, ExtraSubField
 from subject_app.models import ExtraField
+from .models import StudentRemark
 
 
 ########### MpBoardReportCardMapping #############
@@ -64,3 +65,12 @@ class ExtraSubFieldListView(CommonListView, APIView):
     Model = ExtraSubField
 
 
+########### Class Teacher Remark #############
+
+
+class StudentRemarkView(CommonView, APIView):
+    Model = StudentRemark
+
+
+class StudentRemarkListView(CommonListView, APIView):
+    Model = StudentRemark

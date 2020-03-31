@@ -109,3 +109,12 @@ class PrincipalSignatureImageView(APIView):
     def post(request, school_id):
         return update_principal_signature_image(request.FILES['myFile'], school_id)
 
+from common.common_views import CommonView, CommonListView
+from .model.models import BusStop
+
+class BusStopView(CommonView, APIView):
+    Model = BusStop
+
+
+class BusStopListView(CommonListView, APIView):
+    Model = BusStop

@@ -35,7 +35,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = '59g0wy_6v_=f7l8getixb1b87!ee_^#lajh^zli2b+9zkvm0jw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'salary_app',
     'user_app',
     'notification_app',
+    'information_app',
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',

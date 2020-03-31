@@ -1,11 +1,13 @@
 from django.db import models
 
 from school_app.model.models import School
+from information_app.models import MessageType
+
 
 # Create your models here.
-
-
 class SMS(models.Model):
+
+    parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1)
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')

@@ -87,7 +87,7 @@ class SMSPurchaseView(APIView):
 
 
 ############## SMS ##############
-from .business.send_sms import send_sms
+from .business.send_sms import send_sms, send_different_sms
 
 
 class SmsView(CommonView, APIView):
@@ -99,6 +99,7 @@ class SmsView(CommonView, APIView):
         return_data = { 'status': 'success' }
         if data['mobileNumberList'] != '':
             return_data = send_sms(data)
+            print(data)
             if return_data['status'] == 'success':
                 data['requestId'] = return_data['requestId']
                 return_data['data'] = create_object(data, self.Model, self.ModelSerializer)
@@ -108,6 +109,28 @@ class SmsView(CommonView, APIView):
         return return_data
 
 
-class SmsListView(CommonListView, APIView):
+## Mobile number list and count still needed
+
+class SmsDifferentView(CommonView, APIView):
     Model = SMS
 
+    @user_permission_new
+    def post(self, request):
+        # print(request.body)
+        data = json.loads(request.body)
+        # data = json.loads(request.body.decode('utf-8'))
+        return_data = {'status': 'success'}
+        if len(data["data"]) > 0:
+            return_data = send_different_sms(data)
+            if return_data["status"] == 'success':
+                data['requestId'] = return_data['requestId']
+                return_data["data"] = create_object(data, self.Model, self.ModelSerializer)
+        else:
+            return_data["data"] = create_object(data, self.Model, self.ModelSerializer)
+            print(return_data)
+        return return_data
+
+
+
+class SmsListView(CommonListView, APIView):
+    Model = SMS

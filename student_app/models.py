@@ -93,11 +93,9 @@ class Student(models.Model):
 
     RTE_YES = 'YES'
     RTE_NO = 'NO'
-    RTE_UNKNOWN = 'UNKNOWN'
     RTE = (
         ('YES', 'Yes'),
         ('NO', 'No'),
-        ('UNKNOWN', 'Unknown')
     )
 
     rte = models.CharField(max_length=10, choices=RTE, null=True)
@@ -151,7 +149,7 @@ class StudentSection(models.Model):
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
 
-    rollNumber = models.TextField(null=True)
+    rollNumber = models.TextField(null=True, blank=True)
     attendance = models.IntegerField(null=True)
 
     class Meta:

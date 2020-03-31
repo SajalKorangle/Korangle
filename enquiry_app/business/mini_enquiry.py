@@ -12,6 +12,7 @@ def get_mini_enquriry_list(data):
             'id': enquiry_object.id,
             'enquirerName': enquiry_object.enquirerName,
             'dateOfEnquiry': enquiry_object.dateOfEnquiry,
+            'studentName':enquiry_object.studentName
         }
         enquiry_list.append(tempEnquiry)
 

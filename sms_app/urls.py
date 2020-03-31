@@ -34,7 +34,6 @@ urlpatterns += [
 	url(r'^send-sms', SendSMSView.as_view()),
 ]
 
-
 ######## Msg Club Delivery Report ###############
 from .views import MsgClubDeliveryReportView, handle_msg_club_delivery_report_view
 
@@ -50,4 +49,11 @@ from .views import SmsView, SmsListView
 urlpatterns += [
 	url(r'^sms/batch', SmsListView.as_view()),
 	url(r'^sms', SmsView.as_view()),
+]
+
+######### Send Different SMS ############
+from .views import SmsDifferentView
+
+urlpatterns += [
+	url(r'^send-diff-sms', SmsDifferentView.as_view()),
 ]
