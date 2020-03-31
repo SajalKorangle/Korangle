@@ -61,7 +61,7 @@ class Employee(models.Model):
 
     #Bank IFSC Code
     bankIfscCode = models.TextField(null=True, blank=True)
-    
+
     # Bank Name
     bankName = models.TextField(null=True)
 
