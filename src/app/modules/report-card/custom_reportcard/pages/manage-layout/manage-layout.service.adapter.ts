@@ -12,7 +12,6 @@ export class ManageLayoutServiceAdapter {
     }
 
     //initialize data
-    // Handle the data flow properly
     initializeData(): void {
 
         let request_layout_data = {
@@ -63,6 +62,7 @@ export class ManageLayoutServiceAdapter {
                 console.log(value);
                 this.vm.examinationList = value[0];
                 if(value[0].length == 0){
+                    this.vm.isLoading = false;
                     return;
                 }
                 this.vm.gradeList = value[1];
@@ -82,8 +82,6 @@ export class ManageLayoutServiceAdapter {
     }
 
 
-    // Return the position of the key in selectedLayout.studentDetailsHeader
-    // if it's show true
     updateOrderNumber(){
         if(this.vm.selectedLayout == null || this.vm.selectedLayout == undefined) return;
 
@@ -91,6 +89,29 @@ export class ManageLayoutServiceAdapter {
             this.vm.selectedLayout.layout[key] = index+1;
         });
 
+        this.vm.selectedLayout.selectedStudentDetailsFooter.forEach((key,index)=>{
+            this.vm.selectedLayout.layout[key] = index+1;
+        });
+
+    }
+
+    validateAttendanceStartAndEndDate():Boolean{
+        if(this.vm.selectedLayout.autoAttendance == false){
+            this.vm.selectedLayout.layout.attendanceStartDate = null;
+            this.vm.selectedLayout.layout.attendanceEndDate = null;
+            return true;
+        }
+        if(this.vm.selectedLayout.autoAttendance == true){
+            if(this.vm.selectedLayout.layout.attendanceStartDate == null || this.vm.selectedLayout.layout.attendanceEndDate == null){
+                alert('Attendance start date and end date must not be empty');
+                return false;
+            }
+            if(this.vm.selectedLayout.layout.attendanceStartDate >= this.vm.selectedLayout.layout.attendanceEndDate){
+                alert('Please enter valid dates');
+                return false;
+            }
+        }
+        return true;
     }
 
     createNewLayout(){
@@ -101,11 +122,15 @@ export class ManageLayoutServiceAdapter {
             alert('Layout Name must be unique and not empty');
             return;
         }
+        if(this.validateAttendanceStartAndEndDate() == false){
+            return;
+        }
 
         this.updateOrderNumber();
         this.vm.isLoading = true;
 
         let request_data = this.vm.selectedLayout.layout;
+
         Object.keys(request_data).forEach(key=>{
             if(typeof request_data[key] == 'number' && request_data[key] == 0){
                 delete request_data[key];
@@ -117,22 +142,10 @@ export class ManageLayoutServiceAdapter {
 
         this.vm.customReportCardService.createObject(this.vm.customReportCardService.layout,request_data).then(
             value=>{
-                console.log(value);
+
                 this.vm.selectedLayout.layout.id = value.id;
                 this.vm.layoutList.push(value);
                 
-                this.vm.selectedLayout.layoutExamColumnList.forEach(item=>{
-                    this.vm.layoutExamColumnList.push(item);
-                });
-
-                this.vm.selectedLayout.layoutGradeList.forEach(item=>{
-                    this.vm.layoutGradeList.push(item);
-                });
-
-                this.vm.selectedLayout.layoutSubGradeList.forEach(item=>{
-                    this.vm.layoutSubGradeList.push(item);
-                });
-
                 this.createLayoutExamColumnsAndLayoutGrades();
                 
             },
@@ -154,6 +167,10 @@ export class ManageLayoutServiceAdapter {
             return;
         }
         
+        if(this.validateAttendanceStartAndEndDate() == false){
+            return;
+        }
+
         this.updateOrderNumber();
         this.vm.isLoading = true;
 
@@ -167,6 +184,7 @@ export class ManageLayoutServiceAdapter {
         let request_layout_exam_column_delete_data = this.vm.layoutExamColumnList.filter(item=>{
             return item.parentLayout == this.vm.selectedLayout.layout.id;
         });
+
         if(request_layout_exam_column_delete_data.length != 0){
             service_list.push(this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_column_delete_data))
         }
@@ -181,17 +199,28 @@ export class ManageLayoutServiceAdapter {
             service_list.push(this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade_delete_data))
         }
 
-
         Promise.all(service_list).then(
             value=>{
 
                 // Sync the data
+                this.vm.layoutList = this.vm.layoutList.map(item=>{
+                    if(item.id == value[0].id){
+                        return value[0];
+                    }
+                    return item;
+                });
+
                 this.vm.layoutExamColumnList = this.vm.layoutExamColumnList.filter(item=>{
                     return item.parentLayout != this.vm.selectedLayout.layout.id;
                 });
 
                 this.vm.layoutGradeList = this.vm.layoutGradeList.filter(item=>{
-                    return item.parentLayout != this.vm.selectedLayout.layout.id;
+
+                    if(item.parentLayout != this.vm.selectedLayout.layout.id) return true;
+
+                    this.vm.layoutSubGradeList = this.vm.layoutSubGradeList.filter(item1=>{
+                        return item1.parentLayoutGrade != item.id;
+                    });
                 });
 
                 this.createLayoutExamColumnsAndLayoutGrades();
@@ -234,20 +263,10 @@ export class ManageLayoutServiceAdapter {
                 // Sync with the list present here
                 value[0].forEach(item=>{
                     this.vm.layoutExamColumnList.push(item);
-                    this.vm.selectedLayout.layoutExamColumnList.forEach(layoutExam=>{
-                        if(layoutExam.parentExamination == item.parentExamination && layoutExam.parentLayout == item.parentLayout){
-                            layoutExam.id = item.id;
-                        }
-                    });
                 });
 
                 value[1].forEach(item=>{
                     this.vm.layoutGradeList.push(item);
-                    this.vm.selectedLayout.layoutGradeList.forEach(layoutGrade=>{
-                        if(layoutGrade.parentGrade == item.parentGrade && layoutGrade.parentLayout == item.parentLayout){
-                            layoutGrade.id = item.id;
-                        }
-                    });
                 });
 
                 this.createLayoutSubGrades(value[1]);
@@ -262,6 +281,7 @@ export class ManageLayoutServiceAdapter {
     }
 
     createLayoutSubGrades(layoutGradeList){
+
         if(layoutGradeList.length == 0 || this.vm.selectedLayout.layoutSubGradeList.length == 0){
             this.vm.resetCurrentLayout();
             alert('Task successfull');
@@ -276,6 +296,7 @@ export class ManageLayoutServiceAdapter {
 
             let subGrade_id = layoutSubGrade.parentSubGrade;
             let grade_id = this.vm.subGradeList.find(item=>{return item.id == subGrade_id}).parentGrade;
+        
             let layoutGrade = layoutGradeList.find(item=>{
                 return item.parentGrade == grade_id && item.parentLayout == this.vm.selectedLayout.layout.id;
             });
@@ -292,10 +313,8 @@ export class ManageLayoutServiceAdapter {
 
 
                 // Sync with the list present here
-                this.vm.selectedLayout.layoutSubGradeList.forEach(layoutSubGrade=>{
-                    layoutSubGrade.id = value.find(item=>{
-                        return item.parentSubGrade == layoutSubGrade.parentSubGrade && item.parentLayoutGrade == layoutSubGrade.parentLayoutGrade;
-                    }).id;                    
+                value.forEach(item=>{
+                    this.vm.layoutSubGradeList.push(item);
                 });
 
                 this.vm.resetCurrentLayout();
@@ -303,10 +322,57 @@ export class ManageLayoutServiceAdapter {
                 this.vm.isLoading = false; 
             },
             error=>{
-
+                this.vm.isLoading = false;
             }
         );
     }
 
+    deleteLayout(){
+        if(this.vm.selectedLayout == null || this.vm.selectedLayout.layout.id == 0) return;
+
+        if(confirm('Delete layout ?') == false){
+            return;
+        }
+
+        this.vm.isLoading = true;
+
+        this.vm.customReportCardService.deleteObject(this.vm.customReportCardService.layout, this.vm.selectedLayout.layout).then(
+            value=>{
+
+                this.vm.layoutList = this.vm.layoutList.filter(item=>{
+                    return item.id != this.vm.selectedLayout.layout.id;
+                });
+
+                this.vm.layoutExamColumnList = this.vm.layoutExamColumnList.filter(item=>{
+                    let layoutExam = this.vm.selectedLayout.layoutExamColumnList.find(item1=>{
+                        return item1.id == item.id;
+                    });
+                    if(layoutExam == undefined) return true;
+                    return false;
+                });
+
+                this.vm.layoutGradeList = this.vm.layoutGradeList.filter(item=>{
+
+                    let layoutGrade = this.vm.selectedLayout.layoutGradeList.find(item1=>{
+                        return item1.id == item.id;
+                    });
+
+                    if(layoutGrade == undefined) return true;
+
+                    this.vm.layoutSubGradeList = this.vm.layoutSubGradeList.filter(item1=>{
+                        return item1.parentLayoutGrade != layoutGrade.id;
+                    });
+                    return false;
+                });
+
+                this.vm.isLoading = false;
+                this.vm.resetCurrentLayout();
+                alert('Layout deleted');
+            },
+            error=>{
+                this.vm.isLoading = false;
+            }
+        );
+    }
 
 }

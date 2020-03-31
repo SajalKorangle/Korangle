@@ -1,69 +1,85 @@
 <div class="card-content" style="height: 88vh; overflow: auto"> <!-- 88vh -->
 	
-	<div class="row" style="" *ngIf="!isLoading" style="height: 100%;overflow: auto;">
-		
+	<div class="row" *ngIf="!isLoading && examinationList.length == 0">
 		<div class="col-md-12" *ngIf="examinationList.length == 0">
 			No examination created.
 		</div>
+	</div>
+
+	<div class="row" style="" *ngIf="!isLoading && examinationList.length != 0" style="height: 100%;overflow: auto;">
+		
 
 		<!-- Parameter Section  -->
-		<div class="col-md-6" style="height: 100%; overflow: auto;">
+		<div class="col-xs-6" style="height: 100%; overflow: auto;">
 
 			<!-- Existing layouts dropdown -->
-			<div *ngIf="selectedLayout == null && layoutList.length != 0">
+			<mat-card *ngIf="layoutList.length != 0" style="margin-bottom: 0.5vh">
 				<mat-form-field>
 					<mat-label>
-						Existing layouts
+						Edit existing Layout
 					</mat-label>
-					<mat-select (selectionChange)="initializeExistingLayout($event.value)">
+					<mat-select (selectionChange)="initializeExistingLayout($event.value);this.$event.value=null">
 						<mat-option *ngFor="let layout of layoutList" [value]="layout">
 							{{layout.name}}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-			</div>
-			<!-- Create new layout button -->
-			<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="selectedLayout == null" (click)="initializeNewLayout()">
-				Create new layout
-			</button>
+			</mat-card>
 
-			<!-- Reset Layout button -->
-			<button class="btn btn-danger" *ngIf="selectedLayout != null" (click)="resetCurrentLayout()">
-				Reset
-			</button>
-
-			<!-- Save Layout button -->
-			<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="selectedLayout && selectedLayout.layout.id == 0" (click)="serviceAdapter.createNewLayout()">
-				Save
-			</button>
-			<!-- Update Layout button -->
-			<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="selectedLayout && selectedLayout.layout.id != 0" (click)="serviceAdapter.updateLayout()">
-				Update
-			</button>
-
-			<div class="row">
-				<div class="col-md-6">
-					<mat-form-field *ngIf="selectedLayout != null">
-						<mat-label>Layout Name</mat-label>
-						<input matInput placeholder="Enter Layout Name" [(ngModel)]="selectedLayout.layout.name" required>
-						<mat-error *ngIf="!isNameUnqiue(selectedLayout,layoutList)">
+			<mat-card *ngIf="selectedLayout != null">
+				<p>Customised Report Card</p>
+				<div class="row">
+					<mat-form-field class="col-md-6">
+						<span style="color:red" *ngIf="!isNameUnqiue(selectedLayout,layoutList)" class="small">
 							Layout name must be unique
-						</mat-error>
+						</span>
+						<mat-label>
+							Layout Name
+						</mat-label>
+						<input matInput placeholder="Enter Layout Name" [(ngModel)]="selectedLayout.layout.name" required>
 					</mat-form-field>
-				</div>
 
-				<div class="col-md-6">
-					<mat-form-field *ngIf="selectedLayout != null">
+					<mat-form-field class="col-md-6">
 						<mat-label>Report Card Heading</mat-label>
 						<input matInput
 						          [(ngModel)]="selectedLayout.layout.reportCardHeading">
 					</mat-form-field>
+
+					<div class="col-md-12" style="box-sizing: border-box;">
+						<mat-checkbox [(ngModel)]="selectedLayout.layout.showLetterHeadImage">
+							Use school Letterhead
+						</mat-checkbox>
+					</div>
+
+					<div class="col-md-12">
+						<mat-checkbox [(ngModel)]="selectedLayout.autoAttendance">
+							Use software attendance
+						</mat-checkbox>
+						<div *ngIf="selectedLayout.autoAttendance" class="row">
+							<mat-form-field class="col-md-6">
+								<mat-label>Start date</mat-label>
+								<input matInput type="date" [(ngModel)]="selectedLayout.layout.attendanceStartDate">
+							</mat-form-field>
+							<mat-form-field class="col-md-6">
+								<mat-label>End date</mat-label>
+								<input matInput type="date" [(ngModel)]="selectedLayout.layout.attendanceEndDate">
+							</mat-form-field>
+						</div>
+					</div>
 				</div>
-			</div>
-			
-			<mat-vertical-stepper *ngIf="selectedLayout">
-				<mat-step>
-					<ng-template matStepLabel>Student Header Mapping Section</ng-template>
+
+
+			</mat-card>
+
+			<br>
+
+			<mat-accordion *ngIf="selectedLayout" multi="false">
+				<mat-expansion-panel style="margin-bottom:0.6vh;">
+					<mat-expansion-panel-header>
+						<mat-panel-title>
+							Student Header Mapping Section
+						</mat-panel-title>
+					</mat-expansion-panel-header>
 
 					<!-- Student Detail Header Parameter -->
 					<div cdkDropList 
@@ -72,8 +88,8 @@
 						<ng-container *ngFor="let studentDetail of selectedLayout.selectedStudentDetailsHeader">
 							<div class="example-box" cdkDrag>
 								{{STUDENT_DETAILS_HEADER[studentDetail]}}
-								<span style="float:right;cursor: default;display: inline-block;" (click)="removeSelectedStudentHeader(studentDetail)">
-									remove
+								<span style="float:right;cursor: default;color:red" (click)="removeSelectedStudentHeader(studentDetail)">
+									Remove
 								</span>
 							</div>	
 						</ng-container>
@@ -91,40 +107,52 @@
 							</mat-select>
 						</mat-form-field>
 					</div>	
-				</mat-step>
-
+				</mat-expansion-panel>
 
 				<!-- Examination Header Section -->
-				<mat-step>
+				<mat-expansion-panel style="margin-bottom: 0.6vh;">
+					<mat-expansion-panel-header >
+						<mat-panel-title>
+							Examination Mapping Section		
+						</mat-panel-title>
+					</mat-expansion-panel-header>
 
-					<ng-template matStepLabel>Examination Mapping Section</ng-template>		
 					<!-- Subject Count input -->
 					<div>
-						<mat-form-field>
-							<label>No of Subjects</label>
-							<input matInput type="number" min="0" max="10" step="1" [value]="subjectCountArray.length" (change)="updateSubjectCountArray($event.target.value)">
+						<mat-form-field class="col-xs-6" matTooltip="Number of subjects to be shown for preview" matTooltipPosition="above">
+							<label>Max. of Subjects</label>
+							<input matInput type="number" min="0" max="10" step="1" [value]="subjectCountArray.length" (change)="updateSubjectCountArray($event.target.value)" >
+						</mat-form-field>
+
+						<mat-form-field class="col-xs-6">
+							<label>Decimal place</label>
+							<input matInput type="number" min="0" max="2" step="1" [(ngModel)]="selectedLayout.layout.decimalPlaces">
 						</mat-form-field>
 					</div>
 
 					<!-- LayoutExamColumn  parameter -->
-					<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event,selectedLayout.layoutExamColumnList)">
+					<mat-accordion cdkDropList class="example-list" (cdkDropListDropped)="drop($event,selectedLayout.layoutExamColumnList)">
 					  <ng-container *ngFor="let layoutExam of selectedLayout.layoutExamColumnList">
-						  <div class="example-box" cdkDrag>
-						  		<span style="display: inline-block;width:80%;box-sizing: border-box;">
-						  			{{getExaminationName(layoutExam.parentExamination)}}
-						  		</span>
-						  		<span style="display: inline-block;width:20%;box-sizing: border-box;cursor: default;" (click)="removeLayoutExamColumnList(layoutExam)">
-									remove						  			
-						  		</span>
-						  		<br>
+						  <mat-expansion-panel class="example-box" cdkDrag>
+						  		<mat-expansion-panel-header>
+						  			<mat-panel-title>
+						  				{{getExaminationName(layoutExam.parentExamination)}}
+						  			</mat-panel-title>
+						  		</mat-expansion-panel-header>
+
 						  		<mat-form-field>
 						  			<mat-label>
 						  				Report card exam name
 						  			</mat-label>
 						  			<input matInput [(ngModel)]="layoutExam.name">
 						  		</mat-form-field>
+						  		
+						  		<button class="btn btn-danger" (click)="removeLayoutExamColumnList(layoutExam)" style="float: right;">
+						  			Remove
+						  		</button>
 
 						  		<mat-form-field>
+						  			<mat-label>Column Type</mat-label>
 						  			<mat-select [(value)]="layoutExam.columnType">
 						  				<mat-option *ngFor="let exam_type of EXAM_COLUMN_TYPE" [value]="exam_type">
 						  					{{exam_type}}
@@ -147,9 +175,10 @@
 						  			</mat-label>
 						  			<input matInput type="number" min="0" [(ngModel)]="layoutExam.maximumMarksObtainedTwo">
 						  		</mat-form-field>
-						  </div>
+
+						  </mat-expansion-panel>
 					  </ng-container>
-					</div>
+					</mat-accordion>
 					<!-- Examination List -->
 					<mat-form-field>
 						<mat-label>Select Examination to map</mat-label>
@@ -162,19 +191,41 @@
 						</mat-select>
 					</mat-form-field>
 		
-				</mat-step>
-
+				</mat-expansion-panel>
 					<!-- Grade List  -->
-				<mat-step>
-					<ng-template matStepLabel>Grade Mapping Section</ng-template>		
-					<div cdkDropList 
+				<mat-expansion-panel style="margin-bottom: 0.6vh;">
+
+					<mat-expansion-panel-header>
+						<mat-panel-title>
+							Grade Mapping Section
+						</mat-panel-title>
+					</mat-expansion-panel-header>
+
+
+					<mat-accordion cdkDropList 
 						class="example-list" 
 						(cdkDropListDropped)="drop($event, selectedLayout.layoutGradeList)" *ngIf="selectedLayout.layoutGradeList.length != 0 ">
-						  <div class="example-box" *ngFor="let layoutGrade of selectedLayout.layoutGradeList;" cdkDrag>
-		  					  {{getGradeName(layoutGrade.parentGrade)}}
-		  					  <hr>
+						  <mat-expansion-panel class="example-box" *ngFor="let layoutGrade of selectedLayout.layoutGradeList;" cdkDrag>
+						  	<mat-expansion-panel-header>
+						  		<mat-panel-title>
+		  					  		{{getGradeName(layoutGrade.parentGrade)}}
+						  		</mat-panel-title>
+						  	</mat-expansion-panel-header>
+		  					  <p>
+		  					  	<span *ngIf="getFilteredLayoutSubGradeList(layoutGrade).length != 0; else emptySubGradesElseBlock">
+		  					  		<i>Mapped sub grades:</i>
+		  					  	</span>
+		  					  	<ng-template #emptySubGradesElseBlock>
+		  					  		<span style="color:red">No sub grades mapped</span>
+		  					  	</ng-template>
+		  					  	
+		  					  </p>
+
 		  					  <mat-card *ngFor="let layoutSubGrade of getFilteredLayoutSubGradeList(layoutGrade)">
 		  					  		{{getSubGradeName(layoutSubGrade.parentSubGrade)}}
+		  					  		<span style="color:red;float: right;cursor: default;" (click)="removeSubGradeMapping(layoutSubGrade)">
+		  					  			Remove
+		  					  		</span>
 		  					  </mat-card>
 
 		  					  <mat-form-field>
@@ -185,9 +236,10 @@
 		  					  		</mat-option>
 		  					  	</mat-select>
 		  					  </mat-form-field>
-						  </div>
+
+						  </mat-expansion-panel>
 					
-					</div>
+					</mat-accordion>
 
 					<br>
 					<mat-form-field>
@@ -200,11 +252,78 @@
 					</mat-form-field>
 				
 
-				</mat-step>
-			</mat-vertical-stepper>
+				</mat-expansion-panel>
+
+				<!-- Student Detail Footer section -->
+				<mat-expansion-panel style="margin-bottom: 0.6vh">
+
+					<mat-expansion-panel-header>
+						<mat-panel-title>
+							Footer Mapping Section
+						</mat-panel-title>
+					</mat-expansion-panel-header>
+
+					<div>
+						<mat-checkbox [ngModel]="selectedLayout.layout.remarksOrderNumber" (ngModelChange)="selectedLayout.layout.remarksOrderNumber=1-selectedLayout.layout.remarksOrderNumber">
+							Show remarks
+						</mat-checkbox>
+					</div>
+
+					<div cdkDropList 
+						class="example-list" 
+						(cdkDropListDropped)="drop($event, selectedLayout.selectedStudentDetailsFooter)">
+						<ng-container *ngFor="let studentDetail of selectedLayout.selectedStudentDetailsFooter">
+							<div class="example-box" cdkDrag>
+								{{STUDENT_DETAILS_FOOTER[studentDetail]}}
+								<span style="float:right;cursor: default;display: inline-block;" (click)="removeSelectedStudentFooter(studentDetail)">
+									remove
+								</span>
+							</div>	
+						</ng-container>
+					</div>
+
+					<div>
+						<mat-form-field>
+							<mat-label>Add new Footer paramter</mat-label>
+							<mat-select (selectionChange)="addStudentFooter($event.value)">
+								<ng-container *ngFor="let studentFooterKey of getFilteredStudentDetailFooter()">
+									<mat-option [value]="studentFooterKey">
+										{{STUDENT_DETAILS_FOOTER[studentFooterKey]}}
+									</mat-option>
+								</ng-container>
+							</mat-select>
+						</mat-form-field>
+					</div>
+				</mat-expansion-panel>
+			</mat-accordion>
 			
 
+			<mat-card>
+				
+				<div>
+					<!-- Reset Layout button -->
+					<button class="btn btn-danger" (click)="resetCurrentLayout()">
+						Reset
+					</button>	
+					
+					<!-- Save Layout button -->
+					<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="selectedLayout && selectedLayout.layout.id == 0" (click)="serviceAdapter.createNewLayout()" >
+						Save
+					</button>
 
+					<!-- Update Layout button -->
+					<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="selectedLayout && selectedLayout.layout.id != 0" (click)="serviceAdapter.updateLayout()">
+						Update
+					</button>
+					
+					<!-- Delete Layout button -->
+					<button class="btn btn-danger" *ngIf="selectedLayout && selectedLayout.layout.id != 0" (click)="serviceAdapter.deleteLayout()">
+						Delete
+					</button>
+
+				</div>
+				
+			</mat-card>
 			
 		</div>
 
@@ -212,39 +331,70 @@
 <!-------------------------------------------------------- Preview section -------------------------------------------------------->
 <!-------------------------------------------------------- Preview section -------------------------------------------------------->
 
-		<div class="col-md-6" style="height: 81.76vh; overflow-y: auto;">
-			
+		<div class="col-xs-6" style="height: 81.2vh; overflow-y: auto;">
+		<!-- 29*2.8=81.2 -->
+			<!-- Preview div starts -->
 			<div class="container-fluid"
-			     style="width: 57.75vh; /*height: 100%;*/ /*h-81.675vh, w-57.75*/
+			     style="width: 57.75vh; height: 100%; /*h-81.675vh, w-57.75*/
 			     border: 6px double #b87333;
 			     position: relative;
-			     /*overflow: hidden;*/
+			     overflow: hidden;
 			     border-radius: 8px;
 			     font-weight: 800 !important;
-			     font-size:1.5vh">
+			     font-size:1.5vh; /* 1.5/2.8cm*/
+			     ">
 			     
-			     <!-- Reg. No. , Dise Code -->
-			     <div class="row no-gutters" style="margin-bottom: 0px !important;">
-			         <div class="col-xs-6 d-flex custom-padding">
-			             Dise code : {{user.activeSchool.diseCode}}
-			         </div>
-			     </div>
+			     
+			     <!-- Background Watermark -->
+			     <img src="{{user.activeSchool.profileImage}}"
+			          style="border-radius: 2px; position: absolute;
+			          top: 50%; left: 50%;
+			          width: 30vh; height: 30vh;
+			          /*width: 350px; height: 350px;*/
+			          opacity: 0.15 !important;
+			          filter: grayscale(100%) !important;
+			          z-index: 10;
+			          transform: translate(-50%,-50%);
+			          -ms-transform: translate(-50%,-50%);"/>
+
+	            <!-- Reg. No. , Dise Code -->
+	            <div class="row no-gutters" style="margin-bottom: 0px !important;">
+	                <div class="col-xs-6 d-flex custom-padding">
+	                    Dise code : {{user.activeSchool.diseCode}}
+	                </div>
+	                <div class="col-xs-6 d-flex custom-padding" align="end">
+	                	<!-- Mp Board -->
+	                    <ng-container *ngIf="user.activeSchool.parentBoard==1">
+	                        School Code :
+	                    </ng-container>
+	                    <!-- Cbse board -->
+	                    <ng-container *ngIf="user.activeSchool.parentBoard==2">
+	                        Affiliation No. :
+	                    </ng-container>
+	                    {{user.activeSchool.affiliationNumber}}
+	                </div>
+	            </div>
 
 			     <!-- School name, School profile image, school address -->
-			     <div class="row">
-			     	<div class="col-md-2">
-			     		<img src="{{user.activeSchool.profileImage}}" style="">
-			     	</div>
-			     	<div class="col-md-8" style="line-height: normal !important; margin-top: 5px !important; text-align: center;">
-			     		<p style="/*font-size:45px*/font-size: 2.8vh; font-weight:800; color: red !important;">
-			     			{{user.activeSchool.printName}}	
-			     		</p>
-			     		<p style="/*font-size: 22px;*/font-size: 2vh;">
-			     			{{user.activeSchool.address}}
-			     		</p>
-			     	</div>
-			     	<div class="col-md-2"></div>
+			     <div class="row" *ngIf="selectedLayout && selectedLayout.layout.showLetterHeadImage;else showLetterHeadImageElseBlock">
+			     	<img src="{{user.activeSchool.profileImage}}" style="width:100%;max-height: 25vh;">
 			     </div>
+			     <ng-template #showLetterHeadImageElseBlock>
+			     	<div class="row">
+			     		<div class="col-md-2">
+			     			<img src="{{user.activeSchool.profileImage}}" style="">
+			     		</div>
+			     		<div class="col-md-8" style="line-height: normal !important; margin-top: 5px !important; text-align: center;">
+			     			<p style="/*font-size:45px*/font-size: 2.8vh; font-weight:800; color: red !important;">
+			     				{{user.activeSchool.printName}}	
+			     			</p>
+			     			<p style="/*font-size: 22px;*/font-size: 2vh;">
+			     				{{user.activeSchool.address}}
+			     			</p>
+			     		</div>
+			     		<div class="col-md-2"></div>
+			     	</div>
+			     </ng-template>
 
 
 			     <!-- Report Card Heading -->
@@ -263,7 +413,7 @@
 
 			     <!-- Student Detail header -->
 			     <!-- First four rows -->
-			     <div class="row" style="/*font-size:14px;*/ font-size: 1.7vh"  *ngIf="selectedLayout != null">
+			     <div class="row" style="/*font-size:14px;*/ font-size: 1.0vh"  *ngIf="selectedLayout != null">
 			     	<div class="col-md-10" style="margin-bottom: 0.5vh">
 			     		
 			     		<ng-container *ngFor="let studentHeaderKey of selectedLayout.selectedStudentDetailsHeader;let i = index">
@@ -287,7 +437,7 @@
 			     </div>
 
 			     <!-- Remaining rows -->
-			     <div class="row" style="/*font-size:14px;*/ font-size:1.7vh;"  *ngIf="selectedLayout != null">
+			     <div class="row" style="/*font-size:14px;*/ font-size:1.0vh;"  *ngIf="selectedLayout != null">
 			     		<ng-container *ngFor="let studentHeaderKey of selectedLayout.selectedStudentDetailsHeader;let i = index">
 			     			<ng-container *ngIf="i>3 && i%2 == 0">
 			     				<div class="col-md-8" style="display: flex;margin-bottom: 0.5vh">
@@ -404,7 +554,7 @@
 			     			<!-- Total marks in words row -->
 			     			<tr>
 			     				<!-- TODO: Hanlde its colspan -->
-			     				<td [attr.colspan]="selectedLayout.layoutExamColumnList.length + 1" style="text-align: left;">
+			     				<td [attr.colspan]="getTotalColummnsInExamTable()" style="text-align: left;">
 			     					Total( in words):
 			     				</td>
 			     			</tr>
@@ -422,14 +572,48 @@
 			     		</div>
 
 			     		<div class="row">
-			     			<div class="col-md-6" style="border:1px solid lightgrey;border-collapse: collapse;" *ngFor="let layoutSubGrade of getFilteredLayoutSubGradeList(layoutGrade)">
+			     			<div class="col-xs-6" style="border:1px solid lightgrey;border-collapse: collapse;" *ngFor="let layoutSubGrade of getFilteredLayoutSubGradeList(layoutGrade)">
 			     				{{getSubGradeName(layoutSubGrade.parentSubGrade)}} - 10
 			     			</div>
 			     		</div>
 			     	</div>
 			     </ng-container>
 
+			     <!-- Student Detail Footer Section-->
+			     	<div class="row" *ngIf="selectedLayout && selectedLayout.selectedStudentDetailsFooter.length != 0">
+				     	<ng-container *ngFor="let studentFooter of selectedLayout.selectedStudentDetailsFooter">
+				     		<div class="col-xs-4">
+				     			{{STUDENT_DETAILS_FOOTER[studentFooter]}}:
+				     			{{STUDENT_DETAILS_FOOTER[studentFooter]}} value
+				     		</div>
+				     	</ng-container>
+			     	</div>
+			     	<!-- Remarks Row -->
+			     	<div class="row" *ngIf="selectedLayout && selectedLayout.layout.remarksOrderNumber != 0">
+			     		Remarks: Some remark will be shown here
+			     	</div>
+
+			     	<!-- Teacher and principal signature -->
+			     	<div class="row" style="position: absolute;bottom:0;width:100%;">
+			     		<div class="col-xs-6" style="text-align: center">
+			     			<div>
+		     					<img src="{{user.activeSchool.profileImage}}" style="height: 4vh;">
+		     				</div>
+		     				<div>
+		     					Class Teacher Signature
+		     				</div>
+			     		</div>
+			     		<div class="col-xs-6" style="text-align: center">
+			     			<div>
+		     					<img src="{{user.activeSchool.principalSignatureImage}}" style="height: 4vh;">
+		     				</div>
+		     				<div>
+		     					Principal Signature
+		     				</div>
+			     		</div>
+			     	</div>
 			 </div>
+			 <!-- Preview div ends -->
 		</div>
 	</div>
 
@@ -439,3 +623,9 @@
 
 
 </div>
+
+<!-- 
+Other in 1/3 column
+REmarks: Below footer section complete row
+
+Show check box to user, if checked then take attendance start and end date and show in position of attendance orderNumber -->

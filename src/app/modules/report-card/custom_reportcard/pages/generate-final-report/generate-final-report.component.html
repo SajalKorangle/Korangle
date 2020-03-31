@@ -1,0 +1,71 @@
+<div class="card-content">
+	
+	<div class="row" *ngIf="!isLoading">
+		
+		<div *ngIf="getFilteredClassList().length == 0">
+			No layout mapped<br>
+			Set class layout from <b>Set Class Layout</b> page
+		</div>
+
+		<div class="row col-md-12" *ngIf="getFilteredClassList().length != 0">
+			<mat-form-field class="col-md-3">
+				<mat-label>
+					Select Class and section
+				</mat-label>
+				<mat-select [ngModel]="" (selectionChange)="updateClassSectionChange($event.value)">
+					<mat-option *ngFor="let classSection of classSectionList" [value]="classSection">
+						{{classSection.class.name}} , {{classSection.section.name}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<div class="col-md-9 text-right" *ngIf="selectedClass && selectedDivision">
+				<button matButton class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.generateReportCard()">Generate Report Card</button>
+				<button class="btn btn-success" (click)="selectAllStudents()">Select All</button>
+				<button class="btn btn-danger" (click)="selectedStudentList = []">Clear Selection</button>
+			</div>
+
+		</div>
+
+		<!-- Student table -->
+		<div class="col-md-12" *ngIf="selectedClass && selectedDivision">
+			<div class="row">
+				Total Student: {{getFilteredStudentList().length}}<br>
+				Student's selected: {{selectedStudentList.length}}<br>
+			</div>
+			<table class="table table-hover">
+			    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+				    <tr>
+				        <th>S No.</th>
+				        <th>Selected</th>
+				        <th>Student Name</th>
+				        <th>Roll No.</th>
+				        <th>Class</th>
+				        <th>Division</th>
+				    </tr>
+			    </thead>
+			    <tbody>
+			    	<tr *ngFor="let student of getFilteredStudentList();let i = index;">
+			    		<td>{{i+1}}</td>
+			    		<td>
+			    			<mat-checkbox [ngModel]="isStudentSelected(student)" (ngModelChange)="updateSelectedStudentList(student,$event)">
+			    			</mat-checkbox>
+			    		</td>
+			    		<td>{{student.name}}</td>
+			    		<td>{{getStudentRollNo(student)}}</td>
+			    		<td>{{selectedClass.name}}</td>
+			    		<td>{{selectedDivision.name}}</td>
+			    	</tr>
+			    </tbody>
+			</table>
+
+		</div>
+
+	</div>
+
+
+	<ng-container *ngIf="isLoading">
+	    <app-loading-spinner [user]="user"></app-loading-spinner>
+	</ng-container>
+
+</div>

@@ -1,0 +1,279 @@
+<div class="card-content" style="height:100%;">
+	
+	<ng-container *ngFor="let student of selectedStudentList; let isLast = last;">
+		
+		<div class="container-fluid"
+		     style="width:100%; height: 100%; /*h-81.675vh, w-57.75*/
+		     border: 6px double #b87333;
+		     position: relative;
+		     overflow: hidden;
+		     border-radius: 8px;
+		     /*font-weight: 800 !important;*/
+		     font-size:1.5vh; /* 1.5/2.8cm*/
+		     " [class.pageBreakAfter]="!isLast">
+		     
+		     
+		     <!-- Background Watermark -->
+		     <img src="{{user.activeSchool.profileImage}}"
+		          style="border-radius: 2px; position: absolute;
+		          top: 50%; left: 50%;
+		          width: 30vh; height: 30vh;
+		          /*width: 350px; height: 350px;*/
+		          opacity: 0.15 !important;
+		          filter: grayscale(100%) !important;
+		          z-index: 10;
+		          transform: translate(-50%,-50%);
+		          -ms-transform: translate(-50%,-50%);"/>
+
+            <!-- Reg. No. , Dise Code -->
+            <div class="row no-gutters" style="margin-bottom: 0px !important;">
+                <div class="col-xs-6 d-flex custom-padding">
+                    Dise code : {{user.activeSchool.diseCode}}
+                </div>
+                <div class="col-xs-6 d-flex custom-padding" align="end">
+                	<!-- Mp Board -->
+                    <ng-container *ngIf="user.activeSchool.parentBoard==1">
+                        School Code :
+                    </ng-container>
+                    <!-- Cbse board -->
+                    <ng-container *ngIf="user.activeSchool.parentBoard==2">
+                        Affiliation No. :
+                    </ng-container>
+                    {{user.activeSchool.affiliationNumber}}
+                </div>
+            </div>
+
+		     <!-- School name, School profile image, school address -->
+		     <div class="row" *ngIf="layout.showLetterHeadImage;else showLetterHeadImageElseBlock">
+		     	<img src="{{user.activeSchool.profileImage}}" style="width:100%;max-height: 25vh;">
+		     </div>
+		     <ng-template #showLetterHeadImageElseBlock>
+		     	<div class="row">
+		     		<div class="col-xs-2">
+		     			<img src="{{user.activeSchool.profileImage}}" style="">
+		     		</div>
+		     		<div class="col-xs-8" style="line-height: normal !important; margin-top: 5px !important; text-align: center;">
+		     			<p style="/*font-size:45px*/font-size: 2.8vh; font-weight:800; color: red !important;">
+		     				{{user.activeSchool.printName}}	
+		     			</p>
+		     			<p style="/*font-size: 22px;*/font-size: 2vh;">
+		     				{{user.activeSchool.address}}
+		     			</p>
+		     		</div>
+		     		<div class="col-xs-2"></div>
+		     	</div>
+		     </ng-template>
+
+
+		     <!-- Report Card Heading -->
+		     <div class="row no-gutters"  *ngIf="layout != null" style="margin-top: 3px !important; line-height: normal !important;">
+		         <div class="col-xs-12" align="center">
+		             <span style="/*font-size: 35px;*/font-size:2.2vh">{{layout.reportCardHeading}}</span>
+		         </div>
+		     </div>
+
+		     <!-- Session -->
+		     <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
+		         <div class="col-xs-12" align="center">
+		             <span style="/*font-size: 25px*/font-size: 2vh">{{session.name}}</span>
+		         </div>
+		     </div>
+
+		     <!-- Student Detail header -->
+		     <!-- First four rows -->
+		     <div class="row" style="/*font-size:14px;*/ font-size: 1.75vh"  *ngIf="layout != null">
+		     	<div class="col-xs-10" style="margin-bottom: 0.5vh">
+		     		
+		     		<ng-container *ngFor="let studentHeaderKey of getActiveKeys(STUDENT_DETAILS_HEADER);let i = index">
+		     			<ng-container *ngIf="i<=3">
+		     				<div style="display:flex;margin-bottom:0.5vh;">
+			     				<div style="width:31%; font-weight: bold;">
+			     					{{STUDENT_DETAILS_HEADER[studentHeaderKey]}}
+			     				</div>
+			     				<div style="width: 100%; font-weight: normal;">
+			     					{{getParameterValue(studentHeaderKey,student)}}
+			     				</div>
+			     			</div>
+		     			</ng-container>
+		     		</ng-container>
+
+		     	</div>
+		     	<div class="col-xs-2" style="padding-left:0px;">
+		     		<img src="{{student.profileImage}}">
+		     	</div>
+		     	
+		     </div>
+
+		     <!-- Remaining rows -->
+		     <div class="row" style="/*font-size:14px;*/ font-size:1.75vh;"  *ngIf="layout != null">
+		     		<ng-container *ngFor="let studentHeaderKey of getActiveKeys(STUDENT_DETAILS_HEADER);let i = index">
+		     			<ng-container *ngIf="i>3 && i%2 == 0">
+		     				<div class="col-xs-8" style="display: flex;margin-bottom: 0.5vh">
+		     					<div style="width:30%; font-weight: bold;">
+		     						{{STUDENT_DETAILS_HEADER[studentHeaderKey]}}
+		     					</div>
+		     					<div style="width:70%; font-weight: normal">
+		     						{{getParameterValue(studentHeaderKey,student)}}
+		     					</div>
+		     				</div>
+		     			</ng-container>
+		     			<ng-container *ngIf="i>3 && i%2 != 0">
+		     				<div class="col-xs-4" style="display: flex;margin-bottom: 0.5vh;padding-left:0px;">
+		     					<div style="width:30%; font-weight: bold">
+		     						{{STUDENT_DETAILS_HEADER[studentHeaderKey]}}
+		     					</div>
+		     					<div style="width:70%;font-weight: normal">
+		     						{{getParameterValue(studentHeaderKey,student)}}
+		     					</div>
+		     				</div>
+		     			</ng-container>
+		     		</ng-container>
+
+		     </div>
+
+
+		     <!-- Examination wing -->
+		     <div class="row" *ngIf="layoutExamColumnList.length != 0">
+		     	<div classs="col-xs-12" style="text-align: center;">
+		     		<table class="table table-bordered table-responsive">
+		     			<!-- First row -->
+		     			<tr>
+		     				<td rowspan="2">Subject Name</td>
+		     				<ng-container *ngFor="let examination of layoutExamColumnList">
+		     					<ng-container *ngIf="examination.columnType.split('/').length == 1">
+		     						<td rowspan="2">
+		     							{{examination.name}}
+		     						</td>
+		     					</ng-container>
+		     					<ng-container *ngIf="examination.columnType.split('/').length > 1">
+		     						<!-- Added one for total column -->
+		     						<td [attr.colspan]="examination.columnType.split('/').length + 1">
+		     							{{examination.name}}
+		     						</td>
+		     					</ng-container>
+		     				</ng-container>
+
+		     				<!-- Added for Total for all examinations; Last column of table -->
+		     				<ng-container *ngIf="layoutExamColumnList.length > 1">
+		     					<td rowspan="2">
+		     						Total
+		     					</td>
+		     				</ng-container>
+		     			</tr>
+
+		     			<!-- Second Row -->
+		     			<tr>
+		     				<ng-container *ngFor="let examination of layoutExamColumnList">
+		     					<ng-container *ngIf="examination.columnType.split('/').length > 1">
+			     					<td   *ngFor="let exam_type of examination.columnType.split('/')">
+			     						{{exam_type}}
+			     					</td>
+			     					<td>
+			     						Total
+			     					</td>
+		     					</ng-container>
+		     				</ng-container>
+		     			</tr>
+		     			<!-- Row for main subjects -->
+		     			<tr *ngFor="let subject of getMainSubjects(student.id);let i = index">
+		     				<td>
+		     					{{subject.name}}
+		     				</td>
+		     				<ng-container *ngFor="let examination of layoutExamColumnList">
+		     					<td *ngFor="let marks of getSubjectMarks(examination,subject,student)">
+		     						{{marks}}
+		     					</td>
+		     				</ng-container>
+
+	     					<ng-container *ngIf="layoutExamColumnList.length > 1">
+		     					<td>
+		     						{{getSubjectTotal(subject,student)}}
+		     					</td>
+		     				</ng-container>
+
+		     			</tr>
+		     			<!-- Total marks row -->
+		     			<tr>
+		     				<td>
+		     					Total
+		     				</td>
+		     				<ng-container *ngFor="let examination of layoutExamColumnList">
+		     					
+		     					<td *ngIf="examination.columnType.split('/').length > 1" [attr.colspan]="examination.columnType.split('/').length + 1" style="text-align: right">
+		     						{{getLayoutExamColumnTotal(examination, student)}}
+		     					</td>
+		     					<td *ngIf="examination.columnType.split('/').length == 1" style="text-align: center">
+		     						{{getLayoutExamColumnTotal(examination, student)}}
+		     					</td>
+		     				</ng-container>
+		     				<ng-container *ngIf="layoutExamColumnList.length > 1">
+		     					<td>
+		     						{{getGrandTotal(student)}}
+		     					</td>
+		     				</ng-container>
+		     			</tr>
+
+		     			<!-- Total marks in words row -->
+		     			<tr>
+		     				<td [attr.colspan]="getTotalColummnsInExamTable()" style="text-align: left;">
+		     					Total( in words): {{getGrandTotalInWords(student)}}
+		     				</td>
+		     			</tr>
+
+		     		</table>
+		     	</div>
+		     </div>
+
+
+		     <!-- Grade Section -->
+		     <ng-container *ngIf="layout != null && layoutGradeList.length != 0">
+		     	<div class="row" style="border:1px solid black;margin-bottom:1vh" *ngFor="let layoutGrade of layoutGradeList">
+		     		<div class="col-xs-12" style="border:0px solid lightgrey;border-collapse: collapse;">
+     					{{getGradeName(layoutGrade.parentGrade)}}
+		     		</div>
+
+		     		<!-- <div class="row"> -->
+		     			<div class="col-xs-6" style="border-top:1px solid lightgrey;" *ngFor="let layoutSubGrade of getFilteredLayoutSubGradeList(layoutGrade)">
+		     				{{getSubGradeName(layoutSubGrade.parentSubGrade)}} - {{getSubGradeMarks(layoutSubGrade.parentSubGrade,student)}}
+		     			</div>
+		     		<!-- </div> -->
+		     	</div>
+		     </ng-container>
+
+		     <!-- Student Detail Footer Section-->
+		     	<div class="row">
+			     	<ng-container *ngFor="let studentFooter of getActiveKeys(STUDENT_DETAILS_FOOTER)">
+			     		<div class="col-xs-4">
+			     			{{STUDENT_DETAILS_FOOTER[studentFooter]}}:
+			     			{{getParameterValue(studentFooter,student)}}
+			     		</div>
+			     	</ng-container>
+		     	</div>
+		     	<!-- Remarks Row -->
+		     	<div class="row" *ngIf="layout != null && layout.remarksOrderNumber != 0">
+		     		Remarks: {{getStudentRemark(student)}}
+		     	</div>
+
+		     	<!-- Teacher and principal signature -->
+		     	<div class="row" style="position: absolute;bottom:0;width:100%;">
+		     		<div class="col-xs-6" style="text-align: center">
+		     			<div style="height: 6vh;">
+	     					<img *ngIf="classTeacherSignatureList.length == 1"src="{{classTeacherSignature[0].signatureImage}}">
+	     				</div>
+	     				<div>
+	     					Class Teacher Signature
+	     				</div>
+		     		</div>
+		     		<div class="col-xs-6" style="text-align: center">
+		     			<div style="height:6vh;">
+	     					<img src="{{user.activeSchool.principalSignatureImage}}">
+	     				</div>
+	     				<div>
+	     					Principal Signature
+	     				</div>
+		     		</div>
+		     	</div>
+		 </div>
+
+	</ng-container>
+</div>

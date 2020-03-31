@@ -8,18 +8,8 @@ import {DataStorage} from "../../../../../classes/data-storage";
 import { ExaminationService} from '../../../../../services/modules/examination/examination.service';
 import { CustomReportCardService } from '../../../../../services/modules/custom_reportcard/custom_reportcard.service';
 import { GradeService } from '../../../../../services/modules/grade/grade.service';
+import { ClassService } from '../../../../../services/modules/class/class.service';
 
-
-
-// ? What if no exams have been created, can layout be created -> Exams are must before creating a layout
-// ? About orderNumber of studentDetailsHeader
-// TODO: Handle change in orderNumber of exams mapping
-// TODO: Layout name to be unique
-// TODO: Examination names for mapped examination must be unique
-// TODO: Update the LayoutList after creating or updating the layout
-// TODO: Handle initialization of data properly
-// TODO: Handle class&section, decimal, address layout parameters
-// TODO: Handle updating of sub grades
 
 class LayoutExamColumnHandle{
     id:Number = 0;
@@ -52,10 +42,12 @@ class LayoutHandle{
     reportCardHeading:String = '';
     parentSchool:Number = 0;
     parentSession:Number = 0;
-    letterHeadImage:String = '';
+    showLetterHeadImage:Boolean = false;
 
-    attendanceStartDateOrderNumber: Number = 0;
-    attendanceEndDateOrderNumber: Number = 0;
+    attendanceStartDate: Date = null;
+    attendanceEndDate: Date = null;
+    decimalPlaces: Number = 0;
+
     studentNameOrderNumber: Number = 0;
     fatherNameOrderNumber: Number = 0;
     motherNameOrderNumber: Number = 0;
@@ -70,15 +62,16 @@ class LayoutHandle{
     classOrderNumber: Number = 0;
     sectionOrderNumber: Number = 0;
     casteOrderNumber: Number = 0;
-    remarksOrderNumber: Number = 0;
+    classAndSectionOrderNumber: Number = 0;
+    addressOrderNumber: Number = 0;
+
     overallMarksOrderNumber: Number = 0;
     attendanceOrderNumber: Number = 0;
     resultOrderNumber: Number = 0;
     percentageOrderNumber: Number = 0;
     promotedToClassOrderNumber: Number = 0;
-    classAndSectionOrderNumber: Number = 0;
-    addressOrderNumber: Number = 0;
-    decimalOrderNumber: Number = 0;
+    
+    remarksOrderNumber: Number = 0;
 }
 
 
@@ -90,6 +83,8 @@ class LayoutParameter{
 
     // Stores the layouthandle parameters which are selected;
     selectedStudentDetailsHeader:any = [];
+    selectedStudentDetailsFooter:any = [];
+    autoAttendance:Boolean = false;
 }
 
 
@@ -97,7 +92,7 @@ class LayoutParameter{
     selector: 'app-manage-layout',
     templateUrl: './manage-layout.component.html',
     styleUrls: ['./manage-layout.component.css'],
-    providers: [ExaminationService, CustomReportCardService, GradeService],
+    providers: [ExaminationService, CustomReportCardService, GradeService, ClassService],
 })
 
 export class ManageLayoutComponent implements OnInit {
@@ -143,9 +138,21 @@ export class ManageLayoutComponent implements OnInit {
         'sectionOrderNumber': 'Section',
         'casteOrderNumber':'Caste',
         'addressOrderNumber':'Address',
+        'classAndSectionOrderNumber':'Class and Section'
     };
     
+    STUDENT_DETAILS_FOOTER = {
+        'attendanceOrderNumber':'Attendance',
+        'overallMarksOrderNumber':'Overall marks',
+        'resultOrderNumber':'Result',
+        'percentageOrderNumber':'Percentage',
+        'promotedToClassOrderNumber':'Promoted to class',
+
+    };
+    
+    
     STUDENT_DETAILS_HEADER_KEYS = Object.keys(this.STUDENT_DETAILS_HEADER);
+    STUDENT_DETAILS_FOOTER_KEYS = Object.keys(this.STUDENT_DETAILS_FOOTER);
 
     serviceAdapter: ManageLayoutServiceAdapter;
 
@@ -153,19 +160,22 @@ export class ManageLayoutComponent implements OnInit {
     constructor(public examinationService:ExaminationService,
                 private cdRef: ChangeDetectorRef,
                 public customReportCardService: CustomReportCardService,
-                public gradeService: GradeService) {}
+                public gradeService: GradeService,
+                public classService: ClassService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
         this.user = DataStorage.getInstance().getUser();
+        console.log(this.user);
         this.serviceAdapter = new ManageLayoutServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        this.selectedLayout = null;
+        this.initializeNewLayout();
     }
 
     resetCurrentLayout(){
         this.selectedLayout = null;
+        this.initializeNewLayout();
     }    
 
     initializeNewLayout(){
@@ -190,25 +200,39 @@ export class ManageLayoutComponent implements OnInit {
         new_layout.layoutGradeList = [];
         new_layout.layoutSubGradeList = [];
 
+        new_layout.selectedStudentDetailsFooter = [];
         this.selectedLayout = new_layout;
-        console.log(this.selectedLayout);
     }
 
+
     initializeExistingLayout(layout){
-        console.log(layout);
-        if(layout.id == 0) return;
+
+        if(layout == null || layout == '') return;
         let new_layout = new LayoutParameter();
+        
         new_layout.layout = layout;
         new_layout.layout.parentSchool = this.user.activeSchool.dbId;
         new_layout.layout.parentSession = this.user.activeSchool.currentSessionDbId;
         
+        if(new_layout.layout.attendanceStartDate != null && new_layout.layout.attendanceEndDate != null){
+            new_layout.autoAttendance = true;
+        }
+
         let studentHeaderKey_temp = [];
+        
         this.STUDENT_DETAILS_HEADER_KEYS.forEach(key=>{
             if(layout[key] != 0) studentHeaderKey_temp.push(key);
         })
-        // sorting
         studentHeaderKey_temp.sort();
         new_layout.selectedStudentDetailsHeader = studentHeaderKey_temp;
+
+        let studentFooterKey_temp = [];
+
+        this.STUDENT_DETAILS_FOOTER_KEYS.forEach(key=>{
+            if(layout[key] != 0) studentFooterKey_temp.push(key);
+        })
+        studentFooterKey_temp.sort();
+        new_layout.selectedStudentDetailsFooter = studentFooterKey_temp;
 
         this.updateSubjectCountArray(6);
 
@@ -245,7 +269,6 @@ export class ManageLayoutComponent implements OnInit {
             }) != undefined;
         })
 
-        console.log(new_layout);
         this.selectedLayout = new_layout;
     }
 
@@ -289,6 +312,34 @@ export class ManageLayoutComponent implements OnInit {
 
     removeSelectedStudentHeader(studentDetailKey){
         this.selectedLayout.selectedStudentDetailsHeader = this.selectedLayout.selectedStudentDetailsHeader.filter(item=>{
+            if(item == studentDetailKey) return false;
+            return true;
+        })
+    }
+
+    // Returns the studentDetailFooter which are set to true
+    getFilteredStudentDetailFooter(){
+        
+        let temp = [];
+        this.STUDENT_DETAILS_FOOTER_KEYS.forEach(item =>{
+            let isFound = false;
+            this.selectedLayout.selectedStudentDetailsFooter.forEach(key=>{
+                if(key == item){
+                    isFound = true;
+                }
+            })
+            if(isFound == false) temp.push(item);
+        });
+        return temp;
+    }
+
+    addStudentFooter(studentFooterKey){
+        if(this.selectedLayout == null || this.selectedLayout == undefined) return;
+        this.selectedLayout.selectedStudentDetailsFooter.push(studentFooterKey);
+    }
+
+    removeSelectedStudentFooter(studentDetailKey){
+        this.selectedLayout.selectedStudentDetailsFooter = this.selectedLayout.selectedStudentDetailsFooter.filter(item=>{
             if(item == studentDetailKey) return false;
             return true;
         })
@@ -344,6 +395,17 @@ export class ManageLayoutComponent implements OnInit {
         this.subjectCountArray = new Array(parseInt(cnt));
     }
 
+    getTotalColummnsInExamTable():Number{
+        if(this.selectedLayout == null) return 0;
+        let total = 0;
+        this.selectedLayout.layoutExamColumnList.forEach(layoutExamColumn=>{
+            let len = layoutExamColumn.columnType.split('/').length;
+            total += len;
+            if(len > 1) total += 1;
+        });
+        if(this.selectedLayout.layoutExamColumnList.length > 1) total += 1;
+        return total + 1;
+    }
     // Check if name already exist
     isNameUnqiue(selectedLayout,list){
         return list.find(item => {
@@ -426,6 +488,14 @@ export class ManageLayoutComponent implements OnInit {
         this.selectedLayout.layoutSubGradeList.push(new_subgrade);
     }
 
+    removeSubGradeMapping(subGrade){
+        this.selectedLayout.layoutSubGradeList = this.selectedLayout.layoutSubGradeList.filter(layoutSubGrade=>{
+            if(layoutSubGrade.id == subGrade.id && layoutSubGrade.parentLayoutGrade == subGrade.parentLayoutGrade
+                && layoutSubGrade.parentSubGrade == subGrade.parentSubGrade) return false;
+            return true;
+        });
+    }
+
     getSubGradeName(subGrade_id){
         let temp = this.subGradeList.find(item=>{
             return item.id == subGrade_id;
@@ -433,4 +503,6 @@ export class ManageLayoutComponent implements OnInit {
         if(temp == undefined) return '';
         return temp.name;
     }
+
+
 }
