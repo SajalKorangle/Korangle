@@ -1,8 +1,7 @@
 <div class="card-content">    
 
     <parent-student-filter [user]="user"
-                           (onDataLoaded)="serviceAdapter.handleDetailsFromParentStudentFilter($event)"
-                           (onStudentListSelected)="serviceAdapter.handleStudentListSelection($event)"
+                           (onStudentListSelected)="serviceAdapter.getStudentAndClassSubjectsAndTests($event)"
                            (onStudentListLoading)="isStudentListLoading=$event"
                            [selectedFilterType]="'Student'"
                            [bothFilters]='false'

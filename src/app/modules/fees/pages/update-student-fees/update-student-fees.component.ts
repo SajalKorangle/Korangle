@@ -48,7 +48,6 @@ export class UpdateStudentFeesComponent implements OnInit {
     sectionList: any;
     busStopList: any;
 
-    selectedStudentList = [];
     studentFeeList: StudentFee[];
     subFeeReceiptList: SubFeeReceipt[];
     subDiscountList: SubDiscount[];
@@ -58,6 +57,8 @@ export class UpdateStudentFeesComponent implements OnInit {
     selectedFeeType: FeeType;
     selectedStudentFee: StudentFee;
     newStudentFee: StudentFee;
+
+    selectedStudent: any;
 
     showDetails = false;
 
@@ -86,8 +87,9 @@ export class UpdateStudentFeesComponent implements OnInit {
     }
 
     handleStudentListSelection(studentList: any): void {
-        this.selectedStudentList = studentList;
+        this.selectedStudent = studentList[0][0];
         this.serviceAdapter.getStudentFeeProfile();
+        this.selectedFeeType = null;
         this.showDetails = true;
     }
 

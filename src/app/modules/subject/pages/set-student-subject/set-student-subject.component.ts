@@ -29,15 +29,10 @@ export class SetStudentSubjectComponent implements OnInit {
     isSessionLoading = false;
     isLoading = false;
 
-    classList = [];
-    sectionList = [];
-    studentSectionList = [];
-    studentClassSection: any;
     isStudentListLoading = false;
 
-    selectedSession: any;
-
     selectedStudent: any;
+    selectedStudentSection: any;
 
     constructor(public subjectService: SubjectOldService,
                 public classService: ClassOldService,
@@ -52,16 +47,8 @@ export class SetStudentSubjectComponent implements OnInit {
         this.serviceAdapter = new SetStudentSubjectServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
 
-        this.selectedSession = {
-            'id': this.user.activeSchool.currentSessionDbId,
-        };
-
         this.serviceAdapter.initializeData();
         // this.serviceAdapter.initializeAdapter(this);
-    }
-
-    populateSelectedSession(item: any): void {
-        this.selectedSession = item;
     }
 
     /*getFilteredSubjectList(): void {

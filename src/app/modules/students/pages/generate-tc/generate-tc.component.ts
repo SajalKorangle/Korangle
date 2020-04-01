@@ -61,7 +61,6 @@ export class GenerateTcComponent implements OnInit {
 
     constructor (private studentService: StudentOldService,
                  private schoolService: SchoolService,
-                 private schoolOldService: SchoolOldService,
                  private printService: PrintService) { }
 
     ngOnInit(): void {
@@ -78,9 +77,9 @@ export class GenerateTcComponent implements OnInit {
     }
 
     handleStudentListSelection(studentList: any): void {
-        this.selectedStudent = studentList[0];
-        this.selectedStudent.dbId = studentList[0].id;
-        this.studentFromFilter = studentList[0];
+        this.selectedStudent = studentList[0][0];
+        this.selectedStudent.dbId = studentList[0][0].id;
+        this.studentFromFilter = studentList[0][0];
         if (this.selectedStudent == null) {
             this.showDetails = false;
         } else {
@@ -264,15 +263,6 @@ export class GenerateTcComponent implements OnInit {
         this.selectedTransferCertificate.clean();
     }
 
-    handleStudentSelection(student: any): void {
-        this.selectedStudent = student;
-        this.studentFromFilter = student;
-        if (this.selectedStudent == null) {
-            this.showDetails = false;
-        } else {
-            this.getStudentProfile();
-        }
-    }
     intializeVariables() {
         // Boolean variable to check if all the required fields are coming from student profile
         this.fatherNameIsComing = false;

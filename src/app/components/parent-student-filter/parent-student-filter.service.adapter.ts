@@ -18,7 +18,7 @@ export class ParentStudentFilterServiceAdapter {
 
         this.vm.handleOnStudentListLoading(true);
 
-        let student_section_data = {            
+        let student_section_data = {
             'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
@@ -39,6 +39,8 @@ export class ParentStudentFilterServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
         ]).then(value => {
+
+            console.log(value);
 
             this.vm.classList = value[0];
             this.vm.sectionList = value[1];

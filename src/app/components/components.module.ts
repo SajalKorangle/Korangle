@@ -19,7 +19,6 @@ import { MatCardModule } from '@angular/material/card';
 
 import { BasicComponentsModule } from "../basic-components/basic-components.module";
 
-import { StudentFilterComponent } from './student-filter/student-filter.component';
 import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateOldComponent } from './day-date-old/day-date-old.component';
 import { DayDateComponent } from "./day-date/day-date.component";
@@ -36,7 +35,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 @NgModule({
     declarations: [
 
-        StudentFilterComponent,
         ParentStudentFilterComponent,
         MonthDateComponent,
         DayDateOldComponent,
@@ -76,7 +74,6 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 
         BasicComponentsModule,
 
-        StudentFilterComponent,
         ParentStudentFilterComponent,
         EmployeeFilterComponent,
         MonthDateComponent,

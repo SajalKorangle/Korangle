@@ -40,45 +40,13 @@ export class SetStudentSubjectServiceAdapter {
 
     }
 
-    handleDetailsFromParentStudentFilter(details: any): void {
-        this.vm.classList = details.classList;
-        this.vm.sectionList = details.sectionList;
-        this.vm.studentSectionList = details.studentSectionList;
-    }
-
-    handleStudentListSelection(studentList: any): void {
-        this.vm.selectedStudent = studentList[0];        
-        this.vm.studentClassSection = this.getStudentClassSectionList(this.vm.selectedStudent,this.vm.selectedSession.dbId);        
-        this.vm.selectedStudent.studentSectionDbId = this.vm.studentClassSection.id;
-        this.vm.selectedStudent.className = this.getClassName(this.vm.studentClassSection);        
-        this.vm.selectedStudent.sectionName = this.getSectionName(this.vm.studentClassSection);        
-        this.vm.selectedStudent.dbId = this.vm.selectedStudent.id;        
-        this.getStudentAndClassSubjectsAndTests(this.vm.selectedStudent);
-    }
-
-    getStudentClassSectionList(student: any,sessionId: any){
-        return this.vm.studentSectionList.find(studentSection => {
-            return studentSection.parentStudent == student.id && studentSection.parentSession == sessionId;            
-        })
-    }
-
-    getClassName(studentClassSection: any): any{        
-        this.vm.selectedStudent.classDbId = this.vm.studentClassSection.parentClass;
-        return this.vm.classList.find(classs => {
-            return classs.dbId == studentClassSection.parentClass;
-        }).name;        
-    }
-
-    getSectionName(studentClassSection: any): any {
-        this.vm.selectedStudent.sectionDbId = this.vm.studentClassSection.parentDivision;
-        return this.vm.sectionList.find(section => {
-            return section.id == studentClassSection.parentDivision;
-        }).name;
-    }
-
     // Get Student & Class Subjects & Tests
-    getStudentAndClassSubjectsAndTests(student: any): void {
-        
+    getStudentAndClassSubjectsAndTests(studentDetailsList: any): void {
+
+        this.vm.selectedStudent = studentDetailsList[0][0];
+        this.vm.selectedStudentSection = studentDetailsList[1][0];
+        let student = studentDetailsList[0][0];
+        let studentSection = studentDetailsList[1][0];
         if (student === null) {
             return;
         }
@@ -91,23 +59,19 @@ export class SetStudentSubjectServiceAdapter {
         this.classTestList = [];
 
         const request_student_subject_data = {
-            studentId: student.dbId,
-            sessionId: this.vm.selectedSession.id,
+            studentId: student.id,
+            sessionId: this.vm.user.activeSchool.currentSessionDbId,
         };
 
         const request_class_subject_data = {
-            /*classId: student.classDbId,
-            sectionId: student.sectionDbId,
-            schoolId: this.vm.user.activeSchool.dbId,
-            sessionId: this.vm.selectedSession.dbId,*/
-            'classList': [student.classDbId],
-            'sectionList': [student.sectionDbId],
+            'classList': [studentSection.parentClass],
+            'sectionList': [studentSection.parentDivision],
             'schoolList': [this.vm.user.activeSchool.dbId],
-            'sessionList': [this.vm.selectedSession.id],
+            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
         };
 
         const request_student_test_data = {
-            'studentList': [student.dbId],
+            'studentList': [student.id],
             'subjectList': [],
             'examinationList': this.prepareExaminationList(),
             'testTypeList': [],
@@ -116,8 +80,8 @@ export class SetStudentSubjectServiceAdapter {
 
         let request_class_test_data = {
             'parentExamination__in': this.prepareExaminationList(),
-            'parentClass': student.classDbId,
-            'parentDivision': student.sectionDbId,
+            'parentClass': studentSection.parentClass,
+            'parentDivision': studentSection.parentDivision,
         };
 
         Promise.all([
@@ -210,8 +174,8 @@ export class SetStudentSubjectServiceAdapter {
     addStudentSubjectAndTests(item: any): void {
 
         let student_subject_data = {
-            parentStudent: this.vm.selectedStudent.dbId,
-            parentSession: this.vm.selectedSession.id,
+            parentStudent: this.vm.selectedStudent.id,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentSubject: item.subjectId,
         };
 
@@ -237,7 +201,7 @@ export class SetStudentSubjectServiceAdapter {
                 let data = {
                     'parentExamination': item.parentExamination,
                     'parentSubject': item.parentSubject,
-                    'parentStudent': this.vm.selectedStudent.dbId,
+                    'parentStudent': this.vm.selectedStudent.id,
                     'testType': item.testType,
                     'marksObtained': 0,
                 };

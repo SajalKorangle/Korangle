@@ -77,30 +77,30 @@ export class UpdateStudentFeesServiceAdapter {
 
     // Get Student Fee Profile
     getStudentFeeProfile(): void {
-        
-        let studentListId = this.vm.selectedStudentList.map(a => a.id).join();
-        console.log(studentListId)
-        
-        let student_fee_list = {
-            'parentStudent__in': studentListId,
+
+        let student_fee_data = {
+            'parentStudent': this.vm.selectedStudent.id,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        let sub_fee_receipt_list = {
-            'parentStudentFee__parentStudent__in': studentListId,
+        let sub_fee_receipt_data = {
+            'parentStudentFee__parentStudent': this.vm.selectedStudent.id,
             'parentFeeReceipt__cancelled': 'false__boolean',
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        let sub_discount_list = {
-            'parentStudentFee__parentStudent__in': studentListId,
+        let sub_discount_data = {
+            'parentStudentFee__parentStudent': this.vm.selectedStudent.id,
             'parentDiscount__cancelled': 'false__boolean',
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_discounts, sub_discount_list),
+            this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_data),
+            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_data),
+            this.vm.feeService.getList(this.vm.feeService.sub_discounts, sub_discount_data),
         ]).then(value => {
 
             this.vm.studentFeeList = value[0];
@@ -167,33 +167,27 @@ export class UpdateStudentFeesServiceAdapter {
     // Attach Rule
     attachToThisRule(schoolFeeRule: any): void {
 
-        let tempObjectList = [];
-
-        this.vm.selectedStudentList.forEach(selectedStudent => {
-            let tempObject = {
-                'parentStudent': selectedStudent.id,
-                'parentSchoolFeeRule': schoolFeeRule.id,
-                'parentFeeType': schoolFeeRule.parentFeeType,
-                'parentSession': schoolFeeRule.parentSession,
-                'isAnnually': schoolFeeRule.isAnnually,
-                'cleared': false,
-            };
-            this.vm.installmentList.forEach(installment => {
-                tempObject[installment+'Amount'] = schoolFeeRule[installment+'Amount'];
-                tempObject[installment+'LastDate'] = schoolFeeRule[installment+'LastDate'];
-                tempObject[installment+'LateFee'] = schoolFeeRule[installment+'LateFee'];
-                tempObject[installment+'MaximumLateFee'] = schoolFeeRule[installment+'MaximumLateFee'];
-                tempObject[installment+'ClearanceDate'] = null;
-            });
-            tempObjectList.push(tempObject);
-        })
-
+        let tempObject = {
+            'parentStudent': this.vm.selectedStudent.id,
+            'parentSchoolFeeRule': schoolFeeRule.id,
+            'parentFeeType': schoolFeeRule.parentFeeType,
+            'parentSession': schoolFeeRule.parentSession,
+            'isAnnually': schoolFeeRule.isAnnually,
+            'cleared': false,
+        };
+        this.vm.installmentList.forEach(installment => {
+            tempObject[installment+'Amount'] = schoolFeeRule[installment+'Amount'];
+            tempObject[installment+'LastDate'] = schoolFeeRule[installment+'LastDate'];
+            tempObject[installment+'LateFee'] = schoolFeeRule[installment+'LateFee'];
+            tempObject[installment+'MaximumLateFee'] = schoolFeeRule[installment+'MaximumLateFee'];
+            tempObject[installment+'ClearanceDate'] = null;
+        });
 
         this.vm.isLoading = true;
 
-        this.vm.feeService.createList(this.vm.feeService.student_fees, tempObjectList).then(value => {
+        this.vm.feeService.create(this.vm.feeService.student_fees, tempObject).then(value => {
 
-            alert('Rule attached to students profile');
+            alert('Group attached to students profile');
             this.vm.studentFeeList.push(value);
             this.vm.changeSelectedStudentFee();
             this.vm.isLoading = false;
