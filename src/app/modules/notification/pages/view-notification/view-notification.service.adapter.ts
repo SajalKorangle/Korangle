@@ -67,13 +67,19 @@ export class ViewNotificationServiceAdapter {
     }
 
     deleteNotification(notification: any){
+        let temp_notification_list = this.vm.notificationList.slice();
+        let idx = this.vm.notificationList.indexOf(notification);
+        this.vm.notificationList.splice(idx,1);
         let notification_delete_data = {
             'id': notification.id
         };
         this.vm.notificationService.deleteObject(this.vm.notificationService.notification,notification_delete_data).then(val=>{
-            let idx = this.vm.notificationList.indexOf(notification);
-            this.vm.notificationList.splice(idx,1);
-        });
+            if(val==null){
+                this.vm.notificationList = temp_notification_list;
+            }
+        }).catch((err)=>{
+            this.vm.notificationList = temp_notification_list;
+        })
     }
 
 }
