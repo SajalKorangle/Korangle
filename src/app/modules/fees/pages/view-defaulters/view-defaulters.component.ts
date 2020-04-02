@@ -13,13 +13,13 @@ import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_FEES_REPORT } from '../../../../print/print-routes.constants';
+import { PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService, SchoolService, PrintService, ],
+    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService, SchoolService],
 })
 
 export class ViewDefaultersComponent implements OnInit {

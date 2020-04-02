@@ -13,22 +13,21 @@ export class PrintService {
         if(!this.isPrinting) {
             this.isPrinting = true;
             this.data = data;
-            console.log("data in ps.ts",this.data);
             const moduleName = window.location.pathname.split('/')[1];
             console.log("step 5");
             console.log("module name is",moduleName);
-            console.log("navigate to ",[{ outlets: { print: ['print', moduleName, routeName]}}]);
             this.router.navigate([{ outlets: { print: ['print', moduleName, routeName]}}]);
-        }      
+        }
+        console.log('this.isPrinting is,',this.isPrinting);
     }
 
     public getData() {
-        console.log("i was here");
         console.log("this.data is ",this.data);
         return this.data;
     }
 
     public print() {
+        console.log('print called with this.isPrinting',this.isPrinting);
         if(this.isPrinting) {
             window.print();
             this.router.navigate([{ outlets: { print: null }}]);
