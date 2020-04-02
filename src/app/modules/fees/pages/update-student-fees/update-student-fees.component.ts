@@ -65,6 +65,8 @@ export class UpdateStudentFeesComponent implements OnInit {
     serviceAdapter: UpdateStudentFeesServiceAdapter;
 
     isLoading = false;
+    
+    isStudentListLoading = false;
 
     constructor(public feeService: FeeService,
                 public classService: ClassOldService,
@@ -79,15 +81,16 @@ export class UpdateStudentFeesComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
-    handleStudentSelection(student: any): void {
-        this.selectedStudent = student;
-        if (this.selectedStudent == null) {
-            this.showDetails = false;
-        } else {
-            this.serviceAdapter.getStudentFeeProfile();
-            this.selectedFeeType = null;
-            this.showDetails = true;
-        }
+    handleDetailsFromParentStudentFilter(details: any): void {
+        this.classList = details.classList;
+        this.sectionList = details.sectionList;        
+    }
+
+    handleStudentListSelection(studentList: any): void {
+        this.selectedStudent = studentList[0][0];
+        this.serviceAdapter.getStudentFeeProfile();
+        this.selectedFeeType = null;
+        this.showDetails = true;
     }
 
     changeSelectedStudentFee(): void {

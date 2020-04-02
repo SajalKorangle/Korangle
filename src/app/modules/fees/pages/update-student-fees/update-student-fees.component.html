@@ -1,17 +1,19 @@
 <div class="card-content table-responsive">
 
-    <student-filter [user]="user"
-                    (onStudentSelected)="handleStudentSelection($event)"
-                    (onStudentLoading)="isLoading=$event"
-                    [sessionChange]="false"
-                    [studentTcGenerated]="false"></student-filter>
+    <parent-student-filter [user]="user"
+                           (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+                           (onStudentListSelected)="handleStudentListSelection($event)"
+                           (onStudentListLoading)="isStudentListLoading=$event"
+                           [selectedFilterType]="'Student'"
+                           [bothFilters]='false'
+                           [studentTcGenerated]="false"></parent-student-filter>
 
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-md-12"
              style="border-bottom: 1px solid lightgrey;"></div>
     </div>
 
-    <ng-container *ngIf="!isLoading && showDetails">
+    <ng-container *ngIf="!isLoading && !isStudentListLoading && showDetails">
 
         <!-- Selecting Fee Type -->
         <mat-form-field>
@@ -369,7 +371,7 @@
 
     </ng-container>
 
-    <ng-container *ngIf="isLoading">
+    <ng-container *ngIf="isLoading || isStudentListLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
 

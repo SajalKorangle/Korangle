@@ -1,18 +1,18 @@
 <div class="card-content">
 
-    <student-filter [user]="user"
-                    (onStudentSelected)="handleStudentSelection($event)"
-                    (onStudentLoading)="isLoading=$event"
-                    [studentTcGenerated]="true"></student-filter>
-
-
+    <parent-student-filter [user]="user"                           
+                           (onStudentListSelected)="handleStudentListSelection($event)"
+                           (onStudentListLoading)="isStudentListLoading=$event"
+                           [selectedFilterType]="'Student'"
+                           [bothFilters]="false"
+                           [studentTcGenerated]="false"></parent-student-filter>
 
     <div class="row">
         <div class="col-md-12"
              style="border-bottom: 1px solid lightgrey;"></div>
     </div>
 
-    <ng-container *ngIf="showDetails==true && !isLoading">
+    <ng-container *ngIf="showDetails==true && !isLoading && !isStudentListLoading">
 
 
         <div class="row" style="font-weight: 800;">
@@ -178,6 +178,6 @@
 
 </div>
 
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="isLoading || isStudentListLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

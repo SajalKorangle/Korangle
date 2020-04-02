@@ -119,7 +119,7 @@ export class ViewGradesRemarksServiceAdapter {
         const promise_arr = [];
         const attendance_permission_data = {
             'parentClass': this.vm.selectedClassSection.class,
-            'parentSection': this.vm.selectedClassSection.section,
+            'parentDivision': this.vm.selectedClassSection.section,
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
         promise_arr.push(this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,attendance_permission_data));

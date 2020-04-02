@@ -1,9 +1,12 @@
-<div class="card-content">
+<div class="card-content">    
 
-    <student-filter [user]="user"
-                    (onStudentLoading)="isStudentListLoading=$event"
-                    (onSessionChange)="onSessionChange($event)"
-                    (onStudentSelected)="selectedStudent=$event"></student-filter>
+    <parent-student-filter [user]="user"
+                           (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+                           (onStudentListSelected)="handleStudentListSelection($event)"
+                           (onStudentListLoading)="isStudentListLoading=$event"
+                           [selectedFilterType]="'Student'"
+                           [bothFilters]="false"
+                           [studentTcGenerated]="false"></parent-student-filter>                    
 
     <ng-container *ngIf="selectedStudent && !isLoading && !isStudentListLoading">
 
@@ -33,7 +36,7 @@
                 Class Name
             </div>
             <div class="col-md-4">
-                : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.className}}, {{selectedStudent.sectionName}}</span>
+                : <span style="font-weight: 600; margin-left: 5px;">{{getClassName(selectedStudentSection)}}, {{getSectionName(selectedStudentSection)}}</span>
             </div>
         </div>
 
@@ -62,7 +65,7 @@
             <div class="col-xs-12">
                 Class Name:
                 <span style="font-weight: 600; margin-left: 5px;">
-                    {{selectedStudent.className}}, {{selectedStudent.sectionName}}
+                    {{getClassName(selectedStudentSection)}}, {{getSectionName(selectedStudentSection)}}
                 </span>
             </div>
         </div>
@@ -76,7 +79,7 @@
                                 (ngModelChange)="selectedClass=$event;">
                         <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
                             {{classs.name}}
-                            <span *ngIf="classs.selectedSection.dbId != classs.sectionList[0].dbId">
+                            <span *ngIf="classs.selectedSection.id != classs.sectionList[0].id">
                                 , {{classs.selectedSection.name}}
                             </span>
                         </mat-option>
@@ -102,8 +105,8 @@
         <br/>
 
         <button type="submit"
-                *ngIf="!(selectedClass.name === selectedStudent.className
-                        && selectedClass.selectedSection.name === selectedStudent.sectionName)"
+                *ngIf="!(selectedClass.dbId === selectedStudentSection.parentClass
+                        && selectedClass.selectedSection.id === selectedStudentSection.parentDivision)"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="changeClassSection()">
             Change</button>

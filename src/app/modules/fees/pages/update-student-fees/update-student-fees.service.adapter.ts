@@ -18,6 +18,8 @@ export class UpdateStudentFeesServiceAdapter {
     //initialize data
     initializeData(): void {
 
+        this.vm.isLoading = true; 
+
         let schoolId = this.vm.user.activeSchool.dbId;
         let sessionId = this.vm.user.activeSchool.currentSessionDbId;
 
@@ -48,16 +50,13 @@ export class UpdateStudentFeesServiceAdapter {
             'parentSchool': schoolId,
             'parentSession': sessionId,
         };
-
-        this.vm.isLoading = true;
+        
 
         Promise.all([
             this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data),
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
             this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
         ]).then(value => {
@@ -66,10 +65,8 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.schoolFeeRuleList = value[1];
             this.vm.classFilterFeeList = value[2];
             this.vm.busStopFilterFeeList = value[3];
-            this.vm.classList = value[4];
-            this.vm.sectionList = value[5];
-            this.vm.busStopList = value[6];
-            if (value[7].length == 1) { this.vm.lockFees = value[7]; }
+            this.vm.busStopList = value[4];
+            if (value[5].length == 1) { this.vm.lockFees = value[5]; }
 
             this.vm.isLoading = false;
         }, error => {
@@ -82,18 +79,18 @@ export class UpdateStudentFeesServiceAdapter {
     getStudentFeeProfile(): void {
 
         let student_fee_data = {
-            'parentStudent': this.vm.selectedStudent.dbId,
+            'parentStudent': this.vm.selectedStudent.id,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         let sub_fee_receipt_data = {
-            'parentStudentFee__parentStudent': this.vm.selectedStudent.dbId,
+            'parentStudentFee__parentStudent': this.vm.selectedStudent.id,
             'parentFeeReceipt__cancelled': 'false__boolean',
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         let sub_discount_data = {
-            'parentStudentFee__parentStudent': this.vm.selectedStudent.dbId,
+            'parentStudentFee__parentStudent': this.vm.selectedStudent.id,
             'parentDiscount__cancelled': 'false__boolean',
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
@@ -171,7 +168,7 @@ export class UpdateStudentFeesServiceAdapter {
     attachToThisRule(schoolFeeRule: any): void {
 
         let tempObject = {
-            'parentStudent': this.vm.selectedStudent.dbId,
+            'parentStudent': this.vm.selectedStudent.id,
             'parentSchoolFeeRule': schoolFeeRule.id,
             'parentFeeType': schoolFeeRule.parentFeeType,
             'parentSession': schoolFeeRule.parentSession,
@@ -190,7 +187,7 @@ export class UpdateStudentFeesServiceAdapter {
 
         this.vm.feeService.create(this.vm.feeService.student_fees, tempObject).then(value => {
 
-            alert('Rule attached to students profile');
+            alert('Group attached to students profile');
             this.vm.studentFeeList.push(value);
             this.vm.changeSelectedStudentFee();
             this.vm.isLoading = false;
