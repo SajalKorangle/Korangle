@@ -17,5 +17,5 @@ export const DIVISION_CONSTANT = [
     {'id': 7,'name': 'Section - G', 'orderNumber': 7},
     {'id': 8,'name': 'Section - H', 'orderNumber': 8},
     {'id': 9,'name': 'Section - I', 'orderNumber': 9},
-    {'id': 10,'name': 'Section - K', 'orderNumber': 10},
+    {'id': 10,'name': 'Section - J', 'orderNumber': 10},
 ];
