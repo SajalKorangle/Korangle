@@ -39,3 +39,6 @@ export const PRINT_MARKSHEET_SECOND_FORMAT = 'print-marksheet-second-format';
 
 //enquiry
 export const PRINT_ENQUIRY_LIST='print-enquiry-list';
+
+//fees
+export const PRINT_FEES_REPORT= 'print-fees-report';

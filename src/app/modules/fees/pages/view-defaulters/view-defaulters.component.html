@@ -22,6 +22,33 @@
                            (ngModelChange)="maximumNumber=$event;"/>
                 </div>
             </div>
+            <div class="col-sm-3" >
+                <mat-form-field>
+                    <mat-select placeholder="Select Class"
+                                [ngModel]="selectedClassSection"
+                                (ngModelChange)="selectedClassSection=$event;">
+                        <mat-option [value]="nullValue">All</mat-option>
+                        <mat-option *ngFor='let classSection of filteredClassSectionList;' [value]="classSection">
+                            {{classSection.class.name}}, {{classSection.section.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+           
+            <div class="col-sm-3" align="end">
+                <mat-form-field>
+                    <mat-select placeholder="Select Filter Type"
+                                [ngModel]="selectedFilterType"
+                                (ngModelChange)="selectedFilterType=$event;">
+                        <mat-option *ngFor='let filterType of filterTypeList;' [value]="filterType">
+                            {{filterType}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row"  style="margin-top: 10px; margin-bottom: 10px;">
             <div class="col-sm-3 hidden-sm">
 
                 <!-- button type="button"
@@ -42,32 +69,31 @@
 
 
             </div>
-            <div class="col-sm-3" align="end">
-                <mat-form-field>
-                    <mat-select placeholder="Select Filter Type"
-                                [ngModel]="selectedFilterType"
-                                (ngModelChange)="selectedFilterType=$event;">
-                        <mat-option *ngFor='let filterType of filterTypeList;' [value]="filterType">
-                            {{filterType}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
 
-        <div class="row" *ngIf="selectedFilterType==filterTypeList[0]" style="margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Select Class"
-                                [ngModel]="selectedClassSection"
-                                (ngModelChange)="selectedClassSection=$event;">
-                        <mat-option [value]="nullValue">All</mat-option>
-                        <mat-option *ngFor='let classSection of filteredClassSectionList;' [value]="classSection">
-                            {{classSection.class.name}}, {{classSection.section.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+
+            <div class="col-sm-3 hidden-sm">
+
+                <!-- button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Print the following list"
+                        tooltip-position="left"
+                        (click)="printFeesReport();">
+                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button -->
+
+                <button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Print the following list"
+                        tooltip-position="left"
+                        (click)="printFeesReport();">
+                    Print<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+
+
             </div>
+
+
+
         </div>
 
         <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
