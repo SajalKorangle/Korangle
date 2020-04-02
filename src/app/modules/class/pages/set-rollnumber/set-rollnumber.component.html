@@ -21,7 +21,7 @@
                 <button type="submit"
                         style="margin-left: 20px;"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.getStudentDetails()">GET</button>
+                        (click)="serviceAdapter.getStudentDetails()" [disabled]="selectedOption==null">GET</button>
             </div>
 
         </div>
