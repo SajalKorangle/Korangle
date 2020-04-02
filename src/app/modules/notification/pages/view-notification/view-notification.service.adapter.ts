@@ -66,4 +66,14 @@ export class ViewNotificationServiceAdapter {
 
     }
 
+    deleteNotification(notification: any){
+        let notification_delete_data = {
+            'id': notification.id
+        };
+        this.vm.notificationService.deleteObject(this.vm.notificationService.notification,notification_delete_data).then(val=>{
+            let idx = this.vm.notificationList.indexOf(notification);
+            this.vm.notificationList.splice(idx,1);
+        });
+    }
+
 }
