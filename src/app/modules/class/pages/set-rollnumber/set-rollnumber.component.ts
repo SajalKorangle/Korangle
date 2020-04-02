@@ -103,32 +103,68 @@ export class SetRollnumberComponent implements OnInit {
           this.minDigits = null;
           return;
       }
-    if(this.prefix != null && this.prefix != "" && this.prefix != undefined
-      && this.minDigits != null && this.minDigits != "" && this.minDigits != undefined){
-      if(this.minDigits == 0){
+
+      if(this.prefix==null && this.minDigits==null){
         let count = 1;
         this.getFilteredStudentList().forEach(student => {
-          student['studentSection'].newRollNumber = this.prefix + count++;
-        })
+          student['studentSection'].newRollNumber = count++;
+        });
       }
-      else{
-        let zeros = '0';
-        zeros = zeros.repeat(this.minDigits-1);
+      else if(this.prefix == null && this.minDigits !=null){
+        if(this.minDigits == 0){
+          let count = 1;
+          this.getFilteredStudentList().forEach(student => {
+            student['studentSection'].newRollNumber = this.prefix + count++;
+          })
+        }
+        else{
+          let zeros = '0';
+          zeros = zeros.repeat(this.minDigits-1);
+          let count = 0;
+          this.getFilteredStudentList().forEach(student => {
+            count = count + 1;
+            if(count.toString().length < this.minDigits){
+              student['studentSection'].newRollNumber = (zeros + count).slice(-this.minDigits);
+            }
+            else{
+              student['studentSection'].newRollNumber = this.prefix + count;
+            }
+          });
+        }
+      }
+
+      else if(this.prefix != null && this.minDigits == null){
         let count = 0;
         this.getFilteredStudentList().forEach(student => {
-          count = count + 1;
-          if(count.toString().length < this.minDigits){
-            student['studentSection'].newRollNumber = this.prefix + (zeros + count).slice(-this.minDigits);
-          }
-          else{
-            student['studentSection'].newRollNumber = this.prefix + count;
-          }
-        })
+          count = count+ 1;
+          student['studentSection'].newRollNumber = this.prefix + count;
+        });
       }
-    }
-    this.minDigits = null;
-    this.prefix = null;
-    console.log(this.getFilteredStudentList());
+
+      else if(this.prefix != null && this.minDigits != null){
+        if(this.minDigits == 0){
+          let count = 1;
+          this.getFilteredStudentList().forEach(student => {
+            student['studentSection'].newRollNumber = this.prefix + count++;
+          })
+        }
+        else{
+          let zeros = '0';
+          zeros = zeros.repeat(this.minDigits-1);
+          let count = 0;
+          this.getFilteredStudentList().forEach(student => {
+            count = count + 1;
+            if(count.toString().length < this.minDigits){
+              student['studentSection'].newRollNumber = this.prefix + (zeros + count).slice(-this.minDigits);
+            }
+            else{
+              student['studentSection'].newRollNumber = this.prefix + count;
+            }
+          })
+        }
+      }
+      this.minDigits = null;
+      this.prefix = null;
   }
 
 }
