@@ -10,14 +10,17 @@ import { PrintService } from '../../../../print/print-service';
 export class PrintFeesReportComponent implements  OnInit, AfterViewChecked {
 
   user : any;
+  template : any;
   viewChecked = true;
 
   constructor(private cdRef: ChangeDetectorRef,
               private printService : PrintService,) { }
   
   ngOnInit():void{
-    console.log("template data ",this.printService.getData());
-    this.printService.print();
+    const value = this.printService.getData();
+    this.user = value['user'];
+    this.template = value['template'];
+    this.viewChecked = false;    
     // window.print();
   }
 

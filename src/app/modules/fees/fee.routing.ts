@@ -8,7 +8,6 @@ import { PrintFeeReceiptListComponent } from './print/print-fee-receipt-list/pri
 import { PrintFullFeeReceiptListComponent } from './print/print-full-fee-receipt-list/print-full-fee-receipt-list.component';
 import { PrintFeesCertificateComponent } from './print/print-fees-certificate/print-fees-certificate.component'
 import { PrintFeesReportComponent } from './print/print-fees-report/print-fees-report.component';
-console.log("stemp0");
 const routes: Routes = [
     {
         path: 'collect_fee',
