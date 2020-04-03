@@ -1,18 +1,18 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {SetRollnumberServiceAdapter} from './set-rollnumber.service.adapter';
+import {SetRollNumberServiceAdapter} from './set-roll-number.service.adapter';
 import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentService} from '../../../../services/modules/student/student.service';
 import {DataStorage} from '../../../../classes/data-storage';
 import {CommonFunctions} from '../../../../classes/common-functions';
 
 @Component({
-  selector: 'app-set-rollnumber',
-  templateUrl: './set-rollnumber.component.html',
-  styleUrls: ['./set-rollnumber.component.css'],
+  selector: 'app-set-roll-number',
+  templateUrl: './set-roll-number.component.html',
+  styleUrls: ['./set-roll-number.component.css'],
   providers: [ ClassService, StudentService ],
 })
 
-export class SetRollnumberComponent implements OnInit {
+export class SetRollNumberComponent implements OnInit {
 
   user;
 
@@ -20,7 +20,7 @@ export class SetRollnumberComponent implements OnInit {
   isInitialLoading = false;
   showTestDetails = false;
 
-  serviceAdapter: SetRollnumberServiceAdapter;
+  serviceAdapter: SetRollNumberServiceAdapter;
 
   classList = [];
   sectionList = [];
@@ -40,7 +40,7 @@ export class SetRollnumberComponent implements OnInit {
   ngOnInit(): void {
     this.user = DataStorage.getInstance().getUser();
 
-    this.serviceAdapter = new SetRollnumberServiceAdapter();
+    this.serviceAdapter = new SetRollNumberServiceAdapter();
     this.serviceAdapter.initializeAdapter(this);
     this.serviceAdapter.initializeData();
   }

@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {SetRollnumberComponent} from './set-rollnumber.component';
+import {SetRollNumberComponent} from './set-roll-number.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: SetRollnumberComponent ,
+        component: SetRollNumberComponent ,
     }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class SetRollnumberRoutingModule { }
+export class SetRollNumberRoutingModule { }

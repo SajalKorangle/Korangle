@@ -1,9 +1,9 @@
 
-import {SetRollnumberComponent} from './set-rollnumber.component';
+import {SetRollNumberComponent} from './set-roll-number.component';
 
-export class SetRollnumberServiceAdapter {
+export class SetRollNumberServiceAdapter {
 
-    vm: SetRollnumberComponent;
+    vm: SetRollNumberComponent;
 
     constructor() {}
 
@@ -12,7 +12,7 @@ export class SetRollnumberServiceAdapter {
     sectionList: any;
     studentSectionList: any;
 
-    initializeAdapter(vm: SetRollnumberComponent): void {
+    initializeAdapter(vm: SetRollNumberComponent): void {
         this.vm = vm;
     }
 
