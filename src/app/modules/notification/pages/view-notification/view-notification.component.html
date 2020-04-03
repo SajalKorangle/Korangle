@@ -6,8 +6,9 @@
             <mat-card style="margin-bottom: 10px;">
                 <mat-card-title style="font-weight: normal; font-size: 15px; align: left">
                     {{getNotificationTitle(notification)}}
-                    <span style="float: right;padding-left: 3px;color: red;cursor: pointer" class="material-icons" (click)="serviceAdapter.deleteNotification(notification)">delete</span>
-                    <span style="float: right;padding-top: 2px">{{notification.sentDateTime | date: 'dd/MM/yyyy'}}</span>
+                    <span *ngIf="isDeleteClicked(notification)" style="float:right" class="loader-custom"></span>
+                    <span *ngIf="!isDeleteClicked(notification)" id="delete" style="float:right;padding-left: 3px;color:gray;cursor: pointer" class="material-icons" (click)="serviceAdapter.deleteNotification(notification)">delete</span>
+                    <span style="float:right;padding-top: 2px">{{notification.sentDateTime | date: 'dd/MM/yyyy'}}</span>
                 </mat-card-title>
                 <mat-card-content style="font-weight: 400; font-size: 20px;white-space: pre-line;">{{notification.content}}</mat-card-content>
             </mat-card>
