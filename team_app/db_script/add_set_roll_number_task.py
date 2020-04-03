@@ -5,7 +5,7 @@ def add_set_roll_number_task_and_permission(apps,schema_editor):
     EmployeePermission = apps.get_model('employee_app','EmployeePermission')
 
     class_module = Module.objects.get(path='class')
-    set_rollnumber = Task(path='set_rollnumber',title='Set Roll Number',orderNumber=3,parentModule=class_module)
+    set_rollnumber = Task(path='set_roll_number',title='Set Roll No.',orderNumber=3,parentModule=class_module)
     set_rollnumber.save()
 
     for employee_permission in EmployeePermission.objects.filter(parentTask__path='assign_task'):
