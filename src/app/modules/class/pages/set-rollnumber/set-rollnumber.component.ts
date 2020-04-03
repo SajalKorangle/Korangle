@@ -32,6 +32,7 @@ export class SetRollnumberComponent implements OnInit {
   prefix = null;
   minDigits = null;
 
+
   constructor(public studentService: StudentService,
               public classService : ClassService,
               private cdRef: ChangeDetectorRef,) { }

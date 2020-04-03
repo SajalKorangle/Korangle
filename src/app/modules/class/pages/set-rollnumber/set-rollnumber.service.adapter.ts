@@ -76,6 +76,12 @@ export class SetRollnumberServiceAdapter {
         });
     }
 
+    // classesPresent(){
+    //     this.vm.classList.forEach(classs=>{
+    //         this.
+    //     })
+    // }
+
     getStudentDetails(){
         this.vm.filteredStudents = this.vm.getFilteredStudentList();
         this.vm.showTestDetails = true;
@@ -99,97 +105,5 @@ export class SetRollnumberServiceAdapter {
             this.vm.isInitialLoading = false;
         });
     }
-
-
-    // populateStudentList(student_sub_grade_list: any): void {
-    //     this.vm.getFilteredStudentList().forEach(item => {
-    //
-    //         item['subGradeList'] = [];
-    //
-    //         this.vm.selectedGrade.subGradeList.forEach(subGrade => {
-    //             let result = this.getStudentSubGrade(item, subGrade, student_sub_grade_list);
-    //             if (result) {
-    //                 item['subGradeList'].push(result);
-    //             } else {
-    //                 result = {
-    //                     'id': 0,
-    //                     'parentStudent': item.id,
-    //                     'parentSubGrade': subGrade.id,
-    //                     'gradeObtained': '',
-    //                 };
-    //                 item['subGradeList'].push(result);
-    //             }
-    //         });
-    //     });
-
-        // console.log(this.vm.getFilteredStudentList());
-
-    //     this.vm.studentList.sort(function(obj1,obj2){
-    //         if(obj1.studentSection.rollNumber < obj2.studentSection.rollNumber) return -1;
-    //         if(obj1.studentSection.rollNumber > obj2.studentSection.rollNumber) return 1;
-    //         if(obj1.name <= obj2.name) return -1;
-    //         return 1;
-    //     });
-    // }
-
-    // getStudentSubGrade(student: any, subGrade: any, student_sub_grade_list: any): any {
-    //     let result = null;
-    //     student_sub_grade_list.every(item => {
-    //         if (item.parentStudent === student.id
-    //             && item.parentSubGrade === subGrade.id) {
-    //             result = item;
-    //             return false;
-    //         }
-    //         return true;
-    //     });
-    //     return result;
-    // }
-
-    // updateStudentField(studentSubGrade, element){
-    //
-    //     let current_value = element.target.value;
-    //
-    //     if (current_value == studentSubGrade.gradeObtained) return;
-    //
-    //     document.getElementById(studentSubGrade.parentStudent+'_'+studentSubGrade.parentSubGrade).classList.add('updatingField');
-    //
-    //     if (current_value == null || current_value == undefined) {
-    //         current_value = '';
-    //         return ;
-    //         // alert("Enter a valid value");
-    //     }
-    //     // studentSubField.gradeObtained = parseFloat(current_value.toString()).toFixed(2);
-    //     studentSubGrade.gradeObtained = current_value;
-    //
-    //     let service_list = [];
-    //     if(studentSubGrade.id ==0){
-    //         let request_studentSubGrade_data = {
-    //             'parentStudent': studentSubGrade.parentStudent,
-    //             'parentSubGrade' : studentSubGrade.parentSubGrade,
-    //             'gradeObtained': studentSubGrade.gradeObtained,
-    //         };
-    //         service_list.push(this.vm.gradeService.createObject(this.vm.gradeService.student_sub_grade, request_studentSubGrade_data));
-    //     }
-    //     else{
-    //         service_list.push(this.vm.gradeService.updateObject(this.vm.gradeService.student_sub_grade,studentSubGrade));
-    //     }
-    //     Promise.all(service_list).then(value => {
-    //
-    //         console.log(value);
-    //         let item = this.vm.studentList.find(student => {
-    //             return student.id == studentSubGrade.parentStudent;
-    //         })['subGradeList'].find(subGrade => {
-    //             return subGrade.parentSubGrade == studentSubGrade.parentSubGrade;
-    //         });
-    //         item.id = value[0].id;
-    //         item.gradeObtained = value[0].gradeObtained;
-    //
-    //         document.getElementById(studentSubGrade.parentStudent+'_'+studentSubGrade.parentSubGrade).classList.remove('updatingField');
-    //
-    //     }, error => {
-    //         alert('Error updating marks');
-    //     });
-    //
-    // }
 
 }
