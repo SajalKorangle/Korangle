@@ -100,9 +100,13 @@ export class SetRollnumberComponent implements OnInit {
 
   autogenerate(){
       if(this.minDigits>10){
-          alert('Digits more than 10 are not allowed');
-          this.minDigits = null;
-          return;
+        alert('Digits more than 10 are not allowed');
+        this.minDigits = null;
+        return;
+      } else if (this.minDigits<0){
+        alert('Digits less than 0 are not allowed');
+        this.minDigits = null;
+        return;
       }
 
       if(this.prefix==null && this.minDigits==null){
