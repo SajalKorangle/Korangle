@@ -14,9 +14,9 @@ const routes: Routes = [
         data: {moduleName: 'assign_class'},
     },
     {
-        path: 'set_rollnumber',
+        path: 'set_roll_number',
         loadChildren: 'app/modules/class/pages/set-rollnumber/set-rollnumber.module#SetRollnumberModule',
-        data: {moduleName: 'set_rollnumber'},
+        data: {moduleName: 'set_roll_number'},
     },
 ];
 
