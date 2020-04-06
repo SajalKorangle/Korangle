@@ -66,4 +66,21 @@ export class ViewNotificationServiceAdapter {
 
     }
 
+    deleteNotification(notification: any){
+        if(!confirm('Are you sure you want to delete this notification')){
+            return;
+        }
+        this.vm.notificationBeingDeleted = notification;
+        let notification_delete_data = {
+            'id': notification.id
+        };
+        this.vm.notificationService.deleteObject(this.vm.notificationService.notification,notification_delete_data).then(val=>{
+            let idx = this.vm.notificationList.indexOf(notification);
+            this.vm.notificationList.splice(idx,1);
+            this.vm.notificationBeingDeleted = null;
+        }).catch((err)=>{
+            console.log(err);
+        })
+    }
+
 }
