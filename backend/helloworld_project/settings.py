@@ -69,7 +69,11 @@ INSTALLED_APPS = [
     'salary_app',
     'user_app',
     'notification_app',
+<<<<<<< HEAD
     'information_app',
+=======
+    'feature_app',
+>>>>>>> backend/request_features
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',
