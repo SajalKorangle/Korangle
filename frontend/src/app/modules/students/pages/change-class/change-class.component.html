@@ -1,0 +1,120 @@
+<div class="card-content">    
+
+    <parent-student-filter [user]="user"
+                           (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+                           (onStudentListSelected)="handleStudentListSelection($event)"
+                           (onStudentListLoading)="isStudentListLoading=$event"
+                           [selectedFilterType]="'Student'"
+                           [bothFilters]="false"
+                           [studentTcGenerated]="false"></parent-student-filter>                    
+
+    <ng-container *ngIf="selectedStudent && !isLoading && !isStudentListLoading">
+
+        <div class="row hidden-xs hidden-sm" style="font-size: 16px;">
+            <div class="col-md-2">
+                Name
+            </div>
+            <div class="col-md-4">
+                : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.name}}</span>
+            </div>
+            <div class="col-md-2">
+                Scholar No.
+            </div>
+            <div class="col-md-4">
+                : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.scholarNumber}}</span>
+            </div>
+        </div>
+
+        <div class="row hidden-xs hidden-sm" style="font-size: 16px;">
+            <div class="col-md-2">
+                Father's Name
+            </div>
+            <div class="col-md-4">
+                : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.fathersName}}</span>
+            </div>
+            <div class="col-md-2">
+                Class Name
+            </div>
+            <div class="col-md-4">
+                : <span style="font-weight: 600; margin-left: 5px;">{{getClassName(selectedStudentSection)}}, {{getSectionName(selectedStudentSection)}}</span>
+            </div>
+        </div>
+
+        <div class="row visible-xs visible-sm" style="font-size: 16px;">
+            <div class="col-xs-12">
+                Name: <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.name}}</span>
+            </div>
+        </div>
+
+        <div class="row visible-xs visible-sm" style="font-size: 16px;">
+            <div class="col-xs-12">
+                Scholar No. : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.scholarNumber}}</span>
+            </div>
+        </div>
+
+        <div class="row visible-xs visible-sm" style="font-size: 16px;">
+            <div class="col-xs-12">
+                Father's Name:
+                <span style="font-weight: 600; margin-left: 5px;">
+                    {{selectedStudent.fathersName}}
+                </span>
+            </div>
+        </div>
+
+        <div class="row visible-xs visible-sm" style="font-size: 16px;">
+            <div class="col-xs-12">
+                Class Name:
+                <span style="font-weight: 600; margin-left: 5px;">
+                    {{getClassName(selectedStudentSection)}}, {{getSectionName(selectedStudentSection)}}
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4" *ngIf="selectedClass">
+                <mat-form-field style="margin-top: 23px;">
+                    <mat-select placeholder="Change to -"
+                                #selectClassSection
+                                [ngModel]="selectedClass"
+                                (ngModelChange)="selectedClass=$event;">
+                        <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
+                            {{classs.name}}
+                            <span *ngIf="classs.selectedSection.id != classs.sectionList[0].id">
+                                , {{classs.selectedSection.name}}
+                            </span>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button class="btn"
+                        style="padding: 2px 11px; background-color: transparent;"
+                        matTooltip="Choose Section (default: Section - A)"
+                        mat-icon-button
+                        [matMenuTriggerFor]="classSectionMenu">
+                    <i class="material-icons" style="color: black;">expand_more</i>
+                </button>
+                <mat-menu #classSectionMenu="matMenu">
+                    <button *ngFor="let section of selectedClass.sectionList"
+                            mat-menu-item
+                            (click)="selectClassSection.open(); selectClassSection.close(); selectedClass.selectedSection=section">
+                        {{section.name}}
+                    </button>
+                </mat-menu>
+            </div>
+        </div>
+
+        <br/>
+
+        <button type="submit"
+                *ngIf="!(selectedClass.dbId === selectedStudentSection.parentClass
+                        && selectedClass.selectedSection.id === selectedStudentSection.parentDivision)"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="changeClassSection()">
+            Change</button>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading || isStudentListLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

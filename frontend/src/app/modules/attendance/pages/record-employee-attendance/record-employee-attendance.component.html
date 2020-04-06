@@ -1,0 +1,128 @@
+<div class="card-content table-responsive">
+
+    <ng-container *ngIf="employeeList">
+
+        <ng-container *ngIf="employeeList.length>0">
+
+            <select [ngModel]="by"
+                    (ngModelChange)="handleModeChange($event);"
+                    style="margin-right: 15px; margin-bottom: 20px;">
+                <option value="date">Date</option>
+                <option value="month">Month</option>
+            </select>
+
+            <ng-container *ngIf="by==='date'">
+                <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
+            </ng-container>
+
+            <ng-container *ngIf="by==='month'">
+                <month-date (onMonthSelected)="onMonthSelected($event)"></month-date>
+            </ng-container>
+
+            <br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
+            <button type="submit"
+                    style="padding: 3px 8px;"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="getEmployeesAttendanceStatusList()">Get</button>
+
+        </ng-container>
+
+        <ng-container *ngIf="employeeList.length===0">
+            No employees exist to record attendance.
+        </ng-container>
+
+    </ng-container>
+
+    <div class="row" *ngIf="employeeList">
+        <div class="col-md-12"
+             style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px;"></div>
+    </div>
+
+    <ng-container *ngIf="!isLoading && showEmployeeList && employeeAttendanceStatusList">
+
+        <button type="submit"
+                style="padding: 3px 8px;"
+                class="btn"
+                (click)="declareAllPresent()">
+            All Present
+        </button>
+
+        <table class="table table-hover">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th>S No.</th>
+                <th>Student</th>
+                <th *ngIf="by==='month'">Abs./Total</th>
+                <ng-container *ngFor="let date of getDateList()">
+                    <th style="text-align: center" *ngIf="by==='month'">{{date.getDate()}}</th>
+                    <th style="text-align: center" *ngIf="by==='date'">Attendance</th>
+                </ng-container>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let employee of employeeAttendanceStatusList; let i=index;">
+                <tr>
+                    <td>{{i+1}}.</td>
+                    <td>
+                        {{employee.name}}
+                        <ng-container *ngIf="employee.scholarNumber">
+                            ({{employee.employeeNumber}})
+                        </ng-container>
+                    </td>
+                    <td *ngIf="by==='month'">
+                        {{getEmployeeRecord(employee)}}
+                    </td>
+                    <ng-container *ngFor="let attendance of employee.attendanceStatusList">
+                        <td align="center">
+                            <button type="submit"
+                                    style="padding: 3px 8px; text-transform: none;"
+                                    class="{{getButtonClass(attendance.status)}}"
+                                    [disabled]="attendance.status===attendanceStatusList[2]"
+                                    (click)="changeEmployeeAttendanceStatus(attendance)"
+                                    matTooltip="{{getMatTooltip(employee, attendance)}}"
+                                    matTooltipShowDelay="1000"
+                                    [matTooltipDisabled]="attendance.status===attendanceStatusList[2] || by==='date'">
+                                {{getButtonString(attendance.status)}}
+                            </button>
+                        </td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+
+        <ng-container *ngIf="by==='date'">
+            <div class="row">
+                <div class="col-md-2" *ngIf="getStatusNumber()>0">Not Taken: {{getStatusNumber()}}</div>
+                <div class="col-md-1">A: {{getStatusNumber(attendanceStatusList[1])}}</div>
+                <div class="col-md-1">P: {{getStatusNumber(attendanceStatusList[0])}}</div>
+            </div>
+        </ng-container>
+
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="updateEmployeeAttendanceList()">Update</button>
+
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="padding: 12px 15px; margin-left: 15px;"
+                (click)="printEmployeeAttendanceList()">
+            <i class="material-icons">print</i>
+        </button>
+
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="padding: 12px 15px; margin-left: 5px;"
+                (click)="downloadList()">
+            <i class="material-icons">save_alt</i>
+        </button>
+
+        <br/>A: Absent, P: Present, H: Holiday, h: Half Day, N: Not Recorded <br/>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

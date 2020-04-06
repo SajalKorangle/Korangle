@@ -1,0 +1,37 @@
+<table class="table table-hover">
+    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+    <tr>
+        <th *ngIf="discountColumnFilter.discountNumber">Discount No.</th>
+        <th *ngIf="discountColumnFilter.name" class="text-left">Name</th>
+        <th *ngIf="discountColumnFilter.scholarNumber" class="text-center">Scholar No.</th>
+        <th *ngIf="discountColumnFilter.class" class="text-center">Class</th>
+        <th *ngIf="discountColumnFilter.amount" class="text-right">Amount</th>
+        <th *ngIf="discountColumnFilter.date" class="text-center">Date</th>
+        <th *ngIf="discountColumnFilter.remark" class="text-center">Remark</th>
+        <th *ngIf="discountColumnFilter.employee" class="text-left">Given By</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let discount of discountList | slice:0:number">
+        <td *ngIf="discountColumnFilter.discountNumber">{{discount.discountNumber}}</td>
+        <td *ngIf="discountColumnFilter.name" align="left">{{getStudentName(discount.parentStudent)}}</td>
+        <td *ngIf="discountColumnFilter.scholarNumber" align="center">{{getStudentScholarNumber(discount.parentStudent)}}</td>
+        <td *ngIf="discountColumnFilter.class" align="center">
+            {{getClassName(discount.parentStudent, discount.parentSession)}},
+            {{getSectionName(discount.parentStudent, discount.parentSession)}}
+        </td>
+        <td *ngIf="discountColumnFilter.amount" style="padding-right: 15px;" align="right">{{getDiscountTotalAmount(discount)}}</td>
+        <td *ngIf="discountColumnFilter.date" align="center">{{discount.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
+        <td *ngIf="discountColumnFilter.remark" align="center">{{discount.remark}}</td>
+        <td *ngIf="discountColumnFilter.employee" align="left">{{getEmployeeName(discount)}}</td>
+    </tr>
+    </tbody>
+</table>
+<ng-container *ngIf="discountList.length>number">
+    <u *ngIf="number<discountList.length"
+       style="color: deepskyblue; cursor: pointer"
+       (click)="increaseNumber()">
+        Show More
+    </u>
+    # of Discounts: {{discountList.length}}
+</ng-container>

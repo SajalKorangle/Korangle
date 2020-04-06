@@ -1,0 +1,311 @@
+<div class="card-content table-responsive">
+
+    <ng-container *ngIf="!isLoading">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Min. No. (Fees Due till month)</label>
+                    <input type="number"
+                           class="form-control"
+                           (keypress)="policeNumberInput($event)"
+                           [ngModel]="minimumNumber"
+                           (ngModelChange)="minimumNumber=$event;"/>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Max. No. (Fees Due till month)</label>
+                    <input type="number"
+                           class="form-control"
+                           (keypress)="policeNumberInput($event)"
+                           [ngModel]="maximumNumber"
+                           (ngModelChange)="maximumNumber=$event;"/>
+                </div>
+            </div>
+            <div class="col-sm-3 hidden-sm">
+
+                <!-- button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Print the following list"
+                        tooltip-position="left"
+                        (click)="printFeesReport();">
+                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button -->
+
+                <button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Download the following list"
+                        tooltip-position="left"
+                        (click)="downloadFeesReport();">
+                    Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+
+
+            </div>
+            <div class="col-sm-3" align="end">
+                <mat-form-field>
+                    <mat-select placeholder="Select Filter Type"
+                                [ngModel]="selectedFilterType"
+                                (ngModelChange)="selectedFilterType=$event;">
+                        <mat-option *ngFor='let filterType of filterTypeList;' [value]="filterType">
+                            {{filterType}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="selectedFilterType==filterTypeList[0]" style="margin-top: 10px; margin-bottom: 10px;">
+            <div class="col-sm-3">
+                <mat-form-field>
+                    <mat-select placeholder="Select Class"
+                                [ngModel]="selectedClassSection"
+                                (ngModelChange)="selectedClassSection=$event;">
+                        <mat-option [value]="nullValue">All</mat-option>
+                        <mat-option *ngFor='let classSection of filteredClassSectionList;' [value]="classSection">
+                            {{classSection.class.name}}, {{classSection.section.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group form-black label-floating">
+                    <label class="control-label">Common Message to append</label>
+                    <textarea type="text" rows="5"
+                              class="form-control"
+                              [(ngModel)]="extraDefaulterMessage"></textarea>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <mat-form-field style="margin-top: 23px;">
+                    <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
+                        <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
+                            {{sentType}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div  style="font-size: 14px; margin-top: 5px;">
+                    # of extra Characters/SMS: {{getExtraMessageLength()}}<br/>
+                    # of Mobile devices: {{getNumberOfMobileDevice()}}<br/>
+                    Estimated SMS Count: {{getEstimatedSMSCount()}}<br/>
+                    Estimated Notification Count: {{getEstimatedNotificationCount()}}<br/>
+                </div>
+                <ng-container *ngIf="getEstimatedSMSCount()>0 || getEstimatedNotificationCount()>0">
+                    <button *ngIf="getEstimatedSMSCount()<=smsBalance"
+                            type="button"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="padding: 12px 15px; margin-right: 17px;"
+                            matTooltip="Notify all the selected defaulters"
+                            tooltip-position="left"
+                            (click)="notifyDefaulters();">
+                        {{getButtonText()}}
+                    </button>
+                    <span *ngIf="getEstimatedSMSCount()>smsBalance"
+                          style="font-size: 16px;">
+                        You are short by <b>{{getEstimatedSMSCount() - smsBalance}}</b> SMS.
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+
+        <!-- Parent -->
+
+        <ng-container *ngIf="selectedFilterType==filterTypeList[1]">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    Selected: <b>{{getSelectedParentCount()}}</b>, Showing: <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
+                </div>
+                <div class="col-sm-6" align="end">
+                    Fees Due (Till Month): <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency:true}}</b>
+                </div>
+            </div>
+            <button class="btn"
+                    style="padding: 4px 7px"
+                    (click)="selectAllHandler(); $event.stopPropagation();">Select All
+            </button>
+            <button class="btn"
+                    style="padding: 4px 7px"
+                    (click)="clearAllHandler(); $event.stopPropagation();">Clear All
+            </button>
+
+            <table class="table table-hover">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th></th>
+                    <th>S No.</th>
+                    <th>Parent</th>
+                    <th>Student</th>
+                    <th>Class</th>
+                    <th>Mobile No.</th>
+                    <th>Mobile No. (2)</th>
+                    <th>Fees Due<br/>(Till Month)</th>
+                    <th>Fees Due<br/>(Overall)</th>
+                    <th>Total Fees<br/>({{getCurrentSessionName()}})</th>
+                    <th>Fees Paid<br/>({{getCurrentSessionName()}})</th>
+                    <th>Discount<br/>({{getCurrentSessionName()}})</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngFor="let parent of getFilteredParentList(); let i=index;">
+                    <tr>
+                        <td>
+                            <mat-checkbox [(ngModel)]="parent.selected"></mat-checkbox>
+                        </td>
+                        <td>{{i+1}}.</td>
+                        <td style="font-weight: 600;">{{parent.name}}</td>
+                        <ng-container *ngIf="parent.studentList.length == 1; else multipleStudents">
+                            <td>{{parent.studentList[0].name}}</td>
+                            <td>{{parent.studentList[0].class.name}}, {{parent.studentList[0].section.name}}</td>
+                            <td>
+                                <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
+                                    <span class="hidden-xs hidden-sm">{{parent.studentList[0].mobileNumber}}</span>
+                                    <span class="visible-xs visible-sm">
+                                        <a href="tel:{{parent.studentList[0].mobileNumber}}">Call Me</a>
+                                    </span>
+                                </ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="checkMobileNumber(parent.studentList[0].secondMobileNumber)">
+                                    <span class="hidden-xs hidden-sm">{{parent.studentList[0].secondMobileNumber}}</span>
+                                    <span class="visible-xs visible-sm">
+                                        <a href="tel:{{parent.studentList[0].secondMobileNumber}}">Call Me</a>
+                                    </span>
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <ng-template #multipleStudents>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
+                                    <span class="hidden-xs hidden-sm">{{parent.studentList[0].mobileNumber}}</span>
+                                    <span class="visible-xs visible-sm">
+                                        <a href="tel:{{parent.studentList[0].mobileNumber}}">Call Me</a>
+                                    </span>
+                                </ng-container>
+                            </td>
+                            <td></td>
+                        </ng-template>
+                        <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | indianCurrency}}</td>
+                        <td>{{getParentFeesDueOverall(parent) | indianCurrency}}</td>
+                        <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
+                        <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
+                        <td>{{getParentDiscount(parent) | indianCurrency}}</td>
+                    </tr>
+                    <ng-container *ngIf="parent.studentList.length > 1">
+                        <ng-container *ngFor="let student of parent.studentList;">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{student.name}}</td>
+                                <td>{{student.class.name}}, {{student.section.name}}</td>
+                                <td></td>
+                                <td>
+                                    <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
+                                        <span class="hidden-xs hidden-sm">{{student.secondMobileNumber}}</span>
+                                        <span class="visible-xs visible-sm">
+                                            <a href="tel:{{student.secondMobileNumber}}">Call Me 2</a>
+                                        </span>
+                                    </ng-container>
+                                </td>
+                                <td>{{student.feesDueTillMonth | indianCurrency}}</td>
+                                <td>{{student.feesDueOverall | indianCurrency}}</td>
+                                <td>{{student.totalFeesThisSession | indianCurrency}}</td>
+                                <td>{{student.feesPaidThisSession | indianCurrency}}</td>
+                                <td>{{student.discountThisSession | indianCurrency}}</td>
+                            </tr>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+                </tbody>
+            </table>
+
+        </ng-container>
+
+        <!-- Student -->
+
+        <ng-container *ngIf="selectedFilterType==filterTypeList[0]">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    Selected:  <b>{{getSelectedChildrenCount()}}</b>, Showing: <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
+                </div>
+                <div class="col-sm-6" align="end">
+                    Fees Due (Till Month): <b>{{getFilteredStudentListFeesDueTillMonth() | indianCurrency:true}}</b>
+                </div>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="selectAllHandler(); $event.stopPropagation();">Select All
+                </button>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="clearAllHandler(); $event.stopPropagation();">Clear All
+                </button>
+            </div>
+
+            <table class="table table-hover">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th></th>
+                    <th>S No.</th>
+                    <th>Student</th>
+                    <th>Father</th>
+                    <th>Class</th>
+                    <th>Mobile No.</th>
+                    <th>Mobile No. (2)</th>
+                    <th>Fees Due<br/>(Till Month)</th>
+                    <th>Fees Due<br/>(Overall)</th>
+                    <th>Total Fees<br/>({{getCurrentSessionName()}})</th>
+                    <th>Fees Paid<br/>({{getCurrentSessionName()}})</th>
+                    <th>Discount<br/>({{getCurrentSessionName()}})</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngFor="let student of getFilteredStudentList(); let i=index;">
+                    <tr>
+                        <td><mat-checkbox [(ngModel)]="student.selected"></mat-checkbox></td>
+                        <td>{{i+1}}.</td>
+                        <td style="font-weight: 600;">{{student.name}}</td>
+                        <td>{{student.fathersName}}</td>
+                        <td>{{student.class.name}}, {{student.section.name}}</td>
+                        <td>
+                            <ng-container *ngIf="checkMobileNumber(student.mobileNumber)">
+                                <span class="hidden-xs hidden-sm">{{student.mobileNumber}}</span>
+                                <span class="visible-xs visible-sm">
+                                    <a href="tel:{{student.mobileNumber}}">Call Me</a>
+                                </span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
+                                <span class="hidden-xs hidden-sm">{{student.secondMobileNumber}}</span>
+                                <span class="visible-xs visible-sm">
+                                    <a href="tel:{{student.secondMobileNumber}}">Call Me 2</a>
+                                </span>
+                            </ng-container>
+                        </td>
+                        <td style="font-weight: 600;">{{student.feesDueTillMonth | indianCurrency}}</td>
+                        <td>{{student.feesDueOverall | indianCurrency}}</td>
+                        <td>{{student.totalFeesThisSession | indianCurrency}}</td>
+                        <td>{{student.feesPaidThisSession | indianCurrency}}</td>
+                        <td>{{student.discountThisSession | indianCurrency}}</td>
+                    </tr>
+                </ng-container>
+                </tbody>
+            </table>
+
+        </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user" [timer]="60"></app-loading-spinner>
+    </ng-container>
+
+</div>

@@ -1,0 +1,69 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <table class="table table-hover" *ngIf="examinationList && examinationList.length > 0">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th>S No.</th>
+                <th>Examination</th>
+                <th>Status</th>
+                <th>-</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let examination of examinationList; let i=index;">
+                <td>{{(i+1)}}.</td>
+                <td>
+                    <input type="text"
+                           [(ngModel)]="examination.newName" [disabled]="examination.updating"/>
+                </td>
+                <td>
+                    <mat-form-field>
+                        <mat-select placeholder="Select Status"
+                                    [ngModel]="examination.newStatus"
+                                    (ngModelChange)="examination.newStatus=$event">
+                            <mat-option value="Created">Created</mat-option>
+                            <mat-option value="Declared">Declared</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            [disabled]="isExaminationUpdateDisabled(examination)"
+                            style="padding: 3px 8px;"
+                            (click)="serviceAdapter.updateExamination(examination)">Update</button>
+                    <div *ngIf="examination.updating" class="loader-custom"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <br/><br/><br/>
+
+        <table class="table table-hover">
+            <tbody>
+            <tr>
+                <td>
+                    <input type="text"
+                           placeholder="Type examination name here ...."
+                           [(ngModel)]="examinationNameToBeAdded"/>
+                </td>
+                <td>
+                    <button type="submit"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="padding: 3px 8px;"
+                            (click)="serviceAdapter.createExamination()">Add</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

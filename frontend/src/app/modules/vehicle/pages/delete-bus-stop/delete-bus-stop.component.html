@@ -1,0 +1,48 @@
+<div class="card-content">
+
+    <form class="example-form" *ngIf="busStopList">
+        <mat-form-field class="example-full-width">
+            <input type="text"
+                   placeholder="Type stop name here...."
+                   aria-label="Stop Name"
+                   matInput
+                   [formControl]="myControl"
+                   [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete"
+                              (optionSelected)="getBusStop($event.option.value)"
+                              [displayWith]="displayFn">
+                <mat-option *ngFor="let busStop of filteredBusStopList | async" [value]="busStop">
+                    {{displayFn(busStop)}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+
+
+    <ng-container *ngIf="selectedBusStop && !isLoading">
+
+        <!-- Stop Name, Distance (km) -->
+        <div class="row">
+            <div class="col-md-3">
+                {{selectedBusStop.stopName}}
+            </div>
+            <div class="col-md-3">
+                {{selectedBusStop.kmDistance}} km
+            </div>
+        </div>
+
+        <button type="submit"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="deleteBusStop();">
+            Delete</button>
+
+        <div class="clearfix"></div>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+

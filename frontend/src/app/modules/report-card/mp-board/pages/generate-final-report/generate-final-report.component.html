@@ -1,0 +1,161 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <ng-container *ngIf="reportCardMapping && classSectionStudentList.length > 0">
+
+            <!-- Class Filter -->
+            <mat-form-field style="margin-right: 15px;">
+                <mat-select placeholder="Select Class" style="width: 100%;">
+
+                    <ng-container *ngFor="let class of classSectionStudentList">
+                        <ng-container *ngFor="let section of class.sectionList">
+                            <mat-option style="width: 100%;">
+                                <mat-checkbox [ngModel]="section.selected"
+                                              (ngModelChange)="unselectAllClasses();section.selected=true;handleStudentDisplay();"
+                                              (click)="$event.stopPropagation();">
+                                    {{class.name}}<span *ngIf="showSectionName(class.name)">, {{section.name}}</span>
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
+                    </ng-container>
+
+                </mat-select>
+            </mat-form-field>
+
+            <button type="submit"
+                    style="margin-left: 20px;"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="serviceAdapter.getStudentFinalReport()">GET</button>
+
+            <div>
+                <mat-checkbox [(ngModel)]="showPrinicipalSignature">
+                    Show Principal Signature
+                </mat-checkbox>
+            </div>
+            <div>
+                <mat-checkbox [(ngModel)]="showClassTeacherSignature">
+                    Show Class Teacher Signature
+                </mat-checkbox>
+            </div>
+
+            <br/>
+            <ng-container *ngIf="filteredStudentList.length>0">
+                <ng-container *ngFor="let item of ' '.repeat((filteredStudentList.length+9)/10).split(''); let i = index; let last=last;">
+                    <mat-checkbox *ngIf="!last"
+                                  [ngModel]="getSelectedStudentsValue(i*10, i*10+10)"
+                                  (ngModelChange)="selectStudents(i*10, i*10+10, $event)"
+                                  style="margin-right: 20px;">
+                        {{i*10+1}} - {{i*10+10}},
+                    </mat-checkbox>
+                    <mat-checkbox *ngIf="last"
+                                  [ngModel]="getSelectedStudentsValue(i*10, filteredStudentList.length)"
+                                  (ngModelChange)="selectStudents(i*10, filteredStudentList.length, $event)"
+                                  style="margin-right: 20px;">
+                        {{i*10+1}} - {{filteredStudentList.length}},
+                    </mat-checkbox>
+                </ng-container>
+            </ng-container>
+            <br>
+            Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
+            <br/>
+
+            <ngx-datatable
+                    class='material ngxDataTable'
+                    [rows]='filteredStudentList'
+                    [columnMode]="'force'"
+                    [headerHeight]="50"
+                    [footerHeight]="50"
+                    [rowHeight]="getRowHeight"
+                    [rowClass]="getRowClass"
+                    [scrollbarV]="true"
+                    [scrollbarH]="true"
+                    (page)="onPage($event)">
+                <ngx-datatable-column name="S No.">
+                    <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
+                        {{rowIndex+1}}.
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Selected">
+                    <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <mat-checkbox [ngModel]="row['selected']"
+                                      (ngModelChange)="updateRowValue(row, $event)"
+                                      [disabled]="!row.selected && getSelectedStudentNumber()>=10">
+                            <span *ngIf="row.selected">Selected</span>
+                            <span *ngIf="!row.selected">Unselected</span>
+                        </mat-checkbox>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Photo">
+                    <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <img *ngIf="row.profileImage" src="{{row.profileImage}}" style="width: 20%;">
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <strong>{{value}}</strong>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Class">
+                    <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+                        <strong>{{row.className}}<span *ngIf="showSectionName(row.className)">, {{row.sectionName}}</span></strong>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Roll No.">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <i>{{row.rollNumber}}</i>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Father's Name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <i>{{row.fathersName}}</i>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Scholar No.">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <i>{{row.scholarNumber}}</i>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+
+            <ng-container *ngFor="let class of classSectionStudentList">
+                <ng-container *ngFor="let section of class.sectionList">
+                    <ng-container *ngFor="let student of section.studentList">
+                        <img src="{{student.profileImage}}" style="width: 0px; height: 0px;">
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+
+        </ng-container>
+
+        <ng-container *ngIf="reportCardMapping == null">
+            Please set the final report card before generating them.
+        </ng-container>
+
+        <ng-container *ngIf="classSectionStudentList.length === 0">
+            No students in this session.
+        </ng-container>
+
+        <img src="{{user.activeSchool.principalSignatureImage}}"
+             *ngIf="user.activeSchool.principalSignatureImage != null"
+             style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/>
+        <img *ngFor="let signature of classTeacherSignatureList" src="{{signature.signatureImage}}" style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/>
+        <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
+             style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/ -->
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

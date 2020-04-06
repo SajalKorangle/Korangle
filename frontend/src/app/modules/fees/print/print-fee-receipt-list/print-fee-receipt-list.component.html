@@ -1,0 +1,31 @@
+<ng-container *ngIf="data">
+
+    <div class="row">
+        <div class="col-xs-4">
+            Total Fees: {{getFeeReceiptListTotalAmount() | indianCurrency:true}}
+        </div>
+        <div class="col-xs-4" *ngIf="data.selectedEmployee">
+            Employee: {{data.selectedEmployee.name}}
+        </div>
+        <div class="col-xs-4" *ngIf="data.selectedModeOfPayment">
+            Payment Mode: {{data.selectedModeOfPayment}}
+        </div>
+    </div>
+
+    <app-fee-receipt-list [user]="user"
+                          [number]="data.feeReceiptList.length"
+                          [receiptColumnFilter]="data.receiptColumnFilter"
+                          [feeTypeList]="data.feeTypeList"
+                          [feeReceiptList]="data.feeReceiptList"
+                          [subFeeReceiptList]="data.subFeeReceiptList"
+                          [studentList]="data.studentList"
+                          [studentSectionList]="data.studentSectionList"
+                          [employeeList]="data.employeeList"
+                          [classList]="data.classList"
+                          [sectionList]="data.sectionList"
+                          [selectedFeeType]="data.selectedFeeType"
+                          [sessionList]="sessionList"
+                          [boardList]="boardList"></app-fee-receipt-list>
+
+
+</ng-container>

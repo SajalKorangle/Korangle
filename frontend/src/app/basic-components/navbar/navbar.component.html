@@ -1,0 +1,33 @@
+<nav *ngIf="user.activeSchool"
+        class="navbar navbar-transparent navbar-absolute"
+     style="border-radius: 0px;"
+     [attr.data-color]="user.activeSchool.primaryThemeColor">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" (click)="sidebarToggle()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar" style="border-color: white;"></span>
+                <span class="icon-bar" style="border-color: white;"></span>
+                <span class="icon-bar" style="border-color: white;"></span>
+            </button>
+            <a *ngIf="user.section" class="navbar-brand" style="color: white;">{{user.section.subTitle}}</a>
+        </div>
+    </div>
+</nav>
+
+<nav *ngIf="!user.activeSchool"
+        class="navbar navbar-transparent navbar-absolute"
+     style="border-radius: 0px;"
+     [attr.data-color]="'green'">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" (click)="sidebarToggle()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar" style="border-color: white;"></span>
+                <span class="icon-bar" style="border-color: white;"></span>
+                <span class="icon-bar" style="border-color: white;"></span>
+            </button>
+            <a *ngIf="user.section" class="navbar-brand" style="color: white;">{{user.section.subTitle}}</a>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,46 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <ng-container *ngFor="let notification of notificationList">
+            <mat-card style="margin-bottom: 10px;">
+                <mat-card-title style="font-weight: normal; font-size: 15px; align: left">
+                    {{getNotificationTitle(notification)}}
+                    <span style="float: right">{{notification.sentDateTime | date: 'dd/MM/yyyy'}}</span>
+                </mat-card-title>
+                <mat-card-content style="font-weight: 400; font-size: 20px;white-space: pre-line;">{{notification.content}}</mat-card-content>
+            </mat-card>
+        </ng-container>
+
+        <ng-container *ngIf="loadMoreNotifications">
+            <button type="submit"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 6px 16px;"
+                    (click)="serviceAdapter.loadMoreNotifications()">Load More</button>
+            <div *ngIf="isLoadingMoreNotification" class="loader-container" align="center">
+                <div class="loader"></div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="!notificationList.length">
+            <div class="text-center">
+                <div class="visible-xs visible-sm" style="margin-top:80px;"></div>
+                <i class="material-icons">notifications_none</i>
+                <br>
+                <i>You have no Notifications yet !</i>
+                <br><br>
+                <span class="visible-xs visible-sm">
+                    Click on &nbsp;&nbsp;<span style=''>&#8801;</span>&nbsp;&nbsp; to explore more
+                </span>
+            </div>
+        </ng-container>
+
+    </ng-container>
+
+</div>
+
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+

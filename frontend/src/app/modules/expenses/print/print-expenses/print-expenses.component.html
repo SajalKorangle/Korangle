@@ -1,0 +1,66 @@
+<div *ngIf='user.activeSchool' class="container-fluid" style="width: 100%">
+    <div class="row">
+        <div class="col-xs-12" align="center">
+            <h4><u>{{user.activeSchool.printName}}</u></h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" align="center">
+            <span style="font-weight: 400"><u>Expenses</u></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            Total Expense: {{ totalExpenses | indianCurrency:true}}
+        </div>
+        <div class="col-xs-6" align="right">
+            Date: {{startDate}} to {{endDate}}
+        </div>
+    </div>
+</div>
+<table class="table table-hover">
+    <thead style="font-weight: 400">
+    <tr>
+        <th>Voucher No.</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Remark</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let expenseEntry of expenseList">
+        <td>{{expenseEntry.voucherNumber}}</td>
+        <td>{{expenseEntry.amount}}</td>
+        <td>{{expenseEntry.voucherDate}}</td>
+        <td>{{expenseEntry.remark}}</td>
+    </tr>
+    </tbody>
+</table>
+<!-- table style="width: 100%">
+    <tr>
+        <td align="left">
+            Total Expense: {{ totalExpenses | currency:'INR':true:'1.1-1'}}
+        </td>
+        <td align="right">
+            Date: {{startDate}} to {{endDate}}
+        </td>
+    </tr>
+</table>
+<table cellpadding="10" class="table-content">
+    <style>
+        td { padding: 10px; }
+        tr { border-bottom: 1px solid gainsboro; }
+    </style>
+    <tr>
+        <td align="center">Voucher No.</td>
+        <td align="center">Amount</td>
+        <td align="center">Date</td>
+        <td align="center">Remark</td>
+    </tr>
+    <tr *ngFor="let expenseEntry of expenseList">
+        <td align="right">{{expenseEntry.voucherNumber}}</td>
+        <td align="right">{{expenseEntry.amount}}</td>
+        <td align="center">{{expenseEntry.generationDateTime}}</td>
+        <td align="left">{{feeEntry.remark}}</td>
+    </tr>
+</table -->

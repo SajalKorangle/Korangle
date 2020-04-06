@@ -1,0 +1,30 @@
+<div class="card-content">    
+
+    <parent-student-filter [user]="user"
+                           (onStudentListSelected)="serviceAdapter.getStudentAndClassSubjectsAndTests($event)"
+                           (onStudentListLoading)="isStudentListLoading=$event"
+                           [selectedFilterType]="'Student'"
+                           [bothFilters]='false'
+                           [studentTcGenerated]="false"></parent-student-filter>
+
+    <ng-container *ngIf="selectedStudent && !isLoading && !isStudentListLoading">
+        <ng-container *ngFor="let item of studentClassAllSubjectList">
+            <mat-checkbox [ngModel]="item.studentSubjectId !== null"
+                          (ngModelChange)="serviceAdapter.updateStudentSubjectAndTests(item)"
+                          [disabled]="item.updating">
+                {{item.subjectName}} <ng-container *ngIf="item.classSubjectId===null">(Subject not mentioned in class)</ng-container>
+                <br/>
+            </mat-checkbox>
+            <div *ngIf="item.updating" class="loader-custom"></div>
+            <br/>
+            <!-- span style="font-weight: 800">{{module.title}}</span><br/>
+            <ng-container *ngFor="let task of module.taskList">
+            </ng-container -->
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isLoading || isStudentListLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

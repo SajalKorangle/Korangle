@@ -1,0 +1,144 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <div class="row">
+            <div class="col-md-9" *ngIf="selectedExamination">
+                <mat-form-field>
+                    <mat-select placeholder="Select Examination"
+                                [ngModel]="selectedExamination"
+                                [disabled]="isLoading"
+                                (ngModelChange)="selectedExamination=$event;">
+                        <mat-option *ngFor='let examination of examinationList;' [value]="examination">
+                            {{examination.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                    <mat-select placeholder="Change to -"
+                                #selectClassSection
+                                [ngModel]="selectedExamination.selectedClass"
+                                (ngModelChange)="selectedExamination.selectedClass=$event;">
+                        <mat-option *ngFor='let classs of selectedExamination.classList;' [value]="classs">
+                            {{classs.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                    <mat-select placeholder="Change to -"
+                                #selectClassSection
+                                [ngModel]="selectedExamination.selectedClass.selectedSection"
+                                (ngModelChange)="selectedExamination.selectedClass.selectedSection=$event;">
+                        <mat-option *ngFor='let section of selectedExamination.selectedClass.sectionList;' [value]="section">
+                            {{section.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- button class="btn"
+                        style="padding: 2px 11px; background-color: transparent;"
+                        matTooltip="Choose Section (default: Section - A)"
+                        mat-icon-button
+                        [matMenuTriggerFor]="classSectionMenu">
+                    <i class="material-icons" style="color: black;">expand_more</i>
+                </button>
+                <mat-menu #classSectionMenu="matMenu">
+                    <button *ngFor="let section of selectedExamination.selectedClass.sectionList"
+                            mat-menu-item
+                            (click)="selectClassSection.open();
+                             selectClassSection.close();
+                             selectedExamination.selectedClass.selectedSection=section;">
+                        {{section.name}}
+                    </button>
+                </mat-menu -->
+
+                <button type="submit"
+                        *ngIf="selectedExamination.selectedClass.selectedSection.studentList.length > 0"
+                        style="margin-left: 20px;"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="printHallTicket()">Generate</button>
+
+                <ng-container *ngIf="selectedExamination.selectedClass.selectedSection.studentList.length === 0">
+                    <br/>
+                    No Student presents in this class.
+                </ng-container>
+
+            </div>
+
+            <div class="col-md-9" *ngIf="selectedExamination">
+                <mat-checkbox [(ngModel)]="showPrincipalSignature">
+                    Show Principal Signature
+                </mat-checkbox>
+            </div>
+            <div class="col-md-9" *ngIf="!selectedExamination">
+                No data to create hall ticket!
+            </div>
+        </div>
+
+        <i>Selected {{getSelectedStudentList().length}} out of {{getFilteredStudentSectionList().length}} students</i><br/>
+
+        <button class="btn"
+                style="padding: 4px 7px"
+                (click)="selectAllStudents(); $event.stopPropagation();">Select All
+        </button>
+        <button class="btn"
+                style="padding: 4px 7px"
+                (click)="unselectAllStudents(); $event.stopPropagation();">Clear All
+        </button>
+        <br/>
+
+        <table class="table table-hover">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th>S No.</th>
+                <th class="text-center">Selected</th>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Roll No.</th>
+                <th>Father's Name</th>
+                <th>Scholar No.</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let student of getFilteredStudentSectionList(); let i=index;">
+                <tr>
+                    <ng-container>
+                        <td>{{i+1}}.</td>
+                        <td align="center">
+                            <mat-checkbox [(ngModel)]="student.selected">
+                            </mat-checkbox>
+                        </td>
+                        <td>
+                            <img *ngIf="student.profileImage" src="{{student.profileImage}}" style="width: 30px; height: 30px;">
+                            <img *ngIf="!student.profileImage" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" style="width: 30px; height: 30px;">
+                        </td>
+                        <td>{{student.name}}</td>
+                        <td>{{student.rollNumber}}</td>
+                        <td>{{student.fathersName}}</td>
+                        <td>{{student.scholarNumber}}</td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+
+        <img src="{{user.activeSchool.principalSignatureImage}}"
+             *ngIf="user.activeSchool.principalSignatureImage != null"
+             style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/>
+        <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
+             style="display: none;
+             bottom: 25px; left: 600px;
+             width: 100px; height: 50px;
+             z-index: 1;"/ -->
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

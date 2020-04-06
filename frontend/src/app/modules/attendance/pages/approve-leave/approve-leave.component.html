@@ -1,0 +1,118 @@
+<div class="card-content">
+
+    <ng-container *ngIf="employeeList && !isLoading">
+
+        <div class="row">
+            <div class="col-md-9">
+                <mat-form-field>
+                    <mat-select placeholder="Leave Status"
+                                [ngModel]="selectedStatus"
+                                (ngModelChange)="selectedStatus=$event">
+                        <mat-option *ngFor='let status of statusList;' [value]="status">
+                            {{status}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3" align="end">
+                <mat-form-field>
+                    <mat-select placeholder="Select Session"
+                                [ngModel]="selectedSession"
+                                (ngModelChange)="selectedSession=$event;serviceAdapter.getEmployeeAppliedLeaveList();">
+                        <mat-option *ngFor='let session of sessionList;' [value]="session">
+                            {{session.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <ng-container *ngFor="let employee of employeeList">
+
+            <ng-container *ngIf="showEmployeeList(employee)">
+
+                <mat-accordion>
+
+                    <mat-expansion-panel>
+
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{employee.name}} -
+                                {{getPendingLeaves(employee)}} pending leaves,
+                                {{getLeftPaidLeaves(employee)}} paid leaves left
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <ng-container *ngIf="!employee.isLoading">
+
+                            <table class="table table-hover">
+                                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                                <tr>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Half/Full Day</th>
+                                    <th class="text-center">Paid/Unpaid</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <ng-container *ngFor="let appliedLeave of employee.modifiedAppliedLeaveList; let i=index;">
+                                    <tr *ngIf="selectedStatus==='ALL' || employee.originalAppliedLeaveList[i].status===selectedStatus">
+                                        <td align="center">{{appliedLeave.dateOfLeave | date: 'dd - MMM - yyyy'}}</td>
+                                        <td align="center">
+                                            <button type="submit"
+                                                    style="padding: 3px 8px; text-transform: none;"
+                                                    class="{{getButtonClass(appliedLeave.status)}}"
+                                                    (click)="changeAppliedLeaveStatus(appliedLeave)">
+                                                {{appliedLeave.status}}
+                                            </button>
+                                        </td>
+                                        <td align="center">{{(getDayLength(appliedLeave.halfDay))}}</td>
+                                        <td align="center">
+                                    <span *ngIf="appliedLeave.status === leave_status_list[1]">
+                                        <button type="submit"
+                                                style="padding: 3px 8px; text-transform: none;"
+                                                class="btn"
+                                                [class.btn-success]="appliedLeave.paidLeave"
+                                                [class.btn-danger]="!appliedLeave.paidLeave"
+                                                (click)="appliedLeave.paidLeave = !appliedLeave.paidLeave">
+                                            {{paidOrUnpaid(appliedLeave.paidLeave)}}
+                                        </button>
+                                    </span>
+                                            <span *ngIf="appliedLeave.status !== leave_status_list[1]">
+                                        -
+                                    </span>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                </tbody>
+                            </table>
+
+                            <button type="submit"
+                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                    (click)="serviceAdapter.submitAppliedLeave(employee)">Submit</button>
+
+                        </ng-container>
+
+                        <ng-container *ngIf="employee.isLoading">
+                            <app-loading-spinner [user]="user"></app-loading-spinner>
+                        </ng-container>
+
+                    </mat-expansion-panel>
+
+                </mat-accordion>
+
+            </ng-container>
+
+        </ng-container>
+
+        <!-- ng-container *ngIf="getTotalAppliedLeaves === 0">
+            ** No leaves applied yet.
+        </ng-container -->
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

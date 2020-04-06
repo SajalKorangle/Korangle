@@ -1,0 +1,33 @@
+<table class="table table-hover" *ngIf="studentAttendanceList">
+    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+    <tr>
+        <th>S No.</th>
+        <th>Student</th>
+        <th *ngIf="by==='month'">A/T</th>
+        <ng-container *ngFor="let date of getDateList()">
+            <th style="text-align: center" *ngIf="by==='month'">{{date.getDate()}}</th>
+            <th style="text-align: center" *ngIf="by==='date'">Attendance</th>
+        </ng-container>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let student of studentAttendanceList; let i=index;">
+        <tr>
+            <td>{{i+1}}.</td>
+            <td>
+                {{student.name}}
+                <ng-container *ngIf="student.scholarNumber">
+                    ({{student.scholarNumber}})
+                </ng-container>
+            </td>
+            <td *ngIf="by==='month'">{{getStudentRecord(student)}}</td>
+            <ng-container *ngFor="let attendance of student.attendanceStatusList">
+                <td align="center"
+                    class="{{getTextClass(attendance.status)}}">
+                    {{getStatus(attendance.status)}}
+                </td>
+            </ng-container>
+        </tr>
+    </ng-container>
+    </tbody>
+</table>

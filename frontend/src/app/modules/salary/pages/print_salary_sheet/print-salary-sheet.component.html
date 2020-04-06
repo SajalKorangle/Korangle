@@ -1,0 +1,45 @@
+<div class="card-content table-responsive">
+
+    <month-date (onMonthSelected)="onMonthSelected($event)"></month-date>
+
+    <ng-container *ngIf="!isLoading && employeeList">
+
+        <table class="table table-hover">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th>S No.</th>
+                <th class="text-left">Name</th>
+                <th class="text-left">Father's/Huband's Name</th>
+                <th class="text-left">Monthly Salary</th>
+                <th class="text-left">Working Days</th>
+                <th class="text-left">Net Salary</th>
+                <th class="text-left">Signature</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let employee of getFilteredEmployeeList(); let i=index;">
+                <td>{{i+1}}.</td>
+                <td align="left">{{employee.name}}</td>
+                <td align="left">{{employee.fatherName}}</td>
+                <td align="left">{{employee.monthlySalary}}</td>
+                <td align="left">{{employee.numberOfWorkingDays}}</td>
+                <td align="left">{{employee.netSalary}}</td>
+                <td align="left"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button type="submit"
+                *ngIf="getFilteredEmployeeList().length > 0"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="printSalarySheet()">
+            Print
+        </button>
+
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

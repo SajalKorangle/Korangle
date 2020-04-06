@@ -1,0 +1,496 @@
+<ng-container *ngIf="feeReceiptList">
+    <ng-container *ngFor="let feeReceipt of feeReceiptList; let isLast=last;">
+
+        <div class="container-fluid"
+             [class.pageBreakAfter]="!isLast"
+             style="width: 100%; height: 100%;
+                    font-size: 16px !important;">
+
+            <div class="row"
+                 style="height: 100% !important;">
+
+                <div class="col-xs-6"
+                     style="height: 100% !important;
+                            padding-left: 20px;
+                            padding-right: 40px;
+                            border-right: 1px solid whitesmoke;">
+
+                    <img src="{{user.activeSchool.profileImage}}"
+                         style="border-radius: 2px; position: absolute;
+                                top: 28px; left: 14px;
+                                width: 56px; height: 56px;"/>
+
+                    <img src="{{user.activeSchool.profileImage}}"
+                         style="border-radius: 2px; position: absolute;
+                                top: 260px; left: 95px;
+                                width: 310px; height: 310px;
+                                opacity: 0.05;
+                                filter: grayscale(100%);
+                                z-index: 10;"/>
+
+                    <!-- Reg. No. , Dise Code -->
+                    <div class="row" style="margin-top: 0px;">
+                        <div class="col-xs-6">
+                            Dise code : {{user.activeSchool.diseCode}}
+                        </div>
+                        <div class="col-xs-6 d-flex custom-padding" align="end">
+                            <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
+                                School Code :
+                            </ng-container>
+                            <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
+                                Affiliation No. :
+                            </ng-container>
+                            {{user.activeSchool.affiliationNumber}}
+                        </div>
+                    </div>
+
+                    <!-- School Name -->
+                    <div class="row " style="margin-top: 8px;">
+                        <div class="col-xs-12" align="center">
+                            <span style="font-size: 24px">
+                                {{user.activeSchool.printName}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- School Address -->
+                    <div class="row" style="margin-top: 0px;">
+                        <div class="col-xs-12" align="center" style="padding: 0px; font-size: 10px;">
+                            {{user.activeSchool.address}}
+                        </div>
+                    </div>
+
+                    <!-- Fee Receipt -->
+                    <div class="row " style="margin-top: 10px;">
+                        <div class="col-xs-12" align="center">
+                            <span style="font-size: 21px;"><u>Fee Receipt</u></span><br/>
+                        </div>
+                    </div>
+
+                    <!-- Session Name -->
+                    <div class="row " style="margin-top: 10px;">
+                        <div class="col-xs-12" align="center">
+                            <span style="font-size: 21px;">
+                                <u>{{getSessionName(feeReceipt.parentSession)}}</u>
+                            </span><br/>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 5px;">
+                        <div class="col-xs-6">
+                            Receipt No. : {{feeReceipt.receiptNumber}}
+                        </div>
+                        <div class="col-xs-6" align="right">
+                            Date: {{feeReceipt.generationDateTime | date: 'dd/MM/yyyy'}}
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="row" style="margin-right: 0px;">
+                        <div class="col-xs-4">
+                            Name <span style="float: right">:</span>
+                        </div>
+                        <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px; font-weight: 800;">
+                            <i>{{ getStudent(feeReceipt.parentStudent).name | titlecase }}</i>
+                        </div>
+                    </div>
+
+                    <!-- Father's Name -->
+                    <div class="row" style="margin-right: 0px;">
+                        <div class="col-xs-4">
+                            Father's Name <span style="float: right">:</span>
+                        </div>
+                        <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+                            <i>Mr. {{ getStudent(feeReceipt.parentStudent).fathersName | titlecase }}</i>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="row" style="margin-right: 0px;">
+                        <div class="col-xs-4">
+                            Address <span style="float: right">:</span>
+                        </div>
+                        <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+                            <i>{{ getStudent(feeReceipt.parentStudent).address}}</i>
+                        </div>
+                    </div>
+
+                    <!-- Scholar No, Standard -->
+                    <div class="row">
+                        <div class="col-xs-6">
+                            Scholar No. : {{getStudent(feeReceipt.parentStudent).scholarNumber}}
+                        </div>
+                        <div class="col-xs-6" align="right">
+                            {{getClassName(feeReceipt)}}, {{getSectionName(feeReceipt)}}
+                        </div>
+                    </div>
+
+                    <!-- S No. , Particulars, Amount -->
+                    <div class="row" style="border-bottom: 1px solid black;
+                                            border-top: 1px solid black;
+                                            margin-bottom: 10px;
+                                            margin-top: 5px;">
+                        <div class="col-xs-2">
+                            <span style="font-weight: 400;">S. No.</span>
+                        </div>
+                        <div class="col-xs-6" >
+                            <span style="font-weight: 400;">Particulars</span>
+                        </div>
+                        <div class="col-xs-4"  align="right">
+                            <span style="font-weight: 400;">Amount</span>
+                        </div>
+                    </div>
+
+                    <ng-container *ngFor="let subFeeReceipt of getSubFeeReceiptList(feeReceipt); let subFeeReceiptIndex=index;">
+                        <div class="row"
+                             [class.tooManyRows]="getNumberOfRows(feeReceipt)>14"
+                             *ngIf="(subFeeReceipt.isAnnually && subFeeReceipt['aprilAmount'] > 0) || !subFeeReceipt.isAnnually">
+                            <div class="col-xs-2" align="center">{{subFeeReceiptIndex+1}}.</div>
+                            <div class="col-xs-6">
+                                {{getFeeType(subFeeReceipt).name}}&nbsp;
+                                <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
+                            </div>
+                            <div class="col-xs-4"
+                                 *ngIf="subFeeReceipt.isAnnually"
+                                 align="right">
+                                {{subFeeReceipt['aprilAmount']}}
+                            </div>
+                        </div>
+                        <div class="row"
+                             [class.tooManyRows]="getNumberOfRows(feeReceipt)>14"
+                             *ngIf="(subFeeReceipt.isAnnually && subFeeReceipt['aprilLateFee'] > 0)">
+                            <div class="col-xs-2" align="center">
+                                <ng-container *ngIf="subFeeReceipt['aprilAmount'] == 0">{{subFeeReceiptIndex+1}}</ng-container>
+                            </div>
+                            <div class="col-xs-6">
+                                <ng-container *ngIf="subFeeReceipt['aprilAmount'] == 0">
+                                    {{getFeeType(subFeeReceipt).name}}&nbsp;
+                                    <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
+                                    - <i>Late Fee</i>
+                                </ng-container>
+                                <ng-container *ngIf="subFeeReceipt['aprilAmount'] > 0">
+                                    <span style="padding-left: 40px;">- <i>Late Fee</i></span>
+                                </ng-container>
+                            </div>
+                            <div class="col-xs-4" align="right">
+                                {{subFeeReceipt['aprilLateFee']}}
+                            </div>
+                        </div>
+                        <ng-container *ngIf="!subFeeReceipt.isAnnually">
+                            <ng-container *ngFor = "let installment of installmentList; let installmentIndex=index;">
+                                <div class="row"
+                                     [class.tooManyRows]="getNumberOfRows(feeReceipt)>14"
+                                     *ngIf="subFeeReceipt[installment+'Amount'] && subFeeReceipt[installment+'Amount'] > 0">
+                                    <div class="col-xs-2" align="center"></div>
+                                    <div class="col-xs-6" style="padding-left: 40px;">
+                                        {{installment | titlecase}}
+                                    </div>
+                                    <div class="col-xs-4" align="right">{{subFeeReceipt[installment+'Amount']}}</div>
+                                </div>
+                                <div class="row"
+                                     [class.tooManyRows]="getNumberOfRows(feeReceipt)>14"
+                                     *ngIf="subFeeReceipt[installment+'LateFee'] && subFeeReceipt[installment+'LateFee'] > 0">
+                                    <div class="col-xs-2" align="center"></div>
+                                    <div class="col-xs-6" style="padding-left: 40px;">
+                                        {{installment | titlecase}} - <i>Late Fee</i>
+                                    </div>
+                                    <div class="col-xs-4" align="right">{{subFeeReceipt[installment+'LateFee']}}</div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+
+                    <div style="position: absolute; bottom: 40px; right: 40px; left: 20px;">
+
+                        <!-- Total, Total Value -->
+                        <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black;">
+                            <div class="col-xs-8">
+                                <span style="font-weight: 400">Total Amount</span>
+                            </div>
+                            <div class="col-xs-4" align="right" >
+                                <span style="font-weight: 400">{{getTotalFeeReceiptAmount(feeReceipt) | indianCurrency:true}}/-</span>
+                            </div>
+                        </div>
+
+                        <!-- Amount in words -->
+                        <div class="row" style="font-size: 10px !important;
+                                                margin-top: 5px !important;
+                                                line-height: normal !important;">
+                            <div class="col-xs-12">
+                                Amount In Words : <i style="font-weight: 400">{{getTotalFeeReceiptAmount(feeReceipt) | amountInWords}} Only</i>
+                            </div>
+                        </div>
+
+                        <div class="row" style="font-size: 10px !important; line-height: normal !important;">
+                            <div class="col-xs-12">
+                                Mode of Payment: <i style="font-weight: 400;">{{feeReceipt.modeOfPayment}}</i>
+                            </div>
+                        </div>
+
+                        <div class="row"
+                             style="font-size: 10px !important; line-height: normal !important;"
+                             *ngIf="feeReceipt.remark && feeReceipt.remark != ''">
+                            <div class="col-xs-12">
+                                Remark: <i style="font-weight: 400;">{{feeReceipt.remark}}</i>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Signature -->
+                    <div class="row" style="position: absolute;
+                                            bottom: 0px;
+                                            right: 40px;
+                                            left: 20px; font-size: 12px !important; line-height: normal !important;">
+                        <div class="col-xs-12" style="padding-right: 20px" align="end">
+                            <span style="text-align: center !important;">(Signature)<br/>{{getEmployeeName(feeReceipt.parentEmployee)}}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xs-6"
+                     style="height: 100% !important;
+                            padding-left: 40px;
+                            padding-right: 20px !important;
+                            border-left: 1px solid whitesmoke;">
+
+                    <img src="{{user.activeSchool.profileImage}}"
+                         style="border-radius: 2px; position: absolute;
+                                top: 28px; left: 34px;
+                                width: 56px; height: 56px;"/>
+
+                    <img src="{{user.activeSchool.profileImage}}"
+                         style="border-radius: 2px; position: absolute;
+                                top: 260px; left: 115px;
+                                width: 310px; height: 310px;
+                                opacity: 0.05;
+                                filter: grayscale(100%);
+                                z-index: 10;"/>
+
+                    <!-- Reg. No. , Dise Code -->
+                    <div class="row" style="margin-top: 0px;">
+                        <div *ngIf="user.activeSchool.affiliationNumber && user.activeSchool.affiliationNumber.length > 4"
+                             class="col-xs-6">
+                            Aff. No. : {{user.activeSchool.affiliationNumber}}
+                        </div>
+                        <div *ngIf="!user.activeSchool.affiliationNumber || user.activeSchool.affiliationNumber.length <= 4"
+                             class="col-xs-6">
+                            Reg. No. : {{user.activeSchool.registrationNumber}}
+                        </div>
+                        <div class="col-xs-6" align="end">
+                            Dise code : {{user.activeSchool.diseCode}}
+                        </div>
+                    </div>
+
+                    <!-- School Name -->
+                    <div class="row " style="margin-top: 8px;">
+                        <div class="col-xs-12" align="center">
+                            <span style="font-size: 24px">
+                                {{user.activeSchool.printName}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- School Address -->
+                    <div class="row" style="margin-top: 0px;">
+                        <div class="col-xs-12" align="center" style="padding: 0px; font-size: 10px;">
+                            {{user.activeSchool.address}}
+                        </div>
+                    </div>
+
+                    <!-- Fee Receipt -->
+                    <div class="row " style="margin-top: 10px;">
+                        <div class="col-xs-12" align="center">
+                            <span style="font-size: 21px;"><u>Fee Receipt</u></span><br/>
+                        </div>
+                    </div>
+
+                    <!-- Session Name -->
+                    <div class="row " style="margin-top: 10px;">
+                        <div class="col-xs-12" align="center">
+                            <span style="font-size: 21px;">
+                                <u>{{getSessionName(feeReceipt.parentSession)}}</u>
+                            </span><br/>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 5px;">
+                        <div class="col-xs-6">
+                            Receipt No. : {{feeReceipt.receiptNumber}}
+                        </div>
+                        <div class="col-xs-6" align="right">
+                            Date: {{feeReceipt.generationDateTime | date: 'dd/MM/yyyy'}}
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="row" style="margin-right: 0px;">
+                        <div class="col-xs-4">
+                            Name <span style="float: right">:</span>
+                        </div>
+                        <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px; font-weight: 800;">
+                            <i>{{ getStudent(feeReceipt.parentStudent).name | titlecase }}</i>
+                        </div>
+                    </div>
+
+                    <!-- Father's Name -->
+                    <div class="row" style="margin-right: 0px;">
+                        <div class="col-xs-4">
+                            Father's Name <span style="float: right">:</span>
+                        </div>
+                        <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+                            <i>Mr. {{ getStudent(feeReceipt.parentStudent).fathersName | titlecase }}</i>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="row" style="margin-right: 0px;">
+                        <div class="col-xs-4">
+                            Address <span style="float: right">:</span>
+                        </div>
+                        <div class="col-xs-8" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+                            <i>{{ getStudent(feeReceipt.parentStudent).address}}</i>
+                        </div>
+                    </div>
+
+                    <!-- Scholar No, Standard -->
+                    <div class="row">
+                        <div class="col-xs-6">
+                            Scholar No. : {{getStudent(feeReceipt.parentStudent).scholarNumber}}
+                        </div>
+                        <div class="col-xs-6" align="right">
+                            {{getClassName(feeReceipt)}}, {{getSectionName(feeReceipt)}}
+                        </div>
+                    </div>
+
+                    <!-- S No. , Particulars, Amount -->
+                    <div class="row" style="border-bottom: 1px solid black;
+                                            border-top: 1px solid black;
+                                            margin-bottom: 10px;
+                                            margin-top: 5px;">
+                        <div class="col-xs-2">
+                            <span style="font-weight: 400;">S. No.</span>
+                        </div>
+                        <div class="col-xs-6" >
+                            <span style="font-weight: 400;">Particulars</span>
+                        </div>
+                        <div class="col-xs-4"  align="right">
+                            <span style="font-weight: 400;">Amount</span>
+                        </div>
+                    </div>
+
+                    <ng-container *ngFor="let subFeeReceipt of getSubFeeReceiptList(feeReceipt); let subFeeReceiptIndex=index;">
+                        <div class="row"
+                             [class.tooManyRows]="getNumberOfRows(feeReceipt)>14"
+                             *ngIf="(subFeeReceipt.isAnnually && subFeeReceipt['aprilAmount'] > 0) || !subFeeReceipt.isAnnually">
+                            <div class="col-xs-2" align="center">{{subFeeReceiptIndex+1}}.</div>
+                            <div class="col-xs-6">
+                                {{getFeeType(subFeeReceipt).name}}&nbsp;
+                                <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
+                            </div>
+                            <div class="col-xs-4"
+                                 *ngIf="subFeeReceipt.isAnnually"
+                                 align="right">
+                                {{subFeeReceipt['aprilAmount']}}
+                            </div>
+                        </div>
+                        <div class="row"
+                             [class.tooManyRows]="getNumberOfRows(feeReceipt)>14"
+                             *ngIf="(subFeeReceipt.isAnnually && subFeeReceipt['aprilLateFee'] > 0)">
+                            <div class="col-xs-2" align="center">
+                                <ng-container *ngIf="subFeeReceipt['aprilAmount'] == 0">{{subFeeReceiptIndex+1}}</ng-container>
+                            </div>
+                            <div class="col-xs-6">
+                                <ng-container *ngIf="subFeeReceipt['aprilAmount'] == 0">
+                                    {{getFeeType(subFeeReceipt).name}}&nbsp;
+                                    <span *ngIf="feeReceipt.parentSession!=subFeeReceipt.parentSession">({{getSessionName(subFeeReceipt.parentSession)}})&nbsp;</span>
+                                    - <i>Late Fee</i>
+                                </ng-container>
+                                <ng-container *ngIf="subFeeReceipt['aprilAmount'] > 0">
+                                    <span style="padding-left: 40px;">- <i>Late Fee</i></span>
+                                </ng-container>
+                            </div>
+                            <div class="col-xs-4" align="right">
+                                {{subFeeReceipt['aprilLateFee']}}
+                            </div>
+                        </div>
+                        <ng-container *ngIf="!subFeeReceipt.isAnnually">
+                            <ng-container *ngFor = "let installment of installmentList; let installmentIndex=index;">
+                                <div class="row"
+                                     [class.tooManyRows]="getNumberOfRows(feeReceipt)>14"
+                                     *ngIf="subFeeReceipt[installment+'Amount'] && subFeeReceipt[installment+'Amount'] > 0">
+                                    <div class="col-xs-2" align="center"></div>
+                                    <div class="col-xs-6" style="padding-left: 40px;">
+                                        {{installment | titlecase}}
+                                    </div>
+                                    <div class="col-xs-4" align="right">{{subFeeReceipt[installment+'Amount']}}</div>
+                                </div>
+                                <div class="row"
+                                     [class.tooManyRows]="getNumberOfRows(feeReceipt)>14"
+                                     *ngIf="subFeeReceipt[installment+'LateFee'] && subFeeReceipt[installment+'LateFee'] > 0">
+                                    <div class="col-xs-2" align="center"></div>
+                                    <div class="col-xs-6" style="padding-left: 40px;">
+                                        {{installment | titlecase}} - <i>Late Fee</i>
+                                    </div>
+                                    <div class="col-xs-4" align="right">{{subFeeReceipt[installment+'LateFee']}}</div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+
+                    <div style="position: absolute; bottom: 40px; right: 20px; left: 40px;">
+
+                        <!-- Total, Total Value -->
+                        <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black;">
+                            <div class="col-xs-8">
+                                <span style="font-weight: 400">Total Amount</span>
+                            </div>
+                            <div class="col-xs-4" align="right" >
+                                <span style="font-weight: 400">{{getTotalFeeReceiptAmount(feeReceipt) | indianCurrency:true}}/-</span>
+                            </div>
+                        </div>
+
+                        <!-- Amount in words -->
+                        <div class="row" style="font-size: 10px !important;
+                                                margin-top: 5px !important;
+                                                line-height: normal !important;">
+                            <div class="col-xs-12">
+                                Amount In Words : <i style="font-weight: 400">{{getTotalFeeReceiptAmount(feeReceipt) | amountInWords}} Only</i>
+                            </div>
+                        </div>
+
+                        <div class="row" style="font-size: 10px !important; line-height: normal !important;">
+                            <div class="col-xs-12">
+                                Mode of Payment: <i style="font-weight: 400;">{{feeReceipt.modeOfPayment}}</i>
+                            </div>
+                        </div>
+
+                        <div class="row"
+                             style="font-size: 10px !important; line-height: normal !important;"
+                             *ngIf="feeReceipt.remark && feeReceipt.remark != ''">
+                            <div class="col-xs-12">
+                                Remark: <i style="font-weight: 400;">{{feeReceipt.remark}}</i>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Signature -->
+                    <div class="row" style="position: absolute;
+                                            bottom: 0px;
+                                            right: 20px;
+                                            left: 40px; font-size: 12px !important; line-height: normal !important;">
+                        <div class="col-xs-12" style="padding-right: 20px" align="end">
+                            <span style="text-align: center !important;">(Signature)<br/>{{getEmployeeName(feeReceipt.parentEmployee)}}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </ng-container>
+</ng-container>

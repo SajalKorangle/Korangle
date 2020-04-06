@@ -1,0 +1,79 @@
+<div class="wrapper hidePrint">
+
+    <div *ngIf="user.isAuthenticated" class="pageDiv">
+
+        <div class="sidebar" data-image="" style="position: fixed">
+            <app-sidebar [user]="user"></app-sidebar>
+            <div class="sidebar-background"></div>
+        </div>
+
+        <mat-progress-bar *ngIf="user.isLazyLoading"  mode="indeterminate"></mat-progress-bar>
+
+        <div class="main-panel">
+
+            <app-navbar [user]="user" class="visible-sm visible-xs"></app-navbar>
+
+            <div class="main-content">
+                <div class="container-fluid">
+
+                    <div class="card"
+                         *ngIf="user.section && user.activeSchool"
+                         style="min-height: 100%;">
+                        <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="user.activeSchool.primaryThemeColor">
+                            <div class="card-header-part1">
+                                <h4 class="title">{{user.section.title}} - {{user.section.subTitle}}</h4>
+                                <div style="display: flex">
+                                    <span style="margin-right: 15px; margin-top: 2px;font-size: 18.2px" *ngIf="lastMonthIsGoingOn()">
+                                        Valid till &nbsp;{{user.activeSchool.dateOfExpiration | date}}&nbsp;
+                                        <span *ngIf="countDownForValidity >= 0">
+                                            <b> (&nbsp;{{countDownForValidity}}&nbsp; days left !&nbsp;)</b>
+                                        </span></span>
+                                    <a style="text-decoration: none" (click)="refresh()">
+                                        <i class="material-icons">refresh</i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <router-outlet></router-outlet>
+                    </div>
+
+                    <div class="card"
+                         *ngIf="user.section && !user.activeSchool"
+                         style="min-height: 100%">
+                        <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="'green'">
+                            <div class="card-header-part1">
+                                <h4 class="title">{{user.section.title}} - {{user.section.subTitle}}</h4>
+                                <a style="text-decoration: none;" (click)="refresh()">
+                                    <i class="material-icons">refresh</i>
+                                </a>
+                            </div>
+                        </div>
+                        <router-outlet></router-outlet>
+                    </div>
+
+                </div>
+            </div>
+
+            <!--Loading-->
+            <ng-container *ngIf="isLoading">
+                <app-loading-spinner [user]="user"></app-loading-spinner>
+            </ng-container>
+
+        </div>
+
+    </div>
+
+    <div *ngIf="!user.isAuthenticated" style="min-height: 100%;background-color: white">
+        <ng-container *ngIf="isMobile()">
+            <app-login-form [user]="user"></app-login-form>
+        </ng-container>
+        <ng-container *ngIf="!isMobile()">
+            <app-frontpage [user]="user"></app-frontpage>
+        </ng-container>
+    </div>
+
+</div>
+<div class="wrapper showPrint">
+    <router-outlet name="print"></router-outlet>
+</div>
+

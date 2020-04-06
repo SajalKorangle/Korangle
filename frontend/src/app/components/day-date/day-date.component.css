@@ -1,0 +1,14 @@
+input:disabled {
+    color: black;
+}
+
+mat-form-field {
+    width: 80%;
+    max-width: 160px;
+}
+
+button {
+    width: 18%;
+    max-width: 26px;
+    margin-left: 5px;
+}

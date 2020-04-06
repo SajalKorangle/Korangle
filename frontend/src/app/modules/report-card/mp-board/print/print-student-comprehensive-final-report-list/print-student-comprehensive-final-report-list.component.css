@@ -1,0 +1,36 @@
+
+td {
+    border: 1px solid navy !important;
+}
+
+td {
+    padding: 0px 0px 0px 0px !important;
+}
+
+.customLineHeight {
+    line-height: normal;
+}
+
+svg {
+    background-color: #333;
+    /*font-family: 'Luckiest Guy', cursive;*/
+    font-size: 30px;
+}
+
+path {
+    fill: transparent;
+}
+
+table, tbody, th, tr, td {
+    background: transparent;
+}
+
+div, span, i, td, b {
+    color: navy !important;
+    text-decoration-color: navy !important;
+}
+
+.pageBreakAfter {
+    page-break-after: always;
+}
+

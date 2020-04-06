@@ -1,0 +1,240 @@
+<div class="card-content table-responsive">
+
+    <!-- Column Filter -->
+    <mat-form-field style="margin-right: 15px;">
+        <mat-select placeholder="Select Columns">
+            <mat-option>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="selectAllColumns(); $event.stopPropagation();">Select All
+                </button>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
+                </button>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation();">Serial No.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showProfileImage" (click)="$event.stopPropagation();">Profile
+                    Image
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation();">Name
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showEmployeeNumber" (click)="$event.stopPropagation();">
+                    Employee No.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showFatherName" (click)="$event.stopPropagation();">Father's
+                    Name
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showSpouseName" (click)="$event.stopPropagation();">Spouse's
+                    Name
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation();">Mobile No.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showDateOfBirth" (click)="$event.stopPropagation();">Date of
+                    Birth
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showMotherName" (click)="$event.stopPropagation();">Mother's
+                    Name
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showAadharNumber" (click)="$event.stopPropagation();">
+                    Aadhar No.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showPassportNumber" (click)="$event.stopPropagation();">
+                    Passport No.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showQualification" (click)="$event.stopPropagation();">
+                    Qualification
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showCurrentPost" (click)="$event.stopPropagation();">
+                    Post
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showDateOfJoining" (click)="$event.stopPropagation();">
+                    Joining Date
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showPanNumber" (click)="$event.stopPropagation();">
+                    Pan No.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showGender" (click)="$event.stopPropagation();">Gender
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation();">Address
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showBankName" (click)="$event.stopPropagation();">Bank Name
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showBankAccountNumber" (click)="$event.stopPropagation();">
+                    Bank Acc. No.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showEpfAccountNumber" (click)="$event.stopPropagation();">
+                    Epf Acc. No.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showMonthlySalary" (click)="$event.stopPropagation();">
+                    Salary
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showPranNumber" (click)="$event.stopPropagation();">
+                    PRAN Number
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showRemark" (click)="$event.stopPropagation();">
+                    Remark
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="selectAllColumns(); $event.stopPropagation();">Select All
+                </button>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
+                </button>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button type="button"
+            class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-sm hidden-xs"
+            style="padding: 12px 15px; margin-right: 17px;"
+            matTooltip="Print the following list"
+            tooltip-position="left"
+            (click)="printEmployeeList();">
+        Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
+
+    <button type="button"
+            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+            style="padding: 12px 15px; margin-right: 17px;"
+            matTooltip="Download the following list"
+            tooltip-position="left"
+            (click)="downloadList();">
+        Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+
+    <br><i>Displaying {{employeeProfileList.length}} employee<span *ngIf="employeeProfileList.length>1">s</span></i>
+
+    <!-- Employee Table List -->
+    <ng-container *ngIf="!isLoading">
+        <table class="table table-hover">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr>
+                <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+                <th [class.hidden]="!columnFilter.showProfileImage" style="text-align: center">Profile Image</th>
+                <th [class.hidden]="!columnFilter.showName">Name</th>
+                <th [class.hidden]="!columnFilter.showEmployeeNumber">Employee No.</th>
+                <th [class.hidden]="!columnFilter.showFatherName">Father's Name</th>
+                <th [class.hidden]="!columnFilter.showSpouseName">Spouse's Name</th>
+                <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
+                <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
+                <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
+                <th [class.hidden]="!columnFilter.showAadharNumber">Aadhar No.</th>
+                <th [class.hidden]="!columnFilter.showPassportNumber">Passport No.</th>
+                <th [class.hidden]="!columnFilter.showQualification">Qualification</th>
+                <th [class.hidden]="!columnFilter.showCurrentPost">Post</th>
+                <th [class.hidden]="!columnFilter.showDateOfJoining">Joining Date</th>
+                <th [class.hidden]="!columnFilter.showPanNumber">Pan No.</th>
+                <th [class.hidden]="!columnFilter.showGender">Gender</th>
+                <th [class.hidden]="!columnFilter.showAddress">Address</th>
+                <th [class.hidden]="!columnFilter.showBankName">Bank Name</th>
+                <th [class.hidden]="!columnFilter.showBankAccountNumber">Bank Acc. No.</th>
+                <th [class.hidden]="!columnFilter.showEpfAccountNumber">EPF Acc. No.</th>
+                <th [class.hidden]="!columnFilter.showMonthlySalary">Monthly Salary</th>
+                <th [class.hidden]="!columnFilter.showPranNumber">PRAN Number</th>
+                <th [class.hidden]="!columnFilter.showRemark">Remark</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let employee of employeeProfileList; let i = index">
+                <tr>
+                    <ng-container>
+                        <td [class.hidden]="!columnFilter.showSerialNumber">{{i+1}}.</td>
+                        <td [class.hidden]="!columnFilter.showProfileImage" align="center">
+                            <img *ngIf="employee.profileImage"
+                                 src="{{employee.profileImage}}"
+                                 style="width: 50px">
+                            <img *ngIf="!employee.profileImage"
+                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                 style="width: 50px"/>
+                        </td>
+                        <td [class.hidden]="!columnFilter.showName">{{employee.name}}</td>
+                        <td [class.hidden]="!columnFilter.showEmployeeNumber">{{employee.employeeNumber}}</td>
+                        <td [class.hidden]="!columnFilter.showFatherName">{{employee.fatherName}}</td>
+                        <td [class.hidden]="!columnFilter.showSpouseName">{{employee.spouseName}}</td>
+                        <!-- Replaced by Harry Chhabra; 18-12-19 -->
+                        <td [class.hidden]="!columnFilter.showMobileNumber">
+                            <span class="hidden-xs hidden-sm">{{employee.mobileNumber}}</span>
+                            <a class="visible-xs visible-sm" href="tel:{{employee.mobileNumber}}">Call Me</a>
+                        </td>
+                        <td [class.hidden]="!columnFilter.showDateOfBirth">
+                            {{employee.dateOfBirth | date: 'dd - MMM - yyyy'}}
+                        </td>
+                        <td [class.hidden]="!columnFilter.showMotherName">{{employee.motherName}}</td>
+                        <td [class.hidden]="!columnFilter.showAadharNumber">{{employee.aadharNumber}}</td>
+                        <td [class.hidden]="!columnFilter.showPassportNumber">{{employee.passportNumber}}</td>
+                        <td [class.hidden]="!columnFilter.showQualification">{{employee.qualification}}</td>
+                        <td [class.hidden]="!columnFilter.showCurrentPost">{{employee.currentPost}}</td>
+                        <td [class.hidden]="!columnFilter.showDateOfJoining">
+                            {{employee.dateOfJoining | date: 'dd - MMM - yyyy'}}
+                        </td>
+                        <td [class.hidden]="!columnFilter.showPanNumber">{{employee.panNumber}}</td>
+                        <td [class.hidden]="!columnFilter.showGender">{{employee.gender}}</td>
+                        <td [class.hidden]="!columnFilter.showAddress">{{employee.address}}</td>
+                        <td [class.hidden]="!columnFilter.showBankName">{{employee.bankName}}</td>
+                        <td [class.hidden]="!columnFilter.showBankAccountNumber">{{employee.bankAccountNumber}}</td>
+                        <td [class.hidden]="!columnFilter.showEpfAccountNumber">{{employee.epfAccountNumber}}</td>
+                        <td [class.hidden]="!columnFilter.showMonthlySalary">{{employee.monthlySalary}}</td>
+                        <td [class.hidden]="!columnFilter.showPranNumber">{{employee.pranNumber}}</td>
+                        <td [class.hidden]="!columnFilter.showRemark">{{employee.remark}}</td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+

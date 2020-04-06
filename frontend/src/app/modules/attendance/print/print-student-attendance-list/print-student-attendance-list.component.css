@@ -1,0 +1,35 @@
+.text-warning {
+    background-color: #ff9800 !important;
+    color: white !important;
+}
+
+.text-primary {
+    background-color: #9c27b0 !important;
+    color: white !important;
+}
+
+.text-danger {
+    background-color: #f44336 !important;
+    color: white !important;
+}
+
+.text-success {
+    background-color: #4caf50 !important;
+    color: white !important;
+}
+
+.text-info {
+    background-color: #00bcd4 !important;
+    color: white !important;
+}
+
+.text-rose {
+    background-color: #e91e63 !important;
+    color: white !important;
+}
+
+.text-gray {
+    background-color: #999999 !important;
+    color: white !important;
+}
+

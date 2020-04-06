@@ -1,0 +1,117 @@
+<div class="card-content">
+
+    <div class="row">
+        <div class="col-md-12" align="center">
+            <month-date [user]="user"
+                        [showButton]="true"
+                        [biggerFont]="true"
+                        (onMonthSelected)="onMonthSelected($event)"></month-date>
+        </div>
+    </div>
+
+    <!-- br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
+    <button type="submit"
+            style="padding: 3px 8px;"
+            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+            (click)="getEmployeeAttendanceStatusList()">Get</button -->
+
+    <div class="row">
+        <div class="col-md-12"
+             style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px;"></div>
+    </div>
+
+    <div class="row" *ngIf="showCalendar && !isLoading">
+        <div class="col-md-6">
+
+            <div class="calendar">
+                <!-- div class="calendar-navs">
+                    <div class="month-nav">
+                        <button (click)="prevMonth()">&lt;</button>
+                        <span class="p4">{{ currentDate.format('MMMM') }}</span>
+                        <button (click)="nextMonth()">&gt;</button>
+                    </div>
+                    <div class="year-nav">
+                        <button (click)="prevYear()">&lt;</button>
+                        <span>{{ currentDate.format('YYYY') }}</span>
+                        <button (click)="nextYear()">&gt;</button>
+                    </div>
+                </div -->
+                <div class="month-grid">
+                    <div class="day-names">
+                        <div *ngFor="let name of dayNames"
+                             class="day-name p9"
+                             [attr.data-background-color]="user.activeSchool.primaryThemeColor">
+                            {{ name }}
+                        </div>
+                    </div>
+                    <div class="weeks">
+                        <div *ngFor="let week of weeks" class="week">
+                            <ng-container *ngFor="let day of week">
+                                <div class="unselectable week-date disabled"
+                                     *ngIf="!isSelectedMonth(day.mDate)">
+                                    <span class="date-text">{{ day.mDate.date() }}</span>
+                                </div>
+                                <div class="unselectable week-date enabled background-color-{{getDateColor(day.mDate)}}"
+                                     [class.text-color-blue]="getDateColor(day.mDate)==''"
+                                     *ngIf="isSelectedMonth(day.mDate)">
+                                    <span class="date-text">&nbsp;&nbsp;{{ day.mDate.date() }}&nbsp;&nbsp;</span>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6" style="padding-top: 10px;">
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <span class="background-color-red">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span class="attStatus">
+                        Absent: <b>{{getAttendanceStatusNumber(ATTENDANCE_STATUS_LIST[1])
+                                    + (0.5*getAttendanceStatusNumber(ATTENDANCE_STATUS_LIST[3]))}}</b>
+                    </span>
+                </div>
+                <div class="col-xs-6">
+                    <span class="background-color-green">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span class="attStatus">
+                        Present: <b>{{getAttendanceStatusNumber(ATTENDANCE_STATUS_LIST[0])
+                                    + (0.5*getAttendanceStatusNumber(ATTENDANCE_STATUS_LIST[3]))}}</b>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <span class="background-color-orange">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span class="attStatus">
+                        Holidays: <b>{{getAttendanceStatusNumber(ATTENDANCE_STATUS_LIST[2])}}</b>
+                    </span>
+                </div>
+                <div class="col-xs-6">
+                    <span class="background-color-white">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span class="text-color-blue attStatus">
+                        Not Taken: <b>{{currentMoment.daysInMonth()-attendanceStatusList.length}}</b>
+                    </span>
+                </div>
+            </div>
+            <!-- div class="row">
+                <div class="col-xs-6">
+                    <span class="attStatus">
+                        Total: <b>{{currentMoment.daysInMonth()}}</b>
+                    </span>
+                </div>
+            </div -->
+
+        </div>
+    </div>
+
+    <br/>
+    ** <span class="background-color-yellow">&nbsp;&nbsp;&nbsp;&nbsp;</span> denotes Half day.
+
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
