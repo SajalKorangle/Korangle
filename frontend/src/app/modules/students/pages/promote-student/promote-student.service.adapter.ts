@@ -63,8 +63,8 @@ export class PromoteStudentServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_one),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_two),
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list),
@@ -140,7 +140,7 @@ export class PromoteStudentServiceAdapter {
         let student_subject_list = [];
 
         this.vm.classSubjectList.filter(classSubject => {
-            return classSubject.parentClass == this.vm.toSelectedClass.dbId
+            return classSubject.parentClass == this.vm.toSelectedClass.id
                 && classSubject.parentDivision == this.vm.toSelectedSection.id;
         }).forEach(classSubject => {
             this.vm.newPromotedList.forEach(studentSection => {
@@ -155,7 +155,7 @@ export class PromoteStudentServiceAdapter {
         let student_test_list = [];
 
         this.vm.testSecondList.filter(testSecond => {
-            return testSecond.parentClass == this.vm.toSelectedClass.dbId
+            return testSecond.parentClass == this.vm.toSelectedClass.id
                 && testSecond.parentDivision == this.vm.toSelectedSection.id;
         }).forEach(testSecond => {
             this.vm.newPromotedList.forEach(studentSection => {
@@ -183,7 +183,7 @@ export class PromoteStudentServiceAdapter {
                 }).every(schoolFeeRule => {
                     if (schoolFeeRule.isClassFilter && this.vm.classFilterFeeList.find(classFilterFee => {
                         return classFilterFee.parentSchoolFeeRule == schoolFeeRule.id
-                            && classFilterFee.parentClass == this.vm.toSelectedClass.dbId
+                            && classFilterFee.parentClass == this.vm.toSelectedClass.id
                             && classFilterFee.parentDivision == this.vm.toSelectedSection.id;
                     }) == undefined) {
                         return true;

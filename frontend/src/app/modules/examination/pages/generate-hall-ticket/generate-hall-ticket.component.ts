@@ -4,7 +4,7 @@ import {ExaminationOldService} from '../../../../services/modules/examination/ex
 import {ExaminationService} from '../../../../services/modules/examination/examination.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {SubjectOldService} from '../../../../services/modules/subject/subject-old.service';
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 
 import { GenerateHallTicketServiceAdapter } from './generate-hall-ticket.service.adapter';
 import { PrintService } from '../../../../print/print-service';
@@ -16,7 +16,7 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
     selector: 'generate-hall-ticket',
     templateUrl: './generate-hall-ticket.component.html',
     styleUrls: ['./generate-hall-ticket.component.css'],
-    providers: [ ExaminationOldService,ExaminationService, SubjectOldService, StudentOldService, ClassOldService, SchoolService ],
+    providers: [ ExaminationOldService, SubjectOldService, StudentOldService, ClassService, SchoolService, ExaminationService ],
 })
 
 export class GenerateHallTicketComponent implements OnInit {
@@ -38,8 +38,8 @@ export class GenerateHallTicketComponent implements OnInit {
                 public examinationService : ExaminationService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
-                public schoolService: SchoolService,
-                public classService: ClassOldService,
+                public schoolService: SchoolService,                
+                public classService : ClassService,
                 private printService: PrintService) {}
 
     ngOnInit(): void {

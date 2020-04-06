@@ -70,8 +70,8 @@ export class SendSmsServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
@@ -203,7 +203,7 @@ export class SendSmsServiceAdapter {
         this.classList.forEach(classs => {
             this.sectionList.forEach(section => {
                 if (this.vm.studentSectionList.find(studentSection => {
-                    return studentSection.parentClass == classs.dbId && studentSection.parentDivision == section.id;
+                    return studentSection.parentClass == classs.id && studentSection.parentDivision == section.id;
                     }) != undefined) {
                     this.vm.classSectionList.push(
                         {
@@ -242,7 +242,7 @@ export class SendSmsServiceAdapter {
             }
         });
         this.vm.studentSectionList = this.vm.studentSectionList.sort((a,b) => {
-            return 10*(this.classList.find(item => item.dbId==a.parentClass).orderNumber - this.classList.find(item => item.dbId==b.parentClass).orderNumber)
+            return 10*(this.classList.find(item => item.id==a.parentClass).orderNumber - this.classList.find(item => item.id==b.parentClass).orderNumber)
                 + (this.sectionList.find(item => item.id==a.parentDivision).orderNumber = this.sectionList.find(item => item.id==b.parentDivision).orderNumber);
         });
     }

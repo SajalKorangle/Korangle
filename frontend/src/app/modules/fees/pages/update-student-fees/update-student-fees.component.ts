@@ -10,7 +10,7 @@ import {SubFeeReceipt} from "../../../../services/modules/fees/models/sub-fee-re
 import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount";
 import {FeeType} from "../../../../services/modules/fees/models/fee-type";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -18,7 +18,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'update-student-fees',
     templateUrl: './update-student-fees.component.html',
     styleUrls: ['./update-student-fees.component.css'],
-    providers: [ FeeService, ClassOldService, VehicleOldService ],
+    providers: [ FeeService,ClassService, VehicleOldService ],
 })
 
 export class UpdateStudentFeesComponent implements OnInit {
@@ -68,8 +68,8 @@ export class UpdateStudentFeesComponent implements OnInit {
     
     isStudentListLoading = false;
 
-    constructor(public feeService: FeeService,
-                public classService: ClassOldService,
+    constructor(public feeService: FeeService,                
+                public classService : ClassService,
                 public vehicleService: VehicleOldService,
                 private cdRef: ChangeDetectorRef) {}
 
@@ -241,7 +241,7 @@ export class UpdateStudentFeesComponent implements OnInit {
 
     getClassName(classDbId: number): string {
         return this.classList.find(classs => {
-            return classs.dbId == classDbId;
+            return classs.id == classDbId;
         }).name;
     }
 

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
 import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 
 import { UpdateMarksServiceAdapter } from './update-marks.service.adapter';
@@ -16,7 +16,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ ExaminationOldService,ExaminationService, ClassOldService, SubjectOldService, StudentOldService ],
+    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService, ExaminationService ],
 })
 
 export class UpdateMarksComponent implements OnInit {
@@ -42,7 +42,7 @@ export class UpdateMarksComponent implements OnInit {
 
     constructor(public examinationOldService: ExaminationOldService,
                 public examinationService : ExaminationService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService,
                 private cdRef: ChangeDetectorRef) {}

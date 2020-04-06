@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -61,7 +61,7 @@ const RELIGION_LIST = [
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentOldService, ClassOldService],
+    providers: [StudentOldService, ClassService],
 })
 
 export class UpdateAllComponent implements OnInit {
@@ -129,8 +129,8 @@ export class UpdateAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private studentService: StudentOldService,
-                private classService: ClassOldService,
+    constructor(private studentService: StudentOldService,                
+                private classService : ClassService,
                 private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
@@ -145,12 +145,16 @@ export class UpdateAllComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
+            this.classService.getObjectList(this.classService.classs,{}),
+            this.classService.getObjectList(this.classService.division,{}),            
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
+            value[0].forEach(classs=>{
+                classs.sectionList = value[1];
+            })
             this.initializeClassSectionList(value[0]);
-            this.initializeStudentFullProfileList(value[1]);
+            this.initializeStudentFullProfileList(value[2]);
         }, error => {
             this.isLoading = false;
         });
@@ -182,7 +186,7 @@ export class UpdateAllComponent implements OnInit {
         let sectionObject = null;
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
+                if (sectionDbId === section.id && classDbId === classs.id) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;

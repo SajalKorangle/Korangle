@@ -2,8 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
 
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
-
+import { ClassService } from '../../../../services/modules/class/class.service';
 
 
 import {FormControl} from '@angular/forms';
@@ -16,7 +15,7 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
   selector: 'assign-class',
   templateUrl: './assign-class.component.html',
   styleUrls: ['./assign-class.component.css'],
-    providers: [ EmployeeOldService, AttendanceOldService, ClassOldService, SchoolService ],
+    providers: [ EmployeeOldService, AttendanceOldService,ClassService, SchoolService ],
 })
 
 export class AssignClassComponent implements OnInit {
@@ -44,8 +43,8 @@ export class AssignClassComponent implements OnInit {
 
     constructor (private employeeService: EmployeeOldService,
                  private attendanceService: AttendanceOldService,
-                 private schoolService: SchoolService,
-                 private classService: ClassOldService) { }
+                 private schoolService: SchoolService,                 
+                 private classService : ClassService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -62,13 +61,17 @@ export class AssignClassComponent implements OnInit {
 
         Promise.all([
             this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
-            this.classService.getClassSectionList(request_class_data, this.user.jwt),
+            this.classService.getObjectList(this.classService.classs,{}),
+            this.classService.getObjectList(this.classService.division,{}),            
             this.schoolService.getObjectList(this.schoolService.board, {}),
         ]).then(value => {
+            value[1].forEach(classs=>{
+                classs.sectionList = value[2]
+            })
             this.isLoading = false;
             this.initializeEmployeeList(value[0]);
             this.initializeClassSectionList(value[1]);
-            this.boardList = value[2];
+            this.boardList = value[3];
             this.populatePageList();
         }, error => {
             this.isLoading = false;
@@ -86,8 +89,9 @@ export class AssignClassComponent implements OnInit {
         );
     }
 
-    initializeClassSectionList(classSectionList: any): void {
+    initializeClassSectionList(classSectionList: any): void {        
         this.classSectionList = classSectionList;
+        console.log(this.classSectionList)
         this.classSectionList.forEach( classs => {
             classs.selectedSection = classs.sectionList[0];
         });
@@ -130,8 +134,8 @@ export class AssignClassComponent implements OnInit {
     showAddButton(): boolean {
         let result = true;
         this.selectedEmployeeAttendancePermissionList.every(attendancePermission => {
-            if (attendancePermission.parentDivision === this.selectedClass.selectedSection.dbId
-                && attendancePermission.parentClass === this.selectedClass.dbId) {
+            if (attendancePermission.parentDivision === this.selectedClass.selectedSection.id
+                && attendancePermission.parentClass === this.selectedClass.id) {
                 result = false;
                 return false;
             }
@@ -144,7 +148,7 @@ export class AssignClassComponent implements OnInit {
         let result = '';
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (section.dbId === sectionDbId && classs.dbId === classDbId) {
+                if (section.id === sectionDbId && classs.id === classDbId) {
                     result = classs.name + ', ' + section.name;
                     return false;
                 }
@@ -163,8 +167,8 @@ export class AssignClassComponent implements OnInit {
         let data = {
             parentEmployee: this.selectedEmployee.id,
             parentSession: this.user.activeSchool.currentSessionDbId,
-            parentClass: this.selectedClass.dbId,
-            parentDivision: this.selectedClass.selectedSection.dbId,
+            parentClass: this.selectedClass.id,
+            parentDivision: this.selectedClass.selectedSection.id,
         };
 
         this.isLoading = true;

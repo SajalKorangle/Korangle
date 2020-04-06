@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {SubjectService} from "../../../../services/modules/subject/subject.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
@@ -17,7 +17,7 @@ import {SchoolService} from "./../../../../services/modules/school/school.servic
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ SchoolService, StudentService, ClassOldService, SubjectService, ExaminationService, FeeService ],
+    providers: [ SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
@@ -56,7 +56,7 @@ export class PromoteStudentComponent implements OnInit {
 
     constructor (public schoolService : SchoolService,
                  public studentService: StudentService,
-                 public classService: ClassOldService,
+                 public classService: ClassService,
                  public subjectService: SubjectService,
                  public feeService: FeeService,
                  public examinationService: ExaminationService) { }

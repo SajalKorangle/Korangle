@@ -104,7 +104,7 @@
                 <mat-option *ngFor="let classSection of classSectionList" style="width: 100%;">
                     <mat-checkbox [(ngModel)]="classSection.selected"
                                   (click)="$event.stopPropagation();">
-                        {{getClassSectionName(classSection.class.dbId,classSection.section.id)}}
+                        {{getClassSectionName(classSection.class.id,classSection.section.id)}}
                     </mat-checkbox>
                 </mat-option>
 

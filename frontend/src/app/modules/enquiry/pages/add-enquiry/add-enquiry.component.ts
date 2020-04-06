@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -20,14 +20,14 @@ export class AddEnquiryComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private enquiryService: EnquiryOldService,
-                 private classService: ClassOldService) { }
+    constructor (private enquiryService: EnquiryOldService,                 
+                 private classService : ClassService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.newEnquiry = {};
 
-        this.classService.getClassList(this.user.jwt).then(classList => {
+        this.classService.getObjectList(this.classService.classs,{}).then(classList => {
             this.classList = classList;
         });
 

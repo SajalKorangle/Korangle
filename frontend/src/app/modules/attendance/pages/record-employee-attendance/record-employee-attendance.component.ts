@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 
@@ -10,14 +9,15 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_ATTENDANCE } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
+import {ClassService} from '../../../../services/modules/class/class.service';
 
 @Component({
   selector: 'record-employee-attendance',
   templateUrl: './record-employee-attendance.component.html',
   styleUrls: ['./record-employee-attendance.component.css'],
     providers: [
-        AttendanceOldService,
-        ClassOldService,
+        AttendanceOldService,        
+        ClassService,
         EmployeeOldService,
     ],
 })

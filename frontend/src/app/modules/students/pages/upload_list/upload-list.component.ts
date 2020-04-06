@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {VehicleOldService} from '../../../../services/modules/vehicle/vehicle-old.service';
 import {SchoolService} from '../../../../services/modules/school/school.service'
@@ -167,7 +167,7 @@ const RTE_VALUES = [
     selector: 'upload-list',
     templateUrl: './upload-list.component.html',
     styleUrls: ['./upload-list.component.css'],
-    providers: [SchoolService, StudentOldService, ClassOldService, VehicleOldService,],
+    providers: [SchoolService, StudentOldService, ClassService, VehicleOldService,],
 })
 
 export class UploadListComponent implements OnInit {
@@ -205,7 +205,7 @@ export class UploadListComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                private classService: ClassOldService,
+                public classService : ClassService,
                 private schoolService: SchoolService,
                 private excelService: ExcelService,
                 private vehicleService: VehicleOldService) { }
@@ -222,9 +222,9 @@ export class UploadListComponent implements OnInit {
         this.isLoading = true;
         Promise.all([
             this.vehicleService.getBusStopList(request_bus_stop_data, this.user.jwt),
-            this.classService.getClassList(this.user.jwt),
+            this.classService.getObjectList(this.classService.classs,{}),
             this.schoolService.getObjectList(this.schoolService.session,{}),
-            this.classService.getSectionList(this.user.jwt),
+            this.classService.getObjectList(this.classService.division,{}),
         ]).then(value => {
             this.isLoading = false;
             this.busStopList = value[0];
@@ -766,7 +766,7 @@ export class UploadListComponent implements OnInit {
         let result = null;
         this.classList.every(classs => {
             if (classs.name === className) {
-                result = classs.dbId;
+                result = classs.id;
                 return false;
             }
             return true;

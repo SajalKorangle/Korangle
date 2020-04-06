@@ -3,7 +3,7 @@ import { GenerateFeesReportServiceAdapter } from "./generate-fees-report.service
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "./../../../../services/modules/school/school.service"
 
@@ -11,7 +11,7 @@ import {SchoolService} from "./../../../../services/modules/school/school.servic
     selector: 'generate-fees-report',
     templateUrl: './generate-fees-report.component.html',
     styleUrls: ['./generate-fees-report.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService,SchoolService ],
+    providers: [ FeeService, StudentService, ClassService, SchoolService ],
 })
 
 export class GenerateFeesReportComponent implements OnInit {
@@ -46,11 +46,11 @@ export class GenerateFeesReportComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public schoolService : SchoolService,
+    constructor(public schoolService: SchoolService,
                 public feeService: FeeService,
-                public studentService: StudentService,
-                public classService: ClassOldService,
-                private cdRef: ChangeDetectorRef,) {}
+                public studentService: StudentService,                
+                public classService : ClassService,
+                private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -278,7 +278,7 @@ export class GenerateFeesReportComponent implements OnInit {
             });
 
             student['class'] = this.classList.find(classs => {
-                return studentSection.parentClass == classs.dbId;
+                return studentSection.parentClass == classs.id;
             });
 
             student['section'] = this.sectionList.find(section => {

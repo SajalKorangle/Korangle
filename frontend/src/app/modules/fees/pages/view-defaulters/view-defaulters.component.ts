@@ -2,9 +2,9 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import { SmsService } from "../../../../services/modules/sms/sms.service";
 import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
 import {NotificationService} from "../../../../services/modules/notification/notification.service";
 import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
@@ -16,7 +16,7 @@ import { SchoolService } from 'app/services/modules/school/school.service';
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService, SchoolService ],
+    providers: [ FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService ],
 })
 
 export class ViewDefaultersComponent implements OnInit {
@@ -78,10 +78,10 @@ export class ViewDefaultersComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public schoolService : SchoolService,
+    constructor(public schoolService: SchoolService,
                 public feeService: FeeService,
-                public studentService: StudentService,
-                public classService: ClassOldService,
+                public studentService: StudentService,                
+                public classService : ClassService,
                 private excelService: ExcelService,
                 public notificationService: NotificationService,
                 public userService: UserService,
@@ -281,7 +281,7 @@ export class ViewDefaultersComponent implements OnInit {
             });
 
             student['class'] = this.classList.find(classs => {
-                return studentSection.parentClass == classs.dbId;
+                return studentSection.parentClass == classs.id;
             });
 
             student['section'] = this.sectionList.find(section => {
@@ -343,9 +343,9 @@ export class ViewDefaultersComponent implements OnInit {
 
     }
 
-    checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
+    checkAndAddToFilteredClassSectionList(classs: any, section: any): void {        
         if (this.filteredClassSectionList.find(classSection => {
-            return classSection.class.dbId == classs.dbId && classSection.section.id == section.id;
+            return classSection.class.id == classs.id && classSection.section.id == section.id;
         }) == undefined) {
             this.filteredClassSectionList.push({
                 'class': classs,

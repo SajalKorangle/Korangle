@@ -62,8 +62,8 @@ export class UpdateMarksServiceAdapter {
 
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
@@ -220,7 +220,7 @@ export class UpdateMarksServiceAdapter {
     isExaminationClassInTestList(examination: any, classs: any): boolean {
         let result = false;
         this.testList.every(item => {
-            if (item.parentClass === classs.dbId
+            if (item.parentClass === classs.id
                 && item.parentExamination === examination.id) {
                 result = true;
                 return false;
@@ -234,7 +234,7 @@ export class UpdateMarksServiceAdapter {
         let result = false;
         this.testList.every(item => {
             if (item.parentExamination === examination.id
-                && item.parentClass === classs.dbId
+                && item.parentClass === classs.id
                 && item.parentDivision === section.id) {
                 result = true;
                 return false;
@@ -248,7 +248,7 @@ export class UpdateMarksServiceAdapter {
         let result = [];
         this.testList.forEach(item => {
             if (item.parentExamination === examination.id
-                && item.parentClass === classs.dbId
+                && item.parentClass === classs.id
                 && item.parentDivision === section.id
                 && item.parentSubject === subject.id) {
                 result.push(item);
@@ -291,7 +291,7 @@ export class UpdateMarksServiceAdapter {
     getStudentIdListForSelectedItems(): any {
         let id_list = [];
         this.student_mini_profile_list.forEach(item => {
-            if (item.classDbId === this.vm.selectedExamination.selectedClass.dbId
+            if (item.classDbId === this.vm.selectedExamination.selectedClass.id
                 && item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id) {
                 id_list.push(item.dbId);
             }
@@ -302,7 +302,7 @@ export class UpdateMarksServiceAdapter {
     populateStudentList(student_test_list: any): void {
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject['studentList'] = [];
         this.student_mini_profile_list.filter(item => {
-            if (item.classDbId === this.vm.selectedExamination.selectedClass.dbId
+            if (item.classDbId === this.vm.selectedExamination.selectedClass.id
                 && item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id) {
                 return true;
             }
