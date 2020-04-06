@@ -6,7 +6,12 @@ import {StudentOldService} from '../../../../services/modules/student/student-ol
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
+<<<<<<< HEAD
 import {DataStorage} from "../../../../classes/data-storage";
+=======
+import { SESSION_LIST } from '../../../../classes/constants/session';
+import { BusStopService } from '../../../../services/bus-stop.service';
+>>>>>>> frontend/add-more-studentDetails
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -36,6 +41,12 @@ class ColumnFilter {
     showBloodGroup = false;
     showFatherAnnualIncome = false;
     showRTE = false;
+<<<<<<< HEAD
+=======
+    showAdmissionSession = false;
+    showBusStopName = false;
+    showDateOfAdmission = false;
+>>>>>>> frontend/add-more-studentDetails
     showRemark = false;
 }
 
@@ -43,12 +54,18 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
+<<<<<<< HEAD
     providers: [StudentOldService, ClassOldService, ExcelService],
+=======
+    providers: [StudentOldService, ClassService, ExcelService, BusStopService],
+>>>>>>> frontend/add-more-studentDetails
 })
 
 export class ViewAllComponent implements OnInit {
 
      user;
+
+    session_list = SESSION_LIST;
 
     columnFilter: ColumnFilter;
 
@@ -81,12 +98,17 @@ export class ViewAllComponent implements OnInit {
 
     studentFullProfileList = [];
 
+    busStopList = [];
+
+    addmissionSession: string;
+
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
                 private classService: ClassOldService,
                 private excelService: ExcelService,
-                private printService: PrintService) { }
+                private printService: PrintService,
+                private busStopService: BusStopService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -105,10 +127,12 @@ export class ViewAllComponent implements OnInit {
         Promise.all([
             this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
+            this.busStopService.getBusStopList(student_full_profile_request_data, this.user.jwt)
         ]).then(value => {
             this.isLoading = false;
             this.initializeClassSectionList(value[0]);
             this.initializeStudentFullProfileList(value[1]);
+            this.busStopList = value[2];            
         }, error => {
             this.isLoading = false;
         });
@@ -143,6 +167,32 @@ export class ViewAllComponent implements OnInit {
         });
         this.handleStudentDisplay();
     }
+
+    getAdmissionSession(admissionSessionDbId: number): string {
+        let admissionSession = null;
+        this.session_list.every(session => {
+            if (session.id === admissionSessionDbId) {
+                admissionSession = session.name;
+                return false;
+            }
+            return true;
+        });
+        return admissionSession;
+    }
+
+    getBusStopName(busStopDbId: any) {
+        let stopName = 'None';
+        if (busStopDbId !== null) {
+            this.busStopList.forEach(busStop => {
+                if (busStop.dbId == busStopDbId) {
+                    stopName = busStop.stopName;
+                    return;
+                }
+            });
+        }
+        return stopName;
+    }
+
 
     getSectionObject(classDbId: any, sectionDbId: number): any {
         let sectionObject = null;
