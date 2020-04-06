@@ -1,0 +1,90 @@
+<div class="card-content">
+    <ng-container *ngIf="!isInitialLoading">
+
+        <div class="row">
+            <div class="col-md-12" *ngIf="gradeList.length > 0">
+
+                <mat-form-field style="margin-right: 5px;">
+                    <mat-select placeholder="Select Class"
+                                [ngModel]="selectedClass"
+                                (ngModelChange)="selectClass($event)">
+                        <mat-option *ngFor="let classs of classList;" [value]="classs.id">
+                            {{classs.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="selectedClass!=null" style="margin-right: 5px;">
+                    <mat-select placeholder="Select Section"
+                                [ngModel]="selectedSection"
+                                (ngModelChange)="selectedSection = $event; showTestDetails = false">
+                        <mat-option *ngFor='let section of sectionList;' [value]="section.id">
+                            {{section.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="selectedClass!=null" style="margin-right: 5px;">
+                    <mat-select placeholder="Select Grade"
+                                [ngModel]="selectedGrade"
+                                (ngModelChange)="selectedGrade = $event;showTestDetails = false">
+                        <mat-option *ngFor='let grade of gradeList;' [value]="grade">
+                            {{grade.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button type="submit"
+                        style="margin-left: 20px;"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="serviceAdapter.getStudentSubGradeDetails()">GET</button>
+            </div>
+
+            <div class="col-md-9" *ngIf="gradeList.length === 0">
+                No Grade Present
+            </div>
+
+        </div>
+
+
+        <ng-container *ngIf="showTestDetails && !isLoading">
+
+            <table *ngIf="!noStudentPresent" class="table table-hover">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th>S No.</th>
+                    <th>Student</th>
+                    <th>Roll No.</th>
+                    <th *ngFor="let subGrade of selectedGrade.subGradeList">
+                        {{subGrade.name}}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let student of getFilteredStudentList(); let i=index;">
+                    <td>{{(i+1)}}.</td>
+                    <td>{{student.name}}</td>
+                    <td>{{student.studentSection.rollNumber}}</td>
+                    <td *ngFor="let studentSubGrade of student.subGradeList">
+                        {{studentSubGrade.gradeObtained}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="row" *ngIf="noStudentPresent">
+                <div class="col-md-9">
+                    No Student Present
+                </div>
+            </div>
+
+        </ng-container>
+
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading || isInitialLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

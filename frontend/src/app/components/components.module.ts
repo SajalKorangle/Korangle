@@ -24,6 +24,7 @@ import { DayDateOldComponent } from './day-date-old/day-date-old.component';
 import { DayDateComponent } from "./day-date/day-date.component";
 import { EmployeeFilterComponent } from './employee-filter/employee-filter.component';
 import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
+import {CustomReportCardComponent} from "./custom-report-card/custom-report-card.component";
 
 // Pipes
 
@@ -45,6 +46,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         IndianCurrencyPipe,
 
         EmployeeFilterComponent,
+        CustomReportCardComponent
 
     ],
     imports: [
@@ -79,6 +81,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MonthDateComponent,
         DayDateOldComponent,
         DayDateComponent,
+        CustomReportCardComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,

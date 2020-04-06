@@ -362,6 +362,7 @@ export class GradeStudentFieldsServiceAdapter {
             alert('Error updating marks');
         });
     }
+<<<<<<< HEAD
 
     updateAllRemainingStudentFields(): void {
 
@@ -421,3 +422,6 @@ export class GradeStudentFieldsServiceAdapter {
 
     }
 }
+=======
+}
+>>>>>>> frontend/custom_report_card
