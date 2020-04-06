@@ -59,6 +59,9 @@ class Employee(models.Model):
     # Joining Date
     dateOfJoining = models.DateField(null=True)
 
+    #Bank IFSC Code
+    bankIfscCode = models.TextField(null=True, blank=True)
+
     # Bank Name
     bankName = models.TextField(null=True)
 
