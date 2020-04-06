@@ -13,6 +13,9 @@ import {DeleteEmployeeServiceAdapter} from './delete-employee.service.adapter';
 export class DeleteEmployeeComponent implements OnInit {
 
   user;
+
+  isLoading = false;
+  selectedEmployee = null;
   serviceAdapter: DeleteEmployeeServiceAdapter;
 
   constructor (public employeeOldService: EmployeeOldService,
@@ -25,4 +28,7 @@ export class DeleteEmployeeComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
+  enableDelete(){
+    return true;
+  }
 }

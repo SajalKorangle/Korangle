@@ -18,4 +18,15 @@ export class DeleteEmployeeServiceAdapter {
 
     }
 
+    getEmployeeDetails(employee:any){
+        this.vm.isLoading = true;
+        let request_data = {
+            'id' : employee.id
+        };
+        this.vm.employeeService.getObject(this.vm.employeeService.employees,request_data).then(val=>{
+            this.vm.selectedEmployee = val;
+            this.vm.isLoading = false;
+        });
+    }
+
 }
