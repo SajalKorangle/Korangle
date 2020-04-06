@@ -10,6 +10,7 @@ import { CustomReportCardService } from '../../../../../services/modules/custom_
 import { GradeService } from '../../../../../services/modules/grade/grade.service';
 import { ClassService } from '../../../../../services/modules/class/class.service';
 import { SchoolService } from '../../../../../services/modules/school/school.service';
+import {EXAM_COLUMN_TYPE, STUDENT_DETAILS_FOOTER, STUDENT_DETAILS_HEADER, STUDENT_DETAILS_FOOTER_KEYS, STUDENT_DETAILS_HEADER_KEYS} from '../../classes/constants';
 
 
 class LayoutExamColumnHandle{
@@ -102,6 +103,11 @@ export class ManageLayoutComponent implements OnInit {
     isLoading:Boolean;
     layoutList:any = [];
     selectedLayout:LayoutParameter;
+    EXAM_COLUMN_TYPE = EXAM_COLUMN_TYPE;
+    STUDENT_DETAILS_FOOTER = STUDENT_DETAILS_FOOTER;
+    STUDENT_DETAILS_HEADER = STUDENT_DETAILS_HEADER;
+    STUDENT_DETAILS_FOOTER_KEYS = STUDENT_DETAILS_FOOTER_KEYS;
+    STUDENT_DETAILS_HEADER_KEYS = STUDENT_DETAILS_HEADER_KEYS;
 
     examinationList = [];
     layoutExamColumnList = [];
@@ -116,46 +122,7 @@ export class ManageLayoutComponent implements OnInit {
     // SubGrades
     subGradeList = [];
     layoutSubGradeList = [];
-
-    EXAM_COLUMN_TYPE = [
-        'Simple', // Default selected
-        'Oral/Written',
-        'Practical/Theory',
-    ];
-
     
-    STUDENT_DETAILS_HEADER = {
-        'studentNameOrderNumber':'Student Name',
-        'fatherNameOrderNumber':'Father\'s Name',
-        'motherNameOrderNumber': 'Mother\'s Name',
-        'classOrderNumber':'Class',
-        'rollNoOrderNumber': 'Roll No.',
-        'scholarNoOrderNumber': 'Scholar No.',
-        'dateOfBirthOrderNumber': 'Date of birth',
-        'dateOfBirthInWordsOrderNumber': 'Date of birth( in words )',
-        'aadharNumberOrderNumber': 'Aadhar No',
-        'categoryOrderNumber': 'Category',
-        'familySSMIDOrderNumber': 'Family SSMID',
-        'childSSMIDOrderNumber': 'Child SSMID',
-        'sectionOrderNumber': 'Section',
-        'casteOrderNumber':'Caste',
-        'addressOrderNumber':'Address',
-        'classAndSectionOrderNumber':'Class and Section'
-    };
-    
-    STUDENT_DETAILS_FOOTER = {
-        'attendanceOrderNumber':'Attendance',
-        'overallMarksOrderNumber':'Overall marks',
-        'resultOrderNumber':'Result',
-        'percentageOrderNumber':'Percentage',
-        'promotedToClassOrderNumber':'Promoted to class',
-
-    };
-    
-    
-    STUDENT_DETAILS_HEADER_KEYS = Object.keys(this.STUDENT_DETAILS_HEADER);
-    STUDENT_DETAILS_FOOTER_KEYS = Object.keys(this.STUDENT_DETAILS_FOOTER);
-
     serviceAdapter: ManageLayoutServiceAdapter;
 
 
