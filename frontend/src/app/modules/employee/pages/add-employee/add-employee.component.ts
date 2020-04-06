@@ -2,11 +2,13 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import {BankService} from '../../../../services/bank.service';
 
 @Component({
   selector: 'add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.css'],
+  providers:[BankService]
 })
 
 export class AddEmployeeComponent implements OnInit {
@@ -20,7 +22,8 @@ export class AddEmployeeComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeOldService) { }
+    constructor (private employeeService: EmployeeOldService,
+                 private bankService: BankService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -57,6 +60,15 @@ export class AddEmployeeComponent implements OnInit {
             return false;
         }
         return true;
+    }
+
+    getBankDetails(){
+        if(this.newEmployee.bankIfscCode.length < 11){
+            return ;
+        }
+        this.bankService.getDetailsFromIFSCCode(this.newEmployee.bankIfscCode.toString()).then(value=>{
+            this.newEmployee.bankName = value ;
+        });
     }
 
     createNewEmployee(): void {

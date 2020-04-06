@@ -257,6 +257,15 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
+                    <mat-label >Bank Ifsc Code</mat-label>
+                    <input matInput
+                           type="text"
+                           (ngModelChange)="newStudent.bankIfscCode=$event;serviceAdapter.getBankDetails()"
+                           [ngModel]="newStudent.bankIfscCode">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
                     <mat-label >Bank Name</mat-label>
                     <input matInput
                            type="text"
@@ -269,14 +278,6 @@
                     <input matInput
                            type="text"
                            [(ngModel)]="newStudent.bankAccountNum">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <mat-label >Bank Ifsc Code</mat-label>
-                    <input matInput
-                           type="text"
-                           [(ngModel)]="newStudent.bankIfscCode">
                 </mat-form-field>
             </div>
         </div>
