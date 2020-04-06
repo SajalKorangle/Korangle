@@ -1,0 +1,18 @@
+<table *ngIf="template" class="table table-hover">
+    <thead style="font-weight: 400">
+        <tr>
+            <th *ngFor = "let headers of template[0]">
+                {{headers}}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor =  "let rows of template">
+            <ng-container *ngIf ="rows[0]!==template[0][0]">
+                <td *ngFor = "let values of rows">
+                    {{values}}
+                </td>
+            </ng-container>
+        </tr>
+    </tbody>
+</table>

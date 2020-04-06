@@ -10,13 +10,16 @@ import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
-import { SchoolService } from 'app/services/modules/school/school.service';
+import {SchoolService} from "../../../../services/modules/school/school.service";
+
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService, SchoolService ],
+    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService, SchoolService],
 })
 
 export class ViewDefaultersComponent implements OnInit {
@@ -87,7 +90,8 @@ export class ViewDefaultersComponent implements OnInit {
                 public userService: UserService,
                 public smsService: SmsService,
                 public smsOldService: SmsOldService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                private printService: PrintService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -537,13 +541,11 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printFeesReport(): any {
-        alert('Functionality yet to be implemented');
-        return ;
-        /*const value = {
-            studentList: this.getFilteredStudentFeeDuesList(),
-            columnFilter: this.columnFilter
-        };
-        EmitterService.get('print-student-list').emit(value);*/
+        if (this.selectedFilterType==this.filterTypeList[0]) {
+            this.printStudentFeesReport();
+        } else {
+            this.printParentFeesReport();
+        }
     }
     
     downloadFeesReport(): void {
@@ -566,6 +568,88 @@ export class ViewDefaultersComponent implements OnInit {
         return this.getFilteredStudentList().filter(item => item.selected).length;
     }
 
+    printStudentFeesReport(): void {
+        let template: any;
+        template = [
+
+            ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
+                'Fees Due (overall)', `Total Fees (${this.getCurrentSessionName()})`,`Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})` ],
+
+        ];
+
+        let count = 0;
+        this.getFilteredStudentList().forEach(student => {
+            let row = [];
+            row.push(++count);
+            row.push(student.name);
+            row.push(student.fathersName);
+            row.push(student.class.name+', '+student.section.name);
+            row.push(student.mobileNumber);
+            row.push(student.secondMobileNumber);
+            row.push(student.feesDueTillMonth);
+            row.push(student.feesDueOverall);
+            row.push(student.totalFeesThisSession);
+            row.push(student.feesPaidThisSession);
+            row.push(student.discountThisSession);
+            template.push(row);
+        });
+        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user, template});
+    }
+
+    printParentFeesReport(): void {
+
+        let template: any;
+
+        template = [
+
+            ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
+                'Fees Due (overall)',`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`],
+
+        ];
+
+        let count = 0;
+        this.getFilteredParentList().forEach(parent => {
+            let row = [];
+            row.push(++count);
+            row.push(parent.name);
+            if (parent.studentList.length == 1) {
+                row.push(parent.studentList[0].name);
+                row.push(parent.studentList[0].class.name+', '+parent.studentList[0].section.name);
+                row.push(parent.studentList[0].mobileNumber);
+                row.push(parent.studentList[0].secondMobileNumber);
+            } else {
+                row.push('');
+                row.push('');
+                row.push(parent.studentList[0].mobileNumber);
+                row.push('');
+            }
+            row.push(this.getParentFeesDueTillMonth(parent));
+            row.push(this.getParentFeesDueOverall(parent));
+            row.push(this.getParentTotalFees(parent));
+            row.push(this.getParentFeesPaid(parent));
+            row.push(this.getParentDiscount(parent));
+            template.push(row);
+            if (parent.studentList.length > 1) {
+                parent.studentList.forEach(student => {
+                    let newRow = [];
+                    newRow.push('');
+                    newRow.push('');
+                    newRow.push(student.name);
+                    newRow.push(student.class.name+', '+student.section.name);
+                    newRow.push('');
+                    newRow.push(student.secondMobileNumber);
+                    newRow.push(student.feesDueTillMonth);
+                    newRow.push(student.feesDueOverall);
+                    newRow.push(student.totalFeesThisSession);
+                    newRow.push(student.feesPaidThisSession);
+                    newRow.push(student.discountThisSession);
+                    template.push(newRow);
+                });
+            }
+        });
+
+        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user, template});
+    }
     downloadStudentFeesReport(): void {
 
         let template: any;
