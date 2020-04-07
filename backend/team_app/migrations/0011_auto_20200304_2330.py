@@ -13,7 +13,7 @@ from team_app.db_script.add_generate_final_report_task import add_generate_final
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0008_auto_20200303_2003'),
+        ('team_app', '0010_auto_20200303_2003'),
     ]
 
     operations = [

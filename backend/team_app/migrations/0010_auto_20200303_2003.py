@@ -10,7 +10,7 @@ from team_app.db_script.add_view_grade_and_permission import add_view_grade_and_
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0007_auto_20200303_1633'),
+        ('team_app', '0009_auto_20200303_1633'),
     ]
 
     operations = [

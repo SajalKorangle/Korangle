@@ -8,7 +8,7 @@ from team_app.db_script.adding_grade_module import add_grade_module
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0006_auto_20200205_1624'),
+        ('team_app', '0008_auto_20200325_1629'),
     ]
 
     operations = [
