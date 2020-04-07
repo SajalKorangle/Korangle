@@ -69,12 +69,9 @@ INSTALLED_APPS = [
     'salary_app',
     'user_app',
     'notification_app',
-<<<<<<< HEAD
     'information_app',
-=======
     'grade_app',
     'report_card.custom_reportcard',
->>>>>>> backend/custom_report_card
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',
