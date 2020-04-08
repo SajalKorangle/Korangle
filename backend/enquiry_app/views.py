@@ -1,4 +1,5 @@
 from decorators import user_permission
+from common.common_views import CommonView, CommonListView
 
 from rest_framework.views import APIView
 
@@ -61,3 +62,11 @@ class MiniEnquiryView(APIView):
             'parentSchool': school_id,
         }
         return get_mini_enquriry_list(data)
+
+from .models import Enquiry
+
+class EnquiryView(CommonView,APIView):
+    Model = Enquiry
+
+class EnquiryyListView(CommonListView,APIView):
+    Model = Enquiry
