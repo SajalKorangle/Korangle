@@ -67,6 +67,7 @@
         <div  *ngIf="!checkChangeSession()"
               [class.sessionMargin68]="user.schoolList.length>1"
               [class.sessionMargin60]="user.schoolList.length==1">
+            <!-- ToDo: Handle more generecally in future -->
             <span *ngIf="user.activeSchool.currentSessionDbId==1">2017-18</span>
             <span *ngIf="user.activeSchool.currentSessionDbId==2">2018-19</span>
             <span *ngIf="user.activeSchool.currentSessionDbId==3">2019-20</span>
