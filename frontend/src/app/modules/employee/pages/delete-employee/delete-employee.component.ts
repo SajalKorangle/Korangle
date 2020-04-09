@@ -3,23 +3,37 @@ import {EmployeeOldService} from '../../../../services/modules/employee/employee
 import {EmployeeService} from '../../../../services/modules/employee/employee.service';
 import {DataStorage} from '../../../../classes/data-storage';
 import {DeleteEmployeeServiceAdapter} from './delete-employee.service.adapter';
+import {AttendanceService} from '../../../../services/modules/attendance/attendance.service';
+import {EnquiryService} from '../../../../services/modules/enquiry/enquiry-service';
+import {SalaryService} from '../../../../services/modules/salary/salary-service';
+import {FeeService} from '../../../../services/modules/fees/fee.service';
+import {SubjectService} from '../../../../services/modules/subject/subject.service';
 
 @Component({
   selector: 'app-delete-employee',
   templateUrl: './delete-employee.component.html',
   styleUrls: ['./delete-employee.component.css'],
-  providers: [ EmployeeOldService, EmployeeService ],
+  providers: [ EmployeeOldService, EmployeeService,FeeService,EnquiryService,SalaryService,AttendanceService, SubjectService ],
 })
 export class DeleteEmployeeComponent implements OnInit {
 
   user;
 
-  isLoading = false;
+  isLoading = true;
   selectedEmployee = null;
+  selectedEmployeeFeeReceiptList = null;
+  selectedEmployeeDiscountList = null;
+  selectedEmployeeClassSubjectList = null;
+
   serviceAdapter: DeleteEmployeeServiceAdapter;
 
   constructor (public employeeOldService: EmployeeOldService,
-               public employeeService: EmployeeService) { }
+               public employeeService: EmployeeService,
+               public attendanceService: AttendanceService,
+               public enquiryService : EnquiryService,
+               public salaryService : SalaryService,
+               public feeService : FeeService,
+               public subjectService: SubjectService) { }
 
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
@@ -28,7 +42,17 @@ export class DeleteEmployeeComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
-  enableDelete(){
-    return true;
+  isCurrentlyLoggedIn(){
+    if(this.selectedEmployee.mobileNumber == this.user.username){
+      return true;
+    }
+    return false;
+  }
+
+  //this.isLoading will be true untill the search bar is loaded
+  isLoadingDone(employeeList : any){
+    if(employeeList!=null){
+      this.isLoading = false;
+    }
   }
 }

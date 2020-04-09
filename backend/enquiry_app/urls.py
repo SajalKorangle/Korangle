@@ -18,9 +18,9 @@ urlpatterns += [
 	url(r'^school/(?P<school_id>[0-9]+)/mini-enquiries', MiniEnquiryView.as_view()),
 ]
 
-from .views import EnquiryView, EnquiryListView
+from .views import EnquiryyView, EnquiryyListView
 
 urlpatterns += [
-	url(r'^enquiry/batch',EnquiryListView.as_view()),
-	url(r'^enquiry',EnquiryView)
+	url(r'^enquiry/batch',EnquiryyListView.as_view()),
+	url(r'^enquiry',EnquiryyView.as_view())
 ]

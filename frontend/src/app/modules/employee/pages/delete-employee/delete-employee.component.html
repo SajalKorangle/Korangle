@@ -1,6 +1,6 @@
 <div class="card-content">
     <app-employee-filter [user]="user"
-                         (employee)="serviceAdapter.getEmployeeDetails($event)"></app-employee-filter>
+                         (employee)="serviceAdapter.getEmployeeDetails($event)" (emitEmployeeList)="isLoadingDone($event)"></app-employee-filter>
 
     <div class="row" style="margin-bottom: 30px;">
         <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
@@ -119,32 +119,29 @@
             </div>
         </div>
 
-        <span *ngIf="enableDelete()">
-            <button type="submit"
-                    style="margin-right: 10px;"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.deleteStudentFromSession();">
-              Delete Employee
-            </button>
-        </span>
+        <span *ngIf="!selectedEmployee.deleted
+                        && selectedEmployeeFeeReceiptList.length == 0
+                        && selectedEmployeeDiscountList.length == 0
+                        && selectedEmployeeClassSubjectList.length == 0
+                        && !isCurrentlyLoggedIn(); else noDeletion">
+                <button type="submit"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="serviceAdapter.deleteEmployee();">
+                  Delete Employee
+                </button>
+            </span>
 
-<!--        <span *ngIf="!selectedStudent.deleted-->
-<!--                        && selectedStudentFeeReceiptList.length == 0-->
-<!--                        && selectedStudentDiscountList.length == 0; else noDeletion">-->
-<!--                <button type="submit"-->
-<!--                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"-->
-<!--                        (click)="serviceAdapter.deleteStudent();">-->
-<!--                  Delete Overall-->
-<!--                </button>-->
-<!--            </span>-->
-
-<!--        <ng-template #noDeletion>-->
-<!--            <br/>-->
-<!--            Can not delete student overall because <br/>-->
-<!--            <ng-container *ngIf="selectedStudent.deleted">Student is already deleted<br/></ng-container>-->
-<!--            <ng-container *ngIf="selectedStudentFeeReceiptList.length != 0">Fee Receipt/s have been issued for the student<br/></ng-container>-->
-<!--            <ng-container *ngIf="selectedStudentDiscountList.length != 0">Discount/s have been issued for the student<br/></ng-container>-->
-<!--        </ng-template>-->
+        <ng-template #noDeletion>
+            <br/>
+            <ng-container *ngIf="isCurrentlyLoggedIn()"><strong>Employee can not be deleted</strong><br/></ng-container>
+            <ng-container *ngIf="!isCurrentlyLoggedIn()">
+                <ng-container>Can not delete employee because <br/></ng-container>
+                <ng-container *ngIf="selectedEmployee.deleted">Employee is already deleted<br/></ng-container>
+                <ng-container *ngIf="selectedEmployeeFeeReceiptList.length != 0">Fee Receipt/s have been issued by the employee<br/></ng-container>
+                <ng-container *ngIf="selectedEmployeeDiscountList.length != 0">Discount/s have been issued by the employee<br/></ng-container>
+                <ng-container *ngIf="selectedEmployeeClassSubjectList.length != 0">Employee has been set as class subject teacher<br/></ng-container>
+            </ng-container>
+        </ng-template>
 
         <div class="clearfix"></div>
 

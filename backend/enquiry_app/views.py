@@ -65,7 +65,7 @@ class MiniEnquiryView(APIView):
 
 from .models import Enquiry
 
-class EnquiryView(CommonView,APIView):
+class EnquiryyView(CommonView,APIView):
     Model = Enquiry
 
 class EnquiryyListView(CommonListView,APIView):
