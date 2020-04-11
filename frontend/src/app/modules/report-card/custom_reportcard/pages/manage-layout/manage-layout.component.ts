@@ -10,456 +10,274 @@ import { CustomReportCardService } from '../../../../../services/modules/custom_
 import { GradeService } from '../../../../../services/modules/grade/grade.service';
 import { ClassService } from '../../../../../services/modules/class/class.service';
 import { SchoolService } from '../../../../../services/modules/school/school.service';
+import { StudentService } from '../../../../../services/modules/student/student.service';
 import {EXAM_COLUMN_TYPE, STUDENT_DETAILS_FOOTER, STUDENT_DETAILS_HEADER, STUDENT_DETAILS_FOOTER_KEYS, STUDENT_DETAILS_HEADER_KEYS} from '../../classes/constants';
-
-
-class LayoutExamColumnHandle{
-    id:Number = 0;
-    parentLayout:Number = 0;
-    parentExamination:Number = 0;
-    orderNumber:Number = 0;
-    name:String; 
-    maximumMarksObtainedOne:Number = 100;
-    maximumMarksObtainedTwo:Number = 100;
-    columnType:any;
-}
-
-class LayoutGradeHandle{
-    id:Number = 0;
-    parentLayout:Number = 0;
-    parentGrade:Number = 0;
-    orderNumber:Number = 0;
-}
-
-class LayoutSubGradeHandle{
-    id:Number = 0;
-    parentLayoutGrade:Number = 0;
-    parentSubGrade:Number = 0;
-    orderNumber:Number = 0;
-}
-
-class LayoutHandle{
-    id:Number = 0;
-    name:String = '';
-    reportCardHeading:String = '';
-    parentSchool:Number = 0;
-    parentSession:Number = 0;
-    showLetterHeadImage:Boolean = false;
-
-    attendanceStartDate: Date = null;
-    attendanceEndDate: Date = null;
-    decimalPlaces: Number = 0;
-
-    studentNameOrderNumber: Number = 0;
-    fatherNameOrderNumber: Number = 0;
-    motherNameOrderNumber: Number = 0;
-    rollNoOrderNumber: Number = 0;
-    scholarNoOrderNumber: Number = 0;
-    dateOfBirthOrderNumber: Number = 0;
-    dateOfBirthInWordsOrderNumber: Number = 0;
-    aadharNumberOrderNumber: Number = 0;
-    categoryOrderNumber: Number = 0;
-    familySSMIDOrderNumber: Number = 0;
-    childSSMIDOrderNumber: Number = 0;
-    classOrderNumber: Number = 0;
-    sectionOrderNumber: Number = 0;
-    casteOrderNumber: Number = 0;
-    classAndSectionOrderNumber: Number = 0;
-    addressOrderNumber: Number = 0;
-
-    overallMarksOrderNumber: Number = 0;
-    attendanceOrderNumber: Number = 0;
-    resultOrderNumber: Number = 0;
-    percentageOrderNumber: Number = 0;
-    promotedToClassOrderNumber: Number = 0;
-    
-    remarksOrderNumber: Number = 0;
-}
-
-
-class LayoutParameter{
-    layout:LayoutHandle = new LayoutHandle();
-    layoutExamColumnList:LayoutExamColumnHandle[] = [];
-    layoutGradeList:LayoutGradeHandle[] = [];
-    layoutSubGradeList:LayoutSubGradeHandle[] = [];
-
-    // Stores the layouthandle parameters which are selected;
-    selectedStudentDetailsHeader:any = [];
-    selectedStudentDetailsFooter:any = [];
-    autoAttendance:Boolean = false;
-}
-
+import {LayoutHandler, StudentDataHandler, LayoutGradeHandler, LayoutSubGradeHandler, LayoutExamColumnHandler} from '../../classes/report-card-data';
 
 @Component({
     selector: 'app-manage-layout',
     templateUrl: './manage-layout.component.html',
     styleUrls: ['./manage-layout.component.css'],
-    providers: [ExaminationService, CustomReportCardService, GradeService, ClassService, SchoolService],
+    providers: [ExaminationService, CustomReportCardService, GradeService, ClassService, SchoolService, StudentService],
 })
 
 export class ManageLayoutComponent implements OnInit {
 
     user;
     isLoading:Boolean;
-    layoutList:any = [];
-    selectedLayout:LayoutParameter;
+    
+    subjectsToShow = 5;
+
     EXAM_COLUMN_TYPE = EXAM_COLUMN_TYPE;
     STUDENT_DETAILS_FOOTER = STUDENT_DETAILS_FOOTER;
     STUDENT_DETAILS_HEADER = STUDENT_DETAILS_HEADER;
     STUDENT_DETAILS_FOOTER_KEYS = STUDENT_DETAILS_FOOTER_KEYS;
     STUDENT_DETAILS_HEADER_KEYS = STUDENT_DETAILS_HEADER_KEYS;
 
+    layoutList:any = [];
     examinationList = [];
-    layoutExamColumnList = [];
-    subjectCountArray:Number[]; // Used in preview to show the no of rows in exam table
-
-    // Grades
     gradeList = [];
-    layoutGradeList = [];
-
-    sessionList = [];
-    
-    // SubGrades
+    sessionList = [];    
     subGradeList = [];
-    layoutSubGradeList = [];
+    testSecondList = [];
+    classList = [];
+    divisionList = [];
+
+    studentList = [];
+    studentSectionList = [];
+    studentSubGradeList = [];
+    studentTestList = [];
+    studentRemarksList = [];
+    studentAttendanceList = [];
+
+    currentLayout: any;
+    layoutExamColumnList: any[] = [];
+    layoutGradeList: any[] = [];
+    layoutSubGradeList: any[] = [];
     
     serviceAdapter: ManageLayoutServiceAdapter;
 
 
     constructor(public examinationService:ExaminationService,
-                private cdRef: ChangeDetectorRef,
                 public customReportCardService: CustomReportCardService,
                 public gradeService: GradeService,
                 public schoolService: SchoolService,
-                public classService: ClassService) {}
+                public classService: ClassService,
+                public studentService: StudentService,
+                private cdRef: ChangeDetectorRef) {}
+    
+    detectChanges(){this.cdRef.detectChanges();}
 
     ngOnInit(): void {
         this.isLoading = true;
         this.user = DataStorage.getInstance().getUser();
-        console.log(this.user);
         this.serviceAdapter = new ManageLayoutServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        this.initializeNewLayout();
+        this.currentLayout = this.getEmptyLayout();      
     }
 
-    resetCurrentLayout(){
-        this.selectedLayout = null;
-        this.initializeNewLayout();
-    }    
-
-    initializeNewLayout(){
-        let new_layout = new LayoutParameter();
-        new_layout.layout.id = 0;
-        new_layout.layout.name = '';
-        new_layout.layout.parentSchool = this.user.activeSchool.dbId;
-        new_layout.layout.parentSession = this.user.activeSchool.currentSessionDbId;
-        new_layout.layout.reportCardHeading = '';
-
-        // Push below in the required order
-        new_layout.selectedStudentDetailsHeader.push('studentNameOrderNumber');
-        new_layout.selectedStudentDetailsHeader.push('fatherNameOrderNumber');
-        new_layout.selectedStudentDetailsHeader.push('rollNoOrderNumber');
-        new_layout.selectedStudentDetailsHeader.push('classOrderNumber');
-
-        // Creating LayoutExamColumnHandle
-        new_layout.layoutExamColumnList = [];
-        this.updateSubjectCountArray(6);
-
-
-        new_layout.layoutGradeList = [];
-        new_layout.layoutSubGradeList = [];
-
-        new_layout.selectedStudentDetailsFooter = [];
-        this.selectedLayout = new_layout;
+    isLayoutNameUnique(): Boolean{
+        return !this.layoutList.find(x => x.name===this.currentLayout.name);
     }
 
+    resetCurrentLayout =() => {
+        this.currentLayout = {...this.getEmptyLayout(), id: this.currentLayout.id};
+        this.layoutSubGradeList = [];
+        this.layoutExamColumnList = [];
+        this.layoutGradeList = [];
+        this.detectChanges();
+    }
 
-    initializeExistingLayout(layout){
+    getEmptyLayout = () => {
+        return {
+            name: '',
+            reportCardHeading: '',
+            parentSchool: this.user.activeSchool.dbId,
+            parentSession: this.user.activeSchool.currentSessionDbId,
+            showLetterHeadImage: false,
 
-        if(layout == null || layout == '') return;
-        let new_layout = new LayoutParameter();
-        
-        new_layout.layout = layout;
-        new_layout.layout.parentSchool = this.user.activeSchool.dbId;
-        new_layout.layout.parentSession = this.user.activeSchool.currentSessionDbId;
-        
-        if(new_layout.layout.attendanceStartDate != null && new_layout.layout.attendanceEndDate != null){
-            new_layout.autoAttendance = true;
+            attendanceStartDate: null,
+            attendanceEndDate: null,
+            decimalPlaces: 0,
+
+            studentNameOrderNumber: 1,
+            fatherNameOrderNumber: 2,
+            motherNameOrderNumber: 3,
+            rollNoOrderNumber: 0,
+            scholarNoOrderNumber: 0,
+            dateOfBirthOrderNumber: 4,
+            dateOfBirthInWordsOrderNumber: 0,
+            aadharNumberOrderNumber: 0,
+            categoryOrderNumber: 0,
+            familySSMIDOrderNumber: 0,
+            childSSMIDOrderNumber: 0,
+            classOrderNumber: 0,
+            sectionOrderNumber: 0,
+            casteOrderNumber: 0,
+            classAndSectionOrderNumber: 0,
+            addressOrderNumber: 0,
+
+            overallMarksOrderNumber: 0,
+            attendanceOrderNumber: 0,
+            resultOrderNumber: 0,
+            percentageOrderNumber: 0,
+            promotedToClassOrderNumber: 0,
+            
+            remarksOrderNumber: 0,
         }
+    }
 
-        let studentHeaderKey_temp = [];
-        
-        this.STUDENT_DETAILS_HEADER_KEYS.forEach(key=>{
-            if(layout[key] != 0) studentHeaderKey_temp.push(key);
+    // Layout Header handlers
+    getCurrentHeaderList = () => this.STUDENT_DETAILS_HEADER_KEYS.filter(key => this.currentLayout[key]!==0).sort((a,b) => this.currentLayout[a]-this.currentLayout[b]);
+    getRemainingHeaderList = () => this.STUDENT_DETAILS_HEADER_KEYS.filter(key => this.currentLayout[key]===0);
+    addHeaderKey = key => {this.currentLayout[key] = this.getCurrentHeaderList().length + 1; this.detectChanges()};
+    removeHeaderKey = header_key => {
+        STUDENT_DETAILS_HEADER_KEYS.filter(item => this.currentLayout[item]>this.currentLayout[header_key]).forEach(item => {
+            this.currentLayout[item]--;
         })
-        studentHeaderKey_temp.sort();
-        new_layout.selectedStudentDetailsHeader = studentHeaderKey_temp;
+        this.currentLayout[header_key] = 0;
+        this.detectChanges();
+    }
+    dropHeaderHandler(event): void{
+        const header_key = this.STUDENT_DETAILS_HEADER_KEYS.find(item => this.currentLayout[item]===event.previousIndex+1);
+        this.STUDENT_DETAILS_HEADER_KEYS.filter(item => this.currentLayout[item]>event.previousIndex+1).forEach(item => {this.currentLayout[item]--});
+        this.STUDENT_DETAILS_HEADER_KEYS.filter(item => this.currentLayout[item]>=event.currentIndex+1).forEach(item => {this.currentLayout[item]++});
+        this.currentLayout[header_key]=event.currentIndex+1;
+        this.detectChanges();
+    }   
+    
+    // LayoutExamColumn handlers
+    getRemainingExaminationList = () => this.examinationList.filter(x => !this.layoutExamColumnList.find(y => y.parentExamination===x.id));
+    addLayoutExamColumn = (examination) => {
+        this.layoutExamColumnList = [...this.layoutExamColumnList, {
+            parentExamination: examination.id,
+            orderNumber: this.layoutExamColumnList.length+1,
+            name: examination.name,
+            maximumMarksObtainedOne: 100,
+            maximumMarksObtainedTwo: 100,
+            columnType: 'Simple'
+        }]
+        this.detectChanges();
+    }
+    removeLayoutExamColumn = layoutExamColumn => {
+        this.layoutExamColumnList = this.layoutExamColumnList.filter(item => item!==layoutExamColumn);
+        this.layoutExamColumnList.forEach((item, i) => {item.orderNumber=i+1})
+        this.detectChanges();
+    }    
+    dropExamHandler(event): void{
+        moveItemInArray(this.layoutExamColumnList, event.previousIndex, event.currentIndex);
+        this.layoutExamColumnList.forEach((item, i) => {item.orderNumber=i+1})
+        this.detectChanges();
+    }
+    getExamination = id => this.examinationList.find(x => x.id===id);
 
-        let studentFooterKey_temp = [];
+    // LayoutGrade handlers
+    getGrade = id => this.gradeList.find(x => x.id===id);
+    getSubGrade = id => this.subGradeList.find(x => x.id===id);
+    getRemainingGradeList = () => this.gradeList.filter(x => !this.layoutGradeList.find(y => y.parentGrade===x.id));
+    addLayoutGrade = grade => {
+        this.layoutGradeList = [...this.layoutGradeList, {
+            parentGrade: grade.id,
+            orderNumber: this.layoutGradeList.length+1,
+        }]
+        this.detectChanges();
+    }
+    dropGradeHandler(event): void{
+        moveItemInArray(this.layoutGradeList, event.previousIndex, event.currentIndex);
+        this.layoutGradeList.forEach((item, i) => {item.orderNumber=i+1})
+        this.detectChanges();
+    }
 
-        this.STUDENT_DETAILS_FOOTER_KEYS.forEach(key=>{
-            if(layout[key] != 0) studentFooterKey_temp.push(key);
+    // LayoutSubGrade handlers
+    getLayoutSubGradeList = grade => this.layoutSubGradeList.filter(x => this.getSubGrade(x.parentSubGrade).parentGrade===grade.id);
+    getRemainingSubGradeList = grade => this.subGradeList.filter(x => x.parentGrade===grade.id && !this.getLayoutSubGradeList(grade).find(y=>y.parentSubGrade===x.id));
+    removeLayoutSubGrade = layoutSubGrade => {
+        this.layoutSubGradeList = this.layoutSubGradeList.filter(x => x!==layoutSubGrade);
+        this.layoutSubGradeList.filter(x => this.getSubGrade(x.parentSubGrade).parentGrade === this.getSubGrade(layoutSubGrade.parentSubGrade).parentGrade).forEach((item, i) => {item.orderNumber=i+1})
+        this.detectChanges();
+    }
+    removeLayoutGrade = layoutGrade => {
+        this.layoutSubGradeList = this.layoutSubGradeList.filter(item => !this.getLayoutSubGradeList(this.getGrade(layoutGrade).parentGrade).includes(item));
+        this.layoutGradeList = this.layoutGradeList.filter(x => x!==layoutGrade);
+    }
+    addLayoutSubGrade = (subGrade) => {
+        this.layoutSubGradeList = [...this.layoutSubGradeList, {
+            parentSubGrade: subGrade.id,
+            orderNumber: this.getLayoutSubGradeList(this.getGrade(subGrade.parentGrade)).length,
+        }]
+        this.detectChanges();
+    }
+
+    // Layout footer handlers
+    getCurrentFooterList = () => this.STUDENT_DETAILS_FOOTER_KEYS.filter(key => this.currentLayout[key]!==0).sort((a,b) => this.currentLayout[a]-this.currentLayout[b]);
+    getRemainingFooterList = () => this.STUDENT_DETAILS_FOOTER_KEYS.filter(key => this.currentLayout[key]===0);
+    addFooterKey = key => {this.currentLayout[key] = this.getCurrentFooterList().length + 1; this.detectChanges();};
+    removeFooterKey = footer_key => {
+        STUDENT_DETAILS_FOOTER_KEYS.filter(item => this.currentLayout[item]>this.currentLayout[footer_key]).forEach(item => {
+            this.currentLayout[item]--;
         })
-        studentFooterKey_temp.sort();
-        new_layout.selectedStudentDetailsFooter = studentFooterKey_temp;
-
-        this.updateSubjectCountArray(6);
-
-        // LayoutExamColumnHandle
-        let temp = [];
-        this.layoutExamColumnList.filter(item=>{
-            if(item.parentLayout == layout.id) return true;
-            return false;
-        }).sort((a,b)=>{
-            return a.orderNumber-b.orderNumber;
-        }).map(item=>{
-            let temp_exam_handle = new LayoutExamColumnHandle();
-            temp_exam_handle.parentLayout = layout.id;
-            temp_exam_handle.parentExamination = item.parentExamination;
-            temp_exam_handle.id = item.id;
-            temp_exam_handle.orderNumber = item.orderNumber;
-            temp_exam_handle.name = item.name;
-            temp_exam_handle.maximumMarksObtainedOne = item.maximumMarksObtainedOne;
-            temp_exam_handle.maximumMarksObtainedTwo = item.maximumMarksObtainedTwo;
-            temp_exam_handle.columnType = item.columnType;
-            temp.push(temp_exam_handle);
-        });
-
-        new_layout.layoutExamColumnList = temp;
-
-        // Grades and sub grades
-        new_layout.layoutGradeList = this.layoutGradeList.filter(item=>{
-            return item.parentLayout == new_layout.layout.id;
-        })
-
-        new_layout.layoutSubGradeList =  this.layoutSubGradeList.filter(item=>{
-            return new_layout.layoutGradeList.find(layoutGrade=>{
-                return layoutGrade.id == item.parentLayoutGrade;
-            }) != undefined;
-        })
-
-        this.selectedLayout = new_layout;
+        this.currentLayout[footer_key] = 0;
+        this.detectChanges();
+    }
+    dropFooterHandler(event): void{
+        const footer_key = this.STUDENT_DETAILS_FOOTER_KEYS.find(item => this.currentLayout[item]===event.previousIndex+1);
+        this.STUDENT_DETAILS_FOOTER_KEYS.filter(item => this.currentLayout[item]>event.previousIndex+1).forEach(item => {this.currentLayout[item]--});
+        this.STUDENT_DETAILS_FOOTER_KEYS.filter(item => this.currentLayout[item]>=event.currentIndex+1).forEach(item => {this.currentLayout[item]++});
+        this.currentLayout[footer_key]=event.currentIndex+1;
+        this.detectChanges();
     }
 
-    getSessionName(sessionId: any): any {
-        return this.sessionList.find(item=>{return item.id == sessionId}).name;        
+    // Student Data handlers
+    getStudentSubGradeList = () => this.layoutSubGradeList.map(layoutSubGrade => ({gradeObtained: '5', parentSubGrade: layoutSubGrade.parentSubGrade, parentStudent: this.studentList[0].id}))
+
+    getStudentTestListForExamination = layoutExamColumn => {
+        let ret = [];
+        for(let i=1; i<=this.subjectsToShow; i++){
+            if(layoutExamColumn.columnType==='Simple'){
+                ret.push({parentExamination: layoutExamColumn.parentExamination, parentSubject: i, parentStudent: this.studentList[0].id, testType: null, marksObtained: 50})
+            }else{
+                layoutExamColumn.columnType.split('/').forEach(type => {
+                    ret.push({parentExamination: layoutExamColumn.parentExamination, parentSubject: i, parentStudent: this.studentList[0].id, testType: type, marksObtained: 50})
+                })
+            }            
+        }
+        return ret;      
+    }
+    getStudentTestList = () => this.layoutExamColumnList.reduce((acc, b) => acc.concat(this.getStudentTestListForExamination(b)), []);
+    getTestListForExamination = layoutExamColumn => {
+        let ret = [];
+        for(let i=1; i<=this.subjectsToShow; i++){
+            if(layoutExamColumn.columnType==='Simple'){
+                ret.push({parentExamination: layoutExamColumn.parentExamination, parentSubject: i, parentClass: this.studentSectionList[0].parentClass, parentDivision: this.studentSectionList[0].parentDivision, startTime: null, endTime: null,testType: null, maximumMarks: 50})
+            }else{
+                layoutExamColumn.columnType.split('/').forEach(type => {
+                    ret.push({parentExamination: layoutExamColumn.parentExamination, parentSubject: i, parentClass: this.studentSectionList[0].parentClass, parentDivision: this.studentSectionList[0].parentDivision, startTime: null, endTime: null,testType: type, maximumMarks: 50})
+                })
+            }            
+        }
+        return ret;      
+    }
+    getTestList = () => this.layoutExamColumnList.reduce((acc, b) => acc.concat(this.getTestListForExamination(b)), []);
+    getSubjectList = () => Object.keys(Array(this.subjectsToShow).fill(0)).map((item, i) => ({name: `Subject ${i+1}`, id: i+1}));
+
+    getStudentRemarksList = () => [{parentStudent: this.studentList[0].id, parentSession: this.user.activeSchool.currentSessionDbId, remark: 'Some remark here'}]
+
+    getStudentAttendanceList =() => [] 
+
+    initializeLayout = layout => {
+        this.currentLayout = layout;
+        this.serviceAdapter.fetchLayoutData();
+    }
+    
+    createNewLayout = () => {
     }
 
-    // Returns the studentDetailHeader which are set to true
-    getFilteredStudentDetailHeader(){
-        
-        let temp = [];
-        this.STUDENT_DETAILS_HEADER_KEYS.forEach(item =>{
-            let isFound = false;
-            this.selectedLayout.selectedStudentDetailsHeader.forEach(key=>{
-                if(key == item){
-                    isFound = true;
-                }
-            })
-            if(isFound == false) temp.push(item);
-        });
-        return temp;
+    updateLayout = () => {
     }
 
-    addStudentHeader(studentHeaderKey){
-        if(this.selectedLayout == null || this.selectedLayout == undefined) return;
-        this.selectedLayout.selectedStudentDetailsHeader.push(studentHeaderKey);
-    }
-
-    removeSelectedStudentHeader(studentDetailKey){
-        this.selectedLayout.selectedStudentDetailsHeader = this.selectedLayout.selectedStudentDetailsHeader.filter(item=>{
-            if(item == studentDetailKey) return false;
-            return true;
-        })
-    }
-
-    // Returns the studentDetailFooter which are set to true
-    getFilteredStudentDetailFooter(){
-        
-        let temp = [];
-        this.STUDENT_DETAILS_FOOTER_KEYS.forEach(item =>{
-            let isFound = false;
-            this.selectedLayout.selectedStudentDetailsFooter.forEach(key=>{
-                if(key == item){
-                    isFound = true;
-                }
-            })
-            if(isFound == false) temp.push(item);
-        });
-        return temp;
-    }
-
-    addStudentFooter(studentFooterKey){
-        if(this.selectedLayout == null || this.selectedLayout == undefined) return;
-        this.selectedLayout.selectedStudentDetailsFooter.push(studentFooterKey);
-    }
-
-    removeSelectedStudentFooter(studentDetailKey){
-        this.selectedLayout.selectedStudentDetailsFooter = this.selectedLayout.selectedStudentDetailsFooter.filter(item=>{
-            if(item == studentDetailKey) return false;
-            return true;
-        })
-    }
-
-    // Return the examinations which are not mapped or not present in selectedLayout.layoutExamColumnList
-    // selectedLayout should not be null before calling this function
-    getFilteredExaminationList(){
-        if(this.selectedLayout == null || this.selectedLayout == undefined) return [];
-
-        return this.examinationList.filter(exam =>{
-            if(this.selectedLayout.layoutExamColumnList.find(item=>{
-                if(item.parentExamination == exam.id) return true;
-                return false;
-            }) == undefined) return true;
-            return false;
-        });
-
-    }
-
-    // Displays exam name by the examination id from examinationList
-    getExaminationName(exam_id){
-        let examination = this.examinationList.find(item => {
-            if(item.id == exam_id) return true;
-            return false;
-        });
-        if(examination == undefined) return '';
-        return examination.name;
-    }
-
-    // Adds the exam to the selectedLayout
-    addExamToMapping(examination){
-        if(this.selectedLayout == null || this.selectedLayout == undefined) return;
-        let new_layout_exam_column_handle = new LayoutExamColumnHandle();
-        new_layout_exam_column_handle.parentExamination = examination.id;
-        new_layout_exam_column_handle.name = examination.name;
-        new_layout_exam_column_handle.columnType = this.EXAM_COLUMN_TYPE[0];
-        this.selectedLayout.layoutExamColumnList.push(new_layout_exam_column_handle);
-    }
-
-    removeLayoutExamColumnList(layoutExam){
-        if(this.selectedLayout == null || this.selectedLayout == undefined) return;
-        this.selectedLayout.layoutExamColumnList = this.selectedLayout.layoutExamColumnList.filter(item=>{
-            if(item.id == layoutExam.id && item.parentLayout == layoutExam.parentLayout && item.parentExamination == layoutExam.parentExamination)
-                return false;
-            return true;
-        });
-    }
-
-    // Used for no of rows in examination table preview
-    // cnt is of type string
-    updateSubjectCountArray(cnt){
-        this.subjectCountArray = new Array(parseInt(cnt));
-    }
-
-    getTotalColummnsInExamTable():Number{
-        if(this.selectedLayout == null) return 0;
-        let total = 0;
-        this.selectedLayout.layoutExamColumnList.forEach(layoutExamColumn=>{
-            let len = layoutExamColumn.columnType.split('/').length;
-            total += len;
-            if(len > 1) total += 1;
-        });
-        if(this.selectedLayout.layoutExamColumnList.length > 1) total += 1;
-        return total + 1;
-    }
-    // Check if name already exist
-    isNameUnqiue(selectedLayout,list){
-        return list.find(item => {
-            if(item.name == selectedLayout.layout.name && item.id != selectedLayout.layout.id) return true;
-            return false;
-        }) == undefined;
-    }
-
-    // Drap and drop position
-    drop(event: CdkDragDrop<string[]>, objectList) {
-        moveItemInArray(objectList, event.previousIndex, event.currentIndex);
-    }
-
-
-
-    // Grades and subgrades
-    getGradeName(grade_id){
-        let grade = this.gradeList.find(item=>{
-            if(item.id == grade_id) return true;
-            return false;
-        });
-        if(grade == undefined) return '';
-        return grade.name;
-    }
-
-    // Returns list of Grades not present in currentLayout_LayoutGradeList
-    getFilteredGradeList(){
-        return this.gradeList.filter(item=>{
-            if(this.selectedLayout.layoutGradeList.find(layoutGrade=>{
-                return layoutGrade.parentGrade == item.id;
-            }) == undefined) return true;
-            return false;
-        });
-    }
-
-    addGradeMapping(grade){
-        let new_grade = new LayoutGradeHandle();
-        new_grade.id = 0;
-        new_grade.parentLayout=this.selectedLayout.layout.id;
-        new_grade.parentGrade = grade.id;
-        new_grade.orderNumber = 0;
-        this.selectedLayout.layoutGradeList.push(new_grade);
-    }
-
-    // Returns the list of sub grades mapped for that grade in layout
-    // Grades mapped for selected layout will be in currentLayout_LayoutGradeList
-    // For newly created layoutGrades, compare the them by Grade id 
-    getFilteredLayoutSubGradeList(layoutGrade){
-        return this.selectedLayout.layoutSubGradeList.filter(item=>{
-            if(layoutGrade.id == 0){
-                // newly created grade mapping
-                let subGrade_id = item.parentSubGrade;
-                let grade_id = this.subGradeList.find(subGrade=>{return subGrade.id == subGrade_id}).parentGrade;
-                if(layoutGrade.parentGrade == grade_id) return true;
-                return false;
-            }
-            return item.parentLayoutGrade == layoutGrade.id;
-        });
-    }
-
-    // Returns list of all the sub grades in the grade that are not mapped
-    getFilteredSubGradeList(layoutGrade){
-        return this.subGradeList.filter(subGrade=>{
-            return subGrade.parentGrade == layoutGrade.parentGrade;
-        }).filter(subGrade=>{
-            return this.selectedLayout.layoutSubGradeList.find(item=>{
-                return item.parentSubGrade == subGrade.id;
-            }) == undefined;
-        });
-    }
-
-    // Mapps the SubGrade with the Grade
-    addSubGradeMapping(subGrade, layoutGrade){
-        let new_subgrade = new LayoutSubGradeHandle();
-        new_subgrade.id = 0;
-        new_subgrade.parentLayoutGrade = layoutGrade.id;
-        new_subgrade.parentSubGrade = subGrade.id;
-        new_subgrade.orderNumber = 0;
-
-        this.selectedLayout.layoutSubGradeList.push(new_subgrade);
-    }
-
-    removeSubGradeMapping(subGrade){
-        this.selectedLayout.layoutSubGradeList = this.selectedLayout.layoutSubGradeList.filter(layoutSubGrade=>{
-            if(layoutSubGrade.id == subGrade.id && layoutSubGrade.parentLayoutGrade == subGrade.parentLayoutGrade
-                && layoutSubGrade.parentSubGrade == subGrade.parentSubGrade) return false;
-            return true;
-        });
-    }
-
-    getSubGradeName(subGrade_id){
-        let temp = this.subGradeList.find(item=>{
-            return item.id == subGrade_id;
-        });
-        if(temp == undefined) return '';
-        return temp.name;
-    }
-
+    deleteLayout = () => {
+        console.log(this.currentLayout);
+    }   
 
 }

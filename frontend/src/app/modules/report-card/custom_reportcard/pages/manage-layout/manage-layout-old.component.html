@@ -1,14 +1,11 @@
 <div class="card-content" style="height: 85vh;">
+
 	<div class="row" *ngIf="!isLoading && examinationList.length == 0">
 		<div class="col-md-12" *ngIf="examinationList.length == 0">
 			No examination created.
 		</div>
 	</div>
 
-	<ng-container *ngIf="isLoading">
-        <app-loading-spinner [user]="user"></app-loading-spinner>
-	</ng-container>
-	
 	<div class="row" *ngIf="!isLoading && examinationList.length != 0" style="height: 100%;overflow: auto;">
 		
 
@@ -21,7 +18,7 @@
 					<mat-label>
 						Edit existing Layout
 					</mat-label>
-					<mat-select (selectionChange)="initializeLayout($event.value)">
+					<mat-select (onChange)="initializeLayoutHandler($event)">
 						<mat-option *ngFor="let layout of layoutList" [value]="layout">
 							{{layout.name}}
 						</mat-option>
@@ -29,40 +26,40 @@
 				</mat-form-field>
 			</mat-card>
 
-			<mat-card *ngIf="currentLayout != null">
+			<mat-card *ngIf="currentLayoutHandler != null">
 				<p>Customised Report Card</p>
 				<div class="row">
 					<mat-form-field class="col-md-6">
-						<span style="color:red" *ngIf="!isLayoutNameUnique() && !currentLayout.id" class="small">
+						<span style="color:red" *ngIf="layoutList.find(layout => layout.name === currentLayoutHandler.name)" class="small">
 							Layout name must be unique
 						</span>
 						<mat-label>
 							Layout Name
 						</mat-label>
-						<input matInput placeholder="Enter Layout Name" [(ngModel)]="currentLayout.name" required>
+						<input matInput placeholder="Enter Layout Name" [(ngModel)]="currentLayoutHandler.name" required>
 					</mat-form-field>
 
 					<mat-form-field class="col-md-6">
 						<mat-label>Report Card Heading</mat-label>
 						<input matInput
-						          [(ngModel)]="currentLayout.reportCardHeading">
+						          [(ngModel)]="currentLayoutHandler.reportCardHeading">
 					</mat-form-field>
 
 					<div class="col-md-12" style="box-sizing: border-box;">
-						<mat-checkbox [(ngModel)]="currentLayout.showLetterHeadImage">
+						<mat-checkbox [(ngModel)]="currentLayoutHandler.showLetterHeadImage">
 							Use school Letterhead
 						</mat-checkbox>
 					</div>
 
-					<div class="col-md-12" *ngIf="currentLayout.attendanceOrderNumber!==0">
+					<div class="col-md-12" *ngIf="currentLayoutHandler.attendanceOrderNumber!==0">
 						<div class="row">
 							<mat-form-field class="col-md-6">
 								<mat-label>Start date</mat-label>
-								<input matInput type="date" [(ngModel)]="currentLayout.attendanceStartDate">
+								<input matInput type="date" [(ngModel)]="selectedLayout.layout.attendanceStartDate">
 							</mat-form-field>
 							<mat-form-field class="col-md-6">
 								<mat-label>End date</mat-label>
-								<input matInput type="date" [(ngModel)]="currentLayout.attendanceEndDate">
+								<input matInput type="date" [(ngModel)]="selectedLayout.layout.attendanceEndDate">
 							</mat-form-field>
 						</div>
 					</div>
@@ -71,7 +68,9 @@
 
 			</mat-card>
 
-			<mat-accordion *ngIf="currentLayout" multi="false">
+			<br>
+
+			<mat-accordion *ngIf="currentLayoutHandler" multi="false">
 				<mat-expansion-panel style="margin-bottom:0.6vh;">
 					<mat-expansion-panel-header>
 						<mat-panel-title>
@@ -83,7 +82,7 @@
 					<div cdkDropList 
 						class="example-list" 
 						(cdkDropListDropped)="dropHeaderHandler($event)">
-						<div class="example-box" cdkDrag *ngFor="let header_key of getCurrentHeaderList()">
+						<div class="example-box" cdkDrag *ngFor="let header_key of STUDENT_DETAILS_HEADER_KEYS.filter(item => currentLayoutHandler[item]!==0).sort((a,b)=>currentLayoutHandler[a]<currentLayoutHandler[b])">
 							{{STUDENT_DETAILS_HEADER[header_key]}}
 							<span style="float:right;cursor: default;color:red" (click)="removeHeaderKey(header_key)">
 								Remove
@@ -94,8 +93,8 @@
 					<div>
 						<mat-form-field>
 							<mat-label>Add new Header paramter</mat-label>
-							<mat-select (selectionChange)="addHeaderKey($event.value)">
-								<ng-container *ngFor="let header_key of getRemainingHeaderList()">
+							<mat-select (selectionChange)="addStudentHeader($event.value)">
+								<ng-container *ngFor="let header_key of STUDENT_DETAILS_HEADER_KEYS.filter(item => currentLayoutHandler[item]==0)">
 									<mat-option [value]="header_key">
 										{{STUDENT_DETAILS_HEADER[header_key]}}
 									</mat-option>
@@ -105,6 +104,7 @@
 					</div>	
 				</mat-expansion-panel>
 
+				<!-- Examination Header Section -->
 				<mat-expansion-panel style="margin-bottom: 0.6vh;">
 					<mat-expansion-panel-header >
 						<mat-panel-title>
@@ -121,17 +121,18 @@
 
 						<mat-form-field class="col-xs-6">
 							<label>Decimal place</label>
-							<input matInput type="number" min="0" max="2" step="1" [(ngModel)]="currentLayout.decimalPlaces">
+							<input matInput type="number" min="0" max="2" step="1" [(ngModel)]="decimalPlaces">
 						</mat-form-field>
 					</div>
 
 					<!-- LayoutExamColumn  parameter -->
 					<mat-accordion cdkDropList class="example-list" (cdkDropListDropped)="dropExamHandler($event)">
-					  <ng-container *ngFor="let layoutExamColumn of layoutExamColumnList">
+					  <ng-container *ngFor="let layoutExamColumn of currentLayoutHandler.layoutExamColumnHandlers">
 						  <mat-expansion-panel class="example-box" cdkDrag>
 						  		<mat-expansion-panel-header>
 						  			<mat-panel-title>
-										{{getExamination(layoutExamColumn.parentExamination).name}}
+										  <!-- {{getExaminationName(layoutExam.parentExamination)}} -->
+										{{layoutExamColumn.parentExamination}}
 						  			</mat-panel-title>
 						  		</mat-expansion-panel-header>
 
@@ -178,8 +179,8 @@
 					<!-- Examination List -->
 					<mat-form-field>
 						<mat-label>Select Examination to map</mat-label>
-						<mat-select (selectionChange)="addLayoutExamColumn($event.value)">
-							<ng-container *ngFor="let examination of getRemainingExaminationList()" >
+						<mat-select (selectionChange)="addExamColumn($event.value)">
+							<ng-container *ngFor="let examination of examinationList.filter(examination => !currentLayoutHandler.layoutExamColumnHandlers.find(examColumn => examColumn.parentExamination===examination.id))" >
 								<mat-option [value]="examination">
 									{{examination.name}}
 								</mat-option>
@@ -188,24 +189,27 @@
 					</mat-form-field>
 		
 				</mat-expansion-panel>
-
+					<!-- Grade List  -->
 				<mat-expansion-panel style="margin-bottom: 0.6vh;">
+
 					<mat-expansion-panel-header>
 						<mat-panel-title>
 							Grade Mapping Section
 						</mat-panel-title>
 					</mat-expansion-panel-header>
+
+
 					<mat-accordion cdkDropList 
 						class="example-list" 
-						(cdkDropListDropped)="dropGradeHandler($event)" *ngIf="layoutGradeList.length != 0 ">
-						  <mat-expansion-panel class="example-box" *ngFor="let layoutGrade of layoutGradeList" cdkDrag>
+						(cdkDropListDropped)="dropGradeHandler($event)" *ngIf="currentLayoutHandler.layoutGradeHandlers.length != 0 ">
+						  <mat-expansion-panel class="example-box" *ngFor="let layoutGradeHandler of currentLayoutHandler.layoutGradeHandlers;" cdkDrag>
 						  	<mat-expansion-panel-header>
 						  		<mat-panel-title>
-		  					  		{{getGrade(layoutGrade.parentGrade).name}}
+		  					  		{{layoutGradeHandler.parentGrade}}
 						  		</mat-panel-title>
 						  	</mat-expansion-panel-header>
 		  					  <p>
-		  					  	<span *ngIf="getLayoutSubGradeList(getGrade(layoutGrade.parentGrade)).length!==0; else emptySubGradesElseBlock">
+		  					  	<span *ngIf="layoutGradeHandler.layoutSubGradeHandlers.length != 0; else emptySubGradesElseBlock">
 		  					  		<i>Mapped sub grades:</i>
 		  					  	</span>
 		  					  	<ng-template #emptySubGradesElseBlock>
@@ -214,25 +218,21 @@
 		  					  	
 		  					  </p>
 
-		  					  <mat-card *ngFor="let layoutSubGrade of getLayoutSubGradeList(getGrade(layoutGrade.parentGrade))">
-		  					  		{{getSubGrade(layoutSubGrade.parentSubGrade)["name"]}}
-		  					  		<span style="color:red;float: right;cursor: default;" (click)="removeLayoutSubGrade(layoutSubGrade)">
+		  					  <mat-card *ngFor="let layoutSubGradeHandler of layoutGradeHandler.layoutSubGradeHandlers">
+		  					  		{{subGradeList.find(subGrade => subGrade.id===layoutSubGradeHandler.parentSubGrade)["name"]}}
+		  					  		<span style="color:red;float: right;cursor: default;" (click)="removeLayoutSubGrade(layoutSubGradeHandler, layoutGradeHandler)">
 		  					  			Remove
 		  					  		</span>
 		  					  </mat-card>
 
 		  					  <mat-form-field>
 		  					  	<mat-label>Add Sub grade</mat-label>
-		  					  	<mat-select (selectionChange)="addLayoutSubGrade($event.value, layoutGrade)">
-		  					  		<mat-option *ngFor="let subGrade of getRemainingSubGradeList(getGrade(layoutGrade.parentGrade))" [value]="subGrade">
+		  					  	<mat-select (selectionChange)="addSubGradeHandler($event.value, layoutGradeHandler)">
+		  					  		<mat-option *ngFor="let subGrade of subGradeList.filter(subGrade => subGrade.parentGrade===layoutGradeHandler.parentGrade &&!layoutGradeHandler.layoutSubGradeHandlers.find(layoutSubGradeHandler => layoutSubGradeHandler.parentSubGrade===subGrade.id))" [value]="subGrade">
 		  					  			{{subGrade.name}}
 		  					  		</mat-option>
 		  					  	</mat-select>
-								</mat-form-field>
-								<button class="btn btn-danger" (click)="removeLayoutGrade(layoutGrade)" style="float: right;">
-									Remove
-								</button>
-								
+		  					  </mat-form-field>
 
 						  </mat-expansion-panel>
 					
@@ -241,15 +241,17 @@
 					<br>
 					<mat-form-field>
 						<mat-label>Avaliable Grades</mat-label>
-						<mat-select (selectionChange)="addLayoutGrade($event.value)">
-							<mat-option *ngFor="let grade of getRemainingGradeList()" [value]="grade">
+						<mat-select (selectionChange)="addGradeHandler($event.value)">
+							<mat-option *ngFor="let grade of gradeList.filter(grade => currentLayoutHandler.layoutGradeHandlers.find(x => x.parentGrade===grade.id))" [value]="grade">
 								{{grade.name}}
 							</mat-option>
 						</mat-select>
-					</mat-form-field>			
+					</mat-form-field>
+				
 
 				</mat-expansion-panel>
 
+				<!-- Student Detail Footer section -->
 				<mat-expansion-panel style="margin-bottom: 0.6vh">
 
 					<mat-expansion-panel-header>
@@ -259,7 +261,7 @@
 					</mat-expansion-panel-header>
 
 					<div>
-						<mat-checkbox [ngModel]="currentLayout.remarksOrderNumber" (ngModelChange)="currentLayout.remarksOrderNumber=1-currentLayout.remarksOrderNumber">
+						<mat-checkbox [ngModel]="currentLayoutHandler.remarksOrderNumber" (ngModelChange)="currentLayoutHandler.remarksOrderNumber=1-currentLayoutHandler.remarksOrderNumber">
 							Show remarks
 						</mat-checkbox>
 					</div>
@@ -267,7 +269,7 @@
 					<div cdkDropList 
 						class="example-list" 
 						(cdkDropListDropped)="dropFooterHandler($event)">
-						<ng-container *ngFor="let footer_key of getCurrentFooterList()">
+						<ng-container *ngFor="let footer_key of STUDENT_DETAILS_FOOTER_KEYS.filter(item => currentLayoutHandler[item]!==0).sort((a,b)=>currentLayoutHandler[a]<currentLayoutHandler[b])">
 							<div class="example-box" cdkDrag>
 								{{STUDENT_DETAILS_FOOTER[footer_key]}}
 								<span style="float:right;cursor: default;" (click)="removeFooterKey(footer_key)">
@@ -281,7 +283,7 @@
 						<mat-form-field>
 							<mat-label>Add new Footer paramter</mat-label>
 							<mat-select (selectionChange)="addFooterKey($event.value)">
-								<ng-container *ngFor="let footer_key of getRemainingFooterList()">
+								<ng-container *ngFor="let footer_key of STUDENT_DETAILS_FOOTER_KEYS.filter(item => currentLayoutHandler[item]==0)">
 									<mat-option [value]="footer_key">
 										{{STUDENT_DETAILS_FOOTER[footer_key]}}
 									</mat-option>
@@ -291,6 +293,7 @@
 					</div>
 				</mat-expansion-panel>
 			</mat-accordion>
+			
 
 			<mat-card>
 				
@@ -301,17 +304,17 @@
 					</button>	
 					
 					<!-- Save Layout button -->
-					<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="currentLayout && !currentLayout.id" (click)="serviceAdapter.createOrUpdateLayout()" >
+					<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="currentLayoutHandler && currentLayoutHandler.id == 0" (click)="serviceAdapter.createNewLayout()" >
 						Save
 					</button>
 
 					<!-- Update Layout button -->
-					<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="currentLayout && currentLayout.id" (click)="serviceAdapter.createOrUpdateLayout()">
+					<button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" *ngIf="currentLayoutHandler && currentLayoutHandler.id != 0" (click)="serviceAdapter.updateLayout()">
 						Update
 					</button>
 					
 					<!-- Delete Layout button -->
-					<button class="btn btn-danger" *ngIf="currentLayout && currentLayout.id != 0" (click)="serviceAdapter.deleteLayout()">
+					<button class="btn btn-danger" *ngIf="currentLayoutHandler && currentLayoutHandler.id != 0" (click)="serviceAdapter.deleteLayout()">
 						Delete
 					</button>
 
@@ -325,20 +328,18 @@
 <!-------------------------------------------------------- Preview section -------------------------------------------------------->
 <!-------------------------------------------------------- Preview section -------------------------------------------------------->
 
-		<div class="col-xs-6" style="height: 100%; display: flex; justify-content: center;">
+		<div class="col-xs-6" style="height: 100%; font-size: 10px; padding: 0 7em">
 
 			<!-- Preview div starts -->
-			<div style="height: 75vh; width: 53.04vh; font-size: 8px;">
-				<custom-report-card [user]=user 
-				[layout]="currentLayout" [layoutExamColumnList]="layoutExamColumnList" [layoutGradeList]="layoutGradeList" [layoutSubGradeList]="layoutSubGradeList" 
-				[studentList]="studentList" [studentSectionList]="studentSectionList" [studentSubGradeList]="getStudentSubGradeList()" [studentTestList]="getStudentTestList()" [studentRemarksList]="getStudentRemarksList()" [studentAttendanceList]="getStudentAttendanceList()" 
-				[sessionList]="sessionList" [classList]="classList" [divisionList]="divisionList" [gradeList]="gradeList" [subGradeList]="subGradeList" [examinationList]="examinationList" [testList]="getTestList()" [subjectList]="getSubjectList()"
-				></custom-report-card>
-			</div>
-			
+			<!-- <custom-report-card [user]=user [layout]="selectedLayout.layout"></custom-report-card> -->
 			 <!-- Preview div ends -->
 		</div>
 	</div>
+
+	<ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
 
 </div>
 

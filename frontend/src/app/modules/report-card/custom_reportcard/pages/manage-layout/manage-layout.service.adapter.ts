@@ -1,5 +1,6 @@
 
 import {ManageLayoutComponent} from './manage-layout.component';
+import { LayoutSubGradeHandler, LayoutGradeHandler, LayoutExamColumnHandler } from '../../classes/report-card-data';
 
 export class ManageLayoutServiceAdapter {
 
@@ -13,368 +14,163 @@ export class ManageLayoutServiceAdapter {
 
     //initialize data
     initializeData(): void {
-
         let request_layout_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
             'parentSchool': this.vm.user.activeSchool.dbId
         }
-
         let request_examination_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
             'parentSchool': this.vm.user.activeSchool.dbId,
-        };
-        
+        };        
         let request_grade_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
             'parentSchool': this.vm.user.activeSchool.dbId,
-        };
-        
+        };        
         let request_sub_grade_data = {
             'parentGrade__parentSession':this.vm.user.activeSchool.currentSessionDbId,
             'parentGrade__parentSchool':this.vm.user.activeSchool.dbId,
         };
-
-        let request_layout_exam_column_data = {
-            'parentLayout__parentSession':this.vm.user.activeSchool.currentSessionDbId,
-            'parentLayout__parentSchool':this.vm.user.activeSchool.dbId,
+        const request_student_section_data = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            korangle__count: '0,1'
         };
-
-        let request_layout_grade_data = {
-            'parentLayout__parentSession':this.vm.user.activeSchool.currentSessionDbId,
-            'parentLayout__parentSchool':this.vm.user.activeSchool.dbId,
-        };
-
-        let request_layout_sub_grade_data = {
-            'parentLayoutGrade__parentLayout__parentSession':this.vm.user.activeSchool.currentSessionDbId,
-            'parentLayoutGrade__parentLayout__parentSchool':this.vm.user.activeSchool.dbId,
-        };
-
-        let request_session_data = {};
         Promise.all([
+            this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout, request_layout_data),
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
-            this.vm.gradeService.getObjectList(this.vm.gradeService.grade,request_grade_data),
+            this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data),
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data),
-            this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout,request_layout_data),
-            this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_column_data),
-            this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade_data),
-            this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_sub_grade, request_layout_sub_grade_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, request_session_data),
-        ]).then(
-            value=>{
-
-                this.vm.examinationList = value[0];
-                if(value[0].length == 0){
-                    this.vm.isLoading = false;
-                    return;
-                }
-                this.vm.gradeList = value[1];
-                this.vm.subGradeList = value[2];
-                this.vm.layoutList = value[3];
-                this.vm.layoutExamColumnList = value[4];
-                this.vm.layoutGradeList = value[5];
-                this.vm.layoutSubGradeList = value[6];
-                this.vm.sessionList = value[7];
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {})
+        ]).then(value => {
+            this.vm.layoutList = value[0];
+            this.vm.examinationList = value[1];
+            this.vm.gradeList = value[2];
+            this.vm.subGradeList = value[3];
+            this.vm.sessionList = value[4];
+            this.vm.studentSectionList = value[5];
+            this.vm.classList = value[6];
+            this.vm.divisionList = value[7]
+            const request_student_data = {
+                id: this.vm.studentSectionList[0].parentStudent,
+            }
+            this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(value => {
+                this.vm.studentList = value;
                 this.vm.isLoading = false;
-            },
-            error=>{
+            }, error => {
+                this.vm.isLoading = false;
+            })
+        }, error=>{
                 this.vm.isLoading = false;
             }
-        );
-        
+        );        
     }
 
-
-    updateOrderNumber(){
-        if(this.vm.selectedLayout == null || this.vm.selectedLayout == undefined) return;
-
-        this.vm.selectedLayout.selectedStudentDetailsHeader.forEach((key,index)=>{
-            this.vm.selectedLayout.layout[key] = index+1;
-        });
-
-        this.vm.selectedLayout.selectedStudentDetailsFooter.forEach((key,index)=>{
-            this.vm.selectedLayout.layout[key] = index+1;
-        });
-
-    }
-
-    validateAttendanceStartAndEndDate():Boolean{
-        if(this.vm.selectedLayout.autoAttendance == false){
-            this.vm.selectedLayout.layout.attendanceStartDate = null;
-            this.vm.selectedLayout.layout.attendanceEndDate = null;
-            return true;
-        }
-        if(this.vm.selectedLayout.autoAttendance == true){
-            if(this.vm.selectedLayout.layout.attendanceStartDate == null || this.vm.selectedLayout.layout.attendanceEndDate == null){
-                alert('Attendance start date and end date must not be empty');
-                return false;
-            }
-            if(this.vm.selectedLayout.layout.attendanceStartDate >= this.vm.selectedLayout.layout.attendanceEndDate){
-                alert('Please enter valid dates');
-                return false;
-            }
-        }
-        return true;
-    }
-
-    createNewLayout(){
-        if(this.vm.selectedLayout == null || this.vm.selectedLayout == undefined) return;
-        if(this.vm.selectedLayout.layout.id != 0) return;
-
-        if(this.vm.selectedLayout.layout.name == '' || this.vm.isNameUnqiue(this.vm.selectedLayout, this.vm.layoutList) == false){
-            alert('Layout Name must be unique and not empty');
-            return;
-        }
-        if(this.validateAttendanceStartAndEndDate() == false){
-            return;
-        }
-
-        this.updateOrderNumber();
+    fetchLayoutData = () => {
         this.vm.isLoading = true;
-
-        let request_data = this.vm.selectedLayout.layout;
-
-        Object.keys(request_data).forEach(key=>{
-            if(typeof request_data[key] == 'number' && request_data[key] == 0){
-                delete request_data[key];
-            }
-            if(typeof request_data[key] == 'string' && request_data[key] == ''){
-                delete request_data[key];
-            }
-        });
-
-        this.vm.customReportCardService.createObject(this.vm.customReportCardService.layout,request_data).then(
-            value=>{
-
-                this.vm.selectedLayout.layout.id = value.id;
-                this.vm.layoutList.push(value);
-                
-                this.createLayoutExamColumnsAndLayoutGrades();
-                
-            },
-            error => {
-                this.vm.isLoading = false;
-            }
-        );
-
-    }
-
-
-    // Updating or saving a new layout
-    updateLayout(){
-        if(this.vm.selectedLayout == null || this.vm.selectedLayout == undefined) return;
-        
-        // Check if name is unique
-        if(this.vm.selectedLayout.layout.name == '' || this.vm.isNameUnqiue(this.vm.selectedLayout, this.vm.layoutList) == false){
-            alert('Layout Name must be unique and not empty');
-            return;
+        const request_layout_exam_column = {
+            parentLayout: this.vm.currentLayout.id,
+            korangle__order: 'orderNumber'
         }
-        
-        if(this.validateAttendanceStartAndEndDate() == false){
-            return;
+        const request_layout_grade = {
+            parentLayout: this.vm.currentLayout.id,
+            korangle__order: 'orderNumber'
         }
-
-        this.updateOrderNumber();
-        this.vm.isLoading = true;
-
-        let request_data = this.vm.selectedLayout.layout;
-
-        let service_list = [];
-
-        service_list.push(this.vm.customReportCardService.updateObject(this.vm.customReportCardService.layout, request_data));
-
-        // Delete existing layout exams columns data
-        let request_layout_exam_column_delete_data = this.vm.layoutExamColumnList.filter(item=>{
-            return item.parentLayout == this.vm.selectedLayout.layout.id;
-        });
-
-        if(request_layout_exam_column_delete_data.length != 0){
-            service_list.push(this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_column_delete_data))
+        const request_layout_sub_grade = {
+            parentLayoutGrade__parentLayout: this.vm.currentLayout.id,
+            korangle__order: 'orderNumber'
         }
-
-        // Delete existing layout grade data
-        // Deleting this will also delete the layout sub grade data because of cascade property
-        let request_layout_grade_delete_data = this.vm.layoutGradeList.filter(item=>{
-            return item.parentLayout == this.vm.selectedLayout.layout.id;
-        });
-
-        if(request_layout_grade_delete_data.length != 0){
-            service_list.push(this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade_delete_data))
-        }
-
-        Promise.all(service_list).then(
-            value=>{
-
-                // Sync the data
-                this.vm.layoutList = this.vm.layoutList.map(item=>{
-                    if(item.id == value[0].id){
-                        return value[0];
-                    }
-                    return item;
-                });
-
-                this.vm.layoutExamColumnList = this.vm.layoutExamColumnList.filter(item=>{
-                    return item.parentLayout != this.vm.selectedLayout.layout.id;
-                });
-
-                this.vm.layoutGradeList = this.vm.layoutGradeList.filter(item=>{
-
-                    if(item.parentLayout != this.vm.selectedLayout.layout.id) return true;
-
-                    this.vm.layoutSubGradeList = this.vm.layoutSubGradeList.filter(item1=>{
-                        return item1.parentLayoutGrade != item.id;
-                    });
-                });
-
-                this.createLayoutExamColumnsAndLayoutGrades();
-            },
-            error=>{
-                this.vm.isLoading = false;
-            }
-        );
-
-
-        return;
-          
-    }
-
-    createLayoutExamColumnsAndLayoutGrades(){
-
-        // Handle  the orderNumber
-        this.vm.selectedLayout.layoutExamColumnList.forEach((item, index)=>{
-            item.orderNumber = index + 1;
-            item.id = 0;
-            item.parentLayout = this.vm.selectedLayout.layout.id;
-        });
-
-        this.vm.selectedLayout.layoutGradeList.forEach((item, index)=>{
-            item.orderNumber = index + 1;
-            item.id = 0;
-            item.parentLayout = this.vm.selectedLayout.layout.id;
-        });
-
-        let request_layout_exam_column_create_data = this.vm.selectedLayout.layoutExamColumnList;
-        let request_layout_grade_create_data = this.vm.selectedLayout.layoutGradeList;
-
         Promise.all([
-            this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_exam_column,request_layout_exam_column_create_data),
-            this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_grade,request_layout_grade_create_data),
-        ]).then(
-            value=>{
-
-
-                // Sync with the list present here
-                value[0].forEach(item=>{
-                    this.vm.layoutExamColumnList.push(item);
-                });
-
-                value[1].forEach(item=>{
-                    this.vm.layoutGradeList.push(item);
-                });
-
-                this.createLayoutSubGrades(value[1]);
-
-            },
-            error=>{
-
-            }
-        );
-
-
-    }
-
-    createLayoutSubGrades(layoutGradeList){
-
-        if(layoutGradeList.length == 0 || this.vm.selectedLayout.layoutSubGradeList.length == 0){
-            this.vm.resetCurrentLayout();
-            alert('Task successfull');
-            this.vm.isLoading = false;
-
-            return;
-        }
-
-        let request_layout_sub_grade_create_data = this.vm.selectedLayout.layoutSubGradeList.map((layoutSubGrade, index)=>{
+            this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_grade, request_layout_grade),
+            this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_exam_column, request_layout_exam_column),
+            this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_sub_grade, request_layout_sub_grade),
             
-            layoutSubGrade.id = 0;
-
-            let subGrade_id = layoutSubGrade.parentSubGrade;
-            let grade_id = this.vm.subGradeList.find(item=>{return item.id == subGrade_id}).parentGrade;
-        
-            let layoutGrade = layoutGradeList.find(item=>{
-                return item.parentGrade == grade_id && item.parentLayout == this.vm.selectedLayout.layout.id;
-            });
-
-            layoutSubGrade.parentLayoutGrade = layoutGrade.id;
-
-            layoutSubGrade.orderNumber = index+1;
-
-            return layoutSubGrade;
-        });
-
-        this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_sub_grade, request_layout_sub_grade_create_data).then(
-            value=>{
-
-
-                // Sync with the list present here
-                value.forEach(item=>{
-                    this.vm.layoutSubGradeList.push(item);
-                });
-
-                this.vm.resetCurrentLayout();
-                alert('Task successfull');
-                this.vm.isLoading = false; 
-            },
-            error=>{
-                this.vm.isLoading = false;
-            }
-        );
+        ]).then(value => {
+            this.vm.layoutGradeList = value[0];
+            this.vm.layoutExamColumnList = value[1];
+            this.vm.layoutSubGradeList = value[2];
+            this.vm.isLoading = false;
+            
+        }, error => {
+            this.vm.isLoading = false;
+        })
     }
 
-    deleteLayout(){
-        if(this.vm.selectedLayout == null || this.vm.selectedLayout.layout.id == 0) return;
-
-        if(confirm('Delete layout ?') == false){
-            return;
+    createOrUpdateLayout = () => {
+        let promise = null;
+        if(!this.vm.currentLayout.id){
+            promise = this.vm.customReportCardService.createObject(this.vm.customReportCardService.layout, this.vm.currentLayout);
+        }else{
+            promise = this.vm.customReportCardService.updateObject(this.vm.customReportCardService.layout, this.vm.currentLayout);
         }
+        promise.then(layout => {
+            this.vm.currentLayout = layout;
 
-        this.vm.isLoading = true;
-
-        this.vm.customReportCardService.deleteObject(this.vm.customReportCardService.layout, this.vm.selectedLayout.layout).then(
-            value=>{
-
-                this.vm.layoutList = this.vm.layoutList.filter(item=>{
-                    return item.id != this.vm.selectedLayout.layout.id;
-                });
-
-                this.vm.layoutExamColumnList = this.vm.layoutExamColumnList.filter(item=>{
-                    let layoutExam = this.vm.selectedLayout.layoutExamColumnList.find(item1=>{
-                        return item1.id == item.id;
-                    });
-                    if(layoutExam == undefined) return true;
-                    return false;
-                });
-
-                this.vm.layoutGradeList = this.vm.layoutGradeList.filter(item=>{
-
-                    let layoutGrade = this.vm.selectedLayout.layoutGradeList.find(item1=>{
-                        return item1.id == item.id;
-                    });
-
-                    if(layoutGrade == undefined) return true;
-
-                    this.vm.layoutSubGradeList = this.vm.layoutSubGradeList.filter(item1=>{
-                        return item1.parentLayoutGrade != layoutGrade.id;
-                    });
-                    return false;
-                });
-
-                this.vm.isLoading = false;
-                this.vm.resetCurrentLayout();
-                alert('Layout deleted');
-            },
-            error=>{
-                this.vm.isLoading = false;
+            // Handling the LayoutExamColumn
+            const exam_column_delete_request_data = {
+                id__in: this.vm.layoutExamColumnList.filter(item => item.id).map(x=>x.id)
             }
-        );
+            this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_exam_column, exam_column_delete_request_data).then(val => {
+                this.vm.layoutExamColumnList.forEach((item, i) => {
+                    item.orderNumber = i+1;
+                    item.parentLayout = this.vm.currentLayout.id;
+                })
+                this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_exam_column, this.vm.layoutExamColumnList).then(value => {
+                    value.forEach((layout_exam_column, i) => {
+                        this.vm.layoutExamColumnList[i] = layout_exam_column;
+                    })
+                })
+            })
+
+            // Handling the LayoutGrades
+            const layout_grade_delete_request_data = {
+                id__in: this.vm.layoutGradeList.filter(item => item.id).map(x => x.id)
+            }
+            this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_grade, layout_grade_delete_request_data).then(val => {
+                let promise_arr = [];
+                let arr = [];
+                this.vm.layoutGradeList.forEach((item, i) => {
+                    item.orderNumber = i+1;
+                    item.parentLayout = this.vm.currentLayout.id;
+                })
+                this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_grade, this.vm.layoutGradeList).then(value => {
+                    value.forEach((layout_grade, i) => {
+                        let promise_arr = [];
+                        const layoutSubGradeList = this.vm.getLayoutSubGradeList(this.vm.getGrade(layout_grade.parentGrade));
+                        this.vm.layoutSubGradeList = this.vm.layoutSubGradeList.filter(item => !layoutSubGradeList.includes(item));
+                        this.vm.layoutGradeList[i] = layout_grade;                        
+                        layoutSubGradeList.forEach((layoutSubGrade, j) => {
+                            layoutSubGrade.orderNumber = i+1;
+                            layoutSubGrade.parentLayoutGrade = layout_grade.id;
+                        })
+                        this.vm.customReportCardService.createObjectList(this.vm.customReportCardService.layout_sub_grade, layoutSubGradeList).then(value => {
+                            value.forEach((layout_sub_grade, j) => {
+                                this.vm.layoutSubGradeList.push(layout_sub_grade);
+                            })
+                        })
+                    })
+                })
+            })
+        })
     }
+
+    deleteLayout = () => {
+        if(!confirm('Are you sure you want to delete this layout?'))return;
+        this.vm.isLoading = true;
+        this.vm.customReportCardService.deleteObject(this.vm.customReportCardService.layout, this.vm.currentLayout).then(value => {
+            this.vm.currentLayout = this.vm.getEmptyLayout();      
+            this.vm.layoutSubGradeList = [];
+            this.vm.layoutExamColumnList = [];
+            this.vm.layoutGradeList = [];
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        })
+    }
+
+
+    
 
 }
