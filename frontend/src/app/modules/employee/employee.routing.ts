@@ -41,6 +41,12 @@ const routes: Routes = [
     },
 
     {
+        path: 'update_all',
+        loadChildren: 'app/modules/employee/pages/update-all/update-all.module#UpdateAllModule',
+        data: {moduleName: 'employee'},
+    },
+
+    {
         path: '',
         component: EmployeeComponent,
     },
