@@ -30,7 +30,9 @@ export class UpdateAllServiceAdapter {
     }
 
     initializeEmployeeFullProfileList(value){
-        this.vm.employeeFullProfileList = value;
+        this.vm.employeeFullProfileList = value.filter(employee=>{
+            return employee.dateOfLeaving === null;
+        });
         let serialnumber = 0;
         this.vm.employeeFullProfileList.forEach(employee=>{
             employee.serialNumber = ++serialnumber;
@@ -44,10 +46,7 @@ export class UpdateAllServiceAdapter {
         };
         data[key] = newValue;
         console.log(data);
-        // console.log(key);
         if (employee[key] != newValue) {
-            // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
-            // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
 
             if (key == 'mobileNumber') {
                 if (newValue.toString().length!==10){
@@ -60,15 +59,25 @@ export class UpdateAllServiceAdapter {
                     data['mobileNumber'] = newValue;
                 }
 
-            }else if (key == 'aadharNum') {
+            }else if (key == 'aadharNumber') {
                 if (newValue.toString().length!==12){
-                    if (employee.aadharNum!=null) {
+                    if (employee.aadharNumber!=null) {
                         alert('Aadhar number should be 12 digits!');
                     }
-                    (<HTMLInputElement> document.getElementById(employee.id.toString()+key.toString())).value=employee.aadharNum;
+                    (<HTMLInputElement> document.getElementById(employee.id.toString()+key.toString())).value=employee.aadharNumber;
                     return;
                 }else{
-                    data['aadharNum'] = newValue;
+                    data['aadharNumber'] = newValue;
+                }
+            }else if (key == 'panNumber') {
+                if (newValue.toString().length!==10){
+                    if (employee.panNumber!=null) {
+                        alert('Pan number should be 10 digits!');
+                    }
+                    (<HTMLInputElement> document.getElementById(employee.id.toString()+key.toString())).value=employee.panNumber;
+                    return;
+                }else{
+                    data['panNumber'] = newValue;
                 }
             }
 

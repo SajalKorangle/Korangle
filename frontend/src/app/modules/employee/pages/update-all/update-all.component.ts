@@ -25,36 +25,6 @@ const GENDER_LIST = [
   'Other',
 ];
 
-const CATEGORY_LIST = [
-  'SC',
-  'ST',
-  'OBC',
-  'Gen.',
-];
-
-const RTE_LIST = [
-  'YES',
-  'NO',
-];
-
-const BLOOD_GROUP_LIST = [
-  'A -',
-  'A +',
-  'B -',
-  'B +',
-  'AB -',
-  'AB +',
-  'O -',
-  'O +',
-];
-
-const RELIGION_LIST = [
-  'Hinduism',
-  'Islam',
-  'Jainism',
-  'Christianity',
-];
-
 @Component({
   selector: 'app-update-all',
   templateUrl: './update-all.component.html',
@@ -70,13 +40,13 @@ export class UpdateAllComponent implements OnInit {
     // value, key, inputType, show, selectedList
     new ColumnHandle('S No.', 'serialNumber', null, true, ''), // 1
     new ColumnHandle('Name', 'name', 'text', true, ''), // 2
-    new ColumnHandle('Employee No.', 'employeeNumber', null, false, ''), // 3
+    new ColumnHandle('Employee No.', 'employeeNumber', 'text', false, ''), // 3
     new ColumnHandle('Father\'s Name', 'fatherName', 'text', true, ''), // 4
     new ColumnHandle('Spouse\'s Name', 'spouseName', 'text', false, ''), // 5
     new ColumnHandle('Mobile No.', 'mobileNumber', 'number', true, ''), // 6
     new ColumnHandle('Date of Birth', 'dateOfBirth', 'date', false, ''), // 7
     new ColumnHandle('Mother\'s Name', 'motherName', 'text', false, ''), // 8
-    new ColumnHandle('Aadhar No.', 'aadharNum', 'number', false, ''), // 9
+    new ColumnHandle('Aadhar No.', 'aadharNumber', 'number', false, ''), // 9
     new ColumnHandle('Passport No.', 'passportNumber', 'number', false, ''), // 10
     new ColumnHandle('Qualification', 'qualification', 'number', false, ''), // 11
     new ColumnHandle('Current Post', 'currentPost', 'text', false, ''), // 12
@@ -85,11 +55,12 @@ export class UpdateAllComponent implements OnInit {
     new ColumnHandle('Gender', 'gender', 'list', false, GENDER_LIST), // 15
     new ColumnHandle('Address', 'address', 'text', false, ''), // 16
     new ColumnHandle('Bank Name', 'bankName', 'text', false, ''), // 17
-    new ColumnHandle('Bank Acc. No.', 'bankAccountNum', 'text', false, ''), // 18
+    new ColumnHandle('Bank Acc. No.', 'bankAccountNumber', 'text', false, ''), // 18
     new ColumnHandle('Epf Acc. No.', 'epfAccountNumber', 'number', false, ''), // 19
-    new ColumnHandle('Month Salary', 'monthlySalary', 'text', false, ''), // 20
-    new ColumnHandle('Pran No.', 'pranNumber', 'text', false, ''), // 21
-    new ColumnHandle('Remark', 'remark', 'text', false, ''), // 22
+    new ColumnHandle('Bank IFSC Code', 'bankIfscCode', 'text', false, ''), // 20
+    new ColumnHandle('Month Salary', 'monthlySalary', 'text', false, ''), // 21
+    new ColumnHandle('Pran No.', 'pranNumber', 'text', false, ''), // 22
+    new ColumnHandle('Remark', 'remark', 'text', false, ''), // 23
   ];
 
   serviceAdapter: UpdateAllServiceAdapter;
