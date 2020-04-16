@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v1
       with:
-        python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+        python-version: '3.6.5' # Version range or exact version of a Python version to use, using SemVer's version range syntax
 
     # Runs a single command using the runners shell
     # - name: Run a one-line script
