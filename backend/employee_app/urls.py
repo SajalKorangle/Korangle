@@ -65,3 +65,10 @@ urlpatterns += [
 	url(r'^employee-permissions/batch', EmployeePermissionListView.as_view()),
 	url(r'^employee-permissions', EmployeePermissionView.as_view()),
 ]
+
+from .views import EmployeeSessionDetailView, EmployeeeSessionDetailListView
+
+urlpatterns += [
+	url(r'^employee-session-detail/batch',EmployeeeSessionDetailListView.as_view()),
+	url(r'^employee-session-detail',EmployeeSessionDetailView.as_view()),
+]

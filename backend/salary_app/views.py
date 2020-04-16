@@ -1,4 +1,5 @@
 from decorators import user_permission
+from common.common_views import CommonView, CommonListView
 
 from rest_framework.views import APIView
 
@@ -107,3 +108,18 @@ class SchoolEmployeePaymentsView(APIView):
         }
         return get_school_employee_payment_list(data)
 
+from .models import Payslip
+
+class PaySlipView(CommonView,APIView):
+    Model = Payslip
+
+class PaySlipListView(CommonListView,APIView):
+    Model = Payslip
+
+from .models import EmployeePayment
+
+class EmployeeePaymentView(CommonView,APIView):
+    Model = EmployeePayment
+
+class EmployeeePaymentListView(CommonListView,APIView):
+    Model = EmployeePayment

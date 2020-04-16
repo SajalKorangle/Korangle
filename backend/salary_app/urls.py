@@ -22,3 +22,17 @@ urlpatterns += [
 	url(r'^employee-payments/(?P<employee_payment_id>[0-9]+)', EmployeePaymentView.as_view()),
 	url(r'^employee-payments', EmployeePaymentView.as_view()),
 ]
+
+from .views import PaySlipView, PaySlipListView
+
+urlpatterns += [
+	url(r'^payslip/batch',PaySlipListView.as_view()),
+	url(r'^payslip',PaySlipView.as_view())
+]
+
+from .views import EmployeeePaymentView, EmployeeePaymentListView
+
+urlpatterns += [
+	url(r'^employee-payment/batch',EmployeeePaymentListView.as_view()),
+	url(r'^employee-payment',EmployeeePaymentView.as_view())
+]
