@@ -88,6 +88,7 @@ export class ManageLayoutServiceAdapter {
             this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.layout_sub_grade, request_layout_sub_grade),
             
         ]).then(value => {
+            console.log(value);
             this.vm.layoutGradeList = value[0];
             this.vm.layoutExamColumnList = value[1];
             this.vm.layoutSubGradeList = value[2];
@@ -99,6 +100,7 @@ export class ManageLayoutServiceAdapter {
     }
 
     createOrUpdateLayout = () => {
+        this.vm.isLoading = true;
         let promise = null;
         if(!this.vm.currentLayout.id){
             promise = this.vm.customReportCardService.createObject(this.vm.customReportCardService.layout, this.vm.currentLayout);
@@ -110,7 +112,7 @@ export class ManageLayoutServiceAdapter {
 
             // Handling the LayoutExamColumn
             const exam_column_delete_request_data = {
-                id__in: this.vm.layoutExamColumnList.filter(item => item.id).map(x=>x.id)
+                parentLayout: this.vm.currentLayout.id
             }
             this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_exam_column, exam_column_delete_request_data).then(val => {
                 this.vm.layoutExamColumnList.forEach((item, i) => {
@@ -121,12 +123,13 @@ export class ManageLayoutServiceAdapter {
                     value.forEach((layout_exam_column, i) => {
                         this.vm.layoutExamColumnList[i] = layout_exam_column;
                     })
-                })
-            })
+                    this.vm.isLoading = false;
+                }, error => this.vm.isLoading = false)
+            }, error => this.vm.isLoading = false)
 
             // Handling the LayoutGrades
             const layout_grade_delete_request_data = {
-                id__in: this.vm.layoutGradeList.filter(item => item.id).map(x => x.id)
+                parentLayout: this.vm.currentLayout.id
             }
             this.vm.customReportCardService.deleteObjectList(this.vm.customReportCardService.layout_grade, layout_grade_delete_request_data).then(val => {
                 let promise_arr = [];
@@ -149,10 +152,13 @@ export class ManageLayoutServiceAdapter {
                             value.forEach((layout_sub_grade, j) => {
                                 this.vm.layoutSubGradeList.push(layout_sub_grade);
                             })
-                        })
+                            this.vm.isLoading = false;
+                        }, error => this.vm.isLoading = false)
                     })
-                })
-            })
+                }, error => this.vm.isLoading = false)
+            }, error => this.vm.isLoading = false)
+        }, error => {
+            this.vm.isLoading = false;
         })
     }
 

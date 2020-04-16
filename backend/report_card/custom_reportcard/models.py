@@ -8,7 +8,7 @@ from student_app.models import Student
 
 class Layout(models.Model):
 	name = models.TextField(verbose_name='name')
-	reportCardHeading = models.TextField(null = True, default='', verbose_name='reportCardHeading')
+	reportCardHeading = models.TextField(null = True, blank=True, default='', verbose_name='reportCardHeading')
 	parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
 	parentSession = models.ForeignKey(Session, on_delete=models.CASCADE, default=0, verbose_name='parentSession')
 	
@@ -17,6 +17,7 @@ class Layout(models.Model):
 	attendanceStartDate = models.DateField(null=True, verbose_name='attendanceStartDate')
 	attendanceEndDate = models.DateField(null=True, verbose_name='attendanceEndDate')
 	decimalPlaces = models.IntegerField(null=True, default =0, verbose_name='decimalPlaces')
+	passingPercentage = models.IntegerField(null=True, default=33, verbose_name='passingPercentage')
 	# Header
 	studentNameOrderNumber = models.IntegerField(null=True, default =0, verbose_name='studentNameOrderNumber')
 	fatherNameOrderNumber = models.IntegerField(null=True, default =0, verbose_name='fatherNameOrderNumber')

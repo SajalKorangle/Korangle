@@ -44,7 +44,7 @@ export class PrintCustomReportCardComponent implements OnInit, OnDestroy, AfterV
     
     classTeacherSignatureList:any = [];
 
-    session:any = '';
+    sessionList:any[] = [];
     
     STUDENT_DETAILS_HEADER = {
         'studentNameOrderNumber':'Student Name',
@@ -87,31 +87,31 @@ export class PrintCustomReportCardComponent implements OnInit, OnDestroy, AfterV
         this.layoutExamColumnList = value['layoutExamColumnList'];
         this.layoutGradeList = value['layoutGradeList'];
         this.layoutSubGradeList = value['layoutSubGradeList'];
-        this.studentRemarkList = value['studentRemarkList'];
 
+        this.selectedStudentList = value['selectedStudentList'];
         this.studentSectionList = value['studentSectionList'];
-
-        this.gradeList = value['gradeList'];
-        this.subGradeList = value['subGradeList'];
         this.studentSubGradeList = value['studentSubGradeList'];
-
-        this.selectedClass = value['selectedClass'];
-        this.selectedDivision = value['selectedDivision'];
-
-        this.examinationList = value['examinationList'];
+        this.studentTestList = value['studentTestList'];
+        this.studentRemarkList = value['studentRemarkList'];
+        this.studentAttendanceList = value['studentAttendanceList'];
 
         this.subjectList = value['subjectList'];
         this.classSubjectList = value['classSubjectList'];
         this.studentSubjectList = value['studentSubjectList'];
+
+        this.sessionList = value['sessionList'];
+
+        this.selectedClass = value['selectedClass'];
+        this.selectedDivision = value['selectedDivision'];
+
+        this.gradeList = value['gradeList'];
+        this.subGradeList = value['subGradeList'];      
+
+        this.examinationList = value['examinationList'];
         this.testSecondList = value['testSecondList'];
-        this.studentTestList = value['studentTestList'];
 
-        this.studentAttendanceList = value['studentAttendanceList'];
-
-        this.selectedStudentList = value['selectedStudentList'];
-
-        this.classTeacherSignatureList = value['classTeacherSignature'];
-        this.session = value['session'];
+        this.classTeacherSignatureList = value['classTeacherSignatureList'];
+        
         this.viewChecked = false;
     }
 

@@ -114,67 +114,21 @@
 
 					<!-- Subject Count input -->
 					<div>
-						<mat-form-field class="col-xs-6" matTooltip="Number of subjects to be shown for preview" matTooltipPosition="above">
+						<mat-form-field class="col-xs-4" matTooltip="Number of subjects to be shown for preview" matTooltipPosition="above">
 							<label>Max. of Subjects</label>
 							<input matInput type="number" min="0" max="10" step="1" [(ngModel)]="subjectsToShow" />
 						</mat-form-field>
 
-						<mat-form-field class="col-xs-6">
+						<mat-form-field class="col-xs-4">
 							<label>Decimal place</label>
 							<input matInput type="number" min="0" max="2" step="1" [(ngModel)]="currentLayout.decimalPlaces">
 						</mat-form-field>
+						<mat-form-field class="col-xs-4">
+							<label>Passing %</label>
+							<input matInput type="number" min="0" max="100" step="1" [(ngModel)]="currentLayout.passingPercentage">
+						</mat-form-field>
 					</div>
 
-					<!-- LayoutExamColumn  parameter -->
-					<mat-accordion cdkDropList class="example-list" (cdkDropListDropped)="dropExamHandler($event)">
-					  <ng-container *ngFor="let layoutExamColumn of layoutExamColumnList">
-						  <mat-expansion-panel class="example-box" cdkDrag>
-						  		<mat-expansion-panel-header>
-						  			<mat-panel-title>
-										{{getExamination(layoutExamColumn.parentExamination).name}}
-						  			</mat-panel-title>
-						  		</mat-expansion-panel-header>
-
-						  		<mat-form-field>
-						  			<mat-label>
-						  				Report card exam name
-						  			</mat-label>
-						  			<input matInput [(ngModel)]="layoutExamColumn.name">
-						  		</mat-form-field>
-						  		
-						  		<button class="btn btn-danger" (click)="removeLayoutExamColumn(layoutExamColumn)" style="float: right;">
-						  			Remove
-						  		</button>
-
-						  		<mat-form-field>
-						  			<mat-label>Column Type</mat-label>
-						  			<mat-select [(value)]="layoutExamColumn.columnType">
-						  				<mat-option *ngFor="let exam_type of EXAM_COLUMN_TYPE" [value]="exam_type">
-						  					{{exam_type}}
-						  				</mat-option>
-						  			</mat-select>
-						  		</mat-form-field>
-
-						  		<mat-form-field>
-									<mat-label *ngIf="layoutExamColumn.columnType.split('/').length == 2">
-										{{layoutExamColumn.columnType.split('/')[0]}}  Maximum Marks
-						  			</mat-label>
-						  			<mat-label *ngIf="layoutExamColumn.columnType.split('/').length == 1">
-						  				Maximum Marks
-						  			</mat-label>
-						  			<input matInput type="number" min="0" [(ngModel)]="layoutExamColumn.maximumMarksObtainedOne">
-						  		</mat-form-field>
-
-						  		<mat-form-field *ngIf="layoutExamColumn.columnType.split('/').length == 2">
-						  			<mat-label>
-						  				{{layoutExamColumn.columnType.split('/')[1]}} Maximum Marks
-						  			</mat-label>
-						  			<input matInput type="number" min="0" [(ngModel)]="layoutExamColumn.maximumMarksObtainedTwo">
-						  		</mat-form-field>
-
-						  </mat-expansion-panel>
-					  </ng-container>
-					</mat-accordion>
 					<!-- Examination List -->
 					<mat-form-field>
 						<mat-label>Select Examination to map</mat-label>
@@ -185,7 +139,58 @@
 								</mat-option>
 							</ng-container>
 						</mat-select>
-					</mat-form-field>
+					</mat-form-field>					
+
+					<!-- LayoutExamColumn  parameter -->					
+					<mat-accordion cdkDropList class="example-list" (cdkDropListDropped)="dropExamHandler($event)">
+						<ng-container *ngFor="let layoutExamColumn of layoutExamColumnList">
+							<mat-expansion-panel class="example-box" cdkDrag>
+									<mat-expansion-panel-header>
+										<mat-panel-title>
+										  {{getExamination(layoutExamColumn.parentExamination).name}}
+										</mat-panel-title>
+									</mat-expansion-panel-header>
+  
+									<mat-form-field>
+										<mat-label>
+											Report card exam name
+										</mat-label>
+										<input matInput [(ngModel)]="layoutExamColumn.name">
+									</mat-form-field>
+									
+									<button class="btn btn-danger" (click)="removeLayoutExamColumn(layoutExamColumn)" style="float: right;">
+										Remove
+									</button>
+  
+									<mat-form-field>
+										<mat-label>Column Type</mat-label>
+										<mat-select [(value)]="layoutExamColumn.columnType">
+											<mat-option *ngFor="let exam_type of EXAM_COLUMN_TYPE" [value]="exam_type">
+												{{exam_type}}
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+  
+									<mat-form-field>
+									  <mat-label *ngIf="layoutExamColumn.columnType.split('/').length == 2">
+										  {{layoutExamColumn.columnType.split('/')[0]}}  Maximum Marks
+										</mat-label>
+										<mat-label *ngIf="layoutExamColumn.columnType.split('/').length == 1">
+											Maximum Marks
+										</mat-label>
+										<input matInput type="number" min="0" [(ngModel)]="layoutExamColumn.maximumMarksObtainedOne">
+									</mat-form-field>
+  
+									<mat-form-field *ngIf="layoutExamColumn.columnType.split('/').length == 2">
+										<mat-label>
+											{{layoutExamColumn.columnType.split('/')[1]}} Maximum Marks
+										</mat-label>
+										<input matInput type="number" min="0" [(ngModel)]="layoutExamColumn.maximumMarksObtainedTwo">
+									</mat-form-field>
+  
+							</mat-expansion-panel>
+						</ng-container>
+					  </mat-accordion>
 		
 				</mat-expansion-panel>
 
@@ -332,7 +337,8 @@
 				<custom-report-card [user]=user 
 				[layout]="currentLayout" [layoutExamColumnList]="layoutExamColumnList" [layoutGradeList]="layoutGradeList" [layoutSubGradeList]="layoutSubGradeList" 
 				[studentList]="studentList" [studentSectionList]="studentSectionList" [studentSubGradeList]="getStudentSubGradeList()" [studentTestList]="getStudentTestList()" [studentRemarksList]="getStudentRemarksList()" [studentAttendanceList]="getStudentAttendanceList()" 
-				[sessionList]="sessionList" [classList]="classList" [divisionList]="divisionList" [gradeList]="gradeList" [subGradeList]="subGradeList" [examinationList]="examinationList" [testList]="getTestList()" [subjectList]="getSubjectList()"
+				[subjectList]="getSubjectList()" [classSubjectList]="getClassSubjectList()" [studentSubjectList]="getStudentSubjectList()" 
+				[sessionList]="sessionList" [classList]="classList" [divisionList]="divisionList" [gradeList]="gradeList" [subGradeList]="subGradeList" [examinationList]="examinationList" [testList]="getTestList()" [classTeacherSignatureList]="getClassTeacherSignatureList()"
 				></custom-report-card>
 			</div>
 			

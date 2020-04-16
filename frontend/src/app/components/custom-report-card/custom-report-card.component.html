@@ -1,8 +1,8 @@
-<div id="main-report-card-container" style="position: relative;" *ngFor="let student of studentList">
+<div class="main-report-card-container" style="position: relative;" *ngFor="let student of studentList">
     <img src="{{user.activeSchool.profileImage}}"
     style="border-radius: 2px; position: absolute;
     top: 50%; left: 50%;
-    width: 10em; height: 10em;
+    width: 15em; height: 15em;
     opacity: 0.15 !important;
     filter: grayscale(100%) !important;
     z-index: 10;
@@ -30,7 +30,7 @@
     <!-- Leater head for report card -->
     <div class="row no-gutters text-center" *ngIf="!layout.showLetterHeadImage">
         <div class="col-xs-2">
-            <img src="{{user.activeSchool.profileImage}}" height="3em">
+            <img src="{{user.activeSchool.profileImage}}" style="width: 100%;">
         </div>
         <div class="col-xs-8 text-center">
             <div class="text-bold margin-bottom" style="font-size: 2em; color: red !important; line-height: 1em;">
@@ -46,7 +46,7 @@
     <div class="text-bold text-center" *ngIf="layout.reportCardHeading">
         <span style="font-size:1.4em">{{layout.reportCardHeading}}</span>
     </div>
-    <div class="text-bold text-center">
+    <div class="text-bold text-center margin-bottom">
         <span style="font-size: 1.3em">{{getSession(user.activeSchool.currentSessionDbId).name}}</span>
     </div>
     <div class="row no-gutters padding-main" style="display: flex; align-items: center">
@@ -62,7 +62,7 @@
             </div>
         </div>
         <div class="col-xs-3" style="padding: 0;text-align: right;">
-            <img style="height: 8em; width: auto;" src="{{user.activeSchool.profileImage}}">
+            <img style="height: 50%; border-radius: 0.5em;" *ngIf="student.profileImage" src="{{student.profileImage}}">
         </div>
     </div>
     <div class="row no-gutters padding-main" style="font-size: 1em; line-height: 1.1em">
@@ -110,25 +110,25 @@
                     </ng-container>
                 </ng-container>
             </tr>
-            <tr *ngFor="let subject of subjectList; let i=i">
+            <tr *ngFor="let studentSubject of getStudentSubjectList(student); let i=i">
                 <th>
-                   {{subject.name}}
+                   {{getSubject(studentSubject.parentSubject).name}}
                 </th>
                 <ng-container *ngFor="let layoutExamColumn of layoutExamColumnList">
                     <td *ngFor="let exam_type of layoutExamColumn.columnType.split('/')">
-                        {{getMarksNormalisedByExamColumn(exam_type, layoutExamColumn, subject, student)}}
+                        {{round(getMarksNormalisedByExamColumn(exam_type, layoutExamColumn, getSubject(studentSubject.parentSubject), student))}}
                     </td>
                     <ng-container *ngIf="layoutExamColumn.columnType.split('/').length > 1">
                         <!-- Added for total column -->
                         <td>
-                            {{getTotalMarksByExamColumnSubject(layoutExamColumn, subject, student)}}
+                            {{round(getTotalMarksByExamColumnSubject(layoutExamColumn, getSubject(studentSubject.parentSubject), student))}}
                         </td>
                     </ng-container>
                 </ng-container>
                 
                 <ng-container *ngIf="layoutExamColumnList.length > 1">
                     <td>
-                        {{getTotalMarksBySubject(subject, student)}}
+                        {{round(getTotalMarksBySubject(getSubject(studentSubject.parentSubject), student))}}
                     </td>
                 </ng-container>
             </tr>
@@ -138,22 +138,24 @@
                 </th>
                 <ng-container *ngFor="let layoutExamColumn of layoutExamColumnList">
                     <ng-container *ngIf="layoutExamColumn.columnType.split('/').length > 1">
-                        <td style="border: 0"></td><td style="border: 0"></td><td style="border-left: 0">{{getTotalMarksByExamColumn(layoutExamColumn, student)}}</td>
+                        <td style="border: 0!important"></td>
+                        <td style="border: 0!important"></td>
+                        <td style="border-left: 0!important">{{round(getTotalMarksByExamColumn(layoutExamColumn, student))}}</td>
                     </ng-container>
                     <td *ngIf="layoutExamColumn.columnType.split('/').length == 1" style="text-align: center">
-                        {{getTotalMarksByExamColumn(layoutExamColumn, student)}}
+                        {{round(getTotalMarksByExamColumn(layoutExamColumn, student))}}
                     </td>
                 </ng-container>
                 <ng-container *ngIf="layoutExamColumnList.length > 1">
                     <td>
-                        {{getTotalMarks(student)}}
+                        {{round(getTotalMarks(student))}}
                     </td>
                 </ng-container>
             </tr>
             <tr>
                 <!-- TODO: Hanlde its colspan -->
                 <td [attr.colspan]="getTotalColummnsInExamTable()" style="text-align: left;">
-                    <span class="text-bold">Total( in words):</span> {{getTotalMarks(student)|amountInWords}}
+                    <span class="text-bold">Total( in words):</span> {{round(getTotalMarks(student))|amountInWords}}
                 </td>
             </tr>
         </table>
@@ -186,19 +188,19 @@
         <span class="text-bold">Remarks</span>: {{getStudentRemarks(student)}}
     </div>
     <div class="row no-gutters padding-main" style="position: absolute;bottom:0;width:100%;">
-        <div class="col-xs-6 text-center">
-            <div>
-                <img src="{{user.activeSchool.profileImage}}" style="height: 4em; width: auto;">
+        <div class="col-xs-6 text-center" style="position: relative;">
+            <div style="position: absolute; bottom: 2em; width: 100%">
+                <img *ngIf="getClassTeacherSignature(student)" src="{{getClassTeacherSignature(student).signatureImage}}" style="height: 4em; width: auto;">
             </div>
-            <div>
+            <div style="position: absolute; bottom: 0.5em; width: 100%">
                 Class Teacher Signature
             </div>
         </div>
-        <div class="col-xs-6 text-center">
-            <div>
+        <div class="col-xs-6 text-center" style="position: relative;">
+            <div style="position: absolute; bottom: 2em; width: 100%">
                 <img src="{{user.activeSchool.principalSignatureImage}}" style="height: 4em; width: auto;">
             </div>
-            <div>
+            <div style="position: absolute; bottom: 0.5em; width: 100%">
                 Principal Signature
             </div>
         </div>

@@ -34,11 +34,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.TextField(verbose_name='name')),
-                ('reportCardHeading', models.TextField(default='', null=True, verbose_name='reportCardHeading')),
+                ('reportCardHeading', models.TextField(default='', null=True, blank=True, verbose_name='reportCardHeading')),
                 ('showLetterHeadImage', models.BooleanField(default=False, verbose_name='showLetterHeadImage')),
                 ('attendanceStartDate', models.DateField(null=True, verbose_name='attendanceStartDate')),
                 ('attendanceEndDate', models.DateField(null=True, verbose_name='attendanceEndDate')),
                 ('decimalPlaces', models.IntegerField(default=0, null=True, verbose_name='decimalPlaces')),
+                ('passingPercentage', models.IntegerField(default=33, null=True, verbose_name='passingPercentage')),
                 ('studentNameOrderNumber', models.IntegerField(default=0, null=True, verbose_name='studentNameOrderNumber')),
                 ('fatherNameOrderNumber', models.IntegerField(default=0, null=True, verbose_name='fatherNameOrderNumber')),
                 ('motherNameOrderNumber', models.IntegerField(default=0, null=True, verbose_name='motherNameOrderNumber')),

@@ -100,6 +100,7 @@ export class ManageLayoutComponent implements OnInit {
             attendanceStartDate: null,
             attendanceEndDate: null,
             decimalPlaces: 0,
+            passingPercentage: 33,
 
             studentNameOrderNumber: 1,
             fatherNameOrderNumber: 2,
@@ -198,7 +199,7 @@ export class ManageLayoutComponent implements OnInit {
         this.detectChanges();
     }
     removeLayoutGrade = layoutGrade => {
-        this.layoutSubGradeList = this.layoutSubGradeList.filter(item => !this.getLayoutSubGradeList(this.getGrade(layoutGrade).parentGrade).includes(item));
+        this.layoutSubGradeList = this.layoutSubGradeList.filter(item => !this.getLayoutSubGradeList(this.getGrade(layoutGrade.parentGrade)).includes(item));
         this.layoutGradeList = this.layoutGradeList.filter(x => x!==layoutGrade);
     }
     addLayoutSubGrade = (subGrade) => {
@@ -260,24 +261,14 @@ export class ManageLayoutComponent implements OnInit {
     }
     getTestList = () => this.layoutExamColumnList.reduce((acc, b) => acc.concat(this.getTestListForExamination(b)), []);
     getSubjectList = () => Object.keys(Array(this.subjectsToShow).fill(0)).map((item, i) => ({name: `Subject ${i+1}`, id: i+1}));
-
+    getClassSubjectList = () => this.getSubjectList().map(subject => ({parentSubject: subject.id, parentClass: this.studentSectionList[0].parentClass, parentDivision: this.studentSectionList[0].parentDivision, mainSubject: true, orderNumber: 0}))
+    getStudentSubjectList = () => this.getSubjectList().map(subject => ({parentSubject: subject.id, parentStudent: this.studentList[0].id, parentSession: this.studentSectionList[0].parentSession}))
     getStudentRemarksList = () => [{parentStudent: this.studentList[0].id, parentSession: this.user.activeSchool.currentSessionDbId, remark: 'Some remark here'}]
-
+    getClassTeacherSignatureList = () => []
     getStudentAttendanceList =() => [] 
 
     initializeLayout = layout => {
         this.currentLayout = layout;
         this.serviceAdapter.fetchLayoutData();
     }
-    
-    createNewLayout = () => {
-    }
-
-    updateLayout = () => {
-    }
-
-    deleteLayout = () => {
-        console.log(this.currentLayout);
-    }   
-
 }

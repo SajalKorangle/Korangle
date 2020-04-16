@@ -57,12 +57,18 @@ export class GenerateFinalReportComponent implements OnInit {
   testSecondList:any;
   
   // student
-  studentList:any;
-  studentSectionList:any;
-  studentSubjectList:any;
+  studentList:any[];
+  studentSectionList:any[];
+  studentSubjectList:any[];
   
   //subject
-  subjectList:any;
+  subjectList:any[];
+
+  // session
+  sessionList: any[];
+
+  // Class Teacher Signatures
+  classTeacherSignatureList: any[];
 
   selectedStudentList:any = [];
   selectedClass:any = null;

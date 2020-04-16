@@ -29,8 +29,8 @@ export class GenerateFinalReportServiceAdapter {
             'parentSchool': this.vm.user.activeSchool.dbId,
     	};
     	let request_class_layout_data = {
-    		'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentSchool': this.vm.user.activeSchool.dbId,
+    		'parentLayout__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentLayout__parentSchool': this.vm.user.activeSchool.dbId,
     	};
     	let request_layout_exam_column_data = {
     		'parentLayout__parentSession': this.vm.user.activeSchool.currentSessionDbId,
@@ -67,7 +67,9 @@ export class GenerateFinalReportServiceAdapter {
             'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
             'parentStudent__parentTransferCertificate': 'null__korangle',
     	};
-    	
+    	let request_class_teacher_signature_data = {
+        'parentSchool':this.vm.user.activeSchool.dbId,
+      };
     	Promise.all([
     		this.vm.classService.getObjectList(this.vm.classService.classs,request_class_data),
     		this.vm.classService.getObjectList(this.vm.classService.division,request_division_data),
@@ -81,7 +83,9 @@ export class GenerateFinalReportServiceAdapter {
     		this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
     		this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_second_data),
     		this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data),
-    		this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+        this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+        this.vm.schoolService.getObjectList(this.vm.schoolService.session,{}),
+        this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature,request_class_teacher_signature_data),
 		]).then(
     		value=>{
 
@@ -108,7 +112,13 @@ export class GenerateFinalReportServiceAdapter {
     			this.vm.studentSectionList = value[11];
 
     			//subject
-    			this.vm.subjectList = value[12];
+          this.vm.subjectList = value[12];
+          
+          // session
+          this.vm.sessionList = value[13];
+
+          // Class teacher signatures
+          this.vm.classTeacherSignatureList = value[14];
 
     			// Student Data
 		    	let request_student_data = {
@@ -232,7 +242,6 @@ export class GenerateFinalReportServiceAdapter {
         this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data),
         this.vm.customReportCardService.getObjectList(this.vm.customReportCardService.student_remarks, request_student_remarks_data),
         this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature,request_class_teacher_signature_data),
-        this.vm.schoolService.getObjectList(this.vm.schoolService.session,request_session_data),
       ];
 
       if(data['layout'].attendanceOrderNumber != 0 && 
@@ -246,23 +255,21 @@ export class GenerateFinalReportServiceAdapter {
         };
         service_list.push(this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_student_attendance_data));
       }
-
+      console.log(service_list);
       Promise.all(service_list).then(
         value=>{
-
+          console.log(value);
           data['classSubjectList'] = value[0];
           data['testSecondList'] = value[1];
           data['studentTestList'] = value[2];
           data['studentSubjectList'] = value[3];
           data['studentSubGradeList'] = value[4];
           data['studentRemarkList'] = value[5];
-          data['classTeacherSignature'] = value[6];
-          data['session'] = value[7][0];
-
-
+          data['classTeacherSignatureList'] = this.vm.classTeacherSignatureList;
+          data['sessionList'] = this.vm.sessionList;
           data['studentAttendanceList'] = [];
-          if(value.length == 9){
-            data['studentAttendanceList'] = value[8];
+          if(value.length == 8){
+            data['studentAttendanceList'] = value[7];
           }
           alert('This may take some time');
           this.vm.printReportCard(data);
