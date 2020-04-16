@@ -79,6 +79,16 @@ export class UpdateAllServiceAdapter {
                 }else{
                     data['panNumber'] = newValue;
                 }
+            }else if (key == 'bankIfscCode') {
+                if (newValue.toString().length!==11){
+                    if (employee.bankIfscCode!=null) {
+                        alert('Pan number should be 11 digits!');
+                    }
+                    (<HTMLInputElement> document.getElementById(employee.id.toString()+key.toString())).value=employee.bankIfscCode;
+                    return;
+                }else{
+                    data['bankIfscCode'] = newValue;
+                }
             }
 
             document.getElementById(key + employee.id).classList.add('updatingField');
