@@ -212,6 +212,6 @@ export class CustomReportCardComponent implements OnInit {
         return 100*this.getTotalMarks(student, true)/(this.getStudentSubjectList(student).filter(x => this.getClassSubjectFromStudentSubject(x).mainSubject).length*this.layoutExamColumnList.reduce((a,b) => a+(b.columnType.split('/').length==2?b.maximumMarksObtainedTwo:0)+b.maximumMarksObtainedOne, 0)); 
     }
 
-    didStudentPass = student => this.getStudentSubjectList(student).every(item => this.round(this.getTotalMarksBySubject(this.getSubject(item.parentSubject), student)/this.layoutExamColumnList.reduce((a,b) => a+(b.columnType.split('/').length==2?b.maximumMarksObtainedTwo:0)+b.maximumMarksObtainedOne, 0)*100) >= this.layout.passingPercentage);
+    didStudentPass = student => this.getStudentSubjectList(student).filter(x => this.getClassSubjectFromStudentSubject(x).mainOnly).every(item => this.round(this.getTotalMarksBySubject(this.getSubject(item.parentSubject), student)/this.layoutExamColumnList.reduce((a,b) => a+(b.columnType.split('/').length==2?b.maximumMarksObtainedTwo:0)+b.maximumMarksObtainedOne, 0)*100) >= this.layout.passingPercentage);
 
 }
