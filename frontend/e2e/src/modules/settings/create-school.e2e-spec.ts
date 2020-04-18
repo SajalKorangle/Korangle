@@ -23,7 +23,7 @@ describe('workspace-project App', () => {
 
         browser.executeScript(scrollIntoView,element(by.id('Settings-Create School')));
         element(by.id('Settings-Create School')).click();
-        browser.sleep(2000);
+        browser.sleep(3000);
 
     });
 
