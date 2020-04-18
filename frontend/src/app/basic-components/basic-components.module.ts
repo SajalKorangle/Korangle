@@ -25,7 +25,6 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
         MatProgressBarModule,
         MatFormFieldModule,
         MatInputModule,
-
     ],
     exports: [
 
@@ -39,7 +38,6 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
         MatProgressBarModule,
         MatFormFieldModule,
         MatInputModule,
-
     ]
 })
 export class BasicComponentsModule { }

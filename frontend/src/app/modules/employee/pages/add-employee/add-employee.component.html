@@ -232,6 +232,47 @@
             </div>
         </div>
 
+        <mat-accordion>
+            <mat-expansion-panel style="margin-bottom: 3px">
+<!--                <mat-divider style="margin-left: -10px;margin-right:-10px;margin-bottom: 8px"></mat-divider>-->
+                <div style="margin-bottom: 3px">
+                    <button class="btn" style="padding: 6px 9px" (click)="grantAll()">Grant All</button>
+                    <button class="btn" (click)="removeAll()" style="padding: 6px 9px;margin-left: 8px;margin-right: 9px">Remove All</button>
+                </div>
+<!--                <mat-divider style="margin-left: -10px;margin-right:-10px;margin-top: 8px;margin-bottom: 8px"></mat-divider>-->
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span style="font-size: large;font-weight: 800">Assign Tasks</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-action-row>
+                    <button class="btn" style="padding: 6px 9px" (click)="grantAll()">Grant All</button>
+                    <button class="btn" (click)="removeAll()" style="padding: 6px 9px;margin-left: 8px;margin-right: 9px">Remove All</button>
+                </mat-action-row>
+                <div class="row">
+                    <ng-container *ngFor="let module of moduleList">
+                        <div class="col-xs-12" style="margin-left: 8px">
+                            <div class="row" style="margin-bottom: 5px;">
+                                <span style="font-size: large;font-weight: 800;">{{module.title}}</span>
+                            </div>
+                            <div class="row" style="margin-bottom: 8px;">
+                                <ng-container *ngFor="let task of module.taskList">
+                                    <div class="col-md-3">
+                                        <mat-checkbox
+                                        [ngModel]="task.selected">
+                                            {{task.title}}
+                                        </mat-checkbox>
+                                    </div>
+                                </ng-container>
+                                <br/>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+
         <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="createNewEmployee()">Create Profile</button>
 
     </ng-container>

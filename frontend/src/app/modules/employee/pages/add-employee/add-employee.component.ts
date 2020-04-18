@@ -2,11 +2,13 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import {TeamService} from '../../../../services/modules/team/team.service';
 
 @Component({
   selector: 'add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.css'],
+    providers:[TeamService]
 })
 
 export class AddEmployeeComponent implements OnInit {
@@ -17,14 +19,17 @@ export class AddEmployeeComponent implements OnInit {
     newEmployeeSessionDetail: any;
 
     employeeList = [];
+    moduleList = [];
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeOldService) { }
+    constructor (private employeeService: EmployeeOldService,
+                 private teamService:TeamService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
+        this.isLoading = true;
         this.newEmployee = {};
         this.newEmployeeSessionDetail = {};
         let data = {
@@ -33,7 +38,72 @@ export class AddEmployeeComponent implements OnInit {
         this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
             this.employeeList = employeeList;
         });
+
+        let module_data = {
+            'parentBoard__or': this.user.activeSchool.parentBoard,
+            'parentBoard': 'null__korangle',
+        };
+
+        let task_data = {
+            'parentBoard__or': this.user.activeSchool.parentBoard,
+            'parentBoard': 'null__korangle',
+            'parentModule__parentBoard__or': this.user.activeSchool.parentBoard,
+            'parentModule__parentBoard': 'null__korangle',
+        };
+
+        Promise.all([
+            this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt),
+            this.teamService.getObjectList(this.teamService.module, module_data),
+            this.teamService.getObjectList(this.teamService.task, task_data),
+        ]).then(value => {
+            this.employeeList = value[0];
+            this.initializeModuleList(value[1],value[2]);
+            this.isLoading = false;
+
+        }, error => {
+            this.isLoading = false;
+        });
+
     }
+
+    isSelected(task: any){
+        if(task.selected){
+            return task.id
+        }
+    }
+
+    grantAll(){
+        this.moduleList.forEach(module => {
+            module.taskList.forEach(task => {
+                task.selected = true;
+            })
+        })
+    }
+
+    removeAll(){
+        this.moduleList.forEach(module => {
+            module.taskList.forEach(task => {
+                task.selected = false;
+            })
+        })
+    }
+
+    initializeModuleList(moduleList: any, taskList: any): void {
+        this.moduleList = moduleList;
+        this.moduleList.forEach(module => {
+            module.taskList = taskList.filter(task => {
+                task.selected = false;
+                return task.parentModule == module.id;
+            }).sort( (a,b) => {
+                return a.orderNumber - b.orderNumber;
+            });
+        });
+        this.moduleList = this.moduleList.sort( (a,b) => {
+            return a.orderNumber - b.orderNumber;
+        });
+        console.log(this.moduleList);
+    }
+
 
     checkLength(value: any) {
         if (value && value.toString().length > 0) {
