@@ -1,3 +1,0 @@
-[
-  { "model": "school_app.School", "pk": 1, "fields": { "name": "Harshal Agrawal", "parentBoard": 1} } 
-]
