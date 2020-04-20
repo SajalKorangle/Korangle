@@ -3,12 +3,13 @@ import {Component, Input, OnInit} from '@angular/core';
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 import {TeamService} from '../../../../services/modules/team/team.service';
+import {EmployeeService} from '../../../../services/modules/employee/employee.service';
 
 @Component({
   selector: 'add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.css'],
-    providers:[TeamService]
+    providers:[TeamService,EmployeeService]
 })
 
 export class AddEmployeeComponent implements OnInit {
@@ -23,7 +24,8 @@ export class AddEmployeeComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeOldService,
+    constructor (private employeeOldService: EmployeeOldService,
+                 private employeeService : EmployeeService,
                  private teamService:TeamService) { }
 
     ngOnInit(): void {
@@ -35,7 +37,7 @@ export class AddEmployeeComponent implements OnInit {
         let data = {
             parentSchool: this.user.activeSchool.dbId,
         };
-        this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
+        this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
             this.employeeList = employeeList;
         });
 
@@ -52,7 +54,7 @@ export class AddEmployeeComponent implements OnInit {
         };
 
         Promise.all([
-            this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt),
+            this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt),
             this.teamService.getObjectList(this.teamService.module, module_data),
             this.teamService.getObjectList(this.teamService.task, task_data),
         ]).then(value => {
@@ -85,6 +87,23 @@ export class AddEmployeeComponent implements OnInit {
             module.taskList.forEach(task => {
                 task.selected = false;
             })
+        })
+    }
+
+    createPermission(employee: any, task){
+        let data = [];
+        this.moduleList.forEach(module=>{
+            module.taskList.forEach(task=>{
+                if(task.selected){
+                    data.push({
+                        'parentEmployee': employee.id,
+                        'parentTask': task.id,
+                    })
+                }
+            })
+        });
+        this.employeeService.createObjectList(this.employeeService.employee_permissions,data).then(value => {
+
         })
     }
 
@@ -184,17 +203,31 @@ export class AddEmployeeComponent implements OnInit {
         this.isLoading = true;
 
         console.log(this.newEmployee);
-        this.employeeService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
+        this.employeeOldService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
                 let post_data = {
                     parentEmployee: response.id,
                     parentSession: this.user.activeSchool.currentSessionDbId,
                     paidLeaveNumber: this.newEmployeeSessionDetail.paidLeaveNumber,
                 };
-                this.employeeService.createEmployeeSessionDetail(post_data, this.user.jwt).then(response => {
-                    this.isLoading = false;
-                    alert('Employee Profile Created Successfully');
-                    this.newEmployee = {};
-                    this.newEmployeeSessionDetail = {};
+                this.employeeOldService.createEmployeeSessionDetail(post_data, this.user.jwt).then(res => {
+                    console.log(response);
+                    let data = [];
+                    this.moduleList.forEach(module=>{
+                        module.taskList.forEach(task=>{
+                            if(task.selected){
+                                data.push({
+                                    'parentEmployee': response.id,
+                                    'parentTask': task.id,
+                                })
+                            }
+                        })
+                    });
+                    this.employeeService.createObjectList(this.employeeService.employee_permissions,data).then(value => {
+                        this.isLoading = false;
+                        alert('Employee Profile Created Successfully');
+                        this.newEmployee = {};
+                        this.newEmployeeSessionDetail = {};
+                    })
                 });
             }, error => {
                 this.isLoading = false;

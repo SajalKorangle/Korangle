@@ -233,7 +233,7 @@
         </div>
 
         <mat-accordion>
-            <mat-expansion-panel style="margin-bottom: 3px">
+            <mat-expansion-panel style="margin-bottom: 8px">
 <!--                <mat-divider style="margin-left: -10px;margin-right:-10px;margin-bottom: 8px"></mat-divider>-->
                 <div style="margin-bottom: 3px">
                     <button class="btn" style="padding: 6px 9px" (click)="grantAll()">Grant All</button>
@@ -259,7 +259,7 @@
                                 <ng-container *ngFor="let task of module.taskList">
                                     <div class="col-md-3">
                                         <mat-checkbox
-                                        [ngModel]="task.selected">
+                                        [(ngModel)]="task.selected">
                                             {{task.title}}
                                         </mat-checkbox>
                                     </div>
