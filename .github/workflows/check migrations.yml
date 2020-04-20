@@ -49,6 +49,6 @@ jobs:
         cd backend
         ./manage.py makemigrations --check
         ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
-        cd frontend
+        cd ../frontend
         ng e2e --specs=src/modules/login.e2e-spec.ts
         kill -9 `ps aux |grep testserver | awk '{ print $2 }'`
