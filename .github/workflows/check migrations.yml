@@ -43,7 +43,6 @@ jobs:
         pip install -r backend/requirements.txt
         cd frontend
         npm ci
-
     # Checking Migration
     - name: Checking Migration
       run: |
