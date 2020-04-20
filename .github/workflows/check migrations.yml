@@ -44,11 +44,12 @@ jobs:
         cd frontend
         npm ci
     # Checking Migration
+        # ng e2e --specs=src/modules/login.e2e-spec.ts
     - name: Checking Migration
       run: |
         cd backend
         ./manage.py makemigrations --check
         ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
         cd ../frontend
-        ng e2e --specs=src/modules/login.e2e-spec.ts
+        npm run github-test
         kill -9 `ps aux |grep testserver | awk '{ print $2 }'`
