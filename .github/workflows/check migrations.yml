@@ -46,9 +46,9 @@ jobs:
     # Checking Migration
     - name: Checking Migration
       run: |
-        # cd backend
-        # ./manage.py makemigrations --check
-        # ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
+        cd backend
+        ./manage.py makemigrations --check
+        ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
         cd frontend
-        ng e2e --spec=src/modules/login.e2e.spec.ts
+        ng e2e --specs=src/modules/login.e2e-spec.ts
         kill -9 `ps aux |grep testserver | awk '{ print $2 }'`
