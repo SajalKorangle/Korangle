@@ -9,6 +9,7 @@
     "lint": "ng lint",
     "test": "ng test",
     "e2e": "ng e2e --port=4201",
+    "github-test": "ng e2e --specs=src/modules/login.e2e-spec.ts",
     "post-build": "node ./build/post-build.js",
     "build:stats": "ng build --stats-json",
     "build-production:stats": "ng build --prod --build-optimizer --stats-json",
