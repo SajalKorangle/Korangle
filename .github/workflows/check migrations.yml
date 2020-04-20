@@ -51,6 +51,6 @@ jobs:
         ./manage.py makemigrations --check
         ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
         cd ../frontend
-        touch src/environments/environment.prod.ts
+        cp src/environments/environment.ts src/environments/environment.prod.ts
         npm run github-test
         kill -9 `ps aux |grep testserver | awk '{ print $2 }'`
