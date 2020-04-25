@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6]
+        node-version: [10.16]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -26,6 +27,10 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
 
     # Runs a single command using the runners shell
     # - name: Run a one-line script
@@ -36,9 +41,16 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r backend/requirements.txt
-
+        cd frontend
+        npm ci
     # Checking Migration
+        # ng e2e --specs=src/modules/login.e2e-spec.ts
     - name: Checking Migration
       run: |
         cd backend
         ./manage.py makemigrations --check
+        ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
+        cd ../frontend
+        cp src/environments/environment.ts src/environments/environment.prod.ts
+        npm run github-test
+        kill -9 `ps aux |grep testserver | awk '{ print $2 }'`

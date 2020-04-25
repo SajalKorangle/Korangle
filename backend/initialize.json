@@ -178,8 +178,9 @@
 	{ "model": "school_app.session", "pk": 3, "fields": { "name": "Session 2019-20" , "startDate": "2019-04-01", "endDate": "2020-03-31", "orderNumber": 3} },
 	{ "model": "school_app.session", "pk": 4, "fields": { "name": "Session 2020-21" , "startDate": "2020-04-01", "endDate": "2021-03-31", "orderNumber": 4} },
 	{ "model": "school_app.session", "pk": 5, "fields": { "name": "Session 2021-22" , "startDate": "2021-04-01", "endDate": "2022-03-31", "orderNumber": 5} },
-	{ "model": "auth.user", "pk": 1, "fields": { "username": "1234567890" , "password": "1234567890", "is_superuser": true, "is_staff": true} },
-	{ "model": "information_app.information_app_messagetype", "pk": 1, "fields": { "name": "General"} },
-	{ "model": "information_app.information_app_messagetype", "pk": 2, "fields": { "name": "Defaulter"} },
-	{ "model": "information_app.information_app_messagetype", "pk": 3, "fields": { "name": "Fee Receipt"} }
+	{ "model": "auth.user", "pk": 1, "fields": { "username": "1234567890" , "password": "pbkdf2_sha256$36000$Ng1YbztvzTdO$ShaXZs5uf8jzia9tKiqJwybG/GPuqVwlY4Mg4a24Ptc=", "is_superuser": true, "is_staff": true, "first_name": "Dummy"} },
+	{ "model": "information_app.MessageType", "pk": 1, "fields": { "name": "General"} },
+	{ "model": "information_app.MessageType", "pk": 2, "fields": { "name": "Defaulter"} },
+	{ "model": "information_app.MessageType", "pk": 3, "fields": { "name": "Fee Receipt"} },
+  { "model": "student_app.Student", "pk": 1, "fields": { "name": "Harshal Agrawal", "parentSchool": 1 } }
 ]

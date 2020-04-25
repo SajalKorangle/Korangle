@@ -39,6 +39,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
+TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
 
 # Application definition
 
@@ -51,6 +52,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+
+    'test_without_migrations',
 
     'school_app',
     'class_app',

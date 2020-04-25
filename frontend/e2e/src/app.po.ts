@@ -16,8 +16,8 @@ export class AppPage {
       browser.waitForAngularEnabled(false);
       this.navigateTo();
 
-      element(by.name('username')).sendKeys('6264439636');
-      element(by.name('password')).sendKeys('6264439636');
+      element(by.name('username')).sendKeys('1234567890');
+      element(by.name('password')).sendKeys('1234567890');
       element(by.buttonText('Login')).click();
       browser.sleep(5000);
       console.log('Logged In');

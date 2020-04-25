@@ -18,7 +18,7 @@ describe('workspace-project App', () => {
 
     console.log('Opening Student');
     element(by.id('Employee-Students')).click();
-    browser.sleep(2000);    
+    browser.sleep(2000);
     element(by.id('Students-Update Profile')).click();
     console.log('Clicked On update profile');
     browser.sleep(10000);
