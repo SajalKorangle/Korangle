@@ -43,6 +43,7 @@
     "moment": "^2.24.0",
     "ngx-papaparse": "^3.0.3",
     "npm": "^6.10.2",
+    "puppeteer": "^3.0.1",
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.5.2",
     "tslib": "^1.10.0",
