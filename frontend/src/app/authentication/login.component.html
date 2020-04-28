@@ -41,7 +41,7 @@
                         <ng-container *ngIf="isMobile()">
                             <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" align="center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="pass"
+                                    <input matInput id="password"
                                            type="{{visibilityMode ? 'text':'password'}}"
                                            placeholder="Password"
                                            [(ngModel)]="password"
@@ -57,7 +57,7 @@
                         <ng-container *ngIf="!isMobile()">
                             <div style="width: 75%">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="pass"
+                                    <input matInput id="password"
                                            type="{{visibilityMode ? 'text':'password'}}"
                                            placeholder="Password"
                                            [(ngModel)]="password"
