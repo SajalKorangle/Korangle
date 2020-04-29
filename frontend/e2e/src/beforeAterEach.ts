@@ -1,7 +1,7 @@
 import * as puppeteer from 'puppeteer';
 
 // Q: How to take Screenshot
-// A: await BeforeAfterEach.page.screenshot({ path: 'before-login.png' });
+// A: await page.screenshot({ path: 'before-login.png' });
 
 export class BeforeAfterEach {
 

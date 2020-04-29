@@ -12,7 +12,6 @@ describe('workspace-project App', () => {
 
         await page.click('#settings');
         await page.click('#settings-contact_us');
-        await BeforeAfterEach.page.screenshot({ path: 'before-login.png' });
 
     });
 

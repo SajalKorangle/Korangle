@@ -1,0 +1,12 @@
+[
+	{ "model": "class_app.division", "pk": 1, "fields": {"name": "Section - A", "orderNumber": 1} },
+	{ "model": "class_app.division", "pk": 2, "fields": {"name": "Section - B", "orderNumber": 2} },
+	{ "model": "class_app.division", "pk": 3, "fields": {"name": "Section - C", "orderNumber": 3} },
+	{ "model": "class_app.division", "pk": 4, "fields": {"name": "Section - D", "orderNumber": 4} },
+	{ "model": "class_app.division", "pk": 5, "fields": {"name": "Section - E", "orderNumber": 5} },
+	{ "model": "class_app.division", "pk": 6, "fields": {"name": "Section - F", "orderNumber": 6} },
+	{ "model": "class_app.division", "pk": 7, "fields": {"name": "Section - G", "orderNumber": 7} },
+	{ "model": "class_app.division", "pk": 8, "fields": {"name": "Section - H", "orderNumber": 8} },
+	{ "model": "class_app.division", "pk": 9, "fields": {"name": "Section - I", "orderNumber": 9} },
+	{ "model": "class_app.division", "pk": 10, "fields": {"name": "Section - K", "orderNumber": 10} }
+]

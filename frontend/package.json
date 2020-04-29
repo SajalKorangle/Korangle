@@ -13,7 +13,8 @@
     "post-build": "node ./build/post-build.js",
     "build:stats": "ng build --stats-json",
     "build-production:stats": "ng build --prod --build-optimizer --stats-json",
-    "analyze": "webpack-bundle-analyzer dist/stats.json"
+    "analyze": "webpack-bundle-analyzer dist/stats.json",
+    "ci-e2e": "protractor e2e/protractor.conf.js"
   },
   "private": true,
   "dependencies": {
