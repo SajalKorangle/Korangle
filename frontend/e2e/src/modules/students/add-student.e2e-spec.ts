@@ -15,8 +15,12 @@ describe('workspace-project App', () => {
     });
 
     it('Add Student Page', async () => {
+        page.on('dialog', async dialog => {
+            page.screenshot({path: 'alert.png'})
+            console.log(dialog.message());
+            await dialog.dismiss();
+        });;
         await page.click('#students');
-        await page.screenshot({ path: 'add-student.png' });
         await page.click('#students-add_student');
         await page.waitForSelector('input[name="name"]');
         await page.type('input[name="name"]', 'Sanjay Rathore'); // Types instantly
@@ -24,10 +28,18 @@ describe('workspace-project App', () => {
         await page.click('#selectClass');
         await page.click('mat-option[ng-reflect-value="7"]');
         await page.click('#selectSection');
-        await page.click('#section-button-3');
-        await page.screenshot({ path: 'add-student.png' });
+        await page.waitFor(500)
+        await page.waitForSelector('#section-button-6')
+        await page.click('#section-button-6');
+        await page.type('input#mat-input-4', '1231231230')
         await page.click('#action-add-student');
         await page.click('#students-view_all');
+        await page.waitForSelector('#select-class')
+        await page.click('#select-class');
+        await page.waitFor(500);
+        await page.waitForSelector('#select-all-classes')
+        await page.click('#select-all-classes');
+        await page.screenshot({ path: 'select-all-classes.png' });
     });
 
     afterEach(async () => {
