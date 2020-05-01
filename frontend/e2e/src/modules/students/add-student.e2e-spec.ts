@@ -1,4 +1,5 @@
 import {BeforeAfterEach} from '../../beforeAterEach';
+import {by, element} from 'protractor';
 
 describe('workspace-project App', () => {
 
@@ -16,7 +17,6 @@ describe('workspace-project App', () => {
 
     it('Add Student Page', async () => {
         page.on('dialog', async dialog => {
-            page.screenshot({path: 'alert.png'})
             console.log(dialog.message());
             await dialog.dismiss();
         });;
@@ -39,7 +39,7 @@ describe('workspace-project App', () => {
         await page.waitFor(500);
         await page.waitForSelector('#select-all-classes')
         await page.click('#select-all-classes');
-        await page.screenshot({ path: 'select-all-classes.png' });
+        await page.waitForSelector('#student-value-SanjayRathore');
     });
 
     afterEach(async () => {

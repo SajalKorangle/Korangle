@@ -331,13 +331,13 @@
                                  src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
                                  style="width: 50px"/>
                         </td>
-                        <td [class.hidden]="!columnFilter.showName">{{student.name}}</td>
+                        <td [attr.id]="'student-value-'+student.name.replace(' ','')" [class.hidden]="!columnFilter.showName">{{student.name}}</td>
                         <td [class.hidden]="!columnFilter.showClassName">{{student.className}}
                             <!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->
                         </td>
                         <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>
                         <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
-                        <td [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
+                        <td [attr.id]="'father-name-value-'+student.fathersName.replace(' ','')" [class.hidden]="!columnFilter.showFathersName">{{student.fathersName}}</td>
                         <td [class.hidden]="!columnFilter.showMobileNumber">
                             <span class="hidden-xs hidden-sm">{{student.mobileNumber}}</span>
                             <a class="visible-xs visible-sm" href="tel:{{student.mobileNumber}}">Call Me</a>
