@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/app/services/modules/employee/employee-old.service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../index.html">All files</a> / <a href="index.html">src/app/services/modules/employee</a> employee-old.service.ts
+    </h1>
+    <div class='clearfix'>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {Injectable} from '@angular/core';
+&nbsp;
+&nbsp;
+&nbsp;
+import { CommonServiceRequirements } from '../../common-service-requirements';
+&nbsp;
+@Injectable()
+export class EmployeeOldService extends CommonServiceRequirements {
+    // Profile Image
+<span class="fstat-no" title="function not covered" >    uploadProfileImage(</span>file: any, data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/' + data['id'] + '/profile-image';</span>
+<span class="cstat-no" title="statement not covered" >        return super.fileData(file, token, url);</span>
+    }
+&nbsp;
+    // Employee Profile
+<span class="fstat-no" title="function not covered" >    createEmployeeProfile(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/employee-profiles';</span>
+<span class="cstat-no" title="statement not covered" >        return super.postData(data, token, url);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    getEmployeeProfile(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/employee-profiles/' + data['id'];</span>
+<span class="cstat-no" title="statement not covered" >        return super.getData(token, url);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    getEmployeeProfileList(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/school/' + data['parentSchool'] + '/employee-profiles';</span>
+<span class="cstat-no" title="statement not covered" >        return super.getData(token, url);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    updateEmployeeProfile(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/employee-profiles/' + data['id'];</span>
+<span class="cstat-no" title="statement not covered" >        return super.putData(data, token, url);</span>
+    }
+&nbsp;
+    // Employee Mini Profile
+<span class="fstat-no" title="function not covered" >    getEmployeeMiniProfileList(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/school/' + data['parentSchool'] + '/employee-mini-profiles';</span>
+<span class="cstat-no" title="statement not covered" >        return super.getData(token, url);</span>
+    }
+&nbsp;
+    // Employee Session Details
+<span class="fstat-no" title="function not covered" >    createEmployeeSessionDetail(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/employee-session-details';</span>
+<span class="cstat-no" title="statement not covered" >        return super.postData(data, token, url);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    updateEmployeeSessionDetail(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/employee-session-details/' + data['id'];</span>
+<span class="cstat-no" title="statement not covered" >        return super.putData(data, token, url);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    getEmployeeSessionDetail(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/' + data['parentEmployee'] + '/employee-session-details?sessionId=' + data['sessionId'];</span>
+<span class="cstat-no" title="statement not covered" >        return super.getData(token, url);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    getEmployeeSessionDetailList(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/school/' + data['parentSchool'] + '/employee-session-details?sessionId=' + data['sessionId'];</span>
+<span class="cstat-no" title="statement not covered" >        return super.getData(token, url);</span>
+    }
+&nbsp;
+    // Employee Permission
+<span class="fstat-no" title="function not covered" >    getEmployeePermissionList(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/' + data['parentEmployee'] + '/employee-permissions-old';</span>
+<span class="cstat-no" title="statement not covered" >        return super.getData(token, url)</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    addEmployeePermission(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/employee-permissions-old';</span>
+<span class="cstat-no" title="statement not covered" >        return super.postData(data, token, url);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    addEmployeePermissionList(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/employee-permissions-old/batch';</span>
+<span class="cstat-no" title="statement not covered" >        return super.postData(data, token, url);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    deleteEmployeePermission(</span>data: any, token: any): Promise&lt;any&gt; {
+        const url = <span class="cstat-no" title="statement not covered" >'/employee/employee-permissions-old/' + data['id'];</span>
+<span class="cstat-no" title="statement not covered" >        return super.deleteData(token, url);</span>
+    }
+&nbsp;
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun May 10 2020 06:17:01 GMT+0530 (India Standard Time)
+</div>
+</div>
+<script src="../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../sorter.js"></script>
+</body>
+</html>
