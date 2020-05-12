@@ -19,6 +19,7 @@ frontend/version.json
 frontend/preparePackage.sh
 frontend/src/environments/environment.prod.ts
 frontend/dist/
+frontend/src/coverage/
 frontend/copytoserver.sh
 backend/*db.sqlite3*
 *.pyc
