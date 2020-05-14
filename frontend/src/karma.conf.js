@@ -17,13 +17,19 @@ module.exports = function (config) {
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, './coverage/'),
-      reports: ['html', 'lcovonly', 'text-summary'],
+      include: 'src/**/!(*.spec).ts',
+      exclude: 'src/main.ts',
+      reports: ['json-summary'],
       fixWebpackSourcePaths: true,
+      // Omit files with no statements, no functions and no branches covered from the report
+      skipFilesWithNoCoverage: false,
       thresholds: {
-        statements: 80,
-        lines: 80,
-        branches: 80,
-        functions: 80
+        global: {
+          statements: 1,
+          lines: 1,
+          branches: 1,
+          functions: 1
+        },
       }
      },
     reporters: ['progress', 'kjhtml'],
@@ -31,7 +37,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true
   });
