@@ -21,6 +21,7 @@ frontend/src/environments/environment.prod.ts
 frontend/dist/
 frontend/src/coverage/
 frontend/copytoserver.sh
+frontend/src/coverage/
 backend/*db.sqlite3*
 *.pyc
 *.swp
