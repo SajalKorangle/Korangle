@@ -16,21 +16,27 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
+
       dir: require('path').join(__dirname, './coverage/'),
-      include: 'src/**/!(*.spec).ts',
-      exclude: 'src/main.ts',
       reports: ['json-summary'],
+
+      // For Manual checking of report
+      // dir: require('path').join(__dirname, './coverage-report/'),
+      // reports: ['html', 'lcovonly', 'text-summary'],
+
       fixWebpackSourcePaths: true,
+
       // Omit files with no statements, no functions and no branches covered from the report
-      skipFilesWithNoCoverage: false,
-      thresholds: {
+      // skipFilesWithNoCoverage: false,
+
+      /*thresholds: {
         global: {
           statements: 1,
           lines: 1,
           branches: 1,
           functions: 1
         },
-      }
+      }*/
      },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
