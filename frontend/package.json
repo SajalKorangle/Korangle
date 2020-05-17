@@ -8,15 +8,16 @@
     "build": "ng build",
     "lint": "ng lint",
     "test": "ng test",
-    "unit-tests": "ng test --code-coverage --no-watch",
+    "unit-github": "ng test --code-coverage --no-watch",
     "check-coverage": "node ./src/coverage/check-coverage.js",
-    "e2e": "ng e2e --port=4201",
+    "e2e-tests-github": "ng e2e",
+    "e2e-tests-local": "ng e2e --port=4201",
     "e2e-login-tests": "ng e2e --specs=src/modules/login.e2e-spec.ts",
-    "e2e-tests": "ng e2e",
     "post-build": "node ./build/post-build.js",
     "build:stats": "ng build --stats-json",
     "build-production:stats": "ng build --prod --build-optimizer --stats-json",
-    "analyze": "webpack-bundle-analyzer dist/stats.json"
+    "analyze": "webpack-bundle-analyzer dist/stats.json",
+    "ci-e2e": "protractor e2e/protractor.conf.js"
   },
   "private": true,
   "dependencies": {
@@ -46,6 +47,7 @@
     "moment": "^2.24.0",
     "ngx-papaparse": "^3.0.3",
     "npm": "^6.10.2",
+    "puppeteer": "^3.0.1",
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.5.2",
     "tslib": "^1.10.0",
