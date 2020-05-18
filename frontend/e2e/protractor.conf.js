@@ -16,7 +16,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-        args: [],
+        args: ['--headless'],
         binary: puppeteer.executablePath(),
     },
   },
