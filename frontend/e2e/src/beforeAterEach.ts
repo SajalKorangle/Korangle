@@ -21,7 +21,8 @@ export class BeforeAfterEach {
         await BeforeAfterEach.page.type('#password', '1234567890', {delay: 100}); // Types slower, like a user
         await BeforeAfterEach.page.click('button[type="submit"]');
         await BeforeAfterEach.page.screenshot({ path: 'before-login.png' });
-        await BeforeAfterEach.page.waitForNavigation();
+        await BeforeAfterEach.page.waitForSelector('div.sidebar')
+        await BeforeAfterEach.page.screenshot({ path: 'after-login.png' });
         return BeforeAfterEach.page;
 
     }
