@@ -54,11 +54,11 @@ jobs:
         cd backend
         ./manage.py makemigrations --check
 
-#    - name: Unit Tests
-#      run: |
-#        cd frontend
-#        sh src/coverage/run-unit-tests.sh
-#        npm run check-coverage
+    - name: Unit Tests
+      run: |
+        cd frontend
+        sh src/coverage/run-unit-tests.sh
+        npm run check-coverage
 
     - name: E2E Tests
       run: |
