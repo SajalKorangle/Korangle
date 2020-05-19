@@ -1,5 +1,4 @@
 
-
 # Create a fake environment.prod.ts
 cp src/environments/environment.ts src/environments/environment.prod.ts
 
