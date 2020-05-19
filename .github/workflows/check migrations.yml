@@ -34,8 +34,8 @@ jobs:
 #    - uses: chrislennon/action-aws-cli@v1.1
 #    - name: Setup Aws cli 
 #      env:
-#          AWS_ACCESS_KEY_ID: 'AKIAIPISPZZVD4IAFVDA'
-#          AWS_SECRET_ACCESS_KEY: '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'
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     # Runs a single command using the runners shell
     # - name: Run a one-line script
@@ -57,6 +57,7 @@ jobs:
     - name: Unit Tests
       run: |
         cd frontend
+				aws configure list
         sh src/coverage/run-unit-tests.sh
         npm run check-coverage
 

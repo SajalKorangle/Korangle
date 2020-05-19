@@ -8,7 +8,7 @@
     "build": "ng build",
     "lint": "ng lint",
     "test": "ng test",
-    "unit-github": "ng test --code-coverage --no-watch",
+    "unit-tests": "ng test --code-coverage --no-watch",
     "check-coverage": "node ./src/coverage/check-coverage.js",
     "e2e-tests-github": "ng e2e",
     "e2e-tests-local": "ng e2e --port=4201",
