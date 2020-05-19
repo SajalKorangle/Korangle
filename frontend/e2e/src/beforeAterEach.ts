@@ -1,7 +1,7 @@
 import * as puppeteer from 'puppeteer';
 
 // Q: How to take Screenshot
-// A: await page.screenshot({ path: 'before-login.png' });
+// A: await page.screenshot({ path: 'e2e/before-login.png' });
 
 export class BeforeAfterEach {
 
@@ -20,9 +20,7 @@ export class BeforeAfterEach {
         await BeforeAfterEach.page.type('#username', '1234567890'); // Types instantly
         await BeforeAfterEach.page.type('#password', '1234567890', {delay: 100}); // Types slower, like a user
         await BeforeAfterEach.page.click('button[type="submit"]');
-        await BeforeAfterEach.page.screenshot({ path: 'before-login.png' });
         await BeforeAfterEach.page.waitForSelector('div.sidebar')
-        await BeforeAfterEach.page.screenshot({ path: 'after-login.png' });
         return BeforeAfterEach.page;
 
     }
