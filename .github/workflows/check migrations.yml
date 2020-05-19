@@ -31,8 +31,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - uses: chrislennon/action-aws-cli@v1.1
 #    - name: Setup Aws cli 
-#      uses: chrislennon/action-aws-cli@v1.1
 #      env:
 #          AWS_ACCESS_KEY_ID: 'AKIAIPISPZZVD4IAFVDA'
 #          AWS_SECRET_ACCESS_KEY: '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'
