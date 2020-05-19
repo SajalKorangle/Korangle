@@ -16,22 +16,34 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
+
       dir: require('path').join(__dirname, './coverage/'),
-      reports: ['html', 'lcovonly', 'text-summary'],
+      reports: ['json-summary'],
+
+      // For Manual checking of report
+      // dir: require('path').join(__dirname, './coverage-report/'),
+      // reports: ['html', 'lcovonly', 'text-summary'],
+
       fixWebpackSourcePaths: true,
-      thresholds: {
-        statements: 80,
-        lines: 80,
-        branches: 80,
-        functions: 80
-      }
+
+      // Omit files with no statements, no functions and no branches covered from the report
+      // skipFilesWithNoCoverage: false,
+
+      /*thresholds: {
+        global: {
+          statements: 1,
+          lines: 1,
+          branches: 1,
+          functions: 1
+        },
+      }*/
      },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true
   });

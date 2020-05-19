@@ -1,4 +1,4 @@
-import {BeforeAfterEach} from '../../beforeAterEach';
+import {BeforeAfterEach} from '../beforeAterEach';
 
 describe('workspace-project App', () => {
 
@@ -8,10 +8,9 @@ describe('workspace-project App', () => {
         page = await BeforeAfterEach.beforeEach();
     });
 
-    it('Contact Us Page', async () => {
+    it('login check', async () => {
 
-        await page.click('#settings');
-        await page.click('#settings-contact_us');
+        console.log('Just Checking logging');
 
     });
 

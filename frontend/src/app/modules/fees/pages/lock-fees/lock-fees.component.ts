@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { LockFeesServiceAdapter } from "./lock-fees.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {DataStorage} from "../../../../classes/data-storage";
-import { SchoolService } from 'app/services/modules/school/school.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 @Component({
     selector: 'lock-fees',
