@@ -57,7 +57,7 @@ jobs:
     - name: Unit Tests
       run: |
         cd frontend
-				aws configure list
+        aws configure list
         sh src/coverage/run-unit-tests.sh
         npm run check-coverage
 
