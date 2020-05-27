@@ -22,7 +22,7 @@ export class AddEmployeeComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeOldService,
+    constructor (private employeeOldService: EmployeeOldService,
                  private bankService: BankService) { }
 
     ngOnInit(): void {
@@ -33,7 +33,7 @@ export class AddEmployeeComponent implements OnInit {
         let data = {
             parentSchool: this.user.activeSchool.dbId,
         };
-        this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
+        this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
             this.employeeList = employeeList;
         });
     }
@@ -126,13 +126,13 @@ export class AddEmployeeComponent implements OnInit {
         this.isLoading = true;
 
         console.log(this.newEmployee);
-        this.employeeService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
+        this.employeeOldService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
                 let post_data = {
                     parentEmployee: response.id,
                     parentSession: this.user.activeSchool.currentSessionDbId,
                     paidLeaveNumber: this.newEmployeeSessionDetail.paidLeaveNumber,
                 };
-                this.employeeService.createEmployeeSessionDetail(post_data, this.user.jwt).then(response => {
+                this.employeeOldService.createEmployeeSessionDetail(post_data, this.user.jwt).then(response => {
                     this.isLoading = false;
                     alert('Employee Profile Created Successfully');
                     this.newEmployee = {};
