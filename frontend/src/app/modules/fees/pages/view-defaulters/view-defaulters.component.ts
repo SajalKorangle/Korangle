@@ -10,7 +10,7 @@ import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
-import { SchoolService } from 'app/services/modules/school/school.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 @Component({
     selector: 'view-defaulters',

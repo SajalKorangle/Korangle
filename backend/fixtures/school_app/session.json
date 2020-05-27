@@ -1,0 +1,7 @@
+[
+	{ "model": "school_app.session", "pk": 1, "fields": { "name": "Session 2017-18" , "startDate": "2017-04-01", "endDate": "2018-03-31", "orderNumber": 1} },
+	{ "model": "school_app.session", "pk": 2, "fields": { "name": "Session 2018-19" , "startDate": "2018-04-01", "endDate": "2019-03-31", "orderNumber": 2} },
+	{ "model": "school_app.session", "pk": 3, "fields": { "name": "Session 2019-20" , "startDate": "2019-04-01", "endDate": "2020-03-31", "orderNumber": 3} },
+	{ "model": "school_app.session", "pk": 4, "fields": { "name": "Session 2020-21" , "startDate": "2020-04-01", "endDate": "2021-03-31", "orderNumber": 4} },
+	{ "model": "school_app.session", "pk": 5, "fields": { "name": "Session 2021-22" , "startDate": "2021-04-01", "endDate": "2022-03-31", "orderNumber": 5} }
+]
