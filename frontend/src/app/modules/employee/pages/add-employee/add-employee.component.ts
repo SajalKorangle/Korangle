@@ -234,6 +234,11 @@ export class AddEmployeeComponent implements OnInit {
                         })
                     });
                     this.employeeService.createObjectList(this.employeeService.employee_permissions,data).then(value => {
+                        this.moduleList.forEach(module=>{
+                            module.taskList.forEach(task=>{
+                                task.selected = false;
+                            })
+                        });
                         this.isLoading = false;
                         alert('Employee Profile Created Successfully');
                         this.newEmployee = {};
