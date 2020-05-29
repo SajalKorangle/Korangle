@@ -95,7 +95,7 @@
                             <td class="rightBorder downBorder" style="padding-top: 2px; padding-bottom: 2px; font-weight: 800 !important;">Scholastic Areas</td>
                             <td class="downBorder" style="padding-top: 2px; padding-bottom: 2px; font-weight: 800 !important;" colspan="6" align="center">Term-1 (100 marks)</td>
                         </tr>
-                        <tr>
+                        <tr class="marksTableFontSize">
                             <td class="leftBorder rightBorder downBorder">Sub Name</td>
                             <td class="rightBorder downBorder">Per Test (10)</td>
                             <td class="rightBorder downBorder">Note Book (5)</td>
@@ -105,7 +105,7 @@
                             <td class="rightBorder downBorder">Gr</td>
                         </tr>
                         <ng-container *ngFor="let classSubject of classSubjectList;">
-                            <tr>
+                            <tr class="marksTableFontSize">
                                 <td class="leftBorder rightBorder" style="padding: 5px;">{{getSubjectName(classSubject.parentSubject)}}</td>
                                 <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[2]) | number:'1.0-2'}}</td>
                                 <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[2]) | number:'1.0-2'}}</td>
@@ -128,15 +128,15 @@
                             <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800;">Co-Scholastic Areas: Term-1 [on a 3-point (A-C) grading scale]</td>
                             <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800;">Grade</td>
                         </tr>
-                        <tr>
+                        <tr class="marksTableFontSize">
                             <td class="leftBorder upBorder" style="padding: 3px;">{{extraFieldList[0].name}}</td>
                             <td class="leftBorder upBorder" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[0], termList[2])}}</td>
                         </tr>
-                        <tr>
+                        <tr class="marksTableFontSize">
                             <td class="leftBorder" style="padding: 3px;">{{extraFieldList[1].name}}</td>
                             <td class="leftBorder" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[1], termList[2])}}</td>
                         </tr>
-                        <tr>
+                        <tr class="marksTableFontSize">
                             <td class="leftBorder downBorder" style="padding: 3px;">{{extraFieldList[2].name}}</td>
                             <td class="leftBorder downBorder" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[2], termList[2])}}</td>
                         </tr>
@@ -157,7 +157,7 @@
                 <div class="col-xs-12">
                     <table class="table" style="font-size: 8px !important;">
                         <tbody>
-                        <tr>
+                        <tr class="marksTableFontSize">
                             <td style="padding: 2px;"><b>Attendance: Term-1</b> Total Present/Working Days</td>
                             <td class="leftBorder" style="padding: 2px;" align="center"     *ngIf="getWorkingDays(student, 2)!= 0" >{{getPresentDays(student, 2)}}/{{getWorkingDays(student, 2)}}</td>
                         </tr>
