@@ -174,14 +174,14 @@ export class GenerateFinalReportServiceAdapter {
                 'dateOfAttendance__lte': '2011-10-31',
             };
             if (this.vm.selectedClassSection.class.orderNumber >= 5 && index != 2 ) {
-                if (reportCardMapping.startDate && reportCardMapping.endDate) {
-                    attendance_data['dateOfAttendance__gte'] = reportCardMapping.startDate;
-                    attendance_data['dateOfAttendance__lte'] = reportCardMapping.endDate;
+                if (reportCardMapping.attendanceStartDate && reportCardMapping.attendanceEndDate) {
+                    attendance_data['dateOfAttendance__gte'] = reportCardMapping.attendanceStartDate;
+                    attendance_data['dateOfAttendance__lte'] = reportCardMapping.attendanceEndDate;
                 }
             } else if (this.vm.selectedClassSection.class.orderNumber < 5 && index == 2 ) {
-                if (reportCardMapping.startDate && reportCardMapping.endDate) {
-                    attendance_data['dateOfAttendance__gte'] = reportCardMapping.startDate;
-                    attendance_data['dateOfAttendance__lte'] = reportCardMapping.endDate;
+                if (reportCardMapping.attendanceStartDate && reportCardMapping.attendanceEndDate) {
+                    attendance_data['dateOfAttendance__gte'] = reportCardMapping.attendanceStartDate;
+                    attendance_data['dateOfAttendance__lte'] = reportCardMapping.attendanceEndDate;
                 }
             }
             service_list.push(this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, attendance_data));

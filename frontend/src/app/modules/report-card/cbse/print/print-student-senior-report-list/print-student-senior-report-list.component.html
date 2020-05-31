@@ -130,15 +130,15 @@
                         </tr>
                         <tr class="marksTableFontSize">
                             <td class="leftBorder upBorder" style="padding: 3px;">{{extraFieldList[0].name}}</td>
-                            <td class="leftBorder upBorder" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[0], termList[2])}}</td>
+                            <td class="leftBorder upBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[0], termList[2])}}</td>
                         </tr>
                         <tr class="marksTableFontSize">
                             <td class="leftBorder" style="padding: 3px;">{{extraFieldList[1].name}}</td>
-                            <td class="leftBorder" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[1], termList[2])}}</td>
+                            <td class="leftBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[1], termList[2])}}</td>
                         </tr>
                         <tr class="marksTableFontSize">
                             <td class="leftBorder downBorder" style="padding: 3px;">{{extraFieldList[2].name}}</td>
-                            <td class="leftBorder downBorder" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[2], termList[2])}}</td>
+                            <td class="leftBorder downBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[2], termList[2])}}</td>
                         </tr>
                         <tr>
                             <td style="padding-top: 8px; padding-bottom: 0px;"></td>
@@ -159,7 +159,7 @@
                         <tbody>
                         <tr class="marksTableFontSize">
                             <td style="padding: 2px;"><b>Attendance: Term-1</b> Total Present/Working Days</td>
-                            <td class="leftBorder" style="padding: 2px;" align="center"     *ngIf="getWorkingDays(student, 2)!= 0" >{{getPresentDays(student, 2)}}/{{getWorkingDays(student, 2)}}</td>
+                            <td class="leftBorder" style="padding: 2px;" align="center" *ngIf="getWorkingDays(student, 2)!= 0" >{{getPresentDays(student, 2)}}/{{getWorkingDays(student, 2)}}</td>
                         </tr>
                         </tbody>
                     </table>
