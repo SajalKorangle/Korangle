@@ -10,7 +10,7 @@ import {BankService} from '../../../../services/bank.service';
   selector: 'add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.css'],
-  providers:[BankService,TeamService,EmployeeService]
+  providers:[BankService,TeamService,EmployeeService,EmployeeOldService]
 })
 
 export class AddEmployeeComponent implements OnInit {
