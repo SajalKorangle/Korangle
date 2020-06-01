@@ -18,15 +18,10 @@ https.get("https://korangleplus.s3.amazonaws.com/benchmark-coverage.json", funct
                 "functions": getNewCoverage('functions')
             };
 
+            console.log('BenchMark');
+            console.log(benchmark);
+            console.log('Your Coverage');
             console.log(newCoverage);
-
-            Object.keys(newCoverage).forEach((key) => {
-                if (newCoverage[key] == -1) {
-                    console.log(current);
-                    cosole.log(benchmark);
-                    throw error;
-                }
-            });
 
         } catch (error) {
             console.error(error.message);
@@ -35,12 +30,6 @@ https.get("https://korangleplus.s3.amazonaws.com/benchmark-coverage.json", funct
 });
 
 function getNewCoverage(param) {
-    if (benchmark[param]-current['total'][param]['pct'] > 0.01) {
-        return -1;
-    } else if (benchmark[param]-current['total'][param]['pct'] >= 0) {
-        return benchmark[param];
-    } else if (benchmark[param]-current['total'][param]['pct'] < 0) {
-        return current['total'][param]['pct'];
-    }
+    return current['total'][param]['pct'];
 }
 
