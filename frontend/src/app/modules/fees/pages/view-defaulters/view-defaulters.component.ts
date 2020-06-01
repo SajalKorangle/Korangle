@@ -24,6 +24,8 @@ export class ViewDefaultersComponent implements OnInit {
     installmentList = INSTALLMENT_LIST;
     sessionList = [];
 
+    STUDENT_LIMITER = 200;
+
     nullValue = null;
 
      user;
