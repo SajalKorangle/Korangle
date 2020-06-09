@@ -14,12 +14,13 @@ import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service"
+import {BankService} from '../../../../services/bank.service';
 
 @Component({
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ SchoolService, ClassOldService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService ],
+    providers: [ SchoolService, ClassOldService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService, BankService ],
 })
 
 export class AddStudentComponent implements OnInit {
@@ -54,7 +55,8 @@ export class AddStudentComponent implements OnInit {
                  public subjectService: SubjectService,
                  public vehicleService: VehicleOldService,
                  public examinationService: ExaminationService,
-                 public feeService: FeeService) { }
+                 public feeService: FeeService,
+                 public bankService: BankService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
