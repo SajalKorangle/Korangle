@@ -204,6 +204,12 @@ export class GenerateFinalReportServiceAdapter {
             this.vm.studentTestList = value[1];
             this.vm.studentExtraFieldList = value[2];
             this.vm.studentRemarkList = value[3];
+
+            // This line seems to be holding the integrity of the student attendance so don't delete it
+            // even though it seems that it is just appending the data but the new called data doesn't seem to
+            // be recognised.
+            this.vm.termStudentAttendanceList = [];
+
             this.vm.termStudentAttendanceList.push(value[4]);
             this.vm.termStudentAttendanceList.push(value[5]);
             this.vm.termStudentAttendanceList.push(value[6]);
