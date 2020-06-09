@@ -10,7 +10,7 @@ import {BankService} from '../../../../services/bank.service';
   selector: 'add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.css'],
-  providers:[BankService,TeamService,EmployeeService]
+  providers:[BankService,TeamService,EmployeeService,EmployeeOldService]
 })
 
 export class AddEmployeeComponent implements OnInit {
@@ -60,6 +60,7 @@ export class AddEmployeeComponent implements OnInit {
             this.teamService.getObjectList(this.teamService.module, module_data),
             this.teamService.getObjectList(this.teamService.task, task_data),
         ]).then(value => {
+            console.log(value[0]);
             this.employeeList = value[0];
             this.initializeModuleList(value[1],value[2]);
             this.isLoading = false;
@@ -160,6 +161,8 @@ export class AddEmployeeComponent implements OnInit {
     }
 
     createNewEmployee(): void {
+
+        console.log("CREATE NEW EMPLOYEE CALLED");
 
         if (this.newEmployee.name === undefined || this.newEmployee.name === '') {
             alert('Name should be populated');

@@ -56,7 +56,20 @@ export class UpdateAllServiceAdapter {
                     (<HTMLInputElement> document.getElementById(employee.id.toString()+key.toString())).value=employee.mobileNumber;
                     return;
                 }else{
-                    data['mobileNumber'] = newValue;
+                    let selectedEmployee = null;
+                    this.vm.employeeFullProfileList.forEach(employee => {
+                        if (employee.mobileNumber == newValue) {
+                            selectedEmployee = employee;
+                        }
+                    });
+                    //console.log("selectedEmployee is : ",selectedEmployee);
+                    if (selectedEmployee) {
+                        alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
+                        (<HTMLInputElement> document.getElementById(employee.id.toString()+key.toString())).value=employee.mobileNumber;
+                        return;
+                    }else{
+                        data['mobileNumber'] = newValue;
+                    }
                 }
 
             }else if (key == 'aadharNumber') {
