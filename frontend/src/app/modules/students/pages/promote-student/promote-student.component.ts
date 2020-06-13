@@ -25,6 +25,8 @@ export class PromoteStudentComponent implements OnInit {
     sessionList = [];
     installmentList = INSTALLMENT_LIST;
 
+    STUDENT_LIMITER = 200;
+
     user;
 
     // From Service Adapter
