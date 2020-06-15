@@ -127,6 +127,7 @@
             Include Alternate Mobile Number
         </mat-checkbox>
         <mat-form-field style="margin-left: 10px;">
+            <mat-hint align="end">De-select all to ignore the filter</mat-hint>
             <mat-select placeholder="Filters">
                 <mat-option>
                     <mat-checkbox [(ngModel)]="studentFilters.category.sc"
@@ -188,7 +189,7 @@
         <br>
             Total Students: <i>{{studentSectionList.length}}</i>,
             Displaying: <i>{{getDisplayStudentNumber()}}</i>,
-            Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
+            Selected: <b><i>{{getFilteredStudentList().length}}</i></b>
         <br/>
 
         <button class="btn"
