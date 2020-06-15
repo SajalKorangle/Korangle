@@ -54,7 +54,7 @@ export class SendSmsServiceAdapter {
         let student_data = {
             'parentTransferCertificate': 'null__korangle',
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber'
+            'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,rte,gender,newCategoryField,admissionSession'
         };
 
         const sms_count_request_data = {

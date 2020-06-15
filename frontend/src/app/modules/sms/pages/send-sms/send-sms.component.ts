@@ -61,6 +61,27 @@ export class SendSmsComponent implements OnInit {
     timeout: any;
 
     serviceAdapter: SendSmsServiceAdapter;
+    studentFilters: any = {
+        category: {
+            sc: false,
+            st: false,
+            obc: false,
+            general: false
+        },
+        gender: {
+            male: false,
+            female: false,
+            other: false
+        },
+        admission: {
+            new: false,
+            old: false
+        },
+        rte: {
+            yes: false,
+            no: false
+        }
+    }
 
     constructor(public studentService: StudentService,
                 public employeeService: EmployeeService,
@@ -229,7 +250,41 @@ export class SendSmsComponent implements OnInit {
     getFilteredStudentList(): any {
         return this.studentSectionList.filter(studentSection => {
             return this.isClassSectionSelected(studentSection.parentClass, studentSection.parentDivision);
-        });
+        })
+        .filter(studentSection => {
+            // category filter
+            // If none is checked return all
+            if(!this.studentFilters.category.general && !this.studentFilters.category.sc && !this.studentFilters.category.st && !this.studentFilters.category.obc)return true;
+            // If something is checked
+            if(this.studentFilters.category.general && studentSection.student.newCategoryField==="Gen.")return true;
+            if(this.studentFilters.category.sc && studentSection.student.newCategoryField==="SC")return true;
+            if(this.studentFilters.category.st && studentSection.student.newCategoryField==="ST")return true;
+            if(this.studentFilters.category.obc && studentSection.student.newCategoryField==="OBC")return true;
+            // For all other cases
+            return false;
+        }).filter(studentSection => {
+            // gender filter
+            // if none selected return all
+            if(!this.studentFilters.gender.male && !this.studentFilters.gender.female && !this.studentFilters.gender.other)return true;
+            // If something is checked
+            if(this.studentFilters.gender.male && studentSection.student.gender=="Male")return true;
+            if(this.studentFilters.gender.female && studentSection.student.gender=="Female")return true;
+            if(this.studentFilters.gender.other && studentSection.student.gender=="Other")return true;
+            // For all other cases
+            return false;
+        }).filter(studentSection => {
+            if(!this.studentFilters.admission.new && !this.studentFilters.admission.old)return true;
+            // admission new or old
+            if(studentSection.student.admissionSession===this.user.activeSchool.currentSessionDbId && this.studentFilters.admission.new)return true;
+            if(studentSection.student.admissionSession!==this.user.activeSchool.currentSessionDbId && this.studentFilters.admission.old)return true;
+            return false;
+        }).filter(studentSection => {
+            if(!this.studentFilters.rte.yes && !this.studentFilters.rte.no)return true;
+            // rte yes or no
+            if(studentSection.student.rte==="YES" && this.studentFilters.rte.yes)return true;
+            if(studentSection.student.rte==="NO" && this.studentFilters.rte.no)return true;
+            return false;
+        })
     }
 
     selectAllEmployees(): void {

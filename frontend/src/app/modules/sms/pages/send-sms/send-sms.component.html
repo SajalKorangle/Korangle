@@ -28,7 +28,7 @@
                               [(ngModel)]="message"></textarea>
             </mat-form-field>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <mat-form-field style="margin-top: 23px;">
                 <mat-select placeholder="Send via"
                             [(ngModel)]="selectedSentType">
@@ -126,6 +126,64 @@
                       (click)="$event.stopPropagation();">
             Include Alternate Mobile Number
         </mat-checkbox>
+        <mat-form-field style="margin-left: 10px;">
+            <mat-select placeholder="Filters">
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="studentFilters.category.sc"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">SC,
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="studentFilters.category.st"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">ST,
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="studentFilters.category.obc"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">OBC,
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="studentFilters.category.general"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">Gen.
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="studentFilters.gender.male"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">M
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="studentFilters.gender.female"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">F
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="studentFilters.gender.other"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">Other
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    Admission:
+                    <mat-checkbox [(ngModel)]="studentFilters.admission.new"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">New
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="studentFilters.admission.old"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">Old
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    RTE:
+                    <mat-checkbox [(ngModel)]="studentFilters.rte.yes"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">Yes
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="studentFilters.rte.no"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">No
+                    </mat-checkbox>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
         <br>
             Total Students: <i>{{studentSectionList.length}}</i>,
