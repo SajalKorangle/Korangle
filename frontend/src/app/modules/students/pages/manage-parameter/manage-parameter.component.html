@@ -1,0 +1,17 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <b>Already Existing Parameters:-</b><br/>
+        <span *ngFor="let parameter of globalParametersList; let last=last;">
+            {{parameter}}<ng-container *ngIf="!last">,</ng-container>&nbsp;
+        </span>
+        <br/><br/>
+        <b>Custom Parameters:-</b><br/>
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
