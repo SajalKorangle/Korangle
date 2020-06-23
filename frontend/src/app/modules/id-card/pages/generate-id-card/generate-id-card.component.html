@@ -1,0 +1,101 @@
+<div class="card-content">
+    <ng-container *ngIf="!isLoading">
+        <div>
+            <mat-form-field style="margin-right: 15px;">
+                <mat-select placeholder="Select Class" style="width: 100%;">
+
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAllClasses(); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
+
+                    <ng-container *ngFor="let classSection of classSectionList">
+                        <mat-option style="width: 100%;">
+                            <mat-checkbox [(ngModel)]="classSection.selected"
+                                            (ngModelChange)="handleStudentDisplay()"
+                                            (click)="$event.stopPropagation();">
+                                {{classSection.class.name}}, {{classSection.section.name}}
+                            </mat-checkbox>
+                        </mat-option>
+                    </ng-container>
+
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAllClasses(); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
+
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field style="margin-right: 15px;">
+                <mat-label>
+                    Select Layout
+                </mat-label>
+                <mat-select [(ngModel)]="selectedLayout">
+                    <mat-option *ngFor="let layout of layoutList" [value]="layout">
+                        {{layout.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button type="button" *ngIf="selectedLayout"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                style="padding: 12px 15px; margin-right: 17px;"
+                (click)="printIdCards();">
+                Print
+            </button>  
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-xs-6">
+                <mat-checkbox [(ngModel)]="printMultiple">Print Multiple Cards</mat-checkbox>
+            </div>            
+        </div>
+        <button class="btn"
+                style="padding: 4px 7px"
+                (click)="selectAllStudents(); $event.stopPropagation();">Select All
+        </button>
+        <button class="btn"
+                style="padding: 4px 7px"
+                (click)="clearAllStudents(); $event.stopPropagation();">Clear All
+        </button>
+        <table class="table table-hover" id="pdfTable">
+            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Photo</th>
+                    <th>Class & Section</th>
+                    <th>Father's Name</th>
+                </tr>
+            </thead>     
+            <tbody>       
+                <ng-container *ngFor="let studentSection of filteredStudentSectionList">
+                    <tr>
+                        <td>
+                            <mat-checkbox [(ngModel)]="studentSection.selected"></mat-checkbox>
+                        </td>
+                        <td>{{getStudent(studentSection.parentStudent).name}}</td>
+                        <td> <img style="width: 3em" src="{{getStudent(studentSection.parentStudent).profileImage}}"/></td>
+                        <td>{{getClass(studentSection.parentClass).name}}, {{getSection(studentSection.parentDivision).name}}</td>
+                        <td>{{getStudent(studentSection.parentStudent).fathersName}}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </ng-container>
+
+    <ng-container *ngIf="isLoading" style="height: 100%; display: flex; justify-content: center">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>
