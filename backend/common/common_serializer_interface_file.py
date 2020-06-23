@@ -116,8 +116,6 @@ def update_object(data, Model, ModelSerializer):
         print(attr)
         if attr in instance_field_list:
             delete_list.append(attr)
-    for field_name in delete_list:
-        del data[field_name]
 
     serializer = ModelSerializer(Model.objects.get(id=data['id']), data=data)
     if serializer.is_valid():

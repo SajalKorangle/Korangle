@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'user_app',
     'notification_app',
     'information_app',
+    'id_card_app',
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',

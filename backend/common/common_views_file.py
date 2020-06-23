@@ -7,7 +7,7 @@ import json
 
 from rest_framework import serializers
 
-from common.common_serializer_interface import get_object, get_list, create_object, create_list, \
+from common.common_serializer_interface_file import get_object, get_list, create_object, create_list, \
     update_object, update_list, partial_update_object, partial_update_list, delete_object, delete_list
 
 
@@ -48,18 +48,15 @@ class CommonView():
 
     @user_permission_new
     def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_object(data, self.Model, self.ModelSerializer)
+        return create_object(request.data, self.Model, self.ModelSerializer)
 
     @user_permission_new
-    def put(self, request):
-        data = json.loads(request.body.decode('utf-8'))        
-        return update_object(data, self.Model, self.ModelSerializer)
+    def put(self, request):       
+        return update_object(request.data, self.Model, self.ModelSerializer)
 
     @user_permission_new
     def patch(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        return partial_update_object(data, self.Model, self.ModelSerializer)
+        return partial_update_object(request.data, self.Model, self.ModelSerializer)
 
     @user_permission_new
     def delete(self, request):
@@ -82,18 +79,15 @@ class CommonListView():
 
     @user_permission_new
     def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_list(data, self.Model, self.ModelSerializer)
+        return create_list(request.data, self.Model, self.ModelSerializer)
 
     @user_permission_new
     def put(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        return update_list(data, self.Model, self.ModelSerializer)
+        return update_list(request.data, self.Model, self.ModelSerializer)
 
     @user_permission_new
     def patch(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        return partial_update_list(data, self.Model, self.ModelSerializer)
+        return partial_update_list(request.data, self.Model, self.ModelSerializer)
 
     @user_permission_new
     def delete(self, request):
