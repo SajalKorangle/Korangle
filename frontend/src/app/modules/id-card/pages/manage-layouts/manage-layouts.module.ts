@@ -10,8 +10,6 @@ import {MatIconModule} from '@angular/material/icon';
 
 import {ManageLayoutsComponent} from "./manage-layouts.component";
 
-import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
-
 
 @NgModule({
     declarations: [
@@ -25,7 +23,6 @@ import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
         MatButtonToggleModule,
         MatIconModule,
 
-        PdfJsViewerModule
     ],
     exports: [
     ],
