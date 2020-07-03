@@ -57,6 +57,8 @@ export class ManageLayoutsComponent implements OnInit {
         this.serviceAdapter = new ManageLayoutsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        /*let func = new Function('return ' + 'function (a, b) { return a + b; }')();
+        console.log(func(1, 2));*/
     }
 
     detectChanges(){
