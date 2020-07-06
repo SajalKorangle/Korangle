@@ -449,12 +449,29 @@
                               [ngModel]="selectedStudent.remark">
                         </textarea>
                 </mat-form-field>
-
+            </div>
+        </div>
+        <div class="row">
+            <div *ngFor="let parameter of studentParameterList" class="col-md-3" [class.fieldChanged]="checkCustomFieldChanged(currentStudent, parameter)">
+                <mat-form-field  style="width: 100%;">
+                    <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
+                    <input matInput  *ngIf="parameter.parameterType==='TEXT'"
+                        type="text"
+                        (ngModelChange)="updateParameterValue(currentStudent, parameter, $event)"
+                        [ngModel]="getParameterValue(currentStudent, parameter)">
+                    <ng-container *ngIf="parameter.parameterType==='FILTER'">
+                        <mat-select placeholder="{{parameter.name}}"
+                            [ngModel]="getParameterValue(currentStudent, parameter)"
+                            (ngModelChange)="updateParameterValue(currentStudent, parameter, $event)">
+                                <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                    </ng-container>
+                </mat-form-field>
 
             </div>
         </div>
 
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateProfile();">Update</button>
+        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.updateProfile();">Update</button>
         <div class="clearfix"></div>
 
     </ng-container>

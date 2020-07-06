@@ -168,7 +168,7 @@ class StudentParameter(models.Model):
         ( 'TEXT', 'TEXT' ),
         ( 'FILTER', 'FILTER' ),
     )
-    paramterType = models.CharField(max_length=20, choices=PARAMETER_TYPE, null=False)
+    parameterType = models.CharField(max_length=20, choices=PARAMETER_TYPE, null=False)
 
     filterValues = models.TextField(null=True, blank=True)
 

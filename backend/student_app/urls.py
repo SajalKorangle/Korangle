@@ -79,6 +79,14 @@ urlpatterns += [
 ]
 
 
+from student_app.views import StudentParameterValueView, StudentParameterValueListView
+
+urlpatterns += [
+    url(r'^student-parameter-value/batch', StudentParameterValueListView.as_view()),
+    url(r'^student-parameter-value', StudentParameterValueView.as_view()),
+]
+
+
 from student_app.views import StudentParameterView, StudentParameterListView
 
 urlpatterns += [
@@ -87,10 +95,4 @@ urlpatterns += [
 ]
 
 
-from student_app.views import StudentParameterValueView, StudentParameterValueListView
-
-urlpatterns += [
-    url(r'^student-parameter-value/batch', StudentParameterValueListView.as_view()),
-    url(r'^student-parameter-value', StudentParameterValueView.as_view()),
-]
 

@@ -2,13 +2,14 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { ManageParameterServiceAdapter } from './manage-parameter.service.adapter';
 import {DataStorage} from '../../../../classes/data-storage';
+import {StudentService} from './../../../../services/modules/student/student.service'
 
 
 @Component({
   selector: 'manage-parameter',
   templateUrl: './manage-parameter.component.html',
   styleUrls: ['./manage-parameter.component.css'],
-    providers: [  ],
+    providers: [ StudentService ],
 })
 
 export class ManageParameterComponent implements OnInit {
@@ -45,17 +46,52 @@ export class ManageParameterComponent implements OnInit {
         'Remark'
     ];
 
+    customParameterTypeList: any[] = [{type: 'TEXT', name: 'Text'}, {type: 'FILTER', name: 'Filter'}]
+    customParameterList: any[] = [];
+    currentParameter: any;
+    newFilterValue: any = ''
+
     serviceAdapter: ManageParameterServiceAdapter;
 
     isLoading = false;
 
-    constructor () { }
+    constructor (
+        public studentService: StudentService
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new ManageParameterServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+    }
+
+    setActiveParameter = parameter => {
+        this.currentParameter = {...parameter, filterValues: JSON.parse(parameter.filterValues)}
+    }
+
+    addNewParameter = () => {
+        this.currentParameter = {
+            parentSchool: this.user.activeSchool.dbId,
+            name: '',
+            parameterType: 'TEXT',
+            filterValues: []
+        }
+    }
+
+    deleteFilter = filter => {
+        this.currentParameter.filterValues = this.currentParameter.filterValues.filter(x => x!==filter)
+    }
+
+    addFilter = filter => {
+        this.currentParameter.filterValues.push(filter)
+        this.newFilterValue = ''
+        console.log(this.currentParameter)
+    }
+
+    isValidParameterName = () => {
+        // console.log(this.globalParametersList.find(x => x===this.currentParameter.name) || this.customParameterList.find(x => x.name===this.currentParameter.name && x.id!==this.currentParameter.id))
+        return !(this.globalParametersList.find(x => x===this.currentParameter.name) || this.customParameterList.find(x => x.name===this.currentParameter.name && x.id!==this.currentParameter.id))
     }
 
 }

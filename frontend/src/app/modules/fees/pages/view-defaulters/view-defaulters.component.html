@@ -68,6 +68,19 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <div class="col-sm-3">
+                <mat-form-field>
+                    <mat-select placeholder="Filter">
+                        <mat-option *ngFor='let parameter of studentParameterList;'>
+                            {{parameter.name}}:
+                            <mat-checkbox *ngFor="let filter of parameter.filterValues" [(ngModel)]="filter.show"
+                                        style="margin-right: 5px;"
+                                        (click)="$event.stopPropagation();">{{filter.name}}
+                            </mat-checkbox>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
 
         <div>SMS count: <b>{{smsBalance}}</b> <br /></div>

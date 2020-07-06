@@ -52,6 +52,9 @@ export class ViewDefaultersComponent implements OnInit {
     classList: any;
     sectionList: any;
 
+    studentParameterList: any;
+    studentParameterValueList: any;
+
     notif_usernames = [];
 
     parentList = [];
@@ -431,8 +434,29 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
+    getParameterValue = (student, parameter) => {
+        try {
+            return this.studentParameterValueList.find(x => x.parentStudent===student.id && x.parentStudentParameter===parameter.id).value
+        } catch {
+            return ''
+        }
+    }
+
     getFilteredStudentList(): any {
-        let tempList = this.studentList;
+        let tempList = this.studentList.filter(student => {
+            for (let x of this.studentParameterList){
+                let flag = false;
+                x.filterValues.forEach(filter => {
+                    flag = flag || filter.show
+                })
+                if (flag){
+                    if(!(x.filterValues.filter(filter => filter.show).map(filter => filter.name).includes(this.getParameterValue(student, x)))){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
         if (this.selectedClassSection) {
             tempList = tempList.filter(student => {
                 return student.class.dbId == this.selectedClassSection.class.dbId

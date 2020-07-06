@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
-                ('paramterType', models.CharField(choices=[('TEXT', 'TEXT'), ('FILTER', 'FILTER')], max_length=20)),
+                ('parameterType', models.CharField(choices=[('TEXT', 'TEXT'), ('FILTER', 'FILTER')], max_length=20)),
                 ('filterValues', models.TextField(blank=True, null=True)),
                 ('parentSchool', models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='school_app.School', verbose_name='parentSchool')),
             ],
