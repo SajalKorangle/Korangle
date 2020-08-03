@@ -2,11 +2,15 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import {TeamService} from '../../../../services/modules/team/team.service';
+import {EmployeeService} from '../../../../services/modules/employee/employee.service';
+import {BankService} from '../../../../services/bank.service';
 
 @Component({
   selector: 'add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.css'],
+  providers:[BankService,TeamService,EmployeeService,EmployeeOldService]
 })
 
 export class AddEmployeeComponent implements OnInit {
@@ -17,23 +21,111 @@ export class AddEmployeeComponent implements OnInit {
     newEmployeeSessionDetail: any;
 
     employeeList = [];
+    moduleList = [];
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeOldService) { }
+    constructor (private employeeOldService: EmployeeOldService,
+                 private employeeService : EmployeeService,
+                 private bankService: BankService,
+                 private teamService:TeamService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
+        this.isLoading = true;
         this.newEmployee = {};
         this.newEmployeeSessionDetail = {};
         let data = {
             parentSchool: this.user.activeSchool.dbId,
         };
-        this.employeeService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
+        this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
             this.employeeList = employeeList;
         });
+
+        let module_data = {
+            'parentBoard__or': this.user.activeSchool.parentBoard,
+            'parentBoard': 'null__korangle',
+        };
+
+        let task_data = {
+            'parentBoard__or': this.user.activeSchool.parentBoard,
+            'parentBoard': 'null__korangle',
+            'parentModule__parentBoard__or': this.user.activeSchool.parentBoard,
+            'parentModule__parentBoard': 'null__korangle',
+        };
+
+        Promise.all([
+            this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt),
+            this.teamService.getObjectList(this.teamService.module, module_data),
+            this.teamService.getObjectList(this.teamService.task, task_data),
+        ]).then(value => {
+            console.log(value[0]);
+            this.employeeList = value[0];
+            this.initializeModuleList(value[1],value[2]);
+            this.isLoading = false;
+
+        }, error => {
+            this.isLoading = false;
+        });
+
     }
+
+    isSelected(task: any){
+        if(task.selected){
+            return task.id
+        }
+    }
+
+    grantAll(){
+        this.moduleList.forEach(module => {
+            module.taskList.forEach(task => {
+                task.selected = true;
+            })
+        })
+    }
+
+    removeAll(){
+        this.moduleList.forEach(module => {
+            module.taskList.forEach(task => {
+                task.selected = false;
+            })
+        })
+    }
+
+    createPermission(employee: any, task){
+        let data = [];
+        this.moduleList.forEach(module=>{
+            module.taskList.forEach(task=>{
+                if(task.selected){
+                    data.push({
+                        'parentEmployee': employee.id,
+                        'parentTask': task.id,
+                    })
+                }
+            })
+        });
+        this.employeeService.createObjectList(this.employeeService.employee_permissions,data).then(value => {
+
+        })
+    }
+
+    initializeModuleList(moduleList: any, taskList: any): void {
+        this.moduleList = moduleList;
+        this.moduleList.forEach(module => {
+            module.taskList = taskList.filter(task => {
+                task.selected = false;
+                return task.parentModule == module.id;
+            }).sort( (a,b) => {
+                return a.orderNumber - b.orderNumber;
+            });
+        });
+        this.moduleList = this.moduleList.sort( (a,b) => {
+            return a.orderNumber - b.orderNumber;
+        });
+        console.log(this.moduleList);
+    }
+
 
     checkLength(value: any) {
         if (value && value.toString().length > 0) {
@@ -59,7 +151,18 @@ export class AddEmployeeComponent implements OnInit {
         return true;
     }
 
+    getBankDetails(){
+        if(this.newEmployee.bankIfscCode.length < 11){
+            return ;
+        }
+        this.bankService.getDetailsFromIFSCCode(this.newEmployee.bankIfscCode.toString()).then(value=>{
+            this.newEmployee.bankName = value ;
+        });
+    }
+
     createNewEmployee(): void {
+
+        console.log("CREATE NEW EMPLOYEE CALLED");
 
         if (this.newEmployee.name === undefined || this.newEmployee.name === '') {
             alert('Name should be populated');
@@ -114,17 +217,36 @@ export class AddEmployeeComponent implements OnInit {
         this.isLoading = true;
 
         console.log(this.newEmployee);
-        this.employeeService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
+        this.employeeOldService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
                 let post_data = {
                     parentEmployee: response.id,
                     parentSession: this.user.activeSchool.currentSessionDbId,
                     paidLeaveNumber: this.newEmployeeSessionDetail.paidLeaveNumber,
                 };
-                this.employeeService.createEmployeeSessionDetail(post_data, this.user.jwt).then(response => {
-                    this.isLoading = false;
-                    alert('Employee Profile Created Successfully');
-                    this.newEmployee = {};
-                    this.newEmployeeSessionDetail = {};
+                this.employeeOldService.createEmployeeSessionDetail(post_data, this.user.jwt).then(res => {
+                    console.log(response);
+                    let data = [];
+                    this.moduleList.forEach(module=>{
+                        module.taskList.forEach(task=>{
+                            if(task.selected){
+                                data.push({
+                                    'parentEmployee': response.id,
+                                    'parentTask': task.id,
+                                })
+                            }
+                        })
+                    });
+                    this.employeeService.createObjectList(this.employeeService.employee_permissions,data).then(value => {
+                        this.moduleList.forEach(module=>{
+                            module.taskList.forEach(task=>{
+                                task.selected = false;
+                            })
+                        });
+                        this.isLoading = false;
+                        alert('Employee Profile Created Successfully');
+                        this.newEmployee = {};
+                        this.newEmployeeSessionDetail = {};
+                    })
                 });
             }, error => {
                 this.isLoading = false;

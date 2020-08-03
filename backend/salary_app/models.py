@@ -35,7 +35,7 @@ MONTH = (
 
 class Payslip(models.Model):
 
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, default=0, verbose_name='parentEmployee')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, default=0, verbose_name='parentEmployee')
     amount = models.IntegerField(null=False, verbose_name='amount', default=0)
     month = models.CharField(max_length=10, choices=MONTH, null=False, default=APRIL, verbose_name='month')
     year = models.IntegerField(null=False, verbose_name='year', default=2011)
@@ -49,7 +49,7 @@ class Payslip(models.Model):
 
 class EmployeePayment(models.Model):
 
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, default=0, verbose_name='parentEmployee')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, default=0, verbose_name='parentEmployee')
     amount = models.IntegerField(null=False, verbose_name='amount', default=0)
     dateOfPayment = models.DateField(null=False, auto_now_add=True, verbose_name='dateOfPayment')
     remark = models.TextField(null=True, verbose_name='remark')

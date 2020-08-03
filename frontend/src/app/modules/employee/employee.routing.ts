@@ -35,8 +35,18 @@ const routes: Routes = [
         data: {moduleName: 'employee'},
     },
     {
+        path: 'delete_employee',
+        loadChildren: 'app/modules/employee/pages/delete-employee/delete-employee.module#DeleteEmployeeModule',
+        data: {moduleName: 'employee'},
+    },
+    {
         path: 'employee_experience_certi',
         loadChildren: 'app/modules/employee/pages/experience-certi/experience-certi.module#ExperienceCertiModule',
+        data: {moduleName: 'employee'},
+    },
+    {
+        path: 'update_all',
+        loadChildren: 'app/modules/employee/pages/update-all/update-all.module#UpdateAllModule',
         data: {moduleName: 'employee'},
     },
 

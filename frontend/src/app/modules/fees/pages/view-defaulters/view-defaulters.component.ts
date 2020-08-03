@@ -10,8 +10,7 @@ import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
-import {SchoolService} from "../../../../services/modules/school/school.service";
-
+import { SchoolService } from '../../../../services/modules/school/school.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 
@@ -26,6 +25,8 @@ export class ViewDefaultersComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
     sessionList = [];
+
+    STUDENT_LIMITER = 200;
 
     nullValue = null;
 

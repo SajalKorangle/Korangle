@@ -22,7 +22,6 @@ export class User {
     schoolList: School[] = [];
 
     isLazyLoading: boolean = false;
-    isPageLoading: boolean = false;
 
     emptyUserDetails(): void {
         this.username = null;
@@ -35,7 +34,6 @@ export class User {
         this.activeSchool = null;
         this.schoolList = [];
         this.isLazyLoading = false;
-        this.isPageLoading = false;
         this.section = null;
     }
 

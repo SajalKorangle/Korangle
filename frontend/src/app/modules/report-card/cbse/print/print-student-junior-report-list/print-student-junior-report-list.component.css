@@ -80,3 +80,7 @@ td.bold {
     font-weight: normal;
     vertical-align: middle;
 }
+
+.marksTableFontSize {
+    font-size: 9.5px !important;
+}
