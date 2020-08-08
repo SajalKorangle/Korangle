@@ -585,8 +585,8 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.name);
             row.push(student.fathersName);
             row.push(student.class.name+', '+student.section.name);
-            row.push(student.mobileNumber);
-            row.push(student.secondMobileNumber);
+            row.push(this.checkMobileNumber(student.mobileNumber) ? student.mobileNumber : '');
+            row.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
             row.push(student.totalFeesThisSession);
@@ -594,7 +594,7 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.discountThisSession);
             template.push(row);
         });
-        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user, template});
+        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user, template: template});
     }
 
     printParentFeesReport(): void {
@@ -616,12 +616,12 @@ export class ViewDefaultersComponent implements OnInit {
             if (parent.studentList.length == 1) {
                 row.push(parent.studentList[0].name);
                 row.push(parent.studentList[0].class.name+', '+parent.studentList[0].section.name);
-                row.push(parent.studentList[0].mobileNumber);
-                row.push(parent.studentList[0].secondMobileNumber);
+                row.push(this.checkMobileNumber(parent.studentList[0].mobileNumber) ? parent.studentList[0].mobileNumber : '');
+                row.push(this.checkMobileNumber(parent.studentList[0].secondMobileNumber) ? parent.studentList[0].secondMobileNumber : '');
             } else {
                 row.push('');
                 row.push('');
-                row.push(parent.studentList[0].mobileNumber);
+                row.push(this.checkMobileNumber(parent.studentList[0].mobileNumber) ? parent.studentList[0].mobileNumber : '');
                 row.push('');
             }
             row.push(this.getParentFeesDueTillMonth(parent));
@@ -638,7 +638,7 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push(student.name);
                     newRow.push(student.class.name+', '+student.section.name);
                     newRow.push('');
-                    newRow.push(student.secondMobileNumber);
+                    newRow.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
                     newRow.push(student.totalFeesThisSession);
@@ -649,8 +649,9 @@ export class ViewDefaultersComponent implements OnInit {
             }
         });
 
-        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user, template});
+        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user,template : template});
     }
+
     downloadStudentFeesReport(): void {
 
         let template: any;

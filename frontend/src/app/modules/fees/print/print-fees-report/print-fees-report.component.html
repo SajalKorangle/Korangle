@@ -8,10 +8,15 @@
     </thead>
     <tbody>
         <tr *ngFor =  "let rows of template">
-            <ng-container *ngIf ="rows[0]!==template[0][0]">
-                <td *ngFor = "let values of rows">
-                    {{values}}
-                </td>
+            <ng-container *ngIf ="rows!=template[0];">
+                <ng-container *ngFor = "let values of rows;let i=index">
+                    <td *ngIf="i<6">
+                        {{values}}
+                    </td>
+                    <td *ngIf="i>=6">  <!-- Because these fields are Indian Rupees -->
+                        {{values | indianCurrency}}
+                    </td>
+                </ng-container>
             </ng-container>
         </tr>
     </tbody>

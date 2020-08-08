@@ -28,8 +28,13 @@ export class PrintFeesReportComponent implements  OnInit, AfterViewChecked {
     if (this.viewChecked === false) {
       this.viewChecked = true;
       this.printService.print();
+      this.template = null;
       this.cdRef.detectChanges();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.template = null;
   }
 
 }
