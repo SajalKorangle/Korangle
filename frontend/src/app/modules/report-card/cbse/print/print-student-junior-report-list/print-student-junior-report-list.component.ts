@@ -141,7 +141,7 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
                 && studentTest.parentSubject == classSubject.parentSubject
                 && studentTest.parentStudent == student.id;
         }).reduce((total, a) => {
-            return total+a.marksObtained;
+            return total+parseFloat(a.marksObtained);
         }, 0);
         return (studentMarks*baseMarks/maximumMarks);
     }
