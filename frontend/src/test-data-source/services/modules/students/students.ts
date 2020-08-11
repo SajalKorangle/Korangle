@@ -1,22 +1,5 @@
 export const STUDENT_LIST = [
     {
-        name : 'Student 1',
-        fathersName : 'Father',
-        class : {
-            name : 'Class 12'
-        },
-        section : {
-            name : 'Section A'
-        },
-        mobileNumber : '1234567891',
-        secondMobileNumber : '7418529637',
-        feesDueTillMonth : 5000,
-        feesDueOverall : 6000,
-        totalFeesThisSession : 8000,
-        feesPaidThisSession : 4000,
-        discountThisSession : 1000
-    },
-    {
         id : 1,
         name : 'Mahima Surana',
         fathersName:  'Sunil Surana',

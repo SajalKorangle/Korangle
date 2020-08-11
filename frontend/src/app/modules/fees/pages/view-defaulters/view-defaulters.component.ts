@@ -657,7 +657,7 @@ export class ViewDefaultersComponent implements OnInit {
         let template: any;
         template = [
 
-            ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
+            ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)',
                 'Fees Due (overall)', `Total Fees (${this.getCurrentSessionName()})`,`Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})` ],
 
         ];
@@ -671,6 +671,7 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.class.name+', '+student.section.name);
             row.push(student.mobileNumber);
             row.push(student.secondMobileNumber);
+            row.push(student.address);
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
             row.push(student.totalFeesThisSession);
@@ -688,7 +689,7 @@ export class ViewDefaultersComponent implements OnInit {
 
         template = [
 
-            ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
+            ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)',
                 'Fees Due (overall)',`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`],
 
         ];
@@ -703,10 +704,12 @@ export class ViewDefaultersComponent implements OnInit {
                 row.push(parent.studentList[0].class.name+', '+parent.studentList[0].section.name);
                 row.push(parent.studentList[0].mobileNumber);
                 row.push(parent.studentList[0].secondMobileNumber);
+                row.push(parent.studentList[0].address);
             } else {
                 row.push('');
                 row.push('');
                 row.push(parent.studentList[0].mobileNumber);
+                row.push('');
                 row.push('');
             }
             row.push(this.getParentFeesDueTillMonth(parent));
@@ -724,6 +727,7 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push(student.class.name+', '+student.section.name);
                     newRow.push('');
                     newRow.push(student.secondMobileNumber);
+                    newRow.push(student.address);
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
                     newRow.push(student.totalFeesThisSession);

@@ -55,7 +55,7 @@ export class ViewDefaultersServiceAdapter {
 
                 const student_list = {
                     'id__in': tempStudentIdList.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)).join(),
-                    'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber',
+                    'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber,address',
                 };
 
                 const student_fee_list = {

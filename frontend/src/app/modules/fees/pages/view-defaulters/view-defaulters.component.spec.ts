@@ -23,7 +23,27 @@ import {SECTION_LIST} from '../../../../../test-data-source/classes/division';
 import {PrintService} from '../../../../print/print-service';
 import {ExcelService} from '../../../../excel/excel-service';
 import {ChangeDetectorRef} from '@angular/core';
-import {STUDENT_LIST} from '../../../../../test-data-source/services/modules/students/students';
+
+export const STUDENT_LIST = [
+    {
+        name : 'Student 1',
+        fathersName : 'Father',
+        class : {
+            name : 'Class - 12'
+        },
+        section : {
+            name : 'Section - A'
+        },
+        mobileNumber : '1234567891',
+        secondMobileNumber : '7418529637',
+        feesDueTillMonth : 5000,
+        feesDueOverall : 6000,
+        totalFeesThisSession : 8000,
+        feesPaidThisSession : 4000,
+        discountThisSession : 1000
+    },
+];
+
 
 class MockPrintService {
 
@@ -44,7 +64,7 @@ class MockPrintService {
 
 }
 
-describe('CreateExaminationComponent', () => {
+describe('ViewDefaultersComponent', () => {
     let component: ViewDefaultersComponent;
     let fixture: ComponentFixture<ViewDefaultersComponent>;
 
@@ -77,7 +97,6 @@ describe('CreateExaminationComponent', () => {
     });
 
     it('Testing printFeesReport() for Student',  () => {
-        // spyOn(component.examinationService, 'createObject').and.returnValue(EXAMINATION_LIST[1]);
         component.printFeesReport();
         expect().nothing();
     });
