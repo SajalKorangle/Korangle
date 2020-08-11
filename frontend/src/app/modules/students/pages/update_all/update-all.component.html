@@ -39,6 +39,13 @@
                             </mat-checkbox>
                         </mat-option>
                     </ng-container>
+                    <ng-container *ngFor="let parameter of studentParameterList">
+                        <mat-option>
+                            <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation();">
+                                {{parameter.name}}
+                            </mat-checkbox>
+                        </mat-option>
+                    </ng-container>
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
@@ -136,6 +143,9 @@
                         [class.hidden]="!column.show">
                             {{column.name}}
                     </th>
+                    <th *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">
+                        {{parameter.name}}
+                    <th>
                 </tr>
                 </thead>
                 <tbody>
@@ -164,6 +174,21 @@
                                        class="customInput"
                                        (blur)="updateStudentField(column.key,student, $event.target.value)"
                                        [ngModel]="student[column.key]"/>
+                            </ng-container>
+                        </td>
+                        <td *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">
+                            <input matInput  *ngIf="parameter.parameterType==='TEXT'"
+                                type="text"
+                                class="customInput"
+                                [attr.id]="student.dbId+parameter.name"
+                                (blur)="serviceAdapter.updateParameterValue(student, parameter, $event.target.value)"
+                                [ngModel]="getParameterValue(student, parameter)">
+                            <ng-container *ngIf="parameter.parameterType==='FILTER'">
+                                <mat-select placeholder="{{parameter.name}}"
+                                    [ngModel]="getParameterValue(student, parameter)"
+                                    (ngModelChange)="serviceAdapter.updateParameterValue(student, parameter, $event)">
+                                        <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
+                                </mat-select>
                             </ng-container>
                         </td>
                     </tr>

@@ -23,8 +23,21 @@ export class ViewDefaultersServiceAdapter {
             'parentStudent__parentTransferCertificate': 'null__korangle',
         };
 
-        this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}).then(sessionList => {
+        Promise.all([
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {
+                'parentSchool': this.vm.user.activeSchool.dbId,
+                'parameterType': 'FILTER'
+            }),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {
+                'parentStudentParameter__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentStudentParamter__parameterType': 'FILTER'
+            })
+        ]).then(val => {
+            let sessionList = val[0];
             this.vm.sessionList = sessionList;
+            this.vm.studentParameterList = val[1].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false}))}));
+            this.vm.studentParameterValueList = val[2];
             const todaysDate = new Date();
             this.vm.currentSession = this.vm.sessionList.find(session => {
                 return new Date(session.startDate) <= todaysDate

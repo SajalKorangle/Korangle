@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import {ManageParameterRouting} from './manage-parameter.routing';
 import {ComponentsModule} from "../../../../components/components.module";
 import {ManageParameterComponent} from "./manage-parameter.component";
+import {MatIconModule} from '@angular/material/icon';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import {ManageParameterComponent} from "./manage-parameter.component";
     imports: [
         ManageParameterRouting,
         ComponentsModule,
+        MatIconModule
     ],
     exports: [
     ],

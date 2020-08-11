@@ -180,6 +180,11 @@
                             Remark
                         </mat-checkbox>
                     </mat-option>
+                    <mat-option *ngFor="let parameter of studentParameterList">
+                        <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation();">
+                            {{parameter.name}}
+                        </mat-checkbox>
+                    </mat-option>
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
@@ -277,6 +282,16 @@
                                       (click)="$event.stopPropagation();">No
                         </mat-checkbox>
                     </mat-option>
+                    <!-- Custom Filter -->
+                    <mat-option *ngFor="let parameter of getFilteredStudentParameterList()">
+                        {{parameter.name}}:
+                        <mat-checkbox *ngFor="let filter of parameter.filterValues" [(ngModel)]="filter.show"
+                                      style="margin-right: 5px;"
+                                      (ngModelChange)="handleStudentDisplay()"
+                                      (click)="$event.stopPropagation();">{{filter.name}}
+                        </mat-checkbox>
+                    </mat-option>
+
                 </mat-select>
             </mat-form-field>
 
@@ -316,6 +331,7 @@
                 <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
                 <th [class.hidden]="!columnFilter.showRTE">RTE</th>
                 <th [class.hidden]="!columnFilter.showRemark">Remark</th>
+                <th *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">{{parameter.name}}</th>
             </tr>
             </thead>
             <tbody>
@@ -368,6 +384,7 @@
                         </td>
                         <td [class.hidden]="!columnFilter.showRTE">{{student.rte}}</td>
                         <td [class.hidden]="!columnFilter.showRemark">{{student.remark}}</td>
+                        <td *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">{{getParameterValue(student, parameter)}}</td>
                     </ng-container>
                 </tr>
             </ng-container>

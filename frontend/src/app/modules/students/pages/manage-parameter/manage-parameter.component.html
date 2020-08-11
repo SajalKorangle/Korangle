@@ -7,7 +7,75 @@
             {{parameter}}<ng-container *ngIf="!last">,</ng-container>&nbsp;
         </span>
         <br/><br/>
-        <b>Custom Parameters:-</b><br/>
+        <b>Custom Parameters:-</b>
+        <div class="row">
+            <div class="col-md-6">
+                <div>Click on parameter to edit/delete</div>
+                <button *ngFor="let parameter of customParameterList" type="button" class="btn btn-secondary"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        (click)="setActiveParameter(parameter)">
+                        {{parameter.name}}
+                </button> 
+                <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="addNewParameter()">
+                        Add new
+                </button> 
+            </div>
+            <div class="col-md-6" *ngIf="currentParameter">
+                <mat-card>
+                    <span style="color:red" *ngIf="!isValidParameterName()" class="small">
+                        Parameter name must be unique
+                    </span>
+                    <mat-form-field style="margin-top: 0">
+                        <mat-label>
+                            Parameter Name
+                        </mat-label>
+                        <input matInput placeholder="Parameter Name" [(ngModel)]="currentParameter.name">
+                    </mat-form-field>
+                    <div>
+                        <mat-radio-group [(ngModel)]="currentParameter.parameterType">
+                            <mat-radio-button *ngFor="let parameterType of customParameterTypeList" [value]="parameterType.type" style="margin-right: 10px;">{{parameterType.name}}</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <ng-container *ngIf="currentParameter.parameterType==='FILTER'">
+                        <ng-container *ngIf="currentParameter.filterValues.length">
+                            <div style="margin-top: 10px">Current Filters</div>
+                            <div class="row">
+                                <div class="col-sm-6" *ngFor="let filter of currentParameter.filterValues; let i = index">
+                                    <mat-form-field style="margin-top: 0">                            
+                                        <mat-label>
+                                            Value #{{i}}
+                                        </mat-label>
+                                        <input matInput placeholder="Filter Name" [(ngModel)]="filter">
+                                        <mat-icon matSuffix style="cursor: pointer;" (click)="deleteFilter(filter)">delete</mat-icon>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>                        
+                        <div style="margin-top: 10px">Add filter value:</div>                    
+                        <mat-form-field style="margin-top: 0">                            
+                            <mat-label>
+                                New Value
+                            </mat-label>
+                            <input matInput placeholder="Filter Name" [(ngModel)]="newFilterValue">
+                            <mat-icon matSuffix style="cursor: pointer;" (click)="addFilter(newFilterValue)">add</mat-icon>
+                        </mat-form-field>
+                        
+                    </ng-container>
+                    <div>
+                        <button *ngIf="isValidParameterName()&&currentParameter.name" style="padding: 12px 15px; margin-right: 17px;" type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="serviceAdapter.saveParameter()">
+                            Save
+                        </button>
+                        <button style="padding: 12px 15px; margin-right: 17px;" type="button" *ngIf="currentParameter.id" class="btn btn-danger"
+                            (click)="serviceAdapter.deleteParameter()">
+                            Delete
+                        </button> 
+                    </div>                   
+                    
+                </mat-card>
+            </div>
+        </div>
     </ng-container>
 
 </div>

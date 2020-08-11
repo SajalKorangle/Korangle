@@ -76,6 +76,14 @@ export class SendSmsServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {
+                'parentSchool': this.vm.user.activeSchool.dbId,
+                'parameterType': 'FILTER'
+            }),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {
+                'parentStudentParameter__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentStudentParamter__parameterType': 'FILTER'
+            })
         ]).then(value => {
 
             console.log(value);
@@ -86,6 +94,8 @@ export class SendSmsServiceAdapter {
             this.populateStudentList(value[3]);
             this.populateEmployeeList(value[4]);
             this.vm.smsBalance = value[5].count;
+            this.vm.studentParameterList = value[6].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false}))}));
+            this.vm.studentParameterValueList = value[7]
 
             this.populateClassSectionList();
             this.populateStudentSectionList();

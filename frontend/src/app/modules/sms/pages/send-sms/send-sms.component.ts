@@ -53,6 +53,9 @@ export class SendSmsComponent implements OnInit {
     smsMobileNumberList = [];
     notificationMobileNumberList = [];
 
+    studentParameterList: any[] = [];
+    studentParameterValueList: any[] = [];
+
     message = '';
 
     isLoading = false;
@@ -226,8 +229,28 @@ export class SendSmsComponent implements OnInit {
         })
     }
 
+    getParameterValue = (student, parameter) => {
+        try {
+            return this.studentParameterValueList.find(x => x.parentStudent===student.id && x.parentStudentParameter===parameter.id).value
+        } catch {
+            return ''
+        }
+    }
+
     getFilteredStudentList(): any {
         return this.studentSectionList.filter(studentSection => {
+            let student = studentSection.student
+            for (let x of this.studentParameterList){
+                let flag = false;
+                x.filterValues.forEach(filter => {
+                    flag = flag || filter.show
+                })
+                if (flag){
+                    if(!(x.filterValues.filter(filter => filter.show).map(filter => filter.name).includes(this.getParameterValue(student, x)))){
+                        return false;
+                    }
+                }
+            }
             return this.isClassSectionSelected(studentSection.parentClass, studentSection.parentDivision);
         });
     }
@@ -246,25 +269,14 @@ export class SendSmsComponent implements OnInit {
         });
     }
 
-    getSelectedStudentNumber(): number {
-        let result = 0;
-        this.studentSectionList.forEach(studentSection => {
-            if (this.isClassSectionSelected(studentSection.parentClass, studentSection.parentDivision) && studentSection.selected) {
-                ++result;
-            }
-        });
-        return result;
+    getSelectedStudentNumber = () => {
+        // console.log(this.getFilteredStudentList().reduce((acc,x) => acc+x.selected?1:0, 0))
+        return this.getFilteredStudentList().reduce((acc,x) => {
+            return x.selected?acc+1:acc
+        }, 0)
     }
 
-    getDisplayStudentNumber(): number {
-        let result = 0;
-        this.studentSectionList.forEach(studentSection => {
-            if (this.isClassSectionSelected(studentSection.parentClass, studentSection.parentDivision)) {
-                ++result;
-            }
-        });
-        return result;
-    }
+    getDisplayStudentNumber = () => this.getFilteredStudentList().length;
 
     getSelectedEmployeeNumber(): number {
         let result = 0;
