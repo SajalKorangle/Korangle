@@ -24,13 +24,13 @@ export class ViewDefaultersServiceAdapter {
         };
 
         this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}).then(sessionList => {
-            this.vm.sessionList = sessionList
+            this.vm.sessionList = sessionList;
             const todaysDate = new Date();
             this.vm.currentSession = this.vm.sessionList.find(session => {
                 return new Date(session.startDate) <= todaysDate
                     && new Date(new Date(session.endDate).getTime() +  24 * 60 * 60 * 1000) > todaysDate;
             });
-        })
+        });
 
         this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list).then(valueList => {
 
@@ -55,7 +55,7 @@ export class ViewDefaultersServiceAdapter {
 
                 const student_list = {
                     'id__in': tempStudentIdList.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)).join(),
-                    'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber',
+                    'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber,address',
                 };
 
                 const student_fee_list = {
