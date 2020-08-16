@@ -94,6 +94,7 @@ describe('ViewDefaultersComponent', () => {
         component.sectionList = SECTION_LIST;
         component.studentList = STUDENT_LIST;
         component.selectedFilterType = 'Student';
+        component.studentParameterList = [];
     });
 
     it('Testing printFeesReport() for Student',  () => {
