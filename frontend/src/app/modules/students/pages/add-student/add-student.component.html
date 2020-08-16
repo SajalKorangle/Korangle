@@ -357,6 +357,7 @@
                         <mat-select placeholder="{{parameter.name}}"
                             [ngModel]="getParameterValue(parameter)"
                             (ngModelChange)="updateParameterValue(parameter, $event)">
+                                <mat-option [value]="nullValue">None</mat-option>
                                 <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
                         </mat-select>
                     </ng-container>

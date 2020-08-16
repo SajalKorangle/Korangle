@@ -181,7 +181,7 @@ class StudentParameterValue(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
     parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
 
-    value = models.TextField(null=False)
+    value = models.TextField(null=True)
 
     class Meta:
         db_table = 'student_parameter_value'

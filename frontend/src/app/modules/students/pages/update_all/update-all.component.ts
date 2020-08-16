@@ -4,8 +4,9 @@ import {ClassOldService} from '../../../../services/modules/class/class-old.serv
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {StudentService} from '../../../../services/modules/student/student.service';
 import { ChangeDetectorRef } from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
+import {DataStorage} from '../../../../classes/data-storage';
 import { UpdateAllServiceAdapter } from './update-all.service.adapter';
+import { PARAMETER_TYPE_LIST } from '../../classes/parameter';
 
 class ColumnHandle {
     name: any;
@@ -99,6 +100,10 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('RTE', 'rte', 'list', false, RTE_LIST), // 25
         new ColumnHandle('Date Of Admission', 'dateOfAdmission', 'date', false, ''), // 26
     ];
+
+    NULL_CONSTANT = null;
+
+    parameter_type_list = PARAMETER_TYPE_LIST;
 
     /* Category Options */
     scSelected = false;
@@ -447,9 +452,9 @@ export class UpdateAllComponent implements OnInit {
 
     getParameterValue = (student, parameter) => {
         try {
-            return this.studentParameterValueList.find(x => x.parentStudent===student.dbId && x.parentStudentParameter===parameter.id).value
+            return this.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
         } catch {
-            return ''
+            return this.NULL_CONSTANT;
         }
     }
 

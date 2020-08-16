@@ -36,28 +36,42 @@ export class UpdateAllServiceAdapter {
     }
 
     updateParameterValue = (student, parameter, value) => {
-        if(!value){
-            alert('Field cannot be blank')
-            return ;
+        let promise = null;
+
+        let student_parameter_value = this.vm.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id);
+
+        if (!student_parameter_value) {
+            if (value !== this.vm.NULL_CONSTANT) {
+                student_parameter_value = {parentStudentParameter: parameter.id, value: value, parentStudent: student.dbId};
+                promise = this.vm.studentService.createObject(this.vm.studentService.student_parameter_value, student_parameter_value);
+            } else {
+                return;
+            }
+        } else if (student_parameter_value.value !== value) {
+            student_parameter_value.value = value;
+            promise = this.vm.studentService.updateObject(this.vm.studentService.student_parameter_value, student_parameter_value);
+        } else {
+            return;
         }
-        let promise = null
-        let student_parameter_value = this.vm.studentParameterValueList.find(x => x.parentStudent===student.dbId && x.parentStudentParameter===parameter.id)
-        
-        if(!student_parameter_value){
-            student_parameter_value = {parentStudentParameter: parameter.id, value: value, parentStudent: student.dbId}
-        }else{
-            student_parameter_value.value = value
+
+        document.getElementById(parameter.id + '-' + student.dbId).classList.add('updatingField');
+        if (parameter.type === this.vm.parameter_type_list[0]) {
+            (<HTMLInputElement>document.getElementById(student.dbId + '-' + parameter.id)).disabled = true;
         }
-        if (student_parameter_value.id){
-            promise = this.vm.studentService.updateObject(this.vm.studentService.student_parameter_value, student_parameter_value)
-        }else{
-            promise = this.vm.studentService.createObject(this.vm.studentService.student_parameter_value, student_parameter_value)
-        }
+
         promise.then(val => {
-            this.vm.studentParameterValueList = this.vm.studentParameterValueList.filter(x => x.id!==val.id)
-            this.vm.studentParameterValueList.push(val)
+
+            this.vm.studentParameterValueList = this.vm.studentParameterValueList.filter(x => x.id !== val.id);
+            this.vm.studentParameterValueList.push(val);
+
+            document.getElementById(parameter.id + '-' + student.dbId).classList.remove('updatingField');
+            if (parameter.type === this.vm.parameter_type_list[0]) {
+                (<HTMLInputElement>document.getElementById(student.dbId + '-' + parameter.id)).disabled = false;
+            }
+
         }, error => {
             alert('Failed to update value')
         })
     }
+
 }

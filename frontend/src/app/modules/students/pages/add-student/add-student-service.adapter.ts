@@ -63,7 +63,6 @@ export class AddStudentServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session,{}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {parentSchool: this.vm.user.activeSchool.dbId}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {parentStudent__parentSchool: this.vm.user.activeSchool.dbId}),
         ]).then(value => {
 
             this.vm.classList = value[0];
@@ -76,7 +75,6 @@ export class AddStudentServiceAdapter {
             this.vm.busStopFilterFeeList = value[7];
             this.vm.sessionList = value[8]
             this.vm.studentParameterList = value[9].map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
-            this.vm.studentParameterValueList = value[10];
 
             this.vm.initializeVariable();
 
@@ -231,9 +229,12 @@ export class AddStudentServiceAdapter {
                 });
             });
 
+            this.vm.currentStudentParameterValueList = this.vm.currentStudentParameterValueList.filter(x => {
+                return x.value !== this.vm.nullValue;
+            });
             this.vm.currentStudentParameterValueList.forEach(x => {
-                x.parentStudent=value.id
-            })
+                x.parentStudent = value.id;
+            });
 
             Promise.all([
                 this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),

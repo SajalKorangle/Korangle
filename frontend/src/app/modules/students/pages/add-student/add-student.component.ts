@@ -45,7 +45,6 @@ export class AddStudentComponent implements OnInit {
     newStudentSection: StudentSection;
 
     studentParameterList: any[] = [];
-    studentParameterValueList: any[] = [];
     currentStudentParameterValueList: any[] = [];
 
     serviceAdapter: AddStudentServiceAdapter;
@@ -79,7 +78,7 @@ export class AddStudentComponent implements OnInit {
         this.newStudentSection.parentDivision = this.sectionList[0].id;
         this.newStudentSection.parentSession = this.user.activeSchool.currentSessionDbId;
         
-        this.currentStudentParameterValueList = []
+        this.currentStudentParameterValueList = [];
 
     }
 
@@ -121,19 +120,19 @@ export class AddStudentComponent implements OnInit {
 
     getParameterValue = (parameter) => {
         try {
-            return this.currentStudentParameterValueList.find(x => x.parentStudentParameter===parameter.id).value
+            return this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id).value
         } catch {
-            return ''
+            return this.nullValue;
         }
     }
 
     updateParameterValue = (parameter, value) => {
-        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter===parameter.id);
-        if(!item){
-            item = {parentStudentParameter: parameter.id, value: value}
-            this.currentStudentParameterValueList.push(item)
-        }else{
-            item.value = value
+        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        if (!item) {
+            item = {parentStudentParameter: parameter.id, value: value};
+            this.currentStudentParameterValueList.push(item);
+        } else {
+            item.value = value;
         }
     }
 

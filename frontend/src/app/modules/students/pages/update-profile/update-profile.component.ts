@@ -19,7 +19,9 @@ import { CommonFunctions } from "../../../../classes/common-functions";
 
 export class UpdateProfileComponent implements OnInit {
 
-   user;
+    user;
+
+    NULL_CONSTANT = null;
 
     selectedStudent: any;
 
@@ -27,6 +29,7 @@ export class UpdateProfileComponent implements OnInit {
 
     busStopList = [];
 
+    isStudentListLoading = false;
     isLoading = false;
 
     selectedStudentSection:any;
@@ -69,28 +72,28 @@ export class UpdateProfileComponent implements OnInit {
         this.serviceAdapter.getStudentProfile(this.selectedStudent.id);
     }
 
-    getParameterValue = (student, parameter) => {
+    getParameterValue = (parameter) => {
         try {
-            return this.currentStudentParameterValueList.find(x => x.parentStudentParameter===parameter.id && x.parentStudent===student.id).value
+            return this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id).value
         } catch {
-            return ''
+            return this.NULL_CONSTANT;
         }
     }
 
-    updateParameterValue = (student, parameter, value) => {
-        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter===parameter.id && x.parentStudent===student.id);
-        if(!item){
-            item = {parentStudent: student.id, parentStudentParameter: parameter.id, value: value}
-            this.currentStudentParameterValueList.push(item)
-        }else{
-            item.value = value
+    updateParameterValue = (parameter, value) => {
+        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        if (!item) {
+            item = {parentStudent: this.currentStudent.id, parentStudentParameter: parameter.id, value: value};
+            this.currentStudentParameterValueList.push(item);
+        } else {
+            item.value = value;
         }
     }
 
-    checkCustomFieldChanged = (student, parameter) => {
-        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter===parameter.id && x.parentStudent===student.id);
-        let old_item = this.studentParameterValueList.find(x => x.parentStudentParameter===parameter.id && x.parentStudent===student.id)
-        return item && (!old_item || item.value!==old_item.value)
+    checkCustomFieldChanged = (parameter) => {
+        const item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        const old_item = this.studentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        return item && (!old_item || item.value !== old_item.value);
     }
 
     getBusStopName(busStopDbId: any) {

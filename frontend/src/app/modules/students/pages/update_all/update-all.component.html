@@ -161,7 +161,7 @@
                                 <mat-form-field>
                                     <mat-select [ngModel]="student[column.key]"
                                                 [attr.id]="student.dbId+column.key"
-                                                (ngModelChange)="updateStudentField(column.key, student, $event)">
+                                                (ngModelChange)="updateStudentField(column.key, student, $event, 'list')">
                                         <mat-option *ngFor='let item of column.list;' [value]="item">
                                             {{item}}
                                         </mat-option>
@@ -172,21 +172,24 @@
                                 <input [attr.type]="column.inputType"
                                        [attr.id]="student.dbId+column.key"
                                        class="customInput"
-                                       (blur)="updateStudentField(column.key,student, $event.target.value)"
+                                       (blur)="updateStudentField(column.key,student, $event.target.value, column.inputType)"
                                        [ngModel]="student[column.key]"/>
                             </ng-container>
                         </td>
-                        <td *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">
-                            <input matInput  *ngIf="parameter.parameterType==='TEXT'"
+                        <td *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show"
+                            [attr.id]="parameter.id+'-'+student.dbId">
+                            <input matInput *ngIf="parameter.parameterType===parameter_type_list[0]"
                                 type="text"
                                 class="customInput"
-                                [attr.id]="student.dbId+parameter.name"
+                                [attr.id]="student.dbId+'-'+parameter.id"
                                 (blur)="serviceAdapter.updateParameterValue(student, parameter, $event.target.value)"
                                 [ngModel]="getParameterValue(student, parameter)">
-                            <ng-container *ngIf="parameter.parameterType==='FILTER'">
+                            <ng-container *ngIf="parameter.parameterType===parameter_type_list[1]">
                                 <mat-select placeholder="{{parameter.name}}"
-                                    [ngModel]="getParameterValue(student, parameter)"
-                                    (ngModelChange)="serviceAdapter.updateParameterValue(student, parameter, $event)">
+                                            [attr.id]="student.dbId+'-'+parameter.id"
+                                            [ngModel]="getParameterValue(student, parameter)"
+                                            (ngModelChange)="serviceAdapter.updateParameterValue(student, parameter, $event)">
+                                        <mat-option [value]="NULL_CONSTANT">None</mat-option>
                                         <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
                                 </mat-select>
                             </ng-container>

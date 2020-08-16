@@ -28,20 +28,28 @@ export class ManageParameterServiceAdapter {
 
     saveParameter(): void {
         this.vm.isLoading = true
-        let promise = null;
+        let service_list = [];
         const data = {...this.vm.currentParameter, filterValues: JSON.stringify(this.vm.currentParameter.filterValues)}
-        if (this.vm.currentParameter.id){
-            promise = this.vm.studentService.updateObject(this.vm.studentService.student_parameter, data)
-        }else {
-            promise = this.vm.studentService.createObject(this.vm.studentService.student_parameter, data)
+        if (this.vm.currentParameter.id) {
+            service_list.push(this.vm.studentService.updateObject(this.vm.studentService.student_parameter, data));
+            if (this.vm.currentParameter.parameterType==this.vm.customParameterTypeList[1].type) {
+                this.vm.oldFilterValueList.filter(item => !this.vm.currentParameter.filterValues.includes(item)).forEach(item => {
+                    service_list.push(this.vm.studentService.deleteObjectList(this.vm.studentService.student_parameter_value, {
+                        parentStudentParameter: this.vm.currentParameter.id,
+                        value: item,
+                    }));
+                });
+            }
+        } else {
+            service_list.push(this.vm.studentService.createObject(this.vm.studentService.student_parameter, data));
         }
-        promise.then(val => {
+        Promise.all(service_list).then(val => {
             // Remove existing parameter
-            this.vm.customParameterList = this.vm.customParameterList.filter(x => x.id!==val.id)
+            this.vm.customParameterList = this.vm.customParameterList.filter(x => x.id!==val[0].id)
             // Push the updated value
-            this.vm.customParameterList.push(val)
+            this.vm.customParameterList.push(val[0]);
             // Set the currentParameter to updated value
-            this.vm.setActiveParameter(val)
+            this.vm.setActiveParameter(val[0]);
             this.vm.isLoading = false
         }, err => {
             this.vm.isLoading = false

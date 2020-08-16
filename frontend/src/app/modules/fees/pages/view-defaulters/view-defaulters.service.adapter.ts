@@ -36,7 +36,7 @@ export class ViewDefaultersServiceAdapter {
         ]).then(val => {
             let sessionList = val[0];
             this.vm.sessionList = sessionList;
-            this.vm.studentParameterList = val[1].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false}))}));
+            this.vm.studentParameterList = val[1].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false})), showNone: false, filterFilterValues: ''}));
             this.vm.studentParameterValueList = val[2];
             const todaysDate = new Date();
             this.vm.currentSession = this.vm.sessionList.find(session => {
@@ -188,7 +188,7 @@ export class ViewDefaultersServiceAdapter {
                 item.notification = true;
             })
             this.vm.handleLoading();
-            this.vm.selectedFilterType = this.vm.filterTypeList[1];
+            this.vm.selectedFilterType = this.vm.filterTypeList[0];
 
             this.vm.isLoading = false;
         })

@@ -50,7 +50,11 @@ class ColumnFilter {
 
 export class ViewAllComponent implements OnInit {
 
-     user;
+    user;
+
+    NULL_CONSTANT = null;
+
+    showCustomFilters = false;
 
     columnFilter: ColumnFilter;
 
@@ -116,13 +120,22 @@ export class ViewAllComponent implements OnInit {
 
     getParameterValue = (student, parameter) => {
         try {
-            return this.studentParameterValueList.find(x => x.parentStudent===student.dbId && x.parentStudentParameter===parameter.id).value
+            return this.studentParameterValueList.find(x => x.parentStudent===student.dbId && x.parentStudentParameter===parameter.id).value;
         } catch {
-            return ''
+            return this.NULL_CONSTANT;
         }
     }
 
-    getFilteredStudentParameterList = () => this.studentParameterList.filter(x => x.parameterType==='FILTER')
+    getFilteredStudentParameterList = () => this.studentParameterList.filter(x => x.parameterType === 'FILTER')
+
+    getFilteredFilterValues(parameter: any): any {
+        if (parameter.filterFilterValues === '') {
+            return parameter.filterValues;
+        }
+        return parameter.filterValues.filter(x => {
+            return x.name.includes(parameter.filterFilterValues);
+        });
+    }
 
     /*initializeClassList(classList: any): void {
         this.classList = classList;
@@ -328,13 +341,15 @@ export class ViewAllComponent implements OnInit {
             }
 
             // Custom filters check
-            for (let x of this.getFilteredStudentParameterList()){
-                let flag = false;
+            for (let x of this.getFilteredStudentParameterList()) {
+                let flag = x.showNone;
                 x.filterValues.forEach(filter => {
-                    flag = flag || filter.show
-                })
-                if (flag){
-                    if(!(x.filterValues.filter(filter => filter.show).map(filter => filter.name).includes(this.getParameterValue(student, x)))){
+                    flag = flag || filter.show;
+                });
+                if (flag) {
+                    let parameterValue = this.getParameterValue(student, x);
+                    if (parameterValue === this.NULL_CONSTANT && x.showNone) {
+                    } else if (!(x.filterValues.filter(filter => filter.show).map(filter => filter.name).includes(parameterValue))) {
                         student.show = false;
                         return;
                     }

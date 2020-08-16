@@ -46,10 +46,13 @@ export class ManageParameterComponent implements OnInit {
         'Remark'
     ];
 
+    ADD_PARAMETER_STRING='<Add New Parameter>';
+
     customParameterTypeList: any[] = [{type: 'TEXT', name: 'Text'}, {type: 'FILTER', name: 'Filter'}]
     customParameterList: any[] = [];
     currentParameter: any;
-    newFilterValue: any = ''
+    oldFilterValueList = [];
+    newFilterValue: any = '';
 
     serviceAdapter: ManageParameterServiceAdapter;
 
@@ -66,8 +69,17 @@ export class ManageParameterComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
+    chooseParameter(value: any): void {
+        if (value==this.ADD_PARAMETER_STRING) {
+            this.addNewParameter();
+        } else {
+            this.setActiveParameter(value);
+        }
+    }
+
     setActiveParameter = parameter => {
-        this.currentParameter = {...parameter, filterValues: JSON.parse(parameter.filterValues)}
+        this.currentParameter = {...parameter, filterValues: JSON.parse(parameter.filterValues)};
+        this.oldFilterValueList = this.currentParameter.filterValues;
     }
 
     addNewParameter = () => {
@@ -84,13 +96,16 @@ export class ManageParameterComponent implements OnInit {
     }
 
     addFilter = filter => {
-        this.currentParameter.filterValues.push(filter)
-        this.newFilterValue = ''
-        console.log(this.currentParameter)
+        filter = filter.trim();
+        if (this.currentParameter.filterValues.indexOf(filter) !== -1) {
+            alert('Filter Value:- ' + filter + ' is already present.');
+            return;
+        }
+        this.currentParameter.filterValues.push(filter);
+        this.newFilterValue = '';
     }
 
     isValidParameterName = () => {
-        // console.log(this.globalParametersList.find(x => x===this.currentParameter.name) || this.customParameterList.find(x => x.name===this.currentParameter.name && x.id!==this.currentParameter.id))
         return !(this.globalParametersList.find(x => x===this.currentParameter.name) || this.customParameterList.find(x => x.name===this.currentParameter.name && x.id!==this.currentParameter.id))
     }
 

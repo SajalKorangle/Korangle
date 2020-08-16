@@ -27,7 +27,7 @@ export class ViewAllServiceAdapter {
         ]).then(value => {
             this.vm.initializeClassSectionList(value[0]);
             this.vm.initializeStudentFullProfileList(value[1]);
-            this.vm.studentParameterList = value[2].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false}))}));
+            this.vm.studentParameterList = value[2].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x2 => ({name: x2, show: false})), showNone: false, filterFilterValues: ''}));
             this.vm.studentParameterValueList = value[3];
             this.vm.isLoading = false;
         }, error => {
