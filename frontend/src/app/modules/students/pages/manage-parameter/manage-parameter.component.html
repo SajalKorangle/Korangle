@@ -34,7 +34,7 @@
                     </mat-form-field>
                     <div>
                         <mat-radio-group [(ngModel)]="currentParameter.parameterType">
-                            <mat-radio-button *ngFor="let parameterType of customParameterTypeList" [value]="parameterType.type" style="margin-right: 10px;">{{parameterType.name}}</mat-radio-button>
+                            <mat-radio-button *ngFor="let parameterType of customParameterTypeList" [value]="parameterType" style="margin-right: 10px;">{{parameterType}}</mat-radio-button>
                         </mat-radio-group>
                     </div>
                     <ng-container *ngIf="currentParameter.parameterType==='FILTER'">

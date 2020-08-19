@@ -48,8 +48,12 @@ export class ManageParameterComponent implements OnInit {
 
     ADD_PARAMETER_STRING='<Add New Parameter>';
 
-    customParameterTypeList: any[] = [{type: 'TEXT', name: 'Text'}, {type: 'FILTER', name: 'Filter'}]
-    customParameterList: any[] = [];
+    // customParameterTypeList: any[] = [{type: 'TEXT', name: 'Text'}, {type: 'FILTER', name: 'Filter'}];
+    customParameterTypeList = [
+        'TEXT',
+        'FILTER'
+    ];
+    customParameterList = [];
     currentParameter: any;
     oldFilterValueList = [];
     newFilterValue: any = '';
