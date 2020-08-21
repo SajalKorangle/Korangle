@@ -67,8 +67,13 @@ const routes: Routes = [
         data: {moduleName: 'students'},
     },
     {
+<<<<<<< HEAD
         path: 'print_profile',
         loadChildren: 'app/modules/students/pages/print-profile/print-profile.module#PrintProfileModule',
+=======
+        path: 'manage_parameter',
+        loadChildren: 'app/modules/students/pages/manage-parameter/manage-parameter.module#ManageParameterModule',
+>>>>>>> master
         data: {moduleName: 'students'},
     },
     {
