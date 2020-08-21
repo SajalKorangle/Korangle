@@ -2,11 +2,13 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassOldService} from '../../../../services/modules/class/class-old.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
+import {StudentService} from '../../../../services/modules/student/student.service';
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
+import { ViewAllServiceAdapter } from './view-all.service.adapter';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -43,12 +45,16 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassOldService, ExcelService],
+    providers: [StudentOldService, ClassOldService, ExcelService, StudentService],
 })
 
 export class ViewAllComponent implements OnInit {
 
-     user;
+    user;
+
+    NULL_CONSTANT = null;
+
+    showCustomFilters = false;
 
     columnFilter: ColumnFilter;
 
@@ -81,38 +87,25 @@ export class ViewAllComponent implements OnInit {
 
     studentFullProfileList = [];
 
+    studentParameterList: any[] = [];
+    studentParameterValueList: any[] = [];
+
     isLoading = false;
 
-    constructor(private studentService: StudentOldService,
-                private classService: ClassOldService,
-                private excelService: ExcelService,
-                private printService: PrintService) { }
+    serviceAdapter: ViewAllServiceAdapter
+
+    constructor(public studentOldService: StudentOldService,
+                public studentService: StudentService,
+                public classService: ClassOldService,
+                public excelService: ExcelService,
+                public printService: PrintService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
         this.columnFilter = new ColumnFilter();
-
-        const student_full_profile_request_data = {
-            schoolDbId: this.user.activeSchool.dbId,
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-        const class_section_request_data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-
-        this.isLoading = true;
-        Promise.all([
-            this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
-            this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
-        ]).then(value => {
-            this.isLoading = false;
-            this.initializeClassSectionList(value[0]);
-            this.initializeStudentFullProfileList(value[1]);
-        }, error => {
-            this.isLoading = false;
-        });
-
+        this.serviceAdapter = new ViewAllServiceAdapter()
+        this.serviceAdapter.initializeAdapter(this)
+        this.serviceAdapter.initializeData()
     }
 
     initializeClassSectionList(classSectionList: any): void {
@@ -122,6 +115,25 @@ export class ViewAllComponent implements OnInit {
                 section.selected = false;
                 section.containsStudent = false;
             });
+        });
+    }
+
+    getParameterValue = (student, parameter) => {
+        try {
+            return this.studentParameterValueList.find(x => x.parentStudent===student.dbId && x.parentStudentParameter===parameter.id).value;
+        } catch {
+            return this.NULL_CONSTANT;
+        }
+    }
+
+    getFilteredStudentParameterList = () => this.studentParameterList.filter(x => x.parameterType === 'FILTER')
+
+    getFilteredFilterValues(parameter: any): any {
+        if (parameter.filterFilterValues === '') {
+            return parameter.filterValues;
+        }
+        return parameter.filterValues.filter(x => {
+            return x.name.includes(parameter.filterFilterValues);
         });
     }
 
@@ -203,12 +215,18 @@ export class ViewAllComponent implements OnInit {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = true;
         });
+        this.studentParameterList.forEach(item => {
+            item.show = true;
+        })
     };
 
     unSelectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = false;
         });
+        this.studentParameterList.forEach(item => {
+            item.show = false;
+        })
     };
 
     showSectionName(classs: any): boolean {
@@ -322,6 +340,21 @@ export class ViewAllComponent implements OnInit {
                 return;
             }
 
+            // Custom filters check
+            for (let x of this.getFilteredStudentParameterList()) {
+                let flag = x.showNone;
+                x.filterValues.forEach(filter => {
+                    flag = flag || filter.show;
+                });
+                if (flag) {
+                    let parameterValue = this.getParameterValue(student, x);
+                    if (parameterValue === this.NULL_CONSTANT && x.showNone) {
+                    } else if (!(x.filterValues.filter(filter => filter.show).map(filter => filter.name).includes(parameterValue))) {
+                        student.show = false;
+                        return;
+                    }
+                }
+            }
             ++this.displayStudentNumber;
             student.show = true;
             student.serialNumber = ++serialNumber;
@@ -381,7 +414,8 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showFatherAnnualIncome?headerValues.push('Father\'s Annual Income'):'';
         this.columnFilter.showRTE?headerValues.push('RTE'):'';
         this.columnFilter.showRemark?headerValues.push('remark'):'';
-
+        // Custom parameters
+        this.studentParameterList.forEach(item => item.show?headerValues.push(item.name):'')
         return headerValues;
     }
 
@@ -415,6 +449,8 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showFatherAnnualIncome?studentDisplay.push(student.fatherAnnualIncome):'';
         this.columnFilter.showRTE?studentDisplay.push(student.rte):'';
         this.columnFilter.showRemark?studentDisplay.push(student.remark):'';
+        // Custom parameter values
+        this.studentParameterList.forEach(item => item.show?studentDisplay.push(this.getParameterValue(student, item)):'')
 
         return studentDisplay;
     }
