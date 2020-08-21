@@ -156,3 +156,34 @@ class StudentSection(models.Model):
         db_table = 'student_section'
         unique_together = ('parentStudent', 'parentClass', 'parentSession')
         unique_together = ('parentStudent', 'parentDivision', 'parentSession')
+
+
+class StudentParameter(models.Model):
+
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
+
+    name = models.CharField(max_length=100)
+
+    PARAMETER_TYPE = (
+        ( 'TEXT', 'TEXT' ),
+        ( 'FILTER', 'FILTER' ),
+    )
+    parameterType = models.CharField(max_length=20, choices=PARAMETER_TYPE, null=False)
+
+    filterValues = models.TextField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'student_parameter'
+
+
+class StudentParameterValue(models.Model):
+
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
+    parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
+
+    value = models.TextField(null=True)
+
+    class Meta:
+        db_table = 'student_parameter_value'
+        unique_together = ('parentStudent', 'parentStudentParameter')
+

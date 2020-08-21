@@ -22,27 +22,7 @@
                            (ngModelChange)="maximumNumber=$event;"/>
                 </div>
             </div>
-            <div class="col-sm-3 hidden-sm">
-
-                <!-- button type="button"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
-                        style="padding: 12px 15px; margin-right: 17px;"
-                        matTooltip="Print the following list"
-                        tooltip-position="left"
-                        (click)="printFeesReport();">
-                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button -->
-
-                <button type="button"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-xs"
-                        style="padding: 12px 15px; margin-right: 17px;"
-                        matTooltip="Download the following list"
-                        tooltip-position="left"
-                        (click)="downloadFeesReport();">
-                    Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
-
-
-            </div>
-            <div class="col-sm-3" align="end">
+            <div class="col-sm-3" >
                 <mat-form-field>
                     <mat-select placeholder="Select Filter Type"
                                 [ngModel]="selectedFilterType"
@@ -53,63 +33,132 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <div class="col-sm-3" *ngIf="selectedFilterType==filterTypeList[0]">
+                <div >
+                    <mat-form-field>
+                        <mat-select placeholder="Select Class"
+                                    [ngModel]="selectedClassSection"
+                                    (ngModelChange)="selectedClassSection=$event;">
+                            <mat-option [value]="nullValue">All</mat-option>
+                            <mat-option *ngFor='let classSection of filteredClassSectionList;' [value]="classSection">
+                                {{classSection.class.name}}, {{classSection.section.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
         </div>
 
-        <div class="row" *ngIf="selectedFilterType==filterTypeList[0]" style="margin-top: 10px; margin-bottom: 10px;">
+        <ng-container *ngIf="selectedFilterType==filterTypeList[0] && studentParameterList.length>0">
+            <button class="btn"
+                    style="padding: 4px 7px"
+                    (click)="showCustomFilters=!showCustomFilters">
+                <ng-container *ngIf="!showCustomFilters">Show Custom Filters</ng-container>
+                <ng-container *ngIf="showCustomFilters">Hide Custom Filters</ng-container>
+            </button><br/>
+            <ng-container *ngIf="showCustomFilters">
+                <ng-container *ngFor="let parameter of studentParameterList">
+                    <mat-form-field>
+                        <mat-label>{{parameter.name}}</mat-label>
+                        <input matInput
+                               type="text"
+                               style="border: none"
+                               [(ngModel)]="parameter.filterFilterValues">
+                    </mat-form-field><br/>
+                    <mat-checkbox [(ngModel)]="parameter.showNone"
+                                  style="margin-right: 5px;"
+                                  (click)="$event.stopPropagation();">None
+                    </mat-checkbox>
+                    <mat-checkbox *ngFor="let filter of getFilteredFilterValues(parameter)" [(ngModel)]="filter.show"
+                                  style="margin-right: 5px;"
+                                  (click)="$event.stopPropagation();">{{filter.name}}
+                    </mat-checkbox><br/>
+                </ng-container>
+            </ng-container>
+            <br/>
+        </ng-container>
+
+        <!-- print , download buttons -->
+        <div class="row" >
             <div class="col-sm-3">
-                <mat-form-field>
-                    <mat-select placeholder="Select Class"
-                                [ngModel]="selectedClassSection"
-                                (ngModelChange)="selectedClassSection=$event;">
-                        <mat-option [value]="nullValue">All</mat-option>
-                        <mat-option *ngFor='let classSection of filteredClassSectionList;' [value]="classSection">
-                            {{classSection.class.name}}, {{classSection.section.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <button type="button"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        style="padding: 12px 15px; margin-right: 17px;"
+                        matTooltip="Download the following list"
+                        tooltip-position="left"
+                        (click)="downloadFeesReport()">
+                    Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+            </div>
+
+            <div class="col-sm-3">
+            <button type="button"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-sm hidden-xs"
+                    style="padding: 12px 15px; margin-right: 17px;"
+                    matTooltip="Print the following list"
+                    tooltip-position="left"
+                    (click)="printFeesReport()">
+                Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
             </div>
         </div>
 
-        <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group form-black label-floating">
-                    <label class="control-label">Common Message to append</label>
-                    <textarea type="text" rows="5"
-                              class="form-control"
-                              [(ngModel)]="extraDefaulterMessage"></textarea>
+        <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
+            <div class="col-md-12"
+                 style="border-bottom: 1px solid lightgrey;"></div>
+        </div>
+
+        <button class="btn"
+                style="padding: 4px 7px"
+                (click)="showSMSSection=!showSMSSection">
+            <ng-container *ngIf="!showSMSSection">Show SMS Section</ng-container>
+            <ng-container *ngIf="showSMSSection">Hide SMS Section</ng-container>
+        </button>
+        <ng-container *ngIf="showSMSSection">
+            <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group form-black label-floating">
+                        <label class="control-label">Common Message to append</label>
+                        <textarea type="text" rows="5"
+                                  class="form-control"
+                                  [(ngModel)]="extraDefaulterMessage"></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm-3">
-                <mat-form-field style="margin-top: 23px;">
-                    <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
-                        <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
-                            {{sentType}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <div  style="font-size: 14px; margin-top: 5px;">
-                    # of extra Characters/SMS: {{getExtraMessageLength()}}<br/>
-                    # of Mobile devices: {{getNumberOfMobileDevice()}}<br/>
-                    Estimated SMS Count: {{getEstimatedSMSCount()}}<br/>
-                    Estimated Notification Count: {{getEstimatedNotificationCount()}}<br/>
-                </div>
-                <ng-container *ngIf="getEstimatedSMSCount()>0 || getEstimatedNotificationCount()>0">
-                    <button *ngIf="getEstimatedSMSCount()<=smsBalance"
-                            type="button"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            style="padding: 12px 15px; margin-right: 17px;"
-                            matTooltip="Notify all the selected defaulters"
-                            tooltip-position="left"
-                            (click)="notifyDefaulters();">
-                        {{getButtonText()}}
-                    </button>
-                    <span *ngIf="getEstimatedSMSCount()>smsBalance"
-                          style="font-size: 16px;">
+                <div class="col-sm-3">
+                    <mat-form-field style="margin-top: 23px;">
+                        <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
+                            <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
+                                {{sentType}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div  style="font-size: 14px; margin-top: 5px;">
+                        # of extra Characters/SMS: {{getExtraMessageLength()}}<br/>
+                        # of Mobile devices: {{getNumberOfMobileDevice()}}<br/>
+                        Estimated SMS Count: {{getEstimatedSMSCount()}}<br/>
+                        Estimated Notification Count: {{getEstimatedNotificationCount()}}<br/>
+                    </div>
+                    <ng-container *ngIf="getEstimatedSMSCount()>0 || getEstimatedNotificationCount()>0">
+                        <button *ngIf="getEstimatedSMSCount()<=smsBalance"
+                                type="button"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                style="padding: 12px 15px; margin-right: 17px;"
+                                matTooltip="Notify all the selected defaulters"
+                                tooltip-position="left"
+                                (click)="notifyDefaulters();">
+                            {{getButtonText()}}
+                        </button>
+                        <span *ngIf="getEstimatedSMSCount()>smsBalance"
+                              style="font-size: 16px;">
                         You are short by <b>{{getEstimatedSMSCount() - smsBalance}}</b> SMS.
                     </span>
-                </ng-container>
+                    </ng-container>
+                </div>
             </div>
+        </ng-container>
+
+        <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
+            <div class="col-md-12"
+                 style="border-bottom: 1px solid lightgrey;"></div>
         </div>
 
         <!-- Parent -->
@@ -124,14 +173,18 @@
                     Fees Due (Till Month): <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency:true}}</b>
                 </div>
             </div>
-            <button class="btn"
-                    style="padding: 4px 7px"
-                    (click)="selectAllHandler(); $event.stopPropagation();">Select All
-            </button>
-            <button class="btn"
-                    style="padding: 4px 7px"
-                    (click)="clearAllHandler(); $event.stopPropagation();">Clear All
-            </button>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn"
+                            style="padding: 4px 7px"
+                            (click)="selectAllHandler(); $event.stopPropagation();">Select All
+                    </button>
+                    <button class="btn"
+                            style="padding: 4px 7px"
+                            (click)="clearAllHandler(); $event.stopPropagation();">Clear All
+                    </button>
+                </div>
+            </div>
 
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
@@ -239,14 +292,18 @@
                 <div class="col-sm-6" align="end">
                     Fees Due (Till Month): <b>{{getFilteredStudentListFeesDueTillMonth() | indianCurrency:true}}</b>
                 </div>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="selectAllHandler(); $event.stopPropagation();">Select All
-                </button>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="clearAllHandler(); $event.stopPropagation();">Clear All
-                </button>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn"
+                            style="padding: 4px 7px"
+                            (click)="selectAllHandler(); $event.stopPropagation();">Select All
+                    </button>
+                    <button class="btn"
+                            style="padding: 4px 7px"
+                            (click)="clearAllHandler(); $event.stopPropagation();">Clear All
+                    </button>
+                </div>
             </div>
 
             <table class="table table-hover">
