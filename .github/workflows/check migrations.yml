@@ -57,11 +57,11 @@ jobs:
         sh src/coverage/run-unit-tests.sh
         npm run check-coverage
 
-#    - name: E2E Tests
-#      run: |
-#        cd backend
-#        ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
-#        cd ../frontend
-#        cp src/environments/environment.ts src/environments/environment.prod.ts
-#        npm run e2e-tests-github
-#        kill -9 `ps aux |grep testserver | awk '{ print $2 }'`
+    - name: E2E Tests
+      run: |
+        cd backend
+        ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
+        cd ../frontend
+        cp src/environments/environment.ts src/environments/environment.prod.ts
+        npm run e2e-tests-github
+        kill -9 `ps aux |grep testserver | awk '{ print $2 }'`
