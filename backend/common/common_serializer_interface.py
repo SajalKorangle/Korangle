@@ -206,9 +206,6 @@ def delete_list(data, Model, ModelSerializer):
 
     return_data = query.count()
 
-    print(data)
-    print(return_data)
-
     if return_data > 0:
         query.delete()
 

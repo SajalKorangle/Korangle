@@ -60,6 +60,11 @@ const routes: Routes = [
         data: {moduleName: 'students'},
     },
     {
+        path: 'manage_parameter',
+        loadChildren: 'app/modules/students/pages/manage-parameter/manage-parameter.module#ManageParameterModule',
+        data: {moduleName: 'students'},
+    },
+    {
         path: '',
         component: StudentComponent,
     },
