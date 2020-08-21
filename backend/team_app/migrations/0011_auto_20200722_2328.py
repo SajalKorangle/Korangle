@@ -8,7 +8,7 @@ from team_app.db_script.add_print_student_profile_task import add_print_student_
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0010_auto_20200416_1850'),
+        ('team_app', '0011_auto_20200622_1449'),
     ]
 
     operations = [
