@@ -345,6 +345,26 @@
                 </mat-form-field>
             </div>
         </div>
+        <div class="row">
+            <div *ngFor="let parameter of studentParameterList" class="col-md-3">
+                <mat-form-field  style="width: 100%;">
+                    <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
+                    <input matInput  *ngIf="parameter.parameterType==='TEXT'"
+                        type="text"
+                        (ngModelChange)="updateParameterValue(parameter, $event)"
+                        [ngModel]="getParameterValue(parameter)">
+                    <ng-container *ngIf="parameter.parameterType==='FILTER'">
+                        <mat-select placeholder="{{parameter.name}}"
+                            [ngModel]="getParameterValue(parameter)"
+                            (ngModelChange)="updateParameterValue(parameter, $event)">
+                                <mat-option [value]="nullValue">None</mat-option>
+                                <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                    </ng-container>
+                </mat-form-field>
+
+            </div>
+        </div>
 
         <button type="submit"
                 id="action-add-student"
