@@ -14,8 +14,8 @@ import {EMPLOYEE_SESSION_DETAIL} from '../../../../../test-data-source/services/
 import {BankService} from '../../../../services/bank.service';
 import {TeamService} from '../../../../services/modules/team/team.service';
 import {EMPLOYEE_MINI_PROFILES} from '../../../../../test-data-source/services/modules/employee/models/employee-mini-profile';
-import {MODULE_LIST} from '../../../../../test-data-source/services/modules/school/models/module';
-import {TASK_LIST} from '../../../../../test-data-source/services/modules/school/models/task';
+import {MODULE_LIST} from '../../../../../test-data-source/services/modules/team/module';
+import {TASK_LIST} from '../../../../../test-data-source/services/modules/team/task';
 
 class MockTeamService {
     getObjectList(object_url,data): Promise<any> {

@@ -24,6 +24,13 @@ import { PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 export class ViewDefaultersComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
+
+    NULL_CONSTANT = null;
+
+    showCustomFilters = false;
+
+    showSMSSection = false;
+
     sessionList = [];
 
     STUDENT_LIMITER = 200;
@@ -54,6 +61,9 @@ export class ViewDefaultersComponent implements OnInit {
     classList: any;
     sectionList: any;
 
+    studentParameterList: any;
+    studentParameterValueList: any;
+
     notif_usernames = [];
 
     parentList = [];
@@ -63,7 +73,7 @@ export class ViewDefaultersComponent implements OnInit {
         'Parent',
     ];
 
-    selectedFilterType = this.filterTypeList[1];
+    selectedFilterType = this.filterTypeList[0];
 
     // d1 = new Date();
     // d2 = new Date();
@@ -99,8 +109,8 @@ export class ViewDefaultersComponent implements OnInit {
 
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();       
-                
+        this.serviceAdapter.initializeData();
+
         let monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
     }
@@ -434,8 +444,40 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
+    getParameterValue = (student, parameter) => {
+        try {
+            return this.studentParameterValueList.find(x => x.parentStudent===student.id && x.parentStudentParameter===parameter.id).value
+        } catch {
+            return this.NULL_CONSTANT;
+        }
+    }
+
+    getFilteredFilterValues(parameter: any): any {
+        if (parameter.filterFilterValues === '') {
+            return parameter.filterValues;
+        }
+        return parameter.filterValues.filter(x => {
+            return x.name.includes(parameter.filterFilterValues);
+        });
+    }
+
     getFilteredStudentList(): any {
-        let tempList = this.studentList;
+        let tempList = this.studentList.filter(student => {
+            for (let x of this.studentParameterList){
+                let flag = x.showNone;
+                x.filterValues.forEach(filter => {
+                    flag = flag || filter.show
+                })
+                if (flag){
+                    let parameterValue = this.getParameterValue(student, x);
+                    if ( parameterValue == this.NULL_CONSTANT && x.showNone) {
+                    } else if(!(x.filterValues.filter(filter => filter.show).map(filter => filter.name).includes(parameterValue))){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
         if (this.selectedClassSection) {
             tempList = tempList.filter(student => {
                 return student.class.dbId == this.selectedClassSection.class.dbId
@@ -748,11 +790,11 @@ export class ViewDefaultersComponent implements OnInit {
     getNumberOfMobileDevice = () => {
         if(this.selectedFilterType == this.filterTypeList[0]){
             return this.getFilteredStudentList().filter((item) => {
-                return item.selected;
+                return item.mobileNumber && item.selected;
             }).length;
         }else{
             return this.getFilteredParentList().filter((item) => {
-                return item.selected;
+                return item.mobileNumber && item.selected;
             }).length;
         }
     }

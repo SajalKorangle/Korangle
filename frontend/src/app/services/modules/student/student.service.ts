@@ -12,6 +12,8 @@ export class StudentService extends ServiceObject {
     // objects urls
     public student = '/students';
     public student_section = '/student-sections';
+    public student_parameter = '/student-parameter';
+    public student_parameter_value = '/student-parameter-value';
 
     constructor(private http_class: HttpClient) {
         super(http_class);
