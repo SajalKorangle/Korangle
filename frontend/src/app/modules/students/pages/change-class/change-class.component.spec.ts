@@ -39,7 +39,10 @@ describe('ChangeClassComponent', () => {
         fixture = TestBed.createComponent(ChangeClassComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-
+        //let classList = CLASS_LIST;
+        CLASS_LIST.forEach(classs => {
+            classs['dbId'] = classs['id'];
+        });
         component.handleDetailsFromParentStudentFilter({'classList' : CLASS_LIST, 'sectionList': SECTION_LIST});
         component.handleStudentListSelection([STUDENT_LIST,STUDENT_SECTION_LIST]);
     });
@@ -48,7 +51,7 @@ describe('ChangeClassComponent', () => {
         fixture.detectChanges();
         component.selectedClass = component.classSectionList[2];
         component.selectedClass.selectedSection = component.selectedClass['sectionList'][2];
-        let spy = spyOn(TestBed.get(StudentService),'partiallyUpdateObject').and.callFake(function () {
+        spyOn(TestBed.get(StudentService),'partiallyUpdateObject').and.callFake(function () {
             if(arguments[0]=='/student-sections'){
                 let studentSection = STUDENT_SECTION_LIST[0];
                 studentSection['parentDivision'] = component.selectedClass['id'];
