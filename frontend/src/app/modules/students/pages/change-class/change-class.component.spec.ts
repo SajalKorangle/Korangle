@@ -39,7 +39,6 @@ describe('ChangeClassComponent', () => {
         fixture = TestBed.createComponent(ChangeClassComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        //let classList = CLASS_LIST;
         CLASS_LIST.forEach(classs => {
             classs['dbId'] = classs['id'];
         });

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import { PrintProfileComponent } from './print-profile.component';
 import {BasicComponentsModule} from '../../../../basic-components/basic-components.module';
@@ -16,6 +16,41 @@ import {FeeService} from '../../../../services/modules/fees/fee.service';
 import {PrintService} from '../../../../print/print-service';
 import {RouterTestingModule} from '@angular/router/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {BOARD_LIST} from '../../../../../test-data-source/services/modules/school/board';
+import {SESSION_LIST} from '../../../../../test-data-source/services/modules/school/session';
+import {BUS_STOP_LIST} from '../../../../../test-data-source/services/modules/team/bus-stop';
+import {CLASS_LIST} from '../../../../../test-data-source/classes/class';
+import {SECTION_LIST} from '../../../../../test-data-source/classes/division';
+import {STUDENT_LIST} from '../../../../../test-data-source/services/modules/students/students';
+import {STUDENT_SECTION_LIST} from '../../../../../test-data-source/services/modules/students/student-section';
+
+class MockSchoolService extends SchoolService {
+
+  getObjectList(object_url, data): Promise<any> {
+    if (object_url === this.session) {
+      return Promise.resolve(SESSION_LIST);
+    } else {
+      return Promise.resolve([]);
+    }
+  }
+
+  createObject(object_url, data): Promise<any> {
+    if (object_url === this.board) {
+      return Promise.resolve(BOARD_LIST);
+    } else {
+      return Promise.resolve([]);
+    }
+  }
+
+  deleteObject(object_url, data): Promise<any> {
+    if (object_url === this.bus_stop) {
+      return Promise.resolve(BUS_STOP_LIST);
+    } else {
+      return Promise.resolve([]);
+    }
+  }
+
+}
 
 describe('PrintProfileComponent', () => {
   let component: PrintProfileComponent;
@@ -29,7 +64,7 @@ describe('PrintProfileComponent', () => {
     }).overrideComponent(PrintProfileComponent, {
       set: {
         providers: [
-          //{provide: ExaminationService, useClass: MockExaminationService}
+          {provide: SchoolService, useClass: MockSchoolService}
         ]
       }
     }).compileComponents();
@@ -38,13 +73,25 @@ describe('PrintProfileComponent', () => {
     DataStorage.getInstance().getUser().activeSchool = SCHOOL_LIST[0];
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(PrintProfileComponent);
     component = fixture.componentInstance;
+    await component.ngOnInit();
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('Custom Input Check', fakeAsync(() => {
+    spyOn(TestBed.get(StudentService),'getObject').and.callFake(function () {
+      if(arguments[0]=='/students'){
+        return Promise.resolve(STUDENT_LIST[0]);
+      }
+    });
+    CLASS_LIST.forEach(classs => {
+      classs['dbId'] = classs['id'];
+    });
+    component.handleDetailsFromParentStudentFilter({'classList' : CLASS_LIST, 'sectionList': SECTION_LIST});
+    component.handleStudentListSelection([STUDENT_LIST,STUDENT_SECTION_LIST]);
+    tick();
     expect().nothing();
-  });
+  }));
 });
