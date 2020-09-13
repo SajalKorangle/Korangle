@@ -20,4 +20,4 @@ import { IdCardRoutingModule } from './id-card.routing';
     providers: [],
     bootstrap: [IdCardComponent]
 })
-export class IdCardModule { }
+export class IdCardModule {}

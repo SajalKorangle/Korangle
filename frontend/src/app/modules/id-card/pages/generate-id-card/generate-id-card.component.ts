@@ -8,12 +8,13 @@ import { GenerateIdCardServiceAdapter } from './generate-id-card.service.adapter
 
 import {DataStorage} from "../../../../classes/data-storage";
 import DefaultIdCard from './../../class/id-card'
+import {SchoolService} from '@services/modules/school/school.service';
 
 @Component({
     selector: 'generate-id-card',
     templateUrl: './generate-id-card.component.html',
     styleUrls: ['./generate-id-card.component.css'],
-    providers: [IdCardService, ClassService, StudentService],
+    providers: [IdCardService, ClassService, StudentService, SchoolService],
 })
 
 export class GenerateIdCardComponent implements OnInit {
@@ -24,14 +25,20 @@ export class GenerateIdCardComponent implements OnInit {
     @ViewChild('pdfTable', {static: false}) pdfTable:ElementRef;
 
 
-    classList: any[] = []
-    sectionList: any[] = []
-    studentList: any[] = []
-    studentSectionList: any[] = []
-    classSectionList: any[] = []
-    layoutList: any[] = []
+    sessionList: any[] = [];
+    classList: any[] = [];
+    sectionList: any[] = [];
+    studentList: any[] = [];
+    studentSectionList: any[] = [];
+    studentParameterList: any[] = [];
+    studentParameterValueList: any[] = [];
+    classSectionList: any[] = [];
+    layoutList: any[] = [];
 
-    filteredStudentSectionList: any[] = []
+    filteredStudentSectionList: any[] = [];
+
+    isIFrameLoading = false;
+    iFrameWarning = '';
 
     selectedClassSection: any
     selectedSection: any
@@ -45,6 +52,7 @@ export class GenerateIdCardComponent implements OnInit {
         public idCardService: IdCardService,
         public classService: ClassService,
         public studentService: StudentService,
+        public schoolService: SchoolService
     ) { }
 
     ngOnInit(): void {
@@ -78,11 +86,14 @@ export class GenerateIdCardComponent implements OnInit {
 
     getPrintData = () => {
         return {
-            user: this.user,
+            school: this.user.activeSchool,
             studentList: this.getSelectedStudentList(),
             studentSectionList: this.filteredStudentSectionList.filter(x => x.selected),
+            studentParameterList: this.studentParameterList,
+            studentParameterValueList: this.studentParameterValueList,
             classList: this.classList,
             divisionList: this.sectionList,
+            sessionList: this.sessionList,
         }
     }
 
@@ -95,12 +106,25 @@ export class GenerateIdCardComponent implements OnInit {
     }
 
     printIdCards = async () => {
-        if(!this.filteredStudentSectionList.find(x => x.selected)){
-            return alert("Select a student first!")
+        if (this.getSelectedStudentList().length === 0) {
+            this.iFrameWarning = 'Student needs to be selected';
+            return;
         }
-        let card = new DefaultIdCard(this.printMultiple, {...this.selectedLayout, content: JSON.parse(this.selectedLayout.content)}, this.getPrintData())
-        await card.generate()
-        card.download()
+        if (!this.selectedLayout) {
+            this.iFrameWarning = 'Layout needs to be selected';
+            return;
+        }
+        this.iFrameWarning = '';
+        this.isIFrameLoading = true;
+        const card = new DefaultIdCard(
+            this.printMultiple,
+            { ...this.selectedLayout, content: JSON.parse(this.selectedLayout.content) },
+            this.getPrintData()
+        );
+        await card.generate();
+        document.getElementById('iFrameDisplay').setAttribute('src', card.pdf.output('bloburi'));
+        this.isIFrameLoading = false;
+        // card.download()
     }
 
     selectAllClasses = () => {
@@ -123,7 +147,6 @@ export class GenerateIdCardComponent implements OnInit {
                 return classSection.class.id===studentSection.parentClass && classSection.section.id===studentSection.parentDivision && classSection.selected
             })
         })
-        console.log(this.filteredStudentSectionList)
     }
 
     selectAllStudents = () => {

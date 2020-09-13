@@ -6,6 +6,8 @@
     "baseUrl": "./",
     "types": [],
     "paths": {
+      "@modules/*": ["app/modules/*"],
+      "@services/*": ["app/services/*"],
       "moment": [
         "../node_modules/moment/min/moment.min.js"
       ]

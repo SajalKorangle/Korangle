@@ -6,8 +6,8 @@ import { IdCardComponent } from './id-card.component';
 
 const routes: Routes = [
     {
-        path: 'manage_layouts',
-        loadChildren: 'app/modules/id-card/pages/manage-layouts/manage-layouts.module#ManageLayoutsModule',
+        path: 'design_layout',
+        loadChildren: 'app/modules/id-card/pages/design-layout/design-layout.module#DesignLayoutModule',
         data: {moduleName: 'id_card'},
     },
     {

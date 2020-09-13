@@ -93,6 +93,7 @@ def create_list(data_list, Model, ModelSerializer):
 
 
 def create_object(data, Model, ModelSerializer):
+
     serializer = ModelSerializer(data=data)
     assert serializer.is_valid(), serializer.errors
     serializer.save()
@@ -113,7 +114,6 @@ def update_object(data, Model, ModelSerializer):
                                                        instance_field_list)))
     delete_list = []
     for attr, value in data.items():
-        print(attr)
         if attr in instance_field_list:
             delete_list.append(attr)
 

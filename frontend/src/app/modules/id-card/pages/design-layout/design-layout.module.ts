@@ -1,32 +1,33 @@
 import { NgModule } from '@angular/core';
 
 
-import {ManageLayoutsRoutingModule} from './manage-layouts.routing';
+import { DesignLayoutRoutingModule } from './design-layout.routing';
 import {ComponentsModule} from "../../../../components/components.module";
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 
-import {ManageLayoutsComponent} from "./manage-layouts.component";
+import {DesignLayoutComponent} from "./design-layout.component";
 
 
 @NgModule({
     declarations: [
-        ManageLayoutsComponent
+        DesignLayoutComponent
     ],
 
     imports: [
-        ManageLayoutsRoutingModule ,
+        DesignLayoutRoutingModule ,
         ComponentsModule,
         DragDropModule,
         MatButtonToggleModule,
         MatIconModule,
-
+        ColorPickerModule,
     ],
     exports: [
     ],
     providers: [],
-    bootstrap: [ManageLayoutsComponent]
+    bootstrap: [DesignLayoutComponent]
 })
-export class ManageLayoutsModule { }
+export class DesignLayoutModule { }

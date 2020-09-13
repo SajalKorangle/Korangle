@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {ManageLayoutsComponent} from "./manage-layouts.component";
+import {DesignLayoutComponent} from "./design-layout.component";
 
 const routes: Routes = [
     {
         path: '',
-        component: ManageLayoutsComponent ,
+        component: DesignLayoutComponent ,
     }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class ManageLayoutsRoutingModule { }
+export class DesignLayoutRoutingModule { }

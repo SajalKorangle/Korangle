@@ -87,6 +87,8 @@ INSTALLED_APPS = [
 
     'push_notifications',
 
+    'django_cleanup.apps.CleanupConfig',
+
 ]
 
 SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E307']
@@ -193,15 +195,6 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static/')
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_STORAGE_BUCKET_NAME = 'korangle'
-AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'korangleplus'
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_SECURE_URLS = False # to use http instead of https
-
 PUSH_NOTIFICATIONS_SETTINGS = {
     "FCM_API_KEY": "AAAAKdpMXv4:APA91bFqo9G8GT8FELpCT7zsDTR9Whu4kZNOyQUaUo-HNqQwe7Jl2MxOLxGO8YPqaaeu_MjVM5uzzfcte7i32bgeXvlZFacSXAhGMFfUrLdzbJim11PyZ7tNmsdaBtaum1ieUHZdrs_3",
 }
@@ -261,3 +254,19 @@ if current_branch != 'master':
                 },
             },
         }
+
+# AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'korangle'
+if current_branch != 'master':
+    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = 'korangletesting'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_SECURE_URLS = False # to use http instead of https
+else:
+    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = 'korangleplus'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_SECURE_URLS = False # to use http instead of https
