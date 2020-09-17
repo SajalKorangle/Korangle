@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddEmployeeComponent} from './add-employee.component';
-import {BasicComponentsModule} from '../../../../basic-components/basic-components.module';
-import {ComponentsModule} from '../../../../components/components.module';
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
-import {EmployeeService} from '../../../../services/modules/employee/employee.service';
+import { AddEmployeeComponent} from '@modules/employee/pages/add-employee/add-employee.component';
+import {BasicComponentsModule} from '@basic-components/basic-components.module';
+import {ComponentsModule} from '@components/components.module';
+import {EmployeeOldService} from '@services/modules/employee/employee-old.service';
+import {EmployeeService} from '@services/modules/employee/employee.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {DataStorage} from '../../../../classes/data-storage';
-import {USER_LIST} from '../../../../../test-data-source/classes/user';
-import {SCHOOL_LIST} from '../../../../../test-data-source/classes/school';
-import {EMPLOYEE_LIST} from '../../../../../test-data-source/services/modules/employee/models/employee';
-import {EMPLOYEE_SESSION_DETAIL} from '../../../../../test-data-source/services/modules/employee/models/employee-seesion-detail';
-import {BankService} from '../../../../services/bank.service';
-import {TeamService} from '../../../../services/modules/team/team.service';
-import {EMPLOYEE_MINI_PROFILES} from '../../../../../test-data-source/services/modules/employee/models/employee-mini-profile';
-import {MODULE_LIST} from '../../../../../test-data-source/services/modules/team/module';
-import {TASK_LIST} from '../../../../../test-data-source/services/modules/team/task';
+import {DataStorage} from '@classes/data-storage';
+import {USER_LIST} from 'test-data-source/classes/user';
+import {SCHOOL_LIST} from 'test-data-source/classes/school';
+import {EMPLOYEE_LIST} from 'test-data-source/services/modules/employee/models/employee';
+import {EMPLOYEE_SESSION_DETAIL} from 'test-data-source/services/modules/employee/models/employee-seesion-detail';
+import {BankService} from '@services/bank.service';
+import {TeamService} from '@services/modules/team/team.service';
+import {EMPLOYEE_MINI_PROFILES} from 'test-data-source/services/modules/employee/models/employee-mini-profile';
+import {MODULE_LIST} from 'test-data-source/services/modules/team/module';
+import {TASK_LIST} from 'test-data-source/services/modules/team/task';
 
 class MockTeamService {
     getObjectList(object_url,data): Promise<any> {

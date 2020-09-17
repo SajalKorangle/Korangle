@@ -1,25 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewDefaultersComponent} from './view-defaulters.component';
-import {BasicComponentsModule} from '../../../../basic-components/basic-components.module';
-import {ComponentsModule} from '../../../../components/components.module';
+import { ViewDefaultersComponent} from '@modules/fees/pages/view-defaulters/view-defaulters.component';
+import {BasicComponentsModule} from '@basic-components/basic-components.module';
+import {ComponentsModule} from '@components/components.module';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {DataStorage} from '../../../../classes/data-storage';
-import {USER_LIST} from '../../../../../test-data-source/classes/user';
-import {SCHOOL_LIST} from '../../../../../test-data-source/classes/school';
-import {FeeService} from '../../../../services/modules/fees/fee.service';
-import {StudentService} from '../../../../services/modules/student/student.service';
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
-import {NotificationService} from '../../../../services/modules/notification/notification.service';
-import {UserService} from '../../../../services/modules/user/user.service';
-import {SmsService} from '../../../../services/modules/sms/sms.service';
-import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
-import {SchoolService} from '../../../../services/modules/school/school.service';
-import {SESSION_LIST} from '../../../../../test-data-source/services/modules/school/session';
-import {CLASS_LIST} from '../../../../../test-data-source/classes/class';
-import {SECTION_LIST} from '../../../../../test-data-source/classes/division';
-import {PrintService} from '../../../../print/print-service';
-import {ExcelService} from '../../../../excel/excel-service';
+import {DataStorage} from '@classes/data-storage';
+import {USER_LIST} from 'test-data-source/classes/user';
+import {SCHOOL_LIST} from 'test-data-source/classes/school';
+import {FeeService} from '@services/modules/fees/fee.service';
+import {StudentService} from '@services/modules/student/student.service';
+import {ClassOldService} from '@services/modules/class/class-old.service';
+import {NotificationService} from '@services/modules/notification/notification.service';
+import {UserService} from '@services/modules/user/user.service';
+import {SmsService} from '@services/modules/sms/sms.service';
+import {SmsOldService} from '@services/modules/sms/sms-old.service';
+import {SchoolService} from '@services/modules/school/school.service';
+import {SESSION_LIST} from 'test-data-source/services/modules/school/session';
+import {CLASS_LIST} from 'test-data-source/classes/class';
+import {SECTION_LIST} from 'test-data-source/classes/division';
+import {PrintService} from 'app/print/print-service';
+import {ExcelService} from 'app/excel/excel-service';
 import {ChangeDetectorRef} from '@angular/core';
 
 export const STUDENT_LIST = [

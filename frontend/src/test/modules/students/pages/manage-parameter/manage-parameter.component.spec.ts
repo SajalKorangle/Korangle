@@ -1,15 +1,15 @@
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
-import { ManageParameterComponent } from './manage-parameter.component';
-import {BasicComponentsModule} from '../../../../basic-components/basic-components.module';
-import {ComponentsModule} from '../../../../components/components.module';
+import { ManageParameterComponent } from '@modules/students/pages/manage-parameter/manage-parameter.component';
+import {BasicComponentsModule} from '@basic-components/basic-components.module';
+import {ComponentsModule} from '@components/components.module';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {DataStorage} from '../../../../classes/data-storage';
-import {USER_LIST} from '../../../../../test-data-source/classes/user';
-import {SCHOOL_LIST} from '../../../../../test-data-source/classes/school';
+import {DataStorage} from '@classes/data-storage';
+import {USER_LIST} from 'test-data-source/classes/user';
+import {SCHOOL_LIST} from 'test-data-source/classes/school';
 import {MatIconModule} from '@angular/material';
-import {StudentService} from '../../../../services/modules/student/student.service';
-import {STUDENT_PARAMETER_LIST} from '../../../../../test-data-source/services/modules/students/student-parameter';
+import {StudentService} from '@services/modules/student/student.service';
+import {STUDENT_PARAMETER_LIST} from 'test-data-source/services/modules/students/student-parameter';
 
 class MockStudentService extends StudentService {
 

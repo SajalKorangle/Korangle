@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { DesignLayoutRoutingModule } from './design-layout.routing';
 import {ComponentsModule} from "../../../../components/components.module";
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -20,7 +19,7 @@ import {DesignLayoutComponent} from "./design-layout.component";
     imports: [
         DesignLayoutRoutingModule ,
         ComponentsModule,
-        DragDropModule,
+
         MatButtonToggleModule,
         MatIconModule,
         ColorPickerModule,

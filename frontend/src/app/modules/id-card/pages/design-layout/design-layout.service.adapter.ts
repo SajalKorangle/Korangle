@@ -59,12 +59,12 @@ export class DesignLayoutServiceAdapter {
                 this.vm.isLoading = false;
             });
 
-            this.populateStudentCustomFieldParameterList();
+            this.populateParameterListWithStudentCustomField();
 
         });
     }
 
-    populateStudentCustomFieldParameterList(): void {
+    populateParameterListWithStudentCustomField(): void {
         this.vm.data.studentParameterList.forEach(studentParameter => {
             this.vm.parameterList.push(StudentCustomParameterStructure.getStructure(
                 studentParameter.id
@@ -104,7 +104,7 @@ export class DesignLayoutServiceAdapter {
         });
         this.vm.idCardService.createObject(this.vm.idCardService.id_card_layout, form_data).then(idCardLayoutValue => {
             this.vm.idCardLayoutList.push(idCardLayoutValue);
-            this.vm.chooseLayout(idCardLayoutValue);
+            this.vm.populateCurrentLayoutWithGivenValue(idCardLayoutValue);
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
@@ -130,7 +130,7 @@ export class DesignLayoutServiceAdapter {
                 return item.id !== idCardLayoutValue.id;
             });
             this.vm.idCardLayoutList.push(idCardLayoutValue);
-            this.vm.chooseLayout(idCardLayoutValue);
+            this.vm.populateCurrentLayoutWithGivenValue(idCardLayoutValue);
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
@@ -143,9 +143,11 @@ export class DesignLayoutServiceAdapter {
             id: this.vm.currentLayout.id,
         };
         this.vm.idCardService.deleteObject(this.vm.idCardService.id_card_layout, layout_data).then(value => {
+            console.log(this.vm.idCardLayoutList);
             this.vm.idCardLayoutList = this.vm.idCardLayoutList.filter(item => {
                 return item.id !== layout_data.id;
             });
+            console.log(this.vm.idCardLayoutList);
             this.vm.currentLayout = null;
             this.vm.isLoading = false;
         }, error => {

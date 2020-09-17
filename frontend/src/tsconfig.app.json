@@ -7,7 +7,15 @@
     "types": [],
     "paths": {
       "@modules/*": ["app/modules/*"],
+      "@basic-components/*": ["app/basic-components/*"],
+      "@classes/*": ["app/classes/*"],
+      "@components/*": ["app/components/*"],
       "@services/*": ["app/services/*"],
+      "@urls/*": ["app/urls/*"],
+      "@test-data-source/*": ["test-data-source/*"],
+      "@mock-services/*": ["test/mock-services/*"],
+      "@mock-data/*": ["test/mock-data/*"],
+      "@mock-api/*": ["test/mock-api/*"],
       "moment": [
         "../node_modules/moment/min/moment.min.js"
       ]

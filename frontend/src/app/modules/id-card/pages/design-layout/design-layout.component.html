@@ -8,7 +8,7 @@
         <mat-form-field style="margin-bottom: 10px;">
             <mat-select placeholder="Choose to add/edit/delete layout/s"
                         [ngModel]="currentLayout"
-                        (ngModelChange)="chooseLayout($event);">
+                        (ngModelChange)="populateCurrentLayoutWithGivenValue($event);">
                 <mat-option [value]="ADD_LAYOUT_STRING">{{ADD_LAYOUT_STRING}}</mat-option>
                 <mat-option *ngFor="let layout of idCardLayoutList;" [value]="layout">{{layout.name}}</mat-option>
             </mat-select>
@@ -39,7 +39,7 @@
                             <div class="col-md-6" align="end">
                                 <button type="button"
                                         class="btn"
-                                        (click)="resetLayout();updatePDF(1);"
+                                        (click)="resetCurrentLayout();updatePDF(1);"
                                         style="cursor: pointer; padding: 4px 7px;">Reset All</button>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                     Select Field
                                 </mat-label>
                                 <mat-select [(ngModel)]="currentField" (ngModelChange)="pickAndSetCurrentUserHandle();">
-                                    <mat-option *ngFor="let fieldKey of getFilteredFieldKeyList(); let i = index" [value]="fieldTypes[fieldKey].displayFieldName">
+                                    <mat-option *ngFor="let fieldKey of getSelectedFieldKeyListInCurrentLayout(); let i = index" [value]="fieldTypes[fieldKey].displayFieldName">
                                         {{fieldTypes[fieldKey].displayFieldName}}
                                     </mat-option>
                                 </mat-select>

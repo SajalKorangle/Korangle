@@ -108,7 +108,7 @@ export class DesignLayoutComponent implements OnInit {
         });
     }
 
-    initializeLayout(): void {
+    populateCurrentLayoutWithEmptyDefaultData(): void {
         this.currentLayout = {
             id: -1,
             parentSchool: this.user.activeSchool.dbId,
@@ -118,18 +118,21 @@ export class DesignLayoutComponent implements OnInit {
         };
     }
 
-    chooseLayout(value: any): void {
+    populateCurrentLayoutWithGivenValue(value: any): void {
         if (value === this.ADD_LAYOUT_STRING) {
-            this.initializeLayout();
+            this.populateCurrentLayoutWithEmptyDefaultData();
         } else {
             this.currentLayout = { ...value, content: JSON.parse(value.content) };
         }
         if (this.currentLayout.content.length > 0) {
-            this.currentField = this.fieldTypes[this.getFilteredFieldKeyList()[0]].displayFieldName;
+            this.currentField = this.fieldTypes[this.getSelectedFieldKeyListInCurrentLayout()[0]].displayFieldName;
             this.pickAndSetCurrentUserHandle();
             setTimeout(() => {
                 this.updatePDF();
             }, 1);
+        } else {
+            this.currentField = null;
+            this.currentUserHandle = null;
         }
     }
 
@@ -140,12 +143,11 @@ export class DesignLayoutComponent implements OnInit {
         }).length === 0;
     };
 
-    resetLayout(): void {
-        this.chooseLayout(
-            this.idCardLayoutList.find(item => {
-                return item.id === this.currentLayout.id;
-            })
-        );
+    resetCurrentLayout(): void {
+        const layout = this.idCardLayoutList.find(item => {
+            return item.id === this.currentLayout.id;
+        });
+        this.populateCurrentLayoutWithGivenValue(layout === undefined ? this.ADD_LAYOUT_STRING : layout);
     }
 
     getFieldKeyList(): any {
@@ -203,7 +205,7 @@ export class DesignLayoutComponent implements OnInit {
         this.currentUserHandle = this.currentLayout.content[this.currentLayout.content.length - 1];
     }
 
-    getFilteredFieldKeyList(): any {
+    getSelectedFieldKeyListInCurrentLayout(): any {
         return Object.keys(this.fieldTypes).filter(fieldKey => {
             return this.currentLayout.content.filter(userHandleStructure => {
                 return this.getParameter(userHandleStructure.key).field === this.fieldTypes[fieldKey].displayFieldName;

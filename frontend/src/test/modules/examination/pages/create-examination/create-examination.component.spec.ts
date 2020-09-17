@@ -1,14 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateExaminationComponent } from './create-examination.component';
-import {BasicComponentsModule} from '../../../../basic-components/basic-components.module';
-import {ComponentsModule} from '../../../../components/components.module';
-import {ExaminationService} from '../../../../services/modules/examination/examination.service';
+import { CreateExaminationComponent } from '@modules/examination/pages/create-examination/create-examination.component';
+import {BasicComponentsModule} from '@basic-components/basic-components.module';
+import {ComponentsModule} from '@components/components.module';
+import {ExaminationService} from '@services/modules/examination/examination.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {DataStorage} from '../../../../classes/data-storage';
-import {USER_LIST} from '../../../../../test-data-source/classes/user';
-import {SCHOOL_LIST} from '../../../../../test-data-source/classes/school';
-import {EXAMINATION_LIST} from '../../../../../test-data-source/services/modules/examination/models/examination';
+import {DataStorage} from '@classes/data-storage';
+import {USER_LIST} from 'test-data-source/classes/user';
+import {SCHOOL_LIST} from 'test-data-source/classes/school';
+import {EXAMINATION_LIST} from 'test-data-source/services/modules/examination/models/examination';
 
 class MockExaminationService {
 

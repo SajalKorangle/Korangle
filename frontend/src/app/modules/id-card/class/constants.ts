@@ -1,13 +1,13 @@
 
-// Note: The fieldKey values will be saved in database
-// so you can not change fieldKey values at a later stage.
+// Note: The fieldStructureKey values will be saved in database
+// so you can not change fieldStructureKey values at a later stage.
 
 class FieldStructure {
 
-    static getStructure(displayFieldName: any, fieldKey: any): any {
+    static getStructure(displayFieldName: any, fieldStructureKey: any): any {
         return {
             displayFieldName: displayFieldName,
-            fieldKey: fieldKey,
+            fieldStructureKey: fieldStructureKey,
         }
     }
 
@@ -389,7 +389,7 @@ class StudentParameterStructure {
 
     static getStructure(displayName: any, variableName: any, dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
-            FIELDS.STUDENT.fieldKey + '-' + variableName,
+            FIELDS.STUDENT.fieldStructureKey + '-' + variableName,
             FIELDS.STUDENT.displayFieldName,
             dataType,
             (dataObject) => {
@@ -407,7 +407,7 @@ class StudentSessionParameterStructure {
 
     static getStructure(displayName: any, variableName: any, getValueFunc: any, dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
-            FIELDS.STUDENT_SESSION.fieldKey + '-' + variableName,
+            FIELDS.STUDENT_SESSION.fieldStructureKey + '-' + variableName,
             FIELDS.STUDENT_SESSION.displayFieldName,
             dataType,
             (dataObject) => {
@@ -425,7 +425,7 @@ export class StudentCustomParameterStructure {
 
     static getStructure(studentParameterId: any, dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
-            FIELDS.STUDENT_CUSTOM.fieldKey + '-' + studentParameterId,
+            FIELDS.STUDENT_CUSTOM.fieldStructureKey + '-' + studentParameterId,
             FIELDS.STUDENT_CUSTOM.displayFieldName,
             dataType,
             (dataObject) => {
@@ -453,7 +453,7 @@ class SchoolParameterStructure {
 
     static getStructure(displayName: any, variableName: any, dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
-            FIELDS.SCHOOL.fieldKey + '-' + variableName,
+            FIELDS.SCHOOL.fieldStructureKey + '-' + variableName,
             FIELDS.SCHOOL.displayFieldName,
             dataType,
             (dataObject) => {
@@ -472,7 +472,7 @@ class ConstantParameterStructure {
 
     static getStructure(dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
-            FIELDS.CONSTANT.fieldKey + '-' + dataType,
+            FIELDS.CONSTANT.fieldStructureKey + '-' + dataType,
             FIELDS.CONSTANT.displayFieldName,
             dataType,
             (dataObject) => {
