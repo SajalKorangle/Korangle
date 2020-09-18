@@ -66,7 +66,7 @@ export default class IdCard {
 
                             const reader = new FileReader();
                             reader.onload = function (event) {
-                                resolve(reader.result.toString().replace('data:font/ttf;base64,', ''));
+                                resolve(reader.result.toString().replace(/data.*base64,/, ''));
                             };
                             reader.readAsDataURL(xhr.response);
                         } else {
@@ -85,7 +85,11 @@ export default class IdCard {
 
     async handleFonts() {
         const alreadyDownloadedList = [];
-        const defaultBase64Content = await this.fetchFont(encodeURIComponent('assets/fonts/Arial/Arial-Normal.ttf'));
+        const defaultBase64Content = await this.fetchFont('https://korangleplus.s3.amazonaws.com/' +
+            encodeURIComponent('assets/fonts/Arial/Arial-Normal.ttf'));
+        // If this error 'jsPDF PubSub Error No unicode cmap for font Error: No unicode cmap for font' shows up
+        // Try printing following statement to see whether you have parsed correctly.
+        // console.log(defaultBase64Content);
         this.pdf.addFileToVFS('Arial-Normal.ttf', defaultBase64Content);
         this.pdf.addFont('Arial-Normal.ttf', 'Arial', 'Normal');
         alreadyDownloadedList.push({
@@ -98,7 +102,9 @@ export default class IdCard {
                     && alreadyDownloaded.fontStyle === item.fontStyle;
             }) === undefined) {
                 const fontFileName = item.fontFamily + '-' + item.fontStyle + '.ttf';
-                const Base64Content = await this.fetchFont(encodeURIComponent('assets/fonts/' + item.fontFamily + '/' + fontFileName));
+                const Base64Content = await this.fetchFont(
+                    'https://korangleplus.s3.amazonaws.com/' +
+                    encodeURIComponent('assets/fonts/' + item.fontFamily + '/' + fontFileName));
                 this.pdf.addFileToVFS(fontFileName, Base64Content);
                 this.pdf.addFont(fontFileName, item.fontFamily, item.fontStyle);
                 alreadyDownloadedList.push({

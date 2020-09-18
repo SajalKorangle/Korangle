@@ -113,7 +113,6 @@ def update_object(data, Model, ModelSerializer):
                                                        instance_field_list)))
     delete_list = []
     for attr, value in data.items():
-        print(attr)
         if attr in instance_field_list:
             delete_list.append(attr)
     for field_name in delete_list:
@@ -124,7 +123,6 @@ def update_object(data, Model, ModelSerializer):
         serializer.save()
         return serializer.data
     else:
-        print(serializer.errors)
         return 'Updation failed'
 
 

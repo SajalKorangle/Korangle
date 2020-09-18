@@ -98,6 +98,7 @@ export class DesignLayoutComponent implements OnInit {
                 '@font-face {' +
                 'font-family: ' + fontFamily.displayName + ';' +
                 'src: url("'
+                    + 'https://korangleplus.s3.amazonaws.com/'
                     + this.encodeURIComponent('assets/fonts/' +
                         fontFamily.displayName +
                         '/' + fontFamily.displayName + '-' + this.getFontStyleList(fontFamily.displayName)[0] + '.ttf')

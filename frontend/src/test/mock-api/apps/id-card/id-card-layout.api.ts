@@ -18,8 +18,6 @@ ID_CARD_LAYOUT_API.version_list.push(
                 id: 1,
                 parentSchool: 1,
                 name: 'Test Layout',
-                content: '[]',
-                backgroundImage: 'https://www.korangle.com/assets/img/plain-id-card.jpg',
             })]
     )
 );

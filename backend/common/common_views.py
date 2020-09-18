@@ -53,7 +53,7 @@ class CommonView():
 
     @user_permission_new
     def put(self, request):
-        data = json.loads(request.body.decode('utf-8'))        
+        data = json.loads(request.body.decode('utf-8'))
         return update_object(data, self.Model, self.ModelSerializer)
 
     @user_permission_new

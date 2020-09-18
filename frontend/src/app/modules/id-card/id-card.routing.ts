@@ -8,12 +8,12 @@ const routes: Routes = [
     {
         path: 'design_layout',
         loadChildren: 'app/modules/id-card/pages/design-layout/design-layout.module#DesignLayoutModule',
-        data: {moduleName: 'id_card'},
+        data: {moduleName: 'id_card'}, // TODO: These should be called modulePath instead of moduleName everywhwere
     },
     {
         path: 'generate_id_card',
         loadChildren: 'app/modules/id-card/pages/generate-id-card/generate-id-card.module#GenerateIdCardModule',
-        data: {moduleName: 'fees'},
+        data: {moduleName: 'id_card'}, // TODO: These should be called modulePath instead of moduleName everywhwere
     },
     {
         path: '',

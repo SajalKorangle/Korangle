@@ -1,6 +1,6 @@
-<script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
+<!-- script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
 <script src="dist/jspdf.customfonts.min.js"></script>
-<script src="dist/default_vfs.js"></script>
+<script src="dist/default_vfs.js"></script -->
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
 
@@ -272,7 +272,6 @@
                                         <mat-label>Select Font Family</mat-label>
                                         <mat-select [(ngModel)]="currentUserHandle.fontFamily" (ngModelChange)="currentUserHandle.fontStyle=getFontStyleList($event)[0];updatePDF()">
                                             <mat-option *ngFor="let fontFamily of fontFamilyList;" [value]="fontFamily.displayName">
-                                                <!-- span [ngStyle]="{'font-family': fontFamily.displayName, 'src': encodeURIComponent('assets/fonts/'+fontFamily.displayName+'/'+fontFamily.displayName+'-'+getFontStyleList(fontFamily.displayName)[0]+'.ttf')}">{{fontFamily.displayName}}</span -->
                                                 <span [ngStyle]="{'font-family': fontFamily.displayName }">{{fontFamily.displayName}}</span>
                                             </mat-option>
                                         </mat-select>
@@ -488,7 +487,10 @@
 
         </ng-container>
 
-        <img style='display: none' id='defaultBackground' src='./assets/img/plain-id-card.jpg' />
+        <img style='display: none'
+             id='defaultBackground'
+             crossorigin="anonymous"
+             src='https://korangleplus.s3.amazonaws.com/assets/img/plain-id-card.jpg' />
 
     </ng-container>
 
