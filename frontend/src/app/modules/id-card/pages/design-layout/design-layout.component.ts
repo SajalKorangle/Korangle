@@ -128,9 +128,7 @@ export class DesignLayoutComponent implements OnInit {
         if (this.currentLayout.content.length > 0) {
             this.currentField = this.fields[this.getSelectedFieldKeyListInCurrentLayout()[0]];
             this.pickAndSetCurrentUserHandle();
-            setTimeout(() => {
-                this.updatePDF();
-            }, 1);
+            this.updatePDF(1);
         } else {
             this.currentField = null;
             this.currentUserHandle = null;
@@ -161,9 +159,9 @@ export class DesignLayoutComponent implements OnInit {
         });
     }
 
-    getFilteredCurrentUserHandleListByCurrentField(): any {
+    getFilteredCurrentUserHandleListByGivenField(field: any): any {
         return this.currentLayout.content.filter(userHandle => {
-            return this.getParameter(userHandle.key).field.fieldStructureKey === this.currentField.fieldStructureKey;
+            return this.getParameter(userHandle.key).field.fieldStructureKey === field.fieldStructureKey;
         })
     }
 
@@ -210,6 +208,9 @@ export class DesignLayoutComponent implements OnInit {
         );
         this.currentField = parameter.field;
         this.currentUserHandle = this.currentLayout.content[this.currentLayout.content.length - 1];
+        if (parameter.field.fieldStructureKey === this.fields.CONSTANT.fieldStructureKey) {
+            this.currentUserHandle.value = 'Text - ' + (this.getFilteredCurrentUserHandleListByGivenField(parameter.field).length);
+        }
     }
 
     getSelectedFieldKeyListInCurrentLayout(): any {
@@ -230,11 +231,13 @@ export class DesignLayoutComponent implements OnInit {
 
         this.currentLayout.content = this.currentLayout.content.filter(x => x !== userHandle);
 
-        this.currentField = null;
-        this.currentUserHandle = null;
-
         if (this.currentLayout.content.length > 0) {
-            this.updatePDF();
+            this.currentField = this.fields[this.getSelectedFieldKeyListInCurrentLayout()[0]];
+            this.pickAndSetCurrentUserHandle();
+            this.updatePDF(1);
+        } else {
+            this.currentField = null;
+            this.currentUserHandle = null;
         }
     }
 

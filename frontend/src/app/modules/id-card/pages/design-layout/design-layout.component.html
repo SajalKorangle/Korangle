@@ -116,7 +116,7 @@
                                     Select Parameter
                                 </mat-label>
                                 <mat-select [(ngModel)]="currentUserHandle">
-                                    <mat-option *ngFor="let userHandle of getFilteredCurrentUserHandleListByCurrentField(); let i = index" [value]="userHandle">
+                                    <mat-option *ngFor="let userHandle of getFilteredCurrentUserHandleListByGivenField(currentField); let i = index" [value]="userHandle">
                                         {{getParameter(userHandle.key).displayParameterNameFunc({data: data, userHandle: userHandle})}}
                                     </mat-option>
                                 </mat-select>
