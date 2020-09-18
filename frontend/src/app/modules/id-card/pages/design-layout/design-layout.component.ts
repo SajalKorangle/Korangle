@@ -41,7 +41,7 @@ export class DesignLayoutComponent implements OnInit {
 
     user;
 
-    fieldTypes = FIELDS;
+    fields = FIELDS;
     dataTypes = DATA_TYPES;
     parameterList = PARAMETER_LIST;
     fontFamilyList = FONT_FAMILY_LIST;
@@ -126,7 +126,7 @@ export class DesignLayoutComponent implements OnInit {
             this.currentLayout = { ...value, content: JSON.parse(value.content) };
         }
         if (this.currentLayout.content.length > 0) {
-            this.currentField = this.fieldTypes[this.getSelectedFieldKeyListInCurrentLayout()[0]].displayFieldName;
+            this.currentField = this.fields[this.getSelectedFieldKeyListInCurrentLayout()[0]];
             this.pickAndSetCurrentUserHandle();
             setTimeout(() => {
                 this.updatePDF();
@@ -157,8 +157,14 @@ export class DesignLayoutComponent implements OnInit {
 
     getFilteredParameterList(field: any): any {
         return this.parameterList.filter(item => {
-            return item.field === field;
+            return item.field.fieldStructureKey === field.fieldStructureKey;
         });
+    }
+
+    getFilteredCurrentUserHandleListByCurrentField(): any {
+        return this.currentLayout.content.filter(userHandle => {
+            return this.getParameter(userHandle.key).field.fieldStructureKey === this.currentField.fieldStructureKey;
+        })
     }
 
     resetBackground(): void {
@@ -192,7 +198,7 @@ export class DesignLayoutComponent implements OnInit {
     }
 
     getParameter(key: any): any {
-        return this.parameterList.find(field => field.key === key);
+        return this.parameterList.find(parameter => parameter.key === key);
     }
 
     addToCurrentUserHandleList(parameter: any): void {
@@ -207,16 +213,16 @@ export class DesignLayoutComponent implements OnInit {
     }
 
     getSelectedFieldKeyListInCurrentLayout(): any {
-        return Object.keys(this.fieldTypes).filter(fieldKey => {
+        return Object.keys(this.fields).filter(fieldKey => {
             return this.currentLayout.content.filter(userHandleStructure => {
-                return this.getParameter(userHandleStructure.key).field === this.fieldTypes[fieldKey].displayFieldName;
+                return this.getParameter(userHandleStructure.key).field.fieldStructureKey === this.fields[fieldKey].fieldStructureKey;
             }).length > 0;
         });
     }
 
     pickAndSetCurrentUserHandle(): any {
         this.currentUserHandle = this.currentLayout.content.find(userHandleStructure => {
-            return this.getParameter(userHandleStructure.key).field === this.currentField;
+            return this.getParameter(userHandleStructure.key).field.fieldStructureKey === this.currentField.fieldStructureKey;
         });
     }
 

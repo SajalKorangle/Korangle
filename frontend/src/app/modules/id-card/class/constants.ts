@@ -390,7 +390,7 @@ class StudentParameterStructure {
     static getStructure(displayName: any, variableName: any, dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
             FIELDS.STUDENT.fieldStructureKey + '-' + variableName,
-            FIELDS.STUDENT.displayFieldName,
+            FIELDS.STUDENT,
             dataType,
             (dataObject) => {
                 return displayName + (dataObject.userHandle ?
@@ -408,7 +408,7 @@ class StudentSessionParameterStructure {
     static getStructure(displayName: any, variableName: any, getValueFunc: any, dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
             FIELDS.STUDENT_SESSION.fieldStructureKey + '-' + variableName,
-            FIELDS.STUDENT_SESSION.displayFieldName,
+            FIELDS.STUDENT_SESSION,
             dataType,
             (dataObject) => {
                 return displayName + (dataObject.userHandle ?
@@ -426,7 +426,7 @@ export class StudentCustomParameterStructure {
     static getStructure(studentParameterId: any, dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
             FIELDS.STUDENT_CUSTOM.fieldStructureKey + '-' + studentParameterId,
-            FIELDS.STUDENT_CUSTOM.displayFieldName,
+            FIELDS.STUDENT_CUSTOM,
             dataType,
             (dataObject) => {
                 return dataObject.data.studentParameterList.find(x => x.id === studentParameterId).name
@@ -454,7 +454,7 @@ class SchoolParameterStructure {
     static getStructure(displayName: any, variableName: any, dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
             FIELDS.SCHOOL.fieldStructureKey + '-' + variableName,
-            FIELDS.SCHOOL.displayFieldName,
+            FIELDS.SCHOOL,
             dataType,
             (dataObject) => {
                 return displayName + (dataObject.userHandle ?
@@ -473,7 +473,7 @@ class ConstantParameterStructure {
     static getStructure(dataType = DATA_TYPES.TEXT): any {
         return ParameterStructure.getStructure(
             FIELDS.CONSTANT.fieldStructureKey + '-' + dataType,
-            FIELDS.CONSTANT.displayFieldName,
+            FIELDS.CONSTANT,
             dataType,
             (dataObject) => {
                 if (dataObject.userHandle && dataObject.userHandle.value !== '') {

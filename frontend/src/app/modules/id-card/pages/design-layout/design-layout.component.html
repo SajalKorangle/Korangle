@@ -52,10 +52,10 @@
                             <mat-form-field *ngFor="let fieldKey of getFieldKeyList()"
                                     style="margin-right: 10px">
                                 <mat-label>
-                                    {{fieldTypes[fieldKey].displayFieldName}}
+                                    {{fields[fieldKey].displayFieldName}}
                                 </mat-label>
                                 <mat-select [value]="null">
-                                    <mat-option *ngFor="let parameter of getFilteredParameterList(fieldTypes[fieldKey].displayFieldName); let i = index"
+                                    <mat-option *ngFor="let parameter of getFilteredParameterList(fields[fieldKey]); let i = index"
                                                 (click)="addToCurrentUserHandleList(parameter); updatePDF(1);"
                                                 [value]="parameter">
                                         {{parameter.displayParameterNameFunc({data: data})}}
@@ -104,8 +104,8 @@
                                     Select Field
                                 </mat-label>
                                 <mat-select [(ngModel)]="currentField" (ngModelChange)="pickAndSetCurrentUserHandle();">
-                                    <mat-option *ngFor="let fieldKey of getSelectedFieldKeyListInCurrentLayout(); let i = index" [value]="fieldTypes[fieldKey].displayFieldName">
-                                        {{fieldTypes[fieldKey].displayFieldName}}
+                                    <mat-option *ngFor="let fieldKey of getSelectedFieldKeyListInCurrentLayout(); let i = index" [value]="fields[fieldKey]">
+                                        {{fields[fieldKey].displayFieldName}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -116,7 +116,7 @@
                                     Select Parameter
                                 </mat-label>
                                 <mat-select [(ngModel)]="currentUserHandle">
-                                    <mat-option *ngFor="let userHandle of currentLayout.content; let i = index" [value]="userHandle">
+                                    <mat-option *ngFor="let userHandle of getFilteredCurrentUserHandleListByCurrentField(); let i = index" [value]="userHandle">
                                         {{getParameter(userHandle.key).displayParameterNameFunc({data: data, userHandle: userHandle})}}
                                     </mat-option>
                                 </mat-select>
@@ -141,7 +141,7 @@
                                         || getParameter(currentUserHandle.key).dataType===dataTypes.DATE">
 
                                 <!-- Constant Value -->
-                                <div style="margin-bottom: 10px;" *ngIf="getParameter(currentUserHandle.key).field==fieldTypes.CONSTANT.displayFieldName">
+                                <div style="margin-bottom: 10px;" *ngIf="getParameter(currentUserHandle.key).field.fieldStructureKey==fields.CONSTANT.fieldStructureKey">
                                     <mat-form-field style="width: 100%;">
                                         <mat-label>
                                             Value
