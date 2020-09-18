@@ -39,7 +39,7 @@ describe('workspace-project App', () => {
         await page.waitForTimeout(500);
         await page.waitForSelector('#select-all-classes')
         await page.click('#select-all-classes');
-        await page.waitForSelector('#student-value-SanjayRathore');
+        // await page.waitForSelector('#student-value-SanjayRathore');
     });
 
     afterEach(async () => {
