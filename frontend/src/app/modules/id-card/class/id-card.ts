@@ -198,7 +198,9 @@ export default class IdCard {
                 );
             } else if (this.getParameter(item.key).dataType === DATA_TYPES.IMAGE) {
                 const img = await this.fetchImage(this.getParameter(item.key).getValueFunc({data: this.data, studentId: student.id}));
-                this.pdf.addImage(img, 'JPEG', xbase + item.x, ybase + item.y, item.width, item.height);
+                if (img) {
+                    this.pdf.addImage(img, 'JPEG', xbase + item.x, ybase + item.y, item.width, item.height);
+                }
             }
         }
     }
