@@ -44,7 +44,9 @@ export default class IdCard {
             // TODO: Add crossorigin="anonymous" to every request so that header comes from Shitty AWS servers
             // https://bugs.chromium.org/p/chromium/issues/detail?id=158131
             // https://forums.aws.amazon.com/thread.jspa?threadID=106157
-            url += '?javascript=';
+            if (url.search(/data.*base64,/) === -1) {
+                url += '?javascript=';
+            }
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 img.onload = () => {
@@ -63,6 +65,10 @@ export default class IdCard {
 
     async fetchFont(url) {
         if (url) {
+            // TODO: Add crossorigin="anonymous" to every request so that header comes from Shitty AWS servers
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=158131
+            // https://forums.aws.amazon.com/thread.jspa?threadID=106157
+            // url += '?javascript=';
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function() {
@@ -130,7 +136,7 @@ export default class IdCard {
             for (const [i, bucket] of bucketedStudents.entries()) {
                 if (i) {
                     // this.pdf.addPage('a4', 'l');
-                    this.pdf.addPage([this.height, this.width], 'l');
+                    this.pdf.addPage([this.height * this.mmToPoint, this.width * this.mmToPoint], 'l');
                 }
                 for (const [j, student] of bucket.entries()) {
                     const tempx = (j % this.cols) * (this.width / this.cols) + 5;
