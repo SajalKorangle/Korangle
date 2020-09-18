@@ -21,8 +21,10 @@ export default class IdCard {
     height: any;
     width: any;
 
-    cardWidth = 87.60; // Adding 2mm to 85.60 to give cutting space.
-    cardHeight = 55.98; // Adding 2mm to 53.98 to give cutting space.
+    cardWidth = 86.60; // Adding 1mm to 85.60 to give cutting space.
+    cardHeight = 54.98; // Adding 1mm to 53.98 to give cutting space.
+
+    mmToPoint = 72 / 25.4;
 
     constructor (multiple, layout, data) {
         this.printMultiple = multiple;
@@ -116,13 +118,15 @@ export default class IdCard {
     }
 
     async generate () {
-        this.pdf = new jsPDF({orientation: 'l', unit: 'mm', format: this.printMultiple ? 'a4' : 'credit-card'});
+        // this.pdf = new jsPDF({orientation: 'l', unit: 'mm', format: this.printMultiple ? 'a4' : 'credit-card'});
+        this.pdf = new jsPDF({orientation: 'l', unit: 'mm', format: [this.height * this.mmToPoint, this.width * this.mmToPoint]});
         await this.handleFonts();
         if (this.printMultiple) { // For 9 id cards in an A4 size sheet
             const bucketedStudents = this.getBucketedStudentList();
             for (const [i, bucket] of bucketedStudents.entries()) {
                 if (i) {
-                    this.pdf.addPage('a4', 'l');
+                    // this.pdf.addPage('a4', 'l');
+                    this.pdf.addPage([this.height, this.width], 'l');
                 }
                 for (const [j, student] of bucket.entries()) {
                     const tempx = (j % this.cols) * (this.width / this.cols) + 5;
@@ -132,7 +136,10 @@ export default class IdCard {
             }
         } else { // For 1 id card in standard id card size sheet
             for (const [i, student] of this.data.studentList.entries()) {
-                if (i) { this.pdf.addPage('credit-card', 'l'); }
+                if (i) {
+                    // this.pdf.addPage('credit-card', 'l');
+                    this.pdf.addPage([this.height * this.mmToPoint, this.width * this.mmToPoint], 'l');
+                }
                 await this.createIDCard(0, 0, student)
             }
         }
@@ -154,7 +161,7 @@ export default class IdCard {
 
                 // Font Size
                 // Coversion for mm to jspdf pt
-                const fontSize = item.fontSize * 72 / 25.4;
+                const fontSize = item.fontSize * this.mmToPoint;
                 this.pdf.setFontSize(fontSize);
 
                 // Font Family, Font Style
