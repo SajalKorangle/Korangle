@@ -10,7 +10,7 @@ def add_id_card_module(apps, schema_editor):
                            parentBoard=None)
 
     task_list = [
-        ('design_layout', 'Design Layout'),
+        ('design_layout', 'Design Id Card'),
         ('generate_id_card', 'Generate ID Card')
     ]
 
