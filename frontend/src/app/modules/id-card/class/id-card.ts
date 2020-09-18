@@ -41,6 +41,10 @@ export default class IdCard {
 
     async fetchImage (url) {
         if (url) {
+            // TODO: Add crossorigin="anonymous" to every request so that header comes from Shitty AWS servers
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=158131
+            // https://forums.aws.amazon.com/thread.jspa?threadID=106157
+            url += '?javascript=';
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 img.onload = () => {
