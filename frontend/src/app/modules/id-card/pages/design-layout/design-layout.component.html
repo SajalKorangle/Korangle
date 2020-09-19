@@ -449,10 +449,13 @@
 
                         <!-- PDF View, True -->
                         <mat-checkbox [(ngModel)]="printMultiple" (ngModelChange)="updatePDF();">A4 Size</mat-checkbox>
-                        <iframe id="iFrameDisplay"
+                        <!-- iframe id="iFrameDisplay"
                                 type='application/pdf'
                                 style="width:100%; height: 3.5in; overflow:scroll;">
-                        </iframe>
+                        </iframe -->
+                        <embed id="iFrameDisplay"
+                                type='application/pdf'
+                                style="width:100%; height: 3.5in; overflow:scroll;">
 
                     </mat-card>
 
