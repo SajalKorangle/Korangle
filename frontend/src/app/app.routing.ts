@@ -21,6 +21,11 @@ const routes: Routes = [
         // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
     },
     {
+        path: 'id_card',
+        loadChildren: 'app/modules/id-card/id-card.module#IdCardModule',
+        // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
+    },
+    {
         path: 'sms',
         loadChildren: 'app/modules/sms/sms.module#SmsModule',
     },

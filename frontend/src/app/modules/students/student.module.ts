@@ -11,6 +11,7 @@ import {PrintMultipleICardsComponent} from "./print/print-multiple-i-cards/print
 import { PrintTransferCertificateSecondFormatComponent } from './print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 import {ExcelService} from "../../excel/excel-service";
+import { PrintStudentProfileComponent } from './print/print-student-profile/print-student-profile.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import {ExcelService} from "../../excel/excel-service";
         PrintICardsComponent,
         PrintMultipleICardsComponent,
         PrintTransferCertificateSecondFormatComponent,
-        PrintStudentListComponent
+        PrintStudentListComponent,
+        PrintStudentProfileComponent
 
     ],
 

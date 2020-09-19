@@ -141,7 +141,7 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
                 && studentTest.parentSubject == classSubject.parentSubject
                 && studentTest.parentStudent == student.id;
         }).reduce((total, a) => {
-            return total+a.marksObtained;
+            return total+parseFloat(a.marksObtained);
         }, 0);
         return (studentMarks*baseMarks/maximumMarks);
     }
@@ -279,7 +279,8 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
 
     getWorkingDays(student: any, termIndex: any): any {
         return this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
-            return termStudentAttendance.parentStudent == student.id;
+            return termStudentAttendance.parentStudent == student.id
+                && termStudentAttendance.status != this.attendance_status_list[2];
         }).length;
     }
 
