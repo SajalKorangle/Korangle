@@ -16,18 +16,18 @@ export class BeforeAfterEach {
             width: 1920,
             height: 1080
         });
-        await BeforeAfterEach.page.goto('http://localhost:4200');
+        await BeforeAfterEach.page.goto('http://localhost:4201');
         await BeforeAfterEach.page.type('#username', '1234567890'); // Types instantly
         await BeforeAfterEach.page.type('#password', '1234567890', {delay: 100}); // Types slower, like a user
         await BeforeAfterEach.page.click('button[type="submit"]');
-        await BeforeAfterEach.page.waitForSelector('div.sidebar')
+        await BeforeAfterEach.page.waitForSelector('div.sidebar');
         return BeforeAfterEach.page;
 
     }
 
     static async afterEach() {
 
-        await BeforeAfterEach.page.waitFor('a#Logout');
+        await BeforeAfterEach.page.waitForSelector('a#Logout');
         await BeforeAfterEach.page.click('a#Logout');
         await BeforeAfterEach.browser.close();
 

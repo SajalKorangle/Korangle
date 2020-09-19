@@ -3,7 +3,7 @@
     <parent-student-filter [user]="user"
                                (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
                                (onStudentListSelected)="handleStudentListSelection($event)"
-                               (onStudentListLoading)="isLoading=$event"
+                               (onStudentListLoading)="isStudentListLoading=$event"
                                [selectedFilterType]="'Student'"
                                [studentTcGenerated]="true"
                                [bothFilters]="false"></parent-student-filter>
@@ -11,7 +11,7 @@
 
     <hr>
     
-    <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
+    <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading && !isStudentListLoading">
 
         <div class="row hidden-md hidden-lg hidden-sm"
              *ngIf="selectedStudent.mobileNumber && selectedStudent.mobileNumber != 0">
@@ -449,12 +449,30 @@
                               [ngModel]="selectedStudent.remark">
                         </textarea>
                 </mat-form-field>
-
+            </div>
+        </div>
+        <div class="row">
+            <div *ngFor="let parameter of studentParameterList" class="col-md-3" [class.fieldChanged]="checkCustomFieldChanged(currentStudent, parameter)">
+                <mat-form-field  style="width: 100%;">
+                    <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
+                    <input matInput  *ngIf="parameter.parameterType==='TEXT'"
+                        type="text"
+                        (ngModelChange)="updateParameterValue(parameter, $event)"
+                        [ngModel]="getParameterValue(parameter)">
+                    <ng-container *ngIf="parameter.parameterType==='FILTER'">
+                        <mat-select placeholder="{{parameter.name}}"
+                            [ngModel]="getParameterValue(parameter)"
+                            (ngModelChange)="updateParameterValue(parameter, $event)">
+                                <mat-option [value]="NULL_CONSTANT">None</mat-option>
+                                <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                    </ng-container>
+                </mat-form-field>
 
             </div>
         </div>
 
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateProfile();">Update</button>
+        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.updateProfile();">Update</button>
         <div class="clearfix"></div>
 
     </ng-container>
@@ -465,7 +483,7 @@
 
 </div>
 
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="isLoading || isStudentListLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
 

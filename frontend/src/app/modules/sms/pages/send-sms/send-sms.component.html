@@ -126,6 +126,7 @@
                       (click)="$event.stopPropagation();">
             Include Alternate Mobile Number
         </mat-checkbox>
+
         <mat-form-field style="margin-left: 10px;">
             <mat-hint align="end">De-select all to ignore the filter</mat-hint>
             <mat-select placeholder="Filters">
@@ -185,6 +186,53 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        <!-- <div class="col-sm-3"> -->
+            <!-- mat-form-field style="margin-left: 15px;">
+                <mat-select placeholder="Filter">
+                    <mat-option *ngFor='let parameter of studentParameterList;'>
+                        {{parameter.name}}:
+                        <mat-checkbox [(ngModel)]="parameter.showNone"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">None
+                        </mat-checkbox>
+                        <mat-checkbox *ngFor="let filter of parameter.filterValues" [(ngModel)]="filter.show"
+                                    style="margin-right: 5px;"
+                                    (click)="$event.stopPropagation();">{{filter.name}}
+                        </mat-checkbox>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field -->
+        <!-- </div> -->
+
+        <!-- Custom Filters -->
+        <ng-container *ngIf="studentParameterList.length>0">
+            <br/>
+            <button class="btn"
+                    style="padding: 4px 7px"
+                    (click)="showCustomFilters=!showCustomFilters">
+                <ng-container *ngIf="!showCustomFilters">Show Custom Filters</ng-container>
+                <ng-container *ngIf="showCustomFilters">Hide Custom Filters</ng-container>
+            </button><br/>
+            <ng-container *ngIf="showCustomFilters">
+                <ng-container *ngFor="let parameter of studentParameterList">
+                    <!-- b>{{parameter.name}}:</b><br/ -->
+                    <mat-form-field>
+                        <mat-label>{{parameter.name}}</mat-label>
+                        <input matInput
+                               type="text"
+                               [(ngModel)]="parameter.filterFilterValues">
+                    </mat-form-field><br/>
+                    <mat-checkbox [(ngModel)]="parameter.showNone"
+                                  style="margin-right: 5px;"
+                                  (click)="$event.stopPropagation();">None
+                    </mat-checkbox>
+                    <mat-checkbox *ngFor="let filter of getFilteredFilterValues(parameter)" [(ngModel)]="filter.show"
+                                  style="margin-right: 5px;"
+                                  (click)="$event.stopPropagation();">{{filter.name}}
+                    </mat-checkbox><br/>
+                </ng-container>
+            </ng-container>
+        </ng-container>
 
         <br>
             Total Students: <i>{{studentSectionList.length}}</i>,

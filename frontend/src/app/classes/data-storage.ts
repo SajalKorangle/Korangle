@@ -5,14 +5,14 @@ export class DataStorage {
 
     user: any;
 
-    constructor() {}
-
     static getInstance(): DataStorage {
         if (!DataStorage.dataStorage) {
             DataStorage.dataStorage = new DataStorage();
         }
         return DataStorage.dataStorage;
     }
+
+    constructor() {}
 
     getUser(): any {
         return this.user;
