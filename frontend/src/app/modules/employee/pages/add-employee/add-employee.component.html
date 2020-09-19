@@ -129,6 +129,15 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
+                    <mat-label >Bank Ifsc Code</mat-label>
+                    <input matInput
+                           type="text"
+                           (ngModelChange)="newEmployee.bankIfscCode=$event;getBankDetails()"
+                           [ngModel]="newEmployee.bankIfscCode">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
                     <input matInput
                            type="text"
                            placeholder="Bank Name"
@@ -151,6 +160,10 @@
                            [(ngModel)]="newEmployee.epfAccountNumber">
                 </mat-form-field>
             </div>
+        </div>
+
+        <!-- Monthly Salary, Paid Leaves -->
+        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -159,10 +172,6 @@
                            [(ngModel)]="newEmployee.panNumber">
                 </mat-form-field>
             </div>
-        </div>
-
-        <!-- Monthly Salary, Paid Leaves -->
-        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -191,6 +200,9 @@
                            [(ngModel)]="newEmployee.dateOfLeaving">
                 </mat-form-field>
             </div>
+        </div>
+        <!-- PRAN Number, Spouse Name -->
+        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -199,9 +211,6 @@
                            [(ngModel)]="newEmployee.spouseName">
                 </mat-form-field>
             </div>
-        </div>
-        <!-- PRAN Number -->
-        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput
@@ -231,6 +240,47 @@
                 </mat-form-field>
             </div>
         </div>
+
+        <mat-accordion>
+            <mat-expansion-panel style="margin-bottom: 8px">
+<!--                <mat-divider style="margin-left: -10px;margin-right:-10px;margin-bottom: 8px"></mat-divider>-->
+                <div style="margin-bottom: 3px">
+                    <button class="btn" style="padding: 6px 9px" (click)="grantAll()">Grant All</button>
+                    <button class="btn" (click)="removeAll()" style="padding: 6px 9px;margin-left: 8px;margin-right: 9px">Remove All</button>
+                </div>
+<!--                <mat-divider style="margin-left: -10px;margin-right:-10px;margin-top: 8px;margin-bottom: 8px"></mat-divider>-->
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span style="font-size: large;font-weight: 800">Assign Tasks</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-action-row>
+                    <button class="btn" style="padding: 6px 9px" (click)="grantAll()">Grant All</button>
+                    <button class="btn" (click)="removeAll()" style="padding: 6px 9px;margin-left: 8px;margin-right: 9px">Remove All</button>
+                </mat-action-row>
+                <div class="row">
+                    <ng-container *ngFor="let module of moduleList">
+                        <div class="col-xs-12" style="margin-left: 8px">
+                            <div class="row" style="margin-bottom: 5px;">
+                                <span style="font-size: large;font-weight: 800;">{{module.title}}</span>
+                            </div>
+                            <div class="row" style="margin-bottom: 8px;">
+                                <ng-container *ngFor="let task of module.taskList">
+                                    <div class="col-md-3">
+                                        <mat-checkbox
+                                        [(ngModel)]="task.selected">
+                                            {{task.title}}
+                                        </mat-checkbox>
+                                    </div>
+                                </ng-container>
+                                <br/>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
 
         <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="createNewEmployee()">Create Profile</button>
 

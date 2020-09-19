@@ -32,7 +32,7 @@ class Enquiry(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
 
     # Employee Id
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True)
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'enquiry'

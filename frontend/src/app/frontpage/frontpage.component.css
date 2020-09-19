@@ -17,7 +17,7 @@
 
 @font-face{
 	font-family: KorangleLogo;
-	src : url('../../assets/exot350b.ttf');
+	src : url('https://korangleplus.s3.amazonaws.com/assets/exot350b.ttf');
 }
 
 .brand-name{

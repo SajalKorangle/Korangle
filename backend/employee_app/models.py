@@ -59,6 +59,9 @@ class Employee(models.Model):
     # Joining Date
     dateOfJoining = models.DateField(null=True)
 
+    #Bank IFSC Code
+    bankIfscCode = models.TextField(null=True, blank=True)
+
     # Bank Name
     bankName = models.TextField(null=True)
 
@@ -93,7 +96,7 @@ class Employee(models.Model):
 
 class EmployeeSessionDetail(models.Model):
 
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=False, verbose_name='parentEmployee', default=0)
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='parentSession', default=0)
     paidLeaveNumber = models.IntegerField(null=True, verbose_name='paidLeaveNumber')
 
@@ -105,7 +108,7 @@ class EmployeeSessionDetail(models.Model):
 class EmployeePermission(models.Model):
 
     parentTask = models.ForeignKey(Task, on_delete=models.PROTECT, null=False, verbose_name='parentTask', default=0)
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=False, verbose_name='parentEmployee', default=0)
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
 
     def __str__(self):
         return self.parentEmployee.parentSchool.name + ' -- ' + self.parentEmployee.name + ' -- ' + str(self.parentTask)
