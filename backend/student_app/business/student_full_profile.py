@@ -145,7 +145,7 @@ def get_student_full_profile_by_school_and_session_id(data):
     for student_section_object in \
         StudentSection.objects.filter(parentStudent__parentSchool_id=data['schoolDbId'],
                                       parentSession_id=data['sessionDbId']) \
-        .order_by('parentClass__orderNumber', 'rollNumber', 'parentStudent__name') \
+        .order_by('parentClass__orderNumber', 'parentDivision__orderNumber', 'rollNumber', 'parentStudent__name') \
         .select_related('parentStudent', 'parentClass', 'parentDivision'):
 
         student_list.append(get_student_full_profile(student_section_object))
