@@ -110,7 +110,6 @@ export class SidebarComponent implements OnInit {
         if (this.user.section) {
             this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         }
-        console.log(this.user);
     }
 
     isMobileMenu() {

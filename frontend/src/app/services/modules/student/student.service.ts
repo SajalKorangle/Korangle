@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 
 
-import {ServiceObject} from "../../common/service-object";
-import { HttpClient } from "@angular/common/http";
+import {ServiceObject} from '../../common/service-object';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class StudentService extends ServiceObject {

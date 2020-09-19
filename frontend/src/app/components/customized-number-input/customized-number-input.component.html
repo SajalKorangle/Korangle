@@ -1,0 +1,11 @@
+<mat-form-field style="width: 100%;">
+    <mat-label>
+        {{placeHolder}}
+    </mat-label>
+    <input matInput
+           #customizedInput
+           type="number"
+           [ngModel]="inputValue"
+           (blur)="onBlur($event)"
+           (ngModelChange)="handleChange($event, customizedInput)">
+</mat-form-field>
