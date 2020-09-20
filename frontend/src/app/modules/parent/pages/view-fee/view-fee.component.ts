@@ -23,7 +23,7 @@ import {EmployeeService} from "../../../../services/modules/employee/employee.se
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {DataStorage} from "../../../../classes/data-storage";
-import { SchoolService } from 'app/services/modules/school/school.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 declare const $: any;
 

@@ -25,7 +25,7 @@ export class ParentStudentFilterServiceAdapter {
 
         let student_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'fields__korangle': 'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte'
+            'fields__korangle': 'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte,parentTransferCertificate'
         };
 
         if (!this.vm.studentTcGenerated) {

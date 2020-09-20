@@ -1,0 +1,3 @@
+[
+	{ "model": "employee_app.employee", "pk": 1, "fields": { "name": "Rohit Agrawal" , "fatherName": "Malik Agrawal", "mobileNumber": "1234567890", "parentSchool": 1} }
+]

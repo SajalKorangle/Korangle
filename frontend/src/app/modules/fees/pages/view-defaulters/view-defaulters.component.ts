@@ -10,7 +10,9 @@ import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import {ExcelService} from "../../../../excel/excel-service";
 import {DataStorage} from "../../../../classes/data-storage";
-import { SchoolService } from 'app/services/modules/school/school.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 
 @Component({
     selector: 'view-defaulters',
@@ -22,7 +24,16 @@ import { SchoolService } from 'app/services/modules/school/school.service';
 export class ViewDefaultersComponent implements OnInit {
 
     installmentList = INSTALLMENT_LIST;
+
+    NULL_CONSTANT = null;
+
+    showCustomFilters = false;
+
+    showSMSSection = false;
+
     sessionList = [];
+
+    STUDENT_LIMITER = 200;
 
     nullValue = null;
 
@@ -50,6 +61,9 @@ export class ViewDefaultersComponent implements OnInit {
     classList: any;
     sectionList: any;
 
+    studentParameterList: any;
+    studentParameterValueList: any;
+
     notif_usernames = [];
 
     parentList = [];
@@ -59,7 +73,7 @@ export class ViewDefaultersComponent implements OnInit {
         'Parent',
     ];
 
-    selectedFilterType = this.filterTypeList[1];
+    selectedFilterType = this.filterTypeList[0];
 
     // d1 = new Date();
     // d2 = new Date();
@@ -80,24 +94,25 @@ export class ViewDefaultersComponent implements OnInit {
 
     constructor(public schoolService: SchoolService,
                 public feeService: FeeService,
-                public studentService: StudentService,                
-                public classService : ClassService,
+                public studentService: StudentService,
+                public classService: ClassService,
                 private excelService: ExcelService,
                 public notificationService: NotificationService,
                 public userService: UserService,
                 public smsService: SmsService,
                 public smsOldService: SmsOldService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                private printService: PrintService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();       
-                
-        let monthNumber = (new Date()).getMonth();
-        this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
+        this.serviceAdapter.initializeData();
+
+        const monthNumber = (new Date()).getMonth();
+        this.installmentNumber = (monthNumber > 2) ? monthNumber - 3 : monthNumber + 9;
     }
 
     detectChanges(): void {
@@ -343,9 +358,9 @@ export class ViewDefaultersComponent implements OnInit {
 
     }
 
-    checkAndAddToFilteredClassSectionList(classs: any, section: any): void {        
+    checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
         if (this.filteredClassSectionList.find(classSection => {
-            return classSection.class.id == classs.id && classSection.section.id == section.id;
+            return classSection.class.id === classs.id && classSection.section.id === section.id;
         }) == undefined) {
             this.filteredClassSectionList.push({
                 'class': classs,
@@ -355,9 +370,9 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     getStudentString = (studentList) => {
-        let ret = "";
+        let ret = '';
         studentList.forEach(student => {
-            ret += student.name +": "+ this.getCurrencyInINR(student.feesDueTillMonth)+"\n";
+            ret += student.name + ": " + this.getCurrencyInINR(student.feesDueTillMonth)+"\n";
         })
         return ret;
     }
@@ -369,7 +384,7 @@ export class ViewDefaultersComponent implements OnInit {
         }
         return ret;
     }
-    
+
     hasUnicode(message): boolean {
         for (let i=0; i<message.length; ++i) {
             if (message.charCodeAt(i) > 127) {
@@ -378,7 +393,7 @@ export class ViewDefaultersComponent implements OnInit {
         }
         return false;
     }
-    
+
     getMessageCount = (message) => {
         if (this.hasUnicode(message)){
             return Math.ceil(message.length/70);
@@ -429,8 +444,40 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
+    getParameterValue = (student, parameter) => {
+        try {
+            return this.studentParameterValueList.find(x => x.parentStudent===student.id && x.parentStudentParameter===parameter.id).value
+        } catch {
+            return this.NULL_CONSTANT;
+        }
+    }
+
+    getFilteredFilterValues(parameter: any): any {
+        if (parameter.filterFilterValues === '') {
+            return parameter.filterValues;
+        }
+        return parameter.filterValues.filter(x => {
+            return x.name.includes(parameter.filterFilterValues);
+        });
+    }
+
     getFilteredStudentList(): any {
-        let tempList = this.studentList;
+        let tempList = this.studentList.filter(student => {
+            for (let x of this.studentParameterList){
+                let flag = x.showNone;
+                x.filterValues.forEach(filter => {
+                    flag = flag || filter.show
+                })
+                if (flag){
+                    let parameterValue = this.getParameterValue(student, x);
+                    if ( parameterValue == this.NULL_CONSTANT && x.showNone) {
+                    } else if(!(x.filterValues.filter(filter => filter.show).map(filter => filter.name).includes(parameterValue))){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
         if (this.selectedClassSection) {
             tempList = tempList.filter(student => {
                 return student.class.dbId == this.selectedClassSection.class.dbId
@@ -537,15 +584,13 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printFeesReport(): any {
-        alert('Functionality yet to be implemented');
-        return ;
-        /*const value = {
-            studentList: this.getFilteredStudentFeeDuesList(),
-            columnFilter: this.columnFilter
-        };
-        EmitterService.get('print-student-list').emit(value);*/
+        if (this.selectedFilterType==this.filterTypeList[0]) {
+            this.printStudentFeesReport();
+        } else {
+            this.printParentFeesReport();
+        }
     }
-    
+
     downloadFeesReport(): void {
 
         if (this.selectedFilterType==this.filterTypeList[0]) {
@@ -566,8 +611,7 @@ export class ViewDefaultersComponent implements OnInit {
         return this.getFilteredStudentList().filter(item => item.selected).length;
     }
 
-    downloadStudentFeesReport(): void {
-
+    printStudentFeesReport(): void {
         let template: any;
         template = [
 
@@ -583,8 +627,8 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.name);
             row.push(student.fathersName);
             row.push(student.class.name+', '+student.section.name);
-            row.push(student.mobileNumber);
-            row.push(student.secondMobileNumber);
+            row.push(this.checkMobileNumber(student.mobileNumber) ? student.mobileNumber : '');
+            row.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
             row.push(student.totalFeesThisSession);
@@ -592,11 +636,10 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.discountThisSession);
             template.push(row);
         });
-
-        this.excelService.downloadFile(template, 'korangle_student_fees.csv');
+        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user, template: template});
     }
 
-    downloadParentFeesReport(): void {
+    printParentFeesReport(): void {
 
         let template: any;
 
@@ -615,12 +658,100 @@ export class ViewDefaultersComponent implements OnInit {
             if (parent.studentList.length == 1) {
                 row.push(parent.studentList[0].name);
                 row.push(parent.studentList[0].class.name+', '+parent.studentList[0].section.name);
+                row.push(this.checkMobileNumber(parent.studentList[0].mobileNumber) ? parent.studentList[0].mobileNumber : '');
+                row.push(this.checkMobileNumber(parent.studentList[0].secondMobileNumber) ? parent.studentList[0].secondMobileNumber : '');
+            } else {
+                row.push('');
+                row.push('');
+                row.push(this.checkMobileNumber(parent.studentList[0].mobileNumber) ? parent.studentList[0].mobileNumber : '');
+                row.push('');
+            }
+            row.push(this.getParentFeesDueTillMonth(parent));
+            row.push(this.getParentFeesDueOverall(parent));
+            row.push(this.getParentTotalFees(parent));
+            row.push(this.getParentFeesPaid(parent));
+            row.push(this.getParentDiscount(parent));
+            template.push(row);
+            if (parent.studentList.length > 1) {
+                parent.studentList.forEach(student => {
+                    let newRow = [];
+                    newRow.push('');
+                    newRow.push('');
+                    newRow.push(student.name);
+                    newRow.push(student.class.name+', '+student.section.name);
+                    newRow.push('');
+                    newRow.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
+                    newRow.push(student.feesDueTillMonth);
+                    newRow.push(student.feesDueOverall);
+                    newRow.push(student.totalFeesThisSession);
+                    newRow.push(student.feesPaidThisSession);
+                    newRow.push(student.discountThisSession);
+                    template.push(newRow);
+                });
+            }
+        });
+
+        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user,template : template});
+    }
+
+    downloadStudentFeesReport(): void {
+
+        let template: any;
+        template = [
+
+            ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)',
+                'Fees Due (overall)', `Total Fees (${this.getCurrentSessionName()})`,`Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})` ],
+
+        ];
+
+        let count = 0;
+        this.getFilteredStudentList().forEach(student => {
+            let row = [];
+            row.push(++count);
+            row.push(student.name);
+            row.push(student.fathersName);
+            row.push(student.class.name+', '+student.section.name);
+            row.push(student.mobileNumber);
+            row.push(student.secondMobileNumber);
+            row.push(student.address);
+            row.push(student.feesDueTillMonth);
+            row.push(student.feesDueOverall);
+            row.push(student.totalFeesThisSession);
+            row.push(student.feesPaidThisSession);
+            row.push(student.discountThisSession);
+            template.push(row);
+        });
+
+        this.excelService.downloadFile(template, 'korangle_student_fees.csv');
+    }
+
+    downloadParentFeesReport(): void {
+
+        let template: any;
+
+        template = [
+
+            ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)',
+                'Fees Due (overall)',`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`],
+
+        ];
+
+        let count = 0;
+        this.getFilteredParentList().forEach(parent => {
+            let row = [];
+            row.push(++count);
+            row.push(parent.name);
+            if (parent.studentList.length == 1) {
+                row.push(parent.studentList[0].name);
+                row.push(parent.studentList[0].class.name+', '+parent.studentList[0].section.name);
                 row.push(parent.studentList[0].mobileNumber);
                 row.push(parent.studentList[0].secondMobileNumber);
+                row.push(parent.studentList[0].address);
             } else {
                 row.push('');
                 row.push('');
                 row.push(parent.studentList[0].mobileNumber);
+                row.push('');
                 row.push('');
             }
             row.push(this.getParentFeesDueTillMonth(parent));
@@ -638,6 +769,7 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push(student.class.name+', '+student.section.name);
                     newRow.push('');
                     newRow.push(student.secondMobileNumber);
+                    newRow.push(student.address);
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
                     newRow.push(student.totalFeesThisSession);
@@ -658,11 +790,11 @@ export class ViewDefaultersComponent implements OnInit {
     getNumberOfMobileDevice = () => {
         if(this.selectedFilterType == this.filterTypeList[0]){
             return this.getFilteredStudentList().filter((item) => {
-                return item.selected;
+                return item.mobileNumber && item.selected;
             }).length;
         }else{
             return this.getFilteredParentList().filter((item) => {
-                return item.selected;
+                return item.mobileNumber && item.selected;
             }).length;
         }
     }

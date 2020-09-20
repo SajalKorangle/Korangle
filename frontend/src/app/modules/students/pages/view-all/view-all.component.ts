@@ -2,11 +2,15 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
+import {StudentService} from '../../../../services/modules/student/student.service';
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
-import {ExcelService} from "../../../../excel/excel-service";
-import {DataStorage} from "../../../../classes/data-storage";
+import {ExcelService} from '../../../../excel/excel-service';
+import {DataStorage} from '../../../../classes/data-storage';
+import { BusStopService} from '@services/modules/school/bus-stop.service';
+import { ViewAllServiceAdapter } from './view-all.service.adapter';
+import {SchoolService} from '@services/modules/school/school.service';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -36,6 +40,9 @@ class ColumnFilter {
     showBloodGroup = false;
     showFatherAnnualIncome = false;
     showRTE = false;
+    showAdmissionSession = false;
+    showBusStopName = false;
+    showDateOfAdmission = false;
     showRemark = false;
 }
 
@@ -43,12 +50,18 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassService, ExcelService],
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService]
 })
 
 export class ViewAllComponent implements OnInit {
 
-     user;
+    user;
+
+    NULL_CONSTANT = null;
+
+    showCustomFilters = false;
+
+    session_list = [];
 
     columnFilter: ColumnFilter;
 
@@ -73,51 +86,35 @@ export class ViewAllComponent implements OnInit {
 
     displayStudentNumber = 0;
 
-    // classSectionStudentList = [];
-
     classSectionList = [];
     classList = [];
     sectionList = [];
 
     studentFullProfileList = [];
 
+    busStopList = [];
+
+    studentParameterList: any[] = [];
+    studentParameterValueList: any[] = [];
+
     isLoading = false;
 
-    constructor(private studentService: StudentOldService,                
-                public classService : ClassService,
-                private excelService: ExcelService,
-                private printService: PrintService) { }
+    serviceAdapter: ViewAllServiceAdapter;
+
+    constructor(public studentOldService: StudentOldService,
+                public studentService: StudentService,
+                public classService: ClassService,
+                public excelService: ExcelService,
+                public schoolService: SchoolService,
+                public printService: PrintService,
+                public busStopService: BusStopService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
         this.columnFilter = new ColumnFilter();
-
-        const student_full_profile_request_data = {
-            schoolDbId: this.user.activeSchool.dbId,
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-        const class_section_request_data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-
-        this.isLoading = true;
-        Promise.all([
-            this.classService.getObjectList(this.classService.classs,{}),
-            this.classService.getObjectList(this.classService.division,{}),
-            //this.classOldService.getClassSectionList(class_section_request_data, this.user.jwt),
-            this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
-        ]).then(value => {
-            this.isLoading = false;
-            value[0].forEach(classs=>{
-                classs.sectionList = value[1];
-            })            
-            this.initializeClassSectionList(value[0]);            
-            this.initializeStudentFullProfileList(value[2]);
-        }, error => {
-            this.isLoading = false;
-        });
-
+        this.serviceAdapter = new ViewAllServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
     }
 
     initializeClassSectionList(classSectionList: any): void {
@@ -127,6 +124,27 @@ export class ViewAllComponent implements OnInit {
                 section.selected = false;
                 section.containsStudent = false;
             });
+        });
+    }
+
+    getParameterValue(student, parameter) {
+        try {
+            return this.studentParameterValueList.find(x =>
+                x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
+            ).value;
+        } catch {
+            return this.NULL_CONSTANT;
+        }
+    }
+
+    getFilteredStudentParameterList = () => this.studentParameterList.filter(x => x.parameterType === 'FILTER')
+
+    getFilteredFilterValues(parameter: any): any {
+        if (parameter.filterFilterValues === '') {
+            return parameter.filterValues;
+        }
+        return parameter.filterValues.filter(x => {
+            return x.name.includes(parameter.filterFilterValues);
         });
     }
 
@@ -141,18 +159,44 @@ export class ViewAllComponent implements OnInit {
     initializeStudentFullProfileList(studentFullProfileList: any): void {
         this.studentFullProfileList = studentFullProfileList.filter( student => {
             return student.parentTransferCertificate == null;
-        });        
+        });
         this.studentFullProfileList.forEach(studentFullProfile => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
-        });        
+        });
         this.handleStudentDisplay();
     }
+
+    getAdmissionSession(admissionSessionDbId: number): string {
+        let admissionSession = null;
+        this.session_list.every(session => {
+            if (session.id === admissionSessionDbId) {
+                admissionSession = session.name;
+                return false;
+            }
+            return true;
+        });
+        return admissionSession;
+    }
+
+    getBusStopName(busStopDbId: any) {
+        let stopName = '';
+        if (busStopDbId !== null) {
+            this.busStopList.forEach(busStop => {
+                if (busStop.id === busStopDbId) {
+                    stopName = busStop.stopName;
+                    return;
+                }
+            });
+        }
+        return stopName;
+    }
+
 
     getSectionObject(classDbId: any, sectionDbId: number): any {
         let sectionObject = null;
         this.classSectionList.every(classs => {
-            classs.sectionList.every(section => {                                
+            classs.sectionList.every(section => {
                 if (sectionDbId === section.id && classDbId === classs.id) {
                     sectionObject = section;
                     section.containsStudent = true;
@@ -208,12 +252,18 @@ export class ViewAllComponent implements OnInit {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = true;
         });
+        this.studentParameterList.forEach(item => {
+            item.show = true;
+        })
     };
 
     unSelectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = false;
         });
+        this.studentParameterList.forEach(item => {
+            item.show = false;
+        })
     };
 
     showSectionName(classs: any): boolean {
@@ -327,6 +377,21 @@ export class ViewAllComponent implements OnInit {
                 return;
             }
 
+            // Custom filters check
+            for (let x of this.getFilteredStudentParameterList()) {
+                let flag = x.showNone;
+                x.filterValues.forEach(filter => {
+                    flag = flag || filter.show;
+                });
+                if (flag) {
+                    let parameterValue = this.getParameterValue(student, x);
+                    if (parameterValue === this.NULL_CONSTANT && x.showNone) {
+                    } else if (!(x.filterValues.filter(filter => filter.show).map(filter => filter.name).includes(parameterValue))) {
+                        student.show = false;
+                        return;
+                    }
+                }
+            }
             ++this.displayStudentNumber;
             student.show = true;
             student.serialNumber = ++serialNumber;
@@ -386,7 +451,8 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showFatherAnnualIncome?headerValues.push('Father\'s Annual Income'):'';
         this.columnFilter.showRTE?headerValues.push('RTE'):'';
         this.columnFilter.showRemark?headerValues.push('remark'):'';
-
+        // Custom parameters
+        this.studentParameterList.forEach(item => item.show?headerValues.push(item.name):'')
         return headerValues;
     }
 
@@ -420,12 +486,10 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showFatherAnnualIncome?studentDisplay.push(student.fatherAnnualIncome):'';
         this.columnFilter.showRTE?studentDisplay.push(student.rte):'';
         this.columnFilter.showRemark?studentDisplay.push(student.remark):'';
+        // Custom parameter values
+        this.studentParameterList.forEach(item => item.show?studentDisplay.push(this.getParameterValue(student, item)):'')
 
         return studentDisplay;
-    }
-
-    addToArray(trueOrFalse: boolean, array: any, trueValue: any, falseValue: any): void {
-
     }
 
 }

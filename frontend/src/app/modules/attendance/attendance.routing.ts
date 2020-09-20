@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AttendanceComponent } from './attendance.component';
 import { PrintEmployeeAttendanceListComponent } from './print/print-employee-attendance-list/print-employee-attendance-list.component';
 import { PrintStudentAttendanceListComponent } from './print/print-student-attendance-list/print-student-attendance-list.component';
-import { PRINT_EMPLOYEE_ATTENDANCE, PRINT_STUDENT_ATTENDANCE } from 'app/print/print-routes.constants';
+import { PRINT_EMPLOYEE_ATTENDANCE, PRINT_STUDENT_ATTENDANCE } from '../../print/print-routes.constants';
 
 const routes: Routes = [
     {

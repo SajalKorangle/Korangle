@@ -14,12 +14,16 @@ import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service"
+import {BankService} from '../../../../services/bank.service';
 
 @Component({
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ SchoolService, ClassService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService ],
+    providers: [
+        SchoolService, ClassService, BusStopService, StudentService, SubjectService,
+        ExaminationService, VehicleOldService, FeeService, BankService
+    ],
 })
 
 export class AddStudentComponent implements OnInit {
@@ -43,6 +47,9 @@ export class AddStudentComponent implements OnInit {
     newStudent: Student;
     newStudentSection: StudentSection;
 
+    studentParameterList: any[] = [];
+    currentStudentParameterValueList: any[] = [];
+
     serviceAdapter: AddStudentServiceAdapter;
 
     isLoading = false;
@@ -54,7 +61,8 @@ export class AddStudentComponent implements OnInit {
                  public subjectService: SubjectService,
                  public vehicleService: VehicleOldService,
                  public examinationService: ExaminationService,
-                 public feeService: FeeService) { }
+                 public feeService: FeeService,
+                 public bankService: BankService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -72,6 +80,8 @@ export class AddStudentComponent implements OnInit {
         this.newStudentSection.parentClass = this.classList[0].dbId;
         this.newStudentSection.parentDivision = this.sectionList[0].id;
         this.newStudentSection.parentSession = this.user.activeSchool.currentSessionDbId;
+
+        this.currentStudentParameterValueList = [];
 
     }
 
@@ -109,6 +119,24 @@ export class AddStudentComponent implements OnInit {
         return this.sectionList.find(section => {
             return this.newStudentSection.parentDivision == section.id;
         });
+    }
+
+    getParameterValue = (parameter) => {
+        try {
+            return this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id).value
+        } catch {
+            return this.nullValue;
+        }
+    }
+
+    updateParameterValue = (parameter, value) => {
+        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        if (!item) {
+            item = {parentStudentParameter: parameter.id, value: value};
+            this.currentStudentParameterValueList.push(item);
+        } else {
+            item.value = value;
+        }
     }
 
 }

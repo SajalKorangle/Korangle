@@ -5,8 +5,15 @@ import { StudentComponent } from './student.component';
 import { PrintICardsComponent } from './print/print-i-card/print-i-cards.component';
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 import {PrintMultipleICardsComponent} from "./print/print-multiple-i-cards/print-multiple-i-cards.component";
-import {PRINT_I_CARD, PRINT_TC, PRINT_STUDENT_LIST, PRINT_MULTIPLE_I_CARDS} from '../../print/print-routes.constants';
+import {
+    PRINT_I_CARD,
+    PRINT_TC,
+    PRINT_STUDENT_LIST,
+    PRINT_MULTIPLE_I_CARDS,
+    PRINT_STUDENT_PROFILE
+} from '../../print/print-routes.constants';
 import {PrintTransferCertificateSecondFormatComponent} from "./print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component";
+import {PrintStudentProfileComponent} from './print/print-student-profile/print-student-profile.component';
 
 const routes: Routes = [
     {
@@ -60,6 +67,16 @@ const routes: Routes = [
         data: {moduleName: 'students'},
     },
     {
+        path: 'print_profile',
+        loadChildren: 'app/modules/students/pages/print-profile/print-profile.module#PrintProfileModule',
+        data: {moduleName: 'students'},
+    },
+    {
+        path: 'manage_parameter',
+        loadChildren: 'app/modules/students/pages/manage-parameter/manage-parameter.module#ManageParameterModule',
+        data: {moduleName: 'students'},
+    },
+    {
         path: '',
         component: StudentComponent,
     },
@@ -78,6 +95,10 @@ const routes: Routes = [
     {
         path: PRINT_STUDENT_LIST,
         component: PrintStudentListComponent,
+    },
+    {
+        path: PRINT_STUDENT_PROFILE,
+        component: PrintStudentProfileComponent
     }
 ];
 

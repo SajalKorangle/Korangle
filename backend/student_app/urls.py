@@ -78,3 +78,21 @@ urlpatterns += [
     url(r'^student-sections', StudentSectionView.as_view()),
 ]
 
+
+from student_app.views import StudentParameterValueView, StudentParameterValueListView
+
+urlpatterns += [
+    url(r'^student-parameter-value/batch', StudentParameterValueListView.as_view()),
+    url(r'^student-parameter-value', StudentParameterValueView.as_view()),
+]
+
+
+from student_app.views import StudentParameterView, StudentParameterListView
+
+urlpatterns += [
+    url(r'^student-parameter/batch', StudentParameterListView.as_view()),
+    url(r'^student-parameter', StudentParameterView.as_view()),
+]
+
+
+

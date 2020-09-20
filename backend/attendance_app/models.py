@@ -22,7 +22,7 @@ ATTENDANCE_STATUS = (
 
 class EmployeeAttendance(models.Model):
 
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT,
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE,
                                        null=False, default=0, verbose_name='parentEmployee')
     dateOfAttendance = models.DateField(null=False, verbose_name='dateOfAttendance', default='2011-01-01')
     status = models.CharField(max_length=10, choices=ATTENDANCE_STATUS, null=False, default=PRESENT_ATTENDANCE_STATUS)
@@ -58,7 +58,7 @@ LEAVE_STATUS = (
 
 class EmployeeAppliedLeave(models.Model):
 
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT,
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE,
                                        null=False, default=0, verbose_name='parentEmployee')
     dateOfLeave = models.DateField(null=False, verbose_name='dateOfLeave', default='2011-01-01')
     status = models.CharField(max_length=10, choices=LEAVE_STATUS, null=False, default=PENDING_LEAVE_STATUS)
@@ -73,7 +73,7 @@ class EmployeeAppliedLeave(models.Model):
 
 class AttendancePermission(models.Model):
 
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentEmployee')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentEmployee')
 
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT,
                                        null=False, default=0, verbose_name='parentDivision')

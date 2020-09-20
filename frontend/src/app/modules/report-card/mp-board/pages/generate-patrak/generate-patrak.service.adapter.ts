@@ -437,7 +437,7 @@ export class GeneratePatrakServiceAdapter {
             }
         });
         if (classMarks==0) {classMarks = 1};
-        return (studentMarks*maximumMarks)/classMarks;
+        return parseFloat(((studentMarks*maximumMarks)/classMarks).toFixed(this.vm.reportCardMapping.maximumDecimalPoints));
     }
 
     getStudentExtraSubFieldMarks(studentId: any, extraSubFieldId: any, examinationId: any): any {

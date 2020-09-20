@@ -38,7 +38,7 @@ export class GradeStudentFieldsComponent implements OnInit {
     classSectionList = [];
     fieldList: any;
 
-    minimumMarks = 0.00;
+    minimumMarks = 1.20;
     maximumMarks =2.00;
 
     studentList = [];

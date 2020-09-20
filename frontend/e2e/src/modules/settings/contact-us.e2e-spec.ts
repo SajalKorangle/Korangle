@@ -1,34 +1,22 @@
-import { browser, logging, element, by } from 'protractor';
-import {AppPage} from "../../app.po";
-
-var scrollIntoView = function (element) {
-    arguments[0].scrollIntoView();
-};
-
+import {BeforeAfterEach} from '../../beforeAterEach';
 
 describe('workspace-project App', () => {
 
-    let page = new AppPage();
+    let page: any;
 
-    beforeEach(() => {
-        page.beforeEach();
+    beforeEach( async () => {
+        page = await BeforeAfterEach.beforeEach();
     });
 
-    it('check',()=>{
+    it('Contact Us Page', async () => {
 
-        console.log('Opening Settings');
-        browser.executeScript(scrollIntoView,element(by.id('Settings')));
-        element(by.id('Settings')).click();
-        browser.sleep(2000);
-
-        browser.executeScript(scrollIntoView,element(by.id('Settings-Contact Us')));
-        element(by.id('Settings-Contact Us')).click();
-        browser.sleep(2000);
+        await page.click('#settings');
+        await page.click('#settings-contact_us');
 
     });
 
-    afterEach(() => {
-        page.afterEach();
-    });
+    afterEach(async () => {
+        await BeforeAfterEach.afterEach();
+    })
 
 });
