@@ -10,7 +10,7 @@ import { SCHOOL_LIST } from 'test-data-source/classes/school';
 import { StudentService } from '@services/modules/student/student.service';
 import { StudentMockService } from '@mock-services/apps/student.mock.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ClassOldService } from '../../../../../app/services/modules/class/class-old.service';
+import { ClassService } from '../../../../../app/services/modules/class/class.service';
 import { EmployeeService } from '../../../../../app/services/modules/employee/employee.service';
 import { NotificationService } from '../../../../../app/services/modules/notification/notification.service';
 import { UserService } from '../../../../../app/services/modules/user/user.service';
@@ -30,7 +30,7 @@ describe('SendSmsComponent', () => {
                 BasicComponentsModule, ComponentsModule, HttpClientTestingModule,
                 BrowserAnimationsModule, NgxDatatableModule
             ],
-            providers: [ StudentService, ClassOldService, EmployeeService, NotificationService, UserService, SmsService, SmsOldService ],
+            providers: [ StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService, SmsOldService ],
         }).overrideComponent(SendSmsComponent, {
             set: {
                 providers: [

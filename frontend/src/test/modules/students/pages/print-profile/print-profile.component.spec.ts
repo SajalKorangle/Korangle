@@ -10,7 +10,7 @@ import {USER_LIST} from 'test-data-source/classes/user';
 import {SCHOOL_LIST} from 'test-data-source/classes/school';
 import {SchoolService} from '@services/modules/school/school.service';
 import {StudentService} from '@services/modules/student/student.service';
-import {ClassOldService} from '@services/modules/class/class-old.service';
+import {ClassService} from '@services/modules/class/class.service';
 import {SubjectService} from '@services/modules/subject/subject.service';
 import {FeeService} from '@services/modules/fees/fee.service';
 import {PrintService} from 'app/print/print-service';
@@ -60,7 +60,7 @@ describe('PrintProfileComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ PrintProfileComponent ],
       imports: [ BasicComponentsModule, ComponentsModule, HttpClientTestingModule, RouterTestingModule, BrowserAnimationsModule ],
-      providers: [ SchoolService, StudentService, ClassOldService, SubjectService, ExaminationService, FeeService, PrintService ],
+      providers: [ SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService, PrintService ],
     }).overrideComponent(PrintProfileComponent, {
       set: {
         providers: [

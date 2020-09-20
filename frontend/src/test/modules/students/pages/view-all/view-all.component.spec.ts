@@ -8,7 +8,7 @@ import {USER_LIST} from 'test-data-source/classes/user';
 import {SCHOOL_LIST} from 'test-data-source/classes/school';
 import {SchoolService} from '@services/modules/school/school.service';
 import {StudentService} from '@services/modules/student/student.service';
-import {ClassOldService} from '@services/modules/class/class-old.service';
+import {ClassService} from '@services/modules/class/class.service';
 import {RouterTestingModule} from '@angular/router/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {StudentOldService} from '../../../../../app/services/modules/student/student-old.service';
@@ -23,7 +23,7 @@ describe('ViewAllComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ViewAllComponent ],
       imports: [ ComponentsModule, HttpClientTestingModule, RouterTestingModule, BrowserAnimationsModule ],
-      providers: [StudentService, StudentOldService, ClassOldService, ExcelService, BusStopService, SchoolService],
+      providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService],
     }).overrideComponent(ViewAllComponent, {
       set: {
         providers: [
