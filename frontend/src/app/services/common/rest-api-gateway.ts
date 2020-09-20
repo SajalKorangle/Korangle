@@ -4,7 +4,7 @@ import { Constants } from '../../classes/constants';
 import { environment } from '../../../environments/environment';
 
 import { HttpHeaders, HttpClient, } from '@angular/common/http';
-import {DataStorage} from "../../classes/data-storage";
+import {DataStorage} from '../../classes/data-storage';
 
 
 

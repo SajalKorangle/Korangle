@@ -13,7 +13,7 @@ export class ViewNotificationServiceAdapter {
         this.vm = vm;
     }
 
-    //initialize data
+    // initialize data
     initializeData(): void {
 
         let count = this.vm.notificationList.length;
@@ -60,25 +60,25 @@ export class ViewNotificationServiceAdapter {
                 this.vm.loadMoreNotifications = false;
             }
             this.vm.isLoadingMoreNotification = false;
-        }, error=> {
+        }, error => {
             this.vm.isLoadingMoreNotification = false;
         });
 
     }
 
     deleteNotification(notification: any){
-        if(!confirm('Are you sure you want to delete this notification')){
+        if (!confirm('Are you sure you want to delete this notification')) {
             return;
         }
         this.vm.notificationBeingDeleted = notification;
-        let notification_delete_data = {
+        const notification_delete_data = {
             'id': notification.id
         };
         this.vm.notificationService.deleteObject(this.vm.notificationService.notification,notification_delete_data).then(val=>{
-            let idx = this.vm.notificationList.indexOf(notification);
+            const idx = this.vm.notificationList.indexOf(notification);
             this.vm.notificationList.splice(idx,1);
             this.vm.notificationBeingDeleted = null;
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err);
         })
     }

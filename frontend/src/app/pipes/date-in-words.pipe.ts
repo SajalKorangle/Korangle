@@ -9,7 +9,7 @@ export class DateInWordsPipe implements PipeTransform {
 
     transform(inputDate: any) {
 
-        let date = new Date(inputDate);
+        const date = new Date(inputDate);
 
         let dateInWords = '';
 
@@ -89,40 +89,29 @@ export class DateInWordsPipe implements PipeTransform {
     }
 
     getMonth(date: Date): string {
-        switch(date.getMonth()) {
-            case 0:
-                return 'January';
-            case 1:
-                return 'February';
-            case 2:
-                return 'March';
-            case 3:
-                return 'April';
-            case 4:
-                return 'May';
-            case 5:
-                return 'June';
-            case 6:
-                return 'July';
-            case 7:
-                return 'August';
-            case 8:
-                return 'September';
-            case 9:
-                return 'October';
-            case 10:
-                return 'November';
-            case 11:
-                return 'December';
+        switch (date.getMonth()) {
+            case 0: return 'January';
+            case 1: return 'February';
+            case 2: return 'March';
+            case 3: return 'April';
+            case 4: return 'May';
+            case 5: return 'June';
+            case 6: return 'July';
+            case 7: return 'August';
+            case 8: return 'September';
+            case 9: return 'October';
+            case 10: return 'November';
+            case 11: return 'December';
         }
         return '';
     }
 
     getYear(date: Date): string {
         if (date.getFullYear() < 2000) {
-            return this.getNumberInWords(Math.floor(date.getFullYear()/100)) + ' ' + this.getNumberInWords(date.getFullYear()%100);
+            return this.getNumberInWords(Math.floor(date.getFullYear() / 100))
+                + ' ' + this.getNumberInWords(date.getFullYear() % 100);
         } else {
-            return 'Two Thousand ' + this.getNumberInWords(date.getFullYear()%100);
+            return 'Two Thousand ' + this.getNumberInWords(date.getFullYear() % 100);
         }
     }
 
