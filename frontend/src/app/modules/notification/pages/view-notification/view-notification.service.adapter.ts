@@ -21,7 +21,7 @@ export class ViewNotificationServiceAdapter {
         let notification_data = {
             'parentUser': this.vm.user.id,
             'korangle__order': '-sentDateTime',
-            'korangle__count': count.toString() + ',' + (count+this.vm.loadingCount).toString(),
+            'korangle__count': count.toString() + ',' + (count + this.vm.loadingCount).toString(),
         };
 
         this.vm.isLoading = true;
@@ -47,7 +47,7 @@ export class ViewNotificationServiceAdapter {
         let notification_data = {
             'parentUser': this.vm.user.id,
             'korangle__order': '-sentDateTime',
-            'korangle__count': count.toString() + ',' + (count+this.vm.loadingCount).toString(),
+            'korangle__count': count.toString() + ',' + (count + this.vm.loadingCount).toString(),
         };
 
         this.vm.isLoadingMoreNotification = true;
@@ -66,7 +66,7 @@ export class ViewNotificationServiceAdapter {
 
     }
 
-    deleteNotification(notification: any){
+    deleteNotification(notification: any) {
         if (!confirm('Are you sure you want to delete this notification')) {
             return;
         }
@@ -74,7 +74,7 @@ export class ViewNotificationServiceAdapter {
         const notification_delete_data = {
             'id': notification.id
         };
-        this.vm.notificationService.deleteObject(this.vm.notificationService.notification,notification_delete_data).then(val=>{
+        this.vm.notificationService.deleteObject(this.vm.notificationService.notification, notification_delete_data).then(val => {
             const idx = this.vm.notificationList.indexOf(notification);
             this.vm.notificationList.splice(idx,1);
             this.vm.notificationBeingDeleted = null;

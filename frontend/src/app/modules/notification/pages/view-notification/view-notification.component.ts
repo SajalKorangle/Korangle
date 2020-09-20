@@ -49,8 +49,8 @@ export class ViewNotificationComponent {
         }
     }
 
-    isDeleteClicked(notification: any){
-        if(this.notificationBeingDeleted == notification){
+    isDeleteClicked(notification: any): boolean {
+        if (this.notificationBeingDeleted === notification){
             return true;
         }
         return false;
