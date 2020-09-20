@@ -36,7 +36,7 @@ export class ChangeClassComponent implements OnInit {
         };
     }
 
-    handleDetailsFromParentStudentFilter(details: any): void {        
+    handleDetailsFromParentStudentFilter(details: any): void {
         this.classList = details.classList;
         this.sectionList = details.sectionList;
         this.classSectionList = this.classList;

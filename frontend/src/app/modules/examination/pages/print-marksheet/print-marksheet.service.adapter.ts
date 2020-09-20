@@ -87,16 +87,16 @@ export class PrintMarksheetServiceAdapter {
 
             this.classSubjectList.forEach(item => {
 
-                let request_class_test_data = {            
+                let request_class_test_data = {
                     /*'examinationId': this.vm.selectedExamination.id,
-                    'classId': this.vm.selectedExamination.selectedClass.dbId,
+                    'classId': this.vm.selectedExamination.selectedClass.id,
                     'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
                     'parentExamination__in': examination_id_list,
                     'parentClass': item.parentClass,
                     'parentDivision': item.parentDivision,
                     'parentSubject' : item.parentSubject,
                 };
-                
+
                 /*let request_class_test_data = {
                     'examinationList': [examination_id_list],
                     'subjectList': [item.parentSubject],

@@ -113,7 +113,7 @@ export class SetSchoolFeesComponent implements OnInit {
 
         let alreadyExists = false;
         this.newClassFilterFeeList.every(classFilterFee => {
-            if (classFilterFee.parentClass == this.selectedClass.dbId
+            if (classFilterFee.parentClass == this.selectedClass.id
                 && classFilterFee.parentDivision == this.selectedSection.id) {
                 alreadyExists = true;
                 return false;
@@ -127,7 +127,7 @@ export class SetSchoolFeesComponent implements OnInit {
         }
 
         let classFilterFee = new ClassFilterFee();
-        classFilterFee.parentClass = this.selectedClass.dbId;
+        classFilterFee.parentClass = this.selectedClass.id;
         classFilterFee.parentDivision = this.selectedSection.id;
         classFilterFee.parentSchoolFeeRule = 0;
 

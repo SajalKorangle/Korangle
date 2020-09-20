@@ -73,6 +73,7 @@ describe('ManageParameterComponent', () => {
         ApiVersion.getInstance().initializeAndSetVersion(STUDENT_PARAMETER_API, 1);
         component.ngOnInit();
         flush();
+        component.chooseParameter(component.ADD_PARAMETER_STRING);
         component.addFilter('Testing');
         expect(component.currentParameter.filterValues[component.currentParameter.filterValues.length - 1]).toBe( 'Testing');
         component.addFilter('Testing - 2 ');

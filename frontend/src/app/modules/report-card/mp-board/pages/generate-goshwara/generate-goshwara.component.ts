@@ -97,7 +97,7 @@ export class GenerateGoshwaraComponent implements OnInit {
 
         template.push(this.getStStudentsGoshwara());
 
-        this.excelService.downloadFile(template, this.selectedClass.name+'_goshwara.csv');
+        this.excelService.downloadFile(template, this.selectedClass.name + '_goshwara.csv');
     }
 
     getHeaderValues(): any {

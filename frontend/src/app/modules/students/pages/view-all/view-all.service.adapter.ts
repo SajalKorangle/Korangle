@@ -33,8 +33,8 @@ export class ViewAllServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getObjectList(this.classService.classs,{}),
-            this.vm.classService.getObjectList(this.classService.division,{}),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data),

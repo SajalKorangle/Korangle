@@ -50,8 +50,8 @@ export class ParentStudentFilterComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public studentService: StudentService,                 
-                 public classService : ClassService) { }
+    constructor (public studentService: StudentService,
+                 public classService: ClassService) { }
 
     ngOnInit(): void {
 

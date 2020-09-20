@@ -46,7 +46,7 @@ export class PrintMarksheetComponent implements OnInit {
     isLoading = false;
 
     constructor(public examinationOldService: ExaminationOldService,
-                public examinationService : ExaminationService,
+                public examinationService: ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectOldService,
                 public studentService: StudentOldService,

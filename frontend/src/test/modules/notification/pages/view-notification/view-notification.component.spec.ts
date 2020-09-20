@@ -9,7 +9,9 @@ import {SCHOOL_LIST} from 'test-data-source/classes/school';
 import {RouterTestingModule} from '@angular/router/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NotificationService} from '@services/modules/notification/notification.service';
-import {NotificationMockService} from '../../../../mock-services/apps/notification.mock.service';
+import {NotificationMockService} from '@mock-services/apps/notification.mock.service';
+import {ApiVersion} from '@mock-api/api-version';
+import {NOTIFICATION_API} from '@mock-api/apps/notification/notification.api';
 
 describe('ViewNotificationComponent', () => {
   let component: ViewNotificationComponent;
@@ -38,6 +40,7 @@ describe('ViewNotificationComponent', () => {
   });
 
   it('component -> getNotificationTitle', fakeAsync(() => {
+    ApiVersion.getInstance().initializeAndSetVersion(NOTIFICATION_API, 1);
     component.ngOnInit();
     flush();
     expect(component.getNotificationTitle(component.notificationList[0])).toBe(component.user.activeSchool.printName);

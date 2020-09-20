@@ -231,7 +231,7 @@ export class SetClassSubjectServiceAdapter {
         }
 
         let class_subject_data = {
-            'parentClass': this.vm.selectedClass.dbId,
+            'parentClass': this.vm.selectedClass.id,
             'parentDivision': this.vm.selectedClass.selectedSection.id,
             'parentSession': this.vm.selectedSession.id,
             'parentSubject': this.vm.selectedSubject.id,
@@ -262,7 +262,7 @@ export class SetClassSubjectServiceAdapter {
     prepareStudentSubjectDataToAdd(): any {
         let data = [];
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === this.vm.selectedClass.dbId) {
+            if (classs.dbId === this.vm.selectedClass.id) {
                 classs.sectionList.every(section => {
                     if (section.id === this.vm.selectedClass.selectedSection.id) {
                         section.studentList.forEach(student => {

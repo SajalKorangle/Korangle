@@ -176,7 +176,7 @@ export class GeneratePatrakServiceAdapter {
             'subjectList': [],
             'schoolList': [this.vm.user.activeSchool.dbId],
             'employeeList': [],
-            'classList': [this.vm.selectedClass.dbId],
+            'classList': [this.vm.selectedClass.id],
             'sectionList': [1],
             'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             'mainSubject': [],
@@ -207,7 +207,7 @@ export class GeneratePatrakServiceAdapter {
 
             let request_class_test_data = {
                 'parentExamination__in': this.getExaminationIdList(),
-                'parentClass': this.vm.selectedClass.dbId,
+                'parentClass': this.vm.selectedClass.id,
                 'parentDivision': 1,
                 'parentSubject__in':this.classSubjectList.map(a => a.parentSubject),
             };

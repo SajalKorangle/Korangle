@@ -106,19 +106,19 @@ export class CreateTestServiceAdapter {
 
         let request_test_data = {
             /*'examinationId': this.vm.selectedExamination.id,
-            'classId': this.vm.selectedExamination.selectedClass.dbId,
+            'classId': this.vm.selectedExamination.selectedClass.id,
             'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
             'parentExamination': this.vm.selectedExamination.id,
-            'parentClass': this.vm.selectedExamination.selectedClass.dbId,
+            'parentClass': this.vm.selectedExamination.selectedClass.id,
             'parentDivision': this.vm.selectedExamination.selectedClass.selectedSection.id,
         };
 
         let request_class_subject_data = {
-            /*'classId': this.vm.selectedExamination.selectedClass.dbId,
+            /*'classId': this.vm.selectedExamination.selectedClass.id,
             'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,
             'sessionId': this.vm.user.activeSchool.currentSessionDbId,
             'schoolId': this.vm.user.activeSchool.dbId,*/
-            'classList': [this.vm.selectedExamination.selectedClass.dbId],
+            'classList': [this.vm.selectedExamination.selectedClass.id],
             'sectionList': [this.vm.selectedExamination.selectedClass.selectedSection.id],
             'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             'schoolList': [this.vm.user.activeSchool.dbId],
@@ -172,7 +172,7 @@ export class CreateTestServiceAdapter {
     getStudentIdListForSelectedItems(): any {
         let idList = [];
         this.student_mini_profile_list.forEach(item => {
-            if (item.classDbId === this.vm.selectedExamination.selectedClass.dbId
+            if (item.classDbId === this.vm.selectedExamination.selectedClass.id
                 && item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id) {
                 idList.push(item.dbId);
             }
@@ -268,7 +268,7 @@ export class CreateTestServiceAdapter {
 
         let data = {
             'parentExamination': this.vm.selectedExamination.id,
-            'parentClass': this.vm.selectedExamination.selectedClass.dbId,
+            'parentClass': this.vm.selectedExamination.selectedClass.id,
             'parentDivision': this.vm.selectedExamination.selectedClass.selectedSection.id,
             'parentSubject': this.vm.selectedSubject.id,
             'startTime': this.getDateTime(this.vm.selectedDate, this.vm.selectedStartTime),
