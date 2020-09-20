@@ -38,8 +38,8 @@ export class GenerateHallTicketComponent implements OnInit {
                 public examinationService : ExaminationService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
-                public schoolService: SchoolService,                
-                public classService : ClassService,
+                public schoolService: SchoolService,
+                public classService: ClassService,
                 private printService: PrintService) {}
 
     ngOnInit(): void {

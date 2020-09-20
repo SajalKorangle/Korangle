@@ -16,7 +16,7 @@ import {UserService} from "../../../../services/modules/user/user.service";
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
     styleUrls: ['./send-sms.component.css'],
-    providers: [ StudentService,ClassService, EmployeeService, NotificationService, UserService, SmsService],
+    providers: [ StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService],
 })
 
 export class SendSmsComponent implements OnInit {
@@ -91,8 +91,8 @@ export class SendSmsComponent implements OnInit {
     }
 
     constructor(public studentService: StudentService,
-                public employeeService: EmployeeService,                
-                public classService : ClassService,
+                public employeeService: EmployeeService,
+                public classService: ClassService,
                 public smsOldService: SmsOldService,
                 public smsService: SmsService,
                 public notificationService: NotificationService,

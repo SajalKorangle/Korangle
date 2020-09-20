@@ -47,8 +47,8 @@ export class MyCollectionComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
-                public studentService: StudentService,                
-                public classService : ClassService,
+                public studentService: StudentService,
+                public classService: ClassService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

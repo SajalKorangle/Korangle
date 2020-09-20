@@ -50,7 +50,6 @@ export class DeclareHolidaysComponent implements OnInit {
             this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
         ]).then(value => {
             this.isLoading = false;
-            console.log(value[0])
             this.initializeClassSectionStudentList(value[0]);
             this.initializeEmployeeList(value[1]);
         }, error => {

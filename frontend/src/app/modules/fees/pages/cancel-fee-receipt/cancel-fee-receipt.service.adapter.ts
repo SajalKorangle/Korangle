@@ -24,7 +24,7 @@ export class CancelFeeReceiptServiceAdapter {
 
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
-            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
         ]).then(value => {
 

@@ -34,8 +34,8 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private enquiryService: EnquiryOldService,                
-                private classService : ClassService,
+    constructor(private enquiryService: EnquiryOldService,
+                private classService: ClassService,
                 private printService: PrintService,
                 private employeeService: EmployeeOldService) { }
 
@@ -46,7 +46,7 @@ export class ViewAllComponent implements OnInit {
         };
 
         Promise.all([
-            this.classService.getObjectList(this.classService.classs,{}),            
+            this.classService.getObjectList(this.classService.classs,{}),
             this.employeeService.getEmployeeProfileList(data, this.user.jwt)
         ]).then(res => {
             this.classList = res[0];
@@ -141,7 +141,7 @@ export class ViewAllComponent implements OnInit {
         this.filteredClassList = this.classList.filter(className => {
             return this.enquiryList.map(a => a.parentClass).filter((item, index, final) => {
                 return final.indexOf(item) == index;
-            }).includes(className.id)
+            }).includes(className.id);
         });
         return this.filteredClassList
     }

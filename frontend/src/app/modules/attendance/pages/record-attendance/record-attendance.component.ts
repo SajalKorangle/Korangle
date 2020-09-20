@@ -9,15 +9,13 @@ import { ExcelService } from "../../../../excel/excel-service";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
-import {ClassService} from '../../../../services/modules/class/class.service';
 
 @Component({
   selector: 'record-attendance',
   templateUrl: './record-attendance.component.html',
   styleUrls: ['./record-attendance.component.css'],
     providers: [
-        AttendanceOldService,        
-        ClassService,
+        AttendanceOldService,
         StudentOldService,
     ],
 })

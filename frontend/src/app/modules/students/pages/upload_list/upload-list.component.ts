@@ -205,7 +205,7 @@ export class UploadListComponent implements OnInit {
     isLoading = false;
 
     constructor(private studentService: StudentOldService,
-                public classService : ClassService,
+                public classService: ClassService,
                 private schoolService: SchoolService,
                 private excelService: ExcelService,
                 private vehicleService: VehicleOldService) { }

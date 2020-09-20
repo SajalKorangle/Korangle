@@ -43,7 +43,7 @@ export class AssignClassComponent implements OnInit {
 
     constructor (private employeeService: EmployeeOldService,
                  private attendanceService: AttendanceOldService,
-                 private schoolService: SchoolService,                 
+                 private schoolService: SchoolService,
                  private classService : ClassService) { }
 
     ngOnInit() {
@@ -60,19 +60,19 @@ export class AssignClassComponent implements OnInit {
         this.isLoading = true;
 
         Promise.all([
-            this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
             this.classService.getObjectList(this.classService.classs,{}),
-            this.classService.getObjectList(this.classService.division,{}),            
+            this.classService.getObjectList(this.classService.division,{}),
+            this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
             this.schoolService.getObjectList(this.schoolService.board, {}),
         ]).then(value => {
-            value[1].forEach(classs=>{
-                classs.sectionList = value[2]
+            value[0].forEach(classs=>{
+                classs.sectionList = value[1];
             })
-            this.isLoading = false;
-            this.initializeEmployeeList(value[0]);
-            this.initializeClassSectionList(value[1]);
+            this.initializeClassSectionList(value[0]);
+            this.initializeEmployeeList(value[2]);
             this.boardList = value[3];
             this.populatePageList();
+            this.isLoading = false;
         }, error => {
             this.isLoading = false;
         });
@@ -89,9 +89,8 @@ export class AssignClassComponent implements OnInit {
         );
     }
 
-    initializeClassSectionList(classSectionList: any): void {        
+    initializeClassSectionList(classSectionList: any): void {
         this.classSectionList = classSectionList;
-        console.log(this.classSectionList)
         this.classSectionList.forEach( classs => {
             classs.selectedSection = classs.sectionList[0];
         });

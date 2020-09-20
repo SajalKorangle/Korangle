@@ -30,7 +30,7 @@ export class TotalCollectionServiceAdapter {
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
-            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
         ]).then(value => {

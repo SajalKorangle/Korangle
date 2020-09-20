@@ -35,7 +35,7 @@ export class ParentStudentFilterServiceAdapter {
 
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
-            this.vm.classService.getObjectList(this.vm.classService.division,{}),        
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
         ]).then(value => {

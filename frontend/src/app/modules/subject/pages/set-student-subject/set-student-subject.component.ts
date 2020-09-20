@@ -34,8 +34,8 @@ export class SetStudentSubjectComponent implements OnInit {
     selectedStudent: any;
     selectedStudentSection: any;
 
-    constructor(public subjectService: SubjectOldService,                
-                public classService : ClassService,
+    constructor(public subjectService: SubjectOldService,
+                public classService: ClassService,
                 public studentService: StudentOldService,
                 public schoolService: SchoolService,
                 public examinationOldService: ExaminationOldService,

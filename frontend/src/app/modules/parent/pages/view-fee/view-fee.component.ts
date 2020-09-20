@@ -75,7 +75,7 @@ export class ViewFeeComponent implements OnInit {
                  public feeService: FeeService,
                  public studentService: StudentService,
                  public vehicleService: VehicleOldService,
-                 public employeeService: EmployeeService,                 
+                 public employeeService: EmployeeService,
                  public classService : ClassService,
                  private cdRef: ChangeDetectorRef) { }
 

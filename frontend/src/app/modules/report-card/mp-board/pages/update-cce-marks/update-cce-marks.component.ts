@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
-import { ClassService } from '../../../../../services/modules/class/class.service';
 import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
+import { ClassService } from '../../../../../services/modules/class/class.service';
 import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
 
 import { UpdateCceMarksServiceAdapter } from './update-cce-marks.service.adapter';

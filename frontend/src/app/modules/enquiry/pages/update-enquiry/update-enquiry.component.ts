@@ -30,8 +30,8 @@ export class UpdateEnquiryComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private enquiryService: EnquiryOldService,                 
-                 private classService : ClassService) { }
+    constructor (private enquiryService: EnquiryOldService,
+                 private classService: ClassService) { }
 
     ngOnInit(): void {
 
@@ -44,7 +44,7 @@ export class UpdateEnquiryComponent implements OnInit {
         };
 
         Promise.all([
-            this.classService.getObjectList(this.classService.classs,{}),            
+            this.classService.getObjectList(this.classService.classs,{}),
             this.enquiryService.getMiniEnquiryList(data, this.user.jwt),
         ]).then(value => {
             this.classList = value[0];

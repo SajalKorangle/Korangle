@@ -48,8 +48,8 @@ export class GenerateFeesReportComponent implements OnInit {
 
     constructor(public schoolService: SchoolService,
                 public feeService: FeeService,
-                public studentService: StudentService,                
-                public classService : ClassService,
+                public studentService: StudentService,
+                public classService: ClassService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

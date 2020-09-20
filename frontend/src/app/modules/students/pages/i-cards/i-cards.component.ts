@@ -72,8 +72,8 @@ export class ICardsComponent implements OnInit {
     expanded = {};
     timeout: any;
 
-    constructor(private studentService: StudentOldService,                
-                private classService : ClassService,
+    constructor(private studentService: StudentOldService,
+                private classService: ClassService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) { }
 
@@ -114,14 +114,14 @@ export class ICardsComponent implements OnInit {
         this.isLoading = true;
         Promise.all([
             this.classService.getObjectList(this.classService.classs,{}),
-            this.classService.getObjectList(this.classService.division,{}),            
+            this.classService.getObjectList(this.classService.division,{}),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
         ]).then(value => {
             console.log(value);
             this.isLoading = false;
-            value[0].forEach(classs=>{
-                classs.sectionList = value[1]
-            })
+            value[0].forEach(classs => {
+                classs.sectionList = value[1];
+            });
             this.initializeClassSectionList(value[0]);
             this.initializeStudentFullProfileList(value[2]);
         }, error => {
@@ -239,7 +239,7 @@ export class ICardsComponent implements OnInit {
     handleStudentDisplay(): void {
         let serialNumber = 0;
         this.displayStudentNumber = 0;
-        console.log(this.studentFullProfileList)
+
         this.studentFullProfileList.forEach(student => {
 
             /* Class Section Check */

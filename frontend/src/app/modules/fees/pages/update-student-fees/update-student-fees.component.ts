@@ -68,8 +68,8 @@ export class UpdateStudentFeesComponent implements OnInit {
     
     isStudentListLoading = false;
 
-    constructor(public feeService: FeeService,                
-                public classService : ClassService,
+    constructor(public feeService: FeeService,
+                public classService: ClassService,
                 public vehicleService: VehicleOldService,
                 private cdRef: ChangeDetectorRef) {}
 

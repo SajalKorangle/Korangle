@@ -20,8 +20,8 @@ export class AddEnquiryComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private enquiryService: EnquiryOldService,                 
-                 private classService : ClassService) { }
+    constructor (private enquiryService: EnquiryOldService,
+                 private classService: ClassService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

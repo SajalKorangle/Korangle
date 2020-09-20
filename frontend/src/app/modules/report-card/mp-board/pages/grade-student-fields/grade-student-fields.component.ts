@@ -1,10 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
+import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 import { ClassService } from '../../../../../services/modules/class/class.service';
-import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
-import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
-import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 import { SubjectService } from '../../../../../services/modules/subject/subject.service';
 import { AttendanceOldService } from '../../../../../services/modules/attendance/attendance-old.service';
 
@@ -15,13 +12,12 @@ import {StudentService} from '../../../../../services/modules/student/student.se
 
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../../classes/data-storage";
-import {StudentOldService} from "../../../../../services/modules/student/student-old.service";
 
 @Component({
     selector: 'grade-student-fields',
     templateUrl: './grade-student-fields.component.html',
     styleUrls: ['./grade-student-fields.component.css'],
-    providers: [ ExaminationService, ExaminationOldService, ClassService, SubjectOldService, SubjectService, StudentService, StudentOldService, AttendanceOldService, ReportCardMpBoardService ],
+    providers: [ ExaminationService, ClassService, SubjectService, StudentService, AttendanceOldService, ReportCardMpBoardService ],
 })
 
 export class GradeStudentFieldsComponent implements OnInit {
@@ -51,9 +47,7 @@ export class GradeStudentFieldsComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationOldService: ExaminationOldService,
-                public examinationService : ExaminationService,
-                public examinationService: ExaminationService,
+    constructor(public examinationService: ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectService,
                 public studentService: StudentService,

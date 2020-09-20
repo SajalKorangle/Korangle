@@ -53,8 +53,8 @@ export class SetSchoolFeesComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public feeService: FeeService,                
-                public classService : ClassService,
+    constructor(public feeService: FeeService,
+                public classService: ClassService,
                 public studentService: StudentOldService,
                 public vehicleService: VehicleOldService,
                 private cdRef: ChangeDetectorRef) {}

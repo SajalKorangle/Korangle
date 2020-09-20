@@ -83,8 +83,8 @@ export class CollectFeeComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
-                public vehicleService: VehicleOldService,                
-                public classService : ClassService,
+                public vehicleService: VehicleOldService,
+                public classService: ClassService,
                 public employeeService: EmployeeService,
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,

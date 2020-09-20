@@ -56,15 +56,11 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data),
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
-<<<<<<< HEAD
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
-=======
-            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),            
-            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
-            this.vm.classService.getObjectList(this.vm.classService.division,{}),
->>>>>>> frontend/remove_class_old_service
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
             this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
         ]).then(value => {
 
             this.vm.feeTypeList = value[0];
@@ -73,6 +69,8 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.busStopFilterFeeList = value[3];
             this.vm.busStopList = value[4];
             if (value[5].length == 1) { this.vm.lockFees = value[5]; }
+            this.vm.classList = value[6];
+            this.vm.sectionList = value[7];
 
             this.vm.isLoading = false;
         }, error => {

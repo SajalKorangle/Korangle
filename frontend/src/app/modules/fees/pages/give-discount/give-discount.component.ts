@@ -77,8 +77,8 @@ export class GiveDiscountComponent implements OnInit {
     constructor(public schoolService : SchoolService,
                 public feeService: FeeService,
                 public studentService: StudentService,
-                public vehicleService: VehicleOldService,                
-                public classService : ClassService,
+                public vehicleService: VehicleOldService,
+                public classService: ClassService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}
 

@@ -63,8 +63,8 @@ export class TotalCollectionComponent implements OnInit {
 
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
-                public studentService: StudentService,                
-                public classService : ClassService,
+                public studentService: StudentService,
+                public classService: ClassService,
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}

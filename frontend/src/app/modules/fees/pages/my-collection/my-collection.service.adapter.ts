@@ -30,7 +30,7 @@ export class MyCollectionServiceAdapter {
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
             this.vm.employeeService.getObject(this.vm.employeeService.employees, employee_data),
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
-            this.vm.classService.getObjectList(this.vm.classService.division,{}),            
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
         ]).then(value => {
 
             this.vm.feeTypeList = value[0]

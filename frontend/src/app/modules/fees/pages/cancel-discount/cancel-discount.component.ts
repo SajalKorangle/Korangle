@@ -35,8 +35,8 @@ export class CancelDiscountComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public feeService: FeeService,                
-                public classService : ClassService,
+    constructor(public feeService: FeeService,
+                public classService: ClassService,
                 public studentService: StudentService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}
