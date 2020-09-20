@@ -44,7 +44,7 @@
 
     <!-- Column Filter -->
     <mat-form-field style="margin-right: 15px;">
-        <mat-select placeholder="Select Columns" id="select-columns">
+        <mat-select placeholder="Select Columns">
             <mat-option>
                 <button class="btn"
                         style="padding: 4px 7px"
@@ -173,6 +173,24 @@
             <mat-option>
                 <mat-checkbox [(ngModel)]="columnFilter.showRTE" (click)="$event.stopPropagation();">
                     RTE
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showAdmissionSession"
+                    (click)="$event.stopPropagation();">
+                    Admission Session
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showBusStopName"
+                    (click)="$event.stopPropagation();">
+                    Bus Stop Name
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showDateOfAdmission"
+                    (click)="$event.stopPropagation();">
+                    Date Of Admission
                 </mat-checkbox>
             </mat-option>
             <mat-option>
@@ -352,6 +370,9 @@
                 <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
                 <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
                 <th [class.hidden]="!columnFilter.showRTE">RTE</th>
+                <th [class.hidden]="!columnFilter.showAdmissionSession">Admission Session</th>
+                <th [class.hidden]="!columnFilter.showBusStopName">Bus Stop Name</th>
+                <th [class.hidden]="!columnFilter.showDateOfAdmission">Date Of Admission</th>
                 <th [class.hidden]="!columnFilter.showRemark">Remark</th>
                 <th *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">{{parameter.name}}</th>
             </tr>
@@ -405,6 +426,13 @@
                         <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{student.fatherAnnualIncome}}
                         </td>
                         <td [class.hidden]="!columnFilter.showRTE">{{student.rte}}</td>
+                        <td [class.hidden]="!columnFilter.showAdmissionSession">
+                            {{getAdmissionSession(student.admissionSessionDbId)}}
+                        </td>
+                        <td [class.hidden]="!columnFilter.showBusStopName">
+                            {{getBusStopName(student.busStopDbId)}}
+                        </td>
+                        <td [class.hidden]="!columnFilter.showDateOfAdmission">{{student.dateOfAdmission | date: 'dd/MM/yyyy'}}</td>
                         <td [class.hidden]="!columnFilter.showRemark">{{student.remark}}</td>
                         <td *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">{{getParameterValue(student, parameter)}}</td>
                     </ng-container>

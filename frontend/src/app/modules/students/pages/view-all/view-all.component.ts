@@ -6,9 +6,11 @@ import {StudentService} from '../../../../services/modules/student/student.servi
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
-import {ExcelService} from "../../../../excel/excel-service";
-import {DataStorage} from "../../../../classes/data-storage";
+import {ExcelService} from '../../../../excel/excel-service';
+import {DataStorage} from '../../../../classes/data-storage';
+import { BusStopService} from '@services/modules/school/bus-stop.service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
+import {SchoolService} from '@services/modules/school/school.service';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -38,6 +40,9 @@ class ColumnFilter {
     showBloodGroup = false;
     showFatherAnnualIncome = false;
     showRTE = false;
+    showAdmissionSession = false;
+    showBusStopName = false;
+    showDateOfAdmission = false;
     showRemark = false;
 }
 
@@ -45,7 +50,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentOldService, ClassOldService, ExcelService, StudentService],
+    providers: [StudentService, StudentOldService, ClassOldService, ExcelService, BusStopService, SchoolService]
 })
 
 export class ViewAllComponent implements OnInit {
@@ -55,6 +60,8 @@ export class ViewAllComponent implements OnInit {
     NULL_CONSTANT = null;
 
     showCustomFilters = false;
+
+    session_list = [];
 
     columnFilter: ColumnFilter;
 
@@ -79,26 +86,28 @@ export class ViewAllComponent implements OnInit {
 
     displayStudentNumber = 0;
 
-    // classSectionStudentList = [];
-
     classSectionList = [];
     classList = [];
     sectionList = [];
 
     studentFullProfileList = [];
 
+    busStopList = [];
+
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
 
     isLoading = false;
 
-    serviceAdapter: ViewAllServiceAdapter
+    serviceAdapter: ViewAllServiceAdapter;
 
     constructor(public studentOldService: StudentOldService,
                 public studentService: StudentService,
                 public classService: ClassOldService,
                 public excelService: ExcelService,
-                public printService: PrintService) { }
+                public schoolService: SchoolService,
+                public printService: PrintService,
+                public busStopService: BusStopService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -118,9 +127,9 @@ export class ViewAllComponent implements OnInit {
         });
     }
 
-    getParameterValue = (student, parameter) => {
+    getParameterValue(student, parameter) {
         try {
-            return this.studentParameterValueList.find(x => x.parentStudent===student.dbId && x.parentStudentParameter===parameter.id).value;
+            return this.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
         } catch {
             return this.NULL_CONSTANT;
         }
@@ -155,6 +164,32 @@ export class ViewAllComponent implements OnInit {
         });
         this.handleStudentDisplay();
     }
+
+    getAdmissionSession(admissionSessionDbId: number): string {
+        let admissionSession = null;
+        this.session_list.every(session => {
+            if (session.id === admissionSessionDbId) {
+                admissionSession = session.name;
+                return false;
+            }
+            return true;
+        });
+        return admissionSession;
+    }
+
+    getBusStopName(busStopDbId: any) {
+        let stopName = '';
+        if (busStopDbId !== null) {
+            this.busStopList.forEach(busStop => {
+                if (busStop.id === busStopDbId) {
+                    stopName = busStop.stopName;
+                    return;
+                }
+            });
+        }
+        return stopName;
+    }
+
 
     getSectionObject(classDbId: any, sectionDbId: number): any {
         let sectionObject = null;
@@ -453,10 +488,6 @@ export class ViewAllComponent implements OnInit {
         this.studentParameterList.forEach(item => item.show?studentDisplay.push(this.getParameterValue(student, item)):'')
 
         return studentDisplay;
-    }
-
-    addToArray(trueOrFalse: boolean, array: any, trueValue: any, falseValue: any): void {
-
     }
 
 }
