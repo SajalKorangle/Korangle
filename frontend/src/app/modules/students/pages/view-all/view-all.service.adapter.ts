@@ -28,11 +28,16 @@ export class ViewAllServiceAdapter {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
         };
 
+        const bus_stop_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
         Promise.all([
             this.vm.classService.getClassSectionList(class_section_request_data, this.vm.user.jwt),
             this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {})
         ]).then(value => {
             this.vm.initializeClassSectionList(value[0]);
@@ -44,7 +49,8 @@ export class ViewAllServiceAdapter {
                 })
             );
             this.vm.studentParameterValueList = value[3];
-            this.vm.session_list = value[4];
+            this.vm.busStopList = value[4];
+            this.vm.session_list = value[5];
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;

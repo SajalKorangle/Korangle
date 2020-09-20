@@ -94,10 +94,10 @@ export class ViewAllComponent implements OnInit {
 
     busStopList = [];
 
-    isLoading = false;
-
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
+
+    isLoading = false;
 
     serviceAdapter: ViewAllServiceAdapter;
 
@@ -129,9 +129,7 @@ export class ViewAllComponent implements OnInit {
 
     getParameterValue(student, parameter) {
         try {
-            return this.studentParameterValueList.find(x =>
-                x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
-            ).value;
+            return this.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
         } catch {
             return this.NULL_CONSTANT;
         }
@@ -180,10 +178,10 @@ export class ViewAllComponent implements OnInit {
     }
 
     getBusStopName(busStopDbId: any) {
-        let stopName = 'None';
+        let stopName = '';
         if (busStopDbId !== null) {
             this.busStopList.forEach(busStop => {
-                if (busStop.dbId == busStopDbId) {
+                if (busStop.id === busStopDbId) {
                     stopName = busStop.stopName;
                     return;
                 }

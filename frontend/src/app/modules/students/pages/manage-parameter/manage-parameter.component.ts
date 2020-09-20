@@ -74,7 +74,7 @@ export class ManageParameterComponent implements OnInit {
     }
 
     chooseParameter(value: any): void {
-        if (value==this.ADD_PARAMETER_STRING) {
+        if (value === this.ADD_PARAMETER_STRING) {
             this.addNewParameter();
         } else {
             this.setActiveParameter(value);
