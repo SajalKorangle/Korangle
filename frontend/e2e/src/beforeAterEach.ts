@@ -10,7 +10,7 @@ export class BeforeAfterEach {
 
     static async beforeEach() {
 
-        BeforeAfterEach.browser = await puppeteer.launch();
+        BeforeAfterEach.browser = await puppeteer.launch({headless: false});
         BeforeAfterEach.page = await BeforeAfterEach.browser.newPage();
         await BeforeAfterEach.page.setViewport({
             width: 1920,
