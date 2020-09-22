@@ -10,10 +10,11 @@ export class BeforeAfterEach {
 
     static async beforeEach() {
 
-        BeforeAfterEach.browser = await puppeteer.launch({headless: false});
+        BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 500});
+        // BeforeAfterEach.browser = await puppeteer.launch();
         BeforeAfterEach.page = await BeforeAfterEach.browser.newPage();
         await BeforeAfterEach.page.setViewport({
-            width: 1920,
+            width: 1220,
             height: 1080
         });
         await BeforeAfterEach.page.goto('http://localhost:4201');

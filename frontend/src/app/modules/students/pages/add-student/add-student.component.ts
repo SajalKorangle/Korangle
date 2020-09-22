@@ -77,7 +77,7 @@ export class AddStudentComponent implements OnInit {
         this.newStudent.parentSchool = this.user.activeSchool.dbId;
 
         this.newStudentSection = new StudentSection();
-        this.newStudentSection.parentClass = this.classList[0].dbId;
+        this.newStudentSection.parentClass = this.classList[0].id;
         this.newStudentSection.parentDivision = this.sectionList[0].id;
         this.newStudentSection.parentSession = this.user.activeSchool.currentSessionDbId;
 

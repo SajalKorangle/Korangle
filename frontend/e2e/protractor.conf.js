@@ -13,13 +13,16 @@ const puppeteer = require('puppeteer');
 exports.config = {
   allScriptsTimeout: 110000,
   specs: [
+    // './src/**/*.e2e-spec.ts'
     './src/**/*.e2e-spec.ts'
   ],
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-        args: ['--headless'],
-        binary: puppeteer.executablePath(),
+      // args: ['--headless', '--window-size=800x600'],
+      args: ['--headless'],
+      // args: [],
+      binary: puppeteer.executablePath(),
     },
   },
   directConnect: true,
