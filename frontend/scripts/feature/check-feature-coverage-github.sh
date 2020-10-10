@@ -4,16 +4,18 @@
 
 mkdir -p tmp
 
-numberOfTests=0
+numberOfProtractorTests=0
 for i in `find tests/protractor/src -name "*.e2e-spec.ts"`
 do
-
-    newSemiColonCount=`grep -v '//' $i | grep -c ';'`
-    numberOfSemiColonInTests=$((newSemiColonCount + numberOfSemiColonInTests))
-
     newTestCounter=`grep -v '//' $i | grep -c 'it('`
-    numberOfTests=$((newTestCounter + numberOfTests))
+    numberOfProtractorTests=$((newTestCounter + numberOfProtractorTests))
+done;
 
+numberOfKarmaTests=0
+for i in `find tests/karma/test -name "*.spec.ts"`
+do
+    newTestCounter=`grep -v '//' $i | grep -c 'it('`
+    numberOfKarmaTests=$((newTestCounter + numberOfKarmaTests))
 done;
 
 # Calculating total number of components in application.
@@ -24,8 +26,9 @@ do
 done;
 
 echo "{
- \"numberOfTests\": $numberOfTests,
- \"numberOfComponents\": $numberOfComponents
+ \"numberOfProtractorTests\": $numberOfProtractorTests,
+ \"numberOfKarmaTests\": $numberOfKarmaTests,
+ \"numberOfComponents\": $numberOfComponentgis
 }" > tmp/feature-coverage-data.json
 
 # Checking Coverage
