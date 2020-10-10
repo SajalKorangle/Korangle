@@ -95,11 +95,11 @@ export class ManageParameterComponent implements OnInit {
         }
     }
 
-    deleteFilter = filter => {
-        this.currentParameter.filterValues = this.currentParameter.filterValues.filter(x => x!==filter)
+    deleteFilter(filter: any) {
+        this.currentParameter.filterValues = this.currentParameter.filterValues.filter(x => x!==filter);
     }
 
-    addFilter = filter => {
+    addFilter(filter: any) {
         filter = filter.trim();
         if (this.currentParameter.filterValues.indexOf(filter) !== -1) {
             alert('Filter Value:- ' + filter + ' is already present.');
@@ -109,7 +109,7 @@ export class ManageParameterComponent implements OnInit {
         this.newFilterValue = '';
     }
 
-    isValidParameterName = () => {
+    isValidParameterName() {
         return !(this.globalParametersList.find(x => x===this.currentParameter.name) || this.customParameterList.find(x => x.name===this.currentParameter.name && x.id!==this.currentParameter.id))
     }
 

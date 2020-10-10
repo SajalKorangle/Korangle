@@ -2,12 +2,11 @@
 .idea/
 *.iml
 frontend/.idea/
+frontend/protractorFailuresReport/
 frontend/node_modules/
 frontend/school.iml
 frontend/preparePackage.sh
-frontend/brightstar.tar.gz
-frontend/brightstar.zip
-frontend/brightstar/
+frontend/tmp
 frontend/src/src.iml
 frontend/.DS_Store
 frontend/md-angular-v1.4.1.iml
@@ -22,7 +21,7 @@ frontend/dist/
 frontend/src/coverage-report/
 frontend/src/coverage/*.json
 frontend/copytoserver.sh
-frontend/src/dummy.spec.ts
+frontend/tests/karma/dummy.spec.ts
 backend/*db.sqlite3*
 *.pyc
 *.swp

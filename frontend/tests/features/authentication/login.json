@@ -1,0 +1,17 @@
+[
+  {
+    "statement": "Type in the correct password and check the existence of sidebar",
+    "testType": "protractor",
+    "testName": "login should pass"
+  },
+  {
+    "statement": "Type in the incorrect password and check the login failed alert",
+    "testType": "protractor",
+    "testName": "login should fail"
+  },
+  {
+    "statement": "testing toggleVisibilityMode function from true to false",
+    "testType": "karma",
+    "testName": "toggleVisibilityMode turns visibility mode from true to false"
+  }
+]
