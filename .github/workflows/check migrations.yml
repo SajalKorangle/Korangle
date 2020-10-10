@@ -64,7 +64,7 @@ jobs:
         cd frontend
         aws configure list
         cp src/environments/environment.ts src/environments/environment.prod.ts
-				sh scripts/protractor/run-tests-e2e-github.sh
-				sh scripts/protractor/check-coverage-e2e-github.sh
-				sh scripts/feature/check-feature-coverage-github.sh
+        sh scripts/protractor/run-tests-e2e-github.sh
+        sh scripts/protractor/check-coverage-e2e-github.sh
+        sh scripts/feature/check-feature-coverage-github.sh
         kill -9 `ps aux | grep testserver | awk '{ print $2 }'`
