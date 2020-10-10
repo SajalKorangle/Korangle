@@ -1,0 +1,42 @@
+[
+  {
+    "statement": "Add new parameter using mock service",
+    "testType": "karma",
+    "testName": "Component -> addNewParameter()"
+  },
+  {
+    "statement": "Testing setActiveParameter function with given value",
+    "testType": "karma",
+    "testName": "Component -> setActiveParameter()"
+  },
+  {
+    "statement": "Testing the initialization of the manage parameter component",
+    "testType": "karma",
+    "testName": "Service Adapter -> initializeData()"
+  },
+  {
+    "statement": "Save parameter using mock service and check the handling of the service callback",
+    "testType": "karma",
+    "testName": "Service Adapter -> saveParameter() new parameter"
+  },
+  {
+    "statement": "Delete parameter using mock service and check the handling of the service callback",
+    "testType": "karma",
+    "testName": "Service Adapter -> deleteParameter() user confirmation"
+  },
+  {
+    "statement": "Calling Delete parameter but user denies it and check the data to be same",
+    "testType": "karma",
+    "testName": "Service Adapter -> deleteParameter() user cancellation"
+  },
+  {
+    "statement": "Calling function add Filter to check whether the filter is added",
+    "testType": "karma",
+    "testName": "Component -> addFilter()"
+  },
+  {
+    "statement": "Calling function add Filter with already existing parameter name and check that it is not added",
+    "testType": "karma",
+    "testName": "Component -> addFilter() already exists"
+  }
+]

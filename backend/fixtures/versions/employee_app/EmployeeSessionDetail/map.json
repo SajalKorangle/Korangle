@@ -1,0 +1,12 @@
+[
+  {
+    "file": "1.json",
+    "file_object_list": [
+      {
+        "app": "employee_app",
+        "model": "Employee",
+        "file": "1.json"
+      }
+    ]
+  }
+]

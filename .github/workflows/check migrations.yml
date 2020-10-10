@@ -47,21 +47,24 @@ jobs:
         cd backend
         ./manage.py makemigrations --check
 
-    - name: Unit Tests
+    - name: Karma Tests
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         cd frontend
         aws configure list
-        sh src/coverage/run-unit-tests.sh
-        npm run check-coverage
+        sh scripts/karma/run-tests-karma-github.sh
 
-    - name: E2E Tests
+    - name: Protractor Tests
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
-        cd backend
-        ./manage.py testserver --nomigrations `find fixtures -path "*.json"` &
-        cd ../frontend
+        cd frontend
+        aws configure list
         cp src/environments/environment.ts src/environments/environment.prod.ts
-        npm run e2e-tests-github
-        kill -9 `ps aux |grep testserver | awk '{ print $2 }'`
+				sh scripts/protractor/run-tests-e2e-github.sh
+				sh scripts/protractor/check-coverage-e2e-github.sh
+				sh scripts/feature/check-feature-coverage-github.sh
+        kill -9 `ps aux | grep testserver | awk '{ print $2 }'`

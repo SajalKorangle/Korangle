@@ -1,4 +1,0 @@
-[
-	{ "model": "employee_app.employeepermission", "pk": 1, "fields": { "parentEmployee": 1, "parentTask": 5 } },
-	{ "model": "employee_app.employeepermission", "pk": 2, "fields": { "parentEmployee": 1, "parentTask": 2 } }
-]

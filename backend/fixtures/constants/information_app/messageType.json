@@ -1,0 +1,5 @@
+[
+	{ "model": "information_app.messagetype", "pk": 1, "fields": {"name": "General"} },
+	{ "model": "information_app.messagetype", "pk": 2, "fields": {"name": "Defaulter"} },
+	{ "model": "information_app.messagetype", "pk": 1, "fields": {"name": "Fee Receipt"} }
+]
