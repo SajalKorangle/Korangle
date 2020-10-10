@@ -10,7 +10,7 @@ sed -i "s/^src\/app/import '..\/..\/src\/app/g" tests/karma/dummy.spec.ts
 sed -i "s/\.ts$/\\';/g" tests/karma/dummy.spec.ts
 
 # Running unit tests
-ng test --code-coverage --no-watch
+npm run test
 
 
 #####################################
