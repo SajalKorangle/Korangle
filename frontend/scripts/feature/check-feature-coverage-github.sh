@@ -28,7 +28,7 @@ done;
 echo "{
  \"numberOfProtractorTests\": $numberOfProtractorTests,
  \"numberOfKarmaTests\": $numberOfKarmaTests,
- \"numberOfComponents\": $numberOfComponentgis
+ \"numberOfComponents\": $numberOfComponents
 }" > tmp/feature-coverage-data.json
 
 # Checking Coverage
