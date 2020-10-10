@@ -11,6 +11,8 @@ node ./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-mana
 ./node_modules/.bin/protractor tests/protractor/protractor.conf.js
 if [ "$?" -ne 0 ];
 then
-    echo 'Protractor Test failed'
+    echo "Protractor Test failed"
     exit 1
+else
+    echo "Protractor Test passed"
 fi
