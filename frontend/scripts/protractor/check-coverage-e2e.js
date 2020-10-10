@@ -1,5 +1,6 @@
 
 const https = require('https');
+const fs = require('fs');
 const coverageData = require('../../tmp/protractor-coverage-data.json');
 
 const newCoverage = {

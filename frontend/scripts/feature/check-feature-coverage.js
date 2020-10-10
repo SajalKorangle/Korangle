@@ -1,6 +1,7 @@
 
 const glob = require("glob");
 const https = require('https');
+const fs = require('fs');
 const coverageData = require('../../tmp/feature-coverage-data.json');
 
 

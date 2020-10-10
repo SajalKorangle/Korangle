@@ -1,4 +1,5 @@
 const https = require('https');
+const fs = require('fs');
 const current = require('../../tmp/coverage-summary.json');
 const coverageData = require('../../tmp/karma-coverage-data.json');
 let benchmark;
