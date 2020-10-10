@@ -4,7 +4,7 @@ start=$SECONDS
 mkdir -p tmp
 
 # Running tests (using protractor)
-ng e2e --port=4200
+npm run e2e
 
 # Total Run time
 echo "Total Run Time: $((SECONDS - start))"

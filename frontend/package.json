@@ -8,7 +8,7 @@
     "build": "ng build",
     "lint": "ng lint",
     "test": "ng test --code-coverage --no-watch",
-    "e2e": "ng e2e",
+    "e2e": "ng e2e --port=4200",
     "post-build": "node ./build/post-build.js",
     "build:stats": "ng build --stats-json",
     "build-production:stats": "ng build --prod --build-optimizer --stats-json",
