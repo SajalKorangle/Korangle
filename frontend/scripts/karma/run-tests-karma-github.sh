@@ -6,8 +6,8 @@ cp src/environments/environment.ts src/environments/environment.prod.ts
 
 # Create Dummy Spec file to include all modules and their files
 find src/app/ -name '*.module.ts' > tests/karma/dummy.spec.ts
-sed -i "" "s/^src\/app/import '..\/..\/src\/app/g" tests/karma/dummy.spec.ts
-sed -i "" "s/\.ts$/\\';/g" tests/karma/dummy.spec.ts
+sed -i "s/^src\/app/import '..\/..\/src\/app/g" tests/karma/dummy.spec.ts
+sed -i "s/\.ts$/\\';/g" tests/karma/dummy.spec.ts
 
 # Running unit tests
 ng test --code-coverage --no-watch
