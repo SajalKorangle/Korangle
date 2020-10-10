@@ -11,7 +11,10 @@
       "node"
     ],
     "paths": {
-      "@fixtures/*": ["../fixtures/*"]
+      "@fixtures/*": ["../fixtures/*"],
+      "moment": [
+        "../node_modules/moment/min/moment.min.js"
+      ]
     }
   }
 }
