@@ -1,0 +1,12 @@
+[
+  {
+    "statement": "Add Student to the database and get the success message",
+    "testType": "protractor",
+    "testName": "Add Student"
+  },
+  {
+    "statement": "Add Student with an in place fee structure and check the students fee profile to be updated accordingly",
+    "testType": "protractor",
+    "testName": null
+  }
+]

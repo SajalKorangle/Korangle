@@ -1,0 +1,7 @@
+[
+  {
+    "statement": "Open Contact Us Page",
+    "testType": "protractor",
+    "testName": "Able to open Contact Us Page"
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "statement": "Calling handleDetailsFromParentStudentFilter & handleStudentListSelection function",
+    "testType": "karma",
+    "testName": "Custom Input Check"
+  }
+]
