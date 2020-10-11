@@ -3,6 +3,8 @@
 
 mkdir -p tmp
 
+rm -rf protractorFailuresReport
+
 kill -9 `ps aux | grep testserver | awk '{ print $2 }'`
 sleep 5
 result=`netstat -an | grep '127.0.0.1.8000' | grep -c 'LISTEN'`
@@ -31,6 +33,8 @@ then
     echo 'Protractor Test failed'
     exit 1
 fi
+
+rm -rf protractorFailuresReport
 
 # Total Run time
 echo "Total Run Time: $((SECONDS - start))"

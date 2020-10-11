@@ -1,0 +1,14 @@
+[
+  {
+    "statement": "Promote Student",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Promote the student",
+      "Check the success message",
+      "Select next session",
+      "Open view all page & confirm the promotion"
+    ],
+    "testName": null
+  }
+]

@@ -1,17 +1,33 @@
 [
   {
-    "statement": "Type in the correct password and check the existence of sidebar",
+    "statement": "Login user",
     "testType": "protractor",
+    "steps": [
+      "Open website",
+      "Type in correct username and password",
+      "Check the existence of sidebar"
+    ],
     "testName": "login should pass"
   },
   {
-    "statement": "Type in the incorrect password and check the login failed alert",
+    "statement": "Login fails on incorrect password",
     "testType": "protractor",
+    "steps": [
+      "Open website",
+      "Type in correct username and incorrect password",
+      "Check the login failed message"
+    ],
     "testName": "login should fail"
   },
   {
     "statement": "testing toggleVisibilityMode function from true to false",
     "testType": "karma",
+    "steps": [
+      "Set up the Login component",
+      "Set the visibilityMode variable to true",
+      "Call the toggleVisibilityMode function",
+      "Check the visibilityMode variable for false"
+    ],
     "testName": "toggleVisibilityMode turns visibility mode from true to false"
   }
 ]

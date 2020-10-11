@@ -30,7 +30,7 @@ exports.config = {
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: 50000,
+    defaultTimeoutInterval: 300000,
     print: function() {}
   },
   onCleanUp: function(results) {

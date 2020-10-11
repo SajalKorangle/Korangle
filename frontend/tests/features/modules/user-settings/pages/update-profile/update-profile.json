@@ -1,0 +1,15 @@
+[
+  {
+    "statement": "Update Profile",
+    "testType": "protractor",
+    "steps": [
+      "Open page",
+      "Change first name of user",
+      "Check success message",
+      "Check the name in sidebar",
+      "Logout",
+      "Login & confirm the change in sidebar"
+    ],
+    "testName": "Able to open Contact Us Page"
+  }
+]
