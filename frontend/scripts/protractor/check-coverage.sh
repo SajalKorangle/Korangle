@@ -11,7 +11,7 @@ do
     newSemiColonCount=`grep -v '//' $i | grep -c ';'`
     numberOfSemiColonInTests=$((newSemiColonCount + numberOfSemiColonInTests))
 
-    newTestCounter=`grep -v '//' $i | grep -c 'it('`
+    newTestCounter=`grep -v '//' $i | grep -v '/\*' | grep -c 'it('`
     numberOfTests=$((newTestCounter + numberOfTests))
 
 done;
@@ -38,4 +38,16 @@ echo "{
  \"numberOfComponents\": $numberOfComponents
 }" > tmp/protractor-coverage-data.json
 
-node scripts/protractor/check-coverage-e2e.js local
+# Checking Coverage
+if [ "$1" = "github" ]; then
+
+    node scripts/protractor/check-coverage.js github
+
+    # Uploading benchmark coverage to s3
+    aws s3 cp protractor-coverage.json s3://korangleplus/benchmark-protractor-coverage.json
+
+else
+
+    node scripts/protractor/check-coverage.js local
+
+fi

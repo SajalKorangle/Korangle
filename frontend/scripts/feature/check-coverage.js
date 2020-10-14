@@ -11,8 +11,6 @@ glob.sync('tests/features/**/*.json').forEach( file => {
 });
 
 if (featureList.filter(feature => feature.testName !== null && feature.testType === 'protractor').length !== coverageData.numberOfProtractorTests) {
-    console.log(featureList.filter(feature => feature.testName !== null && feature.testType === 'protractor'));
-    console.log(coverageData.numberOfProtractorTests);
     throw "Protractor: Number of implemented features are not equal to number of tests implemented";
 }
 

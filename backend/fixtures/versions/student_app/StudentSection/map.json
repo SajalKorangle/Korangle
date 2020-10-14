@@ -1,0 +1,12 @@
+[
+  {
+    "file": "twenty_student_section.json",
+    "file_object_list": [
+      {
+        "app": "student_app",
+        "model": "Student",
+        "file": "twenty_students.json"
+      }
+    ]
+  }
+]

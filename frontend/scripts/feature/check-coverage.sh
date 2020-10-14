@@ -7,14 +7,14 @@ mkdir -p tmp
 numberOfProtractorTests=0
 for i in `find tests/protractor/src -name "*.e2e-spec.ts"`
 do
-    newTestCounter=`grep -v '//' $i | grep -c 'it('`
+    newTestCounter=`grep -v '//' $i | grep -v '/\*' | grep -c 'it('`
     numberOfProtractorTests=$((newTestCounter + numberOfProtractorTests))
 done;
 
 numberOfKarmaTests=0
 for i in `find tests/karma/test -name "*.spec.ts"`
 do
-    newTestCounter=`grep -v '//' $i | grep -c 'it('`
+    newTestCounter=`grep -v '//' $i | grep -v '/\*' | grep -c 'it('`
     numberOfKarmaTests=$((newTestCounter + numberOfKarmaTests))
 done;
 
@@ -32,7 +32,15 @@ echo "{
 }" > tmp/feature-coverage-data.json
 
 # Checking Coverage
-node scripts/feature/check-feature-coverage.js github
+if [ "$1" = "github" ]; then
 
-# Uploading benchmark coverage to s3
-aws s3 cp feature-coverage.json s3://korangleplus/benchmark-feature-coverage.json
+    node scripts/feature/check-feature-coverage.js github
+
+    # Uploading benchmark coverage to s3
+    aws s3 cp feature-coverage.json s3://korangleplus/benchmark-feature-coverage.json
+
+else
+
+    node scripts/feature/check-feature-coverage.js local
+
+fi

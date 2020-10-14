@@ -1,18 +1,29 @@
 
 mkdir -p tmp
 
+# Create a fake environment.prod.ts
+if [ "$1" = "github" ]; then
+    cp src/environments/environment.ts src/environments/environment.prod.ts
+fi
+
 # Create Dummy Spec file to include all modules and their files
 find src/app/ -name '*.module.ts' > tests/karma/dummy.spec.ts
-sed -i "" "s/^src\/app/import '..\/..\/src\/app/g" tests/karma/dummy.spec.ts
-sed -i "" "s/\.ts$/\\';/g" tests/karma/dummy.spec.ts
+if [ "$1" = "github" ]; then
+    sed -i "s/^src\/app/import '..\/..\/src\/app/g" tests/karma/dummy.spec.ts
+    sed -i "s/\.ts$/\\';/g" tests/karma/dummy.spec.ts
+else
+    sed -i "" "s/^src\/app/import '..\/..\/src\/app/g" tests/karma/dummy.spec.ts
+    sed -i "" "s/\.ts$/\\';/g" tests/karma/dummy.spec.ts
+fi
 
 # Running unit tests
-ng test --code-coverage --no-watch
+npm run test
 if [ "$?" -ne 0 ];
 then
     echo 'karma Test failed'
     exit 1
 fi
+
 
 #####################################
 #           Coverage                #
@@ -22,7 +33,7 @@ fi
 numberOfTests=0
 for i in `find tests/karma/test -name "*.spec.ts"`
 do
-    newTestCounter=`grep -v '//' $i | grep -c 'it('`
+    newTestCounter=`grep -v '//' $i | grep -v '/\*' | grep -c 'it('`
     numberOfTests=$((newTestCounter + numberOfTests))
 done;
 
@@ -39,4 +50,15 @@ echo "{
 }" > tmp/karma-coverage-data.json
 
 # Checking Coverage
-node scripts/karma/check-coverage-karma.js local
+if [ "$1" = "github" ]; then
+
+    node scripts/karma/check-coverage.js github
+
+    # Uploading benchmark coverage to s3
+    aws s3 cp karma-coverage.json s3://korangleplus/benchmark-karma-coverage.json
+
+else
+
+    node scripts/karma/check-coverage.js local
+
+fi

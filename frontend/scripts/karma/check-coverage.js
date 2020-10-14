@@ -25,7 +25,7 @@ https.get("https://korangleplus.s3.amazonaws.com/benchmark-karma-coverage.json",
 
         let numberOfRequiredTests = 0;
         Object.keys(newCoverage).forEach((key) => {
-            const testDemand = Math.ceil(((benchmark[key] - newCoverage[key])/newCoverage[key])*coverageData.numberOfTests);
+            const testDemand = Math.ceil(((benchmark[key] - newCoverage[key])/(newCoverage[key]-(key === 'statements' ? 27 : 0)))*coverageData.numberOfTests);
             if (testDemand > numberOfRequiredTests) {
                 numberOfRequiredTests = testDemand;
             }
