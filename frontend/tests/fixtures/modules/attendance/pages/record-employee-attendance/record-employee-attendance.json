@@ -1,23 +1,13 @@
 [
   {
-    "app": "attendance_app",
-    "model": "AttendancePermission",
-    "file": "single_permission.json"
-  },
-  {
     "app": "employee_app",
-    "model": "Employee",
-    "file": "six_employees.json"
+    "model": "EmployeeSessionDetail",
+    "file": "six_employees_session.json"
   },
   {
     "app": "employee_app",
     "model": "EmployeePermission",
-    "file": "1.json"
-  },
-  {
-    "app": "employee_app",
-    "model": "EmployeeSessionDetail",
-    "file": "six_employees_session.json"
+    "file": "six_employees_permission.json"
   },
   {
     "app": "auth",

@@ -34,13 +34,13 @@ echo "{
 # Checking Coverage
 if [ "$1" = "github" ]; then
 
-    node scripts/feature/check-feature-coverage.js github
+    node scripts/feature/check-coverage.js github
 
     # Uploading benchmark coverage to s3
     aws s3 cp feature-coverage.json s3://korangleplus/benchmark-feature-coverage.json
 
 else
 
-    node scripts/feature/check-feature-coverage.js local
+    node scripts/feature/check-coverage.js local
 
 fi

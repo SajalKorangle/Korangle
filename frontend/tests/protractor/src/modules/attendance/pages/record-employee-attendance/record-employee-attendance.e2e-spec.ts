@@ -2,11 +2,15 @@ import {BeforeAfterEach} from '../../../../beforeAterEach';
 import {startBackendServer} from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {contains} from '../../../../contains';
+import {containsFirst} from '../../../../contains';
 
 describe('Attendance -> Record Employee Attendance', () => {
 
     let page: any;
+
+    afterEach( async () => {
+        await BeforeAfterEach.afterEach();
+    });
 
     it('Recording Employee Attendance', async () => {
 
@@ -19,11 +23,11 @@ describe('Attendance -> Record Employee Attendance', () => {
         await openModuleAndPage('Attendance', 'Record Empl. Attend.');
 
         // Getting Employee Attendance Data (Data should be empty since no attendance is taken till now)
-        await (await contains('button', 'Get')).click();
+        await (await containsFirst('button', 'Get')).click();
 
         // Marking attendance for odd employees to Present and even employees to Absent
         for (let i = 0; i < 6; ++i) {
-            const button = await contains('button', ' N ');
+            const button = await containsFirst('button', ' N ');
             if (i % 2 === 0) { await button.click(); }
             await button.click();
         }
@@ -35,13 +39,13 @@ describe('Attendance -> Record Employee Attendance', () => {
         });
 
         // Updating the attendance
-        await (await contains('button', 'Update')).click();
+        await (await containsFirst('button', 'Update')).click();
 
         // Re clicking the page to open it with a fresh start
         await reClickPage('Record Empl. Attend.');
 
         // Getting Employee Attendance Data (Data should be filled since attendance is taken just above)
-        await (await contains('button', 'Get')).click();
+        await (await containsFirst('button', 'Get')).click();
 
         // Waiting for data to show
         await page.waitForXPath('//button[contains(text(), " P ")]');

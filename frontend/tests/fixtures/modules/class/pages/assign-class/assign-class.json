@@ -1,5 +1,10 @@
 [
   {
+    "app": "student_app",
+    "model": "StudentSection",
+    "file": "twenty_student_section.json"
+  },
+  {
     "app": "employee_app",
     "model": "EmployeePermission",
     "file": "1.json"
