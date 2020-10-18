@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from './classes/user';
 import { DataStorage } from './classes/data-storage';
 
-import {AuthenticationService} from './services/authentication.service';
+import {AuthenticationOldService} from '@services/authentication-old.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
 import moment = require('moment');
@@ -18,7 +18,7 @@ import {CommonFunctions} from './classes/common-functions';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [ AuthenticationService, VersionCheckService, NotificationService ],
+    providers: [ AuthenticationOldService, VersionCheckService, NotificationService ],
 })
 
 export class AppComponent implements OnInit {
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
 
 
 
-    constructor(private authenticationService: AuthenticationService,
+    constructor(private authenticationService: AuthenticationOldService,
                 private versionCheckService: VersionCheckService,
                 private notificationService: NotificationService) {}
 

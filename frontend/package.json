@@ -73,6 +73,7 @@
     "karma-coverage-istanbul-reporter": "^2.1.1",
     "karma-jasmine": "^2.0.1",
     "karma-jasmine-html-reporter": "^1.5.4",
+    "ng-recaptcha": "^6.0.2",
     "protractor": "^5.4.4",
     "protractor-retry": "^1.2.13",
     "puppeteer-to-istanbul": "^1.4.0",
