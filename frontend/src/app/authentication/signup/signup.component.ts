@@ -25,10 +25,10 @@ export class SignupComponent implements OnInit {
     @Output() showFrontPageProgressBar = new EventEmitter();
     @Output() changePage = new EventEmitter();
 
-    firstName: any;
-    lastName: any;
-    mobileNumber: any;
-    emailAddress: any;
+    firstName = '';
+    lastName = '';
+    mobileNumber = '';
+    emailAddress = '';
     otp = '';
     password = '';
     confirmPassword = '';
