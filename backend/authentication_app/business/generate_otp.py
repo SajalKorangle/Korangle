@@ -14,7 +14,7 @@ from authentication_app.models import OTP
 def generate_otp(data):
 
     payload = {
-        'secret': '6LeljdgZAAAAAGeOQ-hywPkK8zQfHYP6FpcdhESV',
+        'secret': '6LdNiNgZAAAAAGsOxSLZY6MDiuTGJKFMjpngekZV',
         'response': data['captchaToken']
     }
 

@@ -15,7 +15,7 @@ def generate_otp_for_signup(data):
 
     # Checking Captcha
     payload = {
-        'secret': '6LeljdgZAAAAAGeOQ-hywPkK8zQfHYP6FpcdhESV',
+        'secret': '6LdNiNgZAAAAAGsOxSLZY6MDiuTGJKFMjpngekZV',
         'response': data['captchaToken']
     }
 

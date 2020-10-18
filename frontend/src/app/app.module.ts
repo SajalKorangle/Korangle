@@ -20,7 +20,7 @@ import { ContactUsComponent } from './frontpage/contact-us/contact-us.component'
 import { PricingComponent } from './frontpage/pricing/pricing.component';
 import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
 import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
-import {RecaptchaFormsModule, RecaptchaModule} from 'ng-recaptcha';
+// import {RecaptchaModule} from 'ng-recaptcha';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SignupComponent} from './authentication/signup/signup.component';
 
@@ -46,8 +46,7 @@ import {SignupComponent} from './authentication/signup/signup.component';
         BrowserModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
-        RecaptchaModule,  // this is the recaptcha main module
-        RecaptchaFormsModule, // this is the module for form incase form validation
+        // RecaptchaModule,  // this is the recaptcha main module
     ],
     exports: [
     ],

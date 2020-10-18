@@ -2,10 +2,12 @@ import { SignupComponent } from './signup.component';
 import {registerForNotification} from '@classes/common';
 import {environment} from '../../../environments/environment';
 import {Constants} from '@classes/constants';
+import { load } from 'recaptcha-v3'
 
 export class SignupServiceAdapter {
 
     vm: SignupComponent;
+    recaptcha: any;
 
     constructor() {}
 
@@ -13,19 +15,23 @@ export class SignupServiceAdapter {
 
     initializeAdapter(vm: SignupComponent): void {
         this.vm = vm;
+        load('6LdNiNgZAAAAAMl0OzvNQgutLvXll5uDfMC0nj2c').then((recaptcha) => {
+            this.recaptcha = recaptcha;
+        })
     }
 
     // initialize data
     initializeData(): void { }
 
-    submitCaptcha(token) {
-        this.generateOTP(token);
+    submitCaptcha() {
+        this.vm.isLoading = true;
+        this.vm.showFrontPageProgressBar.emit('true');
+        this.recaptcha.execute('submit').then((token) => {
+            this.generateOTP(token);
+        });
     }
 
     generateOTP(token) {
-
-        this.vm.isLoading = true;
-        this.vm.showFrontPageProgressBar.emit('true');
         this.vm.authenticationService.generateOTPForSignup({mobileNumber: this.vm.mobileNumber, captchaToken: token}).then(data => {
             this.vm.isLoading = false;
             this.vm.showFrontPageProgressBar.emit('false');

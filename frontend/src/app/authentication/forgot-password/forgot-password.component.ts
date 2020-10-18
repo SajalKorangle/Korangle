@@ -33,8 +33,6 @@ export class ForgotPasswordComponent implements OnInit {
 
     visibilityMode = false;
 
-    myGroup;
-
     isLoading = false;
 
     serviceAdapter: ForgotPasswordServiceAdapter;
@@ -44,9 +42,6 @@ export class ForgotPasswordComponent implements OnInit {
                 public notificationService: NotificationService) {}
 
     ngOnInit(): void {
-        this.myGroup = new FormGroup({
-            recaptchaReactive: new FormControl()
-        });
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new ForgotPasswordServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

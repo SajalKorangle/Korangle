@@ -37,8 +37,6 @@ export class SignupComponent implements OnInit {
 
     visibilityMode = false;
 
-    myGroup;
-
     isLoading = false;
 
     serviceAdapter: SignupServiceAdapter;
@@ -49,9 +47,6 @@ export class SignupComponent implements OnInit {
                 public notificationService: NotificationService) {}
 
     ngOnInit(): void {
-        this.myGroup = new FormGroup({
-            recaptchaReactive: new FormControl()
-        });
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new SignupServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

@@ -12,7 +12,7 @@
                     </div>
                 </ng-container>
 
-                <form *ngIf="section=='userDetails'">
+                <form (ngSubmit)="serviceAdapter.submitCaptcha()" *ngIf="section=='userDetails'">
 
                     <ng-container *ngIf="isMobile()">
                         <div class="row" align="center">
@@ -85,13 +85,19 @@
                         </div>
                     </ng-container>
 
-                    <ng-container *ngIf="isFormValid()">
+                    <!-- ng-container *ngIf="isFormValid()">
                         <div class="row" align="center" [formGroup]="myGroup">
                             <re-captcha (resolved)="serviceAdapter.submitCaptcha($event)"
-                                        formControlName="recaptchaReactive"
                                         siteKey="6LeljdgZAAAAAKsZ25fliccBLvfGo1xulS4I5W-u"></re-captcha>
                         </div>
-                    </ng-container>
+                    </ng-container -->
+
+                    <div class="row">
+                        <div class="col-md-12"
+                             align="center">
+                            <button type="submit" class="btn btn-danger">Submit</button>
+                        </div>
+                    </div>
 
                     <div class="clearfix"></div>
 
