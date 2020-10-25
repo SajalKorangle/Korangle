@@ -109,6 +109,7 @@ def get_employee_school_module_list(employee_object):
             tempTask['dbId'] = permission_object.parentTask.id
             tempTask['path'] = permission_object.parentTask.path
             tempTask['title'] = permission_object.parentTask.title
+            tempTask['videoUrl'] = permission_object.parentTask.videoUrl
             tempModule['taskList'].append(tempTask)
         if len(tempModule['taskList']) > 0:
             moduleList.append(tempModule)
