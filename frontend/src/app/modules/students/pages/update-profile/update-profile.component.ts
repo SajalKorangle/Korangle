@@ -112,7 +112,7 @@ export class UpdateProfileComponent implements OnInit {
 
     getClassName(): any {
         return this.classList.find(classs => {
-            return this.selectedStudentSection.parentClass == classs.dbId;
+            return this.selectedStudentSection.parentClass == classs.id;
         }).name;
     }
 

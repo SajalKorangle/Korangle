@@ -2,6 +2,8 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
+// TODO: Testing Different browsers through puppeteer
+
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
 var retry = require('protractor-retry').retry;
@@ -12,6 +14,7 @@ var retry = require('protractor-retry').retry;
 exports.config = {
   allScriptsTimeout: 110000,
   specs: [
+    // './src/**/*.e2e-spec.ts'
     './src/**/*.e2e-spec.ts'
   ],
   capabilities: {
@@ -27,7 +30,7 @@ exports.config = {
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: 50000,
+    defaultTimeoutInterval: 300000,
     print: function() {}
   },
   onCleanUp: function(results) {

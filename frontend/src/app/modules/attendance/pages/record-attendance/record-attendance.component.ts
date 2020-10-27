@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
@@ -17,7 +16,6 @@ import {DataStorage} from "../../../../classes/data-storage";
   styleUrls: ['./record-attendance.component.css'],
     providers: [
         AttendanceOldService,
-        ClassOldService,
         StudentOldService,
     ],
 })

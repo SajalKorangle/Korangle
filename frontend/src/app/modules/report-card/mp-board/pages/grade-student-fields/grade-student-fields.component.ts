@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-// import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 import { ClassService } from '../../../../../services/modules/class/class.service';
 import { SubjectService } from '../../../../../services/modules/subject/subject.service';

@@ -4,6 +4,7 @@ import { STUDENT_API } from '@mock-api/apps/student/student.api';
 import {STUDENT_SECTION_API} from '@mock-api/apps/student/student-section.api';
 import {STUDENT_PARAMETER_API} from '@mock-api/apps/student/student-parameter.api';
 import {STUDENT_PARAMETER_VALUE_API} from '@mock-api/apps/student/student-parameter-value.api';
+import {NOTIFICATION_API} from '@mock-api/apps/notification/notification.api';
 
 export const API_LIST = [
 
@@ -15,5 +16,8 @@ export const API_LIST = [
 
     // Id Card App
     ID_CARD_LAYOUT_API,
+
+    // Notification App
+    NOTIFICATION_API,
 
 ];
