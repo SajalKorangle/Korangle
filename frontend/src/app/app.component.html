@@ -28,8 +28,8 @@
                                         <span *ngIf="countDownForValidity >= 0">
                                             <b> (&nbsp;{{countDownForValidity}}&nbsp; days left !&nbsp;)</b>
                                         </span></span>
-                                    <a style="text-decoration: none" (click)="refresh()">
-                                        <i class="material-icons">refresh</i>
+                                    <a *ngIf="user.section.videoUrl" style="text-decoration: none; cursor: pointer" (click)="showTutorial()">
+                                        <i class="material-icons playButtonShadow">play_circle_outline</i>
                                     </a>
                                 </div>
                             </div>
@@ -43,8 +43,8 @@
                         <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="'green'">
                             <div class="card-header-part1">
                                 <h4 class="title">{{user.section.title}} - {{user.section.subTitle}}</h4>
-                                <a style="text-decoration: none;" (click)="refresh()">
-                                    <i class="material-icons">refresh</i>
+                                <a *ngIf="user.section.videoUrl" style="text-decoration: none; cursor: pointer" (click)="showTutorial()">
+                                    <i class="material-icons playButtonShadow">play_circle_outline</i>
                                 </a>
                             </div>
                         </div>
