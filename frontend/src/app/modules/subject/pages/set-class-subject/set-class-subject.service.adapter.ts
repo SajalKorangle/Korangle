@@ -99,7 +99,7 @@ export class SetClassSubjectServiceAdapter {
                 });
                 tempSection['subjectList'] = [];
                 this.classSubjectList.forEach(classSubject => {
-                    if (classSubject.parentClass === tempClass['dbId']
+                    if (classSubject.parentClass === tempClass['id']
                         && classSubject.parentDivision === tempSection['id']) {
 
                         let tempSubject = {};
@@ -181,7 +181,7 @@ export class SetClassSubjectServiceAdapter {
                     }
                 });*/
                 this.studentSectionList.forEach(studentSection => {
-                    if (studentSection.classDbId === tempClass['dbId']
+                    if (studentSection.classDbId === tempClass['id']
                         && studentSection.sectionDbId === tempSection['id']) {
                         let tempStudent = {};
                         Object.keys(studentSection).forEach(key => {
@@ -262,7 +262,7 @@ export class SetClassSubjectServiceAdapter {
     prepareStudentSubjectDataToAdd(): any {
         let data = [];
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === this.vm.selectedClass.id) {
+            if (classs.id === this.vm.selectedClass.id) {
                 classs.sectionList.every(section => {
                     if (section.id === this.vm.selectedClass.selectedSection.id) {
                         section.studentList.forEach(student => {
@@ -296,7 +296,7 @@ export class SetClassSubjectServiceAdapter {
 
     addSubjectInClassSectionStudentSubjectList(classSubject: any, studentSubjectList): void {
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === classSubject.parentClass) {
+            if (classs.id === classSubject.parentClass) {
                 classs.sectionList.every(section => {
                     if (section.id === classSubject.parentDivision) {
                         // section['subjectList'].push(classSubject);
@@ -321,7 +321,7 @@ export class SetClassSubjectServiceAdapter {
 
     addSubjectInClassSectionSubjectList(classSubject: any): void {
         this.vm.classSectionSubjectList.every(classs => {
-            if (classs.dbId === classSubject.parentClass) {
+            if (classs.id === classSubject.parentClass) {
                 classs.sectionList.every(section => {
                     if (section.id === classSubject.parentDivision) {
 
@@ -371,7 +371,7 @@ export class SetClassSubjectServiceAdapter {
     prepareStudentSubjectDataToRemove(subject: any): any {
         let data = [];
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === subject.parentClass) {
+            if (classs.id === subject.parentClass) {
                 classs.sectionList.every(section => {
                     if (section.id === subject.parentDivision) {
                         section.studentList.forEach(student => {
@@ -396,7 +396,7 @@ export class SetClassSubjectServiceAdapter {
 
     removeSubjectFromClassSectionStudentSubjectList(classId: any, sectionId: any, subjectId: any): void {
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === classId) {
+            if (classs.id === classId) {
                 classs.sectionList.every(section => {
                     if (section.id === sectionId) {
                         /*section['subjectList'] = section['subjectList'].filter(subject => {
@@ -425,7 +425,7 @@ export class SetClassSubjectServiceAdapter {
 
     removeSubjectFromClassSectionSubjectList(classId: any, sectionId: any, subjectId: any): void {
         this.vm.classSectionSubjectList.every(classs => {
-            if (classs.dbId === classId) {
+            if (classs.id === classId) {
                 classs.sectionList.every(section => {
                     if (section.id === sectionId) {
                         section['subjectList'] = section['subjectList'].filter(subject => {

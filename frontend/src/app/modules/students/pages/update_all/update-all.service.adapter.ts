@@ -1,4 +1,5 @@
 import {UpdateAllComponent} from './update-all.component'
+import {CommonFunctions} from '@classes/common-functions';
 
 export class UpdateAllServiceAdapter {
     vm: UpdateAllComponent
@@ -30,7 +31,10 @@ export class UpdateAllServiceAdapter {
         ]).then(value => {
             this.vm.isLoading = false;
             value[0].forEach(classs => {
-                classs.sectionList = value[1];
+                classs.sectionList = [];
+                value[1].forEach(section => {
+                    classs.sectionList.push(CommonFunctions.getInstance().copyObject(section));
+                });
             });
             this.vm.initializeClassSectionList(value[0]);
             this.vm.initializeStudentFullProfileList(value[2]);

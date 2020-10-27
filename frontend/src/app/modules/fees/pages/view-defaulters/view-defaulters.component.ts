@@ -480,7 +480,7 @@ export class ViewDefaultersComponent implements OnInit {
         });
         if (this.selectedClassSection) {
             tempList = tempList.filter(student => {
-                return student.class.dbId == this.selectedClassSection.class.dbId
+                return student.class.id == this.selectedClassSection.class.id
                     && student.section.id == this.selectedClassSection.section.id;
             });
         }

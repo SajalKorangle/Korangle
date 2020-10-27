@@ -177,7 +177,7 @@ export class CollectFeeComponent implements OnInit {
 
     getClassNameByStudentAndSessionId(student: any, sessionId: any): any {
         return this.classList.find(classs => {
-            return classs.dbId == this.selectedStudentSectionList.find(studentSection => {
+            return classs.id == this.selectedStudentSectionList.find(studentSection => {
                 return studentSection.parentStudent == student.id && studentSection.parentSession == sessionId;
             }).parentClass;
         }).name;

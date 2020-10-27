@@ -193,7 +193,7 @@ export class GenerateFinalReportComponent implements OnInit {
                 if (section.selected) {
                     selectedClassSection = {
                         'className': classs.name,
-                        'classDbId': classs.dbId,
+                        'classDbId': classs.id,
                         'sectionName': section.name,
                         'sectionDbId': section.id,
                     };

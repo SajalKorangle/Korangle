@@ -106,10 +106,10 @@ export class DeleteEnquiryComponent implements OnInit {
 
 
 
-    getClass(dbId: number): any {
+    getClass(id: number): any {
         let result = null;
         this.classList.every(classs => {
-            if (classs.dbId === dbId) {
+            if (classs.id === id) {
                 result = classs;
                 return false;
             }

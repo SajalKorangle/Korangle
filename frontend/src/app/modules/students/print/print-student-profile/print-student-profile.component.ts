@@ -74,7 +74,7 @@ export class PrintStudentProfileComponent implements OnInit {
 
   getClassName(parentClass: number): any {
     return this.classList.find(classs => {
-      return this.studentSection.parentClass == classs.dbId;
+      return this.studentSection.parentClass == classs.id;
     }).name;
   }
 

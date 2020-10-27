@@ -1,4 +1,5 @@
 import {ViewAllComponent} from './view-all.component'
+import {CommonFunctions} from '@classes/common-functions';
 
 export class ViewAllServiceAdapter {
     vm: ViewAllComponent
@@ -42,7 +43,10 @@ export class ViewAllServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {})
         ]).then(value => {
             value[0].forEach(classs => {
-                classs.sectionList = value[1];
+                classs.sectionList = [];
+                value[1].forEach(section => {
+                    classs.sectionList.push(CommonFunctions.getInstance().copyObject(section));
+                });
             });
             this.vm.initializeClassSectionList(value[0]);
             this.vm.initializeStudentFullProfileList(value[2]);
