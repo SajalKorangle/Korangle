@@ -21,6 +21,11 @@ const routes: Routes = [
         // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
     },
     {
+        path: 'id_card',
+        loadChildren: 'app/modules/id-card/id-card.module#IdCardModule',
+        // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
+    },
+    {
         path: 'sms',
         loadChildren: 'app/modules/sms/sms.module#SmsModule',
     },
@@ -107,7 +112,6 @@ const routes: Routes = [
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
             {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
             {path: 'custom_reportcard', loadChildren: 'app/modules/report-card/custom_reportcard/custom_reportcard.module#CustomReportCardModule'},
-            /*{path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'},*/
             {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
         ]
     }

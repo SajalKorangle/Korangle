@@ -1,0 +1,7 @@
+[
+  {
+    "statement": "Add Employee using mock api",
+    "testType": "karma",
+    "testName": "Create Employee"
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "statement": "Add a text parameter",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Add a text parameter",
+      "Check the success message",
+      "Confirm the addition in update profile, view all, update all, add student pages of student module",
+      "Confirm the addition in design layout page of id-card module"
+    ],
+    "testName": null
+  },
+  {
+    "statement": "Add a filter parameter",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Add a filter parameter with three filters",
+      "Check the success message",
+      "Confirm the addition in update profile, view all, update all, add student pages of student module",
+      "Confirm the addition in notify defaulters page of fees module",
+      "Confirm the addition in send sms page of sms module",
+      "Confirm the addition in design layout page of id-card module"
+    ],
+    "testName": null
+  }
+]

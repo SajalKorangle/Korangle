@@ -1,0 +1,24 @@
+[
+  {
+    "statement": "Add Student",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Add Student",
+      "Check the success message"
+    ],
+    "testName": "Add Student"
+  },
+  {
+    "statement": "Add Student with an in place fee structure",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Add Student",
+      "Check the success message",
+      "Open view all page and confirm student addition",
+      "Open collect fee page and confirm fee addition"
+    ],
+    "testName": null
+  }
+]

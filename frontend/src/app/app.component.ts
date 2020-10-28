@@ -10,8 +10,9 @@ import moment = require('moment');
 import {NotificationService} from "./services/modules/notification/notification.service";
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
-import {EmitterService} from "./services/emitter.service";
 import {CommonFunctions} from './classes/common-functions';
+import {MatDialog} from '@angular/material/dialog';
+import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
 
 
 @Component({
@@ -22,16 +23,15 @@ import {CommonFunctions} from './classes/common-functions';
 })
 
 export class AppComponent implements OnInit {
-    subRouteValue: string;
     isLoading = false;
     countDownForValidity = -1;
-
-	public user = new User();
+    public user = new User();
 
 
 
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
+                private dialog: MatDialog,
                 private notificationService: NotificationService) {}
 
     ngOnInit() {
@@ -59,14 +59,11 @@ export class AppComponent implements OnInit {
         this.versionCheckService.initVersionCheck(environment.versionCheckURL);
     }
 
-    refresh() {
-        this.subRouteValue = this.user.section.subRoute ;
-        this.user.section.subRoute = null;
-        this.isLoading = true;
-        setTimeout(() => {
-            this.user.section.subRoute = this.subRouteValue;
-            this.isLoading = false;
-        }, 1000);
+    showTutorial() {
+        this.dialog.open(ModalVideoComponent, {
+            height: '80vh',
+            width: '80vw',
+        });
     }
 
     userHasAssignTaskCapability(): boolean {
@@ -100,7 +97,6 @@ export class AppComponent implements OnInit {
         }
     }
     isMobile(): boolean {
-        //return isMobile();
         return CommonFunctions.getInstance().isMobileMenu();
     }
 }

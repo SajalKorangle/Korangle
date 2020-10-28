@@ -1,0 +1,12 @@
+[
+  {
+    "statement": "Testing hasUnicode function with hindi message",
+    "testType": "karma",
+    "testName": "Component -> hasUnicode() return true"
+  },
+  {
+    "statement": "Testing hasUnicode function with simple english message",
+    "testType": "karma",
+    "testName": "Component -> hasUnicode() return false"
+  }
+]

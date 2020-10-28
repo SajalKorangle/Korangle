@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import moment = require('moment');
-import { PrintService } from 'app/print/print-service';
+import { PrintService } from '../../../../print/print-service';
 
 @Component({
     selector: 'print-expenses',

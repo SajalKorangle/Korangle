@@ -26,6 +26,8 @@ export class ViewNotificationComponent {
 
     isLoadingMoreNotification = false;
 
+    notificationBeingDeleted = null;
+
     constructor (public notificationService: NotificationService) { }
 
     ngOnInit(): void {
@@ -45,6 +47,13 @@ export class ViewNotificationComponent {
         } else {
             return '-';
         }
+    }
+
+    isDeleteClicked(notification: any): boolean {
+        if (this.notificationBeingDeleted === notification){
+            return true;
+        }
+        return false;
     }
 
 }

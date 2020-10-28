@@ -22,7 +22,6 @@ export class User {
     schoolList: School[] = [];
 
     isLazyLoading: boolean = false;
-    isPageLoading: boolean = false;
 
     emptyUserDetails(): void {
         this.username = null;
@@ -35,7 +34,6 @@ export class User {
         this.activeSchool = null;
         this.schoolList = [];
         this.isLazyLoading = false;
-        this.isPageLoading = false;
         this.section = null;
     }
 
@@ -60,7 +58,6 @@ export class User {
     }
 
     initializeUserData(data: any): void {
-        console.log(data);
         this.id = data.id;
         this.username = data.username;
         this.first_name = data.first_name;
@@ -135,6 +132,9 @@ export class User {
                 title: module.title,
                 subTitle: task.title,
             };
+            if (task.videoUrl) {
+                this.section['videoUrl'] = task.videoUrl;
+            }
         }
     }
 

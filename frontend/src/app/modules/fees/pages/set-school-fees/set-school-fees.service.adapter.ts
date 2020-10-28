@@ -78,8 +78,8 @@ export class SetSchoolFeesServiceAdapter {
 
         Promise.all([
             this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data),
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
             this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),

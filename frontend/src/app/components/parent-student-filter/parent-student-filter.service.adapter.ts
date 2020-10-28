@@ -25,7 +25,7 @@ export class ParentStudentFilterServiceAdapter {
 
         let student_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'fields__korangle': 'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte'
+            'fields__korangle': 'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte,parentTransferCertificate'
         };
 
         if (!this.vm.studentTcGenerated) {
@@ -34,8 +34,8 @@ export class ParentStudentFilterServiceAdapter {
         }
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
         ]).then(value => {

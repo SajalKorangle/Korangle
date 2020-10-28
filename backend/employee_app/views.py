@@ -166,3 +166,11 @@ class EmployeePermissionView(CommonView, APIView):
 
 class EmployeePermissionListView(CommonListView, APIView):
     Model = EmployeePermission
+
+from .models import EmployeeSessionDetail
+
+class EmployeeeSessionDetailView(CommonView,APIView):
+    Model = EmployeeSessionDetail
+
+class EmployeeeSessionDetailListView(CommonListView,APIView):
+    Model = EmployeeSessionDetail

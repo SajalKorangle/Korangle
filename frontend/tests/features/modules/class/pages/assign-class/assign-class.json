@@ -1,0 +1,15 @@
+[
+  {
+    "statement": "Give Permission to employee for class attendance",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Type Employee Name",
+      "Select Class",
+      "Give Permission",
+      "Open Attendance Page",
+      "Confirm the permission in above steps"
+    ],
+    "testName": "Assign Class"
+  }
+]

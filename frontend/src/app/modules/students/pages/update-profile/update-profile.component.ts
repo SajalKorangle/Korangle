@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Student } from '../../../../classes/student';
 import { Classs } from '../../../../classes/classs';
 import { Section } from '../../../../classes/section';
+import {UpdateProfileServiceAdapter} from './update-profile.service.adapter'
 
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
@@ -18,7 +19,9 @@ import { CommonFunctions } from "../../../../classes/common-functions";
 
 export class UpdateProfileComponent implements OnInit {
 
-   user;
+    user;
+
+    NULL_CONSTANT = null;
 
     selectedStudent: any;
 
@@ -26,6 +29,7 @@ export class UpdateProfileComponent implements OnInit {
 
     busStopList = [];
 
+    isStudentListLoading = false;
     isLoading = false;
 
     selectedStudentSection:any;
@@ -36,25 +40,24 @@ export class UpdateProfileComponent implements OnInit {
 
     studentList: any;
     studentSectionList: any;
+    studentParameterList: any[] = [];
+    studentParameterValueList: any[] = [];
+    currentStudentParameterValueList: any[] = [];
+
+    serviceAdapter: UpdateProfileServiceAdapter
 
     commonFunctions: CommonFunctions;
 
-    constructor (private studentService: StudentService,
-                 private schoolService: SchoolService) { }
+    constructor (public studentService: StudentService,
+        public schoolService: SchoolService) { }
 
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
         this.commonFunctions = CommonFunctions.getInstance();
-
-        const dataForBusStop = {
-            'parentSchool': this.user.activeSchool.dbId,
-        };
-
-        this.schoolService.getObjectList(this.schoolService.bus_stop,dataForBusStop).then( busStopList => {
-            this.busStopList = busStopList;
-        });
+        this.serviceAdapter = new UpdateProfileServiceAdapter()
+        this.serviceAdapter.initializeAdapter(this)
+        this.serviceAdapter.initializeData()
     }
 
 
@@ -64,95 +67,33 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     handleStudentListSelection(value): void{
-        console.log(value);
         this.selectedStudent = value[0][0];
         this.selectedStudentSection = value[1][0];
-        this.getStudentProfile(this.selectedStudent.id);
+        this.serviceAdapter.getStudentProfile(this.selectedStudent.id);
     }
 
-    getStudentProfile(studentId : any): void {
-        this.isLoading = true;
-        let data = {
-            'id': studentId,
-        };
-        this.studentService.getObject(this.studentService.student, data).then(value=>{
-            this.currentStudent = this.commonFunctions.copyObject(value);
-            Object.keys(value).forEach(key => {
-                this.selectedStudent[key] = value[key];
-            });
-            this.currentStudentSection = this.commonFunctions.copyObject(this.selectedStudentSection);
-            this.isLoading = false;
-        });
+    getParameterValue = (parameter) => {
+        try {
+            return this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id).value
+        } catch {
+            return this.NULL_CONSTANT;
+        }
     }
 
-    updateProfile(): void {
-        if (this.currentStudent.currentBusStop == 0) {
-            this.currentStudent.currentBusStop = null;
+    updateParameterValue = (parameter, value) => {
+        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        if (!item) {
+            item = {parentStudent: this.currentStudent.id, parentStudentParameter: parameter.id, value: value};
+            this.currentStudentParameterValueList.push(item);
+        } else {
+            item.value = value;
         }
-        if (this.currentStudent.admissionSession == 0) {
-            this.currentStudent.admissionSession = null;
-        }
-        if (this.currentStudent.familySSMID
-            && this.currentStudent.familySSMID.toString().length !== 0
-            && this.currentStudent.familySSMID.toString().length !== 8) {
-            alert('Number of digits in Family SSMID should be 8');
-            return;
-        }
+    }
 
-        if (this.currentStudent.mobileNumber
-            && this.currentStudent.mobileNumber.toString().length !== 0
-            && this.currentStudent.mobileNumber.toString().length !== 10) {
-            alert("mobile number should be of l0 digits!");
-            return;
-        }
-        if (this.currentStudent.secondMobileNumber
-            && this.currentStudent.secondMobileNumber.toString().length !== 0
-            && this.currentStudent.secondMobileNumber.toString().length !== 10) {
-            alert("alternate mobile number should be of l0 digits!");
-            return;
-        }
-
-        if (this.currentStudent.childSSMID
-            && this.currentStudent.childSSMID.toString().length !== 0
-            && this.currentStudent.childSSMID.toString().length !== 9) {
-            alert('Number of digits in Child SSMID should be 9');
-            return;
-        }
-        if (this.currentStudent.aadharNum
-            && this.currentStudent.aadharNum.toString().length !== 0
-            && this.currentStudent.aadharNum.toString().length !== 12) {
-            alert('Number of digits in Aadhar No. should be 12');
-            return;
-        }
-
-        this.isLoading = true;
-        let service_list = [];
-        
-        service_list.push(this.studentService.updateObject(this.studentService.student,this.currentStudent));
-
-        if(this.selectedStudentSection.rollNumber != this.currentStudentSection.rollNumber
-            && this.currentStudent.id == this.currentStudentSection.parentStudent){
-            service_list.push(this.studentService.updateObject(this.studentService.student_section,this.currentStudentSection));
-        }
-
-        Promise.all(service_list).then(value =>{
-            Object.keys(value[0]).forEach(key =>{
-                this.selectedStudent[key] = value[0][key];
-            });
-            this.currentStudent = this.commonFunctions.copyObject(this.selectedStudent);
-            if(value.length == 2){
-                Object.keys(value[1]).forEach(key => {
-                    this.selectedStudentSection[key] = value[1][key];
-                });
-
-                this.currentStudentSection = this.commonFunctions.copyObject(this.selectedStudentSection);
-            }
-            alert('Student: ' + this.selectedStudent.name + ' updated successfully');
-            this.isLoading = false;
-
-        },error => {
-            this.isLoading = false;
-        });
+    checkCustomFieldChanged = (parameter) => {
+        const item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        const old_item = this.studentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        return item && (!old_item || item.value !== old_item.value);
     }
 
     getBusStopName(busStopDbId: any) {
@@ -171,7 +112,7 @@ export class UpdateProfileComponent implements OnInit {
 
     getClassName(): any {
         return this.classList.find(classs => {
-            return this.selectedStudentSection.parentClass == classs.dbId;
+            return this.selectedStudentSection.parentClass == classs.id;
         }).name;
     }
 

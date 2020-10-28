@@ -3,7 +3,7 @@ import { MyCollectionServiceAdapter } from "./my-collection.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {DataStorage} from "../../../../classes/data-storage";
@@ -12,7 +12,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'my-collection',
     templateUrl: './my-collection.component.html',
     styleUrls: ['./my-collection.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService, ClassOldService ],
+    providers: [ FeeService, EmployeeService, StudentService,ClassService ],
 })
 
 export class MyCollectionComponent implements OnInit {
@@ -48,7 +48,7 @@ export class MyCollectionComponent implements OnInit {
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
                 public studentService: StudentService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

@@ -1,0 +1,17 @@
+[
+  {
+    "file": "single-notification.json",
+    "file_object_list": [
+      {
+        "app": "school_app",
+        "model": "School",
+        "file": "1.json"
+      },
+      {
+        "app": "auth",
+        "model": "User",
+        "file": "1.json"
+      }
+    ]
+  }
+]

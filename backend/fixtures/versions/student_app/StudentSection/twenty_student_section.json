@@ -1,0 +1,22 @@
+[
+	{ "model": "student_app.studentsection", "pk": 1, "fields": { "parentStudent": 1 , "parentSession": 1, "parentClass": 1, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 2, "fields": { "parentStudent": 2 , "parentSession": 1, "parentClass": 1, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 3, "fields": { "parentStudent": 3 , "parentSession": 1, "parentClass": 1, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 4, "fields": { "parentStudent": 4 , "parentSession": 1, "parentClass": 1, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 5, "fields": { "parentStudent": 5 , "parentSession": 1, "parentClass": 1, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 6, "fields": { "parentStudent": 6 , "parentSession": 1, "parentClass": 2, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 7, "fields": { "parentStudent": 7 , "parentSession": 1, "parentClass": 2, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 8, "fields": { "parentStudent": 8 , "parentSession": 1, "parentClass": 2, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 9, "fields": { "parentStudent": 9 , "parentSession": 1, "parentClass": 2, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 10, "fields": { "parentStudent": 10 , "parentSession": 1, "parentClass": 2, "parentDivision": 2 } },
+	{ "model": "student_app.studentsection", "pk": 11, "fields": { "parentStudent": 11 , "parentSession": 1, "parentClass": 2, "parentDivision": 2 } },
+	{ "model": "student_app.studentsection", "pk": 12, "fields": { "parentStudent": 12 , "parentSession": 1, "parentClass": 2, "parentDivision": 2 } },
+	{ "model": "student_app.studentsection", "pk": 13, "fields": { "parentStudent": 13 , "parentSession": 1, "parentClass": 2, "parentDivision": 2 } },
+	{ "model": "student_app.studentsection", "pk": 14, "fields": { "parentStudent": 14 , "parentSession": 1, "parentClass": 3, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 15, "fields": { "parentStudent": 15 , "parentSession": 1, "parentClass": 3, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 16, "fields": { "parentStudent": 16 , "parentSession": 1, "parentClass": 4, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 17, "fields": { "parentStudent": 17 , "parentSession": 1, "parentClass": 5, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 18, "fields": { "parentStudent": 18 , "parentSession": 1, "parentClass": 6, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 19, "fields": { "parentStudent": 19 , "parentSession": 1, "parentClass": 7, "parentDivision": 1 } },
+	{ "model": "student_app.studentsection", "pk": 20, "fields": { "parentStudent": 20 , "parentSession": 1, "parentClass": 8, "parentDivision": 1 } }
+]

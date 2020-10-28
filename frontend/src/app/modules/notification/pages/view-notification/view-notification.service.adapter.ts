@@ -13,7 +13,7 @@ export class ViewNotificationServiceAdapter {
         this.vm = vm;
     }
 
-    //initialize data
+    // initialize data
     initializeData(): void {
 
         let count = this.vm.notificationList.length;
@@ -21,7 +21,7 @@ export class ViewNotificationServiceAdapter {
         let notification_data = {
             'parentUser': this.vm.user.id,
             'korangle__order': '-sentDateTime',
-            'korangle__count': count.toString() + ',' + (count+this.vm.loadingCount).toString(),
+            'korangle__count': count.toString() + ',' + (count + this.vm.loadingCount).toString(),
         };
 
         this.vm.isLoading = true;
@@ -47,7 +47,7 @@ export class ViewNotificationServiceAdapter {
         let notification_data = {
             'parentUser': this.vm.user.id,
             'korangle__order': '-sentDateTime',
-            'korangle__count': count.toString() + ',' + (count+this.vm.loadingCount).toString(),
+            'korangle__count': count.toString() + ',' + (count + this.vm.loadingCount).toString(),
         };
 
         this.vm.isLoadingMoreNotification = true;
@@ -60,10 +60,27 @@ export class ViewNotificationServiceAdapter {
                 this.vm.loadMoreNotifications = false;
             }
             this.vm.isLoadingMoreNotification = false;
-        }, error=> {
+        }, error => {
             this.vm.isLoadingMoreNotification = false;
         });
 
+    }
+
+    deleteNotification(notification: any) {
+        if (!confirm('Are you sure you want to delete this notification')) {
+            return;
+        }
+        this.vm.notificationBeingDeleted = notification;
+        const notification_delete_data = {
+            'id': notification.id
+        };
+        this.vm.notificationService.deleteObject(this.vm.notificationService.notification, notification_delete_data).then(val => {
+            const idx = this.vm.notificationList.indexOf(notification);
+            this.vm.notificationList.splice(idx,1);
+            this.vm.notificationBeingDeleted = null;
+        }).catch((err) => {
+            console.log(err);
+        })
     }
 
 }

@@ -1,0 +1,7 @@
+[
+  {
+    "statement": "Calling printFeesReport function and in turn calling printStudentFeesReport function with mock print service",
+    "testType": "karma",
+    "testName": "Testing printFeesReport() for Student"
+  }
+]

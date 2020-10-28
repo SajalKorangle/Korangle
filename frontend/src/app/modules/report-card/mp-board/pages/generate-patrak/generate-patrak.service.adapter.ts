@@ -69,7 +69,7 @@ export class GeneratePatrakServiceAdapter {
                 };
 
                 Promise.all([
-                    this.vm.classService.getClassList(this.vm.user.jwt),
+                    this.vm.classService.getObjectList(this.vm.classService.classs,{}),
                     // this.vm.classOldService.getSectionList(this.vm.user.jwt),
                     this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
                     this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
@@ -155,7 +155,7 @@ export class GeneratePatrakServiceAdapter {
             this.studentList.filter(student => {
                 return student.parentTransferCertificate === null;
             }).forEach(student => {
-                if (student.classDbId === classs.dbId) {
+                if (student.classDbId === classs.id) {
                     tempClass['studentList'].push(student);
                 }
             });
@@ -176,7 +176,7 @@ export class GeneratePatrakServiceAdapter {
             'subjectList': [],
             'schoolList': [this.vm.user.activeSchool.dbId],
             'employeeList': [],
-            'classList': [this.vm.selectedClass.dbId],
+            'classList': [this.vm.selectedClass.id],
             'sectionList': [1],
             'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             'mainSubject': [],
@@ -207,7 +207,7 @@ export class GeneratePatrakServiceAdapter {
 
             let request_class_test_data = {
                 'parentExamination__in': this.getExaminationIdList(),
-                'parentClass': this.vm.selectedClass.dbId,
+                'parentClass': this.vm.selectedClass.id,
                 'parentDivision': 1,
                 'parentSubject__in':this.classSubjectList.map(a => a.parentSubject),
             };
@@ -437,7 +437,7 @@ export class GeneratePatrakServiceAdapter {
             }
         });
         if (classMarks==0) {classMarks = 1};
-        return (studentMarks*maximumMarks)/classMarks;
+        return parseFloat(((studentMarks*maximumMarks)/classMarks).toFixed(this.vm.reportCardMapping.maximumDecimalPoints));
     }
 
     getStudentExtraSubFieldMarks(studentId: any, extraSubFieldId: any, examinationId: any): any {

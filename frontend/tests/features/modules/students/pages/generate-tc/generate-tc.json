@@ -1,0 +1,14 @@
+[
+  {
+    "statement": "Open the page, select the student, generate tc, check the success message, and re-open page & confirm the change",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Select the student",
+      "Generate TC",
+      "Check success message",
+      "Re-opne page & confirm the change"
+    ],
+    "testName": null
+  }
+]

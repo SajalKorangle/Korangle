@@ -1,0 +1,3 @@
+[
+	{ "model": "notification_app.notification", "pk": 1, "fields": { "content": "Test Content" , "parentMessageType": 1, "sentDateTime": "2013-03-16T17:41:28+00:00", "parentUser": 1, "parentSchool": 1 } }
+]

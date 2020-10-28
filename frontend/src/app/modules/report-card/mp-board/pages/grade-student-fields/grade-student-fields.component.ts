@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-// import { ExaminationOldService } from '../../../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 import { ClassService } from '../../../../../services/modules/class/class.service';
 import { SubjectService } from '../../../../../services/modules/subject/subject.service';
@@ -35,7 +34,7 @@ export class GradeStudentFieldsComponent implements OnInit {
     classSectionList = [];
     fieldList: any;
 
-    minimumMarks = 0.00;
+    minimumMarks = 1.20;
     maximumMarks =2.00;
 
     studentList = [];
