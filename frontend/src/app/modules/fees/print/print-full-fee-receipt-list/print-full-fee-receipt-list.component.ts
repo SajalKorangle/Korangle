@@ -65,7 +65,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
 
     getClassName(feeReceipt: any): any {
         return this.classList.find(classs => {
-            return classs.dbId == this.studentSectionList.find(studentSection => {
+            return classs.id == this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == feeReceipt.parentStudent
                     && studentSection.parentSession == feeReceipt.parentSession;
             }).parentClass;

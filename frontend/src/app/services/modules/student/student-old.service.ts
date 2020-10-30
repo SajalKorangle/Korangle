@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import { Student } from '../../../classes/student';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
+import {deprecate} from 'util';
 
 @Injectable()
 export class StudentOldService extends CommonServiceRequirements {

@@ -1,0 +1,3 @@
+[
+	{ "model": "attendance_app.attendancepermission", "pk": 1, "fields": { "parentEmployee": 1 , "parentSession": 1, "parentClass": 1, "parentDivision": 1 } }
+]

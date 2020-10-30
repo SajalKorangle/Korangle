@@ -4,7 +4,7 @@ import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import { SmsService } from "../../../../services/modules/sms/sms.service";
 import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {NotificationService} from "../../../../services/modules/notification/notification.service";
 import {UserService} from "../../../../services/modules/user/user.service";
 import {INSTALLMENT_LIST} from "../../classes/constants";
@@ -18,7 +18,7 @@ import { PRINT_FEES_REPORT} from '../../print/print-routes.constants';
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [ FeeService, StudentService, ClassOldService, NotificationService, UserService, SmsService, SmsOldService, SchoolService],
+    providers: [ FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService ],
 })
 
 export class ViewDefaultersComponent implements OnInit {
@@ -92,10 +92,10 @@ export class ViewDefaultersComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public schoolService : SchoolService,
+    constructor(public schoolService: SchoolService,
                 public feeService: FeeService,
                 public studentService: StudentService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 private excelService: ExcelService,
                 public notificationService: NotificationService,
                 public userService: UserService,
@@ -111,8 +111,8 @@ export class ViewDefaultersComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        let monthNumber = (new Date()).getMonth();
-        this.installmentNumber = (monthNumber > 2)?monthNumber-3:monthNumber+9;
+        const monthNumber = (new Date()).getMonth();
+        this.installmentNumber = (monthNumber > 2) ? monthNumber - 3 : monthNumber + 9;
     }
 
     detectChanges(): void {
@@ -296,7 +296,7 @@ export class ViewDefaultersComponent implements OnInit {
             });
 
             student['class'] = this.classList.find(classs => {
-                return studentSection.parentClass == classs.dbId;
+                return studentSection.parentClass == classs.id;
             });
 
             student['section'] = this.sectionList.find(section => {
@@ -360,7 +360,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
         if (this.filteredClassSectionList.find(classSection => {
-            return classSection.class.dbId == classs.dbId && classSection.section.id == section.id;
+            return classSection.class.id === classs.id && classSection.section.id === section.id;
         }) == undefined) {
             this.filteredClassSectionList.push({
                 'class': classs,
@@ -370,9 +370,9 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     getStudentString = (studentList) => {
-        let ret = "";
+        let ret = '';
         studentList.forEach(student => {
-            ret += student.name +": "+ this.getCurrencyInINR(student.feesDueTillMonth)+"\n";
+            ret += student.name + ": " + this.getCurrencyInINR(student.feesDueTillMonth)+"\n";
         })
         return ret;
     }
@@ -384,7 +384,7 @@ export class ViewDefaultersComponent implements OnInit {
         }
         return ret;
     }
-    
+
     hasUnicode(message): boolean {
         for (let i=0; i<message.length; ++i) {
             if (message.charCodeAt(i) > 127) {
@@ -393,7 +393,7 @@ export class ViewDefaultersComponent implements OnInit {
         }
         return false;
     }
-    
+
     getMessageCount = (message) => {
         if (this.hasUnicode(message)){
             return Math.ceil(message.length/70);
@@ -480,7 +480,7 @@ export class ViewDefaultersComponent implements OnInit {
         });
         if (this.selectedClassSection) {
             tempList = tempList.filter(student => {
-                return student.class.dbId == this.selectedClassSection.class.dbId
+                return student.class.id == this.selectedClassSection.class.id
                     && student.section.id == this.selectedClassSection.section.id;
             });
         }
@@ -590,7 +590,7 @@ export class ViewDefaultersComponent implements OnInit {
             this.printParentFeesReport();
         }
     }
-    
+
     downloadFeesReport(): void {
 
         if (this.selectedFilterType==this.filterTypeList[0]) {

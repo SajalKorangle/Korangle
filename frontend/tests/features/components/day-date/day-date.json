@@ -1,0 +1,22 @@
+[
+  {
+    "statement": "Check nullDate function to be returning null date",
+    "testType": "karma",
+    "steps": [
+      "Set up the DayDate component",
+      "Call the nullDate function",
+      "Check the return value of date to be null"
+    ],
+    "testName": "Check nullDate function to be returning null date"
+  },
+  {
+    "statement": "Check onDateChanged function with various values",
+    "testType": "karma",
+    "steps": [
+      "Set up the DayDate component",
+      "Call the onDateChanged function with various date values for both formattedOutput true & false",
+      "Check the value emitted by onDateSelected emitter with the expected value"
+    ],
+    "testName": null
+  }
+]

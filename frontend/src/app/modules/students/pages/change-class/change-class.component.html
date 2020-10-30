@@ -105,7 +105,7 @@
         <br/>
 
         <button type="submit"
-                *ngIf="!(selectedClass.dbId === selectedStudentSection.parentClass
+                *ngIf="!(selectedClass.id === selectedStudentSection.parentClass
                         && selectedClass.selectedSection.id === selectedStudentSection.parentDivision)"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="changeClassSection()">

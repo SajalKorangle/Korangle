@@ -81,14 +81,14 @@ export class ViewMarksServiceAdapter {
                 'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             };
 
-            let request_class_test_data = {            
+            let request_class_test_data = {
                 /*'examinationId': this.vm.selectedExamination.id,
-                'classId': this.vm.selectedExamination.selectedClass.dbId,
+                'classId': this.vm.selectedExamination.selectedClass.id,
                 'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
                 'parentExamination__in': this.getExaminationIdList(),
                 'parentClass': this.student_full_profile.classDbId,
                 'parentDivision': this.student_full_profile.sectionDbId,
-            };            
+            };
 
             let request_student_test_data = {
                 'studentList': [this.student_full_profile.dbId],
