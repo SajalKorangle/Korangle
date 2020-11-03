@@ -169,11 +169,23 @@ export class ViewMarksComponent implements OnInit {
     }
 
     getEmployee(test: any): any {
+        // try {
+        // if (this.classSubjectList.find(classSubject => {
+        //     return classSubject.parentSubject == test.parentSubject;
+        // }) === undefined) {
+        //     console.log(test);
+        // }
+        // return this.employeeList[0];
         return this.employeeList.find(employee => {
             return employee.id == this.classSubjectList.find(classSubject => {
                 return classSubject.parentSubject == test.parentSubject;
             }).parentEmployee;
         });
+        // }
+        // catch(err){
+        //     console.log(err);
+        //     return null;
+        // }
     }
 
     getEmployeeName(test: any): any {

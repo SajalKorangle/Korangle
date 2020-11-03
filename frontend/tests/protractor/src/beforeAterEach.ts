@@ -11,13 +11,13 @@ export class BeforeAfterEach {
 
     static async beforeEach() {
 
-        BeforeAfterEach.browser = await puppeteer.launch();
-        // BeforeAfterEach.browser = await puppeteer.launch({headless: false});
-        // BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 100});
+        // BeforeAfterEach.browser = await puppeteer.launch();
+        BeforeAfterEach.browser = await puppeteer.launch({headless: false});
+        // BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 30});
         BeforeAfterEach.page = await BeforeAfterEach.browser.newPage();
         await BeforeAfterEach.page.setViewport({
             width: 1220,
-            height: 1080
+            height: 720
         });
         // await BeforeAfterEach.page.setDefaultNavigationTimeout(0);
         await BeforeAfterEach.page.goto('http://localhost:4200');

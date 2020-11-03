@@ -45,7 +45,7 @@
             <!-- div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-12"></div>
             </div -->
-            <button class="btn" (click)="subjectFilterDisplay=!subjectFilterDisplay" style="display: block; padding: 6px;">{{subjectFilterDisplay?'Hide Subject Filters':'Show Subjects Filter'}}</button>
+            <button class="btn" (click)="subjectFilterDisplay=!subjectFilterDisplay" style="display: block; padding: 6px;">{{subjectFilterDisplay?'Hide Subjects Filter':'Show Subjects Filter'}}</button>
 
             <div class="subject-selection" (click)="showForSubjects" *ngIf="subjectFilterDisplay">
                 <div *ngFor="let test of testList; let i=index" style="white-space: nowrap; text-align: left;">
@@ -84,6 +84,7 @@
                     </ng-container>
                 </tr>
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
