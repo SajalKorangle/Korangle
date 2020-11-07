@@ -240,6 +240,14 @@
             Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
         <br/>
 
+
+        <!-- search by keywords -->
+        <mat-form-field>
+            <input matInput type="text" [(ngModel)]="nameFilter" placeholder="keywords">
+        </mat-form-field>
+
+
+
         <button class="btn"
                 style="padding: 4px 7px"
                 (click)="selectAllStudents(); $event.stopPropagation();">Select All

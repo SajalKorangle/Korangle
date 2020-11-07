@@ -11,6 +11,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import {SendSmsServiceAdapter} from "./send-sms.service.adapter";
 import {NotificationService} from "../../../../services/modules/notification/notification.service";
 import {UserService} from "../../../../services/modules/user/user.service";
+import { isEmpty } from 'lodash';
 
 @Component({
     selector: 'send-sms',
@@ -66,6 +67,8 @@ export class SendSmsComponent implements OnInit {
 
     rows;
     timeout: any;
+
+    nameFilter ="" ;
 
     serviceAdapter: SendSmsServiceAdapter;
     studentFilters: any = {
@@ -320,6 +323,15 @@ export class SendSmsComponent implements OnInit {
             if(studentSection.student.rte==="YES" && this.studentFilters.rte.yes)return true;
             if(studentSection.student.rte==="NO" && this.studentFilters.rte.no)return true;
             return false;
+        }).filter(studentSection =>{
+
+            this.nameFilter = this.nameFilter.toString().toLowerCase().trim();
+
+            return studentSection.student.name.toLowerCase().indexOf(this.nameFilter)!=-1
+            || studentSection.student.fathersName.toLowerCase().indexOf(this.nameFilter)!=-1
+            || studentSection.student.name.toLowerCase().indexOf(this.nameFilter)!=-1
+            || isEmpty(this.nameFilter);
+           
         })
     }
 
