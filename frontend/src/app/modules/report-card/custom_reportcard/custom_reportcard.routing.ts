@@ -29,7 +29,7 @@ const routes: Routes = [
     },
     {
         path: PRINT_CUSTOM_REPORTCARD,
-        component: PrintCustomReportCardComponent, 
+        component: PrintCustomReportCardComponent,
     },
 ];
 

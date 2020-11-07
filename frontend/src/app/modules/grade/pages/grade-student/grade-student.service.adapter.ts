@@ -23,75 +23,88 @@ export class GradeStudentServiceAdapter {
 
         let grade_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId
+        };
+
+        let sub_grade_data = {
+            'parentGrade__parentSchool': this.vm.user.activeSchool.dbId,
+        };
+
+        let request_examination_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission, attendance_permission_data),
-            this.vm.gradeService.getObjectList(this.vm.gradeService.grade,grade_data),
-            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade,{})
+            this.vm.gradeService.getObjectList(this.vm.gradeService.grade, grade_data),
+            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, sub_grade_data),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data)
         ]).then(value => {
+
             this.vm.classList = value[0];
             this.vm.sectionList = value[1];
-            this.vm.attendencePermissionList = value[2];
+            this.vm.attendancePermissionList = value[2];
+            this.populateFilteredClassSectionList();
+            this.vm.examinationList = value[5];
 
-            if(this.vm.attendencePermissionList.length == 0){
+            if(this.vm.attendancePermissionList.length === 0) {
                 this.vm.isInitialLoading = false;
+                return;
             }
 
-            let request_student_section_data = {
-                'parentStudent__parentSchool':this.vm.user.activeSchool.dbId,
-                'parentDivision__in':Array.from(new Set(this.vm.attendencePermissionList.map(item=>{return item.parentDivision}))).join(),
-                'parentClass__in':Array.from(new Set(this.vm.attendencePermissionList.map(item=>{return item.parentClass}))).join(),
-                'parentSession':this.vm.user.activeSchool.currentSessionDbId,
+            const request_student_section_data = {
+                'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentDivision__in': Array.from(new Set(this.vm.attendancePermissionList.map(item => {return item.parentDivision}))).join(),
+                'parentClass__in': Array.from(new Set(this.vm.attendancePermissionList.map(item => {return item.parentClass}))).join(),
+                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
                 'parentStudent__parentTransferCertificate': 'null__korangle',
             };
 
 
-            let student_studentSection_map = {};
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section,request_student_section_data).then(value_studentSection => {
+            const student_studentSection_map = {};
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(value_studentSection => {
 
                 value_studentSection = value_studentSection.filter(item => {
-                    if(this.vm.attendencePermissionList.find(permission=>{
-                        return permission.parentClass == item.parentClass && permission.parentDivision == item.parentDivision
-                    }) != undefined){
+                    if (this.vm.attendancePermissionList.find(permission => {
+                        return permission.parentClass === item.parentClass && permission.parentDivision === item.parentDivision
+                    }) !== undefined) {
                         return true;
                     }
                     return false;
                 });
 
-                if(value_studentSection.length == 0){
+                if (value_studentSection.length === 0) {
                     this.vm.isInitialLoading = false;
                     // alert('No students have been allocated');
                     return;
                 }
 
-                let student_id = [];
-                value_studentSection.forEach(item=>{
+                const student_id = [];
+                value_studentSection.forEach(item => {
                     student_studentSection_map[item.parentStudent] = item;
                     student_id.push(item.parentStudent);
                 });
 
-                let request_student_data = {
-                    'id__in':student_id.join(),
+                const request_student_data = {
+                    'id__in': student_id.join(),
                     'fields__korangle': 'id,name,profileImage',
                 };
 
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(
-                    value_student=>{
+                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(value_student => {
 
-                        // map student with student section
-                        this.vm.studentList = value_student.map(student => {
-                            student['studentSection'] = student_studentSection_map[student.id];
-                            return student;
-                        });
-                        this.vm.isInitialLoading = false;
-
-                    }, error => {
-                        console.log('Error fetching students');
+                    // map student with student section
+                    this.vm.studentList = value_student.map(student => {
+                        student['studentSection'] = student_studentSection_map[student.id];
+                        return student;
                     });
+
+                    this.vm.isInitialLoading = false;
+
+                }, error => {
+                    console.log('Error fetching students');
+                });
 
             }, error => {
                 console.log('Error fetching student section data');
@@ -99,6 +112,16 @@ export class GradeStudentServiceAdapter {
             this.populateGradeList(value[3], value[4]);
         }, error => {
             this.vm.isInitialLoading = false;
+        });
+    }
+
+    populateFilteredClassSectionList(): void {
+        this.vm.filteredClassSectionList = [];
+        this.vm.attendancePermissionList.forEach(attendancePermission => {
+            this.vm.filteredClassSectionList.push({
+                'class': this.vm.classList.find(classs => classs.id === attendancePermission.parentClass),
+                'section': this.vm.sectionList.find(section => section.id === attendancePermission.parentDivision),
+            });
         });
     }
 
@@ -114,7 +137,7 @@ export class GradeStudentServiceAdapter {
             });
         });
         // console.log(this.vm.gradeList);
-        this.vm.selectedGrade = this.vm.gradeList[0];
+        // this.vm.selectedGrade = this.vm.gradeList[0];
     }
 
     // Get Student Sub-Grade Details
@@ -122,11 +145,13 @@ export class GradeStudentServiceAdapter {
 
         this.vm.isLoading = true;
 
-        let request_student_sub_grade_data = {
+        const request_student_sub_grade_data = {
             'parentStudent__in': this.vm.getFilteredStudentList().map(item => item.id).join(),
-            'parentSubGrade__parentGrade' : this.vm.selectedGrade.id
+            'parentSubGrade__parentGrade' : this.vm.selectedGrade.id,
+            'parentExamination': this.vm.selectedExamination.id
         };
-        this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade,request_student_sub_grade_data).then(value2 => {
+
+        this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data).then(value2 => {
             this.populateStudentList(value2);
             this.vm.showTestDetails = true;
             this.vm.isLoading = false;
@@ -149,6 +174,7 @@ export class GradeStudentServiceAdapter {
                         'id': 0,
                         'parentStudent': item.id,
                         'parentSubGrade': subGrade.id,
+                        'parentExamination': this.vm.selectedExamination.id,
                         'gradeObtained': '',
                     };
                     item['subGradeList'].push(result);
@@ -156,12 +182,10 @@ export class GradeStudentServiceAdapter {
             });
         });
 
-        // console.log(this.vm.getFilteredStudentList());
-
-        this.vm.studentList.sort(function(obj1,obj2){
-            if(obj1.studentSection.rollNumber < obj2.studentSection.rollNumber) return -1;
-            if(obj1.studentSection.rollNumber > obj2.studentSection.rollNumber) return 1;
-            if(obj1.name <= obj2.name) return -1;
+        this.vm.studentList.sort(function(obj1, obj2) {
+            if (obj1.studentSection.rollNumber < obj2.studentSection.rollNumber) return -1;
+            if (obj1.studentSection.rollNumber > obj2.studentSection.rollNumber) return 1;
+            if (obj1.name <= obj2.name) return -1;
             return 1;
         });
     }
@@ -180,46 +204,11 @@ export class GradeStudentServiceAdapter {
     }
 
 
-    getFilteredClassList(){
-        if(this.vm.attendencePermissionList.length > 0){
-            return this.vm.classList.filter(classs =>{
-                if(this.vm.attendencePermissionList.find(attendencePermission => {
-                    return attendencePermission.parentClass == classs.id;
-                }) != undefined ){
-                    return true;
-                }
-                return false;
-            });
-        }
-        else{
-            return [];
-        }
-    }
-
-    getSectionList(classs: any){
-        let allSections = this.vm.attendencePermissionList.filter(attendencePermission => {
-            return attendencePermission.parentClass == classs;
-        });
-        if(allSections.length > 0){
-            return this.vm.sectionList.filter(section =>{
-                if(allSections.find(sectionn => {
-                    return sectionn.parentDivision == section.id;
-                }) != undefined ){
-                    return true;
-                }
-                return false;
-            });
-        }
-        else{
-            return [];
-        }
-    }
-
     updateStudentField(studentSubGrade, element){
 
         let current_value = element.target.value;
 
-        if (current_value == studentSubGrade.gradeObtained) return;
+        if (current_value === studentSubGrade.gradeObtained) return;
 
         document.getElementById(studentSubGrade.parentStudent+'_'+studentSubGrade.parentSubGrade).classList.add('updatingField');
 
@@ -236,6 +225,7 @@ export class GradeStudentServiceAdapter {
             let request_studentSubGrade_data = {
                 'parentStudent': studentSubGrade.parentStudent,
                 'parentSubGrade' : studentSubGrade.parentSubGrade,
+                'parentExamination': studentSubGrade.parentExamination,
                 'gradeObtained': studentSubGrade.gradeObtained,
             };
             service_list.push(this.vm.gradeService.createObject(this.vm.gradeService.student_sub_grade, request_studentSubGrade_data));
@@ -245,7 +235,6 @@ export class GradeStudentServiceAdapter {
         }
         Promise.all(service_list).then(value => {
 
-            console.log(value);
             let item = this.vm.studentList.find(student => {
                 return student.id == studentSubGrade.parentStudent;
             })['subGradeList'].find(subGrade => {

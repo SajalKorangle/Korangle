@@ -34,6 +34,8 @@ describe('CustomizedNumberInputComponent', () => {
 
         // For false
         const valid_list = [
+            0,
+            '0',
             123,
             1.,
             1.2,

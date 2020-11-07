@@ -9,5 +9,5 @@ def add_create_grade_task_and_permission(apps,schema_editor):
     create_grade.save()
 
     for employee_permission in EmployeePermission.objects.filter(parentTask__path='assign_task'):
-            permissionObject = EmployeePermission(parentTask=create_grade, parentEmployee=employee_permission.parentEmployee)
-            permissionObject.save()
+        permissionObject = EmployeePermission(parentTask=create_grade, parentEmployee=employee_permission.parentEmployee)
+        permissionObject.save()

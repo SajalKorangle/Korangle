@@ -5,17 +5,13 @@ import { GradeService } from '../../../../services/modules/grade/grade.service';
 import {AttendanceService} from '../../../../services/modules/attendance/attendance.service';
 import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentService} from '../../../../services/modules/student/student.service';
+import {ExaminationService} from '@services/modules/examination/examination.service';
 
 @Component({
   selector: 'app-grade-student',
   templateUrl: './grade-student.component.html',
   styleUrls: ['./grade-student.component.css'],
-  providers:[
-      GradeService,
-    ClassService,
-    AttendanceService,
-      StudentService
-  ]
+  providers: [ GradeService, ClassService, AttendanceService, StudentService, ExaminationService ]
 })
 export class GradeStudentComponent implements OnInit {
 
@@ -29,18 +25,24 @@ export class GradeStudentComponent implements OnInit {
 
   classList = [];
   sectionList = [];
-  selectedClass = null ;
-  selectedSection = null;
-  attendencePermissionList = [];
-  gradeList = [];
+
+  selectedClassSection = null;
+  filteredClassSectionList = [];
+  attendancePermissionList = [];
+
+  selectedExamination = null;
+  examinationList = [];
+
   selectedGrade = null;
+  gradeList = [];
   studentList = [];
 
-  constructor(public gradeService:GradeService,
+  constructor(public gradeService: GradeService,
+              public examinationService: ExaminationService,
               public studentService: StudentService,
-              public attendanceService : AttendanceService,
-              public classService : ClassService,
-              private cdRef: ChangeDetectorRef,) { }
+              public attendanceService: AttendanceService,
+              public classService: ClassService,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
@@ -56,15 +58,50 @@ export class GradeStudentComponent implements OnInit {
 
   getFilteredStudentList(): any {
     return this.studentList.filter(student => {
-      return student.studentSection.parentClass == this.selectedClass
-          && student.studentSection.parentDivision == this.selectedSection;
+      return student.studentSection.parentClass === this.selectedClassSection.class.id
+          && student.studentSection.parentDivision === this.selectedClassSection.section.id;
     });
   }
 
-  selectClass(classs: any){
+  /*selectClass(classs: any){
     this.selectedClass = classs;
     this.showTestDetails = false;
-    this.selectedSection = this.serviceAdapter.getSectionList(this.selectedClass)[0].id;
+    this.selectedSection = this.getSectionList(this.selectedClass)[0].id;
+  }*/
+
+  /*getFilteredClassList() {
+    if(this.attendancePermissionList.length > 0){
+      return this.classList.filter(classs =>{
+        if(this.attendancePermissionList.find(attendencePermission => {
+          return attendencePermission.parentClass == classs.id;
+        }) != undefined ){
+          return true;
+        }
+        return false;
+      });
+    }
+    else{
+      return [];
+    }
   }
+
+  getSectionList(classs: any){
+    let allSections = this.attendancePermissionList.filter(attendencePermission => {
+      return attendencePermission.parentClass == classs;
+    });
+    if(allSections.length > 0){
+      return this.sectionList.filter(section =>{
+        if(allSections.find(sectionn => {
+          return sectionn.parentDivision == section.id;
+        }) != undefined ){
+          return true;
+        }
+        return false;
+      });
+    }
+    else{
+      return [];
+    }
+  }*/
 
 }

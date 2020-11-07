@@ -21,13 +21,11 @@ export class ManageLayoutServiceAdapter {
         let request_examination_data = {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
             'parentSchool': this.vm.user.activeSchool.dbId,
-        };        
+        };
         let request_grade_data = {
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
             'parentSchool': this.vm.user.activeSchool.dbId,
-        };        
+        };
         let request_sub_grade_data = {
-            'parentGrade__parentSession':this.vm.user.activeSchool.currentSessionDbId,
             'parentGrade__parentSchool':this.vm.user.activeSchool.dbId,
         };
         const request_student_section_data = {

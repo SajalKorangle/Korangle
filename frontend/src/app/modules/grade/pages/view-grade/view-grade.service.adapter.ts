@@ -13,33 +13,43 @@ export class ViewGradeServiceAdapter {
         this.vm = vm;
     }
 
-    //initialize data
+    // initialize data
     initializeData(): void {
         this.vm.isInitialLoading = true;
 
         let grade_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId
         };
+
+        let sub_grade_data = {
+            'parentGrade__parentSchool': this.vm.user.activeSchool.dbId,
+        }
+
+        let examination_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentExamination': this.vm.user.activeSchool.currentSessionDbId,
+        }
 
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.gradeService.getObjectList(this.vm.gradeService.grade,grade_data),
-            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade,{})
+            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade,sub_grade_data),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, examination_data)
         ]).then(value => {
             this.vm.classList = value[0];
             this.vm.sectionList = value[1];
+            this.vm.examinationList = value[4];
 
             let request_student_section_data = {
-                'parentStudent__parentSchool':this.vm.user.activeSchool.dbId,
-                'parentSession':this.vm.user.activeSchool.currentSessionDbId,
+                'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
                 'parentStudent__parentTransferCertificate': 'null__korangle',
             };
 
 
             let student_studentSection_map = {};
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section,request_student_section_data).then(value_studentSection => {
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(value_studentSection => {
 
                 if(value_studentSection.length == 0){
                     this.vm.isInitialLoading = false;
@@ -57,19 +67,20 @@ export class ViewGradeServiceAdapter {
                     'fields__korangle': 'id,name,profileImage',
                 };
 
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(
-                    value_student=>{
+                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(value_student => {
 
-                        // map student with student section
-                        this.vm.studentList = value_student.map(student => {
-                            student['studentSection'] = student_studentSection_map[student.id];
-                            return student;
-                        });
-                        this.vm.isInitialLoading = false;
-
-                    }, error => {
-                        console.log('Error fetching students');
+                    // map student with student section
+                    this.vm.studentList = value_student.map(student => {
+                        student['studentSection'] = student_studentSection_map[student.id];
+                        return student;
                     });
+                    this.vm.isInitialLoading = false;
+
+                }, error => {
+                    console.log('Error fetching students');
+                });
+
+                this.populateFilteredClassSectionList(value_studentSection);
 
             }, error => {
                 console.log('Error fetching student section data');
@@ -77,6 +88,23 @@ export class ViewGradeServiceAdapter {
             this.populateGradeList(value[2], value[3]);
         }, error => {
             this.vm.isInitialLoading = false;
+        });
+    }
+
+    populateFilteredClassSectionList(value_studentSection: any): void {
+        this.vm.filteredClassSectionList = [];
+        this.vm.classList.forEach(classs => {
+            this.vm.sectionList.forEach(section => {
+                if (value_studentSection.find(
+                    student_section =>
+                        student_section.parentClass === classs.id && student_section.parentDivision === section.id
+                ) !== undefined) {
+                    this.vm.filteredClassSectionList.push({
+                        'class': classs,
+                        'section': section,
+                    });
+                }
+            });
         });
     }
 
@@ -91,8 +119,6 @@ export class ViewGradeServiceAdapter {
                 }
             });
         });
-        // console.log(this.vm.gradeList);
-        this.vm.selectedGrade = this.vm.gradeList[0];
     }
 
     // Get Student Sub-Grade Details
@@ -100,15 +126,15 @@ export class ViewGradeServiceAdapter {
 
         let studentList = this.vm.getFilteredStudentList();
 
-        if(studentList.length > 0){
-            this.vm.noStudentPresent = false;
+        if (studentList.length > 0){
             this.vm.isLoading = true;
 
             let request_student_sub_grade_data = {
                 'parentStudent__in': this.vm.studentList.map(item => item.id).join(),
-                'parentSubGrade__parentGrade' : this.vm.selectedGrade.id
+                'parentSubGrade__parentGrade' : this.vm.selectedGrade.id,
+                'parentExamination': this.vm.selectedExamination.id
             };
-            this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade,request_student_sub_grade_data).then(value2 => {
+            this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data).then(value2 => {
                 this.populateStudentList(value2);
                 this.vm.showTestDetails = true;
                 this.vm.isLoading = false;
@@ -116,7 +142,6 @@ export class ViewGradeServiceAdapter {
                 this.vm.isLoading = false;
             });
         } else {
-            this.vm.noStudentPresent = true;
             this.vm.showTestDetails = true;
             this.vm.isLoading = false;
         }
@@ -137,6 +162,7 @@ export class ViewGradeServiceAdapter {
                         'id': 0,
                         'parentStudent': item.id,
                         'parentSubGrade': subGrade.id,
+                        'parentExamination': this.vm.selectedExamination,
                         'gradeObtained': '',
                     };
                     item['subGradeList'].push(result);

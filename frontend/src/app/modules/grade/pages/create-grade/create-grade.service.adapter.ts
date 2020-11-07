@@ -16,18 +16,18 @@ export class CreateGradeServiceAdapter {
     //initialize data
     initializeData(): void {
 
-        let request_grade_data = {
+        const request_grade_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId
+            // 'parentSession': this.vm.user.activeSchool.currentSessionDbId
         };
 
         this.vm.isLoading = true;
         this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data).then(value => {
             this.populateGradeList(value);
-            let request_sub_grade_data = {
+             const request_sub_grade_data = {
                 'parentGrade__in': value.map(a => a.id)
             };
-            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade,request_sub_grade_data).then(value1=>{
+            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data).then(value1=>{
                 this.populateSubGradeList(value1);
                 this.vm.isLoading = false;
             });
@@ -45,7 +45,7 @@ export class CreateGradeServiceAdapter {
 
     populateSubGradeList(subGradeList: any): void{
         subGradeList.forEach(subGrade => {
-            subGrade["newName"]=subGrade["name"];
+            subGrade['newName'] = subGrade['name'];
             // subGrade["isUpdating"] = false;
         });
         this.vm.subGradeList = subGradeList;
@@ -87,21 +87,21 @@ export class CreateGradeServiceAdapter {
 
         this.vm.isGradeGettingAdded = true;
 
-        let data = {
+        const data = {
             'name': this.vm.newGradeName,
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId
+            // 'parentSession': this.vm.user.activeSchool.currentSessionDbId
         };
 
-        this.vm.gradeService.createObject(this.vm.gradeService.grade,data).then(value => {
+        this.vm.gradeService.createObject(this.vm.gradeService.grade, data).then(value => {
             this.addToGradelist(value);
 
-            let sub_grade_data = {
+            const sub_grade_data = {
                 'name': this.vm.newSubGradeName,
                 'parentGrade' : value.id
             };
 
-            this.vm.gradeService.createObject(this.vm.gradeService.sub_grade,sub_grade_data).then(value_subgrade => {
+            this.vm.gradeService.createObject(this.vm.gradeService.sub_grade, sub_grade_data).then(value_subgrade => {
                 this.vm.newSubGradeName = "";
                 this.addToSubGradelist(value_subgrade);
             }, error => {

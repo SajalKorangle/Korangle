@@ -62,6 +62,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/report-card/custom_reportcard/custom_reportcard.module#CustomReportCardModule',
     },
     {
+        path: 'report_card',
+        loadChildren: 'app/modules/report-card/report-card.module#ReportCardModule',
+    },
+    {
         path: 'salary',
         loadChildren: 'app/modules/salary/salary.module#SalaryModule',
     },
