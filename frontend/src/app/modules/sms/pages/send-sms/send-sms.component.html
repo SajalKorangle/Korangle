@@ -206,9 +206,11 @@
 
 
         <!-- search by keywords -->
-        <mat-form-field>
-            <input matInput type="text" [(ngModel)]="nameFilter" placeholder="keywords">
-        </mat-form-field>
+        <br>
+            <mat-form-field>
+                <input matInput type="text" [(ngModel)]="nameFilter" placeholder="Enter student name,father's name..">
+            </mat-form-field>
+        
 
         <!-- Custom Filters -->
         <ng-container *ngIf="studentParameterList.length>0">
