@@ -11,7 +11,6 @@ import {DataStorage} from "../../../../classes/data-storage";
 import {SendSmsServiceAdapter} from "./send-sms.service.adapter";
 import {NotificationService} from "../../../../services/modules/notification/notification.service";
 import {UserService} from "../../../../services/modules/user/user.service";
-import { isEmpty } from 'lodash';
 
 @Component({
     selector: 'send-sms',
@@ -330,7 +329,7 @@ export class SendSmsComponent implements OnInit {
             return studentSection.student.name.toLowerCase().indexOf(this.nameFilter)!=-1
             || studentSection.student.fathersName.toLowerCase().indexOf(this.nameFilter)!=-1
             || studentSection.student.name.toLowerCase().indexOf(this.nameFilter)!=-1
-            || isEmpty(this.nameFilter);
+            || this.nameFilter==="";
            
         })
     }
