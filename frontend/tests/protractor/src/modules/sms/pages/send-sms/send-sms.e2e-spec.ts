@@ -2,8 +2,8 @@ import {BeforeAfterEach} from '../../../../beforeAterEach';
 import {startBackendServer} from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst} from '../../../../contains';
-import {By, element} from 'protractor';
+import {containsAll, containsFirst} from '../../../../contains';
+import {browser, by, element} from 'protractor';
 
 
 
@@ -29,9 +29,27 @@ describe('SMS -> Send SMS', () => {
         //Show student list
         (await containsFirst('button', 'Show')).click();
 
+        //Show employee list
+        //(await containsFirst('button', 'Show')).click();
+
+      
         //Confirming the total number no of students
-        var el = element(By.binding('studentSectionList.length'));
-        expect(el.getText()).toBe('122');
+
+        // Type the student name
+        await page.waitForSelector('input[name="keywords"]');
+        await page.type('input[name="keywords"]', 'San'); // Types instantly
+
+        // var el = element(by.id('totalStudent'));
+        // browser.sleep(3000);
+        // expect(await(el.getText())).toBe('3');
+ 
+      //  (await containsFirst('span', 'Show')).click();
+       // browser.sleep(5000);
+
+        
+
+        
+        
        
 
 

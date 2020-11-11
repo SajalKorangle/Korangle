@@ -1,18 +1,27 @@
 [
-    {
-      "app": "employee_app",
-      "model": "EmployeePermission",
-      "file": "1.json"
-    },
-    {
-      "app": "employee_app",
-      "model": "EmployeeSessionDetail",
-      "file": "1.json"
-    },
-    {
-      "app": "auth",
-      "model": "User",
-      "file": "1.json"
-    }
-  ]
-  
+  {
+    "app": "attendance_app",
+    "model": "AttendancePermission",
+    "file": "single_permission.json"
+  },
+  {
+    "app": "student_app",
+    "model": "StudentSection",
+    "file": "twenty_student_section.json"
+  },
+  {
+    "app": "employee_app",
+    "model": "EmployeePermission",
+    "file": "1.json"
+  },
+  {
+    "app": "employee_app",
+    "model": "EmployeeSessionDetail",
+    "file": "1.json"
+  },
+  {
+    "app": "auth",
+    "model": "User",
+    "file": "1.json"
+  }
+]
