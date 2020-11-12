@@ -255,3 +255,12 @@ class CCEMarks(models.Model):
         unique_together = ('parentStudent', 'parentSession')
 
 
+class Remarks(models.Model):
+
+    parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
+    parentExamination = models.ForeignKey(Examination, models.CASCADE, null=False, default=0, verbose_name='parentExamination')
+    remark = models.TextField(null=False, default='-', verbose_name='remark', blank=True)
+
+    class Meta:
+        db_table = 'remarks'
+        unique_together = ('parentStudent', 'parentExamination')

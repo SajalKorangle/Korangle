@@ -218,117 +218,63 @@ export default class ReportCard {
                 }
             } else if (this.getParameter(item.key).dataType === DATA_TYPES.TABLE) {
 
-                this.pdf.setDrawColor(item.drawColor);
+                // this.pdf.setDrawColor(item.drawColor);
 
                 let startingX, startingY;
 
+                startingY = item.y;
+                for (let i = 0; i < item.cellList.length; i++) {
+                    startingX = item.x;
+                    for (let j = 0; j < item.cellList[i].length; j++) {
+                        if (item.cellList[i][j]) {
+                            console.log(item.cellList[i][j]);
+                            this.pdf.setFillColor(item.cellList[i][j]);
+                            this.pdf.rect(startingX, startingY, item.columnList[j].length, item.rowList[i].length, 'F');
+                        }
+                        startingX += item.columnList[j].length;
+                    }
+                    startingY += item.rowList[i].length;
+                }
+
                 // Draw lines
-                // Row
+                // Horizontal
                 startingY = item.y;
                 for (let i = 0; i <= item.rowList.length; i++) {
                     startingX = item.x;
                     for (let j = 0; j < item.columnList.length; j++) {
-                        if (item.horizontalLineList[i][j]) {
-                            this.pdf.line(startingX, startingY, startingX + item.columnList[j].width, startingY);
+                        if (item.horizontalLineList[i][j].color) {
+                            this.pdf.setDrawColor(item.horizontalLineList[i][j].color);
+                            this.pdf.setLineWidth(item.horizontalLineList[i][j].width);
+                            this.pdf.line(
+                                startingX - this.getCorrectionForLineWidth(item.verticalLineList, i, j, item.rowList.length - 1),
+                                startingY,
+                                startingX + item.columnList[j].length + this.getCorrectionForLineWidth(item.verticalLineList, i, j + 1, item.rowList.length - 1),
+                                startingY);
                         }
-                        startingX += item.columnList[j].width;
+                        startingX += item.columnList[j].length;
                     }
-                    startingY += (i < item.rowList.length ? item.rowList[i].height : 0);
+                    startingY += (i < item.rowList.length ? item.rowList[i].length : 0);
                 }
 
-                // Column
+                // Vertical
                 startingY = item.y;
                 for (let i = 0; i < item.rowList.length; i++) {
                     startingX = item.x;
                     for (let j = 0; j <= item.columnList.length; j++) {
-                        if (item.verticalLineList[j][i]) {
-                            this.pdf.line(startingX, startingY, startingX, startingY + item.rowList[i].height);
+                        if (item.verticalLineList[j][i].color) {
+                            this.pdf.setDrawColor(item.verticalLineList[j][i].color);
+                            this.pdf.setLineWidth(item.verticalLineList[j][i].width);
+                            this.pdf.line(
+                                startingX,
+                                startingY - this.getCorrectionForLineWidth(item.horizontalLineList, j, i, item.columnList.length - 1),
+                                startingX,
+                                startingY + item.rowList[i].length + this.getCorrectionForLineWidth(item.horizontalLineList, j, i + 1, item.columnList.length - 1));
                         }
-                        startingX += (j < item.columnList.length ? item.columnList[j].width : 0);
+                        startingX += (j < item.columnList.length ? item.columnList[j].length : 0);
                     }
-                    startingY += item.rowList[i].height;
+                    startingY += item.rowList[i].length;
                 }
 
-                /*this.pdf.setDrawColor(item.drawColor);
-                const startingX = item.x;
-                const startingY = item.y;
-                const finalX = item.columnList.reduce((num, column) => {
-                    return num + column.width;
-                }, startingX);
-                const finalY = item.rowList.reduce((num, row) => {
-                    return num + row.height;
-                }, startingY);
-
-                // Fill Color
-                // rows
-                for (let i = 0, rowYPosition = startingY; i <= item.rowList.length; i++) {
-
-                    if (i < item.rowList.length) {
-                        if (item.rowList[i].fillColor) {
-                            this.pdf.setFillColor(item.rowList[i].fillColor);
-                            this.pdf.rect(startingX, rowYPosition, finalX - startingX, item.rowList[i].height, 'F');
-                        }
-                    }
-
-                    rowYPosition += (i < item.rowList.length ? item.rowList[i].height : 0);
-                }
-
-                // columns
-                for (let i = 0, columnXPosition = startingX; i <= item.columnList.length; i++) {
-
-                    if (i < item.columnList.length) {
-                        if (item.columnList[i].fillColor) {
-                            this.pdf.setFillColor(item.columnList[i].fillColor);
-                            this.pdf.rect(columnXPosition, startingY, item.columnList[i].width, finalY - startingY, 'F');
-                        }
-                    }
-
-                    columnXPosition += (i < item.columnList.length ? item.columnList[i].width : 0);
-                }
-
-                // Set Lines
-                // rows
-                for (let i = 0, rowYPosition = startingY; i <= item.rowList.length; i++) {
-
-                    // Setting Line
-                    if (i === 0 || i === item.rowList.length || item.rowList[i - 1].bottomBorder) {
-                        this.pdf.line(startingX, rowYPosition, finalX, rowYPosition);
-                    }
-
-                    rowYPosition += (i < item.rowList.length ? item.rowList[i].height : 0);
-                }
-
-                // columns
-                for (let i = 0, columnXPosition = startingX; i <= item.columnList.length; i++) {
-
-                    // Setting Line
-                    if (i === 0 || i === item.columnList.length || item.columnList[i - 1].rightBorder) {
-                        this.pdf.line(columnXPosition, startingY, columnXPosition, finalY);
-                    }
-
-                    columnXPosition += (i < item.columnList.length ? item.columnList[i].width : 0);
-                }*/
-
-                /*for (let rowIndex = 0; rowIndex < item.rowList.length; rowIndex++) {
-                    console.log(item.rowList[rowIndex].fillColor);
-                    let startingX = item.x;
-                    if (item.rowList[rowIndex].fillColor) {
-                        this.pdf.setFillColor(item.rowList[rowIndex].fillColor);
-                    }
-                    for (let columnIndex = 0; columnIndex < item.columnList.length; columnIndex++) {
-                        console.log(item.columnList[columnIndex].fillColor);
-                        if (item.columnList[columnIndex].fillColor) {
-                            this.pdf.setFillColor(item.columnList[columnIndex].fillColor);
-                        }
-                        if (item.columnList[columnIndex].fillColor || item.rowList[rowIndex].fillColor) {
-                            this.pdf.rect(startingX, startingY, item.columnList[columnIndex].width, item.rowList[rowIndex].height, 'FD');
-                        } else {
-                            this.pdf.rect(startingX, startingY, item.columnList[columnIndex].width, item.rowList[rowIndex].height);
-                        }
-                        startingX += item.columnList[columnIndex].width;
-                    }
-                    startingY += item.rowList[rowIndex].height;
-                }*/
             }
         }
     }
@@ -353,6 +299,19 @@ export default class ReportCard {
 
     download(): void {
         this.pdf.save('id-card.pdf')
+    }
+
+    getCorrectionForLineWidth(list: any, i: any, j: any, maxI: any): any {
+        if ( i - 1 < 0 ) {
+            return list[j][i].width / 2;
+        } else if ( i > maxI) {
+            return list[j][i - 1].width / 2;
+        } else {
+            return list[j][i].width / 2;
+            const first = list[j][i].width / 2;
+            const second = list[j][i - 1].width / 2;
+            return first > second ? first : second;
+        }
     }
 
 }

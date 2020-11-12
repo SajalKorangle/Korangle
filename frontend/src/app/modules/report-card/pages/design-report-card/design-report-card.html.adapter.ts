@@ -1,6 +1,6 @@
 import { DesignReportCardComponent } from './design-report-card.component';
 import {
-    DATA_TYPES,
+    DATA_TYPES, EXAMINATION_TYPE_LIST,
     FIELDS,
     MARKS_TYPE_LIST,
     marksVariableStructure,
@@ -12,17 +12,31 @@ export class DesignReportCardHtmlAdapter {
 
     vm: DesignReportCardComponent;
 
-    currentTableCell = {
-        rowIndex: 0,
-        columnIndex: 0,
-    };
+    examinationTypeList = EXAMINATION_TYPE_LIST;
+
+    selectedTableCellList = []; // {rowIndex: 0, columnIndex: 0};
+    selectedBorder = 'top'; // top, right, bottom, left
+
+    todaysDateFormatted = '';
 
     constructor() {}
 
     // Data
 
     initializeAdapter(vm: DesignReportCardComponent): void {
+
         this.vm = vm;
+
+        const todaysDate = new Date();
+        let month = '' + (todaysDate.getMonth() + 1);
+        let day = '' + todaysDate.getDate();
+        const year = todaysDate.getFullYear();
+
+        if (month.length < 2) { month = '0' + month; }
+        if (day.length < 2) { day = '0' + day; }
+
+        this.todaysDateFormatted = [year, month, day].join('-');
+
     }
 
     getExaminationFromExaminationId(examinationId: any): any {
@@ -65,6 +79,18 @@ export class DesignReportCardHtmlAdapter {
             this.vm.currentUserHandle.fontSize = 7;
         }
 
+        if (parameter.key ===  FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[1]) {
+            this.vm.currentUserHandle.value = {
+                'subGradeId': this.vm.data.subGradeList[0].id,
+                'examinationId': this.vm.data.examinationList[0].id,
+            };
+        }
+        if (parameter.field.fieldStructureKey === FIELDS.ATTENDANCE.fieldStructureKey) {
+            this.vm.currentUserHandle.value = {
+                'startDate': this.todaysDateFormatted,
+                'endDate': this.todaysDateFormatted,
+            };
+        }
         if (parameter.field.fieldStructureKey === FIELDS.CONSTANT.fieldStructureKey) {
             this.vm.currentUserHandle.value = 'Text - ' + (this.vm.getFilteredCurrentUserHandleListByGivenField(parameter.field).length);
         }
@@ -74,10 +100,10 @@ export class DesignReportCardHtmlAdapter {
             this.giveExamMarksUserHandleAName();
         }
         if (parameter.dataType === DATA_TYPES.TABLE) {
-            this.currentTableCell = {
+            this.selectedTableCellList.push({
                 rowIndex: 0,
                 columnIndex: 0,
-            };
+            });
         }
     }
 
@@ -107,10 +133,10 @@ export class DesignReportCardHtmlAdapter {
             this.giveExamMarksUserHandleAName();
         }
         if (parameter.dataType === DATA_TYPES.TABLE) {
-            this.currentTableCell = {
+            this.selectedTableCellList.push({
                 rowIndex: 0,
                 columnIndex: 0,
-            };
+            });
         }
     }
 
@@ -146,7 +172,7 @@ export class DesignReportCardHtmlAdapter {
     }
 
     addTableRowBefore(): void {
-        const rowIndex = this.currentTableCell.rowIndex;
+        const rowIndex = this.selectedTableCellList[0].rowIndex;
         this.vm.currentUserHandle.rowList.splice(rowIndex, 0,
             JSON.parse(JSON.stringify(this.vm.currentUserHandle.rowList[rowIndex])));
         this.vm.currentUserHandle.horizontalLineList.splice(rowIndex, 0,
@@ -154,10 +180,13 @@ export class DesignReportCardHtmlAdapter {
         this.vm.currentUserHandle.verticalLineList.forEach(verticalLine => {
             verticalLine.splice(rowIndex, 0, JSON.parse(JSON.stringify(verticalLine[rowIndex])));
         });
+        this.vm.currentUserHandle.cellList.splice(rowIndex, 0,
+            JSON.parse(JSON.stringify(this.vm.currentUserHandle.cellList[rowIndex])));
+        this.selectedTableCellList[0].rowIndex += 1;
     }
 
     addTableRowAfter(): void {
-        const rowIndex = this.currentTableCell.rowIndex;
+        const rowIndex = this.selectedTableCellList[0].rowIndex;
         this.vm.currentUserHandle.rowList.splice(rowIndex + 1, 0,
             JSON.parse(JSON.stringify(this.vm.currentUserHandle.rowList[rowIndex])));
         this.vm.currentUserHandle.horizontalLineList.splice(rowIndex + 2, 0,
@@ -165,19 +194,25 @@ export class DesignReportCardHtmlAdapter {
         this.vm.currentUserHandle.verticalLineList.forEach(verticalLine => {
             verticalLine.splice(rowIndex + 1, 0, JSON.parse(JSON.stringify(verticalLine[rowIndex])));
         });
+        this.vm.currentUserHandle.cellList.splice(rowIndex + 1, 0,
+            JSON.parse(JSON.stringify(this.vm.currentUserHandle.cellList[rowIndex])));
     }
 
     deleteTableRow(): void {
-        const rowIndex = this.currentTableCell.rowIndex;
+        const rowIndex = this.selectedTableCellList[0].rowIndex;
+        if (this.vm.currentUserHandle.rowList.length === rowIndex + 1) {
+            this.selectedTableCellList[0].rowIndex -= 1;
+        }
         this.vm.currentUserHandle.rowList.splice(rowIndex, 1);
         this.vm.currentUserHandle.horizontalLineList.splice(rowIndex + 1, 1);
         this.vm.currentUserHandle.verticalLineList.forEach(verticalLine => {
             verticalLine.splice(rowIndex, 1);
         });
+        this.vm.currentUserHandle.cellList.splice(rowIndex, 1);
     }
 
     addTableColumnBefore(): void {
-        const columnIndex = this.currentTableCell.columnIndex;
+        const columnIndex = this.selectedTableCellList[0].columnIndex;
         this.vm.currentUserHandle.columnList.splice(columnIndex, 0,
             JSON.parse(JSON.stringify(this.vm.currentUserHandle.columnList[columnIndex])));
         this.vm.currentUserHandle.verticalLineList.splice(columnIndex, 0,
@@ -185,10 +220,14 @@ export class DesignReportCardHtmlAdapter {
         this.vm.currentUserHandle.horizontalLineList.forEach(horizontalLine => {
             horizontalLine.splice(columnIndex, 0, JSON.parse(JSON.stringify(horizontalLine[columnIndex])));
         });
+        this.vm.currentUserHandle.cellList.forEach(row => {
+            row.splice(columnIndex, 0, JSON.parse(JSON.stringify(row[columnIndex])));
+        });
+        this.selectedTableCellList[0].columnIndex += 1;
     }
 
     addTableColumnAfter(): void {
-        const columnIndex = this.currentTableCell.columnIndex;
+        const columnIndex = this.selectedTableCellList[0].columnIndex;
         this.vm.currentUserHandle.columnList.splice(columnIndex + 1, 0,
             JSON.parse(JSON.stringify(this.vm.currentUserHandle.columnList[columnIndex])));
         this.vm.currentUserHandle.verticalLineList.splice(columnIndex + 2, 0,
@@ -196,15 +235,100 @@ export class DesignReportCardHtmlAdapter {
         this.vm.currentUserHandle.horizontalLineList.forEach(horizontalLine => {
             horizontalLine.splice(columnIndex + 1, 0, JSON.parse(JSON.stringify(horizontalLine[columnIndex])));
         });
+        this.vm.currentUserHandle.cellList.forEach(row => {
+            row.splice(columnIndex + 1, 0, JSON.parse(JSON.stringify(row[columnIndex])));
+        });
     }
 
     deleteTableColumn(): void {
-        const columnIndex = this.currentTableCell.columnIndex;
+        const columnIndex = this.selectedTableCellList[0].columnIndex;
+        if (this.vm.currentUserHandle.columnList.length === columnIndex + 1) {
+            this.selectedTableCellList[0].columnIndex -= 1;
+        }
         this.vm.currentUserHandle.columnList.splice(columnIndex, 1);
         this.vm.currentUserHandle.verticalLineList.splice(columnIndex + 1, 1);
         this.vm.currentUserHandle.horizontalLineList.forEach(horizontalLine => {
             horizontalLine.splice(columnIndex, 1);
         });
+        this.vm.currentUserHandle.cellList.forEach(row => {
+            row.splice(columnIndex, 1);
+        });
+    }
+
+    isCellSelected(rowIndex: any, columnIndex: any): boolean {
+        return this.selectedTableCellList.find(selectedTableCell => {
+            return selectedTableCell.rowIndex === rowIndex && selectedTableCell.columnIndex === columnIndex;
+        }) !== undefined;
+    }
+
+    handleCellClick(rowIndex: any, columnIndex: any): void {
+        if (this.selectedTableCellList.find(selectedTableCell => {
+            return selectedTableCell.rowIndex === rowIndex && selectedTableCell.columnIndex === columnIndex;
+        }) === undefined) {
+            this.selectedTableCellList.push({
+                rowIndex: rowIndex,
+                columnIndex: columnIndex,
+            });
+        } else {
+            this.selectedTableCellList = this.selectedTableCellList.filter(selectedTableCell => {
+                return selectedTableCell.rowIndex !== rowIndex || selectedTableCell.columnIndex !== columnIndex;
+            });
+        }
+    }
+
+    handleCellColor(value: any): void {
+        this.selectedTableCellList.forEach(selectedTableCell => {
+            this.vm.currentUserHandle.cellList[selectedTableCell.rowIndex][selectedTableCell.columnIndex] = value;
+        });
+    }
+
+    handleRowLength(length: any): void {
+        this.selectedTableCellList.forEach(selectedTableCell => {
+            this.vm.currentUserHandle.rowList[selectedTableCell.rowIndex].length = length;
+        });
+    }
+
+    handleColumnLength(length: any): void {
+        this.selectedTableCellList.forEach(selectedTableCell => {
+            this.vm.currentUserHandle.columnList[selectedTableCell.columnIndex].length = length;
+        });
+    }
+
+    handleTopBorder(value: any, variable: any): void { // variable can be 'color' or 'width'
+        this.selectedTableCellList.forEach(selectedTableCell => {
+            this.vm.currentUserHandle.horizontalLineList[selectedTableCell.rowIndex][selectedTableCell.columnIndex][variable] = value;
+        });
+    }
+
+    handleRightBorder(value: any, variable: any): void { // variable can be 'color' or 'width'
+        this.selectedTableCellList.forEach(selectedTableCell => {
+            this.vm.currentUserHandle.verticalLineList[selectedTableCell.columnIndex + 1][selectedTableCell.rowIndex][variable] = value;
+        });
+    }
+
+    handleBottomBorder(value: any, variable: any): void { // variable can be 'color' or 'width'
+        this.selectedTableCellList.forEach(selectedTableCell => {
+            this.vm.currentUserHandle.horizontalLineList[selectedTableCell.rowIndex + 1][selectedTableCell.columnIndex][variable] = value;
+        });
+    }
+
+    handleLeftBorder(value: any, variable: any): void { // variable can be 'color' or 'width'
+        this.selectedTableCellList.forEach(selectedTableCell => {
+            this.vm.currentUserHandle.verticalLineList[selectedTableCell.columnIndex][selectedTableCell.rowIndex][variable] = value;
+        });
+    }
+
+    selectAllTableCells(): void {
+        this.selectedTableCellList = [];
+        this.vm.currentUserHandle.rowList.forEach((row, rowIndex) => {
+            this.vm.currentUserHandle.columnList.forEach((column, columnIndex) => {
+                this.selectedTableCellList.push({rowIndex: rowIndex, columnIndex: columnIndex});
+            });
+        });
+    }
+
+    deselectAllTableCells(): void {
+        this.selectedTableCellList = [];
     }
 
     /* Hide the data below till it's not valid, when onBlur is called change to any valid name

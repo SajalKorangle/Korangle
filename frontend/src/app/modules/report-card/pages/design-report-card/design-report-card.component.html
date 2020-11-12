@@ -131,6 +131,7 @@
                                     (click)="htmlAdapter.makeACopy(currentUserHandle); updatePDF(1)">
                                 Copy
                             </button>
+                            <!-- EOF Copy Parameter -->
 
                             <!-- Delete Parameter -->
                             <button type="button" *ngIf="currentUserHandle"
@@ -139,9 +140,11 @@
                                     (click)="deleteFromCurrentUserHandleList(currentUserHandle);">
                                 Delete
                             </button>
+                            <!-- EOF Delete Parameter -->
 
                         </div>
 
+                        <!-- If a user handle is selected -->
                         <div *ngIf="currentUserHandle">
 
                             <!-- Text, Marks & Date -->
@@ -160,6 +163,119 @@
                                                [ngModel]="currentUserHandle.value" (ngModelChange)="currentUserHandle.value=$event;updatePDF();">
                                     </mat-form-field>
                                 </div>
+
+                                <!-- Date Format -->
+                                <ng-container *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.DATE">
+
+                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+
+                                    <b style="margin-bottom: 5px;">Set Date Format</b>
+
+                                    <!-- Input Field -->
+                                    <div style="margin-bottom: 10px;">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>
+                                                Format
+                                            </mat-label>
+                                            <input matInput
+                                                   type="text"
+                                                   [ngModel]="currentUserHandle.format"
+                                                   (ngModelChange)="currentUserHandle.format=$event;updatePDF();">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Explanation -->
+                                    <div style="margin-bottom: 15px;
+                                                width: 100%;
+                                                font-size: 10px;">
+
+                                        <!-- Every format-->
+                                        <div class="row no-gutters">
+                                            <div class="col-md-4" style="text-align: center">
+                                                Date
+                                                <div class="row no-gutters">
+                                                    <div class="col-xs-6">Type</div>
+                                                    <div class="col-xs-6" style="text-align: center">Display</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;d&gt;</div>
+                                                    <div class="col-xs-6">1</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;dd&gt;</div>
+                                                    <div class="col-xs-6">01</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;ddd&gt;</div>
+                                                    <div class="col-xs-6">1st</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;dddd&gt;</div>
+                                                    <div class="col-xs-6">First</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4" style="text-align: center">
+                                                Month
+                                                <div class="row no-gutters">
+                                                    <div class="col-xs-6">Type</div>
+                                                    <div class="col-xs-6" style="text-align: center">Display</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;m&gt;</div>
+                                                    <div class="col-xs-6">2</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;mm&gt;</div>
+                                                    <div class="col-xs-6">02</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;mmm&gt;</div>
+                                                    <div class="col-xs-6">Feb</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;mmmm&gt;</div>
+                                                    <div class="col-xs-6">February</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4" style="text-align: center">
+                                                Year
+                                                <div class="row no-gutters">
+                                                    <div class="col-xs-6">Type</div>
+                                                    <div class="col-xs-6" style="text-align: center">Display</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;yy&gt;</div>
+                                                    <div class="col-xs-6">89</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;yyy&gt;</div>
+                                                    <div class="col-xs-6">1989</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">&lt;yyyy&gt;</div>
+                                                    <div class="col-xs-6">Nineteen Eighty Nine</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        put separators like . / - etc. between &lt;dd&gt;/&lt;mm&gt;/&lt;yyyy&gt; as desired<br/>
+                                        Example
+                                        <div class="row no-gutters">
+                                            <div class="col-xs-6">3/2/10 or 12/11/17 type &lt;d&gt;/&lt;m&gt;/&lt;yy&gt;</div>
+                                            <div class="col-xs-6">3-Feb-2010 type &lt;d&gt;-&lt;mmm&gt;-&lt;yyy&gt;</div>
+                                        </div>
+                                        <div class="row no-gutters">
+                                            <div class="col-xs-6">03.02.10 or 12.11.17 type &lt;dd&gt;.&lt;mm&gt;.&lt;yy&gt;</div>
+                                            <div class="col-xs-6">3-February-2010 type &lt;d&gt;-&lt;mmmm&gt;-&lt;yyy&gt;</div>
+                                        </div>
+                                        <div class="row no-gutters">
+                                            <div class="col-xs-6">03.02.2010 or 12.11.2017 type &lt;dd&gt;.&lt;mm&gt;.&lt;yyy&gt;</div>
+                                            <div class="col-xs-6">Three February Two Thousand Ten type &lt;dddd&gt; &lt;mmmm&gt; &lt;yyyy&gt;</div>
+                                        </div>
+
+                                    </div>
+
+                                </ng-container>
 
                                 <!-- Marks -->
                                 <ng-container *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.MARKS">
@@ -324,126 +440,76 @@
                                     </div>
 
                                 </ng-container>
+                                <!-- EOF Marks -->
 
-                                <!-- Date Format -->
-                                <ng-container *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.DATE">
+                                <!-- Grades -->
+                                <ng-container *ngIf="currentUserHandle.key===fields.EXAMINATION.fieldStructureKey+'-'+htmlAdapter.examinationTypeList[1]">
 
                                     <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
-                                    <b style="margin-bottom: 5px;">Set Date Format</b>
+                                    <b style="margin-bottom: 10px;">Set Grade</b><br/>
 
-                                    <!-- Input Field -->
-                                    <div style="margin-bottom: 10px;">
-                                        <mat-form-field style="width: 100%;">
-                                            <mat-label>
-                                                Format
-                                            </mat-label>
-                                            <input matInput
-                                                   type="text"
-                                                   [ngModel]="currentUserHandle.format"
-                                                   (ngModelChange)="currentUserHandle.format=$event;updatePDF();">
-                                        </mat-form-field>
-                                    </div>
+                                    <mat-form-field style="margin-right: 10px;">
+                                        <mat-label>
+                                            Select Grade
+                                        </mat-label>
+                                        <mat-select [ngModel]="gradeAdapter.getGradeId()" (ngModelChange)="gradeAdapter.setSubGrade($event);updatePDF(4000);">
+                                            <mat-option *ngFor="let grade of data.gradeList;" [value]="grade.id">
+                                                {{grade.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
 
-                                    <!-- Explanation -->
-                                    <div style="margin-bottom: 15px;
-                                                width: 100%;
-                                                font-size: 10px;">
+                                    <mat-form-field>
+                                        <mat-label>
+                                            Select Sub-Grade
+                                        </mat-label>
+                                        <mat-select [(ngModel)]="currentUserHandle.value.subGradeId" (ngModelChange)="updatePDF(4000);">
+                                            <mat-option *ngFor="let subGrade of gradeAdapter.getFilteredSubGradeList();" [value]="subGrade.id">
+                                                {{subGrade.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
 
-                                        <!-- Every format-->
-                                        <div class="row no-gutters">
-                                            <div class="col-md-4" style="text-align: center">
-                                                Date
-                                                <div class="row no-gutters">
-                                                    <div class="col-xs-6">Type</div>
-                                                    <div class="col-xs-6" style="text-align: center">Display</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;d&gt;</div>
-                                                    <div class="col-xs-6">1</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;dd&gt;</div>
-                                                    <div class="col-xs-6">01</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;ddd&gt;</div>
-                                                    <div class="col-xs-6">1st</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;dddd&gt;</div>
-                                                    <div class="col-xs-6">First</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4" style="text-align: center">
-                                                Month
-                                                <div class="row no-gutters">
-                                                    <div class="col-xs-6">Type</div>
-                                                    <div class="col-xs-6" style="text-align: center">Display</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;m&gt;</div>
-                                                    <div class="col-xs-6">2</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;mm&gt;</div>
-                                                    <div class="col-xs-6">02</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;mmm&gt;</div>
-                                                    <div class="col-xs-6">Feb</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;mmmm&gt;</div>
-                                                    <div class="col-xs-6">February</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4" style="text-align: center">
-                                                Year
-                                                <div class="row no-gutters">
-                                                    <div class="col-xs-6">Type</div>
-                                                    <div class="col-xs-6" style="text-align: center">Display</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;yy&gt;</div>
-                                                    <div class="col-xs-6">89</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;yyy&gt;</div>
-                                                    <div class="col-xs-6">1989</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">&lt;yyyy&gt;</div>
-                                                    <div class="col-xs-6">Nineteen Eighty Nine</div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div style="margin-bottom: 10px;"></div>
 
-                                        put separators like . / - etc. between &lt;dd&gt;/&lt;mm&gt;/&lt;yyyy&gt; as desired<br/>
-                                        Example
-                                        <div class="row no-gutters">
-                                            <div class="col-xs-6">3/2/10 or 12/11/17 type &lt;d&gt;/&lt;m&gt;/&lt;yy&gt;</div>
-                                            <div class="col-xs-6">3-Feb-2010 type &lt;d&gt;-&lt;mmm&gt;-&lt;yyy&gt;</div>
-                                        </div>
-                                        <div class="row no-gutters">
-                                            <div class="col-xs-6">03.02.10 or 12.11.17 type &lt;dd&gt;.&lt;mm&gt;.&lt;yy&gt;</div>
-                                            <div class="col-xs-6">3-February-2010 type &lt;d&gt;-&lt;mmmm&gt;-&lt;yyy&gt;</div>
-                                        </div>
-                                        <div class="row no-gutters">
-                                            <div class="col-xs-6">03.02.2010 or 12.11.2017 type &lt;dd&gt;.&lt;mm&gt;.&lt;yyy&gt;</div>
-                                            <div class="col-xs-6">Three February Two Thousand Ten type &lt;dddd&gt; &lt;mmmm&gt; &lt;yyyy&gt;</div>
-                                        </div>
-
-                                    </div>
+                                    <mat-form-field>
+                                        <mat-label>
+                                            Select Examination
+                                        </mat-label>
+                                        <mat-select [(ngModel)]="currentUserHandle.value.examinationId" (ngModelChange)="updatePDF(2000);">
+                                            <mat-option *ngFor="let examination of data.examinationList;" [value]="examination.id">
+                                                {{examination.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
 
                                 </ng-container>
+                                <!-- EOF Grades -->
+
+                                <!-- Attendance -->
+                                <ng-container *ngIf="getParameter(currentUserHandle.key).field.fieldStructureKey === fields.ATTENDANCE.fieldStructureKey">
+                                    <day-date [placeHolder]="'Start Date'"
+                                              (onDateSelected)="currentUserHandle.value.startDate=$event;updatePDF(2000);"
+                                              [nullButtonDisabled]="true"
+                                              [formattedDateOutput]="true"
+                                              [initialValue]="currentUserHandle.value.startDate"></day-date>
+                                    <day-date [placeHolder]="'End Date'"
+                                              (onDateSelected)="currentUserHandle.value.endDate=$event;updatePDF(2000);"
+                                              [nullButtonDisabled]="true"
+                                              [formattedDateOutput]="true"
+                                              [initialValue]="currentUserHandle.value.endDate"></day-date>
+                                </ng-container>
+                                <!-- EOF Attendance -->
 
                                 <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
-                                <!-- Font List -->
+                                <!-- Font Style -->
                                 <div style="margin-bottom: 5px; width: 100%; align: center;">
                                     <b style="margin-bottom: 5px;">Set Field Style</b>
                                 </div>
+
+                                <!-- Font List -->
                                 <div style="margin-bottom: 10px;">
                                     <mat-form-field style="margin-right: 5px;">
                                         <mat-label>Select Font Family</mat-label>
@@ -462,6 +528,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <!-- EOF Font List -->
 
                                 <!-- Bold, Italic, Underline -->
                                 <div style="margin-bottom: 10px">
@@ -472,6 +539,7 @@
                                         <mat-icon>format_underline</mat-icon>
                                     </mat-button-toggle>
                                 </div>
+                                <!-- EOF Bold, Italic, Underline -->
 
                                 <!-- Text Color -->
                                 <div style="margin-bottom: 10px">
@@ -479,8 +547,10 @@
                                     <input [colorPicker]="currentUserHandle.textColor"
                                            (colorPickerChange)="currentUserHandle.textColor = $event;updatePDF(800);"
                                            [cpOutputFormat]="'hex'"
+                                           [cpDialogDisplay]="'inline'"
                                            [style.background]="currentUserHandle.textColor"/>
                                 </div>
+                                <!-- EOF Text Color -->
 
                                 <!-- Font Size -->
                                 <div class="row">
@@ -495,6 +565,8 @@
                                         </customized-number-input>
                                     </div>
                                 </div>
+                                <!-- EOF Font Size -->
+                                <!-- EOF Font Style -->
 
                                 <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
@@ -521,6 +593,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <!-- Alignment -->
 
                                 <!-- Position -->
                                 <div class="row" style="margin-bottom: 10px;">
@@ -545,6 +618,7 @@
                                         </customized-number-input>
                                     </div>
                                 </div>
+                                <!-- EOF Position -->
 
                                 <!-- Maximum Width -->
                                 <div class="row" style="margin-bottom: 10px;">
@@ -559,8 +633,11 @@
                                         </customized-number-input>
                                     </div>
                                 </div>
+                                <!-- EOF Maximum Width -->
+                                <!-- EOF Field Position -->
 
                             </div>
+                            <!-- EOF Text, Marks & Date -->
 
                             <!-- Image -->
                             <div *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.IMAGE">
@@ -614,9 +691,12 @@
                                 </div>
 
                             </div>
+                            <!-- EOF Image -->
 
                             <!-- Table -->
                             <div *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.TABLE">
+
+                                <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                 <!-- Field Position -->
                                 <div style="margin-bottom: 5px; width: 100%; align: center;">
@@ -645,271 +725,301 @@
                                         </customized-number-input>
                                     </div>
                                 </div>
+                                <!-- EOF Field Position -->
 
-                                <div style="margin-bottom: 10px">
-                                    <span style="margin-right: 10px;">Border Color: </span>
-                                    <input [colorPicker]="currentUserHandle.drawColor"
-                                           (colorPickerChange)="currentUserHandle.drawColor = $event;updatePDF(800);"
-                                           [cpOutputFormat]="'hex'"
-                                           [cpDialogDisplay]="'inline'"
-                                           [style.background]="currentUserHandle.drawColor"/>
-                                </div>
-
-                                <!-- table>
-                                    <ng-container *ngFor="let row of currentUserHandle.rowList">
-                                        <tr>
-                                            <ng-container *ngFor="let column of currentUserHandle.columnList">
-                                                <td class="displayTableCell" style="border: 1px solid black; height: 4vh; width: 4vh"></td>
-                                            </ng-container>
-                                        </tr>
-                                    </ng-container>
-                                </table -->
-
-                                <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+                                <div style="border: 1px solid black; width: 50%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                 <!-- Rows & Columns -->
-                                <div style="margin-bottom: 5px; width: 100%; align: center;">
-                                    <b style="margin-bottom: 5px;">Set Table Rows & Columns</b>
+                                <div style="margin-top: 10px; margin-bottom: 5px; width: 100%; align: center;">
+                                    <b>Set Table Rows & Columns</b>
                                 </div>
 
+                                <!-- Select All, Clear All Button -->
+                                <button type="button"
+                                        class="btn"
+                                        style="padding: 4px 7px;"
+                                        (click)="htmlAdapter.selectAllTableCells()">
+                                    Select All
+                                </button>
+                                <button type="button"
+                                        class="btn"
+                                        style="padding: 4px 7px;"
+                                        (click)="htmlAdapter.deselectAllTableCells()">
+                                    Clear All
+                                </button>
+                                <!-- EOF Select All, Clear All Button -->
+
+                                <!-- Table Display -->
                                 <div style="line-height: 0px; margin-bottom: 10px;">
                                     <ng-container *ngFor="let row of currentUserHandle.rowList; let rowIndex=index;">
                                         <ng-container *ngFor="let column of currentUserHandle.columnList; let columnIndex=index;">
                                             <span class="displayTableCell"
-                                                  [class.selectedTableCell]="rowIndex==htmlAdapter.currentTableCell.rowIndex && columnIndex==htmlAdapter.currentTableCell.columnIndex"
-                                                  [class.topBorderTableCell]="!currentUserHandle.horizontalLineList[rowIndex][columnIndex]"
-                                                  [class.rightBorderTableCell]="!currentUserHandle.verticalLineList[columnIndex+1][rowIndex]"
-                                                  [class.bottomBorderTableCell]="!currentUserHandle.horizontalLineList[rowIndex+1][columnIndex]"
-                                                  [class.leftBorderTableCell]="!currentUserHandle.verticalLineList[columnIndex][rowIndex]"
-                                                  [style.height.vh]="0.4*row.height"
-                                                  [style.width.vh]="0.4*column.width"
-                                                  [style.border-color]="currentUserHandle.drawColor"
-                                                  (click)="htmlAdapter.currentTableCell.rowIndex=rowIndex;htmlAdapter.currentTableCell.columnIndex=columnIndex;"></span>
+
+                                                  [class.selectedTableCell]="htmlAdapter.isCellSelected(rowIndex, columnIndex)"
+
+                                                  [class.topBorderTableCell]="currentUserHandle.horizontalLineList[rowIndex][columnIndex].color==null"
+                                                  [class.rightBorderTableCell]="currentUserHandle.verticalLineList[columnIndex+1][rowIndex].color==null"
+                                                  [class.bottomBorderTableCell]="currentUserHandle.horizontalLineList[rowIndex+1][columnIndex].color==null"
+                                                  [class.leftBorderTableCell]="currentUserHandle.verticalLineList[columnIndex][rowIndex].color==null"
+
+                                                  [style.border-top-color]="currentUserHandle.horizontalLineList[rowIndex][columnIndex].color"
+                                                  [style.border-right-color]="currentUserHandle.verticalLineList[columnIndex+1][rowIndex].color"
+                                                  [style.border-bottom-color]="currentUserHandle.horizontalLineList[rowIndex+1][columnIndex].color"
+                                                  [style.border-left-color]="currentUserHandle.verticalLineList[columnIndex][rowIndex].color"
+
+                                                  [style.border-top-width.mm]="currentUserHandle.horizontalLineList[rowIndex][columnIndex].width"
+                                                  [style.border-right-width.mm]="currentUserHandle.verticalLineList[columnIndex+1][rowIndex].width"
+                                                  [style.border-bottom-width.mm]="currentUserHandle.horizontalLineList[rowIndex+1][columnIndex].width"
+                                                  [style.border-left-width.mm]="currentUserHandle.verticalLineList[columnIndex][rowIndex].width"
+
+                                                  [style.background]="currentUserHandle.cellList[rowIndex][columnIndex]"
+
+                                                  [style.height.vh]="0.4*row.length"
+                                                  [style.width.vh]="0.4*column.length"
+
+                                                  (click)="htmlAdapter.handleCellClick(rowIndex, columnIndex);"></span>
                                         </ng-container>
-                                        <!-- i *ngIf="rowIndex==htmlAdapter.currentTableCell.rowIndex && currentUserHandle.rowList.length > 1"
-                                           class="material-icons"
-                                           style="padding: 0px; margin: 0px; cursor: pointer"
-                                           [style.height.vh]="0.4*row.height"
-                                           [style.width.vh]="0.4*row.height"
-                                           (click)="htmlAdapter.deleteTableRow(rowIndex); updatePDF(2000)">
-                                            cancel
-                                        </i -->
                                         <br/>
                                     </ng-container>
-                                    <ng-container *ngFor="let column of currentUserHandle.columnList; let columnIndex=index;">
-                                        <span *ngIf="columnIndex!=htmlAdapter.currentTableCell.columnIndex"
-                                              style="border: none; display: inline-block;"
-                                              [style.height.vh]="0.4*currentUserHandle.columnList[htmlAdapter.currentTableCell.columnIndex].width"
-                                              [style.width.vh]="0.4*column.width"></span>
-                                        <!-- i *ngIf="columnIndex==htmlAdapter.currentTableCell.columnIndex && currentUserHandle.columnList.length > 1"
-                                           class="material-icons"
-                                           style="padding: 0; margin: 0px; cursor: pointer"
-                                           [style.height.vh]="0.4*column.width"
-                                           [style.width.vh]="0.4*column.width"
-                                           (click)="htmlAdapter.deleteTableColumn(columnIndex); updatePDF(2000)">
-                                            cancel
-                                        </i -->
-                                    </ng-container><br/>
                                 </div>
+                                <!-- EOF Table Display -->
 
-                                <div class="row" style="margin-bottom: 10px;">
-                                    <div class="col-md-6">
-                                        <customized-number-input
-                                                [placeHolder]="'Height'"
-                                                [minimum]="0"
-                                                [maximum]="500"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.rowList[htmlAdapter.currentTableCell.rowIndex].height"
-                                                (outputValue)="currentUserHandle.rowList[htmlAdapter.currentTableCell.rowIndex].height=$event;updatePDF()">
-                                        </customized-number-input>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <customized-number-input
-                                                [placeHolder]="'Width'"
-                                                [minimum]="0"
-                                                [maximum]="500"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.columnList[htmlAdapter.currentTableCell.columnIndex].width"
-                                                (outputValue)="currentUserHandle.columnList[htmlAdapter.currentTableCell.columnIndex].width=$event;updatePDF()">
-                                        </customized-number-input>
-                                    </div>
-                                </div>
-
-                                Border:
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <mat-checkbox [(ngModel)]="currentUserHandle.horizontalLineList[htmlAdapter.currentTableCell.rowIndex][htmlAdapter.currentTableCell.columnIndex]"
-                                                      (ngModelChange)="updatePDF(2000)" style="margin-right: 5vw;">Top</mat-checkbox>
-                                        <mat-checkbox [(ngModel)]="currentUserHandle.verticalLineList[htmlAdapter.currentTableCell.columnIndex+1][htmlAdapter.currentTableCell.rowIndex]"
-                                                      (ngModelChange)="updatePDF(2000)">Right</mat-checkbox>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <mat-checkbox [(ngModel)]="currentUserHandle.horizontalLineList[htmlAdapter.currentTableCell.rowIndex+1][htmlAdapter.currentTableCell.columnIndex]"
-                                                      (ngModelChange)="updatePDF(2000)" style="margin-right: 5vw;">Bottom</mat-checkbox>
-                                        <mat-checkbox [(ngModel)]="currentUserHandle.verticalLineList[htmlAdapter.currentTableCell.columnIndex][htmlAdapter.currentTableCell.rowIndex]"
-                                                      (ngModelChange)="updatePDF(2000)">Left</mat-checkbox>
-                                    </div>
-                                </div>
-
-                                <br/>
-
-                                Row:
-                                <button type="button"
-                                        class="btn"
-                                        style="padding: 4px 7px;"
-                                        (click)="htmlAdapter.addTableRowBefore(); updatePDF(1500)">
-                                    Add Before
-                                </button>
-                                <button type="button"
-                                        class="btn"
-                                        style="padding: 4px 7px;"
-                                        (click)="htmlAdapter.addTableRowAfter(); updatePDF(1500)">
-                                    Add After
-                                </button>
-                                <button type="button"
-                                        class="btn"
-                                        style="padding: 4px 7px;"
-                                        (click)="htmlAdapter.deleteTableRow(); updatePDF(1500)">
-                                    Delete
-                                </button><br/>
-
-                                Column:
-                                <button type="button"
-                                        class="btn"
-                                        style="padding: 4px 7px;"
-                                        (click)="htmlAdapter.addTableColumnBefore(); updatePDF(1500)">
-                                    Add Before
-                                </button>
-                                <button type="button"
-                                        class="btn"
-                                        style="padding: 4px 7px;"
-                                        (click)="htmlAdapter.addTableColumnAfter(); updatePDF(1500)">
-                                    Add After
-                                </button>
-                                <button type="button"
-                                        class="btn"
-                                        style="padding: 4px 7px;"
-                                        (click)="htmlAdapter.deleteTableColumn(); updatePDF(1500)">
-                                    Delete
-                                </button><br/>
-
-                                <!-- Rows -->
-                                <!-- mat-expansion-panel style="margin-bottom: 1vh">
-
-                                    <mat-expansion-panel-header >
-                                        <mat-panel-title>
-                                            {{currentUserHandle.rowList.length}} Row<ng-container *ngIf="currentUserHandle.rowList.length>1">s</ng-container>,
-                                            Height:
-                                            <<ng-container *ngFor="let row of currentUserHandle.rowList; let last=last; let first=first;">
-                                                {{row.height}}<ng-container *ngIf="!last">,</ng-container>
-                                            </ng-container> >
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-
-                                    <ng-container *ngFor="let row of currentUserHandle.rowList; let i=index; let last=last">
-                                        <mat-card style="margin-bottom: 1vh;">
-                                            {{i+1}}.
-                                            <customized-number-input
-                                                    [width]="40"
-                                                    [placeHolder]="'Height (mm)'"
-                                                    [minimum]="0"
-                                                    [maximum]="500"
-                                                    [maximumDecimal]="3"
-                                                    [inputValue]="row.height"
-                                                    (outputValue)="row.height=$event;updatePDF(2000)">
-                                            </customized-number-input>
-                                            <mat-checkbox *ngIf="!last"
-                                                    [(ngModel)]="row.bottomBorder"
-                                                    (ngModelChange)="updatePDF(1)">
-                                                Bottom Border
-                                            </mat-checkbox>
-                                            <span style="padding-left: 5px;color:gray;cursor: pointer; float: right"
-                                                  class="material-icons"
-                                                  (click)="currentUserHandle.rowList.splice(i, 1); updatePDF(2000)">delete</span><br/>
-                                            <button type="button"
-                                                    class="btn"
-                                                    style="padding: 4px 7px;"
-                                                    (click)="row.fillColor=null; updatePDF(1)">
-                                                No Fill
-                                            </button>
-                                            <input [colorPicker]="row.fillColor"
-                                                   (colorPickerChange)="row.fillColor = $event;updatePDF(2000);"
-                                                   [cpDialogDisplay]="'inline'"
-                                                   [cpOutputFormat]="'hex'"
-                                                   [style.background]="row.fillColor"/>
-                                        </mat-card>
-                                    </ng-container>
-    
+                                <!-- Add Column -->
+                                Add Column:
+                                <ng-container *ngIf="htmlAdapter.selectedTableCellList.length == 1">
                                     <button type="button"
                                             class="btn"
                                             style="padding: 4px 7px;"
-                                            (click)="htmlAdapter.addTableRow(currentUserHandle.rowList); updatePDF(3000)">
-                                        Add Row
+                                            (click)="htmlAdapter.addTableColumnBefore(); updatePDF(1500)">
+                                        <i class="material-icons">arrow_back</i>
                                     </button>
-    
-                                </mat-expansion-panel -->
-
-                                <!-- Column -->
-                                <!-- mat-expansion-panel style="margin-bottom: 1vh">
-
-                                    <mat-expansion-panel-header >
-                                        <mat-panel-title>
-                                            {{currentUserHandle.columnList.length}} Column<ng-container *ngIf="currentUserHandle.columnList.length>1">s</ng-container>,
-                                            Width:
-                                            <<ng-container *ngFor="let column of currentUserHandle.columnList; let last=last;">
-                                                {{column.width}}<ng-container *ngIf="!last">,</ng-container>
-                                            </ng-container> >
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-
-                                    <ng-container *ngFor="let column of currentUserHandle.columnList; let i=index; let last=last;">
-                                        <mat-card style="margin-bottom: 1vh;">
-                                            {{i+1}}.
-                                            <customized-number-input
-                                                    [width]="40"
-                                                    [placeHolder]="'Width (mm)'"
-                                                    [minimum]="0"
-                                                    [maximum]="500"
-                                                    [maximumDecimal]="3"
-                                                    [inputValue]="column.width"
-                                                    (outputValue)="column.width=$event;updatePDF(2000)">
-                                            </customized-number-input>
-                                            <mat-checkbox *ngIf="!last"
-                                                    [(ngModel)]="column.rightBorder"
-                                                    (ngModelChange)="updatePDF(1)">
-                                                Right Border
-                                            </mat-checkbox>
-                                            <span style="padding-left: 5px;color:gray;cursor: pointer; float: right"
-                                                  class="material-icons"
-                                                  (click)="currentUserHandle.columnList.splice(i, 1); updatePDF(2000)">delete</span><br/>
-                                            <button type="button"
-                                                    class="btn"
-                                                    style="padding: 4px 7px;"
-                                                    (click)="column.fillColor=null; updatePDF(1)">
-                                                No Fill
-                                            </button>
-                                            <input [colorPicker]="column.fillColor"
-                                                   (colorPickerChange)="column.fillColor = $event;updatePDF(2000);"
-                                                   [cpDialogDisplay]="'inline'"
-                                                   [cpOutputFormat]="'hex'"
-                                                   [style.background]="column.fillColor"/>
-                                        </mat-card>
-                                    </ng-container>
-    
                                     <button type="button"
                                             class="btn"
                                             style="padding: 4px 7px;"
-                                            (click)="htmlAdapter.addTableColumn(currentUserHandle.columnList); updatePDF(3000)">
-                                        Add Column
+                                            (click)="htmlAdapter.addTableColumnAfter(); updatePDF(1500)">
+                                        <i class="material-icons">arrow_forward</i>
                                     </button>
-            
-                                </mat-expansion-panel -->
+                                    <button type="button"
+                                            class="btn"
+                                            style="padding: 4px 7px;"
+                                            *ngIf="currentUserHandle.columnList.length > 1"
+                                            (click)="htmlAdapter.deleteTableColumn(); updatePDF(1500)">
+                                        Del
+                                    </button>
+                                </ng-container><br/>
+                                <!-- EOF Columns -->
+
+                                <!-- Add Row -->
+                                Add Row:
+                                <ng-container *ngIf="htmlAdapter.selectedTableCellList.length == 1">
+                                    <button type="button"
+                                            class="btn"
+                                            style="padding: 4px 7px;"
+                                            (click)="htmlAdapter.addTableRowBefore(); updatePDF(1500)">
+                                        <i class="material-icons">arrow_upward</i>
+                                    </button>
+                                    <button type="button"
+                                            class="btn"
+                                            style="padding: 4px 7px;"
+                                            (click)="htmlAdapter.addTableRowAfter(); updatePDF(1500)">
+                                        <i class="material-icons">arrow_downward</i>
+                                    </button>
+                                    <button type="button"
+                                            class="btn"
+                                            style="padding: 4px 7px;"
+                                            *ngIf="currentUserHandle.rowList.length > 1"
+                                            (click)="htmlAdapter.deleteTableRow(); updatePDF(1500)">
+                                        Del
+                                    </button>
+                                </ng-container><br/>
+                                <!-- EOF Rows -->
+
+                                <div style="border: 1px solid black; width: 50%; margin-top:10px; margin-bottom: 10px;"></div>
+
+                                <!-- If one or more table cell/s are selected -->
+                                <ng-container *ngIf="htmlAdapter.selectedTableCellList.length > 0">
+
+
+                                    <!-- Height, Width -->
+                                    <div style="margin-bottom: 10px;">
+                                        <b>Set Height & Width</b>
+                                    </div>
+                                    <div class="row" style="margin-bottom: 10px;">
+                                        <div class="col-md-6">
+                                            <customized-number-input
+                                                    [placeHolder]="'Row Height (in mm)'"
+                                                    [minimum]="0"
+                                                    [maximum]="500"
+                                                    [maximumDecimal]="3"
+                                                    [inputValue]="currentUserHandle.rowList[htmlAdapter.selectedTableCellList[0].rowIndex].length"
+                                                    (outputValue)="htmlAdapter.handleRowLength($event);updatePDF()">
+                                            </customized-number-input>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <customized-number-input
+                                                    [placeHolder]="'Column Width (in mm)'"
+                                                    [minimum]="0"
+                                                    [maximum]="500"
+                                                    [maximumDecimal]="3"
+                                                    [inputValue]="currentUserHandle.columnList[htmlAdapter.selectedTableCellList[0].columnIndex].length"
+                                                    (outputValue)="htmlAdapter.handleColumnLength($event);updatePDF()">
+                                            </customized-number-input>
+                                        </div>
+                                    </div>
+                                    <!-- EOF Height, Width -->
+
+                                    <!-- Color -->
+                                    <b>Fill Color</b><br/>
+                                    <button type="button"
+                                            class="btn"
+                                            style="padding: 4px 7px;"
+                                            (click)="htmlAdapter.handleCellColor(null); updatePDF(1500)">
+                                        No Fill
+                                    </button>
+
+                                    <div style="margin-bottom: 10px">
+                                        <input [colorPicker]="currentUserHandle.cellList[htmlAdapter.selectedTableCellList[0].rowIndex][htmlAdapter.selectedTableCellList[0].columnIndex]"
+                                               (colorPickerChange)="htmlAdapter.handleCellColor($event);updatePDF(2000)"
+                                               [cpOutputFormat]="'hex'"
+                                               [cpDialogDisplay]="'inline'"
+                                               [style.background]="currentUserHandle.cellList[htmlAdapter.selectedTableCellList[0].rowIndex][htmlAdapter.selectedTableCellList[0].columnIndex]"/>
+                                    </div>
+                                    <!-- EOF Color -->
+
+                                    <div style="border: 1px solid black; width: 50%; margin-top:10px; margin-bottom: 10px;"></div>
+
+                                    <!-- Borders -->
+                                    <div style="margin-bottom: 10px;">
+                                        <b>Set Grid Line</b><br/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <mat-radio-group [(ngModel)]="htmlAdapter.selectedBorder">
+                                                <mat-radio-button value="top">Top</mat-radio-button><br/>
+                                                <mat-radio-button value="right">Right</mat-radio-button><br/>
+                                                <mat-radio-button value="bottom">Bottom</mat-radio-button><br/>
+                                                <mat-radio-button value="left">Left</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <ng-container *ngIf="htmlAdapter.selectedBorder=='top'">
+                                                <customized-number-input
+                                                        [placeHolder]="'Thickness (in mm)'"
+                                                        [minimum]="0"
+                                                        [maximum]="5"
+                                                        [maximumDecimal]="3"
+                                                        [inputValue]="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex][htmlAdapter.selectedTableCellList[0].columnIndex].width"
+                                                        (outputValue)="htmlAdapter.handleTopBorder($event, 'width');updatePDF()">
+                                                </customized-number-input>
+
+                                                <mat-checkbox [ngModel]="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex][htmlAdapter.selectedTableCellList[0].columnIndex].color==null"
+                                                              (ngModelChange)="htmlAdapter.handleTopBorder($event ? null : '#000000', 'color'); updatePDF(1500);">Remove Grid Line</mat-checkbox>
+
+                                                <ng-container *ngIf="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex][htmlAdapter.selectedTableCellList[0].columnIndex].color!=null">
+                                                    <div style="margin-bottom: 5px;"><b>Grid Line Color</b></div>
+                                                    <div style="margin-bottom: 10px">
+                                                        <input [colorPicker]="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex][htmlAdapter.selectedTableCellList[0].columnIndex].color"
+                                                               (colorPickerChange)="htmlAdapter.handleTopBorder($event, 'color');updatePDF(2000)"
+                                                               [cpOutputFormat]="'hex'"
+                                                               [cpDialogDisplay]="'inline'"
+                                                               [style.background]="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex][htmlAdapter.selectedTableCellList[0].columnIndex].color"/>
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
+                                            <ng-container *ngIf="htmlAdapter.selectedBorder=='right'">
+
+                                                <customized-number-input
+                                                        [placeHolder]="'Thickness (in mm)'"
+                                                        [minimum]="0"
+                                                        [maximum]="5"
+                                                        [maximumDecimal]="3"
+                                                        [inputValue]="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex+1][htmlAdapter.selectedTableCellList[0].rowIndex].width"
+                                                        (outputValue)="htmlAdapter.handleRightBorder($event, 'width');updatePDF()">
+                                                </customized-number-input>
+
+                                                <mat-checkbox [ngModel]="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex+1][htmlAdapter.selectedTableCellList[0].rowIndex].color==null"
+                                                              (ngModelChange)="htmlAdapter.handleRightBorder($event ? null : '#000000', 'color'); updatePDF(1500);">Remove Grid Line</mat-checkbox>
+
+                                                <ng-container *ngIf="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex+1][htmlAdapter.selectedTableCellList[0].rowIndex].color!=null">
+                                                    <div style="margin-bottom: 5px;"><b>Grid Line Color</b></div>
+                                                    <div style="margin-bottom: 10px">
+                                                        <input [colorPicker]="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex+1][htmlAdapter.selectedTableCellList[0].rowIndex].color"
+                                                               (colorPickerChange)="htmlAdapter.handleRightBorder($event, 'color');updatePDF(2000)"
+                                                               [cpOutputFormat]="'hex'"
+                                                               [cpDialogDisplay]="'inline'"
+                                                               [style.background]="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex+1][htmlAdapter.selectedTableCellList[0].rowIndex].color"/>
+                                                    </div>
+                                                </ng-container>
+
+                                            </ng-container>
+                                            <ng-container *ngIf="htmlAdapter.selectedBorder=='bottom'">
+
+                                                <customized-number-input
+                                                        [placeHolder]="'Thickness (in mm)'"
+                                                        [minimum]="0"
+                                                        [maximum]="5"
+                                                        [maximumDecimal]="3"
+                                                        [inputValue]="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex+1][htmlAdapter.selectedTableCellList[0].columnIndex].width"
+                                                        (outputValue)="htmlAdapter.handleBottomBorder($event, 'width');updatePDF()">
+                                                </customized-number-input>
+
+                                                <mat-checkbox [ngModel]="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex+1][htmlAdapter.selectedTableCellList[0].columnIndex].color==null"
+                                                              (ngModelChange)="htmlAdapter.handleBottomBorder($event ? null : '#000000', 'color'); updatePDF(1500);">Remove Grid Line</mat-checkbox>
+
+                                                <ng-container *ngIf="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex+1][htmlAdapter.selectedTableCellList[0].columnIndex].color!=null">
+                                                    <div style="margin-bottom: 5px;"><b>Grid Line Color</b></div>
+                                                    <div style="margin-bottom: 10px">
+                                                        <input [colorPicker]="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex+1][htmlAdapter.selectedTableCellList[0].columnIndex].color"
+                                                               (colorPickerChange)="htmlAdapter.handleBottomBorder($event, 'color');updatePDF(2000)"
+                                                               [cpOutputFormat]="'hex'"
+                                                               [cpDialogDisplay]="'inline'"
+                                                               [style.background]="currentUserHandle.horizontalLineList[htmlAdapter.selectedTableCellList[0].rowIndex+1][htmlAdapter.selectedTableCellList[0].columnIndex].color"/>
+                                                    </div>
+                                                </ng-container>
+
+                                            </ng-container>
+                                            <ng-container *ngIf="htmlAdapter.selectedBorder=='left'">
+
+                                                <customized-number-input
+                                                        [placeHolder]="'Thickness (in mm)'"
+                                                        [minimum]="0"
+                                                        [maximum]="5"
+                                                        [maximumDecimal]="3"
+                                                        [inputValue]="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex][htmlAdapter.selectedTableCellList[0].rowIndex].width"
+                                                        (outputValue)="htmlAdapter.handleLeftBorder($event, 'width');updatePDF()">
+                                                </customized-number-input>
+
+                                                <mat-checkbox [ngModel]="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex][htmlAdapter.selectedTableCellList[0].rowIndex].color==null"
+                                                              (ngModelChange)="htmlAdapter.handleLeftBorder($event ? null : '#000000', 'color'); updatePDF(1500);">Remove Grid Line</mat-checkbox>
+
+                                                <ng-container *ngIf="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex][htmlAdapter.selectedTableCellList[0].rowIndex].color!=null">
+                                                    <div style="margin-bottom: 5px;"><b>Grid Line Color</b></div>
+                                                    <div style="margin-bottom: 10px">
+                                                        <input [colorPicker]="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex][htmlAdapter.selectedTableCellList[0].rowIndex].color"
+                                                               (colorPickerChange)="htmlAdapter.handleLeftBorder($event, 'color');updatePDF(2000)"
+                                                               [cpOutputFormat]="'hex'"
+                                                               [cpDialogDisplay]="'inline'"
+                                                               [style.background]="currentUserHandle.verticalLineList[htmlAdapter.selectedTableCellList[0].columnIndex][htmlAdapter.selectedTableCellList[0].rowIndex].color"/>
+                                                    </div>
+                                                </ng-container>
+
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- EOF Borders -->
+
+                                </ng-container>
+                                <!-- EOF If one or more table cell/s are selected -->
+
+                                <div style="margin-bottom: 10px"></div>
+
+                                <div style="margin-bottom: 10px"></div>
 
                             </div>
+                            <!-- EOF Table -->
 
                         </div>
+                        <!-- EOF If a user handle is selected -->
 
                     </mat-expansion-panel>
 
@@ -937,6 +1047,7 @@
                             Delete
                         </button>
                     </div>
+                    <!-- EOF Button Create/Update/Delete -->
 
                 </ng-container>
 

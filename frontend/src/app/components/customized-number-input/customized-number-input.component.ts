@@ -16,6 +16,7 @@ export class CustomizedNumberInputComponent {
     @Input() maximum = null;
     @Input() maximumDecimal = null;
 
+    @Input() disabled;
     @Input() inputValue;
 
     @Output() outputValue = new EventEmitter<any>();

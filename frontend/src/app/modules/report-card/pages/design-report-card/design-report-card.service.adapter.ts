@@ -30,20 +30,29 @@ export class DesignReportCardServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
+        const request_grade_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+        const request_sub_grade_data = {
+            parentGrade__parentSchool: this.vm.user.activeSchool.dbId,
+        };
         const request_test_data = {
             parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
             parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
         this.vm.isLoading = true;
         Promise.all([
-            this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout, report_card_layouts_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
-            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+            this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout, report_card_layouts_data), // 0
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data), // 2
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 3
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 4
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data), // 5
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data), // 6
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), // 7
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 8
+            this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data), // 9
+            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 10
         ]).then(data => {
 
             this.vm.reportCardLayoutList = data[0];
@@ -54,6 +63,9 @@ export class DesignReportCardServiceAdapter {
             this.vm.data.examinationList = data[5];
             this.vm.data.testList = data[6];
             this.vm.data.subjectList = data[7];
+            this.vm.data.sessionList = data[8];
+            this.vm.data.gradeList = data[9];
+            this.vm.data.subGradeList = data[10];
 
             const request_student_data = {
                 id__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
@@ -65,15 +77,27 @@ export class DesignReportCardServiceAdapter {
                 parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
                 parentExamination__in: this.vm.data.examinationList.map(item => item.id).join(','),
             };
+            const request_attendance_data = {
+                parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
+                'dateOfAttendance__gte': (new Date(this.vm.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
+                'dateOfAttendance__lte': (new Date(this.vm.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
+            };
+            const request_student_sub_grade_data = {
+                parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
+            };
 
             Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data),
-                this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data),
-                this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data),
+                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
+                this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 1
+                this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 2
+                this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
+                this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
             ]).then(value => {
                 this.vm.data.studentList = value[0];
                 this.vm.data.studentParameterValueList = value[1];
                 this.vm.data.studentTestList = value[2];
+                this.vm.data.attendanceList = value[3];
+                this.vm.data.studentSubGradeList = value[4];
                 this.vm.isLoading = false;
             }, error => {
                 this.vm.isLoading = false;

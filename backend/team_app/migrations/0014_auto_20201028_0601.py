@@ -13,6 +13,8 @@ from team_app.db_script.add_set_class_layout_task import add_set_class_layout_ta
 from team_app.db_script.add_student_remarks_task import add_student_remarks_task
 from team_app.db_script.add_generate_final_report_task import add_generate_final_report_task
 from team_app.db_script.add_report_card_two_module import add_report_card_two_module
+from team_app.db_script.add_remarks_task import add_remarks_task
+from team_app.db_script.view_remarks_task import view_remarks_task
 
 
 class Migration(migrations.Migration):
@@ -31,5 +33,7 @@ class Migration(migrations.Migration):
         migrations.RunPython(add_set_class_layout_task),
         migrations.RunPython(add_student_remarks_task),
         migrations.RunPython(add_generate_final_report_task),
-        migrations.RunPython(add_report_card_two_module)
+        migrations.RunPython(add_report_card_two_module),
+        migrations.RunPython(add_remarks_task),
+        migrations.RunPython(view_remarks_task),
     ]

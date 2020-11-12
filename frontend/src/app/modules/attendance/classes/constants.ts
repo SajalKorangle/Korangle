@@ -1,10 +1,10 @@
 
 // Attendance Status
 export const ATTENDANCE_STATUS_LIST = [
-    'PRESENT',
-    'ABSENT',
-    'HOLIDAY',
-    'HALF_DAY',
+    'PRESENT', // 0
+    'ABSENT', // 1
+    'HOLIDAY', // 2
+    'HALF_DAY', // 3
 ];
 
 // Leave Status

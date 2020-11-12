@@ -95,3 +95,11 @@ urlpatterns += [
     url(r'^cce-marks', CCEMarksView.as_view()),
 ]
 
+
+from examination_app.views import RemarksView, RemarksListView
+
+urlpatterns += [
+    url(r'^remarks/batch', RemarksListView.as_view()),
+    url(r'^remarks', RemarksView.as_view()),
+]
+

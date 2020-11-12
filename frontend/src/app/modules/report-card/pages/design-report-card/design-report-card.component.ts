@@ -19,12 +19,17 @@ import { FONT_FAMILY_LIST } from '@modules/report-card/class/font';
 import {ExaminationService} from '@services/modules/examination/examination.service';
 import {SubjectService} from '@services/modules/subject/subject.service';
 import {DesignReportCardHtmlAdapter} from '@modules/report-card/pages/design-report-card/design-report-card.html.adapter';
+import {SchoolService} from '@services/modules/school/school.service';
+import {AttendanceService} from '@services/modules/attendance/attendance.service';
+import {GradeService} from '@services/modules/grade/grade.service';
+import {DesignReportCardGradeAdapter} from '@modules/report-card/pages/design-report-card/design-report-card.grade.adapter';
 
 @Component({
     selector: 'app-design-report-card',
     templateUrl: './design-report-card.component.html',
     styleUrls: ['./design-report-card.component.css'],
-    providers: [ReportCardService, StudentService, ClassService, ExaminationService, SubjectService],
+    providers: [ReportCardService, StudentService, ClassService, ExaminationService,
+        SubjectService, SchoolService, AttendanceService, GradeService],
 })
 
 /*
@@ -69,6 +74,7 @@ export class DesignReportCardComponent implements OnInit {
 
     serviceAdapter: DesignReportCardServiceAdapter;
     htmlAdapter: DesignReportCardHtmlAdapter;
+    gradeAdapter: DesignReportCardGradeAdapter;
 
     ADD_LAYOUT_STRING = '<Add New Layout>';
 
@@ -92,6 +98,11 @@ export class DesignReportCardComponent implements OnInit {
         testList: [],
         studentTestList: [],
         subjectList: [],
+        attendanceList: [],
+        sessionList: [],
+        gradeList: [],
+        subGradeList: [],
+        studentSubGradeList: [],
     };
 
 
@@ -101,16 +112,25 @@ export class DesignReportCardComponent implements OnInit {
         public classService: ClassService,
         public examinationService: ExaminationService,
         public subjectService: SubjectService,
+        public schoolService: SchoolService,
+        public attendanceService: AttendanceService,
+        public gradeService: GradeService,
     ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.data.school = this.user.activeSchool;
         this.serviceAdapter = new DesignReportCardServiceAdapter();
+
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
         this.htmlAdapter = new DesignReportCardHtmlAdapter();
         this.htmlAdapter.initializeAdapter(this);
+
+        this.gradeAdapter = new DesignReportCardGradeAdapter();
+        this.gradeAdapter.initializeAdapter(this);
+
         this.downloadFont();
     }
 

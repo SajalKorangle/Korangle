@@ -4,6 +4,8 @@
 const config = { };
 const math = create(all, config);*/
 
+import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
+
 declare var require: any;
 const FormulaParser = require('hot-formula-parser').Parser;
 
@@ -21,6 +23,28 @@ export const MARKS_TYPE_LIST = [
     'Marks Obtained',
     'Maximum Marks',
 ];
+
+export const ATTENDANCE_TYPE_LIST = [
+    'Present',
+    'Absent',
+    'Total Record',
+];
+
+export const EXAMINATION_TYPE_LIST = [
+    'Marks', // 0
+    'Grades', // 1
+    'Remarks', // 2
+];
+
+export const tableLineStructure = {
+    width: 0.3,
+    color: '#000000',
+};
+
+export const tableCellStructure = {
+    length: 10,
+    color: null,
+};
 
 /*export const tableRow = {
     height: 10,
@@ -56,6 +80,7 @@ export const FIELDS = {
     SCHOOL: FieldStructure.getStructure('School', 'school'),
     CONSTANT: FieldStructure.getStructure('Constant', 'constant'),
     EXAMINATION: FieldStructure.getStructure('Examination', 'examination'),
+    ATTENDANCE: FieldStructure.getStructure('Attendance', 'attendance'),
 };
 
 // Different data types have different user handle structures
@@ -64,7 +89,6 @@ export const DATA_TYPES = {
     DATE: 'date',
     IMAGE: 'image',
     MARKS: 'marks',
-    GRADES: 'grades',
     TABLE: 'table',
 };
 
@@ -363,7 +387,9 @@ export class UserHandleStructure {
             fontStyle: 'Normal',
             textColor: '#000000',
             underline: false,
-            value: '', // Used for Constant Field Structure
+            value: '',  // 1) text for Constant Field Structure,
+                        // 2) object {startDate: '', endDate: ''} for Attendance Field Structure
+                        // 3) object {subGradeId: 0, examId: 0} for Examination Grade
         };
     }
 
@@ -371,7 +397,7 @@ export class UserHandleStructure {
         return {
             name: '',
             formula: 'a',
-            marksVariableList: [], // either marks or variable
+            marksVariableList: [], // either marks or variable, it would be better if we call it formula instead of variable
             decimalPlace: 1,
             baseline: 'top', // top, bottom
             align: 'left', // left, right, center
@@ -387,12 +413,16 @@ export class UserHandleStructure {
 
     static getTableStructure(pdfDefault): any {
         return {
-            drawColor: '#000000',
-            rowList: [{height: 10}],
-            columnList: [{width: 10}],
-            horizontalLineList: [[true], [true]], // goes to number of rows + 1 * number of columns
-            verticalLineList: [[true], [true]], // goes to number of columns + 1 * number of rows
-            cellColor: [[null]], // goes to number of rows * number of columns
+            rowList: [{...tableCellStructure}],
+                // array of tableCellStructure that goes to number of rows, ranging from 1 to ∞
+            columnList: [{...tableCellStructure}],
+                // array of tableCellStructure that goes to number of columns, ranging from 1 to ∞
+            horizontalLineList: [[{...tableLineStructure}], [{...tableLineStructure}]],
+                // matrix of tableLineStructure that goes to number of rows + 1 * number of columns, ranging from 2 to ∞ for both dimensions
+            verticalLineList: [[{...tableLineStructure}], [{...tableLineStructure}]],
+                // matrix of tableLineStructure that goes to number of columns + 1 * number of rows, ranging from 2 to ∞ for both dimensions
+            cellList: [[null]],
+                // matrix of color that goes to number of rows * number of columns, ranging from 1 to ∞ for both dimensions
         };
     }
 
@@ -611,14 +641,15 @@ class ExaminationParameterStructure {
 
     // Data Type is the parameter key
 
-    static getStructure(dataType: any): any {
+    static getStructure(variableType: any): any {
 
         let getValueFunc;
+        const dataType = (variableType === EXAMINATION_TYPE_LIST[0] ? DATA_TYPES.MARKS : DATA_TYPES.TEXT);
 
         getValueFunc = (dataObject, nestedCallNo = 1) => {
-            if (nestedCallNo > 10) { return 0; }
-            const parser = new FormulaParser();
-            if (dataType === DATA_TYPES.MARKS) {
+            if (variableType === EXAMINATION_TYPE_LIST[0]) {
+                if (nestedCallNo > 100) { console.log('Nested Call more than 100 times'); return 0; }
+                const parser = new FormulaParser();
                 dataObject.userHandle.marksVariableList.forEach((marksVariable, index) => {
                     if (marksVariable.parentExamination) {
                         parser.setVariable(ALPHABET_LIST.charAt(index), getMarks(dataObject, index));
@@ -642,28 +673,84 @@ class ExaminationParameterStructure {
                 } else {
                     return Number(evaluation.result).toFixed(dataObject.userHandle.decimalPlace);
                 }
+            } else if (variableType === EXAMINATION_TYPE_LIST[1]) {
+                const value = dataObject.data.studentSubGradeList.find(studentSubGrade => {
+                    return studentSubGrade.parentStudent === dataObject.studentId
+                        && studentSubGrade.parentExamination === dataObject.userHandle.value.examinationId
+                        && studentSubGrade.parentSubGrade === dataObject.userHandle.value.subGradeId;
+                });
+                if (value !== undefined) {
+                    return value.gradeObtained;
+                } else {
+                    return '';
+                }
+            } else if (variableType === EXAMINATION_TYPE_LIST[2]) {
+                return 'Remark';
             }
             return 'If you are seeing this contact technical support';
         };
 
         return ParameterStructure.getStructure(
-            FIELDS.EXAMINATION.fieldStructureKey + '-' + dataType,
+            FIELDS.EXAMINATION.fieldStructureKey + '-' + variableType,
             FIELDS.EXAMINATION,
             dataType,
             (dataObject) => {
-                if (dataType === DATA_TYPES.MARKS) {
+                if (variableType === EXAMINATION_TYPE_LIST[0]) {
                     return (dataObject.userHandle ?
                         dataObject.userHandle.name
                         + ' (top: ' + dataObject.userHandle.y
-                        + ', left: ' + dataObject.userHandle.x + ')' : 'Marks/Formula');
-                } else if (dataType === DATA_TYPES.GRADES) {
+                        + ', left: ' + dataObject.userHandle.x + ')' : 'Test Marks/Formula');
+                } else if (variableType === EXAMINATION_TYPE_LIST[1]) {
                     return 'Grades' + (dataObject.userHandle ?
                         ' (top: ' + dataObject.userHandle.y
                         + ', left: ' + dataObject.userHandle.x + ')' : '');
+                } else if (variableType === EXAMINATION_TYPE_LIST[2]) {
+                    return 'Remarks' + (dataObject.userHandle ?
+                        ' (top: ' + dataObject.userHandle.y
+                        + ', left: ' + dataObject.userHandle.x + ')' : '');
                 }
-                return '-';
+                return 'If you are seeing this contact technical support';
             },
             getValueFunc
+        );
+    }
+}
+
+class AttendanceParameterStructure {
+
+    // Data Type is the parameter key
+
+    static getStructure(variableType: any): any {
+
+        return ParameterStructure.getStructure(
+            FIELDS.EXAMINATION.fieldStructureKey + '-' + variableType,
+            FIELDS.ATTENDANCE,
+            DATA_TYPES.TEXT,
+            (dataObject) => {
+                return variableType
+                    + (dataObject.userHandle ? ' (top: ' + dataObject.userHandle.y
+                    + ', left: ' + dataObject.userHandle.x + ')' : '');
+            },
+            (dataObject) => {
+                return dataObject.data.attendanceList.filter(attendance => {
+                    if (attendance.parentStudent === dataObject.studentId) {
+                        const dateOfAttendance = new Date(attendance.dateOfAttendance);
+                        return dateOfAttendance >= new Date(dataObject.userHandle.value.startDate)
+                            && dateOfAttendance <= new Date(dataObject.userHandle.value.endDate);
+                    }
+                    return false;
+                }).reduce((total, attendance) => {
+                    switch (variableType) {
+                        case ATTENDANCE_TYPE_LIST[0]:
+                            return total + (attendance.status === ATTENDANCE_STATUS_LIST[0] ? 1 : (attendance.status === ATTENDANCE_STATUS_LIST[3] ? 0.5 : 0));
+                        case ATTENDANCE_TYPE_LIST[1]:
+                            return total + (attendance.status === ATTENDANCE_STATUS_LIST[1] ? 1 : 0);
+                        case ATTENDANCE_TYPE_LIST[2]:
+                            return total + (attendance.status !== ATTENDANCE_STATUS_LIST[2] ? 1 : 0);
+                    }
+                    return 0;
+                }, 0);
+            }
         );
     }
 }
@@ -795,7 +882,12 @@ export const PARAMETER_LIST = [
     ConstantParameterStructure.getStructure(DATA_TYPES.TABLE),
 
     /* Examination Field */
-    ExaminationParameterStructure.getStructure(DATA_TYPES.MARKS),
-    ExaminationParameterStructure.getStructure(DATA_TYPES.GRADES)
+    ExaminationParameterStructure.getStructure(EXAMINATION_TYPE_LIST[0]),
+    ExaminationParameterStructure.getStructure(EXAMINATION_TYPE_LIST[1]),
+    ExaminationParameterStructure.getStructure(EXAMINATION_TYPE_LIST[2]),
 
+    /* Attendance Field */
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[0]),
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[1]),
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[2]),
 ];
