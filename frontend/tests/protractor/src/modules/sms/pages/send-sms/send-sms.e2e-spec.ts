@@ -3,7 +3,7 @@ import {startBackendServer} from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage} from '../../../../open-page';
 import {containsAll, containsFirst} from '../../../../contains';
-import {browser, by, element} from 'protractor';
+import {browser, by, element, ExpectedConditions, WebElement} from 'protractor';
 
 
 
@@ -37,7 +37,22 @@ describe('SMS -> Send SMS', () => {
 
         // Type the student name
         await page.waitForSelector('input[name="keywords"]');
-        await page.type('input[name="keywords"]', 'San'); // Types instantly
+        await page.type('input[name="keywords"]', 'san'); // Types instantly
+        // waits
+        // await element(by.css('.totalStudent')).getWebElement();
+
+       // const totalStudent = await page.$x('//button[contains(., " Total Students ")]');
+        //expect(await page.$x('//button[contains(., " Total Students ")]')).toContain('Total Students:20');
+
+
+        //let value = await(element(by.id('.totalStudent')).evaluate('studentSectionList.length'));
+        //expect(value.getText()).toBe(3);
+
+        //expect(await page.find('i.totalStudent').getText()).toBe('20');
+        // var el = await(element(by.css('i.totalStudent')));
+        // console.log(el.getText());
+
+        //expect(await(element(by.css('i.totalStudent')).getText())).toBe('20');
 
         // var el = element(by.id('totalStudent'));
         // browser.sleep(3000);
