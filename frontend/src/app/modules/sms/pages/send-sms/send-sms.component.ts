@@ -87,6 +87,9 @@ export class SendSmsComponent implements OnInit {
         rte: {
             yes: false,
             no: false
+        },
+        invalidmobilenumber: {
+            yes: false
         }
     }
 
@@ -111,9 +114,18 @@ export class SendSmsComponent implements OnInit {
     }
 
     getRowClass(row): any {
-        return {
-            'hoverRow': true,
-        };
+        if(row.validMobileNumber)
+        {
+            return {
+                'hoverRow': true,
+            };
+        }
+        else    
+        {
+            return {
+                'highlight': true,
+            };
+        }
     }
 
     updateRowValue(row: any, value: boolean): void {
@@ -319,6 +331,12 @@ export class SendSmsComponent implements OnInit {
             // rte yes or no
             if(studentSection.student.rte==="YES" && this.studentFilters.rte.yes)return true;
             if(studentSection.student.rte==="NO" && this.studentFilters.rte.no)return true;
+            return false;
+        })
+        .filter(studentSection => {
+            if(!this.studentFilters.invalidmobilenumber.yes)return true;
+            // rte yes or no
+            if(this.isMobileNumberValid(studentSection.student.mobileNumber)===false && this.studentFilters.invalidmobilenumber.yes)return true;
             return false;
         })
     }
