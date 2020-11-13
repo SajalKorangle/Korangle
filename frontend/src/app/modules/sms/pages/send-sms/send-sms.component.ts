@@ -37,6 +37,8 @@ export class SendSmsComponent implements OnInit {
 
     includeSecondMobileNumber = false;
 
+    invalidmobilenumber = false;
+
     employeeList = [];
 
     displayStudentNumber = 0;
@@ -88,9 +90,7 @@ export class SendSmsComponent implements OnInit {
             yes: false,
             no: false
         },
-        invalidmobilenumber: {
-            yes: false
-        }
+        
     }
 
     constructor(public studentService: StudentService,
@@ -334,9 +334,8 @@ export class SendSmsComponent implements OnInit {
             return false;
         })
         .filter(studentSection => {
-            if(!this.studentFilters.invalidmobilenumber.yes)return true;
-            // rte yes or no
-            if(this.isMobileNumberValid(studentSection.student.mobileNumber)===false && this.studentFilters.invalidmobilenumber.yes)return true;
+            if(!this.invalidmobilenumber)return true;
+            if(this.isMobileNumberValid(studentSection.student.mobileNumber)===false && this.invalidmobilenumber)return true;
             return false;
         })
     }
