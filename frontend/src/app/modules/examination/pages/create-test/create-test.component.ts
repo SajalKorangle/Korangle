@@ -103,4 +103,11 @@ export class CreateTestComponent implements OnInit {
         return true;
     }
 
+    //This function is used to create a basic test with specified subject
+    createBasicTest()
+    {   
+        console.log("Basic Test creation called...");
+        this.serviceAdapter.createTest();
+    }
+
 }

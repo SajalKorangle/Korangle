@@ -120,7 +120,7 @@
                 <div class="col-md-12"></div>
             </div>
 
-            <table class="table table-hover">
+            <!-- <table class="table table-hover">
                 <tbody>
                 <tr>
                     <td>
@@ -175,7 +175,156 @@
                     </td>
                 </tr>
                 </tbody>
+            </table> -->
+
+
+
+
+            <!--Basic Structure of a monthly Test-->
+
+            <table class="table table-hover">
+                <tbody>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select placeholder="Select Subject"
+                                        [ngModel]="selectedSubject"
+                                        (ngModelChange)="selectedSubject=$event">
+                                <mat-option *ngFor='let subject of subjectList;' [value]="subject">
+                                    {{subject.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field style="margin-left: 20px;">
+                            <mat-select placeholder="Select Test Type"
+                                        [ngModel]="selectedTestType"
+                                        (ngModelChange)="selectedTestType=$event">
+                                <mat-option [value]=0>None</mat-option>
+                                <mat-option *ngFor='let testType of testTypeList;' [value]="testType">
+                                    {{testType}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input type="number"
+                               placeholder="Max. Marks"
+                               [(ngModel)]="selectedMaximumMarks"/>
+                    </td>
+
+                    <td>
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="createBasicTest();">Create Test</button>
+                    </td>
+                </tr>
+                
+                  
+                <!-- <tr>
+                    <td>
+                        <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
+                    </td>
+                    <td>
+                        <span style="margin-left: 20px">
+                            Start Time:
+                            <input type="time" [(ngModel)]="selectedStartTime"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span style="margin-left: 20px">
+                            EndTime:
+                            <input type="time" [(ngModel)]="selectedEndTime"/>
+                        </span>
+                    </td>
+                    <td>
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="serviceAdapter.createTest();">Create Test</button>
+                    </td>
+                </tr> -->
+                </tbody>
+
+                
             </table>
+
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                
+                </mat-expansion-panel>
+                <mat-expansion-panel (opened)="panelOpenState = true"
+                                     (closed)="panelOpenState = false">
+                  <mat-expansion-panel-header>
+                    
+                    <mat-panel-description>
+                        <b>More options</b>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  
+
+
+                  <table class="table table-hover">
+                    <tbody>
+                    <!-- <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-select placeholder="Select Subject"
+                                            [ngModel]="selectedSubject"
+                                            (ngModelChange)="selectedSubject=$event">
+                                    <mat-option *ngFor='let subject of subjectList;' [value]="subject">
+                                        {{subject.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field style="margin-left: 20px;">
+                                <mat-select placeholder="Select Test Type"
+                                            [ngModel]="selectedTestType"
+                                            (ngModelChange)="selectedTestType=$event">
+                                    <mat-option [value]=0>None</mat-option>
+                                    <mat-option *ngFor='let testType of testTypeList;' [value]="testType">
+                                        {{testType}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <input type="number"
+                                   placeholder="Max. Marks"
+                                   [(ngModel)]="selectedMaximumMarks"/>
+                        </td>
+                    </tr> -->
+                    <tr>
+                        <td>
+                            <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
+                        </td>
+                        <td>
+                            <span style="margin-left: 20px">
+                                Start Time:
+                                <input type="time" [(ngModel)]="selectedStartTime"/>
+                            </span>
+                        </td>
+                        <td>
+                            <span style="margin-left: 20px">
+                                EndTime:
+                                <input type="time" [(ngModel)]="selectedEndTime"/>
+                            </span>
+                        </td>
+                       
+                    </tr>
+                    </tbody>
+                </table>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+
+
+
+
+
+
 
             <!-- div class="row">
                 <div class="col-md-12">
