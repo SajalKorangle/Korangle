@@ -204,6 +204,18 @@
             </mat-form-field -->
         <!-- </div> -->
 
+
+        <!-- search by student's or father's name -->
+        <br>
+        <mat-form-field>
+            <input matInput
+                   testId="nameFilter"
+                   placeholder="Enter student's name, father's name.."
+                   type="text"
+                   [(ngModel)]="nameFilter">
+        </mat-form-field>
+        
+
         <!-- Custom Filters -->
         <ng-container *ngIf="studentParameterList.length>0">
             <br/>

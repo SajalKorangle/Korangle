@@ -67,6 +67,8 @@ export class SendSmsComponent implements OnInit {
     rows;
     timeout: any;
 
+    nameFilter = "" ;
+
     serviceAdapter: SendSmsServiceAdapter;
     studentFilters: any = {
         category: {
@@ -320,6 +322,14 @@ export class SendSmsComponent implements OnInit {
             if(studentSection.student.rte==="YES" && this.studentFilters.rte.yes)return true;
             if(studentSection.student.rte==="NO" && this.studentFilters.rte.no)return true;
             return false;
+        }).filter(studentSection =>{
+            // by student's or father's name
+            this.nameFilter = this.nameFilter.toString().toLowerCase().trim();
+
+            return this.nameFilter === ""
+                || studentSection.student.name.toLowerCase().indexOf(this.nameFilter) === 0
+                || studentSection.student.fathersName.toLowerCase().indexOf(this.nameFilter) === 0;
+
         })
     }
 
