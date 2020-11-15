@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 import json
 
-from examination_app.models import Examination, TestSecond, StudentTest, StudentExtraSubField, CCEMarks, Remarks
+from examination_app.models import Examination, TestSecond, StudentTest, StudentExtraSubField, CCEMarks, StudentExaminationRemarks
 
 
 def get_error_response(message):
@@ -257,11 +257,11 @@ class CCEMarksListView(CommonListView, APIView):
 ########### Remarks #############
 
 
-class RemarksView(CommonView, APIView):
-    Model = Remarks
+class StudentExaminationRemarksView(CommonView, APIView):
+    Model = StudentExaminationRemarks
 
 
-class RemarksListView(CommonListView, APIView):
-    Model = Remarks
+class StudentExaminationRemarksListView(CommonListView, APIView):
+    Model = StudentExaminationRemarks
 
 

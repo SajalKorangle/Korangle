@@ -107,3 +107,7 @@ input {
     75%  {background: lightgreen;}
     100% {background: lightpink;}
 }
+
+.highlightRow {
+    background: #f5f5f5;
+}

@@ -96,10 +96,10 @@ urlpatterns += [
 ]
 
 
-from examination_app.views import RemarksView, RemarksListView
+from examination_app.views import StudentExaminationRemarksView, StudentExaminationRemarksListView
 
 urlpatterns += [
-    url(r'^remarks/batch', RemarksListView.as_view()),
-    url(r'^remarks', RemarksView.as_view()),
+    url(r'^student-examination-remarks/batch', StudentExaminationRemarksListView.as_view()),
+    url(r'^student-examination-remarks', StudentExaminationRemarksView.as_view()),
 ]
 

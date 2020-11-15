@@ -21,13 +21,20 @@ export class AddStudentRemarksServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        const examination_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        };
+
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission, attendance_permission_data), // 2
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, examination_data), // 3
         ]).then(value => {
 
             this.vm.attendancePermissionList = value[2];
+            this.populateExaminationList(value[3]);
 
             if (this.vm.attendancePermissionList.length === 0) {
                 this.vm.isInitialLoading = false;
@@ -62,11 +69,11 @@ export class AddStudentRemarksServiceAdapter {
 
                     this.vm.studentList = value_student;
 
-                    /*this.vm.studentSectionList.forEach(item => {
+                    this.vm.studentSectionList.forEach(item => {
                         item['student'] = value_student.find(item_student => {
                             return item_student.id === item.parentStudent;
                         });
-                    });*/
+                    });
 
                     this.vm.isInitialLoading = false;
 
@@ -74,11 +81,14 @@ export class AddStudentRemarksServiceAdapter {
                     this.vm.isInitialLoading = false;
                 });
 
+                // Note: this function should be called after student section list has been populated
+                // as it will only populate those classes for which students are present in the session.
+                // or permission has been given to employee.
+                this.populateClassSectionList(value[0], value[1]);
+
             }, error => {
                 this.vm.isInitialLoading = false;
             });
-
-            this.populateClassSectionList(value[0], value[1]);
 
         }, error => {
             this.vm.isInitialLoading = false;
@@ -86,7 +96,14 @@ export class AddStudentRemarksServiceAdapter {
 
     }
 
-    populateStudentSectionList(studentSectionList: any): void{
+    populateExaminationList(examinationList: any): void {
+        this.vm.examinationList = examinationList;
+        if (examinationList.length > 0) {
+            this.vm.htmlAdapter.selectedExamination = this.vm.examinationList[0];
+        }
+    }
+
+    populateStudentSectionList(studentSectionList: any): void {
         this.vm.studentSectionList = studentSectionList.filter(eachStudentSection => {
             return this.vm.attendancePermissionList.some(eachAttendancePermission => {
                 if (eachStudentSection.parentClass === eachAttendancePermission.parentClass
@@ -98,6 +115,7 @@ export class AddStudentRemarksServiceAdapter {
         });
 
     }
+
     populateClassSectionList(classList: any, sectionList: any): void {
 
         classList.forEach(classs => {
@@ -113,25 +131,27 @@ export class AddStudentRemarksServiceAdapter {
             });
         });
 
-        this.vm.selectedClassSection = this.vm.classSectionList[0];
+        if (this.vm.classSectionList.length > 0) {
+            this.vm.htmlAdapter.handleClassSectionSelection(this.vm.classSectionList[0]);
+        }
     }
 
     getStudentRemarkDetails(): void {
 
         const student_remark_data = {
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentStudent__in': this.vm.getFilteredStudentSectionList().map(item => item.parentStudent).join(','),
+            'parentExamination': this.vm.htmlAdapter.selectedExamination.id,
+            'parentStudent__in': this.vm.htmlAdapter.filteredSortedStudentSectionList.map(item => item.parentStudent).join(','),
         };
 
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.examinationService.getObjectList(this.vm.examinationService.remarks, student_remark_data),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, student_remark_data),
         ]).then(value => {
 
             this.vm.studentRemarkList = value[0];
             this.vm.isLoading = false;
-            this.vm.showStudentList = true;
+            this.vm.htmlAdapter.showStudentList = true;
 
         }, error => {
             this.vm.isLoading = false;
@@ -141,7 +161,7 @@ export class AddStudentRemarksServiceAdapter {
 
     updateStudentRemark(studentSection: any, newRemark: any, element: any): void {
 
-        if (this.vm.getStudentRemark(studentSection) !== newRemark) {
+        if (this.vm.htmlAdapter.getStudentRemark(studentSection) !== newRemark) {
 
             const prev_student_remark = this.vm.studentRemarkList.find(studentRemark => {
                 return studentRemark.parentStudent === studentSection.parentStudent;
@@ -153,17 +173,17 @@ export class AddStudentRemarksServiceAdapter {
                 const student_remark_data = {
                     'id': prev_student_remark.id,
                     'parentStudent': prev_student_remark.parentStudent,
-                    'parentSession': prev_student_remark.parentSession,
+                    'parentExamination': this.vm.htmlAdapter.selectedExamination.id,
                     'remark': newRemark,
                 };
-                service_list.push(this.vm.reportCardMpBoardService.updateObject(this.vm.reportCardMpBoardService.student_remark, student_remark_data));
+                service_list.push(this.vm.examinationService.updateObject(this.vm.examinationService.student_examination_remarks, student_remark_data));
             } else {
                 const student_remark_data = {
                     'parentStudent': studentSection.parentStudent,
-                    'parentSession': studentSection.parentSession,
+                    'parentExamination': this.vm.htmlAdapter.selectedExamination.id,
                     'remark': newRemark,
                 };
-                service_list.push(this.vm.reportCardMpBoardService.createObject(this.vm.reportCardMpBoardService.student_remark, student_remark_data));
+                service_list.push(this.vm.examinationService.createObject(this.vm.examinationService.student_examination_remarks, student_remark_data));
             }
 
             element.classList.add('updatingField');

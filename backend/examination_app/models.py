@@ -255,7 +255,7 @@ class CCEMarks(models.Model):
         unique_together = ('parentStudent', 'parentSession')
 
 
-class Remarks(models.Model):
+class StudentExaminationRemarks(models.Model):
 
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     parentExamination = models.ForeignKey(Examination, models.CASCADE, null=False, default=0, verbose_name='parentExamination')
