@@ -4,7 +4,6 @@ import {startBackendServer} from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import { openModuleAndPage } from '../../../../open-page';
 import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
-import { resolve } from 'dns';
 
 describe('Examination -> View Marks', () => {
 
@@ -24,7 +23,7 @@ describe('Examination -> View Marks', () => {
         await openModuleAndPage('Examination', 'View Marks');
         await page.waitForSelector('button[type="submit"]');
         (await containsFirst('button', 'GET')).click();
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(1000);
     })
 
     describe('set1', () => { 
@@ -40,7 +39,7 @@ describe('Examination -> View Marks', () => {
             let nodes, node, col_count;
             nodes = await getNodes('label', 'Hindi'); //  Subjects for filter should not be available
             expect(nodes.length).toBe(0);
-            nodes = await getNodes('th', 'Hindi');
+            nodes = containsAll('th', 'Hindi');
             expect(nodes.length).not.toBe(0);
 
             nodes = await getNodes('th', '');  // columns count
@@ -51,21 +50,26 @@ describe('Examination -> View Marks', () => {
             node.click();
             await page.waitForTimeout(500);
             
-            [node] = await page.$x('//input[following-sibling::label[contains(text(), "Hindi")]]');
-            expect(node).not.toBeUndefined()
-            node.click();
+            [node] = await page.$x('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input')
+            expect(node).not.toBeUndefined();
+            // await node.click();
+
+            await page.evaluate(() => {
+                nodes = document.evaluate('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input', document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null)
+                node = nodes.iterateNext();
+                node.click();
+            })
+
             await page.waitForTimeout(500);
 
             nodes = await getNodes('th', '');  // columns count
             col_count = nodes.length;
             expect(col_count).toBe(8);
-
-            // await new Promise((res)=>setTimeout(res, 10000))  //sleep
     
         });
 
         it('View Marks: Default Ordering', async () => { 
-            let root, nodes, node, roll = -1, prop;
+            let nodes, node, roll = -1, prop;
             nodes = await page.$$('table tbody tr:nth-child(n)');
             nodes.pop();
             nodes.forEach(async element => {
@@ -100,7 +104,8 @@ describe('Examination -> View Marks', () => {
 
                 node = await element.$('td:nth-child(4) span');
                 prop = await page.evaluate(el => el.innerHTML, node);
-                prop = parseFloat(prop.substring(1,prop.length-1));
+                prop = prop.trim()
+                prop = parseFloat(prop.substring(1, prop.length - 1));
                 expect(prop).toBeLessThanOrEqual(tot);
                 tot = prop;
             });

@@ -11,8 +11,8 @@ export class BeforeAfterEach {
 
     static async beforeEach() {
 
-        // BeforeAfterEach.browser = await puppeteer.launch();
-        BeforeAfterEach.browser = await puppeteer.launch({headless: false});
+        BeforeAfterEach.browser = await puppeteer.launch();
+        // BeforeAfterEach.browser = await puppeteer.launch({headless: false});
         // BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 30});
         BeforeAfterEach.page = await BeforeAfterEach.browser.newPage();
         await BeforeAfterEach.page.setViewport({
@@ -20,6 +20,10 @@ export class BeforeAfterEach {
             height: 720
         });
         // await BeforeAfterEach.page.setDefaultNavigationTimeout(0);
+
+        // Waiting for backend server to start and stabilize
+        await BeforeAfterEach.page.waitForTimeout(3000);
+
         await BeforeAfterEach.page.goto('http://localhost:4200');
         await BeforeAfterEach.page.type('#username', '1234567890'); // Types instantly
         await BeforeAfterEach.page.type('#password', '1234567890'); // Types instantly

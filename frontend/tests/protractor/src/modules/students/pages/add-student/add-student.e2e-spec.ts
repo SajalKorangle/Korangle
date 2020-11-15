@@ -9,6 +9,7 @@ describe('Students -> Add Student', () => {
     let page: any;
 
     it('Add student', async () => {
+        
         startBackendServer(getFixtureFiles('modules/students/pages/add-student/add-student.json'));
 
         page = await BeforeAfterEach.beforeEach();

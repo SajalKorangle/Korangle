@@ -37,7 +37,7 @@ export class ViewMarksComponent implements OnInit {
     studentSectionList: any;
 
     testList: any;
-    showForSubjects: any;
+    showSubjectTestList: any;
     studentList: any;
     studentTestList: any;
     classSubjectList: any;
@@ -77,13 +77,13 @@ export class ViewMarksComponent implements OnInit {
         this.sortBy = sortparam;
     }
 
-    showForSubjectsSwitch(index) {
-        this.showForSubjects[index] = !this.showForSubjects[index];
-        console.log(this.showForSubjects)
+    showSubjectTestListSwitch(index) {
+        this.showSubjectTestList[index] = !this.showSubjectTestList[index];
+        console.log(this.showSubjectTestList)
     }
 
     getFilteredTestList(): any {
-        return this.testList.filter((element, index) => this.showForSubjects[index]);
+        return this.testList.filter((element, index) => this.showSubjectTestList[index]);
     }
 
     showSectionName(classSection: any): boolean {
@@ -111,7 +111,7 @@ export class ViewMarksComponent implements OnInit {
 
     getSortedFilteredStudentSectionList(): any {
         let list = this.getFilteredStudentSectionList()  //filtered student result
-        list.sort((a, b) => {   // sort according to rand (maximun marks)
+        list.sort((a, b) => {   // sort according to rank (maximun marks)
             return this.getStudentFilteredTotalMarks(b) - this.getStudentFilteredTotalMarks(a);
         });  
         list = list.map((element, index) => {   // add rank key studentSelection object
@@ -169,23 +169,11 @@ export class ViewMarksComponent implements OnInit {
     }
 
     getEmployee(test: any): any {
-        // try {
-        // if (this.classSubjectList.find(classSubject => {
-        //     return classSubject.parentSubject == test.parentSubject;
-        // }) === undefined) {
-        //     console.log(test);
-        // }
-        // return this.employeeList[0];
         return this.employeeList.find(employee => {
             return employee.id == this.classSubjectList.find(classSubject => {
                 return classSubject.parentSubject == test.parentSubject;
             }).parentEmployee;
         });
-        // }
-        // catch(err){
-        //     console.log(err);
-        //     return null;
-        // }
     }
 
     getEmployeeName(test: any): any {
