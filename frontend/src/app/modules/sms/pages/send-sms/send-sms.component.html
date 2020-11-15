@@ -75,7 +75,7 @@
     <div class="row">
         <div class="col-md-6">
             <span style="font-size: 16px; font-weight: 600"><i>Student List</i></span>
-            <button class="btn" id="student-list"
+            <button class="btn"
                     style="padding: 4px 7px; margin-left: 15px;"
                     (click)="showStudentList = !showStudentList; $event.stopPropagation();">
                 <span *ngIf="showStudentList; else hideStudentList">Hide</span>
@@ -205,11 +205,15 @@
         <!-- </div> -->
 
 
-        <!-- search by keywords -->
+        <!-- search by student's or father's name -->
         <br>
-            <mat-form-field id="nameFilter">
-                <input id="keywords" matInput name="keywords" type="text" [(ngModel)]="nameFilter" placeholder="Enter student name,father's name..">
-            </mat-form-field>
+        <mat-form-field>
+            <input matInput
+                   testId="nameFilter"
+                   placeholder="Enter student's name, father's name.."
+                   type="text"
+                   [(ngModel)]="nameFilter">
+        </mat-form-field>
         
 
         <!-- Custom Filters -->
@@ -243,15 +247,10 @@
         </ng-container>
 
         <br>
-           <div class="totalStudents"> Total Students: <i class="length">{{studentSectionList.length}}</i>,</div>
+            Total Students: <i>{{studentSectionList.length}}</i>,
             Displaying: <i>{{getDisplayStudentNumber()}}</i>,
             Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
-      
-
-
-        
-
-
+        <br/>
 
         <button class="btn"
                 style="padding: 4px 7px"
