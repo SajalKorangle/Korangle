@@ -29,6 +29,9 @@ fi
 #           Coverage                #
 #####################################
 
+# For now we are moving away from the coverage of karma tests
+exit 1;
+
 # Calculating total number of test cases
 numberOfTests=0
 for i in `find tests/karma/test -name "*.spec.ts"`

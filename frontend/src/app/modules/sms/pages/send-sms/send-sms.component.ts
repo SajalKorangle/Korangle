@@ -344,10 +344,11 @@ export class SendSmsComponent implements OnInit {
 
         })
         .filter(studentSection => {
-            if(!this.studentFilters.invalidmobilenumber.yes)return true;
-            // rte yes or no
-            if(this.isMobileNumberValid(studentSection.student.mobileNumber)===false && this.studentFilters.invalidmobilenumber.yes)return true;
-            return false;
+            // invalid mobile number yes or no
+            if (this.studentFilters.invalidmobilenumber.yes
+                && this.isMobileNumberValid(studentSection.student.mobileNumber) === true) {
+                return false;
+            }
         })
     }
 
