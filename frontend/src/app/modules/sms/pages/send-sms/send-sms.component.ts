@@ -349,6 +349,7 @@ export class SendSmsComponent implements OnInit {
                 && this.isMobileNumberValid(studentSection.student.mobileNumber) === true) {
                 return false;
             }
+            return true;
         })
     }
 
