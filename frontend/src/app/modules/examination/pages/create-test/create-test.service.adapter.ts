@@ -465,6 +465,7 @@ export class CreateTestServiceAdapter {
             test.maximumMarks = value[0].maximumMarks;
             test.testType = value[0].testType;
             this.vm.isLoading = false;
+            this.getTestAndSubjectDetails();
         }, error => {
             this.vm.isLoading = false;
         });
