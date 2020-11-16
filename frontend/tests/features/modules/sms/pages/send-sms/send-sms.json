@@ -1,0 +1,11 @@
+[
+    {
+      "statement": "Send sms to students",
+      "testType": "protractor",
+      "steps": [
+        "Open Send sms page",
+        "Click on Student show button"
+      ],
+      "testName": "Able to open Contact Us Page"
+    }
+  ]
