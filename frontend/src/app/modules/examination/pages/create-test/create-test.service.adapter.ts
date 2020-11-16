@@ -321,12 +321,14 @@ export class CreateTestServiceAdapter {
             tempTest[key] = test[key];
         });
         tempTest['subjectName'] = this.getSubjectName(test.parentSubject) + ((test.testType!=null)?' - '+test.testType:'');
+        tempTest['testType'] = test.testType;
         tempTest['onlyGrade'] = this.isOnlyGrade(test.parentSubject);
         tempTest['newDate'] = this.vm.formatDate(test.startTime, '');
         tempTest['newStartTime'] = this.extractTime(test.startTime);
         console.log(tempTest);
         tempTest['newEndTime'] = this.extractTime(test.endTime);
         tempTest['newMaximumMarks'] = test.maximumMarks;
+        tempTest['newTestType'] = test.testType;
         this.vm.selectedExamination.selectedClass.selectedSection.testList.push(tempTest);
     }
 
@@ -451,7 +453,7 @@ export class CreateTestServiceAdapter {
             'parentSubject': test.parentSubject,
             'startTime': this.getDateTime(test.newDate, test.newStartTime),
             'endTime': this.getDateTime(test.newDate, test.newEndTime),
-            'testType': test.testType,
+            'testType': test.newTestType,
             'maximumMarks': test.newMaximumMarks,
         };
 
@@ -461,6 +463,7 @@ export class CreateTestServiceAdapter {
             test.startTime = value[0].startTime;
             test.endTime = value[0].endTime;
             test.maximumMarks = value[0].maximumMarks;
+            test.testType = value[0].testType;
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;

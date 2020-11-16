@@ -30,7 +30,7 @@ export class CreateTestComponent implements OnInit {
 
     // For New Test
     selectedSubject: any;
-    selectedDate = null;
+    selectedDate : any;
     selectedStartTime = "10:30";
     selectedEndTime = "13:30";
     selectedTestType = null;
@@ -100,13 +100,34 @@ export class CreateTestComponent implements OnInit {
         if (test.newMaximumMarks !== test.maximumMarks) {
             return false;
         }
+        if (test.newTestType !== test.testType)
+            return false;
+
         return true;
     }
 
-    //This function is used to create a basic test with specified subject
-    createBasicTest()
+    //This function is used to create a basic test template for all subjects in the selected class and section
+    createBasicTestForAllSubj()
     {   
         console.log("Basic Test creation called...");
+        
+        this.selectedDate = this.formatDate(new Date(),'');
+    
+        for(let i=0;i<this.subjectList.length;i++)
+        {
+            this.selectedSubject = this.subjectList[i];
+            this.serviceAdapter.createTest();
+        }
+
+    }
+
+    //This function creates specific test by chosen subject name
+    createSpecificTest()
+    {
+        console.log("Subject wise test creation called...");
+
+        this.selectedDate = this.formatDate(new Date(),'');
+
         this.serviceAdapter.createTest();
     }
 
