@@ -19,6 +19,8 @@ export class BeforeAfterEach {
             width: 1220,
             height: 720
         });
+        // Waiting for backend server to start and stabilize
+        await BeforeAfterEach.page.waitForTimeout(3000);
         // await BeforeAfterEach.page.setDefaultNavigationTimeout(0);
 
         // Waiting for backend server to start and stabilize
