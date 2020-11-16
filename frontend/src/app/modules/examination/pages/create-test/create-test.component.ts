@@ -9,6 +9,8 @@ import { CreateTestServiceAdapter } from './create-test.service.adapter';
 import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import { MatLineSetter } from '@angular/material';
+import { update } from 'lodash';
 
 @Component({
     selector: 'create-test',
@@ -118,6 +120,7 @@ export class CreateTestComponent implements OnInit {
             this.selectedSubject = this.subjectList[i];
             this.serviceAdapter.createTest();
         }
+        this.serviceAdapter.getTestAndSubjectDetails();
 
     }
 
@@ -130,5 +133,16 @@ export class CreateTestComponent implements OnInit {
 
         this.serviceAdapter.createTest();
     }
+
+    //Update maximum Marks of all the test at once
+    updateAll()
+    {
+        
+        this.selectedExamination.selectedClass.selectedSection.testList.forEach(test => {
+            test.newMaximumMarks = this.selectedMaximumMarks;
+            this.serviceAdapter.updateTest(test);
+        });
+        
+    } 
 
 }
