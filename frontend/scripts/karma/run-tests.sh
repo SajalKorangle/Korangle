@@ -30,7 +30,7 @@ fi
 #####################################
 
 # For now we are moving away from the coverage of karma tests
-exit 1;
+exit 0;
 
 # Calculating total number of test cases
 numberOfTests=0
