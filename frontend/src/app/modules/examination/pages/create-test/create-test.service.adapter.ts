@@ -88,15 +88,61 @@ export class CreateTestServiceAdapter {
                         tempSection[key] = section[key];
                     });
                     tempSection['testList'] = [];
+                    // console.log(classs.name);
+                    // console.log(section.name);
+                    // console.log(classs.name)
+                    // this.vm.selectedExamination = examination;
+                    // this.vm.selectedExamination.selectedClass =classs;
+                    // this.vm.selectedExamination.selectedClass.selectedSection = section;
+                    // this.getTestAndSubjectDetails();
+                    // if(this.subjectList.length>0)
+                    // {   
+                    //     console.log("getting inside the function ...");
+                    //     console.log(this.subjectList);
+                    // }
+
+                    
+
+                    
+
                     tempClass['sectionList'].push(tempSection);
                 });
                 tempClass['selectedSection'] = tempClass['sectionList'][0];
                 tempExamination['classList'].push(tempClass);
+
+                
+                
             });
             tempExamination['selectedClass'] = tempExamination['classList'][0];
+
+            let request_subject = {
+                /*'classId': this.vm.selectedExamination.selectedClass.id,
+                'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,
+                'sessionId': this.vm.user.activeSchool.currentSessionDbId,
+                'schoolId': this.vm.user.activeSchool.dbId,*/
+                'classList': tempExamination['classList'],
+                'sectionList': tempExamination['tempClass']['sectionList'],
+                'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
+                'schoolList': [this.vm.user.activeSchool.dbId],
+            };
+
+            Promise.all([
+                this.vm.subjectService.getClassSubjectList(request_subject, this.vm.user.jwt),
+            ]).then(value => {
+                console.log(value);
+            },
+            error =>{
+
+                    console.log(error);
+            });
+
+            
+
             this.vm.examinationClassSectionList.push(tempExamination);
         });
         this.vm.selectedExamination = this.vm.examinationClassSectionList[0];
+
+
     }
 
     //Get Test And Subject Details
@@ -151,6 +197,12 @@ export class CreateTestServiceAdapter {
             ]).then(value2 => {
 
                 this.classSubjectList = value[1];
+                console.log("get TEst and suject CAleed ......");
+
+                console.log(this.classSubjectList);
+
+                console.log("getStudentSubjectList caleed............");
+                console.log(value2[1]);
 
                 this.addTestListToExaminationList(value[0]);
                 this.addStudentTestListToExaminationList(value2[0], true);
