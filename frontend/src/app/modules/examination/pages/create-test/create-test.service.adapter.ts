@@ -53,6 +53,7 @@ export class CreateTestServiceAdapter {
             this.sectionList = value[2];
             this.subjectList = value[3];
             this.student_mini_profile_list = value[4];
+            this.getClassSectionSubjectList();
             this.populateExaminationClassSectionList();
             this.vm.subjectList = this.subjectList;
             this.vm.isInitialLoading = false;
@@ -68,6 +69,55 @@ export class CreateTestServiceAdapter {
         });*/
     }
 
+    classSectionSubjectList =[];
+    
+    getClassSectionSubjectList():void{
+        this.classSectionSubjectList =[];
+        this.classList.forEach(currClass => {
+            let tempClass ={};
+            Object.keys(currClass).forEach(key =>{
+                tempClass[key] = currClass[key];
+            })
+            tempClass['sectionList']=[];
+            this.sectionList.forEach(currSection => {
+                let tempSection ={};
+                Object.keys(currClass).forEach(key =>{
+                    tempSection[key] = currSection[key];
+                })
+                tempSection['containsSubject']=false;
+                
+                let request_subject = {
+                            'classList': currClass.id,
+                            'sectionList': currSection.id,
+                            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
+                            'schoolList': [this.vm.user.activeSchool.dbId],
+                        };
+                Promise.all([
+                    this.vm.subjectService.getClassSubjectList(request_subject, this.vm.user.jwt),
+                ]).then(value => {
+                    if(value[0].length>0)tempSection['containsSubject']=true;      
+                },
+                error =>{
+                        console.log(error);
+                });
+                tempClass['sectionList'].push(tempSection);  
+            });
+
+            this.classSectionSubjectList.push(tempClass);
+
+        });
+
+        this.classSectionSubjectList.forEach(classss => {
+                
+            console.log(classss.name);
+            classss['sectionList'].forEach(element => {
+                console.log(element.name);
+                console.log(element.containsSubject);
+            });
+         });
+    }
+
+    
     populateExaminationClassSectionList(): void {
         this.vm.examinationClassSectionList = [];
         this.examinationList.forEach(examination => {
@@ -88,61 +138,16 @@ export class CreateTestServiceAdapter {
                         tempSection[key] = section[key];
                     });
                     tempSection['testList'] = [];
-                    // console.log(classs.name);
-                    // console.log(section.name);
-                    // console.log(classs.name)
-                    // this.vm.selectedExamination = examination;
-                    // this.vm.selectedExamination.selectedClass =classs;
-                    // this.vm.selectedExamination.selectedClass.selectedSection = section;
-                    // this.getTestAndSubjectDetails();
-                    // if(this.subjectList.length>0)
-                    // {   
-                    //     console.log("getting inside the function ...");
-                    //     console.log(this.subjectList);
-                    // }
-
-                    
-
-                    
-
                     tempClass['sectionList'].push(tempSection);
                 });
                 tempClass['selectedSection'] = tempClass['sectionList'][0];
-                tempExamination['classList'].push(tempClass);
-
-                
+                tempExamination['classList'].push(tempClass);   
                 
             });
-            tempExamination['selectedClass'] = tempExamination['classList'][0];
-
-            let request_subject = {
-                /*'classId': this.vm.selectedExamination.selectedClass.id,
-                'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,
-                'sessionId': this.vm.user.activeSchool.currentSessionDbId,
-                'schoolId': this.vm.user.activeSchool.dbId,*/
-                'classList': tempExamination['classList'],
-                'sectionList': tempExamination['tempClass']['sectionList'],
-                'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
-                'schoolList': [this.vm.user.activeSchool.dbId],
-            };
-
-            Promise.all([
-                this.vm.subjectService.getClassSubjectList(request_subject, this.vm.user.jwt),
-            ]).then(value => {
-                console.log(value);
-            },
-            error =>{
-
-                    console.log(error);
-            });
-
-            
-
+            tempExamination['selectedClass'] = tempExamination['classList'][0];          
             this.vm.examinationClassSectionList.push(tempExamination);
         });
         this.vm.selectedExamination = this.vm.examinationClassSectionList[0];
-
-
     }
 
     //Get Test And Subject Details
