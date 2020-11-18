@@ -7,16 +7,6 @@
         
 
         <div class="row">
-            <ng-container *ngFor="let class of classSectionSubjectList">
-                <ng-container *ngFor="let section of class.sectionList">
-                    <mat-option *ngIf="section.containsSubject" style="width: 100%;">
-                        hi
-                        <mat-checkbox >
-                            {{class.name}}<span>, {{section.name}}</span>
-                        </mat-checkbox>
-                    </mat-option>
-                </ng-container>
-            </ng-container>
             <div class="col-md-9" *ngIf="examinationClassSectionList.length > 0">
                 <mat-form-field>
                     <mat-select placeholder="Select Examination"

@@ -10,7 +10,6 @@ import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 import { MatLineSetter } from '@angular/material';
-import { update } from 'lodash';
 
 @Component({
     selector: 'create-test',

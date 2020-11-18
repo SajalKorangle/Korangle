@@ -69,7 +69,7 @@ export class CreateTestServiceAdapter {
         });*/
     }
 
-    classSectionSubjectList =[];
+    classSectionSubjectList :any[];
     
     getClassSectionSubjectList():void{
         this.classSectionSubjectList =[];
@@ -79,12 +79,14 @@ export class CreateTestServiceAdapter {
                 tempClass[key] = currClass[key];
             })
             tempClass['sectionList']=[];
+
             this.sectionList.forEach(currSection => {
                 let tempSection ={};
                 Object.keys(currClass).forEach(key =>{
                     tempSection[key] = currSection[key];
                 })
-                tempSection['containsSubject']=false;
+                let keyy = "containsSubject";
+                tempSection[keyy]=true;
                 
                 let request_subject = {
                             'classList': currClass.id,
@@ -95,26 +97,42 @@ export class CreateTestServiceAdapter {
                 Promise.all([
                     this.vm.subjectService.getClassSubjectList(request_subject, this.vm.user.jwt),
                 ]).then(value => {
-                    if(value[0].length>0)tempSection['containsSubject']=true;      
+
+                    if(value[0].length===0)tempSection[keyy]=false;     
+                    
                 },
                 error =>{
+
                         console.log(error);
                 });
+
                 tempClass['sectionList'].push(tempSection);  
-            });
-
-            this.classSectionSubjectList.push(tempClass);
-
-        });
-
-        this.classSectionSubjectList.forEach(classss => {
                 
-            console.log(classss.name);
-            classss['sectionList'].forEach(element => {
-                console.log(element.name);
-                console.log(element.containsSubject);
             });
-         });
+
+            
+            this.classSectionSubjectList.push(tempClass); 
+
+            
+        });
+        this.showResult();
+        
+        
+    }
+    showResult()
+    {
+        console.log(this.classSectionSubjectList);
+
+        for(let i=0;i<this.classSectionSubjectList.length;i++)
+        {
+            console.log(this.classSectionSubjectList[i].name);
+            console.log(this.classSectionSubjectList[i].sectionList);
+
+            console.log(this.classSectionSubjectList[i].sectionList.length);
+            for(let j=0;j<this.classSectionSubjectList[i].sectionList.length;j++)
+            console.log(this.classSectionSubjectList[i].sectionList[j].containsSubject);
+
+        }
     }
 
     
@@ -202,13 +220,6 @@ export class CreateTestServiceAdapter {
             ]).then(value2 => {
 
                 this.classSubjectList = value[1];
-                console.log("get TEst and suject CAleed ......");
-
-                console.log(this.classSubjectList);
-
-                console.log("getStudentSubjectList caleed............");
-                console.log(value2[1]);
-
                 this.addTestListToExaminationList(value[0]);
                 this.addStudentTestListToExaminationList(value2[0], true);
                 this.addStudentSubjectListToExaminationList(value2[1]);
