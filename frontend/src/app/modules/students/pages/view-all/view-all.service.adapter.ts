@@ -1,5 +1,5 @@
 import {ViewAllComponent} from './view-all.component'
-import {CommonFunctions} from '@classes/common-functions';
+import {CommonFunctions} from '../../../../classes/common-functions';
 
 export class ViewAllServiceAdapter {
     vm: ViewAllComponent

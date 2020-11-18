@@ -20,7 +20,7 @@ export class CreateTestServiceAdapter {
     testList: any;
     classSubjectList: any;
 
-    classSectionSubjectList: any;
+    classSectionSubjectList= [];
 
     student_mini_profile_list: any;
 
@@ -60,25 +60,27 @@ export class CreateTestServiceAdapter {
             this.classList = value[1];
             this.sectionList = value[2];
             this.subjectList = value[3];
-            this.classSectionSubjectList = value[4];
+            // this.classSectionSubjectList = value[4];
+            const map = new Map();
+            value[4].forEach(item => {
+                
+                let key = item.parentClass + "|" + item.parentDivision;
+                if(!map.has(key)){
+                    map.set(key, true);    // set any value to Map
+                    this.classSectionSubjectList.push({
+                        'class': this.getClassName(item.parentClass),
+                        'sec': this.getSectionName(item.parentDivision)
+                    });
+                    console.log("added" + this.classSectionSubjectList[this.classSectionSubjectList.length-1].class);
+                }
+            });
 
 
             this.student_mini_profile_list = value[5];
           
             this.populateExaminationClassSectionList();
-            this.popuateClassSectionSubjectList();
-            this.vm.subjectList = this.subjectList;
+            this.vm.subjectList = this.subjectList;  
             this.vm.isInitialLoading = false;
-            this.showResult();
-
-
-            Promise.all([
-                this.popuateClassSectionSubjectList()
-            ]).then(value2 => {
-
-               
-
-            });
         }, error => {
             this.vm.isInitialLoading = false;
         });
@@ -90,93 +92,21 @@ export class CreateTestServiceAdapter {
             this.vm.isInitialLoading = false;
         });*/
     }
-    resultSelection = [];
-    popuateClassSectionSubjectList()
-    {
-        const map = new Map();
-        for (const item of this.classSectionSubjectList) {
-            let key = item.parentClass + "|" + item.parentDivision;
-            if(!map.has(key)){
-                map.set(key, true);    // set any value to Map
-                this.resultSelection.push({
-                    'class': this.getClassName(item.parentClass),
-                    'sec': this.getSectionName(item.parentDivision)
-                });
-            }
-        }
-    }
-    
-    getClassSectionSubjectList():void{
-        this.classSectionSubjectList =[];
-        this.classList.forEach(currClass => {
-            let tempClass ={};
-            Object.keys(currClass).forEach(key =>{
-                tempClass[key] = currClass[key];
-            })
-            tempClass['sectionList']=[];
-
-            this.sectionList.forEach(currSection => {
-                let tempSection ={};
-                Object.keys(currClass).forEach(key =>{
-                    tempSection[key] = currSection[key];
-                })
-                let keyy = "containsSubject";
-                tempSection[keyy]=true;
-                
-                let request_subject = {
-                            'classList': currClass.id,
-                            'sectionList': currSection.id,
-                            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
-                            'schoolList': [this.vm.user.activeSchool.dbId],
-                        };
-                Promise.all([
-                    this.vm.subjectService.getClassSubjectList(request_subject, this.vm.user.jwt),
-                ]).then(value => {
-
-                    if(value[0].length===0)tempSection[keyy]=false;     
-                    
-                },
-                error =>{
-
-                        console.log(error);
-                });
-
-                tempClass['sectionList'].push(tempSection);  
-                
-            });
-
-            
-            this.classSectionSubjectList.push(tempClass); 
-
-            
-        });
-        this.showResult();
-        
-        
-    }
-    showResult()
-    {   
-
-        console.log(this.vm.examinationClassSectionList);
-        console.log(this.classSectionSubjectList);
-
-        
-        
-        
-        console.log(this.resultSelection)
-        // extract upin, mtype, land from the original array
-        // const arr = this.classSectionSubjectList.map((item) => {
-        //     return {
-        //       class: item.parentClass,
-        //       sect: item.parentDivision,
-        //     };
-        //   });
-
-        // console.log(arr);
-
-        
-    }
-
+    // resultSelection = [];
+    // popuateClassSectionSubjectList()
+    // {
+    //     const map = new Map();
+    //     for (const item of this.classSectionSubjectList) {
+    //         let key = item.parentClass + "|" + item.parentDivision;
+    //         if(!map.has(key)){
+    //             map.set(key, true);    // set any value to Map
+    //             this.resultSelection.push({
+    //                 'class': this.getClassName(item.parentClass),
+    //                 'sec': this.getSectionName(item.parentDivision)
+    //             });
+    //         }
+    //     }
+    // }
     
     populateExaminationClassSectionList(): void {
         this.vm.examinationClassSectionList = [];

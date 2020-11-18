@@ -23,12 +23,9 @@
                 </mat-form-field>
                 
                 <mat-form-field>
-                    <mat-select placeholder="Select class and section"
-                                
-                                [disabled]="isLoading"
-                                >
-                        <mat-option *ngFor='let item of resultSelection;' [value]="item">
-                            {{item.class}}
+                    <mat-select placeholder="Select class and section">
+                        <mat-option *ngFor='let item of classSectionSubjectList;' [value]="item">
+                            {{item.class}},{{item.sec}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -496,5 +493,8 @@
     <ng-container *ngIf="isLoading || isInitialLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
+
+
+    
 
 </div>
