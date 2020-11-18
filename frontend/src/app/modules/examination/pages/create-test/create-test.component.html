@@ -21,15 +21,24 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                
+
+
+
                 <mat-form-field>
-                    <mat-select placeholder="Select class and section">
-                        <mat-option *ngFor='let item of classSectionSubjectList;' [value]="item">
-                            {{item.class}},{{item.sec}}
+                    <mat-select placeholder="Select class section"
+                               
+                                [disabled]="isLoading">
+                            
+                        <mat-option *ngFor='let classSection of classSectionSubjectList' [value]="classSection">
+                            <mat-checkbox >
+                                {{classSection.class}}<span>, {{classSection.sec}}</span>
+                            </mat-checkbox>
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
+                
+                
                 
 
                 

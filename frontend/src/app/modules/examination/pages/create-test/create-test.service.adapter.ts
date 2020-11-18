@@ -20,7 +20,7 @@ export class CreateTestServiceAdapter {
     testList: any;
     classSubjectList: any;
 
-    classSectionSubjectList= [];
+    
 
     student_mini_profile_list: any;
 
@@ -67,11 +67,10 @@ export class CreateTestServiceAdapter {
                 let key = item.parentClass + "|" + item.parentDivision;
                 if(!map.has(key)){
                     map.set(key, true);    // set any value to Map
-                    this.classSectionSubjectList.push({
+                    this.vm.classSectionSubjectList.push({
                         'class': this.getClassName(item.parentClass),
                         'sec': this.getSectionName(item.parentDivision)
                     });
-                    console.log("added" + this.classSectionSubjectList[this.classSectionSubjectList.length-1].class);
                 }
             });
 

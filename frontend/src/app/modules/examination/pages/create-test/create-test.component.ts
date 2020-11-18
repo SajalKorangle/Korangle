@@ -27,6 +27,8 @@ export class CreateTestComponent implements OnInit {
     selectedExamination: any;
     examinationClassSectionList: any;
 
+    classSectionSubjectList= [];
+
     subjectList: any;
 
     // For New Test
