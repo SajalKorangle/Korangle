@@ -3,11 +3,14 @@
 <div class="card-content">
 
     <ng-container *ngIf="!isInitialLoading">
-
         
+        
+
 
         <div class="row">
             <div class="col-md-9" *ngIf="examinationClassSectionList.length > 0">
+
+            
                 <mat-form-field>
                     <mat-select placeholder="Select Examination"
                                 [ngModel]="selectedExamination"
@@ -18,6 +21,19 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+                
+                <mat-form-field>
+                    <mat-select placeholder="Select class and section"
+                                
+                                [disabled]="isLoading"
+                                >
+                        <mat-option *ngFor='let item of resultSelection;' [value]="item">
+                            {{item.class}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                
 
                 
 

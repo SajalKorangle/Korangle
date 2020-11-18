@@ -61,12 +61,24 @@ export class CreateTestServiceAdapter {
             this.sectionList = value[2];
             this.subjectList = value[3];
             this.classSectionSubjectList = value[4];
+
+
             this.student_mini_profile_list = value[5];
           
             this.populateExaminationClassSectionList();
+            this.popuateClassSectionSubjectList();
             this.vm.subjectList = this.subjectList;
             this.vm.isInitialLoading = false;
             this.showResult();
+
+
+            Promise.all([
+                this.popuateClassSectionSubjectList()
+            ]).then(value2 => {
+
+               
+
+            });
         }, error => {
             this.vm.isInitialLoading = false;
         });
@@ -78,8 +90,21 @@ export class CreateTestServiceAdapter {
             this.vm.isInitialLoading = false;
         });*/
     }
-
-    
+    resultSelection = [];
+    popuateClassSectionSubjectList()
+    {
+        const map = new Map();
+        for (const item of this.classSectionSubjectList) {
+            let key = item.parentClass + "|" + item.parentDivision;
+            if(!map.has(key)){
+                map.set(key, true);    // set any value to Map
+                this.resultSelection.push({
+                    'class': this.getClassName(item.parentClass),
+                    'sec': this.getSectionName(item.parentDivision)
+                });
+            }
+        }
+    }
     
     getClassSectionSubjectList():void{
         this.classSectionSubjectList =[];
@@ -130,23 +155,15 @@ export class CreateTestServiceAdapter {
         
     }
     showResult()
-    {
+    {   
+
+        console.log(this.vm.examinationClassSectionList);
         console.log(this.classSectionSubjectList);
 
         
-        const result = [];
-        const map = new Map();
-        for (const item of this.classSectionSubjectList) {
-            let key = item.parentClass + "|" + item.parentDivision;
-            if(!map.has(key)){
-                map.set(key, true);    // set any value to Map
-                result.push({
-                    class: this.getClassName(item.parentClass),
-                    sec: this.getSectionName(item.parentDivision)
-                });
-            }
-        }
-        console.log(result)
+        
+        
+        console.log(this.resultSelection)
         // extract upin, mtype, land from the original array
         // const arr = this.classSectionSubjectList.map((item) => {
         //     return {
