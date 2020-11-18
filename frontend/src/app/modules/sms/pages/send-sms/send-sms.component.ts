@@ -91,8 +91,7 @@ export class SendSmsComponent implements OnInit {
         rte: {
             yes: false,
             no: false
-        },
-        
+        }
     }
 
     constructor(public studentService: StudentService,
@@ -336,16 +335,16 @@ export class SendSmsComponent implements OnInit {
             return false;
         }).filter(studentSection =>{
             // by student's or father's name
-            this.nameFilter = this.nameFilter.toString().toLowerCase().trim();
+            this.nameFilter = this.nameFilter.toString().toLowerCase().replace(/^\s+/gm,'');
 
             return this.nameFilter === ""
                 || studentSection.student.name.toLowerCase().indexOf(this.nameFilter) === 0
                 || studentSection.student.fathersName.toLowerCase().indexOf(this.nameFilter) === 0;
 
-        })
-        .filter(studentSection => {
-            if(!this.invalidmobilenumber)return true;
-            if(this.isMobileNumberValid(studentSection.student.mobileNumber)===false && this.invalidmobilenumber)return true;
+        }).filter(studentSection => {
+            if (!(this.invalidmobilenumber && this.isMobileNumberValid(studentSection.student.mobileNumber))) {
+                return true;
+            }
             return false;
         })
     }
