@@ -20,6 +20,8 @@ export class CreateTestServiceAdapter {
     testList: any;
     classSubjectList: any;
 
+    classSectionSubjectList: any;
+
     student_mini_profile_list: any;
 
 
@@ -41,22 +43,30 @@ export class CreateTestServiceAdapter {
             'sessionDbId': this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        let request_class_section_subject_data = {
+            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
+            'schoolList': [this.vm.user.activeSchool.dbId],
+        };
+
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
             this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
+            this.vm.subjectService.getClassSubjectList(request_class_section_subject_data,this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
         ]).then(value => {
             this.examinationList = value[0];
             this.classList = value[1];
             this.sectionList = value[2];
             this.subjectList = value[3];
-            this.student_mini_profile_list = value[4];
-            this.getClassSectionSubjectList();
+            this.classSectionSubjectList = value[4];
+            this.student_mini_profile_list = value[5];
+          
             this.populateExaminationClassSectionList();
             this.vm.subjectList = this.subjectList;
             this.vm.isInitialLoading = false;
+            this.showResult();
         }, error => {
             this.vm.isInitialLoading = false;
         });
@@ -69,7 +79,7 @@ export class CreateTestServiceAdapter {
         });*/
     }
 
-    classSectionSubjectList :any[];
+    
     
     getClassSectionSubjectList():void{
         this.classSectionSubjectList =[];
@@ -123,16 +133,31 @@ export class CreateTestServiceAdapter {
     {
         console.log(this.classSectionSubjectList);
 
-        for(let i=0;i<this.classSectionSubjectList.length;i++)
-        {
-            console.log(this.classSectionSubjectList[i].name);
-            console.log(this.classSectionSubjectList[i].sectionList);
-
-            console.log(this.classSectionSubjectList[i].sectionList.length);
-            for(let j=0;j<this.classSectionSubjectList[i].sectionList.length;j++)
-            console.log(this.classSectionSubjectList[i].sectionList[j].containsSubject);
-
+        
+        const result = [];
+        const map = new Map();
+        for (const item of this.classSectionSubjectList) {
+            let key = item.parentClass + "|" + item.parentDivision;
+            if(!map.has(key)){
+                map.set(key, true);    // set any value to Map
+                result.push({
+                    class: this.getClassName(item.parentClass),
+                    sec: this.getSectionName(item.parentDivision)
+                });
+            }
         }
+        console.log(result)
+        // extract upin, mtype, land from the original array
+        // const arr = this.classSectionSubjectList.map((item) => {
+        //     return {
+        //       class: item.parentClass,
+        //       sect: item.parentDivision,
+        //     };
+        //   });
+
+        // console.log(arr);
+
+        
     }
 
     
@@ -414,6 +439,30 @@ export class CreateTestServiceAdapter {
         this.subjectList.every(subject => {
             if (subject.id === subjectId) {
                 result = subject.name;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    getClassName(classId: any): any {
+        let result = '';
+        this.classList.every(item => {
+            if (item.id === classId) {
+                result = item.name;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
+
+    getSectionName(sectionId: any): any {
+        let result = '';
+        this.sectionList.every(item => {
+            if (item.id === sectionId) {
+                result = item.name;
                 return false;
             }
             return true;
