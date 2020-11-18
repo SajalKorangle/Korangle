@@ -85,6 +85,11 @@ export class DesignReportCardHtmlAdapter {
                 'examinationId': this.vm.data.examinationList[0].id,
             };
         }
+        if (parameter.key ===  FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[2]) {
+            this.vm.currentUserHandle.value = {
+                'examinationId': this.vm.data.examinationList[0].id,
+            };
+        }
         if (parameter.field.fieldStructureKey === FIELDS.ATTENDANCE.fieldStructureKey) {
             this.vm.currentUserHandle.value = {
                 'startDate': this.todaysDateFormatted,

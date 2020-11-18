@@ -1,4 +1,6 @@
 <div class="card-content">
+
+    <!-- Page -->
     <ng-container *ngIf="!isLoading">
 
         <div class="row" style="height: 85vh;">
@@ -42,6 +44,8 @@
                         </div>
 
                     </mat-card>
+
+                    <!-- TODO: Only show examination field if examination list is not empty, same can go for student & studnent custom fields -->
 
                     <!-- Fields Selection -->
                     <mat-expansion-panel style="margin-bottom: 2vh;">
@@ -486,6 +490,27 @@
 
                                 </ng-container>
                                 <!-- EOF Grades -->
+
+                                <!-- Remarks -->
+                                <ng-container *ngIf="currentUserHandle.key === fields.EXAMINATION.fieldStructureKey+'-'+htmlAdapter.examinationTypeList[2]">
+
+                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+
+                                    <b style="margin-bottom: 10px;">Choose Examination</b><br/>
+
+                                    <mat-form-field>
+                                        <mat-label>
+                                            Select Examination
+                                        </mat-label>
+                                        <mat-select [(ngModel)]="currentUserHandle.value.examinationId" (ngModelChange)="updatePDF(2000);">
+                                            <mat-option *ngFor="let examination of data.examinationList;" [value]="examination.id">
+                                                {{examination.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                </ng-container>
+                                <!-- EOF Remarks -->
 
                                 <!-- Attendance -->
                                 <ng-container *ngIf="getParameter(currentUserHandle.key).field.fieldStructureKey === fields.ATTENDANCE.fieldStructureKey">
@@ -1059,6 +1084,7 @@
                 <embed id="iFrameDisplay"
                        type='application/pdf'
                        style="width: 55vh;">
+                <!-- EOF Preview -->
 
             </div>
 
@@ -1070,9 +1096,12 @@
              src='https://korangleplus.s3.amazonaws.com/assets/img/marksheet-background.jpg' />
 
     </ng-container>
+    <!-- EOF Page -->
 
+    <!-- Loading Spinner -->
     <ng-container *ngIf="isLoading" style="height: 100%; display: flex; justify-content: center">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
+    <!-- EOF Loading Spinner -->
 
 </div>

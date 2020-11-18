@@ -85,6 +85,11 @@ export class DesignReportCardServiceAdapter {
             const request_student_sub_grade_data = {
                 parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
+            const request_student_examination_remarks_data = {
+                parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
+                parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
+            };
 
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
@@ -92,12 +97,14 @@ export class DesignReportCardServiceAdapter {
                 this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 2
                 this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
                 this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
+                this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
             ]).then(value => {
                 this.vm.data.studentList = value[0];
                 this.vm.data.studentParameterValueList = value[1];
                 this.vm.data.studentTestList = value[2];
                 this.vm.data.attendanceList = value[3];
                 this.vm.data.studentSubGradeList = value[4];
+                this.vm.data.studentExaminationRemarksList = value[5];
                 this.vm.isLoading = false;
             }, error => {
                 this.vm.isLoading = false;

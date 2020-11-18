@@ -103,6 +103,7 @@ export class DesignReportCardComponent implements OnInit {
         gradeList: [],
         subGradeList: [],
         studentSubGradeList: [],
+        studentExaminationRemarksList: [],
     };
 
 

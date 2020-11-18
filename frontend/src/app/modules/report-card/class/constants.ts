@@ -46,18 +46,6 @@ export const tableCellStructure = {
     color: null,
 };
 
-/*export const tableRow = {
-    height: 10,
-    bottomBorder: true,
-    fillColor: null
-};
-
-export const tableColumn = {
-    width: 10,
-    rightBorder: true,
-    fillColor: null
-};*/
-
 // Note: The fieldStructureKey values will be saved in database
 // so you can not change fieldStructureKey values at a later stage.
 
@@ -390,6 +378,7 @@ export class UserHandleStructure {
             value: '',  // 1) text for Constant Field Structure,
                         // 2) object {startDate: '', endDate: ''} for Attendance Field Structure
                         // 3) object {subGradeId: 0, examId: 0} for Examination Grade
+                        // 4) object {examinationId: 0} for Examination Remarks
         };
     }
 
@@ -685,7 +674,15 @@ class ExaminationParameterStructure {
                     return '';
                 }
             } else if (variableType === EXAMINATION_TYPE_LIST[2]) {
-                return 'Remark';
+                const value = dataObject.data.studentExaminationRemarksList.find(studentExaminationRemarks => {
+                    return studentExaminationRemarks.parentStudent === dataObject.studentId
+                        && studentExaminationRemarks.parentExamination === dataObject.userHandle.value.examinationId;
+                });
+                if (value !== undefined) {
+                    return value.remark;
+                } else {
+                    return '';
+                }
             }
             return 'If you are seeing this contact technical support';
         };
