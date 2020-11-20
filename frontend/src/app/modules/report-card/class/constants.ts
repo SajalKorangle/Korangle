@@ -34,6 +34,7 @@ export const EXAMINATION_TYPE_LIST = [
     'Marks', // 0
     'Grades', // 1
     'Remarks', // 2
+    'Marks-To-Grade', // 3
 ];
 
 export const tableLineStructure = {
@@ -44,6 +45,14 @@ export const tableLineStructure = {
 export const tableCellStructure = {
     length: 10,
     color: null,
+};
+
+export const marksToGradeRuleStructure = {
+    'lowerMarks': 0,
+    'upperMarks': 100,
+    'lowerInclusion': true, // boolean 'true' or 'false'
+    'upperInclusion': true, // boolean 'true' or 'false'
+    'gradeValue': 'A',
 };
 
 // Note: The fieldStructureKey values will be saved in database
@@ -78,6 +87,7 @@ export const DATA_TYPES = {
     IMAGE: 'image',
     MARKS: 'marks',
     TABLE: 'table',
+    GRADING: 'grading',
 };
 
 function getNumberInWords(numerical: number): string {
@@ -362,6 +372,8 @@ export class UserHandleStructure {
                 return {...structure, ...UserHandleStructure.getMarksStructure(pdfDefault)};
             case DATA_TYPES.TABLE:
                 return {...structure, ...UserHandleStructure.getTableStructure(pdfDefault)};
+            case DATA_TYPES.GRADING:
+                return {key: key, ...UserHandleStructure.getGradingStructure(pdfDefault)};
         }
     }
 
@@ -387,6 +399,7 @@ export class UserHandleStructure {
             name: '',
             formula: 'a',
             marksVariableList: [], // either marks or variable, it would be better if we call it formula instead of variable
+            gradeRuleName: '', // name of grade rule
             decimalPlace: 1,
             baseline: 'top', // top, bottom
             align: 'left', // left, right, center
@@ -447,6 +460,13 @@ export class UserHandleStructure {
         return {
             width: 10,
             height: 10,
+        };
+    }
+
+    static getGradingStructure(pdfDefault): any {
+        return {
+            name: 'Rule - 1',
+            marksToGradeRuleList: [ {...marksToGradeRuleStructure}], // list of object marksToGradeRuleStructure
         };
     }
 
@@ -633,7 +653,17 @@ class ExaminationParameterStructure {
     static getStructure(variableType: any): any {
 
         let getValueFunc;
-        const dataType = (variableType === EXAMINATION_TYPE_LIST[0] ? DATA_TYPES.MARKS : DATA_TYPES.TEXT);
+        let dataType;
+        switch(variableType) {
+            case EXAMINATION_TYPE_LIST[0]:
+                dataType = DATA_TYPES.MARKS;
+                break;
+            case EXAMINATION_TYPE_LIST[3]:
+                dataType = DATA_TYPES.GRADING;
+                break;
+            default:
+                dataType = DATA_TYPES.TEXT;
+        }
 
         getValueFunc = (dataObject, nestedCallNo = 1) => {
             if (variableType === EXAMINATION_TYPE_LIST[0]) {
@@ -644,7 +674,7 @@ class ExaminationParameterStructure {
                         parser.setVariable(ALPHABET_LIST.charAt(index), getMarks(dataObject, index));
                     } else {
                         const variableObject = dataObject.userHandleList.find(item => {
-                            return item.key === FIELDS.EXAMINATION.fieldStructureKey + '-' + dataType
+                            return item.key === FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[0]
                                 && item.name === marksVariable;
                         });
                         if (variableObject !== undefined) {
@@ -660,7 +690,28 @@ class ExaminationParameterStructure {
                 if (evaluation.error) {
                     return evaluation.error;
                 } else {
-                    return Number(evaluation.result).toFixed(dataObject.userHandle.decimalPlace);
+                    const marksValue = Number(evaluation.result).toFixed(dataObject.userHandle.decimalPlace);
+                    // Find Grade Rule
+                    const gradeRule = dataObject.userHandleList.find(userHandle => {
+                        return userHandle.key === FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[3]
+                            && userHandle.name === dataObject.userHandle.gradeRuleName;
+                    });
+                    if (gradeRule === undefined) {
+                        return marksValue;
+                    } else {
+                        let returnValue = marksValue;
+                        gradeRule.marksToGradeRuleList.every(marksToGradeRuleObject => {
+                            if (((marksToGradeRuleObject.lowerInclusion && marksToGradeRuleObject.lowerMarks <= marksValue)
+                                || (!marksToGradeRuleObject.lowerInclusion && marksToGradeRuleObject.lowerMarks < marksValue))
+                                && ((marksToGradeRuleObject.upperInclusion && marksToGradeRuleObject.upperMarks >= marksValue)
+                                    || (!marksToGradeRuleObject.upperInclusion && marksToGradeRuleObject.upperMarks > marksValue))) {
+                                returnValue = marksToGradeRuleObject.gradeValue;
+                                return false;
+                            }
+                            return true;
+                        });
+                        return returnValue;
+                    }
                 }
             } else if (variableType === EXAMINATION_TYPE_LIST[1]) {
                 const value = dataObject.data.studentSubGradeList.find(studentSubGrade => {
@@ -705,6 +756,8 @@ class ExaminationParameterStructure {
                     return 'Remarks' + (dataObject.userHandle ?
                         ' (top: ' + dataObject.userHandle.y
                         + ', left: ' + dataObject.userHandle.x + ')' : '');
+                } else if (variableType === EXAMINATION_TYPE_LIST[3]) {
+                    return (dataObject.userHandle ? dataObject.userHandle.name : 'Marks to Grade');
                 }
                 return 'If you are seeing this contact technical support';
             },
@@ -882,6 +935,7 @@ export const PARAMETER_LIST = [
     ExaminationParameterStructure.getStructure(EXAMINATION_TYPE_LIST[0]),
     ExaminationParameterStructure.getStructure(EXAMINATION_TYPE_LIST[1]),
     ExaminationParameterStructure.getStructure(EXAMINATION_TYPE_LIST[2]),
+    ExaminationParameterStructure.getStructure(EXAMINATION_TYPE_LIST[3]),
 
     /* Attendance Field */
     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[0]),

@@ -275,6 +275,8 @@ export default class ReportCard {
                     startingY += item.rowList[i].length;
                 }
 
+            } else if (this.getParameter(item.key).dataType === DATA_TYPES.GRADING) {
+                // Nothing to do here.
             }
         }
     }

@@ -146,6 +146,8 @@
                             </button>
                             <!-- EOF Delete Parameter -->
 
+                            <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+
                         </div>
 
                         <!-- If a user handle is selected -->
@@ -170,8 +172,6 @@
 
                                 <!-- Date Format -->
                                 <ng-container *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.DATE">
-
-                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                     <b style="margin-bottom: 5px;">Set Date Format</b>
 
@@ -279,11 +279,14 @@
 
                                     </div>
 
+                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+
                                 </ng-container>
 
                                 <!-- Marks -->
                                 <ng-container *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.MARKS">
 
+                                    <!-- Variable Name -->
                                     <div style="margin-bottom: 10px;">
                                         <mat-form-field style="width: 100%;">
                                             <mat-label>
@@ -300,9 +303,11 @@
                                             <span style="color: red">Variable name should be populated.</span>
                                         </ng-container>
                                     </div>
+                                    <!-- EOF Variable Name -->
 
-                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+                                    <div style="border: 1px solid black; width: 50%; margin-top:10px; margin-bottom: 10px;"></div>
 
+                                    <!-- Formula -->
                                     <b style="margin-bottom: 5px;">Set Marks Data</b>
 
                                     <div style="margin-bottom: 10px;">
@@ -431,7 +436,9 @@
                                             Add Variable
                                         </button>
                                     </div>
+                                    <!-- EOF Formula -->
 
+                                    <!-- Decimal -->
                                     <div style="margin-bottom: 10px;">
                                         <customized-number-input
                                                 [placeHolder]="'# of Decimal Digits'"
@@ -442,14 +449,34 @@
                                                 (outputValue)="currentUserHandle.decimalPlace=$event;updatePDF()">
                                         </customized-number-input>
                                     </div>
+                                    <!-- Decimal -->
+
+                                    <!-- Grade Conversion -->
+                                    <ng-container *ngIf="htmlAdapter.gradeRuleList().length > 0">
+
+                                        <mat-form-field>
+                                            <mat-label>
+                                                Select Grade Rule
+                                            </mat-label>
+                                            <mat-select [(ngModel)]="currentUserHandle.gradeRuleName" (ngModelChange)="updatePDF(800);">
+                                                <mat-option [value]="''">None</mat-option>
+                                                <mat-option *ngFor="let gradeRule of htmlAdapter.gradeRuleList();"
+                                                            [value]="gradeRule.name">
+                                                    {{gradeRule.name}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+
+                                    </ng-container>
+                                    <!-- EOF Grade Conversion -->
+
+                                    <div style="border: 1px solid black; width: 50%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                 </ng-container>
                                 <!-- EOF Marks -->
 
                                 <!-- Grades -->
                                 <ng-container *ngIf="currentUserHandle.key===fields.EXAMINATION.fieldStructureKey+'-'+htmlAdapter.examinationTypeList[1]">
-
-                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                     <b style="margin-bottom: 10px;">Set Grade</b><br/>
 
@@ -488,13 +515,13 @@
                                         </mat-select>
                                     </mat-form-field>
 
+                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+
                                 </ng-container>
                                 <!-- EOF Grades -->
 
                                 <!-- Remarks -->
                                 <ng-container *ngIf="currentUserHandle.key === fields.EXAMINATION.fieldStructureKey+'-'+htmlAdapter.examinationTypeList[2]">
-
-                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                     <b style="margin-bottom: 10px;">Choose Examination</b><br/>
 
@@ -508,6 +535,8 @@
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
+
+                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                 </ng-container>
                                 <!-- EOF Remarks -->
@@ -524,13 +553,14 @@
                                               [nullButtonDisabled]="true"
                                               [formattedDateOutput]="true"
                                               [initialValue]="currentUserHandle.value.endDate"></day-date>
+
+                                    <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+
                                 </ng-container>
                                 <!-- EOF Attendance -->
 
-                                <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
-
                                 <!-- Font Style -->
-                                <div style="margin-bottom: 5px; width: 100%; align: center;">
+                                <div style="margin-bottom: 5px; width: 50%; align: center;">
                                     <b style="margin-bottom: 5px;">Set Field Style</b>
                                 </div>
 
@@ -593,7 +623,7 @@
                                 <!-- EOF Font Size -->
                                 <!-- EOF Font Style -->
 
-                                <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+                                <div style="border: 1px solid black; width: 50%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                 <!-- Field Position -->
                                 <div style="margin-bottom: 5px; width: 100%; align: center;">
@@ -720,8 +750,6 @@
 
                             <!-- Table -->
                             <div *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.TABLE">
-
-                                <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
 
                                 <!-- Field Position -->
                                 <div style="margin-bottom: 5px; width: 100%; align: center;">
@@ -1042,6 +1070,81 @@
 
                             </div>
                             <!-- EOF Table -->
+
+                            <!-- Grading -->
+                            <div *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.GRADING">
+
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>
+                                        Type Grading Rule Name
+                                    </mat-label>
+                                    <input matInput
+                                           type="text"
+                                           [ngModel]="currentUserHandle.name" (ngModelChange)="currentUserHandle.name=$event;updatePDF();"/>
+                                </mat-form-field>
+
+                                <div style="border: 1px solid black; width: 50%; margin-top:10px; margin-bottom: 10px;"></div>
+
+                                <ng-container *ngFor="let marksToGradeRuleObject of currentUserHandle.marksToGradeRuleList; let i=index;">
+                                    {{(i+1)}}. &nbsp;
+                                    <customized-number-input
+                                            [placeHolder]="''"
+                                            [width]="10"
+                                            [minimum]="0"
+                                            [maximum]="5000"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="marksToGradeRuleObject.upperMarks"
+                                            (outputValue)="marksToGradeRuleObject.upperMarks=$event;updatePDF(20000)">
+                                    </customized-number-input> &nbsp;
+                                    <button type="button"
+                                            class="btn"
+                                            style="padding: 4px 7px;"
+                                            (click)="marksToGradeRuleObject.upperInclusion=!marksToGradeRuleObject.upperInclusion">
+                                        <ng-container *ngIf="marksToGradeRuleObject.upperInclusion">=&gt;</ng-container>
+                                        <ng-container *ngIf="!marksToGradeRuleObject.upperInclusion">&nbsp;&gt;</ng-container>
+                                    </button> &nbsp;
+                                    Marks &nbsp;
+                                    <button type="button"
+                                            class="btn"
+                                            style="padding: 4px 7px;"
+                                            (click)="marksToGradeRuleObject.lowerInclusion=!marksToGradeRuleObject.lowerInclusion">
+                                        <ng-container *ngIf="marksToGradeRuleObject.lowerInclusion">=&gt;</ng-container>
+                                        <ng-container *ngIf="!marksToGradeRuleObject.lowerInclusion">&nbsp;&gt;</ng-container>
+                                    </button> &nbsp;
+                                    <customized-number-input
+                                            [placeHolder]="''"
+                                            [width]="10"
+                                            [minimum]="0"
+                                            [maximum]="5000"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="marksToGradeRuleObject.lowerMarks"
+                                            (outputValue)="marksToGradeRuleObject.lowerMarks=$event;updatePDF(20000)">
+                                    </customized-number-input> &nbsp;
+                                    <mat-form-field style="width: 10%;">
+                                        <mat-label></mat-label>
+                                        <input matInput
+                                               type="text"
+                                               [ngModel]="marksToGradeRuleObject.gradeValue"
+                                               (ngModelChange)="marksToGradeRuleObject.gradeValue=$event;updatePDF(20000);"/>
+                                    </mat-form-field> &nbsp;
+                                    <button type="button"
+                                            class="btn"
+                                            style="padding: 4px 7px;"
+                                            (click)="htmlAdapter.deleteMarksToGradeRule(i);">
+                                        Del
+                                    </button>
+                                    <br/>
+                                </ng-container>
+
+                                <button type="button"
+                                        class="btn"
+                                        style="padding: 4px 7px;"
+                                        (click)="htmlAdapter.addMarksToGradeRule();">
+                                    Add
+                                </button>
+
+                            </div>
+                            <!-- EOF Grading -->
 
                         </div>
                         <!-- EOF If a user handle is selected -->

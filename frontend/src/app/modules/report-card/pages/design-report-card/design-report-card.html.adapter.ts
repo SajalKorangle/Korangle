@@ -1,8 +1,8 @@
 import { DesignReportCardComponent } from './design-report-card.component';
 import {
-    DATA_TYPES, EXAMINATION_TYPE_LIST,
+    DATA_TYPES,EXAMINATION_TYPE_LIST,
     FIELDS,
-    MARKS_TYPE_LIST,
+    MARKS_TYPE_LIST,marksToGradeRuleStructure,
     marksVariableStructure,
     TEST_TYPE_LIST,
     UserHandleStructure
@@ -71,8 +71,11 @@ export class DesignReportCardHtmlAdapter {
         this.vm.currentUserHandle = this.vm.currentLayout.content[this.vm.currentLayout.content.length - 1];
 
         // So the object appears in the middle of the document with sizeable fonts.
-        this.vm.currentUserHandle.y = 145;
-        this.vm.currentUserHandle.x = 80;
+        if (parameter.dataType !== DATA_TYPES.GRADING) {
+            this.vm.currentUserHandle.y = 145;
+            this.vm.currentUserHandle.x = 80;
+        }
+
         if (parameter.dataType === DATA_TYPES.TEXT
             || parameter.dataType === DATA_TYPES.MARKS
             || parameter.dataType === DATA_TYPES.DATE) {
@@ -99,7 +102,7 @@ export class DesignReportCardHtmlAdapter {
         if (parameter.field.fieldStructureKey === FIELDS.CONSTANT.fieldStructureKey) {
             this.vm.currentUserHandle.value = 'Text - ' + (this.vm.getFilteredCurrentUserHandleListByGivenField(parameter.field).length);
         }
-        if (parameter.key === FIELDS.EXAMINATION.fieldStructureKey + '-' + DATA_TYPES.MARKS) {
+        if (parameter.key === FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[0]) {
             this.vm.currentUserHandle.formula = 'a';
             this.addMarksToMarksVariableList(this.vm.currentUserHandle.marksVariableList);
             this.giveExamMarksUserHandleAName();
@@ -133,7 +136,7 @@ export class DesignReportCardHtmlAdapter {
         if (parameter.field.fieldStructureKey === this.vm.fields.CONSTANT.fieldStructureKey) {
             this.vm.currentUserHandle.value = 'Text - ' + (this.vm.getFilteredCurrentUserHandleListByGivenField(parameter.field).length);
         }
-        if (parameter.key === FIELDS.EXAMINATION.fieldStructureKey + '-' + DATA_TYPES.MARKS) {
+        if (parameter.key === FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[0]) {
             this.vm.currentUserHandle.name = '';
             this.giveExamMarksUserHandleAName();
         }
@@ -160,7 +163,7 @@ export class DesignReportCardHtmlAdapter {
 
     getMarksUserHandleListExceptCurrent(): any {
         return this.vm.currentLayout.content.filter(userHandle => {
-            return userHandle.key ===  FIELDS.EXAMINATION.fieldStructureKey + '-' + DATA_TYPES.MARKS
+            return userHandle.key ===  FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[0]
                 && userHandle.name !== this.vm.currentUserHandle.name;
         });
     }
@@ -171,7 +174,7 @@ export class DesignReportCardHtmlAdapter {
 
     getMarksUserHandleListWithName(name: any): boolean {
         return this.vm.currentLayout.content.filter(userHandle => {
-            return userHandle.key ===  FIELDS.EXAMINATION.fieldStructureKey + '-' + DATA_TYPES.MARKS
+            return userHandle.key ===  FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[0]
                 && userHandle.name === name;
         });
     }
@@ -334,6 +337,21 @@ export class DesignReportCardHtmlAdapter {
 
     deselectAllTableCells(): void {
         this.selectedTableCellList = [];
+    }
+
+    /* Marks To Grade Rule */
+    deleteMarksToGradeRule(index: any): void {
+        this.vm.currentUserHandle.marksToGradeRuleList.splice(index, 1);
+    }
+
+    addMarksToGradeRule(): void {
+        this.vm.currentUserHandle.marksToGradeRuleList.push({...marksToGradeRuleStructure});
+    }
+
+    gradeRuleList(): boolean {
+        return this.vm.currentLayout.content.filter(userHandle => {
+            return userHandle.key === FIELDS.EXAMINATION.fieldStructureKey + '-' + EXAMINATION_TYPE_LIST[3];
+        });
     }
 
     /* Hide the data below till it's not valid, when onBlur is called change to any valid name
