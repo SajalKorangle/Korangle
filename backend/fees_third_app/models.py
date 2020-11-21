@@ -17,7 +17,7 @@ class FeeType(models.Model):
 
     name = models.TextField(verbose_name='name')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
-    orderNumber = models.IntegerField(verbose_name='orderNumber', default=0)
+    orderNumber = models.IntegerField(verbose_name='orderNumber', default=0) # ??
 
     class Meta:
         db_table = 'fee_type_new'
@@ -26,23 +26,23 @@ class FeeType(models.Model):
 
 class SchoolFeeRule(models.Model):
 
-    name = models.TextField(verbose_name='name')
-    ruleNumber = models.IntegerField(verbose_name='ruleNumber', default=0)
+    name = models.TextField(verbose_name='name')    #????
+    ruleNumber = models.IntegerField(verbose_name='ruleNumber', default=0)  
 
-    isClassFilter = models.BooleanField(verbose_name='isClassFilter', default=False)
+    isClassFilter = models.BooleanField(verbose_name='isClassFilter', default=False) 
     isBusStopFilter = models.BooleanField(verbose_name='isBusStopFilter', default=False)
     onlyNewAdmission = models.BooleanField(verbose_name='onlyNewAdmission', default=False)
-    includeRTE = models.BooleanField(verbose_name='includeRTE', default=True)
+    includeRTE = models.BooleanField(verbose_name='includeRTE', default=True)   #??
 
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, verbose_name='parentFeeType')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     # April
-    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')
-    aprilLastDate = models.DateField(null=True, verbose_name='aprilLastDate')
+    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')    # use april fee if anually, what are other cases
+    aprilLastDate = models.DateField(null=True, verbose_name='aprilLastDate')   #????
     aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee')
-    aprilMaximumLateFee = models.IntegerField(null=True, verbose_name='aprilMaximumLateFee')
+    aprilMaximumLateFee = models.IntegerField(null=True, verbose_name='aprilMaximumLateFee')    #????
 
     # May
     mayAmount = models.IntegerField(null=True, verbose_name='mayAmount')

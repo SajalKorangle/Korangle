@@ -1,0 +1,56 @@
+<div class="card-content table-responsive" *ngIf="!isLoading; else spinner">
+
+    <!-- Class Filter -->
+    <mat-form-field style="margin-right: 15px;">
+        <mat-select placeholder="Select Class" id="select-class" style="width: 100%;">
+
+            <mat-option>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        id="select-all-classes"
+                        (click)="updateAllClassesSelection(true); $event.stopPropagation();">
+                        Select All
+                </button>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="updateAllClassesSelection(false); $event.stopPropagation();">Clear All
+                </button>
+            </mat-option>
+
+            <ng-container *ngFor="let class of classList">
+                <ng-container *ngFor="let section of divisionList">
+                    <mat-option *ngIf="structuredStudent[class.id][section.id]" style="width: 100%;">
+                        <mat-checkbox [(ngModel)]="structuredSelection[class.id][section.id]" (ngModelChange)="selectionCount= $event?selectionCount + structuredStudent[class.id][section.id].length : selectionCount - structuredStudent[class.id][section.id].length"
+                                      (click)="$event.stopPropagation();">
+                            {{class.name}}
+                            <span *ngIf="showSection(class)">, {{section.name}}</span>
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container>
+            </ng-container>
+
+            <mat-option>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="updateAllClassesSelection(true); $event.stopPropagation();">Select All
+                </button>
+                <button class="btn"
+                        style="padding: 4px 7px"
+                        (click)="updateAllClassesSelection(false); $event.stopPropagation();">Clear All
+                </button>
+            </mat-option>
+
+        </mat-select>
+    </mat-form-field>
+
+    <h1>{{selectionCount}} / {{studentsCount}}</h1>
+    
+    <button type="submit"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="downloadSheet()">Download</button>
+</div>
+
+
+<ng-template #spinner>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>
