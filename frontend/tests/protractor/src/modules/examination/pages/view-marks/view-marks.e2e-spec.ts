@@ -56,21 +56,15 @@ describe('Examination -> View Marks', () => {
             node = await getNode('button', 'Show Subjects Filter');  // click show subject filter button
             node.click();
             await page.waitForTimeout(500);
-            
-            [node] = await page.$x('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input');
-            expect(node).not.toBeUndefined();
-            // await node.click();
 
-            // Checking and clicking the Hindi Test in filter
-            await page.evaluate(() => {
-                nodes = document.evaluate('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input',
-                    document,
-                    null,
-                    XPathResult.UNORDERED_NODE_ITERATOR_TYPE,
-                    null);
+            // Click on Hindi Filter to make the column disappear
+            node = await page.evaluate(() => {
+                nodes = document.evaluate('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input', document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
                 node = nodes.iterateNext();
-                node.click();
+                return Promise.resolve(node);
+                // node.click();
             });
+            node.click();
 
             await page.waitForTimeout(500);
 
