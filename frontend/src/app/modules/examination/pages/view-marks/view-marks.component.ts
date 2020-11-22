@@ -219,7 +219,7 @@ export class ViewMarksComponent implements OnInit {
             headers,
 
         ];
-        
+
         let count = 0;
         this.getSortedFilteredStudentSectionList().forEach(studentSection => {
             let row = [];

@@ -45,7 +45,7 @@
             <!-- div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-12"></div>
             </div -->
-            <button class="btn subject-selection-button" (click)="subjectFilterDisplay=!subjectFilterDisplay">
+            <button class="btn" style="padding: 4px 7px; display: block" (click)="subjectFilterDisplay=!subjectFilterDisplay">
                 {{subjectFilterDisplay?'Hide Subjects Filter':'Show Subjects Filter'}}
             </button>
 
@@ -64,11 +64,9 @@
                     <th (click)="updateSortingParameters('name')">Student</th>
                     <th (click)="updateSortingParameters('rollNumber')">Roll No.</th>
                     <th (click)="updateSortingParameters('rank')">Total ({{getFilteredTotalMaximumMarks()}})</th>
-                    
                     <th *ngFor="let test of getFilteredTestList(); let i=index" (click)="updateSortingParameters(test)">
                         {{getSubject(test).name}} <span *ngIf="test.testType">- {{test.testType}}</span> ({{test.maximumMarks}})
                     </th>
-                    
                 </tr>
                 </thead>
                 <tbody>

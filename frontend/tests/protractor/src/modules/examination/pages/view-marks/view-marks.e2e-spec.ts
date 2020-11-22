@@ -21,47 +21,60 @@ describe('Examination -> View Marks', () => {
 
         // Opening Page
         await openModuleAndPage('Examination', 'View Marks');
+
+        // Waiting & Clicking the GET button to get the data from backend
         await page.waitForSelector('button[type="submit"]');
         (await containsFirst('button', 'GET')).click();
         await page.waitForTimeout(1000);
-    })
+    });
 
     describe('set1', () => { 
 
         it('View Marks: Student`s Count', async () => {
             let nodes;
 
+            // Checking the number of rows to be equals to 70 -> 68 students, 1 header row, 1 bottom row for employee information
             nodes = await containsAll('tr', '');  //count check
             expect(nodes.length).toBe(70);
-        })
+        });
         
         it('View Marks: Subjects Filter', async () => {
+
+            // Checking that filters are not shown by default
             let nodes, node, col_count;
             nodes = await getNodes('label', 'Hindi'); //  Subjects for filter should not be available
             expect(nodes.length).toBe(0);
             nodes = containsAll('th', 'Hindi');
             expect(nodes.length).not.toBe(0);
 
+            // Checking the number of columns to be equal to 9 -> 1 Rank, 1 Student, 1 Total marks, 6 tests
             nodes = await getNodes('th', '');  // columns count
             col_count = nodes.length;
             expect(col_count).toBe(9);
 
+            // Clicking the show subjects filter button to view the filters
             node = await getNode('button', 'Show Subjects Filter');  // click show subject filter button
             node.click();
             await page.waitForTimeout(500);
             
-            [node] = await page.$x('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input')
+            [node] = await page.$x('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input');
             expect(node).not.toBeUndefined();
             // await node.click();
 
+            // Checking and clicking the Hindi Test in filter
             await page.evaluate(() => {
-                nodes = document.evaluate('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input', document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null)
+                nodes = document.evaluate('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input',
+                    document,
+                    null,
+                    XPathResult.UNORDERED_NODE_ITERATOR_TYPE,
+                    null);
                 node = nodes.iterateNext();
                 node.click();
-            })
+            });
 
             await page.waitForTimeout(500);
 
+            // Checking the drop of count from 9 to 8
             nodes = await getNodes('th', '');  // columns count
             col_count = nodes.length;
             expect(col_count).toBe(8);
@@ -80,16 +93,17 @@ describe('Examination -> View Marks', () => {
                 expect(prop).toBeGreaterThanOrEqual(roll);
                 roll = prop;
             });
-        })
-    })
+        });
+    });
 
     describe('set2', () => { 
         beforeAll(async () => {
+            // Ordering rows in the 'Rank' order
             let node;
             node = await containsFirst('th', 'Rank');
             node.click();
             await page.waitForTimeout(500);
-        })
+        });
 
         it('Rank Order and Total Check', async () => {
             let node, nodes, tot = 100, prop;
@@ -111,7 +125,7 @@ describe('Examination -> View Marks', () => {
             });
         })
 
-    })
+    });
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();

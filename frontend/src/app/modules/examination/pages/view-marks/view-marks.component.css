@@ -87,11 +87,6 @@ input {
     overflow: scroll;
 }
 
-.subject-selection-button {
-    display: block;
-    padding: 6px;
-}
-
 .subject-selection {
     column-count: 1;
 }
