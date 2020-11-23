@@ -1,0 +1,12 @@
+<div class="card-content">
+
+    <mat-form-field style="margin-top: 23px;">
+        <mat-select placeholder="Send via"
+                    [(ngModel)]="selectedSentType">
+            <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
+                {{sentType}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field><br/>
+
+</div>

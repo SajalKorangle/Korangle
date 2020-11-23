@@ -9,6 +9,10 @@ import { ExcelService } from "../../../../excel/excel-service";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constants';
 import {DataStorage} from "../../../../classes/data-storage";
+import { SmsService } from '../../../../services/modules/sms/sms.service';
+import {NotificationService} from "../../../../services/modules/notification/notification.service";
+import {UserService} from "../../../../services/modules/user/user.service";
+import { RecordAttendanceServiceAdapter } from "./record-attendance.service.adapter";
 
 @Component({
   selector: 'record-attendance',
@@ -17,6 +21,9 @@ import {DataStorage} from "../../../../classes/data-storage";
     providers: [
         AttendanceOldService,
         StudentOldService,
+        NotificationService,
+        SmsService,
+        UserService,
     ],
 })
 
@@ -46,10 +53,34 @@ export class RecordAttendanceComponent implements OnInit {
 
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
+    mobileNumberList = [];
+    STUDENT_LIMITER = 200;
+    
+    studentUpdateMessage = "Your ward, <name> is marked <attendanceStatus> on <dateOfAttendance>";
+
+    sentTypeList = [
+        'SMS',
+        'NOTIFICATION',
+        'NOTIF./SMS',
+    ];
+
+    studentList :any;
+
+    selectedSentType = 'SMS';
+    smsBalance = 0;
+
+    notif_usernames = [];
+
+    serviceAdapter: RecordAttendanceServiceAdapter
+
     constructor (private attendanceService: AttendanceOldService,
                  private studentService: StudentOldService,
                  private excelService: ExcelService,
-                 private printServie: PrintService) { }
+                 private printServie: PrintService,
+                 public notificationService: NotificationService,
+                 public smsService: SmsService,
+                 public userService: UserService,
+                 ) { }
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
@@ -59,6 +90,7 @@ export class RecordAttendanceComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.serviceAdapter = new RecordAttendanceServiceAdapter();
         let request_attendance_permission_list_data = {
             parentEmployee: this.user.activeSchool.employeeId,
             sessionId: this.user.activeSchool.currentSessionDbId,
@@ -74,6 +106,7 @@ export class RecordAttendanceComponent implements OnInit {
         Promise.all([
             this.attendanceService.getAttendancePermissionList(request_attendance_permission_list_data, this.user.jwt),
             this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
+            this.serviceAdapter.initializeAdapter(this)
         ]).then(value => {
             this.isInitialLoading = false;
             this.initializeClassSectionStudentList(value[0], value[1]);
@@ -102,7 +135,8 @@ export class RecordAttendanceComponent implements OnInit {
                             let tempStudent = {
                                 name: student.name,
                                 dbId: student.dbId,
-                                scholarNumber: student.scholarNumber
+                                scholarNumber: student.scholarNumber,
+                                mobileNumber: student.mobileNumber
                             };
                             tempSection.studentList.push(tempStudent);
                         }
@@ -180,6 +214,7 @@ export class RecordAttendanceComponent implements OnInit {
                             dbId: student.dbId,
                             name: student.name,
                             scholarNumber: student.scholarNumber,
+                            mobileNumber: student.mobileNumber,
                             attendanceStatusList: [],
                         };
                         let dateList = this.getDateList();
@@ -227,7 +262,7 @@ export class RecordAttendanceComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
-
+        this.notifyParents();
     }
 
     prepareStudentAttendanceStatusListData(): any {
@@ -459,5 +494,262 @@ export class RecordAttendanceComponent implements OnInit {
             + ', '
             + dateStr;
     }
+
+    
+    notifyParents(): void{
+            let message = this.studentUpdateMessage;
+            
+            let mobile_numbers = [];
+            this.studentAttendanceStatusList.forEach(student => {
+                student.attendanceStatusList.forEach(attendanceStatus => {
+                    if (attendanceStatus.status !== null) {
+                        let tempData = {
+                            id: student.dbID,
+                            name: student.name,
+                            dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
+                            attendanceStatus: attendanceStatus.status,
+                            mobileNumber: student.mobileNumber,
+                            notification: student.notification
+                        };
+                        mobile_numbers.push(tempData);
+                    }
+                });
+            });
+            // console.log(mobile_numbers);
+            this.studentList = mobile_numbers;
+            // console.log(this.studentList);
+            this.serviceAdapter.fetchGCMDevices(this.studentList);
+        
+    }
+
+    fetchGCMDevices: any = (studentList: any) => {
+        // console.log(studentList);
+        const service_list = [];
+        const iterationCount = Math.ceil(studentList.length / this.STUDENT_LIMITER);
+        let loopVariable = 0;
+
+        while (loopVariable < iterationCount) {
+            const mobile_list = studentList.filter(item => item.mobileNumber).map(obj => obj.mobileNumber.toString());
+            const gcm_data = {
+                'user__username__in': mobile_list.slice(
+                    this.STUDENT_LIMITER * loopVariable, this.STUDENT_LIMITER * (loopVariable + 1)
+                ),
+                'active': 'true__boolean',
+            }
+            // console.log(gcm_data);
+            const user_data = {
+                'fields__korangle': 'username,id',
+                'username__in': mobile_list.slice(this.STUDENT_LIMITER * loopVariable, this.STUDENT_LIMITER * (loopVariable + 1)),
+            };
+            // console.log(user_data);
+            service_list.push(this.notificationService.getObjectList(this.notificationService.gcm_device, gcm_data));
+            service_list.push(this.userService.getObjectList(this.userService.user, user_data));
+            // console.log(service_list);
+            loopVariable = loopVariable + 1;
+        }
+
+        Promise.all(service_list).then((value) => {
+            let temp_gcm_list = [];
+            let temp_user_list = [];
+            let loopVariable = 0;
+            while (loopVariable < iterationCount) {
+                temp_gcm_list = temp_gcm_list.concat(value[loopVariable * 2]);
+                temp_user_list = temp_user_list.concat(value[loopVariable * 2 + 1]);
+                loopVariable = loopVariable + 1;
+            }
+
+            const notif_usernames = temp_user_list.filter(user => {
+                return temp_gcm_list.find(item => {
+                    return item.user == user.id;
+                }) != undefined;
+            })
+            // Storing because they're used later
+            this.notif_usernames = notif_usernames;
+
+            let notification_list;
+
+            notification_list = studentList.filter(obj => {
+                return notif_usernames.find(user => {
+                    return user.username == obj.mobileNumber;
+                }) != undefined;
+            });
+            studentList.forEach((item, i) => {
+                item.notification = false;
+            })
+            notification_list.forEach((item, i) => {
+                item.notification = true;
+            })
+
+
+            this.isLoading = false;
+        })
+        // console.log(studentList);
+        
+        this.sendSMSNotification(this.studentList, this.studentUpdateMessage);
+    }
+
+
+    sendSMSNotification: any = (mobile_list: any, message: string) => {
+        let service_list = [];
+        let notification_list = [];
+        let sms_list = [];
+        if (this.selectedSentType == this.sentTypeList[0]) {
+            sms_list = mobile_list;
+            notification_list = [];
+        } else if (this.selectedSentType == this.sentTypeList[1]) {
+            sms_list = [];
+            notification_list = mobile_list.filter(obj => {
+                return obj.notification;
+            });
+        } else {
+            notification_list = mobile_list.filter(obj => {
+                return obj.notification;
+            });
+            sms_list = mobile_list.filter(obj => {
+                return !obj.notification;
+            })
+        }
+
+        let notif_mobile_string = '';
+        let sms_mobile_string = '';
+        notification_list.forEach((item, index) => {
+            notif_mobile_string += item.mobileNumber + ', ';
+        });
+        // notif_mobile_string = notif_mobile_string.slice(0, -2);
+        sms_list.forEach((item, index) => {
+            sms_mobile_string += item.mobileNumber + ', ';
+        })
+        sms_mobile_string = sms_mobile_string.slice(0, -2);
+        notif_mobile_string = notif_mobile_string.slice(0, -2);
+        
+        if (sms_list.length > 0) {
+            if (!confirm('Please confirm that you are sending ' + (this.getEstimatedSMSCount()) + ' SMS.')) {
+                return;
+            }
+        }
+        let sms_data = {};
+        const sms_converted_data = sms_list.map(item => {
+            return {
+                'mobileNumber': item.mobileNumber.toString(),
+                'isAdvanceSms': this.getMessageFromTemplate(message, item)
+            }
+        });
+
+        if (sms_list.length != 0) {
+
+            sms_data = {
+                'contentType': ('english'),
+                'data': sms_converted_data,
+                'content': sms_converted_data[0]['isAdvanceSms'],
+                'parentMessageType': 2,
+                'count': this.getEstimatedSMSCount(),
+                'notificationCount': notification_list.length,
+                'notificationMobileNumberList': notif_mobile_string,
+                'mobileNumberList': sms_mobile_string,
+                'parentSchool': this.user.activeSchool.dbId,
+            };
+
+        } else {
+
+            sms_data = {
+                'contentType': ('english'),
+                'data': sms_converted_data,
+                'content': this.getMessageFromTemplate(message, notification_list[0]),
+                'parentMessageType': 2,
+                'count': this.getEstimatedSMSCount(),
+                'notificationCount': notification_list.length,
+                'notificationMobileNumberList': notif_mobile_string,
+                'mobileNumberList': sms_mobile_string,
+                'parentSchool': this.user.activeSchool.dbId,
+            };
+
+        }
+
+        const notification_data = notification_list.map(item => {
+            return {
+                'parentMessageType': 2,
+                'content': this.getMessageFromTemplate(message, item),
+                'parentUser': this.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
+                'parentSchool': this.user.activeSchool.dbId,
+            };
+        });
+        // console.log(sms_data);
+        service_list = [];
+        service_list.push(this.smsService.createObject(this.smsService.diff_sms, sms_data));
+        if (notification_data.length > 0 ) {
+            service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
+        }
+
+        this.isLoading = true;
+
+        Promise.all(service_list).then(value => {
+
+            alert('Operation Successful');
+
+            if ((this.selectedSentType === this.sentTypeList[0] ||
+                this.selectedSentType === this.sentTypeList[2]) &&
+                (sms_list.length > 0)) {
+                if (value[0].status === 'success') {
+                    this.smsBalance -= value[0].data.count;
+                } else if (value[0].status === 'failure') {
+                    this.smsBalance = value[0].count;
+                }
+            }
+
+            this.isLoading = false;
+        }, error => {
+            this.isLoading = false;
+        })
+    }
+
+    getMessageFromTemplate = (message, obj) => {
+        let ret = message;
+        for(let key in obj){
+            ret = ret.replace("<"+key+">", obj[key]);
+        }
+        return ret;
+    }
+
+    hasUnicode(message): boolean {
+        for (let i=0; i<message.length; ++i) {
+            if (message.charCodeAt(i) > 127) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getEstimatedSMSCount = () => {
+        let count = 0;
+        if(this.selectedSentType==this.sentTypeList[1])return 0;
+            this.studentList.filter(item => item.mobileNumber).forEach((item, i) => {
+                if(this.selectedSentType==this.sentTypeList[0] || item.notification==false){
+                    count += this.getMessageCount(this.getMessageFromTemplate(this.studentUpdateMessage, item));
+                }
+            })
+        
+        return count;
+    }
+
+    getMessageCount = (message) => {
+        if (this.hasUnicode(message)){
+            return Math.ceil(message.length/70);
+        }else{
+            return Math.ceil( message.length/160);
+        }
+    }
+
+    getEstimatedNotificationCount = () => {
+        let count = 0;
+        if(this.selectedSentType==this.sentTypeList[0])return 0;
+    
+        count = this.studentList.filter((item) => {
+            return item.mobileNumber && item.notification;
+        }).length;
+    
+        return count;
+    }   
+
+    
 
 }
