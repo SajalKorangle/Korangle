@@ -133,6 +133,7 @@ export class ViewMarksServiceAdapter {
         ]).then(value => {
 
             this.vm.testList = value[0];
+            this.vm.showSubjectTestList = value[0].map(()=>true)  // list of selected subjects to display, default all
             this.vm.studentList = value[1];
             this.vm.studentTestList = value[2];
             this.vm.classSubjectList = value[3];
