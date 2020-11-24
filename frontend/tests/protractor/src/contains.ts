@@ -11,3 +11,13 @@ export async function containsAll(tag, content) {
     const button = await BeforeAfterEach.page.$x('//' + tag + '[contains(., "' + content + '")]');
     return button;
 }
+
+export async function getNode(tag, content) {
+    const [button] = await BeforeAfterEach.page.$x('//' + tag + '[contains(., "' + content + '")]');
+    return button;
+}
+
+export async function getNodes(tag, content) {
+    const button = await BeforeAfterEach.page.$x('//' + tag + '[contains(., "' + content + '")]');
+    return button;
+}

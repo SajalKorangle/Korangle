@@ -45,30 +45,49 @@
             <!-- div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-12"></div>
             </div -->
+            <button class="btn" style="padding: 4px 7px; display: block" (click)="subjectFilterDisplay=!subjectFilterDisplay">
+                {{subjectFilterDisplay?'Hide Subjects Filter':'Show Subjects Filter'}}
+            </button>
+
+            <div class="subject-selection" *ngIf="subjectFilterDisplay">
+                <div *ngFor="let test of testList; let i=index" style="white-space: nowrap;">
+                    <mat-checkbox  [ngModel]="showSubjectTestList[i]" (ngModelChange)="showSubjectTestListSwitch(i)">
+                        <label>{{getSubject(test).name}} <span *ngIf="test.testType">- {{test.testType}}</span> ({{test.maximumMarks}})</label>
+                    </mat-checkbox>
+                </div>
+            </div>
 
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
-                    <th>Rank</th>
-                    <th>Student</th>
-                    <th>Roll No.</th>
-                    <th *ngFor="let test of testList">
+                    <th class="no-wrap" (click)="updateSortingParameters('rank')">Rank</th>
+                    <th (click)="updateSortingParameters('name')">Student</th>
+                    <th (click)="updateSortingParameters('rollNumber')">Roll No.</th>
+                    <th (click)="updateSortingParameters('rank')">Total ({{getFilteredTotalMaximumMarks()}})</th>
+                    <th *ngFor="let test of getFilteredTestList(); let i=index" (click)="updateSortingParameters(test)">
                         {{getSubject(test).name}} <span *ngIf="test.testType">- {{test.testType}}</span> ({{test.maximumMarks}})
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let studentSection of getSortedFilteredStudentSectionList(); let i=index;">
-                    <td>{{(i+1)}}.</td>
+                    <td>{{studentSection.rank}}.</td>
                     <td>{{getStudent(studentSection).name}}</td>
                     <td>{{studentSection.rollNumber}}</td>
-                    <ng-container *ngFor="let test of testList">
+                    <td class="no-wrap">  
+                        {{getStudentFilteredTotalMarks(studentSection)}} 
+                        <span style="color: rgb(0,79,208);">
+                            ({{(getStudentFilteredTotalMarks(studentSection)*100/getFilteredTotalMaximumMarks()).toFixed(2)}}%)
+                        </span>
+                    </td>
+                    <ng-container *ngFor="let test of getFilteredTestList()">
                         <td [class.yellow]="getStudentMarks(studentSection, test) == 0">
                             {{getStudentMarks(studentSection, test)}}
                         </td>
                     </ng-container>
                 </tr>
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

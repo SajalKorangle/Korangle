@@ -8,5 +8,15 @@
         "file": "twenty_students.json"
       }
     ]
+  },
+  {
+    "file": "sixty_eight_students_section.json",
+    "file_object_list": [
+      {
+        "app": "student_app",
+        "model": "Student",
+        "file": "sixty_eight_students.json"
+      }
+    ]
   }
 ]
