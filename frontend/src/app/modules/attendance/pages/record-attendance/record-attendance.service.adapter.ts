@@ -40,7 +40,7 @@ export class RecordAttendanceServiceAdapter {
             // console.log(service_list);
             loopVariable = loopVariable + 1;
         }
-
+        
         Promise.all(service_list).then((value) => {
             let temp_gcm_list = [];
             let temp_user_list = [];
@@ -76,9 +76,7 @@ export class RecordAttendanceServiceAdapter {
 
             this.vm.isLoading = false;
         })
-        // console.log(studentList);
         
-        this.sendSMSNotification(this.vm.studentList, this.vm.studentUpdateMessage);
     }
 
     sendSMSNotification: any = (mobile_list: any, message: string) => {
@@ -88,7 +86,7 @@ export class RecordAttendanceServiceAdapter {
         if (this.vm.selectedSentType == this.vm.sentTypeList[0]) {
             sms_list = mobile_list;
             notification_list = [];
-        } else if (this.vm.selectedSentType == this.vm.sentTypeList[1]) {
+        } else if (this.vm.selectedSentType == this.vm.sentTypeList[1]) {       
             sms_list = [];
             notification_list = mobile_list.filter(obj => {
                 return obj.notification;
@@ -101,7 +99,6 @@ export class RecordAttendanceServiceAdapter {
                 return !obj.notification;
             })
         }
-
         let notif_mobile_string = '';
         let sms_mobile_string = '';
         notification_list.forEach((item, index) => {
@@ -113,11 +110,8 @@ export class RecordAttendanceServiceAdapter {
         })
         sms_mobile_string = sms_mobile_string.slice(0, -2);
         notif_mobile_string = notif_mobile_string.slice(0, -2);
-        
-        if (sms_list.length > 0) {
-            if (!confirm('Please confirm that you are sending ' + (this.vm.getEstimatedSMSCount()) + ' SMS.')) {
-                return;
-            }
+        if ((sms_list.length > 0) && (this.vm.getEstimatedSMSCount() > this.vm.smsBalance)) {
+            alert('You are short by ' + (this.vm.getEstimatedSMSCount() - this.vm.smsBalance) + ' SMS');
         }
         let sms_data = {};
         const sms_converted_data = sms_list.map(item => {
@@ -165,7 +159,6 @@ export class RecordAttendanceServiceAdapter {
                 'parentSchool': this.vm.user.activeSchool.dbId,
             };
         });
-        console.log(sms_data);
         service_list = [];
         service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, sms_data));
         if (notification_data.length > 0 ) {
@@ -175,8 +168,6 @@ export class RecordAttendanceServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all(service_list).then(value => {
-
-            alert('Operation Successful');
 
             if ((this.vm.selectedSentType === this.vm.sentTypeList[0] ||
                 this.vm.selectedSentType === this.vm.sentTypeList[2]) &&
