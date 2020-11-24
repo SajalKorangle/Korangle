@@ -61,10 +61,8 @@ describe('Examination -> View Marks', () => {
             node = await page.evaluate(() => {
                 nodes = document.evaluate('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input', document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
                 node = nodes.iterateNext();
-                return Promise.resolve(node);
-                // node.click();
+                node.click();
             });
-            node.click();
 
             await page.waitForTimeout(500);
 
@@ -75,7 +73,7 @@ describe('Examination -> View Marks', () => {
     
         });
 
-        it('View Marks: Default Ordering', async () => { 
+        it('View Marks: Default Ordering', async () => {
             let nodes, node, roll = -1, prop;
             nodes = await page.$$('table tbody tr:nth-child(n)');
             nodes.pop();
@@ -112,7 +110,7 @@ describe('Examination -> View Marks', () => {
 
                 node = await element.$('td:nth-child(4) span');
                 prop = await page.evaluate(el => el.innerHTML, node);
-                prop = prop.trim()
+                prop = prop.trim();
                 prop = parseFloat(prop.substring(1, prop.length - 1));
                 expect(prop).toBeLessThanOrEqual(tot);
                 tot = prop;
