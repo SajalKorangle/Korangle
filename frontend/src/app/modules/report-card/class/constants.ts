@@ -9,6 +9,60 @@ import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
 declare var require: any;
 const FormulaParser = require('hot-formula-parser').Parser;
 
+function setCustomFunctionsInParser(parser: any): void {
+    parser.setFunction('Max', function(params) {
+
+        // There should be at least 2 numbers and
+        // the final number will decide how many numbers will we choose out of these.
+        if (params.length < 3) {
+            console.log('Insufficient length');
+            return 0;
+        }
+
+        // All parameter arguments should be numbers
+        let jhanda = true;
+        params.every(argument => {
+           if (Number(argument.toString()) != argument) {
+               console.log('All parameters are not numbers');
+               jhanda = false;
+               return false;
+           }
+        });
+        if (!jhanda) {
+            return 0;
+        }
+
+        // Final number should be less than the total number of numbers
+        // and should be an integer
+        if (params.length - 1 <= params[params.length - 1] ||
+            parseInt(params[params.length - 1].toString()) != params[params.length - 1]) {
+            console.log('Last parameter has a fault');
+            return 0;
+        }
+
+        // Calculate the result
+        let minList = params.slice(0, params.length - 1 - params[params.length - 1]);
+        minList.sort(function(a, b){return b-a});
+        let result = 0;
+        params.slice(minList.length, params.length - 1).forEach(number => {
+            result += Number(number);
+            console.log(result);
+            minList.every((minNumber, index, list) => {
+                if (minNumber > number) {
+                    result += Number(minNumber - number);
+                    console.log(result);
+                    list[index] = number;
+                    return false;
+                }
+                return true;
+            });
+            console.log(minList);
+        });
+        return result;
+
+    });
+}
+
 export const ALPHABET_LIST = 'abcdefghijklmnopqrstuvwxyz';
 
 export const TEST_TYPE_LIST = [
@@ -669,6 +723,7 @@ class ExaminationParameterStructure {
             if (variableType === EXAMINATION_TYPE_LIST[0]) {
                 if (nestedCallNo > 100) { console.log('Nested Call more than 100 times'); return 0; }
                 const parser = new FormulaParser();
+                setCustomFunctionsInParser(parser);
                 dataObject.userHandle.marksVariableList.forEach((marksVariable, index) => {
                     if (marksVariable.parentExamination) {
                         parser.setVariable(ALPHABET_LIST.charAt(index), getMarks(dataObject, index));
