@@ -10,15 +10,46 @@ import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
 import { MatLineSetter } from '@angular/material';
+import { StudentService } from 'app/services/modules/student/student.service';
+import { SubjectService } from 'app/services/modules/subject/subject.service';
 
 @Component({
     selector: 'create-test',
     templateUrl: './create-test.component.html',
     styleUrls: ['./create-test.component.css'],
-    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService, ExaminationService ],
+    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService, ExaminationService, SubjectService ],
 })
 
 export class CreateTestComponent implements OnInit {
+
+
+    /* These are newly created properties*/
+
+
+    selectedExaminationNew :any;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*Above are newly created variables */
 
     user;
 
@@ -51,7 +82,9 @@ export class CreateTestComponent implements OnInit {
                 public examinationService: ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectOldService,
-                public studentService: StudentOldService) {}
+                public studentService: StudentOldService,
+                
+                public subjectNewService: SubjectService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

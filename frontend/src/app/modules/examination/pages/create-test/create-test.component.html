@@ -10,8 +10,19 @@
         <div class="row">
             <div class="col-md-9" *ngIf="examinationClassSectionList.length > 0">
 
-            
                 <mat-form-field>
+                    <mat-select placeholder="Select Examination"
+                                [(ngModel)]="selectedExaminationNew"
+                                [disabled]="isLoading"
+                                            >                        
+                        <mat-option *ngFor='let examination of serviceAdapter.examTypeList;' [value]="examination">
+                            {{examination.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+
+                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
                     <mat-select placeholder="Select Examination"
                                 [ngModel]="selectedExamination"
                                 [disabled]="isLoading"
@@ -22,7 +33,21 @@
                     </mat-select>
                 </mat-form-field>
 
-
+                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                    <mat-select placeholder="Select class section"
+                               
+                                [disabled]="isLoading">
+                        <ng-container *ngFor='let class of serviceAdapter.classSectionSubjectList'>
+                            <mat-option  *ngFor="let section of class.sectionList" >
+                                <mat-checkbox [(ngModel)]="section.selected"
+                                            (click)="$event.stopPropagation();" >
+                                    {{class.className}}, {{section.sectionName}}
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
+                       
+                    </mat-select>
+                </mat-form-field>
 
                 <mat-form-field>
                     <mat-select placeholder="Select class section"

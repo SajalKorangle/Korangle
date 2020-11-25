@@ -5,6 +5,78 @@ import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
 export class CreateTestServiceAdapter {
 
+
+
+    /* These are newly created properties*/
+
+
+    examTypeList :any;
+
+    classSectionSubjectList:  Array<{
+                'className':any,
+                'classId':any,
+                'sectionList': Array<{
+                    'sectionName':any,
+                    'sectionId':any,
+                    'selected':boolean,
+                    'subjectList':Array<{
+                        'subjectName':any,
+                        'subjectId':any
+                    }>
+                }>
+            }>;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*Above are newly created variables */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     vm: CreateTestComponent;
 
     test_type_list = TEST_TYPE_LIST;
@@ -38,6 +110,13 @@ export class CreateTestServiceAdapter {
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
+
+        //data to request for examination list type for current school id and session id
+        let request_examination_data_new = {
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+        }
+
         let request_student_mini_profile_data = {
             'schoolDbId': this.vm.user.activeSchool.dbId,
             'sessionDbId': this.vm.user.activeSchool.currentSessionDbId,
@@ -48,6 +127,13 @@ export class CreateTestServiceAdapter {
             'schoolList': [this.vm.user.activeSchool.dbId],
         };
 
+
+        //data to request for class and section and subject having atleast one subject in current schoolId and sessionId
+        let request_class_section_subject_data_new = {
+            'parentSession':this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+        }
+        console.log(request_class_section_subject_data_new);
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
@@ -55,11 +141,97 @@ export class CreateTestServiceAdapter {
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.subjectService.getClassSubjectList(request_class_section_subject_data,this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
+
+            //fetch the exam list type
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data_new),
+            //fetch class and section present in this school and session
+            this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject,request_class_section_subject_data_new),
+
         ]).then(value => {
             this.examinationList = value[0];
             this.classList = value[1];
             this.sectionList = value[2];
             this.subjectList = value[3];
+
+            console.log("Exam list is below");
+            console.log(value[6]);
+            this.examTypeList  = value[6];
+
+            console.log("class, section and subjects are below");
+            console.log(value[7]);
+            //this.classSectionSubjectList = value[7];
+            this.classSectionSubjectList = [];
+
+            value[7].forEach(item => {
+                
+                var classIndex = this.classSectionSubjectList.findIndex(data =>data.classId === item.parentClass);
+                var sectionIndex =-1,subjectIndex=-1;
+                if(classIndex != -1)
+                {
+                    sectionIndex = this.classSectionSubjectList[classIndex].sectionList.findIndex(section => section.sectionId === item.parentDivision);
+
+                    if(sectionIndex != -1)
+                    {
+                        subjectIndex = this.classSectionSubjectList[classIndex].sectionList[sectionIndex].subjectList.findIndex(subject => subject.subjectId === item.parentSubject);
+                    }
+                }
+
+                
+                    let tempSubject = {
+                        'subjectName' : this.getSubjectName(item.parentSubject),
+                        'subjectId' : item.parentSubject
+                    }
+
+                    let tempSubjectList=[];
+                    tempSubjectList.push(tempSubject);
+
+                    let tempSection = {
+                        'sectionName' : this.getSectionName(item.parentDivision),
+                        'sectionId' : item.parentDivision,
+                        'selected' : false,
+                        'subjectList':tempSubjectList
+                    }
+
+                    let tempSectionList = [];
+                    tempSectionList.push(tempSection);
+
+
+                    let tempClass = {
+                        'className' : this.getClassName(item.parentClass),
+                        'classId' : item.parentClass,
+                        'sectionList':tempSectionList,
+                    }
+                
+                if(classIndex === -1)
+                {
+                    this.classSectionSubjectList.push(tempClass);
+                }
+                else if(sectionIndex === -1)
+                {
+                    this.classSectionSubjectList[classIndex].sectionList.push(tempSection);
+                }
+                else if(subjectIndex === -1)
+                {
+                    this.classSectionSubjectList[classIndex].sectionList[sectionIndex].subjectList.push(tempSubject);
+                }
+               
+
+            });
+
+            console.log("List created after nesting class section subject ");
+            console.log(this.classSectionSubjectList);
+            
+
+            //sort the classSection list
+            this.classSectionSubjectListSort();
+            console.log("List after Sorting...");
+            console.log(this.classSectionSubjectList);
+
+
+
+
+
+            
             // this.classSectionSubjectList = value[4];
             const map = new Map();
             value[4].forEach(item => {
@@ -143,6 +315,7 @@ export class CreateTestServiceAdapter {
     getTestAndSubjectDetails(): void {
 
         this.vm.isLoading = true;
+        console.log(this.classSectionSubjectList);
 
         let request_test_data = {
             /*'examinationId': this.vm.selectedExamination.id,
@@ -534,5 +707,28 @@ export class CreateTestServiceAdapter {
         });
 
     }
+
+
+
+
+
+
+
+
+
+    /* These are newly created functions*/
+    classSectionSubjectListSort()
+    {
+        this.classSectionSubjectList.forEach(cl => {
+            cl.sectionList.sort(function(a,b){
+                return a.sectionId - b.sectionId;
+            })
+        });
+
+        this.classSectionSubjectList.sort(function(a,b){
+            return a.classId - b.classId;
+        })
+    }
+
 
 }
