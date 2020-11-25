@@ -1,7 +1,49 @@
 <div class="card-content table-responsive" *ngIf="!isLoading; else spinner">
- 
+    <div style="display: inline-block;">
     <h3 class="text-{{user.activeSchool.secondaryThemeColor}}">Upload Sheet</h3>
     <input type='file' (change)="uploadSheet($event)" multiple="false" accept=".xlsx">
+    </div>
+
+    <ng-container *ngIf="uploadedData.length!==0">
+        
+        <h6 style="color:red;" *ngIf="errorCount()+warningCount()>0">{{errorCount()}} Errors and {{warningCount()}} warnings</h6>
+        
+        <mat-card style="overflow: auto; margin-top: 16px;">
+        <button type="submit" *ngIf="errorCount()+warningCount()===0"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}} upload-btn"
+                (click)="uploadToServer()">Upload Data</button>
+        <div style="text-align: right; position: sticky; left: 0">
+        <mat-button-toggle-group>
+            <mat-button-toggle value="all" [checked]="activeFilter==='all'"  (click)="filterBy('all')">All</mat-button-toggle>
+            <mat-button-toggle value="errors" (click)="filterBy('errors')">Errors</mat-button-toggle>
+            <mat-button-toggle value="warnings" (click)="filterBy('warnings')">Warnings</mat-button-toggle>
+        </mat-button-toggle-group>
+        </div>
+
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr class="text-{{user.activeSchool.secondaryThemeColor}}">
+                    <th>1</th>
+                    <th *ngFor="let headers of uploadedData[0], let i = index" [class.bgDanger]="errorCells['0,'+i]" [matTooltip]="errorCells['0,'+i]">
+                        {{headers}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let row of filteredRows">
+                <tr [class.bgDanger]="errorRows[row]" [matTooltip]="errorRows[row]">
+                    <td>{{row+1}}</td>
+                    <ng-container *ngFor="let column of uploadedData[row], let col = index">
+                        <td [class.bgWarning]="warningCells[(row)+','+col]" [class.bgDanger]="errorCells[(row)+','+col]" [matTooltip]="errorCells[(row)+','+col]?errorCells[(row)+','+col]:warningCells[(row)+','+col]">{{column}}</td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+            </tbody>
+    
+        </table>
+        </mat-card>
+    </ng-container>
+
     <hr/>
 
     

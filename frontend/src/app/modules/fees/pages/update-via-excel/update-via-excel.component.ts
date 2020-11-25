@@ -7,7 +7,6 @@ import {DataStorage} from '../../../../classes/data-storage';
 import { StudentService } from './../../../../services/modules/student/student.service';
 import { ClassService } from './../../../../services/modules/class/class.service';
 import { FeeService} from './../../../../services/modules/fees/fee.service'
-import { empty } from 'rxjs';
 
 @Component({
   selector: 'app-update-via-excel',
@@ -30,12 +29,15 @@ export class UpdateViaExcelComponent implements OnInit {
   selectionCount = 0;
 
   uploadedData = [];  //  Array of array
-  errorRows = []; //  format: [rowNumber,Error Mesage]
-  errorCells = [];  //  format: [row, colums, Error Message]
-  warningRows = []; //  format: [rowNumber,Warning Mesage]
-  warningCells = []; //  format: [row, colums, Warning Message]
+  errorRows = {}; //  format: {rowNumber:Error Mesage, ...}
+  errorCells = {};  //  format: {`row, colums`: Error Message, ...}
+  warningRows = {}; //  format: {rowNumber:Warning Mesage, ...}
+  warningCells = {}; //  format: {`row, colums`: Warning Message}
+  warningRowIndices = new Set();
+  errorRowIndices = new Set();
 
-  dataIsUploadable = false;
+  filteredRows = [];
+  activeFilter = 'all';
   isLoading = false;
 
   serviceAdapter: UpdateViaExcelServiceAdapter;
@@ -47,6 +49,47 @@ export class UpdateViaExcelComponent implements OnInit {
     this.serviceAdapter = new UpdateViaExcelServiceAdapter();
     this.serviceAdapter.initializeAdapter(this);
     this.serviceAdapter.initializeData();
+  }
+
+  filterBy(newFilter): void{
+    if (newFilter !== this.activeFilter) {
+      switch (newFilter) {
+        case 'all':
+          this.filteredRows = this.uploadedData.slice(1).map((d, i) => i + 1);
+          this.activeFilter = newFilter;
+          break;
+        case 'errors':
+          this.filteredRows = Array.from(this.errorRowIndices).sort((a,b)=>a-b);
+          this.activeFilter = newFilter;
+          break;
+        case 'warnings':
+          this.filteredRows = Array.from(this.warningRowIndices).sort((a,b)=>a-b);
+          this.activeFilter = newFilter;
+          break;
+      }
+    }
+  }
+
+  cleanUp(): void{
+    this.warningRowIndices.delete(0);
+    this.errorRowIndices.delete(0);
+    this.filteredRows = this.uploadedData.slice(1).map((d, i) => i+1);
+    this.isLoading = false;
+  }
+
+  newErrorCell(row, col, msg): void {
+    this.errorCells[`${row},${col}`] = msg;
+    this.errorRowIndices.add(row);
+  }
+
+  newErroRow(row, msg): void {
+    this.errorRows[row] = msg;
+    this.errorRowIndices.add(row);
+  }
+
+  newWarningCell(row, col, msg): void {
+    this.warningCells[`${row},${col}`] = msg;
+    this.warningRowIndices.add(row);
   }
 
   populateFeeType(feeTypeList): void{
@@ -134,6 +177,7 @@ export class UpdateViaExcelComponent implements OnInit {
       const reader: FileReader = new FileReader();
 
       reader.onload = (e: any) => {
+        this.isLoading = true;
         /* read workbook */
         const bstr: string = e.target.result;
         const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
@@ -151,6 +195,8 @@ export class UpdateViaExcelComponent implements OnInit {
         this.headersSanityCheck();
         this.studentDataCorrespondenceSanityCheck();
         this.feeAmountSanityCheck();
+
+        this.cleanUp();
       };
       reader.readAsBinaryString(file);
     }
@@ -162,13 +208,14 @@ export class UpdateViaExcelComponent implements OnInit {
     this.feeTypeList.forEach(feeType => actualHeader.push(feeType.name));
     const len = actualHeader.length;
     for (let i = 0; i < len; i += 1){
-      if (actualHeader[i] !== headers[i])
-        this.errorCells.push([0, i, `Header Mismatch: Expected ${actualHeader[i]}`]);
+      if (actualHeader[i] !== headers[i]) {
+        this.newErrorCell(0,i,`Header Mismatch: Expected ${actualHeader[i]}`)
+      }
     }
   }
 
   studentDataCorrespondenceSanityCheck(): void {
-    let i, id, providedStudent, student, len = this.uploadedData.length, Class, Division;
+    let i, id, providedStudent, student, len = this.uploadedData.length, Class, Division, ss;
 
     for (i = 1; i < len; i += 1){ // for every row in uploaded data
       [student, Class, Division] = [undefined, undefined, undefined];
@@ -183,60 +230,68 @@ export class UpdateViaExcelComponent implements OnInit {
         if (D) {
           Division = this.divisionList.find(d => d.name.trim() === D.trim());
           if (Division)
-            student = this.structuredStudent[Class.id][Division.id].find(ss => ss.student.id === id).student;
+            ss = this.structuredStudent[Class.id][Division.id].find(s => s.student.id === id);
+          student = ss ? ss.student : undefined;
         }
         else {
-          student = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k=>this.structuredStudent[Class.id][k])[0].find(ss => ss.student.id === id).student;  // till map function is the implementation of Object.values() since it's not supported
+          ss = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k=>this.structuredStudent[Class.id][k])[0].find(s => s.student.id === id);  // till map function is the implementation of Object.values() since it's not supported
+          student = ss ? ss.student : undefined;
         }
       }
   
       if(student === undefined){
-        this.errorCells.push([i, 4, 'Class/Section Mismatch']);
-        console.log('Class Section Mismatch');
         student = this.studentList.find(s => s.id === id);
+        if (student) {
+          this.newErrorCell(i,4,'Class/Section Mismatch')
+        }
       }
 
-      if (student === undefined)  // not found case
-        this.errorRows.push([i, 'Student Not Found'])
+      if (student === undefined) { // not found case
+        this.newErroRow(i, 'Student Not Found');
+      }
       else {
 
         if (student.scholarNumber != providedStudent[1] && student.scholarNumber !== "" && providedStudent[1] !== undefined) {
-          this.errorCells.push([i, 1, 'Scholar Number Mismatch']);
-          console.log(`Scholar No. data mismatch at row ${i+1}`);
+          this.newErrorCell(i,1,'Scholar Number Mismatch');
         }
 
         if (student.name.trim() !== providedStudent[2].trim()) {
-          this.errorCells.push([i, 2, 'Name Mismatch']);
-          console.log(`Name data mismatch at row ${i+1}`);
+          this.newErrorCell(i, 2, 'Name Mismatch');
         }
 
         if (student.fathersName.trim() !== providedStudent[3].trim()) {
-          this.errorCells.push([i, 3, 'Father’s Name Mismatch']);
-          console.log(`Father’s Name data mismatch at row ${i+1}`)
+          this.newErrorCell(i,3,'Father’s Name Mismatch')
         }
       }
     }
   }
 
   feeAmountSanityCheck(): void {
-    let i, j, len = this.uploadedData.length, currData, parsedAmount;
+    let i, pastIndex, len = this.uploadedData.length, currData, parsedAmount;
     for (i = 1; i < len; i++){  //  for Each row
       currData = this.uploadedData[i];
+      pastIndex = 0;
       currData.slice(5).forEach((amount, index) => {
+        while (index > pastIndex) {
+          currData[pastIndex + 5] = 0;
+          this.newWarningCell(i, pastIndex + 5, 'Empty cell set to 0');
+          pastIndex += 1;
+        }
+        pastIndex += 1;
         parsedAmount = parseFloat(amount)
         if (!isNaN(parsedAmount)) {
           if (parsedAmount < 0) {
-            this.errorCells.push([i,index+5, 'Negavtive Amount'])
+            this.newErrorCell(i, index + 5, 'Negavtive Amount');
           }
           else if (parsedAmount != parseInt(amount)) {
             currData[index + 5] = Math.round(parsedAmount);
-            this.warningCells.push([i, index + 5, 'Amount Rounded to nearest integer']);
+            this.newWarningCell(i, index + 5, 'Amount Rounded to nearest integer');
           }
-        } else {  //  empty cell case
-          // currData[index + 5] = 0;
-          // this.warningCells.push([i, index + 5, 'Empty Amount set to 0']);
+        } else {  //  not number Cell
+          this.newErrorCell(i, index + 5, 'Amount must be an positive integer');
         }
       });
+      this.uploadedData[i] = currData;
     }
   }
 
@@ -244,13 +299,26 @@ export class UpdateViaExcelComponent implements OnInit {
     
   }
 
+  errorCount() {
+    return Reflect.ownKeys(this.errorCells).length + Reflect.ownKeys(this.errorRows).length;
+  }
+
+  warningCount() {
+    return Reflect.ownKeys(this.warningCells).length + Reflect.ownKeys(this.warningRows).length;
+  }
+
   clearExcelData(): void {
     this.uploadedData = [];
-    this.errorRows = [];
-    this.errorCells = [];
-    this.warningRows = [];
-    this.warningCells = [];
+    this.errorRows = {};
+    this.errorCells = {};
+    this.warningRows = {};
+    this.warningCells = {};
+    this.errorRowIndices.clear();
+    this.warningRowIndices.clear();
+    this.activeFilter = 'all';
   }
+
+  uploadToServer(): any{}
 
   logMessage(log: any): void{
     console.log(log);

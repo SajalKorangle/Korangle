@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 import {UpdateViaExcelRoutingModule} from './update-via-excel.routing';
 import { CommonModule } from '@angular/common';
@@ -12,7 +13,8 @@ import { UpdateViaExcelComponent } from './update-via-excel.component';
   imports: [
     UpdateViaExcelRoutingModule,
     ComponentsModule,
-    CommonModule
+    CommonModule,
+    MatButtonToggleModule
   ],
   exports: [
   ],
