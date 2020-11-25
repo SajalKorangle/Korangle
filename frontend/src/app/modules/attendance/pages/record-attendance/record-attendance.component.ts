@@ -66,8 +66,15 @@ export class RecordAttendanceComponent implements OnInit {
 
     studentList :any;
 
-    selectedSentType = 'SMS';
+    selectedSentType = 'NOTIFICATION';
     smsBalance = 0;
+    
+    sentUpdateToList = [
+        'All Students',
+        'Only Absent Students'
+    ];
+
+    selectedSentUpdateTo = 'Only Absent Students';
 
     notif_usernames = [];
 
@@ -502,15 +509,27 @@ export class RecordAttendanceComponent implements OnInit {
             this.studentList = [];
             this.studentAttendanceStatusList.forEach(student => {
                 student.attendanceStatusList.forEach(attendanceStatus => {
-                    if (attendanceStatus.status !== null) {
-                        let tempData = {
-                            name: student.name,
-                            dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
-                            attendanceStatus: attendanceStatus.status,
-                            mobileNumber: student.mobileNumber,
-                            notification: student.notification
-                        };
-                        this.studentList.push(tempData);
+                    if (attendanceStatus.status !== null){
+                        if(attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
+                            let tempData = {
+                                name: student.name,
+                                dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
+                                attendanceStatus: attendanceStatus.status,
+                                mobileNumber: student.mobileNumber,
+                                notification: student.notification
+                            };
+                            this.studentList.push(tempData);
+                        }
+                        if(this.selectedSentUpdateTo == this.sentUpdateToList[0] && attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]){
+                            let tempData = {
+                                name: student.name,
+                                dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
+                                attendanceStatus: attendanceStatus.status,
+                                mobileNumber: student.mobileNumber,
+                                notification: student.notification
+                            };
+                            this.studentList.push(tempData);
+                        }
                     }
                 });
             });

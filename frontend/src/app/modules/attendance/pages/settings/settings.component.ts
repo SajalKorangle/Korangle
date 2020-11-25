@@ -19,7 +19,11 @@ export class SettingsComponent{
 
     selectedSentType = 'SMS';
     
+    sentInfoToList = [
+        'All Students',
+        'Only Absent Students'
+    ];
 
-
+    selectedSentInfoTo = 'All Students';
 
 }
