@@ -25,7 +25,10 @@ export class CreateTestServiceAdapter {
                     }>
                 }>
             }>;
+    classListForTest :any;
+    sectionListForTest :any;
 
+    
 
 
 
@@ -279,6 +282,10 @@ export class CreateTestServiceAdapter {
     //     }
     // }
     
+    
+
+
+
     populateExaminationClassSectionList(): void {
         this.vm.examinationClassSectionList = [];
         this.examinationList.forEach(examination => {
@@ -316,6 +323,14 @@ export class CreateTestServiceAdapter {
 
         this.vm.isLoading = true;
         console.log(this.classSectionSubjectList);
+        this.makeDataReadyForGet();
+
+        let request_test_data_list = {
+            'parentExamination': this.vm.selectedExamination.id,
+            'parentClass__in': this.classListForTest.join(','),
+            'parentDivision__in': this.sectionListForTest.join(','),
+
+        }
 
         let request_test_data = {
             /*'examinationId': this.vm.selectedExamination.id,
@@ -340,7 +355,91 @@ export class CreateTestServiceAdapter {
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
+
+            //fetch test list
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_test_data_list),
         ]).then(value => {
+
+
+            //test list obtained...
+            console.log("Test list fetched...");
+            console.log(value[2]);
+
+            this.vm.newTestList = [];
+            value[2].forEach(test => {
+
+                var subIdx = this.vm.newTestList.findIndex(sub =>sub.subjectId === test.parentSubject && sub.testType === test.testType && sub.maximumMarks === test.maximumMarks);
+
+                var classIdx = -1, sectionIdx = -1;
+
+                if(subIdx != -1)
+                {
+                    classIdx = this.vm.newTestList[subIdx].classList.findIndex(cl => cl.classId === test.parentClass);
+
+                    if(classIdx != -1)
+                    {
+                        sectionIdx = this.vm.newTestList[subIdx].classList[classIdx].sectionList.findIndex(sec => sec.sectionId === test.parentDivision);
+                    }
+                }
+
+
+                let tempSection = {
+                    'sectionName' : this.getSectionName(test.parentDivision),
+                    'sectionId' : test.parentDivision,
+                   
+                }
+
+                let tempSectionList = [];
+                tempSectionList.push(tempSection);
+
+
+                let tempClass = {
+                    'className' : this.getClassName(test.parentClass),
+                    'classId' : test.parentClass,
+                    'sectionList':tempSectionList,
+                }
+                let tempClassList = [];
+                tempClassList.push(tempClass);
+
+                let tempSubject = {
+                    'deleted':false,
+                    'subjectId':test.parentSubject,
+                    'subjectName':this.getSubjectName(test.parentSubject),
+                    'testType':test.testType,
+                    'newTestType' :test.testType,
+                    'maximumMarks':test.maximumMarks,
+                    'newMaximumMarks' :test.maximumMarks,
+                    'classList' : tempClassList,
+                }
+               
+
+
+               
+            
+                if(subIdx === -1)
+                {
+                    this.vm.newTestList.push(tempSubject);
+                }
+                else if(classIdx === -1)
+                {
+                    this.vm.newTestList[subIdx].classList.push(tempClass);
+                }
+                else if(sectionIdx === -1)
+                {
+                    this.vm.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
+                }
+
+
+
+
+
+            });
+
+
+            console.log("Test listed created in nested fashion...");
+            console.log(this.vm.newTestList);
+
+            
 
             let student_id_list = this.getStudentIdListForSelectedItems();
 
@@ -717,6 +816,8 @@ export class CreateTestServiceAdapter {
 
 
     /* These are newly created functions*/
+
+    //Sort the nested list
     classSectionSubjectListSort()
     {
         this.classSectionSubjectList.forEach(cl => {
@@ -729,6 +830,25 @@ export class CreateTestServiceAdapter {
             return a.classId - b.classId;
         })
     }
+
+
+    //Store the selected  Class and Section list to get the test list
+    makeDataReadyForGet():void{
+
+        this.classListForTest = [];
+        this.sectionListForTest = [];
+        this.classSectionSubjectList.forEach(cl => {
+            cl.sectionList.forEach(sec => {
+                if(sec.selected)
+                {
+                    this.classListForTest.push(cl.classId);
+                    this.sectionListForTest.push(sec.sectionId);
+                }
+            });
+        });
+    }
+
+
 
 
 }

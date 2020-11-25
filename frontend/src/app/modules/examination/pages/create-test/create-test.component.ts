@@ -28,7 +28,23 @@ export class CreateTestComponent implements OnInit {
 
     selectedExaminationNew :any;
 
-
+    newTestList : Array<{
+        'deleted':boolean,
+        'subjectId':any,
+        'subjectName':any,
+        'testType':any,
+        'newTestType' :any,
+        'maximumMarks':any,
+        'newMaximumMarks' :any,
+        'classList': Array<{
+            'classId' : any,
+            'className' : any,
+            'sectionList': Array<{
+                'sectionId' : any,
+                'sectionName' : any,
+            }>
+        }>
+    }>;
 
 
 
