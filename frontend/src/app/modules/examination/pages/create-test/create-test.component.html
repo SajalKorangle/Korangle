@@ -144,7 +144,7 @@
 
 
 
-            
+
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-12"></div>
             </div>
@@ -170,50 +170,54 @@
                     </tbody>
                 </table>
 
+            
+                
+            </ng-container>
 
+
+            <!--New Structure of Test List grouped by subject, testType and maximumMarks-->
+            <ng-container>
                 <table class="table table-hover">
                     <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                     <tr>
                         <th>S No.</th>
                         <th>Subject</th>
                         <th>Test type</th>
-                        <!-- <th>Date</th>
-                        <th>Start Time</th>
-                        <th>End Time</th> -->
+                        <th>Class Section</th>
                         <th>Max. Marks</th>
                         <th>-</th>
                         <th>-</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList; let i=index;">
+                    <tr *ngFor="let test of newTestList; let i=index;">
                         <td>{{(i+1)}}.</td>
                         <td>{{test.subjectName}}</td>
-                        <td>
-                            {{test.testType}}
-                           
+                        <td>                           
                             <select [(ngModel)]="test.newTestType">
                                 <option *ngFor='let testType of testTypeList;' [value]="testType">
                                     {{testType}}
                                 <option>
                             </select>
                         </td>
-                        <!-- <td>
-                            <day-date-old [initialValue]="getTestDate(test)"
-                                          (onDateSelected)="onTestDateUpdation(test, $event)">
-
-                            </day-date-old>
-                        </td>
+                        
                         <td>
-                            <input type="time" [(ngModel)]="test.newStartTime"/>
+                            <table>
+                                <ng-container *ngFor="let class of test.classList">
+                                    <ng-container *ngFor="let section of class.sectionList">
+                                        <tr>
+                                            <td>
+                                                {{class.className}},{{section.sectionName}}
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </table>
                         </td>
-                        <td>
-                            <input type="time" [(ngModel)]="test.newEndTime"/>
-                        </td> -->
                         <td>
                             <input type="number" [(ngModel)]="test.newMaximumMarks"/>
                         </td>
-                        <td>
+                        <!-- <td>
                             <button type="submit"
                                     style="padding: 3px 8px;"
                                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
@@ -225,10 +229,11 @@
                                     style="padding: 3px 8px;"
                                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                     (click)="serviceAdapter.deleteTest(test);">Del</button>
-                        </td>
+                        </td> -->
                     </tr>
                     </tbody>
                 </table>
+            
             </ng-container>
 
             

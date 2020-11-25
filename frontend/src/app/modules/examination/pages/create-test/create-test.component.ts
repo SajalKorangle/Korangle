@@ -143,12 +143,6 @@ export class CreateTestComponent implements OnInit {
     }
 
     isTestUpdateDisabled(test: any): boolean {
-        if (test.startTime !== test.newDate + "T" + test.newStartTime +':00+05:30') {
-            return false;
-        }
-        if (test.endTime !== test.newDate + "T" + test.newEndTime +':00+05:30') {
-            return false;
-        }
         if (test.newMaximumMarks !== test.maximumMarks) {
             return false;
         }
