@@ -1,7 +1,7 @@
 
 from common.common_views import CommonView, CommonListView, APIView
 
-from attendance_app.models import EmployeeAttendance, StudentAttendance, EmployeeAppliedLeave, AttendancePermission
+from attendance_app.models import EmployeeAttendance, StudentAttendance, EmployeeAppliedLeave, AttendancePermission, AttendanceSettings
 
 
 # Create your views here.
@@ -51,3 +51,11 @@ class AttendancePermissionListView(CommonListView, APIView):
     Model = AttendancePermission
 
 
+########### Attendance Settings #############
+
+class AttendanceSettingsListView(CommonListView, APIView):
+    Model = AttendanceSettings
+    
+class AttendanceSettingsView(CommonView, APIView):
+    Model = AttendanceSettings
+    

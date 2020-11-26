@@ -86,3 +86,32 @@ class AttendancePermission(models.Model):
 
         db_table = 'attendance_permission'
         unique_together = ('parentEmployee', 'parentDivision', 'parentClass', 'parentSession')
+
+#setting_page_model
+
+class AttendanceSettings(models.Model):
+
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+
+    SMS_UPDATE = 'SMS'
+    NOTIFICATION_UPDATE = 'NOTIFICATION'
+    NOTIFSMS_UPDATE = 'NOTIF./SMS'
+    SENTUPDATE_CHOICES = [
+        (SMS_UPDATE, 'SMS'),
+        (NOTIFICATION_UPDATE, 'NOTIFICATION'),
+        (NOTIFSMS_UPDATE, 'NOTIF./SMS'),
+    ]
+
+    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=SMS_UPDATE, verbose_name='sentUpdateType')
+
+    UPDATE_ALL = 'All Students'
+    UPDATE_ABSENT = 'Only Absent Students'
+    UPDATETO_CHOICES = [
+        (UPDATE_ALL, 'All Students'),
+        (UPDATE_ABSENT, 'Only Absent Students')
+    ]
+
+    sentUpdateToType = models.CharField(max_length=20, choices=UPDATETO_CHOICES, null=False, default=UPDATE_ALL, verbose_name='')
+
+    class Meta:
+        db_table = 'attendance_settings'
