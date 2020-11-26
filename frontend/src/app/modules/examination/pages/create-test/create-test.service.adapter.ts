@@ -27,6 +27,18 @@ export class CreateTestServiceAdapter {
             }>;
     classListForTest :any;
     sectionListForTest :any;
+    commonSubjectList :Array<{
+        'subjectId':any,
+        'subjectName':any,
+        'classList':Array<{
+            'className' :any,
+            'classId' : any
+        }>,
+        'sectionList':Array<{
+            'sectionName':any,
+            'sectionId':any
+        }>
+    }>;
 
     
 
@@ -316,6 +328,89 @@ export class CreateTestServiceAdapter {
             this.vm.examinationClassSectionList.push(tempExamination);
         });
         this.vm.selectedExamination = this.vm.examinationClassSectionList[0];
+    }
+
+
+    //Get Test and Subject Details New
+    getTestAndSubjectDetailsNew(): void {
+        
+        this.vm.isLoading = true;
+        this.makeDataReadyForGet();
+
+        let totalNumberOfListRequired = this.classListForTest.length;
+
+        let request_subject_data = {
+
+            'parentSession': [this.vm.user.activeSchool.currentSessionDbId],
+            'parentSchool': [this.vm.user.activeSchool.dbId],
+            'parentClass__in': this.classListForTest.join(','),
+            'parentDivision__in': this.sectionListForTest.join(','),
+
+        }
+
+        Promise.all([
+            this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject,request_subject_data)
+        ]).then(value =>{
+
+            this.commonSubjectList = [];
+
+            value[0].forEach(item => {
+
+                var subIdx = this.commonSubjectList.findIndex(sub => sub.subjectId === item.parentSubject);
+
+                let tempClass = {
+                    'className' : this.getClassName(item.parentClass),
+                    'classId' : item.parentClass
+                }
+
+                let tempSection = {
+                    'sectionName' : this.getSectionName(item.parentDivision),
+                    'sectionId'  : item.parentDivision
+                }
+
+                let tempClassList = [];  tempClassList.push(tempClass);
+                let tempSectionList = [];  tempSectionList.push(tempSection);
+
+
+
+                if(subIdx != -1)
+                {
+                    this.commonSubjectList[subIdx].classList.push(tempClass);
+                    this.commonSubjectList[subIdx].sectionList.push(tempSection);
+                }
+                else
+                {
+                    let tempSub = {
+                        'subjectName' : this.getSubjectName(item.parentSubject),
+                        'subjectId' : item.parentSubject,
+                        'classList' : tempClassList,
+                        'sectionList' : tempSectionList
+
+                    }
+                    this.commonSubjectList.push(tempSub);
+                }
+
+                
+            });
+
+            var findOne = this.commonSubjectList.findIndex(item => item.classList.length != totalNumberOfListRequired);
+
+            if(findOne === -1)
+            {
+                this.getTestAndSubjectDetails();
+            }
+            else
+            {
+                alert("Selected classes and section have different subject");
+                this.vm.isLoading = false;
+                return ;
+            }
+
+        },
+        error =>{
+            this.vm.isLoading = false;
+        })
+
     }
 
     //Get Test And Subject Details
