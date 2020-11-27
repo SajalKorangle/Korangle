@@ -77,3 +77,14 @@ input {
 .example-full-width {
     width: 100%;
 }*/
+
+.lowOpacity{
+    opacity: 0.2;
+}
+.normalOpacity{
+    opacity: 1;
+}
+
+.lowOpacity .override{
+    opacity: 1;
+}

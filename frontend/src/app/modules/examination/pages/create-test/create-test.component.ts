@@ -12,6 +12,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import { MatLineSetter } from '@angular/material';
 import { StudentService } from 'app/services/modules/student/student.service';
 import { SubjectService } from 'app/services/modules/subject/subject.service';
+import { temporaryDeclaration } from '@angular/compiler/src/compiler_util/expression_converter';
 
 @Component({
     selector: 'create-test',
@@ -30,6 +31,7 @@ export class CreateTestComponent implements OnInit {
 
     newTestList : Array<{
         'deleted':boolean,
+        'parentExamination':any,
         'subjectId':any,
         'subjectName':any,
         'testType':any,
@@ -42,6 +44,28 @@ export class CreateTestComponent implements OnInit {
             'sectionList': Array<{
                 'sectionId' : any,
                 'sectionName' : any,
+                'testId':any,
+            }>
+        }>
+    }>;
+
+
+    templateTestList : Array<{
+        'deleted':boolean,
+        'parentExamination':any,
+        'subjectId':any,
+        'subjectName':any,
+        'testType':any,
+        'newTestType' :any,
+        'maximumMarks':any,
+        'newMaximumMarks' :any,
+        'classList': Array<{
+            'classId' : any,
+            'className' : any,
+            'sectionList': Array<{
+                'sectionId' : any,
+                'sectionName' : any,
+                'testId':any,
             }>
         }>
     }>;
@@ -153,18 +177,93 @@ export class CreateTestComponent implements OnInit {
     }
 
     //This function is used to create a basic test template for all subjects in the selected class and section
-    createBasicTestForAllSubj()
+    createTestFromTemplate()
     {   
         console.log("Basic Test creation called...");
+        this.newTestList = [];
         
-        this.selectedDate = this.formatDate(new Date(),'');
-    
-        for(let i=0;i<this.subjectList.length;i++)
-        {
-            this.selectedSubject = this.subjectList[i];
-            this.serviceAdapter.createTest();
+        //this.selectedDate = this.formatDate(new Date(),'');
+
+        for(let i=0;i<this.serviceAdapter.classListForTest.length;i++)
+        {   
+            this.subjectList.forEach(sub => {
+
+                let test = {
+                    'id': null,
+                    'parentExamination': this.selectedExamination.id,
+                    'parentClass': this.serviceAdapter.classListForTest[i],
+                    'parentDivision':this.serviceAdapter.sectionListForTest[i],
+                    'parentSubject': sub.id,
+                    'startTime':"2019-07-01T11:30:00+05:30",
+                    'endTime':"2019-07-01T13:30:00+05:30",
+                    'testType': null,
+                    'maximumMarks': 100,
+                };
+                
+
+                var subIdx = this.newTestList.findIndex(sub =>sub.subjectId === test.parentSubject && sub.testType === test.testType && sub.maximumMarks === test.maximumMarks);
+
+                var classIdx = -1, sectionIdx = -1;
+
+                if(subIdx != -1)
+                {
+                    classIdx = this.newTestList[subIdx].classList.findIndex(cl => cl.classId === test.parentClass);
+
+                    if(classIdx != -1)
+                    {
+                        sectionIdx = this.newTestList[subIdx].classList[classIdx].sectionList.findIndex(sec => sec.sectionId === test.parentDivision);
+                    }
+                }
+
+
+                let tempSection = {
+                    'sectionName' : this.serviceAdapter.getSectionName(test.parentDivision),
+                    'sectionId' : test.parentDivision,
+                    'testId' : test.id,
+                   
+                }
+
+                let tempSectionList = [];
+                tempSectionList.push(tempSection);
+
+
+                let tempClass = {
+                    'className' : this.serviceAdapter.getClassName(test.parentClass),
+                    'classId' : test.parentClass,
+                    'sectionList':tempSectionList,
+                }
+                let tempClassList = [];
+                tempClassList.push(tempClass);
+
+                let tempSubject = {
+                    'parentExamination' : test.parentExamination,
+                    'deleted':false,
+                    'subjectId':test.parentSubject,
+                    'subjectName':this.serviceAdapter.getSubjectName(test.parentSubject),
+                    'testType':test.testType,
+                    'newTestType' :test.testType,
+                    'maximumMarks':test.maximumMarks,
+                    'newMaximumMarks' :test.maximumMarks,
+                    'classList' : tempClassList,
+                }
+
+                if(subIdx === -1)
+                {
+                    this.newTestList.push(tempSubject);
+                }
+                else if(classIdx === -1)
+                {
+                    this.newTestList[subIdx].classList.push(tempClass);
+                }
+                else if(sectionIdx === -1)
+                {
+                    this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
+                }
+
+
+            });
         }
-        this.serviceAdapter.getTestAndSubjectDetails();
+        
 
     }
 
@@ -173,9 +272,106 @@ export class CreateTestComponent implements OnInit {
     {
         console.log("Subject wise test creation called...");
 
-        this.selectedDate = this.formatDate(new Date(),'');
+        // this.selectedDate = this.formatDate(new Date(),'');
 
-        this.serviceAdapter.createTest();
+        if (this.selectedSubject === null) {
+            alert('Subject should be selected');
+            return;
+        }
+
+        
+
+        if (this.selectedTestType === 0) {
+            this.selectedTestType = null;
+        }
+
+        if (!this.serviceAdapter.isOnlyGrade(this.selectedSubject.id)
+            && (!this.selectedMaximumMarks || this.selectedMaximumMarks < 1)) {
+            alert('Invalid Maximum Marks');
+            return;
+        }
+        
+        //this.selectedDate = this.formatDate(new Date(),'');
+
+        for(let i=0;i<this.serviceAdapter.classListForTest.length;i++)
+        {   
+
+
+                let test = {
+                    'id': null,
+                    'parentExamination': this.selectedExamination.id,
+                    'parentClass': this.serviceAdapter.classListForTest[i],
+                    'parentDivision':this.serviceAdapter.sectionListForTest[i],
+                    'parentSubject': this.selectedSubject.id,
+                    'startTime':"2019-07-01T11:30:00+05:30",
+                    'endTime':"2019-07-01T13:30:00+05:30",
+                    'testType': this.selectedTestType,
+                    'maximumMarks': this.selectedMaximumMarks,
+                };
+                
+
+                var subIdx = this.newTestList.findIndex(sub =>sub.subjectId === test.parentSubject && sub.testType === test.testType && sub.maximumMarks === test.maximumMarks);
+
+                var classIdx = -1, sectionIdx = -1;
+
+                if(subIdx != -1)
+                {
+                    classIdx = this.newTestList[subIdx].classList.findIndex(cl => cl.classId === test.parentClass);
+
+                    if(classIdx != -1)
+                    {
+                        sectionIdx = this.newTestList[subIdx].classList[classIdx].sectionList.findIndex(sec => sec.sectionId === test.parentDivision);
+                    }
+                }
+
+
+                let tempSection = {
+                    'sectionName' : this.serviceAdapter.getSectionName(test.parentDivision),
+                    'sectionId' : test.parentDivision,
+                    'testId' : test.id,
+                   
+                }
+
+                let tempSectionList = [];
+                tempSectionList.push(tempSection);
+
+
+                let tempClass = {
+                    'className' : this.serviceAdapter.getClassName(test.parentClass),
+                    'classId' : test.parentClass,
+                    'sectionList':tempSectionList,
+                }
+                let tempClassList = [];
+                tempClassList.push(tempClass);
+
+                let tempSubject = {
+                    'parentExamination' : test.parentExamination,
+                    'deleted':false,
+                    'subjectId':test.parentSubject,
+                    'subjectName':this.serviceAdapter.getSubjectName(test.parentSubject),
+                    'testType':test.testType,
+                    'newTestType' :test.testType,
+                    'maximumMarks':test.maximumMarks,
+                    'newMaximumMarks' :test.maximumMarks,
+                    'classList' : tempClassList,
+                }
+
+                if(subIdx === -1)
+                {
+                    this.newTestList.push(tempSubject);
+                }
+                else if(classIdx === -1)
+                {
+                    this.newTestList[subIdx].classList.push(tempClass);
+                }
+                else if(sectionIdx === -1)
+                {
+                    this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
+                }
+
+
+            
+        }
     }
 
     //Update maximum Marks of all the test at once

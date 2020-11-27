@@ -27,6 +27,10 @@ export class CreateTestServiceAdapter {
             }>;
     classListForTest :any;
     sectionListForTest :any;
+
+    uniqueClassList :any;
+    uniqueSetionList :any;
+
     commonSubjectList :Array<{
         'subjectId':any,
         'subjectName':any,
@@ -39,6 +43,11 @@ export class CreateTestServiceAdapter {
             'sectionId':any
         }>
     }>;
+
+
+    toBeDeletedTestList:any = [];
+
+    copyNewTestList: any= [];
 
     
 
@@ -365,7 +374,7 @@ export class CreateTestServiceAdapter {
 
                 let tempSection = {
                     'sectionName' : this.getSectionName(item.parentDivision),
-                    'sectionId'  : item.parentDivision
+                    'sectionId'  : item.parentDivision,
                 }
 
                 let tempClassList = [];  tempClassList.push(tempClass);
@@ -392,6 +401,8 @@ export class CreateTestServiceAdapter {
 
                 
             });
+            this.populateSubjectList();
+
 
             var findOne = this.commonSubjectList.findIndex(item => item.classList.length != totalNumberOfListRequired);
 
@@ -481,6 +492,7 @@ export class CreateTestServiceAdapter {
                 let tempSection = {
                     'sectionName' : this.getSectionName(test.parentDivision),
                     'sectionId' : test.parentDivision,
+                    'testId' : test.id,
                    
                 }
 
@@ -497,6 +509,7 @@ export class CreateTestServiceAdapter {
                 tempClassList.push(tempClass);
 
                 let tempSubject = {
+                    'parentExamination' : test.parentExamination,
                     'deleted':false,
                     'subjectId':test.parentSubject,
                     'subjectName':this.getSubjectName(test.parentSubject),
@@ -533,6 +546,11 @@ export class CreateTestServiceAdapter {
 
             console.log("Test listed created in nested fashion...");
             console.log(this.vm.newTestList);
+            this.copyNewTestList = this.vm.newTestList;
+            if(this.vm.newTestList.length === 0)
+            {
+                this.vm.createTestFromTemplate();
+            }
 
             
 
@@ -561,7 +579,6 @@ export class CreateTestServiceAdapter {
                 this.addTestListToExaminationList(value[0]);
                 this.addStudentTestListToExaminationList(value2[0], true);
                 this.addStudentSubjectListToExaminationList(value2[1]);
-                this.populateSubjectList();
                 this.vm.selectedSubject = null;
                 this.vm.selectedTestType = null;
                 this.vm.showTestDetails = true;
@@ -619,28 +636,24 @@ export class CreateTestServiceAdapter {
 
     populateSubjectList(): void {
         this.vm.subjectList = [];
-        this.classSubjectList.forEach(item => {
+        this.commonSubjectList.forEach(item => {
             let tempSubject = {
-                'id': item.parentSubject,
-                'name': this.getSubjectName(item.parentSubject),
+                'id': item.subjectId,
+                'name': item.subjectName,
             };
             this.vm.subjectList.push(tempSubject);
         });
     }
 
-
-    //Create Test
-    createTest(): void {
+    //Create Test New
+    createTestNew(parentClass:any, parentDivision:any): void {
 
         if (this.vm.selectedSubject === null) {
             alert('Subject should be selected');
             return;
         }
 
-        if (this.vm.selectedDate === null) {
-            alert('Date should be selected');
-            return;
-        }
+        
 
         if (this.vm.selectedTestType === 0) {
             this.vm.selectedTestType = null;
@@ -657,6 +670,71 @@ export class CreateTestServiceAdapter {
         }
 
         let testAlreadyAdded = false;
+
+        //Logic to check for test already or not...
+
+
+        if (testAlreadyAdded) {
+            alert('Test Already created for this subject and type');
+            return;
+        }
+
+        this.vm.isLoading = true;
+
+        let data = {
+            'parentExamination': this.vm.selectedExamination.id,
+            'parentClass': parentClass,
+            'parentDivision':parentDivision,
+            'parentSubject': this.vm.selectedSubject.id,
+            'startTime':"2019-07-01T11:30:00+05:30",
+            'endTime':"2019-07-01T13:30:00+05:30",
+            'testType': this.vm.selectedTestType,
+            'maximumMarks': this.vm.selectedMaximumMarks,
+        };
+
+
+        Promise.all([
+            this.vm.examinationService.createObject(this.vm.examinationService.test_second, data),
+        ]).then(value => {
+            this.addTestToNewTestList(value[0]);
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
+    }
+    //Create Test
+    createTest(): void {
+
+        if (this.vm.selectedSubject === null) {
+            alert('Subject should be selected');
+            return;
+        }
+
+        
+
+        if (this.vm.selectedTestType === 0) {
+            this.vm.selectedTestType = null;
+        }
+
+        if (!this.isOnlyGrade(this.vm.selectedSubject.id)
+            && (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)) {
+            alert('Invalid Maximum Marks');
+            return;
+        }
+
+        if (this.isOnlyGrade(this.vm.selectedSubject.id)) {
+            this.vm.selectedMaximumMarks = 100;
+        }
+
+        let testAlreadyAdded = false;
+
+        
+
+        
+
+
+
         this.vm.selectedExamination.selectedClass.selectedSection.testList.every(item => {
             if (item.parentSubject == this.vm.selectedSubject.id && item.testType == this.vm.selectedTestType) {
                 testAlreadyAdded = true;
@@ -720,6 +798,70 @@ export class CreateTestServiceAdapter {
     getDateTime(selectedDate: any, selectedTime: any): any {
         return selectedDate+'T'+selectedTime+':00+05:30';
     }
+
+
+    addTestToNewTestList(test:any): void {
+
+        var subIdx = this.vm.newTestList.findIndex(sub =>sub.subjectId === test.parentSubject && sub.testType === test.testType && sub.maximumMarks === test.maximumMarks);
+
+                var classIdx = -1, sectionIdx = -1;
+
+                if(subIdx != -1)
+                {
+                    classIdx = this.vm.newTestList[subIdx].classList.findIndex(cl => cl.classId === test.parentClass);
+
+                    if(classIdx != -1)
+                    {
+                        sectionIdx = this.vm.newTestList[subIdx].classList[classIdx].sectionList.findIndex(sec => sec.sectionId === test.parentDivision);
+                    }
+                }
+
+
+                let tempSection = {
+                    'sectionName' : this.getSectionName(test.parentDivision),
+                    'sectionId' : test.parentDivision,
+                    'testId' : test.id,
+                   
+                }
+
+                let tempSectionList = [];
+                tempSectionList.push(tempSection);
+
+
+                let tempClass = {
+                    'className' : this.getClassName(test.parentClass),
+                    'classId' : test.parentClass,
+                    'sectionList':tempSectionList,
+                }
+                let tempClassList = [];
+                tempClassList.push(tempClass);
+
+                let tempSubject = {
+                    'parentExamination' : test.parentExamination,
+                    'deleted':false,
+                    'subjectId':test.parentSubject,
+                    'subjectName':this.getSubjectName(test.parentSubject),
+                    'testType':test.testType,
+                    'newTestType' :test.testType,
+                    'maximumMarks':test.maximumMarks,
+                    'newMaximumMarks' :test.maximumMarks,
+                    'classList' : tempClassList,
+                }
+
+                if(subIdx === -1)
+                {
+                    this.vm.newTestList.push(tempSubject);
+                }
+                else if(classIdx === -1)
+                {
+                    this.vm.newTestList[subIdx].classList.push(tempClass);
+                }
+                else if(sectionIdx === -1)
+                {
+                    this.vm.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
+                }
+    }
+    
 
     addTestToTestList(test: any): void {
         let tempTest = {};
@@ -797,6 +939,22 @@ export class CreateTestServiceAdapter {
         return result;
     }
 
+
+    //Reset the test list view if not updated
+
+    resetList(): void {
+
+        this.getTestAndSubjectDetails();
+        
+    }
+
+    //Delete Test New
+    deleteTestNew(test: any, index: any): void {
+
+        this.vm.isLoading = true;
+        test.deleted =true;
+        this.vm.isLoading = false;
+    }
     //Delete Test
     deleteTest(test: any): void {
         this.vm.isLoading = true;
@@ -826,6 +984,11 @@ export class CreateTestServiceAdapter {
         }, error => {
             this.vm.isLoading = false;
         });*/
+    }
+
+    //Delete test and update the backend
+    deleteAndUpdate(): void {
+
     }
 
     prepareStudentTestDataToRemove(test): any {
@@ -858,6 +1021,107 @@ export class CreateTestServiceAdapter {
                 }
                 return true;
             });
+    }
+
+    //Update Test List New
+    updateTestNew(): void {
+
+        this.vm.isLoading = true;
+        //Update the test list if any value changed in any of the test from test list
+        this.vm.newTestList.forEach(test => {
+
+            test.classList.forEach(cl => {
+            
+                cl.sectionList.forEach(sec => {
+                    
+                    let data = {
+                        'id': sec.testId,
+                        'parentExamination': test.parentExamination,
+                        'parentClass': cl.classId,
+                        'parentDivision': sec.sectionId,
+                        'parentSubject': test.subjectId,
+                        'startTime': "2019-07-01T11:30:00+05:30",
+                        'endTime':  "2019-07-01T13:30:00+05:30",
+                        'testType': test.newTestType,
+                        'maximumMarks': test.newMaximumMarks,
+                    };
+
+                    //if test id is null that means it is from template and has to be created in backend
+                    if(data.id === null)
+                    {       
+                        if(test.deleted)
+                        {
+                            console.log("delted from template");
+                            this.getTestAndSubjectDetails();
+                        }
+
+                        else
+                        {
+                            console.log("id is null so test is being created");
+                        
+                            Promise.all([
+                                this.vm.examinationService.createObject(this.vm.examinationService.test_second, data),
+                            ]).then(value => {
+                                this.getTestAndSubjectDetails();
+                                this.vm.isLoading = false;
+                                this.vm.selectedMaximumMarks = null;
+                                
+                            }, error => {
+                                this.vm.isLoading = false;
+                            });
+                        }
+                        
+                        
+                    }
+                    
+                    //if deleted
+                    else if(test.deleted)
+                    {   
+                        console.log("A delete request for");
+                        console.log(test);
+                        Promise.all([
+                            this.vm.examinationService.deleteObject(this.vm.examinationService.test_second, data)
+                        ]).then(value => {
+                            this.vm.isLoading = false;
+                            console.log("Deleted Test");
+                            console.log(value[0]);
+                            this.getTestAndSubjectDetails();
+                        },error =>{
+                            console.log("Delete Test failed");
+                            this.vm.isLoading =false;
+                        })
+                    }
+
+                    //if updated
+                    else if((test.newMaximumMarks != test.maximumMarks) || (test.newTestType != test.testType))
+                    {
+                        Promise.all([
+                            this.vm.examinationService.updateObject(this.vm.examinationService.test_second, data)
+                        ]).then(value => {
+
+                            this.vm.isLoading = false;
+                            console.log("Test Updated")
+                            this.getTestAndSubjectDetails();
+                        }, error => {
+                            this.vm.isLoading = false;
+                        });
+                    }
+
+            
+                    
+                });
+            });
+            
+
+            
+
+           
+        })
+
+        this.vm.isLoading = false;
+
+
+
     }
 
     // Update Test
