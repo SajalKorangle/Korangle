@@ -13,6 +13,7 @@ import { SmsService } from '../../../../services/modules/sms/sms.service';
 import {NotificationService} from "../../../../services/modules/notification/notification.service";
 import {UserService} from "../../../../services/modules/user/user.service";
 import { RecordAttendanceServiceAdapter } from "./record-attendance.service.adapter";
+import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 
 @Component({
   selector: 'record-attendance',
@@ -24,6 +25,7 @@ import { RecordAttendanceServiceAdapter } from "./record-attendance.service.adap
         NotificationService,
         SmsService,
         UserService,
+        AttendanceService,
     ],
 })
 
@@ -66,7 +68,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     studentList :any;
 
-    selectedSentType = 'NOTIFICATION';
+    selectedSentType :any;
     smsBalance = 0;
     
     sentUpdateToList = [
@@ -74,7 +76,7 @@ export class RecordAttendanceComponent implements OnInit {
         'Only Absent Students'
     ];
 
-    selectedSentUpdateTo = 'Only Absent Students';
+    selectedSentUpdateTo :any;
 
     notif_usernames = [];
 
@@ -87,6 +89,7 @@ export class RecordAttendanceComponent implements OnInit {
                  public notificationService: NotificationService,
                  public smsService: SmsService,
                  public userService: UserService,
+                 public attendanceNewService: AttendanceService
                  ) { }
 
     changeSelectedSectionToFirst(): void {
@@ -113,8 +116,11 @@ export class RecordAttendanceComponent implements OnInit {
         Promise.all([
             this.attendanceService.getAttendancePermissionList(request_attendance_permission_list_data, this.user.jwt),
             this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
-            this.serviceAdapter.initializeAdapter(this)
+            this.serviceAdapter.initializeAdapter(this),
+            this.serviceAdapter.initializeData()
         ]).then(value => {
+            // console.log(this.selectedSentUpdateTo);
+            // console.log(this.selectedSentType);
             this.isInitialLoading = false;
             this.initializeClassSectionStudentList(value[0], value[1]);
         }, error => {

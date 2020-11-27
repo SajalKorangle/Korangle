@@ -5,7 +5,7 @@ export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
 
     constructor() {}
-
+    fl:boolean = true;
     // Data
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
@@ -13,6 +13,28 @@ export class RecordAttendanceServiceAdapter {
     }
 
     initializeData(): void {
+        this.fl = true;
+        Promise.all([
+            this.vm.attendanceNewService.getObjectList(this.vm.attendanceNewService.attendance_settings, {})
+        ]).then(value => {
+            if(value[0].length == 0)
+                this.fl = true;
+            else{
+                value[0].forEach(element => {
+                    if(element.parentSchool == this.vm.user.activeSchool.dbId){
+                        this.fl = false;
+                        this.vm.selectedSentType = element.sentUpdateType;
+                        this.vm.selectedSentUpdateTo = element.sentUpdateToType;
+                    }
+                });
+            }
+            if(this.fl == true){
+                this.vm.selectedSentType = 'SMS';
+                this.vm.selectedSentUpdateTo = 'All Students';
+            }
+        }, error => {
+            this.vm.isInitialLoading = false;
+        });
     }
 
     fetchGCMDevices: any = (studentList: any) => {
