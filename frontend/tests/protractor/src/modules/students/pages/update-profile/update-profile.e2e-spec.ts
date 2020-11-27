@@ -10,7 +10,6 @@ describe('Students -> Update Profile', () => {
 
 
     it('Student : Update Profile', async () => {
-        let node, nodes;
 
         // Start Backend Server
         startBackendServer(getFixtureFiles('modules/students/pages/update-profile/update-profile.json'));
@@ -31,11 +30,8 @@ describe('Students -> Update Profile', () => {
         await inputElement.type('Shujalpur');
 
         // Click on UPDATE button
-        node = await page.evaluate(() => {
-            nodes = document.evaluate('//button[@type=\'submit\']', document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
-            node = nodes.iterateNext();
-            node.click();
-        });
+        const [updateButton] = await page.$x('//button[@type=\'submit\']');
+        await updateButton.click();
 
         // Checking update successful by dialog success message
         page.on('dialog', async dialog => {
