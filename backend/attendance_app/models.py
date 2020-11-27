@@ -96,10 +96,12 @@ class AttendanceSettings(models.Model):
     SMS_UPDATE = 'SMS'
     NOTIFICATION_UPDATE = 'NOTIFICATION'
     NOTIFSMS_UPDATE = 'NOTIF./SMS'
+    NO_UPDATE = 'NULL'
     SENTUPDATE_CHOICES = [
         (SMS_UPDATE, 'SMS'),
         (NOTIFICATION_UPDATE, 'NOTIFICATION'),
         (NOTIFSMS_UPDATE, 'NOTIF./SMS'),
+        (NO_UPDATE, 'NULL')
     ]
 
     sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=SMS_UPDATE, verbose_name='sentUpdateType')

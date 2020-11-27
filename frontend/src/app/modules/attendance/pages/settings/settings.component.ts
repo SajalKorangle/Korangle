@@ -19,6 +19,7 @@ export class SettingsComponent{
     
     user: any;
     sentUpdateList = [
+        'NULL',
         'SMS',
         'NOTIFICATION',
         'NOTIF./SMS',

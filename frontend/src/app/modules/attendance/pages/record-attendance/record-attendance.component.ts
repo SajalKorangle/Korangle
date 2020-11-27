@@ -81,7 +81,7 @@ export class RecordAttendanceComponent implements OnInit {
     notif_usernames = [];
 
     serviceAdapter: RecordAttendanceServiceAdapter
-
+    
     constructor (private attendanceService: AttendanceOldService,
                  private studentService: StudentOldService,
                  private excelService: ExcelService,
@@ -89,7 +89,7 @@ export class RecordAttendanceComponent implements OnInit {
                  public notificationService: NotificationService,
                  public smsService: SmsService,
                  public userService: UserService,
-                 public attendanceNewService: AttendanceService
+                 public attendanceNewService: AttendanceService,
                  ) { }
 
     changeSelectedSectionToFirst(): void {
@@ -276,7 +276,11 @@ export class RecordAttendanceComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
-        this.notifyParents();
+        let currentDate = new Date();
+        if(this.selectedSentType != 'NULL'  && this.by == 'date' && this.startDate == this.formatDate(currentDate, '')){
+            console.log('Update Process Started');
+            // this.notifyParents();
+        }
     }
 
     prepareStudentAttendanceStatusListData(): any {
