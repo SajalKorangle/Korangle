@@ -36,7 +36,7 @@ export class GenerateGoshwaraServiceAdapter {
         return tempObject;
     }
 
-    //initialize data
+    // initialize data
     initializeData(): void {
         this.vm.isLoading = true;
 
@@ -67,7 +67,7 @@ export class GenerateGoshwaraServiceAdapter {
                 };
 
                 Promise.all([
-                    this.vm.classService.getClassList(this.vm.user.jwt),
+                    this.vm.classService.getObjectList(this.vm.classService.classs,{}),
                     // this.vm.classOldService.getSectionList(this.vm.user.jwt),
                     this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
                     this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
@@ -165,7 +165,7 @@ export class GenerateGoshwaraServiceAdapter {
             this.studentList.filter(student => {
                 return student.parentTransferCertificate === null;
             }).forEach(student => {
-                if (student.classDbId === classs.dbId) {
+                if (student.classDbId === classs.id) {
                     tempClass['studentList'].push(student);
                 }
             });
@@ -186,7 +186,7 @@ export class GenerateGoshwaraServiceAdapter {
             'subjectList': [],
             'schoolList': [this.vm.user.activeSchool.dbId],
             'employeeList': [],
-            'classList': [this.vm.selectedClass.dbId],
+            'classList': [this.vm.selectedClass.id],
             'sectionList': [1],
             'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             'mainSubject': [],
@@ -216,7 +216,7 @@ export class GenerateGoshwaraServiceAdapter {
 
             let request_class_test_data = {
                 'parentExamination__in': this.getExaminationIdList(),
-                'parentClass': this.vm.selectedClass.dbId,
+                'parentClass': this.vm.selectedClass.id,
                 'parentDivision': 1,
                 'parentSubject__in':this.classSubjectList.map(a => a.parentSubject),
             };

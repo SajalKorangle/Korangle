@@ -1,0 +1,22 @@
+[
+	{ "model": "student_app.student", "pk": 1, "fields": { "name": "Sanjay Sharma" , "fathersName": "Jeevan Sharma", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 2, "fields": { "name": "Aditi Musunur" , "fathersName": "Pratap Musunur", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 3, "fields": { "name": "Advitiya Sujeet" , "fathersName": "Mani Sujeet", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 4, "fields": { "name": "Alagesan Poduri" , "fathersName": "Sam Poduri", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 5, "fields": { "name": "Amrish Ilyas" , "fathersName": "Om Ilyas", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 6, "fields": { "name": "Aprativirya Seshan" , "fathersName": "Gagan Seshan", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 7, "fields": { "name": "Asvathama Ponnada" , "fathersName": "Drona Ponnada", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 8, "fields": { "name": "Avantas Ghosal" , "fathersName": "Devashish Ghosal", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 9, "fields": { "name": "Avidosa Vaisakhi" , "fathersName": "Mrinal Vaisakhi", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 10, "fields": { "name": "Barsati Sandipa" , "fathersName": "Sandipa Sandipa", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 11, "fields": { "name": "Debasis Sundhararajan" , "fathersName": "Arnab Sundhararajan", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 12, "fields": { "name": "Devasru Subramanyan" , "fathersName": "Chaitanya Subramanyan", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 13, "fields": { "name": "Dharmadhrt Ramila" , "fathersName": "Farsi Ramila", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 14, "fields": { "name": "Dhritiman Salim" , "fathersName": "Tipu Salim", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 15, "fields": { "name": "Gopa Trilochana" , "fathersName": "Satya Trilochana", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 16, "fields": { "name": "Hardeep Suksma" , "fathersName": "Pradeep Suksma", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 17, "fields": { "name": "Jayadev Mitali" , "fathersName": "Biswas Mitali", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 18, "fields": { "name": "Jitendra Choudhary" , "fathersName": "Neeraj Choudhary", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 19, "fields": { "name": "Kalyanavata Veerender" , "fathersName": "Sehwag Veerender", "parentSchool": 1 } },
+	{ "model": "student_app.student", "pk": 20, "fields": { "name": "Naveen Tikaram" , "fathersName": "Pawan Tikaram", "parentSchool": 1 } }
+]

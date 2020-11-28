@@ -27,7 +27,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -39,6 +38,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
+TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
 
 # Application definition
 
@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+
+    'test_without_migrations',
 
     'school_app',
     'class_app',
@@ -69,11 +71,9 @@ INSTALLED_APPS = [
     'salary_app',
     'user_app',
     'notification_app',
-<<<<<<< HEAD
     'information_app',
-=======
+    'id_card_app',
     'feature_app',
->>>>>>> backend/request_features
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',
@@ -86,6 +86,8 @@ INSTALLED_APPS = [
     'storages',
 
     'push_notifications',
+
+    'django_cleanup.apps.CleanupConfig',
 
 ]
 
@@ -122,7 +124,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'helloworld_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -137,7 +138,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -148,23 +148,22 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-	'DEFAULT_PERMISSION_CLASSES': (
-		'rest_framework.permissions.IsAuthenticated',
-	),
-  'DEFAULT_AUTHENTICATION_CLASSES': (
-    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    # 'rest_framework.authentication.BasicAuthentication',
-    # 'rest_framework.authentication.SessionAuthentication',
-    # 'rest_framework.authentication.TokenAuthentication',
-  )
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+    )
 }
 
 JWT_AUTH = {
-	'JWT_AUTH_HEADER_PREFIX': 'JWT',
-	'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
-	'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -180,7 +179,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
@@ -193,24 +191,15 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static/')
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_STORAGE_BUCKET_NAME = 'korangle'
-AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'korangleplus'
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_SECURE_URLS = False # to use http instead of https
-
 PUSH_NOTIFICATIONS_SETTINGS = {
     "FCM_API_KEY": "AAAAKdpMXv4:APA91bFqo9G8GT8FELpCT7zsDTR9Whu4kZNOyQUaUo-HNqQwe7Jl2MxOLxGO8YPqaaeu_MjVM5uzzfcte7i32bgeXvlZFacSXAhGMFfUrLdzbJim11PyZ7tNmsdaBtaum1ieUHZdrs_3",
 }
 
 # the next monkey patch is necessary if you use dots in the bucket name
 import ssl
-if hasattr(ssl, '_create_unverified_context'):
-   ssl._create_default_https_context = ssl._create_unverified_context
 
+if hasattr(ssl, '_create_unverified_context'):
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -225,29 +214,31 @@ EMAIL_HOST_PASSWORD = 'AqtgnMQN6VuP6cz9KOOX85r1UUCAR7NpH4xychXFJTBr'
 EMAIL_PORT = 587
 
 import sys
-if 'test' in sys.argv:
-	DATABASES = {
-		'default': {
-			'ENGINE': 'django.db.backends.sqlite3',
-			'USER': 'arnava',
-			'NAME': os.path.join(BASE_DIR, 'test_database'),
-			'TEST': {
-				'NAME': 'test_database',
-			},
-		},
-	}
 
-import subprocess
-command = 'git rev-parse --abbrev-ref HEAD'
-proc = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
-(out, err) = proc.communicate()
-current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b").lstrip("'")
-if current_branch != 'master':
-    print('Branch: '+current_branch)
+if 'test' in sys.argv:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
+            'USER': 'arnava',
+            'NAME': os.path.join(BASE_DIR, 'test_database'),
+            'TEST': {
+                'NAME': 'test_database',
+            },
+        },
+    }
+
+import subprocess
+
+command = 'git rev-parse --abbrev-ref HEAD'
+proc = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+(out, err) = proc.communicate()
+current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b").lstrip("'")
+if current_branch != 'master':
+    print('Branch: ' + current_branch)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, current_branch + '_db.sqlite3'),
         }
     }
     if 'test' in sys.argv:
@@ -255,9 +246,25 @@ if current_branch != 'master':
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'USER': 'arnava',
-                'NAME': os.path.join(BASE_DIR, current_branch+'_test_database'),
+                'NAME': os.path.join(BASE_DIR, current_branch + '_test_database'),
                 'TEST': {
-                    'NAME': current_branch+'_test_database',
+                    'NAME': current_branch + '_test_database',
                 },
             },
         }
+
+# AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'korangle'
+if current_branch != 'master':
+    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = 'korangletesting'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_SECURE_URLS = False  # to use http instead of https
+else:
+    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = 'korangleplus'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_SECURE_URLS = False  # to use http instead of https

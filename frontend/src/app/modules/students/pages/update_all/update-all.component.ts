@@ -1,9 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
+import {StudentService} from '../../../../services/modules/student/student.service';
 import { ChangeDetectorRef } from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
+import {DataStorage} from '../../../../classes/data-storage';
+import { UpdateAllServiceAdapter } from './update-all.service.adapter';
+import { PARAMETER_TYPE_LIST } from '../../classes/parameter';
 
 class ColumnHandle {
     name: any;
@@ -61,7 +64,7 @@ const RELIGION_LIST = [
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentOldService, ClassOldService],
+    providers: [StudentOldService, ClassService, StudentService],
 })
 
 export class UpdateAllComponent implements OnInit {
@@ -98,6 +101,10 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Date Of Admission', 'dateOfAdmission', 'date', false, ''), // 26
     ];
 
+    NULL_CONSTANT = null;
+
+    parameter_type_list = PARAMETER_TYPE_LIST;
+
     /* Category Options */
     scSelected = false;
     stSelected = false;
@@ -129,32 +136,20 @@ export class UpdateAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private studentService: StudentOldService,
-                private classService: ClassOldService,
-                private cdRef: ChangeDetectorRef) { }
+    studentParameterList: any[] = [];
+    studentParameterValueList: any[] = [];
+    serviceAdapter: UpdateAllServiceAdapter;
+
+    constructor(public studentOldService: StudentOldService,
+            public studentService: StudentService,
+            public classService: ClassService,
+            public cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        const student_full_profile_request_data = {
-            schoolDbId: this.user.activeSchool.dbId,
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-        const class_section_request_data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-
-        this.isLoading = true;
-        Promise.all([
-            this.classService.getClassSectionList(class_section_request_data, this.user.jwt),
-            this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
-        ]).then(value => {
-            this.isLoading = false;
-            this.initializeClassSectionList(value[0]);
-            this.initializeStudentFullProfileList(value[1]);
-        }, error => {
-            this.isLoading = false;
-        });
-
+        this.serviceAdapter = new UpdateAllServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData()
     }
 
     initializeClassSectionList(classSectionList: any): void {
@@ -182,7 +177,7 @@ export class UpdateAllComponent implements OnInit {
         let sectionObject = null;
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
+                if (sectionDbId === section.id && classDbId === classs.id) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;
@@ -434,7 +429,7 @@ export class UpdateAllComponent implements OnInit {
             } else if (inputType === 'list') {
 
             }
-            this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
+            this.studentOldService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
                 response => {
                     if (response.status === 'success') {
                         student[key] = newValue;
@@ -451,6 +446,14 @@ export class UpdateAllComponent implements OnInit {
                     alert('Server Error: Contact Admin');
                 }
             );
+        }
+    }
+
+    getParameterValue = (student, parameter) => {
+        try {
+            return this.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
+        } catch {
+            return this.NULL_CONSTANT;
         }
     }
 

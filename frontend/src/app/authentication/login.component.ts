@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { User } from '../classes/user';
 import {registerForNotification} from "../classes/common.js";
@@ -6,6 +6,7 @@ import {NotificationService} from "../services/modules/notification/notification
 import {Constants} from "../classes/constants";
 import {environment} from "../../environments/environment";
 import {CommonFunctions} from "../classes/common-functions";
+import {DataStorage} from '@classes/data-storage';
 
 @Component({
     selector: 'app-login-form',
@@ -14,9 +15,9 @@ import {CommonFunctions} from "../classes/common-functions";
     styleUrls: ['./login.component.css'],
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-    @Input() user: User;
+    user: User;
 
     @Output() showFrontPageProgressBar = new EventEmitter();
 
@@ -27,6 +28,10 @@ export class LoginComponent {
 
     constructor(private authenticationService: AuthenticationService,
                 private notificationService: NotificationService) {}
+
+    ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+    }
 
     login() {
         this.isLoading = true;
@@ -54,13 +59,12 @@ export class LoginComponent {
     }
 
     submit() {
-        var elem = document.getElementById('username')
+        const elem = document.getElementById('username');
         if (document.activeElement === elem) {
-            document.getElementById('pass').focus()
-        }
-        else {
+            document.getElementById('pass').focus();
+        } else {
             this.showFrontPageProgressBar.emit('true');
-            this.login()
+            this.login();
         }
 
     }
@@ -79,7 +83,6 @@ export class LoginComponent {
 
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
-        
     }
 
 }

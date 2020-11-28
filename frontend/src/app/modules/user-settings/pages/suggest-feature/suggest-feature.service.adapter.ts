@@ -1,11 +1,11 @@
-
 import {SuggestFeatureComponent} from './suggest-feature.component';
 
 export class SuggestFeatureServiceAdapter {
 
     vm: SuggestFeatureComponent;
 
-    constructor() {}
+    constructor() {
+    }
 
     initializeAdapter(vm: SuggestFeatureComponent): void {
         this.vm = vm;
@@ -18,7 +18,7 @@ export class SuggestFeatureServiceAdapter {
         };
 
         this.vm.isLoading = true;
-        this.vm.featureService.getObjectList(this.vm.featureService.feature,feature_data).then(value => {
+        this.vm.featureService.getObjectList(this.vm.featureService.feature, feature_data).then(value => {
             this.vm.featureList = value;
             this.vm.isLoading = false;
         }, error => {
@@ -34,15 +34,11 @@ export class SuggestFeatureServiceAdapter {
             return;
         }
 
-        if (!this.vm.currentFeature.why || this.vm.currentFeature.why == '') {
-            alert("'Why' should be populated");
+        if (!this.vm.currentFeature.description || this.vm.currentFeature.description == '') {
+            alert('\'Feature Description\' should be populated');
             return;
         }
 
-        if (!this.vm.currentFeature.what || this.vm.currentFeature.what == '') {
-            alert("'What' should be populated");
-            return;
-        }
 
         this.vm.isLoading = true;
 

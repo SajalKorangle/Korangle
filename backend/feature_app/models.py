@@ -20,9 +20,7 @@ class Feature(models.Model):
 
     photo = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True, null=True)
     title = models.TextField(null=False)
-    why = models.TextField(null=False)
-    how = models.TextField(null=True)
-    what = models.TextField(null=False)
+    description = models.TextField(null=False)
 
     class Meta:
         db_table = 'feature'

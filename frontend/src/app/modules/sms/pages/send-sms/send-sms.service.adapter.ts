@@ -54,7 +54,7 @@ export class SendSmsServiceAdapter {
         let student_data = {
             'parentTransferCertificate': 'null__korangle',
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber'
+            'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,rte,gender,newCategoryField,admissionSession'
         };
 
         const sms_count_request_data = {
@@ -70,12 +70,20 @@ export class SendSmsServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {
+                'parentSchool': this.vm.user.activeSchool.dbId,
+                'parameterType': 'FILTER'
+            }),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {
+                'parentStudentParameter__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentStudentParamter__parameterType': 'FILTER'
+            })
         ]).then(value => {
 
             console.log(value);
@@ -86,6 +94,8 @@ export class SendSmsServiceAdapter {
             this.populateStudentList(value[3]);
             this.populateEmployeeList(value[4]);
             this.vm.smsBalance = value[5].count;
+            this.vm.studentParameterList = value[6].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false})), showNone: false, filterFilterValues: ''}));
+            this.vm.studentParameterValueList = value[7]
 
             this.populateClassSectionList();
             this.populateStudentSectionList();
@@ -203,7 +213,7 @@ export class SendSmsServiceAdapter {
         this.classList.forEach(classs => {
             this.sectionList.forEach(section => {
                 if (this.vm.studentSectionList.find(studentSection => {
-                    return studentSection.parentClass == classs.dbId && studentSection.parentDivision == section.id;
+                    return studentSection.parentClass == classs.id && studentSection.parentDivision == section.id;
                     }) != undefined) {
                     this.vm.classSectionList.push(
                         {
@@ -242,7 +252,7 @@ export class SendSmsServiceAdapter {
             }
         });
         this.vm.studentSectionList = this.vm.studentSectionList.sort((a,b) => {
-            return 10*(this.classList.find(item => item.dbId==a.parentClass).orderNumber - this.classList.find(item => item.dbId==b.parentClass).orderNumber)
+            return 10*(this.classList.find(item => item.id==a.parentClass).orderNumber - this.classList.find(item => item.id==b.parentClass).orderNumber)
                 + (this.sectionList.find(item => item.id==a.parentDivision).orderNumber = this.sectionList.find(item => item.id==b.parentDivision).orderNumber);
         });
     }

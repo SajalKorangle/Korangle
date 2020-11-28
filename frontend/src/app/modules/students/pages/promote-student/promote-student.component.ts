@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {SubjectService} from "../../../../services/modules/subject/subject.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
@@ -17,13 +17,15 @@ import {SchoolService} from "./../../../../services/modules/school/school.servic
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ SchoolService, StudentService, ClassOldService, SubjectService, ExaminationService, FeeService ],
+    providers: [ SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
 
     sessionList = [];
     installmentList = INSTALLMENT_LIST;
+
+    STUDENT_LIMITER = 200;
 
     user;
 
@@ -56,7 +58,7 @@ export class PromoteStudentComponent implements OnInit {
 
     constructor (public schoolService : SchoolService,
                  public studentService: StudentService,
-                 public classService: ClassOldService,
+                 public classService: ClassService,
                  public subjectService: SubjectService,
                  public feeService: FeeService,
                  public examinationService: ExaminationService) { }
@@ -96,7 +98,7 @@ export class PromoteStudentComponent implements OnInit {
     handleToSelectedClassChange(value: any): void {
         this.toSelectedClass = value;
         this.newPromotedList.forEach(studentSection => {
-            studentSection.parentClass = this.toSelectedClass.dbId;
+            studentSection.parentClass = this.toSelectedClass.id;
         });
     }
 
@@ -116,7 +118,7 @@ export class PromoteStudentComponent implements OnInit {
 
     selectAllStudentsFromList(): void {
         this.unPromotedStudentList.filter(studentSection => {
-            return studentSection.parentClass == this.fromSelectedClass.dbId
+            return studentSection.parentClass == this.fromSelectedClass.id
                 && studentSection.parentDivision == this.fromSelectedSection.id;
         }).forEach(studentSection => {
             this.addToNewPromotionList(studentSection);
@@ -129,14 +131,14 @@ export class PromoteStudentComponent implements OnInit {
 
     getFilteredStudentSectionListOne(): any {
         return this.studentSectionListOne.filter(studentSection => {
-            return studentSection.parentClass == this.fromSelectedClass.dbId
+            return studentSection.parentClass == this.fromSelectedClass.id
                 && studentSection.parentDivision == this.fromSelectedSection.id;
         });
     }
 
     getFilteredStudentSectionListTwo(): any {
         return this.studentSectionListTwo.filter(studentSection => {
-            return studentSection.parentClass == this.toSelectedClass.dbId
+            return studentSection.parentClass == this.toSelectedClass.id
                 && studentSection.parentDivision == this.toSelectedSection.id;
         });
     }
@@ -151,7 +153,7 @@ export class PromoteStudentComponent implements OnInit {
 
     addToNewPromotionList(studentSection: any): void {
         let tempObject = new StudentSection();
-        tempObject.parentClass = this.toSelectedClass.dbId;
+        tempObject.parentClass = this.toSelectedClass.id;
         tempObject.parentDivision = this.toSelectedSection.id;
         tempObject.parentStudent = studentSection.parentStudent;
         tempObject.parentSession = this.user.activeSchool.currentSessionDbId+1;

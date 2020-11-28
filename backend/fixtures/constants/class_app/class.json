@@ -1,0 +1,18 @@
+[
+	{ "model": "class_app.class", "pk": 1, "fields": {"name": "Class - 12", "orderNumber": 1} },
+	{ "model": "class_app.class", "pk": 2, "fields": {"name": "Class - 11", "orderNumber": 2} },
+	{ "model": "class_app.class", "pk": 3, "fields": {"name": "Class - 10", "orderNumber": 3} },
+	{ "model": "class_app.class", "pk": 4, "fields": {"name": "Class - 9", "orderNumber": 4} },
+	{ "model": "class_app.class", "pk": 5, "fields": {"name": "Class - 8", "orderNumber": 5} },
+	{ "model": "class_app.class", "pk": 6, "fields": {"name": "Class - 7", "orderNumber": 6} },
+	{ "model": "class_app.class", "pk": 7, "fields": {"name": "Class - 6", "orderNumber": 7} },
+	{ "model": "class_app.class", "pk": 8, "fields": {"name": "Class - 5", "orderNumber": 8} },
+	{ "model": "class_app.class", "pk": 9, "fields": {"name": "Class - 4", "orderNumber": 9} },
+	{ "model": "class_app.class", "pk": 10, "fields": {"name": "Class - 3", "orderNumber": 10} },
+	{ "model": "class_app.class", "pk": 11, "fields": {"name": "Class - 2", "orderNumber": 11} },
+	{ "model": "class_app.class", "pk": 12, "fields": {"name": "Class - 1", "orderNumber": 12} },
+	{ "model": "class_app.class", "pk": 13, "fields": {"name": "U.K.G.", "orderNumber": 13} },
+	{ "model": "class_app.class", "pk": 14, "fields": {"name": "L.K.G.", "orderNumber": 14} },
+	{ "model": "class_app.class", "pk": 15, "fields": {"name": "Nursery", "orderNumber": 15} },
+	{ "model": "class_app.class", "pk": 16, "fields": {"name": "Play Group", "orderNumber": 16} }
+]

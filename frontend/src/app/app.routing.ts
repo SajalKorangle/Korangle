@@ -21,6 +21,11 @@ const routes: Routes = [
         // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
     },
     {
+        path: 'id_card',
+        loadChildren: 'app/modules/id-card/id-card.module#IdCardModule',
+        // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
+    },
+    {
         path: 'sms',
         loadChildren: 'app/modules/sms/sms.module#SmsModule',
     },
@@ -98,7 +103,6 @@ const routes: Routes = [
             {path: 'report_card_cbse', loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule'},
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
             {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
-            /*{path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'},*/
             {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
 
         ]

@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-api_version = 'v3.5/'
+api_version = 'v3.6/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,10 +27,8 @@ urlpatterns = [
     url(r'^'+api_version+'subject/', include('subject_app.urls')),
     url(r'^'+api_version+'notification/', include('notification_app.urls')),
     url(r'^'+api_version+'report-card/', include('report_card_app.urls')),
-<<<<<<< HEAD
     url(r'^'+api_version+'information/', include('information_app.urls')),
-=======
+    url(r'^'+api_version+'id-card/', include('id_card_app.urls')),
     url(r'^'+api_version+'feature/', include('feature_app.urls')),
->>>>>>> backend/request_features
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

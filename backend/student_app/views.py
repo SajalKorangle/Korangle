@@ -7,7 +7,7 @@ import json
 
 from common.common_views import CommonView, CommonListView
 from decorators import user_permission, user_permission_new
-from student_app.models import Student, StudentSection
+from student_app.models import Student, StudentSection, StudentParameter, StudentParameterValue
 
 
 def get_error_response(message):
@@ -224,3 +224,25 @@ class StudentSectionView(CommonView, APIView):
 
 class StudentSectionListView(CommonListView, APIView):
     Model = StudentSection
+
+
+########### Student Parameter #############
+
+
+class StudentParameterView(CommonView, APIView):
+    Model = StudentParameter
+
+
+class StudentParameterListView(CommonListView, APIView):
+    Model = StudentParameter
+
+
+########### Student Parameter Value#############
+
+
+class StudentParameterValueView(CommonView, APIView):
+    Model = StudentParameterValue
+
+
+class StudentParameterValueListView(CommonListView, APIView):
+    Model = StudentParameterValue

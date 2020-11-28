@@ -28,7 +28,7 @@
                               [(ngModel)]="message"></textarea>
             </mat-form-field>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <mat-form-field style="margin-top: 23px;">
                 <mat-select placeholder="Send via"
                             [(ngModel)]="selectedSentType">
@@ -104,7 +104,7 @@
                 <mat-option *ngFor="let classSection of classSectionList" style="width: 100%;">
                     <mat-checkbox [(ngModel)]="classSection.selected"
                                   (click)="$event.stopPropagation();">
-                        {{getClassSectionName(classSection.class.dbId,classSection.section.id)}}
+                        {{getClassSectionName(classSection.class.id,classSection.section.id)}}
                     </mat-checkbox>
                 </mat-option>
 
@@ -126,6 +126,146 @@
                       (click)="$event.stopPropagation();">
             Include Alternate Mobile Number
         </mat-checkbox>
+
+        <mat-checkbox [(ngModel)]="invalidmobilenumber"
+                      style="margin-left: 15px;"
+                      (click)="$event.stopPropagation();">
+            Show Invalid Mobile Number
+        </mat-checkbox>
+
+        <!-- Search by student's or father's name -->
+        <br>
+        <mat-form-field>
+            <input matInput
+                   testId="nameFilter"
+                   placeholder="Enter student's name, father's name.."
+                   type="text"
+                   [(ngModel)]="nameFilter">
+        </mat-form-field>
+        <!-- EOF Search by student's or father's name -->
+
+        <!-- Custom Filters -->
+        <ng-container>
+
+            <br/>
+            <button class="btn"
+                    style="padding: 4px 7px"
+                    (click)="showFilters=!showFilters">
+                <ng-container *ngIf="!showFilters">Show Filters</ng-container>
+                <ng-container *ngIf="showFilters">Hide Filters</ng-container>
+            </button><br/>
+
+            <ng-container *ngIf="showFilters">
+
+                <br/>
+                <b>Default Filters</b><br/>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Category Filter -->
+                        <mat-form-field>
+                            <mat-label>Category</mat-label>
+                            <input matInput disabled = true>
+                        </mat-form-field><br>
+                        <mat-checkbox [(ngModel)]="studentFilters.category.sc"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">SC
+                        </mat-checkbox>,
+                        <mat-checkbox [(ngModel)]="studentFilters.category.st"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">ST
+                        </mat-checkbox>,
+                        <mat-checkbox [(ngModel)]="studentFilters.category.obc"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">OBC
+                        </mat-checkbox>,
+                        <mat-checkbox [(ngModel)]="studentFilters.category.general"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">GEN
+                        </mat-checkbox>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Gender Filter -->
+                        <mat-form-field>
+                            <mat-label>Gender</mat-label>
+                            <input matInput disabled = true>
+                        </mat-form-field><br>
+                        <mat-checkbox [(ngModel)]="studentFilters.gender.male"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">M
+                        </mat-checkbox>,
+                        <mat-checkbox [(ngModel)]="studentFilters.gender.female"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">F
+                        </mat-checkbox>,
+                        <mat-checkbox [(ngModel)]="studentFilters.gender.other"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">Other
+                        </mat-checkbox>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Admission Filter -->
+                        <mat-form-field>
+                            <mat-label>Admission</mat-label>
+                            <input matInput disabled = true>
+                        </mat-form-field><br>
+                        <mat-checkbox [(ngModel)]="studentFilters.admission.new"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">New
+                        </mat-checkbox>,
+                        <mat-checkbox [(ngModel)]="studentFilters.admission.old"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">Old
+                        </mat-checkbox>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- RTE Filter -->
+                        <mat-form-field>
+                            <mat-label>RTE</mat-label>
+                            <input matInput disabled = true>
+                        </mat-form-field><br>
+                        <mat-checkbox [(ngModel)]="studentFilters.rte.yes"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">Yes
+                        </mat-checkbox>,
+                        <mat-checkbox [(ngModel)]="studentFilters.rte.no"
+                                      style="margin-right: 5px;"
+                                      (click)="$event.stopPropagation();">No
+                        </mat-checkbox>
+                    </div>
+                </div>
+
+                <div style="border: 1px dotted black; margin: 15px 0px; width: 100%;"></div>
+
+                <b>Custom Filters</b><br/>
+
+                <!-- Other Filters-->
+                <ng-container *ngFor="let parameter of studentParameterList">
+
+                    <mat-form-field>
+                        <mat-label>{{parameter.name}}</mat-label>
+                        <input matInput
+                               type="text"
+                               [(ngModel)]="parameter.filterFilterValues">
+                    </mat-form-field><br/>
+                    <mat-checkbox [(ngModel)]="parameter.showNone"
+                                  style="margin-right: 5px;"
+                                  (click)="$event.stopPropagation();">None
+                    </mat-checkbox>
+                    <mat-checkbox *ngFor="let filter of getFilteredFilterValues(parameter)" [(ngModel)]="filter.show"
+                                  style="margin-right: 5px;"
+                                  (click)="$event.stopPropagation();">{{filter.name}}
+                    </mat-checkbox><br/>
+
+                </ng-container>
+
+                <div style="border: 1px solid black; margin: 15px 0px; width: 100%;"></div>
+
+            </ng-container>
+        </ng-container>
 
         <br>
             Total Students: <i>{{studentSectionList.length}}</i>,

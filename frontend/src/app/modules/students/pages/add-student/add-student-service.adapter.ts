@@ -53,15 +53,16 @@ export class AddStudentServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
             this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{}),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {parentSchool: this.vm.user.activeSchool.dbId}),
         ]).then(value => {
 
             this.vm.classList = value[0];
@@ -73,6 +74,7 @@ export class AddStudentServiceAdapter {
             this.vm.classFilterFeeList = value[6];
             this.vm.busStopFilterFeeList = value[7];
             this.vm.sessionList = value[8]
+            this.vm.studentParameterList = value[9].map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
 
             this.vm.initializeVariable();
 
@@ -81,6 +83,15 @@ export class AddStudentServiceAdapter {
             this.vm.isLoading = false;
         });
 
+    }
+
+    getBankDetails(){
+        if(this.vm.newStudent.bankIfscCode.length < 11){
+            return ;
+        }
+        this.vm.bankService.getDetailsFromIFSCCode(this.vm.newStudent.bankIfscCode.toString()).then(value=>{
+            this.vm.newStudent.bankName = value ;
+        });
     }
 
     createNewStudent(): void {
@@ -218,11 +229,19 @@ export class AddStudentServiceAdapter {
                 });
             });
 
+            this.vm.currentStudentParameterValueList = this.vm.currentStudentParameterValueList.filter(x => {
+                return x.value !== this.vm.nullValue;
+            });
+            this.vm.currentStudentParameterValueList.forEach(x => {
+                x.parentStudent = value.id;
+            });
+
             Promise.all([
                 this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),
                 this.vm.subjectService.createObjectList(this.vm.subjectService.student_subject, student_subject_list),
                 this.vm.examinationService.createObjectList(this.vm.examinationService.student_test, student_test_list),
                 this.vm.feeService.createObjectList(this.vm.feeService.student_fees, student_fee_list),
+                this.vm.studentService.createObjectList(this.vm.studentService.student_parameter_value, this.vm.currentStudentParameterValueList)
             ]).then( valueTwo => {
 
                 alert('Student admitted successfully');

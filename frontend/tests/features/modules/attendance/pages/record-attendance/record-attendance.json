@@ -1,0 +1,16 @@
+[
+  {
+    "statement": "Recording Attendance",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Get Student Attendance List",
+      "Mark the Attendance",
+      "Update the Attendance",
+      "Refresh the page",
+      "Get Student Attendance List",
+      "Confirm the attendance updates done in above steps"
+    ],
+    "testName": "Recording Attendance"
+  }
+]

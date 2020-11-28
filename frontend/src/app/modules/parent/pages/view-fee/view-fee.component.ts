@@ -21,9 +21,9 @@ import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {DataStorage} from "../../../../classes/data-storage";
-import { SchoolService } from 'app/services/modules/school/school.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 declare const $: any;
 
@@ -31,7 +31,7 @@ declare const $: any;
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [SchoolService, FeeService, StudentService, ClassOldService, VehicleOldService, EmployeeService ],
+    providers: [ FeeService, StudentService,ClassService, VehicleOldService, EmployeeService, SchoolService ],
 })
 
 export class ViewFeeComponent implements OnInit {
@@ -76,7 +76,7 @@ export class ViewFeeComponent implements OnInit {
                  public studentService: StudentService,
                  public vehicleService: VehicleOldService,
                  public employeeService: EmployeeService,
-                 public classService: ClassOldService,
+                 public classService : ClassService,
                  private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {

@@ -1,0 +1,3 @@
+[
+	{ "model": "employee_app.employeesessiondetail", "pk": 1, "fields": { "parentEmployee": 1 , "parentSession": 1 } }
+]

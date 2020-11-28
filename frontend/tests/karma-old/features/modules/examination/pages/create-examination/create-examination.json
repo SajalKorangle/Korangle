@@ -1,0 +1,12 @@
+[
+  {
+    "statement": "Add Examination using mock api",
+    "testType": "karma",
+    "testName": "Add Examination"
+  },
+  {
+    "statement": "Try to add examination with already existing name, check examination list still has the same length",
+    "testType": "karma",
+    "testName": "check name already exists"
+  }
+]

@@ -53,7 +53,7 @@ export class PrintFeesCertificateComponent implements OnInit {
 
     getClassAndSectionName(student: any): any {
         let classs = this.classList.find(classs => {
-            return classs.dbId == this.studentSectionList.find(studentSection => {
+            return classs.id == this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == student.id;
             }).parentClass;
         });

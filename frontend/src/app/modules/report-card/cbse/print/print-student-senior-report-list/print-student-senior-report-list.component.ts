@@ -279,7 +279,8 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
 
     getWorkingDays(student: any, termIndex: any): any {
         return this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
-            return termStudentAttendance.parentStudent == student.id;
+            return termStudentAttendance.parentStudent == student.id
+                && termStudentAttendance.status != this.attendance_status_list[2];
         }).length;
     }
 

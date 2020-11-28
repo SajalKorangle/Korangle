@@ -1,0 +1,52 @@
+[
+  {
+    "statement": "Testing populateCurrentLayoutWithEmptyDefaultData function",
+    "testType": "karma",
+    "testName": "Component -> populateCurrentLayoutWithEmptyDefaultData()"
+  },
+  {
+    "statement": "Testing populateCurrentLayoutWithGivenValue function with a given value",
+    "testType": "karma",
+    "testName": "Component -> populateCurrentLayoutWithGivenValue()"
+  },
+  {
+    "statement": "Testing doesCurrentLayoutHasUniqueName function with a non-unique name",
+    "testType": "karma",
+    "testName": "Component -> doesCurrentLayoutHasUniqueName() returns false"
+  },
+  {
+    "statement": "Testing doesCurrentLayoutHasUniqueName function with a unique name",
+    "testType": "karma",
+    "testName": "Component -> doesCurrentLayoutHasUniqueName() returns true"
+  },
+  {
+    "statement": "Testing addToCurrentUserHandleList function with a given value",
+    "testType": "karma",
+    "testName": "Component -> addToCurrentUserHandleList()"
+  },
+  {
+    "statement": "Testing resetCurrentLayout function with no initial data",
+    "testType": "karma",
+    "testName": "Component -> resetCurrentLayout()"
+  },
+  {
+    "statement": "Testing getFieldKeyList function with a given value",
+    "testType": "karma",
+    "testName": "Component -> getFieldKeyList()"
+  },
+  {
+    "statement": "Testing getFilteredParameterList function with a given data",
+    "testType": "karma",
+    "testName": "Component -> getFilteredParameterList()"
+  },
+  {
+    "statement": "Testing getParameter function with a given value",
+    "testType": "karma",
+    "testName": "Component -> getParameter()"
+  },
+  {
+    "statement": "Deleting a layout with mock api",
+    "testType": "karma",
+    "testName": "serviceAdapter -> deleteLayout()"
+  }
+]

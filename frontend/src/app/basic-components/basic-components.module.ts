@@ -10,12 +10,20 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
+import {MatDialogModule} from '@angular/material';
+import {SafePipe} from '../pipes/safe.pipe';
 
 @NgModule({
     declarations: [
         NavbarComponent,
         SidebarComponent,
         LoadingSpinnerComponent,
+        ModalVideoComponent,
+        SafePipe,
+    ],
+    entryComponents: [
+        ModalVideoComponent,
     ],
     imports: [
 
@@ -25,13 +33,14 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
         MatProgressBarModule,
         MatFormFieldModule,
         MatInputModule,
-
+        MatDialogModule,
     ],
     exports: [
 
         NavbarComponent,
         SidebarComponent,
         LoadingSpinnerComponent,
+        ModalVideoComponent,
 
         CommonModule,
         FormsModule,
@@ -39,7 +48,7 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
         MatProgressBarModule,
         MatFormFieldModule,
         MatInputModule,
-
+        MatDialogModule,
     ]
 })
 export class BasicComponentsModule { }

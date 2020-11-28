@@ -37,6 +37,7 @@ export class ViewMarksComponent implements OnInit {
     studentSectionList: any;
 
     testList: any;
+    showSubjectTestList: any;
     studentList: any;
     studentTestList: any;
     classSubjectList: any;
@@ -48,6 +49,9 @@ export class ViewMarksComponent implements OnInit {
     isInitialLoading = false;
 
     isLoading = false;
+    subjectFilterDisplay = false;
+    sortBy = 'rollNumber'
+    sortingOrder = 1 //1: ascending, -1: descending
 
     constructor(public examinationService: ExaminationService,
                 public classService: ClassService,
@@ -65,16 +69,57 @@ export class ViewMarksComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
+    updateSortingParameters(sortparam) {
+        if (this.sortBy === sortparam) {
+            this.sortingOrder = this.sortingOrder === 1 ? -1 : 1;
+        } else
+            this.sortingOrder = 1;
+        this.sortBy = sortparam;
+    }
+
+    showSubjectTestListSwitch(index) {
+        this.showSubjectTestList[index] = !this.showSubjectTestList[index];
+        console.log(this.showSubjectTestList)
+    }
+
+    getFilteredTestList(): any {
+        return this.testList.filter((element, index) => this.showSubjectTestList[index]);
+    }
+
     showSectionName(classSection: any): boolean {
         return this.classSectionList.filter(item => {
             return item.class.id == classSection.class.id;
         }).length > 1;
     }
 
+    SortingComparatorFunction = (a,b)=> {
+        let ret
+        switch (this.sortBy) {
+            case 'rollNumber':
+            case 'rank':
+                ret = a[this.sortBy] - b[this.sortBy]
+                break;
+            case 'name':
+                console.log('name')
+                ret = this.getStudent(a).name.localeCompare(this.getStudent(b).name)
+                break;
+            default:
+                ret = this.getStudentMarks(a, this.sortBy) - this.getStudentMarks(b,this.sortBy)
+        }
+        return ret*this.sortingOrder
+    }
+
     getSortedFilteredStudentSectionList(): any {
-        return this.getFilteredStudentSectionList().sort((a,b) => {
-            return this.getStudentTotalMarks(b) - this.getStudentTotalMarks(a);
-        });
+        let list = this.getFilteredStudentSectionList()  //filtered student result
+        list.sort((a, b) => {   // sort according to rank (maximun marks)
+            return this.getStudentFilteredTotalMarks(b) - this.getStudentFilteredTotalMarks(a);
+        });  
+        list = list.map((element, index) => {   // add rank key studentSelection object
+            element.rank = index + 1;
+            return element;
+        })
+        list.sort(this.SortingComparatorFunction)  // sort according to roll number
+        return list;
     }
 
     getFilteredStudentSectionList(): any {
@@ -96,6 +141,12 @@ export class ViewMarksComponent implements OnInit {
         });
     }
 
+    getFilteredTotalMaximumMarks() {
+        return this.getFilteredTestList().reduce((total, test) => {
+            return total + test.maximumMarks;
+        }, 0);
+    }
+
     getStudentMarks(studentSection: any, test: any): any {
 
         let studentTest = this.studentTestList.find(item => {
@@ -111,8 +162,8 @@ export class ViewMarksComponent implements OnInit {
 
     }
 
-    getStudentTotalMarks(studentSection: any): any {
-        return this.testList.reduce((total, test) => {
+    getStudentFilteredTotalMarks(studentSection: any): any {
+        return this.getFilteredTestList().reduce((total, test) => {
             return total + parseFloat(this.getStudentMarks(studentSection, test));
         }, 0);
     }
@@ -150,10 +201,11 @@ export class ViewMarksComponent implements OnInit {
     downloadList(): void {
 
         let template: any;
+        let maximumMarks = this.getFilteredTotalMaximumMarks();
 
-        let headers = ['Rank', 'Student', 'Roll No.' ];
+        let headers = ['Rank', 'Student', 'Roll No.', `Total(${maximumMarks})` ];
 
-        this.testList.forEach(test => {
+        this.getFilteredTestList().forEach(test => {
             let subjectName = this.getSubject(test).name;
             if (test.testType) {
                 subjectName += ' - '+test.testType;
@@ -171,10 +223,12 @@ export class ViewMarksComponent implements OnInit {
         let count = 0;
         this.getSortedFilteredStudentSectionList().forEach(studentSection => {
             let row = [];
-            row.push(++count);
+            row.push(studentSection.rank);
             row.push(this.getStudent(studentSection).name);
             row.push(studentSection.rollNumber);
-            this.testList.forEach(test => {
+            let marks = this.getStudentFilteredTotalMarks(studentSection);
+            row.push(marks.toString()+` (${((marks*100)/maximumMarks).toFixed(2).toString()})%`);
+            this.getFilteredTestList().forEach(test => {
                 row.push(this.getStudentMarks(studentSection, test));
             });
             template.push(row);

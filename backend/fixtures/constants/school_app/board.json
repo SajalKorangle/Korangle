@@ -1,0 +1,4 @@
+[
+	{ "model": "school_app.board", "pk": 1, "fields": { "name": "M.P. Board" } },
+	{ "model": "school_app.board", "pk": 2, "fields": { "name": "C.B.S.E." } }
+]
