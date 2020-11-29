@@ -344,6 +344,7 @@ export class CreateTestServiceAdapter {
     getTestAndSubjectDetailsNew(): void {
         
         this.vm.isLoading = true;
+        this.vm.enableUpdateButton = false;
         this.makeDataReadyForGet();
 
         let totalNumberOfListRequired = this.classListForTest.length;
@@ -429,7 +430,7 @@ export class CreateTestServiceAdapter {
 
         this.vm.isLoading = true;
         console.log(this.classSectionSubjectList);
-        this.makeDataReadyForGet();
+        
 
         let request_test_data_list = {
             'parentExamination': this.vm.selectedExamination.id,
@@ -669,17 +670,12 @@ export class CreateTestServiceAdapter {
             this.vm.selectedMaximumMarks = 100;
         }
 
-        let testAlreadyAdded = false;
+       
+        
 
-        //Logic to check for test already or not...
 
 
-        if (testAlreadyAdded) {
-            alert('Test Already created for this subject and type');
-            return;
-        }
-
-        this.vm.isLoading = true;
+       
 
         let data = {
             'parentExamination': this.vm.selectedExamination.id,
@@ -691,6 +687,41 @@ export class CreateTestServiceAdapter {
             'testType': this.vm.selectedTestType,
             'maximumMarks': this.vm.selectedMaximumMarks,
         };
+
+
+
+        //Logic to check for test already or not...
+
+        let testAlreadyAdded = false;
+
+        this.vm.newTestList.forEach(test => {
+            if(test.subjectId === data.parentSubject && test.testType === data.testType)
+            {
+                test.classList.forEach(cll => {
+                        if(cll.classId === data.parentClass)
+                        {
+                        cll.sectionList.forEach(secc => {
+                            if(secc.sectionId === data.parentDivision)
+                            {
+                                console.log("a test is found with same parameter...");
+                                console.log(test);
+                                testAlreadyAdded = true;
+                                
+                            }
+                            
+                        }) 
+                        }
+                })
+            }
+        })
+
+        if (testAlreadyAdded) {
+            alert('Similar Test is already in the template');
+            return;
+        }
+
+        this.vm.isLoading = true;
+        
 
 
         Promise.all([
@@ -945,6 +976,7 @@ export class CreateTestServiceAdapter {
     resetList(): void {
 
         this.getTestAndSubjectDetails();
+        this.vm.enableUpdateButton =false;
         
     }
 
@@ -1117,7 +1149,7 @@ export class CreateTestServiceAdapter {
 
            
         })
-
+        this.vm.enableUpdateButton = false;
         this.vm.isLoading = false;
 
 
@@ -1202,11 +1234,53 @@ export class CreateTestServiceAdapter {
                 {
                     this.classListForTest.push(cl.classId);
                     this.sectionListForTest.push(sec.sectionId);
+                    
                 }
             });
         });
+
+        for(let i=0;i<this.classListForTest.length;i++)
+        {
+            this.vm.showSelectedClassAndSection.push({
+                'className':this.getClassName(this.classListForTest[i]),
+                'sectionName':this.getSectionName(this.sectionListForTest[i])
+            })
+        }
+       
     }
 
+
+    findAnyDuplicate(tempTest :any,value:any) : boolean {
+        var ans = false;
+
+       tempTest.classList.forEach(cl => {
+           cl.sectionList.forEach(sec => {
+               this.vm.newTestList.forEach(test => {
+                   if(test.subjectId === tempTest.subjectId && test.testType === value)
+                   {
+                       test.classList.forEach(cll => {
+                            if(cll.classId === cl.classId)
+                            {
+                               cll.sectionList.forEach(secc => {
+                                   if(secc.sectionId === sec.sectionId && secc.testId != sec.testId)
+                                   {
+                                       console.log("a test is found with same parameter...");
+                                       console.log(test);
+                                       ans = true;
+                                       
+                                   }
+                                   
+                               }) 
+                            }
+                       })
+                   }
+               })
+           });
+       });
+
+
+       return ans;
+    }
 
 
 

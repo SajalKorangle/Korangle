@@ -57,35 +57,7 @@
 
                 
 
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Change to -"
-                                #selectClassSection
-                                [ngModel]="selectedExamination.selectedClass"
-                                (ngModelChange)="selectedExamination.selectedClass=$event;showTestDetails=false;">
-                        <mat-option *ngFor='let classs of selectedExamination.classList;' [value]="classs">
-                            {{classs.name}}, {{classs.selectedSection.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <button class="btn"
-                        style="padding: 2px 11px; background-color: transparent;"
-                        matTooltip="Choose Section (default: Section - A)"
-                        mat-icon-button
-                        [matMenuTriggerFor]="classSectionMenu">
-                    <i class="material-icons" style="color: black;">expand_more</i>
-                </button>
-                <mat-menu #classSectionMenu="matMenu">
-                    <button *ngFor="let section of selectedExamination.selectedClass.sectionList"
-                            mat-menu-item
-                            (click)="selectClassSection.open();
-                             selectClassSection.close();
-                             selectedExamination.selectedClass.selectedSection=section;
-                             showTestDetails=false;">
-                        {{section.name}}
-                    </button>
-                </mat-menu>
-                
-                <button type="submit"
+                                <button type="submit"
                         style="margin-left: 20px;"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="serviceAdapter.getTestAndSubjectDetailsNew()">GET</button>
@@ -94,6 +66,21 @@
                 No Examination created yet!
             </div>
         </div>
+
+        <div class="row" style="border-bottom: 1px solid #eae2e2ad; margin-top: 15px; margin-bottom: 35px; border-width: thin;">
+            <div class="col-md-12"></div>
+        </div>
+        <div class="row" *ngIf="showSelectedClassAndSection.length >0">
+            <div class="col-md-12">
+                <div *ngFor="let item of showSelectedClassAndSection" style="display: inline-block; padding-right: 50px;">
+                    <li>
+                        <b>{{item.className}},{{item.sectionName}}</b>
+                    </li>
+                </div>
+            </div>
+        </div>
+
+        
 
         <ng-container *ngIf="showTestDetails && !isLoading">
 
@@ -132,8 +119,8 @@
 
                         <td>
                             <button type="submit"
-                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                    (click)="createSpecificTest();">Create Test</button>
+                                    class="btn "
+                                    (click)="createSpecificTest();">ADD</button>
                         </td>
                     </tr>
                 </tbody>
@@ -201,12 +188,13 @@
                     <tr *ngFor="let test of newTestList; let i=index;">
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">{{(i+1)}}.</td>
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">{{test.subjectName}}</td>
-                        <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">                           
-                            <select [(ngModel)]="test.newTestType">
-                                <option *ngFor='let testType of testTypeList;' [value]="testType">
+                        <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'" >                           
+                            <mat-select style="max-width: 40%;" [(ngModel)]="test.newTestType" (selectionChange)="handleTestTypeSelection($event.value,ngModelControl,test)" #ngModelControl="ngModel" 
+                                (ngModelChange)="handleUpdate($event,test)">
+                                <mat-option *ngFor='let testType of testTypeList;' [value]="testType">
                                     {{testType}}
-                                <option>
-                            </select>
+                                </mat-option>
+                            </mat-select>
                         </td>
                         
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">
@@ -223,7 +211,7 @@
                             </table>
                         </td>
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">
-                            <input type="number" [(ngModel)]="test.newMaximumMarks"/>
+                            <input style="max-width: 30%;" type="number" [(ngModel)]="test.newMaximumMarks"/>
                         </td>
                         
                         <td>
@@ -241,20 +229,21 @@
                     </tbody>
                 </table>
 
-                <button type="submit"
-                                    style="padding: 13px 15px;margin-right: 20px; float: right;"
-                                    class="btn "
-                                    (click)="serviceAdapter.resetList();">Reset</button>
+                
 
                 <button type="submit"
-                                style="padding: 13px 15px; float: right;"
-                                [disabled]="false"
+                                style="padding: 13px 15px;"
+                                [disabled]="isTestUpdateDisabled()"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                (click)="serviceAdapter.updateTestNew();">Update</button>
-                
-                <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
-                    <div class="col-md-12"></div>
-                </div>
+                                (click)="serviceAdapter.updateTestNew();">
+                                <span  *ngIf="serviceAdapter.copyNewTestList.length === 0 ; else Update">Create</span>
+                                    <ng-template #Update>Update</ng-template>
+                               </button>
+                <button type="submit"
+                               style="padding: 13px 15px;margin-right: 20px;"
+                               class="btn "
+                               (click)="serviceAdapter.resetList();">Reset</button>
+               
             </ng-container>
 
 

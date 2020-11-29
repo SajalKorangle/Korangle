@@ -13,6 +13,7 @@ import { MatLineSetter } from '@angular/material';
 import { StudentService } from 'app/services/modules/student/student.service';
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { temporaryDeclaration } from '@angular/compiler/src/compiler_util/expression_converter';
+import { NgModel } from '@angular/forms';
 
 @Component({
     selector: 'create-test',
@@ -26,7 +27,7 @@ export class CreateTestComponent implements OnInit {
 
     /* These are newly created properties*/
 
-
+    showSelectedClassAndSection :any =[];
     selectedExaminationNew :any;
 
     newTestList : Array<{
@@ -132,6 +133,7 @@ export class CreateTestComponent implements OnInit {
         this.serviceAdapter = new CreateTestServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        
     }
 
     onDateSelected(event: any): void {
@@ -166,12 +168,8 @@ export class CreateTestComponent implements OnInit {
         test.newDate = this.formatDate(event, '');
     }
 
-    isTestUpdateDisabled(test: any): boolean {
-        if (test.newMaximumMarks !== test.maximumMarks) {
-            return false;
-        }
-        if (test.newTestType !== test.testType)
-            return false;
+    isTestUpdateDisabled(): boolean {
+        if(this.enableUpdateButton)return false;
 
         return true;
     }
@@ -264,6 +262,28 @@ export class CreateTestComponent implements OnInit {
             });
         }
         
+
+    }
+    ok =true;
+
+    //This handle which test type can be selected
+    handleTestTypeSelection(value :any, ngModelControl: NgModel,test :any)
+    {         
+
+        
+        if(this.serviceAdapter.findAnyDuplicate(test,value))
+        {
+            ngModelControl.control.setValue(test.testType);
+            console.log("not changing the value");
+            alert('Similar Test is already in the template');
+            test.newTestType = test.testType;
+            console.log(test);
+        }
+        else
+        {
+            console.log("changing the value");
+            console.log(test);
+        }
 
     }
 
@@ -368,6 +388,14 @@ export class CreateTestComponent implements OnInit {
                 {
                     this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
                 }
+                else
+                {
+                    alert('Similar test is already in the template...');
+                    this.selectedTestType = null;
+                    this.selectedSubject = null;
+                    return ;
+                }
+
 
 
             
@@ -383,6 +411,13 @@ export class CreateTestComponent implements OnInit {
             this.serviceAdapter.updateTest(test);
         });
         
-    } 
+    }
+    
+    enableUpdateButton = false;
+    handleUpdate(value : any,test : any): void {
+        console.log(value);
+        if(test.TestType != value)
+        this.enableUpdateButton = true;
+    }
 
 }
