@@ -78,6 +78,10 @@
                     </li>
                 </div>
             </div>
+
+            <div class="col-md-12" *ngIf="!(serviceAdapter.dataCanBeFetched)">
+                <h3>Selected Class and Section have different Subjects</h3>
+            </div>
         </div>
 
         

@@ -49,6 +49,8 @@ export class CreateTestServiceAdapter {
 
     copyNewTestList: any= [];
 
+    dataCanBeFetched =true;
+
     
 
 
@@ -408,12 +410,14 @@ export class CreateTestServiceAdapter {
             var findOne = this.commonSubjectList.findIndex(item => item.classList.length != totalNumberOfListRequired);
 
             if(findOne === -1)
-            {
+            {   
+                this.dataCanBeFetched = true;
                 this.getTestAndSubjectDetails();
+
             }
             else
-            {
-                alert("Selected classes and section have different subject");
+            {   
+                this.dataCanBeFetched = false;
                 this.vm.isLoading = false;
                 return ;
             }
@@ -1239,6 +1243,7 @@ export class CreateTestServiceAdapter {
             });
         });
 
+        this.vm.showSelectedClassAndSection = [];
         for(let i=0;i<this.classListForTest.length;i++)
         {
             this.vm.showSelectedClassAndSection.push({
