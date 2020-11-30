@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as XLSX from 'xlsx';
+import { utils, writeFile, WorkBook, WorkSheet, read } from 'xlsx';
 
 import { UpdateViaExcelServiceAdapter } from './update-via-excel.service.adapter';
 
@@ -7,6 +7,7 @@ import {DataStorage} from '../../../../classes/data-storage';
 import { StudentService } from './../../../../services/modules/student/student.service';
 import { ClassService } from './../../../../services/modules/class/class.service';
 import { FeeService} from './../../../../services/modules/fees/fee.service'
+import {INSTALLMENT_LIST} from "../../classes/constants";
 
 @Component({
   selector: 'app-update-via-excel',
@@ -23,22 +24,28 @@ export class UpdateViaExcelComponent implements OnInit {
   feeTypeList = [];
   studentList = [];
 
-  structuredStudent = {};  // structure = {classId: {classSecions: [Students], ...}, ...}
-  structuredSelection = {};
-  studentsCount = 0;
-  selectionCount = 0;
+  structuredStudent = {};  // structure: {classsid: {divisionId: [student1,...], ...}, ...}
+  structuredSelection = {}; // structure: {classsid: {divisionId: Boolean, ...}, ...}
+  structuredStudentFeeExist = {}; // structure: {parentStudentId: [studentFee,...], ...}
+  studentsCount:number = 0;
+  selectionCount:number = 0;
 
-  uploadedData = [];  //  Array of array
-  errorRows = {}; //  format: {rowNumber:Error Mesage, ...}
-  errorCells = {};  //  format: {`row, colums`: Error Message, ...}
-  warningRows = {}; //  format: {rowNumber:Warning Mesage, ...}
-  warningCells = {}; //  format: {`row, colums`: Warning Message}
-  warningRowIndices = new Set();
-  errorRowIndices = new Set();
+  uploadedData: Array<any> = [];  //  Array of array
+  errorRows = {}; //  format: {rowNumber: "<Error Mesage>", ...}
+  errorCells = {};  //  format: {`row, colums`: "<Error Message>", ...}
+  warningRows = {}; //  format: {rowNumber: "<Warning Mesage>", ...}
+  warningCells = {}; //  format: {`row, colums`: "<Warning Message>"}
+  warningRowIndices: Set<number> = new Set();
+  errorRowIndices: Set<number> = new Set();
+  
+  filteredColumns: Array<number> = [];
+  filteredRows: Array<number> = []; // Dosen't contains header row
+  
+  activeFilter: string = 'all';
+  isLoading: boolean = false;
+  isUploadable: boolean = false;
 
-  filteredRows = [];
-  activeFilter = 'all';
-  isLoading = false;
+  reader: FileReader = new FileReader();
 
   serviceAdapter: UpdateViaExcelServiceAdapter;
 
@@ -49,9 +56,34 @@ export class UpdateViaExcelComponent implements OnInit {
     this.serviceAdapter = new UpdateViaExcelServiceAdapter();
     this.serviceAdapter.initializeAdapter(this);
     this.serviceAdapter.initializeData();
+
+    this.reader.onload = (e: any) => {
+      this.isLoading = true;
+      /* read workbook */
+      const bstr: string = e.target.result;
+      const wb: WorkBook = read(bstr, {type: 'binary'});
+  
+      /* grab first sheet */
+      const wsname: string = wb.SheetNames[0];
+      const ws: WorkSheet = wb.Sheets[wsname];
+  
+    /* save data */
+      this.clearExcelData();  // clear previous data if any
+      this.uploadedData = utils.sheet_to_json(ws, { header: 1 });
+      this.uploadedData.pop();  //  removing last row which is empty
+  
+      //Sanity Checks
+      this.headersSanityCheck();
+      this.removeAllZeroColumns();
+      this.studentDataCorrespondenceSanityCheck();
+      this.feeAmountSanityCheck();
+      this.studentPreviousFeeSanityCheck();
+  
+      this.cleanUp();
+    };
   }
 
-  filterBy(newFilter): void{
+  filterBy(newFilter: string): void{
     if (newFilter !== this.activeFilter) {
       switch (newFilter) {
         case 'all':
@@ -59,11 +91,11 @@ export class UpdateViaExcelComponent implements OnInit {
           this.activeFilter = newFilter;
           break;
         case 'errors':
-          this.filteredRows = Array.from(this.errorRowIndices).sort((a,b)=>a-b);
+          this.filteredRows = Array.from(this.errorRowIndices).sort((a:number, b: number)=>a-b);
           this.activeFilter = newFilter;
           break;
         case 'warnings':
-          this.filteredRows = Array.from(this.warningRowIndices).sort((a,b)=>a-b);
+          this.filteredRows = Array.from(this.warningRowIndices).sort((a:number, b:number)=>a-b);
           this.activeFilter = newFilter;
           break;
       }
@@ -75,61 +107,36 @@ export class UpdateViaExcelComponent implements OnInit {
     this.errorRowIndices.delete(0);
     this.filteredRows = this.uploadedData.slice(1).map((d, i) => i+1);
     this.isLoading = false;
+    this.isUploadable = this.errorCount() == 0;
   }
 
-  newErrorCell(row, col, msg): void {
+  clearExcelData(): void {
+    this.uploadedData = [];
+    this.errorRows = {};
+    this.errorCells = {};
+    this.warningRows = {};
+    this.warningCells = {};
+    this.errorRowIndices.clear();
+    this.warningRowIndices.clear();
+    this.activeFilter = 'all';
+  }
+
+  newErrorCell(row: number, col: number, msg: string): void {
     this.errorCells[`${row},${col}`] = msg;
     this.errorRowIndices.add(row);
   }
 
-  newErroRow(row, msg): void {
+  newErrorRow(row: number, msg: string): void {
     this.errorRows[row] = msg;
     this.errorRowIndices.add(row);
   }
 
-  newWarningCell(row, col, msg): void {
+  newWarningCell(row: number, col: number, msg: string): void {
     this.warningCells[`${row},${col}`] = msg;
     this.warningRowIndices.add(row);
   }
 
-  populateFeeType(feeTypeList): void{
-    this.feeTypeList = feeTypeList.sort((a, b) => a.orderNumber - b.orderNumber);
-  }
-
-  structuringForStudents(classIds: any, divisionIds: any): void {
-    classIds.forEach(classId => {
-      this.structuredStudent[classId] = {};
-      this.structuredSelection[classId] = {};
-      divisionIds.forEach(divisionId => {
-        this.structuredStudent[classId][divisionId] = [];
-        this.structuredSelection[classId][divisionId] = false;
-      });
-    });
-  }
-
-  populateStudents(studentSectionList: any): void {
-    studentSectionList.forEach(studentSelection => {
-      let ClassId, DivisionId;
-      ClassId = studentSelection.parentClass;
-      DivisionId = studentSelection.parentDivision;
-      this.structuredStudent[ClassId][DivisionId].push(studentSelection)
-    });
-    this.studentsCount = studentSectionList.length;
-    this.removeEmptySections();
-  }
-
-  removeEmptySections(): void{
-    this.classList.forEach(Class => {
-      this.divisionList.forEach(Division => {
-        if (this.structuredStudent[Class.id][Division.id].length === 0) {
-          delete this.structuredStudent[Class.id][Division.id];
-          delete this.structuredSelection[Class.id][Division.id];
-        }
-      })
-    })
-  }
-
-  updateAllClassesSelection(selectionStatus: boolean): void {
+  updateAllClassesSelection(selectionStatus: boolean): void { //  sekect all or desclect all
     this.classList.forEach(Class => {
       this.divisionList.forEach(Division => {
         if (this.structuredStudent[Class.id][Division.id]) {
@@ -147,59 +154,113 @@ export class UpdateViaExcelComponent implements OnInit {
     return Object.keys(this.structuredStudent[Class.id]).length > 1;
   }
 
+  errorCount() {
+    return Reflect.ownKeys(this.errorCells).length + Reflect.ownKeys(this.errorRows).length;
+  }
+
+  warningCount() {
+    return Reflect.ownKeys(this.warningCells).length + Reflect.ownKeys(this.warningRows).length;
+  }
+
+  findStudentByClassDivision(student_id:number, class_section: string): any {
+    let Class, Division, student, ss;
+    const [C, D] = class_section.split(','); //extracting class and divison as C and D
+    Class = this.classList.find(c => c.name.trim() === C.trim()); 
+
+    // Extracting student from class and section
+    if (Class) {
+      if (D) {
+        Division = this.divisionList.find(d => d.name.trim() === D.trim());
+        if (Division)
+          ss = this.structuredStudent[Class.id][Division.id].find(s => s.student.id === student_id);
+        student = ss ? ss.student : undefined;
+      }
+      else {
+        ss = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k => this.structuredStudent[Class.id][k])[0].find(s => s.student.id === student_id);  // till map function is the implementation of Object.values() since it's not supported
+        student = ss ? ss.student : undefined;
+      }
+    }
+    return student;
+  }
+
+  uploadToServer(): void{
+    this.serviceAdapter.uploadStudentFeeData();
+  }
+
   downloadSheetTemplate(): void {
-    let data = [];
+    let Data = [];  // to be downloaded
     
     let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
     this.feeTypeList.forEach(feeType => headersRow.push(feeType.name));
-    data.push(headersRow);
+    Data.push(headersRow);
+
+    let structuredFeeType = {};
+    this.feeTypeList.forEach((feeType, index) => {
+      structuredFeeType[feeType.id] = index;
+    })
 
     this.classList.forEach(Class => {
       this.divisionList.forEach(Division => {
         if (this.structuredSelection[Class.id][Division.id]) {
-          this.structuredStudent[Class.id][Division.id].forEach(({student}) => {
-            let row = [student.id, student.scholarNumber, student.name, student.fathersName, `${Class.name} ${this.showSection(Class) ? ','+Division.name : ''}`]
-            data.push(row);
+          this.structuredStudent[Class.id][Division.id].forEach(({ student }) => {
+            let row = [student.id, student.scholarNumber, student.name, student.fathersName, `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`]
+            
+            if (this.structuredStudentFeeExist[student.id]) { // if student fee exists
+              this.structuredStudentFeeExist[student.id].forEach(studentFee => {  // for every student fee
+                let index = structuredFeeType[studentFee.parentFeeType];
+               
+                if (studentFee.isAnnually)
+                  row[index + 5] = studentFee.aprilAmount;  //  fill in appropiate row, index + 5 because first five cells contains students data
+                else {  //   if not anually compute total
+                  let annual_total = 0;
+                  INSTALLMENT_LIST.forEach(month => {
+                    annual_total += studentFee[month + 'Amount'];
+                  })
+                  row[index + 5] = annual_total;
+                }
+              });
+            }
+
+            Data.push(row);
           });
         }
       })
     });
 
-    let ws = XLSX.utils.aoa_to_sheet(data);
-    let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'Sheet.xlsx');
+    let ws = utils.aoa_to_sheet(Data);
+    let wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Sheet1');
+    writeFile(wb, 'Sheet.xlsx');
   }
 
   uploadSheet(event: any): void{
     if (event.target.files.length>0) {
       let file = event.target.files[0];
-      const reader: FileReader = new FileReader();
-
-      reader.onload = (e: any) => {
-        this.isLoading = true;
-        /* read workbook */
-        const bstr: string = e.target.result;
-        const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
-  
-        /* grab first sheet */
-        const wsname: string = wb.SheetNames[0];
-        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-  
-      /* save data */
-        this.clearExcelData();
-        this.uploadedData = XLSX.utils.sheet_to_json(ws, { header: 1 });
-        this.uploadedData.pop();
-        console.log('uploaded Data: ', this.uploadedData);
-        //Sanity Checks
-        this.headersSanityCheck();
-        this.studentDataCorrespondenceSanityCheck();
-        this.feeAmountSanityCheck();
-
-        this.cleanUp();
-      };
-      reader.readAsBinaryString(file);
+      this.reader.readAsBinaryString(file);
     }
+  }
+
+  removeAllZeroColumns(): void{
+    let i=1, len = this.uploadedData.length, ignoredColumns = this.uploadedData[0].slice(5).map((col, index) => index + 5); //  all fee columns
+    let currRow;
+    while (ignoredColumns.length != 0 && i < len) {
+      currRow = this.uploadedData[i];
+      ignoredColumns.forEach((columnIndex, index) => {
+        if (this.uploadedData[i][columnIndex] && this.uploadedData[i][columnIndex] != 0 && this.uploadedData[i][columnIndex] != '')
+          delete ignoredColumns[index];
+      });
+
+      i += 1;
+    }
+
+    this.filteredColumns = this.uploadedData[0].map((r, i) => i);
+    console.log('Initial Data: ', this.filteredColumns);
+    console.log('Ignored Columns: ', ignoredColumns);
+    ignoredColumns.forEach(col => {
+      delete this.filteredColumns[col];
+    });
+    this.filteredColumns = this.filteredColumns.filter(col=>col!=undefined);
+    console.log('After all processing: ', this.filteredColumns);
   }
 
   headersSanityCheck(): void {
@@ -223,31 +284,41 @@ export class UpdateViaExcelComponent implements OnInit {
       id = parseInt(providedStudent[0]);
 
       const [C, D] = providedStudent[4].split(','); //extracting class and divison as C and D
-      Class = this.classList.find(c => c.name.trim() === C.trim()); 
+      try {
+        Class = this.classList.find(c => c.name.trim() === C.trim());
+      }
+      catch(err){
+        this.newErrorRow(i, 'Invalid Class/Section Data');
+      }
 
       // Extracting student from class and section
       if (Class) {
-        if (D) {
-          Division = this.divisionList.find(d => d.name.trim() === D.trim());
-          if (Division)
-            ss = this.structuredStudent[Class.id][Division.id].find(s => s.student.id === id);
-          student = ss ? ss.student : undefined;
+        try {
+          if (D) {
+            Division = this.divisionList.find(d => d.name.trim() === D.trim());
+            if (Division)
+              ss = this.structuredStudent[Class.id][Division.id].find(s => s.student.id === id);
+            student = ss ? ss.student : undefined;
+          }
+          else {
+            ss = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k => this.structuredStudent[Class.id][k])[0].find(s => s.student.id === id);  // till map function is the implementation of Object.values() since it's not supported
+            student = ss ? ss.student : undefined;
+          }
         }
-        else {
-          ss = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k=>this.structuredStudent[Class.id][k])[0].find(s => s.student.id === id);  // till map function is the implementation of Object.values() since it's not supported
-          student = ss ? ss.student : undefined;
+        catch (err) {
+          this.newErrorRow(i, 'Invalid Class/Section Data');
         }
       }
   
-      if(student === undefined){
+      if (student === undefined) {
         student = this.studentList.find(s => s.id === id);
         if (student) {
-          this.newErrorCell(i,4,'Class/Section Mismatch')
+          this.newErrorCell(i, 4, 'Class/Section Mismatch');
         }
       }
 
       if (student === undefined) { // not found case
-        this.newErroRow(i, 'Student Not Found');
+        this.newErrorRow(i, 'Student Not Found');
       }
       else {
 
@@ -267,60 +338,81 @@ export class UpdateViaExcelComponent implements OnInit {
   }
 
   feeAmountSanityCheck(): void {
-    let i, pastIndex, len = this.uploadedData.length, currData, parsedAmount;
-    for (i = 1; i < len; i++){  //  for Each row
-      currData = this.uploadedData[i];
-      pastIndex = 0;
-      currData.slice(5).forEach((amount, index) => {
-        while (index > pastIndex) {
-          currData[pastIndex + 5] = 0;
-          this.newWarningCell(i, pastIndex + 5, 'Empty cell set to 0');
-          pastIndex += 1;
-        }
-        pastIndex += 1;
+    let i, pastIndex, len = this.uploadedData.length, currData, rowLen = this.uploadedData[0].length;
+    
+    for (let j = 5; j < rowLen; j++){
+      if (!this.filteredColumns.find(col => col == j))
+        continue;
+        
+      for (i = 1; i < len; i++){  //  for Each row
+        let parsedAmount, amount = this.uploadedData[i][j];
+        
         parsedAmount = parseFloat(amount)
         if (!isNaN(parsedAmount)) {
           if (parsedAmount < 0) {
-            this.newErrorCell(i, index + 5, 'Negavtive Amount');
+            this.newErrorCell(i, j, 'Negavtive Amount');
           }
           else if (parsedAmount != parseInt(amount)) {
-            currData[index + 5] = Math.round(parsedAmount);
-            this.newWarningCell(i, index + 5, 'Amount Rounded to nearest integer');
+            this.uploadedData[i][j] = Math.round(parsedAmount);
+            this.newWarningCell(i, j, 'Amount Rounded to nearest integer');
           }
         } else {  //  not number Cell
-          this.newErrorCell(i, index + 5, 'Amount must be an positive integer');
+          if (amount && amount.trim() != '') {
+            this.newErrorCell(i, j, 'Amount must be an positive integer');  
+          }
+          else {
+            this.newWarningCell(i, j, 'Empty cell set to 0');
+            this.uploadedData[i][j] = 0;
+          }
         }
-      });
-      this.uploadedData[i] = currData;
+      }
     }
   }
 
-  feeIsNotUploadedSanityCheck(): void {
-    
+  studentPreviousFeeSanityCheck(): void {
+    let structuredFeeType = {};
+    this.feeTypeList.forEach((feeType, index) => {
+      structuredFeeType[feeType.id] = index;
+    })
+
+    this.uploadedData.slice(1).forEach((uploadedRow, row) => {
+      let [student_id] = uploadedRow;
+      if (this.structuredStudentFeeExist[student_id]) {
+        this.structuredStudentFeeExist[student_id].forEach(studentFee => {
+          let index = structuredFeeType[studentFee.parentFeeType];
+          if (studentFee.isAnnually) {
+            if (parseInt(uploadedRow[index + 5]) != studentFee.aprilAmount)
+              this.newErrorCell(row + 1, index + 5, 'Student Fee inconsistant with previous student fee');
+          }
+          else {
+            let annual_total = 0;
+            INSTALLMENT_LIST.forEach(month => {
+              annual_total += studentFee[month + 'Amount'];
+            })
+            if (parseInt(uploadedRow[index + 5]) != annual_total)
+            this.newErrorCell(row + 1, index + 5, 'Student Fee inconsistant with previous student fee');
+          }
+        });
+      }
+        
+    })
   }
 
-  errorCount() {
-    return Reflect.ownKeys(this.errorCells).length + Reflect.ownKeys(this.errorRows).length;
+  removePreviousFeeDataFromSheet(): void {
+    let structuredFeeType = {}; //  storing the index of each feeType for quick access
+    this.feeTypeList.forEach((feeType, index) => {
+      structuredFeeType[feeType.id] = index;
+    });
+
+    this.uploadedData.slice(1).forEach((uploadedRow, row) => {
+      let [student_id] = uploadedRow;
+      if (this.structuredStudentFeeExist[student_id]) {
+        this.structuredStudentFeeExist[student_id].forEach(studentFee => {
+          let index = structuredFeeType[studentFee.parentFeeType];
+          delete this.uploadedData[row+1][index + 5];
+        });
+      }
+    })
   }
 
-  warningCount() {
-    return Reflect.ownKeys(this.warningCells).length + Reflect.ownKeys(this.warningRows).length;
-  }
-
-  clearExcelData(): void {
-    this.uploadedData = [];
-    this.errorRows = {};
-    this.errorCells = {};
-    this.warningRows = {};
-    this.warningCells = {};
-    this.errorRowIndices.clear();
-    this.warningRowIndices.clear();
-    this.activeFilter = 'all';
-  }
-
-  uploadToServer(): any{}
-
-  logMessage(log: any): void{
-    console.log(log);
-  }
 }

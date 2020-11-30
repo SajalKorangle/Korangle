@@ -8,9 +8,3 @@
 .bgDanger {
     background: red !important;
 }
-
-.upload-btn {
-    position: sticky;
-    left: 0;
-    float: left;
-}

@@ -26,13 +26,13 @@ class FeeType(models.Model):
 
 class SchoolFeeRule(models.Model):
 
-    name = models.TextField(verbose_name='name')    #????
-    ruleNumber = models.IntegerField(verbose_name='ruleNumber', default=0)  
+    name = models.TextField(verbose_name='name')
+    ruleNumber = models.IntegerField(verbose_name='ruleNumber', default=0)  #??
 
     isClassFilter = models.BooleanField(verbose_name='isClassFilter', default=False) 
     isBusStopFilter = models.BooleanField(verbose_name='isBusStopFilter', default=False)
     onlyNewAdmission = models.BooleanField(verbose_name='onlyNewAdmission', default=False)
-    includeRTE = models.BooleanField(verbose_name='includeRTE', default=True)   #??
+    includeRTE = models.BooleanField(verbose_name='includeRTE', default=True)
 
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, verbose_name='parentFeeType')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
