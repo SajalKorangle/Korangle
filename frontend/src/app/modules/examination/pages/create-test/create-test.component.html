@@ -203,15 +203,25 @@
                         
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">
                             <table>
-                                <ng-container *ngFor="let class of test.classList">
-                                    <ng-container *ngFor="let section of class.sectionList">
-                                        <tr>
-                                            <td>
-                                                {{class.className}},{{section.sectionName}}
-                                            </td>
-                                        </tr>
-                                    </ng-container>
+                                <ng-container *ngIf="containsAllClass(test); else showSeperately">
+                                    <tr>
+                                        <td>
+                                            ALL
+                                        </td>
+                                    </tr>
                                 </ng-container>
+                                <ng-template #showSeperately>
+                                    <ng-container *ngFor="let class of test.classList">
+                                        <ng-container *ngFor="let section of class.sectionList">
+                                            <tr>
+                                                <td>
+                                                    {{class.className}},{{section.sectionName}}
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-template>
+                                
                             </table>
                         </td>
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">

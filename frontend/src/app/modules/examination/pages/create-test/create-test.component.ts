@@ -14,6 +14,7 @@ import { StudentService } from 'app/services/modules/student/student.service';
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { temporaryDeclaration } from '@angular/compiler/src/compiler_util/expression_converter';
 import { NgModel } from '@angular/forms';
+import { ExcelService } from 'app/excel/excel-service';
 
 @Component({
     selector: 'create-test',
@@ -418,6 +419,36 @@ export class CreateTestComponent implements OnInit {
         console.log(value);
         if(test.TestType != value)
         this.enableUpdateButton = true;
+    }
+
+    containsAllClass(test :any): boolean {
+
+        var containsAll = true;
+
+        this.showSelectedClassAndSection.forEach(item => {
+            var cl = item.className;
+            var sec = item.sectionName;
+            var clFound = false;
+            test.classList.forEach(clas => {
+                if(clas.className === cl)
+                {   
+                    clFound = true;
+                    var secIndex = clas.sectionList.findIndex(secc => 
+                        secc.sectionName === sec
+                        
+                    )
+                    if(secIndex === -1)
+                    containsAll = false;
+                }
+
+            });
+            if(!clFound)
+            containsAll = false;
+        });
+       
+        
+
+        return containsAll;
     }
 
 }
