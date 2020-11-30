@@ -88,6 +88,8 @@ export class RecordAttendanceComponent implements OnInit {
     
     currentAttendanceList = [];
 
+    attendanceChange: boolean;
+
     constructor (private attendanceService: AttendanceOldService,
                  private studentService: StudentOldService,
                  private excelService: ExcelService,
@@ -107,6 +109,7 @@ export class RecordAttendanceComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.attendanceChange = true;
         this.serviceAdapter = new RecordAttendanceServiceAdapter();
         let request_attendance_permission_list_data = {
             parentEmployee: this.user.activeSchool.employeeId,
@@ -118,17 +121,26 @@ export class RecordAttendanceComponent implements OnInit {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
         };
 
+        let student_section_data = {
+            'parentStudent__parentSchool': this.user.activeSchool.dbId,
+            'parentSession': this.user.activeSchool.currentSessionDbId,
+            'parentStudent__parentTransferCertificate': 'null__korangle',
+        };
+
+
         this.isInitialLoading = true;
 
         Promise.all([
             // this.attendanceService.getAttendancePermissionList(request_attendance_permission_list_data, this.user.jwt),
             this.attendanceNewService.getObjectList(this.attendanceNewService.attendance_permission, request_attendance_permission_list_data),
+            // this.studentNewService.getObjectList(this.studentNewService.student_section, student_section_data),
             this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
             this.serviceAdapter.initializeAdapter(this),
             this.serviceAdapter.initializeData()
         ]).then(value => {
             // console.log(this.selectedSentUpdateTo);
             // console.log(this.selectedSentType);
+            // console.log(value[1]);
             this.isInitialLoading = false;
             this.initializeClassSectionStudentList(value[0], value[1]);
         }, error => {
@@ -171,6 +183,7 @@ export class RecordAttendanceComponent implements OnInit {
                 this.classSectionStudentList.push(tempClass);
             }
         });
+        // console.log(this.classSectionStudentList);
         if (this.classSectionStudentList.length > 0) {
             this.selectedClass = this.classSectionStudentList[0];
             this.changeSelectedSectionToFirst();
@@ -280,11 +293,10 @@ export class RecordAttendanceComponent implements OnInit {
     updateStudentAttendanceList(): void {
         
         let data = this.prepareStudentAttendanceStatusListData();
+        this.attendanceChange = true;
         if (data.length === 0) {
-            alert('Nothing to update');
             return;
         }
-
         this.isLoading = true;
         this.attendanceService.recordStudentAttendance(data, this.user.jwt).then(response => {
             this.isLoading = false;
@@ -292,12 +304,8 @@ export class RecordAttendanceComponent implements OnInit {
         }, error => {
             this.isLoading = false;
         });
-        let currentDate = new Date();
+        this.notifyParents();
         
-        if(this.selectedSentType != 'NULL'  && this.by == 'date' && this.startDate == this.formatDate(currentDate, '')){
-            // console.log('Update Started');
-            this.notifyParents();
-        }
     }
 
     prepareStudentAttendanceStatusListData(): any {
@@ -400,6 +408,7 @@ export class RecordAttendanceComponent implements OnInit {
     }
 
     changeStudentAttendanceStatus(temp: any): void {
+        
         if(!temp.status) {
             temp.status = ATTENDANCE_STATUS_LIST[0];
             return;
@@ -586,7 +595,8 @@ export class RecordAttendanceComponent implements OnInit {
             });
             // console.log(this.currentAttendanceList);
             // console.log(this.studentList);
-            if(this.studentList.length > 0){
+            let currentDate = new Date();
+            if(this.studentList.length > 0 && this.selectedSentType != 'NULL'  && this.by == 'date' && this.startDate == this.formatDate(currentDate, '')){
                 this.serviceAdapter.sendSMSNotification(this.studentList);
             }
     }
@@ -646,6 +656,15 @@ export class RecordAttendanceComponent implements OnInit {
         return count;
     }   
 
+    checkAttendanceChange(): any{
+        let data = this.prepareStudentAttendanceStatusListData();
+        console.log(data);
+        if (data.length === 0) {
+            this.attendanceChange = true;
+            return;
+        }
+        this.attendanceChange = false;
+    }
     
 
 }
