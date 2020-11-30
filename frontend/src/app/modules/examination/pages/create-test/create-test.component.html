@@ -232,7 +232,7 @@
                             <button type="submit"
                                     style="padding: 3px 8px;"
                                     class="btn "
-                                    (click)="test.deleted = !test.deleted; $event.stopPropagation();">
+                                    (click)="test.deleted = !test.deleted; handleUpdate(test,test); $event.stopPropagation();">
 
                                     <span  *ngIf="test.deleted; else Delete">UND</span>
                                     <ng-template #Delete>DEL</ng-template>

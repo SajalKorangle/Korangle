@@ -420,6 +420,19 @@ export class CreateTestComponent implements OnInit {
         this.newTestList.forEach(test => {
             if((test.newMaximumMarks != test.maximumMarks) || (test.newTestType != test.testType))
             update = true;
+            if(test.deleted)
+            {
+                if(test.classList[0].sectionList[0].testId != null)
+                update = true;
+                else
+                update = false;
+
+            }
+            if(!test.deleted)
+            {
+                if(test.classList[0].sectionList[0].testId === null)
+                update = true;
+            }
         })
         if(update)
         this.isUpdated = true;
@@ -457,9 +470,6 @@ export class CreateTestComponent implements OnInit {
         return containsAll;
     }
 
-    consoleVAl(temp)
-    {
-        console.log(temp);
-    }
+    
 
 }
