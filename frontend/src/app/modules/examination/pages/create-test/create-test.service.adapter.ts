@@ -346,7 +346,7 @@ export class CreateTestServiceAdapter {
     getTestAndSubjectDetailsNew(): void {
         
         this.vm.isLoading = true;
-        this.vm.enableUpdateButton = false;
+        this.vm.isUpdated = false;
         this.makeDataReadyForGet();
 
         let totalNumberOfListRequired = this.classListForTest.length;
@@ -980,7 +980,7 @@ export class CreateTestServiceAdapter {
     resetList(): void {
 
         this.getTestAndSubjectDetails();
-        this.vm.enableUpdateButton =false;
+        this.vm.isUpdated =false;
         
     }
 
@@ -1153,7 +1153,7 @@ export class CreateTestServiceAdapter {
 
            
         })
-        this.vm.enableUpdateButton = false;
+        this.vm.isUpdated = false;
         this.vm.isLoading = false;
 
 

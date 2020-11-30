@@ -192,8 +192,8 @@
                     <tr *ngFor="let test of newTestList; let i=index;">
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">{{(i+1)}}.</td>
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">{{test.subjectName}}</td>
-                        <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'" >                           
-                            <mat-select style="max-width: 40%;" [(ngModel)]="test.newTestType" (selectionChange)="handleTestTypeSelection($event.value,ngModelControl,test)" #ngModelControl="ngModel" 
+                        <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">                           
+                            <mat-select style="max-width: 75px;" [(ngModel)]="test.newTestType" (selectionChange)="handleTestTypeSelection($event.value,ngModelControl,test)" #ngModelControl="ngModel" 
                                 (ngModelChange)="handleUpdate($event,test)">
                                 <mat-option *ngFor='let testType of testTypeList;' [value]="testType">
                                     {{testType}}
@@ -205,7 +205,7 @@
                             <table>
                                 <ng-container *ngIf="containsAllClass(test); else showSeperately">
                                     <tr>
-                                        <td>
+                                        <td style="text-align: center;">
                                             ALL
                                         </td>
                                     </tr>
@@ -225,7 +225,7 @@
                             </table>
                         </td>
                         <td  [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">
-                            <input style="max-width: 30%;" type="number" [(ngModel)]="test.newMaximumMarks"/>
+                            <input style="max-width: 30%;" type="number" [(ngModel)]="test.newMaximumMarks" (ngModelChange)="handleUpdate($event,test)"/>
                         </td>
                         
                         <td>

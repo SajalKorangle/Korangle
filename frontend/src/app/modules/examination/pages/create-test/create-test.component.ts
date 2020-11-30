@@ -73,7 +73,7 @@ export class CreateTestComponent implements OnInit {
     }>;
 
 
-
+    isUpdated = false;
 
 
 
@@ -170,7 +170,7 @@ export class CreateTestComponent implements OnInit {
     }
 
     isTestUpdateDisabled(): boolean {
-        if(this.enableUpdateButton)return false;
+        if(this.isUpdated)return false;
 
         return true;
     }
@@ -376,7 +376,7 @@ export class CreateTestComponent implements OnInit {
                     'newMaximumMarks' :test.maximumMarks,
                     'classList' : tempClassList,
                 }
-
+                this.isUpdated = true;
                 if(subIdx === -1)
                 {
                     this.newTestList.push(tempSubject);
@@ -390,7 +390,8 @@ export class CreateTestComponent implements OnInit {
                     this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
                 }
                 else
-                {
+                {   
+                    this.isUpdated = false;
                     alert('Similar test is already in the template...');
                     this.selectedTestType = null;
                     this.selectedSubject = null;
@@ -414,11 +415,16 @@ export class CreateTestComponent implements OnInit {
         
     }
     
-    enableUpdateButton = false;
     handleUpdate(value : any,test : any): void {
-        console.log(value);
-        if(test.TestType != value)
-        this.enableUpdateButton = true;
+        var update = false;
+        this.newTestList.forEach(test => {
+            if((test.newMaximumMarks != test.maximumMarks) || (test.newTestType != test.testType))
+            update = true;
+        })
+        if(update)
+        this.isUpdated = true;
+        else
+        this.isUpdated = false;
     }
 
     containsAllClass(test :any): boolean {
@@ -449,6 +455,11 @@ export class CreateTestComponent implements OnInit {
         
 
         return containsAll;
+    }
+
+    consoleVAl(temp)
+    {
+        console.log(temp);
     }
 
 }
