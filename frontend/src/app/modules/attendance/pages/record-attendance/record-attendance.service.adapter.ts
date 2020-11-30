@@ -101,7 +101,7 @@ export class RecordAttendanceServiceAdapter {
         
     }
 
-    sendSMSNotification: any = (mobile_list: any, message: string) => {
+    sendSMSNotification: any = (mobile_list: any) => {
         let service_list = [];
         let notification_list = [];
         let sms_list = [];
@@ -137,19 +137,26 @@ export class RecordAttendanceServiceAdapter {
         }
         let sms_data = {};
         const sms_converted_data = sms_list.map(item => {
-            return {
-                'mobileNumber': item.mobileNumber.toString(),
-                'isAdvanceSms': this.vm.getMessageFromTemplate(message, item)
+            if(item.messageType === 1){
+                return {
+                    'mobileNumber': item.mobileNumber.toString(),
+                    'isAdvanceSms': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, item)
+                }
+            }
+            else{
+                return {
+                    'mobileNumber': item.mobileNumber.toString(),
+                    'isAdvanceSms': this.vm.getMessageFromTemplate(this.vm.studentAlternateMessage, item)
+                }
             }
         });
-
         if (sms_list.length != 0) {
 
             sms_data = {
                 'contentType': ('english'),
                 'data': sms_converted_data,
                 'content': sms_converted_data[0]['isAdvanceSms'],
-                'parentMessageType': 2,
+                'parentMessageType': 4,
                 'count': this.vm.getEstimatedSMSCount(),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
@@ -158,28 +165,39 @@ export class RecordAttendanceServiceAdapter {
             };
 
         } else {
-
             sms_data = {
                 'contentType': ('english'),
                 'data': sms_converted_data,
-                'content': this.vm.getMessageFromTemplate(message, notification_list[0]),
-                'parentMessageType': 2,
+                'content': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, notification_list[0]),
+                'parentMessageType': 4,
                 'count': this.vm.getEstimatedSMSCount(),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
                 'mobileNumberList': sms_mobile_string,
                 'parentSchool': this.vm.user.activeSchool.dbId,
             };
-
+            if(notification_list[0].messageType === 2){
+                sms_data['content'] = this.vm.getMessageFromTemplate(this.vm.studentAlternateMessage, notification_list[0]);
+            }
         }
 
         const notification_data = notification_list.map(item => {
-            return {
-                'parentMessageType': 2,
-                'content': this.vm.getMessageFromTemplate(message, item),
-                'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
-                'parentSchool': this.vm.user.activeSchool.dbId,
-            };
+            if(item.messageType === 1){
+                return {
+                    'parentMessageType': 4,
+                    'content': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, item),
+                    'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
+                    'parentSchool': this.vm.user.activeSchool.dbId,
+                };
+            }
+            else{
+                return {
+                    'parentMessageType': 4,
+                    'content': this.vm.getMessageFromTemplate(this.vm.studentAlternateMessage, item),
+                    'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
+                    'parentSchool': this.vm.user.activeSchool.dbId,
+                };
+            }
         });
         service_list = [];
         service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, sms_data));

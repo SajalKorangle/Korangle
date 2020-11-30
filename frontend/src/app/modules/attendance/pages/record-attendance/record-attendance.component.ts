@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
+import {StudentService} from '../../../../services/modules/student/student.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 
@@ -15,6 +16,7 @@ import {UserService} from "../../../../services/modules/user/user.service";
 import { RecordAttendanceServiceAdapter } from "./record-attendance.service.adapter";
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 
+
 @Component({
   selector: 'record-attendance',
   templateUrl: './record-attendance.component.html',
@@ -26,6 +28,7 @@ import { AttendanceService } from '../../../../services/modules/attendance/atten
         SmsService,
         UserService,
         AttendanceService,
+        StudentService,
     ],
 })
 
@@ -59,6 +62,7 @@ export class RecordAttendanceComponent implements OnInit {
     STUDENT_LIMITER = 200;
     
     studentUpdateMessage = "Your ward, <name> is marked <attendanceStatus> on <dateOfAttendance>";
+    studentAlternateMessage = "Your ward's attendance has been corrected to <attendanceStatus>";
 
     sentTypeList = [
         'SMS',
@@ -82,6 +86,8 @@ export class RecordAttendanceComponent implements OnInit {
 
     serviceAdapter: RecordAttendanceServiceAdapter
     
+    currentAttendanceList = [];
+
     constructor (private attendanceService: AttendanceOldService,
                  private studentService: StudentOldService,
                  private excelService: ExcelService,
@@ -90,6 +96,7 @@ export class RecordAttendanceComponent implements OnInit {
                  public smsService: SmsService,
                  public userService: UserService,
                  public attendanceNewService: AttendanceService,
+                 public studentNewService: StudentService
                  ) { }
 
     changeSelectedSectionToFirst(): void {
@@ -103,7 +110,7 @@ export class RecordAttendanceComponent implements OnInit {
         this.serviceAdapter = new RecordAttendanceServiceAdapter();
         let request_attendance_permission_list_data = {
             parentEmployee: this.user.activeSchool.employeeId,
-            sessionId: this.user.activeSchool.currentSessionDbId,
+            parentSession: this.user.activeSchool.currentSessionDbId,
         };
 
         let request_student_data = {
@@ -114,7 +121,8 @@ export class RecordAttendanceComponent implements OnInit {
         this.isInitialLoading = true;
 
         Promise.all([
-            this.attendanceService.getAttendancePermissionList(request_attendance_permission_list_data, this.user.jwt),
+            // this.attendanceService.getAttendancePermissionList(request_attendance_permission_list_data, this.user.jwt),
+            this.attendanceNewService.getObjectList(this.attendanceNewService.attendance_permission, request_attendance_permission_list_data),
             this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
             this.serviceAdapter.initializeAdapter(this),
             this.serviceAdapter.initializeData()
@@ -207,9 +215,18 @@ export class RecordAttendanceComponent implements OnInit {
 
         this.isLoading = true;
         this.showStudentList = true;
-
+        this.currentAttendanceList = [];
+        
         this.attendanceService.getStudentAttendanceList(data, this.user.jwt).then(attendanceList => {
             this.isLoading = false;
+            attendanceList.forEach(element => {
+                let tempData = {
+                    dateOfAttendance : element.dateOfAttendance,
+                    status: element.status,
+                    parentStudent: element.parentStudent,
+                }
+                this.currentAttendanceList.push(tempData);
+            });
             this.populateStudentAttendanceList(attendanceList);
         }, error => {
             this.isLoading = false;
@@ -261,9 +278,8 @@ export class RecordAttendanceComponent implements OnInit {
 
     // Server Handling - 2
     updateStudentAttendanceList(): void {
-
+        
         let data = this.prepareStudentAttendanceStatusListData();
-
         if (data.length === 0) {
             alert('Nothing to update');
             return;
@@ -277,9 +293,10 @@ export class RecordAttendanceComponent implements OnInit {
             this.isLoading = false;
         });
         let currentDate = new Date();
+        
         if(this.selectedSentType != 'NULL'  && this.by == 'date' && this.startDate == this.formatDate(currentDate, '')){
-            console.log('Update Process Started');
-            // this.notifyParents();
+            // console.log('Update Started');
+            this.notifyParents();
         }
     }
 
@@ -287,7 +304,17 @@ export class RecordAttendanceComponent implements OnInit {
         let studentAttendanceStatusListData = [];
         this.studentAttendanceStatusList.forEach(student => {
             student.attendanceStatusList.forEach(attendanceStatus => {
-                if (attendanceStatus.status !== null) {
+                let previousAttendanceIndex = this.currentAttendanceList.map((cStudent) => cStudent.parentStudent).indexOf(student.dbId);
+                if(previousAttendanceIndex === -1 ){
+                    let tempData = {
+                        dateOfAttendance : this.formatDate(attendanceStatus.date.toString(), ''),
+                        status: null,
+                        parentStudent: student.dbId,
+                    }
+                    this.currentAttendanceList.push(tempData);
+                    previousAttendanceIndex = this.currentAttendanceList.map((cStudent) => cStudent.parentStudent).indexOf(student.dbId);
+                }
+                if (attendanceStatus.status !== null && attendanceStatus.status !== this.currentAttendanceList[previousAttendanceIndex].status) {
                     let tempData = {
                         parentStudent: student.dbId,
                         dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
@@ -296,7 +323,7 @@ export class RecordAttendanceComponent implements OnInit {
                     studentAttendanceStatusListData.push(tempData);
                 }
             });
-        });
+        }); 
         return studentAttendanceStatusListData;
     }
 
@@ -519,32 +546,56 @@ export class RecordAttendanceComponent implements OnInit {
             this.studentList = [];
             this.studentAttendanceStatusList.forEach(student => {
                 student.attendanceStatusList.forEach(attendanceStatus => {
-                    if (attendanceStatus.status !== null){
-                        if(attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
-                            let tempData = {
-                                name: student.name,
-                                dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
-                                attendanceStatus: attendanceStatus.status,
-                                mobileNumber: student.mobileNumber,
-                                notification: student.notification
-                            };
-                            this.studentList.push(tempData);
-                        }
-                        if(this.selectedSentUpdateTo == this.sentUpdateToList[0] && attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]){
-                            let tempData = {
-                                name: student.name,
-                                dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
-                                attendanceStatus: attendanceStatus.status,
-                                mobileNumber: student.mobileNumber,
-                                notification: student.notification
-                            };
-                            this.studentList.push(tempData);
+                    let previousAttendanceIndex = this.currentAttendanceList.map((cStudent) => cStudent.parentStudent).indexOf(student.dbId);
+                    if(this.currentAttendanceList[previousAttendanceIndex].status !== attendanceStatus.status){
+                        if (attendanceStatus.status !== null && this.checkMobileNumber(student.mobileNumber) == true ){
+                            if(attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
+                                let tempData = {
+                                    name: student.name,
+                                    dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
+                                    attendanceStatus: attendanceStatus.status,
+                                    mobileNumber: student.mobileNumber,
+                                    notification: student.notification,
+                                    messageType: 1
+                                };
+                                if(this.currentAttendanceList[previousAttendanceIndex].status !== null ){
+                                    tempData.messageType= 2
+                                }
+                                this.studentList.push(tempData);
+                            }
+                            if(this.selectedSentUpdateTo == this.sentUpdateToList[0] && attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]){
+                                let tempData = {
+                                    name: student.name,
+                                    dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
+                                    attendanceStatus: attendanceStatus.status,
+                                    mobileNumber: student.mobileNumber,
+                                    notification: student.notification,
+                                    messageType: 1
+                                };
+                                if(this.currentAttendanceList[previousAttendanceIndex].status !== null ){
+                                    tempData.messageType= 2
+                                }
+                                this.studentList.push(tempData);
+                            }
                         }
                     }
+                    this.currentAttendanceList[previousAttendanceIndex].status = attendanceStatus.status;
+
                 });
+                
             });
-            this.serviceAdapter.sendSMSNotification(this.studentList, this.studentUpdateMessage);
+            // console.log(this.currentAttendanceList);
             // console.log(this.studentList);
+            if(this.studentList.length > 0){
+                this.serviceAdapter.sendSMSNotification(this.studentList);
+            }
+    }
+
+    checkMobileNumber(mobileNumber: number): boolean {
+        if (mobileNumber && mobileNumber.toString().length == 10) {
+            return true;
+        }
+        return false;
     }
 
     getMessageFromTemplate = (message, obj) => {
