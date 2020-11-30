@@ -11,8 +11,8 @@ export class BeforeAfterEach {
 
     static async beforeEach() {
 
-        BeforeAfterEach.browser = await puppeteer.launch();
-        // BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 30});
+        // BeforeAfterEach.browser = await puppeteer.launch();
+        BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 30});
         BeforeAfterEach.page = await BeforeAfterEach.browser.newPage();
         await BeforeAfterEach.page.setViewport({
             width: 1220,
