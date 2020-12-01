@@ -15,6 +15,11 @@
     "file": "1.json"
   },
   {
+    "app": "fee_third_app",
+    "model": "FeeType",
+    "file": "three_fee_types.json"
+  },
+  {
     "app": "student_app",
     "model": "StudentSection",
     "file": "sixty_eight_students_section.json"
