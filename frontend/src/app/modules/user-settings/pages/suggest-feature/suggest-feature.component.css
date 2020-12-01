@@ -33,6 +33,18 @@
 	100% { transform: rotate(360deg); }
 }
 
+.mt-5{
+	margin-top: 5px;
+}
+
+.font-s-12{
+	font-size: 12px;
+}
+
+.font-s-16{
+	font-size: 16px;
+}
+
 /*mat-form-field {
 	margin-top: 23px;
 }

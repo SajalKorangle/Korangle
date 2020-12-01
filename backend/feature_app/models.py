@@ -21,6 +21,9 @@ class Feature(models.Model):
     photo = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True, null=True)
     title = models.TextField(null=False)
     description = models.TextField(null=False)
+    advantage = models.TextField(null=True)
+    frequency = models.TextField(null=True)
+    managedBy = models.TextField(null=True)
 
     class Meta:
         db_table = 'feature'

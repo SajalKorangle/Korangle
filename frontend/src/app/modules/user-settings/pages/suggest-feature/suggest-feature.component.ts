@@ -19,6 +19,11 @@ export class SuggestFeatureComponent implements OnInit {
 
     featureList = [];
 
+    advantageQues = 'What is the advantage of this feature?';
+    frequencyQues = 'How frequently will this feature be used? (Hourly/Daily/Weekly/Monthly/Yearly)';
+    managedQues = 'How are the things being managed currently without this feature?';
+
+
     serviceAdapter: SuggestFeatureServiceAdapter;
 
     isLoading = false;
@@ -42,6 +47,9 @@ export class SuggestFeatureComponent implements OnInit {
             'parentUser': this.user.id,
             'title': null,
             'description': null,
+            'advantage': null,
+            'frequency': null,
+            'managedBy': null
         };
     }
 
