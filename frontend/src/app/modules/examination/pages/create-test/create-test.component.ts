@@ -1,475 +1,409 @@
-import { Component, Input, OnInit } from '@angular/core';
-
-import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
-import { ExaminationService } from '../../../../services/modules/examination/examination.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
-
-import { CreateTestServiceAdapter } from './create-test.service.adapter';
-import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
-import {StudentOldService} from '../../../../services/modules/student/student-old.service';
-import {DataStorage} from "../../../../classes/data-storage";
-import { MatLineSetter } from '@angular/material';
-import { StudentService } from 'app/services/modules/student/student.service';
-import { SubjectService } from 'app/services/modules/subject/subject.service';
-import { temporaryDeclaration } from '@angular/compiler/src/compiler_util/expression_converter';
-import { NgModel } from '@angular/forms';
-import { ExcelService } from 'app/excel/excel-service';
+import { Component, OnInit } from "@angular/core";
+import { NgModel } from "@angular/forms";
+import { SubjectService } from "app/services/modules/subject/subject.service";
+import { TEST_TYPE_LIST } from "../../../../classes/constants/test-type";
+import { DataStorage } from "../../../../classes/data-storage";
+import { ClassService } from "../../../../services/modules/class/class.service";
+import { ExaminationOldService } from "../../../../services/modules/examination/examination-old.service";
+import { ExaminationService } from "../../../../services/modules/examination/examination.service";
+import { StudentOldService } from "../../../../services/modules/student/student-old.service";
+import { SubjectOldService } from "../../../../services/modules/subject/subject-old.service";
+import { CreateTestServiceAdapter } from "./create-test.service.adapter";
 
 @Component({
-    selector: 'create-test',
-    templateUrl: './create-test.component.html',
-    styleUrls: ['./create-test.component.css'],
-    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService, ExaminationService, SubjectService ],
+  selector: "create-test",
+  templateUrl: "./create-test.component.html",
+  styleUrls: ["./create-test.component.css"],
+  providers: [
+    ExaminationOldService,
+    ClassService,
+    SubjectOldService,
+    StudentOldService,
+    ExaminationService,
+    SubjectService,
+  ],
 })
-
 export class CreateTestComponent implements OnInit {
+  showSelectedClassAndSection: any = [];
+  selectedExaminationNew: any;
 
-
-    /* These are newly created properties*/
-
-    showSelectedClassAndSection :any =[];
-    selectedExaminationNew :any;
-
-    newTestList : Array<{
-        'deleted':boolean,
-        'parentExamination':any,
-        'subjectId':any,
-        'subjectName':any,
-        'testType':any,
-        'newTestType' :any,
-        'maximumMarks':any,
-        'newMaximumMarks' :any,
-        'classList': Array<{
-            'classId' : any,
-            'className' : any,
-            'sectionList': Array<{
-                'sectionId' : any,
-                'sectionName' : any,
-                'testId':any,
-            }>
-        }>
+  newTestList: Array<{
+    deleted: boolean;
+    parentExamination: any;
+    subjectId: any;
+    subjectName: any;
+    testType: any;
+    newTestType: any;
+    maximumMarks: any;
+    newMaximumMarks: any;
+    classList: Array<{
+      classId: any;
+      className: any;
+      sectionList: Array<{
+        sectionId: any;
+        sectionName: any;
+        testId: any;
+      }>;
     }>;
+  }>;
 
-
-    templateTestList : Array<{
-        'deleted':boolean,
-        'parentExamination':any,
-        'subjectId':any,
-        'subjectName':any,
-        'testType':any,
-        'newTestType' :any,
-        'maximumMarks':any,
-        'newMaximumMarks' :any,
-        'classList': Array<{
-            'classId' : any,
-            'className' : any,
-            'sectionList': Array<{
-                'sectionId' : any,
-                'sectionName' : any,
-                'testId':any,
-            }>
-        }>
+  templateTestList: Array<{
+    deleted: boolean;
+    parentExamination: any;
+    subjectId: any;
+    subjectName: any;
+    testType: any;
+    newTestType: any;
+    maximumMarks: any;
+    newMaximumMarks: any;
+    classList: Array<{
+      classId: any;
+      className: any;
+      sectionList: Array<{
+        sectionId: any;
+        sectionName: any;
+        testId: any;
+      }>;
     }>;
+  }>;
 
+  isUpdated = false;
 
-    isUpdated = false;
+  user;
 
+  showTestDetails = false;
 
+  selectedExamination: any;
 
+  examinationClassSectionList: any;
 
+  classSectionSubjectList = [];
 
+  subjectList: any;
 
+  // For New Test
+  selectedSubject: any;
+  selectedDate: any;
+  selectedStartTime = "10:30";
+  selectedEndTime = "13:30";
+  selectedTestType = null;
+  selectedMaximumMarks = 100;
 
+  testTypeList = TEST_TYPE_LIST;
 
+  serviceAdapter: CreateTestServiceAdapter;
 
+  isInitialLoading = false;
 
+  isLoading = false;
 
+  constructor(
+    public examinationOldService: ExaminationOldService,
+    public examinationService: ExaminationService,
+    public classService: ClassService,
+    public subjectService: SubjectOldService,
+    public studentService: StudentOldService,
 
+    public subjectNewService: SubjectService
+  ) {}
 
+  ngOnInit(): void {
+    this.user = DataStorage.getInstance().getUser();
 
+    this.serviceAdapter = new CreateTestServiceAdapter();
+    this.serviceAdapter.initializeAdapter(this);
+    this.serviceAdapter.initializeData();
+  }
 
+  onDateSelected(event: any): void {
+    this.selectedDate = this.formatDate(event, "");
+  }
 
+  formatDate(dateStr: any, status: any): any {
+    let d = new Date(dateStr);
 
-    /*Above are newly created variables */
-
-    user;
-
-    showTestDetails = false;
-
-    selectedExamination: any;
-    examinationClassSectionList: any;
-
-    classSectionSubjectList= [];
-
-    subjectList: any;
-
-    // For New Test
-    selectedSubject: any;
-    selectedDate : any;
-    selectedStartTime = "10:30";
-    selectedEndTime = "13:30";
-    selectedTestType = null;
-    selectedMaximumMarks = 100;
-
-    testTypeList = TEST_TYPE_LIST;
-
-    serviceAdapter: CreateTestServiceAdapter;
-
-    isInitialLoading = false;
-
-    isLoading = false;
-
-    constructor(public examinationOldService: ExaminationOldService,
-                public examinationService: ExaminationService,
-                public classService: ClassService,
-                public subjectService: SubjectOldService,
-                public studentService: StudentOldService,
-                
-                public subjectNewService: SubjectService) {}
-
-    ngOnInit(): void {
-        this.user = DataStorage.getInstance().getUser();
-
-        this.serviceAdapter = new CreateTestServiceAdapter();
-        this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
-        
+    if (status === "firstDate") {
+      d = new Date(d.getFullYear(), d.getMonth(), 1);
+    } else if (status === "lastDate") {
+      d = new Date(d.getFullYear(), d.getMonth() + 1, 0);
     }
 
-    onDateSelected(event: any): void {
-        this.selectedDate = this.formatDate(event, '');
-    }
+    let month = "" + (d.getMonth() + 1);
+    let day = "" + d.getDate();
+    let year = d.getFullYear();
 
-    formatDate(dateStr: any, status: any): any {
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
 
-        let d = new Date(dateStr);
+    return [year, month, day].join("-");
+  }
 
-        if (status === 'firstDate') {
-            d = new Date(d.getFullYear(), d.getMonth(), 1);
-        } else if (status === 'lastDate') {
-            d = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+  getTestDate(test: any): any {
+    return new Date(test.startTime);
+  }
+
+  onTestDateUpdation(test: any, event: any): void {
+    test.newDate = this.formatDate(event, "");
+  }
+
+  isTestUpdateDisabled(): boolean {
+    if (this.isUpdated) return false;
+
+    return true;
+  }
+
+  //This function is used to create a basic test template for all subjects in the selected class and section
+  createTestFromTemplate() {
+    console.log("Basic Test creation called...");
+    this.newTestList = [];
+
+    for (let i = 0; i < this.serviceAdapter.classListForTest.length; i++) {
+      this.subjectList.forEach((sub) => {
+        let test = {
+          id: null,
+          parentExamination: this.selectedExamination.id,
+          parentClass: this.serviceAdapter.classListForTest[i],
+          parentDivision: this.serviceAdapter.sectionListForTest[i],
+          parentSubject: sub.id,
+          startTime: "2019-07-01T11:30:00+05:30",
+          endTime: "2019-07-01T13:30:00+05:30",
+          testType: null,
+          maximumMarks: 100,
+        };
+
+        var subIdx = this.newTestList.findIndex(
+          (sub) =>
+            sub.subjectId === test.parentSubject &&
+            sub.testType === test.testType &&
+            sub.maximumMarks === test.maximumMarks
+        );
+
+        var classIdx = -1,
+          sectionIdx = -1;
+
+        if (subIdx != -1) {
+          classIdx = this.newTestList[subIdx].classList.findIndex(
+            (cl) => cl.classId === test.parentClass
+          );
+
+          if (classIdx != -1) {
+            sectionIdx = this.newTestList[subIdx].classList[
+              classIdx
+            ].sectionList.findIndex(
+              (sec) => sec.sectionId === test.parentDivision
+            );
+          }
         }
 
-        let month = '' + (d.getMonth() + 1);
-        let day = '' + d.getDate();
-        let year = d.getFullYear();
+        let tempSection = {
+          sectionName: this.serviceAdapter.getSectionName(test.parentDivision),
+          sectionId: test.parentDivision,
+          testId: test.id,
+        };
 
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
+        let tempSectionList = [];
+        tempSectionList.push(tempSection);
 
-        return [year, month, day].join('-');
-    }
+        let tempClass = {
+          className: this.serviceAdapter.getClassName(test.parentClass),
+          classId: test.parentClass,
+          sectionList: tempSectionList,
+        };
+        let tempClassList = [];
+        tempClassList.push(tempClass);
 
-    getTestDate(test: any): any {
-        return new Date(test.startTime);
-    }
+        let tempSubject = {
+          parentExamination: test.parentExamination,
+          deleted: false,
+          subjectId: test.parentSubject,
+          subjectName: this.serviceAdapter.getSubjectName(test.parentSubject),
+          testType: test.testType,
+          newTestType: test.testType,
+          maximumMarks: test.maximumMarks,
+          newMaximumMarks: test.maximumMarks,
+          classList: tempClassList,
+        };
 
-    onTestDateUpdation(test: any, event: any): void {
-        test.newDate = this.formatDate(event, '');
-    }
-
-    isTestUpdateDisabled(): boolean {
-        if(this.isUpdated)return false;
-
-        return true;
-    }
-
-    //This function is used to create a basic test template for all subjects in the selected class and section
-    createTestFromTemplate()
-    {   
-        console.log("Basic Test creation called...");
-        this.newTestList = [];
-        
-        //this.selectedDate = this.formatDate(new Date(),'');
-
-        for(let i=0;i<this.serviceAdapter.classListForTest.length;i++)
-        {   
-            this.subjectList.forEach(sub => {
-
-                let test = {
-                    'id': null,
-                    'parentExamination': this.selectedExamination.id,
-                    'parentClass': this.serviceAdapter.classListForTest[i],
-                    'parentDivision':this.serviceAdapter.sectionListForTest[i],
-                    'parentSubject': sub.id,
-                    'startTime':"2019-07-01T11:30:00+05:30",
-                    'endTime':"2019-07-01T13:30:00+05:30",
-                    'testType': null,
-                    'maximumMarks': 100,
-                };
-                
-
-                var subIdx = this.newTestList.findIndex(sub =>sub.subjectId === test.parentSubject && sub.testType === test.testType && sub.maximumMarks === test.maximumMarks);
-
-                var classIdx = -1, sectionIdx = -1;
-
-                if(subIdx != -1)
-                {
-                    classIdx = this.newTestList[subIdx].classList.findIndex(cl => cl.classId === test.parentClass);
-
-                    if(classIdx != -1)
-                    {
-                        sectionIdx = this.newTestList[subIdx].classList[classIdx].sectionList.findIndex(sec => sec.sectionId === test.parentDivision);
-                    }
-                }
-
-
-                let tempSection = {
-                    'sectionName' : this.serviceAdapter.getSectionName(test.parentDivision),
-                    'sectionId' : test.parentDivision,
-                    'testId' : test.id,
-                   
-                }
-
-                let tempSectionList = [];
-                tempSectionList.push(tempSection);
-
-
-                let tempClass = {
-                    'className' : this.serviceAdapter.getClassName(test.parentClass),
-                    'classId' : test.parentClass,
-                    'sectionList':tempSectionList,
-                }
-                let tempClassList = [];
-                tempClassList.push(tempClass);
-
-                let tempSubject = {
-                    'parentExamination' : test.parentExamination,
-                    'deleted':false,
-                    'subjectId':test.parentSubject,
-                    'subjectName':this.serviceAdapter.getSubjectName(test.parentSubject),
-                    'testType':test.testType,
-                    'newTestType' :test.testType,
-                    'maximumMarks':test.maximumMarks,
-                    'newMaximumMarks' :test.maximumMarks,
-                    'classList' : tempClassList,
-                }
-
-                if(subIdx === -1)
-                {
-                    this.newTestList.push(tempSubject);
-                }
-                else if(classIdx === -1)
-                {
-                    this.newTestList[subIdx].classList.push(tempClass);
-                }
-                else if(sectionIdx === -1)
-                {
-                    this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
-                }
-
-
-            });
+        if (subIdx === -1) {
+          this.newTestList.push(tempSubject);
+        } else if (classIdx === -1) {
+          this.newTestList[subIdx].classList.push(tempClass);
+        } else if (sectionIdx === -1) {
+          this.newTestList[subIdx].classList[classIdx].sectionList.push(
+            tempSection
+          );
         }
-        
-
+      });
     }
-    ok =true;
+  }
 
-    //This handle which test type can be selected
-    handleTestTypeSelection(value :any, ngModelControl: NgModel,test :any)
-    {         
-
-        
-        if(this.serviceAdapter.findAnyDuplicate(test,value))
-        {
-            ngModelControl.control.setValue(test.testType);
-            console.log("not changing the value");
-            alert('Similar Test is already in the template');
-            test.newTestType = test.testType;
-            console.log(test);
-        }
-        else
-        {
-            console.log("changing the value");
-            console.log(test);
-        }
-
+  //It handles which test type can be selected
+  handleTestTypeSelection(value: any, ngModelControl: NgModel, test: any) {
+    if (this.serviceAdapter.findAnyDuplicate(test, value)) {
+      ngModelControl.control.setValue(test.testType);
+      console.log("not changing the value");
+      alert("Similar Test is already in the template");
+      test.newTestType = test.testType;
+      console.log(test);
+    } else {
+      console.log("changing the value");
+      console.log(test);
     }
+  }
 
-    //This function creates specific test by chosen subject name
-    createSpecificTest()
-    {
-        console.log("Subject wise test creation called...");
+  //This function creates specific test by chosen subject name
+  createSpecificTest() {
+    console.log("Subject wise test creation called...");
 
-        // this.selectedDate = this.formatDate(new Date(),'');
+    // this.selectedDate = this.formatDate(new Date(),'');
 
-        if (this.selectedSubject === null) {
-            alert('Subject should be selected');
-            return;
-        }
-
-        
-
-        if (this.selectedTestType === 0) {
-            this.selectedTestType = null;
-        }
-
-        if (!this.serviceAdapter.isOnlyGrade(this.selectedSubject.id)
-            && (!this.selectedMaximumMarks || this.selectedMaximumMarks < 1)) {
-            alert('Invalid Maximum Marks');
-            return;
-        }
-        
-        //this.selectedDate = this.formatDate(new Date(),'');
-
-        for(let i=0;i<this.serviceAdapter.classListForTest.length;i++)
-        {   
-
-
-                let test = {
-                    'id': null,
-                    'parentExamination': this.selectedExamination.id,
-                    'parentClass': this.serviceAdapter.classListForTest[i],
-                    'parentDivision':this.serviceAdapter.sectionListForTest[i],
-                    'parentSubject': this.selectedSubject.id,
-                    'startTime':"2019-07-01T11:30:00+05:30",
-                    'endTime':"2019-07-01T13:30:00+05:30",
-                    'testType': this.selectedTestType,
-                    'maximumMarks': this.selectedMaximumMarks,
-                };
-                
-
-                var subIdx = this.newTestList.findIndex(sub =>sub.subjectId === test.parentSubject && sub.testType === test.testType && sub.maximumMarks === test.maximumMarks);
-
-                var classIdx = -1, sectionIdx = -1;
-
-                if(subIdx != -1)
-                {
-                    classIdx = this.newTestList[subIdx].classList.findIndex(cl => cl.classId === test.parentClass);
-
-                    if(classIdx != -1)
-                    {
-                        sectionIdx = this.newTestList[subIdx].classList[classIdx].sectionList.findIndex(sec => sec.sectionId === test.parentDivision);
-                    }
-                }
-
-
-                let tempSection = {
-                    'sectionName' : this.serviceAdapter.getSectionName(test.parentDivision),
-                    'sectionId' : test.parentDivision,
-                    'testId' : test.id,
-                   
-                }
-
-                let tempSectionList = [];
-                tempSectionList.push(tempSection);
-
-
-                let tempClass = {
-                    'className' : this.serviceAdapter.getClassName(test.parentClass),
-                    'classId' : test.parentClass,
-                    'sectionList':tempSectionList,
-                }
-                let tempClassList = [];
-                tempClassList.push(tempClass);
-
-                let tempSubject = {
-                    'parentExamination' : test.parentExamination,
-                    'deleted':false,
-                    'subjectId':test.parentSubject,
-                    'subjectName':this.serviceAdapter.getSubjectName(test.parentSubject),
-                    'testType':test.testType,
-                    'newTestType' :test.testType,
-                    'maximumMarks':test.maximumMarks,
-                    'newMaximumMarks' :test.maximumMarks,
-                    'classList' : tempClassList,
-                }
-                this.isUpdated = true;
-                if(subIdx === -1)
-                {
-                    this.newTestList.push(tempSubject);
-                }
-                else if(classIdx === -1)
-                {
-                    this.newTestList[subIdx].classList.push(tempClass);
-                }
-                else if(sectionIdx === -1)
-                {
-                    this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
-                }
-                else
-                {   
-                    this.isUpdated = false;
-                    alert('Similar test is already in the template...');
-                    this.selectedTestType = null;
-                    this.selectedSubject = null;
-                    return ;
-                }
-
-
-
-            
-        }
+    if (this.selectedSubject === null) {
+      alert("Subject should be selected");
+      return;
     }
 
-    //Update maximum Marks of all the test at once
-    updateAll()
-    {
-        
-        this.selectedExamination.selectedClass.selectedSection.testList.forEach(test => {
-            test.newMaximumMarks = this.selectedMaximumMarks;
-            this.serviceAdapter.updateTest(test);
-        });
-        
-    }
-    
-    handleUpdate(value : any,test : any): void {
-        var update = false;
-        this.newTestList.forEach(test => {
-            if((test.newMaximumMarks != test.maximumMarks) || (test.newTestType != test.testType))
-            update = true;
-            if(test.deleted)
-            {
-                if(test.classList[0].sectionList[0].testId != null)
-                update = true;
-                else
-                update = false;
-
-            }
-            if(!test.deleted)
-            {
-                if(test.classList[0].sectionList[0].testId === null)
-                update = true;
-            }
-        })
-        if(update)
-        this.isUpdated = true;
-        else
-        this.isUpdated = false;
+    if (this.selectedTestType === 0) {
+      this.selectedTestType = null;
     }
 
-    containsAllClass(test :any): boolean {
-
-        var containsAll = true;
-
-        this.showSelectedClassAndSection.forEach(item => {
-            var cl = item.className;
-            var sec = item.sectionName;
-            var clFound = false;
-            test.classList.forEach(clas => {
-                if(clas.className === cl)
-                {   
-                    clFound = true;
-                    var secIndex = clas.sectionList.findIndex(secc => 
-                        secc.sectionName === sec
-                        
-                    )
-                    if(secIndex === -1)
-                    containsAll = false;
-                }
-
-            });
-            if(!clFound)
-            containsAll = false;
-        });
-       
-        
-
-        return containsAll;
+    if (
+      !this.serviceAdapter.isOnlyGrade(this.selectedSubject.id) &&
+      (!this.selectedMaximumMarks || this.selectedMaximumMarks < 1)
+    ) {
+      alert("Invalid Maximum Marks");
+      return;
     }
 
-    
+    //this.selectedDate = this.formatDate(new Date(),'');
 
+    for (let i = 0; i < this.serviceAdapter.classListForTest.length; i++) {
+      let test = {
+        id: null,
+        parentExamination: this.selectedExamination.id,
+        parentClass: this.serviceAdapter.classListForTest[i],
+        parentDivision: this.serviceAdapter.sectionListForTest[i],
+        parentSubject: this.selectedSubject.id,
+        startTime: "2019-07-01T11:30:00+05:30",
+        endTime: "2019-07-01T13:30:00+05:30",
+        testType: this.selectedTestType,
+        maximumMarks: this.selectedMaximumMarks,
+      };
+
+      var subIdx = this.newTestList.findIndex(
+        (sub) =>
+          sub.subjectId === test.parentSubject &&
+          sub.testType === test.testType &&
+          sub.maximumMarks === test.maximumMarks
+      );
+
+      var classIdx = -1,
+        sectionIdx = -1;
+
+      if (subIdx != -1) {
+        classIdx = this.newTestList[subIdx].classList.findIndex(
+          (cl) => cl.classId === test.parentClass
+        );
+
+        if (classIdx != -1) {
+          sectionIdx = this.newTestList[subIdx].classList[
+            classIdx
+          ].sectionList.findIndex(
+            (sec) => sec.sectionId === test.parentDivision
+          );
+        }
+      }
+
+      let tempSection = {
+        sectionName: this.serviceAdapter.getSectionName(test.parentDivision),
+        sectionId: test.parentDivision,
+        testId: test.id,
+      };
+
+      let tempSectionList = [];
+      tempSectionList.push(tempSection);
+
+      let tempClass = {
+        className: this.serviceAdapter.getClassName(test.parentClass),
+        classId: test.parentClass,
+        sectionList: tempSectionList,
+      };
+      let tempClassList = [];
+      tempClassList.push(tempClass);
+
+      let tempSubject = {
+        parentExamination: test.parentExamination,
+        deleted: false,
+        subjectId: test.parentSubject,
+        subjectName: this.serviceAdapter.getSubjectName(test.parentSubject),
+        testType: test.testType,
+        newTestType: test.testType,
+        maximumMarks: test.maximumMarks,
+        newMaximumMarks: test.maximumMarks,
+        classList: tempClassList,
+      };
+
+      if (subIdx === -1) {
+        this.newTestList.push(tempSubject);
+      } else if (classIdx === -1) {
+        this.newTestList[subIdx].classList.push(tempClass);
+      } else if (sectionIdx === -1) {
+        this.newTestList[subIdx].classList[classIdx].sectionList.push(
+          tempSection
+        );
+      } else {
+        alert(
+          "Similar test is already in the template which is not created in database..."
+        );
+        this.selectedTestType = null;
+        this.selectedSubject = null;
+        return;
+      }
+    }
+
+    this.handleUpdate("", "");
+  }
+
+  //It handles the update button
+  handleUpdate(value: any, test: any): void {
+    var update = false;
+    this.newTestList.forEach((test) => {
+      if (
+        test.newMaximumMarks != test.maximumMarks ||
+        test.newTestType != test.testType
+      )
+        update = true;
+      if (test.deleted) {
+        if (test.classList[0].sectionList[0].testId != null) update = true;
+        else update = false;
+      }
+      if (!test.deleted) {
+        if (test.classList[0].sectionList[0].testId === null) update = true;
+      }
+    });
+    if (update) this.isUpdated = true;
+    else this.isUpdated = false;
+  }
+
+  //Check if current test is created for all the selected class and section
+  containsAllClass(test: any): boolean {
+    var containsAll = true;
+
+    this.showSelectedClassAndSection.forEach((item) => {
+      var cl = item.className;
+      var sec = item.sectionName;
+      var clFound = false;
+      test.classList.forEach((clas) => {
+        if (clas.className === cl) {
+          clFound = true;
+          var secIndex = clas.sectionList.findIndex(
+            (secc) => secc.sectionName === sec
+          );
+          if (secIndex === -1) containsAll = false;
+        }
+      });
+      if (!clFound) containsAll = false;
+    });
+
+    return containsAll;
+  }
 }
