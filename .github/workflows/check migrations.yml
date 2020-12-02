@@ -54,7 +54,7 @@ jobs:
       run: |
         cd frontend
         aws configure list
-        sh scripts/karma/run-tests-karma-github.sh
+        sh scripts/karma/run-tests.sh github
 
     - name: Protractor Tests
       env:
@@ -64,6 +64,7 @@ jobs:
         cd frontend
         aws configure list
         cp src/environments/environment.ts src/environments/environment.prod.ts
-        sh scripts/protractor/run-tests-e2e-github.sh
-        sh scripts/protractor/check-coverage-e2e-github.sh
-        sh scripts/feature/check-feature-coverage-github.sh
+        sh scripts/protractor/run-tests-github.sh
+        # sh scripts/protractor/check-coverage.sh github
+        # For now we are not keeping track of implemented protractor tests using feature files
+        # sh scripts/feature/check-coverage.sh github

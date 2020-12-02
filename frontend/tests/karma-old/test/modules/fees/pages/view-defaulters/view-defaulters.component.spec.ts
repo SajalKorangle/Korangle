@@ -9,7 +9,7 @@ import {USER_LIST} from '@test-data-source/classes/user';
 import {SCHOOL_LIST} from '@test-data-source/classes/school';
 import {FeeService} from '@services/modules/fees/fee.service';
 import {StudentService} from '@services/modules/student/student.service';
-import {ClassOldService} from '@services/modules/class/class-old.service';
+import {ClassService} from '@services/modules/class/class.service';
 import {NotificationService} from '@services/modules/notification/notification.service';
 import {UserService} from '@services/modules/user/user.service';
 import {SmsService} from '@services/modules/sms/sms.service';
@@ -69,7 +69,7 @@ describe('ViewDefaultersComponent', () => {
         TestBed.configureTestingModule({
             declarations: [ ViewDefaultersComponent ],
             imports: [ BasicComponentsModule, ComponentsModule, HttpClientTestingModule ],
-            providers: [SchoolService, FeeService, StudentService, ClassOldService, ExcelService, NotificationService, UserService, SmsService, SmsOldService, ChangeDetectorRef, PrintService],
+            providers: [SchoolService, FeeService, StudentService, ClassService, ExcelService, NotificationService, UserService, SmsService, SmsOldService, ChangeDetectorRef, PrintService],
         }).overrideComponent(ViewDefaultersComponent, {
             set: {
                 providers: [

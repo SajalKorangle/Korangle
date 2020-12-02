@@ -2,6 +2,9 @@
   {
     "statement": "Open Contact Us Page",
     "testType": "protractor",
+    "steps": [
+      "Open contact us page"
+    ],
     "testName": "Able to open Contact Us Page"
   }
 ]

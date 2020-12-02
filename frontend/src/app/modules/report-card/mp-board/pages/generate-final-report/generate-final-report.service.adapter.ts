@@ -77,8 +77,8 @@ export class GenerateFinalReportServiceAdapter {
                 console.log(request_examination_data);
 
                 Promise.all([
-                    this.vm.classOldService.getClassList(this.vm.user.jwt),
-                    this.vm.classOldService.getSectionList(this.vm.user.jwt),
+                    this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+                    this.vm.classService.getObjectList(this.vm.classService.division,{}),
                     this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
                     this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
                     this.vm.subjectService.getSubjectList(this.vm.user.jwt),
@@ -187,7 +187,7 @@ export class GenerateFinalReportServiceAdapter {
                 this.studentList.filter(student => {
                     return student.parentTransferCertificate === null;
                 }).forEach(student => {
-                    if (student.classDbId === classs.dbId && student.sectionDbId === section.id) {
+                    if (student.classDbId === classs.id && student.sectionDbId === section.id) {
                         student.selected = false;
                         tempSection['studentList'].push(student);
                     }

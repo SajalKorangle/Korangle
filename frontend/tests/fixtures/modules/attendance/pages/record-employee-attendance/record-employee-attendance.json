@@ -1,0 +1,17 @@
+[
+  {
+    "app": "employee_app",
+    "model": "EmployeeSessionDetail",
+    "file": "six_employees_session.json"
+  },
+  {
+    "app": "employee_app",
+    "model": "EmployeePermission",
+    "file": "six_employees_permission.json"
+  },
+  {
+    "app": "auth",
+    "model": "User",
+    "file": "1.json"
+  }
+]

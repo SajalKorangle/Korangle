@@ -1,0 +1,12 @@
+[
+  {
+    "statement": "Update Student profile in update all page",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Change student's field like mobile number etc.",
+      "Re-open page & confirm the change"
+    ],
+    "testName": null
+  }
+]

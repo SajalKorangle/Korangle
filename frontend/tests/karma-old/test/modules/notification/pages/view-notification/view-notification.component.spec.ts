@@ -9,7 +9,6 @@ import {SCHOOL_LIST} from '@test-data-source/classes/school';
 import {RouterTestingModule} from '@angular/router/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NotificationService} from '@services/modules/notification/notification.service';
-import {NotificationMockService} from '@mock-services/apps/notification.mock.service';
 
 describe('ViewNotificationComponent', () => {
   let component: ViewNotificationComponent;

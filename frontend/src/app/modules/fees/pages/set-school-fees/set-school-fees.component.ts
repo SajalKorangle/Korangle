@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { SetSchoolFeesServiceAdapter } from "./set-school-fees.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {StudentOldService} from "../../../../services/modules/student/student-old.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
 import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
 import {ClassFilterFee} from "../../../../services/modules/fees/models/class-filter-fee";
@@ -15,7 +15,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'set-school-fees',
     templateUrl: './set-school-fees.component.html',
     styleUrls: ['./set-school-fees.component.css'],
-    providers: [ FeeService, StudentOldService, ClassOldService, VehicleOldService ],
+    providers: [ FeeService, StudentOldService, ClassService, VehicleOldService ],
 })
 
 export class SetSchoolFeesComponent implements OnInit {
@@ -54,7 +54,7 @@ export class SetSchoolFeesComponent implements OnInit {
     isLoading = false;
 
     constructor(public feeService: FeeService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 public studentService: StudentOldService,
                 public vehicleService: VehicleOldService,
                 private cdRef: ChangeDetectorRef) {}
@@ -113,7 +113,7 @@ export class SetSchoolFeesComponent implements OnInit {
 
         let alreadyExists = false;
         this.newClassFilterFeeList.every(classFilterFee => {
-            if (classFilterFee.parentClass == this.selectedClass.dbId
+            if (classFilterFee.parentClass == this.selectedClass.id
                 && classFilterFee.parentDivision == this.selectedSection.id) {
                 alreadyExists = true;
                 return false;
@@ -127,7 +127,7 @@ export class SetSchoolFeesComponent implements OnInit {
         }
 
         let classFilterFee = new ClassFilterFee();
-        classFilterFee.parentClass = this.selectedClass.dbId;
+        classFilterFee.parentClass = this.selectedClass.id;
         classFilterFee.parentDivision = this.selectedSection.id;
         classFilterFee.parentSchoolFeeRule = 0;
 
@@ -177,7 +177,7 @@ export class SetSchoolFeesComponent implements OnInit {
 
     getClassName(classDbId: number): string {
         return this.classList.find(classs => {
-            return classs.dbId == classDbId;
+            return classs.id == classDbId;
         }).name;
     }
 

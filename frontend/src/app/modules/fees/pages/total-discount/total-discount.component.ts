@@ -4,7 +4,7 @@ import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {DiscountColumnFilter, INSTALLMENT_LIST} from "../../classes/constants";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {DataStorage} from "../../../../classes/data-storage";
 
@@ -12,7 +12,7 @@ import {DataStorage} from "../../../../classes/data-storage";
     selector: 'total-discount',
     templateUrl: './total-discount.component.html',
     styleUrls: ['./total-discount.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService, ClassOldService ],
+    providers: [ FeeService, EmployeeService, StudentService, ClassService ],
 })
 
 export class TotalDiscountComponent implements OnInit {
@@ -49,7 +49,7 @@ export class TotalDiscountComponent implements OnInit {
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
                 public studentService: StudentService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

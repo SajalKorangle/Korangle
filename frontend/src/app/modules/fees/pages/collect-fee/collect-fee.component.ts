@@ -15,7 +15,7 @@ import {
 } from "../../classes/constants";
 import {FeeType} from "../../../../services/modules/fees/models/fee-type";
 import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
@@ -30,7 +30,7 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [ FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService, SchoolService ],
+    providers: [ FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService ],
 })
 
 export class CollectFeeComponent implements OnInit {
@@ -84,7 +84,7 @@ export class CollectFeeComponent implements OnInit {
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
                 public vehicleService: VehicleOldService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 public employeeService: EmployeeService,
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
@@ -177,7 +177,7 @@ export class CollectFeeComponent implements OnInit {
 
     getClassNameByStudentAndSessionId(student: any, sessionId: any): any {
         return this.classList.find(classs => {
-            return classs.dbId == this.selectedStudentSectionList.find(studentSection => {
+            return classs.id == this.selectedStudentSectionList.find(studentSection => {
                 return studentSection.parentStudent == student.id && studentSection.parentSession == sessionId;
             }).parentClass;
         }).name;

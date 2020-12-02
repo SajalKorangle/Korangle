@@ -1,0 +1,8 @@
+[
+	{ "model": "employee_app.employeesessiondetail", "pk": 1, "fields": { "parentEmployee": 1 , "parentSession": 1 } },
+	{ "model": "employee_app.employeesessiondetail", "pk": 2, "fields": { "parentEmployee": 2 , "parentSession": 1 } },
+	{ "model": "employee_app.employeesessiondetail", "pk": 3, "fields": { "parentEmployee": 3 , "parentSession": 1 } },
+	{ "model": "employee_app.employeesessiondetail", "pk": 4, "fields": { "parentEmployee": 4 , "parentSession": 1 } },
+	{ "model": "employee_app.employeesessiondetail", "pk": 5, "fields": { "parentEmployee": 5 , "parentSession": 1 } },
+	{ "model": "employee_app.employeesessiondetail", "pk": 6, "fields": { "parentEmployee": 6 , "parentSession": 1 } }
+]

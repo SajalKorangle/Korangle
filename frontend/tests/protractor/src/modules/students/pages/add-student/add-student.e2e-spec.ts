@@ -1,7 +1,8 @@
 import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../../../backend-server';
+import {startBackendServer} from '../../../../backend-server';
 // import { getFixtureFiles } from '@fixtures/fixture-map';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
+import {openModuleAndPage} from '../../../../open-page';
 
 describe('Students -> Add Student', () => {
 
@@ -16,14 +17,10 @@ describe('Students -> Add Student', () => {
             console.log(dialog.message());
             await dialog.dismiss();
         });
-        let [button] = await page.$x('//p[contains(., "Students")]');
-        if (button) {
-            await button.click();
-        }
-        [button] = await page.$x('//p[contains(., "Add Student")]');
-        if (button) {
-            await button.click();
-        }
+
+        // Opening Page
+        await openModuleAndPage('Students', 'Add Student');
+
         await page.waitForSelector('input[name="name"]');
         await page.type('input[name="name"]', 'Sanjay Rathore'); // Types instantly
         await page.type('input[name="fatherName"]', 'Shiva Rathore');

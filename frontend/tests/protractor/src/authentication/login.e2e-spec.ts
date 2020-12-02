@@ -1,5 +1,5 @@
 import {BeforeAfterEach} from '../beforeAterEach';
-import {startBackendServer, stopBackendServer} from '../../../backend-server';
+import {startBackendServer, stopBackendServer} from '../backend-server';
 import { getFixtureFiles } from '../../../fixtures/fixture-map';
 import * as puppeteer from 'puppeteer';
 
