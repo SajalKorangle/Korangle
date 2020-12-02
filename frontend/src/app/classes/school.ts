@@ -23,7 +23,7 @@ export class School {
     registrationNumber: string;
     affiliationNumber: string;
 
-    dateOfExpiration: string;
+    // dateOfExpiration: string;
 
     opacity: number;
 
@@ -73,7 +73,7 @@ export class School {
 
         this.employeeId = schoolData.employeeId;
 
-        this.dateOfExpiration = schoolData.dateOfExpiration;
+      //  this.dateOfExpiration = schoolData.dateOfExpiration;
 
         this.parentBoard = schoolData.parentBoard;
 
