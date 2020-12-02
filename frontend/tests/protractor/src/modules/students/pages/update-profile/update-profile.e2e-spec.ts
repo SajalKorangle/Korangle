@@ -8,16 +8,19 @@ describe('Students -> Update Profile', () => {
 
     let page: any;
 
-
-    it('Student : Update Profile', async () => {
+    beforeAll(async () => {
 
         // Start Backend Server
         startBackendServer(getFixtureFiles('modules/students/pages/update-profile/update-profile.json'));
         page = await BeforeAfterEach.beforeEach();
-
         // Opening Page
         await openModuleAndPage('Students', 'Update Profile');
 
+    });
+
+    it('Student : Update Profile', async () => {
+
+        await page.waitForXPath('//input[1]');
         // Type the Student name
         (await containsFirst('input', '')).type('Ajay');
         // Select the Student
@@ -39,8 +42,10 @@ describe('Students -> Update Profile', () => {
             await dialog.dismiss();
         });
 
-        await BeforeAfterEach.afterEach();
-
     });
+
+    afterAll(async () => {
+        await BeforeAfterEach.afterEach();
+    })
 });
 
