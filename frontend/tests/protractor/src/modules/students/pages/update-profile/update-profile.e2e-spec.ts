@@ -18,7 +18,7 @@ describe('Students -> Update Profile', () => {
 
     });
 
-    it('Student : Update Profile', async () => {
+    it('Student : Update Profile - Address', async () => {
 
         await page.waitForXPath('//input[1]');
         // Type the Student name
@@ -32,6 +32,10 @@ describe('Students -> Update Profile', () => {
         // Type the updated address
         await inputElement.type('Shujalpur');
 
+    });
+
+    afterAll(async () => {
+
         // Click on UPDATE button
         const [updateButton] = await page.$x('//button[@type=\'submit\']');
         await updateButton.click();
@@ -41,10 +45,6 @@ describe('Students -> Update Profile', () => {
             expect(dialog.message()).toBe('Student: Ajay Dhangar updated successfully');
             await dialog.dismiss();
         });
-
-    });
-
-    afterAll(async () => {
         await BeforeAfterEach.afterEach();
     })
 });
