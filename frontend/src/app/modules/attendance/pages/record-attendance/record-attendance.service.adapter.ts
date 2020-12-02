@@ -4,6 +4,8 @@ export class RecordAttendanceServiceAdapter {
 
     vm: RecordAttendanceComponent;
 
+    infornmationMessageType = 4; //Attendance Message
+
     constructor() {}
     settingsDoesNotExist:boolean = true;
     // Data
@@ -156,7 +158,7 @@ export class RecordAttendanceServiceAdapter {
                 'contentType': ('english'),
                 'data': sms_converted_data,
                 'content': sms_converted_data[0]['isAdvanceSms'],
-                'parentMessageType': 4,
+                'parentMessageType': this.infornmationMessageType,
                 'count': this.vm.getEstimatedSMSCount(),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
@@ -169,7 +171,7 @@ export class RecordAttendanceServiceAdapter {
                 'contentType': ('english'),
                 'data': sms_converted_data,
                 'content': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, notification_list[0]),
-                'parentMessageType': 4,
+                'parentMessageType': this.infornmationMessageType,
                 'count': this.vm.getEstimatedSMSCount(),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
@@ -184,7 +186,7 @@ export class RecordAttendanceServiceAdapter {
         const notification_data = notification_list.map(item => {
             if(item.messageType === 1){
                 return {
-                    'parentMessageType': 4,
+                    'parentMessageType': this.infornmationMessageType,
                     'content': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, item),
                     'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
                     'parentSchool': this.vm.user.activeSchool.dbId,
@@ -192,7 +194,7 @@ export class RecordAttendanceServiceAdapter {
             }
             else{
                 return {
-                    'parentMessageType': 4,
+                    'parentMessageType': this.infornmationMessageType,
                     'content': this.vm.getMessageFromTemplate(this.vm.studentAlternateMessage, item),
                     'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
                     'parentSchool': this.vm.user.activeSchool.dbId,

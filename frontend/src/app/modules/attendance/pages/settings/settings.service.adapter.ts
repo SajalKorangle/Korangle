@@ -37,7 +37,8 @@ export class SettingsServiceAdapter{
                 this.vm.selectedSettings.sentUpdateToType = 'All Students';
                 this.vm.attendanceService.createObject(this.vm.attendanceService.attendance_settings,this.vm.selectedSettings);                
             }
-            this.vm.currentSettings = this.vm.selectedSettings;
+            this.vm.currentSettings.sentUpdateToType = this.vm.selectedSettings.sentUpdateToType;
+            this.vm.currentSettings.sentUpdateType = this.vm.selectedSettings.sentUpdateType;
             this.vm.isInitialLoading = false;
         }, error => {
             this.vm.isInitialLoading = false;
@@ -57,8 +58,9 @@ export class SettingsServiceAdapter{
         this.vm.selectedSettings.sentUpdateToType = this.vm.currentSettings.sentUpdateToType;
         
         Promise.all([
-            this.vm.attendanceService.updateObject(this.vm.attendanceService.attendance_settings, this.vm.currentSettings)
+            this.vm.attendanceService.updateObject(this.vm.attendanceService.attendance_settings, this.vm.selectedSettings)
         ]).then(value => {
+            this.vm.settingsChanged = false;
             alert('Settings Updated Successfully');
             // console.log(this.vm.selectedSettings);
             this.vm.isInitialLoading = false;
