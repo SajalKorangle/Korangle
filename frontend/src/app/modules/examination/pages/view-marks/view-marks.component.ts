@@ -11,7 +11,8 @@ import {ClassService} from "../../../../services/modules/class/class.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
-import {ExcelService} from "../../../../excel/excel-service";
+import { ExcelService } from "../../../../excel/excel-service";
+import { utils, writeFile, WorkBook, WorkSheet, read } from 'xlsx';
 
 @Component({
     selector: 'view-class-marks',
@@ -238,9 +239,14 @@ export class ViewMarksComponent implements OnInit {
         if (this.showSectionName(this.selectedClassSection)) {
             fileName += '_'+this.selectedClassSection.section.name;
         }
-        fileName += '_'+this.selectedExamination.name+'.csv';
+        fileName += '_'+this.selectedExamination.name+'.xlsx';
 
-        this.excelService.downloadFile(template, fileName);
+        let ws = utils.aoa_to_sheet(template);
+        let wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, 'Sheet1');
+        writeFile(wb, fileName);
+
+        // this.excelService.downloadFile(template, fileName);
     }
 
 }

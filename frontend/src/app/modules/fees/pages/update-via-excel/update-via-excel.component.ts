@@ -75,7 +75,11 @@ export class UpdateViaExcelComponent implements OnInit {
       //Sanity Checks
       this.headersSanityCheck();
       this.removeAllZeroColumns();
+      let t1, t2;
+      t1 = new Date();
       this.studentDataCorrespondenceSanityCheck();
+      t2 = new Date()
+      console.log('time taken = ', t2 - t1);
       this.feeAmountSanityCheck();
       this.studentPreviousFeeSanityCheck();
   
@@ -282,8 +286,8 @@ export class UpdateViaExcelComponent implements OnInit {
       [student, Class, Division] = [undefined, undefined, undefined];
       providedStudent = this.uploadedData[i];
       id = parseInt(providedStudent[0]);
-
-      const [C, D] = providedStudent[4].split(','); //extracting class and divison as C and D
+      
+      const [C, D] = providedStudent[4]?providedStudent[4].split(','):[undefined, undefined]; //extracting class and divison as C and D
       try {
         Class = this.classList.find(c => c.name.trim() === C.trim());
       }
@@ -322,20 +326,89 @@ export class UpdateViaExcelComponent implements OnInit {
       }
       else {
 
-        if (student.scholarNumber != providedStudent[1] && student.scholarNumber !== "" && providedStudent[1] !== undefined) {
-          this.newErrorCell(i,1,'Scholar Number Mismatch');
+        if (student.scholarNumber != providedStudent[1] && !(student.scholarNumber == "" && providedStudent[1] == undefined)) {
+          
+          this.newErrorCell(i, 1, 'Scholar Number Mismatch');
         }
 
-        if (student.name.trim() !== providedStudent[2].trim()) {
+        if (!providedStudent[2] || student.name.trim() !== providedStudent[2].trim()) {
           this.newErrorCell(i, 2, 'Name Mismatch');
         }
 
-        if (student.fathersName.trim() !== providedStudent[3].trim()) {
+        if (!providedStudent[3] || student.fathersName.trim() !== providedStudent[3].trim()) {
           this.newErrorCell(i,3,'Father’s Name Mismatch')
         }
       }
     }
   }
+
+  // studentDataCorrespondenceSanityCheck(): void {
+  //   let i, id, providedStudent, student, len = this.uploadedData.length, Class, Division, ss;
+
+  //   for (i = 1; i < len; i += 1){ // for every row in uploaded data
+  //     [student, Class, Division] = [undefined, undefined, undefined];
+  //     providedStudent = this.uploadedData[i];
+  //     id = parseInt(providedStudent[0]);
+      
+      
+  //     student = this.studentList.find(s => s.id === id);
+  //     // if (student) {
+  //     //   this.newErrorCell(i, 4, 'Class/Section Mismatch');
+  //     // }
+      
+
+  //     if (student === undefined) { // not found case
+  //       this.newErrorRow(i, 'Student Not Found');
+  //     }
+  //     else {
+
+  //       const [C, D] = providedStudent[4]?providedStudent[4].split(','):[undefined, undefined]; //extracting class and divison as C and D
+  //       if (C) {
+  //         Class = this.classList.find(c => c.name.trim() === C.trim());
+  //         if (Class) {
+  //           if (D) {
+  //             Division = this.divisionList.find(d => d.name.trim() === D.trim());
+  //             if (Division) {
+  //               ss = this.structuredStudent[Class.id][Division.id].find(s => s.student.id === id);
+  //               if (!ss)
+  //                 this.newErrorCell(i, 4, 'Class/Section Mismatch');
+  //             }
+  //             else
+  //               this.newErrorCell(i, 4, 'Class/Section Mismatch');
+  //           }
+  //           else {
+  //             if(Reflect.ownKeys(this.structuredStudent[Class.id]).length > 1)
+  //               this.newErrorCell(i, 4, 'Class/Section Mismatch');
+  //             else {
+  //               ss = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k => this.structuredStudent[Class.id][k])[0].find(s => s.student.id === id);
+  //               if (!ss)
+  //                 this.newErrorCell(i, 4, 'Class/Section Mismatch');
+  //             }
+  //           }
+  //         }
+  //         else {
+  //           this.newErrorCell(i, 4, 'Class/Section Mismatch');
+  //         }
+  //       }
+  //       else {
+  //         this.newErrorCell(i, 4, 'Class/Section Mismatch');
+  //       }
+
+  //       if (student.scholarNumber != providedStudent[1] && !(student.scholarNumber == "" && providedStudent[1] == undefined)) {
+          
+  //         this.newErrorCell(i, 1, 'Scholar Number Mismatch');
+  //       }
+
+  //       if (!providedStudent[2] || student.name.trim() !== providedStudent[2].trim()) {
+  //         this.newErrorCell(i, 2, 'Name Mismatch');
+  //       }
+
+  //       if (!providedStudent[3] || student.fathersName.trim() !== providedStudent[3].trim()) {
+  //         this.newErrorCell(i,3,'Father’s Name Mismatch')
+  //       }
+  //     }
+  //   }
+  // }
 
   feeAmountSanityCheck(): void {
     let i, pastIndex, len = this.uploadedData.length, currData, rowLen = this.uploadedData[0].length;
