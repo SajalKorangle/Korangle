@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from './classes/user';
 import { DataStorage } from './classes/data-storage';
 
-import {AuthenticationService} from './services/authentication.service';
+import {AuthenticationService} from '@services/modules/authentication/authentication.service';
 import {AuthenticationOldService} from '@services/authentication-old.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
@@ -20,7 +20,7 @@ import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.com
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [ AuthenticationService, VersionCheckService, NotificationService ],
+    providers: [ AuthenticationOldService, AuthenticationService, VersionCheckService, NotificationService ],
 })
 
 export class AppComponent implements OnInit {

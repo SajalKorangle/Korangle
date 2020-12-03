@@ -69,9 +69,9 @@ export class SignupComponent implements OnInit {
     }
 
     isFormValid(): boolean {
-        if (isNaN(this.mobileNumber) ||
+        if (isNaN(Number(this.mobileNumber)) ||
             this.mobileNumber.toString().length !== 10 ||
-            this.mobileNumber < 0 ||
+            Number(this.mobileNumber) < 0 ||
             this.mobileNumber.toString().indexOf('.') !== -1) {
             // alert('Invalid Mobile Number');
             return false;
