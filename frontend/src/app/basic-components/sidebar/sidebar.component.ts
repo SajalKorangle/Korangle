@@ -110,6 +110,27 @@ export class SidebarComponent implements OnInit {
         if (this.user.section) {
             this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
         }
+
+        EmitterService.get('page-change').subscribe(value => {  //value : {module: moduleTitle, task: taskTitle}
+            let module, task;
+            switch (value.module) {
+                case 'Notification':
+                    module = this.notification;
+                    break;
+                case 'Settings':
+                    module = this.settings;
+                    break;
+                default:
+                    module = this.user.activeSchool.moduleList.find(m => m.title == value.module);
+            }   
+            task = module.taskList.find(t => t.title == value.task);
+            if (module !== undefined && task !== undefined) {
+                this.changePage(task, module);
+            }
+            else {
+                throw "Module/Task not found";
+            }
+        })
     }
 
     isMobileMenu() {

@@ -127,7 +127,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
         it('Unchanged Sheet Data Upload', async () => {
             let node;
             [node] = await page.$x('//input[@type="file"]');
-            await node.uploadFile('tests/protractor/src/modules/fee/pages/update-via-excel/Sheet.xlsx');
+            await node.uploadFile('tests/fixtures/modules/fee/pages/update-via-excel/Sheet.xlsx');
             await page.waitForTimeout(500);
             await page.waitForXPath('//button[contains(., "Download Template")]');
             await page.waitForTimeout(500);

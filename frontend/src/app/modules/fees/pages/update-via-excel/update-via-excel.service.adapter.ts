@@ -1,5 +1,6 @@
 import { SchoolFeeRule} from 'app/services/modules/fees/models/school-fee-rule';
 import { UpdateViaExcelComponent } from './update-via-excel.component';
+import { EmitterService } from './../../../../services/emitter.service';
 
 export class UpdateViaExcelServiceAdapter{
     vm: UpdateViaExcelComponent;
@@ -158,6 +159,7 @@ export class UpdateViaExcelServiceAdapter{
                     this.vm.isUploadable = false;
                     this.vm.isLoading = false;
                     alert('Data Upload Successful');
+                    EmitterService.get('page-change').emit({module: 'Notification', task: 'View Notification'})
                     this.vm.clearExcelData();
                 });
             else {
