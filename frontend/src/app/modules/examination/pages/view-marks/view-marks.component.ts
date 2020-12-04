@@ -11,14 +11,13 @@ import {ClassService} from "../../../../services/modules/class/class.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
-import { ExcelService } from "../../../../excel/excel-service";
-import { utils, writeFile, WorkBook, WorkSheet, read } from 'xlsx';
+import { utils, writeFile } from 'xlsx';
 
 @Component({
     selector: 'view-class-marks',
     templateUrl: './view-marks.component.html',
     styleUrls: ['./view-marks.component.css'],
-    providers: [ ExaminationService, StudentService, ClassService, SubjectService, EmployeeService, ExcelService ],
+    providers: [ ExaminationService, StudentService, ClassService, SubjectService, EmployeeService ],
 })
 
 export class ViewMarksComponent implements OnInit {
@@ -59,7 +58,6 @@ export class ViewMarksComponent implements OnInit {
                 public subjectService: SubjectService,
                 public studentService: StudentService,
                 public employeeService: EmployeeService,
-                public excelService: ExcelService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -245,8 +243,6 @@ export class ViewMarksComponent implements OnInit {
         let wb = utils.book_new();
         utils.book_append_sheet(wb, ws, 'Sheet1');
         writeFile(wb, fileName);
-
-        // this.excelService.downloadFile(template, fileName);
     }
 
 }

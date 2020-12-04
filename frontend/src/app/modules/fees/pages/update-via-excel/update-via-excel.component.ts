@@ -22,18 +22,17 @@ export class UpdateViaExcelComponent implements OnInit {
   classList = [];
   divisionList = [];
   feeTypeList = [];
-  studentSessionList = [];  // student data available with key student
+  studentSessionList = [];  // student data available in student session with key 'student'
 
   structuredStudent = {};  // structure: {classsid: {divisionId: [student1,...], ...}, ...}
   structuredSelection = {}; // structure: {classsid: {divisionId: Boolean, ...}, ...}
-  structuredStudentFeeExist = {}; // structure: {parentStudentId: [studentFee,...], ...}
+  structuredStudentFee = {}; // structure: {parentStudentId: [studentFee,...], ...}
   studentsCount:number = 0;
   selectionCount:number = 0;
 
   uploadedData: Array<Array<any>> = [];  //  Array of array
   errorRows = {}; //  format: {rowNumber: "<Error Mesage>", ...}
   errorCells = {};  //  format: {`row, colums`: "<Error Message>", ...}
-  warningRows = {}; //  format: {rowNumber: "<Warning Mesage>", ...}
   warningCells = {}; //  format: {`row, colums`: "<Warning Message>"}
   warningRowIndices: Set<number> = new Set();
   errorRowIndices: Set<number> = new Set();
@@ -67,7 +66,7 @@ export class UpdateViaExcelComponent implements OnInit {
       const wsname: string = wb.SheetNames[0];
       const ws: WorkSheet = wb.Sheets[wsname];
   
-    /* save data */
+      /* save data */
       this.clearExcelData();  // clear previous data if any
       this.uploadedData = utils.sheet_to_json(ws, { header: 1 });
       this.uploadedData.pop();  //  removing last row which is empty
@@ -103,7 +102,7 @@ export class UpdateViaExcelComponent implements OnInit {
   }
 
   cleanUp(): void{
-    this.warningRowIndices.delete(0);
+    this.warningRowIndices.delete(0);  // 0th row(header) is always rendered
     this.errorRowIndices.delete(0);
     this.filteredRows = this.uploadedData.slice(1).map((d, i) => i+1);
     this.isLoading = false;
@@ -112,9 +111,10 @@ export class UpdateViaExcelComponent implements OnInit {
 
   clearExcelData(): void {
     this.uploadedData = [];
+    this.filteredColumns = [];
+    this.filteredRows = [];
     this.errorRows = {};
     this.errorCells = {};
-    this.warningRows = {};
     this.warningCells = {};
     this.errorRowIndices.clear();
     this.warningRowIndices.clear();
@@ -155,11 +155,11 @@ export class UpdateViaExcelComponent implements OnInit {
   }
 
   errorCount() {
-    return Reflect.ownKeys(this.errorCells).length + Reflect.ownKeys(this.errorRows).length;
+    return Object.keys(this.errorCells).length + Object.keys(this.errorRows).length;
   }
 
   warningCount() {
-    return Reflect.ownKeys(this.warningCells).length + Reflect.ownKeys(this.warningRows).length;
+    return Object.keys(this.warningCells).length;
   }
 
   uploadToServer(): void{
@@ -173,7 +173,7 @@ export class UpdateViaExcelComponent implements OnInit {
     this.feeTypeList.forEach(feeType => headersRow.push(feeType.name));
     Data.push(headersRow);
 
-    let structuredFeeType = {};
+    let structuredFeeType = {}; // for accessing index of feeType by feeType.id
     this.feeTypeList.forEach((feeType, index) => {
       structuredFeeType[feeType.id] = index;
     })
@@ -184,8 +184,8 @@ export class UpdateViaExcelComponent implements OnInit {
           this.structuredStudent[Class.id][Division.id].forEach(({ student }) => {
             let row = [student.id, student.scholarNumber, student.name, student.fathersName, `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`]
             
-            if (this.structuredStudentFeeExist[student.id]) { // if student fee exists
-              this.structuredStudentFeeExist[student.id].forEach(studentFee => {  // for every student fee
+            if (this.structuredStudentFee[student.id]) { // if student fee exists
+              this.structuredStudentFee[student.id].forEach(studentFee => {  // for every student fee
                 let index = structuredFeeType[studentFee.parentFeeType];
                
                 if (studentFee.isAnnually)
@@ -330,8 +330,8 @@ export class UpdateViaExcelComponent implements OnInit {
 
     this.uploadedData.slice(1).forEach((uploadedRow, row) => {
       let [student_id] = uploadedRow;
-      if (this.structuredStudentFeeExist[student_id]) {
-        this.structuredStudentFeeExist[student_id].forEach(studentFee => {
+      if (this.structuredStudentFee[student_id]) {
+        this.structuredStudentFee[student_id].forEach(studentFee => {
           let index = structuredFeeType[studentFee.parentFeeType];
           if (studentFee.isAnnually) {
             if (parseInt(uploadedRow[index + 5]) != studentFee.aprilAmount)
@@ -359,8 +359,8 @@ export class UpdateViaExcelComponent implements OnInit {
 
     this.uploadedData.slice(1).forEach((uploadedRow, row) => {
       let [student_id] = uploadedRow;
-      if (this.structuredStudentFeeExist[student_id]) {
-        this.structuredStudentFeeExist[student_id].forEach(studentFee => {
+      if (this.structuredStudentFee[student_id]) {
+        this.structuredStudentFee[student_id].forEach(studentFee => {
           let index = structuredFeeType[studentFee.parentFeeType];
           delete this.uploadedData[row+1][index + 5];
         });

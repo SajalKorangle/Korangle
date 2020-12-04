@@ -40,29 +40,30 @@ export class UpdateViaExcelServiceAdapter{
                 'id__in': value[0].map(ss => ss.parentStudent),
                 'fields__korangle': 'id,name,fathersName,scholarNumber',
             };
+
+            let student_fee_data = {
+                'parentStudent__in': value[0].map(s=>s.parentStudent),
+                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            };
             
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
+                this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_data)
             ]).then(value2 => {
+                
+                value[0].forEach(ss => {
+                    ss['student'] = value2[0].find(student => student.id === ss.parentStudent);   // storing student data inside student session data
+                }); 
+                this.vm.studentSessionList = value[0];
 
-                let student_fee_data = {
-                    'parentStudent__in': value2[0].map(s=>s.id),
-                    'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                };
-                this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_data).then(value3 => {
-                    value[0].forEach(ss => {
-                        ss['student'] = value2[0].find(student => student.id === ss.parentStudent);   // storing student data inside student session data
-                    }); 
-                    this.vm.studentSessionList = value[0];
+                //Populate Students
+                this.populateStudents(value[0]); 
+                
+                //storing fee of students
+                this.populateStructuredStudentsFeeExist(value2[1]);
 
-                    //Populate Students
-                    this.populateStudents(value[0]); 
-                    
-                    //storing fee of students
-                    this.populateStructuredStudentsFeeExist(value3);
-
-                    this.vm.isLoading = false;
-                })
+                this.vm.isLoading = false;
+            
             })
         }, error => {
                 console.log(error);
@@ -209,10 +210,10 @@ export class UpdateViaExcelServiceAdapter{
 
     populateStructuredStudentsFeeExist(studentFeeList: any): void{
         studentFeeList.forEach(studentFee => {
-            if (this.vm.structuredStudentFeeExist[studentFee.parentStudent])
-                this.vm.structuredStudentFeeExist[studentFee.parentStudent].push(studentFee);
+            if (this.vm.structuredStudentFee[studentFee.parentStudent])
+                this.vm.structuredStudentFee[studentFee.parentStudent].push(studentFee);
             else
-                this.vm.structuredStudentFeeExist[studentFee.parentStudent] = [studentFee];
+                this.vm.structuredStudentFee[studentFee.parentStudent] = [studentFee];
         });
     }
 
