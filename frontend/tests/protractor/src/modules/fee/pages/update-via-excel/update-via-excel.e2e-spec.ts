@@ -112,7 +112,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             node = await containsFirst('button', 'Upload Data');
             node.click();
             await page.waitForTimeout(500);
-            await page.waitForXPath('//h4[contains(., "Notification - View Notification")]');
+            await page.waitForXPath('//button[contains(., "Download Template")]');  // waiting for page load after spinner
         });
         
     });  
@@ -122,10 +122,6 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             page.removeListener('dialog', successDialog);
             page.on('dialog', noDialog);
 
-            // Opening and waiting for page load
-            await page.waitForXPath('//p[contains(., "Update Via Excel")]');
-            const [button] = await page.$x('//p[contains(., "Update Via Excel")]');
-            await button.click();
             await page.waitForXPath('//button[contains(., "Download Template")]');
 
             const [node] = await page.$x('//input[@type="file"]');    // file input
@@ -154,11 +150,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
         beforeAll(async () => {
             page.removeListener('dialog', noDialog);
             page.on('dialog', failureDialog);
-
-            // Opening and waiting for page load
-            await page.waitForXPath('//p[contains(., "Update Via Excel")]');
-            const [button] = await page.$x('//p[contains(., "Update Via Excel")]');
-            await button.click();
+            
             await page.waitForXPath('//button[contains(., "Download Template")]');
         });
 

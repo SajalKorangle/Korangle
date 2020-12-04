@@ -1,6 +1,5 @@
 import { SchoolFeeRule} from 'app/services/modules/fees/models/school-fee-rule';
 import { UpdateViaExcelComponent } from './update-via-excel.component';
-import { EmitterService } from './../../../../services/emitter.service';
 
 export class UpdateViaExcelServiceAdapter{
     vm: UpdateViaExcelComponent;
@@ -30,7 +29,6 @@ export class UpdateViaExcelServiceAdapter{
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data),
         ]).then(value => {
-            console.log('update via excel adapter value data: ', value);
             this.vm.classList = value[1];
             this.vm.divisionList = value[2];
             this.populateFeeType(value[3]);
@@ -46,7 +44,6 @@ export class UpdateViaExcelServiceAdapter{
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             ]).then(value2 => {
-                this.vm.studentList = value2[0];  //check if we can avoid this
 
                 let student_fee_data = {
                     'parentStudent__in': value2[0].map(s=>s.id),
@@ -56,6 +53,7 @@ export class UpdateViaExcelServiceAdapter{
                     value[0].forEach(ss => {
                         ss['student'] = value2[0].find(student => student.id === ss.parentStudent);   // storing student data inside student session data
                     }); 
+                    this.vm.studentSessionList = value[0];
 
                     //Populate Students
                     this.populateStudents(value[0]); 
@@ -159,13 +157,14 @@ export class UpdateViaExcelServiceAdapter{
                     this.vm.isUploadable = false;
                     this.vm.isLoading = false;
                     alert('Data Upload Successful');
-                    EmitterService.get('page-change').emit({module: 'Notification', task: 'View Notification'})
+                    this.initializeData();
                     this.vm.clearExcelData();
                 });
             else {
                 this.vm.isUploadable = false;
                 this.vm.isLoading = false;
                 alert('No Fee Data To Upload');
+                this.vm.clearExcelData();
             }  
         })
     }

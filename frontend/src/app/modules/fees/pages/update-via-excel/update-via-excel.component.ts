@@ -22,7 +22,7 @@ export class UpdateViaExcelComponent implements OnInit {
   classList = [];
   divisionList = [];
   feeTypeList = [];
-  studentList = [];
+  studentSessionList = [];  // student data available with key student
 
   structuredStudent = {};  // structure: {classsid: {divisionId: [student1,...], ...}, ...}
   structuredSelection = {}; // structure: {classsid: {divisionId: Boolean, ...}, ...}
@@ -30,7 +30,7 @@ export class UpdateViaExcelComponent implements OnInit {
   studentsCount:number = 0;
   selectionCount:number = 0;
 
-  uploadedData: Array<any> = [];  //  Array of array
+  uploadedData: Array<Array<any>> = [];  //  Array of array
   errorRows = {}; //  format: {rowNumber: "<Error Mesage>", ...}
   errorCells = {};  //  format: {`row, colums`: "<Error Message>", ...}
   warningRows = {}; //  format: {rowNumber: "<Warning Mesage>", ...}
@@ -75,11 +75,7 @@ export class UpdateViaExcelComponent implements OnInit {
       //Sanity Checks
       this.headersSanityCheck();
       this.removeAllZeroColumns();
-      let t1, t2;
-      t1 = new Date();
       this.studentDataCorrespondenceSanityCheck();
-      t2 = new Date()
-      console.log('time taken = ', t2 - t1);
       this.feeAmountSanityCheck();
       this.studentPreviousFeeSanityCheck();
   
@@ -166,27 +162,6 @@ export class UpdateViaExcelComponent implements OnInit {
     return Reflect.ownKeys(this.warningCells).length + Reflect.ownKeys(this.warningRows).length;
   }
 
-  findStudentByClassDivision(student_id:number, class_section: string): any {
-    let Class, Division, student, ss;
-    const [C, D] = class_section.split(','); //extracting class and divison as C and D
-    Class = this.classList.find(c => c.name.trim() === C.trim()); 
-
-    // Extracting student from class and section
-    if (Class) {
-      if (D) {
-        Division = this.divisionList.find(d => d.name.trim() === D.trim());
-        if (Division)
-          ss = this.structuredStudent[Class.id][Division.id].find(s => s.student.id === student_id);
-        student = ss ? ss.student : undefined;
-      }
-      else {
-        ss = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k => this.structuredStudent[Class.id][k])[0].find(s => s.student.id === student_id);  // till map function is the implementation of Object.values() since it's not supported
-        student = ss ? ss.student : undefined;
-      }
-    }
-    return student;
-  }
-
   uploadToServer(): void{
     this.serviceAdapter.uploadStudentFeeData();
   }
@@ -258,13 +233,10 @@ export class UpdateViaExcelComponent implements OnInit {
     }
 
     this.filteredColumns = this.uploadedData[0].map((r, i) => i);
-    console.log('Initial Data: ', this.filteredColumns);
-    console.log('Ignored Columns: ', ignoredColumns);
     ignoredColumns.forEach(col => {
       delete this.filteredColumns[col];
     });
     this.filteredColumns = this.filteredColumns.filter(col=>col!=undefined);
-    console.log('After all processing: ', this.filteredColumns);
   }
 
   headersSanityCheck(): void {
@@ -283,53 +255,29 @@ export class UpdateViaExcelComponent implements OnInit {
     let i, id, providedStudent, student, len = this.uploadedData.length, Class, Division, ss;
 
     for (i = 1; i < len; i += 1){ // for every row in uploaded data
-      [student, Class, Division] = [undefined, undefined, undefined];
+      student = undefined;
       providedStudent = this.uploadedData[i];
       id = parseInt(providedStudent[0]);
       
-      const [C, D] = providedStudent[4]?providedStudent[4].split(','):[undefined, undefined]; //extracting class and divison as C and D
-      try {
-        Class = this.classList.find(c => c.name.trim() === C.trim());
-      }
-      catch(err){
-        this.newErrorRow(i, 'Invalid Class/Section Data');
-      }
-
-      // Extracting student from class and section
-      if (Class) {
-        try {
-          if (D) {
-            Division = this.divisionList.find(d => d.name.trim() === D.trim());
-            if (Division)
-              ss = this.structuredStudent[Class.id][Division.id].find(s => s.student.id === id);
-            student = ss ? ss.student : undefined;
-          }
-          else {
-            ss = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k => this.structuredStudent[Class.id][k])[0].find(s => s.student.id === id);  // till map function is the implementation of Object.values() since it's not supported
-            student = ss ? ss.student : undefined;
-          }
-        }
-        catch (err) {
-          this.newErrorRow(i, 'Invalid Class/Section Data');
-        }
-      }
-  
-      if (student === undefined) {
-        student = this.studentList.find(s => s.id === id);
-        if (student) {
-          this.newErrorCell(i, 4, 'Class/Section Mismatch');
-        }
-      }
+      
+      ss = this.studentSessionList.find(s => s.parentStudent === id);
+      if (ss)
+        student = ss.student;
+      
 
       if (student === undefined) { // not found case
         this.newErrorRow(i, 'Student Not Found');
       }
       else {
 
-        if (student.scholarNumber != providedStudent[1] && !(student.scholarNumber == "" && providedStudent[1] == undefined)) {
-          
+        Class = this.classList.find(c=> c.id==ss.parentClass);
+        Division = this.divisionList.find(d => d.id == ss.parentDivision);
+
+        if (!providedStudent[4] || `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`.trim() != providedStudent[4].trim())
+          this.newErrorCell(i, 4, 'Invalid Class/Section Data');
+
+        if (student.scholarNumber != providedStudent[1] && !(student.scholarNumber == "" && providedStudent[1] == undefined)) 
           this.newErrorCell(i, 1, 'Scholar Number Mismatch');
-        }
 
         if (!providedStudent[2] || student.name.trim() !== providedStudent[2].trim()) {
           this.newErrorCell(i, 2, 'Name Mismatch');
@@ -341,74 +289,6 @@ export class UpdateViaExcelComponent implements OnInit {
       }
     }
   }
-
-  // studentDataCorrespondenceSanityCheck(): void {
-  //   let i, id, providedStudent, student, len = this.uploadedData.length, Class, Division, ss;
-
-  //   for (i = 1; i < len; i += 1){ // for every row in uploaded data
-  //     [student, Class, Division] = [undefined, undefined, undefined];
-  //     providedStudent = this.uploadedData[i];
-  //     id = parseInt(providedStudent[0]);
-      
-      
-  //     student = this.studentList.find(s => s.id === id);
-  //     // if (student) {
-  //     //   this.newErrorCell(i, 4, 'Class/Section Mismatch');
-  //     // }
-      
-
-  //     if (student === undefined) { // not found case
-  //       this.newErrorRow(i, 'Student Not Found');
-  //     }
-  //     else {
-
-  //       const [C, D] = providedStudent[4]?providedStudent[4].split(','):[undefined, undefined]; //extracting class and divison as C and D
-  //       if (C) {
-  //         Class = this.classList.find(c => c.name.trim() === C.trim());
-  //         if (Class) {
-  //           if (D) {
-  //             Division = this.divisionList.find(d => d.name.trim() === D.trim());
-  //             if (Division) {
-  //               ss = this.structuredStudent[Class.id][Division.id].find(s => s.student.id === id);
-  //               if (!ss)
-  //                 this.newErrorCell(i, 4, 'Class/Section Mismatch');
-  //             }
-  //             else
-  //               this.newErrorCell(i, 4, 'Class/Section Mismatch');
-  //           }
-  //           else {
-  //             if(Reflect.ownKeys(this.structuredStudent[Class.id]).length > 1)
-  //               this.newErrorCell(i, 4, 'Class/Section Mismatch');
-  //             else {
-  //               ss = Reflect.ownKeys(this.structuredStudent[Class.id]).map(k => this.structuredStudent[Class.id][k])[0].find(s => s.student.id === id);
-  //               if (!ss)
-  //                 this.newErrorCell(i, 4, 'Class/Section Mismatch');
-  //             }
-  //           }
-  //         }
-  //         else {
-  //           this.newErrorCell(i, 4, 'Class/Section Mismatch');
-  //         }
-  //       }
-  //       else {
-  //         this.newErrorCell(i, 4, 'Class/Section Mismatch');
-  //       }
-
-  //       if (student.scholarNumber != providedStudent[1] && !(student.scholarNumber == "" && providedStudent[1] == undefined)) {
-          
-  //         this.newErrorCell(i, 1, 'Scholar Number Mismatch');
-  //       }
-
-  //       if (!providedStudent[2] || student.name.trim() !== providedStudent[2].trim()) {
-  //         this.newErrorCell(i, 2, 'Name Mismatch');
-  //       }
-
-  //       if (!providedStudent[3] || student.fathersName.trim() !== providedStudent[3].trim()) {
-  //         this.newErrorCell(i,3,'Father’s Name Mismatch')
-  //       }
-  //     }
-  //   }
-  // }
 
   feeAmountSanityCheck(): void {
     let i, pastIndex, len = this.uploadedData.length, currData, rowLen = this.uploadedData[0].length;
