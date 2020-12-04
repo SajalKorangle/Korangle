@@ -1,0 +1,15 @@
+[
+    {
+      "statement": "Changing Settings",
+      "testType": "protractor",
+      "steps": [
+        "Open the page",
+        "Change Settings",
+        "Update the Settings",
+        "Refresh the page",
+        "Confirm the settings updates done in above steps"
+      ],
+      "testName": "Changing Settings"
+    }
+  ]
+  

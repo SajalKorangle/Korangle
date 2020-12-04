@@ -1,0 +1,7 @@
+[
+    {
+        "app": "attendance_app",
+        "model": "AttendanceSettings",
+        "file": "initial_settings.json"
+    }
+]

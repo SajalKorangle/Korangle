@@ -15,6 +15,8 @@ import {NotificationService} from "../../../../services/modules/notification/not
 import {UserService} from "../../../../services/modules/user/user.service";
 import { RecordAttendanceServiceAdapter } from "./record-attendance.service.adapter";
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
+import { elementAt } from 'rxjs/operators';
+import { IfStmt } from '@angular/compiler';
 
 
 @Component({
@@ -109,7 +111,7 @@ export class RecordAttendanceComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.attendanceChange = true;
+        this.attendanceChange = false;
         this.serviceAdapter = new RecordAttendanceServiceAdapter();
         let request_attendance_permission_list_data = {
             parentEmployee: this.user.activeSchool.employeeId,
@@ -136,11 +138,10 @@ export class RecordAttendanceComponent implements OnInit {
             // this.studentNewService.getObjectList(this.studentNewService.student_section, student_section_data),
             this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
             this.serviceAdapter.initializeAdapter(this),
-            this.serviceAdapter.initializeData()
+            this.serviceAdapter.initializeData(),
         ]).then(value => {
             // console.log(this.selectedSentUpdateTo);
             // console.log(this.selectedSentType);
-            // console.log(value[1]);
             this.isInitialLoading = false;
             this.initializeClassSectionStudentList(value[0], value[1]);
         }, error => {
@@ -225,10 +226,32 @@ export class RecordAttendanceComponent implements OnInit {
             startDate: this.startDate,
             endDate: this.endDate,
         };
-
+        
         this.isLoading = true;
         this.showStudentList = true;
         this.currentAttendanceList = [];
+        // this.getStudentIdList().forEach(student => {       
+        //     this.getDateList().forEach(date =>{
+        //             let tempData = {
+        //                 parentStudent: student,
+        //                 dateOfAttendance: this.formatDate(date,'')
+        //             }
+        //             this.attendanceNewService.getObjectList(this.attendanceNewService.student_attendance, tempData).then(value =>{
+        //                 this.isLoading = false;
+        //                 if(value.length>0){
+        //                     let tempData = {
+        //                         dateOfAttendance : value[0].dateOfAttendance,
+        //                         status: value[0].status,
+        //                         parentStudent: value[0].parentStudent,
+        //                     }
+        //                     this.currentAttendanceList.push(tempData);
+        //                     this.populateStudentAttendanceList(this.currentAttendanceList);
+        //                 }
+        //             }, error => {
+        //                 this.isLoading = false;
+        //             });
+        //     });
+        // });
         
         this.attendanceService.getStudentAttendanceList(data, this.user.jwt).then(attendanceList => {
             this.isLoading = false;
@@ -240,14 +263,14 @@ export class RecordAttendanceComponent implements OnInit {
                 }
                 this.currentAttendanceList.push(tempData);
             });
-            this.populateStudentAttendanceList(attendanceList);
+                this.populateStudentAttendanceList(attendanceList);
         }, error => {
             this.isLoading = false;
         });
-
+        // console.log(this.currentAttendanceList);
     }
 
-    populateStudentAttendanceList(attendanceList: any): void {
+    async populateStudentAttendanceList(attendanceList: any) {
         this.studentAttendanceStatusList = [];
         this.classSectionStudentList.forEach(classs => {
             classs.sectionList.forEach(section => {
@@ -293,7 +316,7 @@ export class RecordAttendanceComponent implements OnInit {
     updateStudentAttendanceList(): void {
         
         let data = this.prepareStudentAttendanceStatusListData();
-        this.attendanceChange = true;
+        this.attendanceChange = false;
         if (data.length === 0) {
             return;
         }
@@ -658,12 +681,11 @@ export class RecordAttendanceComponent implements OnInit {
 
     checkAttendanceChange(): any{
         let data = this.prepareStudentAttendanceStatusListData();
-        console.log(data);
         if (data.length === 0) {
-            this.attendanceChange = true;
+            this.attendanceChange = false;
             return;
         }
-        this.attendanceChange = false;
+        this.attendanceChange = true;
     }
     
 

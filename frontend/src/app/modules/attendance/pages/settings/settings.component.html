@@ -2,6 +2,7 @@
 
         <mat-form-field style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px;" >
             <mat-select placeholder="Send via"
+                        id="sentUpdateType"
                         [ngModel]="selectedSettings.sentUpdateType"
                         (ngModelChange)="currentSettings.sentUpdateType = $event; checkSettingsChange()">
                 <mat-option *ngFor='let sentType of sentUpdateList;' [value]="sentType">
@@ -12,6 +13,7 @@
 
         <mat-form-field style="margin-top: 23px;">
             <mat-select placeholder="Send Update To"
+                    id="sentUpdateToType"
                     [ngModel]="selectedSettings.sentUpdateToType"
                     (ngModelChange)="currentSettings.sentUpdateToType = $event; checkSettingsChange()">
                 <mat-option *ngFor='let sentUpdateToType of sentUpdateToList;' [value]="sentUpdateToType">

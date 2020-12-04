@@ -1,0 +1,13 @@
+[
+    {
+      "file": "initial_settings.json",
+      "file_object_list": [
+        {
+          "app": "school_app",
+          "model": "School",
+          "file": "1.json"
+        }
+      ]
+    }
+  ]
+  

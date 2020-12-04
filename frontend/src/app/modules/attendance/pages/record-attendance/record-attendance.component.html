@@ -121,7 +121,7 @@
 
         <button type="submit"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                [disabled]="attendanceChange"
+                [disabled]="!attendanceChange"
                 (click)="updateStudentAttendanceList()">Update</button>
 
         <button type="submit"
