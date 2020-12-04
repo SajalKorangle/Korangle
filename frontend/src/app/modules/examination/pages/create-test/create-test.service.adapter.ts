@@ -312,6 +312,7 @@ export class CreateTestServiceAdapter {
         } else {
           this.dataCanBeFetched = false;
           this.vm.isLoading = false;
+          this.vm.showTestDetails = false;
           return;
         }
       },
@@ -327,7 +328,7 @@ export class CreateTestServiceAdapter {
     console.log(this.classSectionSubjectList);
 
     let request_test_data_list = {
-      parentExamination: this.vm.selectedExamination.id,
+      parentExamination: this.vm.selectedExamination,
       parentClass__in: this.classListForTest.join(","),
       parentDivision__in: this.sectionListForTest.join(","),
     };
@@ -450,22 +451,22 @@ export class CreateTestServiceAdapter {
     }
 
     if (
-      !this.isOnlyGrade(this.vm.selectedSubject.id) &&
+      !this.isOnlyGrade(this.vm.selectedSubject) &&
       (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)
     ) {
       alert("Invalid Maximum Marks");
       return;
     }
 
-    if (this.isOnlyGrade(this.vm.selectedSubject.id)) {
+    if (this.isOnlyGrade(this.vm.selectedSubject)) {
       this.vm.selectedMaximumMarks = 100;
     }
 
     let data = {
-      parentExamination: this.vm.selectedExamination.id,
+      parentExamination: this.vm.selectedExamination,
       parentClass: parentClass,
       parentDivision: parentDivision,
-      parentSubject: this.vm.selectedSubject.id,
+      parentSubject: this.vm.selectedSubject,
       startTime: "2019-07-01T11:30:00+05:30",
       endTime: "2019-07-01T13:30:00+05:30",
       testType: this.vm.selectedTestType,

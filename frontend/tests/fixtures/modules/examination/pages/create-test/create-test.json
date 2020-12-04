@@ -15,11 +15,6 @@
       "file": "1.json"
     },
     {
-        "app": "examination_app",
-        "model": "Examination",
-        "file": "single_examination.json"
-    },
-    {
       "app": "examination_app",
       "model": "StudentTest",
       "file": "student_test_oneClassSet.json"

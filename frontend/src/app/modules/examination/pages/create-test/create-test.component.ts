@@ -73,7 +73,7 @@ export class CreateTestComponent implements OnInit {
 
   showTestDetails = false;
 
-  selectedExamination: any;
+  selectedExamination : any;
 
   examinationClassSectionList: any;
 
@@ -161,7 +161,7 @@ export class CreateTestComponent implements OnInit {
       this.subjectList.forEach((sub) => {
         let test = {
           id: null,
-          parentExamination: this.selectedExamination.id,
+          parentExamination: this.selectedExamination,
           parentClass: this.serviceAdapter.classListForTest[i],
           parentDivision: this.serviceAdapter.sectionListForTest[i],
           parentSubject: sub.id,
@@ -279,10 +279,10 @@ export class CreateTestComponent implements OnInit {
     for (let i = 0; i < this.serviceAdapter.classListForTest.length; i++) {
       let test = {
         id: null,
-        parentExamination: this.selectedExamination.id,
+        parentExamination: this.selectedExamination,
         parentClass: this.serviceAdapter.classListForTest[i],
         parentDivision: this.serviceAdapter.sectionListForTest[i],
-        parentSubject: this.selectedSubject.id,
+        parentSubject: this.selectedSubject,
         startTime: "2019-07-01T11:30:00+05:30",
         endTime: "2019-07-01T13:30:00+05:30",
         testType: this.selectedTestType,

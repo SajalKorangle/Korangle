@@ -7,17 +7,17 @@
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
                     <mat-select placeholder="Select Examination" [(ngModel)]="selectedExamination"
-                        [disabled]="isLoading">
-                        <mat-option *ngFor='let examination of serviceAdapter.examinationList;' [value]="examination">
+                        [disabled]="isLoading" id="selectExam">
+                        <mat-option *ngFor='let examination of serviceAdapter.examinationList;' [value]="examination.id">
                             {{examination.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select class section" [disabled]="isLoading">
+                    <mat-select placeholder="Select class section" [disabled]="isLoading" id="selectClassSection">
                         <ng-container *ngFor='let class of serviceAdapter.classSectionSubjectList'>
-                            <mat-option *ngFor="let section of class.sectionList">
+                            <mat-option *ngFor="let section of class.sectionList" [value]="section.sectionId">
                                 <mat-checkbox [(ngModel)]="section.selected" (click)="$event.stopPropagation();">
                                     {{class.className}}, {{section.sectionName}}
                                 </mat-checkbox>
@@ -27,7 +27,7 @@
                     </mat-select>
                 </mat-form-field>
 
-                <button type="submit" style="margin-left: 20px;"
+                <button type="submit" style="margin-left: 20px;" id="getTestDetails"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="serviceAdapter.getTestAndSubjectDetailsNew()">GET</button>
             </div>
@@ -68,8 +68,9 @@
                         <td>
                             <mat-form-field>
                                 <mat-select placeholder="Select Subject" [ngModel]="selectedSubject"
+                                    id="selectSubject"
                                     (ngModelChange)="selectedSubject=$event">
-                                    <mat-option *ngFor='let subject of subjectList;' [value]="subject">
+                                    <mat-option *ngFor='let subject of subjectList;' [value]="subject.id">
                                         {{subject.name}}
                                     </mat-option>
                                 </mat-select>
@@ -78,6 +79,7 @@
                         <td>
                             <mat-form-field style="margin-left: 20px;">
                                 <mat-select placeholder="Select Test Type" [ngModel]="selectedTestType"
+                                    id="selectTestType"
                                     (ngModelChange)="selectedTestType=$event">
                                     <mat-option [value]=0>None</mat-option>
                                     <mat-option *ngFor='let testType of testTypeList;' [value]="testType">
@@ -133,8 +135,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let test of newTestList; let i=index;">
-                            <td [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">{{(i+1)}}.</td>
+                        <tr  *ngFor="let test of newTestList; let i=index;">
+                            <td testId="count" [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">{{(i+1)}}.</td>
                             <td [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">{{test.subjectName}}</td>
                             <td [ngClass]="test.deleted ? 'lowOpacity' : 'normalOpacity'">
                                 <mat-select style="max-width: 75px;" [(ngModel)]="test.newTestType"
