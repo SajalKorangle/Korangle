@@ -8,9 +8,9 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import {ExcelService} from '../../../../excel/excel-service';
 import {DataStorage} from '../../../../classes/data-storage';
-import { BusStopService} from '../../../../services/modules/school/bus-stop.service';
+import { BusStopService} from '@services/modules/school/bus-stop.service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
-import {SchoolService} from '../../../../services/modules/school/school.service';
+import {SchoolService} from '@services/modules/school/school.service';
 
 class ColumnFilter {
     showSerialNumber = true;

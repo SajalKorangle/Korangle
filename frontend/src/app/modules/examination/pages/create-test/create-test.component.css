@@ -81,10 +81,3 @@ input {
 .lowOpacity{
     opacity: 0.2;
 }
-.normalOpacity{
-    opacity: 1;
-}
-
-.lowOpacity .override{
-    opacity: 1;
-}
