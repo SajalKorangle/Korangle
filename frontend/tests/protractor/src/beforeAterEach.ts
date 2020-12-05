@@ -1,6 +1,5 @@
 import * as puppeteer from 'puppeteer';
 import {stopBackendServer} from './backend-server';
-// import { launchOptions } from '../puppeteer/config.js';
 
 // Q: How to take Screenshot
 // A: await page.screenshot({ path: 'e2e/before-login.png' });
