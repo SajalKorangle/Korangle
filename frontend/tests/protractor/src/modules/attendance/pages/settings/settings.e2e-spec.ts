@@ -2,7 +2,7 @@ import {BeforeAfterEach} from '../../../../beforeAterEach';
 import {startBackendServer} from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsFirst} from '../../../../contains';
+import {containsAll, containsFirst} from '../../../../contains';
 
 describe('Attendance -> Change Attendance Settings', () => {
 
@@ -41,8 +41,8 @@ describe('Attendance -> Change Attendance Settings', () => {
         await reClickPage('Settings');
 
         // Check Expected Settings
-        expect(await containsFirst('select', 'NOTIFICATION'));
-        expect(await containsFirst('select', 'All Students'));
+        expect((await containsAll('select', 'NOTIFICATION')).length).toBe(1);
+        expect((await containsAll('select', 'Only Absent Students')).length).toBe(1);
         
     });
 

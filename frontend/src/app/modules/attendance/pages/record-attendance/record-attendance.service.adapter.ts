@@ -15,10 +15,18 @@ export class RecordAttendanceServiceAdapter {
     }
 
     initializeData(): void {
+
+        const sms_count_request_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
         this.settingsDoesNotExist = true;
         Promise.all([
-            this.vm.attendanceNewService.getObjectList(this.vm.attendanceNewService.attendance_settings, {})
+            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {}),
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
+            // this.vm.smsService.getObject(this.vm.smsService.sms_count, {id : this.vm.user.activeSchool.dbId})
         ]).then(value => {
+            this.vm.smsBalance = value[1];
             if(value[0].length == 0)
                 this.settingsDoesNotExist = true;
             else{

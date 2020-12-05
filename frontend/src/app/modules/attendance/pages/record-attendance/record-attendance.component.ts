@@ -1,7 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
-import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {StudentService} from '../../../../services/modules/student/student.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
@@ -15,8 +13,8 @@ import {NotificationService} from "../../../../services/modules/notification/not
 import {UserService} from "../../../../services/modules/user/user.service";
 import { RecordAttendanceServiceAdapter } from "./record-attendance.service.adapter";
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
-import { elementAt } from 'rxjs/operators';
-import { IfStmt } from '@angular/compiler';
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 
 
 @Component({
@@ -24,13 +22,13 @@ import { IfStmt } from '@angular/compiler';
   templateUrl: './record-attendance.component.html',
   styleUrls: ['./record-attendance.component.css'],
     providers: [
-        AttendanceOldService,
-        StudentOldService,
         NotificationService,
         SmsService,
         UserService,
         AttendanceService,
         StudentService,
+        SmsOldService,
+        ClassService
     ],
 })
 
@@ -92,15 +90,15 @@ export class RecordAttendanceComponent implements OnInit {
 
     attendanceChange: boolean;
 
-    constructor (private attendanceService: AttendanceOldService,
-                 private studentService: StudentOldService,
-                 private excelService: ExcelService,
+    constructor (private excelService: ExcelService,
                  private printServie: PrintService,
                  public notificationService: NotificationService,
                  public smsService: SmsService,
                  public userService: UserService,
-                 public attendanceNewService: AttendanceService,
-                 public studentNewService: StudentService
+                 public attendanceService: AttendanceService,
+                 public studentService: StudentService,
+                 public smsOldService: SmsOldService,
+                 public classService: ClassService,
                  ) { }
 
     changeSelectedSectionToFirst(): void {
@@ -126,69 +124,112 @@ export class RecordAttendanceComponent implements OnInit {
         let student_section_data = {
             'parentStudent__parentSchool': this.user.activeSchool.dbId,
             'parentSession': this.user.activeSchool.currentSessionDbId,
-            'parentStudent__parentTransferCertificate': 'null__korangle',
         };
 
+        let student_data = {
+            'parentSchool': this.user.activeSchool.dbId,
+            'fields__korangle': 'id,name,mobileNumber,scholarNumber,parentTransferCertificate'
+        };
 
         this.isInitialLoading = true;
 
         Promise.all([
-            // this.attendanceService.getAttendancePermissionList(request_attendance_permission_list_data, this.user.jwt),
-            this.attendanceNewService.getObjectList(this.attendanceNewService.attendance_permission, request_attendance_permission_list_data),
-            // this.studentNewService.getObjectList(this.studentNewService.student_section, student_section_data),
-            this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
+            this.attendanceService.getObjectList(this.attendanceService.attendance_permission, request_attendance_permission_list_data),
             this.serviceAdapter.initializeAdapter(this),
             this.serviceAdapter.initializeData(),
+            this.studentService.getObjectList(this.studentService.student_section, student_section_data),
+            this.classService.getObjectList(this.classService.classs, {}),
+            this.classService.getObjectList(this.classService.division, {}),
+            this.studentService.getObjectList(this.studentService.student, student_data),
+            
         ]).then(value => {
-            // console.log(this.selectedSentUpdateTo);
-            // console.log(this.selectedSentType);
+            this.initializeClassSectionStudentList(value[4], value[5], value[3], value[6], value[0]);
             this.isInitialLoading = false;
-            this.initializeClassSectionStudentList(value[0], value[1]);
         }, error => {
             this.isInitialLoading = false;
         });
 
     }
 
-    initializeClassSectionStudentList(attendancePermissionList: any, classSectionStudentList: any): void {
-        classSectionStudentList.forEach( classs => {
-            let tempClass = {
-                name: classs.name,
-                dbId: classs.dbId,
-                sectionList: [],
-            };
-            classs.sectionList.forEach( section => {
-                if (this.classSectionInPermissionList(classs.dbId, section.dbId, attendancePermissionList)) {
-                    let tempSection = {
-                        name: section.name,
-                        dbId: section.dbId,
-                        studentList: [],
-                    };
-                    section.studentList.forEach( student => {
-                        if (student.parentTransferCertificate === null) {
-                            let tempStudent = {
-                                name: student.name,
-                                dbId: student.dbId,
-                                scholarNumber: student.scholarNumber,
-                                mobileNumber: student.mobileNumber
-                            };
-                            tempSection.studentList.push(tempStudent);
-                        }
-                    });
-                    if (tempSection.studentList.length > 0) {
-                        tempClass.sectionList.push(tempSection);
+    initializeClassSectionStudentList(classList: any, divisionList: any, studentList: any, studentDetailsList: any, attendancePermissionList:any):any{
+        this.classSectionStudentList = [];
+        studentList.forEach(student =>{
+            if (this.classSectionInPermissionList(student.parentClass, student.parentDivision, attendancePermissionList)){
+                let classIndex = -1;
+                let tempIndex = 0;
+                this.classSectionStudentList.forEach(classs =>{
+                    if(classs.dbId == student.parentClass){
+                        classIndex = tempIndex;
+                        return ;
                     }
+                    tempIndex = tempIndex+1;
+                });
+                if(classIndex === -1){
+                    let classs = classList.find(classs => classs.id === student.parentClass);
+                    let tempClass = {
+                        name: classs.name,
+                        dbId: classs.id,
+                        sectionList: [],
+                    }
+                    this.classSectionStudentList.push(tempClass);
+                    let tempIndex = 0;
+                    this.classSectionStudentList.forEach(classs =>{
+                        if(classs.dbId == student.parentClass){
+                            classIndex = tempIndex;
+                            return ;
+                    }
+                    tempIndex = tempIndex+1;
+                    });
                 }
-            });
-            if (tempClass.sectionList.length > 0) {
-                this.classSectionStudentList.push(tempClass);
+                let divisionIndex = -1;
+                tempIndex = 0;
+                this.classSectionStudentList[classIndex].sectionList.forEach(division =>{
+                    if(division.dbId == student.parentDivision){
+                        divisionIndex = tempIndex;
+                        return ;
+                    }
+                    tempIndex = tempIndex+1;
+                });
+                
+                if(divisionIndex === -1){
+                    let division = divisionList.find(division => division.id === student.parentDivision);
+                    let tempDivision = {
+                        name: division.name,
+                        dbId: division.id,
+                        studentList: [],
+                    }
+                    this.classSectionStudentList[classIndex].sectionList.push(tempDivision);
+                    tempIndex = 0;
+                    this.classSectionStudentList[classIndex].sectionList.forEach(division =>{
+                        if(division.dbId == student.parentDivision){
+                            divisionIndex = tempIndex;
+                            return ;
+                        }
+                        tempIndex = tempIndex+1;
+                    });
+                }
+                let studentDetails = studentDetailsList.find(studentDetails => studentDetails.id == student.parentStudent);
+                let tempData = {
+                    name: studentDetails.name,
+                    dbId: studentDetails.id,
+                    scholarNumber: studentDetails.scholarNumber,
+                    mobileNumber: studentDetails.mobileNumber,
+                }
+                this.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(tempData);
             }
         });
-        // console.log(this.classSectionStudentList);
+        this.classSectionStudentList.forEach(classs =>{
+            classs.sectionList.forEach( section => {
+                section.studentList.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+            });
+            classs.sectionList.sort(((a, b) => a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0))
+        })
+        this.classSectionStudentList.sort(((a, b) => a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0))
         if (this.classSectionStudentList.length > 0) {
             this.selectedClass = this.classSectionStudentList[0];
             this.changeSelectedSectionToFirst();
         }
+        
     }
 
     classSectionInPermissionList(classDbId: number, sectionDbId: number, attendancePermissionList: any): boolean {
@@ -220,57 +261,35 @@ export class RecordAttendanceComponent implements OnInit {
     }
 
     getStudentsAttendanceStatusList(): void {
-
-        let data = {
-            studentIdList: this.getStudentIdList(),
-            startDate: this.startDate,
-            endDate: this.endDate,
-        };
         
         this.isLoading = true;
         this.showStudentList = true;
         this.currentAttendanceList = [];
-        // this.getStudentIdList().forEach(student => {       
-        //     this.getDateList().forEach(date =>{
-        //             let tempData = {
-        //                 parentStudent: student,
-        //                 dateOfAttendance: this.formatDate(date,'')
-        //             }
-        //             this.attendanceNewService.getObjectList(this.attendanceNewService.student_attendance, tempData).then(value =>{
-        //                 this.isLoading = false;
-        //                 if(value.length>0){
-        //                     let tempData = {
-        //                         dateOfAttendance : value[0].dateOfAttendance,
-        //                         status: value[0].status,
-        //                         parentStudent: value[0].parentStudent,
-        //                     }
-        //                     this.currentAttendanceList.push(tempData);
-        //                     this.populateStudentAttendanceList(this.currentAttendanceList);
-        //                 }
-        //             }, error => {
-        //                 this.isLoading = false;
-        //             });
-        //     });
-        // });
-        
-        this.attendanceService.getStudentAttendanceList(data, this.user.jwt).then(attendanceList => {
+
+        let data = {
+            parentStudent__in : this.getStudentIdList(),
+            dateOfAttendance__gte : this.startDate,
+            dateOfAttendance__lte : this.endDate    
+        }
+
+        this.attendanceService.getObjectList(this.attendanceService.student_attendance, data).then(attendanceList =>{
             this.isLoading = false;
-            attendanceList.forEach(element => {
+            attendanceList.forEach(element =>{
                 let tempData = {
                     dateOfAttendance : element.dateOfAttendance,
                     status: element.status,
                     parentStudent: element.parentStudent,
                 }
-                this.currentAttendanceList.push(tempData);
+                this.currentAttendanceList.push(element);
             });
-                this.populateStudentAttendanceList(attendanceList);
-        }, error => {
+            this.populateStudentAttendanceList(attendanceList);
+        },error => {
             this.isLoading = false;
         });
-        // console.log(this.currentAttendanceList);
+        
     }
 
-    async populateStudentAttendanceList(attendanceList: any) {
+    populateStudentAttendanceList(attendanceList: any) {
         this.studentAttendanceStatusList = [];
         this.classSectionStudentList.forEach(classs => {
             classs.sectionList.forEach(section => {
@@ -320,30 +339,70 @@ export class RecordAttendanceComponent implements OnInit {
         if (data.length === 0) {
             return;
         }
+        const promises = [];
+        let toCreateAttendance = [];
+        let toUpdateAttendance = [];
+        data.forEach(attendance =>{
+            let tempData = {
+                dbId : attendance.parentStudent,
+            }
+            let previousAttendanceIndex = this.getPreviousAttendanceIndex(tempData, new Date(attendance.dateOfAttendance));
+            if(this.currentAttendanceList[previousAttendanceIndex].id == null){
+                toCreateAttendance.push(attendance);
+            }
+            else{
+                let tempData = {
+                    id : this.currentAttendanceList[previousAttendanceIndex].id,
+                    dateOfAttendance : attendance.dateOfAttendance,
+                    status: attendance.status,
+                    parentStudent: attendance.parentStudent,
+                }
+                toUpdateAttendance.push(tempData);
+            }
+        })
+        promises.push(this.attendanceService.createObjectList(this.attendanceService.student_attendance, toCreateAttendance));
+        toUpdateAttendance.forEach(attendance =>{
+            promises.push(this.attendanceService.updateObject(this.attendanceService.student_attendance, attendance));
+        });
         this.isLoading = true;
-        this.attendanceService.recordStudentAttendance(data, this.user.jwt).then(response => {
+        Promise.all(promises).then(response =>{
             this.isLoading = false;
-            alert(response);
+            alert('Student Attendance recorded successfully');
+            this.notifyParents();
+            this.getStudentsAttendanceStatusList();
         }, error => {
             this.isLoading = false;
         });
-        this.notifyParents();
-        
     }
+
+
+    getPreviousAttendanceIndex(student, date): any{
+        let previousAttendanceIndex = -1;
+        let index = 0;
+        this.currentAttendanceList.forEach(attendance =>{
+            if(attendance.parentStudent == student.dbId && attendance.dateOfAttendance == this.formatDate(date.toString(), '')){
+                previousAttendanceIndex = index;
+                return previousAttendanceIndex;
+            }
+            index = index+1;
+        });
+        return previousAttendanceIndex;
+    };
 
     prepareStudentAttendanceStatusListData(): any {
         let studentAttendanceStatusListData = [];
         this.studentAttendanceStatusList.forEach(student => {
             student.attendanceStatusList.forEach(attendanceStatus => {
-                let previousAttendanceIndex = this.currentAttendanceList.map((cStudent) => cStudent.parentStudent).indexOf(student.dbId);
+                let previousAttendanceIndex = this.getPreviousAttendanceIndex(student, attendanceStatus.date);
                 if(previousAttendanceIndex === -1 ){
                     let tempData = {
+                        id: null,
                         dateOfAttendance : this.formatDate(attendanceStatus.date.toString(), ''),
                         status: null,
                         parentStudent: student.dbId,
                     }
                     this.currentAttendanceList.push(tempData);
-                    previousAttendanceIndex = this.currentAttendanceList.map((cStudent) => cStudent.parentStudent).indexOf(student.dbId);
+                    previousAttendanceIndex = this.getPreviousAttendanceIndex(student, attendanceStatus.date);
                 }
                 if (attendanceStatus.status !== null && attendanceStatus.status !== this.currentAttendanceList[previousAttendanceIndex].status) {
                     let tempData = {
@@ -574,11 +633,10 @@ export class RecordAttendanceComponent implements OnInit {
 
     
     notifyParents(): void{
-            let message = this.studentUpdateMessage;
             this.studentList = [];
             this.studentAttendanceStatusList.forEach(student => {
                 student.attendanceStatusList.forEach(attendanceStatus => {
-                    let previousAttendanceIndex = this.currentAttendanceList.map((cStudent) => cStudent.parentStudent).indexOf(student.dbId);
+                    let previousAttendanceIndex = this.getPreviousAttendanceIndex(student, attendanceStatus.date);
                     if(this.currentAttendanceList[previousAttendanceIndex].status !== attendanceStatus.status){
                         if (attendanceStatus.status !== null && this.checkMobileNumber(student.mobileNumber) == true ){
                             if(attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
@@ -611,13 +669,9 @@ export class RecordAttendanceComponent implements OnInit {
                             }
                         }
                     }
-                    this.currentAttendanceList[previousAttendanceIndex].status = attendanceStatus.status;
-
                 });
                 
             });
-            // console.log(this.currentAttendanceList);
-            // console.log(this.studentList);
             let currentDate = new Date();
             if(this.studentList.length > 0 && this.selectedSentType != 'NULL'  && this.by == 'date' && this.startDate == this.formatDate(currentDate, '')){
                 this.serviceAdapter.sendSMSNotification(this.studentList);
