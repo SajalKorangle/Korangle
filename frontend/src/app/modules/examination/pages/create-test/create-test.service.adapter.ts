@@ -1,5 +1,5 @@
-import { TEST_TYPE_LIST } from "../../../../classes/constants/test-type";
-import { CreateTestComponent } from "./create-test.component";
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
+import { CreateTestComponent } from './create-test.component';
 
 export class CreateTestServiceAdapter {
   vm: CreateTestComponent;
@@ -132,17 +132,17 @@ export class CreateTestServiceAdapter {
     ]).then(
       (value) => {
         this.examinationList = value[0];
-        console.log("examinationList: ", this.examinationList);
+        console.log('examinationList: ', this.examinationList);
 
         this.classList = value[1];
         this.sectionList = value[2];
         this.subjectList = value[3];
 
-        console.log("Exam list is below");
+        console.log('Exam list is below');
         console.log(value[5]);
         this.examTypeList = value[5];
 
-        console.log("class, section and subjects are below");
+        console.log('class, section and subjects are below');
         console.log(value[6]);
         this.classSubjectList = value[6];
 
@@ -207,18 +207,18 @@ export class CreateTestServiceAdapter {
           }
         });
 
-        console.log("List created after nesting class section subject ");
+        console.log('List created after nesting class section subject ');
         console.log(this.classSectionSubjectList);
 
         //sort the classSection list
         this.classSectionSubjectListSort();
-        console.log("List after Sorting...");
+        console.log('List after Sorting...');
         console.log(this.classSectionSubjectList);
 
         // this.classSectionSubjectList = value[4];
         const map = new Map();
         value[4].forEach((item) => {
-          let key = item.parentClass + "|" + item.parentDivision;
+          let key = item.parentClass + '|' + item.parentDivision;
           if (!map.has(key)) {
             map.set(key, true); // set any value to Map
             this.vm.classSectionSubjectList.push({
@@ -243,7 +243,7 @@ export class CreateTestServiceAdapter {
     this.makeDataReadyForGet();
 
     if (this.vm.showSelectedClassAndSection.length === 0) {
-      alert("Please select any class and section");
+      alert('Please select any class and section');
       this.vm.isLoading = false;
       this.vm.showTestDetails = false;
       return;
@@ -254,8 +254,8 @@ export class CreateTestServiceAdapter {
     let request_subject_data = {
       parentSession: [this.vm.user.activeSchool.currentSessionDbId],
       parentSchool: [this.vm.user.activeSchool.dbId],
-      parentClass__in: this.classListForTest.join(","),
-      parentDivision__in: this.sectionListForTest.join(","),
+      parentClass__in: this.classListForTest.join(','),
+      parentDivision__in: this.sectionListForTest.join(','),
     };
 
     Promise.all([
@@ -329,8 +329,8 @@ export class CreateTestServiceAdapter {
 
     let request_test_data_list = {
       parentExamination: this.vm.selectedExamination,
-      parentClass__in: this.classListForTest.join(","),
-      parentDivision__in: this.sectionListForTest.join(","),
+      parentClass__in: this.classListForTest.join(','),
+      parentDivision__in: this.sectionListForTest.join(','),
     };
 
     Promise.all([
@@ -342,8 +342,8 @@ export class CreateTestServiceAdapter {
     ]).then(
       (value) => {
         //test list obtained...
-        console.log("Test list fetched...");
-        console.log("value: ", value[0]);
+        console.log('Test list fetched...');
+        console.log('value: ', value[0]);
         this.vm.newTestList = [];
         value[0].forEach((test) => {
           var subIdx = this.vm.newTestList.findIndex(
@@ -410,13 +410,13 @@ export class CreateTestServiceAdapter {
           }
         });
 
-        console.log("Test listed created in nested fashion...");
+        console.log('Test listed created in nested fashion...');
         console.log(this.vm.newTestList);
         this.copyNewTestList = this.vm.newTestList;
         if (this.vm.newTestList.length === 0) {
           this.vm.createTestFromTemplate();
         }
-        this.vm.handleUpdate("", "");
+        this.vm.handleUpdate('', '');
         this.vm.isLoading = false;
         this.vm.showTestDetails = true;
         this.vm.selectedSubject = null;
@@ -442,7 +442,7 @@ export class CreateTestServiceAdapter {
   //Create Test New implemented to created test with provided class and section parameter for specific subject and test type
   createTestNew(parentClass: any, parentDivision: any): void {
     if (this.vm.selectedSubject === null) {
-      alert("Subject should be selected");
+      alert('Subject should be selected');
       return;
     }
 
@@ -454,7 +454,7 @@ export class CreateTestServiceAdapter {
       !this.isOnlyGrade(this.vm.selectedSubject) &&
       (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)
     ) {
-      alert("Invalid Maximum Marks");
+      alert('Invalid Maximum Marks');
       return;
     }
 
@@ -467,8 +467,8 @@ export class CreateTestServiceAdapter {
       parentClass: parentClass,
       parentDivision: parentDivision,
       parentSubject: this.vm.selectedSubject,
-      startTime: "2019-07-01T11:30:00+05:30",
-      endTime: "2019-07-01T13:30:00+05:30",
+      startTime: '2019-07-01T11:30:00+05:30',
+      endTime: '2019-07-01T13:30:00+05:30',
       testType: this.vm.selectedTestType,
       maximumMarks: this.vm.selectedMaximumMarks,
     };
@@ -486,7 +486,7 @@ export class CreateTestServiceAdapter {
           if (cll.classId === data.parentClass) {
             cll.sectionList.forEach((secc) => {
               if (secc.sectionId === data.parentDivision) {
-                console.log("a test is found with same parameter...");
+                console.log('a test is found with same parameter...');
                 console.log(test);
                 testAlreadyAdded = true;
               }
@@ -497,7 +497,7 @@ export class CreateTestServiceAdapter {
     });
 
     if (testAlreadyAdded) {
-      alert("Similar Test is already in the template");
+      alert('Similar Test is already in the template');
       return;
     }
 
@@ -520,7 +520,7 @@ export class CreateTestServiceAdapter {
   }
 
   getDateTime(selectedDate: any, selectedTime: any): any {
-    return selectedDate + "T" + selectedTime + ":00+05:30";
+    return selectedDate + 'T' + selectedTime + ':00+05:30';
   }
 
   addTestToNewTestList(test: any): void {
@@ -589,14 +589,14 @@ export class CreateTestServiceAdapter {
   extractTime(dateStr: any): any {
     let d = new Date(dateStr);
 
-    let hour = (d.getHours() < 10 ? "0" : "") + d.getHours();
-    let minute = "" + d.getMinutes();
+    let hour = (d.getHours() < 10 ? '0' : '') + d.getHours();
+    let minute = '' + d.getMinutes();
 
-    return hour + ":" + minute;
+    return hour + ':' + minute;
   }
 
   getSubjectName(subjectId: any): any {
-    let result = "";
+    let result = '';
     this.subjectList.every((subject) => {
       if (subject.id === subjectId) {
         result = subject.name;
@@ -608,7 +608,7 @@ export class CreateTestServiceAdapter {
   }
 
   getClassName(classId: any): any {
-    let result = "";
+    let result = '';
     this.classList.every((item) => {
       if (item.id === classId) {
         result = item.name;
@@ -620,7 +620,7 @@ export class CreateTestServiceAdapter {
   }
 
   getSectionName(sectionId: any): any {
-    let result = "";
+    let result = '';
     this.sectionList.every((item) => {
       if (item.id === sectionId) {
         result = item.name;
@@ -665,8 +665,8 @@ export class CreateTestServiceAdapter {
             parentClass: cl.classId,
             parentDivision: sec.sectionId,
             parentSubject: test.subjectId,
-            startTime: "2019-07-01T11:30:00+05:30",
-            endTime: "2019-07-01T13:30:00+05:30",
+            startTime: '2019-07-01T11:30:00+05:30',
+            endTime: '2019-07-01T13:30:00+05:30',
             testType: test.newTestType,
             maximumMarks: test.newMaximumMarks,
           };
@@ -674,10 +674,10 @@ export class CreateTestServiceAdapter {
           //if test id is null that means it is from template and has to be created in backend
           if (data.id === null) {
             if (test.deleted) {
-              console.log("deleted from template");
+              console.log('deleted from template');
               this.getTestAndSubjectDetails();
             } else {
-              console.log("id is null so test is being created");
+              console.log('id is null so test is being created');
 
               Promise.all([
                 this.vm.examinationService.createObject(
@@ -700,7 +700,7 @@ export class CreateTestServiceAdapter {
 
           //if deleted
           else if (test.deleted) {
-            console.log("A delete request for");
+            console.log('A delete request for');
             console.log(test);
             Promise.all([
               this.vm.examinationService.deleteObject(
@@ -710,13 +710,13 @@ export class CreateTestServiceAdapter {
             ]).then(
               (value) => {
                 this.vm.isLoading = false;
-                console.log("Deleted Test");
+                console.log('Deleted Test');
                 console.log(value[0]);
 
                 this.getTestAndSubjectDetails();
               },
               (error) => {
-                console.log("Delete Test failed");
+                console.log('Delete Test failed');
                 this.vm.isLoading = false;
               }
             );
@@ -735,7 +735,7 @@ export class CreateTestServiceAdapter {
             ]).then(
               (value) => {
                 this.vm.isLoading = false;
-                console.log("Test Updated");
+                console.log('Test Updated');
 
                 this.getTestAndSubjectDetails();
               },
@@ -747,7 +747,7 @@ export class CreateTestServiceAdapter {
         });
       });
     });
-    this.vm.handleUpdate("", "");
+    this.vm.handleUpdate('', '');
     this.vm.isLoading = false;
   }
 
@@ -804,7 +804,7 @@ export class CreateTestServiceAdapter {
                     secc.sectionId === sec.sectionId &&
                     secc.testId != sec.testId
                   ) {
-                    console.log("a test is found with same parameter...");
+                    console.log('a test is found with same parameter...');
                     console.log(test);
                     ans = true;
                   }
