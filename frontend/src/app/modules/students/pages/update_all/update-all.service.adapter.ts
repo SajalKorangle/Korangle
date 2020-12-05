@@ -1,4 +1,5 @@
 import {UpdateAllComponent} from './update-all.component'
+import {CommonFunctions} from '@classes/common-functions';
 
 export class UpdateAllServiceAdapter {
     vm: UpdateAllComponent
@@ -20,16 +21,25 @@ export class UpdateAllServiceAdapter {
 
         this.vm.isLoading = true;
         Promise.all([
-            this.vm.classService.getClassSectionList(class_section_request_data, this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {parentSchool: this.vm.user.activeSchool.dbId}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {parentStudent__parentSchool: this.vm.user.activeSchool.dbId})
+            this.vm.studentService.getObjectList(
+                this.vm.studentService.student_parameter_value,
+                {parentStudent__parentSchool: this.vm.user.activeSchool.dbId})
         ]).then(value => {
             this.vm.isLoading = false;
+            value[0].forEach(classs => {
+                classs.sectionList = [];
+                value[1].forEach(section => {
+                    classs.sectionList.push(CommonFunctions.getInstance().copyObject(section));
+                });
+            });
             this.vm.initializeClassSectionList(value[0]);
-            this.vm.initializeStudentFullProfileList(value[1]);
-            this.vm.studentParameterList = value[2].map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
-            this.vm.studentParameterValueList = value[3]
+            this.vm.initializeStudentFullProfileList(value[2]);
+            this.vm.studentParameterList = value[3].map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
+            this.vm.studentParameterValueList = value[4];
         }, error => {
             this.vm.isLoading = false;
         });
@@ -38,7 +48,9 @@ export class UpdateAllServiceAdapter {
     updateParameterValue = (student, parameter, value) => {
         let promise = null;
 
-        let student_parameter_value = this.vm.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id);
+        let student_parameter_value = this.vm.studentParameterValueList.find(x =>
+            x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
+        );
 
         if (!student_parameter_value) {
             if (value !== this.vm.NULL_CONSTANT) {

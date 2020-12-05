@@ -1,0 +1,12 @@
+[
+  {
+    "statement": "Check Student existence in view all page",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Select all classes",
+      "Check the student existence"
+    ],
+    "testName": null
+  }
+]

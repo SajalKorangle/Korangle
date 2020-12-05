@@ -15,7 +15,7 @@ import {Discount} from "../../../../services/modules/fees/models/discount";
 import {SubDiscount} from "../../../../services/modules/fees/models/sub-discount";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {VehicleOldService} from "../../../../services/modules/vehicle/vehicle-old.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {DataStorage} from "../../../../classes/data-storage";
@@ -27,7 +27,7 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [SchoolService, FeeService, StudentService, VehicleOldService, ClassOldService, EmployeeService ],
+    providers: [ FeeService, StudentService, VehicleOldService,ClassService, EmployeeService, SchoolService ],
 })
 
 export class GiveDiscountComponent implements OnInit {
@@ -78,7 +78,7 @@ export class GiveDiscountComponent implements OnInit {
                 public feeService: FeeService,
                 public studentService: StudentService,
                 public vehicleService: VehicleOldService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 public employeeService: EmployeeService,
                 private cdRef: ChangeDetectorRef) {}
 
@@ -167,7 +167,7 @@ export class GiveDiscountComponent implements OnInit {
 
     getClassNameByStudentAndSessionId(student: any, sessionId: any): any {
         return this.classList.find(classs => {
-            return classs.dbId == this.selectedStudentSectionList.find(studentSection => {
+            return classs.id == this.selectedStudentSectionList.find(studentSection => {
                 return studentSection.parentStudent == student.id && studentSection.parentSession == sessionId;
             }).parentClass;
         }).name;

@@ -1,0 +1,14 @@
+[
+  {
+    "statement": "Change Student's Class",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Select the student",
+      "Change the class",
+      "Check success message",
+      "Re-open the page and confirm class change"
+    ],
+    "testName": null
+  }
+]

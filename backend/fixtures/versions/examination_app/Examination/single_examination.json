@@ -1,0 +1,3 @@
+[
+    {"model": "examination_app.examination", "pk": 1, "fields": {"name": "Half Yearly Examination 2018-19", "parentSchool": 1, "parentSession": 1, "status": "Declared"}}
+]

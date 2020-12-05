@@ -84,3 +84,11 @@ i.material-icons.column {
 ngx-datatable-column:hover {
     background-color: lightgrey;
 }
+
+/deep/ .datatable-body-cell{
+    margin-top:  15px;
+}
+
+/deep/ .highlight{
+    background: yellow;
+}

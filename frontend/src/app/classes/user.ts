@@ -132,6 +132,9 @@ export class User {
                 title: module.title,
                 subTitle: task.title,
             };
+            if (task.videoUrl) {
+                this.section['videoUrl'] = task.videoUrl;
+            }
         }
     }
 

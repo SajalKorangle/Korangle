@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { AddStudentServiceAdapter } from './add-student-service.adapter';
 
-import { ClassOldService } from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import { BusStopService } from '../../../../services/modules/school/bus-stop.service';
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {Student} from "../../../../services/modules/student/models/student";
@@ -20,7 +20,10 @@ import {BankService} from '../../../../services/bank.service';
   selector: 'add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.css'],
-    providers: [ SchoolService, ClassOldService, BusStopService, StudentService, SubjectService, ExaminationService, VehicleOldService, FeeService, BankService ],
+    providers: [
+        SchoolService, ClassService, BusStopService, StudentService, SubjectService,
+        ExaminationService, VehicleOldService, FeeService, BankService
+    ],
 })
 
 export class AddStudentComponent implements OnInit {
@@ -52,7 +55,7 @@ export class AddStudentComponent implements OnInit {
     isLoading = false;
 
     constructor (public schoolService : SchoolService,
-                 public classService: ClassOldService,
+                 public classService: ClassService,
                  public busStopService: BusStopService,
                  public studentService: StudentService,
                  public subjectService: SubjectService,
@@ -74,10 +77,10 @@ export class AddStudentComponent implements OnInit {
         this.newStudent.parentSchool = this.user.activeSchool.dbId;
 
         this.newStudentSection = new StudentSection();
-        this.newStudentSection.parentClass = this.classList[0].dbId;
+        this.newStudentSection.parentClass = this.classList[0].id;
         this.newStudentSection.parentDivision = this.sectionList[0].id;
         this.newStudentSection.parentSession = this.user.activeSchool.currentSessionDbId;
-        
+
         this.currentStudentParameterValueList = [];
 
     }

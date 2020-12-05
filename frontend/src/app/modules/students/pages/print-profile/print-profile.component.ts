@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {PrintProfileServiceAdapter} from './print-profile.service.adapter';
 import {SchoolService} from '../../../../services/modules/school/school.service';
 import {StudentService} from '../../../../services/modules/student/student.service';
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
 import {SubjectService} from '../../../../services/modules/subject/subject.service';
 import {FeeService} from '../../../../services/modules/fees/fee.service';
 import {ExaminationService} from '../../../../services/modules/examination/examination.service';
@@ -16,7 +16,7 @@ declare const $: any;
   selector: 'app-print-profile',
   templateUrl: './print-profile.component.html',
   styleUrls: ['./print-profile.component.css'],
-  providers: [ SchoolService, StudentService, ClassOldService, SubjectService, ExaminationService, FeeService ],
+  providers: [ SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
 })
 export class PrintProfileComponent implements OnInit {
 
@@ -41,7 +41,7 @@ export class PrintProfileComponent implements OnInit {
 
   constructor (public schoolService : SchoolService,
                public studentService: StudentService,
-               public classService: ClassOldService,
+               public classService: ClassService,
                public subjectService: SubjectService,
                public feeService: FeeService,
                public examinationService: ExaminationService,
@@ -65,7 +65,7 @@ export class PrintProfileComponent implements OnInit {
 
   getClassName(parentClass: number): any {
     return this.classList.find(classs => {
-      return parentClass == classs.dbId;
+      return parentClass == classs.id;
     }).name;
   }
 

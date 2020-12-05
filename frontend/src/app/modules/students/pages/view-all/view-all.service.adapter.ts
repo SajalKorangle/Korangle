@@ -1,4 +1,5 @@
 import {ViewAllComponent} from './view-all.component'
+import {CommonFunctions} from '@classes/common-functions';
 
 export class ViewAllServiceAdapter {
     vm: ViewAllComponent
@@ -33,24 +34,31 @@ export class ViewAllServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getClassSectionList(class_section_request_data, this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {})
         ]).then(value => {
+            value[0].forEach(classs => {
+                classs.sectionList = [];
+                value[1].forEach(section => {
+                    classs.sectionList.push(CommonFunctions.getInstance().copyObject(section));
+                });
+            });
             this.vm.initializeClassSectionList(value[0]);
-            this.vm.initializeStudentFullProfileList(value[1]);
-            this.vm.studentParameterList = value[2].map(x =>
+            this.vm.initializeStudentFullProfileList(value[2]);
+            this.vm.studentParameterList = value[3].map(x =>
                 ({
                     ...x,
                     filterValues: JSON.parse(x.filterValues).map(x2 => ({name: x2, show: false})), showNone: false, filterFilterValues: ''
                 })
             );
-            this.vm.studentParameterValueList = value[3];
-            this.vm.busStopList = value[4];
-            this.vm.session_list = value[5];
+            this.vm.studentParameterValueList = value[4];
+            this.vm.busStopList = value[5];
+            this.vm.session_list = value[6];
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
