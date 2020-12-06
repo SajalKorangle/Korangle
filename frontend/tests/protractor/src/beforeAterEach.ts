@@ -11,8 +11,12 @@ export class BeforeAfterEach {
 
     static async beforeEach() {
 
-        BeforeAfterEach.browser = await puppeteer.launch();
-        // BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 30});
+        // SET PUPPETEER_ENVIRONMENT to local in your bashrc (for unix terminal)
+        if (process.env.PUPPETEER_ENVIRONMENT == 'local') {
+            BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 30});
+        } else {
+            BeforeAfterEach.browser = await puppeteer.launch();
+        }
         BeforeAfterEach.page = await BeforeAfterEach.browser.newPage();
         await BeforeAfterEach.page.setViewport({
             width: 1220,
