@@ -9,9 +9,9 @@
 
         <mat-progress-bar *ngIf="user.isLazyLoading"  mode="indeterminate"></mat-progress-bar>
 
-        <div class="main-panel">
+        <div class="main-panel" id="main-pannel">
 
-            <app-navbar [user]="user" class="visible-sm visible-xs"></app-navbar>
+            <app-navbar [user]="user" class="visible-sm visible-xs mobile-sticky-top"></app-navbar>
 
             <div class="main-content">
                 <div class="container-fluid">
