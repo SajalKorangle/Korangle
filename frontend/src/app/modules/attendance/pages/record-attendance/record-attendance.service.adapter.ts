@@ -20,13 +20,33 @@ export class RecordAttendanceServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
+        let request_attendance_permission_list_data = {
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        let student_section_data = {
+            'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        let student_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'fields__korangle': 'id,name,mobileNumber,scholarNumber,parentTransferCertificate'
+        };
+
         this.settingsDoesNotExist = true;
         Promise.all([
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {}),
+            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission, request_attendance_permission_list_data),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
-            // this.vm.smsService.getObject(this.vm.smsService.sms_count, {id : this.vm.user.activeSchool.dbId})
         ]).then(value => {
-            this.vm.smsBalance = value[1];
+            this.vm.initializeClassSectionStudentList(value[3], value[4], value[2], value[5], value[1]);
+            this.vm.smsBalance = value[6];
             if(value[0].length == 0)
                 this.settingsDoesNotExist = true;
             else{

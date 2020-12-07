@@ -4,14 +4,14 @@ import {StudentService} from '../../../../services/modules/student/student.servi
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 
-import { ExcelService } from "../../../../excel/excel-service";
+import { ExcelService } from '../../../../excel/excel-service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_ATTENDANCE } from '../../../../print/print-routes.constants';
-import {DataStorage} from "../../../../classes/data-storage";
+import {DataStorage} from '../../../../classes/data-storage';
 import { SmsService } from '../../../../services/modules/sms/sms.service';
-import {NotificationService} from "../../../../services/modules/notification/notification.service";
-import {UserService} from "../../../../services/modules/user/user.service";
-import { RecordAttendanceServiceAdapter } from "./record-attendance.service.adapter";
+import {NotificationService} from '../../../../services/modules/notification/notification.service';
+import {UserService} from '../../../../services/modules/user/user.service';
+import { RecordAttendanceServiceAdapter } from './record-attendance.service.adapter';
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -111,39 +111,13 @@ export class RecordAttendanceComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         this.attendanceChange = false;
         this.serviceAdapter = new RecordAttendanceServiceAdapter();
-        let request_attendance_permission_list_data = {
-            parentEmployee: this.user.activeSchool.employeeId,
-            parentSession: this.user.activeSchool.currentSessionDbId,
-        };
-
-        let request_student_data = {
-            schoolDbId: this.user.activeSchool.dbId,
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-
-        let student_section_data = {
-            'parentStudent__parentSchool': this.user.activeSchool.dbId,
-            'parentSession': this.user.activeSchool.currentSessionDbId,
-        };
-
-        let student_data = {
-            'parentSchool': this.user.activeSchool.dbId,
-            'fields__korangle': 'id,name,mobileNumber,scholarNumber,parentTransferCertificate'
-        };
 
         this.isInitialLoading = true;
 
         Promise.all([
-            this.attendanceService.getObjectList(this.attendanceService.attendance_permission, request_attendance_permission_list_data),
             this.serviceAdapter.initializeAdapter(this),
             this.serviceAdapter.initializeData(),
-            this.studentService.getObjectList(this.studentService.student_section, student_section_data),
-            this.classService.getObjectList(this.classService.classs, {}),
-            this.classService.getObjectList(this.classService.division, {}),
-            this.studentService.getObjectList(this.studentService.student, student_data),
-            
         ]).then(value => {
-            this.initializeClassSectionStudentList(value[4], value[5], value[3], value[6], value[0]);
             this.isInitialLoading = false;
         }, error => {
             this.isInitialLoading = false;
@@ -565,16 +539,16 @@ export class RecordAttendanceComponent implements OnInit {
     }
 
     getButtonClass(status: any): any {
-        let classs = "btn";
+        let classs = 'btn';
         switch (status) {
             case ATTENDANCE_STATUS_LIST[2]:
-                classs += " btn-warning";
+                classs += ' btn-warning';
                 break;
             case ATTENDANCE_STATUS_LIST[1]:
-                classs += " btn-danger";
+                classs += ' btn-danger';
                 break;
             case ATTENDANCE_STATUS_LIST[0]:
-                classs += " btn-success";
+                classs += ' btn-success';
                 break;
         }
         return classs;
@@ -688,7 +662,7 @@ export class RecordAttendanceComponent implements OnInit {
     getMessageFromTemplate = (message, obj) => {
         let ret = message;
         for(let key in obj){
-            ret = ret.replace("<"+key+">", obj[key]);
+            ret = ret.replace('<'+key+'>', obj[key]);
         }
         return ret;
     }
