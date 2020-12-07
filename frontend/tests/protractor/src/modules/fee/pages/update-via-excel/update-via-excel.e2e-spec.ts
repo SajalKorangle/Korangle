@@ -51,7 +51,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             [node] = await page.$x('//input[@type="file"]');    // file input
             await node.uploadFile('tests/fixtures/modules/fee/pages/update-via-excel/Sheet.xlsx');
             await page.waitForTimeout(500);
-            await page.waitForXPath('//button[contains(., "Download Template")]');  // waiting for sinner to disappear
+            await page.waitForXPath('//button[contains(., "Download Template")]');  // waiting for spinner to disappear
             await page.waitForTimeout(500);
         })
 
@@ -72,7 +72,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             nodes = await containsAll('tr', '');
             nodes = nodes.slice(1);
             
-            for (let i = 0; i < nodes.length; i += 1) {  // counting cells that contins 20, 50 and 100
+            for (let i = 0; i < nodes.length; i += 1) {  // counting cells that contains 20, 50 and 100
                 row = nodes[i];
                 let cells;
 
@@ -108,7 +108,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
         afterAll(async () => {
             let node;
             
-            //Cliking download button and waiting for the spinner to disappear
+            //Clicking download button and waiting for the spinner to disappear
             node = await containsFirst('button', 'Upload Data');
             node.click();
             await page.waitForTimeout(500);

@@ -4,7 +4,7 @@ def add_update_via_excel_and_permission(apps,schema_editor):
     EmployeePermission = apps.get_model('employee_app','EmployeePermission')
 
     employee_module = Module.objects.get(path='fees')
-    update_via_excel = Task(path='update_via_excel',title='Update Via Excel',orderNumber=11,parentModule=employee_module)
+    update_via_excel = Task(path='update_via_excel',title='Upload Excel',orderNumber=11,parentModule=employee_module)
     update_via_excel.save()
 
     for employee_permission in EmployeePermission.objects.filter(parentTask__path='assign_task'):

@@ -11,7 +11,7 @@ import {ClassService} from "../../../../services/modules/class/class.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
-import { utils, writeFile } from 'xlsx';
+import xlsx = require('xlsx');
 
 @Component({
     selector: 'view-class-marks',
@@ -239,10 +239,10 @@ export class ViewMarksComponent implements OnInit {
         }
         fileName += '_'+this.selectedExamination.name+'.xlsx';
 
-        let ws = utils.aoa_to_sheet(template);
-        let wb = utils.book_new();
-        utils.book_append_sheet(wb, ws, 'Sheet1');
-        writeFile(wb, fileName);
+        let ws = xlsx.utils.aoa_to_sheet(template);
+        let wb = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+        xlsx.writeFile(wb, fileName);
     }
 
 }

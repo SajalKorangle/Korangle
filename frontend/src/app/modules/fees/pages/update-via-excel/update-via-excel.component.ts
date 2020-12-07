@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { utils, writeFile, WorkBook, WorkSheet, read } from 'xlsx';
+import xlsx = require('xlsx');
 
 import { UpdateViaExcelServiceAdapter } from './update-via-excel.service.adapter';
 
@@ -38,7 +38,7 @@ export class UpdateViaExcelComponent implements OnInit {
   errorRowIndices: Set<number> = new Set();
   
   filteredColumns: Array<number> = [];
-  filteredRows: Array<number> = []; // Dosen't contains header row
+  filteredRows: Array<number> = []; // Doesn't contains header row
   
   activeFilter: string = 'all';
   isLoading: boolean = false;
@@ -60,15 +60,15 @@ export class UpdateViaExcelComponent implements OnInit {
       this.isLoading = true;
       /* read workbook */
       const bstr: string = e.target.result;
-      const wb: WorkBook = read(bstr, {type: 'binary'});
-  
+      const wb: xlsx.WorkBook = xlsx.read(bstr, {type: 'binary'});
+
       /* grab first sheet */
       const wsname: string = wb.SheetNames[0];
-      const ws: WorkSheet = wb.Sheets[wsname];
-  
+      const ws: xlsx.WorkSheet = wb.Sheets[wsname];
+
       /* save data */
       this.clearExcelData();  // clear previous data if any
-      this.uploadedData = utils.sheet_to_json(ws, { header: 1 });
+      this.uploadedData = xlsx.utils.sheet_to_json(ws, { header: 1 });
       this.uploadedData.pop();  //  removing last row which is empty
   
       //Sanity Checks
@@ -206,10 +206,10 @@ export class UpdateViaExcelComponent implements OnInit {
       })
     });
 
-    let ws = utils.aoa_to_sheet(Data);
-    let wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, 'Sheet1');
-    writeFile(wb, 'Sheet.xlsx');
+    let ws = xlsx.utils.aoa_to_sheet(Data);
+    let wb = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+    xlsx.writeFile(wb, 'Sheet.xlsx');
   }
 
   uploadSheet(event: any): void{
@@ -326,7 +326,7 @@ export class UpdateViaExcelComponent implements OnInit {
     let structuredFeeType = {};
     this.feeTypeList.forEach((feeType, index) => {
       structuredFeeType[feeType.id] = index;
-    })
+    });
 
     this.uploadedData.slice(1).forEach((uploadedRow, row) => {
       let [student_id] = uploadedRow;
