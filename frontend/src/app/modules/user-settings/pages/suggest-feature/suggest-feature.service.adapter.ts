@@ -29,15 +29,26 @@ export class SuggestFeatureServiceAdapter {
 
     public createFeature(): void {
 
-        if (!this.vm.currentFeature.title || this.vm.currentFeature.title == '') {
+        if (!this.vm.currentFeature.title || this.vm.currentFeature.title.trim() == '') {
             alert('Title should be populated');
             return;
         }
 
-        if (!this.vm.currentFeature.description || this.vm.currentFeature.description == '') {
+        if (!this.vm.currentFeature.description || this.vm.currentFeature.description.trim() == '') {
             alert('\'Feature Description\' should be populated');
             return;
         }
+
+        if(!this.vm.currentFeature.advantage || this.vm.currentFeature.advantage.trim() == ''){
+            this.vm.currentFeature.advantage=null;
+        }
+        if(!this.vm.currentFeature.frequency || this.vm.currentFeature.frequency.trim() == ''){
+            this.vm.currentFeature.frequency=null;
+        }
+        if(!this.vm.currentFeature.managedBy || this.vm.currentFeature.managedBy.trim() == ''){
+            this.vm.currentFeature.managedBy=null;
+        }
+
 
 
         this.vm.isLoading = true;
