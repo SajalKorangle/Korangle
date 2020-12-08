@@ -43,7 +43,7 @@ export class SidebarComponent implements OnInit {
 
     green = 'green';
     warning = 'warning';
-    session_list = [];    
+    session_list = [];
 
     constructor(private router: Router,
                 private notificationService: NotificationService,
@@ -55,6 +55,29 @@ export class SidebarComponent implements OnInit {
             .subscribe((event) => {
                 if(event instanceof NavigationStart) {
                     this.user.isLazyLoading = true;
+                    if (event.navigationTrigger == "popstate") {
+                        if(event.url=='/'){
+                            location.reload();
+                            return;
+                        }
+                        const module_path = event.url.split('/')[1];
+                        const task_path = event.url.split('/')[2].split('?')[0];
+                        let module, task;
+                        switch (module_path) {
+                            case 'notification':
+                                module = this.user.notification;
+                                break;
+                            case 'settings':
+                                module = this.user.settings;
+                                break;
+                            default:
+                                module = this.user.activeSchool.moduleList.find(m => m.path == module_path);
+                        }
+                        task = module.taskList.find(t => t.path == task_path);
+                        this.user.populateSection(task, module);
+                        //this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
+                        // this.changePage(task, module);
+                    }
                 }
                 else if (
                     event instanceof NavigationEnd ||
@@ -86,20 +109,17 @@ export class SidebarComponent implements OnInit {
     };
 
     changePage(task: any, module: any) {
-        if(!this.user.checkAuthentication()){
+        if (!this.user.checkAuthentication()) {
             alert("Authentication failed");
-        }else {
-            this.router.navigateByUrl('');
-            setTimeout(() => {
-                this.user.populateSection(task, module);
-                this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
-                    queryParams: {
-                        school_id: this.user.activeSchool.dbId,
-                        session: this.user.activeSchool.currentSessionDbId
-                    }
-                }));
-                EmitterService.get('close-sidebar').emit();
-            });
+        } else {
+            this.user.populateSection(task, module);
+            this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
+                queryParams: {
+                    school_id: this.user.activeSchool.dbId,
+                    session: this.user.activeSchool.currentSessionDbId
+                }
+            }));
+            EmitterService.get('close-sidebar').emit();
         }
     }
 
@@ -147,7 +167,6 @@ export class SidebarComponent implements OnInit {
         this.user.isAuthenticated = false;
         this.user.jwt = '';
         this.user.emptyUserDetails();
-        this.router.navigateByUrl('/');
     }
 
 }

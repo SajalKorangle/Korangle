@@ -140,8 +140,7 @@ export class User {
         }*/
 
         let urlPath = window.location.pathname;
-        const modulePath = urlPath.split('/')[1];
-        const taskPath = urlPath.split('/')[2];
+        const [,modulePath, taskPath] = urlPath.split('/');
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         let urlActiveSchool: any;
@@ -151,22 +150,16 @@ export class User {
             this.populateSection(this.notification.taskList[0], this.notification);
             EmitterService.get('initialize-router').emit('');
 
-        } else if (modulePath == 'user-settings' || modulePath == 'notification') {  // if the user refreshes the notification or user - settings (i.e) we dont have these two in our user's module list
+        } else if (modulePath == 'user-settings' || modulePath == 'notification') {  // if the user refreshes the notification or user - settings (i.e) we dont have these two in our user's active school module list
 
-            let taskList: any;
             let module: any;
-            let selectedTask: any = undefined;
+            let task: any ;
             if (modulePath == 'user-settings') {
                 module = this.settings;
             } else {
                 module = this.notification;
             }
-            taskList = module.taskList;
-            taskList.some(task => {
-                if (task.path == urlPath.split('/')[2]) {
-                    selectedTask = task;
-                }
-            });
+            task = module.taskList.find(t => t.path == taskPath);
 
             // checking the school id in the url is valid for this user
             const validSchool = this.schoolList.some(function (school) {
@@ -178,7 +171,7 @@ export class User {
             if (validSchool && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= 5) {
                 this.activeSchool = urlActiveSchool;
                 this.activeSchool.currentSessionDbId = Number(urlParams.get('session'));
-                this.populateSection(selectedTask, module);
+                this.populateSection(task, module);
                 module.showTaskList = true;
                 EmitterService.get('initialize-router').emit('');
             } else {  // else redirecting him to his default school and session
@@ -188,8 +181,6 @@ export class User {
 
         } else {  // other than notification and user-settings come here
 
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
             const school_id = Number(urlParams.get('school_id'));
             const session_id = Number(urlParams.get('session'));
 
