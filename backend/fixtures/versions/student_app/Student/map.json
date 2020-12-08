@@ -18,5 +18,15 @@
         "file": "1.json"
       }
     ]
+  },
+  {
+    "file": "1.json",
+    "file_object_list": [
+      {
+        "app": "school_app",
+        "model": "School",
+     	"file": "1.json"
+      }
+    ]
   }
 ]
