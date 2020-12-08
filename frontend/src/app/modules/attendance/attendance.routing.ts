@@ -31,7 +31,7 @@ const routes: Routes = [
     {
         path: 'settings',
         loadChildren: 'app/modules/attendance/pages/settings/settings.module#SettingsModule',
-        data: {moduleName: 'settings'},
+        data: {moduleName: 'attendance'},
     },
     {
         path: '',
