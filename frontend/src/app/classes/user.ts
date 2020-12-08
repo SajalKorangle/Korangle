@@ -23,6 +23,44 @@ export class User {
 
     isLazyLoading: boolean = false;
 
+    notification = {
+        path: 'notification',
+        title: 'Notification',
+        icon: 'notifications_active',
+        showTaskList: false,
+        taskList: [
+            {
+                path: 'view_notification',
+                title: 'View Notification',
+            },
+        ],
+    };
+
+    settings = {
+        path: 'user-settings',
+        title: 'Settings',
+        icon: 'settings',
+        showTaskList: false,
+        taskList: [
+            {
+                path: 'update_profile',
+                title: 'Update Profile',
+            },
+            {
+                path: 'change_password',
+                title: 'Change Password',
+            },
+            {
+                path: 'contact_us',
+                title: 'Contact Us',
+            },
+            {
+                path: 'create_school',
+                title: 'Create School',
+            }
+        ],
+    };
+
     emptyUserDetails(): void {
         this.username = null;
         this.first_name = null;
@@ -100,13 +138,88 @@ export class User {
             };
             EmitterService.get('initialize-router').emit('');
         }*/
-        this.section = {
-            route: 'notification',
-            subRoute: 'view_notification',
-            title: 'Notification',
-            subTitle: 'View Notification',
-        };
-        EmitterService.get('initialize-router').emit('');
+
+        let urlPath = window.location.pathname;
+        const modulePath = urlPath.split('/')[1];
+        const taskPath = urlPath.split('/')[2];
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        let urlActiveSchool: any;
+
+        if (urlPath == '/') { // on user login the path comes with '/' so on login showing notification page
+
+            this.populateSection(this.notification.taskList[0], this.notification);
+            EmitterService.get('initialize-router').emit('');
+
+        } else if (modulePath == 'user-settings' || modulePath == 'notification') {  // if the user refreshes the notification or user - settings (i.e) we dont have these two in our user's module list
+
+            let taskList: any;
+            let module: any;
+            let selectedTask: any = undefined;
+            if (modulePath == 'user-settings') {
+                module = this.settings;
+            } else {
+                module = this.notification;
+            }
+            taskList = module.taskList;
+            taskList.some(task => {
+                if (task.path == urlPath.split('/')[2]) {
+                    selectedTask = task;
+                }
+            });
+
+            // checking the school id in the url is valid for this user
+            const validSchool = this.schoolList.some(function (school) {
+                urlActiveSchool = school;
+                return school.dbId === Number(urlParams.get('school_id'));
+            });
+
+            // if school and session are valid then showing the page
+            if (validSchool && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= 5) {
+                this.activeSchool = urlActiveSchool;
+                this.activeSchool.currentSessionDbId = Number(urlParams.get('session'));
+                this.populateSection(selectedTask, module);
+                module.showTaskList = true;
+                EmitterService.get('initialize-router').emit('');
+            } else {  // else redirecting him to his default school and session
+                this.populateSection(this.notification.taskList[0], this.notification);
+                EmitterService.get('initialize-router').emit('');
+            }
+
+        } else {  // other than notification and user-settings come here
+
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const school_id = Number(urlParams.get('school_id'));
+            const session_id = Number(urlParams.get('session'));
+
+            // iterating through schoolList if the module and task are valid
+            const taskValid = this.schoolList.some(school => {
+                if (school.dbId == school_id && session_id > 0 && session_id <= 5) {
+                    return school.moduleList.some(module => {
+                        if (module.path == modulePath) {
+                            return module.taskList.some(task => {
+                                if (task.path == taskPath) {
+                                    // if the school is valid and then the module and task are valid for that particular school user show him the page
+                                    this.activeSchool = school;
+                                    this.activeSchool.currentSessionDbId = session_id;
+                                    this.populateSection(task, module);
+                                    EmitterService.get('initialize-router').emit('');
+                                    module.showTaskList = true;
+                                    return true;
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            });
+            if (!taskValid) { // if the task page or module or school id is not valid redirects him to his default school notification page
+                this.populateSection(this.notification.taskList[0], this.notification);
+                EmitterService.get('initialize-router').emit('');
+            }
+        }
     }
 
     populateSection(task: any, module: any): void {

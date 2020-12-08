@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { User } from './classes/user';
 import { DataStorage } from './classes/data-storage';
-
+import {ActivatedRoute, RoutesRecognized} from '@angular/router';
 import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
@@ -12,7 +12,10 @@ import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
 import {CommonFunctions} from './classes/common-functions';
 import {MatDialog} from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
+import 'rxjs/add/operator/filter';
+import {filter, pairwise} from 'rxjs/operators';
 
 
 @Component({
@@ -32,7 +35,9 @@ export class AppComponent implements OnInit {
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
                 private dialog: MatDialog,
-                private notificationService: NotificationService) {}
+                private notificationService: NotificationService,
+                private route: ActivatedRoute,
+                private router: Router) {}
 
     ngOnInit() {
 
@@ -55,7 +60,6 @@ export class AppComponent implements OnInit {
                 }
             });
         }
-
         this.versionCheckService.initVersionCheck(environment.versionCheckURL);
     }
 

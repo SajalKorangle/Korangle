@@ -44,44 +44,6 @@ export class SidebarComponent implements OnInit {
     warning = 'warning';
     session_list = [];    
 
-    notification = {
-        path: 'notification',
-        title: 'Notification',
-        icon: 'notifications_active',
-        showTaskList: false,
-        taskList: [
-            {
-                path: 'view_notification',
-                title: 'View Notification',
-            },
-        ],
-    };
-
-    settings = {
-        path: 'user-settings',
-        title: 'Settings',
-        icon: 'settings',
-        showTaskList: false,
-        taskList: [
-            {
-                path: 'update_profile',
-                title: 'Update Profile',
-            },
-            {
-                path: 'change_password',
-                title: 'Change Password',
-            },
-            {
-                path: 'contact_us',
-                title: 'Contact Us',
-            },
-            {
-                path: 'create_school',
-                title: 'Create School',
-            }
-        ],
-    };
-
     constructor(private router: Router,
                 private notificationService: NotificationService,
                 private schoolService : SchoolService) {
@@ -105,10 +67,10 @@ export class SidebarComponent implements OnInit {
                 this.session_list = value;
             })
         EmitterService.get('initialize-router').subscribe(value => {
-            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
+            this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route+'/'+this.user.section.subRoute],{queryParams:{school_id: this.user.activeSchool.dbId,session:this.user.activeSchool.currentSessionDbId}}));
         });
         if (this.user.section) {
-            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
+            this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route+'/'+this.user.section.subRoute],{queryParams:{school_id: this.user.activeSchool.dbId,session:this.user.activeSchool.currentSessionDbId}}));
         }
     }
 
@@ -120,12 +82,21 @@ export class SidebarComponent implements OnInit {
     };
 
     changePage(task: any, module: any) {
-        this.router.navigateByUrl('');
-        setTimeout(() => {
-            this.user.populateSection(task, module);
-            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
-            EmitterService.get('close-sidebar').emit();
-        });
+        if(!this.user.checkAuthentication()){
+            alert("Authentication failed");
+        }else {
+            this.router.navigateByUrl('');
+            setTimeout(() => {
+                this.user.populateSection(task, module);
+                this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
+                    queryParams: {
+                        school_id: this.user.activeSchool.dbId,
+                        session: this.user.activeSchool.currentSessionDbId
+                    }
+                }));
+                EmitterService.get('close-sidebar').emit();
+            });
+        }
     }
 
     checkChangeSession(){
@@ -172,6 +143,7 @@ export class SidebarComponent implements OnInit {
         this.user.isAuthenticated = false;
         this.user.jwt = '';
         this.user.emptyUserDetails();
+        this.router.navigateByUrl('/');
     }
 
 }
