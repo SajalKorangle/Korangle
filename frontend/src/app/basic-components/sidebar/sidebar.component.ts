@@ -52,33 +52,16 @@ export class SidebarComponent implements OnInit {
 
     ngOnInit() {
         this.router.events
-            .subscribe((event) => {
+            .subscribe(event => {
                 if(event instanceof NavigationStart) {
                     this.user.isLazyLoading = true;
                     if (event.navigationTrigger == "popstate") {
-                        if(event.url=='/'){
-                            location.reload();
+                        if (event.url == '/') {
                             return;
                         }
-                        const module_path = event.url.split('/')[1];
-                        const task_path = event.url.split('/')[2].split('?')[0];
-                        let module, task;
-                        switch (module_path) {
-                            case 'notification':
-                                module = this.user.notification;
-                                break;
-                            case 'settings':
-                                module = this.user.settings;
-                                break;
-                            default:
-                                module = this.user.activeSchool.moduleList.find(m => m.path == module_path);
+                        this.user.initializeTask();
                         }
-                        task = module.taskList.find(t => t.path == task_path);
-                        this.user.populateSection(task, module);
-                        //this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
-                        // this.changePage(task, module);
                     }
-                }
                 else if (
                     event instanceof NavigationEnd ||
                     event instanceof NavigationCancel
