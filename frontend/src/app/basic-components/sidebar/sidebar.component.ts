@@ -52,7 +52,7 @@ export class SidebarComponent implements OnInit {
 
     ngOnInit() {
         this.router.events
-            .subscribe(event => {
+            .subscribe((event) => {
                 if(event instanceof NavigationStart) {
                     this.user.isLazyLoading = true;
                     if (event.navigationTrigger == "popstate") {

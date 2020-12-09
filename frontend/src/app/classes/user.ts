@@ -2,7 +2,6 @@
 import {School} from './school';
 
 import { EmitterService } from '../services/emitter.service';
-import { SidebarComponent } from '@basic-components/sidebar/sidebar.component'
 
 export class User {
 
