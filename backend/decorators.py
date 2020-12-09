@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-
+from permissions import employeeHasSchoolPermission, parentHasStudentPermission
+from student_app.models import Student
 
 def get_error_response(message):
     error_response = {}
@@ -40,3 +41,26 @@ def user_permission_new(function):
     wrap.__name__ = function.__name__
     return wrap
 
+def user_permission_3(function):
+    def wrap(*args, **kwargs):
+        request = args[1]
+        if request.user.is_authenticated:
+            if ('activeSchoolID' in request.GET.keys()):    # User is reqesting as employee
+                activeSchoolID = request.GET['activeSchoolID']
+                if (employeeHasSchoolPermission(request.user, activeSchoolID)):
+                    data = {'response': get_success_response(function(*args, **kwargs))}
+                    return JsonResponse(data)               
+            else if ('activeStudentId' in request.GET.keys()):  # User is requesting as parent
+                studentID = request.GET['activeStudentId']
+                if (parentHasStudentPermission(request.user, studentID)):
+                    request.GET._mutable = True
+                    request.GET['activeSchoolID'] = Student.objects.get(id=studentID).parentSchool.id
+                    request.GET._mutable = False
+                    data = {'response': get_success_response(function(*args, **kwargs))}
+                    return JsonResponse(data)
+            return JsonResponse({'response': get_error_response('Permission Issue')})
+        return JsonResponse(
+            {'response': get_error_response('User is not authenticated, logout and login again.')})
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap
