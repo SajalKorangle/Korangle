@@ -50,7 +50,7 @@ def user_permission_3(function):
                 if (employeeHasSchoolPermission(request.user, activeSchoolID)):
                     data = {'response': get_success_response(function(*args, **kwargs))}
                     return JsonResponse(data)               
-            else if ('activeStudentId' in request.GET.keys()):  # User is requesting as parent
+            elif ('activeStudentId' in request.GET.keys()):  # User is requesting as parent
                 studentID = request.GET['activeStudentId']
                 if (parentHasStudentPermission(request.user, studentID)):
                     request.GET._mutable = True
