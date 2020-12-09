@@ -25,8 +25,8 @@ def get_model_serializer(Model, fields__korangle, validator):
                 for not_requested in all_fields - set(fields):
                     self.fields.pop(not_requested)
 
-        def is_valid(self, *args, **kwargs):
-            original_response = super().is_valid()
+        def is_valid(self, raise_exception=False, *args, **kwargs):
+            original_response = super().is_valid(raise_exception=raise_exception)
             return original_response and validator(self.validated_data, *args, **kwargs) 
 
         class Meta:
@@ -38,9 +38,15 @@ def get_model_serializer(Model, fields__korangle, validator):
 
 ########### Common View ########
 
-class CommonSecurity():
+class CommonBaseView():
+
+    Model = ''
+    ModelSerializer = ''
     RelationsToSchool = []   # ex: parentStudent__parentSchool
     RelationsToStudent = []
+
+    def __init__(self):
+        self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
 
     def validator(self, valideted_data, activeSchoolID, activeStudentID):
         if(activeStudentID):
@@ -50,95 +56,81 @@ class CommonSecurity():
                 if (reduce(lambda a, b: getattr(a, b), splitted_relation) != activeStudentID):
                     return False
             for relation in self.RelationsToSchool:
-            splitted_relation = relation.split('__') + ['id']
-            splitted_relation[0] = valideted_data[splitted_relation[0]]
-            if (reduce(lambda a, b: getattr(a, b), splitted_relation) != activeSchoolID):
-                return False
+                splitted_relation = relation.split('__') + ['id']
+                splitted_relation[0] = valideted_data[splitted_relation[0]]
+                if (reduce(lambda a, b: getattr(a, b), splitted_relation) != activeSchoolID):
+                    return False
         return True
     
-    def requestPreProcessing(self, request):
-        request.GET._mutable = True
-        if (request.GET['activeStudentID']): # parent 
-            activeStudentID = request.GET['activeStudentID']
-            del request.GET['activeStudentID']
+    def permittedQuerySet(self, activeSchoolID, activeStudentID):
+        query_filters = {}
+        if (activeStudentID): # for parent only
             for relation in self.RelationsToStudent:
-                request.GET[relation] = activeStudentID
-        activeSchoolID = request.GET['activeSchoolID']
-        del request.GET['activeSchoolID']
+                query_filters[relation] = activeStudentID
         for relation in self.RelationsToSchool:
-            request.GET[relation] = activeSchoolID
-        request.GET._mutable = False
-        return request
+            query_filters[relation] = activeSchoolID
+        return self.Model.objects.filter(**query_filters)
 
 
-class CommonView(CommonSecurity):
-
-    Model = ''
-    ModelSerializer = ''
-
-    def __init__(self):
-        self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
+class CommonView(CommonBaseView):
     
     @user_permission_3
-    def get(self, request):
-        request = self.requestPreProcessing(request)
-        return get_object(request.GET, self.Model, self.ModelSerializer)
+    def get(self, request, activeSchoolID, activeStudentID):
+        filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
+        return get_object(request.GET, filtered_query_set, self.ModelSerializer)
 
     @user_permission_3
-    def post(self, request):
+    def post(self, request, activeSchoolID, activeStudentID):
         data = json.loads(request.body.decode('utf-8'))
-        return create_object(data, self.Model, self.ModelSerializer, request.GET)
+        return create_object(data, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
-    def put(self, request):
+    def put(self, request, activeSchoolID, activeStudentID):
         data = json.loads(request.body.decode('utf-8'))
-        return update_object(data, self.Model, self.ModelSerializer, request.GET)
+        filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
+        return update_object(data, self.Model, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
-    def patch(self, request):
+    def patch(self, request, activeSchoolID, activeStudentID):
         data = json.loads(request.body.decode('utf-8'))
-        return partial_update_object(data, self.Model, self.ModelSerializer, request.GET)
+        filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
+        return partial_update_object(data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
-    def delete(self, request):
-        request = self.requestPreProcessing(request)
-        return delete_object(request.GET, self.Model, self.ModelSerializer)
+    def delete(self, request, activeSchoolID, activeStudentID):
+        filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
+        return delete_object(request.GET, query_set)
 
 
-class CommonListView(CommonSecurity):
-
-    Model = ''
-    ModelSerializer = ''
-
-
-    def __init__(self, validator):
-        self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
+class CommonListView(CommonBaseView):
 
     @user_permission_3
-    def get(self, request):
-        request = self.requestPreProcessing(request)
+    def get(self, request, activeSchoolID, activeStudentID):
+        filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         if 'fields__korangle' in request.GET:
             self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=request.GET['fields__korangle'], validator=self.validator)
-        return get_list(request.GET, self.Model, self.ModelSerializer)
+        return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
     @user_permission_3
-    def post(self, request):
+    def post(self, request, activeSchoolID, activeStudentID):
         data = json.loads(request.body.decode('utf-8'))
-        return create_list(data, self.Model, self.ModelSerializer, request.GET)
+        return create_list(data, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
-    def put(self, request):
+    def put(self, request, activeSchoolID, activeStudentID):
         data = json.loads(request.body.decode('utf-8'))
+        filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         return update_list(data, self.Model, self.ModelSerializer, request.GET)
 
     @user_permission_3
-    def patch(self, request):
+    def patch(self, request, activeSchoolID, activeStudentID):
         data = json.loads(request.body.decode('utf-8'))
-        return partial_update_list(data, self.Model, self.ModelSerializer. request.GET)
+        filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
+        return partial_update_list(data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
-    def delete(self, request):
-        request = self.requestPreProcessing(request)
-        return delete_list(request.GET, self.Model, self.ModelSerializer)
+    def delete(self, request, activeSchoolID, activeStudentID):
+        filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
+        return delete_list(request.GET, filtered_query_set, self.ModelSerializer)
 
 
