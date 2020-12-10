@@ -12,6 +12,11 @@ export class CommonFunctions {
         return CommonFunctions.instance;
     }
 
+    static scrollToTop(): void {
+        const mainPannel = document.getElementById('main-pannel');
+        mainPannel.scrollTop = 0;
+    }
+
     copyObject(object: any): any {
         let tempObject = {};
         Object.keys(object).forEach(key => {
