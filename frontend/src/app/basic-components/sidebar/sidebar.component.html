@@ -47,7 +47,7 @@
             </ng-container>
         </ng-container>
 
-        <ng-container *ngIf="checkChangeSession()">
+        <ng-container *ngIf="user.checkChangeSession()">
 
             <select [class.sessionMargin61]="user.schoolList.length>1"
                     [class.sessionMargin60]="user.schoolList.length==1"
@@ -64,7 +64,7 @@
         </ng-container>
 
         <!-- Current Session Name -->
-        <div  *ngIf="!checkChangeSession()"
+        <div  *ngIf="!user.checkChangeSession()"
               [class.sessionMargin68]="user.schoolList.length>1"
               [class.sessionMargin60]="user.schoolList.length==1">
             <!-- ToDo: Handle more generecally in future -->

@@ -145,11 +145,11 @@ export class User {
         let module: any;
         let task: any ;
 
-        if (urlPath == '/') { // on user login the path comes with '/' so on login showing notification page
+        if (urlPath == '/' || urlParams.get('school_id') == undefined || urlParams.get('session') == undefined)  { // on user login the path comes with '/' so on login showing notification page and even if there are no params or wrong params
 
             this.populateSection(this.notification.taskList[0], this.notification);
             this.notification.showTaskList=true;
-            EmitterService.get('initialize-router').emit('');
+            EmitterService.get('initialize-router').emit({student:'false'});
 
         } else if(this.isSchoolValid(urlParams)) { // checking the school id  and session id in the url is valid for this user
             switch (modulePath) {
@@ -161,43 +161,57 @@ export class User {
                 case 'notification':
                     module = this.notification;
                     break;
-               // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
+                // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
                 case 'parent':
-                    module = this.activeSchool.parentModuleList[0];
+                    if (this.activeSchool.role == 'Parent' && urlParams.get('student_id') != undefined) {
+                        module = this.activeSchool.studentList.find(s => s.id == Number(urlParams.get('student_id')));
+                    } else {
+                        module = this.activeSchool.parentModuleList[0];
+                    }
                     break;
-               // for employee
+                // for employee
                 default:
                     module = this.activeSchool.moduleList.find(m => m.path == modulePath);
             }
-            if(module==undefined){ // if module doesn't exist redirect to default school notification page
-                this.populateSection(this.notification.taskList[0], this.notification);
-            }else {
+            if (module == undefined) { // if module doesn't exist redirect to default school notification page
+                module=this.notification
+                task=this.notification.taskList[0]
+            } else {
                 task = module.taskList.find(t => t.path == taskPath);
-                if(task==undefined){ // if task doesn't exist redirect to default school notification page
-                this.populateSection(this.notification.taskList[0], this.notification);
-                }else{
-                 module.showTaskList = true;
-                 this.populateSection(task, module); // if valid then populate the corresponding section
+                if (task == undefined) { // if task doesn't exist redirect to default school notification page
+                     module=this.notification
+                     task=this.notification.taskList[0]
                 }
             }
-            EmitterService.get('initialize-router').emit('');
+            this.populateSection(task, module);
+            module.showTaskList = true;
+            EmitterService.get('initialize-router').emit({student: module});
         }
     }
 
 
-        isSchoolValid(urlParams:any):boolean{
-           const school = this.schoolList.find(s => s.dbId == Number(urlParams.get('school_id')));
-           if(school != undefined && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= 5){
-               this.activeSchool=school;
-               this.activeSchool.currentSessionDbId = Number(urlParams.get('session'));
-               return true; // if both are valid returns true
-
-           }else { // if the school id or session id is not valid redirects him to his default school's notification page
-               this.populateSection(this.notification.taskList[0], this.notification);
-               EmitterService.get('initialize-router').emit('');
-               return false;
-           }
+        isSchoolValid(urlParams:any):boolean {
+                const school = this.schoolList.find(s => s.dbId == Number(urlParams.get('school_id')));
+                if (school != undefined && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= 5) {
+                    this.activeSchool = school;
+                    if (this.activeSchool.currentSessionDbId != Number(urlParams.get('session')) && this.checkChangeSession()) {
+                        this.activeSchool.currentSessionDbId = Number(urlParams.get('session'));
+                    }
+                    return true; // if both are valid returns true
+                } else { // if the school id or session id is not valid redirects him to his default school's notification page
+                    this.populateSection(this.notification.taskList[0], this.notification);
+                    EmitterService.get('initialize-router').emit({student:'false'});
+                    return false;
+                }
         }
+
+        checkChangeSession(){
+        return this.activeSchool && this.activeSchool.moduleList.find(module=>{
+            return module.path=='school' && module.taskList.find(task=>{
+                return task.path=='change_session';
+            })!=undefined;
+        })!=undefined;
+    }
 
     populateSection(task: any, module: any): void {
         if (module.path === 'user-settings' || module.path === 'notification') {

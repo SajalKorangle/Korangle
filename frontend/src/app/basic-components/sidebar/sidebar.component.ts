@@ -57,6 +57,7 @@ export class SidebarComponent implements OnInit {
                     this.user.isLazyLoading = true;
                     if (event.navigationTrigger == "popstate") {
                         if (event.url == '/') {
+                            history.back();
                             return;
                         }
                         this.user.initializeTask();
@@ -77,7 +78,18 @@ export class SidebarComponent implements OnInit {
                 this.session_list = value;
             })
         EmitterService.get('initialize-router').subscribe(value => {
-            this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route+'/'+this.user.section.subRoute],{queryParams:{school_id: this.user.activeSchool.dbId,session:this.user.activeSchool.currentSessionDbId}}));
+            if(this.user.activeSchool.role == 'Parent' && value.student.id!=undefined && this.user.section.subRoute!='view_fee'){
+                 this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
+                queryParams: {
+                    school_id: this.user.activeSchool.dbId,
+                    session: this.user.activeSchool.currentSessionDbId,
+                    student_id:value.student.id
+                }
+            }));
+            }else
+            {
+                this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route+'/'+this.user.section.subRoute],{queryParams:{school_id: this.user.activeSchool.dbId,session:this.user.activeSchool.currentSessionDbId}}));
+            }
         });
         if (this.user.section) {
             this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route+'/'+this.user.section.subRoute],{queryParams:{school_id: this.user.activeSchool.dbId,session:this.user.activeSchool.currentSessionDbId}}));
@@ -96,23 +108,26 @@ export class SidebarComponent implements OnInit {
             alert("Authentication failed");
         } else {
             this.user.populateSection(task, module);
-            this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
+            if(this.user.activeSchool.role == 'Parent' && module.name!=undefined && task.path!='view_fee'){ // view fee is common for all students in the case of multiple students
+                this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
                 queryParams: {
                     school_id: this.user.activeSchool.dbId,
-                    session: this.user.activeSchool.currentSessionDbId
+                    session: this.user.activeSchool.currentSessionDbId,
+                    student_id:module.id
                 }
             }));
+            }else {
+                this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
+                    queryParams: {
+                        school_id: this.user.activeSchool.dbId,
+                        session: this.user.activeSchool.currentSessionDbId
+                    }
+                }));
+            }
             EmitterService.get('close-sidebar').emit();
         }
     }
 
-    checkChangeSession(){
-        return this.user.activeSchool && this.user.activeSchool.moduleList.find(module=>{
-            return module.path=='school' && module.taskList.find(task=>{
-                return task.path=='change_session';
-            })!=undefined;
-        })!=undefined;
-    }
 
     handleSessionChange(){
         this.router.navigateByUrl('');
