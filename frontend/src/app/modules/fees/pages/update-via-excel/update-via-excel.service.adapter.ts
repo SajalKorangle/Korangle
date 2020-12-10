@@ -54,7 +54,7 @@ export class UpdateViaExcelServiceAdapter{
                 value[0].forEach(ss => {
                     ss['student'] = value2[0].find(student => student.id === ss.parentStudent);   // storing student data inside student session data
                 }); 
-                this.vm.studentSessionList = value[0];
+                this.vm.studentSectionList = value[0];
 
                 //Populate Students
                 this.populateStudents(value[0]); 
@@ -74,6 +74,9 @@ export class UpdateViaExcelServiceAdapter{
 
     populateFeeType(feeTypeList: any): void{
         this.vm.feeTypeList = feeTypeList.sort((a, b) => a.orderNumber - b.orderNumber);
+        feeTypeList.sort((a, b) => a.orderNumber - b.orderNumber).forEach((feeType, index) => {
+            this.vm.feeTypeColumnIndexMappedByFeeTypeId[feeType.id] = index + this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO;
+        });
     }
 
     structuringForStudents(classList: any, divisionList: any): void {   // structure: {classsid: {divisionId: [student1,...], ...}, ...}
@@ -81,11 +84,11 @@ export class UpdateViaExcelServiceAdapter{
         let divisionIds = divisionList.map(d => d.id);
 
         classIds.forEach(classId => {
-            this.vm.structuredStudent[classId] = {};
-            this.vm.structuredSelection[classId] = {};
+            this.vm.studentListMappedByClassDivision[classId] = {};
+            this.vm.classDivisionSelectionMappedByClassDivision[classId] = {};
             divisionIds.forEach(divisionId => {
-                this.vm.structuredStudent[classId][divisionId] = [];    // students will be filled while populating
-                this.vm.structuredSelection[classId][divisionId] = false;   // default selection false
+                this.vm.studentListMappedByClassDivision[classId][divisionId] = [];    // students will be filled while populating
+                this.vm.classDivisionSelectionMappedByClassDivision[classId][divisionId] = false;   // default selection false
             });
         });
     }
@@ -95,16 +98,16 @@ export class UpdateViaExcelServiceAdapter{
             let ClassId, DivisionId;
             ClassId = studentSelection.parentClass;
             DivisionId = studentSelection.parentDivision;
-            this.vm.structuredStudent[ClassId][DivisionId].push(studentSelection);
+            this.vm.studentListMappedByClassDivision[ClassId][DivisionId].push(studentSelection);
         });
         this.vm.studentsCount = studentSectionList.length;
 
         // Removing empty divisions
         this.vm.classList.forEach(Class => {
             this.vm.divisionList.forEach(Division => {
-                if (this.vm.structuredStudent[Class.id][Division.id].length === 0) {
-                    delete this.vm.structuredStudent[Class.id][Division.id];
-                    delete this.vm.structuredSelection[Class.id][Division.id];
+                if (this.vm.studentListMappedByClassDivision[Class.id][Division.id].length === 0) {
+                    delete this.vm.studentListMappedByClassDivision[Class.id][Division.id];
+                    delete this.vm.classDivisionSelectionMappedByClassDivision[Class.id][Division.id];
                 }
             })
         })
@@ -112,31 +115,47 @@ export class UpdateViaExcelServiceAdapter{
 
     populateStructuredStudentsFeeExist(studentFeeList: any): void{
         studentFeeList.forEach(studentFee => {
-            if (this.vm.structuredStudentFee[studentFee.parentStudent]) // for handling the case of multiple fee types
-                this.vm.structuredStudentFee[studentFee.parentStudent].push(studentFee);
+            if (this.vm.studentFeeListMappedByStudent[studentFee.parentStudent]) // for handling the case of multiple fee types
+                this.vm.studentFeeListMappedByStudent[studentFee.parentStudent].push(studentFee);
             else
-                this.vm.structuredStudentFee[studentFee.parentStudent] = [studentFee];
+                this.vm.studentFeeListMappedByStudent[studentFee.parentStudent] = [studentFee];
         });
     }
 
     uploadedStudentFeePreProcessing() {
-        this.vm.removePreviousFeeDataFromSheet();
+
+        this.vm.excelDataFromUser.slice(1).forEach((uploadedRow,row) => {
+            let [student_id] = uploadedRow;
+            if (this.vm.studentFeeListMappedByStudent[student_id]) {
+                this.vm.studentFeeListMappedByStudent[student_id].forEach(studentFee => {
+                    let feeTypeColumnIndex = this.vm.feeTypeColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
+                    delete this.vm.excelDataFromUser[row+1][feeTypeColumnIndex]; // What are we deleting here?, Why are we deleting the what?
+                });
+            }
+        });
 
         let request_school_fee_rule_data = {
             'parentFeeType__parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId
         };
 
+        // What do we need to do to upload student fee data.
+        // We have already gotten the student fee rules as of now, during initialize data.
+        // If there is a student fee that needs to be uploaded for a particular fee type then,
+        // we would have to create school fee rule no matter what with the excel file name, date & time,
+        // so that a particular file data can be deleted.
         return this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data).then(value => {
-            let schoolFeeRuleList = {}; // format: {feeTypeId: schoolFeeRule, ...}; it will be returned for creating studentFee
+            // There can be more than one school fee rules for a particular fee type.
+            // This doesn't seem right.
+            let schoolFeeRuleMappedByFeeTypeId = {}; // format: {feeTypeId: schoolFeeRule, ...}; it will be returned for creating studentFee
             value.forEach(schoolFeeRule => {
-                schoolFeeRuleList[schoolFeeRule.parentFeeType] = schoolFeeRule;
+                schoolFeeRuleMappedByFeeTypeId[schoolFeeRule.parentFeeType] = schoolFeeRule;
             });
 
             let schoolFeeRuleToBeUploaded = [];  // to be uploaded
-            this.vm.filteredColumns.slice(5).forEach(col => {
-                let feeType = this.vm.feeTypeList[col-5];
-                if (!schoolFeeRuleList[feeType.id]) {   //  create new school fee rule if doesn't already exist for a particular fee type
+            this.vm.usefulFeeTypeExcelColumnIndexList.forEach(col => {
+                let feeType = this.vm.feeTypeList[col-this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO];
+                if (!schoolFeeRuleMappedByFeeTypeId[feeType.id]) {   //  create new school fee rule if doesn't already exist for a particular fee type
                     let newSchoolFeeRule = new SchoolFeeRule();
                     newSchoolFeeRule.parentSession = this.vm.user.activeSchool.currentSessionDbId;
                     newSchoolFeeRule.isClassFilter = false;
@@ -155,13 +174,13 @@ export class UpdateViaExcelServiceAdapter{
             if (schoolFeeRuleToBeUploaded.length > 0) {
                 return this.vm.feeService.createList(this.vm.feeService.school_fee_rules, schoolFeeRuleToBeUploaded).then(schoolFeeRules => {
                     schoolFeeRules.forEach(schoolFeeRule => {
-                        schoolFeeRuleList[schoolFeeRule.id] = schoolFeeRule;
+                        schoolFeeRuleMappedByFeeTypeId[schoolFeeRule.parentFeeType] = schoolFeeRule;
                     });
-                    return schoolFeeRuleList;
+                    return schoolFeeRuleMappedByFeeTypeId;
                 })
             }
             else
-                return schoolFeeRuleList;
+                return schoolFeeRuleMappedByFeeTypeId;
         });
     }
 
@@ -169,10 +188,11 @@ export class UpdateViaExcelServiceAdapter{
         this.vm.isLoading = true;
         this.uploadedStudentFeePreProcessing().then(SchoolFeeRuleObject => {
             let studentFeeListToBeUploaded = [];  //  to be uploaded
-            this.vm.filteredColumns.slice(5).forEach(col => {
-                let feeType = this.vm.feeTypeList[col - 5];
+            this.vm.usefulFeeTypeExcelColumnIndexList.forEach(col => {
+                let feeType = this.vm.feeTypeList[col - this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO];
                 let schoolFeeRule = SchoolFeeRuleObject[feeType.id];
-                this.vm.uploadedData.slice(1).forEach(rowStudent => {
+                this.vm.excelDataFromUser.slice(1).forEach(rowStudent => {
+                    // Why are we parsing with float instead of parsing with int.
                     if (!rowStudent[col] || parseFloat(rowStudent[col]) == 0 || isNaN(parseFloat(rowStudent[col]))) //  if cell is empty return
                         return;
                     
