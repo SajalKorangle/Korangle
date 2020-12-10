@@ -45,6 +45,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
         });
     });
 
+    // So many nesting in tests and different. Can't we just have test with different steps.
     describe('set2: Sheet Upload', () => {
         beforeAll(async () => {
             let node;
@@ -52,10 +53,10 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             await node.uploadFile('tests/fixtures/modules/fee/pages/update-via-excel/Sheet.xlsx');
             await page.waitForTimeout(500);
             await page.waitForXPath('//button[contains(., "Download Template")]');  // waiting for spinner to disappear
-            await page.waitForTimeout(500);
+            await page.waitForTimeout(5000);
         })
 
-        it('Row-column Count', async () => {
+        fit('Row-column Count', async () => {
             let node, nodes;
             nodes = await containsAll('tr', '');    //  table rows
             expect(nodes.length).toBe(69);

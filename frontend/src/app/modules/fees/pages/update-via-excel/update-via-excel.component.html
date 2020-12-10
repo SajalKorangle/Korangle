@@ -28,7 +28,8 @@
             <thead>
                 <tr class="text-{{user.activeSchool.secondaryThemeColor}}">
                     <th>1</th>
-                    <th *ngFor="let col of usefulFeeTypeExcelColumnIndexList" [class.bgDanger]="errorCells['0,'+col]" [matTooltip]="errorCells['0,'+col]">
+                    <!-- Replaced filtered Columns with excel Data from user here -->
+                    <th *ngFor="let col of [0,1,2,3,4].concat(usefulFeeTypeExcelColumnIndexList)" [class.bgDanger]="errorCells['0,'+col]" [matTooltip]="errorCells['0,'+col]">
                         {{excelDataFromUser[0][col]}}
                     </th>
                 </tr>
@@ -38,7 +39,8 @@
             <ng-container *ngFor="let row of filteredRows">
                 <tr [class.bgDanger]="errorRows[row]" [matTooltip]="errorRows[row]">
                     <td>{{row+1}}</td>
-                    <ng-container *ngFor="let col of usefulFeeTypeExcelColumnIndexList">
+                    <!-- Replaced filtered Columns with excel Data from user here -->
+                    <ng-container *ngFor="let col of [0,1,2,3,4].concat(usefulFeeTypeExcelColumnIndexList)">
                         <td [class.bgWarning]="warningCells[(row)+','+col]" [class.bgDanger]="errorCells[(row)+','+col]" [matTooltip]="errorCells[(row)+','+col]?errorCells[(row)+','+col]:warningCells[(row)+','+col]">{{excelDataFromUser[row][col]}}</td>
                     </ng-container>
                 </tr>

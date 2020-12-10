@@ -281,16 +281,20 @@ export class UpdateViaExcelComponent implements OnInit {
                 Division = this.divisionList.find(d => d.id == ss.parentDivision);
 
                 if (!excelStudent[4] || `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`.trim() != excelStudent[4].trim())
+                    console.log('Error');
                     this.newErrorCell(i, 4, 'Invalid Class/Section Data');
 
                 if (backendStudent.scholarNumber != excelStudent[1] && !(backendStudent.scholarNumber == "" && excelStudent[1] == undefined))
+                    console.log('Error');
                     this.newErrorCell(i, 1, 'Scholar Number Mismatch');
 
                 if (!excelStudent[2] || backendStudent.name.trim() !== excelStudent[2].trim()) {
+                    console.log('Error');
                     this.newErrorCell(i, 2, 'Name Mismatch');
                 }
 
                 if (!excelStudent[3] || backendStudent.fathersName.trim() !== excelStudent[3].trim()) {
+                    console.log('Error');
                     this.newErrorCell(i,3,'Father’s Name Mismatch')
                 }
             }
@@ -312,6 +316,7 @@ export class UpdateViaExcelComponent implements OnInit {
                 parsedAmount = parseFloat(amount);
                 if (!isNaN(parsedAmount)) { // The case of '' (i.e. empty string) goes to if not else and should be handled.
                     if (parsedAmount < 0) {
+                        console.log('Error');
                         this.newErrorCell(i, j, 'Negative Amount');
                     }
                     else if (parsedAmount != parseInt(amount)) {
@@ -320,6 +325,7 @@ export class UpdateViaExcelComponent implements OnInit {
                     }
                 } else {  //  not number Cell
                     if (amount && amount.trim() != '') {
+                        console.log('Error');
                         this.newErrorCell(i, j, 'Amount must be an positive integer');
                     }
                     else {
@@ -347,6 +353,7 @@ export class UpdateViaExcelComponent implements OnInit {
                         });
                     }
                     if (parseInt(uploadedRow[feeTypeColumnIndex]) != annual_total) // What happens if parseInt gives error
+                        console.log('Error');
                         this.newErrorCell(row + 1, feeTypeColumnIndex, 'Student Fee inconsistent with previous student fee');
                 });
             }
