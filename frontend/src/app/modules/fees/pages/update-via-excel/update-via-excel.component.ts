@@ -244,6 +244,7 @@ export class UpdateViaExcelComponent implements OnInit {
         });
 
         // Why do we require this line?
+        // to remove all empty slots in array
         this.usefulFeeTypeExcelColumnIndexList = this.usefulFeeTypeExcelColumnIndexList.filter(col=>col!=undefined);
     }
 
