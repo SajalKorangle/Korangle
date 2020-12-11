@@ -1,15 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {User} from './classes/user';
-import {DataStorage} from './classes/data-storage';
+import { User } from './classes/user';
+import { DataStorage } from './classes/data-storage';
 
 import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
-import moment = require('moment');
-import {NotificationService} from './services/modules/notification/notification.service';
-import {Constants} from './classes/constants';
-import {registerForNotification} from './classes/common';
+import {NotificationService} from "./services/modules/notification/notification.service";
+import {Constants} from "./classes/constants";
+import {registerForNotification} from "./classes/common";
 import {CommonFunctions} from './classes/common-functions';
 import {MatDialog} from '@angular/material/dialog';
 import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
@@ -19,25 +18,24 @@ import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.com
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [AuthenticationService, VersionCheckService, NotificationService],
+    providers: [ AuthenticationService, VersionCheckService, NotificationService ],
 })
 
 export class AppComponent implements OnInit {
+
     isLoading = false;
     public user = new User();
-
 
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
                 private dialog: MatDialog,
-                private notificationService: NotificationService) {
-    }
+                private notificationService: NotificationService) {}
 
     ngOnInit() {
 
         DataStorage.getInstance().setUser(this.user);
         if (this.user.checkAuthentication()) {
-            this.authenticationService.getUserDetails(this.user.jwt).then(data => {
+            this.authenticationService.getUserDetails(this.user.jwt).then( data => {
                 if (data === 'failed') {
                     console.log('authentication failed');
                     this.user.isAuthenticated = false;
@@ -77,7 +75,6 @@ export class AppComponent implements OnInit {
         }
         return false;
     }
-
 
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
