@@ -20,6 +20,11 @@ const routes: Routes = [
         data: {moduleName: 'examinations'},
     },
     {
+        path: 'schedule_test',
+        loadChildren: 'app/modules/examination/pages/schedule-test/schedule-test.module#ScheduleTestModule',
+        data: {moduleName: 'examinations'},
+    },
+    {
         path: 'generate_hall_ticket',
         loadChildren: 'app/modules/examination/pages/generate-hall-ticket/generate-hall-ticket.module#GenerateHallTicketModule',
         data: {moduleName: 'examinations'},
