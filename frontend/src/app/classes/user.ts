@@ -199,6 +199,8 @@ export class User {
                 return true; // if both are valid returns true
             } else { // if the school id or session id is not valid redirects him to his default school's notification page
                 this.populateSection(this.notification.taskList[0], this.notification);
+                this.notification.showTaskList=true;
+                EmitterService.get('initialize-router').emit({student:'false'});
                 return false;
             }
     }
