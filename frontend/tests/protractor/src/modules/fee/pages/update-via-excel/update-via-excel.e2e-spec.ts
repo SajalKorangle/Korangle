@@ -137,16 +137,14 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             expect(isWarning).toBe(true);
         });
 
-        /*fit('No. of Error Rows', async () => {
+        it('No. of Error Rows', async () => {
             let node, nodes;
-            await page.waitForTimeout(30000);
             node = await containsFirst('button', 'Errors');
             node.click();
 
-            await page.waitForTimeout(30000);
             nodes = await containsAll('tr', '');    //  table rows
             expect(nodes.length).toBe(11);
-        });*/
+        });
     });
     
     describe('set4: Same Sheet Upload', () => {
