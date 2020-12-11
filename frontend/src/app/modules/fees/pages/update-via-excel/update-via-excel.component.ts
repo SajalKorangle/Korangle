@@ -24,19 +24,22 @@ export class UpdateViaExcelComponent implements OnInit {
     classList = [];
     divisionList = [];
     feeTypeList = [];
-    feeTypeColumnIndexMappedByFeeTypeId = {};
+    feeTypeExcelColumnIndexMappedByFeeTypeId = {};
+    feeTypeIdMappedByFeeTypeExcelColumnIndex = {};
     studentSectionList = [];  // student data available in student session with key 'student'
 
-    studentListMappedByClassDivision = {};  // structure: {classsid: {divisionId: [student1,...], ...}, ...}
-    classDivisionSelectionMappedByClassDivision = {}; // structure: {classsid: {divisionId: Boolean, ...}, ...}
-    studentFeeListMappedByStudent = {}; // structure: {parentStudentId: [studentFee,...], ...}
+    studentListMappedByClassIdDivisionId = {};  // structure: {classsid: {divisionId: [student1,...], ...}, ...}
+    classDivisionSelectionMappedByClassIdDivisionId = {}; // structure: {classsid: {divisionId: Boolean, ...}, ...}
+    // Delete below after code review
+    // studentFeeListMappedByStudent = {}; // structure: {parentStudentId: [studentFee,...], ...}
+    studentFeeListMappedByStudentIdFeeTypeId = {};
     studentsCount:number = 0;
     selectionCount:number = 0;
 
     excelDataFromUser: Array<Array<any>> = [];  //  Array of array
     errorRows = {}; //  format: {rowNumber: "<Error Mesage>", ...}
-    errorCells = {};  //  format: {`row, colums`: "<Error Message>", ...}
-    warningCells = {}; //  format: {`row, colums`: "<Warning Message>"}
+    errorCells = {};  //  format: {`row, columns`: "<Error Message>", ...}
+    warningCells = {}; //  format: {`row, columns`: "<Warning Message>"}
     warningRowIndices: Set<number> = new Set();
     errorRowIndices: Set<number> = new Set();
 
@@ -73,6 +76,9 @@ export class UpdateViaExcelComponent implements OnInit {
             /* save data */
             this.clearExcelData();  // clear previous data if any
             this.excelDataFromUser = xlsx.utils.sheet_to_json(ws, { header: 1 });
+
+            // The bottom student was removed because of this,
+            // you need to handle the empty bottom row case differently, maybe check if it is empty or not at first
             this.excelDataFromUser.pop();  //  removing last row which is empty
 
             //Sanity Checks
@@ -143,8 +149,8 @@ export class UpdateViaExcelComponent implements OnInit {
     updateAllClassesSelection(selectionStatus: boolean): void { //  sekect all or desclect all
         this.classList.forEach(Class => {
             this.divisionList.forEach(Division => {
-                if (this.studentListMappedByClassDivision[Class.id][Division.id]) {
-                  this.classDivisionSelectionMappedByClassDivision[Class.id][Division.id]= selectionStatus;
+                if (this.studentListMappedByClassIdDivisionId[Class.id][Division.id]) {
+                  this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id]= selectionStatus;
                 }
             });
         });
@@ -155,7 +161,7 @@ export class UpdateViaExcelComponent implements OnInit {
     }
 
     showSection(Class: any): boolean{
-        return Object.keys(this.studentListMappedByClassDivision[Class.id]).length > 1;
+        return Object.keys(this.studentListMappedByClassIdDivisionId[Class.id]).length > 1;
     }
 
     errorCount() {
@@ -179,13 +185,28 @@ export class UpdateViaExcelComponent implements OnInit {
 
         this.classList.forEach(Class => {
             this.divisionList.forEach(Division => {
-                if (this.classDivisionSelectionMappedByClassDivision[Class.id][Division.id]) {
-                    this.studentListMappedByClassDivision[Class.id][Division.id].forEach(({ student }) => {
+                if (this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id]) {
+                    this.studentListMappedByClassIdDivisionId[Class.id][Division.id].forEach(({ student }) => {
                         let row = [student.id, student.scholarNumber, student.name, student.fathersName, `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`];
 
-                        if (this.studentFeeListMappedByStudent[student.id]) { // if student fee exists
+                        this.feeTypeList.forEach(feeType => {
+                            let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id]
+                            if (studentFee) {
+                                let feeTypeExcelColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
+                                if (studentFee.isAnnually) {
+                                    row[feeTypeExcelColumnIndex] = studentFee.aprilAmount;
+                                } else { //   if not annually compute total
+                                    row[feeTypeExcelColumnIndex] = INSTALLMENT_LIST.reduce((total, month) => {
+                                        return total + studentFee[month + 'Amount'];
+                                    }, 0);
+                                }
+                            }
+                        });
+
+                        // Delete Below after code review
+                        /*if (this.studentFeeListMappedByStudent[student.id]) { // if student fee exists
                             this.studentFeeListMappedByStudent[student.id].forEach(studentFee => {  // for every student fee
-                                let feeTypeColumnIndex = this.feeTypeColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
+                                let feeTypeColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
 
                                 if (studentFee.isAnnually)
                                     row[feeTypeColumnIndex] = studentFee.aprilAmount;
@@ -197,7 +218,7 @@ export class UpdateViaExcelComponent implements OnInit {
                                     row[feeTypeColumnIndex] = annual_total;
                                 }
                             });
-                        }
+                        }*/
 
                         headerRowPlusStudentListToBeDownloaded.push(row);
                     });
@@ -218,46 +239,46 @@ export class UpdateViaExcelComponent implements OnInit {
         }
     }
 
-    removingEmptyOrAllZeroFeeTypeColumns(): void {
-        let i=1, // starting the loop from student row and ignoring the header row of excel file.
-            len = this.excelDataFromUser.length,
-            ignoredColumns = this.excelDataFromUser[0].map((col,index) => index).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO); //  all fee columns
-        let currRow;
-        while (ignoredColumns.length != 0 && i < len) {
-            currRow = this.excelDataFromUser[i];
-            // even if there is a single student for which there is a valid student fee for uploading,
-            // we are going to keep that column
-            // that means we need to remove it from the ignored columns.
-            // Where are we ignoring those cells/columns whose data is already present in backend?
-            ignoredColumns.forEach((columnIndex, index) => {
-                if (this.excelDataFromUser[i][columnIndex] && this.excelDataFromUser[i][columnIndex] != 0 && this.excelDataFromUser[i][columnIndex] != '')
-                    delete ignoredColumns[index];
-            });
-
-            i += 1;
-        }
-
-        // Finally removing those columns of excel file, which have no data.
-        this.usefulFeeTypeExcelColumnIndexList = this.excelDataFromUser[0].map((r,i) => i).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO);
-        ignoredColumns.forEach(col => {
-            delete this.usefulFeeTypeExcelColumnIndexList[col];
-        });
-
-        // Why do we require this line?
-        // to remove all empty slots in array
-        this.usefulFeeTypeExcelColumnIndexList = this.usefulFeeTypeExcelColumnIndexList.filter(col=>col!=undefined);
-    }
-
     headersSanityCheck(): void {
         const headers = this.excelDataFromUser[0];
         let actualHeader = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
         this.feeTypeList.forEach(feeType => actualHeader.push(feeType.name));
         const len = actualHeader.length;
         for (let i = 0; i < len; i += 1) {
-            if (actualHeader[i] !== headers[i]) {
+            if (headers[i] !== actualHeader[i]) {
                 this.newErrorCell(0,i,`Header Mismatch: Expected ${actualHeader[i]}`)
             }
         }
+    }
+
+    removingEmptyOrAllZeroFeeTypeColumns(): void {
+        let i=1, // starting the loop from student row and ignoring the header row of excel file.
+            len = this.excelDataFromUser.length,
+            ignoredFeeTypeExcelColumnIndexList = this.excelDataFromUser[0].map((col,index) => index).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO); //  all fee columns
+        let currRow;
+        while (ignoredFeeTypeExcelColumnIndexList.length != 0 && i < len) {
+            currRow = this.excelDataFromUser[i];
+            // even if there is a single student for which there is a valid student fee for uploading,
+            // we are going to keep that column
+            // that means we need to remove it from the ignored columns.
+            ignoredFeeTypeExcelColumnIndexList.forEach((columnIndex, index) => {
+                if (this.excelDataFromUser[i][columnIndex] && this.excelDataFromUser[i][columnIndex] != 0 && this.excelDataFromUser[i][columnIndex] != '')
+                    delete ignoredFeeTypeExcelColumnIndexList[index];
+            });
+
+            i += 1;
+        }
+
+        this.usefulFeeTypeExcelColumnIndexList =
+            this.excelDataFromUser[0]
+                .map((colValue,colIndex) => colIndex)
+                .slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)
+                .filter(colIndex => {
+                    return ignoredFeeTypeExcelColumnIndexList.find(ignoredColIndex => {
+                        return ignoredColIndex === colIndex;
+                    }) === undefined;
+                });
+
     }
 
     studentDataCorrespondenceSanityCheck(): void {
@@ -281,21 +302,19 @@ export class UpdateViaExcelComponent implements OnInit {
                 Class = this.classList.find(c=> c.id==ss.parentClass);
                 Division = this.divisionList.find(d => d.id == ss.parentDivision);
 
-                if (!excelStudent[4] || `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`.trim() != excelStudent[4].trim())
-                    console.log('Error');
+                if (!excelStudent[4] || `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`.trim() != excelStudent[4].trim()) {
                     this.newErrorCell(i, 4, 'Invalid Class/Section Data');
+                }
 
-                if (backendStudent.scholarNumber != excelStudent[1] && !(backendStudent.scholarNumber == "" && excelStudent[1] == undefined))
-                    console.log('Error');
+                if (backendStudent.scholarNumber != excelStudent[1] && !(backendStudent.scholarNumber == "" && excelStudent[1] == undefined)) {
                     this.newErrorCell(i, 1, 'Scholar Number Mismatch');
+                }
 
                 if (!excelStudent[2] || backendStudent.name.trim() !== excelStudent[2].trim()) {
-                    console.log('Error');
                     this.newErrorCell(i, 2, 'Name Mismatch');
                 }
 
                 if (!excelStudent[3] || backendStudent.fathersName.trim() !== excelStudent[3].trim()) {
-                    console.log('Error');
                     this.newErrorCell(i,3,'Father’s Name Mismatch')
                 }
             }
@@ -315,9 +334,8 @@ export class UpdateViaExcelComponent implements OnInit {
                 let parsedAmount, amount = this.excelDataFromUser[i][j];
 
                 parsedAmount = parseFloat(amount);
-                if (!isNaN(parsedAmount)) { // The case of '' (i.e. empty string) goes to if not else and should be handled.
+                if (!isNaN(parsedAmount)) {
                     if (parsedAmount < 0) {
-                        console.log('Error');
                         this.newErrorCell(i, j, 'Negative Amount');
                     }
                     else if (parsedAmount != parseInt(amount)) {
@@ -326,7 +344,6 @@ export class UpdateViaExcelComponent implements OnInit {
                     }
                 } else {  //  not number Cell
                     if (amount && amount.trim() != '') {
-                        console.log('Error');
                         this.newErrorCell(i, j, 'Amount must be an positive integer');
                     }
                     else {
@@ -341,9 +358,28 @@ export class UpdateViaExcelComponent implements OnInit {
     studentPreviousFeeSanityCheck(): void {
         this.excelDataFromUser.slice(1).forEach((uploadedRow,row) => {
             let [student_id] = uploadedRow;
-            if (this.studentFeeListMappedByStudent[student_id]) {
+            this.usefulFeeTypeExcelColumnIndexList.forEach(colIndex => {
+                let studentFee;
+                if (this.studentFeeListMappedByStudentIdFeeTypeId[student_id]
+                    && this.studentFeeListMappedByStudentIdFeeTypeId[student_id][this.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex]]) {
+                    studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][this.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex]];
+                    let annual_total;
+                    if (studentFee.isAnnually) {
+                        annual_total = studentFee.aprilAmount;
+                    } else {
+                        annual_total = INSTALLMENT_LIST.reduce((total, month) => {
+                            return total + studentFee[month + 'Amount'];
+                        }, 0);
+                    }
+                    if (parseInt(uploadedRow[colIndex]) != annual_total) { // What happens if parseInt gives error
+                        this.newErrorCell(row + 1, colIndex, 'Student Fee inconsistent with previous student fee');
+                    }
+                }
+            });
+            // Delete below after code review
+            /*if (this.studentFeeListMappedByStudent[student_id]) {
                 this.studentFeeListMappedByStudent[student_id].forEach(studentFee => {
-                    let feeTypeColumnIndex = this.feeTypeColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
+                    let feeTypeColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
                     let annual_total = 0;
                     if (studentFee.isAnnually) {
                         annual_total = studentFee.aprilAmount;
@@ -354,10 +390,9 @@ export class UpdateViaExcelComponent implements OnInit {
                         });
                     }
                     if (parseInt(uploadedRow[feeTypeColumnIndex]) != annual_total) // What happens if parseInt gives error
-                        console.log('Error');
                         this.newErrorCell(row + 1, feeTypeColumnIndex, 'Student Fee inconsistent with previous student fee');
                 });
-            }
+            }*/
         });
     }
 

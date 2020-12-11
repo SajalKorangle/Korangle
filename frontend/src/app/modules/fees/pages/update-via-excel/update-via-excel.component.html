@@ -28,7 +28,6 @@
             <thead>
                 <tr class="text-{{user.activeSchool.secondaryThemeColor}}">
                     <th>1</th>
-                    <!-- Replaced filtered Columns with excel Data from user here -->
                     <th *ngFor="let col of [0,1,2,3,4].concat(usefulFeeTypeExcelColumnIndexList)" [class.bgDanger]="errorCells['0,'+col]" [matTooltip]="errorCells['0,'+col]">
                         {{excelDataFromUser[0][col]}}
                     </th>
@@ -39,7 +38,6 @@
             <ng-container *ngFor="let row of filteredRows">
                 <tr [class.bgDanger]="errorRows[row]" [matTooltip]="errorRows[row]">
                     <td>{{row+1}}</td>
-                    <!-- Replaced filtered Columns with excel Data from user here -->
                     <ng-container *ngFor="let col of [0,1,2,3,4].concat(usefulFeeTypeExcelColumnIndexList)">
                         <td [class.bgWarning]="warningCells[(row)+','+col]" [class.bgDanger]="errorCells[(row)+','+col]" [matTooltip]="errorCells[(row)+','+col]?errorCells[(row)+','+col]:warningCells[(row)+','+col]">{{excelDataFromUser[row][col]}}</td>
                     </ng-container>
@@ -75,8 +73,11 @@
 
             <ng-container *ngFor="let class of classList">
                 <ng-container *ngFor="let section of divisionList">
-                    <mat-option *ngIf="studentListMappedByClassDivision[class.id][section.id]" style="width: 100%;">
-                        <mat-checkbox [(ngModel)]="classDivisionSelectionMappedByClassDivision[class.id][section.id]" (ngModelChange)="selectionCount= $event?selectionCount + studentListMappedByClassDivision[class.id][section.id].length : selectionCount - studentListMappedByClassDivision[class.id][section.id].length"
+                    <mat-option *ngIf="studentListMappedByClassIdDivisionId[class.id][section.id]" style="width: 100%;">
+                        <mat-checkbox [(ngModel)]="classDivisionSelectionMappedByClassIdDivisionId[class.id][section.id]"
+                                      (ngModelChange)="selectionCount = $event ?
+                                                                       selectionCount + studentListMappedByClassIdDivisionId[class.id][section.id].length :
+                                                                       selectionCount - studentListMappedByClassIdDivisionId[class.id][section.id].length"
                                       (click)="$event.stopPropagation();">
                             {{class.name}}
                             <span *ngIf="showSection(class)">, {{section.name}}</span>

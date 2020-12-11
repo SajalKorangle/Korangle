@@ -13,7 +13,7 @@ export class BeforeAfterEach {
 
         // SET PUPPETEER_ENVIRONMENT to local in your bashrc (for unix terminal)
         if (process.env.PUPPETEER_ENVIRONMENT == 'local') {
-            BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 300});
+            BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 30});
         } else {
             BeforeAfterEach.browser = await puppeteer.launch();
         }

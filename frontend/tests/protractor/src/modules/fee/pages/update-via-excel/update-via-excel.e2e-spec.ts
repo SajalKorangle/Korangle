@@ -22,7 +22,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
     let noDialog = async dialog => {
         expect(true).toBe(false);
         await dialog.dismiss();
-    }
+    };
 
     beforeAll(async () => {
 
@@ -54,9 +54,9 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             await page.waitForTimeout(500);
             await page.waitForXPath('//button[contains(., "Download Template")]');  // waiting for spinner to disappear
             await page.waitForTimeout(5000);
-        })
+        });
 
-        fit('Row-column Count', async () => {
+        it('Row-column Count', async () => {
             let node, nodes;
             nodes = await containsAll('tr', '');    //  table rows
             expect(nodes.length).toBe(69);
@@ -64,7 +64,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             [node] = nodes;
             nodes = await node.$x('//th');  // table columns
             expect(nodes.length).toBe(9);
-        })
+        });
 
         it('Sheet data test ', async () => {
             let nodes, row, node;
@@ -135,16 +135,18 @@ describe('Fees 3.0 -> Update Via Excel', () => {
         it('Warning for decimal amount', async () => {
             let isWarning = await page.$eval('tbody tr:nth-child(25) td:nth-child(7)', node => isWarning =  node.classList.contains("bgWarning"))
             expect(isWarning).toBe(true);
-        })
+        });
 
-        it('No. of Error Rows', async () => {
+        /*fit('No. of Error Rows', async () => {
             let node, nodes;
+            await page.waitForTimeout(30000);
             node = await containsFirst('button', 'Errors');
             node.click();
 
+            await page.waitForTimeout(30000);
             nodes = await containsAll('tr', '');    //  table rows
             expect(nodes.length).toBe(11);
-        })
+        });*/
     });
     
     describe('set4: Same Sheet Upload', () => {
@@ -155,6 +157,7 @@ describe('Fees 3.0 -> Update Via Excel', () => {
             await page.waitForXPath('//button[contains(., "Download Template")]');
         });
 
+        // Test should be able to run individually
         it('Unchanged Sheet Data Upload', async () => {
             let node;
             [node] = await page.$x('//input[@type="file"]');
@@ -167,13 +170,13 @@ describe('Fees 3.0 -> Update Via Excel', () => {
         afterAll(async () => {
             let node;
         
-            //Cliking download button and waiting for the action to finish
+            //Clicking download button and waiting for the action to finish
             node = await containsFirst('button', 'Upload Data');
             node.click();
             await page.waitForTimeout(500);
             await page.waitForXPath('//button[contains(., "Download Template")]');
         });
-    })
+    });
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
