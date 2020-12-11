@@ -1,0 +1,17 @@
+[
+  {
+    "file": "student_test_oneClassSet.json",
+    "file_object_list": [
+      {
+        "app": "examination_app",
+        "model": "Examination",
+        "file": "single_examination.json"
+      },
+      {
+        "app": "student_app",
+        "model": "Student",
+        "file": "sixty_eight_students.json"
+      }
+    ]
+  }
+]
