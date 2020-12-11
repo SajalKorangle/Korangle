@@ -184,6 +184,9 @@ export class User {
                 }else {
                     module.showTaskList = true;
                     this.populateSection(task, module); // if all exist then populate that section
+                    if(this.activeSchool.currentSessionDbId != Number(urlParams.get('session'))){ // if the session params are wrong then navigate again to respective path with default session
+                        EmitterService.get('initialize-router').emit({student:module});                    // if all exist then populate that section
+                    }
                 }
             }
         }
