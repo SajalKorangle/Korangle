@@ -48,7 +48,15 @@ export class SidebarComponent implements OnInit {
     constructor(private router: Router,
                 private notificationService: NotificationService,
                 private schoolService : SchoolService) {
+
+        this.router.routeReuseStrategy.shouldReuseRoute = function() {
+        return false;
+        };
+
     }
+
+
+
 
     ngOnInit() {
         this.router.events
@@ -91,10 +99,8 @@ export class SidebarComponent implements OnInit {
                 this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route+'/'+this.user.section.subRoute],{queryParams:{school_id: this.user.activeSchool.dbId,session:this.user.activeSchool.currentSessionDbId}}));
             }
         });
-        if (this.user.section) {
-            this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route+'/'+this.user.section.subRoute],{queryParams:{school_id: this.user.activeSchool.dbId,session:this.user.activeSchool.currentSessionDbId}}));
-        }
     }
+
 
     isMobileMenu() {
         if ($(window).width() > 991) {
@@ -113,7 +119,7 @@ export class SidebarComponent implements OnInit {
                 queryParams: {
                     school_id: this.user.activeSchool.dbId,
                     session: this.user.activeSchool.currentSessionDbId,
-                    student_id:module.id
+                    student_id:module.id  // the if case is for this param , if  student's task then student id must be a param
                 }
             }));
             }else {
