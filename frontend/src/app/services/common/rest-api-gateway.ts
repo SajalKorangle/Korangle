@@ -17,6 +17,16 @@ export class RestApiGateway {
         return DataStorage.getInstance().getUser().jwt;
     }
 
+    getAbsoluteURL(url: string): string{
+        let absolute_url = new URL(environment.DJANGO_SERVER + Constants.api_version + url);
+        let user = DataStorage.getInstance().getUser();
+        if(user.activeSchool.role=='Employee')
+            absolute_url.searchParams.append('activeSchoolID', user.activeSchool.dbId);
+        else
+            absolute_url.searchParams.append('activeStudentId', user.section.student.id)
+        return absolute_url.toString()
+    }
+
     public returnResponse(response: any): any {
         // const jsonResponse = response.json().response;
         const jsonResponse = response.response;
@@ -35,7 +45,7 @@ export class RestApiGateway {
 
     public deleteData(url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.delete(environment.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
+        return this.http.delete(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -48,7 +58,7 @@ export class RestApiGateway {
 
     public putData(body: any, url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.put(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.put(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -62,7 +72,7 @@ export class RestApiGateway {
     public putFileData(body: any, url: any): Promise<any> {
         // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
         const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.put(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.put(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -75,7 +85,7 @@ export class RestApiGateway {
 
     public patchData(body: any, url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.patch(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.patch(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -89,7 +99,7 @@ export class RestApiGateway {
     public patchFileData(body: any, url: any): Promise<any> {
         // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
         const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.patch(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.patch(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -102,7 +112,7 @@ export class RestApiGateway {
 
     public postData(body: any, url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.post(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -116,7 +126,7 @@ export class RestApiGateway {
     public postFileData(body: any, url: any): Promise<any> {
         // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
         const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.post(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -131,7 +141,7 @@ export class RestApiGateway {
         const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
         let uploadData = new FormData();
         uploadData.append('myFile', file);
-        return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, uploadData, {headers: headers})
+        return this.http.post(this.getAbsoluteURL(url), uploadData, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);
@@ -143,8 +153,8 @@ export class RestApiGateway {
     }
 
     public getData(url: any, params?: any): Promise<any> {
-        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.get(environment.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'JWT ' + this.getToken() });
+        return this.http.get(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response);

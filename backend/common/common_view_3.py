@@ -7,7 +7,7 @@ import json
 
 from rest_framework import serializers
 
-from common.common_serializer_interface_new import get_object, get_list, create_object, create_list, \
+from common.common_serializer_interface_3 import get_object, get_list, create_object, create_list, \
     update_object, update_list, partial_update_object, partial_update_list, delete_object, delete_list
 
 from functools import reduce
@@ -81,20 +81,17 @@ class CommonView(CommonBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_object(data, self.ModelSerializer, activeSchoolID, activeStudentID)
+        return create_object(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def put(self, request, activeSchoolID, activeStudentID):
-        data = json.loads(request.body.decode('utf-8'))
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        return update_object(data, self.Model, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
+        return update_object(request.data, self.Model, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def patch(self, request, activeSchoolID, activeStudentID):
-        data = json.loads(request.body.decode('utf-8'))
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        return partial_update_object(data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
+        return partial_update_object(request.data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def delete(self, request, activeSchoolID, activeStudentID):
@@ -113,20 +110,17 @@ class CommonListView(CommonBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        data = json.loads(request.body.decode('utf-8'))
-        return create_list(data, self.ModelSerializer, activeSchoolID, activeStudentID)
+        return create_list(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def put(self, request, activeSchoolID, activeStudentID):
-        data = json.loads(request.body.decode('utf-8'))
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        return update_list(data, self.Model, self.ModelSerializer, request.GET)
+        return update_list(request.data, self.Model, self.ModelSerializer, request.GET)
 
     @user_permission_3
     def patch(self, request, activeSchoolID, activeStudentID):
-        data = json.loads(request.body.decode('utf-8'))
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        return partial_update_list(data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
+        return partial_update_list(request.data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def delete(self, request, activeSchoolID, activeStudentID):

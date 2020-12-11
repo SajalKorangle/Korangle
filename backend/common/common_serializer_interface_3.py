@@ -5,7 +5,7 @@ from django.db.models import Q
 
 
 def get_object(data, query_set, ModelSerializer):
-    object = query_set.get(**data)
+    object = query_set.get(id=data['id'])
     return ModelSerializer(object).data
 
 
@@ -105,18 +105,7 @@ def update_list(data_list, Model, query_set, ModelSerializer, activeSchoolID, ac
 
 
 def update_object(data, Model, query_set, ModelSerializer, activeSchoolID, activeStudentID):
-
-    instance_field_list = Model._meta.get_fields(include_parents=False)
-    instance_field_list = list(map(lambda x: x.name, filter(lambda x: x.concrete and x.get_internal_type() == 'FileField',
-                                                       instance_field_list)))
-    delete_list = []
-    for attr, value in data.items():
-        if attr in instance_field_list:
-            delete_list.append(attr)
-    for field_name in delete_list:
-        del data[field_name]
-
-    serializer = ModelSerializer(query_set.get(**data), data=data)
+    serializer = ModelSerializer(query_set.get(id=data['id']), data=data)
     if serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID):
         serializer.save()
         return serializer.data
@@ -132,7 +121,7 @@ def partial_update_list(data_list, query_set, ModelSerializer, activeSchoolID, a
 
 
 def partial_update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
-    serializer = ModelSerializer(query_set.get(**data), data=data, partial=True)
+    serializer = ModelSerializer(query_set.get(id=data['id']), data=data, partial=True)
     if serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID):
         serializer.save()
         return serializer.data
@@ -141,7 +130,7 @@ def partial_update_object(data, query_set, ModelSerializer, activeSchoolID, acti
 
 
 def delete_object(data, query_set):
-    query_set.get(**data).delete()
+    query_set.get(id=data['id']).delete()
     return data['id']
 
 
