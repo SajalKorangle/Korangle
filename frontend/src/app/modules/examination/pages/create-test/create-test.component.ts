@@ -71,13 +71,31 @@ export class CreateTestComponent implements OnInit {
 
   user;
 
+  fetchedList:any;
+
+  dataCanBeFetched = true;
+
   showTestDetails = false;
 
   selectedExamination : any;
 
+  examinationList: any = [];
+
   examinationClassSectionList: any;
 
-  classSectionSubjectList = [];
+  classSectionSubjectList: Array<{
+    className: any;
+    classId: any;
+    sectionList: Array<{
+      sectionName: any;
+      sectionId: any;
+      selected: boolean;
+      subjectList: Array<{
+        subjectName: any;
+        subjectId: any;
+      }>;
+    }>;
+  }>;
 
   subjectList: any;
 
@@ -144,12 +162,6 @@ export class CreateTestComponent implements OnInit {
 
   onTestDateUpdation(test: any, event: any): void {
     test.newDate = this.formatDate(event, '');
-  }
-
-  isTestUpdateDisabled(): boolean {
-    if (this.isUpdated) return false;
-
-    return true;
   }
 
   //This function is used to create a basic test template for all subjects in the selected class and section
@@ -367,17 +379,16 @@ export class CreateTestComponent implements OnInit {
   handleUpdate(value: any, test: any): void {
     var update = false;
     this.newTestList.forEach((test) => {
-      if (
-        test.newMaximumMarks != test.maximumMarks ||
-        test.newTestType != test.testType
-      )
-        update = true;
-      if (test.deleted) {
-        if (test.classList[0].sectionList[0].testId != null) update = true;
-        else update = false;
+      if(test.classList[0].sectionList[0].testId === null)
+      {
+        if(!test.deleted)update = true;
       }
-      if (!test.deleted) {
-        if (test.classList[0].sectionList[0].testId === null) update = true;
+      else
+      {
+        if(test.deleted)update =true;
+        if(test.newMaximumMarks != test.maximumMarks ||
+          test.newTestType != test.testType)
+          update = true;
       }
     });
     if (update) this.isUpdated = true;
@@ -405,5 +416,11 @@ export class CreateTestComponent implements OnInit {
     });
 
     return containsAll;
+  }
+
+  //Reset the test list view if not updated or simply get the backend test list
+  resetList(): void {
+    this.serviceAdapter.getTestAndSubjectDetails();
+    this.isUpdated = false;
   }
 }

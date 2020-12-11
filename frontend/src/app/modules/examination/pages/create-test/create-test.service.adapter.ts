@@ -6,22 +6,6 @@ export class CreateTestServiceAdapter {
 
   test_type_list = TEST_TYPE_LIST;
 
-  examTypeList: any;
-
-  classSectionSubjectList: Array<{
-    className: any;
-    classId: any;
-    sectionList: Array<{
-      sectionName: any;
-      sectionId: any;
-      selected: boolean;
-      subjectList: Array<{
-        subjectName: any;
-        subjectId: any;
-      }>;
-    }>;
-  }>;
-
   classListForTest: any;
 
   sectionListForTest: any;
@@ -45,15 +29,10 @@ export class CreateTestServiceAdapter {
 
   toBeDeletedTestList: any = [];
 
-  copyNewTestList: any = [];
 
-  dataCanBeFetched = true;
-
-  constructor() {}
+  constructor() { }
 
   // Data
-  examinationList: any = [];
-
   classList: any;
 
   sectionList: any;
@@ -79,17 +58,6 @@ export class CreateTestServiceAdapter {
       parentSchool: this.vm.user.activeSchool.dbId,
     };
 
-    //data to request for examination list type for current school id and session id
-    let request_examination_data_new = {
-      parentSession: this.vm.user.activeSchool.currentSessionDbId,
-      parentSchool: this.vm.user.activeSchool.dbId,
-    };
-
-    let request_student_mini_profile_data = {
-      schoolDbId: this.vm.user.activeSchool.dbId,
-      sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
-    };
-
     let request_class_section_subject_data = {
       parentSession: this.vm.user.activeSchool.currentSessionDbId,
       paerntSchool: this.vm.user.activeSchool.dbId,
@@ -111,8 +79,10 @@ export class CreateTestServiceAdapter {
         this.vm.examinationService.examination,
         request_examination_data
       ),
-      this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-      this.vm.classService.getObjectList(this.vm.classService.division, {}),
+      this.vm.classService.getObjectList(
+        this.vm.classService.classs, {}),
+      this.vm.classService.getObjectList(
+        this.vm.classService.division, {}),
       this.vm.subjectNewService.getObjectList(
         this.vm.subjectNewService.subject,
         request_subject_data
@@ -121,48 +91,40 @@ export class CreateTestServiceAdapter {
         this.vm.subjectNewService.class_subject,
         request_class_section_subject_data
       ),
-      this.vm.examinationService.getObjectList(
-        this.vm.examinationService.examination,
-        request_examination_data_new
-      ),
       this.vm.subjectNewService.getObjectList(
         this.vm.subjectNewService.class_subject,
         request_class_section_subject_data_new
       ),
     ]).then(
       (value) => {
-        this.examinationList = value[0];
-        console.log('examinationList: ', this.examinationList);
+        this.vm.examinationList = value[0];
+        console.log('examinationList: ', this.vm.examinationList);
 
         this.classList = value[1];
         this.sectionList = value[2];
         this.subjectList = value[3];
 
-        console.log('Exam list is below');
-        console.log(value[5]);
-        this.examTypeList = value[5];
-
         console.log('class, section and subjects are below');
-        console.log(value[6]);
-        this.classSubjectList = value[6];
+        console.log(value[5]);
+        this.classSubjectList = value[5];
 
-        this.classSectionSubjectList = [];
+        this.vm.classSectionSubjectList = [];
 
-        value[6].forEach((item) => {
-          var classIndex = this.classSectionSubjectList.findIndex(
+        value[5].forEach((item) => {
+          var classIndex = this.vm.classSectionSubjectList.findIndex(
             (data) => data.classId === item.parentClass
           );
           var sectionIndex = -1,
             subjectIndex = -1;
           if (classIndex != -1) {
-            sectionIndex = this.classSectionSubjectList[
+            sectionIndex = this.vm.classSectionSubjectList[
               classIndex
             ].sectionList.findIndex(
               (section) => section.sectionId === item.parentDivision
             );
 
             if (sectionIndex != -1) {
-              subjectIndex = this.classSectionSubjectList[
+              subjectIndex = this.vm.classSectionSubjectList[
                 classIndex
               ].sectionList[sectionIndex].subjectList.findIndex(
                 (subject) => subject.subjectId === item.parentSubject
@@ -195,39 +157,25 @@ export class CreateTestServiceAdapter {
           };
 
           if (classIndex === -1) {
-            this.classSectionSubjectList.push(tempClass);
+            this.vm.classSectionSubjectList.push(tempClass);
           } else if (sectionIndex === -1) {
-            this.classSectionSubjectList[classIndex].sectionList.push(
+            this.vm.classSectionSubjectList[classIndex].sectionList.push(
               tempSection
             );
           } else if (subjectIndex === -1) {
-            this.classSectionSubjectList[classIndex].sectionList[
+            this.vm.classSectionSubjectList[classIndex].sectionList[
               sectionIndex
             ].subjectList.push(tempSubject);
           }
         });
 
         console.log('List created after nesting class section subject ');
-        console.log(this.classSectionSubjectList);
+        console.log(this.vm.classSectionSubjectList);
 
         //sort the classSection list
         this.classSectionSubjectListSort();
         console.log('List after Sorting...');
-        console.log(this.classSectionSubjectList);
-
-        // this.classSectionSubjectList = value[4];
-        const map = new Map();
-        value[4].forEach((item) => {
-          let key = item.parentClass + '|' + item.parentDivision;
-          if (!map.has(key)) {
-            map.set(key, true); // set any value to Map
-            this.vm.classSectionSubjectList.push({
-              class: this.getClassName(item.parentClass),
-              sec: this.getSectionName(item.parentDivision),
-            });
-          }
-        });
-
+        console.log(this.vm.classSectionSubjectList);
         this.vm.subjectList = this.subjectList;
         this.vm.isInitialLoading = false;
       },
@@ -307,10 +255,10 @@ export class CreateTestServiceAdapter {
         );
 
         if (findOne === -1) {
-          this.dataCanBeFetched = true;
+          this.vm.dataCanBeFetched = true;
           this.getTestAndSubjectDetails();
         } else {
-          this.dataCanBeFetched = false;
+          this.vm.dataCanBeFetched = false;
           this.vm.isLoading = false;
           this.vm.showTestDetails = false;
           return;
@@ -325,7 +273,7 @@ export class CreateTestServiceAdapter {
   //Get Test And Subject Details
   getTestAndSubjectDetails(): void {
     this.vm.isLoading = true;
-    console.log(this.classSectionSubjectList);
+    console.log(this.vm.classSectionSubjectList);
 
     let request_test_data_list = {
       parentExamination: this.vm.selectedExamination,
@@ -412,7 +360,7 @@ export class CreateTestServiceAdapter {
 
         console.log('Test listed created in nested fashion...');
         console.log(this.vm.newTestList);
-        this.copyNewTestList = this.vm.newTestList;
+        this.vm.fetchedList = this.vm.newTestList.length;
         if (this.vm.newTestList.length === 0) {
           this.vm.createTestFromTemplate();
         }
@@ -645,12 +593,6 @@ export class CreateTestServiceAdapter {
     return result;
   }
 
-  //Reset the test list view if not updated or simply get the backend test list
-  resetList(): void {
-    this.getTestAndSubjectDetails();
-    this.vm.isUpdated = false;
-  }
-
   //Update Test List New
   updateTestNew(): void {
     this.vm.isLoading = true;
@@ -665,7 +607,7 @@ export class CreateTestServiceAdapter {
             parentClass: cl.classId,
             parentDivision: sec.sectionId,
             parentSubject: test.subjectId,
-            startTime: '2019-07-01T11:30:00+05:30',
+            startTime: '2019-07-01T10:30:00+05:30',
             endTime: '2019-07-01T13:30:00+05:30',
             testType: test.newTestType,
             maximumMarks: test.newMaximumMarks,
@@ -753,13 +695,13 @@ export class CreateTestServiceAdapter {
 
   //Sort the nested list
   classSectionSubjectListSort() {
-    this.classSectionSubjectList.forEach((cl) => {
+    this.vm.classSectionSubjectList.forEach((cl) => {
       cl.sectionList.sort(function (a, b) {
         return a.sectionId - b.sectionId;
       });
     });
 
-    this.classSectionSubjectList.sort(function (a, b) {
+    this.vm.classSectionSubjectList.sort(function (a, b) {
       return a.classId - b.classId;
     });
   }
@@ -768,7 +710,7 @@ export class CreateTestServiceAdapter {
   makeDataReadyForGet(): void {
     this.classListForTest = [];
     this.sectionListForTest = [];
-    this.classSectionSubjectList.forEach((cl) => {
+    this.vm.classSectionSubjectList.forEach((cl) => {
       cl.sectionList.forEach((sec) => {
         if (sec.selected) {
           this.classListForTest.push(cl.classId);
