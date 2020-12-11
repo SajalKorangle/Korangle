@@ -192,7 +192,7 @@ export class UpdateViaExcelServiceAdapter{
                 let feeType = this.vm.feeTypeList[col - this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO];
                 let schoolFeeRule = SchoolFeeRuleObject[feeType.id];
                 this.vm.excelDataFromUser.slice(1).forEach(rowStudent => {
-                    // Why are we parsing with float instead of parsing with int.
+                    // Why are we parsing with float instead of parsing with int. : Not necessary to check with parseFloat, already handled at the time of sanity check
                     if (!rowStudent[col] || parseFloat(rowStudent[col]) == 0 || isNaN(parseFloat(rowStudent[col]))) //  if cell is empty return
                         return;
                     
