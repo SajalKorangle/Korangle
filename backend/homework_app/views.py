@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from common.common_views import CommonView, CommonListView, APIView
 
 from homework_app.models import Homework, HomeworkQuestion, HomeworkStatus, HomeworkAnswer

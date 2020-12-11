@@ -14,6 +14,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input'
+import { MatTableModule } from '@angular/material';  
+ 
 
 
 
@@ -68,6 +71,8 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
+        MatInputModule,
+        MatTableModule,
 
         BasicComponentsModule,
 
@@ -104,6 +109,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
+        MatInputModule,
 
     ]
 })
