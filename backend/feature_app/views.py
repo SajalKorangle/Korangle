@@ -18,19 +18,3 @@ class FeatureView(CommonView, APIView):
 class FeatureListView(CommonListView, APIView):
     Model = Feature
 
-
-########### Feature Photo #############
-from feature_app.business.feature_photo import create_object
-
-
-class FeaturePhotoView(CommonView, APIView):
-    Model = Feature
-
-    @user_permission_new
-    def post(self, request):
-        return create_object(request, self.Model, self.ModelSerializer)
-
-
-class FeaturePhotoListView(CommonListView, APIView):
-    Model = Feature
-

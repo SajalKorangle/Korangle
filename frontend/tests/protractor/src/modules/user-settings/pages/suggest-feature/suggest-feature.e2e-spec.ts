@@ -8,7 +8,7 @@ describe('Settings -> Suggest Feature', () => {
 
     let page: any;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         startBackendServer(getFixtureFiles('modules/user-settings/pages/suggest-feature/suggest-feature.json'));
 
         page = await BeforeAfterEach.beforeEach();
@@ -30,22 +30,26 @@ describe('Settings -> Suggest Feature', () => {
         await advantage.type('Advantage of the Feature');
         const [frequency] = await page.$x('//textarea//following::textarea[2]');
         await frequency.type('Frequency of the Feature');
-        const [managedBy] = await page.$x('//textarea//following::textarea[3]');
-        await managedBy.type('Currently managed by');
+        // Commenting the managedBy to check whether null texts are handled or not
+        /*const [managedBy] = await page.$x('//textarea//following::textarea[3]');
+        await managedBy.type('Currently managed by');*/
+
+        // Checking success dialog message
+        page.on('dialog', async dialog => {
+            page.waitForTimeout(5000);
+            expect(dialog.message()).toBe('Feature submitted successfully');
+            await dialog.dismiss();
+        });
 
         // Clicking on Submit button
         await page.waitForXPath('//button[contains(text(),\'Submit\')]');
         const [submit] = await page.$x('//button[contains(text(),\'Submit\')]');
         await submit.click();
 
-        // Checking success dialog message
-        page.on('dialog', async dialog => {
-            expect(dialog.message()).toBe('Feature submitted successfully');
-            await dialog.dismiss();
-        });
     });
 
     it('Deletes an existing suggestion', async () => {
+
         let nodes, featureCount;
 
         // Re-clicking the page and checking no of features are 1
@@ -67,9 +71,10 @@ describe('Settings -> Suggest Feature', () => {
         nodes = await getNodes('mat-expansion-panel-header', '');
         featureCount = nodes.length;
         expect(featureCount).toBe(0);
+
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
         await BeforeAfterEach.afterEach();
     })
 });

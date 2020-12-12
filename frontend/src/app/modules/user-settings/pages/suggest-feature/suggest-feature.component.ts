@@ -7,7 +7,6 @@ import {FeatureService} from '../../../../services/modules/feature/feature.servi
 @Component({
     selector: 'suggest-feature',
     templateUrl: './suggest-feature.component.html',
-    styleUrls: ['./suggest-feature.component.css'],
     providers: [FeatureService],
 })
 
@@ -33,12 +32,12 @@ export class SuggestFeatureComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.initializeCurrentFeature();
 
         this.serviceAdapter = new SuggestFeatureServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
+        this.initializeCurrentFeature();
     }
 
     initializeCurrentFeature(): void {

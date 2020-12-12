@@ -10,8 +10,8 @@
     "file": "1.json"
   },
   {
-    "app": "auth",
-    "model": "User",
-    "file": "1.json"
+    "app": "feature_app",
+    "model": "Feature",
+    "file": "single-feature.json"
   }
 ]

@@ -11,11 +11,9 @@ export class FeatureService extends ServiceObject {
 
     // objects urls
     public feature = '/feature';
-    public feature_photo = '/feature-photo';
 
     constructor(private http_class: HttpClient) {
         super(http_class);
-        this.file_list[this.feature_photo] = this.feature_photo;
     }
 
 }

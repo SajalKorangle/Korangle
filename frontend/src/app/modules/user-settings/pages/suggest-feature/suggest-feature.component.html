@@ -1,7 +1,7 @@
 <div class="card-content">
 
-        <!--Getting the required Suggestion fields-->
 
+    <!-- Getting the required Suggestion fields -->
     <ng-container *ngIf="!isLoading">
 
         <div class="row">
@@ -75,9 +75,10 @@
         <div style="margin-bottom: 5px"></div>
 
     </ng-container>
+    <!-- EOF Getting the required Suggestion fields -->
 
-                            <!-- Showing Previous Feature Suggestions-->
 
+    <!-- Showing Previous Feature Suggestions -->
     <mat-accordion *ngIf="featureList.length > 0" displayMode="flat" class="mat-table hidden-sm hidden-xs">
 
         <mat-expansion-panel *ngFor="let feature of featureList; let i=index;">
@@ -105,8 +106,6 @@
                 </div>
             </div>
 
-            <!-- Photo -->
-
             <!-- Delete -->
             <button type="submit"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
@@ -116,6 +115,7 @@
         </mat-expansion-panel>
 
     </mat-accordion>
+    <!-- EOF Showing Previous Feature Suggestions -->
 
 </div>
 
