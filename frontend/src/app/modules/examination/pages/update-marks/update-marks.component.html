@@ -81,9 +81,9 @@
                     <td>{{student.name}}</td>
                     <td>{{student.rollNumber}}</td>
                     <td *ngFor="let test of student.testDetails">
-                        <input type="number"
+                        <input type="number" [(ngModel)]="test.newMarksObtained"(ngModelChange)='handleUpdate($event,student)'
                                placeholder="Type marks here"
-                               [(ngModel)]="test.marksObtained"/>
+                               />
                     </td>
                 </tr>
                 </tbody>
@@ -95,6 +95,7 @@
 
             <button type="submit"
                     style="margin-left: 20px;"
+                    [disabled]="!isUpdated"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="serviceAdapter.updateStudentTestDetails()">Update</button>
 

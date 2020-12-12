@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
-import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 
 import { UpdateMarksServiceAdapter } from './update-marks.service.adapter';
 import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
@@ -11,12 +10,13 @@ import {StudentOldService} from '../../../../services/modules/student/student-ol
 
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
+import { SubjectService } from 'app/services/modules/subject/subject.service';
 
 @Component({
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService, ExaminationService ],
+    providers: [ ExaminationOldService, ClassService, SubjectService, StudentOldService, ExaminationService ],
 })
 
 export class UpdateMarksComponent implements OnInit {
@@ -39,11 +39,11 @@ export class UpdateMarksComponent implements OnInit {
     isInitialLoading = false;
 
     isLoading = false;
+    isUpdated =  false;
 
-    constructor(public examinationOldService: ExaminationOldService,
-                public examinationService : ExaminationService,
+    constructor(public examinationService : ExaminationService,
                 public classService: ClassService,
-                public subjectService: SubjectOldService,
+                public subjectService: SubjectService,
                 public studentService: StudentOldService,
                 private cdRef: ChangeDetectorRef) {}
 
@@ -79,6 +79,22 @@ export class UpdateMarksComponent implements OnInit {
             }
             return false;
         })
+    }
+
+    handleUpdate(event: any,student: any): void {
+        
+        var updateCheck = false;
+        
+        student.testDetails.forEach(item => {
+            if(item.newMarksObtained != item.marksObtained)
+            {
+                updateCheck = true;
+            }
+        });
+        if(updateCheck)
+        this.isUpdated = true;
+        else
+        this.isUpdated = false;
     }
 
 }
