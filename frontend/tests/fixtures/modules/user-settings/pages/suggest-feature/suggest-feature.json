@@ -1,0 +1,17 @@
+[
+  {
+    "app": "employee_app",
+    "model": "EmployeePermission",
+    "file": "1.json"
+  },
+  {
+    "app": "employee_app",
+    "model": "EmployeeSessionDetail",
+    "file": "1.json"
+  },
+  {
+    "app": "feature_app",
+    "model": "Feature",
+    "file": "single-feature.json"
+  }
+]
