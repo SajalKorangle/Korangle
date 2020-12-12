@@ -1,4 +1,5 @@
-from common.common_views import CommonView, CommonListView, APIView
+from common.common_views_file import CommonView, CommonListView
+from rest_framework.views import APIView
 
 from homework_app.models import Homework, HomeworkQuestion, HomeworkStatus, HomeworkAnswer
 # Create your views here.

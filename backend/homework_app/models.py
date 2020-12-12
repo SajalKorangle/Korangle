@@ -23,9 +23,9 @@ class Homework(models.Model):
     homeworkName = models.TextField(null=False)
     parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentClassSubject')
     startDate = models.DateField(null=False, verbose_name='startDate', default=date.today)
-    endDate = models.DateField(null=False, verbose_name='endDate', default='2011-01-01')
+    endDate = models.DateField(null=True, verbose_name='endDate')
     startTime = models.TimeField(null=False, verbose_name='startTime', default=datetime.now().strftime('%H:%M:%S'))
-    endTime = models.TimeField(null=True, verbose_name='endTime', default='23:59:59')
+    endTime = models.TimeField(null=True, blank=True, verbose_name='endTime', default='23:59:59')
     homeworkText = models.TextField(null=True)
     
 

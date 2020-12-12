@@ -18,6 +18,7 @@ import {ComponentsModule} from "../../../../components/components.module";
     exports: [
     ],
     providers: [],
+    
     bootstrap: [IssueHomeworkComponent]
 })
 export class IssueHomeworkModule { }

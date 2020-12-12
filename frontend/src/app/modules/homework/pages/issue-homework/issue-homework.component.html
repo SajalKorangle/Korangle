@@ -1,7 +1,5 @@
 <div class="card-content table-responsive">
 
-
-
     <ng-container *ngIf="!isSessionLoading">
         <mat-form-field style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px;">
             <mat-select placeholder="Select Class" [ngModel]="selectedClassSection"
@@ -44,7 +42,7 @@
                 (ngModelChange)="currentHomework.endDate=$event;" placeholder="Choose Deadline Date ">
         </mat-form-field>
 
-        <mat-form-field style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px; width: 140px">
+        <mat-form-field *ngIf="currentHomework.endDate != null" style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px; width: 140px">
             <input type="time" matInput [ngModel]="currentHomework.endTime"
                 (ngModelChange)="currentHomework.endTime=$event;" placeholder="Choose Deadline Time">
         </mat-form-field><br>
@@ -56,9 +54,19 @@
                 placeholder="Enter Homework Questions">
             </textarea>
         </mat-form-field><br>
-        
+
         <div class="image-row">
             <div  *ngFor="let image of currentHomeworkImages; let i = index">
+                    <img src="{{image.questionImage}}" (click)="openModal();currentSlide(i+1)" class="hover-shadow cursor image-column">
+            </div>
+        </div>
+
+        
+        <!-- <div class="image-row">
+            <div  *ngFor="let image of currentHomeworkImages; let i = index">
+                <div *ngIf="image.type === 'application/pdf'">
+                    <embed src="image.questionImage" width="800px" height="2100px" /> 
+                </div>
                 <img src="{{image.questionImage}}" (click)="openModal();currentSlide(i+1)" class="hover-shadow cursor image-column" >
             </div>
         </div>
@@ -76,9 +84,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         
-        <input type='file' (change)="readURL($event);" multiple="false" style="display: none" accept="image/*" #imageInput/>                
+        <input type='file' (change)="readURL($event);" multiple="false" style="display: none" accept="image/jpeg,image/png,application/pdf" #imageInput/>                
         <button type="submit"
                 class="btn"
                 style="margin-top: 15px ; margin-right: 15px; margin-bottom: 10px;cursor: pointer; padding: 4px 7px;"
@@ -86,7 +94,8 @@
                         
         <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
             [disabled]="currentHomework.homeworkName== null"
-            style="margin-top: 15px ; margin-right: 15px; margin-bottom: 10px;">CREATE HW</button>
+            style="margin-top: 15px ; margin-right: 15px; margin-bottom: 10px;"
+            (click)="createHomework()">CREATE HW</button>
         <!-- PREVIOUS HOMEWORK -->
 
         <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 10px;">
@@ -98,35 +107,47 @@
         <mat-expansion-panel [disabled]="homeworkList.length === 0">
             <mat-expansion-panel-header *ngIf="homeworkList.length === 0">**No Homework Given Yet</mat-expansion-panel-header>
         </mat-expansion-panel>
-        <ng-container *ngFor="let homework of homeworkList; let i=index;">
-            <mat-expansion-panel style="margin-top: 5px; margin-bottom:5px;">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <span class="hidden-xs" style="color: #7b7b7b;">Homework Title: &nbsp;</span><i>{{homework.homeworkName}}</i> &nbsp;
-                    </mat-panel-title>
-                    
-                </mat-expansion-panel-header>
+        <mat-accordion [multi]="false">
+            <ng-container *ngFor="let homework of homeworkList; let i=index;">
+                <mat-expansion-panel style="margin-top: 5px; margin-bottom:5px;">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <span class="hidden-xs" style="color: #7b7b7b;">Homework Title: &nbsp;</span><i>{{homework.homeworkName}}</i> &nbsp;
+                        </mat-panel-title>
+                        
+                    </mat-expansion-panel-header>
 
-                <div>
-                    <span class="hidden-xs" style="color: #7b7b7b;">Issue Date & Time: &nbsp;</span><i>{{homework.startDate}} : {{homework.startTime}}</i> <br>
-                    <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span><i>{{homework.endDate}} : {{homework.endTime}}</i>    
-                    
-                    <button type="submit"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            style="padding: 12px 15px; margin-left: 15px; float: right; margin-top : -10px">
-                            <i class="material-icons">delete</i></button>
-                    <button type="submit"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            style="padding: 12px 15px; margin-left: 15px; float: right; margin-top : -10px">
-                            <i class="material-icons">edit</i></button>
-                </div>
-                <div style="margin-top: 30px;">
-                    <span class="hidden-xs" style="color: #7b7b7b;">Homework Questions: <br></span><pre>{{homework.homeworkText}}</pre>
-                </div>
+                    <div>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Issue Date & Time: &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i>    
+                        
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                style="padding: 12px 15px; margin-left: 15px; float: right; margin-top : -10px"
+                                (click)="serviceAdapter.deleteHomework(homework.id);">
+                                <i class="material-icons">delete</i></button>
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                style="padding: 12px 15px; margin-left: 15px; float: right; margin-top : -10px">
+                                <i class="material-icons">edit</i></button>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <span class="hidden-xs" style="color: #7b7b7b;">Homework Questions: <br></span><pre>{{homework.homeworkText}}</pre>
+                    </div><br>
 
-            </mat-expansion-panel>
+                    <div style="margin-top: 5px;">
+                        <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
+                        <div class="image-row">
+                            <div  *ngFor="let image of homework.homeworkImages">
+                                <img src="{{image}}" class="hover-shadow cursor image-column">
+                            </div>
+                        </div>
+                    </div><br>
 
-        </ng-container>
+                </mat-expansion-panel>
+
+            </ng-container>
+        </mat-accordion>
                 
     </ng-container>
 

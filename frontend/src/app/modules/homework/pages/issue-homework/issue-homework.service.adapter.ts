@@ -45,18 +45,15 @@ export class IssueHomeworkServiceAdapter {
         this.vm.isLoading = true;
         this.vm.homeworkList = [];
 
-        // const homework_data = {
-        //     parentHomework__parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
-        // };
+        const homework_data = {
+            parentHomework__parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
+        };
 
         Promise.all([
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, {parentClassSubject: this.vm.selectedSubject.classSubjectDbId}),
-            // this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, {}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_status, {}),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, homework_data),
         ]).then(value =>{
-            console.log(value[0]);
-            console.log(value[1]);
-            this.vm.homeworkList =  value[0];         
+            this.initialiseHomeworks(value[0], value[1]);        
             this.vm.isLoading = false;
         },error =>{
             this.vm.isLoading = false;
@@ -64,6 +61,45 @@ export class IssueHomeworkServiceAdapter {
 
     }
 
+    initialiseHomeworks(homeworksList: any, homeworkImageList: any):any{
+        this.vm.homeworkList = [];
+        homeworksList.forEach(currentHomework =>{
+            let tempHomework = this.vm.homeworkList.find(homework => homework.id ==  currentHomework.id);
+            if(tempHomework === undefined){
+                let tempData = {
+                    id: currentHomework.id,
+                    homeworkName: currentHomework.homeworkName,
+                    startDate: currentHomework.startDate,
+                    startTime: currentHomework.startTime,
+                    endDate: currentHomework.endDate,
+                    endTime: currentHomework.endTime,
+                    homeworkText: currentHomework.homeworkText,
+                    homeworkImages: [],
+                }
+                this.vm.homeworkList.push(tempData);
+                tempHomework = this.vm.homeworkList.find(homework => homework.id ==  currentHomework.id);
+            }
+            homeworkImageList.forEach(image =>{
+                if(image.parentHomework == currentHomework.id){
+                    tempHomework.homeworkImages.push(image.questionImage);
+                }
+            })
+
+        });
+
+    }
+
+
+    deleteHomework(homeworkId: any): any{
+        this.vm.isLoading = true;
+        this.vm.homeworkService.deleteObject(this.vm.homeworkService.homeworks, {id: homeworkId}).then(value =>{
+            alert('Homework Deleted')
+            this.getHomeworks();
+            this.vm.isLoading = false;
+        }),error =>{
+            this.vm.isLoading = false;
+        };
+    }
 
     
 }

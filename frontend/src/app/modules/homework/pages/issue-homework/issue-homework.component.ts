@@ -103,25 +103,57 @@ export class IssueHomeworkComponent implements OnInit {
         this.selectedSubject = this.selectedClassSection.subjectList[0];
         
     }
+    populateHomeworkImages(): any{
+        this.currentHomeworkImages.forEach(image =>{
+            image.parentHomework = this.currentHomework.id;
+        })
+        let index = 0;
+        let promises = [];
+        this.currentHomeworkImages.forEach(image =>{
+            console.log(image);
+            let temp_form_data = new FormData();
+            const layout_data = { ...image,};
+            Object.keys(layout_data).forEach(key => {
+                if (key === 'questionImage' ) {
+                    const file = this.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg');
+                    console.log(file);
+                    temp_form_data.append(key, this.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
+                    // form_data.append(key, file);
+                } else {
+                    temp_form_data.append(key, layout_data[key]);
+                }
+            });
+            index = index + 1;
+            promises.push(this.homeworkService.createObject(this.homeworkService.homework_question, temp_form_data));
+        })
+        return promises;
+        // return promises;
+        // Promise.all(promises).then( value =>{
+        //     alert('images uploaded');
+        // })
+    }
+
 
     createHomework():any{
-        // this.populateHomeworkImages();
+        this.isLoading = true;
         this.currentHomework.parentClassSubject = this.selectedSubject.classSubjectDbId;
         let currentDate = new Date();
         this.currentHomework.startDate = this.formatDate(currentDate, '');
         this.currentHomework.startTime = this.formatTime(currentDate);
-        this.currentHomework.endTime = this.currentHomework.endTime + ':00';
+        if(this.currentHomework.endDate != null && this.currentHomework.endTime == null){
+            this.currentHomework.endTime =  '23:59:59';
+        }
         console.log(this.currentHomework);
         Promise.all([
             this.homeworkService.createObject(this.homeworkService.homeworks , this.currentHomework),
         ]).then(value =>{
-            this.isLoading = false;
             this.currentHomework.id = value[0].id;
-            // Promise.all(this.populateHomeworkImages()).then(value =>{
-            //     alert('Homework Added Successfully');
-            // })
-            this.homeworkList.push(this.currentHomework);
+            Promise.all(this.populateHomeworkImages()).then(value =>{
+                alert('done');
+            })
+            this.serviceAdapter.getHomeworks();
             this.currentHomework = new Homework;
+            this.isLoading = false;
         },error =>{
             this.isLoading = false;
         });
@@ -158,14 +190,17 @@ export class IssueHomeworkComponent implements OnInit {
     }
 
     readURL(event): void {
+        
         if (event.target.files && event.target.files[0]) {
             const image = event.target.files[0];
-            if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
-                alert('Image type should be either jpg, jpeg, or png');
+            if (image.type !== 'image/jpeg' && image.type !== 'image/png' && image.type !== 'application/pdf') {
+                alert('File type should be either pdf, jpg, jpeg, or png');
                 return;
             }
+            
             const reader = new FileReader();
             reader.onload = e => {
+                // console.log(reader.result);
                 let tempImageData = {
                     parentHomework: null,
                     questionImage: reader.result,
@@ -174,8 +209,8 @@ export class IssueHomeworkComponent implements OnInit {
                 // this.updatePDF();
             };
             reader.readAsDataURL(image);
+            
         }
-           
     }
 
     
@@ -198,36 +233,33 @@ export class IssueHomeworkComponent implements OnInit {
         }
     }
 
-    populateHomeworkImages(): any{
-        this.currentHomeworkImages.forEach(image =>{
-            image.parentHomework = this.currentHomework.id;
-        })
-        let index = 0;
-        const promises = [];
-        console.log(this.currentHomeworkImages);
-        this.currentHomeworkImages.forEach(image =>{
-            const layout_data = { ...image,};
-            const form_data = new FormData();
-            Object.keys(layout_data).forEach(key => {
-                if (key === 'questionImage' ) {
-                    const file = this.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg');
-                    console.log(file);
-                
-                    form_data.append(key, file);
-                } else {
-                    form_data.append(key, layout_data[key]);
-                }
-            });
-            console.log(form_data);
-            index = index + 1; 
-            promises.push(this.homeworkService.createObject(this.homeworkService.homework_question, form_data));
+    
+    displayDateTime(date: any, time: any): any{
+        let str='';
+        let tempStr ='';
 
-        })
-        return promises;
-        // Promise.all(promises).then( value =>{
-        //     alert('images uploaded');
-        // })
+        if(date == null){
+            str = 'No deadline is given';
+            return str;
+        }
+        for(let i =0; i<date.length; i++){
+            if(date[i] == '-'){
+                str = '-' + tempStr + str;
+                tempStr = '';
+
+            }
+            else{
+                tempStr+= date[i];
+            }
+        }
+        str = tempStr + str;
+        str = str +  ' ; ';
+        for(let i =0;i<5;i++)
+            str+= time[i];
+        
+        return str;
     }
+    
 
 
     // IMAGE PREVIEW CODE

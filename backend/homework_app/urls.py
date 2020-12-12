@@ -2,30 +2,32 @@ from django.conf.urls import url
 
 urlpatterns = []
 
-from homework_app.views import HomeworkView,HomeworkListView
+from .views import HomeworkView,HomeworkListView
 
-urlpatterns += [
-    url(r'^homework/batch', HomeworkListView.as_view()),
-    url(r'^homework', HomeworkView.as_view()),
-]
 
-from homework_app.views import HomeworkQuestionView,HomeworkQuestionListView
+
+from .views import HomeworkQuestionView,HomeworkQuestionListView
 
 urlpatterns += [
     url(r'^homework-question/batch', HomeworkQuestionListView.as_view()),
     url(r'^homework-question', HomeworkQuestionView.as_view()),
 ]
 
-from homework_app.views import HomeworkStatusView,HomeworkStatusListView
+from .views import HomeworkStatusView,HomeworkStatusListView
 
 urlpatterns += [
     url(r'^homework-status/batch', HomeworkStatusListView.as_view()),
     url(r'^homework-status', HomeworkStatusView.as_view()),
 ]
 
-from homework_app.views import HomeworkAnswerView,HomeworkAnswerListView
+from .views import HomeworkAnswerView,HomeworkAnswerListView
 
 urlpatterns += [
     url(r'^homework-answer/batch', HomeworkAnswerListView.as_view()),
     url(r'^homework-answer', HomeworkAnswerView.as_view()),
+]
+
+urlpatterns += [
+    url(r'^homework/batch', HomeworkListView.as_view()),
+    url(r'^homework', HomeworkView.as_view()),
 ]

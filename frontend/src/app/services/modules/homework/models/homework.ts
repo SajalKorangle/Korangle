@@ -1,6 +1,6 @@
 
 export class Homework{
-    id: number = null;
+    id: any = null;
     homeworkName: string = null;
     parentClassSubject: number = null;
     startDate: any = null;
