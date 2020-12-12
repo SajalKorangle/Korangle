@@ -25,7 +25,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/user-settings/pages/contact-us/contact-us.module#ContactUsModule',
         data: {moduleName: 'user-settings'},
     },
-
+    {
+        path: 'suggest_feature',
+        loadChildren: 'app/modules/user-settings/pages/suggest-feature/suggest-feature.module#SuggestFeatureModule',
+        data: {moduleName: 'user-settings'},
+    },
     {
         path: '',
         component: UserSettingsComponent,
