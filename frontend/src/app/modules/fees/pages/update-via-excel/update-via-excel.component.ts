@@ -30,8 +30,7 @@ export class UpdateViaExcelComponent implements OnInit {
 
     studentListMappedByClassIdDivisionId = {};  // structure: {classsid: {divisionId: [student1,...], ...}, ...}
     classDivisionSelectionMappedByClassIdDivisionId = {}; // structure: {classsid: {divisionId: Boolean, ...}, ...}
-    // Delete below after code review
-    // studentFeeListMappedByStudent = {}; // structure: {parentStudentId: [studentFee,...], ...}
+    
     studentFeeListMappedByStudentIdFeeTypeId = {};
     studentsCount:number = 0;
     selectionCount:number = 0;
@@ -110,6 +109,10 @@ export class UpdateViaExcelComponent implements OnInit {
                 break;
             }
         }
+    }
+
+    getVisibleColumnIndexList(): Array<number>{
+        return Array.from({length: this.NUM_OF_COLUMNS_FOR_STUDENT_INFO}, (_,i)=>i).concat(this.usefulFeeTypeExcelColumnIndexList)
     }
 
     cleanUp(): void{
@@ -339,9 +342,10 @@ export class UpdateViaExcelComponent implements OnInit {
     }
 
     studentPreviousFeeSanityCheck(): void {
+        let excelFeeColumnList = this.excelDataFromUser[0].map((_, i) => i).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO);
         this.excelDataFromUser.slice(1).forEach((uploadedRow,row) => {
             let [student_id] = uploadedRow;
-            this.usefulFeeTypeExcelColumnIndexList.forEach(colIndex => {
+            excelFeeColumnList.forEach(colIndex => {
                 let studentFee;
                 if (this.studentFeeListMappedByStudentIdFeeTypeId[student_id]
                     && this.studentFeeListMappedByStudentIdFeeTypeId[student_id][this.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex]]) {
