@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
@@ -7,7 +7,22 @@ import { HomeworkService } from '../../../../services/modules/homework/homework.
 import { IssueHomeworkServiceAdapter } from './issue-homework.service.adapter';
 import { Homework } from '../../../../services/modules/homework/models/homework';
  
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
+
+
+export interface EditHomeworkDialogData {
+    id: any;
+    homeworkName: any ;
+    parentClassSubject: any;
+    startDate: any;
+    startTime: any;
+    endDate: any;
+    endTime: any;
+    homeworkText: any ;
+    homeworkImages: any;
+    editRequired: any;
+}
 
 @Component({
     selector: 'issue-homework',
@@ -35,6 +50,7 @@ export class IssueHomeworkComponent implements OnInit {
     selectedSubject: any;
 
     homeworkList: any;
+    homeworkImagesList: any;
     currentHomework: Homework;
     homeworkDisplayList: any;
 
@@ -42,10 +58,13 @@ export class IssueHomeworkComponent implements OnInit {
     isSessionLoading: any;
     isLoading: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
+    editableHomework: any;
+
     constructor(
         public subjectService: SubjectService,
         public homeworkService: HomeworkService,
         public classService: ClassService,
+        public dialog: MatDialog,
     ){}
 
     // Server Handling - Initial
@@ -110,15 +129,12 @@ export class IssueHomeworkComponent implements OnInit {
         let index = 0;
         let promises = [];
         this.currentHomeworkImages.forEach(image =>{
-            console.log(image);
             let temp_form_data = new FormData();
             const layout_data = { ...image,};
             Object.keys(layout_data).forEach(key => {
                 if (key === 'questionImage' ) {
                     const file = this.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg');
-                    console.log(file);
                     temp_form_data.append(key, this.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
-                    // form_data.append(key, file);
                 } else {
                     temp_form_data.append(key, layout_data[key]);
                 }
@@ -149,11 +165,15 @@ export class IssueHomeworkComponent implements OnInit {
         ]).then(value =>{
             this.currentHomework.id = value[0].id;
             Promise.all(this.populateHomeworkImages()).then(value =>{
-                alert('done');
+                alert('Homework has been successfully created');
+                this.serviceAdapter.getHomeworks();
+                this.currentHomework = new Homework;
+                this.currentHomeworkImages = [];
+                this.isLoading = false;
+            },error =>{
+                this.isLoading = false;
             })
-            this.serviceAdapter.getHomeworks();
-            this.currentHomework = new Homework;
-            this.isLoading = false;
+            
         },error =>{
             this.isLoading = false;
         });
@@ -185,8 +205,7 @@ export class IssueHomeworkComponent implements OnInit {
         let d = new Date(dateStr);
         let hours = d.getHours();
         let minutes = d.getMinutes();
-        let seconds = d.getSeconds();
-        return [hours, minutes, seconds].join(':');
+        return [hours, minutes].join(':');
     }
 
     readURL(event): void {
@@ -259,8 +278,52 @@ export class IssueHomeworkComponent implements OnInit {
         
         return str;
     }
+
+    removeImage(url: any):any{
+        this.currentHomeworkImages.forEach( (image,index) =>{
+            if(image.questionImage === url){
+                this.currentHomeworkImages.splice(index, 1);
+            }
+        });
+    }
     
 
+    editHomework(homeworkId:any):any{
+        let tempHomework = this.homeworkList.find( homework => homework.id == homeworkId);
+
+        this.editableHomework = {
+            id: tempHomework.id,
+            homeworkName: tempHomework.homeworkName,
+            parentClassSubject: tempHomework.parentClassSubject,
+            startDate: tempHomework.startDate,
+            startTime: tempHomework.startTime,
+            endDate: tempHomework.endDate,
+            endTime: tempHomework.endTime,
+            homeworkText: tempHomework.homeworkText,
+            homeworkImages: [],
+            editRequired: true,
+        }
+        tempHomework.homeworkImages.forEach(image =>{
+            this.editableHomework.homeworkImages.push(image);
+        });
+    }
+
+
+    openDialog(): void {
+        const dialogRef = this.dialog.open(EditHomeworkDialogComponent, {
+            width: '1000px',
+            data: this.editableHomework,
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            if(this.editableHomework.editRequired){
+                this.isLoading = true;
+                this.serviceAdapter.updateHomework(this.editableHomework);
+                // console.log(this.editableHomework);
+            }
+        });
+    }
 
     // IMAGE PREVIEW CODE
     openModal() {
@@ -299,3 +362,77 @@ export class IssueHomeworkComponent implements OnInit {
     }
     
 }
+
+//EDIT HOMEWORK DIALOG COMPONENT
+
+@Component({
+    selector: 'edit-homework-dialog',
+    templateUrl: 'edit-homework-dialog.html',
+    styleUrls: ['./issue-homework.component.css'],
+  })
+  export class EditHomeworkDialogComponent {
+    
+    serviceAdapter: any;
+    constructor(
+        public dialogRef: MatDialogRef<EditHomeworkDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) 
+        public data: EditHomeworkDialogData,) {
+        this.serviceAdapter = new IssueHomeworkServiceAdapter;
+    }
+  
+    onNoClick(): void {
+        if(!confirm("Any changes made will be lost, are you sure you want to continue?")) {
+            return;
+        }
+        this.data.editRequired = false;
+        this.dialogRef.close();
+    }
+    
+    removeImage(url: any):any{
+        this.data.homeworkImages.forEach( (image,index) =>{
+            if(image == url){
+                this.data.homeworkImages.splice(index, 1);
+            }
+        });
+    }
+
+    readURL(event): void {
+        
+        if (event.target.files && event.target.files[0]) {
+            const image = event.target.files[0];
+            if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+                alert('File type should be either jpg, jpeg, or png');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = e => {
+                this.data.homeworkImages.push(reader.result);
+                // this.updatePDF();
+            };
+            reader.readAsDataURL(image);
+            
+        }
+    }
+
+    
+    dataURLtoFile(dataurl, filename) {
+
+        try {
+            const arr = dataurl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+
+            return new File([u8arr], filename, {type: mime});
+        } catch (e) {
+            return null;
+        }
+    }
+
+  }

@@ -16,6 +16,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input'
 import { MatTableModule } from '@angular/material';  
+import { MatDialogModule } from '@angular/material'
  
 
 
@@ -73,6 +74,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatCardModule,
         MatInputModule,
         MatTableModule,
+        MatDialogModule,
 
         BasicComponentsModule,
 
@@ -110,7 +112,8 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatSortModule,
         MatCardModule,
         MatInputModule,
-
+        MatDialogModule,
+        
     ]
 })
 export class ComponentsModule { }
