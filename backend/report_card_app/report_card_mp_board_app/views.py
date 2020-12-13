@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
-from common.common_views import CommonListView, CommonView
+from common.common_views_3 import CommonListView, CommonView
 from rest_framework.views import APIView
 
 from examination_app.models import MpBoardReportCardMapping, CCEMarks, StudentExtraSubField, ExtraSubField
@@ -15,10 +15,42 @@ from .models import StudentRemark
 
 class ReportCardMappingView(CommonView, APIView):
     Model = MpBoardReportCardMapping
+    RelationsToSchool = [
+        'parentSchool',
+        'parentExaminationJuly__parentSchool',
+        'parentExaminationAugust__parentSchool',
+        'parentExaminationSeptember__parentSchool',
+        'parentExaminationOctober__parentSchool',
+        'parentExaminationHalfYearly__parentSchool',
+        'parentExaminationDecember__parentSchool',
+        'parentExaminationJanuary__parentSchool',
+        'parentExaminationFebruary__parentSchool',
+        'parentExaminationFinal__parentSchool',
+        'parentExaminationQuarterlyHigh__parentSchool',
+        'parentExaminationHalfYearlyHigh__parentSchool',
+        'parentExaminationFinalHigh__parentSchool',
+        'parentExaminationProject__parentSchool'
+    ]
 
 
 class ReportCardMappingListView(CommonListView, APIView):
     Model = MpBoardReportCardMapping
+    RelationsToSchool = [
+        'parentSchool',
+        'parentExaminationJuly__parentSchool',
+        'parentExaminationAugust__parentSchool',
+        'parentExaminationSeptember__parentSchool',
+        'parentExaminationOctober__parentSchool',
+        'parentExaminationHalfYearly__parentSchool',
+        'parentExaminationDecember__parentSchool',
+        'parentExaminationJanuary__parentSchool',
+        'parentExaminationFebruary__parentSchool',
+        'parentExaminationFinal__parentSchool',
+        'parentExaminationQuarterlyHigh__parentSchool',
+        'parentExaminationHalfYearlyHigh__parentSchool',
+        'parentExaminationFinalHigh__parentSchool',
+        'parentExaminationProject__parentSchool'
+    ]
 
 
 ########### CCEMarks #############
@@ -26,10 +58,14 @@ class ReportCardMappingListView(CommonListView, APIView):
 
 class CCEMarksView(CommonView, APIView):
     Model = CCEMarks
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 class CCEMarksListView(CommonListView, APIView):
     Model = CCEMarks
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 ########### StudentExtraSubField #############
@@ -37,10 +73,14 @@ class CCEMarksListView(CommonListView, APIView):
 
 class StudentExtraSubFieldView(CommonView, APIView):
     Model = StudentExtraSubField
+    RelationsToSchool = ['parentExamination__parentSchool', 'parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 class StudentExtraSubFieldListView(CommonListView, APIView):
     Model = StudentExtraSubField
+    RelationsToSchool = ['parentExamination__parentSchool', 'parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 ########### ExtraField #############
@@ -70,7 +110,12 @@ class ExtraSubFieldListView(CommonListView, APIView):
 
 class StudentRemarkView(CommonView, APIView):
     Model = StudentRemark
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
+
 
 
 class StudentRemarkListView(CommonListView, APIView):
     Model = StudentRemark
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']

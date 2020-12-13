@@ -1,5 +1,5 @@
 
-from common.common_views import CommonListView, CommonView
+from common.common_views_3 import CommonListView, CommonView
 from rest_framework.views import APIView
 from .models  import Term, ExtraField, StudentExtraField, StudentRemark, ReportCardMapping
 
@@ -31,10 +31,14 @@ class ExtraFieldListView(CommonListView, APIView):
 
 class StudentExtraFieldView(CommonView, APIView):
     Model = StudentExtraField
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 class StudentExtraFieldListView(CommonListView, APIView):
     Model = StudentExtraField
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 ########### Class Teacher Remark #############
@@ -42,10 +46,14 @@ class StudentExtraFieldListView(CommonListView, APIView):
 
 class StudentRemarkView(CommonView, APIView):
     Model = StudentRemark
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 class StudentRemarkListView(CommonListView, APIView):
     Model = StudentRemark
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 ########### Report Card Mapping #############
@@ -53,9 +61,9 @@ class StudentRemarkListView(CommonListView, APIView):
 
 class ReportCardMappingView(CommonView, APIView):
     Model = ReportCardMapping
+    RelationsToSchool = ['parentSchool', 'parentExaminationPeriodicTest__parentSchool', 'parentExaminationNoteBook__parentSchool', 'parentExaminationSubEnrichment__parentSchool', 'parentExaminationFinalTerm____parentSchool']
 
 
 class ReportCardMappingListView(CommonListView, APIView):
     Model = ReportCardMapping
-
-
+    RelationsToSchool = ['parentSchool', 'parentExaminationPeriodicTest__parentSchool', 'parentExaminationNoteBook__parentSchool', 'parentExaminationSubEnrichment__parentSchool', 'parentExaminationFinalTerm__parentSchool']

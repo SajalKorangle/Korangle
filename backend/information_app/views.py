@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 
 
 #################### MessageType #########################
