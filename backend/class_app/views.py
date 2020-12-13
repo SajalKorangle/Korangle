@@ -7,20 +7,6 @@ from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_new
 from class_app.models import ClassTeacherSignature
 
-# Why we needed it here
-# def get_error_response(message):
-#     error_response = {}
-#     error_response['status'] = 'fail'
-#     error_response['message'] = message
-#     return error_response
-
-# def get_success_response(data):
-#     message_response = {}
-#     message_response['status'] = 'success'
-#     message_response['data'] = data
-#     return message_response
-
-
 
 # Not needed any more
 ############ ClassTeacherSignature ###########

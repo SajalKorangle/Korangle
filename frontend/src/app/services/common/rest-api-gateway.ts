@@ -153,7 +153,7 @@ export class RestApiGateway {
     }
 
     public getData(url: any, params?: any): Promise<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'JWT ' + this.getToken() });
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'JWT ' + this.getToken()});
         return this.http.get(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {

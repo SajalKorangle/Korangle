@@ -1,6 +1,6 @@
 from common.common_views_3 import CommonView, CommonListView
-from common.common_serializer_interface import create_object
-from decorators import user_permission, user_permission_new
+from common.common_serializer_interface_3 import create_object
+from decorators import user_permission, user_permission_new, user_permission_3
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
@@ -94,19 +94,19 @@ class SmsView(CommonView, APIView):
     Model = SMS
     RelationsToSchool= ['parentSchool']
 
-    @user_permission_new
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
+        data = request.data
         return_data = { 'status': 'success' }
         if data['mobileNumberList'] != '':
             return_data = send_sms(data)
             print(data)
             if return_data['status'] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data['data'] = create_object(data, self.Model, self.ModelSerializer)
+                return_data['data'] = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
         else:
             data['requestId'] = 1
-            return_data['data'] = create_object(data, self.Model, self.ModelSerializer)
+            return_data['data'] = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
         return return_data
 
 
@@ -126,9 +126,9 @@ class SmsDifferentView(CommonView, APIView):
             return_data = send_different_sms(data)
             if return_data["status"] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data["data"] = create_object(data, self.Model, self.ModelSerializer)
+                return_data["data"] = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
         else:
-            return_data["data"] = create_object(data, self.Model, self.ModelSerializer)
+            return_data["data"] = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
             print(return_data)
         return return_data
 

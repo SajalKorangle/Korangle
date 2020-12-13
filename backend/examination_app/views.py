@@ -238,6 +238,8 @@ class StudentExtraSubFieldListView(CommonListView, APIView):
 
 class CCEMarksView(CommonView, APIView):
     Model = CCEMarks
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 class CCEMarksListView(CommonListView, APIView):
