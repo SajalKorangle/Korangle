@@ -65,10 +65,13 @@ class CommonBaseView():
     def permittedQuerySet(self, activeSchoolID, activeStudentID):
         query_filters = {}
         if (activeStudentID): # for parent only
-            for relation in self.RelationsToStudent:
+            for relation in self.RelationsToStudent:    # takes the first relation to student only(should be closest)
                 query_filters[relation] = activeStudentID
-        for relation in self.RelationsToSchool:
-            query_filters[relation] = activeSchoolID
+                break
+        if(len(query_filters.keys()) == 0): # if no student filter is applied
+            for relation in self.RelationsToSchool: # takes the first relation to school only(should be the closest)
+                query_filters[relation] = activeSchoolID
+                break
         return self.Model.objects.filter(**query_filters)
 
 

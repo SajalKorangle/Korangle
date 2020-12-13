@@ -1,4 +1,4 @@
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 from decorators import user_permission
 
 from rest_framework.views import APIView
@@ -151,10 +151,12 @@ class ProfileImageView(APIView):
 
 class EmployeeView(CommonView, APIView):
     Model = Employee
+    RelationsToSchool = ['parentSchool']
 
 
 class EmployeeListView(CommonListView, APIView):
     Model = Employee
+    RelationsToSchool = ['parentSchool']
 
 ########### EmployeePermission ############
 from .models import EmployeePermission
@@ -162,15 +164,19 @@ from .models import EmployeePermission
 
 class EmployeePermissionView(CommonView, APIView):
     Model = EmployeePermission
+    RelationsToSchool = ['parentEmployee__parentSchool']
 
 
 class EmployeePermissionListView(CommonListView, APIView):
     Model = EmployeePermission
+    RelationsToSchool = ['parentEmployee__parentSchool']
 
 from .models import EmployeeSessionDetail
 
 class EmployeeeSessionDetailView(CommonView,APIView):
     Model = EmployeeSessionDetail
+    RelationsToSchool = ['parentEmployee__parentSchool']
 
 class EmployeeeSessionDetailListView(CommonListView,APIView):
     Model = EmployeeSessionDetail
+    RelationsToSchool = ['parentEmployee__parentSchool']

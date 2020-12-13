@@ -1,5 +1,5 @@
 from decorators import user_permission
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 
 from rest_framework.views import APIView
 
@@ -67,6 +67,8 @@ from .models import Enquiry
 
 class EnquiryyView(CommonView,APIView):
     Model = Enquiry
+    RelationsToSchool = ['parentSchool', 'parentEmployee__parentSchool']
 
 class EnquiryyListView(CommonListView,APIView):
     Model = Enquiry
+    RelationsToSchool = ['parentSchool', 'parentEmployee__parentSchool']

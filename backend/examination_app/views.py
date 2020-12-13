@@ -2,7 +2,7 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
-from common.common_views import CommonListView, CommonView
+from common.common_views_3 import CommonListView, CommonView
 from decorators import user_permission
 
 from rest_framework.views import APIView
@@ -11,24 +11,7 @@ import json
 
 from examination_app.models import Examination, TestSecond, StudentTest, StudentExtraSubField, CCEMarks
 
-
-def get_error_response(message):
-    error_response = {}
-    error_response['status'] = 'fail'
-    error_response['message'] = message
-    return error_response
-
-def get_success_response(data):
-    message_response = {}
-    message_response['status'] = 'success'
-    message_response['data'] = data
-    return message_response
-
-def get_success_message(message):
-    message_response = {}
-    message_response['status'] = 'success'
-    message_response['message'] = message
-    return message_response
+from common.common_functions import get_error_response, get_success_message, get_success_response
 
 ################ Maximum Marks Allowed ##################
 from .handlers.maximumMarksAllowed import get_maximumMarksAllowed
@@ -203,32 +186,38 @@ class CCEMarksOldListView(APIView):
 
 class ExaminationView(CommonView, APIView):
     Model = Examination
+    RelationsToSchool = ['parentSchool']
 
 
 class ExaminationListView(CommonListView, APIView):
     Model = Examination
-
+    RelationsToSchool = ['parentSchool']
 
 ########### Test Second #############
 
 
 class TestSecondView(CommonView, APIView):
     Model = TestSecond
+    RelationsToSchool = ['parentExamination__parentSchool']
 
 
 class TestSecondListView(CommonListView, APIView):
     Model = TestSecond
-
+    RelationsToSchool = ['parentExamination__parentSchool']
 
 ########### Student Test #############
 
 
 class StudentTestView(CommonView, APIView):
     Model = StudentTest
+    RelationsToSchool = ['parentExamination__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 class StudentTestListView(CommonListView, APIView):
     Model = StudentTest
+    RelationsToSchool = ['parentExamination__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 
 ########### Student Extra Sub Field #############
@@ -236,11 +225,13 @@ class StudentTestListView(CommonListView, APIView):
 
 class StudentExtraSubFieldView(CommonView, APIView):
     Model = StudentExtraSubField
-
+    RelationsToSchool = ['parentExamination__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 class StudentExtraSubFieldListView(CommonListView, APIView):
     Model = StudentExtraSubField
-
+    RelationsToSchool = ['parentExamination__parentSchool']
+    RelationsToStudent = ['parentStudent']
 
 ########### CCE Marks #############
 
@@ -251,5 +242,6 @@ class CCEMarksView(CommonView, APIView):
 
 class CCEMarksListView(CommonListView, APIView):
     Model = CCEMarks
-
-
+    RelationsToSchool = ['parentStudent__parentSchool']
+    RelationsToStudent = ['parentStudent']
+    

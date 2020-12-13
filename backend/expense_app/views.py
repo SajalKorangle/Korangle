@@ -6,17 +6,7 @@ from rest_framework.decorators import api_view
 
 import json
 
-def get_error_response(message):
-    error_response = {}
-    error_response['status'] = 'fail'
-    error_response['message'] = message
-    return error_response
-
-def get_success_response(data):
-    message_response = {}
-    message_response['status'] = 'success'
-    message_response['data'] = data
-    return message_response
+from common.common_functions import get_error_response, get_success_response
 
 from .handlers.new_expense import new_expense
 @api_view(['POST'])
