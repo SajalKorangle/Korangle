@@ -148,31 +148,6 @@ export class ScheduleTestComponent implements OnInit {
   }
 
 
-  //It handles the time update in test
-  handleTimeUpdate(test,event,status): void {
-    console.log("Time udpate is called "+event);
-    if(status === "startTime")
-    { 
-      console.log(status);
-      if(event > test.newEndTime)
-      {
-        alert('Start Time cannot be greater than End Time');
-        return;
-      }
-  
-    }
-    else
-    {
-      if(event < test.newStartTime)
-      {
-        alert('Start Time cannot be greater than End Time');
-        return;
-      }
-    }
-    this.handleUpdate();
-
-    
-  }
 
 
   //It handles the update button

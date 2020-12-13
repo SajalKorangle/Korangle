@@ -132,10 +132,10 @@
                                 
                             </td>
                             <td [class.lowOpacity]='test.deleted'>
-                                <input type='time' [(ngModel)]='test.newStartTime'(ngModelChange)='handleTimeUpdate(test,$event,"startTime")'/>
+                                <input type='time' [(ngModel)]='test.newStartTime' (ngModelChange)="handleUpdate()" />
                             </td>
                             <td [class.lowOpacity]='test.deleted'>
-                                <input type='time' [(ngModel)]='test.newEndTime'(ngModelChange)='handleTimeUpdate(test,$event,"endTime")'/>
+                                <input type='time' [(ngModel)]='test.newEndTime' (ngModelChange)="handleUpdate()" />
                             </td>
                             <td [class.lowOpacity]='test.deleted'>
                                 {{test.maximumMarks}}
