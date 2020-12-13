@@ -1,7 +1,7 @@
 
 from rest_framework.views import APIView
 
-from common.common_views import CommonListView, CommonView
+from common.common_views_3 import CommonListView, CommonView
 
 from team_app.models import Module, Task
 

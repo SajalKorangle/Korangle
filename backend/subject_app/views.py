@@ -5,25 +5,15 @@ from django.shortcuts import render
 
 from rest_framework.views import APIView
 
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 from decorators import user_permission
 
 import json
 
 from subject_app.models import StudentSubject, ClassSubject, SubjectSecond
 
+from common.common_functions import get_error_response, get_success_message
 
-def get_error_response(message):
-    error_response = {}
-    error_response['status'] = 'fail'
-    error_response['message'] = message
-    return error_response
-
-def get_success_response(data):
-    message_response = {}
-    message_response['status'] = 'success'
-    message_response['data'] = data
-    return message_response
 
 from subject_app.handlers.subject_list import subject_list
 ############ Subjects List #############
@@ -163,10 +153,12 @@ class SubjectListView(CommonListView, APIView):
 
 class ClassSubjectView(CommonView, APIView):
     Model = ClassSubject
+    RelationsToSchool= ['parentSchool', 'parentEmployee__parentSchool']
 
 
 class ClassSubjectListView(CommonListView, APIView):
     Model = ClassSubject
+    RelationsToSchool= ['parentSchool', 'parentEmployee__parentSchool']
 
 
 ########### Student Subject #############
@@ -174,9 +166,13 @@ class ClassSubjectListView(CommonListView, APIView):
 
 class StudentSubjectView(CommonView, APIView):
     Model = StudentSubject
+    RelationsToSchool = ['parentSchool__parentStudent']
+    RelationsToStudent = ['parentStudent']
 
 
 class StudentSubjectListView(CommonListView, APIView):
     Model = StudentSubject
+    RelationsToSchool = ['parentSchool__parentStudent']
+    RelationsToStudent = ['parentStudent']
 
 

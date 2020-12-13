@@ -1,5 +1,5 @@
 from decorators import user_permission
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 
 from rest_framework.views import APIView
 
@@ -112,14 +112,18 @@ from .models import Payslip
 
 class PaySlipView(CommonView,APIView):
     Model = Payslip
+    RelationsToSchool = ['parentEmployee__parentSchool']
 
 class PaySlipListView(CommonListView,APIView):
     Model = Payslip
+    RelationsToSchool = ['parentEmployee__parentSchool']
 
 from .models import EmployeePayment
 
 class EmployeeePaymentView(CommonView,APIView):
     Model = EmployeePayment
+    RelationsToSchool = ['parentEmployee__parentSchool']
 
 class EmployeeePaymentListView(CommonListView,APIView):
     Model = EmployeePayment
+    RelationsToSchool = ['parentEmployee__parentSchool']

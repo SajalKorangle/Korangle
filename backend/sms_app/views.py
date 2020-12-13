@@ -1,4 +1,4 @@
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 from common.common_serializer_interface import create_object
 from decorators import user_permission, user_permission_new
 from django.http import HttpResponse
@@ -92,6 +92,7 @@ from .business.send_sms import send_sms, send_different_sms
 
 class SmsView(CommonView, APIView):
     Model = SMS
+    RelationsToSchool= ['parentSchool']
 
     @user_permission_new
     def post(self, request):
@@ -113,6 +114,7 @@ class SmsView(CommonView, APIView):
 
 class SmsDifferentView(CommonView, APIView):
     Model = SMS
+    RelationsToSchool= ['parentSchool']
 
     @user_permission_new
     def post(self, request):
@@ -134,3 +136,4 @@ class SmsDifferentView(CommonView, APIView):
 
 class SmsListView(CommonListView, APIView):
     Model = SMS
+    RelationsToSchool= ['parentSchool']
