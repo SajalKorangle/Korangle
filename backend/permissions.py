@@ -4,10 +4,10 @@ from datetime import date
 from student_app.models import StudentSection, Student
 from employee_app.models import Employee
 
-def employeeHasSchoolPermission(user, schooldID):    
+def employeeHasSchoolPermission(user, schoolID):    
     employee_queryset = Employee.objects.filter(mobileNumber=user.username,
-                                                    parentSchool=schooldID,
-                                                    parentSchool__dateOfExpiration__gte=date.today(),
+                                                    parentSchool=schoolID,
+                                                    parentSchool__expired=False,
                                                     dateOfLeaving=None)
     if (len(employee_queryset) > 0):
         return True
