@@ -1,5 +1,5 @@
 # from common.common_views_file import CommonView, CommonListView
-from common.common_view_3 import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 from rest_framework.views import APIView
 from id_card_app.models import IdCardLayout
 
