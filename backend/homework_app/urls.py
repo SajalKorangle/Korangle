@@ -4,8 +4,6 @@ urlpatterns = []
 
 from .views import HomeworkView,HomeworkListView
 
-
-
 from .views import HomeworkQuestionView,HomeworkQuestionListView
 
 urlpatterns += [

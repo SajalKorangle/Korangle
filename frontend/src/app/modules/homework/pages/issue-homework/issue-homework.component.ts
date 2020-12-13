@@ -123,12 +123,11 @@ export class IssueHomeworkComponent implements OnInit {
         
     }
     populateHomeworkImages(): any{
-        this.currentHomeworkImages.forEach(image =>{
-            image.parentHomework = this.currentHomework.id;
-        })
         let index = 0;
         let promises = [];
         this.currentHomeworkImages.forEach(image =>{
+            image.parentHomework = this.currentHomework.id;
+            image.orderNumber = index;
             let temp_form_data = new FormData();
             const layout_data = { ...image,};
             Object.keys(layout_data).forEach(key => {
@@ -157,7 +156,7 @@ export class IssueHomeworkComponent implements OnInit {
         this.currentHomework.startDate = this.formatDate(currentDate, '');
         this.currentHomework.startTime = this.formatTime(currentDate);
         if(this.currentHomework.endDate != null && this.currentHomework.endTime == null){
-            this.currentHomework.endTime =  '23:59:59';
+            this.currentHomework.endTime =  '23:59';
         }
         console.log(this.currentHomework);
         Promise.all([
@@ -221,6 +220,7 @@ export class IssueHomeworkComponent implements OnInit {
             reader.onload = e => {
                 // console.log(reader.result);
                 let tempImageData = {
+                    orderNumber: null,
                     parentHomework: null,
                     questionImage: reader.result,
                 }
@@ -325,42 +325,6 @@ export class IssueHomeworkComponent implements OnInit {
         });
     }
 
-    // IMAGE PREVIEW CODE
-    openModal() {
-        document.getElementById('imgModal').style.display = "block";
-    }
-    closeModal() {
-    document.getElementById('imgModal').style.display = "none";
-    }
-    plusSlides(n) {
-    this.showSlides(this.slideIndex += n);
-    }
-    currentSlide(n) {
-    this.showSlides(this.slideIndex = n);
-    }
-    showSlides(slideIndex);
-    showSlides(n) {
-        let i;
-        const slides = document.getElementsByClassName("img-slides") as HTMLCollectionOf < HTMLElement > ;
-        const dots = document.getElementsByClassName("images") as HTMLCollectionOf < HTMLElement > ;
-        if (n > slides.length) {
-            this.slideIndex = 1
-        }
-        if (n < 1) {
-            this.slideIndex = slides.length
-        }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        for (i = 0; i < dots.length; i++) {
-            dots[i].className = dots[i].className.replace(" active", "");
-        }
-        slides[this.slideIndex - 1].style.display = "block";
-        if (dots && dots.length > 0) {
-            dots[this.slideIndex - 1].className += " active";
-        }
-    }
-    
 }
 
 //EDIT HOMEWORK DIALOG COMPONENT
@@ -390,7 +354,7 @@ export class IssueHomeworkComponent implements OnInit {
     
     removeImage(url: any):any{
         this.data.homeworkImages.forEach( (image,index) =>{
-            if(image == url){
+            if(image.questionImage == url){
                 this.data.homeworkImages.splice(index, 1);
             }
         });
@@ -407,8 +371,13 @@ export class IssueHomeworkComponent implements OnInit {
             
             const reader = new FileReader();
             reader.onload = e => {
-                this.data.homeworkImages.push(reader.result);
-                // this.updatePDF();
+
+                let tempData = {
+                    orderNumber: null,
+                    parentHomework: this.data.id,
+                    questionImage: reader.result,
+                }
+                this.data.homeworkImages.push(tempData);
             };
             reader.readAsDataURL(image);
             

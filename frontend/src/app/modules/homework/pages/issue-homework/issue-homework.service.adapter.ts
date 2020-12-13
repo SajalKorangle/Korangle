@@ -55,6 +55,7 @@ export class IssueHomeworkServiceAdapter {
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, homework_data),
         ]).then(value =>{
             this.vm.homeworkImagesList = value[1];
+            console.log(value[1]);
             this.initialiseHomeworks(value[0], value[1]);        
             this.vm.isLoading = false;
         },error =>{
@@ -84,11 +85,15 @@ export class IssueHomeworkServiceAdapter {
             }
             homeworkImageList.forEach(image =>{
                 if(image.parentHomework == currentHomework.id){
-                    tempHomework.homeworkImages.push(image.questionImage);
+                    tempHomework.homeworkImages.push(image);
                 }
             })
 
         });
+
+        this.vm.homeworkList.forEach(homework =>{
+            homework.homeworkImages.sort((a, b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0)
+        })
 
     }
 
@@ -109,7 +114,8 @@ export class IssueHomeworkServiceAdapter {
     }
 
     updateHomework(data :any): any{
-
+        
+        const promises = [];
         let previousHomework = this.vm.homeworkList.find(homework => homework.id === data.id);
 
         let tempHomeworkData = {
@@ -123,16 +129,16 @@ export class IssueHomeworkServiceAdapter {
             homeworkText: data.homeworkText,
         }
 
-        const promises = [];
+        promises.push(this.vm.homeworkService.updateObject(this.vm.homeworkService.homeworks, tempHomeworkData));
 
         let index = 0;
-        promises.push(this.vm.homeworkService.updateObject(this.vm.homeworkService.homeworks, tempHomeworkData));
         data.homeworkImages.forEach(image =>{
-            let temp = previousHomework.homeworkImages.find(images => images === image);
+            let temp = previousHomework.homeworkImages.find(images => images.questionImage === image.questionImage);
             if(temp === undefined){
                 let tempData = {
+                    orderNumber: index,
                     parentHomework: data.id,
-                    questionImage: image,
+                    questionImage: image.questionImage,
                 }
                 let temp_form_data = new FormData();
                 const layout_data = { ...tempData,};
@@ -143,21 +149,25 @@ export class IssueHomeworkServiceAdapter {
                         temp_form_data.append(key, layout_data[key]);
                     }
                 });
-                index = index + 1;
                 promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question, temp_form_data));
             }
+            else{
+                let tempData ={
+                    id: temp.id,
+                    orderNumber: index,
+                }
+                promises.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_question, tempData));
+            }
+            index = index + 1;
         });
 
         previousHomework.homeworkImages.forEach(image =>{
-            let temp = data.homeworkImages.find(images => images === image);
+            let temp = data.homeworkImages.find(images => images.questionImage === image.questionImage);
             if(temp === undefined){
-                let tempId = this.vm.homeworkImagesList.find(images => images.questionImage == image).id;
-                console.log(tempId);
-                promises.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question,{'id': tempId}));
+                promises.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question,{'id': image.id}));
             }
         });
 
-        console.log(tempHomeworkData);
         Promise.all(promises).then(value =>{
             this.getHomeworks();
             alert('Homework Edited Successfully');

@@ -35,7 +35,8 @@ class Homework(models.Model):
 class HomeworkQuestion(models.Model):
 
     parentHomework = models.ForeignKey(Homework, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
-    questionImage = models.ImageField("question_image", upload_to = upload_question_to,blank = True,null=True)
+    questionImage = models.ImageField('question_image', upload_to = upload_question_to,blank = True,null=True)
+    orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
 
     class Meta:
         db_table = 'homework_question'
@@ -70,6 +71,7 @@ class HomeworkAnswer(models.Model):
 
     parentHomework = models.ForeignKey(Homework, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
     answerImage = models.ImageField("answer_image", upload_to = upload_answer_to,blank = True,null=True)
+    orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
 
     class Meta:
         db_table = 'homework_answer'

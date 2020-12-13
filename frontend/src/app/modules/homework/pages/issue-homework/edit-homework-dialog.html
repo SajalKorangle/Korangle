@@ -29,9 +29,9 @@
 
     <div >
         <div class="image-row">
-            <div  *ngFor="let image of data.homeworkImages; let i = index">
-                <img src="{{image}}" class="hover-shadow cursor image-column">
-                <span class="close" (click)="removeImage(image);" >&times;</span>
+            <div  *ngFor="let images of data.homeworkImages; let i = index">
+                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column">
+                <span class="close" (click)="removeImage(images.questionImage);" >&times;</span>
             </div>
         </div>
     </div>
