@@ -60,7 +60,7 @@ export class UpdateViaExcelServiceAdapter{
                 this.populateStudents(value[0]); 
                 
                 //storing fee of students
-                this.populateStructuredStudentsFeeExist(value2[1]);
+                this.populateStructuredStudentsFee(value2[1]);
 
                 this.vm.isLoading = false;
             
@@ -114,14 +114,7 @@ export class UpdateViaExcelServiceAdapter{
         })
     }
 
-    populateStructuredStudentsFeeExist(studentFeeList: any): void{
-        // Delete below after code review
-        /*studentFeeList.forEach(studentFee => {
-            if (this.vm.studentFeeListMappedByStudent[studentFee.parentStudent]) // for handling the case of multiple fee types
-                this.vm.studentFeeListMappedByStudent[studentFee.parentStudent].push(studentFee);
-            else
-                this.vm.studentFeeListMappedByStudent[studentFee.parentStudent] = [studentFee];
-        });*/
+    populateStructuredStudentsFee(studentFeeList: any): void{
         studentFeeList.forEach(studentFee => {
             if (!this.vm.studentFeeListMappedByStudentIdFeeTypeId[studentFee.parentStudent]) {
                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[studentFee.parentStudent] = {};
@@ -151,8 +144,8 @@ export class UpdateViaExcelServiceAdapter{
                 let student_id = uploadedRow[0];
                 this.vm.usefulFeeTypeExcelColumnIndexList.forEach(colIndex => {
                     let feeTypeId = this.vm.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex];
-                    if ((!this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id]
-                        || !this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId])
+                    if (!(this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id]
+                        && this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId])
                         && this.vm.excelDataFromUser[rowIndex+1][colIndex] != 0) {
                         studentFeeListToBeUploaded.push({
                             'parentStudent': student_id,
@@ -211,7 +204,7 @@ export class UpdateViaExcelServiceAdapter{
                     this.vm.feeService.createList(this.vm.feeService.student_fees, studentFeeListToBeUploaded).then(studentFeeListCreated => {
 
                         // this.initializeData();
-                        this.populateStructuredStudentsFeeExist(studentFeeListCreated);
+                        this.populateStructuredStudentsFee(studentFeeListCreated);
                         this.vm.clearExcelData();
 
                         alert('Data Upload Successful');
@@ -238,115 +231,8 @@ export class UpdateViaExcelServiceAdapter{
         }, error => {
             this.vm.isUploadable = false;
             this.vm.isLoading = false;
-        }); // this.vm.feeService.getObjectList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data).then(schoolFeeRuleListBackend => {
+        }); 
 
     }
-
-    // Delete below after code review.
-    /*uploadedStudentFeePreProcessing() {
-
-        this.vm.excelDataFromUser.slice(1).forEach((uploadedRow,row) => {
-            let [student_id] = uploadedRow;
-            if (this.vm.studentFeeListMappedByStudent[student_id]) {
-                this.vm.studentFeeListMappedByStudent[student_id].forEach(studentFee => {
-                    let feeTypeColumnIndex = this.vm.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
-                    delete this.vm.excelDataFromUser[row+1][feeTypeColumnIndex]; // What are we deleting here?, Why are we deleting the what?
-                });
-            }
-        });
-
-        let request_school_fee_rule_data = {
-            'parentFeeType__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId
-        };
-
-        // What do we need to do to upload student fee data.
-        // We have already gotten the student fee rules as of now, during initialize data.
-        // If there is a student fee that needs to be uploaded for a particular fee type then,
-        // we would have to create school fee rule no matter what with the excel file name, date & time,
-        // so that a particular file data can be deleted.
-        return this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data).then(value => {
-            // There can be more than one school fee rules for a particular fee type.
-            // This doesn't seem right.
-            let schoolFeeRuleMappedByFeeTypeId = {}; // format: {feeTypeId: schoolFeeRule, ...}; it will be returned for creating studentFee
-            value.forEach(schoolFeeRule => {
-                schoolFeeRuleMappedByFeeTypeId[schoolFeeRule.parentFeeType] = schoolFeeRule;
-            });
-
-            let schoolFeeRuleToBeUploaded = [];  // to be uploaded
-            this.vm.usefulFeeTypeExcelColumnIndexList.forEach(col => {
-                let feeType = this.vm.feeTypeList[col-this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO];
-                if (!schoolFeeRuleMappedByFeeTypeId[feeType.id]) {   //  create new school fee rule if doesn't already exist for a particular fee type
-                    let newSchoolFeeRule = new SchoolFeeRule();
-                    newSchoolFeeRule.parentSession = this.vm.user.activeSchool.currentSessionDbId;
-                    newSchoolFeeRule.isClassFilter = false;
-                    newSchoolFeeRule.isBusStopFilter = false;
-                    newSchoolFeeRule.onlyNewAdmission = false;
-                    newSchoolFeeRule.includeRTE = false;
-                    newSchoolFeeRule.isAnnually = true;
-
-                    newSchoolFeeRule.name = feeType.name + '-SheetUpload';
-                    newSchoolFeeRule.parentFeeType = feeType.id;
-                    newSchoolFeeRule.ruleNumber = 1;
-                    schoolFeeRuleToBeUploaded.push(newSchoolFeeRule);
-                }
-            });
-
-            if (schoolFeeRuleToBeUploaded.length > 0) {
-                return this.vm.feeService.createList(this.vm.feeService.school_fee_rules, schoolFeeRuleToBeUploaded).then(schoolFeeRules => {
-                    schoolFeeRules.forEach(schoolFeeRule => {
-                        schoolFeeRuleMappedByFeeTypeId[schoolFeeRule.parentFeeType] = schoolFeeRule;
-                    });
-                    return schoolFeeRuleMappedByFeeTypeId;
-                })
-            }
-            else
-                return schoolFeeRuleMappedByFeeTypeId;
-        });
-    }
-
-    uploadStudentFeeDataOld() {
-        this.vm.isLoading = true;
-        this.uploadedStudentFeePreProcessing().then(SchoolFeeRuleObject => {
-            let studentFeeListToBeUploaded = [];  //  to be uploaded
-            this.vm.usefulFeeTypeExcelColumnIndexList.forEach(col => {
-                let feeType = this.vm.feeTypeList[col - this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO];
-                let schoolFeeRule = SchoolFeeRuleObject[feeType.id];
-                this.vm.excelDataFromUser.slice(1).forEach(rowStudent => {
-                    // Why are we parsing with float instead of parsing with int. : Not necessary to check with parseFloat, already handled at the time of sanity check
-                    if (!rowStudent[col] || parseFloat(rowStudent[col]) == 0 || isNaN(parseFloat(rowStudent[col]))) //  if cell is empty return
-                        return;
-                    
-                    let student_id = parseInt(rowStudent[0]);
-                    let newStudentFee = {   //  Create student Data.push();
-                        'parentStudent': student_id,
-                        'parentSchoolFeeRule': schoolFeeRule.id,
-                        'parentFeeType': feeType.id,
-                        'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                        'isAnnually': true,
-                        'cleared': false,
-
-                        'aprilAmount': rowStudent[col],                        
-                    };
-                    studentFeeListToBeUploaded.push(newStudentFee);
-                })                
-            });
-
-            if(studentFeeListToBeUploaded.length>0)
-                this.vm.feeService.createList(this.vm.feeService.student_fees, studentFeeListToBeUploaded).then((uploadedFeeData) => {
-                    this.vm.isUploadable = false;
-                    this.vm.isLoading = false;
-                    alert('Data Upload Successful');
-                    this.initializeData();
-                    this.vm.clearExcelData();
-                });
-            else {
-                this.vm.isUploadable = false;
-                this.vm.isLoading = false;
-                alert('No Fee Data To Upload');
-                this.vm.clearExcelData();
-            }  
-        })
-    }*/
 
 }
