@@ -5,7 +5,7 @@ import { openModuleAndPage } from '../../../../open-page';
 import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
 
 
-describe('Fees 3.0 -> Update Excel', () => {
+describe('Fees 3.0 -> Upload Excel', () => {
 
     let page: any;
 
@@ -31,13 +31,13 @@ describe('Fees 3.0 -> Update Excel', () => {
         page = await BeforeAfterEach.beforeEach();
 
         // Opening and waiting for page load
-        await openModuleAndPage('Fees 3.0', 'Update Excel');
+        await openModuleAndPage('Fees 3.0', 'Upload Excel');
         await page.waitForXPath('//button[contains(., "Download Template")]');  // waiting for page load after spinner
     });
 
     describe('set1: Sheet Download', () => { 
 
-        it('Update Excel: Downloaded Button Check', async () => {
+        it('Upload Excel: Downloaded Button Check', async () => {
             let node = await getNode('button', 'Download Template');  
             expect(node).not.toBeUndefined();        
         });
