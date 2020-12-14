@@ -31,7 +31,18 @@ def user_permission(function):
 
 def user_permission_new(function):
     def wrap(*args, **kwargs):
-        if args[1].user.is_authenticated:
+        request = args[1]
+        if request.user.is_authenticated:
+            # Deleting activeSchoolId or activeStudentId keys from get; inroduced by updated architecture
+            if ('activeSchoolID' in request.GET.keys()):    # User is reqesting as employee
+                request.GET._mutable = True
+                del request.GET['activeSchoolID']
+                request.GET._mutable = False
+            elif ('activeStudentId' in request.GET.keys()):  # User is requesting as parent
+                request.GET._mutable = True
+                del request.GET['activeStudentID']
+                request.GET._mutable = False
+
             data = {'response': get_success_response(function(*args, **kwargs))}
             return JsonResponse(data)
         else:

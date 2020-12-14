@@ -64,14 +64,10 @@ class CommonBaseView():
     
     def permittedQuerySet(self, activeSchoolID, activeStudentID):
         query_filters = {}
-        if (activeStudentID): # for parent only
-            for relation in self.RelationsToStudent:    # takes the first relation to student only(should be closest)
-                query_filters[relation] = activeStudentID
-                break
-        if(len(query_filters.keys()) == 0): # if no student filter is applied
-            for relation in self.RelationsToSchool: # takes the first relation to school only(should be the closest)
-                query_filters[relation] = activeSchoolID
-                break
+        if (activeStudentID and len(self.RelationsToStudent) > 0):  # for parent only 
+            query_filters[self.RelationsToStudent[0]] = activeStudentID     # takes the first relation to student only(should be the closest)
+        elif (len(self.RelationsToSchool)>0):
+            query_filters[self.RelationsToSchool[0]] = activeSchoolID    # takes the first relation to school only(should be the the closest)
         return self.Model.objects.filter(**query_filters)
 
 
@@ -79,6 +75,10 @@ class CommonView(CommonBaseView):
     
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
+        # print('-------------------------------')
+        # print(activeSchoolID)
+        # print(activeStudentID)
+        # print('-------------------------------')
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         return get_object(request.GET, filtered_query_set, self.ModelSerializer)
 
