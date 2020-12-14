@@ -1,5 +1,3 @@
-
-import { Homework } from 'app/services/modules/homework/models/homework';
 import { IssueHomeworkComponent } from './issue-homework.component';
 
 export class IssueHomeworkServiceAdapter {
@@ -23,6 +21,7 @@ export class IssueHomeworkServiceAdapter {
             'parentEmployee': this.vm.user.activeSchool.employeeId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId
         }
+
         this.vm.isSessionLoading = true;
 
         Promise.all([
@@ -45,6 +44,15 @@ export class IssueHomeworkServiceAdapter {
     getHomeworks():any{
         this.vm.isLoading = true;
         this.vm.homeworkList = [];
+        this.vm.studentList = [];
+        
+        let student_section_data = {
+            'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
+            'parentClass': this.vm.selectedClassSection.classDbId,
+            'parentDivision': this.vm.selectedClassSection.divisionDbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'fields__korangle': 'parentStudent',
+        }
 
         const homework_data = {
             parentHomework__parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
@@ -53,11 +61,36 @@ export class IssueHomeworkServiceAdapter {
         Promise.all([
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, {parentClassSubject: this.vm.selectedSubject.classSubjectDbId}),
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, homework_data),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
+            // this.vm.
         ]).then(value =>{
             this.vm.homeworkImagesList = value[1];
-            console.log(value[1]);
-            this.initialiseHomeworks(value[0], value[1]);        
-            this.vm.isLoading = false;
+            this.initialiseHomeworks(value[0], value[1]);       
+            let studentIdList = [];
+            value[2].forEach(student =>{
+                studentIdList.push(student.parentStudent);
+            });
+            let student_data = {
+                'id__in': studentIdList,
+                'fields__korangle': 'name,mobileNumber',
+            }
+            Promise.all([
+                this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
+            ]).then(value =>{
+                value[0].forEach(element =>{
+                    let tempData = {
+                        name: element.name,
+                        mobileNumber: element.mobileNumber,
+                        subject: this.vm.selectedSubject.name,
+                        homeworkName: null,
+                        deadLine: null,
+                    }
+                    this.vm.studentList.push(tempData);
+                })
+                this.fetchGCMDevices(this.vm.studentList);
+                this.vm.isLoading = false;
+            });
+            
         },error =>{
             this.vm.isLoading = false;
         });
@@ -105,8 +138,12 @@ export class IssueHomeworkServiceAdapter {
         }
         this.vm.isLoading = true;
         this.vm.homeworkService.deleteObject(this.vm.homeworkService.homeworks, {id: homeworkId}).then(value =>{
+            this.vm.homeworkList.forEach( (homework,index) =>{
+                if(homework.id == homeworkId){
+                    this.vm.homeworkList.splice(index, 1);
+                }
+            });
             alert('Homework Deleted')
-            this.getHomeworks();
             this.vm.isLoading = false;
         }),error =>{
             this.vm.isLoading = false;
@@ -176,5 +213,107 @@ export class IssueHomeworkServiceAdapter {
             this.vm.isLoading = false;
         }
         
+    }
+
+
+
+    fetchGCMDevices: any = (studentList: any) => {
+        // console.log(studentList);
+        this.vm.isLoading = true;
+        const service_list = [];
+        const iterationCount = Math.ceil(studentList.length / this.vm.STUDENT_LIMITER);
+        let loopVariable = 0;
+
+        while (loopVariable < iterationCount) {
+            const mobile_list = studentList.filter(item => item.mobileNumber).map(obj => obj.mobileNumber.toString());
+            const gcm_data = {
+                'user__username__in': mobile_list.slice(
+                    this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)
+                ),
+                'active': 'true__boolean',
+            }
+            // console.log(gcm_data);
+            const user_data = {
+                'fields__korangle': 'username,id',
+                'username__in': mobile_list.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)),
+            };
+            // console.log(user_data);
+            service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_data));
+            service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
+            // console.log(service_list);
+            loopVariable = loopVariable + 1;
+        }
+
+        Promise.all(service_list).then((value) => {
+            let temp_gcm_list = [];
+            let temp_user_list = [];
+            let loopVariable = 0;
+            while (loopVariable < iterationCount) {
+                temp_gcm_list = temp_gcm_list.concat(value[loopVariable * 2]);
+                temp_user_list = temp_user_list.concat(value[loopVariable * 2 + 1]);
+                loopVariable = loopVariable + 1;
+            }
+
+            const notif_usernames = temp_user_list.filter(user => {
+                return temp_gcm_list.find(item => {
+                    return item.user == user.id;
+                }) != undefined;
+            })
+            // Storing because they're used later
+            this.vm.notif_usernames = notif_usernames;
+
+            let notification_list;
+
+            notification_list = studentList.filter(obj => {
+                return notif_usernames.find(user => {
+                    return user.username == obj.mobileNumber;
+                }) != undefined;
+            });
+            studentList.forEach((item, i) => {
+                item.notification = false;
+            })
+            notification_list.forEach((item, i) => {
+                item.notification = true;
+            })
+
+
+            this.vm.isLoading = false;
+        })
+    }
+
+
+    sendNotification: any = (mobile_list: any) => {
+        let service_list = [];
+        let notification_list = [];
+        
+        notification_list = mobile_list.filter(obj => {
+            return obj.notification;
+        });
+        
+        
+        let notif_mobile_string = '';
+        notification_list.forEach((item, index) => {
+            notif_mobile_string += item.mobileNumber + ', ';
+        });
+        // notif_mobile_string = notif_mobile_string.slice(0, -2);
+
+        notif_mobile_string = notif_mobile_string.slice(0, -2);
+        const notification_data = notification_list.map(item => {
+            return {
+                    'parentMessageType': 1,
+                    'content': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, item),
+                    'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
+                    'parentSchool': this.vm.user.activeSchool.dbId,
+                
+            };
+        });
+        service_list = [];
+        if (notification_data.length > 0 ) {
+            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
+        }
+
+        Promise.all(service_list).then(value =>{
+            this.vm.isLoading = false;
+        });
     }
 }

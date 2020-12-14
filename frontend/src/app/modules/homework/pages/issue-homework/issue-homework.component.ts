@@ -1,13 +1,17 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
+import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { HomeworkService } from '../../../../services/modules/homework/homework.service';
 import { IssueHomeworkServiceAdapter } from './issue-homework.service.adapter';
+import {NotificationService} from '../../../../services/modules/notification/notification.service';
+import {UserService} from '../../../../services/modules/user/user.service';
+
+
 import { Homework } from '../../../../services/modules/homework/models/homework';
- 
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 
 
@@ -31,7 +35,10 @@ export interface EditHomeworkDialogData {
     providers: [
         SubjectService,
         HomeworkService,
-        ClassService
+        ClassService,
+        StudentService,
+        NotificationService,
+        UserService,
     ],
 })
 
@@ -43,7 +50,10 @@ export class IssueHomeworkComponent implements OnInit {
 
     // @Input() user;
     user: any;
-    slideIndex = 0;
+
+    
+    STUDENT_LIMITER = 200;
+    notif_usernames = [];
  
     classSectionSubjectList: any;
     selectedClassSection: any;
@@ -57,13 +67,19 @@ export class IssueHomeworkComponent implements OnInit {
     currentHomeworkImages: any;
     isSessionLoading: any;
     isLoading: any;
-    serviceAdapter: IssueHomeworkServiceAdapter;
     editableHomework: any;
+
+    studentUpdateMessage = "New Homework is added in <subject>,\n Title - <homeworkName> \n Last date to submit - <deadLine> ";
+    studentList: any;
+    serviceAdapter: IssueHomeworkServiceAdapter;
 
     constructor(
         public subjectService: SubjectService,
         public homeworkService: HomeworkService,
         public classService: ClassService,
+        public studentService: StudentService,
+        public notificationService: NotificationService,
+        public userService: UserService,
         public dialog: MatDialog,
     ){}
 
@@ -122,6 +138,57 @@ export class IssueHomeworkComponent implements OnInit {
         this.selectedSubject = this.selectedClassSection.subjectList[0];
         
     }
+    
+
+    createHomework():any{
+        this.isLoading = true;
+        this.currentHomework.parentClassSubject = this.selectedSubject.classSubjectDbId;
+        let currentDate = new Date();
+        this.currentHomework.startDate = this.formatDate(currentDate, '');
+        this.currentHomework.startTime = this.formatTime(currentDate);
+        if(this.currentHomework.endDate != null && this.currentHomework.endTime == null){
+            this.currentHomework.endTime =  '23:59';
+        }
+        
+        Promise.all([
+            this.homeworkService.createObject(this.homeworkService.homeworks , this.currentHomework),
+        ]).then(value =>{
+            this.currentHomework.id = value[0].id;
+            this.populateCurrentHomework();
+            Promise.all(this.populateHomeworkImages()).then(value =>{
+                alert('Homework has been successfully created');
+                this.populateStudentList(this.studentList);
+                this.currentHomework = new Homework;
+                this.currentHomeworkImages = [];
+                this.isLoading = false;
+                this.serviceAdapter.sendNotification(this.studentList);
+            },error =>{
+                this.isLoading = false;
+            })
+        },error =>{
+            this.isLoading = false;
+        });
+        
+    }
+
+    populateCurrentHomework(): any{
+        let tempHomework = {
+            id: this.currentHomework.id,
+            homeworkName: this.currentHomework.homeworkName ,
+            parentClassSubject: this.currentHomework.parentClassSubject,
+            startDate: this.currentHomework.startDate,
+            startTime: this.currentHomework.startTime,
+            endDate: this.currentHomework.endDate,
+            endTime: this.currentHomework.endTime,
+            homeworkText: this.currentHomework.homeworkText,
+            homeworkImages: [],
+        }
+        this.currentHomeworkImages.forEach(image =>{
+            tempHomework.homeworkImages.push(image);
+        });
+        this.homeworkList.push(tempHomework);
+    }
+
     populateHomeworkImages(): any{
         let index = 0;
         let promises = [];
@@ -149,34 +216,11 @@ export class IssueHomeworkComponent implements OnInit {
     }
 
 
-    createHomework():any{
-        this.isLoading = true;
-        this.currentHomework.parentClassSubject = this.selectedSubject.classSubjectDbId;
-        let currentDate = new Date();
-        this.currentHomework.startDate = this.formatDate(currentDate, '');
-        this.currentHomework.startTime = this.formatTime(currentDate);
-        if(this.currentHomework.endDate != null && this.currentHomework.endTime == null){
-            this.currentHomework.endTime =  '23:59';
-        }
-        console.log(this.currentHomework);
-        Promise.all([
-            this.homeworkService.createObject(this.homeworkService.homeworks , this.currentHomework),
-        ]).then(value =>{
-            this.currentHomework.id = value[0].id;
-            Promise.all(this.populateHomeworkImages()).then(value =>{
-                alert('Homework has been successfully created');
-                this.serviceAdapter.getHomeworks();
-                this.currentHomework = new Homework;
-                this.currentHomeworkImages = [];
-                this.isLoading = false;
-            },error =>{
-                this.isLoading = false;
-            })
-            
-        },error =>{
-            this.isLoading = false;
+    populateStudentList(studentList: any): any{
+        studentList.forEach(student =>{
+            student.homeworkName = this.currentHomework.homeworkName;
+            student.deadLine = this.displayDateTime(this.currentHomework.endDate, this.currentHomework.endTime);
         });
-        
     }
 
     formatDate(dateStr: any, status: any): any {
@@ -258,7 +302,7 @@ export class IssueHomeworkComponent implements OnInit {
         let tempStr ='';
 
         if(date == null){
-            str = 'No deadline is given';
+            str = 'No deadline';
             return str;
         }
         for(let i =0; i<date.length; i++){
@@ -308,11 +352,19 @@ export class IssueHomeworkComponent implements OnInit {
         });
     }
 
+    getMessageFromTemplate = (message, obj) => {
+        let ret = message;
+        for(let key in obj){
+            ret = ret.replace('<'+key+'>', obj[key]);
+        }
+        return ret;
+    }
 
-    openDialog(): void {
+    openEditHomeworkDialog(): void {
         const dialogRef = this.dialog.open(EditHomeworkDialogComponent, {
             width: '1000px',
             data: this.editableHomework,
+            disableClose: true,
         });
     
         dialogRef.afterClosed().subscribe(result => {

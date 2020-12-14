@@ -61,31 +61,6 @@
                 <span class="close" (click)="removeImage(image.questionImage);" >&times;</span>
             </div>
         </div>
-
-        
-        <!-- <div class="image-row">
-            <div  *ngFor="let image of currentHomeworkImages; let i = index">
-                <div *ngIf="image.type === 'application/pdf'">
-                    <embed src="image.questionImage" width="800px" height="2100px" /> 
-                </div>
-                <img src="{{image.questionImage}}" (click)="openModal();currentSlide(i+1)" class="hover-shadow cursor image-column" >
-            </div>
-        </div>
-        <div id="imgModal" class="slide-modal">
-            <span class="close cursor" (click)="closeModal()">&times;</span>
-            <div class="slide-modal-content">
-                <div class="img-slides" *ngFor="let image of currentHomeworkImages; let i = index">
-                    <img src="{{image.questionImage}}">
-                </div>
-                <a class="prev" (click)="plusSlides(-1)">&#10094;</a>
-                <a class="next" (click)="plusSlides(1)">&#10095;</a>
-                <div class="image-row">
-                    <div class="image-column" *ngFor="let image of currentHomeworkImages; let i = index">
-                        <img class="images" (click)="currentSlide(i+1)" src="{{image.questionImage}}">
-                    </div>
-                </div>
-            </div>
-        </div> -->
         
         <input type='file' (change)="readURL($event);" multiple="false" style="display: none" accept="image/jpeg,image/png,application/pdf" #imageInput/>                
         <button type="submit"
@@ -122,26 +97,9 @@
                     </mat-expansion-panel-header>
 
                     <div>
-                        <!-- <div *ngIf="editableHomework.id == homework.id">
-                            <span class="hidden-xs" style="color: #7b7b7b;">Homework Title: &nbsp;</span>
-                            <mat-form-field style="margin-right: 15px;">
-                                <input type="text" matInput [ngModel]="editableHomework.homeworkName"
-                                (ngModelChange)="editableHomework.homeworkName=$event;">
-                            </mat-form-field>
-                        </div> -->
+                        
                         <span class="hidden-xs" style="color: #7b7b7b;">Issue Date & Time: &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
 
-                        <!-- <div *ngIf="editableHomework.id == homework.id">
-                            <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span>
-                            <mat-form-field style="margin-right: 15px; width: 150px">
-                                <input type="date" matInput [ngModel]="editableHomework.endDate"
-                                (ngModelChange)="editableHomework.endDate=$event;" placeholder="Choose Deadline Date ">
-                            </mat-form-field> 
-                            <mat-form-field  style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px; width: 140px">
-                                <input type="time" matInput [ngModel]="editableHomework.endTime"
-                                (ngModelChange)="editableHomework.endTime=$event;" placeholder="Choose Deadline Time">
-                            </mat-form-field><br>
-                        </div> -->
                         <div >
                             <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i>    
                         </div>
@@ -149,13 +107,6 @@
                     </div>
                     <div style="margin-top: 30px;">
                         <span class="hidden-xs" style="color: #7b7b7b;">Homework Questions: <br></span>
-                        <!-- <div *ngIf="editableHomework.id == homework.id">
-                            <mat-form-field  style="width: 100%;">
-                                <textarea matInput style="padding-top: 10px; padding-bottom: 10px;; white-space: pre-wrap;"
-                                    rows="5" [ngModel]="editableHomework.homeworkText" (ngModelChange)="editableHomework.homeworkText=$event;">
-                                </textarea>
-                            </mat-form-field>
-                        </div> -->
                         <div >
                             <pre>{{homework.homeworkText}}</pre>
                         </div>
@@ -163,15 +114,6 @@
 
                     <div style="margin-top: 5px;">
                         <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
-
-                        <!-- <div *ngIf="editableHomework.id == homework.id">
-                            <div class="image-row">
-                                <div  *ngFor="let image of homework.homeworkImages; let i = index">
-                                    <img src="{{image}}" class="hover-shadow cursor image-column">
-                                    <span class="close" (click)="removeImage(image.questionImage);" >&times;</span>
-                                </div>
-                            </div>
-                        </div> -->
 
                         <div >
                             <div class="image-row">
@@ -182,16 +124,11 @@
                         </div>
                     </div><br>
 
-                    <!-- <div *ngIf="editableHomework.id == homework.id">
-                        <span *ngIf="editableHomework.id == homework.id" style='font-size:15px;margin-left: 15px;'>Confirm Changes:</span>
-                        <span *ngIf="editableHomework.id == homework.id" class="cursor" style='font-size:20px;margin-left: 10px;color:green' (click)="serviceAdapter.updateHomework();">&#x2714;</span>
-                        <span *ngIf="editableHomework.id == homework.id" class="cursor" style='font-size:20px;margin-left: 15px;color:red'>&#x2716;</span>
-                    </div> -->
                     <div >
                         <button type="submit"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 12px 15px; margin-top : 10px"
-                                (click)="editHomework(homework.id);openDialog()">
+                                (click)="editHomework(homework.id);openEditHomeworkDialog()">
                                 <i class="material-icons">edit</i></button>
                         <button type="submit"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
