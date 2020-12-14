@@ -67,8 +67,8 @@ from .models import Enquiry
 
 class EnquiryyView(CommonView,APIView):
     Model = Enquiry
-    RelationsToSchool = ['parentSchool', 'parentEmployee__parentSchool']
+    RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
 
 class EnquiryyListView(CommonListView,APIView):
     Model = Enquiry
-    RelationsToSchool = ['parentSchool', 'parentEmployee__parentSchool']
+    RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']

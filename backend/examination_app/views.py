@@ -2,10 +2,8 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
-from common.common_views_3 import CommonListView, CommonView
+from common.common_views_3 import CommonListView, CommonView, APIView
 from decorators import user_permission
-
-from rest_framework.views import APIView
 
 import json
 
@@ -186,38 +184,38 @@ class CCEMarksOldListView(APIView):
 
 class ExaminationView(CommonView, APIView):
     Model = Examination
-    RelationsToSchool = ['parentSchool']
+    RelationsToSchool = ['parentSchool__id']
 
 
 class ExaminationListView(CommonListView, APIView):
     Model = Examination
-    RelationsToSchool = ['parentSchool']
+    RelationsToSchool = ['parentSchool__id']
 
 ########### Test Second #############
 
 
 class TestSecondView(CommonView, APIView):
     Model = TestSecond
-    RelationsToSchool = ['parentExamination__parentSchool']
+    RelationsToSchool = ['parentExamination__parentSchool__id']
 
 
 class TestSecondListView(CommonListView, APIView):
     Model = TestSecond
-    RelationsToSchool = ['parentExamination__parentSchool']
+    RelationsToSchool = ['parentExamination__parentSchool__id']
 
 ########### Student Test #############
 
 
 class StudentTestView(CommonView, APIView):
     Model = StudentTest
-    RelationsToSchool = ['parentExamination__parentSchool']
-    RelationsToStudent = ['parentStudent']
+    RelationsToSchool = ['parentExamination__parentSchool__id', 'parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 
 class StudentTestListView(CommonListView, APIView):
     Model = StudentTest
-    RelationsToSchool = ['parentExamination__parentSchool']
-    RelationsToStudent = ['parentStudent']
+    RelationsToSchool = ['parentExamination__parentSchool__id', 'parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 
 ########### Student Extra Sub Field #############
@@ -225,25 +223,25 @@ class StudentTestListView(CommonListView, APIView):
 
 class StudentExtraSubFieldView(CommonView, APIView):
     Model = StudentExtraSubField
-    RelationsToSchool = ['parentExamination__parentSchool']
-    RelationsToStudent = ['parentStudent']
+    RelationsToSchool = ['parentExamination__parentSchool__id', 'parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 class StudentExtraSubFieldListView(CommonListView, APIView):
     Model = StudentExtraSubField
-    RelationsToSchool = ['parentExamination__parentSchool']
-    RelationsToStudent = ['parentStudent']
+    RelationsToSchool = ['parentExamination__parentSchool__id', 'parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 ########### CCE Marks #############
 
 
 class CCEMarksView(CommonView, APIView):
     Model = CCEMarks
-    RelationsToSchool = ['parentStudent__parentSchool']
-    RelationsToStudent = ['parentStudent']
+    RelationsToSchool = ['parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 
 class CCEMarksListView(CommonListView, APIView):
     Model = CCEMarks
-    RelationsToSchool = ['parentStudent__parentSchool']
-    RelationsToStudent = ['parentStudent']
+    RelationsToSchool = ['parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
     

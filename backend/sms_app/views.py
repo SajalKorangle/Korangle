@@ -92,7 +92,7 @@ from .business.send_sms import send_sms, send_different_sms
 
 class SmsView(CommonView, APIView):
     Model = SMS
-    RelationsToSchool= ['parentSchool']
+    RelationsToSchool= ['parentSchool__id']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
@@ -103,10 +103,10 @@ class SmsView(CommonView, APIView):
             print(data)
             if return_data['status'] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data['data'] = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
+                return_data['data'] = create_object(data, self.ModelSerializer, *args, **kwargs)
         else:
             data['requestId'] = 1
-            return_data['data'] = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
+            return_data['data'] = create_object(data, self.ModelSerializer, *args, **kwargs)
         return return_data
 
 
@@ -114,10 +114,10 @@ class SmsView(CommonView, APIView):
 
 class SmsDifferentView(CommonView, APIView):
     Model = SMS
-    RelationsToSchool= ['parentSchool']
+    RelationsToSchool= ['parentSchool__id']
 
-    @user_permission_new
-    def post(self, request):
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
         # print(request.body)
         data = json.loads(request.body)
         # data = json.loads(request.body.decode('utf-8'))
@@ -126,9 +126,9 @@ class SmsDifferentView(CommonView, APIView):
             return_data = send_different_sms(data)
             if return_data["status"] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data["data"] = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
+                return_data["data"] = create_object(data, self.ModelSerializer, *args, **kwargs)
         else:
-            return_data["data"] = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
+            return_data["data"] = create_object(data, self.ModelSerializer, *args, **kwargs)
             print(return_data)
         return return_data
 
@@ -136,4 +136,4 @@ class SmsDifferentView(CommonView, APIView):
 
 class SmsListView(CommonListView, APIView):
     Model = SMS
-    RelationsToSchool= ['parentSchool']
+    RelationsToSchool= ['parentSchool__id']

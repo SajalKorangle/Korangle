@@ -97,9 +97,9 @@ from .model.models import BusStop
 
 class BusStopView(CommonView, APIView):
     Model = BusStop
-    RelationsToSchool = ['parentSchool']
+    RelationsToSchool = ['parentSchool__id']
 
 
 class BusStopListView(CommonListView, APIView):
     Model = BusStop
-    RelationsToSchool = ['parentSchool']
+    RelationsToSchool = ['parentSchool__id']

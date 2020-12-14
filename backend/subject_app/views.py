@@ -153,12 +153,12 @@ class SubjectListView(CommonListView, APIView):
 
 class ClassSubjectView(CommonView, APIView):
     Model = ClassSubject
-    RelationsToSchool= ['parentSchool', 'parentEmployee__parentSchool']
+    RelationsToSchool= ['parentSchool__id', 'parentEmployee__parentSchool__id']
 
 
 class ClassSubjectListView(CommonListView, APIView):
     Model = ClassSubject
-    RelationsToSchool= ['parentSchool', 'parentEmployee__parentSchool']
+    RelationsToSchool= ['parentSchool__id', 'parentEmployee__parentSchool__id']
 
 
 ########### Student Subject #############
@@ -166,13 +166,13 @@ class ClassSubjectListView(CommonListView, APIView):
 
 class StudentSubjectView(CommonView, APIView):
     Model = StudentSubject
-    RelationsToSchool = ['parentSchool__parentStudent']
-    RelationsToStudent = ['parentStudent']
+    RelationsToSchool = ['parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 
 class StudentSubjectListView(CommonListView, APIView):
     Model = StudentSubject
-    RelationsToSchool = ['parentSchool__parentStudent']
-    RelationsToStudent = ['parentStudent']
+    RelationsToSchool = ['parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 
