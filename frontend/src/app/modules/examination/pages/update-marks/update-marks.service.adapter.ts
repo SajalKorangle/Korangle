@@ -8,6 +8,8 @@ export class UpdateMarksServiceAdapter {
     vm: UpdateMarksComponent;
 
     test_type_list = TEST_TYPE_LIST;
+    student_section_data_list: any;
+    student_data_list: any;
 
     constructor() {}
 
@@ -21,7 +23,7 @@ export class UpdateMarksServiceAdapter {
     testList: any;
     classSubjectList: any;
 
-    student_mini_profile_list: any;
+    student_mini_profile_list: any = [];
 
 
     initializeAdapter(vm: UpdateMarksComponent): void {
@@ -60,8 +62,9 @@ export class UpdateMarksServiceAdapter {
         let request_student_mini_profile_data_new = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'fields__korangle': 'id,name,fathersName,profileImage,gender,rollNumber,scholarNumber,parentTransferCertificate,parentStudent'
+            'fields__korangle': 'id,name,fathersName,profileImage,gender,scholarNumber,parentTransferCertificate'
         };
+        
 
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
@@ -69,8 +72,7 @@ export class UpdateMarksServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject,{}),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject,request_class_subject_data),
-            this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
-            this.vm.studentNewService.getObjectList(this.vm.studentNewService.student,request_student_mini_profile_data_new)
+            this.vm.studentNewService.getObjectList(this.vm.studentNewService.student,request_student_mini_profile_data_new),
         ]).then(value => {
 
             this.examinationList = value[0];
@@ -78,10 +80,47 @@ export class UpdateMarksServiceAdapter {
             this.sectionList = value[2];
             this.subjectList = value[3];
             this.classSubjectList = value[4];
-            this.student_mini_profile_list = value[5];
-            this.vm.student_mini_profile_list = value[5];
-            console.log("Size is : "+this.student_mini_profile_list.length);
-            console.log("new size is : "+value[6].length);
+            this.student_data_list = value[5];
+            
+
+            let request_student_section_data = {
+                'parentStudent__in':this.getStudentIdList(value[5]).join(','),
+                'parentSession' : this.vm.user.activeSchool.currentSessionDbId
+            }
+            this.vm.studentNewService.getObjectList(this.vm.studentNewService.student_section,request_student_section_data).then(value => {
+                this.student_section_data_list = value;
+                this.student_data_list.forEach(student => {
+                    this.student_section_data_list.forEach(stud_sec => {
+                            
+                    if(stud_sec.parentStudent === student.id)
+                    {
+                        let data = {
+                            dbId: student.id,
+                            name: student.name,
+                            fatherName: student.fatherName,
+                            gender: student.gender,
+                            profileImage: student.profileImage,
+                            scholarNumber: student.scholarNumber,
+                            parentTransferCertificate: student.parentTransferCertificate,
+                            classDbId: stud_sec.parentClass,
+                            className: this.getClassName(stud_sec.parentClass),
+                            sectionDbId: stud_sec.parentDivision,
+                            sectionName: this.getSectionName(stud_sec.parentDivision),
+                            studentSectionDbId: stud_sec.id,
+                            rollNumber: stud_sec.rollNumber
+                        }  
+                        this.vm.student_mini_profile_list.push(data);
+                        this.student_mini_profile_list.push(data);
+                        
+                    }
+                    
+                    });
+                });
+
+            })
+
+            
+
 
 
             let service_list = [];
@@ -137,6 +176,36 @@ export class UpdateMarksServiceAdapter {
             this.vm.isInitialLoading = false;
         });
 
+    }
+    getSectionName(sectionId: any): any {
+        let result = '';
+        this.sectionList.every((item) => {
+          if (item.id === sectionId) {
+            result = item.name;
+            return false;
+          }
+          return true;
+        });
+        return result;
+      }
+    getClassName(classId: any): any {
+        let result = '';
+        this.classList.every((item) => {
+          if (item.id === classId) {
+            result = item.name;
+            return false;
+          }
+          return true;
+        });
+        return result;
+      }
+
+    getStudentIdList(studentList): any {
+        let result = [];
+        studentList.forEach(student => {
+            result.push(student.id);
+        });
+        return result;
     }
 
     getExaminationIdList(): any {
@@ -208,7 +277,7 @@ export class UpdateMarksServiceAdapter {
         });
         this.vm.selectedExamination = this.vm.examinationClassSectionSubjectList[0];
 
-        console.log(this.vm.examinationClassSectionSubjectList);
+        console.log("Exam Class Section list "+this.vm.examinationClassSectionSubjectList);
 
     }
 
@@ -283,7 +352,6 @@ export class UpdateMarksServiceAdapter {
 
             if(this.testTypeListInCurrentTest.findIndex(tempTestType => tempTestType===test.testType)===-1)
             {   
-                console.log(test.testType);
                 this.testTypeListInCurrentTest.push(test.testType);
             }
   
@@ -403,15 +471,13 @@ export class UpdateMarksServiceAdapter {
         });
         
         this.updateAndCreateStudentTestData(data);        
-        
+        this.getStudentTestDetails();
         
     }
     updateAndCreateStudentTestData(data: any): void {
 
         this.vm.isLoading = true;
         data.forEach(item => {
-
-            console.log(item)
             if(item.id === null)
             {   
                 this.vm.isLoading = true;
@@ -444,6 +510,7 @@ export class UpdateMarksServiceAdapter {
 
         
             this.vm.isLoading = false;
+            this.getStudentTestDetails();
             
             
     }

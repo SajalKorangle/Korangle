@@ -29,7 +29,7 @@ export class UpdateMarksComponent implements OnInit {
     selectedExamination: any;
     examinationClassSectionSubjectList: any;
 
-    student_mini_profile_list: any;
+    student_mini_profile_list: any = [];
 
     subjectList: any;
 
@@ -85,14 +85,30 @@ export class UpdateMarksComponent implements OnInit {
 
     handleUpdate(event: any,student: any): void {
         
-        var updateCheck = false;
         
         student.testDetails.forEach(item => {
-            if(item.newMarksObtained != item.marksObtained)
-            {
-                updateCheck = true;
+            if(event != item.marksObtained)
+            {   
+                item.newMarksObtained = event;
+                
             }
         });
+
+        this.activateUpdate();
+        
+    }
+    activateUpdate(): void {
+        var updateCheck = false;
+
+        let student_list = this.getFilteredStudentList(this.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList);
+
+        student_list.forEach(st => {
+            st.testDetails.forEach(test => {
+                if(test.newMarksObtained != test.marksObtained)
+                updateCheck = true;;
+            });
+        });
+
         if(updateCheck)
         this.isUpdated = true;
         else
