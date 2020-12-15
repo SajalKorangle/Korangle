@@ -43,7 +43,7 @@ export class DesignLayoutComponent implements OnInit {
 
     fields = FIELDS;
     dataTypes = DATA_TYPES;
-    parameterList = PARAMETER_LIST;
+    parameterList = Object.assign([],PARAMETER_LIST);
     fontFamilyList = FONT_FAMILY_LIST;
 
     idCardLayoutList: any[] = [];
