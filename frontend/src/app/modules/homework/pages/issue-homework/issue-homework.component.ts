@@ -67,9 +67,13 @@ export class IssueHomeworkComponent implements OnInit {
     currentHomeworkImages: any;
     isSessionLoading: any;
     isLoading: any;
+    showContent: any;
     editableHomework: any;
 
-    studentUpdateMessage = "New Homework is added in <subject>,\n Title - <homeworkName> \n Last date to submit - <deadLine> ";
+    noPermission: any;
+
+    homeworkCreatedMessage = "New Homework is added in <subject>,\n Title - <homeworkName> \n Last date to submit - <deadLine> ";
+    homeworkUpdateMessage = "Please note, there are changes in the Homework '<homeworkName>' of <subject>";
     studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
 
@@ -87,7 +91,9 @@ export class IssueHomeworkComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.isSessionLoading = true;
-        this.isLoading = true;
+        this.isLoading = false;
+        this.showContent = false;
+        this.noPermission = false;
         this.currentHomework = new Homework;
         this.currentHomeworkImages = [];
         this.serviceAdapter = new IssueHomeworkServiceAdapter();
@@ -97,6 +103,12 @@ export class IssueHomeworkComponent implements OnInit {
 
     initialiseClassSubjectData(classSectionSubjectList: any, subjectList: any, classList: any, divisionList: any){
         this.classSectionSubjectList = [];
+        if(classSectionSubjectList.length === 0){
+            this.noPermission = true;
+            this.isLoading = false;
+            this.isSessionLoading = false;
+            return ;
+        }
         classSectionSubjectList.forEach(element =>{
             let classSection = this.classSectionSubjectList.find(classSection => classSection.classDbId == element.parentClass && classSection.divisionDbId == element.parentDivision);
             if(classSection === undefined)
@@ -136,7 +148,6 @@ export class IssueHomeworkComponent implements OnInit {
     
     changeClassSection():any{
         this.selectedSubject = this.selectedClassSection.subjectList[0];
-        
     }
     
 
@@ -157,11 +168,11 @@ export class IssueHomeworkComponent implements OnInit {
             this.populateCurrentHomework();
             Promise.all(this.populateHomeworkImages()).then(value =>{
                 alert('Homework has been successfully created');
-                this.populateStudentList(this.studentList);
+                this.populateStudentList(this.studentList, this.currentHomework);
                 this.currentHomework = new Homework;
                 this.currentHomeworkImages = [];
                 this.isLoading = false;
-                this.serviceAdapter.sendNotification(this.studentList);
+                this.serviceAdapter.sendNotification(this.studentList, this.homeworkCreatedMessage);
             },error =>{
                 this.isLoading = false;
             })
@@ -169,6 +180,25 @@ export class IssueHomeworkComponent implements OnInit {
             this.isLoading = false;
         });
         
+    }
+
+    sortHomeworks(): any{
+        this.homeworkList.sort((a, b) => {
+            if(a.startDate > b.startDate){
+                return -1;
+            }
+            else if(a.startDate < b.startDate){
+                return 1;
+            }
+            else{
+                if(a.startTime > b.startTime){
+                    return -1;
+                }
+                else if(a.startTime < b.startTime){
+                    return 1;
+                }
+            }
+        });
     }
 
     populateCurrentHomework(): any{
@@ -187,6 +217,7 @@ export class IssueHomeworkComponent implements OnInit {
             tempHomework.homeworkImages.push(image);
         });
         this.homeworkList.push(tempHomework);
+        this.sortHomeworks();
     }
 
     populateHomeworkImages(): any{
@@ -209,17 +240,27 @@ export class IssueHomeworkComponent implements OnInit {
             promises.push(this.homeworkService.createObject(this.homeworkService.homework_question, temp_form_data));
         })
         return promises;
-        // return promises;
-        // Promise.all(promises).then( value =>{
-        //     alert('images uploaded');
-        // })
     }
 
 
-    populateStudentList(studentList: any): any{
+    populateStudentList(studentList: any, homeworkData: any): any{
         studentList.forEach(student =>{
-            student.homeworkName = this.currentHomework.homeworkName;
-            student.deadLine = this.displayDateTime(this.currentHomework.endDate, this.currentHomework.endTime);
+            student.homeworkName = homeworkData.homeworkName;
+            student.deadLine = this.displayDateTime(homeworkData.endDate, homeworkData.endTime);
+        });
+    }
+
+    populateEditedHomework(data: any): any{
+        let tempHomeworkData = data[0];
+        let previousHomework = this.homeworkList.find(homework => homework.id === tempHomeworkData.id);
+        previousHomework.homeworkName = tempHomeworkData.homeworkName;
+        previousHomework.endDate = tempHomeworkData.endDate;
+        previousHomework.endTime = tempHomeworkData.endTime;
+        previousHomework.homeworkText = tempHomeworkData.homeworkText;
+        previousHomework.homeworkImages = [];
+        data.forEach(image => {
+            if(image.questionImage != undefined)
+                previousHomework.homeworkImages.push(image);
         });
     }
 

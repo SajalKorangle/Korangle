@@ -43,6 +43,7 @@ export class IssueHomeworkServiceAdapter {
 
     getHomeworks():any{
         this.vm.isLoading = true;
+        this.vm.showContent = false;
         this.vm.homeworkList = [];
         this.vm.studentList = [];
         
@@ -90,9 +91,12 @@ export class IssueHomeworkServiceAdapter {
                 this.fetchGCMDevices(this.vm.studentList);
                 this.vm.isLoading = false;
             });
-            
+            this.vm.sortHomeworks();
+            this.vm.isLoading = false;
+            this.vm.showContent = true;
         },error =>{
             this.vm.isLoading = false;
+            this.vm.showContent = true;
         });
 
     }
@@ -194,19 +198,20 @@ export class IssueHomeworkServiceAdapter {
                     orderNumber: index,
                 }
                 promises.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_question, tempData));
+                let tempIndex = previousHomework.homeworkImages.indexOf(temp);
+                previousHomework.homeworkImages.splice(tempIndex, 1);
             }
             index = index + 1;
         });
 
         previousHomework.homeworkImages.forEach(image =>{
-            let temp = data.homeworkImages.find(images => images.questionImage === image.questionImage);
-            if(temp === undefined){
-                promises.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question,{'id': image.id}));
-            }
+            promises.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question, image));
         });
 
         Promise.all(promises).then(value =>{
-            this.getHomeworks();
+            this.vm.populateEditedHomework(value);
+            this.vm.populateStudentList(this.vm.studentList, value[0]);
+            this.sendNotification(this.vm.studentList, this.vm.homeworkUpdateMessage);
             alert('Homework Edited Successfully');
             this.vm.isLoading = false;
         }),error =>{
@@ -282,7 +287,7 @@ export class IssueHomeworkServiceAdapter {
     }
 
 
-    sendNotification: any = (mobile_list: any) => {
+    sendNotification: any = (mobile_list: any, message: any) => {
         let service_list = [];
         let notification_list = [];
         
@@ -301,7 +306,7 @@ export class IssueHomeworkServiceAdapter {
         const notification_data = notification_list.map(item => {
             return {
                     'parentMessageType': 1,
-                    'content': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, item),
+                    'content': this.vm.getMessageFromTemplate(message, item),
                     'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
                     'parentSchool': this.vm.user.activeSchool.dbId,
                 

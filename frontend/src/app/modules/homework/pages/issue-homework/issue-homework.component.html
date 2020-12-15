@@ -1,4 +1,8 @@
-<div class="card-content table-responsive">
+<div class="card-content table-responsive" *ngIf="noPermission" >
+    No permission for any subject
+</div>
+
+<div class="card-content table-responsive" *ngIf="!noPermission">
 
     <ng-container *ngIf="!isSessionLoading">
         <mat-form-field style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px;">
@@ -24,13 +28,14 @@
             (click)="serviceAdapter.getHomeworks();">GET</button>
     </ng-container><br>
 
-    <ng-container *ngIf="!isLoading">
+    <div class="row" style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;">
+        <div class="col-md-12"></div>
+    </div><br>
+
+    <ng-container *ngIf="!isLoading && showContent">
 
             
         <!-- CREATE HOMEWORK -->
-        <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 10px;">
-            <div class="col-md-12"></div>
-        </div><br>
 
         <mat-form-field style="margin-top: 15px ; margin-right: 15px; margin-bottom: 10px;">
             <input type="text" matInput [ngModel]="currentHomework.homeworkName"
@@ -74,7 +79,7 @@
             (click)="createHomework()">CREATE HW</button>
         <!-- PREVIOUS HOMEWORK -->
 
-        <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 10px;">
+        <div class="row" style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;">
             <div class="col-md-12"></div>
         </div><br>
 
@@ -146,3 +151,6 @@
 
 </div>
 
+<ng-container *ngIf="isLoading || isSessionLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
