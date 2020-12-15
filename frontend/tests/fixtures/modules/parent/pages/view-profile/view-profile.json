@@ -16,6 +16,6 @@
     {
         "app": "student_app",
         "model": "StudentSection",
-        "file": "1.json"
+        "file": "one_student_section.json"
     }
 ]

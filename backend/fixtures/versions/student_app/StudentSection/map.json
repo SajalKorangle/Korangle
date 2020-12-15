@@ -20,12 +20,12 @@
     ]
   },
   {
-    "file": "1.json",
+    "file": "one_student_section.json",
     "file_object_list": [
       {
         "app": "student_app",
         "model": "Student",
-        "file": "1.json"
+        "file": "one_student.json"
       }
     ]
   }
