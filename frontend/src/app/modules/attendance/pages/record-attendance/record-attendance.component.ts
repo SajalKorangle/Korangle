@@ -464,7 +464,6 @@ export class RecordAttendanceComponent implements OnInit {
     }
 
     changeStudentAttendanceStatus(temp: any): void {
-        
         if(!temp.status) {
             temp.status = ATTENDANCE_STATUS_LIST[0];
             return;

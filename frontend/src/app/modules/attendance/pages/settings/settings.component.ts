@@ -10,7 +10,6 @@ import { Settings } from "../../../../services/modules/attendance/models/setting
 @Component({
     selector: 'settings',
     templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.css'],
     providers: [ SchoolService, UserService, AttendanceService ],
 })
   
