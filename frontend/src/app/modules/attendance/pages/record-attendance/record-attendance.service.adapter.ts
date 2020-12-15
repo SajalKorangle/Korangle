@@ -37,7 +37,7 @@ export class RecordAttendanceServiceAdapter {
 
         this.settingsDoesNotExist = true;
         Promise.all([
-            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {}),
+            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {'parentSchool': this.vm.user.activeSchool.dbId}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission, request_attendance_permission_list_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
@@ -45,18 +45,14 @@ export class RecordAttendanceServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
         ]).then(value => {
-            this.vm.initializeClassSectionStudentList(value[3], value[4], value[2], value[5], value[1]);
+            this.initializeClassSectionStudentList(value[3], value[4], value[2], value[5], value[1]);
             this.vm.smsBalance = value[6];
             if(value[0].length == 0)
                 this.settingsDoesNotExist = true;
             else{
-                value[0].forEach(element => {
-                    if(element.parentSchool == this.vm.user.activeSchool.dbId){
-                        this.settingsDoesNotExist = false;
-                        this.vm.selectedSentType = element.sentUpdateType;
-                        this.vm.selectedSentUpdateTo = element.sentUpdateToType;
-                    }
-                });
+                this.settingsDoesNotExist = false;
+                this.vm.selectedSentType = value[0][0].sentUpdateType;
+                this.vm.selectedSentUpdateTo = value[0][0].sentUpdateToType;
             }
             if(this.settingsDoesNotExist == true){
                 this.vm.selectedSentType = 'SMS';
@@ -65,6 +61,87 @@ export class RecordAttendanceServiceAdapter {
         }, error => {
             this.vm.isInitialLoading = false;
         });
+    }
+
+    initializeClassSectionStudentList(classList: any, divisionList: any, studentList: any, studentDetailsList: any, attendancePermissionList:any):any{
+        this.vm.classSectionStudentList = [];
+        studentList.forEach(student =>{
+            if (this.vm.classSectionInPermissionList(student.parentClass, student.parentDivision, attendancePermissionList)){
+                let classIndex = -1;
+                let tempIndex = 0;
+                this.vm.classSectionStudentList.forEach(classs =>{
+                    if(classs.dbId == student.parentClass){
+                        classIndex = tempIndex;
+                        return ;
+                    }
+                    tempIndex = tempIndex+1;
+                });
+                if(classIndex === -1){
+                    let classs = classList.find(classs => classs.id === student.parentClass);
+                    let tempClass = {
+                        name: classs.name,
+                        dbId: classs.id,
+                        sectionList: [],
+                    }
+                    this.vm.classSectionStudentList.push(tempClass);
+                    let tempIndex = 0;
+                    this.vm.classSectionStudentList.forEach(classs =>{
+                        if(classs.dbId == student.parentClass){
+                            classIndex = tempIndex;
+                            return ;
+                    }
+                    tempIndex = tempIndex+1;
+                    });
+                }
+                let divisionIndex = -1;
+                tempIndex = 0;
+                this.vm.classSectionStudentList[classIndex].sectionList.forEach(division =>{
+                    if(division.dbId == student.parentDivision){
+                        divisionIndex = tempIndex;
+                        return ;
+                    }
+                    tempIndex = tempIndex+1;
+                });
+                
+                if(divisionIndex === -1){
+                    let division = divisionList.find(division => division.id === student.parentDivision);
+                    let tempDivision = {
+                        name: division.name,
+                        dbId: division.id,
+                        studentList: [],
+                    }
+                    this.vm.classSectionStudentList[classIndex].sectionList.push(tempDivision);
+                    tempIndex = 0;
+                    this.vm.classSectionStudentList[classIndex].sectionList.forEach(division =>{
+                        if(division.dbId == student.parentDivision){
+                            divisionIndex = tempIndex;
+                            return ;
+                        }
+                        tempIndex = tempIndex+1;
+                    });
+                }
+                let studentDetails = studentDetailsList.find(studentDetails => studentDetails.id == student.parentStudent);
+                let tempData = {
+                    name: studentDetails.name,
+                    dbId: studentDetails.id,
+                    scholarNumber: studentDetails.scholarNumber,
+                    mobileNumber: studentDetails.mobileNumber,
+                }
+                this.vm.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(tempData);
+            }
+        });
+        this.vm.classSectionStudentList.forEach(classs =>{
+            classs.sectionList.forEach( section => {
+                section.studentList.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+            });
+            classs.sectionList.sort(((a, b) => a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0))
+        })
+        this.vm.classSectionStudentList.sort(((a, b) => a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0))
+        if (this.vm.classSectionStudentList.length > 0) {
+            this.vm.selectedClass = this.vm.classSectionStudentList[0];
+            this.vm.changeSelectedSectionToFirst();
+        }
+        
     }
 
     fetchGCMDevices: any = (studentList: any) => {
