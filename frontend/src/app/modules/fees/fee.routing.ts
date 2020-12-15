@@ -91,6 +91,11 @@ const routes: Routes = [
         data: {moduleName: 'fees'},
     },
 
+    {
+        path: 'update_via_excel',
+        loadChildren: 'app/modules/fees/pages/update-via-excel/update-via-excel.module#UpdateViaExcelModule',
+        data: {moduleName: 'fees'},
+    },
 
     {
         path: '',
