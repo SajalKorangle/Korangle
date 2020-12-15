@@ -11,12 +11,13 @@ import {StudentOldService} from '../../../../services/modules/student/student-ol
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { SubjectService } from 'app/services/modules/subject/subject.service';
+import { StudentService } from 'app/services/modules/student/student.service';
 
 @Component({
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ ExaminationOldService, ClassService, SubjectService, StudentOldService, ExaminationService ],
+    providers: [ ExaminationOldService, ClassService, SubjectService, StudentOldService, ExaminationService, StudentService ],
 })
 
 export class UpdateMarksComponent implements OnInit {
@@ -45,6 +46,7 @@ export class UpdateMarksComponent implements OnInit {
                 public classService: ClassService,
                 public subjectService: SubjectService,
                 public studentService: StudentOldService,
+                public studentNewService: StudentService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

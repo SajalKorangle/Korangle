@@ -57,6 +57,11 @@ export class UpdateMarksServiceAdapter {
             'schoolDbId': this.vm.user.activeSchool.dbId,
             'sessionDbId': this.vm.user.activeSchool.currentSessionDbId,
         };
+        let request_student_mini_profile_data_new = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'fields__korangle': 'id,name,fathersName,profileImage,gender,rollNumber,scholarNumber,parentTransferCertificate,parentStudent'
+        };
 
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
@@ -65,6 +70,7 @@ export class UpdateMarksServiceAdapter {
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject,{}),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject,request_class_subject_data),
             this.vm.studentService.getStudentMiniProfileList(request_student_mini_profile_data, this.vm.user.jwt),
+            this.vm.studentNewService.getObjectList(this.vm.studentNewService.student,request_student_mini_profile_data_new)
         ]).then(value => {
 
             this.examinationList = value[0];
@@ -74,6 +80,9 @@ export class UpdateMarksServiceAdapter {
             this.classSubjectList = value[4];
             this.student_mini_profile_list = value[5];
             this.vm.student_mini_profile_list = value[5];
+            console.log("Size is : "+this.student_mini_profile_list.length);
+            console.log("new size is : "+value[6].length);
+
 
             let service_list = [];
 
@@ -387,12 +396,13 @@ export class UpdateMarksServiceAdapter {
                 } else {
                     itemTwo.marksObtained = parseFloat(itemTwo.marksObtained.toString()).toFixed(1);
                 }
+
+                if(itemTwo.newMarksObtained != itemTwo.marksObtained)
                 data.push(itemTwo);
             });
         });
         
-        this.updateAndCreateStudentTestData(data);          
-        
+        this.updateAndCreateStudentTestData(data);        
         
         
     }
@@ -410,8 +420,6 @@ export class UpdateMarksServiceAdapter {
                 this.vm.examinationService.createObject(this.vm.examinationService.student_test,item)
                 ]).then(
                     (value) => {
-                       
-                        
                       },
                       (error) => {
                         this.vm.isLoading = false;
@@ -425,9 +433,7 @@ export class UpdateMarksServiceAdapter {
                 Promise.all([
                     this.vm.examinationService.updateObject(this.vm.examinationService.student_test,item)
                     ]).then(
-                        (value) => {
-                           
-                            
+                        (value) => {                          
                           },
                           (error) => {
                             this.vm.isLoading = false;
@@ -438,7 +444,8 @@ export class UpdateMarksServiceAdapter {
 
         
             this.vm.isLoading = false;
-            this.getStudentTestDetails();
+            
+            
     }
     
 }

@@ -77,5 +77,6 @@
 	{ "model": "team_app.task", "pk": 92, "fields": { "path": "manage_parameter", "title": "Manage Parameter", "parentModule": "1", "orderNumber": 11, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 93, "fields": { "path": "print_profile", "title": "Print Profile", "parentModule": "1", "orderNumber": 1, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 94, "fields": { "path": "design_layout", "title": "Design Id Card", "parentModule": "19", "orderNumber": 1, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 95, "fields": { "path": "generate_id_card", "title": "Generate ID Card", "parentModule": "19", "orderNumber": 2, "parentBoard": null } }
+	{ "model": "team_app.task", "pk": 95, "fields": { "path": "generate_id_card", "title": "Generate ID Card", "parentModule": "19", "orderNumber": 2, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 96, "fields": { "path": "schedule_test", "title": "Schedule Test", "parentModule": "14", "orderNumber": 6, "parentBoard": null } }
 ]
