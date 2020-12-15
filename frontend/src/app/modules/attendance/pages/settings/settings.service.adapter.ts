@@ -16,26 +16,25 @@ export class SettingsServiceAdapter{
         this.vm.isInitialLoading = true;
         this.settingsDoesNotExist = true;
         Promise.all([
-            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {})
+            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {'parentSchool': this.vm.user.activeSchool.dbId})
         ]).then(value => {
+            console.log(value[0]);
             if(value[0].length == 0)
                 this.settingsDoesNotExist = true;
             else{
-                value[0].forEach(element => {
-                    if(element.parentSchool == this.vm.user.activeSchool.dbId){
-                        this.settingsDoesNotExist = false;
-                        this.vm.selectedSettings.id = element.id;
-                        this.vm.selectedSettings.parentSchool = element.parentSchool;
-                        this.vm.selectedSettings.sentUpdateType = element.sentUpdateType;
-                        this.vm.selectedSettings.sentUpdateToType = element.sentUpdateToType;
-                    }
-                });
+                let element  = value[0][0];
+                this.settingsDoesNotExist = false;
+                this.vm.selectedSettings.id = element.id;
+                this.vm.selectedSettings.parentSchool = element.parentSchool;
+                this.vm.selectedSettings.sentUpdateType = element.sentUpdateType;
+                this.vm.selectedSettings.sentUpdateToType = element.sentUpdateToType;
+        
             }
             if(this.settingsDoesNotExist){
                 this.vm.selectedSettings.parentSchool = this.vm.user.activeSchool.dbId;
                 this.vm.selectedSettings.sentUpdateType = 'SMS';
                 this.vm.selectedSettings.sentUpdateToType = 'All Students';
-                this.vm.attendanceService.createObject(this.vm.attendanceService.attendance_settings,this.vm.selectedSettings);                
+                Promise.all([this.vm.attendanceService.createObject(this.vm.attendanceService.attendance_settings,this.vm.selectedSettings)])       
             }
             this.vm.currentSettings.sentUpdateToType = this.vm.selectedSettings.sentUpdateToType;
             this.vm.currentSettings.sentUpdateType = this.vm.selectedSettings.sentUpdateType;
@@ -46,6 +45,8 @@ export class SettingsServiceAdapter{
     }
 
     updateSettings(): any{
+        
+        this.vm.isInitialLoading = true;
         if (this.vm.currentSettings.sentUpdateType === null) {
             alert('Select Send Via Type');
             return;
@@ -62,7 +63,6 @@ export class SettingsServiceAdapter{
         ]).then(value => {
             this.vm.settingsChanged = false;
             alert('Settings Updated Successfully');
-            // console.log(this.vm.selectedSettings);
             this.vm.isInitialLoading = false;
         }, error => {
             this.vm.isInitialLoading = false;
