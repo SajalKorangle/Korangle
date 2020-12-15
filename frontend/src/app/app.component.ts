@@ -6,7 +6,6 @@ import { DataStorage } from './classes/data-storage';
 import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
-import moment = require('moment');
 import {NotificationService} from "./services/modules/notification/notification.service";
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
@@ -23,11 +22,9 @@ import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.com
 })
 
 export class AppComponent implements OnInit {
+
     isLoading = false;
-    countDownForValidity = -1;
     public user = new User();
-
-
 
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
@@ -46,7 +43,6 @@ export class AppComponent implements OnInit {
                     localStorage.setItem('schoolJWT', '');
                 } else {
                     this.user.initializeUserData(data);
-                    this.lastMonthIsGoingOn();
                     registerForNotification({
                         'user': this.user.id,
                         'jwt': this.user.jwt,
@@ -80,22 +76,6 @@ export class AppComponent implements OnInit {
         return false;
     }
 
-    lastMonthIsGoingOn(): boolean {
-        const date1 = new Date();
-        if (this.userHasAssignTaskCapability()) {
-            const date2 = moment(this.user.activeSchool.dateOfExpiration);
-            const diff1 = moment.duration(date2.diff(date1)).asDays();
-            const diff2 = Math.ceil(diff1);
-            if (diff2 <= 15) {
-                this.countDownForValidity = diff2;
-            }
-            if (diff2 <= 30) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
     }
