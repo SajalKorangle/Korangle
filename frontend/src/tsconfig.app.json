@@ -4,7 +4,7 @@
     "outDir": "../out-tsc/app",
     "module": "commonjs",
     "baseUrl": "./",
-    "types": [],
+    "types": ["node"],
     "paths": {
       "@modules/*": ["app/modules/*"],
       "@basic-components/*": ["app/basic-components/*"],
@@ -14,6 +14,9 @@
       "@urls/*": ["app/urls/*"],
       "moment": [
         "../node_modules/moment/min/moment.min.js"
+      ],
+      "xlsx": [
+        "../node_modules/xlsx/dist/xlsx.mini.min.js"
       ]
     }
   },
