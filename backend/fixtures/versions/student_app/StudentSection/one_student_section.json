@@ -1,0 +1,3 @@
+[
+{ "model": "student_app.studentsection", "pk": 1, "fields": { "parentStudent": 1, "parentSession": 1, "parentClass": 1, "parentDivision": 1 } }
+]
