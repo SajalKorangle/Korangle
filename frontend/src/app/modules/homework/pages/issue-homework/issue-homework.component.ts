@@ -8,6 +8,9 @@ import { ClassService } from '../../../../services/modules/class/class.service';
 import { HomeworkService } from '../../../../services/modules/homework/homework.service';
 import { IssueHomeworkServiceAdapter } from './issue-homework.service.adapter';
 import {NotificationService} from '../../../../services/modules/notification/notification.service';
+import {SmsService} from '../../../../services/modules/sms/sms.service';
+import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
+
 import {UserService} from '../../../../services/modules/user/user.service';
 
 
@@ -28,6 +31,13 @@ export interface EditHomeworkDialogData {
     editRequired: any;
 }
 
+
+export interface ImagePreviewDialogData {
+    
+    homeworkImages: any;
+    index: any
+}
+
 @Component({
     selector: 'issue-homework',
     templateUrl: './issue-homework.component.html',
@@ -39,6 +49,8 @@ export interface EditHomeworkDialogData {
         StudentService,
         NotificationService,
         UserService,
+        SmsService,
+        SmsOldService,
     ],
 })
 
@@ -71,9 +83,13 @@ export class IssueHomeworkComponent implements OnInit {
     editableHomework: any;
 
     noPermission: any;
+    settings : any;
+    smsBalance: any;
 
-    homeworkCreatedMessage = "New Homework is added in <subject>,\n Title - <homeworkName> \n Last date to submit - <deadLine> ";
+    homeworkCreatedMessage = "New Homework is added in <subject>,\n Title - '<homeworkName>' \n Last date to submit - <deadLine> ";
     homeworkUpdateMessage = "Please note, there are changes in the Homework '<homeworkName>' of <subject>";
+    homeworkDeleteMessage = "Please note, the homework '<homeworkName>' of subject <subject> has been removed";
+    
     studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
 
@@ -84,6 +100,8 @@ export class IssueHomeworkComponent implements OnInit {
         public studentService: StudentService,
         public notificationService: NotificationService,
         public userService: UserService,
+        public smsService: SmsService,
+        public smsOldService: SmsOldService,
         public dialog: MatDialog,
     ){}
 
@@ -166,13 +184,16 @@ export class IssueHomeworkComponent implements OnInit {
         ]).then(value =>{
             this.currentHomework.id = value[0].id;
             this.populateCurrentHomework();
-            Promise.all(this.populateHomeworkImages()).then(value =>{
+            Promise.all(this.populateHomeworkImages()).then(sValue =>{
                 alert('Homework has been successfully created');
                 this.populateStudentList(this.studentList, this.currentHomework);
+                this.populateCurrentHomeworkImages(value[0].id, sValue);
                 this.currentHomework = new Homework;
                 this.currentHomeworkImages = [];
                 this.isLoading = false;
-                this.serviceAdapter.sendNotification(this.studentList, this.homeworkCreatedMessage);
+                if(this.settings.sendCreateUpdate == true){
+                    this.serviceAdapter.sendSMSNotification(this.studentList, this.homeworkCreatedMessage);
+                }
             },error =>{
                 this.isLoading = false;
             })
@@ -213,10 +234,16 @@ export class IssueHomeworkComponent implements OnInit {
             homeworkText: this.currentHomework.homeworkText,
             homeworkImages: [],
         }
-        this.currentHomeworkImages.forEach(image =>{
-            tempHomework.homeworkImages.push(image);
-        });
         this.homeworkList.push(tempHomework);
+        this.sortHomeworks();
+    }
+
+    populateCurrentHomeworkImages(homeworkId: any,imagesList: any): any{
+        let tempHomework = this.homeworkList.find(homework => homework.id == homeworkId);
+        imagesList.forEach(image =>{
+            if(image.questionImage != undefined)
+                tempHomework.homeworkImages.push(image);
+        });
         this.sortHomeworks();
     }
 
@@ -245,8 +272,12 @@ export class IssueHomeworkComponent implements OnInit {
 
     populateStudentList(studentList: any, homeworkData: any): any{
         studentList.forEach(student =>{
-            student.homeworkName = homeworkData.homeworkName;
-            student.deadLine = this.displayDateTime(homeworkData.endDate, homeworkData.endTime);
+            if(homeworkData.homeworkName!= undefined){
+                student.homeworkName = homeworkData.homeworkName;
+            }
+            if(homeworkData.endDate != undefined){
+                student.deadLine = this.displayDateTime(homeworkData.endDate, homeworkData.endTime);
+            }
         });
     }
 
@@ -287,8 +318,12 @@ export class IssueHomeworkComponent implements OnInit {
     formatTime(dateStr: any): any {
 
         let d = new Date(dateStr);
-        let hours = d.getHours();
-        let minutes = d.getMinutes();
+        let hours = '' + d.getHours();
+        let minutes = '' + d.getMinutes();
+
+        if (hours.length < 2) hours = '0' + hours;
+        if (minutes.length < 2) minutes = '0' + minutes;
+
         return [hours, minutes].join(':');
     }
 
@@ -358,18 +393,15 @@ export class IssueHomeworkComponent implements OnInit {
         }
         str = tempStr + str;
         str = str +  ' ; ';
-        for(let i =0;i<5;i++)
-            str+= time[i];
+        for(let i =0;i<5;i++){
+            str = str + time[i];
+        }
         
         return str;
     }
 
-    removeImage(url: any):any{
-        this.currentHomeworkImages.forEach( (image,index) =>{
-            if(image.questionImage === url){
-                this.currentHomeworkImages.splice(index, 1);
-            }
-        });
+    removeImage(index: any):any{
+        this.currentHomeworkImages.splice(index, 1);
     }
     
 
@@ -401,6 +433,46 @@ export class IssueHomeworkComponent implements OnInit {
         return ret;
     }
 
+    hasUnicode(message): boolean {
+        for (let i=0; i<message.length; ++i) {
+            if (message.charCodeAt(i) > 127) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getEstimatedSMSCount = (message: any) => {
+        let count = 0;
+        if(this.settings.sentUpdateType=='NOTIFICATION')return 0;
+            this.studentList.filter(item => item.mobileNumber).forEach((item, i) => {
+                if(this.settings.sentUpdateType=='SMS' || item.notification==false){
+                    count += this.getMessageCount(this.getMessageFromTemplate(message, item));
+                }
+            })
+
+        return count;
+    }
+
+    getMessageCount = (message) => {
+        if (this.hasUnicode(message)){
+            return Math.ceil(message.length/70);
+        }else{
+            return Math.ceil( message.length/160);
+        }
+    }
+
+    getEstimatedNotificationCount = () => {
+        let count = 0;
+        if(this.settings.sentUpdateType=='SMS')return 0;
+
+        count = this.studentList.filter((item) => {
+            return item.mobileNumber && item.notification;
+        }).length;
+
+        return count;
+    }   
+
     openEditHomeworkDialog(): void {
         const dialogRef = this.dialog.open(EditHomeworkDialogComponent, {
             width: '1000px',
@@ -418,6 +490,18 @@ export class IssueHomeworkComponent implements OnInit {
         });
     }
 
+    openImagePreviewDialog(homeworkImages: any, index: any): void {
+        const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+            width: '1000px',
+            data: {'homeworkImages': homeworkImages, 'index': index}
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            
+        });
+    }
+
 }
 
 //EDIT HOMEWORK DIALOG COMPONENT
@@ -429,12 +513,11 @@ export class IssueHomeworkComponent implements OnInit {
   })
   export class EditHomeworkDialogComponent {
     
-    serviceAdapter: any;
     constructor(
         public dialogRef: MatDialogRef<EditHomeworkDialogComponent>,
         @Inject(MAT_DIALOG_DATA) 
-        public data: EditHomeworkDialogData,) {
-        this.serviceAdapter = new IssueHomeworkServiceAdapter;
+        public data: EditHomeworkDialogData,
+        public dialog: MatDialog,) {
     }
   
     onNoClick(): void {
@@ -445,12 +528,8 @@ export class IssueHomeworkComponent implements OnInit {
         this.dialogRef.close();
     }
     
-    removeImage(url: any):any{
-        this.data.homeworkImages.forEach( (image,index) =>{
-            if(image.questionImage == url){
-                this.data.homeworkImages.splice(index, 1);
-            }
-        });
+    removeImage(index: any):any{
+        this.data.homeworkImages.splice(index, 1);
     }
 
     readURL(event): void {
@@ -497,4 +576,52 @@ export class IssueHomeworkComponent implements OnInit {
         }
     }
 
-  }
+    openImagePreviewDialog(homeworkImages: any, index: any): void {
+        const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+            width: '1000px',
+            data: {'homeworkImages': homeworkImages, 'index': index}
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            
+        });
+    }
+
+}
+
+  
+@Component({
+    selector: 'image-preview-dialog',
+    templateUrl: 'image-preview-dialog.html',
+    styleUrls: ['./issue-homework.component.css'],
+  })
+  export class ImagePreviewDialogComponent {
+    
+    constructor(
+        public dialogRef: MatDialogRef<ImagePreviewDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) 
+        public data: ImagePreviewDialogData,) {
+    }
+  
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
+    
+    decreaseIndex(): void{
+        this.data.index = this.data.index - 1;
+        if(this.data.index < 0)
+            this.data.index = this.data.homeworkImages.length - 1;
+    }
+
+    
+    increaseIndex(): void{
+        this.data.index = this.data.index + 1;
+        if(this.data.index == this.data.homeworkImages.length)
+            this.data.index = 0;
+    }
+
+    setIndex(i: any): void{
+        this.data.index  = i;
+    }
+}

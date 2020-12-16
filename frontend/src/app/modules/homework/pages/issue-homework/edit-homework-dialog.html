@@ -30,8 +30,8 @@
     <div >
         <div class="image-row">
             <div  *ngFor="let images of data.homeworkImages; let i = index">
-                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column">
-                <span class="close" (click)="removeImage(images.questionImage);" >&times;</span>
+                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(data.homeworkImages, i)">
+                <span class="close" (click)="removeImage(i);" >&times;</span>
             </div>
         </div>
     </div>

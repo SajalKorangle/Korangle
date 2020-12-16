@@ -29,11 +29,24 @@ export class IssueHomeworkServiceAdapter {
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings, {'parentSchool' : this.vm.user.activeSchool.dbId}),
+            this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt),
         ]).then(value => {
             // console.log(value[0]);
             // console.log(value[1]);
             // console.log(value[2]);
-            // console.log(value[3]);
+            this.vm.smsBalance = value[5];
+            if(value[4].length > 0){
+                this.vm.settings = value[4][0];
+            }
+            else{
+                this.vm.settings = {
+                    sentUpdateType: 'NOTIFICATION',
+                    sendCreateUpdate: true,
+                    sendEditUpdate: true,
+                    sendDeleteUpdate: true,
+                }
+            }
             this.vm.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);
             this.vm.isSessionLoading =false;
         },error =>{
@@ -140,13 +153,21 @@ export class IssueHomeworkServiceAdapter {
         if(!confirm("Are you sure you want to delete this homework?")) {
             return;
         }
+        
+        let tempHomeworkName;
+
         this.vm.isLoading = true;
         this.vm.homeworkService.deleteObject(this.vm.homeworkService.homeworks, {id: homeworkId}).then(value =>{
             this.vm.homeworkList.forEach( (homework,index) =>{
                 if(homework.id == homeworkId){
+                    tempHomeworkName = homework.homeworkName;
                     this.vm.homeworkList.splice(index, 1);
                 }
             });
+            this.vm.populateStudentList(this.vm.studentList, {'homeworkName': tempHomeworkName});
+            if(this.vm.settings.sendDeleteUpdate == true){
+                this.sendSMSNotification(this.vm.studentList, this.vm.homeworkDeleteMessage);
+            }
             alert('Homework Deleted')
             this.vm.isLoading = false;
         }),error =>{
@@ -211,7 +232,11 @@ export class IssueHomeworkServiceAdapter {
         Promise.all(promises).then(value =>{
             this.vm.populateEditedHomework(value);
             this.vm.populateStudentList(this.vm.studentList, value[0]);
-            this.sendNotification(this.vm.studentList, this.vm.homeworkUpdateMessage);
+            console.log(this.vm.settings);
+            console.log(this.vm.settings.sendEditUpdate);
+            if(this.vm.settings.sendEditUpdate == true){
+                this.sendSMSNotification(this.vm.studentList, this.vm.homeworkUpdateMessage);
+            }
             alert('Homework Edited Successfully');
             this.vm.isLoading = false;
         }),error =>{
@@ -286,39 +311,109 @@ export class IssueHomeworkServiceAdapter {
         })
     }
 
-
-    sendNotification: any = (mobile_list: any, message: any) => {
+    sendSMSNotification: any = (mobile_list: any, message: any) => {
         let service_list = [];
         let notification_list = [];
-        
-        notification_list = mobile_list.filter(obj => {
-            return obj.notification;
-        });
-        
-        
+        let sms_list = [];
+        if (this.vm.settings.sentUpdateType == 'SMS') {
+            sms_list = mobile_list;
+            notification_list = [];
+        } else if (this.vm.settings.sentUpdateType == 'NOTIFICATION') {       
+            sms_list = [];
+            notification_list = mobile_list.filter(obj => {
+                return obj.notification;
+            });
+        } else {
+            notification_list = mobile_list.filter(obj => {
+                return obj.notification;
+            });
+            sms_list = mobile_list.filter(obj => {
+                return !obj.notification;
+            })
+        }
         let notif_mobile_string = '';
+        let sms_mobile_string = '';
         notification_list.forEach((item, index) => {
             notif_mobile_string += item.mobileNumber + ', ';
         });
         // notif_mobile_string = notif_mobile_string.slice(0, -2);
-
+        sms_list.forEach((item, index) => {
+            sms_mobile_string += item.mobileNumber + ', ';
+        })
+        sms_mobile_string = sms_mobile_string.slice(0, -2);
         notif_mobile_string = notif_mobile_string.slice(0, -2);
+        if ((sms_list.length > 0) && (this.vm.getEstimatedSMSCount(message) > this.vm.smsBalance)) {
+            alert('You are short by ' + (this.vm.getEstimatedSMSCount(message) - this.vm.smsBalance) + ' SMS');
+        }
+        let sms_data = {};
+        const sms_converted_data = sms_list.map(item => {
+            return {
+                'mobileNumber': item.mobileNumber.toString(),
+                'isAdvanceSms': this.vm.getMessageFromTemplate(message, item)
+            }
+        });
+        if (sms_list.length != 0) {
+
+            sms_data = {
+                'contentType': ('english'),
+                'data': sms_converted_data,
+                'content': sms_converted_data[0]['isAdvanceSms'],
+                'parentMessageType': 2,
+                'count': this.vm.getEstimatedSMSCount(message),
+                'notificationCount': notification_list.length,
+                'notificationMobileNumberList': notif_mobile_string,
+                'mobileNumberList': sms_mobile_string,
+                'parentSchool': this.vm.user.activeSchool.dbId,
+            };
+
+        } else {
+            sms_data = {
+                'contentType': ('english'),
+                'data': sms_converted_data,
+                'content': this.vm.getMessageFromTemplate(message, notification_list[0]),
+                'parentMessageType': 2,
+                'count': this.vm.getEstimatedSMSCount(message),
+                'notificationCount': notification_list.length,
+                'notificationMobileNumberList': notif_mobile_string,
+                'mobileNumberList': sms_mobile_string,
+                'parentSchool': this.vm.user.activeSchool.dbId,
+            };
+        }
+
         const notification_data = notification_list.map(item => {
             return {
-                    'parentMessageType': 1,
-                    'content': this.vm.getMessageFromTemplate(message, item),
-                    'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
-                    'parentSchool': this.vm.user.activeSchool.dbId,
-                
+                'parentMessageType': 2,
+                'content': this.vm.getMessageFromTemplate(message, item),
+                'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
+                'parentSchool': this.vm.user.activeSchool.dbId,
             };
         });
         service_list = [];
+        service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, sms_data));
         if (notification_data.length > 0 ) {
             service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
         }
 
-        Promise.all(service_list).then(value =>{
-            this.vm.isLoading = false;
-        });
+        console.log(sms_converted_data);
+        console.log(notification_data);
+
+        // this.vm.isLoading = true;
+
+        // Promise.all(service_list).then(value => {
+
+        //     if ((this.vm.settings.sentUpdateType == 'SMS' ||
+        //     this.vm.settings.sentUpdateType == 'NOTIF./SMS') &&
+        //         (sms_list.length > 0)) {
+        //         if (value[0].status === 'success') {
+        //             this.vm.smsBalance -= value[0].data.count;
+        //         } else if (value[0].status === 'failure') {
+        //             this.vm.smsBalance = value[0].count;
+        //         }
+        //     }
+
+        //     this.vm.isLoading = false;
+        // }, error => {
+        //     this.vm.isLoading = false;
+        // })
     }
 }

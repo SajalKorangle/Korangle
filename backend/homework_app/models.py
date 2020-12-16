@@ -4,6 +4,7 @@ from django.db import models
 
 from subject_app.models import ClassSubject
 from student_app.models import Student
+from school_app.model.models import School
 
 import os
 from django.utils.timezone import now
@@ -22,9 +23,9 @@ class Homework(models.Model):
 
     homeworkName = models.TextField(null=False)
     parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentClassSubject')
-    startDate = models.DateField(null=False, verbose_name='startDate', default=date.today)
+    startDate = models.DateField(null=False, verbose_name='startDate')
     endDate = models.DateField(null=True, verbose_name='endDate')
-    startTime = models.TimeField(null=False, verbose_name='startTime', default=datetime.now().strftime('%H:%M:%S'))
+    startTime = models.TimeField(null=False, verbose_name='startTime')
     endTime = models.TimeField(null=True, blank=True, verbose_name='endTime', default='23:59:59')
     homeworkText = models.TextField(null=True)
     
@@ -59,8 +60,8 @@ class HomeworkStatus(models.Model):
     )
 
     homeworkStatus = models.TextField(null=False, choices=HOMEWORK_STATUS, default=HOMEWORK_GIVEN_STATUS)
-    submissionDate = models.DateField(null=True, verbose_name='submissionDate', default=date.today)
-    submissionTime = models.TimeField(null=True, default=datetime.now().strftime('%H:%M:%S'))
+    submissionDate = models.DateField(null=True, verbose_name='submissionDate')
+    submissionTime = models.TimeField(null=True, verbose_name='submissionTime')
     answerText = models.TextField(null=True)
     
     class Meta:
@@ -75,3 +76,27 @@ class HomeworkAnswer(models.Model):
 
     class Meta:
         db_table = 'homework_answer'
+
+class HomeworkSettings(models.Model):
+    
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+
+    SMS_UPDATE = 'SMS'
+    NOTIFICATION_UPDATE = 'NOTIFICATION'
+    NOTIFSMS_UPDATE = 'NOTIF./SMS'
+    NO_UPDATE = 'NULL'
+    SENTUPDATE_CHOICES = [
+        (SMS_UPDATE, 'SMS'),
+        (NOTIFICATION_UPDATE, 'NOTIFICATION'),
+        (NOTIFSMS_UPDATE, 'NOTIF./SMS'),
+        (NO_UPDATE, 'NULL')
+    ]
+
+    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=NOTIFICATION_UPDATE, verbose_name='sentUpdateType')
+
+    sendCreateUpdate = models.BooleanField(null=False, default=True, verbose_name='sendCreateUpdate')
+    sendEditUpdate = models.BooleanField(null=False, default=True, verbose_name='sendEditUpdate')
+    sendDeleteUpdate = models.BooleanField(null=False, default=True, verbose_name='sendDeleteUpdate')
+
+    class Meta:
+        db_table = 'homework_settings'

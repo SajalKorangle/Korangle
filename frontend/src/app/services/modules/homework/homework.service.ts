@@ -14,6 +14,7 @@ export class HomeworkService extends ServiceObject {
     public homework_question = '/homework-question';
     public homework_status = '/homework-status';
     public homework_answer = '/homework-answer';
+    public homework_settings = '/homework-settings';
     
     constructor(private http_class: HttpClient) {
         super(http_class);
