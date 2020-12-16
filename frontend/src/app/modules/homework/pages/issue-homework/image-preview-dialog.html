@@ -1,7 +1,10 @@
 
 <mat-dialog-content style="max-height: 88vh;">
+
     
-    <div>
+    
+    <div *ngIf="data.homeworkImages.length > 0">
+        <span class="material-icons cursor" style="font-size: 40px; float:right" (click)="onNoClick()">&times;</span>
         <span class="material-icons cursor" style="font-size: 30px; margin-top: 250px; float:left" (click)="decreaseIndex()">keyboard_arrow_left</span>
         <img src="{{data.homeworkImages[data.index].questionImage}}" style="width:400px; height: 500px; margin-left: 300px"class="hover-shadow cursor image-column">
         <span class="material-icons cursor" style="font-size: 30px; margin-top: 250px; float:right" (click)="increaseIndex()">keyboard_arrow_right</span>
@@ -12,7 +15,7 @@
         <div class="image-row">
             <div  *ngFor="let images of data.homeworkImages; let i = index">
                 <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="setIndex(i)">
-                <span class="close">&times;</span>
+                <span *ngIf="data.editable === 1" class="close" (click)="removeImage(i);">&times;</span>
             </div>
         </div>
     </div>

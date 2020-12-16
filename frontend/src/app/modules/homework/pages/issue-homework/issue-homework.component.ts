@@ -35,7 +35,8 @@ export interface EditHomeworkDialogData {
 export interface ImagePreviewDialogData {
     
     homeworkImages: any;
-    index: any
+    index: any;
+    editable: any;
 }
 
 @Component({
@@ -490,10 +491,10 @@ export class IssueHomeworkComponent implements OnInit {
         });
     }
 
-    openImagePreviewDialog(homeworkImages: any, index: any): void {
+    openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             width: '1000px',
-            data: {'homeworkImages': homeworkImages, 'index': index}
+            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable}
         });
     
         dialogRef.afterClosed().subscribe(result => {
@@ -576,10 +577,10 @@ export class IssueHomeworkComponent implements OnInit {
         }
     }
 
-    openImagePreviewDialog(homeworkImages: any, index: any): void {
+    openImagePreviewDialog(homeworkImages: any, index: any, editable): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             width: '1000px',
-            data: {'homeworkImages': homeworkImages, 'index': index}
+            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable}
         });
     
         dialogRef.afterClosed().subscribe(result => {
@@ -623,5 +624,15 @@ export class IssueHomeworkComponent implements OnInit {
 
     setIndex(i: any): void{
         this.data.index  = i;
+    }
+
+    removeImage(index: any):any{
+        this.data.homeworkImages.splice(index, 1);
+        if(this.data.homeworkImages.length == 0){
+            this.dialogRef.close();
+        }
+        if(index == this.data.index){
+            this.decreaseIndex();
+        }
     }
 }
