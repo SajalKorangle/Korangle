@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {TutorialsComponent} from '@modules/tutorials/tutorials.component';
 import {CommonModule} from '@angular/common';
+import {AddTutorialModule} from '@modules/tutorials/pages/add-tutorial/add-tutorial.module';
 
 
 const routes: Routes = [
       {
         path: 'add_tutorial',
-        loadChildren: 'app/modules/tutorials/pages/add-tutorial/add-tutorial.module#AddTutorialModule',
+        loadChildren: () => AddTutorialModule,
         data: {moduleName: 'tutorials'},
     },
     {

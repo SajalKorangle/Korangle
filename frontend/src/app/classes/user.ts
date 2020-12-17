@@ -21,6 +21,8 @@ export class User {
 
     schoolList: School[] = [];
 
+    videoUrl:string;
+
     isLazyLoading: boolean = false;
 
     emptyUserDetails(): void {

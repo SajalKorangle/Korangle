@@ -1,1 +1,222 @@
-<p>add-tutorial works!</p>
+<div class="card-content table-responsive">
+    <ng-container *ngIf="!isLoading">
+        <div class="row">
+            <div class="col-md-4">
+                <mat-form-field style="margin-top: 23px;">
+                    <mat-select placeholder="Select Class -">
+                        <ng-container *ngFor="let classs of classSectionSubjectList">
+                            <ng-container *ngFor="let section of classs.sectionList">
+                                <mat-option *ngIf="section.containStudent && section.subjectList.length>0"
+                                            style="width: 100%;">
+                                    <mat-checkbox [ngModel]="section.selected"
+                                                  (ngModelChange)="unselectAllClasses();section.selected=true;selectedSection=section;selectedClass=classs;"
+                                                  (click)="$event.stopPropagation();">
+                                        {{classs.name}}<span *ngIf="section.containStudent">, {{section.name}}</span>
+                                    </mat-checkbox>
+                                </mat-option>
+                            </ng-container>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4" style="margin-top: 20px;">
+                <mat-form-field style="margin-right: 15px">
+                    <mat-select placeholder="Subject"
+                                [ngModel]="selectedSubject"
+                                (ngModelChange)="selectedSubject=$event;showTutorialDetails=false;">
+                        <mat-option *ngFor='let subject of selectedSection.subjectList;'
+                                    [value]="subject">
+                            {{getSubjectName(subject)}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button type="submit"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="serviceAdapter.getTutorialList()">GET
+                </button>
+            </div>
+        </div>
+        <ng-container *ngIf="!isLoading && showTutorialDetails">
+
+            <div class="row">
+                <div class="col-md-4" style="margin: 10px;">
+                    <div class="row">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Chapter*</mat-label>
+                            <input matInput
+                                   type="text"
+                                   cdkTextareaAutosize
+                                   [(ngModel)]="newTutorial.chapter"
+                                   (ngModelChange)="serviceAdapter.checkEnableAddButton()">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="row">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Topic*</mat-label>
+                            <input matInput
+                                   type="text"
+                                   [(ngModel)]="newTutorial.topic"
+                                   (ngModelChange)="serviceAdapter.checkEnableAddButton()">
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Order No(Only upto 1 Decimal)</mat-label>
+                            <input matInput
+                                   type="number"
+                                   value="0"
+                                   min="1"
+                                   step=".1"
+                                   [(ngModel)]="newTutorial.orderNumber"
+                                   (ngModelChange)="serviceAdapter.checkEnableAddButton()">
+                        </mat-form-field>
+                    </div>
+
+
+                    <div class="row">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Youtube Link*</mat-label>
+                            <textarea matInput
+                                      type="text"
+                                      cdkTextareaAutosize
+                                      [(ngModel)]="newTutorial.link" style="overflow: hidden;min-height: 17px"
+                                      (ngModelChange)="serviceAdapter.checkEnableAddButton()">
+                    </textarea>
+                        </mat-form-field>
+
+                    </div>
+
+
+                    <div class="row">
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                [disabled]="isDisabled"
+                                (click)="serviceAdapter.addNewTutorial()">Add
+                        </button>
+                    </div>
+                </div>
+                <ng-container *ngIf="!isDisabled">
+                    <div class="col-md-6" style="margin-left: 20px">
+                        <iframe height="250" width="100%"
+                                [src]="previewBeforeAddTutorialUrl | safe"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                </ng-container>
+
+            </div>
+
+
+            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
+                <div class="col-md-12"></div>
+            </div>
+            <ng-container *ngIf="tutorialUpdating">
+                <mat-spinner [diameter]="40"></mat-spinner>
+            </ng-container>
+            <ng-container *ngIf="tutorialList.length==0">
+                <span style="margin-top: 30px" align="center">
+                    No Tutorial Videos added yet!
+                </span>
+            </ng-container>
+
+            <table class="table table-hover" *ngIf="tutorialList.length>0">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th>Order No</th>
+                    <th>Chapter</th>
+                    <th>Topic</th>
+                    <th>Youtube Link</th>
+                    <th>Created Date</th>
+                    <th>-</th>
+                    <th>-</th>
+                    <th>-</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let tutorial of tutorialList">
+                    <td>
+                        <span *ngIf="!tutorial.editable">{{tutorial.orderNumber}}</span>
+                        <mat-form-field *ngIf="tutorial.editable">
+                            <input *ngIf="tutorial.editable" matInput
+                                   type="number"
+                                   step=".1"
+                                   min="1"
+                                   [ngModel]="tutorial.orderNumber"
+                                   (ngModelChange)="tutorial.orderNumber=$event">
+                        </mat-form-field>
+                    </td>
+
+                    <td>
+                        <span *ngIf="!tutorial.editable">{{tutorial.chapter}}</span>
+                        <mat-form-field *ngIf="tutorial.editable">
+                            <input *ngIf="tutorial.editable" matInput
+                                   type="text"
+                                   [ngModel]="tutorial.chapter"
+                                   (ngModelChange)="tutorial.chapter=$event">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <span *ngIf="!tutorial.editable">{{tutorial.topic}}</span>
+                        <mat-form-field *ngIf="tutorial.editable">
+                            <input
+                                    matInput
+                                    type="text"
+                                    [ngModel]="tutorial.topic"
+                                    (ngModelChange)="tutorial.topic=$event">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <a href="{{tutorial.link}}" target="_blank"><span
+                                *ngIf="!tutorial.editable">{{tutorial.link}}</span></a>
+                        <mat-form-field *ngIf="tutorial.editable">
+                            <input *ngIf="tutorial.editable" matInput
+                                   type="text"
+                                   [ngModel]="tutorial.link"
+                                   (ngModelChange)="tutorial.link=$event">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <span>{{tutorial.generationDateTime.split('T')[0]}}</span>
+                    </td>
+                    <td>
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                style="padding: 3px 8px;"
+                                [disabled]="tutorialUpdating"
+                                (click)="serviceAdapter.makeEditableOrSave(tutorial)"><span *ngIf="tutorial.editable">Save</span><span
+                                *ngIf="!tutorial.editable">Edit</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                style="padding: 3px 8px;"
+                                [disabled]="tutorialUpdating"
+                                (click)="serviceAdapter.removeOrCancel(tutorial)"><span
+                                *ngIf="tutorial.editable">Cancel</span><span *ngIf="!tutorial.editable">Remove</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button *ngIf="!tutorial.editable" type="submit"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                style="padding: 3px 8px;"
+                                [disabled]="tutorialUpdating"
+                                (click)="showPreviewVideo(tutorial)">Preview
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
+                <div class="col-md-12"></div>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+

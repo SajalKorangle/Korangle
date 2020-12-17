@@ -25,7 +25,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/parent/pages/view-attendance/view-attendance.module#ViewAttendanceModule',
         data: {moduleName: 'parent'},
     },
-
+    {
+        path: 'view_tutorials',
+        loadChildren: 'app/modules/parent/pages/view-tutorials/view-tutorials.module#ViewTutorialsModule',
+        data: {moduleName: 'parent'},
+    },
     {
         path: '',
         component: ParentComponent,

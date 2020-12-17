@@ -1,0 +1,56 @@
+<div class="card-content">
+    <ng-container *ngIf="!isLoading">
+        <div class="row">
+            <mat-form-field style="margin: 20px;">
+                <mat-select placeholder="Select Subject"
+                            [ngModel]="selectedSubject"
+                            (ngModelChange)="selectedSubject=$event;serviceAdapter.getTutorialList();selectedChapter=null;selectedTopic=null">
+                    <mat-option *ngFor='let subject of studentSubjectList;' [value]="subject">
+                        {{getSubjectName(subject)}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="margin: 20px;">
+                <mat-select placeholder="Select Chapter"
+                            [ngModel]="selectedChapter"
+                            (ngModelChange)="selectedChapter=$event;selectedTopic=null;populateTopic()">
+                    <mat-option *ngFor='let chapter of chapterList;' [value]="chapter">
+                        {{chapter}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field style="margin: 20px;">
+                <mat-select placeholder="Select Topic"
+                            [ngModel]="selectedTopic"
+                            (ngModelChange)="selectedTopic=$event;videoUrl=selectedTopic.link;showTutorialVideo=false">
+                    <mat-option *ngFor='let topic of topicList;' [value]="topic">
+                        {{topic.topic}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button type="submit"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="setTutorialVideo()">GET
+            </button>
+        </div>
+        <ng-container *ngIf="showTutorialVideo">
+            <div style="height:70%;width: 70%;margin-left:10%;margin-bottom: 5%">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item"
+                            [src]="videoUrl | safe"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
+<ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
