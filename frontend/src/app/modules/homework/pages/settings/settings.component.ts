@@ -33,6 +33,8 @@ export class SettingsComponent{
 
     isInitialLoading = true;
 
+    settingsChanged: any;
+
     serviceAdapter: SettingsServiceAdapter;
 
     constructor ( 
@@ -43,10 +45,21 @@ export class SettingsComponent{
 
     ngOnInit(): void {
         this.serviceAdapter = new SettingsServiceAdapter;
+        this.settingsChanged = false;
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
         
+    }
+
+    checkChangeSettings(): any{
+        if(this.sentUpdateType == this.previousSettings.sentUpdateType && this.sendCreateUpdate == this.previousSettings.sendCreateUpdate 
+            && this.sendDeleteUpdate == this.previousSettings.sendDeleteUpdate && this.sendEditUpdate == this.previousSettings.sendEditUpdate){
+                this.settingsChanged = false;
+        }
+        else{
+            this.settingsChanged = true;
+        }
     }
 
 

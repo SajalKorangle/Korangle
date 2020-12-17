@@ -63,6 +63,7 @@ class HomeworkStatus(models.Model):
     submissionDate = models.DateField(null=True, verbose_name='submissionDate')
     submissionTime = models.TimeField(null=True, verbose_name='submissionTime')
     answerText = models.TextField(null=True)
+    remark = models.TextField(null=True, blank=True, verbose_name='remark')
     
     class Meta:
         db_table = 'homework_status'
@@ -71,6 +72,8 @@ class HomeworkStatus(models.Model):
 class HomeworkAnswer(models.Model):
 
     parentHomework = models.ForeignKey(Homework, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentStudent')
+
     answerImage = models.ImageField("answer_image", upload_to = upload_answer_to,blank = True,null=True)
     orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
 

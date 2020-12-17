@@ -86,13 +86,14 @@ export class IssueHomeworkServiceAdapter {
             });
             let student_data = {
                 'id__in': studentIdList,
-                'fields__korangle': 'name,mobileNumber',
+                'fields__korangle': 'id,name,mobileNumber',
             }
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             ]).then(value =>{
                 value[0].forEach(element =>{
                     let tempData = {
+                        dbId: element.id,
                         name: element.name,
                         mobileNumber: element.mobileNumber,
                         subject: this.vm.selectedSubject.name,
@@ -165,7 +166,7 @@ export class IssueHomeworkServiceAdapter {
                 }
             });
             this.vm.populateStudentList(this.vm.studentList, {'homeworkName': tempHomeworkName});
-            if(this.vm.settings.sendDeleteUpdate == true){
+            if(this.vm.settings.sendDeleteUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
                 this.sendSMSNotification(this.vm.studentList, this.vm.homeworkDeleteMessage);
             }
             alert('Homework Deleted')
@@ -234,7 +235,7 @@ export class IssueHomeworkServiceAdapter {
             this.vm.populateStudentList(this.vm.studentList, value[0]);
             console.log(this.vm.settings);
             console.log(this.vm.settings.sendEditUpdate);
-            if(this.vm.settings.sendEditUpdate == true){
+            if(this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
                 this.sendSMSNotification(this.vm.studentList, this.vm.homeworkUpdateMessage);
             }
             alert('Homework Edited Successfully');

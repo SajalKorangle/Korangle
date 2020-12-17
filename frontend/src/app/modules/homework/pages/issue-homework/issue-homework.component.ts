@@ -180,19 +180,22 @@ export class IssueHomeworkComponent implements OnInit {
             this.currentHomework.endTime =  '23:59';
         }
         
+        
         Promise.all([
             this.homeworkService.createObject(this.homeworkService.homeworks , this.currentHomework),
         ]).then(value =>{
             this.currentHomework.id = value[0].id;
             this.populateCurrentHomework();
+            
             Promise.all(this.populateHomeworkImages()).then(sValue =>{
+                console.log(sValue);
                 alert('Homework has been successfully created');
                 this.populateStudentList(this.studentList, this.currentHomework);
                 this.populateCurrentHomeworkImages(value[0].id, sValue);
                 this.currentHomework = new Homework;
                 this.currentHomeworkImages = [];
                 this.isLoading = false;
-                if(this.settings.sendCreateUpdate == true){
+                if(this.settings.sendCreateUpdate == true && this.settings.sentUpdateType !='NULL'){
                     this.serviceAdapter.sendSMSNotification(this.studentList, this.homeworkCreatedMessage);
                 }
             },error =>{
@@ -267,6 +270,21 @@ export class IssueHomeworkComponent implements OnInit {
             index = index + 1;
             promises.push(this.homeworkService.createObject(this.homeworkService.homework_question, temp_form_data));
         })
+
+        let studentIdList = [];
+        this.studentList.forEach(student =>{
+            studentIdList.push(student.dbId);
+        });
+
+        studentIdList.forEach(student =>{
+            let tempData = {
+                'parentStudent': student,
+                'parentHomework': this.currentHomework.id,
+                'homeworkStatus': 'GIVEN',
+            }
+            promises.push(this.homeworkService.createObject(this.homeworkService.homework_status, tempData));
+        })
+
         return promises;
     }
 

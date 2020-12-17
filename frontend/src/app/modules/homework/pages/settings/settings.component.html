@@ -4,7 +4,7 @@
         <mat-select placeholder="Send via"
                     id="sentUpdateType"
                     [ngModel]="sentUpdateType"
-                    (ngModelChange)="sentUpdateType = $event">
+                    (ngModelChange)="sentUpdateType = $event; checkChangeSettings()">
             <mat-option *ngFor='let sentType of sentUpdateList;' [value]="sentType">
                 {{sentType}}
             </mat-option>
@@ -12,13 +12,14 @@
     </mat-form-field>
 
     <span style="margin-left: 15px;">Send Update For: &nbsp;</span>    
-    <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendCreateUpdate">Homework Creation &nbsp;</mat-checkbox>
-    <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendEditUpdate">Homework Updation &nbsp;</mat-checkbox>
-    <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendDeleteUpdate">Homework Deletion &nbsp;</mat-checkbox>
+    <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendCreateUpdate" (change)="checkChangeSettings()">Homework Creation &nbsp;</mat-checkbox>
+    <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendEditUpdate" (change)="checkChangeSettings()">Homework Updation &nbsp;</mat-checkbox>
+    <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendDeleteUpdate" (change)="checkChangeSettings()">Homework Deletion &nbsp;</mat-checkbox>
     <br>
 
     <button type="submit"
             class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+            [disabled]="!settingsChanged"
             (click)="serviceAdapter.updateSettings()">Update</button>
     
     
