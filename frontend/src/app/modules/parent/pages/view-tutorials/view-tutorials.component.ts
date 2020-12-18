@@ -22,6 +22,7 @@ export class ViewTutorialsComponent implements OnInit {
     user: any;
     tutorialList: any;
     isLoading = false;
+    publishDate:any;
     studentSubjectList: any;
     serviceAdapter: ViewTutorialsServiceAdapter;
     classSubjectList = [];

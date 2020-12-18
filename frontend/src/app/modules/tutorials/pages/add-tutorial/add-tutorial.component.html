@@ -3,16 +3,14 @@
         <div class="row">
             <div class="col-md-4">
                 <mat-form-field style="margin-top: 23px;">
-                    <mat-select placeholder="Select Class -">
+                    <mat-select placeholder="Select Class -"
+                                [(ngModel)]="selectedSection">
                         <ng-container *ngFor="let classs of classSectionSubjectList">
                             <ng-container *ngFor="let section of classs.sectionList">
                                 <mat-option *ngIf="section.containStudent && section.subjectList.length>0"
-                                            style="width: 100%;">
-                                    <mat-checkbox [ngModel]="section.selected"
-                                                  (ngModelChange)="unselectAllClasses();section.selected=true;selectedSection=section;selectedClass=classs;"
-                                                  (click)="$event.stopPropagation();">
-                                        {{classs.name}}<span *ngIf="section.containStudent">, {{section.name}}</span>
-                                    </mat-checkbox>
+                                            style="width: 100%;"
+                                            [value]="section">
+                                    {{classs.name}}<span *ngIf="section.containStudent">, {{section.name}}</span>
                                 </mat-option>
                             </ng-container>
                         </ng-container>
@@ -85,6 +83,7 @@
                     </textarea>
                         </mat-form-field>
 
+
                     </div>
 
 
@@ -113,9 +112,6 @@
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-12"></div>
             </div>
-            <ng-container *ngIf="tutorialUpdating">
-                <mat-spinner [diameter]="40"></mat-spinner>
-            </ng-container>
             <ng-container *ngIf="tutorialList.length==0">
                 <span style="margin-top: 30px" align="center">
                     No Tutorial Videos added yet!
@@ -130,9 +126,13 @@
                     <th>Topic</th>
                     <th>Youtube Link</th>
                     <th>Created Date</th>
+                    <ng-container *ngIf="tutorialUpdating">
+                        <th></th>
+                    </ng-container>
                     <th>-</th>
                     <th>-</th>
                     <th>-</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -181,11 +181,16 @@
                     <td>
                         <span>{{tutorial.generationDateTime.split('T')[0]}}</span>
                     </td>
+                    <ng-container *ngIf="tutorialUpdating && tutorial.editable">
+                        <td>
+                            <mat-spinner [diameter]="20"></mat-spinner>
+                        </td>
+                    </ng-container>
                     <td>
                         <button type="submit"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 3px 8px;"
-                                [disabled]="tutorialUpdating"
+                                [disabled]="tutorialEditing && !tutorial.editable == true || tutorialUpdating"
                                 (click)="serviceAdapter.makeEditableOrSave(tutorial)"><span *ngIf="tutorial.editable">Save</span><span
                                 *ngIf="!tutorial.editable">Edit</span>
                         </button>

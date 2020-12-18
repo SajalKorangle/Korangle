@@ -4,8 +4,8 @@
             <mat-form-field style="margin: 20px;">
                 <mat-select placeholder="Select Subject"
                             [ngModel]="selectedSubject"
-                            (ngModelChange)="selectedSubject=$event;serviceAdapter.getTutorialList();selectedChapter=null;selectedTopic=null">
-                    <mat-option *ngFor='let subject of studentSubjectList;' [value]="subject">
+                            (ngModelChange)="selectedSubject=$event;selectedChapter=null;selectedTopic=null;serviceAdapter.populateChapter()">
+                    <mat-option *ngFor='let subject of serviceAdapter.filteredStudentSubject;' [value]="subject">
                         {{getSubjectName(subject)}}
                     </mat-option>
                 </mat-select>
@@ -25,17 +25,17 @@
             <mat-form-field style="margin: 20px;">
                 <mat-select placeholder="Select Topic"
                             [ngModel]="selectedTopic"
-                            (ngModelChange)="selectedTopic=$event;videoUrl=selectedTopic.link;showTutorialVideo=false">
+                            (ngModelChange)="selectedTopic=$event;publishDate=selectedTopic.generationDateTime;videoUrl=selectedTopic.link;showTutorialVideo=false;setTutorialVideo()">
                     <mat-option *ngFor='let topic of topicList;' [value]="topic">
                         {{topic.topic}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <button type="submit"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="setTutorialVideo()">GET
-            </button>
+<!--            <button type="submit"-->
+<!--                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"-->
+<!--                    (click)="">GET-->
+<!--            </button>-->
         </div>
         <ng-container *ngIf="showTutorialVideo">
             <div style="height:70%;width: 70%;margin-left:10%;margin-bottom: 5%">
@@ -47,6 +47,9 @@
                             allowfullscreen>
                     </iframe>
                 </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <span><b>Published On : {{publishDate.split('T')[0]}}</b></span>
             </div>
         </ng-container>
     </ng-container>

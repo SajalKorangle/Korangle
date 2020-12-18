@@ -13,7 +13,7 @@ import {StudentOldService} from '@services/modules/student/student-old.service';
     selector: 'app-add-tutorial',
     templateUrl: './add-tutorial.component.html',
     styleUrls: ['./add-tutorial.component.css'],
-    providers: [SubjectOldService,StudentOldService, ClassService, StudentService, TutorialsService],
+    providers: [SubjectOldService, StudentOldService, ClassService, StudentService, TutorialsService],
 
 })
 export class AddTutorialComponent implements OnInit {
@@ -30,19 +30,19 @@ export class AddTutorialComponent implements OnInit {
     classSubjectList: any;
     newTutorial: any;
     editable = false;
-    showPreview = false;
+    tutorialEditing = false;
     previewBeforeAddTutorialUrl: string;
     classSectionSubjectList: any;
     selectedSection: any;
-    isDisabled=true;
-    tutorialUpdating=false;
+    isDisabled = true;
+    tutorialUpdating = false;
 
     constructor(public subjectService: SubjectOldService,
                 public classService: ClassService,
                 public studentService: StudentService,
                 public tutorialService: TutorialsService,
                 private dialog: MatDialog,
-                public  studentOldService:StudentOldService) {
+                public  studentOldService: StudentOldService) {
     }
 
     ngOnInit() {
@@ -73,13 +73,13 @@ export class AddTutorialComponent implements OnInit {
             'topic': null,
             'link': null,
             'editable': false,
-            'orderNumber':0,
+            'orderNumber': 0,
         };
     }
 
     getParentClassSubject(): number {
         const classSub = this.serviceAdapter.classSubjectList.filter(classSubject => {
-            if (classSubject.parentClass == this.selectedClass.id && classSubject.parentDivision == this.selectedClass.selectedSection.id && classSubject.parentSubject == this.selectedSubject.parentSubject) {
+            if (classSubject.parentClass == this.selectedSection.parentClass && classSubject.parentDivision == this.selectedSection.id && classSubject.parentSubject == this.selectedSubject.parentSubject) {
                 return classSubject;
             }
         });
@@ -93,7 +93,8 @@ export class AddTutorialComponent implements OnInit {
             width: '80vw',
         });
     }
-showSectionName(classs: any): boolean {
+
+    showSectionName(classs: any): boolean {
         let sectionLength = 0;
         classs.sectionList.every(section => {
             if (section.containsStudent) {

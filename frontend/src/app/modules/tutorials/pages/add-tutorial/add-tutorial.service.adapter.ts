@@ -9,9 +9,9 @@ export class AddTutorialServiceAdapter {
     classSubjectList: any;
     subjectList: any;
     youtubeRegex = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$/;
-    decimalRegex=/^-?[0-9]*\.?[0-9]$/;
+    decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     classSectionSubjectList: any;
-    fullStudentList:any;
+    fullStudentList: any;
 
     constructor() {
     }
@@ -31,7 +31,7 @@ export class AddTutorialServiceAdapter {
             'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
             'schoolList': [this.vm.user.activeSchool.dbId],
         };
-         const student_full_profile_request_data = {
+        const student_full_profile_request_data = {
             schoolDbId: this.vm.user.activeSchool.dbId,
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
@@ -49,7 +49,7 @@ export class AddTutorialServiceAdapter {
             this.sectionList = value[1];
             this.classSubjectList = value[2];
             this.subjectList = value[3];
-            this.fullStudentList=value[4];
+            this.fullStudentList = value[4];
             this.populateSubjectList();
             this.populateClassSectionList();
             this.vm.isLoading = false;
@@ -72,8 +72,9 @@ export class AddTutorialServiceAdapter {
                     tempSection[key] = section[key];
                 });
                 tempSection['containStudent'] = false;
-                tempSection['selected'] = false;
+                tempSection['parentClass']=classs.id
                 tempSection['subjectList'] = [];
+
                 this.classSubjectList.forEach(classSubject => {
                     if (classSubject.parentClass === tempClass['id']
                         && classSubject.parentDivision === tempSection['id']
@@ -96,26 +97,9 @@ export class AddTutorialServiceAdapter {
         this.vm.classSectionSubjectList = [];
         this.populateContainsStudent();
         this.vm.classSectionSubjectList = this.classSectionSubjectList;
-// //       this.vm.classSectionSubjectList=this.classSectionSubjectList.map((classSecSub) => {
-// //   return {...classSecSub, sectionList: classSecSub.sectionList.map((section) => {
-// //       return {...section, subjectList: section.subjectList.filter((subject)=> subject.parentEmployee === this.vm.user.activeSchool.employeeId)}
-// //       })};
-// // });
-//
-//        this.vm.classSectionSubjectList = this.classSectionSubjectList.filter(val => {
-//   return val.sectionList.some(({sectionList}) => sectionList.subjectList.some(({subject}) =>subject.parentEmployee === this.vm.user.activeSchool.employeeId))
-// });
-        // this.vm.classSectionSubjectList=this.classSectionSubjectList.filter(classSecSub=>{
-        //     return classSecSub.sectionList.some(section =>{
-        //        return section.subjectList.filter(subject =>{
-        //             return subject.parentEmployee == this.vm.user.activeSchool.employeeId;
-        //         });
-        //     });
-        // });
-
         console.log(this.vm.classSectionSubjectList);
-        this.vm.classSectionSubjectList[0].sectionList[0].selected=true;
-        this.vm.selectedClass=this.vm.classSectionSubjectList[0];
+        this.vm.classSectionSubjectList[0].sectionList[0].selected = true;
+        this.vm.selectedClass = this.vm.classSectionSubjectList[0];
         this.vm.selectedSection = this.vm.classSectionSubjectList[0].sectionList[0];
     }
 
@@ -140,18 +124,18 @@ export class AddTutorialServiceAdapter {
             });
             this.vm.initializeNewTutorial();
             this.vm.showTutorialDetails = true;
-            this.vm.isDisabled=true;
+            this.vm.isDisabled = true;
         }
     }
 
     addNewTutorial(): void {
 
 
-        if(!this.decimalRegex.test(this.vm.newTutorial.orderNumber) || this.vm.newTutorial.orderNumber <= 0) {
+        if (!this.decimalRegex.test(this.vm.newTutorial.orderNumber) || this.vm.newTutorial.orderNumber <= 0) {
             if (this.vm.tutorialList.length == 0) {
                 this.vm.newTutorial.orderNumber = 1;
             } else {
-                this.vm.newTutorial.orderNumber = (parseFloat(this.vm.tutorialList[this.vm.tutorialList.length - 1].orderNumber)+0.1).toFixed(1);
+                this.vm.newTutorial.orderNumber = (parseFloat(this.vm.tutorialList[this.vm.tutorialList.length - 1].orderNumber) + 0.1).toFixed(1);
             }
         }
         this.vm.isLoading = true;
@@ -161,7 +145,7 @@ export class AddTutorialServiceAdapter {
             'chapter': this.vm.newTutorial.chapter,
             'topic': this.vm.newTutorial.topic,
             'link': this.vm.newTutorial.link,
-            'orderNumber':this.vm.newTutorial.orderNumber,
+            'orderNumber': this.vm.newTutorial.orderNumber,
         };
 
 
@@ -175,48 +159,49 @@ export class AddTutorialServiceAdapter {
         }, error => {
             this.vm.isLoading = false;
         });
-        this.vm.isDisabled=true;
+        this.vm.isDisabled = true;
 
     }
 
     makeEditableOrSave(tutorial: any): void {
         if (tutorial.editable) {
-
             if (!this.areInputsValid(tutorial)) {
                 return;
             }
-            this.vm.tutorialUpdating=true;
+
+            this.vm.tutorialUpdating = true;
             let data = {
                 'id': tutorial.id,
                 'parentClassSubject': tutorial.parentClassSubject,
                 'chapter': tutorial.chapter,
                 'topic': tutorial.topic,
                 'link': tutorial.link,
-                'orderNumber':tutorial.orderNumber,
+                'orderNumber': tutorial.orderNumber,
             };
 
 
             Promise.all([
                 this.vm.tutorialService.updateObject(this.vm.tutorialService.tutorial, data),
             ]).then(value => {
-                this.vm.tutorialUpdating=false;
+                this.vm.tutorialUpdating = false;
             }, error => {
-                this.vm.tutorialUpdating=false;
+               this.vm.tutorialUpdating = false;
             });
 
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
             tutorial.editable = false;
+            this.vm.tutorialEditing=false;
         } else {
+            this.vm.tutorialEditing=true;
             tutorial.editable = true;
         }
     }
 
     removeOrCancel(tutorial: any): void {
         if (tutorial.editable) {
-            this.vm.showTutorialDetails=false;
             this.getTutorialList();
             tutorial.editable = false;
-            this.vm.showTutorialDetails=true;
+            this.vm.tutorialEditing=false;
         } else {
             this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial).then(value => {
                 this.vm.tutorialList = this.vm.tutorialList.filter(item => {
@@ -248,10 +233,9 @@ export class AddTutorialServiceAdapter {
             alert('Tutorial link should not be empty');
             return false;
         }
-        if(!this.decimalRegex.test(tutorial.orderNumber) || tutorial.orderNumber<=0)
-        {
+        if (!this.decimalRegex.test(tutorial.orderNumber) || tutorial.orderNumber <= 0) {
             alert('OrderNumber should be greater than 0 with 1 decimal place');
-            return ;
+            return;
         }
         if (!this.youtubeRegex.test(tutorial.link.trim())) {
             alert('Please enter a valid link');
@@ -260,48 +244,45 @@ export class AddTutorialServiceAdapter {
         return true;
     }
 
-     checkEnableAddButton() {
-       const tutorial=this.vm.newTutorial;
-      if (!tutorial.chapter || tutorial.chapter.trim() == '') {
-            this.vm.isDisabled= true;
+    checkEnableAddButton() {
+        const tutorial = this.vm.newTutorial;
+        if (!tutorial.chapter || tutorial.chapter.trim() == '') {
+            this.vm.isDisabled = true;
             return;
-        }
-        else if (!tutorial.topic || tutorial.topic.trim() == '') {
-            this.vm.isDisabled= true;
+        } else if (!tutorial.topic || tutorial.topic.trim() == '') {
+            this.vm.isDisabled = true;
             return;
-        }
-        else if (!tutorial.link || tutorial.link.trim() == '') {
-            this.vm.isDisabled= true;
+        } else if (!tutorial.link || tutorial.link.trim() == '') {
+            this.vm.isDisabled = true;
             return;
-        }
-       else if (!this.youtubeRegex.test(tutorial.link.trim())) {
-            this.vm.isDisabled= true;
+        } else if (!this.youtubeRegex.test(tutorial.link.trim())) {
+            this.vm.isDisabled = true;
             return;
+        } else {
+            this.vm.previewBeforeAddTutorialUrl = tutorial.link.replace('watch?v=', 'embed/');
+            this.vm.isDisabled = false;
         }
-       else {
-           this.vm.previewBeforeAddTutorialUrl=tutorial.link.replace('watch?v=', 'embed/');
-           this.vm.isDisabled = false;
-       }
 
-     }
+    }
 
     populateTutorialList(tutorialList) {
         tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         tutorialList.forEach(tutorial => {
             tutorial['editable'] = false;
+            tutorial['isUpdating'] = false;
         });
         this.vm.tutorialList = tutorialList;
     }
 
-     populateContainsStudent() {
-        this.fullStudentList.forEach(student=>{
+    populateContainsStudent() {
+        this.fullStudentList.forEach(student => {
             this.classSectionSubjectList.forEach(classs => {
-            classs.sectionList.forEach(section => {
-                if (student.sectionDbId === section.id && student.classDbId === classs.id) {
-                    section.containStudent = true;
-                }
+                classs.sectionList.forEach(section => {
+                    if (student.sectionDbId === section.id && student.classDbId === classs.id) {
+                        section.containStudent = true;
+                    }
+                });
             });
         });
-    });
-}
+    }
 }

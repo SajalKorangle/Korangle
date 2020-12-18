@@ -15,6 +15,7 @@ export class ViewTutorialsServiceAdapter {
     classTestList: any;
     studentTestList: any;
     studentProfile: any;
+    filteredStudentSubject:any;
 
 
     initializeAdapter(vm: ViewTutorialsComponent): void {
@@ -63,11 +64,12 @@ export class ViewTutorialsServiceAdapter {
             this.vm.selectedSubject = this.vm.studentSubjectList[0];
             this.studentProfile = value[3];
             this.getTutorialList();
+            this.populateChapter();
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
         });
-
+        
     }
 
 
@@ -75,21 +77,38 @@ export class ViewTutorialsServiceAdapter {
         this.vm.chapterList = [];
         this.vm.topicList = [];
         this.vm.showTutorialVideo = false;
+        this.filteredStudentSubject=[];
+        this.vm.tutorialList=[];
+        this.vm.studentSubjectList.forEach(subject=>{
+         this.vm.selectedSubject=subject;
         let request_tutorials_data = {
-            'parentClassSubject': this.getParentClassSubject(),
+            'parentClassSubject': this.getParentClassSelectedSubject(),
         };
         Promise.all([
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_tutorials_data),
         ]).then(value => {
-            this.populateTutorialList(value[0]);
+                if(value[0].length > 0){
+                     this.filteredStudentSubject.push(subject);
+                     this.vm.tutorialList.push(value[0]);
+                     console.log(this.vm.tutorialList);
+                 }
         }, error => {
             this.vm.isLoading = false;
         });
+    });
     }
 
-    populateTutorialList(tutorialList: any) {
-        // this.vm.tutorialList=[];
-        // this.vm.tutorialList=tutorialList;
+    populateChapter() {
+
+         const tutorialList=[];
+          this.vm.tutorialList.forEach(subject=> {
+              subject.forEach(tutorial => {
+                  if (tutorial.parentClassSubject === this.getParentClassSelectedSubject()) {
+                      tutorialList.push(tutorial);
+                  }
+              });
+          });
+          this.vm.chapterList=[];
         this.vm.selectedSubject['tutorialList'] = [];
         this.vm.selectedSubject['tutorialList'] = tutorialList;
         this.vm.selectedSubject.tutorialList.forEach(tutorial => {
@@ -102,7 +121,7 @@ export class ViewTutorialsServiceAdapter {
         console.log(this.vm.chapterList);
     }
 
-    getParentClassSubject(): number {
+    getParentClassSelectedSubject(): number {
         const classSub = this.vm.classSubjectList.filter(classSubject => {
             if (classSubject.parentClass == this.studentProfile.classDbId && classSubject.parentDivision == this.studentProfile.sectionDbId && classSubject.parentSubject == this.vm.selectedSubject.parentSubject) {
                 return classSubject;
