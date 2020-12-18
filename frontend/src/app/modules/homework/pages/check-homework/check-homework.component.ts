@@ -79,6 +79,7 @@ export class CheckHomeworkComponent implements OnInit {
     ngOnInit(): void {
         this.currentHomework = null;
         this.isLoading = false;
+        this.classSectionHomeworkList = [];
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new CheckHomeworkServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);

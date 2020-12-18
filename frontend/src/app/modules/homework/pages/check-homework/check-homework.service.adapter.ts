@@ -14,6 +14,8 @@ export class CheckHomeworkServiceAdapter {
 
     initializeData(): void {
 
+        this.vm.isInitialLoading = true;
+
         this.vm.sendCheckUpdate = true;
         this.vm.sendResubmissionUpdate = true;
         this.vm.sendUpdateType = 'SMS';
@@ -30,7 +32,6 @@ export class CheckHomeworkServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId
         }
 
-        this.vm.isInitialLoading = true;
 
         Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
@@ -58,6 +59,9 @@ export class CheckHomeworkServiceAdapter {
     }
 
     initialiseClassSubjectData(subjectList: any, classList: any, divisionList: any, homeworkList: any, classSectionSubjectList: any, ){
+        if(homeworkList.length == 0){
+            return ;
+        }
         this.vm.classSectionHomeworkList = [];
         homeworkList.forEach(homework =>{
             let tempClassSubject = classSectionSubjectList.find(classSectionSubject => classSectionSubject.id == homework.parentClassSubject);

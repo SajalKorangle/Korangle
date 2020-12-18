@@ -1,4 +1,7 @@
-<div class="card-content table-responsive" >
+<div class="card-content table-responsive" *ngIf="classSectionHomeworkList.length == 0 && !isInitialLoading">
+    No Homeworks Given Yet
+</div>
+<div class="card-content table-responsive" *ngIf="classSectionHomeworkList.length > 0">
 
     <div *ngIf="!isInitialLoading">
         <ng-container>
@@ -149,4 +152,4 @@
 
 <ng-container *ngIf="isLoading || isInitialLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container>
+</ng-container> 
