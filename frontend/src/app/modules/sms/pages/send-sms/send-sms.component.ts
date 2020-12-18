@@ -25,7 +25,7 @@ export class SendSmsComponent implements OnInit {
 
     NULL_CONSTANT = null;
 
-    showCustomFilters = false;
+    showFilters = false;
 
     sentTypeList = [
         'SMS',
@@ -36,6 +36,8 @@ export class SendSmsComponent implements OnInit {
     selectedSentType = 'SMS';
 
     includeSecondMobileNumber = false;
+
+    invalidmobilenumber = false;
 
     employeeList = [];
 
@@ -66,6 +68,8 @@ export class SendSmsComponent implements OnInit {
 
     rows;
     timeout: any;
+
+    nameFilter = "" ;
 
     serviceAdapter: SendSmsServiceAdapter;
     studentFilters: any = {
@@ -111,9 +115,18 @@ export class SendSmsComponent implements OnInit {
     }
 
     getRowClass(row): any {
-        return {
-            'hoverRow': true,
-        };
+        if(row.validMobileNumber)
+        {
+            return {
+                'hoverRow': true,
+            };
+        }
+        else    
+        {
+            return {
+                'highlight': true,
+            };
+        }
     }
 
     updateRowValue(row: any, value: boolean): void {
@@ -319,6 +332,19 @@ export class SendSmsComponent implements OnInit {
             // rte yes or no
             if(studentSection.student.rte==="YES" && this.studentFilters.rte.yes)return true;
             if(studentSection.student.rte==="NO" && this.studentFilters.rte.no)return true;
+            return false;
+        }).filter(studentSection =>{
+            // by student's or father's name
+            this.nameFilter = this.nameFilter.toString().toLowerCase().replace(/^\s+/gm,'');
+
+            return this.nameFilter === ""
+                || studentSection.student.name.toLowerCase().indexOf(this.nameFilter) === 0
+                || studentSection.student.fathersName.toLowerCase().indexOf(this.nameFilter) === 0;
+
+        }).filter(studentSection => {
+            if (!(this.invalidmobilenumber && this.isMobileNumberValid(studentSection.student.mobileNumber))) {
+                return true;
+            }
             return false;
         })
     }

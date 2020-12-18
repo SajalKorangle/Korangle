@@ -7,11 +7,13 @@ name: Test Code
 on:
   pull_request:
     branches: [ master ]
+    types: [ labeled ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
+    if: ${{ github.event.label.name == 'Production Ready' }}
     # The type of runner that the job will run on
     runs-on: ubuntu-18.04
     strategy:
@@ -65,5 +67,6 @@ jobs:
         aws configure list
         cp src/environments/environment.ts src/environments/environment.prod.ts
         sh scripts/protractor/run-tests-github.sh
-        sh scripts/protractor/check-coverage.sh github
-        sh scripts/feature/check-coverage.sh github
+        # sh scripts/protractor/check-coverage.sh github
+        # For now we are not keeping track of implemented protractor tests using feature files
+        # sh scripts/feature/check-coverage.sh github

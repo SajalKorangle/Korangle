@@ -1,6 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 
-import {Router, NavigationStart, NavigationEnd, NavigationCancel} from '@angular/router';
+import {Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart} from '@angular/router';
 
 import { EmitterService } from '../../services/emitter.service';
 
@@ -9,6 +9,7 @@ import {style, state, trigger, animate, transition} from "@angular/animations";
 import {SchoolService} from "../../services/modules/school/school.service"
 import {environment} from "../../../environments/environment";
 import {Constants} from "../../classes/constants";
+import { CommonFunctions} from './../../classes/common-functions'
 import {NotificationService} from "../../services/modules/notification/notification.service";
 import {unregisterForNotification} from '../../classes/common.js';
 
@@ -76,6 +77,10 @@ export class SidebarComponent implements OnInit {
                 title: 'Contact Us',
             },
             {
+                path: 'suggest_feature',
+                title: 'Suggest Feature',
+            },
+            {
                 path: 'create_school',
                 title: 'Create School',
             }
@@ -98,6 +103,9 @@ export class SidebarComponent implements OnInit {
                     event instanceof NavigationCancel
                 ) {
                     this.user.isLazyLoading = false;
+                }
+                else if (event instanceof ActivationStart) {
+                    CommonFunctions.scrollToTop();
                 }
             });
         this.schoolService.getObjectList(this.schoolService.session,{})

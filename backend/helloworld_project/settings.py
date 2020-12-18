@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'grade_app',
     'report_card.custom_reportcard',
     'id_card_app',
+    'feature_app',
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',

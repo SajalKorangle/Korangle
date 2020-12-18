@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-api_version = 'v3.6/'
+api_version = 'v3.9/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -31,5 +31,6 @@ urlpatterns = [
     url(r'^'+api_version+'custom_reportcard/', include('report_card.custom_reportcard.urls')),
     url(r'^'+api_version+'grade/', include('grade_app.urls')),
     url(r'^'+api_version+'id-card/', include('id_card_app.urls')),
+    url(r'^'+api_version+'feature/', include('feature_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
