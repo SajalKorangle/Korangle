@@ -77,6 +77,10 @@ export class SidebarComponent implements OnInit {
                 title: 'Contact Us',
             },
             {
+                path: 'suggest_feature',
+                title: 'Suggest Feature',
+            },
+            {
                 path: 'create_school',
                 title: 'Create School',
             }
