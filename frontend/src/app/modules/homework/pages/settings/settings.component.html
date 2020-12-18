@@ -9,12 +9,14 @@
                 {{sentType}}
             </mat-option>
         </mat-select>
-    </mat-form-field>
+    </mat-form-field> <br>
 
-    <span style="margin-left: 15px;">Send Update For: &nbsp;</span>    
+    <span style="margin-right: 10px;">Send Update For: &nbsp;</span>    
     <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendCreateUpdate" (change)="checkChangeSettings()">Homework Creation &nbsp;</mat-checkbox>
     <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendEditUpdate" (change)="checkChangeSettings()">Homework Updation &nbsp;</mat-checkbox>
     <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendDeleteUpdate" (change)="checkChangeSettings()">Homework Deletion &nbsp;</mat-checkbox>
+    <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendCheckUpdate" (change)="checkChangeSettings()">Homework Checking &nbsp;</mat-checkbox>
+    <mat-checkbox style="margin-right: 5px;" [(ngModel)]="sendResubmissionUpdate" (change)="checkChangeSettings()">Homework Resubmission &nbsp;</mat-checkbox>
     <br>
 
     <button type="submit"

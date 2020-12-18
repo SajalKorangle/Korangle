@@ -14,6 +14,10 @@ export class CheckHomeworkServiceAdapter {
 
     initializeData(): void {
 
+        this.vm.sendCheckUpdate = true;
+        this.vm.sendResubmissionUpdate = true;
+        this.vm.sendUpdateType = 'SMS';
+
         let request_homework_list = {
             'parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId, 
             'parentClassSubject__parentEmployee': this.vm.user.activeSchool.employeeId,
@@ -34,12 +38,19 @@ export class CheckHomeworkServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, request_homework_list),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings,{'parentSchool' : this.vm.user.activeSchool.dbId}),
+            this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt),
         ]).then(value => {
             // console.log(value[0]);
             // console.log(value[4]);
             // console.log(value[3]);
+            this.vm.smsBalance = value[6];
+            if(value[5].length> 0){
+                this.vm.sendUpdateType = value[5][0].sentUpdateType;
+                this.vm.sendCheckUpdate = value[5][0].sendCheckUpdate;
+                this.vm.sendResubmissionUpdate = value[5][0].sendResubmissionUpdate;
+            }
             this.initialiseClassSubjectData(value[0], value[1], value[2], value[3], value[4]);
-            
             this.vm.isInitialLoading =false;
         },error =>{
             this.vm.isInitialLoading =false;
@@ -182,6 +193,7 @@ export class CheckHomeworkServiceAdapter {
             let tempData = {
                 'id': studentHomework.id, 
                 'studentName': tempStudent.name,
+                'mobileNumber': tempStudent.mobileNumber,
                 'parentStudent': studentHomework.parentStudent,
                 'parentHomework': studentHomework.parentHomework,
                 'status': studentHomework.homeworkStatus,
@@ -240,6 +252,26 @@ export class CheckHomeworkServiceAdapter {
         Promise.all([
             this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_status, tempData),
         ]).then(value =>{
+            if(studentHomework.status == this.vm.HOMEWORK_STATUS[2] && this.vm.sendCheckUpdate == true && this.vm.sendUpdateType!= 'NULL'){
+                let tempData = {
+                    'mobileNumber': studentHomework.mobileNumber,
+                    'homeworkName': this.vm.selectedHomework.homeworkName,
+                    'subject': this.vm.selectedSubject.name,
+                }
+                let mobile_list = [];
+                mobile_list.push(tempData);
+                this.sendSMSNotification(mobile_list, this.vm.checkUpdateMessage);
+            }
+            else if(studentHomework.status == this.vm.HOMEWORK_STATUS[3] && this.vm.sendResubmissionUpdate == true && this.vm.sendUpdateType!= 'NULL'){
+                let tempData = {
+                    'mobileNumber': studentHomework.mobileNumber,
+                    'homeworkName': this.vm.selectedHomework.homeworkName,
+                    'subject': this.vm.selectedSubject.name,
+                }
+                let mobile_list = [];
+                mobile_list.push(tempData);
+                this.sendSMSNotification(mobile_list, this.vm.resubmissionUpdateMessage);
+            }
             this.getHomeworkReport();
             studentHomework.isStatusLoading = false;
         },error =>{
@@ -329,6 +361,112 @@ export class CheckHomeworkServiceAdapter {
 
             this.vm.isLoading = false;
         })
+    }
+
+    sendSMSNotification: any = (mobile_list: any, message: any) => {
+        let service_list = [];
+        let notification_list = [];
+        let sms_list = [];
+        if (this.vm.sendUpdateType == 'SMS') {
+            sms_list = mobile_list;
+            notification_list = [];
+        } else if (this.vm.sendUpdateType == 'NOTIFICATION') {       
+            sms_list = [];
+            notification_list = mobile_list.filter(obj => {
+                return obj.notification;
+            });
+        } else {
+            notification_list = mobile_list.filter(obj => {
+                return obj.notification;
+            });
+            sms_list = mobile_list.filter(obj => {
+                return !obj.notification;
+            })
+        }
+        let notif_mobile_string = '';
+        let sms_mobile_string = '';
+        notification_list.forEach((item, index) => {
+            notif_mobile_string += item.mobileNumber + ', ';
+        });
+        // notif_mobile_string = notif_mobile_string.slice(0, -2);
+        sms_list.forEach((item, index) => {
+            sms_mobile_string += item.mobileNumber + ', ';
+        })
+        sms_mobile_string = sms_mobile_string.slice(0, -2);
+        notif_mobile_string = notif_mobile_string.slice(0, -2);
+        if ((sms_list.length > 0) && (this.vm.getEstimatedSMSCount(message) > this.vm.smsBalance)) {
+            alert('You are short by ' + (this.vm.getEstimatedSMSCount(message) - this.vm.smsBalance) + ' SMS');
+        }
+        let sms_data = {};
+        const sms_converted_data = sms_list.map(item => {
+            return {
+                'mobileNumber': item.mobileNumber.toString(),
+                'isAdvanceSms': this.vm.getMessageFromTemplate(message, item)
+            }
+        });
+        if (sms_list.length != 0) {
+
+            sms_data = {
+                'contentType': ('english'),
+                'data': sms_converted_data,
+                'content': sms_converted_data[0]['isAdvanceSms'],
+                'parentMessageType': 2,
+                'count': this.vm.getEstimatedSMSCount(message),
+                'notificationCount': notification_list.length,
+                'notificationMobileNumberList': notif_mobile_string,
+                'mobileNumberList': sms_mobile_string,
+                'parentSchool': this.vm.user.activeSchool.dbId,
+            };
+
+        } else {
+            sms_data = {
+                'contentType': ('english'),
+                'data': sms_converted_data,
+                'content': this.vm.getMessageFromTemplate(message, notification_list[0]),
+                'parentMessageType': 2,
+                'count': this.vm.getEstimatedSMSCount(message),
+                'notificationCount': notification_list.length,
+                'notificationMobileNumberList': notif_mobile_string,
+                'mobileNumberList': sms_mobile_string,
+                'parentSchool': this.vm.user.activeSchool.dbId,
+            };
+        }
+
+        const notification_data = notification_list.map(item => {
+            return {
+                'parentMessageType': 2,
+                'content': this.vm.getMessageFromTemplate(message, item),
+                'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
+                'parentSchool': this.vm.user.activeSchool.dbId,
+            };
+        });
+        service_list = [];
+        service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, sms_data));
+        if (notification_data.length > 0 ) {
+            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
+        }
+
+        console.log(sms_converted_data);
+        console.log(notification_data);
+
+        // this.vm.isLoading = true;
+
+        // Promise.all(service_list).then(value => {
+
+        //     if ((this.vm.sendUpdateType == 'SMS' ||
+        //     this.vm.sendUpdateType == 'NOTIF./SMS') &&
+        //         (sms_list.length > 0)) {
+        //         if (value[0].status === 'success') {
+        //             this.vm.smsBalance -= value[0].data.count;
+        //         } else if (value[0].status === 'failure') {
+        //             this.vm.smsBalance = value[0].count;
+        //         }
+        //     }
+
+        //     this.vm.isLoading = false;
+        // }, error => {
+        //     this.vm.isLoading = false;
+        // })
     }
 
 

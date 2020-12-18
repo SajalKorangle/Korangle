@@ -94,6 +94,7 @@
                             <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px;">Student Name: &nbsp;</span><i style="margin-top: 10px;">{{studentHomework.studentName}}</i> &nbsp;
                         </mat-panel-title>
                         <mat-panel-description>
+                            <div *ngIf="studentHomework.isStatusLoading" style="margin-right: 10px" class="loader-custom"></div>
                             <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px;">Status: &nbsp;</span>
                             <button type="submit"
                                 style="padding: 3px 8px;"
@@ -101,15 +102,13 @@
                                 (click)="changeStudentHomeworkStatus(studentHomework);$event.stopPropagation();serviceAdapter.changeStudentHomeworkStatus(studentHomework);">
                                 <span>{{getButtonString(studentHomework.status)}}</span>
                             </button>
-                            <div *ngIf="studentHomework.isStatusLoading" class="loader-custom"></div>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
 
                     <div>
                         <div *ngIf="studentHomework.submissionDate != null">
                             <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
-                        </div>
-                        
+                        </div>   
                     </div>
 
                     <mat-form-field style="margin-top: 10px;">

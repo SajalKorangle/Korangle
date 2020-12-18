@@ -100,6 +100,10 @@ class HomeworkSettings(models.Model):
     sendCreateUpdate = models.BooleanField(null=False, default=True, verbose_name='sendCreateUpdate')
     sendEditUpdate = models.BooleanField(null=False, default=True, verbose_name='sendEditUpdate')
     sendDeleteUpdate = models.BooleanField(null=False, default=True, verbose_name='sendDeleteUpdate')
+    sendCheckUpdate = models.BooleanField(null=False, default=True, verbose_name='sendCheckUpdate')
+    sendResubmissionUpdate = models.BooleanField(null=False, default=True, verbose_name='sendResubmissionUpdate')
+    
+
 
     class Meta:
         db_table = 'homework_settings'

@@ -13,7 +13,6 @@ import { HomeworkService } from '../../../../services/modules/homework/homework.
     providers: [ SchoolService, UserService, HomeworkService ],
 })
 
-
 export class SettingsComponent{
 
     user: any;
@@ -29,6 +28,8 @@ export class SettingsComponent{
     sendCreateUpdate: any;
     sendEditUpdate: any;
     sendDeleteUpdate: any;
+    sendCheckUpdate: any;
+    sendResubmissionUpdate: any;
     previousSettings: any;
 
     isInitialLoading = true;
@@ -54,7 +55,8 @@ export class SettingsComponent{
 
     checkChangeSettings(): any{
         if(this.sentUpdateType == this.previousSettings.sentUpdateType && this.sendCreateUpdate == this.previousSettings.sendCreateUpdate 
-            && this.sendDeleteUpdate == this.previousSettings.sendDeleteUpdate && this.sendEditUpdate == this.previousSettings.sendEditUpdate){
+            && this.sendDeleteUpdate == this.previousSettings.sendDeleteUpdate && this.sendEditUpdate == this.previousSettings.sendEditUpdate
+            && this.sendCheckUpdate == this.previousSettings.sendCheckUpdate && this.sendResubmissionUpdate == this.previousSettings.sendResubmissionUpdate){
                 this.settingsChanged = false;
         }
         else{
