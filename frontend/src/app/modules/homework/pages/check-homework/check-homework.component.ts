@@ -140,6 +140,19 @@ export class CheckHomeworkComponent implements OnInit {
         return classs;
     }
 
+    getLoaderClass(studentHomework: any): any {
+        let classs = "";
+        switch (studentHomework.isStatusLoading) {
+            case true:
+                classs += "loader-custom";
+                break;
+            case false:
+                classs += "loader-hide";
+                break;
+        }
+        return classs;
+    }
+
     changeStudentHomeworkStatus(temp: any): void {
         if(!temp.status) {
             temp.status = this.HOMEWORK_STATUS[0];

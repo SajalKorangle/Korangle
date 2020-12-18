@@ -42,7 +42,7 @@
     </div>
     <div *ngIf="!isLoading && currentHomework != null">
         
-        <br><span class="hidden-xs">Total Students: {{studentHomeworkList.length}} ; Total Submitted: {{homeworkReport.submitted}} ; Total Checked: {{homeworkReport.checked}} ; Total Asked For Resubmission: {{homeworkReport.resubmission}}</span><br>
+        <strong><br>Total Students: {{studentHomeworkList.length}} ; Total Submitted: {{homeworkReport.submitted}} ; Total Checked: {{homeworkReport.checked}} ; Total Asked For Resubmission: {{homeworkReport.resubmission}}<br></strong>
     
         <mat-expansion-panel *ngIf="currentHomework != null" [expanded]="true" style="margin-top: 5px; margin-bottom:5px;">
             <mat-expansion-panel-header>
@@ -94,7 +94,6 @@
                             <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px;">Student Name: &nbsp;</span><i style="margin-top: 10px;">{{studentHomework.studentName}}</i> &nbsp;
                         </mat-panel-title>
                         <mat-panel-description>
-                            <div *ngIf="studentHomework.isStatusLoading" style="margin-right: 10px" class="loader-custom"></div>
                             <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px;">Status: &nbsp;</span>
                             <button type="submit"
                                 style="padding: 3px 8px;"
@@ -102,6 +101,8 @@
                                 (click)="changeStudentHomeworkStatus(studentHomework);$event.stopPropagation();serviceAdapter.changeStudentHomeworkStatus(studentHomework);">
                                 <span>{{getButtonString(studentHomework.status)}}</span>
                             </button>
+                            <div class="{{getLoaderClass(studentHomework)}}"></div>
+                            
                         </mat-panel-description>
                     </mat-expansion-panel-header>
 
@@ -145,3 +146,7 @@
         </mat-accordion>
     </div>
 </div>
+
+<ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
