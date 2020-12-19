@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
                 } else {
                     this.user.initializeUserData(data);
                     //Sending the user-id of user to google-analytics to monitor per user flow
-                    (<any>window).ga('set', 'userId', data.id);
+                    (<any>window).ga('set', 'userId', 'id: '+data.id+' user-name: '+data.username+ ' name: '+data.first_name+' '+data.last_name);
                     (<any>window).ga('send', 'event', 'authentication', 'user-id available');
                     registerForNotification({
                         'user': this.user.id,
