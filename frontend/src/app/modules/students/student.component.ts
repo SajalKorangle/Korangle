@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import {DataStorage} from '../../classes/data-storage';
 
 @Component({
@@ -10,7 +11,14 @@ export class StudentComponent implements OnInit {
 
     user: any;
 
-    constructor() { }
+    constructor(public router: Router) { 
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {                            
+                (<any>window).ga('set', 'page', event.urlAfterRedirects);
+                (<any>window).ga('send', 'pageview');
+              }
+          });
+    }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

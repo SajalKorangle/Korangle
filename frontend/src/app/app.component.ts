@@ -11,7 +11,8 @@ import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
 import {CommonFunctions} from './classes/common-functions';
 import {MatDialog} from '@angular/material/dialog';
-import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
+import {ModalVideoComponent} from './basic-components/modal-video/modal-video.component';
+import { NavigationEnd, Router } from '@angular/router';
 
 
 @Component({
@@ -25,11 +26,22 @@ export class AppComponent implements OnInit {
 
     isLoading = false;
     public user = new User();
-
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
                 private dialog: MatDialog,
-                private notificationService: NotificationService) {}
+                private notificationService: NotificationService,
+                public router: Router) {
+                    this.router.events.subscribe(event => {
+                        if (event instanceof NavigationEnd) {     
+                            if(this.router.url != '/')       
+                            {
+                                (<any>window).ga('set', 'page', event.urlAfterRedirects);
+                                (<any>window).ga('send', 'pageview');
+                            }               
+                            
+                          }
+                      });
+                }
 
     ngOnInit() {
 
@@ -43,6 +55,9 @@ export class AppComponent implements OnInit {
                     localStorage.setItem('schoolJWT', '');
                 } else {
                     this.user.initializeUserData(data);
+                    //Sending the user-id of user to google-analytics to monitor per user flow
+                    (<any>window).ga('set', 'userId', data.id);
+                    (<any>window).ga('send', 'event', 'authentication', 'user-id available');
                     registerForNotification({
                         'user': this.user.id,
                         'jwt': this.user.jwt,
