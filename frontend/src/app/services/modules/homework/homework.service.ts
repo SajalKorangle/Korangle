@@ -19,5 +19,6 @@ export class HomeworkService extends ServiceObject {
     constructor(private http_class: HttpClient) {
         super(http_class);
         this.file_list[this.homework_question] = this.homework_question;
+        this.file_list[this.homework_answer] = this.homework_answer;
     }
 }

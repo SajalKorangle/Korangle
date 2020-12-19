@@ -21,8 +21,9 @@
     </div>
     <div >
         <mat-form-field  style="width: 100%;">
-            <textarea matInput style="padding-top: 10px; padding-bottom: 10px;; white-space: pre-wrap;"
-                rows="5" [ngModel]="data.homeworkText" (ngModelChange)="data.homeworkText=$event;">
+            <textarea matInput 
+            cdkTextareaAutosize style="padding-top: 10px; padding-bottom: 10px;; white-space: pre-wrap;"
+                 [ngModel]="data.homeworkText" (ngModelChange)="data.homeworkText=$event;">
             </textarea>
         </mat-form-field>
     </div>

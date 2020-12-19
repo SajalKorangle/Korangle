@@ -1,0 +1,129 @@
+<div class="card-content table-responsive" >
+
+
+    <div *ngIf="!isSessionLoading">
+        
+        <div *ngIf="subjectList.length == 0">
+            No Subjects Registered
+        </div>
+
+        <ng-container *ngIf="subjectList.length > 0">
+            <mat-form-field style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px;">
+                <mat-select placeholder="Select Subject" [ngModel]="selectedSubject"
+                    (ngModelChange)="selectedSubject = $event;">
+                    <mat-option *ngFor="let subject of subjectList" style="width: 100%;" [value]="subject">
+                        {{subject.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            
+            <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="serviceAdapter.getHomeworks()">GET</button>
+        </ng-container><br>
+
+        <div class="row" style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px;">
+            <div class="col-md-12"></div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading" class={{getClass()}}>
+
+        
+        <mat-expansion-panel *ngIf="homeworkList.length === 0 && showContent == true" [disabled]="true">
+            <mat-expansion-panel-header >**No Homework Given Yet</mat-expansion-panel-header>
+        </mat-expansion-panel>
+        
+        <mat-accordion [multi]="false">
+            <ng-container *ngFor="let homework of homeworkList; let i=index;">
+                <mat-expansion-panel style="margin-top: 5px; margin-bottom:5px;" [disabled]="isSubmitting">
+                    <mat-expansion-panel-header>
+
+                        <mat-panel-title>
+                            <span class="hidden-xs" style="color: #7b7b7b;">Homework Title: &nbsp;</span><i>{{homework.homeworkName}}</i> &nbsp;
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <span class="hidden-xs" style="color: #7b7b7b;">Status: &nbsp;</span><i>{{homework.homeworkStatus}}</i> &nbsp;          
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Issue Date & Time: &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i> <br> 
+                        <span class="hidden-xs" style="color: #7b7b7b;">Teacher's Remark: &nbsp;</span><i>{{homework.homeworkRemark}}</i>    
+                        <div *ngIf="homework.submissionDate != null">
+                            <span class="hidden-xs" style="color: #7b7b7b;">Submitted On Date & Time: &nbsp;</span><i>{{displayDateTime(homework.submissionDate, homework.submissionTime)}}</i>    
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <span class="hidden-xs" style="color: #7b7b7b;">Homework Questions: <br></span>
+                        <div >
+                            <pre>{{homework.homeworkText}}</pre>
+                        </div>
+                    </div><br>
+
+                    <div style="margin-top: 5px;">
+                        <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
+
+                        <div >
+                            <div class="image-row">
+                                <div  *ngFor="let images of homework.questionImages; let i = index">
+                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" >
+                                </div>
+                            </div>
+                        </div>
+                    </div><br>
+
+                    <button *ngIf="!isSubmitting" type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="submitHomework(homework)">SUBMIT</button>
+                </mat-expansion-panel>
+
+            </ng-container>
+        </mat-accordion>
+    </div>
+
+    <div *ngIf="isSubmitting && !isLoading" class="col-md-6">
+        <mat-expansion-panel style="margin-top: 5px; margin-bottom:5px;" [disabled]="isSubmitting" [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-description>
+                    <span style='font-size:17px;'>Submit:</span>
+                    <span class="cursor" style="font-size:20px;margin-left: 10px;color:green;border-style: solid;"
+                        (click)="serviceAdapter.submitHomework(currentHomework)">&#x2714;</span>
+                    <span class="cursor" style="font-size:20px;margin-left: 15px;color:red;border-style: solid;"
+                        (click)="closeSubmission();">&#x2716;</span>                 
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            
+            <mat-form-field style="width: 100%;">
+                <textarea matInput 
+                        cdkTextareaAutosize
+                        style="padding-top: 10px; padding-bottom: 10px; overflow: hidden;"
+                        [ngModel]="currentHomework.answerText" 
+                        (ngModelChange)="currentHomework.answerText=$event;"
+                        placeholder="Enter Homework Answers">
+                </textarea>
+            </mat-form-field><br>
+
+            <div class="image-row">
+                <div  *ngFor="let image of currentHomework.answerImages; let i = index">
+                    <img src="{{image.answerImage}}" class="hover-shadow cursor image-column" style="width: 1.35in;">
+                    <span class="close" (click)="removeImage(i);" >&times;</span>
+                </div>
+            </div>
+            
+            <input type='file' (change)="readURL($event);" multiple="false" style="display: none" accept="image/jpeg,image/png" #imageInput/>                
+            <button type="submit"
+                    class="btn"
+                    style="margin-top: 15px ; margin-right: 15px; margin-bottom: 10px;cursor: pointer; padding: 4px 7px;"
+                    (click)="imageInput.click()">Upload Image</button>
+            
+            
+        </mat-expansion-panel>
+    </div>
+</div>
+
+
+<ng-container *ngIf="isLoading || isSessionLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

@@ -158,8 +158,22 @@ export class IssueHomeworkComponent implements OnInit {
         this.classSectionSubjectList.forEach(classsSection =>{
             classsSection.subjectList.sort((a, b) => a.subjectDbId < b.subjectDbId ? -1 : a.subjectDbId > b.subjectDbId ? 1 : 0);
         })
-        this.classSectionSubjectList.sort((a, b) => a.classDbId < b.classDbId ? -1 : a.classDbId > b.classDbId ? 1 : 0);
-        this.classSectionSubjectList.sort((a, b) => a.divisionDbId < b.divisionDbId ? -1 : a.divisionDbId > b.divisionDbId ? 1 : 0);
+        this.classSectionSubjectList.sort((a, b) => {
+            if(a.classDbId > b.classDbId){
+                return 1;
+            }
+            else if(a.classDbId < b.classDbId){
+                return -1;
+            }
+            else{
+                if(a.divisionDbId > b.divisionDbid){
+                    return 1;
+                }
+                else{
+                    return -1;
+                }
+            }
+        });
         this.selectedClassSection = this.classSectionSubjectList[0];
         this.selectedSubject = this.selectedClassSection.subjectList[0];
     }

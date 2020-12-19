@@ -101,9 +101,22 @@ export class CheckHomeworkServiceAdapter {
                 });
                 classSection.subjectList.sort((a, b) => a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0);
         });
-        this.vm.classSectionHomeworkList.sort((a, b) => a.classDbId < b.classDbId ? -1 : a.classDbId > b.classDbId ? 1 : 0);
-        this.vm.classSectionHomeworkList.sort((a, b) => a.divisionDbId < b.divisionDbId ? -1 : a.divisionDbId > b.divisionDbId ? 1 : 0);
-        
+        this.vm.classSectionHomeworkList.sort((a, b) => {
+            if(a.classDbId > b.classDbId){
+                return 1;
+            }
+            else if(a.classDbId < b.classDbId){
+                return -1;
+            }
+            else{
+                if(a.divisionDbId > b.divisionDbid){
+                    return 1;
+                }
+                else{
+                    return -1;
+                }
+            }
+        });
         
         this.vm.selectedClassSection = this.vm.classSectionHomeworkList[0];
         this.vm.selectedSubject = this.vm.selectedClassSection.subjectList[0];
@@ -216,6 +229,7 @@ export class CheckHomeworkServiceAdapter {
                     currentStudentHomework.images.push(image);
                 }
             })
+            currentStudentHomework.images.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
         });
 
     }
