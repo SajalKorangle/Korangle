@@ -1,5 +1,5 @@
 import * as jsPDF from 'jspdf'
-import {PARAMETER_LIST, DATA_TYPES, FIELDS, UserHandleStructure} from './constants'
+import {DATA_TYPES, FIELDS, UserHandleStructure} from './constants'
 
 //// data variable contains following :-
 //// school
@@ -26,7 +26,9 @@ export default class IdCard {
 
     mmToPoint = 72 / 25.4;
 
-    constructor (multiple, layout, data) {
+    paramterList = [];
+
+    constructor (multiple, layout, data, parameterList) {
         this.printMultiple = multiple;
         this.layout = layout;
         if (multiple) {
@@ -37,6 +39,7 @@ export default class IdCard {
             this.width = this.cardWidth;
         }
         this.data = data;
+        this.paramterList = parameterList;
     }
 
     async fetchImage (url) {
@@ -156,7 +159,7 @@ export default class IdCard {
     }
 
     getParameter(key: any): any {
-        return PARAMETER_LIST.find(x => x.key === key);
+        return this.paramterList.find(x => x.key === key);
     }
 
     async createIDCard (xbase, ybase, student) {
