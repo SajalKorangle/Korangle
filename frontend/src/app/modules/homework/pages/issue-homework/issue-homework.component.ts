@@ -202,7 +202,6 @@ export class IssueHomeworkComponent implements OnInit {
             this.populateCurrentHomework();
             
             Promise.all(this.populateHomeworkImages()).then(sValue =>{
-                console.log(sValue);
                 alert('Homework has been successfully created');
                 this.populateStudentList(this.studentList, this.currentHomework);
                 this.populateCurrentHomeworkImages(value[0].id, sValue);

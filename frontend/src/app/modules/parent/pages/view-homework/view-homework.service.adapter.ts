@@ -1,4 +1,5 @@
 
+import { elementAt } from 'rxjs/operators';
 import { ViewHomeworkComponent } from './view-homework.component';
 
 export class ViewHomeworkServiceAdapter {
@@ -25,13 +26,57 @@ export class ViewHomeworkServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId
         }
         Promise.all([
-            this.vm.subjectService.getObjectList(this.vm.subjectService.student_subject, student_subject_data),
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_subject_data)
-        ]).then(value =>{
-            this.vm.studentClassData = value[2][0];
-            this.initializeSubjectList(value[0], value[1]);
-            this.vm.isSessionLoading = false;
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_subject_data),
+            
+        ]).then(firstValue =>{
+            this.vm.studentClassData = firstValue[1][0];
+            let resubmission_homework_data = {
+                'parentStudent': this.vm.selectedStudent,
+                'parentHomework__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentHomework__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
+                'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
+                'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
+                'homeworkStatus': 'ASKED FOR RESUBMISSION',
+            }
+            let given_homework_data = {
+                'parentStudent': this.vm.selectedStudent,
+                'parentHomework__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentHomework__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
+                'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
+                'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
+                'homeworkStatus': 'GIVEN',
+            }
+            let class_subject_homework_data = {
+                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentSchool' : this.vm.user.activeSchool.dbId,
+                'parentClass' : this.vm.studentClassData.parentClass,
+                'parentDivision' : this.vm.studentClassData.parentDivision,
+            }
+            Promise.all([
+                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_status, resubmission_homework_data),
+                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_status, given_homework_data),
+                this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_homework_data),
+        
+            ]).then(secondValue =>{
+                let homeworkIdList = [];
+                secondValue[0].forEach(element =>{
+                    homeworkIdList.push(element.parentHomework);
+                })
+                secondValue[1].forEach(element =>{
+                    homeworkIdList.push(element.parentHomework);
+                })
+                let homework_data = {
+                    'id__in': homeworkIdList,
+                }
+                Promise.all([
+                    this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, homework_data),
+                ]).then(thirdValue =>{
+                    this.initializePendingHomeworkList(thirdValue[0], secondValue[1], secondValue[0], secondValue[2], firstValue[0]);
+                    this.vm.isSessionLoading = false;
+                })
+            })
+            // this.initializeSubjectList(firstValue[0], firstValue[1]);
         },error =>{
             this.vm.isSessionLoading = false;
         })
@@ -39,124 +84,74 @@ export class ViewHomeworkServiceAdapter {
         
     }
 
-    initializeSubjectList(studentSubjectList: any, subjectList: any): any{
-        if(studentSubjectList.length == 0){
-            return ;
-        }
+    initializePendingHomeworkList(homeworkList: any, givenHomeworkList: any, resubmitHomeworkList: any, classSubjectList: any, subjectList: any): any{
+        this.vm.pendingHomeworkList = [];
         this.vm.subjectList = [];
-        studentSubjectList.forEach(subject =>{
-            let tempSubject = subjectList.find(subjects => subjects.id == subject.parentSubject);
-            let tempData = {
-                'dbId': tempSubject.id,
-                'name': tempSubject.name,
+        let all_subject = {
+            id: -1,
+            name: 'All',
+        }
+        this.vm.subjectList.push(all_subject);
+        homeworkList.forEach(homework =>{
+            let currentHomeworkStatus = givenHomeworkList.find(homeworks => homeworks.parentHomework == homework.id);
+            if(currentHomeworkStatus == undefined){
+                currentHomeworkStatus = resubmitHomeworkList.find(homeworks => homeworks.parentHomework == homework.id);
             }
-            this.vm.subjectList.push(tempData);
+            let currentClassSubject = classSubjectList.find(classSubject => classSubject.id == homework.parentClassSubject);
+            let currentSubject = subjectList.find(subject => subject.id == currentClassSubject.parentSubject);
+            if(this.vm.subjectList.find(subject => subject.name == currentSubject.name) == undefined){
+                this.vm.subjectList.push(currentSubject);
+            }
+            let tempHomework = {
+                dbId: homework.id,
+                homeworkName: homework.homeworkName,
+                startDate: homework.startDate,
+                endDate: homework.endDate,
+                startTime: homework.startTime,
+                endTime: homework.endTime,
+                homeworkText: homework.homeworkText,
+                subjectDbId: currentSubject.id,
+                subjectName: currentSubject.name,
+                statusDbId: currentHomeworkStatus.id,
+                homeworkStatus: currentHomeworkStatus.homeworkStatus,
+                submissionDate: currentHomeworkStatus.submissionDate,
+                submissionTime: currentHomeworkStatus.submissionTime,
+                answerText: currentHomeworkStatus.answerText,
+                homeworkRemark: currentHomeworkStatus.remark,
+            }
+            this.vm.pendingHomeworkList.push(tempHomework);
         })
         this.vm.selectedSubject = this.vm.subjectList[0];
+        this.vm.pendingHomeworkList.sort((a,b) => a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0);
+        
     }
 
-    getHomeworks():any{
 
-        this.vm.showContent = true;
-        this.vm.isLoading = true;
-        this.vm.isSubmitting = false;
-        this.vm.homeworkList = [];
-        let subject_homework_data = {
-            'parentClassSubject__parentSubject': this.vm.selectedSubject.dbId,
-            'parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
-            'parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
-            'parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
-        }
-
-        Promise.all([
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, subject_homework_data),
-        ]).then(value =>{
-            let homeworkIdList = [];
-            value[0].forEach(homework =>{
-                homeworkIdList.push(homework.id);
-            })
-            Promise.all([
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, {'parentHomework__in': homeworkIdList}),
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_status, {'parentHomework__in': homeworkIdList, 'parentStudent': this.vm.selectedStudent}),
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer, {'parentHomework__in': homeworkIdList, 'parentStudent': this.vm.selectedStudent}),
-            ]).then(homeworkDetailValue =>{
-                this.initializeHomeworkList(value[0], homeworkDetailValue[0], homeworkDetailValue[1], homeworkDetailValue[2]);
-                this.vm.isLoading = false;
-            },error =>{
-                this.vm.isLoading = false;
-            })
-        },error =>{
-            this.vm.isLoading = false;
-        })
-    }
-
-    initializeHomeworkList(homeworkList: any, homeworkQuestionList: any, homeworkStatusList: any, homeworkAnswerList: any):any{
-        this.vm.homeworkList = [];
-        homeworkList.forEach(homework =>{
-            let tempStatus = homeworkStatusList.find(homeworks => homeworks.parentHomework == homework.id);
-            let tempData = {
-                'homeworkId': homework.id,
-                'homeworkName': homework.homeworkName,
-                'startDate': homework.startDate,
-                'startTime': homework.startTime,
-                'endDate': homework.endDate,
-                'endTime': homework.endTime,
-                'homeworkText': homework.homeworkText,
-                'statusDbId': tempStatus.id,
-                'homeworkStatus': tempStatus.homeworkStatus,
-                'submissionDate': tempStatus.submissionDate,
-                'submissionTime': tempStatus.submissionTime,
-                'homeworkRemark': tempStatus.remark,
-                'answerText': tempStatus.answerText,
-                'questionImages': [],
-                'answerImages': [],
-            }
-            homeworkQuestionList.forEach(image =>{
-                if(image.parentHomework == homework.id){
-                    tempData.questionImages.push(image);
-                }
-            });
-            
-            homeworkAnswerList.forEach(image =>{
-                if(image.parentHomework == homework.id){
-                    tempData.answerImages.push(image);
-                }
-            });
-            this.vm.homeworkList.push(tempData);
-        });
-        this.vm.homeworkList.forEach(homework =>{
-            homework.questionImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
-            homework.answerImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
-        })
-        this.vm.homeworkList.sort((a,b) => a.homeworkId > b.homeworkId ? -1 : a.homeworkId < b.homeworkId ? 1 : 0)
-    }
-
-    submitHomework(homework: any): any{
+    submitHomework(): any{
 
         this.vm.isSubmitting = false;
-        this.vm.isLoading = true;
+        this.vm.isSessionLoading = true;
         let currentDate = new Date();
         let submissionDate = this.vm.formatDate(currentDate, '');
         let submissionTime = this.vm.formatTime(currentDate);
 
         let tempStatus = {
-            'id': homework.statusDbId,
+            'id': this.vm.toSubmitHomework.statusDbId,
             'submissionDate': submissionDate,
             'submissionTime': submissionTime,
             'homeworkStatus': 'SUBMITTED',
-            'answerText': homework.answerText,
-        }
+            'answerText': this.vm.toSubmitHomework.answerText,
+        } 
         const service_list = [];
         service_list.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_status, tempStatus))
         let index = 0;
-        homework.answerImages.forEach(image =>{
-            let tempImage = homework.previousAnswerImages.find(images => images.answerImage == image.answerImage);
+        this.vm.toSubmitHomework.answerImages.forEach(image =>{
+            let tempImage = this.vm.toSubmitHomework.previousAnswerImages.find(images => images.answerImage == image.answerImage);
             
             if(tempImage == undefined){
                 let tempData = {
                     orderNumber: index,
-                    parentHomework: homework.homeworkId,
+                    parentHomework: this.vm.toSubmitHomework.dbId,
                     parentStudent: this.vm.selectedStudent,
                     answerImage: image.answerImage,
                 }
@@ -177,24 +172,46 @@ export class ViewHomeworkServiceAdapter {
                     orderNumber: index,
                 }
                 service_list.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData));
-                let tempIndex = homework.previousAnswerImages.indexOf(tempImage);
-                homework.previousAnswerImages.splice(tempIndex, 1);
+                let tempIndex = this.vm.toSubmitHomework.previousAnswerImages.indexOf(tempImage);
+                this.vm.toSubmitHomework.previousAnswerImages.splice(tempIndex, 1);
             }
             index = index + 1;
         })
         
-        homework.previousAnswerImages.forEach(image =>{
+        this.vm.toSubmitHomework.previousAnswerImages.forEach(image =>{
             service_list.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_answer, {'id':image.id}));
         });
         Promise.all(service_list).then(value =>{
             console.log(value);
-            this.vm.populateSubmittedHomework(value);
+            // this.vm.populateSubmittedHomework(value);
             alert('Homework Answer Recorded Successfully');
-            this.vm.isLoading = false;
+            this.vm.isSessionLoading = false;
         },error =>{
-            this.vm.isLoading = false;
+            this.vm.isSessionLoading = false;
         })
     }
 
+
+    getHomeworkDetails(homework: any){
+        this.vm.isHomeworkLoading = true;
+        this.vm.currentHomeworkImages = [];
+        this.vm.currentHomeworkAnswerImages = [];
+        Promise.all([
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question,{'parentHomework': homework.dbId}),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer,{'parentHomework': homework.dbId, 'parentStudent': this.vm.selectedStudent}),
+            
+        ]).then(value =>{
+            value[0].forEach(element =>{
+                this.vm.currentHomeworkImages.push(element);
+            })
+            value[1].forEach(element =>{
+                this.vm.currentHomeworkAnswerImages.push(element);
+            })
+            this.vm.currentHomeworkImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
+            this.vm.currentHomeworkAnswerImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
+        
+            this.vm.isHomeworkLoading = false;
+        })
+    }
 
 }

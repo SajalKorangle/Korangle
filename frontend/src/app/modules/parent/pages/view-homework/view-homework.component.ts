@@ -35,6 +35,14 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     studentClassData: any;
     currentHomework: any;
 
+    pendingHomeworkList: any;
+    homeworkOpen: any;
+
+    isHomeworkLoading: any;
+    currentHomeworkImages: any;
+    currentHomeworkAnswerImages: any;
+    toSubmitHomework: any;
+
 
     constructor (
         public homeworkService: HomeworkService,
@@ -95,9 +103,9 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         return classs;
     }
 
-    closeSubmission():any{
+    onNoClick():any{
         this.isSubmitting = false;
-        this.currentHomework = {};
+        this.toSubmitHomework = {};
     }
 
     readURL(event): void {
@@ -114,11 +122,11 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
                 // console.log(reader.result);
                 let tempImageData = {
                     orderNumber: null,
-                    parentHomework: this.currentHomework.homeworkId,
+                    parentHomework: this.toSubmitHomework.dbId,
                     parentStudent: this.selectedStudent,
                     answerImage: reader.result,
                 }
-                this.currentHomework.answerImages.push(tempImageData);
+                this.toSubmitHomework.answerImages.push(tempImageData);
                 // this.updatePDF();
             };
             reader.readAsDataURL(image);
@@ -147,30 +155,40 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     }
 
     removeImage(index : any){
-        this.currentHomework.answerImages.splice(index,1);
+        this.toSubmitHomework.answerImages.splice(index,1);
     }
 
 
     submitHomework(homework: any){
         this.isSubmitting = true;
-        this.currentHomework = {
-            homeworkId: homework.homeworkId,
+        this.toSubmitHomework = {
+            dbId: homework.dbId,
+            homeworkName: homework.homeworkName,
+            startDate: homework.startDate,
+            endDate: homework.endDate,
+            startTime: homework.startTime,
+            endTime: homework.endTime,
+            homeworkText: homework.homeworkText,
+            subjectDbId: homework.subjectDbId,
+            subjectName: homework.subjectName,
             statusDbId: homework.statusDbId,
+            homeworkStatus: homework.homeworkStatus,
             submissionDate: homework.submissionDate,
             submissionTime: homework.submissionTime,
             answerText: homework.answerText,
+            homeworkRemark: homework.remark,
+            questionImages: [],
             answerImages: [],
             previousAnswerImages: [],
         }
-        homework.answerImages.forEach(image =>{
-            let tempImage = {
-                'id': image.id,
-                'answerImage': image.answerImage,
-                'orderNumber': image.orderNumber,
-            }
-            this.currentHomework.answerImages.push(tempImage);
-            this.currentHomework.previousAnswerImages.push(tempImage);
+        this.currentHomeworkImages.forEach(element =>{
+            this.toSubmitHomework.questionImages.push(element);
         })
+        this.currentHomeworkAnswerImages.forEach(element =>{
+            this.toSubmitHomework.answerImages.push(element);
+            this.toSubmitHomework.previousAnswerImages.push(element);
+        })
+        
     }
 
     
@@ -220,6 +238,15 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
             }
         });
         tempHomework.answerImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
+    }
+
+    getFilteredHomeworkList(): any{
+        // console.log(this.pendingHomeworkList);
+        return this.pendingHomeworkList.filter(homeworks =>{
+            if(this.selectedSubject.id == -1)return true;
+            if(homeworks.subjectDbId == this.selectedSubject.id)return true;
+            return false;
+        });
     }
 
 }
