@@ -7,7 +7,6 @@ export class RecordAttendanceServiceAdapter {
     infornmationMessageType = 4; //Attendance Message
 
     constructor() {}
-    settingsDoesNotExist:boolean = true;
     // Data
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
@@ -35,7 +34,6 @@ export class RecordAttendanceServiceAdapter {
             'fields__korangle': 'id,name,mobileNumber,scholarNumber,parentTransferCertificate'
         };
 
-        this.settingsDoesNotExist = true;
         Promise.all([
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {'parentSchool': this.vm.user.activeSchool.dbId}),
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission, request_attendance_permission_list_data),
@@ -47,16 +45,13 @@ export class RecordAttendanceServiceAdapter {
         ]).then(value => {
             this.initializeClassSectionStudentList(value[3], value[4], value[2], value[5], value[1]);
             this.vm.smsBalance = value[6];
-            if(value[0].length == 0)
-                this.settingsDoesNotExist = true;
-            else{
-                this.settingsDoesNotExist = false;
+            if(value[0].length > 0){
                 this.vm.selectedSentType = value[0][0].sentUpdateType;
                 this.vm.selectedSentUpdateTo = value[0][0].sentUpdateToType;
             }
-            if(this.settingsDoesNotExist == true){
-                this.vm.selectedSentType = 'SMS';
-                this.vm.selectedSentUpdateTo = 'All Students';
+            else{
+                this.vm.selectedSentType = 'NULL';
+                this.vm.selectedSentUpdateTo = 'Only Absent Students';
             }
         }, error => {
             this.vm.isInitialLoading = false;

@@ -65,6 +65,7 @@ export class RecordAttendanceComponent implements OnInit {
     studentAlternateMessage = "Your ward's attendance has been corrected to <attendanceStatus>";
 
     sentTypeList = [
+        'NULL',
         'SMS',
         'NOTIFICATION',
         'NOTIF./SMS',
