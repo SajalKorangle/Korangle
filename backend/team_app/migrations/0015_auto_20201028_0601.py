@@ -20,7 +20,7 @@ from team_app.db_script.view_remarks_task import view_remarks_task
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0013_task_videourl'),
+        ('team_app', '0014_auto_20201120_1940'),
     ]
 
     operations = [
