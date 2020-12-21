@@ -1,5 +1,7 @@
 from django.db import models
 from school_app.model.models import School
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, pre_delete
 
 import os
 from django.utils.timezone import now
@@ -19,4 +21,17 @@ class ReportCardLayout(models.Model):
 
     class Meta:
         unique_together = ('parentSchool', 'name')
+
+class ReportCardLayoutNew(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, null=True, blank=True)
+    content = models.TextField()    # Contains the JSON content for the layout
+    
+    class Meta:
+        unique_together = ('parentSchool', 'name')
+
+class ImageAssets(models.Model):
+    parentLayout = models.ForeignKey(ReportCardLayoutNew, on_delete=models.CASCADE, blank=False)
+    image = models.ImageField(upload_to="report_cards/imageAssets")
+
 

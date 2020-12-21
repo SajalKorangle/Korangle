@@ -1,0 +1,7 @@
+<div class="card-content table-responsive" *ngIf="!isLoading; else spinner">
+    
+</div>
+
+<ng-template #spinner>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>

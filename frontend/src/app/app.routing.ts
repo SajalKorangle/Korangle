@@ -66,6 +66,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/report-card/report-card.module#ReportCardModule',
     },
     {
+        path: 'report_card_3.0',
+        loadChildren: 'app/modules/report-card/report-card-3/report-card.module#ReportCardModule',
+    },
+    {
         path: 'salary',
         loadChildren: 'app/modules/salary/salary.module#SalaryModule',
     },
