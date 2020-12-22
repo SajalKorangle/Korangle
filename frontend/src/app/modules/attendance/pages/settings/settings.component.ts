@@ -24,17 +24,15 @@ export class SettingsComponent{
         'NOTIF./SMS',
     ];
 
-    sentUpdateToList = [
+    receiverList = [
         'All Students',
         'Only Absent Students'
     ];
 
-    isInitialLoading = false;
+    isLoading = false;
 
     selectedSettings: Settings;
     currentSettings: Settings;
-
-    settingsChanged: any;
 
     serviceAdapter: SettingsServiceAdapter
 
@@ -44,7 +42,6 @@ export class SettingsComponent{
                 ) { }
 
     ngOnInit(): void {
-        this.settingsChanged = false;
         this.user = DataStorage.getInstance().getUser();
         this.currentSettings = new Settings;
         this.selectedSettings = new Settings;
@@ -54,14 +51,9 @@ export class SettingsComponent{
         
     }
 
-    checkSettingsChange():any{
-        if(this.currentSettings.sentUpdateType == this.selectedSettings.sentUpdateType 
-            && this.currentSettings.sentUpdateToType == this.selectedSettings.sentUpdateToType){
-                this.settingsChanged = false;
-                return ;
+    isSettingsChanged(): boolean {
+        return !(this.currentSettings.sentUpdateType == this.selectedSettings.sentUpdateType
+        && this.currentSettings.receiverType == this.selectedSettings.receiverType);
         }
-        this.settingsChanged = true;
-    }
-
     
 }

@@ -65,6 +65,7 @@ export class RecordAttendanceComponent implements OnInit {
     studentAlternateMessage = "Your ward's attendance has been corrected to <attendanceStatus>";
 
     sentTypeList = [
+        'NULL',
         'SMS',
         'NOTIFICATION',
         'NOTIF./SMS',
@@ -75,20 +76,18 @@ export class RecordAttendanceComponent implements OnInit {
     selectedSentType :any;
     smsBalance = 0;
     
-    sentUpdateToList = [
+    receiverList = [
         'All Students',
         'Only Absent Students'
     ];
 
-    selectedSentUpdateTo :any;
+    selectedReceiver :any;
 
     notif_usernames = [];
 
     serviceAdapter: RecordAttendanceServiceAdapter
     
     currentAttendanceList = [];
-
-    attendanceChange: boolean;
 
     constructor (private excelService: ExcelService,
                  private printServie: PrintService,
@@ -109,19 +108,10 @@ export class RecordAttendanceComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.attendanceChange = false;
         this.serviceAdapter = new RecordAttendanceServiceAdapter();
-
         this.isInitialLoading = true;
-
-        Promise.all([
-            this.serviceAdapter.initializeAdapter(this),
-            this.serviceAdapter.initializeData(),
-        ]).then(value => {
-            this.isInitialLoading = false;
-        }, error => {
-            this.isInitialLoading = false;
-        });
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
 
     }
 
@@ -168,11 +158,6 @@ export class RecordAttendanceComponent implements OnInit {
         this.attendanceService.getObjectList(this.attendanceService.student_attendance, data).then(attendanceList =>{
             this.isLoading = false;
             attendanceList.forEach(element =>{
-                let tempData = {
-                    dateOfAttendance : element.dateOfAttendance,
-                    status: element.status,
-                    parentStudent: element.parentStudent,
-                }
                 this.currentAttendanceList.push(element);
             });
             this.populateStudentAttendanceList(attendanceList);
@@ -228,7 +213,6 @@ export class RecordAttendanceComponent implements OnInit {
     updateStudentAttendanceList(): void {
         
         let data = this.prepareStudentAttendanceStatusListData();
-        this.attendanceChange = false;
         if (data.length === 0) {
             return;
         }
@@ -260,9 +244,23 @@ export class RecordAttendanceComponent implements OnInit {
         this.isLoading = true;
         Promise.all(promises).then(response =>{
             this.isLoading = false;
+            response[0].forEach(element =>{
+                let tempData = {
+                    dbId : element.parentStudent,
+                }
+                let previousAttendanceIndex = this.getPreviousAttendanceIndex(tempData, new Date(element.dateOfAttendance));
+                this.currentAttendanceList[previousAttendanceIndex].status = element.status;
+                this.currentAttendanceList[previousAttendanceIndex].id = element.id;
+            })
+            for(let i=1; i<response.length; i++){
+                let tempData = {
+                    dbId : response[i].parentStudent,
+                }
+                let previousAttendanceIndex = this.getPreviousAttendanceIndex(tempData, new Date(response[i].dateOfAttendance));
+                this.currentAttendanceList[previousAttendanceIndex].status = response[i].status;
+            }
             alert('Student Attendance recorded successfully');
             this.notifyParents();
-            this.getStudentsAttendanceStatusList();
         }, error => {
             this.isLoading = false;
         });
@@ -545,7 +543,7 @@ export class RecordAttendanceComponent implements OnInit {
                                 }
                                 this.studentList.push(tempData);
                             }
-                            if(this.selectedSentUpdateTo == this.sentUpdateToList[0] && attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]){
+                            if(this.selectedReceiver == this.receiverList[0] && attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]){
                                 let tempData = {
                                     name: student.name,
                                     dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),
@@ -624,15 +622,6 @@ export class RecordAttendanceComponent implements OnInit {
     
         return count;
     }   
-
-    checkAttendanceChange(): any{
-        let data = this.prepareStudentAttendanceStatusListData();
-        if (data.length === 0) {
-            this.attendanceChange = false;
-            return;
-        }
-        this.attendanceChange = true;
-    }
     
 
 }
