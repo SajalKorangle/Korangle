@@ -15,10 +15,7 @@ import { CreateTestServiceAdapter } from './create-test.service.adapter';
   templateUrl: './create-test.component.html',
   styleUrls: ['./create-test.component.css'],
   providers: [
-    ExaminationOldService,
     ClassService,
-    SubjectOldService,
-    StudentOldService,
     ExaminationService,
     SubjectService,
   ],
@@ -116,12 +113,8 @@ export class CreateTestComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    public examinationOldService: ExaminationOldService,
     public examinationService: ExaminationService,
     public classService: ClassService,
-    public subjectService: SubjectOldService,
-    public studentService: StudentOldService,
-
     public subjectNewService: SubjectService
   ) {}
 

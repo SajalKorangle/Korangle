@@ -15,10 +15,7 @@ import { ScheduleTestServiceAdapter } from './schedule-test.service.adapter';
   templateUrl: './schedule-test.component.html',
   styleUrls: ['./schedule-test.component.css'],
   providers: [
-    ExaminationOldService,
     ClassService,
-    SubjectOldService,
-    StudentOldService,
     ExaminationService,
     SubjectService,
   ],
@@ -92,12 +89,8 @@ export class ScheduleTestComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    public examinationOldService: ExaminationOldService,
     public examinationService: ExaminationService,
     public classService: ClassService,
-    public subjectService: SubjectOldService,
-    public studentService: StudentOldService,
-
     public subjectNewService: SubjectService
   ) {}
 
