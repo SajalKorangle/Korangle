@@ -1,5 +1,43 @@
 <div class="card-content table-responsive" *ngIf="!isLoading; else spinner">
-    
+
+    <!-- Choose to add/edit/delete layout/s -->
+    <mat-form-field style="margin-bottom: 10px;">
+        <mat-select placeholder="Choose to add/edit/delete layout/s"
+                    [ngModel]="currentLayout"
+                    (ngModelChange)="populateCurrentLayoutWithGivenValue($event);">
+            <mat-option [value]="ADD_LAYOUT_STRING">{{ADD_LAYOUT_STRING}}</mat-option>
+            <mat-option *ngFor="let layout of reportCardLayoutList;" [value]="layout">{{layout.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <ng-container *ngIf="currentLayout">
+    <mat-card>
+        <div class="bg-grey" style="width: 100%; height: 35px;">
+            <!-- Top Toolbar -->
+            Top Toolbar
+        </div>
+
+        <div style="margin-top: 8px; width: 100%; display: flex; flex-direction: row; justify-content: space-around;">
+            <!-- column1 -->
+            <div class="inline-block" style="width: 200px;">
+                Left Pannel
+            </div>
+
+            <!-- column 2 -->
+            <div class="bg-grey inline-block" style="width: calc(100% - 390px);">
+                <canvas id="mainCanvas" style="width: calc(100% - 48px); margin: 24px;"></canvas>
+            </div>
+
+
+            <!-- column 3 -->
+            <div class="inline-block" style="width: 160px;">
+                Right pannel
+            </div>
+
+        </div>
+    </mat-card>
+    </ng-container>
+
 </div>
 
 <ng-template #spinner>

@@ -11,6 +11,8 @@ class ReportCardLayoutView(CommonView, APIView):
 class ReportCardLayoutListView(CommonListView, APIView):
     Model = ReportCardLayout
 
+
+
 class ReportCardLayoutNewView(CommonView, APIView):
     Model = ReportCardLayoutNew
 

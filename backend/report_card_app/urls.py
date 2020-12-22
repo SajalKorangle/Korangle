@@ -3,10 +3,14 @@ from django.conf.urls import url, include
 
 urlpatterns = []
 
-from report_card_app.views import ReportCardLayoutView, ReportCardLayoutListView
+from report_card_app.views import ReportCardLayoutView, ReportCardLayoutListView, ReportCardLayoutNewView, ReportCardLayoutNewListView, ImageAssetsView, ImageAssetsListView
 
 urlpatterns += [
 
+    url(r'^report-card-layout-new/batch', ReportCardLayoutNewListView.as_view()),
+    url(r'^report-card-layout-new', ReportCardLayoutNewView.as_view()),
+    url(r'^image-assets/batch', ImageAssetsListView.as_view()),
+    url(r'^image-assets', ImageAssetsView.as_view()),
     url(r'^report-card-layout/batch', ReportCardLayoutListView.as_view()),
     url(r'^report-card-layout', ReportCardLayoutView.as_view()),
 

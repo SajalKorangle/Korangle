@@ -9,6 +9,8 @@ export class ReportCardService extends ServiceObject {
 
     // objects urls
     public report_card_layout = '/report-card-layout';
+    public report_card_layout_new = '/report-card-layout-new';
+    public image_assets = '/image-assets';
 
     protected module_url = '/report-card';
 
