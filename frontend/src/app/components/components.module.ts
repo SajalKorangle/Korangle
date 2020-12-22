@@ -16,7 +16,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input'
 import { MatTableModule } from '@angular/material';  
-import { MatDialogModule } from '@angular/material'
+import { MatDialogModule } from '@angular/material';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatListModule} from '@angular/material/list';
  
 
 
@@ -75,6 +77,8 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatInputModule,
         MatTableModule,
         MatDialogModule,
+        MatListModule,
+        DragDropModule,
 
         BasicComponentsModule,
 
@@ -113,6 +117,8 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatCardModule,
         MatInputModule,
         MatDialogModule,
+        MatListModule,
+        DragDropModule,
         
     ]
 })

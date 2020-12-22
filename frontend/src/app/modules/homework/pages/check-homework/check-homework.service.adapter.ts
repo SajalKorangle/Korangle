@@ -127,8 +127,9 @@ export class CheckHomeworkServiceAdapter {
         // console.log(this.vm.selectedHomework);
     }
 
-    getHomework(): any{
-
+    getHomework(homework: any): any{
+        this.vm.isChecking = true;
+        this.vm.selectedHomework = homework;
         this.vm.isLoading = true;
         this.vm.studentList = [];
         this.vm.studentHomeworkList = [];

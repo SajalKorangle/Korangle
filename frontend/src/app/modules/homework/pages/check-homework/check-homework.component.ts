@@ -35,6 +35,7 @@ export class CheckHomeworkComponent implements OnInit {
     serviceAdapter: CheckHomeworkServiceAdapter;
     isInitialLoading: any;
     isLoading: any;
+    isChecking: any;
     
     STUDENT_LIMITER = 200;
     notif_usernames = [];
@@ -79,6 +80,7 @@ export class CheckHomeworkComponent implements OnInit {
     ngOnInit(): void {
         this.currentHomework = null;
         this.isLoading = false;
+        this.isChecking = false;
         this.classSectionHomeworkList = [];
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new CheckHomeworkServiceAdapter;

@@ -37,7 +37,7 @@
             
         <!-- CREATE HOMEWORK -->
 
-        <mat-form-field style="margin-top: 15px ; margin-right: 15px; margin-bottom: 10px;">
+        <mat-form-field style="margin-top: 15px ; margin-right: 15px; margin-bottom: 10px; width: 25%">
             <input type="text" matInput [ngModel]="currentHomework.homeworkName"
                 (ngModelChange)="currentHomework.homeworkName=$event;" placeholder="Type Homework Name">
         </mat-form-field>
@@ -54,8 +54,8 @@
 
 
         <mat-form-field style="width: 100%;">
-            <textarea matInput style="padding-top: 10px; padding-bottom: 10px; white-space: pre-wrap;"
-                rows="5" [ngModel]="currentHomework.homeworkText" (ngModelChange)="currentHomework.homeworkText=$event;"
+            <textarea matInput cdkTextareaAutosize style="padding-top: 10px; padding-bottom: 10px; white-space: pre-wrap;"
+                rows="2" [ngModel]="currentHomework.homeworkText" (ngModelChange)="currentHomework.homeworkText=$event;"
                 placeholder="Enter Homework Questions">
             </textarea>
         </mat-form-field><br>
@@ -94,22 +94,21 @@
                     <mat-expansion-panel-header>
 
                         <mat-panel-title>
-                            <div>
-                                <span class="hidden-xs" style="color: #7b7b7b;">Homework Title: &nbsp;</span><i>{{homework.homeworkName}}</i> &nbsp;
+                            <div style="width: 100%;">
+                                <strong>{{homework.homeworkName}}</strong>
+                                <div style="float: right;">
+                                    <span class="hidden-xs" style="color: #7b7b7b;">Issue Date & Time: &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i>&nbsp;&nbsp;
+                                    <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i>    
+                                </div>
                             </div>
                         </mat-panel-title>
                         
                     </mat-expansion-panel-header>
 
-                    <div>
-                        
+                    <!-- <div>
                         <span class="hidden-xs" style="color: #7b7b7b;">Issue Date & Time: &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
-
-                        <div >
-                            <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i>    
-                        </div>
-                        
-                    </div>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i>    
+                    </div> -->
                     <div style="margin-top: 30px;">
                         <span class="hidden-xs" style="color: #7b7b7b;">Homework Questions: <br></span>
                         <div >

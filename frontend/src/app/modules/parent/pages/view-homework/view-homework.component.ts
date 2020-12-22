@@ -7,6 +7,8 @@ import { HomeworkService } from '../../../../services/modules/homework/homework.
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+
 @Component({
   selector: 'view-homework',
   templateUrl: './view-homework.component.html',
@@ -18,6 +20,13 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
 
     user;
 
+    
+    loadingCount = 1;
+
+    isLoadingCheckedHomeworks = true;
+    isLoadingSubmittedHomeworks = true;
+    loadMoreHomework = true;
+
     selectedStudent: any;
 
     isLoading = false;
@@ -28,7 +37,6 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
 
     subjectList: any;
 
-    homeworkList: any;
     isSubmitting: any;
 
     selectedSubject: any;
@@ -36,6 +44,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     currentHomework: any;
 
     pendingHomeworkList: any;
+    completedHomeworkList: any;
     homeworkOpen: any;
 
     isHomeworkLoading: any;
@@ -58,7 +67,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         this.user = DataStorage.getInstance().getUser();
         this.isSubmitting = false;
         this.showContent = false;
-        this.homeworkList = [];
+        this.loadMoreHomework = true;
         this.serviceAdapter = new ViewHomeworkServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -224,21 +233,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         return [hours, minutes].join(':');
     }
 
-    populateSubmittedHomework(homework: any){
-        let tempHomework  = this.homeworkList.find(homeworks => homeworks.homeworkId == homework[0].parentHomework);
-        tempHomework.homeworkStatus = homework[0].homeworkStatus;
-        tempHomework.submissionDate = homework[0].submissionDate;
-        tempHomework.submissionTime = homework[0].submissionTime;
-        tempHomework.homeworkRemark = homework[0].remark;
-        tempHomework.answerText = homework[0].answerText;
-        tempHomework.answerImages = [];
-        homework.forEach(image =>{
-            if(image.answerImage != undefined){
-                tempHomework.answerImages.push(image);
-            }
-        });
-        tempHomework.answerImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
-    }
+  
 
     getFilteredHomeworkList(): any{
         // console.log(this.pendingHomeworkList);
@@ -249,4 +244,17 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         });
     }
 
+    getFilteredCompletedList(): any{
+        return this.completedHomeworkList.filter(homeworks =>{
+            if(this.selectedSubject.id == -1)return true;
+            if(homeworks.subjectDbId == this.selectedSubject.id)return true;
+            return false;
+        });
+    }
+
+    drop(event: CdkDragDrop<string[]>) {
+        console.log(event.previousIndex);
+        console.log(event.currentIndex);
+        moveItemInArray(this.toSubmitHomework.answerImages, event.previousIndex, event.currentIndex);
+    }
 }
