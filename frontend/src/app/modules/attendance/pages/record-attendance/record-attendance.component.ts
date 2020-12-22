@@ -89,8 +89,6 @@ export class RecordAttendanceComponent implements OnInit {
     
     currentAttendanceList = [];
 
-    attendanceChange: boolean;
-
     constructor (private excelService: ExcelService,
                  private printServie: PrintService,
                  public notificationService: NotificationService,
@@ -110,19 +108,10 @@ export class RecordAttendanceComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.attendanceChange = false;
         this.serviceAdapter = new RecordAttendanceServiceAdapter();
-
         this.isInitialLoading = true;
-
-        Promise.all([
-            this.serviceAdapter.initializeAdapter(this),
-            this.serviceAdapter.initializeData(),
-        ]).then(value => {
-            this.isInitialLoading = false;
-        }, error => {
-            this.isInitialLoading = false;
-        });
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
 
     }
 
@@ -169,11 +158,6 @@ export class RecordAttendanceComponent implements OnInit {
         this.attendanceService.getObjectList(this.attendanceService.student_attendance, data).then(attendanceList =>{
             this.isLoading = false;
             attendanceList.forEach(element =>{
-                let tempData = {
-                    dateOfAttendance : element.dateOfAttendance,
-                    status: element.status,
-                    parentStudent: element.parentStudent,
-                }
                 this.currentAttendanceList.push(element);
             });
             this.populateStudentAttendanceList(attendanceList);
@@ -229,7 +213,6 @@ export class RecordAttendanceComponent implements OnInit {
     updateStudentAttendanceList(): void {
         
         let data = this.prepareStudentAttendanceStatusListData();
-        this.attendanceChange = false;
         if (data.length === 0) {
             return;
         }
@@ -261,9 +244,23 @@ export class RecordAttendanceComponent implements OnInit {
         this.isLoading = true;
         Promise.all(promises).then(response =>{
             this.isLoading = false;
+            response[0].forEach(element =>{
+                let tempData = {
+                    dbId : element.parentStudent,
+                }
+                let previousAttendanceIndex = this.getPreviousAttendanceIndex(tempData, new Date(element.dateOfAttendance));
+                this.currentAttendanceList[previousAttendanceIndex].status = element.status;
+                this.currentAttendanceList[previousAttendanceIndex].id = element.id;
+            })
+            for(let i=1; i<response.length; i++){
+                let tempData = {
+                    dbId : response[i].parentStudent,
+                }
+                let previousAttendanceIndex = this.getPreviousAttendanceIndex(tempData, new Date(response[i].dateOfAttendance));
+                this.currentAttendanceList[previousAttendanceIndex].status = response[i].status;
+            }
             alert('Student Attendance recorded successfully');
             this.notifyParents();
-            this.getStudentsAttendanceStatusList();
         }, error => {
             this.isLoading = false;
         });
@@ -626,15 +623,6 @@ export class RecordAttendanceComponent implements OnInit {
     
         return count;
     }   
-
-    checkAttendanceChange(): any{
-        let data = this.prepareStudentAttendanceStatusListData();
-        if (data.length === 0) {
-            this.attendanceChange = false;
-            return;
-        }
-        this.attendanceChange = true;
-    }
     
 
 }

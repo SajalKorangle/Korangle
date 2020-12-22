@@ -15,6 +15,7 @@ export class RecordAttendanceServiceAdapter {
 
     initializeData(): void {
 
+        this.vm.isInitialLoading = true;
         const sms_count_request_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
@@ -53,6 +54,7 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.selectedSentType = 'NULL';
                 this.vm.selectedSentUpdateTo = 'Only Absent Students';
             }
+            this.vm.isInitialLoading = false;
         }, error => {
             this.vm.isInitialLoading = false;
         });
