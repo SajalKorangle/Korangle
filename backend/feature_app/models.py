@@ -22,3 +22,6 @@ class Feature(models.Model):
     class Meta:
         db_table = 'feature'
 
+    def __str__(self):
+        return str(self.parentUser.username) + ' - ' + self.title
+
