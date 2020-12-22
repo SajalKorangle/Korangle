@@ -13,11 +13,11 @@
 
         <mat-form-field style="margin-top: 23px;">
             <mat-select placeholder="Send Update To"
-                    id="sentUpdateToType"
-                    [ngModel]="selectedSettings.sentUpdateToType"
-                    (ngModelChange)="currentSettings.sentUpdateToType = $event;">
-                <mat-option *ngFor='let sentUpdateToType of sentUpdateToList;' [value]="sentUpdateToType">
-                    {{sentUpdateToType}}
+                    id="receiverType"
+                    [ngModel]="selectedSettings.receiverType"
+                    (ngModelChange)="currentSettings.receiverType = $event;">
+                <mat-option *ngFor='let receiverType of receiverList;' [value]="receiverType">
+                    {{receiverType}}
                 </mat-option>
             </mat-select>
         </mat-form-field><br/>

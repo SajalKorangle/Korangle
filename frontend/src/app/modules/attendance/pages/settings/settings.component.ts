@@ -25,7 +25,7 @@ export class SettingsComponent{
         'NOTIF./SMS',
     ];
 
-    sentUpdateToList = [
+    receiverList = [
         'All Students',
         'Only Absent Students'
     ];
@@ -54,7 +54,7 @@ export class SettingsComponent{
 
     isSettingsChanged(): boolean {
         return !(this.currentSettings.sentUpdateType == this.selectedSettings.sentUpdateType
-        && this.currentSettings.sentUpdateToType == this.selectedSettings.sentUpdateToType);
+        && this.currentSettings.receiverType == this.selectedSettings.receiverType);
         }
     
 }

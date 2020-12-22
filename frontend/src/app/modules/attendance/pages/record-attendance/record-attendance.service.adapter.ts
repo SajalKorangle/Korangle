@@ -48,11 +48,11 @@ export class RecordAttendanceServiceAdapter {
             this.vm.smsBalance = value[6];
             if(value[0].length > 0){
                 this.vm.selectedSentType = value[0][0].sentUpdateType;
-                this.vm.selectedSentUpdateTo = value[0][0].sentUpdateToType;
+                this.vm.selectedReceiver = value[0][0].receiverType;
             }
             else{
                 this.vm.selectedSentType = 'NULL';
-                this.vm.selectedSentUpdateTo = 'Only Absent Students';
+                this.vm.selectedReceiver = 'Only Absent Students';
             }
             this.vm.isInitialLoading = false;
         }, error => {

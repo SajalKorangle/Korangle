@@ -21,18 +21,18 @@ export class SettingsServiceAdapter{
                 this.vm.selectedSettings.id = element.id;
                 this.vm.selectedSettings.parentSchool = element.parentSchool;
                 this.vm.selectedSettings.sentUpdateType = element.sentUpdateType;
-                this.vm.selectedSettings.sentUpdateToType = element.sentUpdateToType;
+                this.vm.selectedSettings.receiverType = element.receiverType;
         
             }
             else{
                 this.vm.selectedSettings.parentSchool = this.vm.user.activeSchool.dbId;
                 this.vm.selectedSettings.sentUpdateType = 'NULL';
-                this.vm.selectedSettings.sentUpdateToType = 'Only Absent Students';
+                this.vm.selectedSettings.receiverType = 'Only Absent Students';
                 Promise.all([this.vm.attendanceService.createObject(this.vm.attendanceService.attendance_settings,this.vm.selectedSettings)]).then(value =>{
                     this.vm.selectedSettings.id = value[0].id;
                 })       
             }
-            this.vm.currentSettings.sentUpdateToType = this.vm.selectedSettings.sentUpdateToType;
+            this.vm.currentSettings.receiverType = this.vm.selectedSettings.receiverType;
             this.vm.currentSettings.sentUpdateType = this.vm.selectedSettings.sentUpdateType;
             this.vm.isLoading = false;
         }, error => {
@@ -45,7 +45,7 @@ export class SettingsServiceAdapter{
         this.vm.isLoading = true;
         
         this.vm.selectedSettings.sentUpdateType = this.vm.currentSettings.sentUpdateType;
-        this.vm.selectedSettings.sentUpdateToType = this.vm.currentSettings.sentUpdateToType;
+        this.vm.selectedSettings.receiverType = this.vm.currentSettings.receiverType;
         
         Promise.all([
             this.vm.attendanceService.updateObject(this.vm.attendanceService.attendance_settings, this.vm.selectedSettings)

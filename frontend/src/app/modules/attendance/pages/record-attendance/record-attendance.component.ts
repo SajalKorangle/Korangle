@@ -76,12 +76,12 @@ export class RecordAttendanceComponent implements OnInit {
     selectedSentType :any;
     smsBalance = 0;
     
-    sentUpdateToList = [
+    receiverList = [
         'All Students',
         'Only Absent Students'
     ];
 
-    selectedSentUpdateTo :any;
+    selectedReceiver :any;
 
     notif_usernames = [];
 
@@ -544,7 +544,7 @@ export class RecordAttendanceComponent implements OnInit {
                                 }
                                 this.studentList.push(tempData);
                             }
-                            if(this.selectedSentUpdateTo == this.sentUpdateToList[0] && attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]){
+                            if(this.selectedReceiver == this.receiverList[0] && attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]){
                                 let tempData = {
                                     name: student.name,
                                     dateOfAttendance: this.formatDate(attendanceStatus.date.toString(), ''),

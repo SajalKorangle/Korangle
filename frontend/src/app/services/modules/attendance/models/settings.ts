@@ -5,5 +5,5 @@ export class Settings {
     
     parentSchool: number = null;
     sentUpdateType: string = null;
-    sentUpdateToType: string = null;
+    receiverType: string = null;
 }
