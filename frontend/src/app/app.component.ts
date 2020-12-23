@@ -29,19 +29,7 @@ export class AppComponent implements OnInit {
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
                 private dialog: MatDialog,
-                private notificationService: NotificationService,
-                public router: Router) {
-                    this.router.events.subscribe(event => {
-                        if (event instanceof NavigationEnd) {     
-                            if(this.router.url != '/')       
-                            {
-                                (<any>window).ga('set', 'page', event.urlAfterRedirects);
-                                (<any>window).ga('send', 'pageview');
-                            }               
-                            
-                          }
-                      });
-                }
+                private notificationService: NotificationService) {}
 
     ngOnInit() {
 
