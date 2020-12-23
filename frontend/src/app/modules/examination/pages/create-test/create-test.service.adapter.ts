@@ -63,17 +63,6 @@ export class CreateTestServiceAdapter {
       paerntSchool: this.vm.user.activeSchool.dbId,
     };
 
-    let request_subject_data = {
-      parentSession: this.vm.user.activeSchool.currentSessionDbId,
-      paerntSchool: this.vm.user.activeSchool.dbId,
-    };
-
-    //data to request for class and section and subject having atleast one subject in current schoolId and sessionId
-    let request_class_section_subject_data_new = {
-      parentSession: this.vm.user.activeSchool.currentSessionDbId,
-      parentSchool: this.vm.user.activeSchool.dbId,
-    };
-    console.log(request_class_section_subject_data_new);
     Promise.all([
       this.vm.examinationService.getObjectList(
         this.vm.examinationService.examination,
@@ -85,32 +74,22 @@ export class CreateTestServiceAdapter {
         this.vm.classService.division, {}),
       this.vm.subjectNewService.getObjectList(
         this.vm.subjectNewService.subject,
-        request_subject_data
+        {}
       ),
       this.vm.subjectNewService.getObjectList(
         this.vm.subjectNewService.class_subject,
         request_class_section_subject_data
       ),
-      this.vm.subjectNewService.getObjectList(
-        this.vm.subjectNewService.class_subject,
-        request_class_section_subject_data_new
-      ),
     ]).then(
       (value) => {
         this.vm.examinationList = value[0];
-        console.log('examinationList: ', this.vm.examinationList);
-
         this.classList = value[1];
         this.sectionList = value[2];
         this.subjectList = value[3];
-
-        console.log('class, section and subjects are below');
-        console.log(value[5]);
-        this.classSubjectList = value[5];
-
+        this.classSubjectList = value[4];
         this.vm.classSectionSubjectList = [];
 
-        value[5].forEach((item) => {
+        value[4].forEach((item) => {
           var classIndex = this.vm.classSectionSubjectList.findIndex(
             (data) => data.classId === item.parentClass
           );
@@ -169,13 +148,8 @@ export class CreateTestServiceAdapter {
           }
         });
 
-        console.log('List created after nesting class section subject ');
-        console.log(this.vm.classSectionSubjectList);
-
         //sort the classSection list
         this.classSectionSubjectListSort();
-        console.log('List after Sorting...');
-        console.log(this.vm.classSectionSubjectList);
         this.vm.subjectList = this.subjectList;
         this.vm.isInitialLoading = false;
       },
