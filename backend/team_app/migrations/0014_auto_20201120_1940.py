@@ -8,7 +8,7 @@ from team_app.db_script.add_update_via_excel_task import add_update_via_excel_an
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0014_auto_20201119_1559'),
+        ('team_app', '0013_task_videourl'),
     ]
 
     operations = [
