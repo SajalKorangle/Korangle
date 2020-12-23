@@ -137,6 +137,7 @@ export class ViewDefaultersServiceAdapter {
                     this.vm.subDiscountList = this.vm.subDiscountList.concat(remaining_result[loopVariable * 4 + 3]);
                     loopVariable = loopVariable + 1;
                 }
+
                 this.fetchGCMDevices(this.vm.studentList);
 
             }, error => {

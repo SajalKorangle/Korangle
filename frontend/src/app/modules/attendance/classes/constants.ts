@@ -19,3 +19,8 @@ export const LEAVE_OPTION_LIST = [
     'FULL_DAY',
     'HALF_DAY',
 ];
+
+export const RECEIVER_LIST = [
+    'All Students',
+    'Only Absent Students'
+];

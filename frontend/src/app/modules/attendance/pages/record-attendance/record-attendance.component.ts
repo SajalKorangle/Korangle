@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {StudentService} from '../../../../services/modules/student/student.service';
 
-import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
+import {ATTENDANCE_STATUS_LIST,RECEIVER_LIST} from '../../classes/constants';
 
 import { ExcelService } from '../../../../excel/excel-service';
 import { PrintService } from '../../../../print/print-service';
@@ -76,10 +76,7 @@ export class RecordAttendanceComponent implements OnInit {
     selectedSentType :any;
     smsBalance = 0;
     
-    receiverList = [
-        'All Students',
-        'Only Absent Students'
-    ];
+    receiverList = RECEIVER_LIST;
 
     selectedReceiver :any;
 
@@ -504,7 +501,7 @@ export class RecordAttendanceComponent implements OnInit {
                 
             });
             let currentDate = new Date();
-            if(this.studentList.length > 0 && this.selectedSentType != 'NULL'  && this.by == 'date' && this.startDate == this.formatDate(currentDate, '')){
+            if(this.studentList.length > 0 && this.selectedSentType != this.sentTypeList[0]  && this.by == 'date' && this.startDate == this.formatDate(currentDate, '')){
                 this.serviceAdapter.sendSMSNotification(this.studentList);
             }
     }

@@ -6,6 +6,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 import { SettingsServiceAdapter } from './settings.service.adapter'
 import { Settings } from "../../../../services/modules/attendance/models/settings";
+import {RECEIVER_LIST} from '@modules/attendance/classes/constants';
  
 @Component({
     selector: 'settings',
@@ -24,22 +25,18 @@ export class SettingsComponent{
         'NOTIF./SMS',
     ];
 
-    receiverList = [
-        'All Students',
-        'Only Absent Students'
-    ];
+    receiverList = RECEIVER_LIST;
 
     isLoading = false;
 
     selectedSettings: Settings;
     currentSettings: Settings;
 
-    serviceAdapter: SettingsServiceAdapter
+    serviceAdapter: SettingsServiceAdapter;
 
-    constructor ( public schoolService: SchoolService,
-                public userService: UserService,
-                public attendanceService: AttendanceService
-                ) { }
+    constructor (public schoolService: SchoolService,
+                 public userService: UserService,
+                 public attendanceService: AttendanceService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -47,13 +44,12 @@ export class SettingsComponent{
         this.selectedSettings = new Settings;
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData()
-        
+        this.serviceAdapter.initializeData();
     }
 
     isSettingsChanged(): boolean {
         return !(this.currentSettings.sentUpdateType == this.selectedSettings.sentUpdateType
         && this.currentSettings.receiverType == this.selectedSettings.receiverType);
-        }
+    }
     
 }

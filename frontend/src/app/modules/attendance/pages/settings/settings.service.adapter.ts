@@ -26,11 +26,11 @@ export class SettingsServiceAdapter{
             }
             else{
                 this.vm.selectedSettings.parentSchool = this.vm.user.activeSchool.dbId;
-                this.vm.selectedSettings.sentUpdateType = 'NULL';
-                this.vm.selectedSettings.receiverType = 'Only Absent Students';
+                this.vm.selectedSettings.sentUpdateType = this.vm.sentUpdateList[0];
+                this.vm.selectedSettings.receiverType = this.vm.receiverList[1];
                 Promise.all([this.vm.attendanceService.createObject(this.vm.attendanceService.attendance_settings,this.vm.selectedSettings)]).then(value =>{
                     this.vm.selectedSettings.id = value[0].id;
-                })       
+                })
             }
             this.vm.currentSettings.receiverType = this.vm.selectedSettings.receiverType;
             this.vm.currentSettings.sentUpdateType = this.vm.selectedSettings.sentUpdateType;

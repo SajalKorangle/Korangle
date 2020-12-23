@@ -104,7 +104,7 @@ class AttendanceSettings(models.Model):
         (NO_UPDATE, 'NULL')
     ]
 
-    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=SMS_UPDATE, verbose_name='sentUpdateType')
+    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=NO_UPDATE, verbose_name='sentUpdateType')
 
     UPDATE_ALL = 'All Students'
     UPDATE_ABSENT = 'Only Absent Students'
