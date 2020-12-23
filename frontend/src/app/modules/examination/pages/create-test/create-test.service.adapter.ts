@@ -60,7 +60,7 @@ export class CreateTestServiceAdapter {
 
     let request_class_section_subject_data = {
       parentSession: this.vm.user.activeSchool.currentSessionDbId,
-      paerntSchool: this.vm.user.activeSchool.dbId,
+      parentSchool: this.vm.user.activeSchool.dbId,
     };
 
     Promise.all([
