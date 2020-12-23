@@ -6,10 +6,15 @@ import {AddTutorialModule} from '@modules/tutorials/pages/add-tutorial/add-tutor
 
 
 const routes: Routes = [
-      {
+    {
         path: 'add_tutorial',
         loadChildren: () => AddTutorialModule,
         data: {moduleName: 'tutorials'},
+    },
+    {
+        path: 'settings',
+        loadChildren: 'app/modules/tutorials/pages/settings/settings.module#SettingsModule',
+        data: {moduleName: 'attendance'},
     },
     {
         path: '',
