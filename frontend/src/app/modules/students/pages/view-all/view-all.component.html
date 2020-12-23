@@ -289,6 +289,11 @@
             </mat-option>
             <mat-option>
                 RTE:
+                <mat-checkbox [(ngModel)]="noneRTE"
+                              style="margin-right: 5px;"
+                              (ngModelChange)="handleStudentDisplay()"
+                              (click)="$event.stopPropagation();">None
+                </mat-checkbox>
                 <mat-checkbox [(ngModel)]="yesRTE"
                               style="margin-right: 5px;"
                               (ngModelChange)="handleStudentDisplay()"
