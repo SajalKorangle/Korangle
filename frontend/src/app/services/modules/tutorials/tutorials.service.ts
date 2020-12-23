@@ -11,6 +11,7 @@ export class TutorialsService extends ServiceObject {
 
     // objects urls
     public tutorial = '/tutorial';
+    public tutorial_settings = '/tutorial-settings';
 
     constructor(private http_class: HttpClient) {
         super(http_class);
