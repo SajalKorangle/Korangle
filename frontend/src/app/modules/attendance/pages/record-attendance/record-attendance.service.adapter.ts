@@ -141,6 +141,31 @@ export class RecordAttendanceServiceAdapter {
         
     }
 
+    
+    getStudentsAttendanceStatusList(): void {
+        
+        this.vm.isLoading = true;
+        this.vm.showStudentList = true;
+        this.vm.currentAttendanceList = [];
+
+        let data = {
+            parentStudent__in : this.vm.getStudentIdList(),
+            dateOfAttendance__gte : this.vm.startDate,
+            dateOfAttendance__lte : this.vm.endDate    
+        }
+
+        this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, data).then(attendanceList =>{
+            this.vm.isLoading = false;
+            attendanceList.forEach(element =>{
+                this.vm.currentAttendanceList.push(element);
+            });
+            this.vm.populateStudentAttendanceList(attendanceList);
+        },error => {
+            this.vm.isLoading = false;
+        });
+        
+    }
+
     updateStudentAttendanceList(): void {
         
         let data = this.vm.prepareStudentAttendanceStatusListData();

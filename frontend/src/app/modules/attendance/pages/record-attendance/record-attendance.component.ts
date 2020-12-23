@@ -140,30 +140,6 @@ export class RecordAttendanceComponent implements OnInit {
         return studentIdList;
     }
 
-    getStudentsAttendanceStatusList(): void {
-        
-        this.isLoading = true;
-        this.showStudentList = true;
-        this.currentAttendanceList = [];
-
-        let data = {
-            parentStudent__in : this.getStudentIdList(),
-            dateOfAttendance__gte : this.startDate,
-            dateOfAttendance__lte : this.endDate    
-        }
-
-        this.attendanceService.getObjectList(this.attendanceService.student_attendance, data).then(attendanceList =>{
-            this.isLoading = false;
-            attendanceList.forEach(element =>{
-                this.currentAttendanceList.push(element);
-            });
-            this.populateStudentAttendanceList(attendanceList);
-        },error => {
-            this.isLoading = false;
-        });
-        
-    }
-
     populateStudentAttendanceList(attendanceList: any) {
         this.studentAttendanceStatusList = [];
         this.classSectionStudentList.forEach(classs => {
