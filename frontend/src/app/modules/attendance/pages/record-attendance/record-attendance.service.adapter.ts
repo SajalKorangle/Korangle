@@ -4,7 +4,7 @@ export class RecordAttendanceServiceAdapter {
 
     vm: RecordAttendanceComponent;
 
-    infornmationMessageType = 4; //Attendance Message
+    informationMessageType = 4; //Attendance Message
 
     constructor() {}
     // Data
@@ -51,8 +51,8 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.selectedReceiver = value[0][0].receiverType;
             }
             else{
-                this.vm.selectedSentType = 'NULL';
-                this.vm.selectedReceiver = 'Only Absent Students';
+                this.vm.selectedSentType = this.vm.sentTypeList[0]; // NULL
+                this.vm.selectedReceiver = this.vm.receiverList[1]; // Only Absent Students
             }
             this.vm.isInitialLoading = false;
         }, error => {
@@ -260,7 +260,7 @@ export class RecordAttendanceServiceAdapter {
                 'contentType': ('english'),
                 'data': sms_converted_data,
                 'content': sms_converted_data[0]['isAdvanceSms'],
-                'parentMessageType': this.infornmationMessageType,
+                'parentMessageType': this.informationMessageType,
                 'count': this.vm.getEstimatedSMSCount(),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
@@ -273,7 +273,7 @@ export class RecordAttendanceServiceAdapter {
                 'contentType': ('english'),
                 'data': sms_converted_data,
                 'content': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, notification_list[0]),
-                'parentMessageType': this.infornmationMessageType,
+                'parentMessageType': this.informationMessageType,
                 'count': this.vm.getEstimatedSMSCount(),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
@@ -288,7 +288,7 @@ export class RecordAttendanceServiceAdapter {
         const notification_data = notification_list.map(item => {
             if(item.messageType === 1){
                 return {
-                    'parentMessageType': this.infornmationMessageType,
+                    'parentMessageType': this.informationMessageType,
                     'content': this.vm.getMessageFromTemplate(this.vm.studentUpdateMessage, item),
                     'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
                     'parentSchool': this.vm.user.activeSchool.dbId,
@@ -296,7 +296,7 @@ export class RecordAttendanceServiceAdapter {
             }
             else{
                 return {
-                    'parentMessageType': this.infornmationMessageType,
+                    'parentMessageType': this.informationMessageType,
                     'content': this.vm.getMessageFromTemplate(this.vm.studentAlternateMessage, item),
                     'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
                     'parentSchool': this.vm.user.activeSchool.dbId,
