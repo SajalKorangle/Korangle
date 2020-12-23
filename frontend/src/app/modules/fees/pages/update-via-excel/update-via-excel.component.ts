@@ -194,7 +194,10 @@ export class UpdateViaExcelComponent implements OnInit {
                         let row = [student.id, student.scholarNumber, student.name, student.fathersName, `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`];
 
                         this.feeTypeList.forEach(feeType => {
-                            let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id]
+                            let studentFee;
+                            if (this.studentFeeListMappedByStudentIdFeeTypeId[student.id]) {
+                                studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id];
+                            }
                             if (studentFee) {
                                 let feeTypeExcelColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
                                 if (studentFee.isAnnually) {
