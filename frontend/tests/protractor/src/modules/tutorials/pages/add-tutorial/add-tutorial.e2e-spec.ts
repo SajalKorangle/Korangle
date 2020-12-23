@@ -18,17 +18,12 @@ describe('Tutorials -> Add Tutorial', () => {
         await openModuleAndPage('Tutorials', 'Add Tutorial');
 
         await page.waitForSelector('button[type="submit"]');
-        (await containsFirst('mat-select', '')).click();
-        (await containsFirst('mat-option', 'Class - 3, Section - A')).click();
-        const [select] = await page.$x('//mat-select//following::mat-select[1]');
-        await select.click();
-        (await containsFirst('mat-option', 'English')).click();
         (await containsFirst('button', 'GET')).click();
         await page.waitForTimeout(1000);
     });
 
     it('Add  a new tutorial ', async () => {
-            let nodes;
+        let nodes;
 
         nodes = await containsAll('span', 'No Tutorial Videos added yet!');  //count check
         expect(nodes.length).toBe(1);

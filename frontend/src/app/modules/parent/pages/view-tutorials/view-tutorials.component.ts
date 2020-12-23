@@ -27,6 +27,7 @@ export class ViewTutorialsComponent implements OnInit {
     subjectList = [];
     videoUrl = null;
     showTutorialVideo = false;
+    noTutorials=false;
 
 
     constructor(public subjectService: SubjectService,

@@ -27,22 +27,23 @@ export class AddTutorialServiceAdapter {
 
         this.vm.isLoading = true;
 
-        let request_class_subject_data = {
-            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
-            'schoolList': [this.vm.user.activeSchool.dbId],
+        let class_subject_list = {
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
-        const student_full_profile_request_data = {
-            schoolDbId: this.vm.user.activeSchool.dbId,
-            sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
+
+        const fetch_student_section_data = {
+            'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
 
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject,request_class_subject_data),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student, student_full_profile_request_data),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data),
         ]).then(value => {
 
             this.classList = value[0];
@@ -52,7 +53,7 @@ export class AddTutorialServiceAdapter {
             this.fullStudentList = value[4];
             this.populateSubjectList();
             this.populateClassSectionList();
-            this.populateContainsStudent();
+            this.populateDefaults();
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
@@ -72,9 +73,10 @@ export class AddTutorialServiceAdapter {
                 Object.keys(section).forEach(key => {
                     tempSection[key] = section[key];
                 });
-                tempSection['containStudent'] = false;
+
                 tempSection['parentClass'] = classs.id
                 tempSection['subjectList'] = [];
+                tempSection['containStudent'] = this.containsStudent(tempSection);
 
                 this.classSubjectList.forEach(classSubject => {
                     if (classSubject.parentClass === tempClass['id']
@@ -85,14 +87,17 @@ export class AddTutorialServiceAdapter {
                         Object.keys(classSubject).forEach(key => {
                             tempSubject[key] = classSubject[key];
                         });
-
                         tempSection['subjectList'].push(tempSubject);
                     }
                 });
-                tempClass['sectionList'].push(tempSection);
+                if (tempSection['subjectList'].length > 0 && tempSection['containStudent']) {
+                    tempClass['sectionList'].push(tempSection);
+                }
             });
-            tempClass['selectedSection'] = tempClass['sectionList'][0];
-            this.classSectionSubjectList.push(tempClass);
+            if (tempClass['sectionList'].length > 0) {
+                tempClass['selectedSection'] = tempClass['sectionList'][0];
+                this.classSectionSubjectList.push(tempClass);
+            }
         });
 
     }
@@ -175,6 +180,7 @@ export class AddTutorialServiceAdapter {
                 this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
                 this.vm.tutorialUpdating = false;
                 tutorial.editable = false;
+                this.checkEnableAddButton();
             }, error => {
                 this.vm.tutorialUpdating = false;
                 tutorial.editable = false;
@@ -205,6 +211,7 @@ export class AddTutorialServiceAdapter {
                 this.vm.tutorialList = this.vm.tutorialList.filter(item => {
                     return item.id != tutorial.id;
                 });
+                this.checkEnableAddButton();
                 this.vm.tutorialUpdating = false;
             }, error => {
                 this.vm.tutorialUpdating = false;
@@ -285,16 +292,14 @@ export class AddTutorialServiceAdapter {
         this.vm.tutorialList = tutorialList;
     }
 
-    populateContainsStudent() {
-        this.fullStudentList.forEach(student => {
-            this.classSectionSubjectList.forEach(classs => {
-                classs.sectionList.forEach(section => {
-                    if (student.sectionDbId === section.id && student.classDbId === classs.id) {
-                        section.containStudent = true;
-                    }
-                });
-            });
+    containsStudent(sectionTemp: any) {
+        return this.fullStudentList.some(student => {
+            return student.parentDivision === sectionTemp.id && student.parentClass === sectionTemp.parentClass
         });
+    }
+
+    populateDefaults() {
+
         this.vm.classSectionSubjectList = [];
         this.vm.classSectionSubjectList = this.classSectionSubjectList;
         if (this.vm.classSectionSubjectList.length > 0) {

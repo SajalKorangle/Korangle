@@ -28,32 +28,32 @@ export class ViewTutorialsServiceAdapter {
         this.vm.isLoading = true;
 
         const request_student_subject_data = {
-            studentId: this.vm.user.section.student.id,
-            sessionId: this.vm.user.activeSchool.currentSessionDbId,
+            parentStudent: this.vm.user.section.student.id,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        let request_class_subject_data = {
-            'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
-            'schoolList': [this.vm.user.activeSchool.dbId],
+        let class_subject_list = {
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
-        const request_student_data = {
-            studentDbId: this.vm.user.section.student.id,
-            sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
+        const fetch_student_section_data = {
+            'parentStudent': this.vm.user.section.student.id,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
 
         Promise.all([
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject,request_class_subject_data),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject,{}),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.student_subject,request_student_subject_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student,request_student_data),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.student_subject, request_student_subject_data),
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data),
 
         ]).then(value => {
             this.vm.classSubjectList = value[0];
             this.vm.subjectList = value[1];
             this.vm.studentSubjectList = value[2];
-            this.studentProfile = value[3];
+            this.studentProfile = value[3][0];
             this.populateSubjectChapterTopic();
             this.vm.isLoading = false;
         }, error => {
@@ -67,9 +67,11 @@ export class ViewTutorialsServiceAdapter {
         this.filteredStudentSubject = [];
         this.vm.selectedSubject = [];
         this.vm.selectedChapter = [];
+        let studentIndex = 0;
+         this.vm.noTutorials = false;
 
         this.vm.studentSubjectList.forEach(subject => {
-
+            studentIndex++;
             let request_tutorials_data = {
                 'parentClassSubject': this.getParentClassSelectedSubject(subject),
             };
@@ -95,23 +97,29 @@ export class ViewTutorialsServiceAdapter {
                         }
                     });
                     this.filteredStudentSubject.push(subject);
-                    this.vm.selectedSubject = subject;
-                    this.vm.selectedChapter = this.vm.selectedSubject.chapterList[0];
-                    this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
-                    this.vm.setTutorialVideo();
-                    console.log(this.vm.selectedChapter);
                 }
-                console.log(this.filteredStudentSubject);
+                if (studentIndex === this.vm.studentSubjectList.length) {
+                    if (this.filteredStudentSubject.length > 0) {
+                        this.vm.selectedSubject = this.filteredStudentSubject[0];
+                        this.vm.selectedChapter = this.vm.selectedSubject.chapterList[0];
+                        this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
+                        this.vm.setTutorialVideo();
+                        this.vm.noTutorials = false;
+                    } else {
+                        this.vm.noTutorials = true; // to show no tutorials present if none subject has a tutorial
+                    }
+                }
             }, error => {
                 this.vm.isLoading = false;
             });
         });
+
     }
 
 
     getParentClassSelectedSubject(subject: any): number {
         const classSub = this.vm.classSubjectList.filter(classSubject => {
-            if (classSubject.parentClass == this.studentProfile.classDbId && classSubject.parentDivision == this.studentProfile.sectionDbId && classSubject.parentSubject == subject.parentSubject) {
+            if (classSubject.parentClass == this.studentProfile.parentClass && classSubject.parentDivision == this.studentProfile.parentDivision && classSubject.parentSubject == subject.parentSubject) {
                 return classSubject;
             }
         });

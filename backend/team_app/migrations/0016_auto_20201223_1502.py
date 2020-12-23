@@ -9,7 +9,7 @@ from tutorial_app.db_script.add_tutorial_settings_task import add_tutorial_setti
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0014_auto_20201214_1418'),
+        ('team_app', '0015_auto_20201214_1418'),
     ]
 
     operations = [

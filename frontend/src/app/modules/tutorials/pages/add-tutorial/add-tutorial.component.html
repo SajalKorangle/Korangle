@@ -9,10 +9,9 @@
                                 (selectionChange)="selectedSubject=null">
                         <ng-container *ngFor="let classs of classSectionSubjectList">
                             <ng-container *ngFor="let section of classs.sectionList">
-                                <mat-option *ngIf="section.containStudent && section.subjectList.length>0"
-                                            style="width: 100%;"
+                                <mat-option style="width: 100%;"
                                             [value]="section">
-                                    {{classs.name}}<span *ngIf="section.containStudent">, {{section.name}}</span>
+                                    {{classs.name}}, {{section.name}}
                                 </mat-option>
                             </ng-container>
                         </ng-container>

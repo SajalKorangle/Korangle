@@ -10,7 +10,7 @@ from team_app.db_script.add_tutorials_module import add_tutorials_module
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0013_task_videourl'),
+        ('team_app', '0014_auto_20201120_1940'),
     ]
 
     operations = [

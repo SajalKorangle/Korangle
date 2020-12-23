@@ -14,7 +14,7 @@
             <mat-form-field style="margin: 20px;">
                 <mat-select placeholder="Select Chapter"
                             [ngModel]="selectedChapter"
-                            (ngModelChange)="selectedChapter=$event;showTutorialVideo=false;">
+                            (ngModelChange)="selectedChapter=$event;showTutorialVideo=false;selectedTopic=[];">
                     <mat-option *ngFor='let chapter of selectedSubject.chapterList;' [value]="chapter">
                         {{chapter.name}}
                     </mat-option>
@@ -31,6 +31,8 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+
+            <span *ngIf="noTutorials" style="color: red">[ No Tutorials Present ]</span>
 
         </div>
         <ng-container *ngIf="showTutorialVideo">
