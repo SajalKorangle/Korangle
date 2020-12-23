@@ -4,10 +4,7 @@ import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 import { DataStorage } from '../../../../classes/data-storage';
 import { ClassService } from '../../../../services/modules/class/class.service';
-import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
-import { StudentOldService } from '../../../../services/modules/student/student-old.service';
-import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
 
 @Component({
