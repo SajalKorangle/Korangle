@@ -75,10 +75,6 @@ class CommonView(CommonBaseView):
     
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
-        # print('-------------------------------')
-        # print(activeSchoolID)
-        # print(activeStudentID)
-        # print('-------------------------------')
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         return get_object(request.GET, filtered_query_set, self.ModelSerializer)
 

@@ -9,9 +9,7 @@ def employeeHasSchoolPermission(user, schoolID):
                                                     parentSchool=schoolID,
                                                     parentSchool__expired=False,
                                                     dateOfLeaving=None)
-    if (len(employee_queryset) > 0):
-        return True
-    return False
+    return len(employee_queryset) > 0
 
 def parentHasStudentPermission(user, studentID):
     student = Student.objects.get(id=studentID)
