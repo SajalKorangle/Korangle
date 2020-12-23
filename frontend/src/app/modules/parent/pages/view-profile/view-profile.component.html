@@ -2,6 +2,12 @@
 
     <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
 
+        <!-- Class and Section -->
+        <div class="row">
+            <div class="col-md-12">
+                <b>{{selectedStudent.className}} , {{selectedStudent.sectionName}}</b>
+            </div>
+        </div>
 
         <div class="row">
 
