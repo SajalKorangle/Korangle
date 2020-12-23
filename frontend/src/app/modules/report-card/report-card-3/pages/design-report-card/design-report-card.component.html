@@ -12,15 +12,42 @@
 
     <ng-container *ngIf="currentLayout">
     <mat-card>
-        <div class="bg-grey" style="width: 100%; height: 35px;">
+        <div class="bg-grey flex-row" style="width: 100%; padding: 6px;">
             <!-- Top Toolbar -->
-            Top Toolbar
+
+            <div class="tool"> <!--Background Color Picker-->   
+                    <label>Background Color: </label>
+                    <input type="color" [value]="canvasAdapter.backgroundColor" (input)="canvasAdapter.applyBackground($event.target.value)"/>
+            </div>
+
+            <div class="tool">
+                <input type='file' (change)="imageUploadHandler($event)" multiple="false" style="display: none" accept="image/x-png,image/jpeg" #imageInput/>
+                <button type="button"
+                        class="btn material-icons"
+                        (click)="imageInput.click()">add_photo_alternate</button>
+            </div>
+
         </div>
 
-        <div style="margin-top: 8px; width: 100%; display: flex; flex-direction: row; justify-content: space-around;">
-            <!-- column1 -->
-            <div class="inline-block" style="width: 200px;">
-                Left Pannel
+        <div class="flex-row" style="margin-top: 8px; width: 100%; justify-content: space-around;">
+            <!-- column1: Left Pannel -->
+            <div class="inline-block" style="width: 200px;" class="leftPannel bg-grey">
+                <mat-button-toggle-group style="width: 100%; margin-top: 2px;">
+                    <mat-button-toggle value="layers" [checked]="htmlAdapter.activeLeftColumn === 'layers'"  (click)="htmlAdapter.activeLeftColumn = 'layers'">Layers</mat-button-toggle>
+                    <mat-button-toggle value="parameters" (click)="htmlAdapter.activeLeftColumn = 'parameters'">Parameters</mat-button-toggle>
+                </mat-button-toggle-group>
+
+                <!-- Layers Column -->
+                <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
+                    <div style="width: 100%; height: 100%; margin-top: 4px;" class="flex-column">
+                        <span style="width: calc(100% - 4px); text-align: center; margin: 2px; padding: 4px; border-radius: 3px;" class="bg-white" *ngFor="let layers of canvasAdapter.layers, i as index"> Layer {{i}}</span>
+                    </div>
+                </ng-container>
+
+                <!-- Parameters -->
+                <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'parameters'">
+
+                </ng-container>
             </div>
 
             <!-- column 2 -->

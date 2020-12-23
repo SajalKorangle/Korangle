@@ -4,6 +4,8 @@ export class DesignReportCardHtmlAdapter {
 
     vm: DesignReportCardComponent;
 
+    activeLeftColumn: string = 'layers';
+
     constructor() {}
 
     // Data

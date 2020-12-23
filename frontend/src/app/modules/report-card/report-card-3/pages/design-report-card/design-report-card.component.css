@@ -1,7 +1,43 @@
+.bg-white {
+    background-color: white;
+}
 .bg-grey {
     background-color: lightgray;
 }
 
 .inline-block {
     display: inline-block;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.tool {
+    margin: 2px;
+    padding: 4px;
+    background-color: white;
+    border-radius: 4px;
+}
+.tool label {
+    color: rgb(90, 90, 90);
+    margin: 4px;
+}
+
+.tool button {
+    padding: 2px;
+    margin: unset;
+}
+
+.leftPannel mat-button-toggle-group mat-button-toggle {
+    width: 50%;
+}
+.mat-button-toggle-label-content {
+    line-height: 30px !important;
 }

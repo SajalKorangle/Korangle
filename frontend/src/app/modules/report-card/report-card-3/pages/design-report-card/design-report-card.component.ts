@@ -29,6 +29,8 @@ export class DesignReportCardComponent implements OnInit {
   htmlAdapter: DesignReportCardHtmlAdapter;
   canvasAdapter: DesignReportCardCanvasAdapter;
 
+  fileReader: FileReader;
+
   constructor(public reportCardService: ReportCardService,) { }
 
   ngOnInit() {
@@ -42,6 +44,11 @@ export class DesignReportCardComponent implements OnInit {
 
     this.htmlAdapter = new DesignReportCardHtmlAdapter();
     this.htmlAdapter.initializeAdapter(this);
+
+    this.fileReader = new FileReader();
+    this.fileReader.onload = e => {
+      this.canvasAdapter.newImageLayer(this.fileReader.result); // Push new Image layer with the provided data
+    };
   }
 
   populateCurrentLayoutWithEmptyDefaultData(): void {
@@ -81,6 +88,15 @@ export class DesignReportCardComponent implements OnInit {
       // Draw graphics on canvas from this.currentLayout.content
     }
     // Rest to be implemented
+  }
+
+  imageUploadHandler(event: any): void{
+    const uploadedImage = event.target.files[0];
+    this.fileReader.readAsDataURL(uploadedImage);
+  }
+
+  logMessage(msg: any): void{
+    console.log("message: ", msg);
   }
 
 }
