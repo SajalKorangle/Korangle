@@ -122,7 +122,7 @@
         <button type="submit"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 [disabled]="prepareStudentAttendanceStatusListData().length == 0"
-                (click)="updateStudentAttendanceList()">Update</button>
+                (click)="serviceAdapter.updateStudentAttendanceList()">Update</button>
 
         <button type="submit"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"

@@ -141,6 +141,62 @@ export class RecordAttendanceServiceAdapter {
         
     }
 
+    updateStudentAttendanceList(): void {
+        
+        let data = this.vm.prepareStudentAttendanceStatusListData();
+        if (data.length === 0) {
+            return;
+        }
+        const promises = [];
+        let toCreateAttendance = [];
+        let toUpdateAttendance = [];
+        data.forEach(attendance =>{
+            let tempData = {
+                dbId : attendance.parentStudent,
+            }
+            let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(tempData, new Date(attendance.dateOfAttendance));
+            if(this.vm.currentAttendanceList[previousAttendanceIndex].id == null){
+                toCreateAttendance.push(attendance);
+            }
+            else{
+                let tempData = {
+                    id : this.vm.currentAttendanceList[previousAttendanceIndex].id,
+                    dateOfAttendance : attendance.dateOfAttendance,
+                    status: attendance.status,
+                    parentStudent: attendance.parentStudent,
+                }
+                toUpdateAttendance.push(tempData);
+            }
+        })
+        promises.push(this.vm.attendanceService.createObjectList(this.vm.attendanceService.student_attendance, toCreateAttendance));
+        toUpdateAttendance.forEach(attendance =>{
+            promises.push(this.vm.attendanceService.updateObject(this.vm.attendanceService.student_attendance, attendance));
+        });
+        this.vm.isLoading = true;
+        Promise.all(promises).then(response =>{
+            this.vm.isLoading = false;
+            response[0].forEach(element =>{
+                let tempData = {
+                    dbId : element.parentStudent,
+                }
+                let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(tempData, new Date(element.dateOfAttendance));
+                this.vm.currentAttendanceList[previousAttendanceIndex].status = element.status;
+                this.vm.currentAttendanceList[previousAttendanceIndex].id = element.id;
+            })
+            for(let i=1; i<response.length; i++){
+                let tempData = {
+                    dbId : response[i].parentStudent,
+                }
+                let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(tempData, new Date(response[i].dateOfAttendance));
+                this.vm.currentAttendanceList[previousAttendanceIndex].status = response[i].status;
+            }
+            alert('Student Attendance recorded successfully');
+            this.vm.notifyParents();
+        }, error => {
+            this.vm.isLoading = false;
+        });
+    }
+
     fetchGCMDevices: any = (studentList: any) => {
         // console.log(studentList);
         const service_list = [];
