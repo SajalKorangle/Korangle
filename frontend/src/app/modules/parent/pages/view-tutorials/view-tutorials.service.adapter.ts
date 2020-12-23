@@ -44,10 +44,10 @@ export class ViewTutorialsServiceAdapter {
 
 
         Promise.all([
-            this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
-            this.vm.subjectService.getSubjectList(this.vm.user.jwt),
-            this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
-            this.vm.studentService.getStudentFullProfile(request_student_data, this.vm.user.jwt),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject,request_class_subject_data),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject,{}),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.student_subject,request_student_subject_data),
+            this.vm.studentService.getObjectList(this.vm.studentService.student,request_student_data),
 
         ]).then(value => {
             this.vm.classSubjectList = value[0];

@@ -40,9 +40,9 @@ export class AddTutorialServiceAdapter {
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
-            this.vm.subjectService.getSubjectList(this.vm.user.jwt),
-            this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject,request_class_subject_data),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+            this.vm.studentService.getObjectList(this.vm.studentService.student, student_full_profile_request_data),
         ]).then(value => {
 
             this.classList = value[0];

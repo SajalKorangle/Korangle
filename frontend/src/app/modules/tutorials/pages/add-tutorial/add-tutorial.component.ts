@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {SubjectOldService} from '@services/modules/subject/subject-old.service';
 import {ClassService} from '@services/modules/class/class.service';
 import {AddTutorialServiceAdapter} from '@modules/tutorials/pages/add-tutorial/add-tutorial.service.adapter';
 import {DataStorage} from '@classes/data-storage';
@@ -7,13 +6,13 @@ import {StudentService} from '@services/modules/student/student.service';
 import {TutorialsService} from '@services/modules/tutorials/tutorials.service';
 import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
 import {MatDialog} from '@angular/material/dialog';
-import {StudentOldService} from '@services/modules/student/student-old.service';
+import {SubjectService} from '@services/modules/subject/subject.service';
 
 @Component({
     selector: 'app-add-tutorial',
     templateUrl: './add-tutorial.component.html',
     styleUrls: ['./add-tutorial.component.css'],
-    providers: [SubjectOldService, StudentOldService, ClassService, StudentService, TutorialsService],
+    providers: [SubjectService, ClassService, StudentService, TutorialsService],
 
 })
 export class AddTutorialComponent implements OnInit {
@@ -39,12 +38,11 @@ export class AddTutorialComponent implements OnInit {
     showPreview = false;
     topicAlreadyPresent = false;
 
-    constructor(public subjectService: SubjectOldService,
+    constructor(public subjectService: SubjectService,
                 public classService: ClassService,
                 public studentService: StudentService,
                 public tutorialService: TutorialsService,
-                private dialog: MatDialog,
-                public  studentOldService: StudentOldService) {
+                private dialog: MatDialog) {
     }
 
     ngOnInit() {

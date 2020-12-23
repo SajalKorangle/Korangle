@@ -1,17 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {SubjectOldService} from '@services/modules/subject/subject-old.service';
 import {ClassService} from '@services/modules/class/class.service';
 import {DataStorage} from '@classes/data-storage';
 import {TutorialsService} from '@services/modules/tutorials/tutorials.service';
 import {ViewTutorialsServiceAdapter} from '@modules/parent/pages/view-tutorials/view-tutorials.service.adapter';
-import {StudentOldService} from '@services/modules/student/student-old.service';
+import {SubjectService} from '@services/modules/subject/subject.service';
+import {StudentService} from '@services/modules/student/student.service';
 
 
 @Component({
     selector: 'app-view-tutorials',
     templateUrl: './view-tutorials.component.html',
     styleUrls: ['./view-tutorials.component.css'],
-    providers: [SubjectOldService, ClassService, StudentOldService, TutorialsService],
+    providers: [SubjectService, ClassService, StudentService, TutorialsService],
 })
 export class ViewTutorialsComponent implements OnInit {
 
@@ -29,9 +29,9 @@ export class ViewTutorialsComponent implements OnInit {
     showTutorialVideo = false;
 
 
-    constructor(public subjectService: SubjectOldService,
+    constructor(public subjectService: SubjectService,
                 public classService: ClassService,
-                public studentService: StudentOldService,
+                public studentService: StudentService,
                 public tutorialService: TutorialsService,) {
     }
 
