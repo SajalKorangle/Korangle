@@ -4,21 +4,13 @@ import {DataStorage} from '../../classes/data-storage';
 
 @Component({
     template: '<router-outlet></router-outlet>',
-
 })
 
 export class StudentComponent implements OnInit {
 
     user: any;
 
-    constructor(public router: Router) { 
-        this.router.events.subscribe(event => {
-            if (event instanceof NavigationEnd) {                            
-                (<any>window).ga('set', 'page', event.urlAfterRedirects);
-                (<any>window).ga('send', 'pageview');
-              }
-          });
-    }
+    constructor() { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
