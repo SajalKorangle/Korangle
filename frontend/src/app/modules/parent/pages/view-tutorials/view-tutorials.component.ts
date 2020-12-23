@@ -17,10 +17,8 @@ export class ViewTutorialsComponent implements OnInit {
 
     selectedTopic: any;
     selectedChapter: any;
-    selectedSubject: any = [{name: null}];
-    topicList = [];
+    selectedSubject: any;
     user: any;
-    tutorialList: any;
     isLoading = false;
     publishDate:any;
     studentSubjectList: any;
@@ -29,7 +27,6 @@ export class ViewTutorialsComponent implements OnInit {
     subjectList = [];
     videoUrl = null;
     showTutorialVideo = false;
-    chapterList = [];
 
 
     constructor(public subjectService: SubjectOldService,
@@ -46,24 +43,18 @@ export class ViewTutorialsComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
-    populateTopic(): void {
-        this.showTutorialVideo = false;
-        this.topicList = this.selectedSubject.tutorialList.filter(t => {
-            return t.chapter === this.selectedChapter;
-        });
-        console.log(this.topicList);
-    }
 
     setTutorialVideo(): void {
+        this.videoUrl=this.selectedTopic.link.replace('watch?v=', 'embed/');;
+        this.publishDate=this.selectedTopic.generationDateTime;
         if (!this.selectedChapter) {
             alert('Select a chapter');
-            return;
+               return;
         }
         if (!this.selectedTopic) {
             alert('Select a topic');
             return;
         }
-        this.videoUrl = this.videoUrl.replace('watch?v=', 'embed/');
         this.showTutorialVideo = true;
     }
 

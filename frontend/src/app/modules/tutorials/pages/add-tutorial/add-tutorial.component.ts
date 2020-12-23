@@ -25,7 +25,6 @@ export class AddTutorialComponent implements OnInit {
     subjectList: any;
     tutorialList = [];
     showTutorialDetails = false;
-    filteredSubjectList: any;
     isLoading = false;
     classSubjectList: any;
     newTutorial: any;
@@ -34,8 +33,11 @@ export class AddTutorialComponent implements OnInit {
     previewBeforeAddTutorialUrl: string;
     classSectionSubjectList: any;
     selectedSection: any;
-    isDisabled = true;
+    isAddDisabled = true;
     tutorialUpdating = false;
+    editedTutorial: any;
+    showPreview = false;
+    topicAlreadyPresent = false;
 
     constructor(public subjectService: SubjectOldService,
                 public classService: ClassService,
@@ -87,36 +89,13 @@ export class AddTutorialComponent implements OnInit {
     }
 
     showPreviewVideo(tutorial: any): void {
-        this.user.videoUrl = tutorial.link.replace('watch?v=', 'embed/');
         this.dialog.open(ModalVideoComponent, {
             height: '80vh',
             width: '80vw',
-        });
-    }
-
-    showSectionName(classs: any): boolean {
-        let sectionLength = 0;
-        classs.sectionList.every(section => {
-            if (section.containsStudent) {
-                ++sectionLength;
-            }
-            if (sectionLength > 1) {
-                return false;
-            } else {
-                return true;
+            data: {
+                videoUrl: tutorial.link.replace('watch?v=', 'embed/')
             }
         });
-        return sectionLength > 1;
-    }
-
-    unselectAllClasses(): void {
-        this.classSectionSubjectList.forEach(
-            classs => {
-                classs.sectionList.forEach(section => {
-                    section.selected = false;
-                });
-            }
-        );
     }
 
 }

@@ -4,7 +4,7 @@
             <mat-form-field style="margin: 20px;">
                 <mat-select placeholder="Select Subject"
                             [ngModel]="selectedSubject"
-                            (ngModelChange)="selectedSubject=$event;selectedChapter=null;selectedTopic=null;serviceAdapter.populateChapter()">
+                            (ngModelChange)="selectedSubject=$event;showTutorialVideo=false;selectedChapter=[];">
                     <mat-option *ngFor='let subject of serviceAdapter.filteredStudentSubject;' [value]="subject">
                         {{getSubjectName(subject)}}
                     </mat-option>
@@ -14,9 +14,9 @@
             <mat-form-field style="margin: 20px;">
                 <mat-select placeholder="Select Chapter"
                             [ngModel]="selectedChapter"
-                            (ngModelChange)="selectedChapter=$event;selectedTopic=null;populateTopic()">
-                    <mat-option *ngFor='let chapter of chapterList;' [value]="chapter">
-                        {{chapter}}
+                            (ngModelChange)="selectedChapter=$event;showTutorialVideo=false;">
+                    <mat-option *ngFor='let chapter of selectedSubject.chapterList;' [value]="chapter">
+                        {{chapter.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -25,17 +25,13 @@
             <mat-form-field style="margin: 20px;">
                 <mat-select placeholder="Select Topic"
                             [ngModel]="selectedTopic"
-                            (ngModelChange)="selectedTopic=$event;publishDate=selectedTopic.generationDateTime;videoUrl=selectedTopic.link;showTutorialVideo=false;setTutorialVideo()">
-                    <mat-option *ngFor='let topic of topicList;' [value]="topic">
+                            (ngModelChange)="selectedTopic=$event;setTutorialVideo()">
+                    <mat-option *ngFor='let topic of selectedChapter.topicList;' [value]="topic">
                         {{topic.topic}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-<!--            <button type="submit"-->
-<!--                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"-->
-<!--                    (click)="">GET-->
-<!--            </button>-->
         </div>
         <ng-container *ngIf="showTutorialVideo">
             <div style="height:70%;width: 70%;margin-left:10%;margin-bottom: 5%">
@@ -53,7 +49,8 @@
             </div>
         </ng-container>
     </ng-container>
+
 </div>
 <ng-container *ngIf="isLoading">
-        <app-loading-spinner [user]="user"></app-loading-spinner>
-    </ng-container>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

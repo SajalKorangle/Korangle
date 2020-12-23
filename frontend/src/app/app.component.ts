@@ -56,10 +56,12 @@ export class AppComponent implements OnInit {
     }
 
     showTutorial(url:any) {
-        this.user.videoUrl=url;
         this.dialog.open(ModalVideoComponent, {
             height: '80vh',
             width: '80vw',
+            data: {
+                videoUrl: url
+            }
         });
     }
 

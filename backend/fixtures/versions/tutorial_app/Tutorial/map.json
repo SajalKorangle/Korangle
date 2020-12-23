@@ -1,0 +1,12 @@
+[
+    {
+      "file": "single-tutorial.json",
+      "file_object_list": [
+        {
+          "app": "subject_app",
+          "model": "ClassSubject",
+          "file": "class_three_subject.json"
+        }
+      ]
+    }
+]

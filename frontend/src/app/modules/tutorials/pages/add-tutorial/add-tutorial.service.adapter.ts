@@ -52,6 +52,7 @@ export class AddTutorialServiceAdapter {
             this.fullStudentList = value[4];
             this.populateSubjectList();
             this.populateClassSectionList();
+            this.populateContainsStudent();
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
@@ -72,7 +73,7 @@ export class AddTutorialServiceAdapter {
                     tempSection[key] = section[key];
                 });
                 tempSection['containStudent'] = false;
-                tempSection['parentClass']=classs.id
+                tempSection['parentClass'] = classs.id
                 tempSection['subjectList'] = [];
 
                 this.classSubjectList.forEach(classSubject => {
@@ -94,13 +95,6 @@ export class AddTutorialServiceAdapter {
             this.classSectionSubjectList.push(tempClass);
         });
 
-        this.vm.classSectionSubjectList = [];
-        this.populateContainsStudent();
-        this.vm.classSectionSubjectList = this.classSectionSubjectList;
-        console.log(this.vm.classSectionSubjectList);
-        this.vm.classSectionSubjectList[0].sectionList[0].selected = true;
-        this.vm.selectedClass = this.vm.classSectionSubjectList[0];
-        this.vm.selectedSection = this.vm.classSectionSubjectList[0].sectionList[0];
     }
 
     populateSubjectList(): void {
@@ -109,27 +103,21 @@ export class AddTutorialServiceAdapter {
 
     getTutorialList(): void {
         this.vm.showTutorialDetails = false;
-        if (this.vm.selectedSubject == null) {
-            alert('Select the Subject');
-        } else {
-            this.vm.showTutorialDetails = false;
-            let request_class_subject_tutorial_data = {
-                'parentClassSubject': this.vm.getParentClassSubject()
-            };
-            Promise.all([
-                this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_class_subject_tutorial_data),
-            ]).then(value => {
-                this.populateTutorialList(value[0]);
-            }, error => {
-            });
-            this.vm.initializeNewTutorial();
-            this.vm.showTutorialDetails = true;
-            this.vm.isDisabled = true;
-        }
+        let request_class_subject_tutorial_data = {
+            'parentClassSubject': this.vm.getParentClassSubject()
+        };
+        Promise.all([
+            this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_class_subject_tutorial_data),
+        ]).then(value => {
+            this.populateTutorialList(value[0]);
+        }, error => {
+        });
+        this.vm.initializeNewTutorial();
+        this.vm.showTutorialDetails = true;
+        this.vm.isAddDisabled = true; // Add button is disabled
     }
 
     addNewTutorial(): void {
-
 
         if (!this.decimalRegex.test(this.vm.newTutorial.orderNumber) || this.vm.newTutorial.orderNumber <= 0) {
             if (this.vm.tutorialList.length == 0) {
@@ -150,7 +138,6 @@ export class AddTutorialServiceAdapter {
 
 
         this.vm.tutorialService.createObject(this.vm.tutorialService.tutorial, data).then(value => {
-            // alert('Tutorial created successfully');
             value['editable'] = false;
             this.vm.tutorialList.push(value);
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
@@ -159,66 +146,72 @@ export class AddTutorialServiceAdapter {
         }, error => {
             this.vm.isLoading = false;
         });
-        this.vm.isDisabled = true;
-
+        this.vm.isAddDisabled = true;
+        this.vm.showPreview = false;
     }
 
     makeEditableOrSave(tutorial: any): void {
         if (tutorial.editable) {
-            if (!this.areInputsValid(tutorial)) {
+            if (!this.areInputsValid(this.vm.editedTutorial)) {
                 return;
             }
 
             this.vm.tutorialUpdating = true;
-            let data = {
-                'id': tutorial.id,
-                'parentClassSubject': tutorial.parentClassSubject,
-                'chapter': tutorial.chapter,
-                'topic': tutorial.topic,
-                'link': tutorial.link,
-                'orderNumber': tutorial.orderNumber,
-            };
+            this.vm.tutorialEditing = false;
 
+            let data = {
+                'id': this.vm.editedTutorial.id,
+                'parentClassSubject': this.vm.editedTutorial.parentClassSubject,
+                'chapter': this.vm.editedTutorial.chapter,
+                'topic': this.vm.editedTutorial.topic,
+                'link': this.vm.editedTutorial.link,
+                'orderNumber': this.vm.editedTutorial.orderNumber,
+            };
 
             Promise.all([
                 this.vm.tutorialService.updateObject(this.vm.tutorialService.tutorial, data),
             ]).then(value => {
+                Object.assign(this.vm.tutorialList.find(t => t.id === tutorial.id), value[0]);
+                this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
                 this.vm.tutorialUpdating = false;
+                tutorial.editable = false;
             }, error => {
-               this.vm.tutorialUpdating = false;
+                this.vm.tutorialUpdating = false;
+                tutorial.editable = false;
             });
-
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
-            tutorial.editable = false;
-            this.vm.tutorialEditing=false;
         } else {
-            this.vm.tutorialEditing=true;
+
+            this.vm.editedTutorial = [];
+            Object.keys(tutorial).forEach(key => {
+                this.vm.editedTutorial[key] = tutorial[key];
+            });
+            this.vm.tutorialEditing = true;
             tutorial.editable = true;
+
         }
     }
 
     removeOrCancel(tutorial: any): void {
         if (tutorial.editable) {
-            this.getTutorialList();
+            this.vm.showTutorialDetails = false;
+            this.vm.editedTutorial = [];
             tutorial.editable = false;
-            this.vm.tutorialEditing=false;
+            this.vm.tutorialEditing = false;
+            this.vm.showTutorialDetails = true;
         } else {
+            this.vm.tutorialUpdating = true;
             this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial).then(value => {
                 this.vm.tutorialList = this.vm.tutorialList.filter(item => {
                     return item.id != tutorial.id;
                 });
+                this.vm.tutorialUpdating = false;
             }, error => {
+                this.vm.tutorialUpdating = false;
             });
         }
     }
 
-
-    populateSubjectTutorial(tutorials: any) {
-        this.vm.selectedSubject['tutorialList'] = [];
-        if (tutorials != undefined) {
-            this.vm.selectedSubject.tutorialList = tutorials;
-        }
-    }
 
     areInputsValid(tutorial): boolean {
         if (!tutorial.chapter || tutorial.chapter.trim() == '') {
@@ -229,48 +222,66 @@ export class AddTutorialServiceAdapter {
             alert('Tutorial topic should not be empty');
             return false;
         }
+        if (this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim() && !t.id === tutorial.id)) {
+            alert('The Topic already exists');
+            return false;
+        }
         if (!tutorial.link || tutorial.link.trim() == '') {
             alert('Tutorial link should not be empty');
             return false;
         }
-        if (!this.decimalRegex.test(tutorial.orderNumber) || tutorial.orderNumber <= 0) {
+        if (!this.decimalRegex.test(tutorial.orderNumber) || parseFloat(tutorial.orderNumber) <= 0) {
             alert('OrderNumber should be greater than 0 with 1 decimal place');
-            return;
+            return false;
         }
         if (!this.youtubeRegex.test(tutorial.link.trim())) {
             alert('Please enter a valid link');
             return false;
+        }
+        if (tutorial.link.startsWith('www.')) {
+            tutorial.link = 'https://' + tutorial.link;
         }
         return true;
     }
 
     checkEnableAddButton() {
         const tutorial = this.vm.newTutorial;
-        if (!tutorial.chapter || tutorial.chapter.trim() == '') {
-            this.vm.isDisabled = true;
+        this.vm.topicAlreadyPresent = tutorial.topic && this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim());
+
+        if (!tutorial.link || tutorial.link.trim() == '') {
+            this.vm.isAddDisabled = true;
+            this.vm.showPreview = false;
             return;
-        } else if (!tutorial.topic || tutorial.topic.trim() == '') {
-            this.vm.isDisabled = true;
-            return;
-        } else if (!tutorial.link || tutorial.link.trim() == '') {
-            this.vm.isDisabled = true;
-            return;
-        } else if (!this.youtubeRegex.test(tutorial.link.trim())) {
-            this.vm.isDisabled = true;
-            return;
-        } else {
-            this.vm.previewBeforeAddTutorialUrl = tutorial.link.replace('watch?v=', 'embed/');
-            this.vm.isDisabled = false;
         }
 
+        if (this.youtubeRegex.test(tutorial.link.trim())) {
+            if (tutorial.link.startsWith('www.')) {
+                tutorial.link = 'https://' + tutorial.link;
+            }
+            this.vm.previewBeforeAddTutorialUrl = tutorial.link.replace('watch?v=', 'embed/');
+            this.vm.showPreview = true;
+            if (!tutorial.chapter || tutorial.chapter.trim() == '') {
+                this.vm.isAddDisabled = true;
+                return;
+            } else if (!tutorial.topic || tutorial.topic.trim() == '' || this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim())) {
+                this.vm.isAddDisabled = true;
+                return;
+            } else {
+                this.vm.topicAlreadyPresent = false;
+                this.vm.isAddDisabled = false;
+                this.vm.topicAlreadyPresent = false;
+            }
+        } else {
+            this.vm.showPreview = false;
+            this.vm.isAddDisabled = true;
+        }
     }
 
     populateTutorialList(tutorialList) {
-        tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         tutorialList.forEach(tutorial => {
             tutorial['editable'] = false;
-            tutorial['isUpdating'] = false;
         });
+        tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         this.vm.tutorialList = tutorialList;
     }
 
@@ -284,5 +295,12 @@ export class AddTutorialServiceAdapter {
                 });
             });
         });
+        this.vm.classSectionSubjectList = [];
+        this.vm.classSectionSubjectList = this.classSectionSubjectList;
+        if (this.vm.classSectionSubjectList.length > 0) {
+            this.vm.selectedClass = this.vm.classSectionSubjectList[0];
+            this.vm.selectedSection = this.vm.selectedClass.sectionList[0];
+            this.vm.selectedSubject = this.vm.selectedSection.subjectList[0];
+        }
     }
 }

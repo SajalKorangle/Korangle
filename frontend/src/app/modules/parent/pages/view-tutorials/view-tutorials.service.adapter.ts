@@ -15,20 +15,13 @@ export class ViewTutorialsServiceAdapter {
     classTestList: any;
     studentTestList: any;
     studentProfile: any;
-    filteredStudentSubject:any;
+    filteredStudentSubject: any;
 
 
     initializeAdapter(vm: ViewTutorialsComponent): void {
         this.vm = vm;
     }
 
-    copyObject(object: any): any {
-        let tempObject = {};
-        Object.keys(object).forEach(key => {
-            tempObject[key] = object[key];
-        });
-        return tempObject;
-    }
 
     //initialize data
     initializeData(): void {
@@ -60,75 +53,71 @@ export class ViewTutorialsServiceAdapter {
             this.vm.classSubjectList = value[0];
             this.vm.subjectList = value[1];
             this.vm.studentSubjectList = value[2];
-            console.log(this.vm.studentSubjectList);
-            this.vm.selectedSubject = this.vm.studentSubjectList[0];
             this.studentProfile = value[3];
-            this.getTutorialList();
-            this.populateChapter();
+            this.populateSubjectChapterTopic();
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
         });
-        
+
     }
 
 
-    getTutorialList() {
-        this.vm.chapterList = [];
-        this.vm.topicList = [];
-        this.vm.showTutorialVideo = false;
-        this.filteredStudentSubject=[];
-        this.vm.tutorialList=[];
-        this.vm.studentSubjectList.forEach(subject=>{
-         this.vm.selectedSubject=subject;
-        let request_tutorials_data = {
-            'parentClassSubject': this.getParentClassSelectedSubject(),
-        };
-        Promise.all([
-            this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_tutorials_data),
-        ]).then(value => {
-                if(value[0].length > 0){
-                     this.filteredStudentSubject.push(subject);
-                     this.vm.tutorialList.push(value[0]);
-                     console.log(this.vm.tutorialList);
-                 }
-        }, error => {
-            this.vm.isLoading = false;
+    populateSubjectChapterTopic() {
+        this.filteredStudentSubject = [];
+        this.vm.selectedSubject = [];
+        this.vm.selectedChapter = [];
+
+        this.vm.studentSubjectList.forEach(subject => {
+
+            let request_tutorials_data = {
+                'parentClassSubject': this.getParentClassSelectedSubject(subject),
+            };
+            Promise.all([
+                this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_tutorials_data),
+            ]).then(value => {
+                if (value[0].length > 0) {
+                    subject['parentClassSubject'] = value[0][0].parentClassSubject;
+                    subject['chapterList'] = [];
+                    value[0].forEach(tutorial => {
+                        if (subject.chapterList.length < 0 || !subject.chapterList.some(chap => chap.name === tutorial.chapter)) {
+                            let tempChapter = {};
+                            tempChapter['name'] = tutorial.chapter;
+                            tempChapter['topicList'] = [];
+                            let tempTopic = {};
+                            Object.keys(tutorial).forEach(key => {
+                                tempTopic[key] = tutorial[key];
+                            });
+                            tempChapter['topicList'].push(tempTopic);
+                            subject.chapterList.push(tempChapter);
+                        } else {
+                            subject.chapterList.find(chap => chap.name === tutorial.chapter).topicList.push(tutorial);
+                        }
+                    });
+                    this.filteredStudentSubject.push(subject);
+                    this.vm.selectedSubject = subject;
+                    this.vm.selectedChapter = this.vm.selectedSubject.chapterList[0];
+                    this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
+                    this.vm.setTutorialVideo();
+                    console.log(this.vm.selectedChapter);
+                }
+                console.log(this.filteredStudentSubject);
+            }, error => {
+                this.vm.isLoading = false;
+            });
         });
-    });
     }
 
-    populateChapter() {
 
-         const tutorialList=[];
-          this.vm.tutorialList.forEach(subject=> {
-              subject.forEach(tutorial => {
-                  if (tutorial.parentClassSubject === this.getParentClassSelectedSubject()) {
-                      tutorialList.push(tutorial);
-                  }
-              });
-          });
-          this.vm.chapterList=[];
-        this.vm.selectedSubject['tutorialList'] = [];
-        this.vm.selectedSubject['tutorialList'] = tutorialList;
-        this.vm.selectedSubject.tutorialList.forEach(tutorial => {
-            if (!this.vm.chapterList.find(chapter => {
-                return chapter === tutorial.chapter
-            })) {
-                this.vm.chapterList.push(tutorial.chapter);
-            }
-        });
-        console.log(this.vm.chapterList);
-    }
-
-    getParentClassSelectedSubject(): number {
+    getParentClassSelectedSubject(subject: any): number {
         const classSub = this.vm.classSubjectList.filter(classSubject => {
-            if (classSubject.parentClass == this.studentProfile.classDbId && classSubject.parentDivision == this.studentProfile.sectionDbId && classSubject.parentSubject == this.vm.selectedSubject.parentSubject) {
+            if (classSubject.parentClass == this.studentProfile.classDbId && classSubject.parentDivision == this.studentProfile.sectionDbId && classSubject.parentSubject == subject.parentSubject) {
                 return classSubject;
             }
         });
         return classSub[0].id;
     }
+
 }
 
 
