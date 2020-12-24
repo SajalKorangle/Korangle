@@ -98,7 +98,7 @@
                                     style="padding: 3px 8px;"
                                     class="{{getButtonClass(attendance.status)}}"
                                     [disabled]="attendance.status===attendanceStatusList[2]"
-                                    (click)="changeStudentAttendanceStatus(attendance);"
+                                    (click)="changeStudentAttendanceStatus(attendance)"
                                     matTooltip="{{getMatTooltip(student, attendance)}}"
                                     matTooltipShowDelay="1000"
                                     [matTooltipDisabled]="attendance.status===attendanceStatusList[2] || by==='date'">
