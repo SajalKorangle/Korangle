@@ -161,11 +161,36 @@ export class RecordAttendanceServiceAdapter {
             attendanceList.forEach(element =>{
                 this.vm.currentAttendanceList.push(element);
             });
-            this.vm.populateStudentAttendanceList(attendanceList);
+            this.populateStudentAttendanceList(attendanceList);
         },error => {
             this.vm.isLoading = false;
         });
         
+    }
+
+    populateStudentAttendanceList(attendanceList: any) {
+        this.vm.studentAttendanceStatusList = [];
+        this.vm.classSectionStudentList.forEach(classs => {
+            classs.sectionList.forEach(section => {
+                if (this.vm.selectedSection.dbId === section.dbId && classs.dbId === this.vm.selectedClass.dbId) {
+                    section.studentList.forEach(student => {
+                        let tempItem = {
+                            dbId: student.dbId,
+                            name: student.name,
+                            scholarNumber: student.scholarNumber,
+                            mobileNumber: student.mobileNumber,
+                            attendanceStatusList: [],
+                        };
+                        let dateList = this.vm.getDateList();
+                        dateList.forEach(date => {
+                            tempItem.attendanceStatusList.push(this.vm.getStudentAttendanceStatusObject(student, date, attendanceList));
+                        });
+                        this.vm.studentAttendanceStatusList.push(tempItem);
+                    });
+                }
+            });
+        });
+        this.fetchGCMDevices(this.vm.studentAttendanceStatusList);
     }
 
     updateStudentAttendanceList(): void {

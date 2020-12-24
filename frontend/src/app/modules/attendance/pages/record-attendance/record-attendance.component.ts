@@ -140,31 +140,6 @@ export class RecordAttendanceComponent implements OnInit {
         return studentIdList;
     }
 
-    populateStudentAttendanceList(attendanceList: any) {
-        this.studentAttendanceStatusList = [];
-        this.classSectionStudentList.forEach(classs => {
-            classs.sectionList.forEach(section => {
-                if (this.selectedSection.dbId === section.dbId && classs.dbId === this.selectedClass.dbId) {
-                    section.studentList.forEach(student => {
-                        let tempItem = {
-                            dbId: student.dbId,
-                            name: student.name,
-                            scholarNumber: student.scholarNumber,
-                            mobileNumber: student.mobileNumber,
-                            attendanceStatusList: [],
-                        };
-                        let dateList = this.getDateList();
-                        dateList.forEach(date => {
-                            tempItem.attendanceStatusList.push(this.getStudentAttendanceStatusObject(student, date, attendanceList));
-                        });
-                        this.studentAttendanceStatusList.push(tempItem);
-                    });
-                }
-            });
-        });
-        this.serviceAdapter.fetchGCMDevices(this.studentAttendanceStatusList);
-    }
-
     getStudentAttendanceStatusObject(student: any, date: any, attendanceStatusList: any): any {
         let temp = {
             date: date,
