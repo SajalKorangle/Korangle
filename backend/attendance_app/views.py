@@ -53,9 +53,11 @@ class AttendancePermissionListView(CommonListView, APIView):
 
 ########### Attendance Settings #############
 
+
 class AttendanceSettingsListView(CommonListView, APIView):
     Model = AttendanceSettings
-    
+
+
 class AttendanceSettingsView(CommonView, APIView):
     Model = AttendanceSettings
-    
+
