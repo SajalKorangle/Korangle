@@ -369,16 +369,16 @@ export class RecordAttendanceComponent implements OnInit {
     }
 
     getButtonClass(status: any): any {
-        let classs = 'btn';
+        let classs = "btn";
         switch (status) {
             case ATTENDANCE_STATUS_LIST[2]:
-                classs += ' btn-warning';
+                classs += " btn-warning";
                 break;
             case ATTENDANCE_STATUS_LIST[1]:
-                classs += ' btn-danger';
+                classs += " btn-danger";
                 break;
             case ATTENDANCE_STATUS_LIST[0]:
-                classs += ' btn-success';
+                classs += " btn-success";
                 break;
         }
         return classs;
