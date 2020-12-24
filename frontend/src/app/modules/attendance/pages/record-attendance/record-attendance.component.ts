@@ -124,22 +124,6 @@ export class RecordAttendanceComponent implements OnInit {
         return result;
     }
 
-
-    // Server Handling - 1
-    getStudentIdList(): any {
-        let studentIdList = [];
-        this.classSectionStudentList.forEach(classs => {
-            classs.sectionList.forEach(section => {
-                if (this.selectedSection.dbId === section.dbId && classs.dbId === this.selectedClass.dbId) {
-                    section.studentList.forEach(student => {
-                        studentIdList.push(student.dbId);
-                    });
-                }
-            });
-        });
-        return studentIdList;
-    }
-
     getStudentAttendanceStatusObject(student: any, date: any, attendanceStatusList: any): any {
         let temp = {
             date: date,
