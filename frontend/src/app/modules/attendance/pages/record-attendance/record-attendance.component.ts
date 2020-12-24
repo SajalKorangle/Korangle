@@ -218,7 +218,7 @@ export class RecordAttendanceComponent implements OnInit {
                     studentAttendanceStatusListData.push(tempData);
                 }
             });
-        }); 
+        });
         return studentAttendanceStatusListData;
     }
 
