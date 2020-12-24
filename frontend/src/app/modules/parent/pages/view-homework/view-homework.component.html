@@ -35,7 +35,7 @@
                             <i>{{homework.homeworkName}}</i> &nbsp;
                         </mat-panel-title>
                         <mat-panel-description>
-                            <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time:
+                            <span *ngIf="homework.endDate!= null" class="hidden-xs" style="color: #7b7b7b;">Deadline:
                                 &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i> &nbsp;&nbsp;
                             <strong><i>{{homework.homeworkStatus}}</i> &nbsp;</strong>
                         </mat-panel-description>
@@ -98,9 +98,9 @@
                             <i>{{homework.homeworkName}}</i> &nbsp;
                         </mat-panel-title>
                         <mat-panel-description>
-                            <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time:
+                            <span *ngIf="homework.endDate!= null" class="hidden-xs" style="color: #7b7b7b;">Deadline:
                                 &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i> &nbsp;&nbsp;
-                            <strong><i>{{homework.homeworkStatus}}</i> &nbsp;</strong>
+                            <strong>{{homework.homeworkStatus}} &nbsp;</strong>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
 
@@ -161,7 +161,7 @@
 </div>
 
 <div class="card-content table-responsive" *ngIf="isSubmitting">
-    <div class="col-md-12">
+    <div class="col-xs-12">
         <button type="submit"
             class="btn"
             style="float:left ;cursor: pointer; padding: 4px 7px;"
@@ -178,6 +178,9 @@
                 &nbsp;</span><i>{{displayDateTime(toSubmitHomework.startDate, toSubmitHomework.startTime)}}</i> <br>
             <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time:
                 &nbsp;</span><i>{{displayDateTime(toSubmitHomework.endDate, toSubmitHomework.endTime)}}</i> <br>
+            <span class="hidden-xs" style="color: #7b7b7b;">Submission On Date & Time:
+                &nbsp;</span><i>{{displayDateTime(toSubmitHomework.submissionDate, toSubmitHomework.submissionTime)}}</i> <br>
+            
             <span class="hidden-xs" style="color: #7b7b7b;">Teacher's Remark:
                 &nbsp;</span><i>{{toSubmitHomework.homeworkRemark}}</i>
 
