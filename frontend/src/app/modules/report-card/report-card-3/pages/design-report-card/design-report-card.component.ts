@@ -17,10 +17,10 @@ export class DesignReportCardComponent implements OnInit {
   user: any;
   canvas: any;
 
-  currentLayout: any;
+  currentLayout: {id?:number, parentSchool:string, name:string, content: string};
   ADD_LAYOUT_STRING = '<Add New Layout>';
 
-
+  // stores the layour list from backend, new layout or modified layout is added to this list only after saving to backend
   reportCardLayoutList: any[] = [];
 
   isLoading = false;
@@ -51,28 +51,29 @@ export class DesignReportCardComponent implements OnInit {
     };
   }
 
-  populateCurrentLayoutWithEmptyDefaultData(): void {
+  newLayout(): void { // populating current layout to empty vaues and current activeSchool ID
     this.currentLayout = {
         parentSchool: this.user.activeSchool.dbId,
         name: '',
-        content: [],
+        content: '',
     };
-  }
+  } 
 
   populateCurrentLayoutWithGivenValue(value: any): void {
     // Check and give warning if the previous canvas is not saved
-
-    if (this.canvas && this.canvasAdapter) {
+    if (this.canvas) {
       this.canvasAdapter.clearCanvas();
     }
     else {
-      let observer = new MutationObserver((mutations, me) => {
+      // if canvs is not already rendered subscribe to mutations while canvas is rendered
+      let observer = new MutationObserver((mutations, me) => {  
         let canvas = document.getElementById('mainCanvas');
         if (canvas) {
           this.canvas = canvas;
+          this.htmlAdapter.canvasSetUp();
           this.canvasAdapter.initilizeAdapter(this.canvas);
+          // Draw graphics of previous data form this.currentLayout.content
           me.disconnect();
-          return;
         }
       });
       observer.observe(document, {
@@ -82,7 +83,7 @@ export class DesignReportCardComponent implements OnInit {
     }
 
     if (value === this.ADD_LAYOUT_STRING) {
-      this.populateCurrentLayoutWithEmptyDefaultData();
+      this.newLayout();
     } else {
       this.currentLayout = { ...value, content: JSON.parse(value.content) };
       // Draw graphics on canvas from this.currentLayout.content
@@ -90,9 +91,22 @@ export class DesignReportCardComponent implements OnInit {
     // Rest to be implemented
   }
 
+  doesCurrentLayoutHasUniqueName(): boolean {
+    return this.reportCardLayoutList.filter(reportCardLayout => {
+        return reportCardLayout.name === this.currentLayout.name;
+    }).length === 0;
+  };
+
   imageUploadHandler(event: any): void{
     const uploadedImage = event.target.files[0];
     this.fileReader.readAsDataURL(uploadedImage);
+  }
+
+  resetCurrentLayout(): void {
+    const layout = this.reportCardLayoutList.find(item => {
+      return item.id === this.currentLayout.id;
+    });
+    this.populateCurrentLayoutWithGivenValue(layout === undefined ? this.ADD_LAYOUT_STRING : layout);
   }
 
   logMessage(msg: any): void{

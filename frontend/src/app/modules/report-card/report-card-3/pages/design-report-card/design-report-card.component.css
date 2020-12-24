@@ -4,6 +4,15 @@
 .bg-grey {
     background-color: lightgray;
 }
+.bg-active {
+    background-color: skyblue;
+    box-shadow: 0 0 3px darkgray;
+}
+
+.bg-active::selection {
+    color: red;
+    background: yellow;
+}
 
 .inline-block {
     display: inline-block;

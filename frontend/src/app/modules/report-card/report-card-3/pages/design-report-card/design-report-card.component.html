@@ -12,7 +12,25 @@
 
     <ng-container *ngIf="currentLayout">
     <mat-card>
-        <div class="bg-grey flex-row" style="width: 100%; padding: 6px;">
+        <div>
+        <mat-form-field style="width: 100%; max-width: 250px;">
+            <mat-label>
+                Layout Name
+            </mat-label>
+            <input matInput [(ngModel)]="currentLayout.name">
+            <mat-icon matSuffix *ngIf="doesCurrentLayoutHasUniqueName()"><span class="matrial-icons">emoji_emotions</span></mat-icon>
+            <mat-hint style="color:red; display: block;" *ngIf="!doesCurrentLayoutHasUniqueName()" class="small">
+                Layout name must be unique
+            </mat-hint>
+        </mat-form-field>
+
+        <button class="btn"
+                (click)="resetCurrentLayout()"
+                style="padding: 4px 7px; margin-right: 12px; float: right;">Reset All</button>
+
+        </div>
+
+        <div class="bg-grey flex-row" style="width: 100%; padding: 6px; margin-top: 6px;">
             <!-- Top Toolbar -->
 
             <div class="tool"> <!--Background Color Picker-->   
@@ -31,7 +49,7 @@
 
         <div class="flex-row" style="margin-top: 8px; width: 100%; justify-content: space-around;">
             <!-- column1: Left Pannel -->
-            <div class="inline-block" style="width: 200px;" class="leftPannel bg-grey">
+            <div class="inline-block" style="width: 240px;" class="leftPannel bg-grey">
                 <mat-button-toggle-group style="width: 100%; margin-top: 2px;">
                     <mat-button-toggle value="layers" [checked]="htmlAdapter.activeLeftColumn === 'layers'"  (click)="htmlAdapter.activeLeftColumn = 'layers'">Layers</mat-button-toggle>
                     <mat-button-toggle value="parameters" (click)="htmlAdapter.activeLeftColumn = 'parameters'">Parameters</mat-button-toggle>
@@ -40,7 +58,15 @@
                 <!-- Layers Column -->
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
                     <div style="width: 100%; height: 100%; margin-top: 4px;" class="flex-column">
-                        <span style="width: calc(100% - 4px); text-align: center; margin: 2px; padding: 4px; border-radius: 3px;" class="bg-white" *ngFor="let layers of canvasAdapter.layers, i as index"> Layer {{i}}</span>
+                        <ng-container *ngFor="let layer of canvasAdapter.layers; index as i">
+                            <span *ngIf="layer"
+                                    (click)="canvasAdapter.updateActiveLayer(i);"
+                                    style="width: calc(100% - 8px); text-align: center; margin: 4px; padding: 4px; border-radius: 3px; cursor: pointer; white-space: nowrap;" 
+                                    [class]="i==canvasAdapter.activeLayerIndex?'bg-active':'bg-white'"> 
+                                <span (blur)="layer.displayName=$event.target.innerText" style="display: inline-block;" contenteditable="true"> {{layer.displayName}} </span>   <!--this is layer name-->
+                                <span style="float: right; margin-right: 12px;">#{{i}}</span>   <!-- i is id which is the array index no.of layers -->
+                            </span>
+                        </ng-container>
                     </div>
                 </ng-container>
 
@@ -51,8 +77,8 @@
             </div>
 
             <!-- column 2 -->
-            <div class="bg-grey inline-block" style="width: calc(100% - 390px);">
-                <canvas id="mainCanvas" style="width: calc(100% - 48px); margin: 24px;"></canvas>
+            <div class="bg-grey inline-block" style="width: calc(100% - 430px);" id="canvasWrapper">
+                <canvas id="mainCanvas" [style.margin.px]="htmlAdapter.canvasMargin"></canvas>
             </div>
 
 
