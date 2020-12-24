@@ -17,6 +17,12 @@ export class CommonFunctions {
         mainPannel.scrollTop = 0;
     }
 
+    static objectToFormData(object): FormData{
+        let form = new FormData();
+        Object.keys(object).forEach(key => form.append(key, object['key']));
+        return form;
+    }
+
     copyObject(object: any): any {
         let tempObject = {};
         Object.keys(object).forEach(key => {

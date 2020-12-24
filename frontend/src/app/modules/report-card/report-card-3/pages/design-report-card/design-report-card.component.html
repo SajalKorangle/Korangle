@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" *ngIf="!isLoading; else spinner">
+<div class="card-content table-responsive" *ngIf="!htmlAdapter.isLoading; else spinner">
 
     <!-- Choose to add/edit/delete layout/s -->
     <mat-form-field style="margin-bottom: 10px;">
@@ -38,11 +38,15 @@
                     <input type="color" [value]="canvasAdapter.backgroundColor" (input)="canvasAdapter.applyBackground($event.target.value)"/>
             </div>
 
-            <div class="tool">
+            <div class="tool">  <!--Add Image-->
                 <input type='file' (change)="imageUploadHandler($event)" multiple="false" style="display: none" accept="image/x-png,image/jpeg" #imageInput/>
-                <button type="button"
-                        class="btn material-icons"
+                <button class="btn material-icons"
                         (click)="imageInput.click()">add_photo_alternate</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        (click)="htmlAdapter.isSaving=true; saveLayout();" [disabled]="htmlAdapter.isSaving">save</button>
             </div>
 
         </div>
@@ -77,7 +81,8 @@
             </div>
 
             <!-- column 2 -->
-            <div class="bg-grey inline-block" style="width: calc(100% - 430px);" id="canvasWrapper">
+            <div class="bg-grey inline-block" style="width: calc(100% - 430px); position: relative;" id="canvasWrapper">
+                <ng-container *ngIf="htmlAdapter.isSaving"><mat-progress-bar mode="indeterminate" style="position: absolute;"></mat-progress-bar></ng-container>
                 <canvas id="mainCanvas" [style.margin.px]="htmlAdapter.canvasMargin"></canvas>
             </div>
 

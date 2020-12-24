@@ -17,16 +17,16 @@ export class DesignReportCardComponent implements OnInit {
   user: any;
   canvas: any;
 
-  currentLayout: {id?:number, parentSchool:string, name:string, content: string};
+  currentLayout: {id?:any, parentSchool:string, name:string, content: any};
   ADD_LAYOUT_STRING = '<Add New Layout>';
 
   // stores the layour list from backend, new layout or modified layout is added to this list only after saving to backend
   reportCardLayoutList: any[] = [];
 
-  isLoading = false;
+  unuploadedFiles: {string:string}[] = []; // Local urls of files to be uploaded, format [{file_uri : file_name},...]
 
   serviceAdapter: DesignReportCardServiceAdapter;
-  htmlAdapter: DesignReportCardHtmlAdapter;
+  htmlAdapter: DesignReportCardHtmlAdapter = new DesignReportCardHtmlAdapter();
   canvasAdapter: DesignReportCardCanvasAdapter;
 
   fileReader: FileReader;
@@ -42,20 +42,14 @@ export class DesignReportCardComponent implements OnInit {
 
     this.canvasAdapter = new DesignReportCardCanvasAdapter();
 
-    this.htmlAdapter = new DesignReportCardHtmlAdapter();
     this.htmlAdapter.initializeAdapter(this);
-
-    this.fileReader = new FileReader();
-    this.fileReader.onload = e => {
-      this.canvasAdapter.newImageLayer(this.fileReader.result); // Push new Image layer with the provided data
-    };
   }
 
   newLayout(): void { // populating current layout to empty vaues and current activeSchool ID
     this.currentLayout = {
         parentSchool: this.user.activeSchool.dbId,
         name: '',
-        content: '',
+        content: [],
     };
   } 
 
@@ -89,17 +83,21 @@ export class DesignReportCardComponent implements OnInit {
       // Draw graphics on canvas from this.currentLayout.content
     }
     // Rest to be implemented
+    console.log('curent Layout: ', this.currentLayout);
   }
 
   doesCurrentLayoutHasUniqueName(): boolean {
     return this.reportCardLayoutList.filter(reportCardLayout => {
-        return reportCardLayout.name === this.currentLayout.name;
+      return this.currentLayout.id !== reportCardLayout.id
+        && reportCardLayout.name === this.currentLayout.name;
     }).length === 0;
   };
 
   imageUploadHandler(event: any): void{
     const uploadedImage = event.target.files[0];
-    this.fileReader.readAsDataURL(uploadedImage);
+    const local_file_uri = URL.createObjectURL(uploadedImage);
+    this.canvasAdapter.newImageLayer(local_file_uri); // Push new Image layer with the provided data
+    this.unuploadedFiles[local_file_uri] = uploadedImage.name;
   }
 
   resetCurrentLayout(): void {
@@ -107,6 +105,34 @@ export class DesignReportCardComponent implements OnInit {
       return item.id === this.currentLayout.id;
     });
     this.populateCurrentLayoutWithGivenValue(layout === undefined ? this.ADD_LAYOUT_STRING : layout);
+  }
+
+  async saveLayout() {
+    if (this.currentLayout.name.trim() == '') {
+      await window.confirm("Layout Name Cannot Be Empty!");
+      this.htmlAdapter.isSaving = false;
+      return;
+    }
+
+    if (!this.currentLayout.id) // if new layout upload it
+      await this.serviceAdapter.uploadCurrentLayout();
+    
+    const layers = this.canvasAdapter.getLayersToSave();
+    console.log('to be uploaded layers = ', layers);
+    for (let i = 0; i < layers.length;i++){
+      if (layers[i].LAYER_TYPE == 'IMAGE') {
+        if (this.unuploadedFiles[layers[i].uri]) {
+          let image = await fetch(layers[i].uri).then(response => response.blob());
+          console.log(image)
+          layers[i].image = await this.serviceAdapter.uploadImageForCurrentLayout(image, this.unuploadedFiles[layers[i].uri]);
+          console.log('image url = ', layers[i].image);
+        }
+      }
+    }
+    this.currentLayout.content = layers;
+    await this.serviceAdapter.uploadCurrentLayout();
+    
+    this.htmlAdapter.isSaving = false;
   }
 
   logMessage(msg: any): void{

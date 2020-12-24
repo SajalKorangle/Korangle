@@ -1,4 +1,4 @@
-import { A4, CanvasImage } from './../../../class/constants_3';
+import { A4, CanvasImage, PageRelativeAttributes } from './../../../class/constants_3';
 // Currently supports only a4 size
 
 export class DesignReportCardCanvasAdapter {
@@ -17,7 +17,10 @@ export class DesignReportCardCanvasAdapter {
     lastMouseY: number;
     currentMouseDown: boolean = false;
 
+    pixelTommFactor: number;
     isSaved = false;    // if canvas is not saved then give warning; to be implemented
+
+    pendingReDrawId: any;
 
     constructor() {
     }
@@ -29,13 +32,15 @@ export class DesignReportCardCanvasAdapter {
         this.canvasWidth = canvas.width;
         this.canvasHeight = A4.getHeigthRelativeToA4(this.canvasWidth);  // Adjusting Height according to aspect ratio
         canvas.height = this.canvasHeight;
+        this.pixelTommFactor = A4.A4Resolution.mm.width / this.canvasWidth; 
 
         this.canvas.addEventListener('resize', () => {  // Maintain aspect ratio on resize
             this.canvasWidth = canvas.width;
-            this.canvasWidth = A4.getHeigthRelativeToA4(this.canvasWidth);
-            canvas.width = this.canvasWidth;
+            this.canvasHeight = A4.getHeigthRelativeToA4(this.canvasWidth);
+            canvas.height = this.canvasHeight;
+            this.pixelTommFactor = A4.A4Resolution.mm.width / this.canvasWidth; 
+            // Check if we need to do some more work wrt layers here
         })
-        console.log('Canvas Width X Height: ', this.canvasWidth, this.canvasHeight);
  
         this.applyDefaultbackground();
 
@@ -87,8 +92,15 @@ export class DesignReportCardCanvasAdapter {
         this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);   // Applying background color
 
         for (let i = 0; i < this.layers.length; i++){
-            setTimeout(() => this.layers[i].drawOnCanvas(this.context));
+            let status = this.layers[i].drawOnCanvas(this.context);    // check for redundant iterations
+            if (!status)
+                break;
         }
+    }
+
+    scheduleCanvasReDraw = ()=>{
+        clearTimeout(this.pendingReDrawId);
+        this.pendingReDrawId = setTimeout(() => this.drawAllLayers(), 150);
     }
 
     applyDefaultbackground(): void{
@@ -112,10 +124,11 @@ export class DesignReportCardCanvasAdapter {
         this.applyDefaultbackground();
     }
 
-    newImageLayer(base64Image: any): void{
-        let canvasImage = new CanvasImage(base64Image, 0, 0, this.canvasHeight, this.canvasWidth);
+    newImageLayer(uri: string): void{
+        let canvasImage = new CanvasImage(uri, 0, 0);
+        canvasImage.layerSetUp(this.canvasHeight, this.canvasWidth);
         this.layers.push(canvasImage);
-        setTimeout(() => canvasImage.drawOnCanvas(this.context));  // Putting in ast of event loop to wait for base64Image to load
+        canvasImage.drawOnCanvas(this.context, this.scheduleCanvasReDraw);  // Putting in ast of event loop to wait for base64Image to load
         this.activeLayer = canvasImage;
         this.activeLayerIndex = this.layers.length - 1;
     }
@@ -123,6 +136,20 @@ export class DesignReportCardCanvasAdapter {
     updateActiveLayer(activeLayerIndex:number): void{   // used by left layer pannel
         this.activeLayerIndex = activeLayerIndex;
         this.activeLayer = this.layers[this.activeLayerIndex];
+    }
+
+    getLayersToSave() {
+        let layers = [];
+        for (let i = 0; i < this.layers.length; i++){    // Copying all layer objects
+            layers[i] = { ...this.layers[i] };
+        }
+        layers.forEach(layer => {   // Converting pixels to mm
+            Object.keys(layer).forEach(key => {
+                if (key in PageRelativeAttributes)
+                    layer['key'] = this.pixelTommFactor * layer['key'];
+            })
+        })
+        return layers;
     }
 
 }

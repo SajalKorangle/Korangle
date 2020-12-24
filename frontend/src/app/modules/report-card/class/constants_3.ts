@@ -2,6 +2,13 @@
 
 export const permissibleClickError = 8;    // in pixels
 
+export const PageRelativeAttributes = [
+    'x',
+    'y',
+    'width',
+    'height'
+];
+
 export class A4{
     static aspectRatio = 210 / 297;
     static A4Resolution = {
@@ -30,55 +37,62 @@ interface Layer{
     LAYER_TYPE: string;
     x: number;
     y: number;
+    layerSetUp(canvasWidth:number, canvasHeight: number): void;
     updatePosition(dx: number, dy: number): void;
-    drawOnCanvas(ctx: CanvasRenderingContext2D): void;
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
     isClicked(mouseX: number, mouseY: number): boolean
 };
 
 export class CanvasImage implements Layer{  // Canvas Image Layer
     displayName: string = 'Image';
     LAYER_TYPE: string = 'IMAGE';   // Type description for JSON parsing
-    image: HTMLImageElement;
+    image: HTMLImageElement;    // not included in content json data
+    uri: string;
     x: number;
     y: number;
     heigth: number = null;
     width: number = null;
-    aspectRatio: any = null;
-    maintainAspectRatio = true;
+    aspectRatio: any = null;    // not included in content json data
+    maintainAspectRatio = true; // not included in content json data
 
-    constructor(base64Image: any, x: number, y: number, initialMaxHeight: number = undefined, initialMaxWidth: number = undefined) {
+    constructor(uri: any, x: number, y: number) {
         this.image = new Image();
-        if (initialMaxHeight || initialMaxWidth)
+        console.log(uri);
+        this.uri = uri;
+        this.x = x;
+        this.y = y;
+    }
+
+    layerSetUp(canvasWidth: number, canvasHeight: number): void{
+        if (!this.heigth && !this.width) {
             this.image.onload = () => {
                 this.heigth = this.image.height;
                 this.width = this.image.width;
                 this.aspectRatio = this.width / this.heigth;
 
-                if (initialMaxHeight && this.heigth > initialMaxHeight) {
-                    this.heigth = initialMaxHeight;
-                    this.width = Math.floor(this.aspectRatio * this.heigth);    // maintaining aspect ratio
+                if (canvasHeight && this.heigth > canvasHeight) {
+                    this.heigth = canvasHeight;
+                    this.width = this.aspectRatio * this.heigth;    // maintaining aspect ratio
                 }
-                if (initialMaxWidth && this.width > initialMaxWidth) {
-                    this.width = initialMaxWidth;
-                    this.heigth = Math.floor(this.width / this.aspectRatio);    // maintaining aspect ratio
+                if (canvasWidth && this.width > canvasWidth) {
+                    this.width = canvasWidth;
+                    this.heigth = this.width / this.aspectRatio;    // maintaining aspect ratio
                 }
-                console.log('from construct after image onload : x,y,width,height = ', this.x, this.y, this.width, this.heigth);
             }
-        this.image.src = base64Image;
-        this.x = x;
-        this.y = y;
+        }
+        this.image.src = this.uri;
     }
 
     updateHeight(newHeight: number) {
         this.heigth = newHeight;
         if (this.maintainAspectRatio)
-            this.width = Math.floor(this.aspectRatio * this.heigth);
+            this.width = this.aspectRatio * this.heigth;
     }
 
     updateWidthh(newWidth: number) {
         this.width = newWidth;
         if (this.maintainAspectRatio)
-            this.heigth = Math.floor(this.width / this.aspectRatio); 
+            this.heigth = this.width / this.aspectRatio; 
     }
 
     updatePosition(dx = 0, dy = 0):void {
@@ -86,9 +100,13 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
         this.y += dy;
     }
     
-    drawOnCanvas(ctx: CanvasRenderingContext2D):void {
-        console.log('from draw on canvas after image onload : x,y,width,height = ', this.x, this.y, this.width, this.heigth);
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.heigth);
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        if (this.image.complete && this.image.naturalHeight > 0) {
+            setTimeout(()=>ctx.drawImage(this.image, this.x, this.y, this.width, this.heigth));
+            return true;    // Drawn successfully on canvas
+        }
+        scheduleReDraw();
+        return false;   // Canvas Drawing failed, scheduled redraw for later
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {

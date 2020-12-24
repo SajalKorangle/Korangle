@@ -5,6 +5,9 @@ export class DesignReportCardHtmlAdapter {
     vm: DesignReportCardComponent;
     canvasMargin = 24;
 
+    isSaving = false;
+    isLoading = false;
+
     activeLeftColumn: string = 'layers';
 
     constructor() {}

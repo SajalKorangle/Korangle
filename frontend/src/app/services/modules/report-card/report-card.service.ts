@@ -17,6 +17,7 @@ export class ReportCardService extends ServiceObject {
     constructor(private http_class: HttpClient) {
         super(http_class);
         this.file_list[this.report_card_layout] = this.report_card_layout;
+        this.file_list[this.image_assets] = this.image_assets;
     }
 
 }
