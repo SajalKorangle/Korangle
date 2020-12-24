@@ -37,7 +37,12 @@
 	margin-right: 5px;
 	margin-top: 10px
 }
-
+.image-column-mobile {
+	width: 0.375in; 
+	height: 0.525in; 
+	margin-right: 5px;
+	margin-top: 5px
+}
 .slide-modal {
 	display: none;
 	position: fixed;

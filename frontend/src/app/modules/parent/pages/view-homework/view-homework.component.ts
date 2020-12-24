@@ -6,6 +6,7 @@ import { HomeworkService } from '../../../../services/modules/homework/homework.
 
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
+import { isMobile } from '../../../../classes/common.js';
 
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
@@ -73,6 +74,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         this.serviceAdapter = new ViewHomeworkServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        console.log(this.isMobile());
 
     }
 
@@ -255,23 +257,17 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     }
 
     drop(event: CdkDragDrop<string[]>) {
-        console.log(event.previousIndex);
-        console.log(event.currentIndex);
         moveItemInArray(this.toSubmitHomework.answerImages, event.previousIndex, event.currentIndex);
     }
 
-    func(): any{
-        console.log('scroll');
-    }
-
     @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-        let pos = document.documentElement.offsetHeight;
-        let max = document.documentElement.scrollHeight;
         if((document.documentElement.clientHeight + document.documentElement.scrollTop + 1) > document.documentElement.scrollHeight && this.loadMoreHomework == true){
             this.serviceAdapter.loadMoreHomeworks();
         }
-        // console.log(pos, max);
-        // console.log($event.target.offsetHeight + $event.target.scrollTop, $event.target.scrollHeight);
-        // console.log("scrolling");
-      } 
+    } 
+
+    isMobile(): boolean {
+        return true;
+    }
+
 }

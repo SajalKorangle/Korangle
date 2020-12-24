@@ -376,6 +376,9 @@ export class ViewHomeworkServiceAdapter {
         
             this.vm.isHomeworkLoading = false;
         })
+        // if(this.vm.isMobile()){
+        //     this.vm.submitHomework(homework);
+        // }
     }
     
 }
