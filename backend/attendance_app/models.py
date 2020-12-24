@@ -113,7 +113,7 @@ class AttendanceSettings(models.Model):
         (UPDATE_ABSENT, 'Only Absent Students')
     ]
 
-    receiverType = models.CharField(max_length=20, choices=UPDATETO_CHOICES, null=False, default=UPDATE_ALL, verbose_name='')
+    receiverType = models.CharField(max_length=20, choices=UPDATETO_CHOICES, null=False, default=UPDATE_ALL, verbose_name='receiverType')
 
     class Meta:
         db_table = 'attendance_settings'
