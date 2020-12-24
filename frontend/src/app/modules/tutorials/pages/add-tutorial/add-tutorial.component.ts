@@ -7,12 +7,13 @@ import {TutorialsService} from '@services/modules/tutorials/tutorials.service';
 import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
 import {MatDialog} from '@angular/material/dialog';
 import {SubjectService} from '@services/modules/subject/subject.service';
+import { UpdateService } from '../../../../update/update-service'
 
 @Component({
     selector: 'app-add-tutorial',
     templateUrl: './add-tutorial.component.html',
     styleUrls: ['./add-tutorial.component.css'],
-    providers: [SubjectService, ClassService, StudentService, TutorialsService],
+    providers: [SubjectService, ClassService, StudentService, TutorialsService, UpdateService,],
 
 })
 export class AddTutorialComponent implements OnInit {
@@ -42,7 +43,8 @@ export class AddTutorialComponent implements OnInit {
                 public classService: ClassService,
                 public studentService: StudentService,
                 public tutorialService: TutorialsService,
-                private dialog: MatDialog) {
+                private dialog: MatDialog,
+                public updateService: UpdateService,) {
     }
 
     ngOnInit() {

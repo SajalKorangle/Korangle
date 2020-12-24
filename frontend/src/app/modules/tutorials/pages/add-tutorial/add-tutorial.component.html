@@ -34,7 +34,7 @@
                         style="margin-left: 20px"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         [disabled]="!selectedSubject"
-                        (click)="serviceAdapter.getTutorialList()">GET
+                        (click)="serviceAdapter.getTutorialList(); serviceAdapter.prepareStudentList()">GET
                 </button>
             </div>
         </div>
@@ -95,7 +95,7 @@
                         <button type="submit"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 [disabled]="isAddDisabled"
-                                (click)="serviceAdapter.addNewTutorial()">Add
+                                (click)="serviceAdapter.addNewTutorial(); ">Add
                         </button>
                     </div>
                 </div>

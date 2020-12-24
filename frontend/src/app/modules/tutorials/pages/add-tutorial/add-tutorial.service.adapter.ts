@@ -13,8 +13,8 @@ export class AddTutorialServiceAdapter {
     classSectionSubjectList: any;
     fullStudentList: any;
 
-    constructor() {
-    }
+    constructor(
+    ) { }
 
 
     initializeAdapter(vm: AddTutorialComponent): void {
@@ -307,5 +307,15 @@ export class AddTutorialServiceAdapter {
             this.vm.selectedSection = this.vm.selectedClass.sectionList[0];
             this.vm.selectedSubject = this.vm.selectedSection.subjectList[0];
         }
+    }
+
+
+    prepareStudentList(): any{
+        let student_list = this.fullStudentList.filter(student =>{
+            if(student.parentClass == this.vm.selectedClass.id && student.parentDivision == this.vm.selectedSection.id) return true;
+            return false; 
+        })
+        this.vm.updateService.setStudentList(student_list);
+        console.log(student_list);
     }
 }
