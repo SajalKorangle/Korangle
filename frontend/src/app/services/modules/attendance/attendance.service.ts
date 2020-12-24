@@ -14,6 +14,5 @@ export class AttendanceService extends ServiceObject {
     public employee_applied_leave = '/employee-applied-leave';
     public attendance_permission = '/attendance-permission';
     public attendance_settings = '/attendance-settings';
-    // public employees = '/employees';
 
 }
