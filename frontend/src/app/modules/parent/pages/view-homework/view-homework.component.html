@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" *ngIf="!isSubmitting">
+<div class="card-content table-responsive" *ngIf="!isSubmitting" (scroll)="onScroll($event)">
 
 
     <div *ngIf="!isSessionLoading">
@@ -86,8 +86,8 @@
             <div class="col-md-12"></div>
         </div>
         <strong>Completed Homeworks</strong>
-
-        <mat-accordion [multi]="false">
+        
+        <mat-accordion [multi]="false" (scroll)="func()">
             <ng-container *ngFor="let homework of getFilteredCompletedList(); let i=index;">
                 <mat-expansion-panel style="margin-top: 5px; margin-bottom:5px;" [disabled]="isSubmitting"
                     (opened)="serviceAdapter.getHomeworkDetails(homework)">
@@ -145,16 +145,18 @@
 
         
         <ng-container *ngIf="loadMoreHomework">
-            <button type="submit"
+            <!-- <button type="submit"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     style="padding: 6px 16px;"
-                    (click)="serviceAdapter.loadMoreHomeworks()">Load More</button>
-            <!-- <div *ngIf="isLoadingCheckedHomeworks || isLoadingSubmittedHomeworks" class="loader-container" align="center">
-                <div class="loader"></div>
-            </div> -->
+                    (click)="serviceAdapter.loadMoreHomeworks()">Load More</button> -->
+            <div *ngIf="isLoadingCheckedHomeworks || isLoadingSubmittedHomeworks">
+                <br>
+                <div style="width: 100%" align="center">
+                    <div class="loaderCustom"></div>
+                </div> 
+            </div>
         </ng-container>
 
-        
     </div>
 </div>
 

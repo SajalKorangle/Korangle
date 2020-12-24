@@ -221,22 +221,7 @@ export class IssueHomeworkComponent implements OnInit {
     }
 
     sortHomeworks(): any{
-        this.homeworkList.sort((a, b) => {
-            if(a.startDate > b.startDate){
-                return -1;
-            }
-            else if(a.startDate < b.startDate){
-                return 1;
-            }
-            else{
-                if(a.startTime > b.startTime){
-                    return -1;
-                }
-                else if(a.startTime < b.startTime){
-                    return 1;
-                }
-            }
-        });
+        this.homeworkList.sort((a, b) => a.id > b.id ? -1 : a.id < b.id ? 1 : 0);
     }
 
     populateCurrentHomework(): any{

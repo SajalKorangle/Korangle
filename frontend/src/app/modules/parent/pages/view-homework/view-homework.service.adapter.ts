@@ -62,7 +62,7 @@ export class ViewHomeworkServiceAdapter {
                 'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
                 'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
                 'homeworkStatus': 'CHECKED',
-                'korangle__count': count.toString() + ',' + (count + this.vm.loadingCount).toString(),
+                'korangle__count': this.vm.checkedHomeworkCount.toString() + ',' + (this.vm.checkedHomeworkCount + this.vm.loadingCount).toString(),
                 'korangle__order': '-parentHomework',
             }
 
@@ -73,7 +73,7 @@ export class ViewHomeworkServiceAdapter {
                 'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
                 'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
                 'homeworkStatus': 'SUBMITTED',
-                'korangle__count': count.toString() + ',' + (count + this.vm.loadingCount).toString(),
+                'korangle__count': this.vm.submittedHomeworkCount.toString() + ',' + (this.vm.submittedHomeworkCount + this.vm.loadingCount).toString(),
                 'korangle__order': '-parentHomework',
             }
             let class_subject_homework_data = {
@@ -91,6 +91,8 @@ export class ViewHomeworkServiceAdapter {
                 this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_status, submitted_homework_data),
         
             ]).then(secondValue =>{
+                this.vm.submittedHomeworkCount = secondValue[4].length;
+                this.vm.checkedHomeworkCount = secondValue[3].length;
                 this.classSubjectList = secondValue[2];
                 this.vm.isLoadingSubmittedHomeworks = false;
                 this.vm.isLoadingCheckedHomeworks = false;
@@ -230,7 +232,7 @@ export class ViewHomeworkServiceAdapter {
             'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
             'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
             'homeworkStatus': 'CHECKED',
-            'korangle__count': count.toString() + ',' + (count + this.vm.loadingCount).toString(),
+            'korangle__count': this.vm.checkedHomeworkCount.toString() + ',' + (this.vm.checkedHomeworkCount + this.vm.loadingCount).toString(),
             'korangle__order': '-parentHomework',
         }
 
@@ -241,7 +243,7 @@ export class ViewHomeworkServiceAdapter {
             'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
             'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
             'homeworkStatus': 'SUBMITTED',
-            'korangle__count': count.toString() + ',' + (count + this.vm.loadingCount).toString(),
+            'korangle__count': this.vm.submittedHomeworkCount.toString() + ',' + (this.vm.submittedHomeworkCount + this.vm.loadingCount).toString(),
             'korangle__order': '-parentHomework',
         }
 
@@ -252,6 +254,8 @@ export class ViewHomeworkServiceAdapter {
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_status, checked_homework_data),
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_status, submitted_homework_data),
         ]).then(value => {
+            this.vm.submittedHomeworkCount+= value[1].length;
+            this.vm.checkedHomeworkCount+= value[0].length;
             console.log(value);
             let completedHomeworkIdList = [];
             value[0].forEach(element =>{
@@ -373,5 +377,5 @@ export class ViewHomeworkServiceAdapter {
             this.vm.isHomeworkLoading = false;
         })
     }
-
+    
 }

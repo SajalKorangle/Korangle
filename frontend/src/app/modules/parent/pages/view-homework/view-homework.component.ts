@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, HostListener } from '@angular/core';
 
 import {DataStorage} from "../../../../classes/data-storage";
 import { ViewHomeworkServiceAdapter } from "./view-homework.service.adapter"
@@ -21,7 +21,9 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     user;
 
     
-    loadingCount = 1;
+    loadingCount = 4;
+    checkedHomeworkCount =  0;
+    submittedHomeworkCount= 0;
 
     isLoadingCheckedHomeworks = true;
     isLoadingSubmittedHomeworks = true;
@@ -257,4 +259,19 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         console.log(event.currentIndex);
         moveItemInArray(this.toSubmitHomework.answerImages, event.previousIndex, event.currentIndex);
     }
+
+    func(): any{
+        console.log('scroll');
+    }
+
+    @HostListener('window:scroll', ['$event']) onScrollEvent(event){
+        let pos = document.documentElement.offsetHeight;
+        let max = document.documentElement.scrollHeight;
+        if((document.documentElement.clientHeight + document.documentElement.scrollTop + 1) > document.documentElement.scrollHeight && this.loadMoreHomework == true){
+            this.serviceAdapter.loadMoreHomeworks();
+        }
+        // console.log(pos, max);
+        // console.log($event.target.offsetHeight + $event.target.scrollTop, $event.target.scrollHeight);
+        // console.log("scrolling");
+      } 
 }
