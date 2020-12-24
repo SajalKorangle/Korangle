@@ -159,7 +159,7 @@ export class TotalCollectionComponent implements OnInit {
         if (this.selectedClassSection) {
             tempList = tempList.filter(feeReceipt => {
                 let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
-                return classSection.classs.dbId == this.selectedClassSection.classs.dbId
+                return classSection.classs.id == this.selectedClassSection.classs.id
                     && classSection.section.id == this.selectedClassSection.section.id;
             });
         }
