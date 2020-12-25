@@ -26,8 +26,12 @@ describe('Examination -> Create Test', () => {
 
         await page.waitForSelector('#selectClassSection');
         await page.click('#selectClassSection');
+
+        //i have to select the first option from mat-option please suggest a way to do so
+        await page.click('#selectClassSection');
         //Check if this line works or not
-        (await containsFirst('mat-option', 'Class-12, Section-A')).click();
+        // const option = (await containsFirst('mat-option', 'Class-3, Section-A'));
+        // await option.click({ clickCount: 2 })
         
 
         (await containsFirst('button', 'GET')).click();
