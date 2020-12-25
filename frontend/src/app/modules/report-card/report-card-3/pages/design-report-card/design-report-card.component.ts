@@ -7,6 +7,8 @@ import { ReportCardService } from '@services/modules/report-card/report-card.ser
 import { DesignReportCardHtmlAdapter } from './design-report-card.html.adapter';
 import { DesignReportCardCanvasAdapter } from './design-report-card.canvas.adapter';
 
+import { DEFAULT_BACKGROUND_COLOR } from './../../../class/constants_3';
+
 @Component({
   selector: 'app-design-report-card',
   templateUrl: './design-report-card.component.html',
@@ -49,7 +51,7 @@ export class DesignReportCardComponent implements OnInit {
     this.currentLayout = {
         parentSchool: this.user.activeSchool.dbId,
         name: '',
-        content: [],
+        content: {backgroundColor: DEFAULT_BACKGROUND_COLOR, layers: []},
     };
   } 
 
@@ -66,6 +68,7 @@ export class DesignReportCardComponent implements OnInit {
           this.canvas = canvas;
           this.htmlAdapter.canvasSetUp();
           this.canvasAdapter.initilizeAdapter(this.canvas);
+          this.canvasAdapter.loadData(this.currentLayout.content);
           // Draw graphics of previous data form this.currentLayout.content
           me.disconnect();
         }
@@ -80,8 +83,9 @@ export class DesignReportCardComponent implements OnInit {
       this.newLayout();
     } else {
       this.currentLayout = { ...value, content: JSON.parse(value.content) };
-      // Draw graphics on canvas from this.currentLayout.content
     }
+    if (this.canvas)
+        this.canvasAdapter.loadData(this.currentLayout.content);
     // Rest to be implemented
     console.log('curent Layout: ', this.currentLayout);
   }
@@ -116,20 +120,20 @@ export class DesignReportCardComponent implements OnInit {
 
     if (!this.currentLayout.id) // if new layout upload it
       await this.serviceAdapter.uploadCurrentLayout();
-    
-    const layers = this.canvasAdapter.getLayersToSave();
+    const DataToSave = this.canvasAdapter.getDataToSave();
+    const layers = DataToSave.layers;
     console.log('to be uploaded layers = ', layers);
-    for (let i = 0; i < layers.length;i++){
+    for (let i = 0; i < layers.length; i++){
       if (layers[i].LAYER_TYPE == 'IMAGE') {
         if (this.unuploadedFiles[layers[i].uri]) {
           let image = await fetch(layers[i].uri).then(response => response.blob());
           console.log(image)
-          layers[i].image = await this.serviceAdapter.uploadImageForCurrentLayout(image, this.unuploadedFiles[layers[i].uri]);
+          layers[i].uri = await this.serviceAdapter.uploadImageForCurrentLayout(image, this.unuploadedFiles[layers[i].uri]);
           console.log('image url = ', layers[i].image);
         }
       }
     }
-    this.currentLayout.content = layers;
+    this.currentLayout.content = DataToSave;
     await this.serviceAdapter.uploadCurrentLayout();
     
     this.htmlAdapter.isSaving = false;

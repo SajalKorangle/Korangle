@@ -24,6 +24,11 @@
             </mat-hint>
         </mat-form-field>
 
+        <button *ngIf="currentLayout.id"
+                class="btn material-icons"
+                (click)="serviceAdapter.deleteCurrentLayout()"
+                style="padding: 4px 7px; margin-right: 12px; float: right;">delete</button>
+
         <button class="btn"
                 (click)="resetCurrentLayout()"
                 style="padding: 4px 7px; margin-right: 12px; float: right;">Reset All</button>
@@ -47,6 +52,11 @@
             <div class="tool">
                 <button class="btn material-icons"
                         (click)="htmlAdapter.isSaving=true; saveLayout();" [disabled]="htmlAdapter.isSaving">save</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        (click)="canvasAdapter.scheduleCanvasReDraw(0)" [disabled]="htmlAdapter.isSaving">refresh</button>
             </div>
 
         </div>

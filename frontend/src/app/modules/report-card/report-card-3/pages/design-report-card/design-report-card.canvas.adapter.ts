@@ -1,4 +1,4 @@
-import { A4, CanvasImage, PageRelativeAttributes } from './../../../class/constants_3';
+import { A4, CanvasImage, PageRelativeAttributes, DEFAULT_BACKGROUND_COLOR } from './../../../class/constants_3';
 // Currently supports only a4 size
 
 export class DesignReportCardCanvasAdapter {
@@ -30,13 +30,13 @@ export class DesignReportCardCanvasAdapter {
         this.context = canvas.getContext('2d');
 
         this.canvasWidth = canvas.width;
-        this.canvasHeight = A4.getHeigthRelativeToA4(this.canvasWidth);  // Adjusting Height according to aspect ratio
+        this.canvasHeight = A4.getHeightRelativeToA4(this.canvasWidth);  // Adjusting Height according to aspect ratio
         canvas.height = this.canvasHeight;
         this.pixelTommFactor = A4.A4Resolution.mm.width / this.canvasWidth; 
 
         this.canvas.addEventListener('resize', () => {  // Maintain aspect ratio on resize
             this.canvasWidth = canvas.width;
-            this.canvasHeight = A4.getHeigthRelativeToA4(this.canvasWidth);
+            this.canvasHeight = A4.getHeightRelativeToA4(this.canvasWidth);
             canvas.height = this.canvasHeight;
             this.pixelTommFactor = A4.A4Resolution.mm.width / this.canvasWidth; 
             // Check if we need to do some more work wrt layers here
@@ -86,27 +86,62 @@ export class DesignReportCardCanvasAdapter {
         });
     }
 
+    loadData(Data): void{
+        try {
+            this.backgroundColor = Data.backgroundColor;
+            for (let i = 0; i < Data.layers.length; i++) {
+                if (Data.layers[i]) {
+                    let layerData = { ...Data.layers[i] };
+                
+                    Object.keys(layerData).forEach(key => { // conversion from mm to pixels
+                        if (key in PageRelativeAttributes)
+                            layerData['key'] = layerData['key'] / this.pixelTommFactor;
+                    });
+                
+                    let newLayerFromLayerData;
+                    switch (layerData.LAYER_TYPE) {
+                        case 'IMAGE':
+                            newLayerFromLayerData = Object.assign(new CanvasImage, layerData);
+                            break;
+                    }
+                    this.layers.push(newLayerFromLayerData);
+                    newLayerFromLayerData.layerSetUp(this.canvasWidth, this.canvasHeight);
+                } else {
+                    this.layers.push(null);
+                }
+            }
+            this.drawAllLayers();
+            console.log('canvas layers: ', this.layers);
+        } catch (err) {
+            console.log(err);
+            alert('data corupted');
+            clearTimeout(this.pendingReDrawId);
+        }
+    }
+
     drawAllLayers(): void {
         this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.context.fillStyle = this.backgroundColor;
         this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);   // Applying background color
 
         for (let i = 0; i < this.layers.length; i++){
-            let status = this.layers[i].drawOnCanvas(this.context);    // check for redundant iterations
+            if (!this.layers[i])
+                continue;
+            let status = this.layers[i].drawOnCanvas(this.context, this.scheduleCanvasReDraw);    // check for redundant iterations
             if (!status)
                 break;
         }
     }
 
-    scheduleCanvasReDraw = ()=>{
+    scheduleCanvasReDraw = (duration:number =500)=>{
         clearTimeout(this.pendingReDrawId);
-        this.pendingReDrawId = setTimeout(() => this.drawAllLayers(), 150);
+        this.pendingReDrawId = setTimeout(() => this.drawAllLayers(), duration);
     }
 
     applyDefaultbackground(): void{
-        this.context.fillStyle = '#ffffff';
+        this.context.fillStyle = DEFAULT_BACKGROUND_COLOR;
         this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-        this.backgroundColor = '#ffffff';
+        this.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     }
 
     applyBackground(bgColor: string): void{
@@ -138,18 +173,26 @@ export class DesignReportCardCanvasAdapter {
         this.activeLayer = this.layers[this.activeLayerIndex];
     }
 
-    getLayersToSave() {
+    getDataToSave() {
         let layers = [];
         for (let i = 0; i < this.layers.length; i++){    // Copying all layer objects
-            layers[i] = { ...this.layers[i] };
+            if (this.layers[i])
+                layers[i] = this.layers[i].getDataToSave();
+            else
+                layers[i] = null;
         }
         layers.forEach(layer => {   // Converting pixels to mm
-            Object.keys(layer).forEach(key => {
-                if (key in PageRelativeAttributes)
-                    layer['key'] = this.pixelTommFactor * layer['key'];
-            })
+            if (layers) {
+                Object.keys(layer).forEach(key => {
+                    if (key in PageRelativeAttributes)
+                        layer['key'] = this.pixelTommFactor * layer['key'];
+                });
+            }
         })
-        return layers;
+        return {
+            backgroundColor: this.backgroundColor,
+            layers: layers
+        };
     }
 
 }

@@ -57,6 +57,23 @@ export class DesignReportCardServiceAdapter {
         formdata.append('image', image, file_name);
         return this.vm.reportCardService.createObject(this.vm.reportCardService.image_assets, formdata).then(response => response.image);
     }
+
+    deleteCurrentLayout(): void{
+        if (this.vm.currentLayout.id) {
+            const current_layut_id = this.vm.currentLayout.id
+            const layout_delete_request = {
+                id: current_layut_id
+            };
+            this.vm.htmlAdapter.isSaving = true;
+            this.vm.reportCardService.deleteObject(this.vm.reportCardService.report_card_layout_new, layout_delete_request).then(response => {
+                delete this.vm.currentLayout.id;
+                const currentLayoutIndex = this.vm.reportCardLayoutList.findIndex(layout => layout.id == current_layut_id);
+                delete this.vm.reportCardLayoutList[currentLayoutIndex];
+                this.vm.reportCardLayoutList = this.vm.reportCardLayoutList.filter(Boolean); // removing empty slots from array
+                this.vm.htmlAdapter.isSaving = false;
+            })
+        }
+    }
 }
 
 
