@@ -17,10 +17,15 @@ export class CommonFunctions {
         mainPannel.scrollTop = 0;
     }
 
-    static objectToFormData(object): FormData{
-        let form = new FormData();
-        Object.keys(object).forEach(key => form.append(key, object['key']));
-        return form;
+    static elementFullScreenToggle(element: HTMLElement): boolean{
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen();
+      } else {
+        if (element.requestFullscreen)
+          element.requestFullscreen();   
+        return true;
+      }
+      return false;
     }
 
     copyObject(object: any): any {

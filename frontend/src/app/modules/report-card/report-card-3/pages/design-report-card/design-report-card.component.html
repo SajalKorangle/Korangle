@@ -11,7 +11,7 @@
     </mat-form-field>
 
     <ng-container *ngIf="currentLayout">
-    <mat-card>
+    <mat-card id="drc-mainCard">
         <div>
         <mat-form-field style="width: 100%; max-width: 250px;">
             <mat-label>
@@ -59,6 +59,11 @@
                         (click)="canvasAdapter.scheduleCanvasReDraw(0)" [disabled]="htmlAdapter.isSaving">refresh</button>
             </div>
 
+            <div class="tool">
+                <button class="btn material-icons"
+                        (click)="htmlAdapter.fullScreenToggle()">{{htmlAdapter.isFullScreen?'fullscreen_exit':'fullscreen'}}</button>
+            </div>
+
         </div>
 
         <div class="flex-row" style="margin-top: 8px; width: 100%; justify-content: space-around;">
@@ -68,6 +73,25 @@
                     <mat-button-toggle value="layers" [checked]="htmlAdapter.activeLeftColumn === 'layers'"  (click)="htmlAdapter.activeLeftColumn = 'layers'">Layers</mat-button-toggle>
                     <mat-button-toggle value="parameters" (click)="htmlAdapter.activeLeftColumn = 'parameters'">Parameters</mat-button-toggle>
                 </mat-button-toggle-group>
+
+                <!-- Parameters -->
+                <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'parameters'">
+                <div style="margin: 4px; padding: 4px; border-radius: 4px; text-align: center;" class="bg-white">
+                    
+                    <mat-form-field *ngFor="let fieldKey of htmlAdapter.getFieldKeys()" style="margin-bottom: 1vh;">
+                        <mat-label>
+                            {{htmlAdapter.fields[fieldKey].displayFieldName}}
+                        </mat-label>
+                        <mat-select [value]="null">
+                            <mat-option *ngIf="htmlAdapter.getFilteredParameterList(htmlAdapter.fields[fieldKey]).length == 0">--Comming Soon--</mat-option>
+                            <mat-option *ngFor="let parameter of htmlAdapter.getFilteredParameterList(htmlAdapter.fields[fieldKey])">
+                                {{parameter.displayParameterNameFunc()}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    
+                </div>
+                </ng-container>
 
                 <!-- Layers Column -->
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
@@ -84,10 +108,6 @@
                     </div>
                 </ng-container>
 
-                <!-- Parameters -->
-                <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'parameters'">
-
-                </ng-container>
             </div>
 
             <!-- column 2 -->

@@ -2,7 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "../../../../../classes/data-storage";
 
 import { DesignReportCardServiceAdapter } from './design-report-card.service.adapter';
+
 import { ReportCardService } from '@services/modules/report-card/report-card.service';
+import { StudentService } from '@services/modules/student/student.service';
+import { ClassService } from '@services/modules/class/class.service';
+import { ExaminationService } from '@services/modules/examination/examination.service';
+import { SubjectService } from '@services/modules/subject/subject.service';
+import {SchoolService} from '@services/modules/school/school.service';
+import {AttendanceService} from '@services/modules/attendance/attendance.service';
+import {GradeService} from '@services/modules/grade/grade.service';
 
 import { DesignReportCardHtmlAdapter } from './design-report-card.html.adapter';
 import { DesignReportCardCanvasAdapter } from './design-report-card.canvas.adapter';
@@ -13,7 +21,16 @@ import { DEFAULT_BACKGROUND_COLOR } from './../../../class/constants_3';
   selector: 'app-design-report-card',
   templateUrl: './design-report-card.component.html',
   styleUrls: ['./design-report-card.component.css'],
-  providers: [ReportCardService]
+  providers: [
+    ReportCardService,
+    StudentService,
+    ClassService,
+    ExaminationService,
+    SubjectService,
+    SchoolService,
+    AttendanceService,
+    GradeService
+  ]
 })
 export class DesignReportCardComponent implements OnInit {
   user: any;
@@ -31,11 +48,39 @@ export class DesignReportCardComponent implements OnInit {
   htmlAdapter: DesignReportCardHtmlAdapter = new DesignReportCardHtmlAdapter();
   canvasAdapter: DesignReportCardCanvasAdapter;
 
-  fileReader: FileReader;
+  data: any = {
+    school: null,
+    studentList: [],
+    studentSectionList: [],
+    studentParameterList: [],
+    studentParameterValueList: [],
+    classList: [],
+    divisionList: [],
+    examinationList: [],
+    testList: [],
+    studentTestList: [],
+    subjectList: [],
+    attendanceList: [],
+    sessionList: [],
+    gradeList: [],
+    subGradeList: [],
+    studentSubGradeList: [],
+    studentExaminationRemarksList: [],
+  };
 
-  constructor(public reportCardService: ReportCardService,) { }
+  constructor(
+    public reportCardService: ReportCardService,
+    public studentService: StudentService,
+    public classService: ClassService,
+    public examinationService: ExaminationService,
+    public subjectService: SubjectService,
+    public schoolService: SchoolService,
+    public attendanceService: AttendanceService,
+    public gradeService: GradeService
+  ) { }
 
   ngOnInit() {
+    console.log('student service: ', this.studentService);
     this.user = DataStorage.getInstance().getUser();
 
     this.serviceAdapter = new DesignReportCardServiceAdapter();
@@ -43,6 +88,7 @@ export class DesignReportCardComponent implements OnInit {
     this.serviceAdapter.initializeData();
 
     this.canvasAdapter = new DesignReportCardCanvasAdapter();
+    this.canvasAdapter.initilizeAdapter(this);
 
     this.htmlAdapter.initializeAdapter(this);
   }
@@ -67,7 +113,7 @@ export class DesignReportCardComponent implements OnInit {
         if (canvas) {
           this.canvas = canvas;
           this.htmlAdapter.canvasSetUp();
-          this.canvasAdapter.initilizeAdapter(this.canvas);
+          this.canvasAdapter.initilizeCanvas(this.canvas);
           this.canvasAdapter.loadData(this.currentLayout.content);
           // Draw graphics of previous data form this.currentLayout.content
           me.disconnect();

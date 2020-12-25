@@ -54,7 +54,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data), // 9
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 10
         ]).then(data => {
-
+            console.log('first call data: ', data);
             this.vm.reportCardLayoutList = data[0];
             this.vm.data.studentSectionList = data[1];
             this.vm.data.studentParameterList = data[2];

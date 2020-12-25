@@ -1,7 +1,10 @@
+import { DesignReportCardComponent } from './design-report-card.component';
 import { A4, CanvasImage, PageRelativeAttributes, DEFAULT_BACKGROUND_COLOR } from './../../../class/constants_3';
 // Currently supports only a4 size
 
 export class DesignReportCardCanvasAdapter {
+
+    vm: DesignReportCardComponent;
 
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
@@ -25,7 +28,11 @@ export class DesignReportCardCanvasAdapter {
     constructor() {
     }
 
-    initilizeAdapter(canvas: HTMLCanvasElement) {
+    initilizeAdapter(vm: DesignReportCardComponent) {
+        this.vm = vm;
+    }
+
+    initilizeCanvas(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
 
@@ -119,7 +126,7 @@ export class DesignReportCardCanvasAdapter {
         }
     }
 
-    drawAllLayers(): void {
+    private drawAllLayers(): void {
         this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.context.fillStyle = this.backgroundColor;
         this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);   // Applying background color
