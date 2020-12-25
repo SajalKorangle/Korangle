@@ -4,7 +4,7 @@
         <mat-select placeholder="Send via"
                     id="sentUpdateType"
                     [ngModel]="sentUpdateType"
-                    (ngModelChange)="sentUpdateType = $event; checkChangeSettings()">
+                    (ngModelChange)="sentUpdateType = $event;">
             <mat-option *ngFor='let sentType of sentUpdateList;' [value]="sentType">
                 {{sentType}}
             </mat-option>
@@ -19,7 +19,7 @@
 
     <button type="submit"
             class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-            
+            [disabled]="!isSettingsChanged()"
             (click)="serviceAdapter.updateSettings()">Update</button>
 
 

@@ -58,5 +58,12 @@ export class SettingsComponent implements OnInit {
             return 3;
         }
     }
+
+    isSettingsChanged(): boolean {
+        return !(this.previousSettings.sentUpdateType == (this.getSentUpdateTypeIndex(this.sentUpdateType) + 1)
+        && this.previousSettings.sendCreateUpdate == this.sendCreateUpdate
+        && this.previousSettings.sendEditUpdate == this.sendEditUpdate
+        && this.previousSettings.sendDeleteUpdate == this.sendDeleteUpdate);
+    }
     
 }
