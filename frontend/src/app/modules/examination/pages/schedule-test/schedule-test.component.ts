@@ -70,7 +70,7 @@ export class ScheduleTestComponent implements OnInit {
 
   showTestDetails = false;
 
-  selectedExamination : any;
+  selectedExamination : any = undefined;
 
   dataCanBeFetched = true;
 

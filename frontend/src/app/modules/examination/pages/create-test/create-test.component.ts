@@ -71,7 +71,7 @@ export class CreateTestComponent implements OnInit {
 
   showTestDetails = false;
 
-  selectedExamination : any;
+  selectedExamination : any = undefined;
 
   examinationList: any = [];
 

@@ -26,7 +26,8 @@ describe('Examination -> Create Test', () => {
 
         await page.waitForSelector('#selectClassSection');
         await page.click('#selectClassSection');
-        await page.click('mat-option[ng-reflect-value="1"]');
+        //Check if this line works or not
+        (await containsFirst('mat-option', 'Class-12, Section-A')).click();
         
 
         (await containsFirst('button', 'GET')).click();

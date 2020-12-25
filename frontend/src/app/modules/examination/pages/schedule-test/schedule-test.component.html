@@ -17,7 +17,7 @@
                 <mat-form-field style='margin-top: 23px; margin-left: 20px;'>
                     <mat-select placeholder='Select class section' [disabled]='isLoading' id='selectClassSection'>
                         <ng-container *ngFor='let class of classSectionSubjectList'>    
-                            <mat-option *ngFor='let section of class.sectionList' [value]='section.sectionId'>
+                            <mat-option *ngFor='let section of class.sectionList'>
                                 <mat-checkbox [(ngModel)]='section.selected' (click)='$event.stopPropagation();'>
                                     {{class.className}}, {{section.sectionName}}
                                 </mat-checkbox>

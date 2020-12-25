@@ -171,6 +171,13 @@ export class CreateTestServiceAdapter {
       return;
     }
 
+    if(this.vm.selectedExamination === undefined) {
+      alert('Please select any Exam');
+      this.vm.isLoading = false;
+      this.vm.showTestDetails = false;
+      return;
+    }
+
     let totalNumberOfListRequired = this.classListForTest.length;
 
     let request_subject_data = {
@@ -190,37 +197,44 @@ export class CreateTestServiceAdapter {
         this.commonSubjectList = [];
 
         value[0].forEach((item) => {
-          var subIdx = this.commonSubjectList.findIndex(
-            (sub) => sub.subjectId === item.parentSubject
-          );
-
-          let tempClass = {
-            className: this.getClassName(item.parentClass),
-            classId: item.parentClass,
-          };
-
-          let tempSection = {
-            sectionName: this.getSectionName(item.parentDivision),
-            sectionId: item.parentDivision,
-          };
-
-          let tempClassList = [];
-          tempClassList.push(tempClass);
-          let tempSectionList = [];
-          tempSectionList.push(tempSection);
-
-          if (subIdx != -1) {
-            this.commonSubjectList[subIdx].classList.push(tempClass);
-            this.commonSubjectList[subIdx].sectionList.push(tempSection);
-          } else {
-            let tempSub = {
-              subjectName: this.getSubjectName(item.parentSubject),
-              subjectId: item.parentSubject,
-              classList: tempClassList,
-              sectionList: tempSectionList,
-            };
-            this.commonSubjectList.push(tempSub);
+          for(let i=0;i<this.classListForTest.length;i++)
+          {
+            if(this.classListForTest[i]===item.parentClass && this.sectionListForTest[i]===item.parentDivision)
+            {
+              var subIdx = this.commonSubjectList.findIndex(
+                (sub) => sub.subjectId === item.parentSubject
+              );
+    
+              let tempClass = {
+                className: this.getClassName(item.parentClass),
+                classId: item.parentClass,
+              };
+    
+              let tempSection = {
+                sectionName: this.getSectionName(item.parentDivision),
+                sectionId: item.parentDivision,
+              };
+    
+              let tempClassList = [];
+              tempClassList.push(tempClass);
+              let tempSectionList = [];
+              tempSectionList.push(tempSection);
+    
+              if (subIdx != -1) {
+                this.commonSubjectList[subIdx].classList.push(tempClass);
+                this.commonSubjectList[subIdx].sectionList.push(tempSection);
+              } else {
+                let tempSub = {
+                  subjectName: this.getSubjectName(item.parentSubject),
+                  subjectId: item.parentSubject,
+                  classList: tempClassList,
+                  sectionList: tempSectionList,
+                };
+                this.commonSubjectList.push(tempSub);
+              }
+            }
           }
+          
         });
         this.populateSubjectList();
 
@@ -247,7 +261,6 @@ export class CreateTestServiceAdapter {
   //Get Test And Subject Details
   getTestAndSubjectDetails(): void {
     this.vm.isLoading = true;
-    console.log(this.vm.classSectionSubjectList);
 
     let request_test_data_list = {
       parentExamination: this.vm.selectedExamination,
@@ -263,77 +276,80 @@ export class CreateTestServiceAdapter {
       ),
     ]).then(
       (value) => {
-        //test list obtained...
-        console.log('Test list fetched...');
-        console.log('value: ', value[0]);
         this.vm.newTestList = [];
         value[0].forEach((test) => {
-          var subIdx = this.vm.newTestList.findIndex(
-            (sub) =>
-              sub.subjectId === test.parentSubject &&
-              sub.testType === test.testType &&
-              sub.maximumMarks === test.maximumMarks
-          );
 
-          var classIdx = -1,
-            sectionIdx = -1;
-
-          if (subIdx != -1) {
-            classIdx = this.vm.newTestList[subIdx].classList.findIndex(
-              (cl) => cl.classId === test.parentClass
-            );
-
-            if (classIdx != -1) {
-              sectionIdx = this.vm.newTestList[subIdx].classList[
-                classIdx
-              ].sectionList.findIndex(
-                (sec) => sec.sectionId === test.parentDivision
+          //Filter test for selected class and section only
+          for(let i=0;i<this.classListForTest.length;i++)
+          {
+            if(this.classListForTest[i]===test.parentClass && this.sectionListForTest[i]===test.parentDivision)
+            {
+              var subIdx = this.vm.newTestList.findIndex(
+                (sub) =>
+                  sub.subjectId === test.parentSubject &&
+                  sub.testType === test.testType &&
+                  sub.maximumMarks === test.maximumMarks
               );
+    
+              var classIdx = -1,
+                sectionIdx = -1;
+    
+              if (subIdx != -1) {
+                classIdx = this.vm.newTestList[subIdx].classList.findIndex(
+                  (cl) => cl.classId === test.parentClass
+                );
+    
+                if (classIdx != -1) {
+                  sectionIdx = this.vm.newTestList[subIdx].classList[
+                    classIdx
+                  ].sectionList.findIndex(
+                    (sec) => sec.sectionId === test.parentDivision
+                  );
+                }
+              }
+    
+              let tempSection = {
+                sectionName: this.getSectionName(test.parentDivision),
+                sectionId: test.parentDivision,
+                testId: test.id,
+              };
+    
+              let tempSectionList = [];
+              tempSectionList.push(tempSection);
+    
+              let tempClass = {
+                className: this.getClassName(test.parentClass),
+                classId: test.parentClass,
+                sectionList: tempSectionList,
+              };
+              let tempClassList = [];
+              tempClassList.push(tempClass);
+    
+              let tempSubject = {
+                parentExamination: test.parentExamination,
+                deleted: false,
+                subjectId: test.parentSubject,
+                subjectName: this.getSubjectName(test.parentSubject),
+                testType: test.testType,
+                newTestType: test.testType,
+                maximumMarks: test.maximumMarks,
+                newMaximumMarks: test.maximumMarks,
+                classList: tempClassList,
+              };
+    
+              if (subIdx === -1) {
+                this.vm.newTestList.push(tempSubject);
+              } else if (classIdx === -1) {
+                this.vm.newTestList[subIdx].classList.push(tempClass);
+              } else if (sectionIdx === -1) {
+                this.vm.newTestList[subIdx].classList[classIdx].sectionList.push(
+                  tempSection
+                );
+              }
             }
-          }
-
-          let tempSection = {
-            sectionName: this.getSectionName(test.parentDivision),
-            sectionId: test.parentDivision,
-            testId: test.id,
-          };
-
-          let tempSectionList = [];
-          tempSectionList.push(tempSection);
-
-          let tempClass = {
-            className: this.getClassName(test.parentClass),
-            classId: test.parentClass,
-            sectionList: tempSectionList,
-          };
-          let tempClassList = [];
-          tempClassList.push(tempClass);
-
-          let tempSubject = {
-            parentExamination: test.parentExamination,
-            deleted: false,
-            subjectId: test.parentSubject,
-            subjectName: this.getSubjectName(test.parentSubject),
-            testType: test.testType,
-            newTestType: test.testType,
-            maximumMarks: test.maximumMarks,
-            newMaximumMarks: test.maximumMarks,
-            classList: tempClassList,
-          };
-
-          if (subIdx === -1) {
-            this.vm.newTestList.push(tempSubject);
-          } else if (classIdx === -1) {
-            this.vm.newTestList[subIdx].classList.push(tempClass);
-          } else if (sectionIdx === -1) {
-            this.vm.newTestList[subIdx].classList[classIdx].sectionList.push(
-              tempSection
-            );
           }
         });
 
-        console.log('Test listed created in nested fashion...');
-        console.log(this.vm.newTestList);
         this.vm.fetchedList = this.vm.newTestList.length;
         if (this.vm.newTestList.length === 0) {
           this.vm.createTestFromTemplate();
@@ -408,8 +424,7 @@ export class CreateTestServiceAdapter {
           if (cll.classId === data.parentClass) {
             cll.sectionList.forEach((secc) => {
               if (secc.sectionId === data.parentDivision) {
-                console.log('a test is found with same parameter...');
-                console.log(test);
+
                 testAlreadyAdded = true;
               }
             });
@@ -590,11 +605,8 @@ export class CreateTestServiceAdapter {
           //if test id is null that means it is from template and has to be created in backend
           if (data.id === null) {
             if (test.deleted) {
-              console.log('deleted from template');
               this.getTestAndSubjectDetails();
             } else {
-              console.log('id is null so test is being created');
-
               Promise.all([
                 this.vm.examinationService.createObject(
                   this.vm.examinationService.test_second,
@@ -616,8 +628,6 @@ export class CreateTestServiceAdapter {
 
           //if deleted
           else if (test.deleted) {
-            console.log('A delete request for');
-            console.log(test);
             Promise.all([
               this.vm.examinationService.deleteObject(
                 this.vm.examinationService.test_second,
@@ -626,13 +636,9 @@ export class CreateTestServiceAdapter {
             ]).then(
               (value) => {
                 this.vm.isLoading = false;
-                console.log('Deleted Test');
-                console.log(value[0]);
-
                 this.getTestAndSubjectDetails();
               },
               (error) => {
-                console.log('Delete Test failed');
                 this.vm.isLoading = false;
               }
             );
@@ -651,8 +657,6 @@ export class CreateTestServiceAdapter {
             ]).then(
               (value) => {
                 this.vm.isLoading = false;
-                console.log('Test Updated');
-
                 this.getTestAndSubjectDetails();
               },
               (error) => {
@@ -720,8 +724,6 @@ export class CreateTestServiceAdapter {
                     secc.sectionId === sec.sectionId &&
                     secc.testId != sec.testId
                   ) {
-                    console.log('a test is found with same parameter...');
-                    console.log(test);
                     ans = true;
                   }
                 });

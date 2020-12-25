@@ -61,20 +61,9 @@ export class ScheduleTestServiceAdapter {
 
     let request_class_section_subject_data = {
       parentSession: this.vm.user.activeSchool.currentSessionDbId,
-      paerntSchool: this.vm.user.activeSchool.dbId,
-    };
-
-    let request_subject_data = {
-      parentSession: this.vm.user.activeSchool.currentSessionDbId,
-      paerntSchool: this.vm.user.activeSchool.dbId,
-    };
-
-    //data to request for class and section and subject having atleast one subject in current schoolId and sessionId
-    let request_class_section_subject_data_new = {
-      parentSession: this.vm.user.activeSchool.currentSessionDbId,
       parentSchool: this.vm.user.activeSchool.dbId,
     };
-    console.log(request_class_section_subject_data_new);
+
     Promise.all([
       this.vm.examinationService.getObjectList(
         this.vm.examinationService.examination,
@@ -84,36 +73,26 @@ export class ScheduleTestServiceAdapter {
       this.vm.classService.getObjectList(this.vm.classService.division, {}),
       this.vm.subjectNewService.getObjectList(
         this.vm.subjectNewService.subject,
-        request_subject_data
+        {}
       ),
       this.vm.subjectNewService.getObjectList(
         this.vm.subjectNewService.class_subject,
         request_class_section_subject_data
       ),
-      this.vm.subjectNewService.getObjectList(
-        this.vm.subjectNewService.class_subject,
-        request_class_section_subject_data_new
-      ),
     ]).then(
       (value) => {
         this.vm.examinationList = value[0];
-        console.log('examinationList: ', this.vm.examinationList);
 
         this.classList = value[1];
         this.sectionList = value[2];
         this.subjectList = value[3];
 
-        console.log('Exam list is below');
-        console.log(value[5]);
-        this.examTypeList = value[5];
-
-        console.log('class, section and subjects are below');
-        console.log(value[5]);
-        this.classSubjectList = value[5];
+        this.examTypeList = value[4];
+        this.classSubjectList = value[4];
 
         this.vm.classSectionSubjectList = [];
 
-        value[5].forEach((item) => {
+        value[4].forEach((item) => {
           var classIndex = this.vm.classSectionSubjectList.findIndex(
             (data) => data.classId === item.parentClass
           );
@@ -172,14 +151,8 @@ export class ScheduleTestServiceAdapter {
           }
         });
 
-        console.log('List created after nesting class section subject ');
-        console.log(this.vm.classSectionSubjectList);
-
         //sort the classSection list
         this.classSectionSubjectListSort();
-        console.log('List after Sorting...');
-        console.log(this.vm.classSectionSubjectList);
-
         this.vm.subjectList = this.subjectList;
         this.vm.isInitialLoading = false;
       },
@@ -196,6 +169,13 @@ export class ScheduleTestServiceAdapter {
 
     if (this.vm.showSelectedClassAndSection.length === 0) {
       alert('Please select any class and section');
+      this.vm.isLoading = false;
+      this.vm.showTestDetails = false;
+      return;
+    }
+
+    if(this.vm.selectedExamination === undefined) {
+      alert('Please select any Exam');
       this.vm.isLoading = false;
       this.vm.showTestDetails = false;
       return;
@@ -220,37 +200,46 @@ export class ScheduleTestServiceAdapter {
         this.commonSubjectList = [];
 
         value[0].forEach((item) => {
-          var subIdx = this.commonSubjectList.findIndex(
-            (sub) => sub.subjectId === item.parentSubject
-          );
 
-          let tempClass = {
-            className: this.getClassName(item.parentClass),
-            classId: item.parentClass,
-          };
+          for(let i=0;i<this.classListForTest.length;i++)
+          {
+            if(this.classListForTest[i]===item.parentClass && this.sectionListForTest[i]===item.parentDivision)
+            {
+              var subIdx = this.commonSubjectList.findIndex(
+                (sub) => sub.subjectId === item.parentSubject
+              );
+    
+              let tempClass = {
+                className: this.getClassName(item.parentClass),
+                classId: item.parentClass,
+              };
+    
+              let tempSection = {
+                sectionName: this.getSectionName(item.parentDivision),
+                sectionId: item.parentDivision,
+              };
+    
+              let tempClassList = [];
+              tempClassList.push(tempClass);
+              let tempSectionList = [];
+              tempSectionList.push(tempSection);
+    
+              if (subIdx != -1) {
+                this.commonSubjectList[subIdx].classList.push(tempClass);
+                this.commonSubjectList[subIdx].sectionList.push(tempSection);
+              } else {
+                let tempSub = {
+                  subjectName: this.getSubjectName(item.parentSubject),
+                  subjectId: item.parentSubject,
+                  classList: tempClassList,
+                  sectionList: tempSectionList,
+                };
+                this.commonSubjectList.push(tempSub);
+              }
 
-          let tempSection = {
-            sectionName: this.getSectionName(item.parentDivision),
-            sectionId: item.parentDivision,
-          };
-
-          let tempClassList = [];
-          tempClassList.push(tempClass);
-          let tempSectionList = [];
-          tempSectionList.push(tempSection);
-
-          if (subIdx != -1) {
-            this.commonSubjectList[subIdx].classList.push(tempClass);
-            this.commonSubjectList[subIdx].sectionList.push(tempSection);
-          } else {
-            let tempSub = {
-              subjectName: this.getSubjectName(item.parentSubject),
-              subjectId: item.parentSubject,
-              classList: tempClassList,
-              sectionList: tempSectionList,
-            };
-            this.commonSubjectList.push(tempSub);
+            }
           }
+          
         });
         this.populateSubjectList();
 
@@ -298,80 +287,87 @@ export class ScheduleTestServiceAdapter {
         console.log('value: ', value[0]);
         this.vm.newTestList = [];
         value[0].forEach((test) => {
-          var subIdx = this.vm.newTestList.findIndex(
-            (sub) =>
-              sub.subjectId === test.parentSubject &&
-              sub.testType === test.testType &&
-              sub.maximumMarks === test.maximumMarks &&
-              sub.date === this.vm.getTestDate(test) &&
-              sub.newDate === this.vm.getTestDate(test) &&
-              sub.startTime === test.startTime &&
-              sub.endTime === test.endTime
 
-              // check for same date and start & end time also
-          );
-
-          var classIdx = -1,
-            sectionIdx = -1;
-
-          if (subIdx != -1) {
-            classIdx = this.vm.newTestList[subIdx].classList.findIndex(
-              (cl) => cl.classId === test.parentClass
-            );
-
-            if (classIdx != -1) {
-              sectionIdx = this.vm.newTestList[subIdx].classList[
-                classIdx
-              ].sectionList.findIndex(
-                (sec) => sec.sectionId === test.parentDivision
+          for(let i=0;i<this.classListForTest.length;i++)
+          {
+            if(this.classListForTest[i]===test.parentClass && this.sectionListForTest[i]===test.parentDivision)
+            {
+              var subIdx = this.vm.newTestList.findIndex(
+                (sub) =>
+                  sub.subjectId === test.parentSubject &&
+                  sub.testType === test.testType &&
+                  sub.maximumMarks === test.maximumMarks &&
+                  this.vm.formatDate(sub.date,'') === this.vm.formatDate(this.vm.getTestDate(test),'')&&
+                  sub.startTime === this.extractTime(test.startTime)&&
+                  sub.endTime === this.extractTime(test.endTime),
+    
+                  // check for same date and start & end time also
               );
+              var classIdx = -1,
+                sectionIdx = -1;
+    
+              if (subIdx != -1) {
+                console.log("test is true :"+ test);
+                classIdx = this.vm.newTestList[subIdx].classList.findIndex(
+                  (cl) => cl.classId === test.parentClass
+                );
+    
+                if (classIdx != -1) {
+                  sectionIdx = this.vm.newTestList[subIdx].classList[
+                    classIdx
+                  ].sectionList.findIndex(
+                    (sec) => sec.sectionId === test.parentDivision
+                  );
+                }
+              }
+    
+              let tempSection = {
+                sectionName: this.getSectionName(test.parentDivision),
+                sectionId: test.parentDivision,
+                testId: test.id,
+              };
+    
+              let tempSectionList = [];
+              tempSectionList.push(tempSection);
+    
+              let tempClass = {
+                className: this.getClassName(test.parentClass),
+                classId: test.parentClass,
+                sectionList: tempSectionList,
+              };
+              let tempClassList = [];
+              tempClassList.push(tempClass);
+    
+              let tempSubject = {
+                parentExamination: test.parentExamination,
+                deleted: false,
+                subjectId: test.parentSubject,
+                subjectName: this.getSubjectName(test.parentSubject),
+                testType: test.testType,
+                startTime: this.extractTime(test.startTime),
+                newStartTime: this.extractTime(test.startTime),
+                endTime: this.extractTime(test.endTime),
+                newEndTime: this.extractTime(test.endTime),
+                
+                date: this.vm.getTestDate(test),
+                
+                newDate: this.vm.getTestDate(test),
+                maximumMarks: test.maximumMarks,
+                classList: tempClassList,
+              };
+    
+              if (subIdx === -1) {
+                this.vm.newTestList.push(tempSubject);
+              } else if (classIdx === -1) {
+                this.vm.newTestList[subIdx].classList.push(tempClass);
+              } else if (sectionIdx === -1) {
+                this.vm.newTestList[subIdx].classList[classIdx].sectionList.push(
+                  tempSection
+                );
+              }
             }
           }
-
-          let tempSection = {
-            sectionName: this.getSectionName(test.parentDivision),
-            sectionId: test.parentDivision,
-            testId: test.id,
-          };
-
-          let tempSectionList = [];
-          tempSectionList.push(tempSection);
-
-          let tempClass = {
-            className: this.getClassName(test.parentClass),
-            classId: test.parentClass,
-            sectionList: tempSectionList,
-          };
-          let tempClassList = [];
-          tempClassList.push(tempClass);
-
-          let tempSubject = {
-            parentExamination: test.parentExamination,
-            deleted: false,
-            subjectId: test.parentSubject,
-            subjectName: this.getSubjectName(test.parentSubject),
-            testType: test.testType,
-            startTime: this.extractTime(test.startTime),
-            newStartTime: this.extractTime(test.startTime),
-            endTime: this.extractTime(test.endTime),
-            newEndTime: this.extractTime(test.endTime),
-            
-            date: this.vm.getTestDate(test),
-            
-            newDate: this.vm.getTestDate(test),
-            maximumMarks: test.maximumMarks,
-            classList: tempClassList,
-          };
-
-          if (subIdx === -1) {
-            this.vm.newTestList.push(tempSubject);
-          } else if (classIdx === -1) {
-            this.vm.newTestList[subIdx].classList.push(tempClass);
-          } else if (sectionIdx === -1) {
-            this.vm.newTestList[subIdx].classList[classIdx].sectionList.push(
-              tempSection
-            );
-          }
+          
         });
 
         console.log('Test listed created in nested fashion...');
