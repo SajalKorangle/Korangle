@@ -76,7 +76,7 @@
                             <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
                             <div class="image-row">
                                 <div *ngFor="let images of currentHomeworkImages; let i = index">
-                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column">
+                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(currentHomeworkImages, i, 0)">
                                 </div>
                             </div>
                         </div><br>
@@ -174,7 +174,7 @@
                             <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
                             <div class="image-row">
                                 <div *ngFor="let images of currentHomeworkImages; let i = index">
-                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column">
+                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(currentHomeworkImages, i, 0)">
                                 </div>
                             </div>
                         </div><br>
@@ -264,7 +264,7 @@
                         <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
                         <div class="image-row">
                             <div *ngFor="let images of toSubmitHomework.questionImages; let i = index">
-                                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column">
+                                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(toSubmitHomework.questionImages, i, 0)">
                             </div>
                         </div><br>
                     </div>
@@ -316,7 +316,7 @@
                     <span style="color: #7b7b7b;">Answer Images: <br></span>
                     <div class="image-row" cdkDropList (cdkDropListDropped)="drop($event)">
                         <div *ngFor="let images of toSubmitHomework.answerImages; let i = index" cdkDrag>
-                            <img src="{{images.answerImage}}" class="hover-shadow cursor image-column">
+                            <img src="{{images.answerImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 1)">
                             <span class="close" (click)="removeImage(i);">&times;</span>
                         </div>
                         <input type='file' (change)="readURL($event);" multiple="false" style="display: none"

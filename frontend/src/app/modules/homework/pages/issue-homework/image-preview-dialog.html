@@ -2,23 +2,23 @@
 <mat-dialog-content style="max-height: 88vh;">
 
     
-    
-    <div *ngIf="data.homeworkImages.length > 0">
-        <span class="material-icons cursor close" style="font-size: 40px; float:right" (click)="onNoClick()">&times;</span>
-        <span class="material-icons cursor" style="font-size: 30px; margin-top: 250px; float:left" (click)="decreaseIndex()">keyboard_arrow_left</span>
-        <img src="{{data.homeworkImages[data.index].questionImage}}" style="width:400px; height: 500px; margin-left: 300px"class="hover-shadow cursor image-column">
-        <span class="material-icons cursor" style="font-size: 30px; margin-top: 250px; float:right" (click)="increaseIndex()">keyboard_arrow_right</span>
-    </div>
-
-
-    <div >
-        <div class="image-row">
-            <div  *ngFor="let images of data.homeworkImages; let i = index">
-                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="setIndex(i)">
-                <span *ngIf="data.editable === 1" class="close" (click)="removeImage(i);">&times;</span>
-            </div>
+    <div class="row">
+        <div class="col-sm-12">
+            {{data.index + 1 }}/{{data.homeworkImages.length}}
+            <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 40px; float:right">clear</span>
+            <span *ngIf="data.editable === 1" class="material-icons cursor" (click)="removeImage(data.index);" style="font-size: 35px; float:right; margin-right: 10px">delete</span>
         </div>
     </div>
-
-    
+    <div class="row">
+        <div class="col-sm-1">
+            <span class="material-icons cursor" style="font-size: 30px; margin-top: 250px; float:left" (click)="decreaseIndex()">keyboard_arrow_left</span>
+        </div>
+        <div class="col-sm-10">
+            <img *ngIf="data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" style="width:400px; height: 500px;" class="zoom">
+            <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" style="width:400px; height: 500px;" class="zoom">
+        </div>
+        <div class="col-sm-1">
+            <span class="material-icons cursor" style="font-size: 30px; margin-top: 250px; float:right" (click)="increaseIndex()">keyboard_arrow_right</span>
+        </div>
+    </div>
 </mat-dialog-content>

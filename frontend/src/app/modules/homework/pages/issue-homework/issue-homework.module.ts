@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { IssueHomeworkComponent } from "./issue-homework.component";
 
+
 import { ImagePreviewDialogComponent } from "./issue-homework.component";
 import { EditHomeworkDialogComponent } from "./issue-homework.component";
 import {IssueHomeworkRoutingModule } from './issue-homework.routing';
@@ -12,7 +13,7 @@ import {ComponentsModule} from "../../../../components/components.module";
     declarations: [
         IssueHomeworkComponent,
         EditHomeworkDialogComponent,
-        ImagePreviewDialogComponent
+        ImagePreviewDialogComponent,
     ],
 
     imports: [
@@ -20,6 +21,7 @@ import {ComponentsModule} from "../../../../components/components.module";
         ComponentsModule,
     ],
     exports: [
+        ImagePreviewDialogComponent,
     ],
     providers: [],
     

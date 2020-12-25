@@ -8,6 +8,9 @@ import { SubjectService } from '../../../../services/modules/subject/subject.ser
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { isMobile } from '../../../../classes/common.js';
 
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { ImagePreviewDialogComponent} from '../../../homework/pages/issue-homework/issue-homework.component';
+
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
@@ -60,6 +63,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         public homeworkService: HomeworkService,
         public subjectService: SubjectService,
         public studentService: StudentService,
+        public dialog: MatDialog,
         ) { }
 
     ngOnChanges(): void {
@@ -267,7 +271,19 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     } 
 
     isMobile(): boolean {
-        return true;
+        return isMobile();
+    }
+
+    openImagePreviewDialog(homeworkImages: any, index: any, editable): void {
+        const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+            width: '1000px',
+            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable}
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            
+        });
     }
 
 }

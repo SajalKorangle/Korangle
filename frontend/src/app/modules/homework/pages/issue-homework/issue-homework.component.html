@@ -63,7 +63,6 @@
         <div class="image-row">
             <div  *ngFor="let image of currentHomeworkImages; let i = index">
                 <img src="{{image.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(currentHomeworkImages, i, 1)">
-                <span class="close" (click)="removeImage(i);" >&times;</span>
             </div>
         </div>
         

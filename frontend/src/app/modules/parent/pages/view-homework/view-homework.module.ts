@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { ViewHomeworkRoutingModule} from './view-homework.routing';
 import {ComponentsModule} from "../../../../components/components.module";
 import {ViewHomeworkComponent} from "./view-homework.component";
+import { IssueHomeworkModule } from '../../../homework/pages/issue-homework/issue-homework.module';
+import { ImagePreviewDialogComponent } from '../../../homework/pages/issue-homework/issue-homework.component';
 
 
 @NgModule({
@@ -14,10 +16,11 @@ import {ViewHomeworkComponent} from "./view-homework.component";
     imports: [
         ViewHomeworkRoutingModule ,
         ComponentsModule,
+        IssueHomeworkModule,
     ],
     exports: [
     ],
     providers: [],
-    bootstrap: [ViewHomeworkComponent]
+    bootstrap: [ViewHomeworkComponent, ImagePreviewDialogComponent]
 })
 export class ViewHomeworkModule { }
