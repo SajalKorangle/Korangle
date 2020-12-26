@@ -76,16 +76,31 @@ export class TotalCollectionComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        delete this.receiptColumnFilter['printButton'];
+        this.initializeSelection();
+        /*delete this.receiptColumnFilter['printButton'];
 
         this.receiptColumnFilter.scholarNumber = false;
-        this.receiptColumnFilter.remark = false;
+        this.receiptColumnFilter.remark = false;*/
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }
+
+    }
+
+    initializeSelection(): void {
+
+        this.selectedEmployee = null;
+        this.selectedClassSection = null;
+        this.selectedModeOfPayment = null;
+        this.selectedFeeType = null;
+
+        this.receiptColumnFilter = new ReceiptColumnFilter();
+        delete this.receiptColumnFilter['printButton'];
+        this.receiptColumnFilter.scholarNumber = false;
+        this.receiptColumnFilter.remark = false;
 
     }
 
