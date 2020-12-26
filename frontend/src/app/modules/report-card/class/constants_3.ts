@@ -26,7 +26,7 @@ Object.seal(A4.A4Resolution.mm);
 
 //Constants--------------------------------------
 
-export const permissibleClickError = 8;    // in pixels
+export const permissibleClickError = 4;    // in pixels
 
 export const PageRelativeAttributes = [
     'x',
@@ -41,46 +41,57 @@ export const DATA_SOUCE_TYPE = [
 ]
 
 export const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+export const DEFAULT_TEXT_COLOR = '#000000'
 
 
 //Layers--------------------------------------
 
 // To be implemented by all Canvas Layers
-interface Layer{
-    displayName: string;
-    LAYER_TYPE: string;
+export interface Layer{
+    displayName: string;    // layer name displayed to user
+    LAYER_TYPE: string; // Type description for JSON parsing
     x: number;
     y: number;
     dataSourceType: string;    // options: DATA_SOURCE_TYPE
     source?: {[key:string]: any};   // object containing information about the source of data
-    layerSetUp(Data:object, canvasWidth:number, canvasHeight: number): void;
+    layerSetUp(Data: object, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void;
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
     isClicked(mouseX: number, mouseY: number): boolean
     getDataToSave(): any;
+
+    image?: HTMLImageElement;
+    height?: number;
+    width?: number;
+    textBoxMetrx?: {
+        boundingBoxLeft: number,
+        boundingBoxRight: number,
+        boundingBoxTop: number,
+        boundingBoxBottom: number,
+    };
 };
 
 export class CanvasImage implements Layer{  // Canvas Image Layer
     displayName: string = 'Image';
-    LAYER_TYPE: string = 'IMAGE';   // Type description for JSON parsing
+    LAYER_TYPE: string = 'IMAGE';   
     image: HTMLImageElement;    // not included in content json data
     uri: string;
     x: number;
     y: number;
     height: number = null;
     width: number = null;
-    aspectRatio: any = null;    // not included in content json data
-    maintainAspectRatio = true; // not included in content json data
-    dataSourceType: string = DATA_SOUCE_TYPE[0];
+    aspectRatio: any = null;    
+    maintainAspectRatio = true; 
+    dataSourceType: string = 'N/A';
     source?: {[key:string]: any};
 
-    constructor(attributesObject: object) {
+    constructor(attributes: object) {
         this.image = new Image();
-        Object.entries(attributesObject).forEach(([key, value]) => this[key] = value);
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         this.LAYER_TYPE = 'IMAGE';
     }
 
-    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number): void{
+    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void{
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
             this.uri = this.source.getValueFunc(DATA);
         }
@@ -164,26 +175,105 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     }
 }
 
-// export class CanvasText implements Layer{
-//     displayName: string = 'Text';
-//     LAYER_TYPE: string = 'TEXT';   // Type description for parsing
-//     text: '';    // not included in content json data
-//     x: number;
-//     y: number;
-//     height: number = null;
-//     width: number = null;
-//     dataSource: string = 'CONST';
-//     source?: object;
+export class CanvasText implements Layer{
+    displayName: string = 'Text';
+    LAYER_TYPE: string = 'TEXT';   // Type description for parsing
+    text: string = 'Lorem Ipsum';    
+    x: number;
+    y: number;
+    textBoxMetrx: {
+        boundingBoxLeft: number,
+        boundingBoxRight: number,
+        boundingBoxTop: number,
+        boundingBoxBottom: number,
+    } = {
+        boundingBoxLeft: null,
+        boundingBoxRight: null,
+        boundingBoxTop: null,
+        boundingBoxBottom: null,
+    };
+    dataSourceType: string = 'N/A';
+    source?: {[key:string]: any};
 
-//     constructor(attributesObject) {
-//         Object.entries(attributesObject).forEach(([key, value]) => this[key] = value);
-//         this.LAYER_TYPE = 'TEXT';
-//     }
-// }
+    fontStyle: { [key: string]: string } = {
+        fillStyle: DEFAULT_TEXT_COLOR
+    };
 
-export const LAYER_TYPES = {    // all nulls to be implemented
+    constructor(attributes: object) {
+        console.log('canvas text before constructor: ', this.text);
+        console.log('attributes in construtor: ', attributes);
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
+        this.LAYER_TYPE = 'TEXT';
+        console.log('canvas text after constructor: ', this.text);
+    }
+
+    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
+        console.log('canvas text before layer setup: ', this.text);
+        if (this.dataSourceType == 'DATA') {
+            this.text = this.source.getValueFunc(DATA);
+            console.log('if is called inside layer setup for dataSourceType== DATA');
+        }
+        Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
+        let textMetrix = ctx.measureText(this.text);
+        console.log(textMetrix);
+        this.textBoxMetrx = {
+            boundingBoxLeft: textMetrix.actualBoundingBoxLeft,
+            boundingBoxRight: textMetrix.actualBoundingBoxRight,
+            boundingBoxTop: textMetrix.actualBoundingBoxAscent,
+            boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
+        };
+
+        if (!this.x && !this.y) {
+            this.x = 50;
+            this.y = 50;
+        }
+        console.log('canvas text after layer setup: ', this.text);
+    }
+
+    updatePosition(dx = 0, dy = 0):void {
+        this.x += dx;
+        this.y += dy;
+    }
+
+    // style updated to be implemented
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        console.log('canvas text in draw on Canvas: ', this.text);
+        Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
+        setTimeout(()=>ctx.fillText(this.text, this.x, this.y));
+        return true;    // Drawn successfully on canvas
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+        return (mouseX > this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError
+            && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
+            && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
+            && mouseY < this.y + this.textBoxMetrx.boundingBoxBottom + permissibleClickError)
+    }
+
+    getDataToSave() {
+        let savingData: any = {
+            'displayName': this.displayName,
+            'LAYER_TYPE': this.LAYER_TYPE,
+            'x': this.x,
+            'y': this.y,
+            'dataSourceType': this.dataSourceType,
+            'fontStyle': this.fontStyle
+        }
+        if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
+            savingData.text = this.text;
+        } else {
+            savingData.source = this.source;
+            delete savingData.source.layerType;
+        }
+        return { ...savingData };
+    }
+
+}
+
+export const LAYER_TYPES: {[key:string]: any} = {    // all nulls to be implemented
     'IMAGE': CanvasImage,
-    'TEXT': null,
+    'TEXT': CanvasText,
     'DATE': null,
     'TABLE': null,
 };
@@ -228,6 +318,14 @@ export const FIELDS = {
 
 
 // Parameters--------------------------------------
+
+export interface ParameterAsset{
+    key: string,
+    field: string,
+    layerType: any,
+    displayParameterNameFunc: any
+    getValueFunc: any
+};
 
 class ParameterStructure {
 
@@ -304,7 +402,7 @@ export const PARAMETER_LIST = [
     StudentParameterStructure.getStructure(`Scholar No.`, 'scholarNumber'),
     StudentParameterStructure.getStructure(`Address`, 'address'),
     StudentParameterStructure.getStructure(`Profile Image`, 'profileImage', LAYER_TYPES.IMAGE),
-    StudentParameterStructure.getStructure(`Date of Birth`, 'dateOfBirth', LAYER_TYPES.DATE),
+    // StudentParameterStructure.getStructure(`Date of Birth`, 'dateOfBirth', LAYER_TYPES.DATE),    //uncomment after implementing Date layer
     StudentParameterStructure.getStructure(`Gender`, 'gender'),
     StudentParameterStructure.getStructure(`Caste`, 'caste'),
     StudentParameterStructure.getStructure(`Category`, 'newCategoryField'),
@@ -319,5 +417,5 @@ export const PARAMETER_LIST = [
     StudentParameterStructure.getStructure(`Blood Group`, 'bloodGroup'),
     StudentParameterStructure.getStructure(`Father's Annual Income`, 'fatherAnnualIncome'),
     StudentParameterStructure.getStructure(`RTE`, 'rte'),
-    StudentParameterStructure.getStructure(`Date of Admission`, 'dateOfAdmission', LAYER_TYPES.DATE),
+    // StudentParameterStructure.getStructure(`Date of Admission`, 'dateOfAdmission', LAYER_TYPES.DATE), //uncomment after implementing Date layer
 ]

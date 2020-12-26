@@ -54,39 +54,39 @@ export class DesignReportCardServiceAdapter {
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 10
         ]).then(data => { 
             this.vm.reportCardLayoutList = data[0];
-            this.vm.data.studentSectionList = data[1];
-            this.vm.data.studentParameterList = data[2];
-            this.vm.data.classList = data[3];
-            this.vm.data.divisionList = data[4];
-            this.vm.data.examinationList = data[5];
-            this.vm.data.testList = data[6];
-            this.vm.data.subjectList = data[7];
-            this.vm.data.sessionList = data[8];
-            this.vm.data.gradeList = data[9];
-            this.vm.data.subGradeList = data[10];
+            this.vm.DATA.data.studentSectionList = data[1];
+            this.vm.DATA.data.studentParameterList = data[2];
+            this.vm.DATA.data.classList = data[3];
+            this.vm.DATA.data.divisionList = data[4];
+            this.vm.DATA.data.examinationList = data[5];
+            this.vm.DATA.data.testList = data[6];
+            this.vm.DATA.data.subjectList = data[7];
+            this.vm.DATA.data.sessionList = data[8];
+            this.vm.DATA.data.gradeList = data[9];
+            this.vm.DATA.data.subGradeList = data[10];
 
             const request_student_data = {
-                id__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
+                id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
             const request_student_parameter_value_data = {
-                parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
+                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
             const request_student_test_data = {
-                parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
-                parentExamination__in: this.vm.data.examinationList.map(item => item.id).join(','),
+                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
+                parentExamination__in: this.vm.DATA.data.examinationList.map(item => item.id).join(','),
             };
             const request_attendance_data = {
-                parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
-                'dateOfAttendance__gte': (new Date(this.vm.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
-                'dateOfAttendance__lte': (new Date(this.vm.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
+                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
+                'dateOfAttendance__gte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
+                'dateOfAttendance__lte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
             };
             const request_student_sub_grade_data = {
-                parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
+                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
             const request_student_examination_remarks_data = {
                 parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
                 parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                parentStudent__in: this.vm.data.studentSectionList.map(item => item.parentStudent).join(','),
+                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
 
             Promise.all([
@@ -97,12 +97,15 @@ export class DesignReportCardServiceAdapter {
                 this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
                 this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
             ]).then(value => {
-                this.vm.data.studentList = value[0];
-                this.vm.data.studentParameterValueList = value[1];
-                this.vm.data.studentTestList = value[2];
-                this.vm.data.attendanceList = value[3];
-                this.vm.data.studentSubGradeList = value[4];
-                this.vm.data.studentExaminationRemarksList = value[5];
+                this.vm.DATA.data.studentList = value[0];
+                this.vm.DATA.data.studentParameterValueList = value[1];
+                this.vm.DATA.data.studentTestList = value[2];
+                this.vm.DATA.data.attendanceList = value[3];
+                this.vm.DATA.data.studentSubGradeList = value[4];
+                this.vm.DATA.data.studentExaminationRemarksList = value[5];
+
+                this.vm.DATA.studentId = this.vm.DATA.data.studentList[0].id;
+                console.log('DATA: ', this.vm.DATA);
                 this.vm.htmlAdapter.isLoading = false;
             }, error => {
                 this.vm.htmlAdapter.isLoading = false;
@@ -119,7 +122,7 @@ export class DesignReportCardServiceAdapter {
         //         studentParameter.id
         //     ));
         // });
-        // uncomment afetr copying parameters
+        // uncomment afetr copying parameters all 
     }
 
     uploadCurrentLayout() {

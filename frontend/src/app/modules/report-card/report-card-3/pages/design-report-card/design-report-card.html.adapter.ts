@@ -1,5 +1,5 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST } from './../../../class/constants_3';
+import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset } from './../../../class/constants_3';
 import { CommonFunctions } from '@classes/common-functions.ts';
 
 export class DesignReportCardHtmlAdapter {
@@ -38,6 +38,11 @@ export class DesignReportCardHtmlAdapter {
         return this.parameterList.filter(item => {
             return item.field.fieldStructureKey === field.fieldStructureKey;
         });
+    }
+
+    addNewLayerForAsset(asset: ParameterAsset): void {
+        this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }));
+        
     }
 
     fullScreenToggle(): void{

@@ -69,6 +69,11 @@
                         (click)="logMessage('zoom_in')">zoom_in</button>
             </div>
 
+            <div class="tool">
+                <button class="btn material-icons"
+                        (click)="canvasAdapter.newTextLayer()">title</button>
+            </div>
+
         </div>
 
         <div class="flex-row" style="margin-top: 8px; width: 100%; justify-content: space-around;">
@@ -89,7 +94,8 @@
                         </mat-label>
                         <mat-select [value]="null">
                             <mat-option *ngIf="htmlAdapter.getFilteredParameterList(htmlAdapter.fields[fieldKey]).length == 0">--Comming Soon--</mat-option>
-                            <mat-option *ngFor="let parameter of htmlAdapter.getFilteredParameterList(htmlAdapter.fields[fieldKey])">
+                            <mat-option *ngFor="let parameter of htmlAdapter.getFilteredParameterList(htmlAdapter.fields[fieldKey])"
+                                    (click)="htmlAdapter.addNewLayerForAsset(parameter)">
                                 {{parameter.displayParameterNameFunc()}}
                             </mat-option>
                         </mat-select>

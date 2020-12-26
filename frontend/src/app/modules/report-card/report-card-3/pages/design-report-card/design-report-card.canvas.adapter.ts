@@ -1,5 +1,5 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { A4, CanvasImage, PageRelativeAttributes, DEFAULT_BACKGROUND_COLOR } from './../../../class/constants_3';
+import { A4, PageRelativeAttributes, DEFAULT_BACKGROUND_COLOR, CanvasImage, CanvasText, Layer } from './../../../class/constants_3';
 // Currently supports only a4 size
 
 export class DesignReportCardCanvasAdapter {
@@ -14,7 +14,7 @@ export class DesignReportCardCanvasAdapter {
     canvasHeight: number;   // height and width are in pixels
     canvasWidth: number;    
 
-    layers: Array<any> = [];  // layers in thier order from back to front
+    layers: Array<Layer> = [];  // layers in thier order from back to front
     activeLayer = null;
     activeLayerIndex = null;
     backgroundColor: string = null;
@@ -65,9 +65,6 @@ export class DesignReportCardCanvasAdapter {
             this.currentMouseDown = false;
 
             for (let i = this.layers.length - 1; i >= 0; i--) {
-                console.log('Layer position: ', this.layers[i].x, this.layers[i].y);
-                console.log('Layer width and height: ', this.layers[i].width, this.layers[i].height);
-                console.log(this.layers[i].isClicked(clickedX, clickedY))
                 if (this.layers[i].isClicked(clickedX, clickedY)) {
                     this.activeLayer = this.layers[i];
                     this.activeLayerIndex = i;
@@ -108,14 +105,14 @@ export class DesignReportCardCanvasAdapter {
                             layerData['key'] = layerData['key'] / this.pixelTommFactor;
                     });
                 
-                    let newLayerFromLayerData;
+                    let newLayerFromLayerData: Layer;
                     switch (layerData.LAYER_TYPE) {
                         case 'IMAGE':
                             newLayerFromLayerData = new CanvasImage(layerData);
                             break;
                     }
                     this.layers.push(newLayerFromLayerData);
-                    newLayerFromLayerData.layerSetUp({}, this.canvasWidth, this.canvasHeight);  // change empty object first arg to DATA object
+                    newLayerFromLayerData.layerSetUp(this.vm.DATA, this.canvasWidth, this.canvasHeight, this.virtualContext);  // change empty object first arg to DATA object
                 } else {
                     this.layers.push(null);
                 }
@@ -168,18 +165,6 @@ export class DesignReportCardCanvasAdapter {
         this.applyDefaultbackground();
     }
 
-    newImageLayer(uri: string): void{
-        let canvasImage = new CanvasImage({ uri, x:0, y:0});
-        canvasImage.layerSetUp({}, this.canvasHeight, this.canvasWidth);    // Update {} to DATA
-        this.layers.push(canvasImage);
-        let status = canvasImage.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);  // Putting in ast of event loop to wait for base64Image to load
-        if (status)
-            setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
-        this.activeLayer = canvasImage;
-        this.activeLayerIndex = this.layers.length - 1;
-        console.log(canvasImage);
-    }
-
     updateActiveLayer(activeLayerIndex:number): void{   // used by left layer pannel
         this.activeLayerIndex = activeLayerIndex;
         this.activeLayer = this.layers[this.activeLayerIndex];
@@ -205,6 +190,39 @@ export class DesignReportCardCanvasAdapter {
             backgroundColor: this.backgroundColor,
             layers: layers
         };
+    }
+
+    newImageLayer(uri: string): void{
+        let canvasImage = new CanvasImage({ uri, x:0, y:0});
+        canvasImage.layerSetUp({}, this.canvasHeight, this.canvasWidth, this.virtualContext);    // Update {} to DATA
+        this.layers.push(canvasImage);
+        let status = canvasImage.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);  // Putting in ast of event loop to wait for base64Image to load
+        if (status)
+            setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
+        this.activeLayer = canvasImage;
+        this.activeLayerIndex = this.layers.length - 1;
+        console.log(canvasImage);
+    }
+
+    newTextLayer(initialParameters: object = {}): void{
+        let canvasText = new CanvasText(initialParameters);
+        canvasText.layerSetUp(this.vm.DATA, this.canvasHeight, this.canvasWidth, this.virtualContext);
+        this.layers.push(canvasText);
+        let status = canvasText.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
+        if (status)
+            setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
+        this.activeLayer = canvasText;
+        this.activeLayerIndex = this.layers.length - 1;
+    }
+
+    newLayerInitilization(layer: Layer): void{
+        layer.layerSetUp(this.vm.DATA, this.canvasHeight, this.canvasWidth, this.virtualContext)
+        this.layers.push(layer);
+        let status = layer.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
+        if (status)
+            setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
+        this.activeLayer = layer;
+        this.activeLayerIndex = this.layers.length - 1;
     }
 
 }

@@ -48,25 +48,31 @@ export class DesignReportCardComponent implements OnInit {
   htmlAdapter: DesignReportCardHtmlAdapter = new DesignReportCardHtmlAdapter();
   canvasAdapter: DesignReportCardCanvasAdapter;
 
-  data: any = {
-    school: null,
-    studentList: [],
-    studentSectionList: [],
-    studentParameterList: [],
-    studentParameterValueList: [],
-    classList: [],
-    divisionList: [],
-    examinationList: [],
-    testList: [],
-    studentTestList: [],
-    subjectList: [],
-    attendanceList: [],
-    sessionList: [],
-    gradeList: [],
-    subGradeList: [],
-    studentSubGradeList: [],
-    studentExaminationRemarksList: [],
-  };
+  DATA: {
+    studentId: number,
+    data: any
+  } = {
+    studentId: null,
+    data: {
+      school: null,
+      studentList: [],
+      studentSectionList: [],
+      studentParameterList: [],
+      studentParameterValueList: [],
+      classList: [],
+      divisionList: [],
+      examinationList: [],
+      testList: [],
+      studentTestList: [],
+      subjectList: [],
+      attendanceList: [],
+      sessionList: [],
+      gradeList: [],
+      subGradeList: [],
+      studentSubGradeList: [],
+      studentExaminationRemarksList: [],
+    }
+  }
 
   constructor(
     public reportCardService: ReportCardService,
