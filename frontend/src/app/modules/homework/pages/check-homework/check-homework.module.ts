@@ -4,8 +4,8 @@ import { CheckHomeworkComponent } from "./check-homework.component";
 
 import {CheckHomeworkRoutingModule } from './check-homework.routing';
 import {ComponentsModule} from "../../../../components/components.module";
-import { IssueHomeworkModule } from '../issue-homework/issue-homework.module'
-import { ImagePreviewDialogComponent } from '../issue-homework/issue-homework.component'
+import { IssueHomeworkModule } from '../issue-homework/issue-homework.module';
+import { ImagePreviewDialogComponent } from '../issue-homework/issue-homework.component';
 
 
 

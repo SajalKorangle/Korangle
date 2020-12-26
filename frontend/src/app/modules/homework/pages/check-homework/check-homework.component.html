@@ -29,7 +29,7 @@
                 <div style="width: 100%;">
                     <strong>{{homework.homeworkName}}</strong>
                     <div style="float: right;">
-                        <span *ngIf="!isMobile()" style="color: #494949; font-size: 15px">Issue Date & Time: &nbsp;</span><i *ngIf="!isMobile()">{{displayDateTime(homework.startDate, homework.startTime)}}</i>
+                        <span *ngIf="!isMobile()" style="color: #494949; font-size: 15px">Issued On: &nbsp;</span><i *ngIf="!isMobile()">{{displayDateTime(homework.startDate, homework.startTime)}}</i>
                         <span class="material-icons" style="font-size: 25px; margin-left: 15px;" >keyboard_arrow_right</span>
                     </div>
                 </div>
@@ -61,15 +61,15 @@
             </mat-expansion-panel-header>
 
             <div *ngIf="!isMobile()">
-                <span class="hidden-xs" style="color: #7b7b7b;">Issued Date & Time: &nbsp;</span><i>{{displayDateTime(currentHomework.startDate, currentHomework.startTime)}}</i><br>
-                <span  class="hidden-xs" style="color: #7b7b7b;">Due Date & Time: &nbsp;</span><i>{{displayDateTime(currentHomework.endDate, currentHomework.endTime)}}</i><br>
+                <span class="hidden-xs" style="color: #7b7b7b;">Issued On: &nbsp;</span><i>{{displayDateTime(currentHomework.startDate, currentHomework.startTime)}}</i><br>
+                <span  class="hidden-xs" style="color: #7b7b7b;">Due On: &nbsp;</span><i>{{displayDateTime(currentHomework.endDate, currentHomework.endTime)}}</i><br>
                 <strong>Total: {{studentHomeworkList.length}} ; Submitted: {{homeworkReport.submitted}} ; Checked: {{homeworkReport.checked}} ; Asked For Resubmission: {{homeworkReport.resubmission}}<br></strong>
     
             </div>
             
             <div *ngIf="isMobile()">
-                <span style="color: #7b7b7b; font-size: 12px">Issued Date & Time: &nbsp;</span><i>{{displayDateTime(currentHomework.startDate, currentHomework.startTime)}}</i><br>
-                <span style="color: #7b7b7b; font-size: 12px">Due Date & Time: &nbsp;</span><i>{{displayDateTime(currentHomework.endDate, currentHomework.endTime)}}</i><br>
+                <span style="color: #7b7b7b; font-size: 12px">Issued On: &nbsp;</span><i>{{displayDateTime(currentHomework.startDate, currentHomework.startTime)}}</i><br>
+                <span style="color: #7b7b7b; font-size: 12px">Due On: &nbsp;</span><i>{{displayDateTime(currentHomework.endDate, currentHomework.endTime)}}</i><br>
                 <strong style="font-size: 12px">Total: {{studentHomeworkList.length}} ; Submitted: {{homeworkReport.submitted}} <br>Checked: {{homeworkReport.checked}} ; Asked For Resubmission: {{homeworkReport.resubmission}}<br></strong>
             </div>
             <div style="margin-top: 30px;">
@@ -126,11 +126,11 @@
 
                     <div *ngIf="studentHomework.submissionDate != null">
                         <div *ngIf="!isMobile()">
-                            <span class="hidden-xs" style="color: #7b7b7b;">Submitted On Date & Time: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
+                            <span class="hidden-xs" style="color: #7b7b7b;">Submitted On: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
                         </div>
                         
                         <div *ngIf="isMobile()">
-                            <span style="color: #7b7b7b; font-size: 12px">Submitted On Date & Time: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
+                            <span style="color: #7b7b7b; font-size: 12px">Submitted On: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
                         </div>
                     </div>   
 

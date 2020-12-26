@@ -177,7 +177,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
 
 
     submitHomework(homework: any){
-        this.isSubmitting = true;
+        
         this.toSubmitHomework = {
             dbId: homework.dbId,
             homeworkName: homework.homeworkName,
@@ -204,7 +204,9 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         this.currentHomeworkAnswerImages.forEach(element =>{
             this.toSubmitHomework.answerImages.push(element);
             this.toSubmitHomework.previousAnswerImages.push(element);
-        })
+        });
+        this.isSubmitting = true;
+        console.log(this.toSubmitHomework);
         
     }
 

@@ -18,9 +18,8 @@ export function unregisterForNotification(data) {
 }
 
 export function isMobile() {
-    // if (navigator.userAgent == "Mobile") {
-    //     return true;
-    // }
-    // return false;
-    return true;
+    if (navigator.userAgent == "Mobile") {
+        return true;
+    }
+    return false;
 }

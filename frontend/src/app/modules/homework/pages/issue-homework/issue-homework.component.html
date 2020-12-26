@@ -120,7 +120,7 @@
                             <div style="width: 100%;">
                                 <strong>{{homework.homeworkName}}</strong>
                                 <div *ngIf="!isMobile()" style="float: right;">
-                                    <span class="hidden-xs" style="color: #7b7b7b;">Issued Date & Time: &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i>&nbsp;&nbsp;
+                                    <span class="hidden-xs" style="color: #7b7b7b;">Issued On: &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i>&nbsp;&nbsp;
                                 </div>
                             </div>
                         </mat-panel-title>
@@ -128,12 +128,12 @@
                     </mat-expansion-panel-header>
 
                     <div *ngIf="!isMobile()">
-                        <span class="hidden-xs" style="color: #7b7b7b;">Due Date & Time: &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i>    
+                        <span class="hidden-xs" style="color: #7b7b7b;">Due On: &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i>    
                     </div>
                     <div *ngIf="isMobile()">
-                        <span style="color: #7b7b7b;">Issued Date & Time:
+                        <span style="color: #7b7b7b;">Issued On:
                             &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
-                        <span style="color: #7b7b7b;">Due Date & Time:
+                        <span style="color: #7b7b7b;">Due On:
                             &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i> <br>
                         
                     </div>

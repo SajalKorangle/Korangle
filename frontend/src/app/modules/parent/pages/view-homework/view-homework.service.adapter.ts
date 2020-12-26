@@ -293,6 +293,10 @@ export class ViewHomeworkServiceAdapter {
 
     submitHomework(): any{
 
+        if(!confirm("Click OK to submit the current Answer")) {
+            return;
+        }
+
         this.vm.isSubmitting = false;
         this.vm.isSessionLoading = true;
         let currentDate = new Date();
@@ -373,12 +377,13 @@ export class ViewHomeworkServiceAdapter {
             })
             this.vm.currentHomeworkImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
             this.vm.currentHomeworkAnswerImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
-        
+            
+            if(this.vm.isMobile() == true){    
+                this.vm.submitHomework(homework);
+            }    
             this.vm.isHomeworkLoading = false;
+            
         })
-        // if(this.vm.isMobile()){
-        //     this.vm.submitHomework(homework);
-        // }
     }
     
 }

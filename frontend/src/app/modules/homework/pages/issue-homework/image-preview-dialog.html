@@ -2,7 +2,16 @@
 <mat-dialog-content style="max-height: 88vh;" *ngIf="!data.isMobile">
 
     <div class="row">
+        
         <div class="col-sm-12" style="text-align: center;">
+            <mat-form-field *ngIf="data.editable === 1" style="width: 1.5cm; margin:0px; float:left">
+                <mat-select placeholder="Move To" [ngModel]="moveToIndex"
+                    (ngModelChange)="moveToIndex = $event; moveImage()">
+                    <mat-option *ngFor="let item of data.homeworkImages; let i = index" style="width: 100%;" [value]="i">
+                        {{i+1}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <span *ngIf="data.editable === 1" class="material-icons cursor" (click)="removeImage(data.index);" style="font-size: 35px; float:left">delete</span>
             {{data.index + 1 }}/{{data.homeworkImages.length}}
             <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 40px; float:right">clear</span>
@@ -24,14 +33,22 @@
 
 <mat-dialog-content style="height: 90vh; margin: 0px; padding: 2px" *ngIf="data.isMobile">
     
-        <div style="text-align: center; margin: 0px; padding: 2px">
-            <span *ngIf="data.editable === 1" class="material-icons cursor" (click)="removeImage(data.index);" style="font-size: 20px; float:left">delete</span>
-            {{data.index + 1 }}/{{data.homeworkImages.length}}
-            <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 20px; float:right">clear</span>
-        </div><br>
-        <div (swipeleft)="increaseIndex()" (swiperight)="decreaseIndex()" >
-            <img *ngIf="data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" style="width: 65vw; height: 55vh">
-            <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" style="width: 65vw; height: 55vh;">
-        </div>
+    <div style="text-align: center; margin: 0px; padding: 2px">
+        <mat-form-field *ngIf="data.editable === 1" style="width: 1.25cm; margin:0px; padding:0px; float:left; font-size: 13px">
+            <mat-select placeholder="Move To" [ngModel]="moveToIndex"
+                (ngModelChange)="moveToIndex = $event; moveImage()">
+                <mat-option *ngFor="let item of data.homeworkImages; let i = index"  [value]="i">
+                    {{i+1}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <span *ngIf="data.editable === 1" class="material-icons cursor" (click)="removeImage(data.index);" style="font-size: 20px; float:left">delete</span>
+        {{data.index + 1 }}/{{data.homeworkImages.length}}
+        <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 20px; float:right">clear</span>
+    </div><br>
+    <div (swipeleft)="increaseIndex()" (swiperight)="decreaseIndex()" >
+        <img *ngIf="data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" style="width: 65vw; height: 55vh">
+        <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" style="width: 65vw; height: 55vh;">
+    </div>
     
 </mat-dialog-content>

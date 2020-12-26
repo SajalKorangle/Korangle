@@ -38,7 +38,7 @@ export interface ImagePreviewDialogData {
     homeworkImages: any;
     index: any;
     editable: any;
-    inMobile: any;
+    isMobile: any;
 }
 
 @Component({
@@ -629,7 +629,10 @@ export class IssueHomeworkComponent implements OnInit {
         public dialogRef: MatDialogRef<ImagePreviewDialogComponent>,
         @Inject(MAT_DIALOG_DATA) 
         public data: ImagePreviewDialogData,) {
+            this.moveToIndex = this.data.index;
     }
+
+    moveToIndex: any;
   
     onNoClick(): void {
         this.dialogRef.close();
@@ -639,6 +642,7 @@ export class IssueHomeworkComponent implements OnInit {
         this.data.index = this.data.index - 1;
         if(this.data.index < 0)
             this.data.index = this.data.homeworkImages.length - 1;
+            this.moveToIndex = this.data.index;
     }
 
     
@@ -646,10 +650,7 @@ export class IssueHomeworkComponent implements OnInit {
         this.data.index = this.data.index + 1;
         if(this.data.index == this.data.homeworkImages.length)
             this.data.index = 0;
-    }
-
-    setIndex(i: any): void{
-        this.data.index  = i;
+        this.moveToIndex = this.data.index;
     }
 
     removeImage(index: any):any{
@@ -662,8 +663,11 @@ export class IssueHomeworkComponent implements OnInit {
         }
     }   
 
-    func(event): any{
-        console.log(event);
+    moveImage(){
+        let temp = this.data.homeworkImages[this.data.index];
+        this.data.homeworkImages.splice(this.data.index, 1);
+        this.data.homeworkImages.splice(this.moveToIndex, 0, temp);
+        this.data.index = this.moveToIndex;
     }
 
     
