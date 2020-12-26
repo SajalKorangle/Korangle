@@ -7,6 +7,7 @@ import { ImagePreviewDialogComponent } from "./issue-homework.component";
 import { EditHomeworkDialogComponent } from "./issue-homework.component";
 import {IssueHomeworkRoutingModule } from './issue-homework.routing';
 import {ComponentsModule} from "../../../../components/components.module";
+import 'hammerjs';
 
 
 @NgModule({

@@ -8,10 +8,10 @@ import { SubjectService } from '../../../../services/modules/subject/subject.ser
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { isMobile } from '../../../../classes/common.js';
 
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog} from '@angular/material';
 import { ImagePreviewDialogComponent} from '../../../homework/pages/issue-homework/issue-homework.component';
 
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, moveItemInArray, CdkDragEnter} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'view-homework',
@@ -126,7 +126,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     }
 
     readURL(event): void {
-        
+        console.log(event);
         if (event.target.files && event.target.files[0]) {
             const image = event.target.files[0];
             if (image.type !== 'image/jpeg' && image.type !== 'image/png' && image.type !== 'application/pdf') {
@@ -261,7 +261,17 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     }
 
     drop(event: CdkDragDrop<string[]>) {
-        moveItemInArray(this.toSubmitHomework.answerImages, event.previousIndex, event.currentIndex);
+        console.log(event.previousIndex ,event.currentIndex);
+        // moveItemInArray(this.toSubmitHomework.answerImages, event.previousIndex, event.currentIndex);
+        let temp = this.toSubmitHomework.answerImages[event.previousIndex];
+        this.toSubmitHomework.answerImages[event.previousIndex] = this.toSubmitHomework.answerImages[event.currentIndex];
+        this.toSubmitHomework.answerImages[event.currentIndex] = temp;
+        
+        
+    }
+
+    entered(event: CdkDragEnter) {
+        moveItemInArray(this.toSubmitHomework.answerImages, event.item.data, event.container.data);
     }
 
     @HostListener('window:scroll', ['$event']) onScrollEvent(event){
@@ -277,7 +287,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     openImagePreviewDialog(homeworkImages: any, index: any, editable): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             width: '1000px',
-            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable}
+            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
         });
     
         dialogRef.afterClosed().subscribe(result => {

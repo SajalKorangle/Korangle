@@ -75,65 +75,16 @@ mat-form-field input[type='date'] {
 	margin-top: 10px
 }
 
-.close {
-    color: rgb(17, 17, 17);
-    position: relative;
-    top: 10px;
-    right: 7px;
-    font-size: 25px;
-    font-weight: bold;
-    z-index: 2;
-	margin-right: 20px;
-	
+
+.image-column-mobile {
+	width: 0.375in; 
+	height: 0.525in; 
+	margin-right: 5px;
+	margin-top: 5px
 }
-.close:hover{
-	cursor: pointer;
-	color: #ddd8d8;
-	background-color: #706d6d;
-	border-radius: 50px;
-}
-.close:focus {
-	color: #888888;
-	text-decoration: none;
-	cursor: pointer;
-}
-.img-slides {
-	display: block; 
-	width: 60%; 
-	height: 5.525in; 
-	margin:auto; 
-	margin-bottom: 20px;
-	margin-top:20px
-}
+
 .cursor {
 	cursor: pointer;
-}
-.cursor:hover {
-	background-color: #b9b7b7;
-}
-.prev,
-.next {
-	cursor: pointer;
-	position: absolute;
-	top: 35%;
-	width: auto;
-	padding: 18px;
-	margin-top: -50px;
-	color: white !important;
-	font-weight: bold;
-	font-size: 20px;
-	transition: 0.8s ease;
-	border-radius: 0 5px 5px 0;
-	user-select: none;
-	-webkit-user-select: none;
-}
-.next {
-	right: 0;
-	border-radius: 3px 0 0 3px;
-}
-.prev:hover,
-.next:hover {
-	background-color: rgba(0, 0, 0, 0.8);
 }
 img {
 	margin-bottom: -4px;

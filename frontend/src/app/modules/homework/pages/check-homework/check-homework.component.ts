@@ -11,6 +11,7 @@ import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
 import {UserService} from '../../../../services/modules/user/user.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { ImagePreviewDialogComponent} from '../issue-homework/issue-homework.component'
+import { isMobile } from '../../../../classes/common.js';
 
 
 @Component({
@@ -249,12 +250,16 @@ export class CheckHomeworkComponent implements OnInit {
     openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             width: '1000px',
-            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable}
+            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
         });
     
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
             
         });
+    }
+
+    isMobile(): boolean {
+        return isMobile();
     }
 }

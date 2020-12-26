@@ -12,6 +12,7 @@ import {SmsService} from '../../../../services/modules/sms/sms.service';
 import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
 
 import {UserService} from '../../../../services/modules/user/user.service';
+import { isMobile } from '../../../../classes/common.js';
 
 
 import { Homework } from '../../../../services/modules/homework/models/homework';
@@ -37,6 +38,7 @@ export interface ImagePreviewDialogData {
     homeworkImages: any;
     index: any;
     editable: any;
+    inMobile: any;
 }
 
 @Component({
@@ -510,13 +512,17 @@ export class IssueHomeworkComponent implements OnInit {
     openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             width: '1000px',
-            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable}
+            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
         });
     
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
             
         });
+    }
+    
+    isMobile(): boolean {
+        return isMobile();
     }
 
 }
@@ -596,13 +602,17 @@ export class IssueHomeworkComponent implements OnInit {
     openImagePreviewDialog(homeworkImages: any, index: any, editable): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             width: '1000px',
-            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable}
+            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
         });
     
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
             
         });
+    }
+
+    isMobile(): boolean {
+        return isMobile();
     }
 
 }
@@ -650,5 +660,11 @@ export class IssueHomeworkComponent implements OnInit {
         if(index == this.data.index){
             this.decreaseIndex();
         }
+    }   
+
+    func(event): any{
+        console.log(event);
     }
+
+    
 }

@@ -78,6 +78,13 @@ mat-form-field input[type='date'] {
 	margin-top: 10px
 }
 
+.image-column-mobile {
+	width: 0.375in; 
+	height: 0.525in; 
+	margin-right: 5px;
+	margin-top: 5px
+}
+
 .close {
     color: rgb(17, 17, 17);
     position: relative;
@@ -128,3 +135,11 @@ img.hover-shadow {
 	margin-top: 10px;
 	transform: scale(2); /* (150% zoom)*/
 }
+
+
+#myElement {
+	background: silver;
+	height: 300px;
+	text-align: center;
+	font: 30px/300px Helvetica, Arial, sans-serif;
+  }

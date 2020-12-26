@@ -9,7 +9,6 @@
     </div>
 
     <div>
-        <span class="hidden-xs" style="color: #7b7b7b;">Submission Date & Time: &nbsp;</span>
         <mat-form-field style="margin-right: 15px; width: 150px">
             <input type="date" matInput [ngModel]="data.endDate"
             (ngModelChange)="data.endDate=$event;" placeholder="Choose Deadline Date ">
@@ -23,24 +22,42 @@
         <mat-form-field  style="width: 100%;">
             <textarea matInput 
             cdkTextareaAutosize style="padding-top: 10px; padding-bottom: 10px;; white-space: pre-wrap;"
-                 [ngModel]="data.homeworkText" (ngModelChange)="data.homeworkText=$event;">
+            [ngModel]="data.homeworkText" (ngModelChange)="data.homeworkText=$event;"
+            placeholder="Enter Homework Questions">
             </textarea>
         </mat-form-field>
     </div>
 
-    <div >
-        <div class="image-row">
+    
+    <div style="margin-top: 5px;" *ngIf="!isMobile()">
+        <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
+        <div class="image-row" >
             <div  *ngFor="let images of data.homeworkImages; let i = index">
                 <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(data.homeworkImages, i, 1)">
             </div>
+            <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
+                        accept="image/jpeg,image/png" #imageInput />
+            <button type="submit" class="image-column"
+                style="cursor: pointer; font-size: 45px;color: grey;border-radius: 5px;"
+                (click)="imageInput.click()">+</button>
         </div>
+        <br>
     </div>
 
-    <input type='file' (change)="readURL($event);" multiple="false" style="display: none" accept="image/jpeg,image/png" #imageInput/>                
-            <button type="submit"
-                    class="btn"
-                    style="margin-top: 15px ; margin-right: 15px; margin-bottom: 10px;cursor: pointer; padding: 4px 7px;"
-                    (click)="imageInput.click()">Upload Image</button>
+    <div style="margin-top: 5px;" *ngIf="isMobile()">
+        <span style="color: #7b7b7b;">Homework Images: <br></span>
+        <div class="image-row">
+            <div  *ngFor="let images of data.homeworkImages; let i = index">
+                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column-mobile" (click)="openImagePreviewDialog(data.homeworkImages, i, 1)">
+            </div>
+            <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
+                        accept="image/jpeg,image/png" #imageInput />
+            <button type="submit" class="image-column-mobile"
+                style="cursor: pointer; font-size: 35px;color: grey;border-radius: 5px;"
+                (click)="imageInput.click()">+</button>
+        </div>
+        <br>
+    </div>
     
 </mat-dialog-content>
 

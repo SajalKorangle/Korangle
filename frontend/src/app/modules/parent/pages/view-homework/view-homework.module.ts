@@ -6,6 +6,7 @@ import {ComponentsModule} from "../../../../components/components.module";
 import {ViewHomeworkComponent} from "./view-homework.component";
 import { IssueHomeworkModule } from '../../../homework/pages/issue-homework/issue-homework.module';
 import { ImagePreviewDialogComponent } from '../../../homework/pages/issue-homework/issue-homework.component';
+import { MatGridListModule } from '@angular/material/grid-list'
 
 
 @NgModule({
@@ -17,8 +18,10 @@ import { ImagePreviewDialogComponent } from '../../../homework/pages/issue-homew
         ViewHomeworkRoutingModule ,
         ComponentsModule,
         IssueHomeworkModule,
+        MatGridListModule,
     ],
     exports: [
+        MatGridListModule,
     ],
     providers: [],
     bootstrap: [ViewHomeworkComponent, ImagePreviewDialogComponent]

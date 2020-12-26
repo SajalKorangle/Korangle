@@ -32,6 +32,7 @@
 	clear: both;
 }
 .image-column {
+	display: inline-block;
 	width: 1.375in; 
 	height: 1.525in; 
 	margin-right: 5px;
