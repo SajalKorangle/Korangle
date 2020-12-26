@@ -55,6 +55,10 @@ export class User {
                 title: 'Contact Us',
             },
             {
+                path: 'suggest_feature',
+                title: 'Suggest Feature',
+            },
+            {
                 path: 'create_school',
                 title: 'Create School',
             }
@@ -145,11 +149,15 @@ export class User {
         let module: any;
         let task: any ;
 
-        if (urlPath == '/' || urlParams.get('school_id') == undefined || urlParams.get('session') == undefined)  { // on user login the path comes with '/' so on login showing notification page and even if there are no params or wrong params
+        // Review: iska else kahan, agar urlPath empty nahi hai, aur schoolid and session bhi exist karti hai
+        // uske baad user ko uski permission bhi nahi hai, tab kya karoge.
+        if (urlPath == '/'
+            || urlParams.get('school_id') == undefined
+            || urlParams.get('session') == undefined) { // on user login the path comes with '/' so on login showing notification page and even if there are no params or wrong params
 
             this.redirectToDefaultPage();
 
-        } else if(this.isSchoolValid(urlParams)) { // checking the school id  and session id in the url is valid for this user
+        } else if (this.checkUserSchoolSessionPermission(urlParams)) { // checking the school id  and session id in the url is valid for this user
             switch (modulePath) {
                 // if the user refreshes the notification or user - settings
                 // (i.e) we dont have these two in our user's active school module list
@@ -159,15 +167,22 @@ export class User {
                 case 'notification':
                     module = this.notification;
                     break;
+
+                // Review: You have written down that refreshing of student task list is not handled yet.
+                // Ye comment puraana hai, ya functionality abhi bhi nahi handle hui hai.
+
                 // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
                 case 'parent':
+                    // Review: Agar woh employee ke role se parent ke role me aa raha hai to? Permission hai dono ki uske paas.
                     if (this.activeSchool.role == 'Parent') {
                         if (urlParams.get('student_id') != undefined) {
                             module = this.activeSchool.studentList.find(s => s.id == Number(urlParams.get('student_id')));
                         } else {
+                            // Review: agar path view_fee receipt ka nahi hua aur student id bhi undefined hai to?
+                            // Aisa case is line tak pahunch sakta hai kya?
                             module = this.activeSchool.parentModuleList[0];
                         }
-                    }else{
+                    } else {
                         this.redirectToDefaultPage();
                     }
                     break;
@@ -176,15 +191,15 @@ export class User {
                     module = this.activeSchool.moduleList.find(m => m.path == modulePath);
             }
             if (module == undefined) { // if module doesn't exist redirect to default school notification page
-              this.redirectToDefaultPage();
+                this.redirectToDefaultPage();
             } else {
                 task = module.taskList.find(t => t.path == taskPath);
                 if (task == undefined) { // if task doesn't exist redirect to default school notification page
                      this.redirectToDefaultPage();
-                }else {
+                } else {
                     module.showTaskList = true;
                     this.populateSection(task, module); // if all exist then populate that section
-                    if(this.activeSchool.currentSessionDbId != Number(urlParams.get('session'))){ // if the session params are wrong then navigate again to respective path with default session
+                    if (this.activeSchool.currentSessionDbId != Number(urlParams.get('session'))) { // if the session params are wrong then navigate again to respective path with default session
                         EmitterService.get('initialize-router').emit({student:module});                    // if all exist then populate that section
                     }
                 }
@@ -192,32 +207,36 @@ export class User {
         }
     }
 
-    redirectToDefaultPage(){
+    redirectToDefaultPage() {
         this.populateSection(this.notification.taskList[0], this.notification);
         this.notification.showTaskList=true;
         EmitterService.get('initialize-router').emit({student:'false'});
     }
 
 
-    isSchoolValid(urlParams:any):boolean {
-            const school = this.schoolList.find(s => s.dbId == Number(urlParams.get('school_id')));
-            if (school != undefined && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= 5) {
-                this.activeSchool = school;
-                if (this.activeSchool.currentSessionDbId != Number(urlParams.get('session')) && this.checkChangeSession()) {
-                    this.activeSchool.currentSessionDbId = Number(urlParams.get('session'));
-                }
-                return true; // if both are valid returns true
-            } else { // if the school id or session id is not valid redirects him to his default school's notification page
-              this.redirectToDefaultPage();
+    checkUserSchoolSessionPermission(urlParams:any): boolean {
+        const school = this.schoolList.find(s => s.dbId == Number(urlParams.get('school_id')));
+        if (school != undefined
+            && Number(urlParams.get('session')) > 0
+            && Number(urlParams.get('session')) <= 5) {
+            this.activeSchool = school;
+            if (this.activeSchool.currentSessionDbId != Number(urlParams.get('session'))
+                && this.checkChangeSession()) {
+                this.activeSchool.currentSessionDbId = Number(urlParams.get('session'));
             }
+            return true; // if both are valid returns true
+        } else { // if the school id or session id is not valid redirects him to his default school's notification page
+            // this.redirectToDefaultPage();
+            // Review: yahan se false return hona chahiye tha na.
+        }
     }
 
-    checkChangeSession(){
-    return this.activeSchool && this.activeSchool.moduleList.find(module=>{
-        return module.path=='school' && module.taskList.find(task=>{
-            return task.path=='change_session';
-        })!=undefined;
-    })!=undefined;
+    checkChangeSession() {
+        return this.activeSchool && this.activeSchool.moduleList.find(module => {
+            return module.path=='school' && module.taskList.find(task => {
+                return task.path=='change_session';
+            }) != undefined;
+        }) != undefined;
     }
 
     populateSection(task: any, module: any): void {

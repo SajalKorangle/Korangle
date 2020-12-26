@@ -83,6 +83,7 @@ export class ViewAllComponent implements OnInit {
     /* RTE Options */
     yesRTE = true;
     noRTE = true;
+    noneRTE = true;
 
     displayStudentNumber = 0;
 
@@ -369,10 +370,11 @@ export class ViewAllComponent implements OnInit {
             }
 
             /* RTE Filter Check */
-            if (!this.yesRTE && student.rte === "YES") {
-                student.show = false;
-                return;
-            } else if (!this.noRTE && student.rte === "NO") {
+            if (!(
+                (this.yesRTE && student.rte === "YES")
+                || (this.noRTE && student.rte === "NO")
+                || (this.noneRTE && student.rte != "YES" && student.rte != "NO")
+            )) { // First we are checking for which conditions student should be visible then we are applying a 'NOT' to the whole to get student invisible condition
                 student.show = false;
                 return;
             }

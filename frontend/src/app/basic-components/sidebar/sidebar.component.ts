@@ -49,58 +49,66 @@ export class SidebarComponent implements OnInit {
                 private notificationService: NotificationService,
                 private schoolService : SchoolService) {
 
+        // Review: Ye code kisliye likha hai.
         this.router.routeReuseStrategy.shouldReuseRoute = function() {
-        return false;
+            return false;
         };
 
     }
 
-
-
-
     ngOnInit() {
-        this.router.events
-            .subscribe((event) => {
-                if(event instanceof NavigationStart) {
-                    this.user.isLazyLoading = true;
-                    if (event.navigationTrigger == "popstate") {
-                        if (event.url == '/') {
-                            history.back();
-                            return;
-                        }
-                        this.user.initializeTask();
+        this.router.events.subscribe((event) => {
+            if(event instanceof NavigationStart) {
+                this.user.isLazyLoading = true;
+
+                // Review: What are we checking here?
+                if (event.navigationTrigger == "popstate") {
+                    if (event.url == '/') {
+                        history.back();
+                        return;
+                    }
+                    this.user.initializeTask();
+                }
+            }
+            else if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
+                this.user.isLazyLoading = false;
+            }
+            else if (event instanceof ActivationStart) {
+                CommonFunctions.scrollToTop();
+            }
+        });
+        this.schoolService.getObjectList(this.schoolService.session,{}).then(value => {
+            this.session_list = value;
+        });
+        EmitterService.get('initialize-router').subscribe(value => {
+            // Review : Ye cheez kahan check ho rahi hai ki agar student ke page ka route hai lekin student ki id nahi hai.
+            // Us case me kya ho raha hai.
+            if(this.user.activeSchool.role == 'Parent'
+                && value.student.id != undefined
+                && this.user.section.subRoute != 'view_fee') { // Harshal: If we are routing to student specific page
+                this.router.navigateByUrl(this.router.createUrlTree(
+                    [this.user.section.route + '/' + this.user.section.subRoute],
+                    {
+                        queryParams: {
+                            school_id: this.user.activeSchool.dbId,
+                            session: this.user.activeSchool.currentSessionDbId,
+                            student_id: value.student.id
                         }
                     }
-                else if (
-                    event instanceof NavigationEnd ||
-                    event instanceof NavigationCancel
-                ) {
-                    this.user.isLazyLoading = false;
-                }
-                else if (event instanceof ActivationStart) {
-                    CommonFunctions.scrollToTop();
-                }
-            });
-        this.schoolService.getObjectList(this.schoolService.session,{})
-            .then(value=>{
-                this.session_list = value;
-            })
-        EmitterService.get('initialize-router').subscribe(value => {
-            if(this.user.activeSchool.role == 'Parent' && value.student.id!=undefined && this.user.section.subRoute!='view_fee'){
-                 this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
-                queryParams: {
-                    school_id: this.user.activeSchool.dbId,
-                    session: this.user.activeSchool.currentSessionDbId,
-                    student_id:value.student.id
-                }
-            }));
-            }else
-            {
-                this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route+'/'+this.user.section.subRoute],{queryParams:{school_id: this.user.activeSchool.dbId,session:this.user.activeSchool.currentSessionDbId}}));
+                ));
+            } else { // Harshal: If we are routing to parent or employee specific page
+                this.router.navigateByUrl(this.router.createUrlTree(
+                    [this.user.section.route+'/'+this.user.section.subRoute],
+                    {
+                        queryParams:{
+                            school_id: this.user.activeSchool.dbId,
+                            session: this.user.activeSchool.currentSessionDbId
+                        }
+                    }
+                ));
             }
         });
     }
-
 
     isMobileMenu() {
         if ($(window).width() > 991) {
