@@ -254,7 +254,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         });
     }
 
-    getFilteredCompletedList(): any{
+    getFilteredCompletedHomeworkList(): any{
         return this.completedHomeworkList.filter(homeworks =>{
             if(this.selectedSubject.id == -1)return true;
             if(homeworks.subjectDbId == this.selectedSubject.id)return true;
