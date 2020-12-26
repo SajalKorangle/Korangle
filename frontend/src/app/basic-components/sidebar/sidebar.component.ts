@@ -57,26 +57,32 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.router.events.subscribe((event) => {
-            if(event instanceof NavigationStart) {
-                this.user.isLazyLoading = true;
+        this.router.events
+            .subscribe((event) => {
+                if(event instanceof NavigationStart) {
+                    this.user.isLazyLoading = true;
 
-                // Review: What are we checking here?
-                if (event.navigationTrigger == "popstate") {
-                    if (event.url == '/') {
-                        history.back();
-                        return;
+                    // Review: What are we checking here?
+                    if (event.navigationTrigger == "popstate"){
+                        if(event.url=='/'){
+                            history.back();
+                            return;
+                        }
+                        this.user.initializeTask();
                     }
-                    this.user.initializeTask();
                 }
-            }
-            else if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
-                this.user.isLazyLoading = false;
-            }
-            else if (event instanceof ActivationStart) {
-                CommonFunctions.scrollToTop();
-            }
-        });
+                else if (event instanceof NavigationCancel) {
+                    this.user.isLazyLoading = false;
+                } else if (event instanceof NavigationEnd) {
+                    this.user.isLazyLoading = false;
+                    if(this.router.url != '/') {
+                        (<any>window).ga('set', 'page', event.urlAfterRedirects);
+                        (<any>window).ga('send', 'pageview');
+                    }
+                } else if (event instanceof ActivationStart) {
+                    CommonFunctions.scrollToTop();
+                }
+            });
         this.schoolService.getObjectList(this.schoolService.session,{}).then(value => {
             this.session_list = value;
         });
