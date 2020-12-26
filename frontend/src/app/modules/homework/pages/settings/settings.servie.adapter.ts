@@ -15,12 +15,12 @@ export class SettingsServiceAdapter {
 
         this.vm.isInitialLoading = true;
         
-        this.vm.sentUpdateType = 'NOTIFICATION';
-        this.vm.sendEditUpdate = true;
-        this.vm.sendCreateUpdate = true;
-        this.vm.sendDeleteUpdate = true;
-        this.vm.sendCheckUpdate = true;
-        this.vm.sendResubmissionUpdate = true;
+        this.vm.sentUpdateType = 'NULL';
+        this.vm.sendEditUpdate = false;
+        this.vm.sendCreateUpdate = false;
+        this.vm.sendDeleteUpdate = false;
+        this.vm.sendCheckUpdate = false;
+        this.vm.sendResubmissionUpdate = false;
         
         Promise.all([
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings, {'parentSchool' : this.vm.user.activeSchool.dbId}),
@@ -28,12 +28,12 @@ export class SettingsServiceAdapter {
             if(value[0].length == 0){
                 let tempSettings = {
                     'parentSchool' : this.vm.user.activeSchool.dbId,
-                    'sentUpdateType': 'NOTIFICATION',
-                    'sendCreateUpdate': true,
-                    'sendEditUpdate': true,
-                    'sendDeleteUpdate': true,
-                    'sendCheckUpdate': true,
-                    'sendResubmissionUpdate': true,
+                    'sentUpdateType': 'NULL',
+                    'sendCreateUpdate': false,
+                    'sendEditUpdate': false,
+                    'sendDeleteUpdate': false,
+                    'sendCheckUpdate': false,
+                    'sendResubmissionUpdate': false,
                 }
                 Promise.all([
                     this.vm.homeworkService.createObject(this.vm.homeworkService.homework_settings, tempSettings)

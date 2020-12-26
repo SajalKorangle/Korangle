@@ -95,13 +95,13 @@ class HomeworkSettings(models.Model):
         (NO_UPDATE, 'NULL')
     ]
 
-    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=NOTIFICATION_UPDATE, verbose_name='sentUpdateType')
+    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=NO_UPDATE, verbose_name='sentUpdateType')
 
-    sendCreateUpdate = models.BooleanField(null=False, default=True, verbose_name='sendCreateUpdate')
-    sendEditUpdate = models.BooleanField(null=False, default=True, verbose_name='sendEditUpdate')
-    sendDeleteUpdate = models.BooleanField(null=False, default=True, verbose_name='sendDeleteUpdate')
-    sendCheckUpdate = models.BooleanField(null=False, default=True, verbose_name='sendCheckUpdate')
-    sendResubmissionUpdate = models.BooleanField(null=False, default=True, verbose_name='sendResubmissionUpdate')
+    sendCreateUpdate = models.BooleanField(null=False, default=False, verbose_name='sendCreateUpdate')
+    sendEditUpdate = models.BooleanField(null=False, default=False, verbose_name='sendEditUpdate')
+    sendDeleteUpdate = models.BooleanField(null=False, default=False, verbose_name='sendDeleteUpdate')
+    sendCheckUpdate = models.BooleanField(null=False, default=False, verbose_name='sendCheckUpdate')
+    sendResubmissionUpdate = models.BooleanField(null=False, default=False, verbose_name='sendResubmissionUpdate')
     
 
 

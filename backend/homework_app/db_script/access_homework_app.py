@@ -24,8 +24,8 @@ def access_homework_app(apps, schema_editor):
             'orderNumber': 2,
         },
         {
-            'path': 'view_report',
-            'title': 'View Report',
+            'path': 'settings',
+            'title': 'Settings',
             'orderNumber': 3,
         },
     ]

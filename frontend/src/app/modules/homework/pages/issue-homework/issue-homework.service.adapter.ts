@@ -41,10 +41,10 @@ export class IssueHomeworkServiceAdapter {
             }
             else{
                 this.vm.settings = {
-                    sentUpdateType: 'NOTIFICATION',
-                    sendCreateUpdate: true,
-                    sendEditUpdate: true,
-                    sendDeleteUpdate: true,
+                    sentUpdateType: 'NULL',
+                    sendCreateUpdate: false,
+                    sendEditUpdate: false,
+                    sendDeleteUpdate: false,
                 }
             }
             this.vm.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);

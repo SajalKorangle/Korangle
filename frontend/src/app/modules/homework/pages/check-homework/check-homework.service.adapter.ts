@@ -16,9 +16,9 @@ export class CheckHomeworkServiceAdapter {
 
         this.vm.isInitialLoading = true;
 
-        this.vm.sendCheckUpdate = true;
-        this.vm.sendResubmissionUpdate = true;
-        this.vm.sendUpdateType = 'SMS';
+        this.vm.sendCheckUpdate = false;
+        this.vm.sendResubmissionUpdate = false;
+        this.vm.sendUpdateType = 'NULL';
 
         let request_homework_list = {
             'parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId, 
