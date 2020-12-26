@@ -26,6 +26,7 @@ export class DesignReportCardCanvasAdapter {
     pixelTommFactor: number;
     isSaved = false;    // if canvas is not saved then give warning; to be implemented
 
+    virtualPendingReDrawId: any;
     pendingReDrawId: any;
 
     constructor() {
@@ -122,7 +123,7 @@ export class DesignReportCardCanvasAdapter {
         } catch (err) {
             console.log(err);
             alert('data corupted');
-            clearTimeout(this.pendingReDrawId);
+            clearTimeout(this.virtualPendingReDrawId);
         }
     }
 
@@ -138,12 +139,13 @@ export class DesignReportCardCanvasAdapter {
             if (!status)
                 return;
         }
-        setTimeout(()=>this.context.drawImage(this.virtualCanvas, 0, 0));
+        clearTimeout(this.pendingReDrawId);
+        this.pendingReDrawId = setTimeout(()=>this.context.drawImage(this.virtualCanvas, 0, 0));
     }
 
     scheduleCanvasReDraw = (duration:number =500)=>{
-        clearTimeout(this.pendingReDrawId);
-        this.pendingReDrawId = setTimeout(() => this.drawAllLayers(), duration);
+        clearTimeout(this.virtualPendingReDrawId);
+        this.virtualPendingReDrawId = setTimeout(() => this.drawAllLayers(), duration);
     }
 
     applyDefaultbackground(): void{
