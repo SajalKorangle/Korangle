@@ -1,6 +1,5 @@
 import { DesignReportCardComponent } from './design-report-card.component';
 import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset } from './../../../class/constants_3';
-import { CommonFunctions } from '@classes/common-functions.ts';
 
 export class DesignReportCardHtmlAdapter {
 
@@ -41,12 +40,25 @@ export class DesignReportCardHtmlAdapter {
     }
 
     addNewLayerForAsset(asset: ParameterAsset): void {
-        this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }));
-        
+        this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }));   
     }
 
     fullScreenToggle(): void{
-        this.isFullScreen = CommonFunctions.elementFullScreenToggle(document.getElementById('drc-mainCard'))
+        let element = document.getElementById('drc-mainCard');
+        if (this.isFullScreen) {
+            element.classList.remove('fullScreen');
+            document.getElementById('drc-wrapper').appendChild(element);
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+            this.isFullScreen = false;
+        } else{
+            element.classList.add('fullScreen');
+            document.body.appendChild(element);
+            if(document.body.requestFullscreen)
+                document.body.requestFullscreen();
+            this.isFullScreen = true;
+        }     
     }
 
 }

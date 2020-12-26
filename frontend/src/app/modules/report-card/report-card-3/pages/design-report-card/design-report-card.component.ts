@@ -120,7 +120,6 @@ export class DesignReportCardComponent implements OnInit {
           this.htmlAdapter.canvasSetUp();
           this.canvasAdapter.initilizeCanvas(this.canvas);
           this.canvasAdapter.loadData(this.currentLayout.content);
-          // Draw graphics of previous data form this.currentLayout.content
           me.disconnect();
         }
       });
@@ -137,12 +136,10 @@ export class DesignReportCardComponent implements OnInit {
     }
     if (this.canvas)
         this.canvasAdapter.loadData(this.currentLayout.content);
-    // Rest to be implemented
-    console.log('curent Layout: ', this.currentLayout);
   }
 
   doesCurrentLayoutHasUniqueName(): boolean {
-    return this.reportCardLayoutList.filter(reportCardLayout => {
+    return this.currentLayout.name.trim() != '' && this.reportCardLayoutList.filter(reportCardLayout => {
       return this.currentLayout.id !== reportCardLayout.id
         && reportCardLayout.name === this.currentLayout.name;
     }).length === 0;
@@ -151,7 +148,7 @@ export class DesignReportCardComponent implements OnInit {
   imageUploadHandler(event: any): void{
     const uploadedImage = event.target.files[0];
     const local_file_uri = URL.createObjectURL(uploadedImage);
-    this.canvasAdapter.newImageLayer(local_file_uri); // Push new Image layer with the provided data
+    this.canvasAdapter.newImageLayer({ uri: local_file_uri }); // Push new Image layer with the provided data
     this.unuploadedFiles[local_file_uri] = uploadedImage.name;
   }
 

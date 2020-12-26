@@ -76,8 +76,8 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     LAYER_TYPE: string = 'IMAGE';   
     image: HTMLImageElement;    // not included in content json data
     uri: string;
-    x: number;
-    y: number;
+    x: number=0;
+    y: number=0;
     height: number = null;
     width: number = null;
     aspectRatio: any = null;    
@@ -179,8 +179,8 @@ export class CanvasText implements Layer{
     displayName: string = 'Text';
     LAYER_TYPE: string = 'TEXT';   // Type description for parsing
     text: string = 'Lorem Ipsum';    
-    x: number;
-    y: number;
+    x: number = 50;
+    y: number = 50;
     textBoxMetrx: {
         boundingBoxLeft: number,
         boundingBoxRight: number,
@@ -208,26 +208,17 @@ export class CanvasText implements Layer{
     }
 
     layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
-        console.log('canvas text before layer setup: ', this.text);
         if (this.dataSourceType == 'DATA') {
             this.text = this.source.getValueFunc(DATA);
-            console.log('if is called inside layer setup for dataSourceType== DATA');
         }
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
         let textMetrix = ctx.measureText(this.text);
-        console.log(textMetrix);
         this.textBoxMetrx = {
             boundingBoxLeft: textMetrix.actualBoundingBoxLeft,
             boundingBoxRight: textMetrix.actualBoundingBoxRight,
             boundingBoxTop: textMetrix.actualBoundingBoxAscent,
             boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
         };
-
-        if (!this.x && !this.y) {
-            this.x = 50;
-            this.y = 50;
-        }
-        console.log('canvas text after layer setup: ', this.text);
     }
 
     updatePosition(dx = 0, dy = 0):void {

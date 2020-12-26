@@ -106,7 +106,7 @@ export class DesignReportCardCanvasAdapter {
                             layerData['key'] = layerData['key'] / this.pixelTommFactor;
                     });
                 
-                    let newLayerFromLayerData: Layer;
+                    let newLayerFromLayerData: Layer;   // update this for new architecture
                     switch (layerData.LAYER_TYPE) {
                         case 'IMAGE':
                             newLayerFromLayerData = new CanvasImage(layerData);
@@ -178,7 +178,7 @@ export class DesignReportCardCanvasAdapter {
             if (this.layers[i])
                 layers[i] = this.layers[i].getDataToSave();
             else
-                layers[i] = null;
+                layers[i] = null;   // optimization scope: a better approach is not to store this nulls in db
         }
         layers.forEach(layer => {   // Converting pixels to mm
             if (layers) {
@@ -194,8 +194,8 @@ export class DesignReportCardCanvasAdapter {
         };
     }
 
-    newImageLayer(uri: string): void{
-        let canvasImage = new CanvasImage({ uri, x:0, y:0});
+    newImageLayer(initialParameters: object): void{
+        let canvasImage = new CanvasImage(initialParameters);
         canvasImage.layerSetUp({}, this.canvasHeight, this.canvasWidth, this.virtualContext);    // Update {} to DATA
         this.layers.push(canvasImage);
         let status = canvasImage.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);  // Putting in ast of event loop to wait for base64Image to load
@@ -203,7 +203,6 @@ export class DesignReportCardCanvasAdapter {
             setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
         this.activeLayer = canvasImage;
         this.activeLayerIndex = this.layers.length - 1;
-        console.log(canvasImage);
     }
 
     newTextLayer(initialParameters: object = {}): void{

@@ -17,17 +17,6 @@ export class CommonFunctions {
         mainPannel.scrollTop = 0;
     }
 
-    static elementFullScreenToggle(element: HTMLElement): boolean{
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen();
-      } else {
-        if (element.requestFullscreen)
-          element.requestFullscreen();   
-        return true;
-      }
-      return false;
-    }
-
     copyObject(object: any): any {
         let tempObject = {};
         Object.keys(object).forEach(key => {

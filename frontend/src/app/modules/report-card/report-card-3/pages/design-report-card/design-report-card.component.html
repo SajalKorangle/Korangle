@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" *ngIf="!htmlAdapter.isLoading; else spinner">
+<div class="card-content table-responsive" id="drc-wrapper" *ngIf="!htmlAdapter.isLoading; else spinner">
 
     <!-- Choose to add/edit/delete layout/s -->
     <mat-form-field style="margin-bottom: 10px;">
@@ -51,11 +51,6 @@
 
             <div class="tool">
                 <button class="btn material-icons"
-                        (click)="htmlAdapter.isSaving=true; saveLayout();" [disabled]="htmlAdapter.isSaving">save</button>
-            </div>
-
-            <div class="tool">
-                <button class="btn material-icons"
                         (click)="canvasAdapter.scheduleCanvasReDraw(0)" [disabled]="htmlAdapter.isSaving">refresh</button>
             </div>
 
@@ -66,7 +61,7 @@
 
             <div class="tool">
                 <button class="btn material-icons"
-                        (click)="logMessage('zoom_in')">zoom_in</button>
+                        (click)="logMessage('zoom_in')">zoom_in</button>    <!--To Be Implemented: Canavs resize-->
             </div>
 
             <div class="tool">
@@ -87,8 +82,9 @@
                 <!-- Parameters -->
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'parameters'">
                 <div style="margin: 4px; padding: 4px; border-radius: 4px; text-align: center;" class="bg-white">
-                    
-                    <mat-form-field *ngFor="let fieldKey of htmlAdapter.getFieldKeys()" style="margin-bottom: 1vh;">
+                   
+                <ng-container *ngFor="let fieldKey of htmlAdapter.getFieldKeys(); let i = index;">
+                    <mat-form-field style="margin-bottom: 1vh;">
                         <mat-label>
                             {{htmlAdapter.fields[fieldKey].displayFieldName}}
                         </mat-label>
@@ -100,6 +96,7 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                </ng-container>
                     
                 </div>
                 </ng-container>
@@ -133,6 +130,10 @@
                 Right pannel
             </div>
 
+        </div>
+        <div>   <!--Save Button-->
+            <button class="btn material-icons"
+                    (click)="htmlAdapter.isSaving=true; saveLayout();" [disabled]="htmlAdapter.isSaving">save</button>
         </div>
     </mat-card>
     </ng-container>
