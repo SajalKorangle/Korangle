@@ -98,21 +98,15 @@ export class SidebarComponent implements OnInit {
                 if(event instanceof NavigationStart) {
                     this.user.isLazyLoading = true;
                 }
-                else if (
-                    event instanceof NavigationEnd ||
-                    event instanceof NavigationCancel
-                ) {
+                else if (event instanceof NavigationCancel) {
                     this.user.isLazyLoading = false;
-                    if(event instanceof NavigationEnd)
-                    {
-                        if(this.router.url != '/')       
-                        {
-                            (<any>window).ga('set', 'page', event.urlAfterRedirects);
-                            (<any>window).ga('send', 'pageview');
-                        }
-                    } 
-                }
-                else if (event instanceof ActivationStart) {
+                } else if (event instanceof NavigationEnd) {
+                    this.user.isLazyLoading = false;
+                    if(this.router.url != '/') {
+                        (<any>window).ga('set', 'page', event.urlAfterRedirects);
+                        (<any>window).ga('send', 'pageview');
+                    }
+                } else if (event instanceof ActivationStart) {
                     CommonFunctions.scrollToTop();
                 }
             });

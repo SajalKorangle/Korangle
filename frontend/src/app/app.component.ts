@@ -11,8 +11,7 @@ import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
 import {CommonFunctions} from './classes/common-functions';
 import {MatDialog} from '@angular/material/dialog';
-import {ModalVideoComponent} from './basic-components/modal-video/modal-video.component';
-import { NavigationEnd, Router } from '@angular/router';
+import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
 
 
 @Component({
@@ -26,6 +25,7 @@ export class AppComponent implements OnInit {
 
     isLoading = false;
     public user = new User();
+
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
                 private dialog: MatDialog,
@@ -43,6 +43,8 @@ export class AppComponent implements OnInit {
                     localStorage.setItem('schoolJWT', '');
                 } else {
                     this.user.initializeUserData(data);
+                    (<any>window).ga('set', 'userId', 'id: '+data.id);
+                    (<any>window).ga('send', 'event', 'authentication', 'Direct Entry');
                     registerForNotification({
                         'user': this.user.id,
                         'jwt': this.user.jwt,
