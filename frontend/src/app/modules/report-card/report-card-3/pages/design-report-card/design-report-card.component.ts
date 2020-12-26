@@ -80,7 +80,6 @@ export class DesignReportCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('student service: ', this.studentService);
     this.user = DataStorage.getInstance().getUser();
 
     this.serviceAdapter = new DesignReportCardServiceAdapter();

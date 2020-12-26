@@ -64,6 +64,11 @@
                         (click)="htmlAdapter.fullScreenToggle()">{{htmlAdapter.isFullScreen?'fullscreen_exit':'fullscreen'}}</button>
             </div>
 
+            <div class="tool">
+                <button class="btn material-icons"
+                        (click)="logMessage('zoom_in')">zoom_in</button>
+            </div>
+
         </div>
 
         <div class="flex-row" style="margin-top: 8px; width: 100%; justify-content: space-around;">
@@ -111,7 +116,7 @@
             </div>
 
             <!-- column 2 -->
-            <div class="bg-grey inline-block" style="width: calc(100% - 430px); position: relative;" id="canvasWrapper">
+            <div class="bg-grey inline-block" style="width: calc(100% - 430px); position: relative; text-align: center; overflow: auto;" id="canvasWrapper">
                 <ng-container *ngIf="htmlAdapter.isSaving"><mat-progress-bar mode="indeterminate" style="position: absolute;"></mat-progress-bar></ng-container>
                 <canvas id="mainCanvas" [style.margin.px]="htmlAdapter.canvasMargin"></canvas>
             </div>

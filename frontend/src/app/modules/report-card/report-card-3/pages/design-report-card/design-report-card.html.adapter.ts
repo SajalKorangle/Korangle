@@ -22,8 +22,6 @@ export class DesignReportCardHtmlAdapter {
 
     initializeAdapter(vm: DesignReportCardComponent): void {
         this.vm = vm;
-        console.log('constant FIELD: ', FIELDS);
-        console.log('get field keys: ', this.getFieldKeys());
     }
 
     canvasSetUp():void {

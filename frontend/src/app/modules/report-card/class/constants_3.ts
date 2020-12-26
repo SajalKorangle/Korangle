@@ -1,15 +1,4 @@
-// CANVAS DESIGN TOOL
-
-export const permissibleClickError = 8;    // in pixels
-
-export const PageRelativeAttributes = [
-    'x',
-    'y',
-    'width',
-    'height'
-];
-
-export const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+//Page Resolutions
 
 export class A4{
     static aspectRatio = 210 / 297;
@@ -33,13 +22,38 @@ Object.seal(A4);    // Making these objects immutable
 Object.seal(A4.A4Resolution);
 Object.seal(A4.A4Resolution.mm);
 
+// CANVAS DESIGN TOOL------------------------------------------------------------------------
+
+//Constants--------------------------------------
+
+export const permissibleClickError = 8;    // in pixels
+
+export const PageRelativeAttributes = [
+    'x',
+    'y',
+    'width',
+    'height'
+];
+
+export const DATA_SOUCE_TYPE = [
+    'N/A',
+    'DATA'
+]
+
+export const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+
+
+//Layers--------------------------------------
+
 // To be implemented by all Canvas Layers
 interface Layer{
     displayName: string;
     LAYER_TYPE: string;
     x: number;
     y: number;
-    layerSetUp(canvasWidth:number, canvasHeight: number): void;
+    dataSourceType: string;    // options: DATA_SOURCE_TYPE
+    source?: {[key:string]: any};   // object containing information about the source of data
+    layerSetUp(Data:object, canvasWidth:number, canvasHeight: number): void;
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
     isClicked(mouseX: number, mouseY: number): boolean
@@ -57,18 +71,21 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     width: number = null;
     aspectRatio: any = null;    // not included in content json data
     maintainAspectRatio = true; // not included in content json data
+    dataSourceType: string = DATA_SOUCE_TYPE[0];
+    source?: {[key:string]: any};
 
-    constructor(uri: any=undefined, x: number=undefined, y: number=undefined) {
+    constructor(attributesObject: object) {
         this.image = new Image();
-        console.log(uri);
-        this.uri = uri;
-        this.x = x;
-        this.y = y;
+        Object.entries(attributesObject).forEach(([key, value]) => this[key] = value);
+        this.LAYER_TYPE = 'IMAGE';
     }
 
-    layerSetUp(canvasWidth: number, canvasHeight: number): void{
+    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number): void{
+        if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
+            this.uri = this.source.getValueFunc(DATA);
+        }
         if (!this.height && !this.width) {
-            this.image.onload = () => {
+            let getHeightAndWidth = () => {
                 this.height = this.image.height;
                 this.width = this.image.width;
                 this.aspectRatio = this.width / this.height;
@@ -80,6 +97,13 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
                 if (canvasWidth && this.width > canvasWidth) {
                     this.width = canvasWidth;
                     this.height = this.width / this.aspectRatio;    // maintaining aspect ratio
+                }
+            }
+            if (this.image.complete && this.image.naturalHeight > 0) {
+                getHeightAndWidth();
+            } else {
+                this.image.onload = () => {
+                    getHeightAndWidth();
                 }
             }
         }
@@ -121,17 +145,41 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     }
 
     getDataToSave() {
-        return {
+        let savingData: any = {
             'displayName': this.displayName,
             'LAYER_TYPE': this.LAYER_TYPE,
             'x': this.x,
             'y': this.y,
-            'uri': this.uri,
             'height': this.height,
-            'width': this.width
+            'width': this.width,
+            'dataSourceType': this.dataSourceType,
         }
+        if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
+            savingData.uri = this.uri;
+        } else {
+            savingData.source = this.source;
+            delete savingData.source.layerType;
+        }
+        return { ...savingData };
     }
 }
+
+// export class CanvasText implements Layer{
+//     displayName: string = 'Text';
+//     LAYER_TYPE: string = 'TEXT';   // Type description for parsing
+//     text: '';    // not included in content json data
+//     x: number;
+//     y: number;
+//     height: number = null;
+//     width: number = null;
+//     dataSource: string = 'CONST';
+//     source?: object;
+
+//     constructor(attributesObject) {
+//         Object.entries(attributesObject).forEach(([key, value]) => this[key] = value);
+//         this.LAYER_TYPE = 'TEXT';
+//     }
+// }
 
 export const LAYER_TYPES = {    // all nulls to be implemented
     'IMAGE': CanvasImage,
