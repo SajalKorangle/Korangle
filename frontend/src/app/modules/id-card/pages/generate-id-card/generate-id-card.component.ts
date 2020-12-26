@@ -9,6 +9,7 @@ import { GenerateIdCardServiceAdapter } from './generate-id-card.service.adapter
 import {DataStorage} from "../../../../classes/data-storage";
 import DefaultIdCard from './../../class/id-card'
 import {SchoolService} from '@services/modules/school/school.service';
+import {PARAMETER_LIST} from '@modules/id-card/class/constants';
 
 @Component({
     selector: 'generate-id-card',
@@ -21,6 +22,8 @@ export class GenerateIdCardComponent implements OnInit {
 
     user
     isLoading = false
+
+    parameterList = Object.assign([], PARAMETER_LIST);
 
     @ViewChild('pdfTable', {static: false}) pdfTable:ElementRef;
 
@@ -119,7 +122,8 @@ export class GenerateIdCardComponent implements OnInit {
         const card = new DefaultIdCard(
             this.printMultiple,
             { ...this.selectedLayout, content: JSON.parse(this.selectedLayout.content) },
-            this.getPrintData()
+            this.getPrintData(),
+            this.parameterList
         );
         await card.generate();
         document.getElementById('iFrameDisplay').setAttribute('src', card.pdf.output('bloburi'));
