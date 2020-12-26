@@ -122,7 +122,8 @@ export class GenerateIdCardComponent implements OnInit {
         const card = new DefaultIdCard(
             this.printMultiple,
             { ...this.selectedLayout, content: JSON.parse(this.selectedLayout.content) },
-            this.getPrintData(), this.parameterList
+            this.getPrintData(),
+            this.parameterList
         );
         await card.generate();
         document.getElementById('iFrameDisplay').setAttribute('src', card.pdf.output('bloburi'));

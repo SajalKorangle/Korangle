@@ -1,5 +1,5 @@
 import * as jsPDF from 'jspdf'
-import {DATA_TYPES, FIELDS, UserHandleStructure} from './constants'
+import {DATA_TYPES, UserHandleStructure} from './constants'
 
 //// data variable contains following :-
 //// school
