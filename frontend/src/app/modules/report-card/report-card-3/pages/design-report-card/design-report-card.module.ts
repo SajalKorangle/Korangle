@@ -4,7 +4,7 @@ import { DesignReportCardComponent } from './design-report-card.component';
 import { DesignReportCardRouting } from './design-report-card.routing';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
-
+import {ParametersPannelModule} from './../../../components/parameters-pannel.module'
 
 @NgModule({
   declarations: [DesignReportCardComponent],
@@ -12,7 +12,8 @@ import {MatIconModule} from '@angular/material/icon';
     ComponentsModule,
     DesignReportCardRouting,
     MatButtonToggleModule,
-    MatIconModule
+    MatIconModule,
+    ParametersPannelModule
   ],
   bootstrap: [DesignReportCardComponent]
 })

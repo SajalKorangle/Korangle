@@ -52,6 +52,7 @@ export interface Layer{
     LAYER_TYPE: string; // Type description for JSON parsing
     x: number;
     y: number;
+    parameterToolPannels: string[];
     dataSourceType: string;    // options: DATA_SOURCE_TYPE
     source?: {[key:string]: any};   // object containing information about the source of data
     layerSetUp(Data: object, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void;
@@ -83,7 +84,9 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     aspectRatio: any = null;    
     maintainAspectRatio = true; 
     dataSourceType: string = 'N/A';
-    source?: {[key:string]: any};
+    source?: { [key: string]: any };
+    
+    parameterToolPannels: string[] = ['image'];
 
     constructor(attributes: object) {
         this.image = new Image();
@@ -198,6 +201,7 @@ export class CanvasText implements Layer{
     fontStyle: { [key: string]: string } = {
         fillStyle: DEFAULT_TEXT_COLOR
     };
+    parameterToolPannels: string[] = ['text'];
 
     constructor(attributes: object) {
         console.log('canvas text before constructor: ', this.text);
@@ -341,30 +345,53 @@ class StudentParameterStructure {
 
     // Variable name is the parameter key
 
-    static getStructure(displayName: any, variableName: any, layerType = LAYER_TYPES.TEXT): any {
+    static getStructure(displayName: any, variableName: any, layerType:any = CanvasText): any {
         return ParameterStructure.getStructure(
-            // FIELDS.STUDENT.fieldStructureKey + '-' +
-            variableName,  // remove FIELDS.STUDENT.fieldStructureKey  if not needed
+            variableName, 
             FIELDS.STUDENT,
             layerType,
-            () => {   // why data object, if not required remove
+            () => {   
                 return displayName;
-                    // + (dataObject.userHandle ?' (top: ' + dataObject.userHandle.y + ', left: ' + dataObject.userHandle.x + ')' : '');
             },
             (dataObject) => {
-                // if (dataType === DATA_TYPES.DATE) {
-                //     const date = new Date(dataObject.data.studentList.find(x => x.id === dataObject.studentId)[variableName]);
-                //     const dateReplacements = getDateReplacements(date);
-                //     let dateValue = dataObject.userHandle.format.toString();
-                //     Object.keys(dateReplacements).forEach(dataReplacementKey => {
-                //         dateValue = dateValue.replace(dataReplacementKey, dateReplacements[dataReplacementKey]);
-                //     });
-                //     return dateValue;
-                // } else {
-                //     return dataObject.data.studentList.find(x => x.id === dataObject.studentId)[variableName];
-                // }
                 return dataObject.data.studentList.find(x => x.id === dataObject.studentId)[variableName];
             });
+    }
+
+}
+
+
+class StudentSessionParameterStructure {
+
+    // Variable name is the parameter key
+
+    static getStructure(displayName: any, variableName: any, getValueFunc: any, layerType:any = CanvasText): any {
+        return ParameterStructure.getStructure(
+            variableName,
+            FIELDS.STUDENT_SESSION,
+            layerType,
+            () => {
+                return displayName;
+            },
+            getValueFunc);
+    }
+
+}
+
+class SchoolParameterStructure {
+
+    // Variable name is the parameter key
+
+
+    static getStructure(displayName: any, variableName: any, layerType:any = CanvasText): any {
+        return ParameterStructure.getStructure(
+            variableName,
+            FIELDS.SCHOOL,
+            layerType,
+            () => {
+                return displayName;
+            },
+            (dataObject) => dataObject.data.school[variableName]);
     }
 
 }
@@ -392,7 +419,7 @@ export const PARAMETER_LIST = [
     StudentParameterStructure.getStructure(`Alt. Mobile No.`, 'secondMobileNumber'),
     StudentParameterStructure.getStructure(`Scholar No.`, 'scholarNumber'),
     StudentParameterStructure.getStructure(`Address`, 'address'),
-    StudentParameterStructure.getStructure(`Profile Image`, 'profileImage', LAYER_TYPES.IMAGE),
+    StudentParameterStructure.getStructure(`Profile Image`, 'profileImage', CanvasImage),
     // StudentParameterStructure.getStructure(`Date of Birth`, 'dateOfBirth', LAYER_TYPES.DATE),    //uncomment after implementing Date layer
     StudentParameterStructure.getStructure(`Gender`, 'gender'),
     StudentParameterStructure.getStructure(`Caste`, 'caste'),
@@ -409,4 +436,86 @@ export const PARAMETER_LIST = [
     StudentParameterStructure.getStructure(`Father's Annual Income`, 'fatherAnnualIncome'),
     StudentParameterStructure.getStructure(`RTE`, 'rte'),
     // StudentParameterStructure.getStructure(`Date of Admission`, 'dateOfAdmission', LAYER_TYPES.DATE), //uncomment after implementing Date layer
+
+    /* Student Session Field */
+    StudentSessionParameterStructure.getStructure(
+        'Class',
+        'class',
+        (dataObject) => {
+            return dataObject.data.classList.find(
+                classs => {
+                    return classs.id === dataObject.data.studentSectionList.find(
+                        x => x.parentStudent === dataObject.studentId
+                    ).parentClass
+                }
+            ).name
+        }
+    ),
+    StudentSessionParameterStructure.getStructure(
+        'Section',
+        'section',
+        (dataObject) => {
+            return dataObject.data.divisionList.find(
+                classs => {
+                    return classs.id === dataObject.data.studentSectionList.find(
+                        x => x.parentStudent === dataObject.studentId
+                    ).parentDivision
+                }
+            ).name
+        }
+    ),
+    StudentSessionParameterStructure.getStructure(
+        'Roll No.',
+        'rollNumber',
+        (dataObject) => {
+            return dataObject.data.studentSectionList.find(
+                x => x.parentStudent === dataObject.studentId
+            ).rollNumber
+        }
+    ),
+    StudentSessionParameterStructure.getStructure(
+        'Class & Section',
+        'classSection',
+        (dataObject) => {
+            return dataObject.data.classList.find(
+                    classs => {
+                        return classs.id === dataObject.data.studentSectionList.find(
+                            x => x.parentStudent === dataObject.studentId
+                        ).parentClass
+                    }
+                ).name
+                + ', '
+                + dataObject.data.divisionList.find(
+                    division => {
+                        return division.id === dataObject.data.studentSectionList.find(
+                            x => x.parentStudent === dataObject.studentId
+                        ).parentDivision
+                    }
+                ).name
+        }
+    ),
+
+
+    /* School Field */
+    /* Done */
+    //// ProfileImage, Principal Signature Image
+    //// Name, Print Name, Mobile Number, Address, Pin Code,
+    //// Village/City, Block, District, State, Dise Code, Registration Number, Medium, Affiliation Number
+    /* Remaining */
+    //// Current Session, Board
+    SchoolParameterStructure.getStructure(`Logo`, 'profileImage', CanvasImage),
+    SchoolParameterStructure.getStructure(`Principal's Signature`, 'principalSignatureImage', CanvasImage),
+    SchoolParameterStructure.getStructure(`Name`, 'name'),
+    SchoolParameterStructure.getStructure(`Print Name`, 'printName'),
+    SchoolParameterStructure.getStructure(`Mobile No.`, 'mobileNumber'),
+    SchoolParameterStructure.getStructure(`Address`, 'address'),
+    SchoolParameterStructure.getStructure(`Pin Code`, 'pincode'),
+    SchoolParameterStructure.getStructure(`Village/City`, 'villageCity'),
+    SchoolParameterStructure.getStructure(`Block`, 'block'),
+    SchoolParameterStructure.getStructure(`District`, 'district'),
+    SchoolParameterStructure.getStructure(`State`, 'state'),
+    SchoolParameterStructure.getStructure(`Dise Code`, 'diseCode'),
+    SchoolParameterStructure.getStructure(`Registration No.`, 'registrationNumber'),
+    SchoolParameterStructure.getStructure(`Affiliation No.`, 'affiliationNumber'),
+    SchoolParameterStructure.getStructure(`Medium`, 'medium'),
 ]

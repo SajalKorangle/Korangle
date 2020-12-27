@@ -140,7 +140,10 @@
            
             <!-- column 3: Right Pannel -->
             <mat-card class="inline-block flex-column" style="width: 55px; padding: 4px; align-items: center;">
+                <div class="parameters-tool">
                <button class="btn material-icons parameter-button" style="padding: 2px;">text_format</button>
+                    <app-text-parameters-pannel *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('text')"></app-text-parameters-pannel>
+               </div>
             </mat-card>
 
         </div>

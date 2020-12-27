@@ -73,6 +73,12 @@
     background-color: #ffffff;
 }
 
+.parameter-tool {
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+
 .parameter-button {
     height: 42px;
     width: 42px;
