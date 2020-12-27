@@ -10,16 +10,17 @@
         </mat-select>
     </mat-form-field>
 
+    <div id="drc-mainCard" style="margin:0; padding:0" class="bg-white">
     <ng-container *ngIf="currentLayout">
-    <mat-card id="drc-mainCard">
-        <div>
+    <mat-card>
+        <div *ngIf="!htmlAdapter.isFullScreen">
         <mat-form-field style="width: 100%; max-width: 250px;">
             <mat-label>
                 Layout Name
             </mat-label>
             <input matInput [(ngModel)]="currentLayout.name">
             <mat-icon matSuffix *ngIf="doesCurrentLayoutHasUniqueName()"><span class="matrial-icons">emoji_emotions</span></mat-icon>
-            <mat-hint style="color:red; display: block;" *ngIf="!doesCurrentLayoutHasUniqueName()" class="small">
+            <mat-hint style="color:red; display: block;" *ngIf="!doesCurrentLayoutHasUniqueName() && currentLayout.name!=''" class="small">
                 Layout name must be unique
             </mat-hint>
         </mat-form-field>
@@ -38,7 +39,7 @@
         
         
         
-        <div class="bg-grey flex-row" style="width: 100%; padding: 6px; margin-top: 6px;">
+        <mat-card class="bg-grey flex-row" style="width: 100%; padding: 4px; margin-top: 6px;" [class.stickyTop]="htmlAdapter.isFullScreen">
             <!-- Top Toolbar -->
 
             <div class="tool"> <!--Background Color Picker-->   
@@ -72,15 +73,15 @@
                         (click)="canvasAdapter.newTextLayer()">title</button>
             </div>
 
-        </div>
+        </mat-card>
 
 
 
 
-        <div class="flex-row" style="margin-top: 8px; width: 100%; justify-content: space-around;">
+        <div class="flex-row" style="margin-top: 8px; width: 100%; justify-content: space-between;">
            
             <!-- column1: Left Pannel -->
-            <div class="inline-block" style="width: 240px;" class="leftPannel bg-grey">
+            <mat-card class="inline-block" style="width: 240px; padding: 4px;" class="leftPannel bg-grey">
                 <mat-button-toggle-group style="width: 100%; margin-top: 2px;">
                     <mat-button-toggle value="layers" [checked]="htmlAdapter.activeLeftColumn === 'layers'"  (click)="htmlAdapter.activeLeftColumn = 'layers'">Layers</mat-button-toggle>
                     <mat-button-toggle value="parameters" (click)="htmlAdapter.activeLeftColumn = 'parameters'">Parameters</mat-button-toggle>
@@ -125,30 +126,34 @@
                     </div>
                 </ng-container>
 
-            </div>
+            </mat-card>
 
             
             
-            <!-- column 2 -->
-            <div class="bg-grey inline-block" style="width: calc(100% - 430px); position: relative; text-align: center; overflow: auto;" id="canvasWrapper">
+            <!-- column 2: Canvas -->
+            <mat-card class="bg-grey inline-block" style="padding:0; width: calc(100% - 320px); position: relative; text-align: center; overflow: auto;" id="canvasWrapper">
                 <ng-container *ngIf="htmlAdapter.isSaving"><mat-progress-bar mode="indeterminate" style="position: absolute;"></mat-progress-bar></ng-container>
                 <canvas id="mainCanvas" [style.margin.px]="htmlAdapter.canvasMargin"></canvas>
-            </div>
+            </mat-card>
 
 
            
-            <!-- column 3 -->
-            <div class="inline-block" style="width: 160px;">
-                Right pannel
-            </div>
+            <!-- column 3: Right Pannel -->
+            <mat-card class="inline-block flex-column" style="width: 55px; padding: 4px; align-items: center;">
+               <button class="btn material-icons parameter-button" style="padding: 2px;">text_format</button>
+            </mat-card>
 
         </div>
     </mat-card>
-    <div style="text-align: right;">   <!--Save Button-->
+
+    <div style="text-align: right; padding: 0;" *ngIf="!htmlAdapter.isFullScreen">   <!--Save Button-->
         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}} material-icons"
                 (click)="htmlAdapter.isSaving=true; saveLayout();" [disabled]="htmlAdapter.isSaving">save</button>
     </div>
+
     </ng-container>
+    </div>
+
 
 </div>
 
