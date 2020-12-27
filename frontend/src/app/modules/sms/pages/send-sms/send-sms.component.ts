@@ -94,6 +94,13 @@ export class SendSmsComponent implements OnInit {
         }
     }
 
+    smsPlan = [
+        { noOfSms: 5000,  price: 1250 },
+        { noOfSms: 20000, price: 5000 },
+        { noOfSms: 30000, price: 7200 }
+      ];
+    selectedSmsPlan : any = undefined;
+
     constructor(public studentService: StudentService,
                 public employeeService: EmployeeService,
                 public classService: ClassService,
@@ -396,6 +403,12 @@ export class SendSmsComponent implements OnInit {
             return classSection.class.id == classId;
         }).length > 1;
         return classSection.class.name + (multipleSections?', '+classSection.section.name:'');
+    }
+
+
+    initPayment() : void {
+        console.log('Payment initiated for ' + this.selectedSmsPlan.price + ' amount');
+
     }
 
 }
