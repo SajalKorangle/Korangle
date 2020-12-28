@@ -88,8 +88,14 @@ class SMSPurchase(models.Model):
     # School
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
+    # SMS No.
+    orderId = models.IntegerField(null=False, default=-1, verbose_name='orderId')
+
+    # SMS No.
+    payment_capture = models.BooleanField(null=False, default=False, verbose_name='payment_capture')
+
     def __str__(self):
-        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price)
+        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price) + ' -- ' + str(self.orderId)
 
     class Meta:
         db_table = 'sms_purchase'
