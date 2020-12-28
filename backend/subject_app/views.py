@@ -12,7 +12,7 @@ import json
 
 from subject_app.models import StudentSubject, ClassSubject, SubjectSecond
 
-from common.common_functions import get_error_response, get_success_message
+from common.common_functions import get_error_response, get_success_response
 
 
 from subject_app.handlers.subject_list import subject_list

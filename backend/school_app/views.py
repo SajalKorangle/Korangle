@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 import json
 
-from common.common_functions import get_error_response, get_success_message, get_success_message
+from common.common_functions import get_error_response, get_success_message, get_success_response
 
 ################ School Profile ############
 from .handlers.school_profile import update_school_profile
