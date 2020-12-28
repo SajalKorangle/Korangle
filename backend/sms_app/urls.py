@@ -42,6 +42,12 @@ urlpatterns += [
 	url(r'^msg-club-delivery-report', MsgClubDeliveryReportView.as_view()),
 ]
 
+######## SMS PURCHASE ##############
+from .views import SMSPurchaseView
+
+urlpatterns += [
+	url(r'^sms-purchase', SMSPurchaseView.as_view()),
+]
 
 ######## SMS ##############
 from .views import SmsView, SmsListView

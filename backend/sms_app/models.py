@@ -89,7 +89,7 @@ class SMSPurchase(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
     # SMS No.
-    orderId = models.IntegerField(null=False, default=-1, verbose_name='orderId')
+    orderId = models.CharField(max_length = 200, null=True, verbose_name='orderId')
 
     # SMS No.
     payment_capture = models.BooleanField(null=False, default=False, verbose_name='payment_capture')

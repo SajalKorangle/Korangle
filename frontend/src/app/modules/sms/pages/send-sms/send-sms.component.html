@@ -82,6 +82,7 @@
                         </mat-select>
                     </mat-form-field>
                     <button type="submit"
+                    [disabled]="selectedSmsPlan === undefined"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="createRzpayOrder()">Pay</button>
                 </mat-expansion-panel>

@@ -409,41 +409,86 @@ export class SendSmsComponent implements OnInit {
     }
 
 
-    createRzpayOrder(data) {
-        console.log(data);
-        // call api to create order_id
-        let order_id; // received from backend
-        this.payWithRazor(order_id);
+    createRzpayOrder() {
+        let sms_purchase_data = {
+            parentSchool :this.user.activeSchool.dbId,
+            purchseDateTime: Date.now(),
+            numberOfSMS : this.selectedSmsPlan.noOfSms,
+            price : this.selectedSmsPlan.price,
+            orderId : -1,
+            payment_capture : 0
+        }
+
+        console.log(sms_purchase_data);
+
+        //call api to create order_id
+        Promise.all([
+            this.smsService.createObject(this.smsService.sms_purchase,sms_purchase_data)
+        ]).then(value => {
+
+            //console.log('Data obtained is '+ value[0]);
+            let val = value[0];
+            this.showVal(val);
+            this.payWithRazor(value[0]);
+        }, error => {
+            console.log('Error fetching data');
+        })
+        
+    }
+
+    showVal(val:any)
+    {
+        console.log(val);
+        console.log(this.user)
     }
 
     payWithRazor(val) {
         const options: any = {
-          key: 'rzp_test_key',
-          amount: 125500, // amount should be in paise format to display Rs 1255 without decimal point
+          key: 'rzp_test_9ItYu1Pd8xL43N',
+          amount: val.price, // amount should be in paise format to display Rs 1255 without decimal point
           currency: 'INR',
-          name: '', // company name or product name
-          description: '',  // product description
-          image: './assets/logo.png', // company logo or product image
-          order_id: val, // order_id created by you in backend
+          name: 'Korangle', // company name or product name
+          description: 'sms-purchase',  // product description
+          order_id: val.orderId, // order_id created by you in backend
+          receipt_id :val.id,
           modal: {
             // We should prevent closing of the form when esc key is pressed.
             escape: false,
+          },
+          prefill: {
+              email:this.user.email,
           },
           notes: {
             // include notes if any
           },
           theme: {
             color: '#0c238a'
-          }
+          },
         };
         options.handler = ((response, error) => {
-          options.response = response;
+          options.error = error;
           console.log(response);
           console.log(options);
-          // call your backend api to verify payment signature & capture transaction
-        });
+          // call your backend api to verify payment signature, capture transaction & update the record
+            let update_data = {
+                id : options.receipt_id,
+                response : response,
+                amount : options.amount
+            }
+            Promise.all([
+                this.smsService.updateObject(this.smsService.sms_purchase,update_data)
+                ]).then(value => {
+                    let val = value[0];
+                    this.selectedSmsPlan = '';
+                    this.showVal(val);
+                }, error => {
+                    console.log(error);
+                    console.log('Error Updating data, Transaction is not captured');
+                })
+            });
         options.modal.ondismiss = (() => {
           // handle the case when user closes the form while transaction is in progress
+          this.selectedSmsPlan = '';
           console.log('Transaction cancelled.');
         });
         const rzp = new this.winRef.nativeWindow.Razorpay(options);
