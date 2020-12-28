@@ -25,8 +25,8 @@ describe('Homework -> Issue Homework', () => {
         // Get Homework Create Template
         await (await containsFirst('button', 'Get')).click();
         
-        await BeforeAfterEach.page.waitForXPath('//input[@testId="homeworkName"]');
-        const [inputElement] = await BeforeAfterEach.page.$x('//input[@testId="homeworkName"]');
+        await BeforeAfterEach.page.waitForXPath('input[ng-model="currentHomework.homeworkName"]');
+        const [inputElement] = await BeforeAfterEach.page.$x('input[ng-model="currentHomework.homeworkName"]');
         await inputElement.type('Chapter 1, Ex 1');
 
         // Checking the confirmation message by registering dialog callback
@@ -49,6 +49,6 @@ describe('Homework -> Issue Homework', () => {
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 
 });

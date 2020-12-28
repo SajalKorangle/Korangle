@@ -4,7 +4,7 @@ import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage, reClickPage} from '../../../../open-page';
 import {containsFirst} from '../../../../contains';
 
-describe('Homework -> Issue Homework', () => {
+describe('Homework -> Check Homework', () => {
 
     let page: any;
 
