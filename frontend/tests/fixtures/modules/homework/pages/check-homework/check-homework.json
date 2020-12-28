@@ -1,5 +1,15 @@
 [
   {
+    "app": "homework_app",
+    "model": "Homework",
+    "file": "1.json"
+  },
+  {
+    "app": "homework_app",
+    "model": "HomeworkStatus",
+    "file": "ten_students.json"
+  },
+  {
     "app": "employee_app",
     "model": "EmployeePermission",
     "file": "1.json"

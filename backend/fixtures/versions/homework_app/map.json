@@ -8,6 +8,16 @@
           "file": "class_three_subject.json"
         }
       ]
+    },
+    {
+        "file": "ten_students.json",
+        "file_object_list": [
+          {
+            "app": "student_app",
+            "model": "Student",
+            "file": "twenty_students.json"
+          }
+        ]
     }
 ]
   

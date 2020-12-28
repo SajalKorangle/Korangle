@@ -41,13 +41,14 @@ describe('Homework -> Issue Homework', () => {
         //Verifying Created Homework in Check Homework Page
         await openModuleAndPage('Homework', 'Create Homework');
 
-        await page.waitForXPath('//td[@testId="homeworkCount"]');
-        const list = await page.$x('//td[@testId="homeworkCount"]');
+        await page.waitForXPath('//a[@testId="homeworkCount"]');
+        const list = await page.$x('//a[@testId="homeworkCount"]');
         expect(list.length).toBe(1);
 
-        afterAll(async () => {
-            await BeforeAfterEach.afterEach();
-        })
     });
+
+    afterAll(async () => {
+        await BeforeAfterEach.afterEach();
+    })
 
 });
