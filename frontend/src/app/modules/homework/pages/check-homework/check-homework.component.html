@@ -25,7 +25,7 @@
         <br>
 
         <mat-nav-list *ngFor="let homework of selectedSubject.homeworkList" style="width: 100%;">
-            <a mat-list-item class="list-item" (click)="serviceAdapter.getHomework(homework)">
+            <a mat-list-item class="list-item" (click)="serviceAdapter.getHomework(homework)" testId="homeworkCount">
                 <div style="width: 100%;">
                     <strong>{{homework.homeworkName}}</strong>
                     <div style="float: right;">

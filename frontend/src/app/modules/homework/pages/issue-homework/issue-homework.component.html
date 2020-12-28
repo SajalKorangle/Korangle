@@ -38,12 +38,11 @@
         <!-- CREATE HOMEWORK -->
 
         <mat-form-field *ngIf="!isMobile()" style="margin-top: 5px ; margin-right: 15px; margin-bottom: 5px; width: 25%">
-            <input type="text" matInput [ngModel]="currentHomework.homeworkName"
-                (ngModelChange)="currentHomework.homeworkName=$event;" placeholder="Type Homework Name">
+            <input type="text" matInput [ngModel]="currentHomework.homeworkName" testId="homeworkName" (ngModelChange)="currentHomework.homeworkName=$event;" placeholder="Type Homework Name">
         </mat-form-field>
 
         <mat-form-field *ngIf="isMobile()" style="margin-top: 5px ; margin-right: 15px; margin-bottom: 5px; width: 80%">
-            <input type="text" matInput [ngModel]="currentHomework.homeworkName"
+            <input type="text" matInput [ngModel]="currentHomework.homeworkName" testId="homeworkName"
                 (ngModelChange)="currentHomework.homeworkName=$event;" placeholder="Type Homework Name"><br>
         </mat-form-field>
 
