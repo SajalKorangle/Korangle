@@ -7,6 +7,7 @@
                                 [(ngModel)]="selectedSection"
                                 [disabled]="isLoading"
                                 (selectionChange)="selectedSubject=null">
+                        <ng-container *ngIf="!noSubjects">
                         <ng-container *ngFor="let classs of classSectionSubjectList">
                             <ng-container *ngFor="let section of classs.sectionList">
                                 <mat-option style="width: 100%;"
@@ -15,6 +16,7 @@
                                 </mat-option>
                             </ng-container>
                         </ng-container>
+                            </ng-container>
                     </mat-select>
                 </mat-form-field>
 
@@ -23,10 +25,12 @@
                                 [ngModel]="selectedSubject"
                                 [disabled]="isLoading"
                                 (ngModelChange)="selectedSubject=$event;showTutorialDetails=false;topicAlreadyPresent=false;showPreview=false;">
+                        <ng-container *ngIf="!noSubjects">
                         <mat-option *ngFor='let subject of selectedSection.subjectList;'
                                     [value]="subject">
                             {{getSubjectName(subject)}}
                         </mat-option>
+                        </ng-container>
 
                     </mat-select>
                 </mat-form-field>

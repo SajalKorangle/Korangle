@@ -336,6 +336,9 @@ export class AddTutorialServiceAdapter {
             this.vm.selectedClass = this.vm.classSectionSubjectList[0];
             this.vm.selectedSection = this.vm.selectedClass.sectionList[0];
             this.vm.selectedSubject = this.vm.selectedSection.subjectList[0];
+            this.vm.noSubjects=false;
+        }else{
+            this.vm.noSubjects=true;
         }
     }
 

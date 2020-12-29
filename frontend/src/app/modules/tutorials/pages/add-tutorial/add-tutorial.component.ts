@@ -52,6 +52,8 @@ export class AddTutorialComponent implements OnInit {
     smsBalance: any;
 
     currentClassStudentList: any;
+    noSubjects: boolean;
+
 
     constructor(public subjectService: SubjectService,
                 public classService: ClassService,
