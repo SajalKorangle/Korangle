@@ -5,7 +5,7 @@ from sms_app.models import SMS, SMSPurchase
 
 def get_sms_count(data):
 
-    purchase_count = SMSPurchase.objects.filter(parentSchool_id=data['parentSchool']) \
+    purchase_count = SMSPurchase.objects.filter(parentSchool_id=data['parentSchool'],payment_capture=1) \
         .aggregate(purchaseCount=Sum('numberOfSMS'))['purchaseCount']
 
     if purchase_count is None:
