@@ -349,23 +349,25 @@ export class SetClassSubjectServiceAdapter {
     // Remove Subject
     removeSubject(subject: any): void {
 
-        this.vm.isLoading = true;
+        if (confirm('Are you sure ? removing the subject will remove all its corresponding tutorial videos')) {
+            this.vm.isLoading = true;
 
-        let class_subject_data = subject.id;
+            let class_subject_data = subject.id;
 
-        let student_subject_data = this.prepareStudentSubjectDataToRemove(subject);
+            let student_subject_data = this.prepareStudentSubjectDataToRemove(subject);
 
-        Promise.all([
-            this.vm.subjectService.deleteClassSubject(class_subject_data, this.vm.user.jwt),
-            ((student_subject_data.length>0)?this.vm.subjectService.deleteStudentSubjectList(student_subject_data, this.vm.user.jwt):''),
-        ]).then(value => {
-            alert('Subject removed from class successfully');
-            this.removeSubjectFromClassSectionSubjectList(subject.parentClass, subject.parentDivision, subject.parentSubject);
-            this.removeSubjectFromClassSectionStudentSubjectList(subject.parentClass, subject.parentDivision, subject.parentSubject);
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
+            Promise.all([
+                this.vm.subjectService.deleteClassSubject(class_subject_data, this.vm.user.jwt),
+                ((student_subject_data.length > 0) ? this.vm.subjectService.deleteStudentSubjectList(student_subject_data, this.vm.user.jwt) : ''),
+            ]).then(value => {
+                alert('Subject removed from class successfully');
+                this.removeSubjectFromClassSectionSubjectList(subject.parentClass, subject.parentDivision, subject.parentSubject);
+                this.removeSubjectFromClassSectionStudentSubjectList(subject.parentClass, subject.parentDivision, subject.parentSubject);
+                this.vm.isLoading = false;
+            }, error => {
+                this.vm.isLoading = false;
+            });
+        }
     }
 
     prepareStudentSubjectDataToRemove(subject: any): any {

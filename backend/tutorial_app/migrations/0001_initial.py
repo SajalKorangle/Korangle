@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('link', models.TextField()),
                 ('orderNumber', models.DecimalField(decimal_places=1, max_digits=8)),
                 ('generationDateTime', models.DateTimeField(auto_now_add=True, verbose_name='generationDateTime')),
-                ('parentClassSubject', models.ForeignKey(default=0, on_delete=django.db.models.deletion.PROTECT, to='subject_app.ClassSubject', verbose_name='parentClassSubject')),
+                ('parentClassSubject', models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='subject_app.ClassSubject', verbose_name='parentClassSubject')),
             ],
             options={
                 'db_table': 'tutorial',

@@ -7,7 +7,7 @@ from information_app.models import SentUpdateType
 
 
 class Tutorial(models.Model):
-    parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.PROTECT, null=False, default=0,
+    parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE, null=False, default=0,
                                            verbose_name='parentClassSubject')
 
     chapter = models.TextField(null=False)
