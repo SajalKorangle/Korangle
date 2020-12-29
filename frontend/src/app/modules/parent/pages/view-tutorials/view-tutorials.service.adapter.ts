@@ -65,8 +65,8 @@ export class ViewTutorialsServiceAdapter {
 
     populateSubjectChapterTopic() {
         this.filteredStudentSubject = [];
-        this.vm.selectedSubject = [];
-        this.vm.selectedChapter = [];
+        this.vm.selectedSubject = {};
+        this.vm.selectedChapter = {};
         let studentIndex = 0;
          this.vm.noTutorials = false;
 
@@ -100,6 +100,7 @@ export class ViewTutorialsServiceAdapter {
                 }
                 if (studentIndex === this.vm.studentSubjectList.length) {
                     if (this.filteredStudentSubject.length > 0) {
+                        this.vm.filteredStudentSubject=this.filteredStudentSubject;
                         this.vm.selectedSubject = this.filteredStudentSubject[0];
                         this.vm.selectedChapter = this.vm.selectedSubject.chapterList[0];
                         this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];

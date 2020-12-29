@@ -4,8 +4,8 @@
             <mat-form-field  *ngIf="!noTutorials" style="margin: 20px;">
                 <mat-select placeholder="Select Subject"
                             [ngModel]="selectedSubject"
-                            (ngModelChange)="selectedSubject=$event;showTutorialVideo=false;selectedChapter=[];">
-                    <mat-option *ngFor='let subject of serviceAdapter.filteredStudentSubject;' [value]="subject">
+                            (ngModelChange)="selectedSubject=$event;showTutorialVideo=false;selectedChapter={};">
+                    <mat-option *ngFor='let subject of filteredStudentSubject;' [value]="subject">
                         {{getSubjectName(subject)}}
                     </mat-option>
                 </mat-select>
@@ -14,7 +14,7 @@
             <mat-form-field *ngIf="!noTutorials" style="margin: 20px;">
                 <mat-select placeholder="Select Chapter"
                             [ngModel]="selectedChapter"
-                            (ngModelChange)="selectedChapter=$event;showTutorialVideo=false;selectedTopic=[];">
+                            (ngModelChange)="selectedChapter=$event;showTutorialVideo=false;selectedTopic={};">
                     <mat-option *ngFor='let chapter of selectedSubject.chapterList;' [value]="chapter">
                         {{chapter.name}}
                     </mat-option>
@@ -32,7 +32,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <span *ngIf="noTutorials" style="margin-left:20px;color:red">[ No Tutorial Videos Present ]</span>
+            <span *ngIf="noTutorials" style="margin-left:20px">[ No Tutorial Videos Present ]</span>
 
         </div>
         <ng-container *ngIf="showTutorialVideo">

@@ -2,7 +2,7 @@
     <ng-container *ngIf="!isLoading">
         <div class="row">
             <div class="col-md-9">
-                <span *ngIf="noSubjects" style="color:red">[ There are no Subjects Assigned to you ]</span>
+                <span *ngIf="noSubjects">[ There are no Subjects Assigned to you ]</span>
                 <mat-form-field *ngIf="!noSubjects">
                     <mat-select placeholder="Select Class -"
                                 [(ngModel)]="selectedSection"
