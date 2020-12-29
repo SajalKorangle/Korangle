@@ -69,6 +69,8 @@ export class TotalCollectionServiceAdapter {
             'parentFeeReceipt__cancelled': 'false__boolean',
         };
 
+        this.vm.initializeSelection();
+
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
             this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
@@ -150,7 +152,7 @@ export class TotalCollectionServiceAdapter {
         this.vm.filteredClassSectionList = this.vm.feeReceiptList.map(fee=>{
             return this.vm.getClassAndSection(fee.parentStudent,fee.parentSession);
         }).filter((item, index, final) => {
-            return final.findIndex(item2 => item2.classs.dbId == item.classs.dbId
+            return final.findIndex(item2 => item2.classs.id == item.classs.id
                 && item2.section.id == item.section.id ) == index;
         }).sort((a,b) => {
             if (a.classs.orderNumber == b.classs.orderNumber) {
