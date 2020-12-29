@@ -8,8 +8,6 @@ export class AddTutorialServiceAdapter {
     sectionList: any;
     classSubjectList: any;
     subjectList: any;
-    youtubeRegex = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$/;
-    decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     classSectionSubjectList: any;
     fullStudentList: any;
 
@@ -64,7 +62,7 @@ export class AddTutorialServiceAdapter {
             this.classSubjectList = value[2];
             this.subjectList = value[3];
             this.fullStudentList = value[4];
-            this.populateSubjectList();
+            this.vm.subjectList = this.subjectList;
             this.populateClassSectionList();
             this.populateDefaults();
             this.vm.isLoading = false;
@@ -115,9 +113,6 @@ export class AddTutorialServiceAdapter {
 
     }
 
-    populateSubjectList(): void {
-        this.vm.subjectList = this.subjectList;
-    }
 
     getTutorialList(): void {
         this.vm.showTutorialDetails = false;
@@ -137,7 +132,7 @@ export class AddTutorialServiceAdapter {
 
     addNewTutorial(): void {
 
-        if (!this.decimalRegex.test(this.vm.newTutorial.orderNumber) || this.vm.newTutorial.orderNumber <= 0) {
+        if (!this.vm.decimalRegex.test(this.vm.newTutorial.orderNumber) || this.vm.newTutorial.orderNumber <= 0) {
             if (this.vm.tutorialList.length == 0) {
                 this.vm.newTutorial.orderNumber = 1;
             } else {
@@ -202,7 +197,7 @@ export class AddTutorialServiceAdapter {
                 if(this.vm.settings != 0 && this.vm.settings.sendEditUpdate == true){
                     this.prepareSmsNotificationData(this.vm.editMessage);
                 }
-                this.checkEnableAddButton();
+                this.vm.checkEnableAddButton();
             }, error => {
                 this.vm.tutorialUpdating = false;
                 tutorial.editable = false;
@@ -210,7 +205,7 @@ export class AddTutorialServiceAdapter {
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         } else {
 
-            this.vm.editedTutorial = [];
+            this.vm.editedTutorial = {};
             Object.keys(tutorial).forEach(key => {
                 this.vm.editedTutorial[key] = tutorial[key];
             });
@@ -223,7 +218,7 @@ export class AddTutorialServiceAdapter {
     removeOrCancel(tutorial: any): void {
         if (tutorial.editable) {
             this.vm.showTutorialDetails = false;
-            this.vm.editedTutorial = [];
+            this.vm.editedTutorial = {};
             tutorial.editable = false;
             this.vm.tutorialEditing = false;
             this.vm.showTutorialDetails = true;
@@ -236,7 +231,7 @@ export class AddTutorialServiceAdapter {
                 this.vm.tutorialList = this.vm.tutorialList.filter(item => {
                     return item.id != tutorial.id;
                 });
-                this.checkEnableAddButton();
+                this.vm.checkEnableAddButton();
                 this.populateStudentList(tutorial);
                 this.vm.tutorialUpdating = false;
                 if(this.vm.settings != 0 && this.vm.settings.sendDeleteUpdate == true){
@@ -267,11 +262,11 @@ export class AddTutorialServiceAdapter {
             alert('Tutorial link should not be empty');
             return false;
         }
-        if (!this.decimalRegex.test(tutorial.orderNumber) || parseFloat(tutorial.orderNumber) <= 0) {
+        if (!this.vm.decimalRegex.test(tutorial.orderNumber) || parseFloat(tutorial.orderNumber) <= 0) {
             alert('OrderNumber should be greater than 0 with 1 decimal place');
             return false;
         }
-        if (!this.youtubeRegex.test(tutorial.link.trim())) {
+        if (!this.vm.youtubeRegex.test(tutorial.link.trim())) {
             alert('Please enter a valid link');
             return false;
         }
@@ -281,38 +276,7 @@ export class AddTutorialServiceAdapter {
         return true;
     }
 
-    checkEnableAddButton() {
-        const tutorial = this.vm.newTutorial;
-        this.vm.topicAlreadyPresent = tutorial.topic && this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim());
 
-        if (!tutorial.link || tutorial.link.trim() == '') {
-            this.vm.isAddDisabled = true;
-            this.vm.showPreview = false;
-            return;
-        }
-
-        if (this.youtubeRegex.test(tutorial.link.trim())) {
-            if (tutorial.link.startsWith('www.')) {
-                tutorial.link = 'https://' + tutorial.link;
-            }
-            this.vm.previewBeforeAddTutorialUrl = tutorial.link.replace('watch?v=', 'embed/');
-            this.vm.showPreview = true;
-            if (!tutorial.chapter || tutorial.chapter.trim() == '') {
-                this.vm.isAddDisabled = true;
-                return;
-            } else if (!tutorial.topic || tutorial.topic.trim() == '' || this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim())) {
-                this.vm.isAddDisabled = true;
-                return;
-            } else {
-                this.vm.topicAlreadyPresent = false;
-                this.vm.isAddDisabled = false;
-                this.vm.topicAlreadyPresent = false;
-            }
-        } else {
-            this.vm.showPreview = false;
-            this.vm.isAddDisabled = true;
-        }
-    }
 
     populateTutorialList(tutorialList) {
         tutorialList.forEach(tutorial => {

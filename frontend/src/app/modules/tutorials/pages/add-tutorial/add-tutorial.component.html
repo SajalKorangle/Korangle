@@ -8,15 +8,15 @@
                                 [disabled]="isLoading"
                                 (selectionChange)="selectedSubject=null">
                         <ng-container *ngIf="!noSubjects">
-                        <ng-container *ngFor="let classs of classSectionSubjectList">
-                            <ng-container *ngFor="let section of classs.sectionList">
-                                <mat-option style="width: 100%;"
-                                            [value]="section">
-                                    {{classs.name}}, {{section.name}}
-                                </mat-option>
+                            <ng-container *ngFor="let classs of classSectionSubjectList">
+                                <ng-container *ngFor="let section of classs.sectionList">
+                                    <mat-option style="width: 100%;"
+                                                [value]="section">
+                                        {{classs.name}}, {{section.name}}
+                                    </mat-option>
+                                </ng-container>
                             </ng-container>
                         </ng-container>
-                            </ng-container>
                     </mat-select>
                 </mat-form-field>
 
@@ -53,7 +53,7 @@
                                    type="text"
                                    cdkTextareaAutosize
                                    [(ngModel)]="newTutorial.chapter"
-                                   (ngModelChange)="serviceAdapter.checkEnableAddButton()">
+                                   (ngModelChange)="checkEnableAddButton()">
                         </mat-form-field>
                     </div>
 
@@ -63,7 +63,7 @@
                             <input matInput
                                    type="text"
                                    [(ngModel)]="newTutorial.topic"
-                                   (ngModelChange)="serviceAdapter.checkEnableAddButton()">
+                                   (ngModelChange)="checkEnableAddButton()">
                         </mat-form-field>
                     </div>
                     <div class="row">
@@ -75,7 +75,7 @@
                                    min="1"
                                    step=".1"
                                    [(ngModel)]="newTutorial.orderNumber"
-                                   (ngModelChange)="serviceAdapter.checkEnableAddButton()">
+                                   (ngModelChange)="checkEnableAddButton()">
                         </mat-form-field>
                     </div>
 
@@ -87,7 +87,7 @@
                                       type="text"
                                       cdkTextareaAutosize
                                       [(ngModel)]="newTutorial.link" style="overflow: hidden;min-height: 17px"
-                                      (ngModelChange)="serviceAdapter.checkEnableAddButton();">
+                                      (ngModelChange)="checkEnableAddButton();">
                     </textarea>
                         </mat-form-field>
 

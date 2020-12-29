@@ -43,6 +43,8 @@ export class AddTutorialComponent implements OnInit {
     editedTutorial: any;
     showPreview = false;
     topicAlreadyPresent = false;
+    youtubeRegex = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$/;
+    decimalRegex = /^-?[0-9]*\.?[0-9]$/;
 
 
     createMessage = 'A new tutorial has been created in the Subject <subject>; Chapter <tutorialChapter>; Topic <tutorialTopic>';
@@ -118,4 +120,37 @@ export class AddTutorialComponent implements OnInit {
         });
     }
 
+
+     checkEnableAddButton() {
+        const tutorial = this.newTutorial;
+        this.topicAlreadyPresent = tutorial.topic && this.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim());
+
+        if (!tutorial.link || tutorial.link.trim() == '') {
+            this.isAddDisabled = true;
+            this.showPreview = false;
+            return;
+        }
+
+        if (this.youtubeRegex.test(tutorial.link.trim())) {
+            if (tutorial.link.startsWith('www.')) {
+                tutorial.link = 'https://' + tutorial.link;
+            }
+            this.previewBeforeAddTutorialUrl = tutorial.link.replace('watch?v=', 'embed/');
+            this.showPreview = true;
+            if (!tutorial.chapter || tutorial.chapter.trim() == '') {
+                this.isAddDisabled = true;
+                return;
+            } else if (!tutorial.topic || tutorial.topic.trim() == '' || this.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim())) {
+                this.isAddDisabled = true;
+                return;
+            } else {
+                this.topicAlreadyPresent = false;
+                this.isAddDisabled = false;
+                this.topicAlreadyPresent = false;
+            }
+        } else {
+            this.showPreview = false;
+            this.isAddDisabled = true;
+        }
+    }
 }
