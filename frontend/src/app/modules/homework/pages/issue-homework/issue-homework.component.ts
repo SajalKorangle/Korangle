@@ -6,16 +6,15 @@ import { StudentService } from '../../../../services/modules/student/student.ser
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { HomeworkService } from '../../../../services/modules/homework/homework.service';
-import { IssueHomeworkServiceAdapter } from './issue-homework.service.adapter';
 import {NotificationService} from '../../../../services/modules/notification/notification.service';
 import {SmsService} from '../../../../services/modules/sms/sms.service';
 import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
-
+import { IssueHomeworkServiceAdapter } from './issue-homework.service.adapter';
 import {UserService} from '../../../../services/modules/user/user.service';
 import { isMobile } from '../../../../classes/common.js';
 
-
 import { Homework } from '../../../../services/modules/homework/models/homework';
+import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 
 
 
@@ -617,58 +616,3 @@ export class IssueHomeworkComponent implements OnInit {
 
 }
 
-  
-@Component({
-    selector: 'image-preview-dialog',
-    templateUrl: 'image-preview-dialog.html',
-    styleUrls: ['./issue-homework.component.css'],
-  })
-  export class ImagePreviewDialogComponent {
-    
-    constructor(
-        public dialogRef: MatDialogRef<ImagePreviewDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) 
-        public data: ImagePreviewDialogData,) {
-            this.moveToIndex = this.data.index;
-    }
-
-    moveToIndex: any;
-  
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-    
-    decreaseIndex(): void{
-        this.data.index = this.data.index - 1;
-        if(this.data.index < 0)
-            this.data.index = this.data.homeworkImages.length - 1;
-            this.moveToIndex = this.data.index;
-    }
-
-    
-    increaseIndex(): void{
-        this.data.index = this.data.index + 1;
-        if(this.data.index == this.data.homeworkImages.length)
-            this.data.index = 0;
-        this.moveToIndex = this.data.index;
-    }
-
-    removeImage(index: any):any{
-        this.data.homeworkImages.splice(index, 1);
-        if(this.data.homeworkImages.length == 0){
-            this.dialogRef.close();
-        }
-        if(index == this.data.index){
-            this.decreaseIndex();
-        }
-    }   
-
-    moveImage(){
-        let temp = this.data.homeworkImages[this.data.index];
-        this.data.homeworkImages.splice(this.data.index, 1);
-        this.data.homeworkImages.splice(this.moveToIndex, 0, temp);
-        this.data.index = this.moveToIndex;
-    }
-
-    
-}

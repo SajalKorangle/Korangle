@@ -9,7 +9,7 @@ import { StudentService } from '../../../../services/modules/student/student.ser
 import { isMobile } from '../../../../classes/common.js';
 
 import {MatDialog} from '@angular/material';
-import { ImagePreviewDialogComponent} from '../../../homework/pages/issue-homework/issue-homework.component';
+import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 
 import {CdkDragDrop, moveItemInArray, CdkDragEnter} from '@angular/cdk/drag-drop';
 
@@ -206,7 +206,6 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
             this.toSubmitHomework.previousAnswerImages.push(element);
         });
         this.isSubmitting = true;
-        console.log(this.toSubmitHomework);
         
     }
 

@@ -31,6 +31,7 @@ import { DayDateComponent } from "./day-date/day-date.component";
 import { EmployeeFilterComponent } from './employee-filter/employee-filter.component';
 import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
 import { CustomizedNumberInputComponent } from './customized-number-input/customized-number-input.component';
+import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.component'
 
 // Pipes
 
@@ -47,6 +48,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         DayDateOldComponent,
         DayDateComponent,
         CustomizedNumberInputComponent,
+        ImagePreviewDialogComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -93,6 +95,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         DayDateOldComponent,
         DayDateComponent,
         CustomizedNumberInputComponent,
+        ImagePreviewDialogComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,

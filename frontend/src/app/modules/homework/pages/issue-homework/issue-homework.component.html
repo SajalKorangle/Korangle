@@ -68,7 +68,7 @@
             <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
             <div class="image-row" >
                 <div  *ngFor="let images of currentHomeworkImages; let i = index">
-                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(homework.homeworkImages, i, 0)">
+                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(currentHomeworkImages, i, 1)">
                 </div>
                 <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
                             accept="image/jpeg,image/png" #imageInput />
@@ -83,7 +83,7 @@
             <span style="color: #7b7b7b;">Homework Images: <br></span>
             <div class="image-row">
                 <div  *ngFor="let images of currentHomeworkImages; let i = index">
-                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column-mobile" (click)="openImagePreviewDialog(homework.homeworkImages, i, 0)">
+                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column-mobile" (click)="openImagePreviewDialog(currentHomeworkImages, i, 1)">
                 </div>
                 <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
                             accept="image/jpeg,image/png" #imageInput />

@@ -266,7 +266,7 @@
         </mat-accordion>
 
         <ng-container *ngIf="loadMoreHomework">
-            <span style="color: #817ae9;" (click)="serviceAdapter.loadMoreHomeworks()"><u>Load More..</u></span>
+            <span *ngIf="isMobile()" style="color: #817ae9;" (click)="serviceAdapter.loadMoreHomeworks()"><u>Load More..</u></span>
             <div *ngIf="isLoadingCheckedHomeworks || isLoadingSubmittedHomeworks">
                 <br>
                 <div style="width: 100%" align="center">
@@ -341,7 +341,7 @@
                         <span style="color: #7b7b7b;">Homework Images: <br></span>
                         <div class="image-row">
                             <div *ngFor="let images of currentHomeworkImages; let i = index">
-                                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column-mobile" (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 0)">
+                                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column-mobile" (click)="openImagePreviewDialog(currentHomeworkImages, i, 0)">
                             </div>
                         </div><br>
                     </div>
@@ -359,29 +359,6 @@
                         [ngModel]="toSubmitHomework.answerText" (ngModelChange)="toSubmitHomework.answerText=$event">
                     </textarea>
                 </mat-form-field>
-
-                <!-- Drag and drop trial code -->
-                <!-- <div style="margin-top: 5px;" *ngIf="!isMobile()">
-                    <span style="color: #7b7b7b;">Answer Images: <br></span>
-                    <div style="display:flex;flex-wrap:wrap" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
-                        <div style="display: inline-block;" *ngFor="let images of toSubmitHomework.answerImages; let i = index" cdkDrag>
-                            <img src="{{images.answerImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 1)">
-                        </div>
-                    </div>
-                    <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
-                            accept="image/jpeg,image/png" #imageInput />
-                    <button type="submit" class="image-column"
-                        style="cursor: pointer; font-size: 45px;color: grey;border-radius: 5px;"
-                        (click)="imageInput.click()">+</button>
-                </div> 
-            
-                <mat-grid-list cdkDropListGroup cols="3">
-                    <mat-grid-tile cdkDropList [cdkDropListData]="i" *ngFor="let images of toSubmitHomework.answerImages; let i = index">
-                        <div cdkDrag [cdkDragData]="i" (cdkDragEntered)="entered($event)"> 
-                            <img src="{{images.answerImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 1)">
-                        </div> 
-                    </mat-grid-tile> 
-                </mat-grid-list><br> -->
 
                 <div style="margin-top: 5px;" *ngIf="!isMobile()">
                     <span style="color: #7b7b7b;">Answer Images: <br></span>

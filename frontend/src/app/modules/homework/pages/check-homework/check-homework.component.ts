@@ -9,8 +9,8 @@ import {NotificationService} from '../../../../services/modules/notification/not
 import {SmsService} from '../../../../services/modules/sms/sms.service';
 import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
 import {UserService} from '../../../../services/modules/user/user.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { ImagePreviewDialogComponent} from '../issue-homework/issue-homework.component'
+import {MatDialog} from '@angular/material';
+import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { isMobile } from '../../../../classes/common.js';
 
 

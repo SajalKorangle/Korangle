@@ -19,58 +19,7 @@
 	height: 100%;
 }
 
-.loader {
-	z-index: 1000;
-	border: 8px solid #FFFFFF; /* White */
-	border-top: 8px solid red; /* Red */
-	border-radius: 50%;
-	width: 120px;
-	height: 120px;
-	animation: spin 2s linear infinite;
-}
 
-@keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
-}
-
-.fieldRight {
-	color: lightgreen;
-	font-weight: 400;
-}
-mat-form-field textarea{
-	width: 100%;
-}
-/* mat-form-field {
-	margin-top: 15px;
-	width: 100%;
-} */
-/*
-mat-form-field input,
-mat-form-field mat-select {
-	padding-top: 5px;
-	padding-bottom: 4px;
-}
-
-mat-form-field input[type='date'] {
-	padding-top: 2px;
-	padding-bottom: 1px;
-} */
-
-
-.image-row {
-	display: flex;
-	flex-wrap: wrap;
-	margin-top: 5px;
-}
-.image-row > .image-column {
-	padding: 5px 10px;
-}
-.image-row:after {
-	content: "";
-	display: table;
-	clear: both;
-}
 .image-column {
 	width: 1.375in; 
 	height: 1.525in; 
@@ -122,3 +71,17 @@ img.hover-shadow {
 .hover-shadow:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
 }
+
+.zoom {
+	display: block;
+	padding: 50px;
+	transition: transform .2s; /* Animation */
+	margin: auto;
+}
+  
+.zoom:hover {
+	padding: 50px;
+	margin-top: 10px;
+	transform: scale(2); /* (150% zoom)*/
+}
+

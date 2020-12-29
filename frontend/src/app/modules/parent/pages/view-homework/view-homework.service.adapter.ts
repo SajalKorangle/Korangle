@@ -99,7 +99,7 @@ export class ViewHomeworkServiceAdapter {
                 if((secondValue[3].length + secondValue[4].length) < this.vm.loadingCount){
                     this.vm.loadMoreHomework = false;
                 }
-                console.log(secondValue);
+                // console.log(secondValue);
                 let pendingHomeworkIdList = [];
                 secondValue[0].forEach(element =>{
                     pendingHomeworkIdList.push(element.parentHomework);
@@ -128,7 +128,7 @@ export class ViewHomeworkServiceAdapter {
                     this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, homework_data),
                     this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, completed_homework_data),
                 ]).then(thirdValue =>{
-                    console.log(thirdValue);
+                    // console.log(thirdValue);
                     this.initializePendingHomeworkList(thirdValue[0], secondValue[1], secondValue[0], this.classSubjectList, this.subjectList);
                     this.populateCompletedHomeworkList(thirdValue[1], secondValue[3], secondValue[4], this.classSubjectList, this.subjectList);
                     this.vm.isSessionLoading = false;
@@ -256,7 +256,7 @@ export class ViewHomeworkServiceAdapter {
         ]).then(value => {
             this.vm.submittedHomeworkCount+= value[1].length;
             this.vm.checkedHomeworkCount+= value[0].length;
-            console.log(value);
+            // console.log(value);
             let completedHomeworkIdList = [];
             value[0].forEach(element =>{
                 completedHomeworkIdList.push(element.parentHomework);
@@ -350,8 +350,8 @@ export class ViewHomeworkServiceAdapter {
             service_list.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_answer, {'id':image.id}));
         });
         Promise.all(service_list).then(value =>{
-            console.log(value);
-            // this.vm.populateSubmittedHomework(value);
+            // console.log(value);
+            this.populateSubmittedHomework(value);
             alert('Homework Answer Recorded Successfully');
             this.vm.isSessionLoading = false;
         },error =>{
@@ -384,6 +384,40 @@ export class ViewHomeworkServiceAdapter {
             this.vm.isHomeworkLoading = false;
             
         })
+    }
+
+    populateSubmittedHomework(homework: any): any{
+        let tempHomework = this.vm.pendingHomeworkList.find(homeworks => homeworks.statusDbId == homework[0].id);;
+        let submittedHomework;
+        if(tempHomework == undefined){
+            tempHomework = this.vm.completedHomeworkList.find(homeworks => homeworks.statusDbId == homework[0].id);
+        }
+        submittedHomework = {
+            dbId: tempHomework.dbId,
+            homeworkName: tempHomework.homeworkName,
+            startDate: tempHomework.startDate,
+            endDate: tempHomework.endDate,
+            startTime: tempHomework.startTime,
+            endTime: tempHomework.endTime,
+            homeworkText: tempHomework.homeworkText,
+            subjectDbId: tempHomework.subjectDbId,
+            subjectName: tempHomework.subjectName,
+            statusDbId: tempHomework.statusDbId,
+            homeworkStatus: homework[0].homeworkStatus,
+            submissionDate: homework[0].submissionDate,
+            submissionTime: homework[0].submissionTime,
+            answerText: homework[0].answerText,
+            homeworkRemark: tempHomework.homeworkRemark,
+        }
+        let tempIndex = this.vm.pendingHomeworkList.indexOf(tempHomework);
+        if(tempIndex == -1){
+            tempIndex = this.vm.completedHomeworkList.indexOf(tempHomework);
+            this.vm.completedHomeworkList.splice(tempIndex, 1);
+        }
+        else{
+            this.vm.pendingHomeworkList.splice(tempIndex, 1);
+        }
+        this.vm.completedHomeworkList.splice(0,0,submittedHomework);
     }
     
 }
