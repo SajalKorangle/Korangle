@@ -7,7 +7,7 @@
             <mat-label>
                 Value
             </mat-label>
-            <input matInput>
+            <input matInput type="text" [ngModel]="layer.text" (ngModelChange)="layer.text=$event; canvasRefresh()">
         </mat-form-field>
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">
             <mat-button-toggle value="bold"><span class="material-icons">format_bold</span></mat-button-toggle>

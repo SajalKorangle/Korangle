@@ -147,7 +147,11 @@
             <mat-card class="inline-block flex-column" style="width: 240px; padding: 4px; align-items: center;">
                 <span *ngIf="!canvasAdapter.activeLayer" style="margin-top: 25px;">No Layers Selected </span>
                 <div class="parameters-tool">
-                    <app-text-parameters-pannel *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('text')"></app-text-parameters-pannel>
+                    <app-text-parameters-pannel 
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('text')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-text-parameters-pannel>
                 </div>
             </mat-card>
 

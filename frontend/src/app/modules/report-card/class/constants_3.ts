@@ -63,6 +63,7 @@ export interface Layer{
     getDataToSave(): any;
 
     image?: HTMLImageElement;
+    text?: string;
     height?: number;
     width?: number;
     textBoxMetrx?: {
