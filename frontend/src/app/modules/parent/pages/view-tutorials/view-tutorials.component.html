@@ -1,7 +1,7 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
         <div class="row">
-            <mat-form-field style="margin: 20px;">
+            <mat-form-field  *ngIf="!noTutorials" style="margin: 20px;">
                 <mat-select placeholder="Select Subject"
                             [ngModel]="selectedSubject"
                             (ngModelChange)="selectedSubject=$event;showTutorialVideo=false;selectedChapter=[];">
@@ -11,7 +11,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field style="margin: 20px;">
+            <mat-form-field *ngIf="!noTutorials" style="margin: 20px;">
                 <mat-select placeholder="Select Chapter"
                             [ngModel]="selectedChapter"
                             (ngModelChange)="selectedChapter=$event;showTutorialVideo=false;selectedTopic=[];">
@@ -22,7 +22,7 @@
             </mat-form-field>
 
 
-            <mat-form-field style="margin: 20px;">
+            <mat-form-field  *ngIf="!noTutorials" style="margin: 20px;">
                 <mat-select placeholder="Select Topic"
                             [ngModel]="selectedTopic"
                             (ngModelChange)="selectedTopic=$event;setTutorialVideo()">
@@ -32,7 +32,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <span *ngIf="noTutorials" style="color: red">[ No Tutorials Present ]</span>
+            <span *ngIf="noTutorials" style="margin-left:20px;color:red">[ No Tutorial Videos Present ]</span>
 
         </div>
         <ng-container *ngIf="showTutorialVideo">
