@@ -2,12 +2,12 @@
     <ng-container *ngIf="!isLoading">
         <div class="row">
             <div class="col-md-9">
-                <mat-form-field>
+                <span *ngIf="noSubjects" style="color:red">[ There are no Subjects Assigned to you ]</span>
+                <mat-form-field *ngIf="!noSubjects">
                     <mat-select placeholder="Select Class -"
                                 [(ngModel)]="selectedSection"
                                 [disabled]="isLoading"
                                 (selectionChange)="selectedSubject=null">
-                        <ng-container *ngIf="!noSubjects">
                             <ng-container *ngFor="let classs of classSectionSubjectList">
                                 <ng-container *ngFor="let section of classs.sectionList">
                                     <mat-option style="width: 100%;"
@@ -16,25 +16,20 @@
                                     </mat-option>
                                 </ng-container>
                             </ng-container>
-                        </ng-container>
                     </mat-select>
                 </mat-form-field>
-
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
+                <mat-form-field *ngIf="!noSubjects" style="margin-top: 23px; margin-left: 20px;">
                     <mat-select placeholder="Subject"
                                 [ngModel]="selectedSubject"
                                 [disabled]="isLoading"
                                 (ngModelChange)="selectedSubject=$event;showTutorialDetails=false;topicAlreadyPresent=false;showPreview=false;">
-                        <ng-container *ngIf="!noSubjects">
                         <mat-option *ngFor='let subject of selectedSection.subjectList;'
                                     [value]="subject">
                             {{getSubjectName(subject)}}
                         </mat-option>
-                        </ng-container>
-
                     </mat-select>
                 </mat-form-field>
-                <button type="submit"
+                <button *ngIf="!noSubjects" type="submit"
                         style="margin-left: 20px"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         [disabled]="!selectedSubject"
