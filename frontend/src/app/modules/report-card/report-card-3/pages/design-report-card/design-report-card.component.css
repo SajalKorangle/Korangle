@@ -63,6 +63,15 @@
 .leftPannel mat-button-toggle-group mat-button-toggle {
     width: 50%;
 }
+
+.leftPannel .inner-content {
+    margin: 4px;
+    max-height: calc(100% - 50px);
+    width: calc(100% - 8px);
+    padding-bottom: 50px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 .mat-button-toggle-label-content {
     line-height: 30px !important;
 }

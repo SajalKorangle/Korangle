@@ -58,7 +58,8 @@ export interface Layer{
     layerSetUp(Data: object, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void;
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
-    isClicked(mouseX: number, mouseY: number): boolean
+    isClicked(mouseX: number, mouseY: number): boolean;
+    scale(scaleFactor: number): void;
     getDataToSave(): any;
 
     image?: HTMLImageElement;
@@ -159,6 +160,13 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
             && mouseY < this.y+this.height+permissibleClickError)
     }
 
+    scale(scaleFactor: number): void{
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        this.height *= scaleFactor;
+        this.width *= scaleFactor;
+    }
+
     getDataToSave() {
         let savingData: any = {
             'displayName': this.displayName,
@@ -234,7 +242,6 @@ export class CanvasText implements Layer{
     // style updated to be implemented
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        console.log('canvas text in draw on Canvas: ', this.text);
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
         setTimeout(()=>ctx.fillText(this.text, this.x, this.y));
         return true;    // Drawn successfully on canvas
@@ -245,6 +252,12 @@ export class CanvasText implements Layer{
             && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
             && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
             && mouseY < this.y + this.textBoxMetrx.boundingBoxBottom + permissibleClickError)
+    }
+
+    scale(scaleFactor: number): void{
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        Object.keys(this.textBoxMetrx).forEach(key => this.textBoxMetrx[key] *= scaleFactor);
     }
 
     getDataToSave() {

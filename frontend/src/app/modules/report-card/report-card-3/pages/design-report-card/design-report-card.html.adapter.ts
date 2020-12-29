@@ -23,10 +23,15 @@ export class DesignReportCardHtmlAdapter {
         this.vm = vm;
     }
 
-    canvasSetUp():void {
+    canvasSetUp():void {    // Setting canvas height and width to according to parent div
         let canvasWrapper = document.getElementById('canvasWrapper');
-        let computedCavasWidth = canvasWrapper.getBoundingClientRect().width - 2*this.canvasMargin;
+        let wrapperBoundingDimensions = canvasWrapper.getBoundingClientRect();
+
+        let computedCavasWidth = wrapperBoundingDimensions.width - 2 * this.canvasMargin;
+        let computedCanvasHeight = wrapperBoundingDimensions.height - 2 * this.canvasMargin;
+        
         this.vm.canvas.width = computedCavasWidth;
+        this.vm.canvas.height = computedCanvasHeight;
     }
 
     getFieldKeys(): any{
@@ -58,7 +63,11 @@ export class DesignReportCardHtmlAdapter {
             if(document.body.requestFullscreen)
                 document.body.requestFullscreen();
             this.isFullScreen = true;
-        }     
+        }  
+        setTimeout(() => {
+            this.canvasSetUp();
+            this.vm.canvasAdapter.canvasSizing();
+        })
     }
 
 }

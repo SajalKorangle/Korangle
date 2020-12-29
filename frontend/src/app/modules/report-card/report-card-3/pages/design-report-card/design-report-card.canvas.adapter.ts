@@ -11,8 +11,8 @@ export class DesignReportCardCanvasAdapter {
 
     canvas: HTMLCanvasElement;  // html canvas rendered on screen
     context: CanvasRenderingContext2D;
-    canvasHeight: number;   // height and width are in pixels
-    canvasWidth: number;    
+    canvasHeight: number = null;   // height and width are in pixels
+    canvasWidth: number = null;    
 
     layers: Array<Layer> = [];  // layers in thier order from back to front
     activeLayer = null;
@@ -42,13 +42,7 @@ export class DesignReportCardCanvasAdapter {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
 
-        this.canvasWidth = canvas.width;
-        this.canvasHeight = A4.getHeightRelativeToA4(this.canvasWidth);  // Adjusting Height according to aspect ratio
-        canvas.height = this.canvasHeight;
-        this.pixelTommFactor = A4.A4Resolution.mm.width / this.canvasWidth;
-        
-        this.virtualCanvas.height = this.canvasHeight;
-        this.virtualCanvas.width = this.canvasWidth;
+        this.canvasSizing();
 
         console.log('virtual canvas : ', this.virtualCanvas);
         console.log('virtual context: ', this.virtualContext);
@@ -92,6 +86,31 @@ export class DesignReportCardCanvasAdapter {
         this.canvas.addEventListener('mouseup', (event) => {
             this.currentMouseDown = false;
         });
+    }
+
+    canvasSizing(): void{
+        let canvasPreviousWidth = this.canvasWidth;
+        if (this.canvas.width / this.canvas.height > A4.aspectRatio) {
+            this.canvasHeight = this.canvas.height;
+            this.canvasWidth = A4.getWidthRelativeToA4(this.canvasHeight);
+            this.canvas.width = this.canvasWidth;
+        }
+        else {
+            this.canvasWidth = this.canvas.width;
+            this.canvasHeight = A4.getHeightRelativeToA4(this.canvasWidth);
+            this.canvas.height = this.canvasHeight;
+        }
+
+        this.pixelTommFactor = A4.A4Resolution.mm.width / this.canvasWidth;
+        
+        this.virtualCanvas.height = this.canvasHeight;
+        this.virtualCanvas.width = this.canvasWidth;
+
+        if (canvasPreviousWidth) {
+            let scaleFactor = this.canvasWidth / canvasPreviousWidth;
+            this.layers.forEach((layer: Layer) => layer.scale(scaleFactor));
+            this.scheduleCanvasReDraw(0);
+        }
     }
 
     loadData(Data): void{
