@@ -88,6 +88,7 @@ export class DesignReportCardComponent implements OnInit {
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
     this.DATA.data.school = this.user.activeSchool;
+    
     this.serviceAdapter = new DesignReportCardServiceAdapter();
     this.serviceAdapter.initializeAdapter(this);
     this.serviceAdapter.initializeData();

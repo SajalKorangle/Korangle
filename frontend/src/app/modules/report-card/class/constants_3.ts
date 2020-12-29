@@ -90,6 +90,7 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
 
     constructor(attributes: object) {
         this.image = new Image();
+        this.image.crossOrigin = "anonymous";
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         this.LAYER_TYPE = 'IMAGE';
     }

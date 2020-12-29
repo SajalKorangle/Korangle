@@ -1,7 +1,7 @@
+// Currently supports only a4 size
 import { DesignReportCardComponent } from './design-report-card.component';
 import { A4, PageRelativeAttributes, DEFAULT_BACKGROUND_COLOR, CanvasImage, CanvasText, Layer } from './../../../class/constants_3';
-// Currently supports only a4 size
-
+import * as jsPDF from 'jspdf'
 export class DesignReportCardCanvasAdapter {
 
     vm: DesignReportCardComponent;
@@ -192,6 +192,12 @@ export class DesignReportCardCanvasAdapter {
             backgroundColor: this.backgroundColor,
             layers: layers
         };
+    }
+
+    downloadPDF() {
+        let doc = new jsPDF();
+        doc.addImage(this.virtualCanvas.toDataURL(), 'PNG', 0, 0);
+        doc.save(this.vm.currentLayout.name + '.pdf');
     }
 
     newImageLayer(initialParameters: object): void{

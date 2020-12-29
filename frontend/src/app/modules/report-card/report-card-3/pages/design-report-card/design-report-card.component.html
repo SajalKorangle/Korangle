@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" id="drc-wrapper" *ngIf="!htmlAdapter.isLoading; else spinner">
+<div class="card-content table-responsive" id="drc-wrapper" style="height: 90vh;" *ngIf="!htmlAdapter.isLoading; else spinner">
 
     <!-- Choose to add/edit/delete layout/s -->
     <mat-form-field style="margin-bottom: 10px;">
@@ -10,7 +10,7 @@
         </mat-select>
     </mat-form-field>
 
-    <div id="drc-mainCard" style="margin:0; padding:0" class="bg-white">
+    <div id="drc-mainCard" style="margin:0; padding:0;" class="bg-white">
     <ng-container *ngIf="currentLayout">
     <mat-card>
         <div *ngIf="!htmlAdapter.isFullScreen">
@@ -71,6 +71,11 @@
             <div class="tool">
                 <button class="btn material-icons"
                         (click)="canvasAdapter.newTextLayer()">title</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        (click)="canvasAdapter.downloadPDF()">save_alt</button>
             </div>
 
         </mat-card>
