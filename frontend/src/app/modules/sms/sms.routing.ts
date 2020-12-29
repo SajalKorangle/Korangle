@@ -20,6 +20,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/sms/pages/view-purchases/view-purchases.module#ViewPurchasesModule',
         data: {moduleName: 'sms'},
     },
+    {
+        path: 'purchase_sms',
+        loadChildren: 'app/modules/sms/pages/purchase-sms/purchase-sms.module#PurchaseSmsModule',
+        data: {moduleName: 'sms'},
+    },
 
     {
         path: '',
