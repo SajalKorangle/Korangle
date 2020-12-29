@@ -28,5 +28,10 @@
     "app": "subject_app",
     "model": "ClassSubject",
     "file": "class_three_subject.json"
+  },
+  {
+    "app": "student_app",
+    "model": "StudentSection",
+    "file": "twenty_student_section.json"
   }
 ]

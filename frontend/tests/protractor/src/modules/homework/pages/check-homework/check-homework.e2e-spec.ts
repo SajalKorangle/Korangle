@@ -42,13 +42,11 @@ describe('Homework -> Check Homework', () => {
         // Waiting for data to show
         await page.waitForXPath('//button[contains(text(), " S ")]');
 
-        // Confirming the number of present attendance
-        const presentAttendance = await page.$x('//button[contains(., " S ")]');
-        expect(presentAttendance.length).toBe(5);
+        const submittedHomework = await page.$x('//button[contains(., " S ")]');
+        expect(submittedHomework.length).toBe(5);
 
-        // Confirming the number of absent attendance
-        const absentAttendance  = await page.$x('//button[contains(., " C ")]');
-        expect(absentAttendance.length).toBe(5);
+        const checkedHomework  = await page.$x('//button[contains(., " C ")]');
+        expect(checkedHomework.length).toBe(5);
 
     });
 
