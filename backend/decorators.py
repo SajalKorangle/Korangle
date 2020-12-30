@@ -16,6 +16,7 @@ def get_success_response(data):
     return message_response
 
 
+# deprecated, don't use anymore
 def user_permission(function):
     def wrap(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -29,6 +30,7 @@ def user_permission(function):
     return wrap
 
 
+# deprecated, don't use anymore
 def user_permission_new(function):
     def wrap(*args, **kwargs):
         request = args[1]
@@ -52,20 +54,23 @@ def user_permission_new(function):
     wrap.__name__ = function.__name__
     return wrap
 
+
 def user_permission_3(function):
     def wrap(*args, **kwargs):
         request = args[1]
         if request.user.is_authenticated:
 
-            if ('activeSchoolID' in request.GET.keys()):    # User is reqesting as employee
+            if ('activeSchoolID' in request.GET.keys()):    # User is requesting as employee
                 activeSchoolID = request.GET['activeSchoolID']
-                if (employeeHasSchoolPermission(request.user, activeSchoolID)):
+                if employeeHasSchoolPermission(request.user, activeSchoolID):
                     request.GET._mutable = True
                     del request.GET['activeSchoolID']
                     request.GET._mutable = False
                     data = {'response': get_success_response(function(*args, **kwargs, activeSchoolID=activeSchoolID, activeStudentID=None))}
                     return JsonResponse(data)
-                             
+                else:
+                    return JsonResponse({'response': get_error_response('Permission Issue')})
+
             elif ('activeStudentId' in request.GET.keys()):  # User is requesting as parent
                 activeStudentID = request.GET['activeStudentID']
                 if (parentHasStudentPermission(request.user, activeStudentID)):
@@ -75,10 +80,17 @@ def user_permission_3(function):
                     activeSchoolID = Student.objects.get(id=activeStudentID).parentSchool.id
                     data = {'response': get_success_response(function(*args, **kwargs, activeSchoolID=activeSchoolID, activeStudentID=activeStudentID))}
                     return JsonResponse(data)
-                    
-            return JsonResponse({'response': get_error_response('Permission Issue')})
+                else:
+                    return JsonResponse({'response': get_error_response('Permission Issue')})
+
+            else:
+                data = {'response': get_success_response(
+                    function(*args, **kwargs, activeSchoolID=None, activeStudentID=None))}
+                return JsonResponse(data)
+
         return JsonResponse(
             {'response': get_error_response('User is not authenticated, logout and login again.')})
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
     return wrap
+

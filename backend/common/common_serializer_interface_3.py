@@ -100,7 +100,7 @@ def create_object(data, ModelSerializer, activeSchoolID, activeStudentID):
 def update_list(data_list, query_set, ModelSerializer, activeSchoolID, activeStudentID):
     return_data = []
     for data in data_list:
-        return_data.append(update_object(data, Model, query_set, ModelSerializer, activeSchoolID, activeStudentID))
+        return_data.append(update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID))
     return return_data
 
 
@@ -116,7 +116,7 @@ def update_object(data, query_set, ModelSerializer, activeSchoolID, activeStuden
 def partial_update_list(data_list, query_set, ModelSerializer, activeSchoolID, activeStudentID):
     return_data = []
     for data in data_list:
-        return_data.append(partial_update_object(data, query_set, activeSchoolID, activeStudentID))
+        return_data.append(partial_update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID))
     return return_data
 
 

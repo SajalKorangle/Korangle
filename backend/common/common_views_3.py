@@ -48,26 +48,37 @@ class CommonBaseView():
     def __init__(self):
         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
 
-    def validator(self, valideted_data, activeSchoolID, activeStudentID):
+    def validator(self, validated_data, activeSchoolID, activeStudentID):
+
+        # Checking for Parent
         if(activeStudentID):
             for relation in self.RelationsToStudent:
                 splitted_relation = relation.split('__')
-                splitted_relation[0] = valideted_data[splitted_relation[0]]
-                if (reduce(lambda a, b: getattr(a, b), splitted_relation) != activeStudentID):
+                splitted_relation[0] = validated_data[splitted_relation[0]]
+                if (splitted_relation[0] and reduce(lambda a, b: getattr(a, b), splitted_relation) != activeStudentID):
                     return False
-            for relation in self.RelationsToSchool:
-                splitted_relation = relation.split('__')
-                splitted_relation[0] = valideted_data[splitted_relation[0]]
-                if (reduce(lambda a, b: getattr(a, b), splitted_relation) != activeSchoolID):
-                    return False
+
+        # Checking for Parent & Employee Both
+        for relation in self.RelationsToSchool:
+            splitted_relation = relation.split('__')
+            splitted_relation[0] = validated_data[splitted_relation[0]]
+            if (splitted_relation[0] and reduce(lambda a, b: getattr(a, b), splitted_relation) != activeSchoolID):
+                return False
+
         return True
     
     def permittedQuerySet(self, activeSchoolID, activeStudentID):
         query_filters = {}
-        if (activeStudentID and len(self.RelationsToStudent) > 0):  # for parent only 
+
+        # Here we are banking on the fact that
+        # 1. if RelationsToStudent exist then RelationsToSchool always exist,
+        # 2. activeStudentId represents parent, non existance of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
+
+        if (activeStudentID and len(self.RelationsToStudent) > 0):  # for parent only
             query_filters[self.RelationsToStudent[0]] = activeStudentID     # takes the first relation to student only(should be the closest)
         elif (len(self.RelationsToSchool)>0):
             query_filters[self.RelationsToSchool[0]] = activeSchoolID    # takes the first relation to school only(should be the the closest)
+
         return self.Model.objects.filter(**query_filters)
 
 
@@ -95,7 +106,7 @@ class CommonView(CommonBaseView):
     @user_permission_3
     def delete(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        return delete_object(request.GET, query_set)
+        return delete_object(request.GET, filtered_query_set)
 
 
 class CommonListView(CommonBaseView):
@@ -114,7 +125,7 @@ class CommonListView(CommonBaseView):
     @user_permission_3
     def put(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        return update_list(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
+        return update_list(request.data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def patch(self, request, activeSchoolID, activeStudentID):
