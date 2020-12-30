@@ -22,12 +22,13 @@ export class TextParametersPannelComponent implements OnInit {
 
   updateFontSize(newSize: number): void{
     newSize = newSize / this.getPixelTommFactor();
-    const [fontWeight, fontSize, font] = this.layer.fontStyle.font.split(' ');
-    this.layer.fontStyle.font = [fontWeight, newSize + 'px', font].join(' ');
+    const fontArgumentsArray = this.layer.fontStyle.font.split(' ');
+    fontArgumentsArray[2] = newSize + 'px';
+    this.layer.fontStyle.font = fontArgumentsArray.join(' ');
   }
 
   getFontSize(): string{
-    let [fontWeight, fontSize, font] = this.layer.fontStyle.font.split(' ');
+    let [,,fontSize] = this.layer.fontStyle.font.split(' ');
     return (parseFloat(fontSize.substr(0, fontSize.length - 2))*this.getPixelTommFactor()).toFixed(2);
   }
 
@@ -39,7 +40,7 @@ export class TextParametersPannelComponent implements OnInit {
 
   italicToggle(event): void{
     let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
-    fontArgumentsArray[0] = event.source.checked ? 'italic' : ' ';
+    fontArgumentsArray[0] = event.source.checked ? 'italic' : '';
     this.layer.fontStyle.font = fontArgumentsArray.join(' ');
   }
 
