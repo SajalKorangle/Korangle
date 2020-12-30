@@ -16,6 +16,43 @@ export class TextParametersPannelComponent implements OnInit {
   ngOnInit() {
   }
 
+  getPixelTommFactor(): number{
+    return this.layer.ca.pixelTommFactor;
+  }
+
+  updateFontSize(newSize: number): void{
+    newSize = newSize / this.getPixelTommFactor();
+    const [fontWeight, fontSize, font] = this.layer.fontStyle.font.split(' ');
+    this.layer.fontStyle.font = [fontWeight, newSize + 'px', font].join(' ');
+  }
+
+  getFontSize(): string{
+    let [fontWeight, fontSize, font] = this.layer.fontStyle.font.split(' ');
+    return (parseFloat(fontSize.substr(0, fontSize.length - 2))*this.getPixelTommFactor()).toFixed(2);
+  }
+
+  boldToggle(event): void{
+    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
+    fontArgumentsArray[1] = event.source.checked ? 'bold' : 'normal';
+    this.layer.fontStyle.font = fontArgumentsArray.join(' ');
+  }
+
+  italicToggle(event): void{
+    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
+    fontArgumentsArray[0] = event.source.checked ? 'italic' : ' ';
+    this.layer.fontStyle.font = fontArgumentsArray.join(' ');
+  }
+
+  isBold(): boolean{
+    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
+    return fontArgumentsArray[1] == 'bold';
+  }
+   
+  isItalics(): boolean{
+    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
+    return fontArgumentsArray[0] == 'italic';
+  }
+
   logMessage(toast, msg): void{
     console.log(toast,msg);
   }

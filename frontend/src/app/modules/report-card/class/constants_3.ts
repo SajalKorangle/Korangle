@@ -1,3 +1,4 @@
+import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 //Page Resolutions
 
 export class A4{
@@ -6,6 +7,12 @@ export class A4{
         mm: {
             height: 297,
             width: 210
+        },
+        px: {
+            dpi300: {
+                height: 3508,
+                width: 2480
+            }
         }
     }
 
@@ -54,7 +61,8 @@ export interface Layer{
     y: number;
     parameterToolPannels: string[];
     dataSourceType: string;    // options: DATA_SOURCE_TYPE
-    source?: {[key:string]: any};   // object containing information about the source of data
+    source?: { [key: string]: any };   // object containing information about the source of data
+    ca: DesignReportCardCanvasAdapter;  // canvas adapter
     layerSetUp(Data: object, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void;
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
@@ -72,6 +80,8 @@ export interface Layer{
         boundingBoxTop: number,
         boundingBoxBottom: number,
     };
+    fontStyle?: { [key: string]: any };
+    updateTextBoxMetrics?(): void;
 };
 
 export class CanvasImage implements Layer{  // Canvas Image Layer
@@ -87,10 +97,13 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     maintainAspectRatio = true; 
     dataSourceType: string = 'N/A';
     source?: { [key: string]: any };
+
+    ca: DesignReportCardCanvasAdapter;
     
     parameterToolPannels: string[] = ['image'];
 
-    constructor(attributes: object) {
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        this.ca = ca;
         this.image = new Image();
         this.image.crossOrigin = "anonymous";
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
@@ -99,7 +112,7 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
 
     layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void{
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
-            this.uri = this.source.getValueFunc(DATA);
+            this.uri = this.source.getValueFunc(DATA)+'?javascript=';
         }
         if (!this.height && !this.width) {
             let getHeightAndWidth = () => {
@@ -124,6 +137,7 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
                 }
             }
         }
+        this.image.setAttribute('crossOrigin', 'anonymous');
         this.image.src = this.uri;
     }
 
@@ -147,7 +161,7 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         console.log('draw on canvas called');
         if (this.image.complete && this.image.naturalHeight > 0) {
-            setTimeout(()=>ctx.drawImage(this.image, this.x, this.y, this.width, this.height));
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             return true;    // Drawn successfully on canvas
         }
         scheduleReDraw();
@@ -209,16 +223,19 @@ export class CanvasText implements Layer{
     source?: {[key:string]: any};
 
     fontStyle: { [key: string]: string } = {
-        fillStyle: DEFAULT_TEXT_COLOR
+        fillStyle: DEFAULT_TEXT_COLOR,
+        font: ' normal 12px Arial',
     };
     parameterToolPannels: string[] = ['text'];
+    ca: DesignReportCardCanvasAdapter;
 
-    constructor(attributes: object) {
-        console.log('canvas text before constructor: ', this.text);
-        console.log('attributes in construtor: ', attributes);
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        this.ca = ca;
+        this.x = 50 / ca.pixelTommFactor;
+        this.y = 50 / ca.pixelTommFactor;
+        this.fontStyle.font = ` normal ${6/ca.pixelTommFactor}px Arial`;
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         this.LAYER_TYPE = 'TEXT';
-        console.log('canvas text after constructor: ', this.text);
     }
 
     layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
@@ -240,11 +257,22 @@ export class CanvasText implements Layer{
         this.y += dy;
     }
 
-    // style updated to be implemented
+    updateTextBoxMetrics = ():void=>{
+        const ctx = this.ca.virtualContext;
+        Object.entries(this.fontStyle).forEach(([key, value]) => ctx[key] = value); 
+        let textMetrix = ctx.measureText(this.text);
+        this.textBoxMetrx = {
+            boundingBoxLeft: textMetrix.actualBoundingBoxLeft,
+            boundingBoxRight: textMetrix.actualBoundingBoxRight,
+            boundingBoxTop: textMetrix.actualBoundingBoxAscent,
+            boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
+        };
+        console.log('from update text box metrics: ', this.textBoxMetrx);
+    }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
-        setTimeout(()=>ctx.fillText(this.text, this.x, this.y));
+        ctx.fillText(this.text, this.x, this.y);
         return true;    // Drawn successfully on canvas
     }
 
@@ -255,10 +283,14 @@ export class CanvasText implements Layer{
             && mouseY < this.y + this.textBoxMetrx.boundingBoxBottom + permissibleClickError)
     }
 
-    scale(scaleFactor: number): void{
+    scale(scaleFactor: number): void {
         this.x *= scaleFactor;
         this.y *= scaleFactor;
         Object.keys(this.textBoxMetrx).forEach(key => this.textBoxMetrx[key] *= scaleFactor);
+        const [fontWeight, fontSize, font] = this.fontStyle.font.split(' ');
+        let newFontSize = parseFloat(fontSize.substr(0, fontSize.length - 2));
+        newFontSize *= scaleFactor;
+        this.fontStyle.font = [fontWeight, newFontSize + 'px', font].join(' ');
     }
 
     getDataToSave() {

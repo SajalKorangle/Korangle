@@ -23,7 +23,7 @@ export class DesignReportCardCanvasAdapter {
     lastMouseY: number;
     currentMouseDown: boolean = false;
 
-    pixelTommFactor: number;
+    pixelTommFactor: number;    // A4 width(height) in mm / Canvas width(height) in pixel
     isSaved = false;    // if canvas is not saved then give warning; to be implemented
 
     virtualPendingReDrawId: any;
@@ -111,9 +111,10 @@ export class DesignReportCardCanvasAdapter {
             this.layers.forEach((layer: Layer) => layer.scale(scaleFactor));
             this.scheduleCanvasReDraw(0);
         }
+        console.log('canvas sizing called; previous width ', canvasPreviousWidth, 'currentHeight: ', this.canvasHeight)
     }
 
-    loadData(Data): void{
+    loadData(Data): void{   // handle this method
         try {
             this.backgroundColor = Data.backgroundColor;
             for (let i = 0; i < Data.layers.length; i++) {
@@ -128,7 +129,7 @@ export class DesignReportCardCanvasAdapter {
                     let newLayerFromLayerData: Layer;   // update this for new architecture
                     switch (layerData.LAYER_TYPE) {
                         case 'IMAGE':
-                            newLayerFromLayerData = new CanvasImage(layerData);
+                            newLayerFromLayerData = new CanvasImage(layerData, this);
                             break;
                     }
                     this.layers.push(newLayerFromLayerData);
@@ -162,9 +163,12 @@ export class DesignReportCardCanvasAdapter {
         this.pendingReDrawId = setTimeout(()=>this.context.drawImage(this.virtualCanvas, 0, 0));
     }
 
-    scheduleCanvasReDraw = (duration:number =500)=>{
+    scheduleCanvasReDraw = (duration: number = 500, successCallback: any = () => { })=>{
         clearTimeout(this.virtualPendingReDrawId);
-        this.virtualPendingReDrawId = setTimeout(() => this.drawAllLayers(), duration);
+        this.virtualPendingReDrawId = setTimeout(() => {
+            this.drawAllLayers();
+            successCallback();
+        }, duration);
     }
 
     applyDefaultbackground(): void{
@@ -213,14 +217,27 @@ export class DesignReportCardCanvasAdapter {
         };
     }
 
-    downloadPDF() {
-        let doc = new jsPDF();
-        doc.addImage(this.virtualCanvas.toDataURL(), 'PNG', 0, 0);
-        doc.save(this.vm.currentLayout.name + '.pdf');
+    downloadPDF() { // apply a loading spinner and block the canvas user interaction while saving(to be done)
+        let actualCanavsWidth = this.canvasWidth, actualCanavsHeight = this.canvasHeight;
+        this.canvas.width = A4.A4Resolution.px.dpi300.width;
+        this.canvas.height = A4.A4Resolution.px.dpi300.height;
+
+        this.vm.htmlAdapter.isSaving = true;
+        this.canvasSizing();
+        setTimeout(() => {
+            let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [A4.A4Resolution.px.dpi300.height, A4.A4Resolution.px.dpi300.width] });
+            let dataurl = this.canvas.toDataURL()
+            doc.addImage(dataurl, 'PNG', 0, 0, A4.A4Resolution.px.dpi300.width, A4.A4Resolution.px.dpi300.height);
+            doc.save(this.vm.currentLayout.name + '.pdf');
+            this.canvas.width = actualCanavsWidth;
+            this.canvas.height = actualCanavsHeight;
+            this.canvasSizing();
+            this.vm.htmlAdapter.isSaving = false;
+        },1000);    // bad design of waiting for canvas loading
     }
 
     newImageLayer(initialParameters: object): void{
-        let canvasImage = new CanvasImage(initialParameters);
+        let canvasImage = new CanvasImage(initialParameters, this);
         canvasImage.layerSetUp({}, this.canvasHeight, this.canvasWidth, this.virtualContext);    // Update {} to DATA
         this.layers.push(canvasImage);
         let status = canvasImage.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);  // Putting in ast of event loop to wait for base64Image to load
@@ -231,7 +248,7 @@ export class DesignReportCardCanvasAdapter {
     }
 
     newTextLayer(initialParameters: object = {}): void{
-        let canvasText = new CanvasText(initialParameters);
+        let canvasText = new CanvasText(initialParameters, this);
         canvasText.layerSetUp(this.vm.DATA, this.canvasHeight, this.canvasWidth, this.virtualContext);
         this.layers.push(canvasText);
         let status = canvasText.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
