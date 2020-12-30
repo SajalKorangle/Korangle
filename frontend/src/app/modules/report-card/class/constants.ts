@@ -720,7 +720,7 @@ class ExaminationParameterStructure {
         }
 
         getValueFunc = (dataObject, nestedCallNo = 1) => {
-            if (variableType === EXAMINATION_TYPE_LIST[0]) {
+            if (variableType === EXAMINATION_TYPE_LIST[0]) {    // EXAMINATION_TYPE_LIST[0] = 'MARKS'
                 if (nestedCallNo > 100) { console.log('Nested Call more than 100 times'); return 0; }
                 const parser = new FormulaParser();
                 setCustomFunctionsInParser(parser);
@@ -755,13 +755,13 @@ class ExaminationParameterStructure {
                         return marksValue;
                     } else {
                         let returnValue = marksValue;
-                        gradeRule.marksToGradeRuleList.every(marksToGradeRuleObject => {
+                        gradeRule.marksToGradeRuleList.every(marksToGradeRuleObject => {   // conversion of marks to grade
                             if (((marksToGradeRuleObject.lowerInclusion && marksToGradeRuleObject.lowerMarks <= marksValue)
                                 || (!marksToGradeRuleObject.lowerInclusion && marksToGradeRuleObject.lowerMarks < marksValue))
                                 && ((marksToGradeRuleObject.upperInclusion && marksToGradeRuleObject.upperMarks >= marksValue)
                                     || (!marksToGradeRuleObject.upperInclusion && marksToGradeRuleObject.upperMarks > marksValue))) {
                                 returnValue = marksToGradeRuleObject.gradeValue;
-                                return false;
+                                return false;   // every loop runs if it gets false
                             }
                             return true;
                         });
