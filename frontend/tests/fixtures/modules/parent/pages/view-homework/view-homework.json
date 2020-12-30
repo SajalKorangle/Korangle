@@ -1,15 +1,5 @@
 [
     {
-        "app": "homework_app",
-        "model": "Homework",
-        "file": "1.json"
-    },
-    {
-        "app": "homework_app",
-        "model": "HomeworkStatus",
-        "file": "ten_students.json"
-    },
-    {
         "app": "auth",
         "model": "User",
         "file": "1.json"
@@ -28,5 +18,10 @@
         "app": "student_app",
         "model": "StudentSection",
         "file": "one_student_section.json"
+    },
+    {
+        "app": "homework_app",
+        "model": "HomeworkStatus",
+        "file": "one_student.json"
     }
 ]

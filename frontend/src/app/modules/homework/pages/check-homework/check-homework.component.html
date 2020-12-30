@@ -117,7 +117,7 @@
                                 style="padding: 3px 8px;"
                                 class="{{getButtonClass(studentHomework.status)}}"
                                 (click)="changeStudentHomeworkStatus(studentHomework);$event.stopPropagation();serviceAdapter.changeStudentHomeworkStatus(studentHomework);">
-                                <span>{{getButtonString(studentHomework.status)}}</span>
+                                {{getButtonString(studentHomework.status)}}
                             </button>
                             <div class="{{getLoaderClass(studentHomework)}}"></div>
                             

@@ -1,0 +1,33 @@
+[
+    {
+        "file": "one_student.json",
+        "file_object_list": [
+          {
+            "app": "student_app",
+            "model": "Student",
+            "file": "one_student.json"
+          },
+          {
+            "app": "homework_app",
+            "model": "Homework",
+            "file": "one_homework.json"
+          }
+        ]
+    },
+    {
+      "file": "ten_students.json",
+      "file_object_list": [
+        {
+          "app": "student_app",
+          "model": "Student",
+          "file": "sixty_eight_students.json"
+        },
+        {
+          "app": "homework_app",
+          "model": "Homework",
+          "file": "1.json"
+        }
+      ]
+    }
+]
+  

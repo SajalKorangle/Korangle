@@ -26,27 +26,27 @@ describe('Homework -> Check Homework', () => {
         const [button] = await BeforeAfterEach.page.$x('//a[contains(., "' + 'First Homework' + '")]');
         await button.click();
 
-        // for (let i = 0; i < 10; ++i) {
-        //     const button = await containsFirst('button', ' G ');
-        //     if (i % 2 === 0) { await button.click(); }
-        //     await button.click();
-        // }
+        for (let i = 0; i < 10; ++i) {
+            const button = await containsFirst('button', ' G ');
+            if (i % 2 === 0) { await button.click(); }
+            await button.click();
+        }
 
-        // await reClickPage('Check Homework');
+        await reClickPage('Check Homework');
 
-        // await BeforeAfterEach.page.waitForXPath('//a[contains(., "' + 'First Homework' + '")]');
-        // const [button1] = await BeforeAfterEach.page.$x('//a[contains(., "' + 'First Homework' + '")]');
-        // await button1.click();
+        await BeforeAfterEach.page.waitForXPath('//a[contains(., "' + 'First Homework' + '")]');
+        const [button1] = await BeforeAfterEach.page.$x('//a[contains(., "' + 'First Homework' + '")]');
+        await button1.click();
 
 
-        // // Waiting for data to show
-        // await page.waitForXPath('//button[contains(text(), " S ")]');
+        // Waiting for data to show
+        await page.waitForXPath('//button[contains(text(), " S ")]');
 
-        // const submittedHomework = await page.$x('//button[contains(., " S ")]');
-        // expect(submittedHomework.length).toBe(5);
+        const submittedHomework = await page.$x('//button[contains(., " S ")]');
+        expect(submittedHomework.length).toBe(5);
 
-        // const checkedHomework  = await page.$x('//button[contains(., " C ")]');
-        // expect(checkedHomework.length).toBe(5);
+        const checkedHomework  = await page.$x('//button[contains(., " C ")]');
+        expect(checkedHomework.length).toBe(5);
 
     });
 

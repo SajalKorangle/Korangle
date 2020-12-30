@@ -10,17 +10,12 @@
       ]
     },
     {
-      "file": "ten_students.json",
+      "file": "one_homework.json",
       "file_object_list": [
         {
-          "app": "student_app",
-          "model": "Student",
-          "file": "sixty_eight_students.json"
-        },
-        {
-          "app": "homework_app",
-          "model": "Homework",
-          "file": "1.json"
+          "app": "subject_app",
+          "model": "ClassSubject",
+          "file": "class_one_subject.json"
         }
       ]
     }

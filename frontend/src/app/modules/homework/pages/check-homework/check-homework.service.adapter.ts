@@ -145,6 +145,8 @@ export class CheckHomeworkServiceAdapter {
             'fields__korangle': 'parentStudent',
         }
 
+        console.log(student_section_data);
+
         this.vm.currentHomework = {
             name: this.vm.selectedHomework.homeworkName,
             startDate: this.vm.selectedHomework.startDate,
