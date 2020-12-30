@@ -348,6 +348,8 @@ export interface Layer{
     fontStyle?: { [key: string]: any };
     dateFormat?: string;
     date?: Date;
+    startDate?: Date;
+    endDate?: Date;
 };
 
 export class CanvasImage implements Layer{  // Canvas Image Layer
@@ -620,24 +622,28 @@ export class CanvasDate extends CanvasText implements Layer{
 
 }
 
-class Attendance extends CanvasText implements Layer{
+class CanavsAttendance extends CanvasText implements Layer{
     displayName: string = 'Attendance';
     startDate: Date = new Date();
     endDate: Date = new Date();
 
-    dataSourceType: string = 'N/A';
+    dataSourceType: string = 'DATA';
     source: {[key:string]: any};    // required attribute
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca);
         this.LAYER_TYPE = 'ATTENDANCE';
+        this.parameterToolPannels.push('attendance');
+
     }
 
     layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
-        if (this.dataSourceType == 'DATA') {
-            this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate);
-        }
+        this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate);
         this.updateTextBoxMetrics();
+    }
+
+    attendanceUpdate():void { //remove this afetr fixing layer setup arguments
+        this.layerSetUp(this.ca.vm.DATA, null, null, null);
     }
 }
 
@@ -781,7 +787,7 @@ class AttendanceParameterStructure {
         return ParameterStructure.getStructure(
             variableType,
             FIELDS.ATTENDANCE,
-            CanvasText,
+            CanavsAttendance,
             () => {
                 return variableType;
             },
