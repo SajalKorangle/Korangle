@@ -74,17 +74,17 @@
                     </mat-panel-title>
                   </mat-expansion-panel-header>
                     <mat-form-field>
-                        <mat-select placeholder="Select SMS plan"
-                                    [(ngModel)]="selectedSmsPlan">
+                        <mat-select placeholder='Select a Plan...' [(ngModel)]="selectedSmsPlan">
+                            <mat-option [value]='defaultPlan'>Select a Plan...</mat-option>
                             <mat-option *ngFor='let plan of smsPlan;' [value]="plan">
                                 {{plan.noOfSms}} sms for Rs.{{plan.price}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button type="submit"
-                    [disabled]="selectedSmsPlan === undefined"
+                    [disabled]="selectedSmsPlan === defaultPlan"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="createRzpayOrder()">Pay</button>
+                    (click)="serviceAdapter.createRzpayOrder()">Pay</button>
                 </mat-expansion-panel>
             </mat-accordion>   
         </div>

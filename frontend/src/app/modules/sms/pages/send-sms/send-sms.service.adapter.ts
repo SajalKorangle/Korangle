@@ -336,4 +336,80 @@ export class SendSmsServiceAdapter {
 
     }
 
+    createRzpayOrder() {
+        let sms_purchase_data = {
+            parentSchool :this.vm.user.activeSchool.dbId,
+            purchseDateTime: Date.now(),
+            numberOfSMS : this.vm.selectedSmsPlan.noOfSms,
+            price : this.vm.selectedSmsPlan.price,
+            orderId : -1,
+            payment_capture : 0
+        }
+        this.vm.selectedSmsPlan = this.vm.defaultPlan;
+
+        //call api to create order_id
+        Promise.all([
+            this.vm.smsService.createObject(this.vm.smsService.sms_purchase,sms_purchase_data)
+        ]).then(value => {        
+            this.payWithRazor(value[0]);
+        }, error => {
+            console.log('Error fetching data');
+        })
+        
+    }
+
+    payWithRazor(val) {
+        const options: any = {
+          key: 'rzp_test_9ItYu1Pd8xL43N',
+          amount: val.price, // amount should be in paise format to display Rs 1255 without decimal point
+          currency: 'INR',
+          name: 'Korangle', // company name or product name
+          description: 'sms-purchase',  // product description
+          order_id: val.orderId, // order_id created by you in backend
+          receipt_id :val.id,
+          modal: {
+            // We should prevent closing of the form when esc key is pressed.
+            escape: false,
+          },
+          prefill: {
+              email:this.vm.user.email,
+              contact: this.vm.user.username
+          },
+          notes: {
+            // include notes if any
+          },
+          theme: {
+            color: '#0c238a'
+          },
+        };
+        options.handler = ((response, error) => {
+          options.error = error;
+          // call your backend api to verify payment signature, capture transaction & update the record
+            let update_data = {
+                id : options.receipt_id,
+                response : response,
+                amount : options.amount
+            }
+            Promise.all([
+                this.vm.smsService.updateObject(this.vm.smsService.sms_purchase,update_data)
+                ]).then(value => {
+                    console.log(value[0])
+                    if(value[0] === undefined)
+                    alert('Transaction Failed, Contact your Admin!!!')
+                    else
+                    alert('Transaction Completed!!!')
+                }, error => {
+                    console.log(error);
+                    console.log('Error Updating data, Transaction is not captured');
+                })
+            });
+        options.modal.ondismiss = (() => {
+          // handle the case when user closes the form while transaction is in progress
+          this.vm.selectedSmsPlan = undefined;
+          console.log('Transaction cancelled.');
+        });
+        const rzp = new this.vm.winRef.nativeWindow.Razorpay(options);
+        rzp.open();
+    }
+
 }

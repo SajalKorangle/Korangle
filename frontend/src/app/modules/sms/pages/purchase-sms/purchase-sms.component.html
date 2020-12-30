@@ -1,1 +1,40 @@
-<p>purchase-sms works!</p>
+
+<div class="card-content table-responsive" [class.hidden]="isLoading">
+
+    <ng-container *ngIf="!isInitialLoading">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Your current sms balance is {{SMSCount}}</h3>
+    
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Purchase SMS Plan
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-form-field>
+                        <mat-select placeholder='Select a Plan...' [(ngModel)]="selectedSmsPlan">
+                            <mat-option [value]='defaultPlan'>Select a Plan...</mat-option>
+                            <mat-option *ngFor='let plan of smsPlan;' [value]="plan">
+                                {{plan.noOfSms}} sms for Rs.{{plan.price}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    
+                    <button type="submit"
+                    [disabled]="selectedSmsPlan === defaultPlan"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="serviceAdapter.createRzpayOrder()">Pay</button>
+    
+                </mat-expansion-panel>
+    
+            </div>
+        </div>
+    </ng-container>
+    
+</div>
+
+
+<ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
