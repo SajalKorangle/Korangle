@@ -70,12 +70,17 @@
 
             <div class="tool">
                 <button class="btn material-icons"
+                        (click)="canvasAdapter.downloadPDF()">save_alt</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
                         (click)="canvasAdapter.newTextLayer()">title</button>
             </div>
 
             <div class="tool">
                 <button class="btn material-icons"
-                        (click)="canvasAdapter.downloadPDF()">save_alt</button>
+                        (click)="canvasAdapter.newDateLayer()">calendar_today</button>
             </div>
 
         </mat-card>

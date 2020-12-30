@@ -1,6 +1,6 @@
 // Currently supports only a4 size
 import { DesignReportCardComponent } from './design-report-card.component';
-import { A4, PageRelativeAttributes, DEFAULT_BACKGROUND_COLOR, CanvasImage, CanvasText, Layer } from './../../../class/constants_3';
+import { A4, PageRelativeAttributes, DEFAULT_BACKGROUND_COLOR, Layer, CanvasImage, CanvasText, CanvasDate} from './../../../class/constants_3';
 import * as jsPDF from 'jspdf'
 export class DesignReportCardCanvasAdapter {
 
@@ -238,24 +238,17 @@ export class DesignReportCardCanvasAdapter {
 
     newImageLayer(initialParameters: object): void{
         let canvasImage = new CanvasImage(initialParameters, this);
-        canvasImage.layerSetUp({}, this.canvasHeight, this.canvasWidth, this.virtualContext);    // Update {} to DATA
-        this.layers.push(canvasImage);
-        let status = canvasImage.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);  // Putting in ast of event loop to wait for base64Image to load
-        if (status)
-            setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
-        this.activeLayer = canvasImage;
-        this.activeLayerIndex = this.layers.length - 1;
+        this.newLayerInitilization(canvasImage);
     }
 
     newTextLayer(initialParameters: object = {}): void{
         let canvasText = new CanvasText(initialParameters, this);
-        canvasText.layerSetUp(this.vm.DATA, this.canvasHeight, this.canvasWidth, this.virtualContext);
-        this.layers.push(canvasText);
-        let status = canvasText.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
-        if (status)
-            setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
-        this.activeLayer = canvasText;
-        this.activeLayerIndex = this.layers.length - 1;
+        this.newLayerInitilization(canvasText);
+    }
+
+    newDateLayer(initialParameters: object = {}) {
+        let canvasDate = new CanvasDate(initialParameters, this);
+        this.newLayerInitilization(canvasDate);
     }
 
     newLayerInitilization(layer: Layer): void{
@@ -263,7 +256,7 @@ export class DesignReportCardCanvasAdapter {
         this.layers.push(layer);
         let status = layer.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
         if (status)
-            setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
+            this.context.drawImage(this.virtualCanvas, 0, 0);
         this.activeLayer = layer;
         this.activeLayerIndex = this.layers.length - 1;
     }

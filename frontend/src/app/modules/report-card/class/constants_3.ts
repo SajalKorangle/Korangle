@@ -1,5 +1,5 @@
 import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
-
+import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
 // Utility Functions ---------------------------------------------------------------------------
 
 function getNumberInWords(numerical: number): string {
@@ -306,6 +306,13 @@ export const DEFAULT_BACKGROUND_COLOR = '#ffffff';
 export const DEFAULT_TEXT_COLOR = '#000000'
 
 
+export const ATTENDANCE_TYPE_LIST = [
+    'Present',
+    'Absent',
+    'Total Record',
+];
+
+
 //Layers--------------------------------------
 
 // To be implemented by all Canvas Layers
@@ -501,14 +508,7 @@ export class CanvasText implements Layer{
         if (this.dataSourceType == 'DATA') {
             this.text = this.source.getValueFunc(DATA);
         }
-        Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
-        let textMetrix = ctx.measureText(this.text);
-        this.textBoxMetrx = {
-            boundingBoxLeft: textMetrix.actualBoundingBoxLeft,
-            boundingBoxRight: textMetrix.actualBoundingBoxRight,
-            boundingBoxTop: textMetrix.actualBoundingBoxAscent,
-            boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
-        };
+        this.updateTextBoxMetrics();
     }
 
     updatePosition(dx = 0, dy = 0):void {
@@ -526,7 +526,6 @@ export class CanvasText implements Layer{
             boundingBoxTop: textMetrix.actualBoundingBoxAscent,
             boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
         };
-        console.log('from update text box metrics: ', this.textBoxMetrx);
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
@@ -572,8 +571,9 @@ export class CanvasText implements Layer{
 
 }
 
-class CanvasDate extends CanvasText implements Layer{
-    date: any;
+export class CanvasDate extends CanvasText implements Layer{
+    displayName: string = 'Date';
+    date: Date = new Date();
     dateFormat: string = '<dd>/<mm>/<yyy>';
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
@@ -588,14 +588,7 @@ class CanvasDate extends CanvasText implements Layer{
 
         this.dateFormatting();
 
-        Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
-        let textMetrix = ctx.measureText(this.text);
-        this.textBoxMetrx = {
-            boundingBoxLeft: textMetrix.actualBoundingBoxLeft,
-            boundingBoxRight: textMetrix.actualBoundingBoxRight,
-            boundingBoxTop: textMetrix.actualBoundingBoxAscent,
-            boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
-        };
+        this.updateTextBoxMetrics();
     }
 
     dateFormatting(): void{
@@ -627,10 +620,32 @@ class CanvasDate extends CanvasText implements Layer{
 
 }
 
-export const LAYER_TYPES: {[key:string]: any} = {    // all nulls to be implemented
+class Attendance extends CanvasText implements Layer{
+    displayName: string = 'Attendance';
+    startDate: Date = new Date();
+    endDate: Date = new Date();
+
+    dataSourceType: string = 'N/A';
+    source: {[key:string]: any};    // required attribute
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca);
+        this.LAYER_TYPE = 'ATTENDANCE';
+    }
+
+    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
+        if (this.dataSourceType == 'DATA') {
+            this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate);
+        }
+        this.updateTextBoxMetrics();
+    }
+}
+
+export const LAYER_TYPES: { [key: string]: any } = {    // all nulls to be implemented
     'IMAGE': CanvasImage,
     'TEXT': CanvasText,
-    'DATE': null,
+    'DATE': CanvasDate,
+    'ATTENDANCE': null,
     'TABLE': null,
 };
 
@@ -757,6 +772,43 @@ class SchoolParameterStructure {
 
 }
 
+class AttendanceParameterStructure {
+
+    // Data Type is the parameter key
+
+    static getStructure(variableType: any): any {
+
+        return ParameterStructure.getStructure(
+            variableType,
+            FIELDS.ATTENDANCE,
+            CanvasText,
+            () => {
+                return variableType;
+            },
+            (dataObject, startDate, endDate) => {
+                return dataObject.data.attendanceList.filter(attendance => {
+                    if (attendance.parentStudent === dataObject.studentId) {
+                        const dateOfAttendance = new Date(attendance.dateOfAttendance);
+                        return dateOfAttendance >= startDate
+                            && dateOfAttendance <= endDate;
+                    }
+                    return false;
+                }).reduce((total, attendance) => {
+                    switch (variableType) {
+                        case ATTENDANCE_TYPE_LIST[0]:
+                            return total + (attendance.status === ATTENDANCE_STATUS_LIST[0] ? 1 : (attendance.status === ATTENDANCE_STATUS_LIST[3] ? 0.5 : 0));
+                        case ATTENDANCE_TYPE_LIST[1]:
+                            return total + (attendance.status === ATTENDANCE_STATUS_LIST[1] ? 1 : 0);
+                        case ATTENDANCE_TYPE_LIST[2]:
+                            return total + (attendance.status !== ATTENDANCE_STATUS_LIST[2] ? 1 : 0);
+                    }
+                    return 0;
+                }, 0);
+            }
+        );
+    }
+}
+
 export const PARAMETER_LIST = [
 
     // key -> <FIELD_NAME>-<PARAMETER_NAME>
@@ -879,4 +931,10 @@ export const PARAMETER_LIST = [
     SchoolParameterStructure.getStructure(`Registration No.`, 'registrationNumber'),
     SchoolParameterStructure.getStructure(`Affiliation No.`, 'affiliationNumber'),
     SchoolParameterStructure.getStructure(`Medium`, 'medium'),
+
+
+     /* Attendance Field */
+     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[0]),
+     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[1]),
+     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[2]),
 ]
