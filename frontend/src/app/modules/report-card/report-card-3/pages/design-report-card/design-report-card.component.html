@@ -151,6 +151,15 @@
             <!-- column 3: Right Pannel -->
             <mat-card class="inline-block flex-column" style="width: 240px; padding-top: 8px; align-items: center;">
                 <span *ngIf="!canvasAdapter.activeLayer" style="margin-top: 25px;">No Layers Selected </span>
+                
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-position-parameter-pannel
+                            *ngIf="canvasAdapter.activeLayer"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-position-parameter-pannel>
+                </div>
+
                 <div class="parameters-tool" style="margin:0; width: 100%;">
                     <app-text-parameters-pannel 
                             *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('text')"
@@ -158,6 +167,7 @@
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-text-parameters-pannel>
                 </div>
+
                 <div class="parameters-tool" style="margin:0; width: 100%;">
                     <app-attendance-parameters-pannel
                             *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('attendance')"
@@ -165,6 +175,7 @@
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-attendance-parameters-pannel>
                 </div>
+
             </mat-card>
 
         </div>

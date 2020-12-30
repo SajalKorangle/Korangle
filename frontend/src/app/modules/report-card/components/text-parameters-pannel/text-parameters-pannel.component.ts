@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Layer} from './../../class/constants_3'
+import { Layer } from './../../class/constants_3';
 
 @Component({
   selector: 'app-text-parameters-pannel',

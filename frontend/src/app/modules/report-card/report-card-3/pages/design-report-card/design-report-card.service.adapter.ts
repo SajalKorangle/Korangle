@@ -1,4 +1,5 @@
 import { DesignReportCardComponent } from './design-report-card.component';
+import { StudentCustomParameterStructure} from './../../../class/constants_3'
 
 export class DesignReportCardServiceAdapter {
 
@@ -117,12 +118,11 @@ export class DesignReportCardServiceAdapter {
     }
 
     populateParameterListWithStudentCustomField(): void {
-        // this.vm.data.studentParameterList.forEach(studentParameter => {
-        //     this.vm.parameterList.push(StudentCustomParameterStructure.getStructure(
-        //         studentParameter.id
-        //     ));
-        // });
-        // uncomment afetr copying parameters all 
+        this.vm.DATA.data.studentParameterList.forEach(studentParameter => {
+            this.vm.htmlAdapter.parameterList.push(StudentCustomParameterStructure.getStructure(
+                studentParameter.name, studentParameter.id,
+            ));
+        });
     }
 
     uploadCurrentLayout() {

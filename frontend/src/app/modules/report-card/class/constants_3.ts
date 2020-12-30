@@ -547,10 +547,10 @@ export class CanvasText implements Layer{
         this.x *= scaleFactor;
         this.y *= scaleFactor;
         Object.keys(this.textBoxMetrx).forEach(key => this.textBoxMetrx[key] *= scaleFactor);
-        const [fontWeight, fontSize, font] = this.fontStyle.font.split(' ');
+        const [italics, fontWeight, fontSize, font] = this.fontStyle.font.split(' ');
         let newFontSize = parseFloat(fontSize.substr(0, fontSize.length - 2));
         newFontSize *= scaleFactor;
-        this.fontStyle.font = [fontWeight, newFontSize + 'px', font].join(' ');
+        this.fontStyle.font = [italics, fontWeight, newFontSize + 'px', font].join(' ');
     }
 
     getDataToSave() {
@@ -686,7 +686,6 @@ export const FIELDS = {
     STUDENT_SESSION: FieldStructure.getStructure('Student Session', 'student_session'),
     STUDENT_CUSTOM: FieldStructure.getStructure('Student Custom', 'student_custom'),
     SCHOOL: FieldStructure.getStructure('School', 'school'),
-    CONSTANT: FieldStructure.getStructure('Constant', 'constant'),
     EXAMINATION: FieldStructure.getStructure('Examination', 'examination'),
     ATTENDANCE: FieldStructure.getStructure('Attendance', 'attendance'),
 };
@@ -813,6 +812,32 @@ class AttendanceParameterStructure {
             }
         );
     }
+}
+
+export class StudentCustomParameterStructure {
+
+    // Student Parameter Id is the parameter key
+
+    static getStructure(studentParameterName: any, studentParameterId:any, layerType = CanvasText): any {
+        return ParameterStructure.getStructure(
+            studentParameterName,
+            FIELDS.STUDENT_CUSTOM,
+            layerType,
+            () => {
+                return studentParameterName;
+            },
+            (dataObject) => {
+                const studentParameterValue = dataObject.data.studentParameterValueList.find(x =>
+                    (x.parentStudentParameter === studentParameterId && x.parentStudent === dataObject.studentId)
+                );
+                if (studentParameterValue !== undefined) {
+                    return studentParameterValue.value;
+                } else {
+                    return 'Parameter Not available';
+                }
+            });
+    }
+
 }
 
 export const PARAMETER_LIST = [

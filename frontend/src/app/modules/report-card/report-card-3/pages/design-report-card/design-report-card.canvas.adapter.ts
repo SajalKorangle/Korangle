@@ -160,7 +160,7 @@ export class DesignReportCardCanvasAdapter {
                 return;
         }
         clearTimeout(this.pendingReDrawId);
-        this.pendingReDrawId = setTimeout(()=>this.context.drawImage(this.virtualCanvas, 0, 0));
+        this.pendingReDrawId = setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
     }
 
     scheduleCanvasReDraw = (duration: number = 500, successCallback: any = () => { })=>{
