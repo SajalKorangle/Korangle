@@ -8,10 +8,6 @@ describe('Homework -> Issue Homework', () => {
 
     let page: any;
 
-    afterEach( async () => {
-        await BeforeAfterEach.afterEach();
-    });
-
     it('Creating Homework', async () => {
 
         // Start Backend Server
@@ -23,10 +19,10 @@ describe('Homework -> Issue Homework', () => {
         await openModuleAndPage('Homework', 'Issue Homework');
 
         // Get Homework Create Template
-        await (await containsFirst('button', 'Get')).click();
+        await (await containsFirst('button', 'GET')).click();
         
-        await BeforeAfterEach.page.waitForXPath('input[ng-model="currentHomework.homeworkName"]');
-        const [inputElement] = await BeforeAfterEach.page.$x('input[ng-model="currentHomework.homeworkName"]');
+        await BeforeAfterEach.page.waitForXPath('//input[@testId="homeworkName"]');
+        const [inputElement] = await BeforeAfterEach.page.$x('//input[@testId="homeworkName"]');
         await inputElement.type('Chapter 1, Ex 1');
 
         // Checking the confirmation message by registering dialog callback
@@ -36,10 +32,10 @@ describe('Homework -> Issue Homework', () => {
         });
 
         //Creating the homework
-        await (await containsFirst('button', 'Create')).click();
+        await (await containsFirst('button', 'CREATE HW')).click();
 
         //Verifying Created Homework in Check Homework Page
-        await openModuleAndPage('Homework', 'Create Homework');
+        await reClickPage('Check Homework');
 
         await page.waitForXPath('//a[@testId="homeworkCount"]');
         const list = await page.$x('//a[@testId="homeworkCount"]');

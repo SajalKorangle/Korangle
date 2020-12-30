@@ -2,7 +2,7 @@ import {BeforeAfterEach} from '../../../../beforeAterEach';
 import {startBackendServer} from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsFirst, containsAll} from '../../../../contains';
+import {containsFirst, containsAll, getNodes} from '../../../../contains';
 
 describe('Homework -> Settings', () => {
 
@@ -22,36 +22,40 @@ describe('Homework -> Settings', () => {
         // Opening Page
         await openModuleAndPage('Homework', 'Settings');
 
-        await page.waitForSelector('select[ng-model="sentUpdateType"');
-        await page.click('select[ng-model="sentUpdateType"');
-        await page.click('mat-option[ng-reflect-value="SMS"]');
+        await page.waitForXPath('//mat-select');
+        let nodes = await containsFirst('mat-select', 'NULL');
+        await nodes.click();
 
-        
-        await page.waitForSelector('checkbox[ng-model="sendCreateUpdate"]');
-        await page.click('checkbox[ng-model="sendCreateUpdate"]');
 
-        await page.waitForSelector('checkbox[ng-model="sendDeleteUpdate"]');
-        await page.click('checkbox[ng-model="sendDeleteUpdate"]');
-        
+        await page.waitForXPath('//mat-option');
+        nodes = await getNodes('mat-option', '');
+        const [option] = await page.$x('//mat-option[2]');
+        await option.click();
+
+        await page.waitForXPath('//mat-checkbox');
+        nodes = await getNodes('mat-checkbox', '');
+        const [checkbox] = await page.$x('//mat-checkbox[1]');
+        await checkbox.click();
+
+
+        page.on('dialog', async dialog => {
+            expect(dialog.message()).toBe('Settings Updated');
+            await dialog.dismiss();
+        });
+
+        await (await containsFirst('button', 'Update')).click();
         
         await reClickPage('Settings');
 
-        expect((await containsAll('select', 'SMS')).length).toBe(1);
-        const checkbox1 = await page.$('checkbox[ng-model="sendCreateUpdate"]');
-        expect(checkbox1.toBeTruthy());
-        const checkbox2 = await page.$('checkbox[ng-model="sendEditUpdate"]');
-        expect(checkbox2.toBeFalsy());
-        const checkbox3 = await page.$('checkbox[ng-model="sendDeleteUpdate"]');
-        expect(checkbox3.toBeTruthy());
-        const checkbox4 = await page.$('checkbox[ng-model="sendCheckUpdate"]');
-        expect(checkbox4.toBeFalsy());
-        const checkbox5 = await page.$('checkbox[ng-model="sendResubmissionUpdate"]');
-        expect(checkbox5.toBeFalsy());
+
+        await page.waitForXPath('//mat-select');
+        let select = await containsAll('mat-select', 'SMS');
+        expect(select.length).toBe(1);
+
+        await page.waitForXPath('//mat-checkbox');
+        nodes = await getNodes('mat-checkbox', '');
+        const [checkbox1] = await page.$x('//mat-checkbox[1]');
+        expect(checkbox1).toBeTruthy();
 
     });
-
-    afterAll(async () => {
-        await BeforeAfterEach.afterEach();
-    });
-
 });

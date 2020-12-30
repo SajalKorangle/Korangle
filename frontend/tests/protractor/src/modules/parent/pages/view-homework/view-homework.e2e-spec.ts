@@ -40,8 +40,6 @@ describe('Parents -> View Profile', () => {
 
         await (await containsFirst('button', 'Submit Answer')).click();
 
-        await BeforeAfterEach.afterEach();
-
         await page.select('select[ng-reflect-model="Parent"]','Employee'); 
         await openModuleAndPage('Homework','Check Homework');
 

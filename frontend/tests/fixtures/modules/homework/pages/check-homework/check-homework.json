@@ -1,22 +1,12 @@
 [
-  {
-    "app": "homework_app",
-    "model": "Homework",
+  {  
+    "app": "employee_app",
+    "model": "EmployeeSessionDetail",
     "file": "1.json"
-  },
-  {
-    "app": "homework_app",
-    "model": "HomeworkStatus",
-    "file": "ten_students.json"
   },
   {
     "app": "employee_app",
     "model": "EmployeePermission",
-    "file": "1.json"
-  },
-  {
-    "app": "employee_app",
-    "model": "EmployeeSessionDetail",
     "file": "1.json"
   },
   {
@@ -25,13 +15,18 @@
     "file": "1.json"
   },
   {
-    "app": "subject_app",
-    "model": "ClassSubject",
-    "file": "class_three_subject.json"
+    "app": "homework_app",
+    "model": "Homework",
+    "file": "1.json"
+  },
+  {
+    "app": "homework_app",
+    "model": "Homework",
+    "file": "ten_students.json"
   },
   {
     "app": "student_app",
     "model": "StudentSection",
-    "file": "twenty_student_section.json"
+    "file": "sixty_eight_students_section.json"
   }
 ]
