@@ -261,6 +261,7 @@ export class CheckHomeworkServiceAdapter {
             'id': studentHomework.id,
             'homeworkStatus': studentHomework.status,
         }
+        let tempStudent = this.vm.studentList.find(student => student.dbId == studentHomework.parentStudent);
         Promise.all([
             this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_status, tempData),
         ]).then(value =>{
@@ -269,6 +270,7 @@ export class CheckHomeworkServiceAdapter {
                     'mobileNumber': studentHomework.mobileNumber,
                     'homeworkName': this.vm.selectedHomework.homeworkName,
                     'subject': this.vm.selectedSubject.name,
+                    'notification': tempStudent.notification,
                 }
                 let mobile_list = [];
                 mobile_list.push(tempData);
@@ -279,6 +281,7 @@ export class CheckHomeworkServiceAdapter {
                     'mobileNumber': studentHomework.mobileNumber,
                     'homeworkName': this.vm.selectedHomework.homeworkName,
                     'subject': this.vm.selectedSubject.name,
+                    'notification': tempStudent.notification,
                 }
                 let mobile_list = [];
                 mobile_list.push(tempData);
@@ -453,8 +456,6 @@ export class CheckHomeworkServiceAdapter {
         if (notification_data.length > 0 ) {
             service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
         }
-
-        this.vm.isLoading = true;
 
         Promise.all(service_list).then(value => {
 
