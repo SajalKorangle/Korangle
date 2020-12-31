@@ -1,5 +1,5 @@
 
-<mat-dialog-content style="max-height: 88vh;" *ngIf="!data.isMobile">
+<mat-dialog-content style="width: 65vw; height: 85vh; overflow: hidden" *ngIf="!data.isMobile">
 
     <div class="row">
         
@@ -17,19 +17,30 @@
             <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 40px; float:right">clear</span>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-1">
-            <span class="material-icons cursor" style="font-size: 30px; margin-top: 250px; float:left" (click)="decreaseIndex()">keyboard_arrow_left</span>
-        </div>
-        <div class="col-sm-10">
-            <img *ngIf="data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" style="width:400px; height: 500px;" class="zoom">
-            <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" style="width:400px; height: 500px;" class="zoom">
-        </div>
-        <div class="col-sm-1">
-            <span class="material-icons cursor" style="font-size: 30px; margin-top: 250px; float:right" (click)="increaseIndex()">keyboard_arrow_right</span>
-        </div>
+    <div class="row" style="overflow: auto; display: flex; justify-content: center; align-items: center; height: 60vh">
+        <img *ngIf="data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" [ngStyle]="imageStyle">
+        <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" style="display:table-cell;margin: auto; ">
     </div>
 </mat-dialog-content>
+
+
+<mat-dialog-actions *ngIf="!data.isMobile">
+    <div class="row" style="width: 100%;">
+        <div class="col-md-1">
+            <span class="material-icons cursor" style="font-size: 30px;" (click)="decreaseIndex()">keyboard_arrow_left</span>
+        </div>
+        <div class="col-md-10" style="text-align: center;">
+            <span class="material-icons cursor" style="font-size: 30px;" (click)="increaseSize()">zoom_in</span>
+            <span class="material-icons cursor" style="font-size: 30px;" (click)="decreaseSize()">zoom_out</span>
+        
+            <!-- <button  class="material-icons" style="font-size: 30px;" (click)="increaseSize()">zoom_in</button>    
+            <button  class="material-icons" style="font-size: 30px;" (click)="decreaseSize()">zoom_out</button>     -->
+        </div>
+        <div class="col-md-1">
+            <span class="material-icons cursor" style="font-size: 30px;" (click)="increaseIndex()">keyboard_arrow_right</span>
+        </div>
+    </div>
+</mat-dialog-actions>
 
 <mat-dialog-content style="height: 90vh; margin: 0px; padding: 2px" *ngIf="data.isMobile">
     
