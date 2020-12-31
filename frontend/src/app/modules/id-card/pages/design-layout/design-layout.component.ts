@@ -43,7 +43,7 @@ export class DesignLayoutComponent implements OnInit {
 
     fields = FIELDS;
     dataTypes = DATA_TYPES;
-    parameterList = PARAMETER_LIST;
+    parameterList = Object.assign([],PARAMETER_LIST);
     fontFamilyList = FONT_FAMILY_LIST;
 
     idCardLayoutList: any[] = [];
@@ -263,9 +263,9 @@ export class DesignLayoutComponent implements OnInit {
             if (!this.printMultiple) {
                 const singleStudentData = {...this.data};
                 singleStudentData.studentList = [singleStudentData.studentList[0]];
-                card = new DefaultIdCard(this.printMultiple, this.currentLayout, singleStudentData);
+                card = new DefaultIdCard(this.printMultiple, this.currentLayout, singleStudentData, this.parameterList);
             } else {
-                card = new DefaultIdCard(this.printMultiple, this.currentLayout, this.data);
+                card = new DefaultIdCard(this.printMultiple, this.currentLayout, this.data, this.parameterList);
             }
             await card.generate();
             document.getElementById('iFrameDisplay').setAttribute('src', card.pdf.output('bloburi'));
