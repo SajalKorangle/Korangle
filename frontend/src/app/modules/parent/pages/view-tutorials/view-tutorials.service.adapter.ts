@@ -16,6 +16,7 @@ export class ViewTutorialsServiceAdapter {
     studentTestList: any;
     studentProfile: any;
     filteredStudentSubject: any;
+    tutorialList:any;
 
 
     initializeAdapter(vm: ViewTutorialsComponent): void {
@@ -54,7 +55,7 @@ export class ViewTutorialsServiceAdapter {
             this.vm.subjectList = value[1];
             this.vm.studentSubjectList = value[2];
             this.studentProfile = value[3][0];
-            this.populateSubjectChapterTopic();
+            this.populateTutorialList();
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
@@ -63,62 +64,29 @@ export class ViewTutorialsServiceAdapter {
     }
 
 
-    populateSubjectChapterTopic() {
+    populateTutorialList() {
         this.filteredStudentSubject = [];
         this.vm.selectedSubject = {};
         this.vm.selectedChapter = {};
-        let studentIndex = 0;
-         this.vm.noTutorials = false;
+        this.tutorialList = [];
+        this.vm.noTutorials = false;
 
-        this.vm.studentSubjectList.forEach(subject => {
-            studentIndex++;
-            let request_tutorials_data = {
-                'parentClassSubject': this.getParentClassSelectedSubject(subject),
-            };
-            Promise.all([
-                this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_tutorials_data),
-            ]).then(value => {
-                if (value[0].length > 0) {
-                    subject['parentClassSubject'] = value[0][0].parentClassSubject;
-                    subject['chapterList'] = [];
-                    value[0].forEach(tutorial => {
-                        if (subject.chapterList.length < 0 || !subject.chapterList.some(chap => chap.name === tutorial.chapter)) {
-                            let tempChapter = {};
-                            tempChapter['name'] = tutorial.chapter;
-                            tempChapter['topicList'] = [];
-                            let tempTopic = {};
-                            Object.keys(tutorial).forEach(key => {
-                                tempTopic[key] = tutorial[key];
-                            });
-                            tempChapter['topicList'].push(tempTopic);
-                            subject.chapterList.push(tempChapter);
-                        } else {
-                            subject.chapterList.find(chap => chap.name === tutorial.chapter).topicList.push(tutorial);
-                        }
-                    });
-                    this.filteredStudentSubject.push(subject);
-                }
-                if (studentIndex === this.vm.studentSubjectList.length) {
-                    if (this.filteredStudentSubject.length > 0) {
-                        this.vm.filteredStudentSubject=this.filteredStudentSubject;
-                        this.vm.selectedSubject = this.filteredStudentSubject[0];
-                        this.vm.selectedChapter = this.vm.selectedSubject.chapterList[0];
-                        this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
-                        this.vm.setTutorialVideo();
-                        this.vm.noTutorials = false;
-                    } else {
-                        this.vm.noTutorials = true; // to show no tutorials present if none subject has a tutorial
-                    }
-                }
-            }, error => {
-                this.vm.isLoading = false;
-            });
+        let request_tutorials_data = {
+            'parentClassSubject__in': this.vm.studentSubjectList.map(a => this.getParentClassSubjectFor(a)).join(),
+        };
+        Promise.all([
+            this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_tutorials_data),
+        ]).then(value => {
+            this.tutorialList = value[0];
+            this.populateFilteredSubjectTutorialList();
+        }, error => {
+            this.vm.isLoading = false;
         });
 
     }
 
 
-    getParentClassSelectedSubject(subject: any): number {
+    getParentClassSubjectFor(subject: any): number {
         const classSub = this.vm.classSubjectList.filter(classSubject => {
             if (classSubject.parentClass == this.studentProfile.parentClass && classSubject.parentDivision == this.studentProfile.parentDivision && classSubject.parentSubject == subject.parentSubject) {
                 return classSubject;
@@ -127,6 +95,41 @@ export class ViewTutorialsServiceAdapter {
         return classSub[0].id;
     }
 
+    populateFilteredSubjectTutorialList() {
+         if (this.tutorialList.length > 0) {
+             this.vm.studentSubjectList.forEach(subject => {
+                 subject['chapterList'] = [];
+                 this.tutorialList.forEach(tutorial => {
+                     if (tutorial && tutorial.parentClassSubject === this.getParentClassSubjectFor(subject)) {
+                         if (subject.chapterList.length < 0 || !subject.chapterList.some(chap => chap.name === tutorial.chapter)) {
+                             let tempChapter = {};
+                             tempChapter['name'] = tutorial.chapter;
+                             tempChapter['topicList'] = [];
+                             let tempTopic = {};
+                             Object.keys(tutorial).forEach(key => {
+                                 tempTopic[key] = tutorial[key];
+                             });
+                             tempChapter['topicList'].push(tempTopic);
+                             subject.chapterList.push(tempChapter);
+                         } else {
+                             subject.chapterList.find(chap => chap.name === tutorial.chapter).topicList.push(tutorial);
+                         }
+                     }
+                 });
+                 if (subject.chapterList.length > 0) {
+                     this.filteredStudentSubject.push(subject);
+                 }
+             });
+            this.vm.filteredStudentSubject = this.filteredStudentSubject;
+            this.vm.selectedSubject = this.filteredStudentSubject[0];
+            this.vm.selectedChapter = this.vm.selectedSubject.chapterList[0];
+            this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
+            this.vm.setTutorialVideo();
+            this.vm.noTutorials = false;
+         }else {
+            this.vm.noTutorials = true; // to show no tutorials present if none subject has a tutorial
+        }
+    }
 }
 
 

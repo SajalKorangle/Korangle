@@ -75,8 +75,13 @@ describe('Tutorials -> Add Tutorial', () => {
 
     });
 
+
     it('Remove an existing tutorial', async () => {
 
+
+        page.on('dialog', async dialog => {
+	        console.log(dialog.accept());
+        });
         let nodes;
 
         await page.waitForXPath('//table[1]');
@@ -88,6 +93,7 @@ describe('Tutorials -> Add Tutorial', () => {
         const [Remove] = await page.$x('//button[contains(.,\'Remove\')][1]');
         await Remove.click();
 
+
         await reClickPage('Add Tutorial');
         nodes = await getNodes('tr', '');
         expect(nodes.length).toBe(0);
@@ -95,7 +101,9 @@ describe('Tutorials -> Add Tutorial', () => {
 
     });
 
+
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
+
 });

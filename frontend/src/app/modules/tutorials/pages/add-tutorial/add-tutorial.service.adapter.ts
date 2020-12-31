@@ -87,7 +87,6 @@ export class AddTutorialServiceAdapter {
 
                 tempSection['parentClass'] = classs.id
                 tempSection['subjectList'] = [];
-                tempSection['containStudent'] = this.containsStudent(tempSection);
 
                 this.classSubjectList.forEach(classSubject => {
                     if (classSubject.parentClass === tempClass['id']
@@ -101,7 +100,7 @@ export class AddTutorialServiceAdapter {
                         tempSection['subjectList'].push(tempSubject);
                     }
                 });
-                if (tempSection['subjectList'].length > 0 && tempSection['containStudent']) {
+                if (tempSection['subjectList'].length > 0 && this.containsStudent(tempSection)) {
                     tempClass['sectionList'].push(tempSection);
                 }
             });
@@ -223,24 +222,24 @@ export class AddTutorialServiceAdapter {
             this.vm.tutorialEditing = false;
             this.vm.showTutorialDetails = true;
         } else {
-            
-            this.vm.tutorialUpdating = true;
-            Promise.all([
-                this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial),
-            ]).then(value =>{
-                this.vm.tutorialList = this.vm.tutorialList.filter(item => {
-                    return item.id != tutorial.id;
+            if(confirm("Are you sure you want to delete this tutorial?")) {
+                this.vm.tutorialUpdating = true;
+                Promise.all([
+                    this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial),
+                ]).then(value => {
+                    this.vm.tutorialList = this.vm.tutorialList.filter(item => {
+                        return item.id != tutorial.id;
+                    });
+                    this.vm.checkEnableAddButton();
+                    this.populateStudentList(tutorial);
+                    this.vm.tutorialUpdating = false;
+                    if (this.vm.settings != 0 && this.vm.settings.sendDeleteUpdate == true) {
+                        this.prepareSmsNotificationData(this.vm.deleteMessage);
+                    }
+                }, error => {
+                    this.vm.tutorialUpdating = false;
                 });
-                this.vm.checkEnableAddButton();
-                this.populateStudentList(tutorial);
-                this.vm.tutorialUpdating = false;
-                if(this.vm.settings != 0 && this.vm.settings.sendDeleteUpdate == true){
-                    this.prepareSmsNotificationData(this.vm.deleteMessage);
-                }
-            }, error =>{
-                this.vm.tutorialUpdating = false;
-            })
-
+            }
         }
     }
 
