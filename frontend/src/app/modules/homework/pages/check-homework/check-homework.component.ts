@@ -119,8 +119,7 @@ export class CheckHomeworkComponent implements OnInit {
                 tempStr+= date[i];
             }
         }
-        str = tempStr + str;
-        str = str +  ' ; ';
+        str = tempStr + str + ' ; ';
         for(let i =0;i<5;i++){
             str = str + time[i];
         }
