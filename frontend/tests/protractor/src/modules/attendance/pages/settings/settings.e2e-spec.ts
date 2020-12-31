@@ -2,12 +2,12 @@ import {BeforeAfterEach} from '../../../../beforeAterEach';
 import {startBackendServer} from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsAll, containsFirst} from '../../../../contains';
+import {getNodes, containsAll, containsFirst} from '../../../../contains';
 
 describe('Attendance -> Change Attendance Settings', () => {
 
     let page: any;
-
+    let nodes: any;
     afterEach( async () => {
         await BeforeAfterEach.afterEach();
     });
@@ -22,12 +22,27 @@ describe('Attendance -> Change Attendance Settings', () => {
         // Opening Page
         await openModuleAndPage('Attendance', 'Settings');
 
-        // Change Settings
-        await page.click('#sentUpdateType');
-        await page.click('mat-option[ng-reflect-value="NOTIFICATION"]');
         
-        await page.click('#sentUpdateToType');
-        await page.click('mat-option[ng-reflect-value="Only Absent Students"]');
+        await page.waitForXPath('//mat-select');
+
+
+        expect((await containsAll('mat-select', 'NULL')).length).toBe(1);
+        expect((await containsAll('mat-select', 'Only Absent Students')).length).toBe(1);
+
+        nodes = await containsFirst('mat-select', 'NULL');
+        await nodes.click();
+        await page.waitForXPath('//mat-option');
+        nodes = await getNodes('mat-option', '');
+        const [option] = await page.$x('//mat-option[2]');
+        await option.click()
+
+        
+        nodes = await containsFirst('mat-select', 'Only Absent Students');
+        await nodes.click();
+        await page.waitForXPath('//mat-option');
+        nodes = await getNodes('mat-option', '');
+        const [option1] = await page.$x('//mat-option[1]');
+        await option1.click();
         
         page.on('dialog', async dialog => {
             expect(dialog.message()).toBe('Settings Updated Successfully');
@@ -35,14 +50,15 @@ describe('Attendance -> Change Attendance Settings', () => {
         });
 
         // Update Settings
-        await (await containsFirst('button', 'UPDATE')).click();
+        await (await containsFirst('button', 'Update')).click();
 
-        // Refresh Page        
+        // // Refresh Page        
         await reClickPage('Settings');
+        await page.waitForXPath('//mat-select');
 
-        // Check Expected Settings
-        expect((await containsAll('select', 'NOTIFICATION')).length).toBe(1);
-        expect((await containsAll('select', 'Only Absent Students')).length).toBe(1);
+        // // Check Expected Settings
+        expect((await containsAll('mat-select', 'SMS')).length).toBe(1);
+        expect((await containsAll('mat-select', 'All Students')).length).toBe(1);
         
     });
 
