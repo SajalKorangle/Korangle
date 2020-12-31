@@ -2,7 +2,7 @@
 import json
 
 from common.common_views_3 import CommonView, CommonListView, APIView
-
+from decorators import user_permission_3
 from push_notifications.models import GCMDevice
 from .models import Notification
 

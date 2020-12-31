@@ -103,10 +103,10 @@ class SmsView(CommonView, APIView):
             print(data)
             if return_data['status'] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data['data'] = create_object(data, self.ModelSerializer, *args, **kwargs)
+                return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         else:
             data['requestId'] = 1
-            return_data['data'] = create_object(data, self.ModelSerializer, *args, **kwargs)
+            return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         return return_data
 
 

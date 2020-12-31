@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 
 import json
 
-from common.common_views_3 import CommonView, CommonListView
 from common.common_views import CommonView as OldCommonView, CommonListView as OldCommonListView
+from common.common_views_3 import CommonView, CommonListView
 from decorators import user_permission, user_permission_new, user_permission_3
 from student_app.models import Student, StudentSection, StudentParameter, StudentParameterValue
 from common.common_functions import get_error_response, get_success_response
