@@ -8,7 +8,7 @@ from fees_third_app.business.discount import create_discount_object, create_disc
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
     SubFeeReceipt, Discount, SubDiscount, LockFee
 
-from student_app.models import Student
+
 # Create your views here.
 
 

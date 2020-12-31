@@ -35,8 +35,8 @@ def user_permission_new(function):
     def wrap(*args, **kwargs):
         request = args[1]
         if request.user.is_authenticated:
-            # Deleting activeSchoolId or activeStudentId keys from get; inroduced by updated architecture
-            if ('activeSchoolID' in request.GET.keys()):    # User is reqesting as employee
+            # Deleting activeSchoolId or activeStudentId keys from get; introduced by updated architecture
+            if ('activeSchoolID' in request.GET.keys()):    # User is requesting as employee
                 request.GET._mutable = True
                 del request.GET['activeSchoolID']
                 request.GET._mutable = False
