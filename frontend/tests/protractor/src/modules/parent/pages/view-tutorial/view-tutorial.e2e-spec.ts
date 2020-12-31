@@ -22,6 +22,7 @@ describe('Parents -> View Profile', () => {
 
     it('View Tutorial : View Tutorial Video', async () => {
 
+        await page.waitForXPath('//iframe');
         node =await getNode('iframe','');
         prop = await page.evaluate(el => el.src, node);
         expect(prop).toBe("https://www.youtube.com/embed/AIgF0NJFm50");

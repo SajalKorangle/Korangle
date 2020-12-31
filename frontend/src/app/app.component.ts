@@ -43,6 +43,8 @@ export class AppComponent implements OnInit {
                     localStorage.setItem('schoolJWT', '');
                 } else {
                     this.user.initializeUserData(data);
+                    (<any>window).ga('set', 'userId', 'id: '+data.id);
+                    (<any>window).ga('send', 'event', 'authentication', 'Direct Entry');
                     registerForNotification({
                         'user': this.user.id,
                         'jwt': this.user.jwt,
