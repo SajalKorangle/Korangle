@@ -99,7 +99,6 @@ export class ViewHomeworkServiceAdapter {
                 if((secondValue[3].length + secondValue[4].length) < this.vm.loadingCount){
                     this.vm.loadMoreHomework = false;
                 }
-                // console.log(secondValue);
                 let pendingHomeworkIdList = [];
                 secondValue[0].forEach(element =>{
                     pendingHomeworkIdList.push(element.parentHomework);
@@ -128,14 +127,12 @@ export class ViewHomeworkServiceAdapter {
                     this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, homework_data),
                     this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, completed_homework_data),
                 ]).then(thirdValue =>{
-                    // console.log(thirdValue);
                     this.initializePendingHomeworkList(thirdValue[0], secondValue[1], secondValue[0], this.classSubjectList, this.subjectList);
                     this.populateCompletedHomeworkList(thirdValue[1], secondValue[3], secondValue[4], this.classSubjectList, this.subjectList);
                     this.vm.isSessionLoading = false;
 
                 })
             })
-            // this.initializeSubjectList(firstValue[0], firstValue[1]);
         },error =>{
             this.vm.isSessionLoading = false;
         })
@@ -256,7 +253,6 @@ export class ViewHomeworkServiceAdapter {
         ]).then(value => {
             this.vm.submittedHomeworkCount+= value[1].length;
             this.vm.checkedHomeworkCount+= value[0].length;
-            // console.log(value);
             let completedHomeworkIdList = [];
             value[0].forEach(element =>{
                 completedHomeworkIdList.push(element.parentHomework);
@@ -274,7 +270,6 @@ export class ViewHomeworkServiceAdapter {
             Promise.all([
                 this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, completed_homework_data),
             ]).then(secondValue =>{
-                // console.log(thirdValue);
                 this.populateCompletedHomeworkList(secondValue[0], value[0], value[1], this.classSubjectList, this.subjectList);
                 this.vm.isSessionLoading = false;
                 
@@ -350,7 +345,6 @@ export class ViewHomeworkServiceAdapter {
             service_list.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_answer, {'id':image.id}));
         });
         Promise.all(service_list).then(value =>{
-            // console.log(value);
             this.populateSubmittedHomework(value);
             alert('Homework Answer Recorded Successfully');
             this.vm.isSessionLoading = false;

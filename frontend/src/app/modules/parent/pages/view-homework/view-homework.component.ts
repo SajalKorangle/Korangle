@@ -78,7 +78,6 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         this.serviceAdapter = new ViewHomeworkServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        console.log(this.isMobile());
 
     }
 
@@ -126,7 +125,6 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     }
 
     readURL(event): void {
-        console.log(event);
         if (event.target.files && event.target.files[0]) {
             const image = event.target.files[0];
             if (image.type !== 'image/jpeg' && image.type !== 'image/png' && image.type !== 'application/pdf') {
@@ -136,7 +134,6 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
             
             const reader = new FileReader();
             reader.onload = e => {
-                // console.log(reader.result);
                 let tempImageData = {
                     orderNumber: null,
                     parentHomework: this.toSubmitHomework.dbId,
@@ -245,7 +242,6 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
   
 
     getFilteredHomeworkList(): any{
-        // console.log(this.pendingHomeworkList);
         return this.pendingHomeworkList.filter(homeworks =>{
             if(this.selectedSubject.id == -1)return true;
             if(homeworks.subjectDbId == this.selectedSubject.id)return true;
@@ -262,8 +258,6 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     }
 
     drop(event: CdkDragDrop<string[]>) {
-        console.log(event.previousIndex ,event.currentIndex);
-        // moveItemInArray(this.toSubmitHomework.answerImages, event.previousIndex, event.currentIndex);
         let temp = this.toSubmitHomework.answerImages[event.previousIndex];
         this.toSubmitHomework.answerImages[event.previousIndex] = this.toSubmitHomework.answerImages[event.currentIndex];
         this.toSubmitHomework.answerImages[event.currentIndex] = temp;
@@ -292,8 +286,6 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         });
     
         dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
-            
         });
     }
 

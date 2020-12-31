@@ -32,9 +32,6 @@ export class IssueHomeworkServiceAdapter {
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings, {'parentSchool' : this.vm.user.activeSchool.dbId}),
             this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt),
         ]).then(value => {
-            // console.log(value[0]);
-            // console.log(value[1]);
-            // console.log(value[2]);
             this.vm.smsBalance = value[5];
             if(value[4].length > 0){
                 this.vm.settings = value[4][0];
@@ -233,8 +230,6 @@ export class IssueHomeworkServiceAdapter {
         Promise.all(promises).then(value =>{
             this.vm.populateEditedHomework(value);
             this.vm.populateStudentList(this.vm.studentList, value[0]);
-            console.log(this.vm.settings);
-            console.log(this.vm.settings.sendEditUpdate);
             if(this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
                 this.sendSMSNotification(this.vm.studentList, this.vm.homeworkUpdateMessage);
             }
@@ -249,7 +244,6 @@ export class IssueHomeworkServiceAdapter {
 
 
     fetchGCMDevices: any = (studentList: any) => {
-        // console.log(studentList);
         this.vm.isLoading = true;
         const service_list = [];
         const iterationCount = Math.ceil(studentList.length / this.vm.STUDENT_LIMITER);
@@ -263,15 +257,12 @@ export class IssueHomeworkServiceAdapter {
                 ),
                 'active': 'true__boolean',
             }
-            // console.log(gcm_data);
             const user_data = {
                 'fields__korangle': 'username,id',
                 'username__in': mobile_list.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)),
             };
-            // console.log(user_data);
             service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_data));
             service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
-            // console.log(service_list);
             loopVariable = loopVariable + 1;
         }
 
@@ -395,26 +386,23 @@ export class IssueHomeworkServiceAdapter {
             service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
         }
 
-        console.log(sms_converted_data);
-        console.log(notification_data);
+        this.vm.isLoading = true;
 
-        // this.vm.isLoading = true;
+        Promise.all(service_list).then(value => {
 
-        // Promise.all(service_list).then(value => {
+            if ((this.vm.settings.sentUpdateType == 'SMS' ||
+            this.vm.settings.sentUpdateType == 'NOTIF./SMS') &&
+                (sms_list.length > 0)) {
+                if (value[0].status === 'success') {
+                    this.vm.smsBalance -= value[0].data.count;
+                } else if (value[0].status === 'failure') {
+                    this.vm.smsBalance = value[0].count;
+                }
+            }
 
-        //     if ((this.vm.settings.sentUpdateType == 'SMS' ||
-        //     this.vm.settings.sentUpdateType == 'NOTIF./SMS') &&
-        //         (sms_list.length > 0)) {
-        //         if (value[0].status === 'success') {
-        //             this.vm.smsBalance -= value[0].data.count;
-        //         } else if (value[0].status === 'failure') {
-        //             this.vm.smsBalance = value[0].count;
-        //         }
-        //     }
-
-        //     this.vm.isLoading = false;
-        // }, error => {
-        //     this.vm.isLoading = false;
-        // })
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        })
     }
 }

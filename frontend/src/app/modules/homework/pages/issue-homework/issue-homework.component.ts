@@ -356,14 +356,12 @@ export class IssueHomeworkComponent implements OnInit {
             
             const reader = new FileReader();
             reader.onload = e => {
-                // console.log(reader.result);
                 let tempImageData = {
                     orderNumber: null,
                     parentHomework: null,
                     questionImage: reader.result,
                 }
                 this.currentHomeworkImages.push(tempImageData);
-                // this.updatePDF();
             };
             reader.readAsDataURL(image);
             
@@ -499,11 +497,9 @@ export class IssueHomeworkComponent implements OnInit {
         });
     
         dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
             if(this.editableHomework.editRequired){
                 this.isLoading = true;
                 this.serviceAdapter.updateHomework(this.editableHomework);
-                // console.log(this.editableHomework);
             }
         });
     }
@@ -515,7 +511,6 @@ export class IssueHomeworkComponent implements OnInit {
         });
     
         dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
             
         });
     }
@@ -605,7 +600,6 @@ export class IssueHomeworkComponent implements OnInit {
         });
     
         dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
             
         });
     }
