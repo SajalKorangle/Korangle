@@ -1,5 +1,8 @@
 import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
+
+const FormulaParser = require('hot-formula-parser').Parser;
+
 // Utility Functions ---------------------------------------------------------------------------
 
 function getNumberInWords(numerical: number): string {
@@ -312,6 +315,20 @@ export const ATTENDANCE_TYPE_LIST = [
     'Total Record',
 ];
 
+export const EXAMINATION_TYPE_LIST = [
+    'Marks', // 0
+    'Grades', // 1
+    'Remarks', // 2
+    'Marks-To-Grade', // 3
+];
+
+export const MARKS_TYPE_LIST = [
+    'Marks Obtained',
+    'Maximum Marks',
+];
+
+export const ALPHABET_LIST = 'abcdefghijklmnopqrstuvwxyz';
+
 
 //Layers--------------------------------------
 
@@ -622,7 +639,7 @@ export class CanvasDate extends CanvasText implements Layer{
 
 }
 
-class CanavsAttendance extends CanvasText implements Layer{
+class AttendanceLayer extends CanvasText implements Layer{
     displayName: string = 'Attendance';
     startDate: Date = new Date();
     endDate: Date = new Date();
@@ -645,16 +662,73 @@ class CanavsAttendance extends CanvasText implements Layer{
     attendanceUpdate():void { //remove this afetr fixing layer setup arguments
         this.layerSetUp(this.ca.vm.DATA, null, null, null);
     }
+
+    // Dato to save need to be implemented
 }
 
-export const LAYER_TYPES: { [key: string]: any } = {    // all nulls to be implemented
-    'IMAGE': CanvasImage,
-    'TEXT': CanvasText,
-    'DATE': CanvasDate,
-    'ATTENDANCE': null,
-    'TABLE': null,
-};
+export class GradeLayer extends CanvasText implements Layer{
+    displayName: string = 'Grade';
+    examinationId: any = null;
+    subGradeId: any = null;
 
+    dataSourceType: string = 'DATA';
+    source: { [key: string]: any };    // required attribute
+    
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca);
+        this.LAYER_TYPE = 'GRADE';
+        this.parameterToolPannels.push('grade');
+    }
+
+    layerSetUp(DATA: object = {}, canvasWidth: number=null, canvasHeight: number=null, ctx: CanvasRenderingContext2D=null): void {
+        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.examinationId, this.subGradeId);
+        this.updateTextBoxMetrics();
+    }
+
+    // data to save need to be implemented
+
+}
+
+export class RemarksLayer extends CanvasText implements Layer{
+    displayName: string = 'Reamrks';
+    examinationId: any = null;
+
+    dataSourceType: string = 'DATA';
+    source: { [key: string]: any };    // required attribute
+    
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca);
+        this.LAYER_TYPE = 'REMARK';
+        this.parameterToolPannels.push('remark');
+    }
+
+    layerSetUp(DATA: object = {}, canvasWidth: number=null, canvasHeight: number=null, ctx: CanvasRenderingContext2D=null): void {
+        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.examinationId);
+        this.updateTextBoxMetrics();
+    }
+
+    // data to save need to be implemented
+
+}
+
+export class MarksLayer extends CanvasText implements Layer{
+    displayName: string = 'Marks/Formula';
+    
+    marksVariableList: {
+        valueType: string
+        
+    }[] = [
+            {
+                valueType: 'marks',
+            }
+        ];
+    
+    formula: string;
+    decimalPlaces: number;
+
+    dataSourceType: string = 'DATA';
+    source: { [key: string]: any };    // required attribute
+}
 
 
 
@@ -786,7 +860,7 @@ class AttendanceParameterStructure {
         return ParameterStructure.getStructure(
             variableType,
             FIELDS.ATTENDANCE,
-            CanavsAttendance,
+            AttendanceLayer,
             () => {
                 return variableType;
             },
@@ -838,6 +912,57 @@ export class StudentCustomParameterStructure {
             });
     }
 
+}
+
+class ExaminationParameterStructure {
+
+    // Data Type is the parameter key
+
+    static getStructure(variableType: any, getValueFunc:any, layerType:any = CanvasText): any {
+
+        return ParameterStructure.getStructure(
+            variableType,
+            FIELDS.EXAMINATION,
+            layerType,
+            (dataObject) => {
+                return variableType;
+            },
+            getValueFunc
+        );
+    }
+
+    static getMarks(dataObject, marksVariable) {
+        if (marksVariable.marksType === MARKS_TYPE_LIST[1]) {
+            const test_object = dataObject.data.testList.find(test => {
+                return test.parentExamination === marksVariable.parentExamination
+                    && test.parentSubject === marksVariable.parentSubject
+                    && test.testType === marksVariable.testType
+                    && test.parentClass === dataObject.data.studentSectionList.find(item =>
+                        item.parentStudent === dataObject.studentId).parentClass
+                    && test.parentDivision === dataObject.data.studentSectionList.find(item =>
+                        item.parentStudent === dataObject.studentId).parentDivision
+            });
+            if (test_object !== undefined && !isNaN(test_object.maximumMarks)) {
+                return test_object.maximumMarks;
+            } else {
+                return 100;
+            }
+        } else if (marksVariable.marksType === MARKS_TYPE_LIST[0]) {
+            const student_test_object = dataObject.data.studentTestList.find(studentTest => {
+                return studentTest.parentExamination === marksVariable.parentExamination
+                    && studentTest.parentSubject === marksVariable.parentSubject
+                    && studentTest.testType === marksVariable.testType
+                    && studentTest.parentStudent === dataObject.studentId
+            });
+            if (student_test_object !== undefined && !isNaN(student_test_object.marksObtained)) {
+                return student_test_object.marksObtained;
+            } else {
+                return 0;
+            }
+        } else {
+            return 'Invalid Data';
+        }
+    }
 }
 
 export const PARAMETER_LIST = [
@@ -964,8 +1089,85 @@ export const PARAMETER_LIST = [
     SchoolParameterStructure.getStructure(`Medium`, 'medium'),
 
 
-     /* Attendance Field */
-     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[0]),
-     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[1]),
-     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[2]),
+    /* Attendance Field */
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[0]),
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[1]),
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[2]),
+     
+    /* Examination Field */
+    ExaminationParameterStructure.getStructure(
+        EXAMINATION_TYPE_LIST[1],
+        (dataObject: any, examinationId:any, subGradeId: any) => {
+            const value = dataObject.data.studentSubGradeList.find(studentSubGrade => {
+                return studentSubGrade.parentStudent === dataObject.studentId
+                    && studentSubGrade.parentExamination === examinationId
+                    && studentSubGrade.parentSubGrade === dataObject.userHandle.value.subGradeId;   // yet to understand
+            });
+            if (value !== undefined) {
+                return value.gradeObtained;
+            } else {
+                return 'N/A';
+            }
+        },
+        GradeLayer
+    ),
+    ExaminationParameterStructure.getStructure(
+        EXAMINATION_TYPE_LIST[2],
+        (dataObject: any, examinationId:any) => {
+            const value = dataObject.data.studentExaminationRemarksList.find(studentExaminationRemarks => {
+                return studentExaminationRemarks.parentStudent === dataObject.studentId
+                    && studentExaminationRemarks.parentExamination === examinationId;
+            });
+            if (value !== undefined) {
+                return value.remark;
+            } else {
+                return 'N/A';
+            }
+        },
+        GradeLayer
+    ),
+    ExaminationParameterStructure.getStructure(
+        EXAMINATION_TYPE_LIST[0],
+        (dataObject: any, formula:any, marksVariableList: any, decimalPlace: any, gradeRules:any = null, layersList:any) => {
+            // if (nestedCallNo > 100) { console.log('Nested Call more than 100 times'); return 0; }
+            const parser = new FormulaParser();
+            // setCustomFunctionsInParser(parser); // add later when the use asires
+            marksVariableList.forEach((marksVariable, index) => {
+                if (marksVariable.valueType = 'marks') {
+                    parser.setVariable(ALPHABET_LIST.charAt(index), ExaminationParameterStructure.getMarks(dataObject, marksVariable));
+                }
+                else {
+                    const layer = layersList.find(layer=>layer.id==marksVariable.referenceLayerId)
+                    if (layer !== undefined) {
+                        parser.setVariable(ALPHABET_LIST.charAt(index),
+                            layer.marks);
+                    }
+                }
+            });
+            const evaluation = parser.parse(formula);
+            if (evaluation.error) {
+                return evaluation.error;
+            } else {
+                const marksValue = Number(evaluation.result).toFixed(decimalPlace);
+                // Find Grade Rule
+                if (!gradeRules) {
+                    return marksValue;
+                } else {
+                    let returnValue = marksValue;
+                    gradeRules.every(marksToGradeRuleObject => {   // conversion of marks to grade
+                        if (((marksToGradeRuleObject.lowerInclusion && marksToGradeRuleObject.lowerMarks <= marksValue)
+                            || (!marksToGradeRuleObject.lowerInclusion && marksToGradeRuleObject.lowerMarks < marksValue))
+                            && ((marksToGradeRuleObject.upperInclusion && marksToGradeRuleObject.upperMarks >= marksValue)
+                                || (!marksToGradeRuleObject.upperInclusion && marksToGradeRuleObject.upperMarks > marksValue))) {
+                            returnValue = marksToGradeRuleObject.gradeValue;
+                            return false;   // every loop runs if it gets false
+                        }
+                        return true;
+                    });
+                    return returnValue;
+                }
+            }
+        },
+        MarksLayer
+    )
 ]
