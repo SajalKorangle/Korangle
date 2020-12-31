@@ -290,9 +290,7 @@ export class IssueHomeworkComponent implements OnInit {
 
     populateStudentList(studentList: any, homeworkData: any): any{
         studentList.forEach(student =>{
-            if(homeworkData.homeworkName!= undefined){
-                student.homeworkName = homeworkData.homeworkName;
-            }
+            student.homeworkName = homeworkData.homeworkName;
             if(homeworkData.endDate != undefined){
                 student.deadLine = this.displayDateTime(homeworkData.endDate, homeworkData.endTime);
             }
@@ -407,8 +405,7 @@ export class IssueHomeworkComponent implements OnInit {
                 tempStr+= date[i];
             }
         }
-        str = tempStr + str;
-        str = str +  ' ; ';
+        str = tempStr + str +  ' ; ';
         for(let i =0;i<5;i++){
             str = str + time[i];
         }
@@ -461,7 +458,7 @@ export class IssueHomeworkComponent implements OnInit {
     getEstimatedSMSCount = (message: any) => {
         let count = 0;
         if(this.settings.sentUpdateType=='NOTIFICATION')return 0;
-            this.studentList.filter(item => item.mobileNumber).forEach((item, i) => {
+            this.studentList.filter(item => item.mobileNumber).forEach((item) => {
                 if(this.settings.sentUpdateType=='SMS' || item.notification==false){
                     count += this.getMessageCount(this.getMessageFromTemplate(message, item));
                 }
@@ -477,17 +474,6 @@ export class IssueHomeworkComponent implements OnInit {
             return Math.ceil( message.length/160);
         }
     }
-
-    getEstimatedNotificationCount = () => {
-        let count = 0;
-        if(this.settings.sentUpdateType=='SMS')return 0;
-
-        count = this.studentList.filter((item) => {
-            return item.mobileNumber && item.notification;
-        }).length;
-
-        return count;
-    }   
 
     openEditHomeworkDialog(): void {
         const dialogRef = this.dialog.open(EditHomeworkDialogComponent, {

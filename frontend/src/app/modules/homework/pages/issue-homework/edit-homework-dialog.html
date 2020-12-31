@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>EDIT HOMEWORK</h1>
 <mat-dialog-content style="max-height: 80vh;">
-    <div>
+    <div class="row col-md-12">
         <span class="hidden-xs" style="color: #7b7b7b;">Homework Title: &nbsp;</span>
         <mat-form-field style="margin-right: 15px;">
             <input type="text" matInput [ngModel]="data.homeworkName"
@@ -8,17 +8,17 @@
         </mat-form-field>
     </div>
 
-    <div>
+    <div class="row col-md-12">
         <mat-form-field style="margin-right: 15px; width: 150px">
             <input type="date" matInput [ngModel]="data.endDate"
             (ngModelChange)="data.endDate=$event;" placeholder="Choose Deadline Date ">
         </mat-form-field> 
-        <mat-form-field  style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px; width: 140px">
+        <mat-form-field *ngIf="data.endDate != null" style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px; width: 140px">
             <input type="time" matInput [ngModel]="data.endTime"
             (ngModelChange)="data.endTime=$event;" placeholder="Choose Deadline Time">
-        </mat-form-field><br>
+        </mat-form-field>
     </div>
-    <div >
+    <div class="row col-md-12">
         <mat-form-field  style="width: 100%;">
             <textarea matInput 
             cdkTextareaAutosize style="padding-top: 10px; padding-bottom: 10px;; white-space: pre-wrap;"

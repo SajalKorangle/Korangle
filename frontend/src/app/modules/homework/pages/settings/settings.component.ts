@@ -32,7 +32,7 @@ export class SettingsComponent{
     sendResubmissionUpdate: any;
     previousSettings: any;
 
-    isInitialLoading = true;
+    isLoading = true;
 
     settingsChanged: any;
 

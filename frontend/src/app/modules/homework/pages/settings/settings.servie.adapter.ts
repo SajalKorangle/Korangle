@@ -13,7 +13,7 @@ export class SettingsServiceAdapter {
     //initialize data
     initializeData(): void {
 
-        this.vm.isInitialLoading = true;
+        this.vm.isLoading = true;
         
         this.vm.sentUpdateType = 'NULL';
         this.vm.sendEditUpdate = false;
@@ -39,7 +39,7 @@ export class SettingsServiceAdapter {
                     this.vm.homeworkService.createObject(this.vm.homeworkService.homework_settings, tempSettings)
                 ]).then(value =>{
                     this.vm.previousSettings = value[0];
-                    this.vm.isInitialLoading = false;
+                    this.vm.isLoading = false;
                 })
             }
             else{
@@ -50,16 +50,16 @@ export class SettingsServiceAdapter {
                 this.vm.sendDeleteUpdate = this.vm.previousSettings.sendDeleteUpdate;
                 this.vm.sendCheckUpdate = this.vm.previousSettings.sendCheckUpdate;
                 this.vm.sendResubmissionUpdate = this.vm.previousSettings.sendResubmissionUpdate;
-                this.vm.isInitialLoading = false;
+                this.vm.isLoading = false;
             }
         },error =>{
-            this.vm.isInitialLoading = false;
+            this.vm.isLoading = false;
         });
     }
 
     updateSettings(): any{
 
-        this.vm.isInitialLoading = true;
+        this.vm.isLoading = true;
         let tempSettings ={
             'id': this.vm.previousSettings.id,
             'sentUpdateType': this.vm.sentUpdateType,
@@ -75,9 +75,9 @@ export class SettingsServiceAdapter {
             alert('Settings Updated');
             this.vm.settingsChanged = false;
             this.vm.previousSettings = value[0];
-            this.vm.isInitialLoading = false;
+            this.vm.isLoading = false;
         },error =>{
-            this.vm.isInitialLoading = false;
+            this.vm.isLoading = false;
         })
     }
 }
