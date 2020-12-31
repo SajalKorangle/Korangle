@@ -81,6 +81,12 @@ export class CollectFeeComponent implements OnInit {
 
     isStudentListLoading = false;
 
+    disableGenerateReceipt=false;
+
+    paymentPriceBorder='red';
+    chequeNumberBorder='red';
+
+
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
                 public vehicleService: VehicleOldService,
@@ -318,7 +324,12 @@ export class CollectFeeComponent implements OnInit {
     }
 
     handleOverallPaymentChange(payment: number): void {
-        let paymentLeft = payment?payment:0;
+        let paymentLeft = payment?payment:0
+        if(payment){
+            this.paymentPriceBorder='black';
+        }else{
+            this.paymentPriceBorder='red';
+        }
 
         this.sessionList.forEach(session => {
             this.installmentList.forEach(installment => {
@@ -1163,14 +1174,24 @@ export class CollectFeeComponent implements OnInit {
             if (feeReceipt.modeOfPayment != this.modeOfPaymentList[1]) {
                 this.newChequeNumber = null;
                 feeReceipt.chequeNumber = null;
+                this.disableGenerateReceipt=false;
+            }else {
+                this.disableGenerateReceipt=true;
             }
         });
     }
 
     updateNewFeeReceiptChequeNumber(): void {
-        this.newFeeReceiptList.forEach(feeReceipt => {
-            feeReceipt.chequeNumber = this.newChequeNumber;
-        });
+        if(this.newChequeNumber) {
+            this.newFeeReceiptList.forEach(feeReceipt => {
+                feeReceipt.chequeNumber = this.newChequeNumber;
+            });
+            this.disableGenerateReceipt=false;
+            this.chequeNumberBorder='black';
+        }else{
+            this.disableGenerateReceipt=true;
+             this.chequeNumberBorder='red';
+        }
     }
 
     getLastDaySubmittedAmount(lastFeeReceipt: any): number {

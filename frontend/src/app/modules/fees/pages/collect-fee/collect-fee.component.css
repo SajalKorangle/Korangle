@@ -11,6 +11,27 @@
 
 }
 
+button[disabled]{
+  background-color: #C4C4C4;
+  color: #FFFFFF;
+}
+button[disabled]:hover {
+    background: #C4C4C4;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
 .main-content {
     height: 95%;
 }

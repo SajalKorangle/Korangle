@@ -110,4 +110,16 @@ export class FeeReceiptListComponent implements OnInit {
         return employee?employee.name:null;
     }
 
+    hasUserPermissionToCancel() {
+        const module = this.user.activeSchool.moduleList.find(module => module.title === 'Fees 3.0');
+        return module.taskList.some(task => task.title === 'Cancel Fee Receipt');
+    }
+
+
+    getStudentMobileNumber(feeReceipt: any) {
+        let student = this.studentList.find(student => {
+            return student.id == feeReceipt.parentStudent;
+        });
+        return student?student.mobileNumber:null;
+    }
 }

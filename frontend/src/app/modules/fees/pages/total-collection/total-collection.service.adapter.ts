@@ -58,15 +58,13 @@ export class TotalCollectionServiceAdapter {
         let fee_receipt_list = {
             'generationDateTime__gte': this.vm.startDate + ' 00:00:00%2B05:30',
             'generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'cancelled': 'false__boolean',
+            'parentSchool': this.vm.user.activeSchool.dbId
         };
 
         let sub_fee_receipt_list = {
             'parentFeeReceipt__generationDateTime__gte': this.vm.startDate + ' 00:00:00%2B05:30',
             'parentFeeReceipt__generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
-            'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentFeeReceipt__cancelled': 'false__boolean',
+            'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId
         };
 
         this.vm.initializeSelection();
