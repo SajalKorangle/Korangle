@@ -215,15 +215,13 @@ export class CheckHomeworkServiceAdapter {
                 'images': [],
                 'isStatusLoading': false,
             }
-            this.vm.studentHomeworkList.push(tempData);
-            let currentStudentHomework = this.vm.studentHomeworkList.find(student => student.parentStudent == studentHomework.parentStudent);
-            
             studentHomeworkImagesList.forEach(image =>{
-                if(image.parentStudent == currentStudentHomework.parentStudent){
-                    currentStudentHomework.images.push(image);
+                if(image.parentStudent == tempData.parentStudent){
+                    tempData.images.push(image);
                 }
             })
-            currentStudentHomework.images.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
+            tempData.images.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
+            this.vm.studentHomeworkList.push(tempData);
         });
 
     }

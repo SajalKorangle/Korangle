@@ -254,7 +254,7 @@
                                 <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
                                     accept="image/jpeg,image/png" #imageInput />
                                 <button type="submit" class="image-column-mobile"
-                                    style="cursor: pointer; font-size: 35px;color: grey;border-radius: 5px;"
+                                    style="cursor: pointer; font-size: 35px;color: grey;border-radius: 5px;width: 0.525in"
                                     (click)="imageInput.click()">+</button>
                             </div><br>
                         </div>
@@ -345,23 +345,18 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div style="margin-top: 5px;">
-                            <span style="color: #7b7b7b;">Answer Images: <br></span>
-                            <div style="display:flex;flex-wrap:wrap">
-                                <div style="display: inline-block;"
-                                    *ngFor="let images of toSubmitHomework.answerImages; let i = index">
-                                    <img src="{{images.answerImage}}" class="hover-shadow cursor image-column"
-                                        (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 1)">
-                                </div>
-                            </div>
-                            <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
-                                accept="image/jpeg,image/png" #imageInput />
-                            <button type="submit" class="image-column"
-                                style="cursor: pointer; font-size: 45px;color: grey;border-radius: 5px;"
-                                (click)="imageInput.click()">+</button>
+
+                <div class="row col-sm-12" style="margin-top: 5px;">
+                    <span style="color: #7b7b7b;">Answer Images: <br></span>
+                    <div class="image-row" >
+                        <div  *ngFor="let images of toSubmitHomework.answerImages; let i = index">
+                            <img src="{{images.answerImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 1)">
                         </div>
+                        <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
+                                    accept="image/jpeg,image/png" #imageInput />
+                        <button type="submit" class="image-column"
+                            style="cursor: pointer; font-size: 45px;color: grey;border-radius: 5px;width: 1.375in"
+                            (click)="imageInput.click()">+</button>
                     </div>
                 </div>
 
