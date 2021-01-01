@@ -5,6 +5,7 @@ import {TutorialsService} from '@services/modules/tutorials/tutorials.service';
 import {ViewTutorialsServiceAdapter} from '@modules/parent/pages/view-tutorials/view-tutorials.service.adapter';
 import {SubjectService} from '@services/modules/subject/subject.service';
 import {StudentService} from '@services/modules/student/student.service';
+import moment = require('moment');
 
 
 @Component({
@@ -47,8 +48,8 @@ export class ViewTutorialsComponent implements OnInit {
 
 
     setTutorialVideo(): void {
-        this.videoUrl=this.selectedTopic.link.replace('watch?v=', 'embed/');;
-        this.publishDate=this.selectedTopic.generationDateTime;
+        this.videoUrl=this.selectedTopic.link.replace('watch?v=', 'embed/');
+        this.publishDate=moment(this.selectedTopic.generationDateTime).format('Do - MMMM - YYYY');
         if (!this.selectedChapter) {
             alert('Select a chapter');
                return;
@@ -71,4 +72,5 @@ export class ViewTutorialsComponent implements OnInit {
         });
         return result;
     }
+
 }

@@ -45,10 +45,10 @@ export class ViewTutorialsServiceAdapter {
 
 
         Promise.all([
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.student_subject, request_student_subject_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),//0
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),//1
+            this.vm.subjectService.getObjectList(this.vm.subjectService.student_subject, request_student_subject_data),//2
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data),//3
 
         ]).then(value => {
             this.vm.classSubjectList = value[0];
@@ -63,6 +63,14 @@ export class ViewTutorialsServiceAdapter {
 
     }
 
+    getParentClassSubjectFor(subject: any): number {
+        const classSub = this.vm.classSubjectList.filter(classSubject => {
+            if (classSubject.parentClass == this.studentProfile.parentClass && classSubject.parentDivision == this.studentProfile.parentDivision && classSubject.parentSubject == subject.parentSubject) {
+                return classSubject;
+            }
+        });
+        return classSub ? classSub[0].id : null;
+    }
 
     populateTutorialList() {
         this.filteredStudentSubject = [];
@@ -72,7 +80,7 @@ export class ViewTutorialsServiceAdapter {
         this.vm.noTutorials = false;
 
         let request_tutorials_data = {
-            'parentClassSubject__in': this.vm.studentSubjectList.map(a => this.getParentClassSubjectFor(a)).join(),
+            'parentClassSubject__in': (this.vm.studentSubjectList.map(a => this.getParentClassSubjectFor(a))).filter(a => a!=null).join(),
         };
         Promise.all([
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_tutorials_data),
@@ -85,15 +93,6 @@ export class ViewTutorialsServiceAdapter {
 
     }
 
-
-    getParentClassSubjectFor(subject: any): number {
-        const classSub = this.vm.classSubjectList.filter(classSubject => {
-            if (classSubject.parentClass == this.studentProfile.parentClass && classSubject.parentDivision == this.studentProfile.parentDivision && classSubject.parentSubject == subject.parentSubject) {
-                return classSubject;
-            }
-        });
-        return classSub[0].id;
-    }
 
     populateFilteredSubjectTutorialList() {
          if (this.tutorialList.length > 0) {

@@ -37,13 +37,13 @@ export class AddTutorialServiceAdapter {
 
 
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data),
-            this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial_settings, {'parentSchool': this.vm.user.activeSchool.dbId}),
-            this.vm.smsOldService.getSMSCount({'parentSchool': this.vm.user.activeSchool.dbId}, this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),//0
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),//1
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),//2
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),//3
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data),//4
+            this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial_settings, {'parentSchool': this.vm.user.activeSchool.dbId}),//5
+            this.vm.smsOldService.getSMSCount({'parentSchool': this.vm.user.activeSchool.dbId}, this.vm.user.jwt),//6
         ]).then(value => {
             this.vm.smsBalance = value[6];
             if(value[5].length > 0){
@@ -63,7 +63,7 @@ export class AddTutorialServiceAdapter {
             this.subjectList = value[3];
             this.fullStudentList = value[4];
             this.vm.subjectList = this.subjectList;
-            this.populateClassSectionList();
+            this.populateClassSectionSubjectList();
             this.populateDefaults();
             this.vm.isLoading = false;
         }, error => {
@@ -71,7 +71,8 @@ export class AddTutorialServiceAdapter {
         });
     }
 
-    populateClassSectionList(): void {
+
+    populateClassSectionSubjectList(): void {
         this.classSectionSubjectList = [];
         this.classList.forEach(classs => {
             let tempClass = {};
@@ -112,6 +113,26 @@ export class AddTutorialServiceAdapter {
 
     }
 
+    populateDefaults() {
+
+        this.vm.classSectionSubjectList = [];
+        this.vm.classSectionSubjectList = this.classSectionSubjectList;
+        if (this.vm.classSectionSubjectList.length > 0) {
+            this.vm.selectedClass = this.vm.classSectionSubjectList[0];
+            this.vm.selectedSection = this.vm.selectedClass.sectionList[0];
+            this.vm.selectedSubject = this.vm.selectedSection.subjectList[0];
+            this.vm.noSubjects = false;
+        } else {
+            this.vm.noSubjects = true;
+        }
+    }
+
+     containsStudent(sectionTemp: any) {
+        return this.fullStudentList.some(student => {
+            return student.parentDivision === sectionTemp.id && student.parentClass === sectionTemp.parentClass
+        });
+    }
+
 
     getTutorialList(): void {
         this.vm.showTutorialDetails = false;
@@ -122,11 +143,20 @@ export class AddTutorialServiceAdapter {
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_class_subject_tutorial_data),
         ]).then(value => {
             this.populateTutorialList(value[0]);
+            this.vm.showTutorialDetails = true;
+            this.vm.isAddDisabled = true;
         }, error => {
         });
         this.vm.initializeNewTutorial();
-        this.vm.showTutorialDetails = true;
-        this.vm.isAddDisabled = true; // Add button is disabled
+         // Add button is disabled
+    }
+
+    populateTutorialList(tutorialList) {
+        tutorialList.forEach(tutorial => {
+            tutorial['editable'] = false;
+        });
+        tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
+        this.vm.tutorialList = tutorialList;
     }
 
     addNewTutorial(): void {
@@ -189,7 +219,7 @@ export class AddTutorialServiceAdapter {
                 this.vm.tutorialService.updateObject(this.vm.tutorialService.tutorial, data),
             ]).then(value => {
                 Object.assign(this.vm.tutorialList.find(t => t.id === tutorial.id), value[0]);
-                this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
+                this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));//getSortedFunction()
                 this.vm.tutorialUpdating = false;
                 tutorial.editable = false;
                 this.populateStudentList(value[0]);
@@ -214,37 +244,7 @@ export class AddTutorialServiceAdapter {
         }
     }
 
-    removeOrCancel(tutorial: any): void {
-        if (tutorial.editable) {
-            this.vm.showTutorialDetails = false;
-            this.vm.editedTutorial = {};
-            tutorial.editable = false;
-            this.vm.tutorialEditing = false;
-            this.vm.showTutorialDetails = true;
-        } else {
-            if(confirm("Are you sure you want to delete this tutorial?")) {
-                this.vm.tutorialUpdating = true;
-                Promise.all([
-                    this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial),
-                ]).then(value => {
-                    this.vm.tutorialList = this.vm.tutorialList.filter(item => {
-                        return item.id != tutorial.id;
-                    });
-                    this.vm.checkEnableAddButton();
-                    this.populateStudentList(tutorial);
-                    this.vm.tutorialUpdating = false;
-                    if (this.vm.settings != 0 && this.vm.settings.sendDeleteUpdate == true) {
-                        this.prepareSmsNotificationData(this.vm.deleteMessage);
-                    }
-                }, error => {
-                    this.vm.tutorialUpdating = false;
-                });
-            }
-        }
-    }
-
-
-    areInputsValid(tutorial): boolean {
+     areInputsValid(tutorial): boolean {
         if (!tutorial.chapter || tutorial.chapter.trim() == '') {
             alert('Tutorial Chapter should not be empty');
             return false;
@@ -275,33 +275,32 @@ export class AddTutorialServiceAdapter {
         return true;
     }
 
-
-
-    populateTutorialList(tutorialList) {
-        tutorialList.forEach(tutorial => {
-            tutorial['editable'] = false;
-        });
-        tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
-        this.vm.tutorialList = tutorialList;
-    }
-
-    containsStudent(sectionTemp: any) {
-        return this.fullStudentList.some(student => {
-            return student.parentDivision === sectionTemp.id && student.parentClass === sectionTemp.parentClass
-        });
-    }
-
-    populateDefaults() {
-
-        this.vm.classSectionSubjectList = [];
-        this.vm.classSectionSubjectList = this.classSectionSubjectList;
-        if (this.vm.classSectionSubjectList.length > 0) {
-            this.vm.selectedClass = this.vm.classSectionSubjectList[0];
-            this.vm.selectedSection = this.vm.selectedClass.sectionList[0];
-            this.vm.selectedSubject = this.vm.selectedSection.subjectList[0];
-            this.vm.noSubjects=false;
-        }else{
-            this.vm.noSubjects=true;
+    removeOrCancel(tutorial: any): void {
+        if (tutorial.editable) {
+            this.vm.showTutorialDetails = false;
+            this.vm.editedTutorial = {};
+            tutorial.editable = false;
+            this.vm.tutorialEditing = false;
+            this.vm.showTutorialDetails = true;
+        } else {
+            if(confirm("Are you sure you want to delete this tutorial?")) {
+                this.vm.tutorialUpdating = true;
+                Promise.all([
+                    this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial),
+                ]).then(value => {
+                    this.vm.tutorialList = this.vm.tutorialList.filter(item => {
+                        return item.id != tutorial.id;
+                    });
+                    this.vm.checkEnableAddButton();
+                    this.populateStudentList(tutorial);
+                    this.vm.tutorialUpdating = false;
+                    if (this.vm.settings != 0 && this.vm.settings.sendDeleteUpdate == true) {
+                        this.prepareSmsNotificationData(this.vm.deleteMessage);
+                    }
+                }, error => {
+                    this.vm.tutorialUpdating = false;
+                });
+            }
         }
     }
 
