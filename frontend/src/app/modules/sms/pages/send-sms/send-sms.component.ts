@@ -112,7 +112,7 @@ export class SendSmsComponent implements OnInit {
                 public smsService: SmsService,
                 public notificationService: NotificationService,
                 public userService: UserService,
-                private cdRef: ChangeDetectorRef,
+                public cdRef: ChangeDetectorRef,
                 public winRef: WindowRefService) { }
 
     onPage(event) {

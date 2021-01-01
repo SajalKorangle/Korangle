@@ -10,7 +10,7 @@ export class PurchaseSmsServiceAdapter {
     initializeAdapter(vm: PurchaseSmsComponent): void {
         this.vm = vm;
     }
-    smsAdded :Number;
+    purchasedSMS: number=0;
     initializeData(): void {
 
         this.vm.isInitialLoading = true;
@@ -42,6 +42,7 @@ export class PurchaseSmsServiceAdapter {
             orderId : -1,
             payment_capture : 0
         }
+        this.purchasedSMS = +this.vm.selectedSmsPlan.price;
         this.vm.selectedSmsPlan = this.vm.defaultPlan;
 
         //call api to create order_id
@@ -58,7 +59,6 @@ export class PurchaseSmsServiceAdapter {
     }
 
     payWithRazor(val) {
-        this.vm.isLoading = true;
         const options: any = {
           key: 'rzp_test_9ItYu1Pd8xL43N',
           amount: val.price, // amount should be in paise format to display Rs 1255 without decimal point
@@ -93,30 +93,21 @@ export class PurchaseSmsServiceAdapter {
             Promise.all([
                 this.vm.smsService.updateObject(this.vm.smsService.sms_purchase,update_data)
                 ]).then(value => {
-                    console.log(value[0])
                     if(value[0] === undefined)
-                    alert('Transaction Failed, Contact your Admin!!!')
+                    alert('Transaction Failed Contact your Admin!!!' + 'Payment Details :-  ' + 'Payment Id = ' +response.razorpay_payment_id +
+                    '  Order Id = '+ response.razorpay_order_id);
                     else 
                     {   
-                        const sms_count_request_data = {
-                            parentSchool: this.vm.user.activeSchool.dbId,
-                        };
                         alert('Transaction Completed!!!');
-                        this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt).then(value => {
-                            this.vm.SMSCount = value.count;
-                            this.vm.ref.detectChanges();
-                            this.vm.isLoading = false;
-                        })
+                        this.vm.SMSCount += this.purchasedSMS;
+                        this.vm.ref.detectChanges();
                     }
                     
-                }, error => {
-                    this.vm.isLoading =false;
                 })
             });
         options.modal.ondismiss = (() => {
           // handle the case when user closes the form while transaction is in progress
-          this.vm.selectedSmsPlan = undefined;
-          console.log('Transaction cancelled.');
+          alert('Transaction cancelled.');
         });
         const rzp = new this.vm.winRef.nativeWindow.Razorpay(options);
         rzp.open();

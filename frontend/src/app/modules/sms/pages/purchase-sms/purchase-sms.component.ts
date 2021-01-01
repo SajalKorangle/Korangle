@@ -31,7 +31,7 @@ export class PurchaseSmsComponent implements OnInit {
   defaultPlan = {noOfSms:'',price:''};
   selectedSmsPlan =this.defaultPlan;
 
-  SMSCount : Number
+  SMSCount =0;
 
 
   constructor(public smsService: SmsService,

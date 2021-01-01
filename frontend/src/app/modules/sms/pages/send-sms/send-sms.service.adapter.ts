@@ -7,6 +7,7 @@ export class SendSmsServiceAdapter {
     sectionList: any;
 
     vm: SendSmsComponent;
+    purchasedSMS: number=0;
 
     constructor() {}
 
@@ -66,6 +67,7 @@ export class SendSmsServiceAdapter {
             'dateOfLeaving': 'null__korangle',
             'fields__korangle': 'id,name,fathersName,mobileNumber',
         };
+        console.dir(sms_count_request_data, {depth:null});
 
         this.vm.isLoading = true;
 
@@ -93,6 +95,7 @@ export class SendSmsServiceAdapter {
             this.vm.studentSectionList = value[2];
             this.populateStudentList(value[3]);
             this.populateEmployeeList(value[4]);
+            console.dir(value[5], {depth:null})
             this.vm.smsBalance = value[5].count;
             this.vm.studentParameterList = value[6].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false})), showNone: false, filterFilterValues: ''}));
             this.vm.studentParameterValueList = value[7]
@@ -337,6 +340,7 @@ export class SendSmsServiceAdapter {
     }
 
     createRzpayOrder() {
+        this.vm.isLoading = true;
         let sms_purchase_data = {
             parentSchool :this.vm.user.activeSchool.dbId,
             purchseDateTime: Date.now(),
@@ -345,13 +349,14 @@ export class SendSmsServiceAdapter {
             orderId : -1,
             payment_capture : 0
         }
+        this.purchasedSMS = +this.vm.selectedSmsPlan.price;
         this.vm.selectedSmsPlan = this.vm.defaultPlan;
-
         //call api to create order_id
         Promise.all([
             this.vm.smsService.createObject(this.vm.smsService.sms_purchase,sms_purchase_data)
         ]).then(value => {        
             this.payWithRazor(value[0]);
+            this.vm.isLoading = false;
         }, error => {
             console.log('Error fetching data');
         })
@@ -395,18 +400,23 @@ export class SendSmsServiceAdapter {
                 ]).then(value => {
                     console.log(value[0])
                     if(value[0] === undefined)
-                    alert('Transaction Failed, Contact your Admin!!!')
+                    alert('Transaction Failed Contact your Admin!!!' + 'Payment Details :-  ' + 'Payment Id = ' +response.razorpay_payment_id +
+                    '  Order Id = '+ response.razorpay_order_id);                    
                     else
-                    alert('Transaction Completed!!!')
+                    {
+                        alert('Transaction Completed!!!')
+                        this.vm.smsBalance += this.purchasedSMS;
+                        this.purchasedSMS = 0;
+                        this.vm.cdRef.detectChanges();
+                        
+                    }
                 }, error => {
-                    console.log(error);
-                    console.log('Error Updating data, Transaction is not captured');
+                    this.purchasedSMS = 0;
                 })
             });
         options.modal.ondismiss = (() => {
           // handle the case when user closes the form while transaction is in progress
-          this.vm.selectedSmsPlan = undefined;
-          console.log('Transaction cancelled.');
+          alert('Transaction cancelled.');
         });
         const rzp = new this.vm.winRef.nativeWindow.Razorpay(options);
         rzp.open();
