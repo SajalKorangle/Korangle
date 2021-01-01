@@ -29,7 +29,7 @@ export class ImagePreviewDialogComponent {
     moveToIndex: any;
 
     imageStyle = {
-        'display': 'table-cell',
+        'display': 'inline-block',
         'margin': 'auto',
         'width': '50%',
         'height': '50%',

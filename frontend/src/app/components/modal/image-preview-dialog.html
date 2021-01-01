@@ -17,9 +17,9 @@
             <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 40px; float:right">clear</span>
         </div>
     </div>
-    <div class="row" style="overflow: auto; display: flex; justify-content: center; align-items: center; height: 60vh">
+    <div class="row" style="overflow-x: auto;overflow-y: auto; display: flex; justify-content: center; align-items: center; height: 60vh; width: 60vw">
         <img *ngIf="data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" [ngStyle]="imageStyle">
-        <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" style="display:table-cell;margin: auto; ">
+        <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" [ngStyle]="imageStyle">
     </div>
 </mat-dialog-content>
 
@@ -32,9 +32,6 @@
         <div class="col-md-10" style="text-align: center;">
             <span class="material-icons cursor" style="font-size: 30px;" (click)="increaseSize()">zoom_in</span>
             <span class="material-icons cursor" style="font-size: 30px;" (click)="decreaseSize()">zoom_out</span>
-        
-            <!-- <button  class="material-icons" style="font-size: 30px;" (click)="increaseSize()">zoom_in</button>    
-            <button  class="material-icons" style="font-size: 30px;" (click)="decreaseSize()">zoom_out</button>     -->
         </div>
         <div class="col-md-1">
             <span class="material-icons cursor" style="font-size: 30px;" (click)="increaseIndex()">keyboard_arrow_right</span>
