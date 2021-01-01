@@ -69,15 +69,14 @@ mat-form-field input[type='date'] {
 	clear: both;
 }
 .image-column {
-	width: 1.375in; 
+	max-width: 1.525in; 
 	height: 1.525in; 
 	margin-right: 10px;
 	margin-top: 10px
 }
 
-
 .image-column-mobile {
-	width: 0.375in; 
+	max-width: 0.525in; 
 	height: 0.525in; 
 	margin-right: 5px;
 	margin-top: 5px

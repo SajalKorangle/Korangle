@@ -32,52 +32,12 @@ export class ImagePreviewDialogComponent {
         'display': 'inline-block',
         'margin': 'auto',
         'width': '50%',
-        'height': '50%',
     }
-    maxSize = false;
-    minSize = false;
-
     increaseSize(): any{
-        this.minSize = false;
-        let currentWidth = this.imageStyle.width;
-        if(currentWidth.length == 3){
-            this.imageStyle.width = '100%';
-            this.imageStyle.height = '100%';
-        }
-        else{
-            if(currentWidth[1] == '5'){
-                this.imageStyle.width = '200%';
-                this.imageStyle.height = '200%';
-            }
-            else if(currentWidth[0] == '1'){
-                this.imageStyle.width = '150%';
-                this.imageStyle.height = '150%';
-            }
-            else{
-                this.maxSize = true;
-            }
-        }
+        this.imageStyle.width = '100%';
     }
     decreaseSize(): any{
-        this.maxSize = false;
-        let currentWidth = this.imageStyle.width;
-        if(currentWidth.length == 3){
-            this.minSize = true;
-        }
-        else{
-            if(currentWidth[1] == '5'){
-                this.imageStyle.width = '100%';
-                this.imageStyle.height = '100%';
-            }
-            else if(currentWidth[0] == '1'){
-                this.imageStyle.width = '50%';
-                this.imageStyle.height = '50%';
-            }
-            else if(currentWidth[0] == '2'){
-                this.imageStyle.width = '150%';
-                this.imageStyle.height = '150%';
-            }
-        }
+        this.imageStyle.width = '50%';
     }
 
     onNoClick(): void {
@@ -88,7 +48,8 @@ export class ImagePreviewDialogComponent {
         this.data.index = this.data.index - 1;
         if(this.data.index < 0)
             this.data.index = this.data.homeworkImages.length - 1;
-            this.moveToIndex = this.data.index;
+        this.moveToIndex = this.data.index;
+        this.imageStyle.width = '50%';
     }
 
     
@@ -97,6 +58,7 @@ export class ImagePreviewDialogComponent {
         if(this.data.index == this.data.homeworkImages.length)
             this.data.index = 0;
         this.moveToIndex = this.data.index;
+        this.imageStyle.width = '50%';
     }
 
     removeImage(index: any):any{
@@ -114,6 +76,7 @@ export class ImagePreviewDialogComponent {
         this.data.homeworkImages.splice(this.data.index, 1);
         this.data.homeworkImages.splice(this.moveToIndex, 0, temp);
         this.data.index = this.moveToIndex;
+        this.imageStyle.width = '50%';
     }
 
     
