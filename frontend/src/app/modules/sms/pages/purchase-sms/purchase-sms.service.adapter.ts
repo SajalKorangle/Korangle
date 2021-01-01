@@ -51,9 +51,6 @@ export class PurchaseSmsServiceAdapter {
         ]).then(value => {      
             this.payWithRazor(value[0]);
             this.vm.isLoading =  false; 
-        }, error => {
-            console.log('Error fetching data');
-            this.vm.isLoading = false;
         })
         
     }

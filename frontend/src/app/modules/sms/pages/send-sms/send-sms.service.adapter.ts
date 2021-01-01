@@ -67,7 +67,6 @@ export class SendSmsServiceAdapter {
             'dateOfLeaving': 'null__korangle',
             'fields__korangle': 'id,name,fathersName,mobileNumber',
         };
-        console.dir(sms_count_request_data, {depth:null});
 
         this.vm.isLoading = true;
 
@@ -87,15 +86,11 @@ export class SendSmsServiceAdapter {
                 'parentStudentParamter__parameterType': 'FILTER'
             })
         ]).then(value => {
-
-            console.log(value);
-
             this.classList = value[0];
             this.sectionList = value[1];
             this.vm.studentSectionList = value[2];
             this.populateStudentList(value[3]);
             this.populateEmployeeList(value[4]);
-            console.dir(value[5], {depth:null})
             this.vm.smsBalance = value[5].count;
             this.vm.studentParameterList = value[6].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false})), showNone: false, filterFilterValues: ''}));
             this.vm.studentParameterValueList = value[7]
@@ -128,64 +123,8 @@ export class SendSmsServiceAdapter {
                 loopVariable = loopVariable + 1;
             }
 
-            /*if(stringMobileNumberList.length>700) {
-
-                let gcm_device_data_1 = {
-                    'user__username__in': stringMobileNumberList.slice(0,700),
-                    'active': 'true__boolean',
-                };
-
-                let gcm_device_data_2 = {
-                    'user__username__in': stringMobileNumberList.slice(700),
-                    'active': 'true__boolean',
-                };
-
-                let user_data_1 = {
-                    'fields__korangle': 'username,id',
-                    'username__in': stringMobileNumberList.slice(0,700),
-                };
-
-                let user_data_2 = {
-                    'fields__korangle': 'username,id',
-                    'username__in': stringMobileNumberList.slice(700),
-                };
-
-                service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data_1));
-                service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data_2));
-                service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data_1));
-                service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data_2));
-
-            } else {
-
-                let gcm_device_data = {
-                    'user__username__in': this.getAllStringMobileNumberList(),
-                    'active': 'true__boolean',
-                };
-
-                let user_data = {
-                    'fields__korangle': 'username,id',
-                    'username__in': this.getAllStringMobileNumberList(),
-                };
-
-                service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data));
-                service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
-
-            }*/
-
-            // console.log(gcm_device_data);
-            // console.log(user_data);
 
             Promise.all(service_list).then(value2 => {
-
-                console.log(value2);
-
-                /*if (service_list.length == 4) {
-                    this.vm.gcmDeviceList = value2[0].concat(value2[1]);
-                    this.populateFilteredUserList(value2[2].concat(value2[3]));
-                } else {
-                    this.vm.gcmDeviceList = value2[0];
-                    this.populateFilteredUserList(value2[1]);
-                }*/
 
                 let gcmDeviceList = [];
                 let userList = [];
@@ -304,8 +243,6 @@ export class SendSmsServiceAdapter {
             };
         });
 
-        console.log(notification_data);
-
         if (this.vm.smsMobileNumberList.length>0) {
             if (!confirm('Please confirm that you are sending ' + (this.vm.getSMSCount()*this.vm.getMobileNumberList('sms').length) + ' SMS.')) {
                 return;
@@ -357,8 +294,6 @@ export class SendSmsServiceAdapter {
         ]).then(value => {        
             this.payWithRazor(value[0]);
             this.vm.isLoading = false;
-        }, error => {
-            console.log('Error fetching data');
         })
         
     }
@@ -398,7 +333,6 @@ export class SendSmsServiceAdapter {
             Promise.all([
                 this.vm.smsService.updateObject(this.vm.smsService.sms_purchase,update_data)
                 ]).then(value => {
-                    console.log(value[0])
                     if(value[0] === undefined)
                     alert('Transaction Failed Contact your Admin!!!' + 'Payment Details :-  ' + 'Payment Id = ' +response.razorpay_payment_id +
                     '  Order Id = '+ response.razorpay_order_id);                    

@@ -376,7 +376,6 @@ export class SendSmsComponent implements OnInit {
     }
 
     getSelectedStudentNumber = () => {
-        // console.log(this.getFilteredStudentList().reduce((acc,x) => acc+x.selected?1:0, 0))
         return this.getFilteredStudentList().reduce((acc,x) => {
             return x.selected?acc+1:acc
         }, 0)
