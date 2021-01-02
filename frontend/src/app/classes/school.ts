@@ -130,7 +130,12 @@ export class School {
                     title: 'Marks',
                     path: 'view_marks',
                     icon: 'receipt',
-                }
+                },
+                {
+                    title: 'Homework',
+                    path: 'view_homework',
+                    icon: 'assignment',
+                },
             ];
         });
 

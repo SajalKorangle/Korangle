@@ -13,6 +13,21 @@
             "file": "1.json"
         }
       ]
+    },
+    {
+      "file": "class_one_subject.json",
+      "file_object_list": [
+        {
+          "app": "school_app",
+          "model": "School",
+          "file": "1.json"
+        },
+        {
+            "app": "employee_app",
+            "model": "Employee",
+            "file": "1.json"
+        }
+      ]
     }
   ]
   

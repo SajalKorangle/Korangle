@@ -1,0 +1,1 @@
+[{"model": "subject_app.classsubject", "pk": 1, "fields": {"parentSubject": 4, "parentSchool": 1, "parentEmployee": 1, "parentClass": 1, "parentDivision": 1, "parentSession": 1, "mainSubject": true, "onlyGrade": false, "orderNumber": 0}}]

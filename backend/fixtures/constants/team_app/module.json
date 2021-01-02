@@ -14,5 +14,6 @@
 	{ "model": "team_app.module", "pk": 16, "fields": { "path": "report_card_mp_board", "title": "Report Card", "icon": "book", "orderNumber": 8, "parentBoard": 1 } },
 	{ "model": "team_app.module", "pk": 17, "fields": { "path": "report_card_cbse", "title": "Report Card", "icon": "book", "orderNumber": 8, "parentBoard": 2 } },
 	{ "model": "team_app.module", "pk": 18, "fields": { "path": "class", "title": "Class", "icon": "people", "orderNumber": 13, "parentBoard": null } },
-	{ "model": "team_app.module", "pk": 19, "fields": { "path": "id_card", "title": "ID Card", "icon": "portrait", "orderNumber": 9, "parentBoard": null } }
+	{ "model": "team_app.module", "pk": 19, "fields": { "path": "id_card", "title": "ID Card", "icon": "portrait", "orderNumber": 9, "parentBoard": null } },
+	{ "model": "team_app.module", "pk": 20, "fields": { "path": "homework", "title": "Homework", "icon": "assignment", "orderNumber": 12, "parentBoard": null } }
 ]
