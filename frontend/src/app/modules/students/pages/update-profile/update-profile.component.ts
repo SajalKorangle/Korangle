@@ -209,6 +209,7 @@ export class UpdateProfileComponent implements OnInit {
         }));
         profile_image_data.append('profileImage', image);
 
+
         this.studentService.partiallyUpdateObject(this.studentService.student, profile_image_data).then(value => {
             Object.keys(value).forEach(key => {
                 this.selectedStudent[key] = value[key];
