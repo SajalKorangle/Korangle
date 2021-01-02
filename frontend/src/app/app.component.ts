@@ -57,10 +57,13 @@ export class AppComponent implements OnInit {
         this.versionCheckService.initVersionCheck(environment.versionCheckURL);
     }
 
-    showTutorial() {
+    showTutorial(url:any) {
         this.dialog.open(ModalVideoComponent, {
             height: '80vh',
             width: '80vw',
+            data: {
+                videoUrl: url
+            }
         });
     }
 

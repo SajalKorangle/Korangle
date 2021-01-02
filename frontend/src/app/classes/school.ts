@@ -132,10 +132,15 @@ export class School {
                     icon: 'receipt',
                 },
                 {
+                    title:'Tutorials',
+                    path:'view_tutorials',
+                    icon:'video_library',
+                },
+                {
                     title: 'Homework',
                     path: 'view_homework',
                     icon: 'assignment',
-                },
+                }
             ];
         });
 

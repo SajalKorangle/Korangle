@@ -8,7 +8,7 @@ def access_homework_app(apps, schema_editor):
 
     module_object = Module(path='homework',
                            title='Homework',
-                           orderNumber=12,
+                           orderNumber=7,
                            icon='assignment')
     module_object.save()
 
