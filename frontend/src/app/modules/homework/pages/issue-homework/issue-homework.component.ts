@@ -230,13 +230,10 @@ export class IssueHomeworkComponent implements OnInit {
 
         return [hours, minutes].join(':');
     }
-    func():any{
-        console.log('func');
-    }
+
     readURL(event): void {
-        console.log('add');
         if (event.target.files && event.target.files[0]) {
-            const image = event.target.files[0];
+            let image = event.target.files[0];
             if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
                 alert('File type should be either jpg, jpeg, or png');
                 return;
@@ -252,9 +249,7 @@ export class IssueHomeworkComponent implements OnInit {
                 this.currentHomeworkImages.push(tempImageData);
             };
             reader.readAsDataURL(image);
-            
         }
-        console.log(this.currentHomeworkImages);
     }
 
     
