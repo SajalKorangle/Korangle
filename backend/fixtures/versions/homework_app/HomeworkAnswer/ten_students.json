@@ -1,0 +1,13 @@
+[
+    { "model": "homework_app.homeworkanswer", "pk": 1, "fields": { "parentStudent": 1 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 2, "fields": { "parentStudent": 2 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 3, "fields": { "parentStudent": 3 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 4, "fields": { "parentStudent": 4 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 5, "fields": { "parentStudent": 5 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 6, "fields": { "parentStudent": 6 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 7, "fields": { "parentStudent": 7 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 8, "fields": { "parentStudent": 8 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 9, "fields": { "parentStudent": 9 , "parentHomework": 1, "homeworkStatus": "GIVEN" } },
+    { "model": "homework_app.homeworkanswer", "pk": 10, "fields": { "parentStudent": 10 , "parentHomework": 1, "homeworkStatus": "GIVEN" } }
+
+]

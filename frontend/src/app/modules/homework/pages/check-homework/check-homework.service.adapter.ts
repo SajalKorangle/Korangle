@@ -21,13 +21,11 @@ export class CheckHomeworkServiceAdapter {
         this.vm.sendUpdateType = 'NULL';
 
         let request_homework_list = {
-            'parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId, 
             'parentClassSubject__parentEmployee': this.vm.user.activeSchool.employeeId,
             'parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId
         }
 
         let request_class_subject_list = {
-            'parentSchool' : this.vm.user.activeSchool.dbId, 
             'parentEmployee': this.vm.user.activeSchool.employeeId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId
         }
@@ -37,7 +35,7 @@ export class CheckHomeworkServiceAdapter {
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, request_homework_list),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, request_homework_list),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list),
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings,{'parentSchool' : this.vm.user.activeSchool.dbId}),
             this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt),
@@ -150,7 +148,7 @@ export class CheckHomeworkServiceAdapter {
         }
 
         Promise.all([
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, homework_data),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
         ]).then(value =>{
             this.vm.currentHomework.images = value[0];
@@ -170,8 +168,8 @@ export class CheckHomeworkServiceAdapter {
             }
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_status, student_homework_data),
                 this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer, student_homework_data),
+                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_data),
             ]).then(value =>{
                 value[0].forEach(element =>{
                     let tempData = {
@@ -261,7 +259,7 @@ export class CheckHomeworkServiceAdapter {
         }
         let tempStudent = this.vm.studentList.find(student => student.dbId == studentHomework.parentStudent);
         Promise.all([
-            this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_status, tempData),
+            this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData),
         ]).then(value =>{
             if(studentHomework.status == this.vm.HOMEWORK_STATUS[2] && this.vm.sendCheckUpdate == true && this.vm.sendUpdateType!= 'NULL'){
                 let tempData = {
@@ -304,7 +302,7 @@ export class CheckHomeworkServiceAdapter {
             'remark': studentHomework.remark,
         }
         Promise.all([
-            this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_status, tempData),
+            this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData),
         ]).then(value =>{
             studentHomework.isStatusLoading = false;
         },error =>{

@@ -1,4 +1,5 @@
 import { IssueHomeworkComponent } from './issue-homework.component';
+import { Homework } from '../../../../services/modules/homework/models/homework';
 
 export class IssueHomeworkServiceAdapter {
 
@@ -70,8 +71,8 @@ export class IssueHomeworkServiceAdapter {
         };
 
         Promise.all([
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homeworks, {parentClassSubject: this.vm.selectedSubject.classSubjectDbId}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, homework_data),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, {parentClassSubject: this.vm.selectedSubject.classSubjectDbId}),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             // this.vm.
         ]).then(value =>{
@@ -102,7 +103,7 @@ export class IssueHomeworkServiceAdapter {
                 this.fetchGCMDevices(this.vm.studentList);
                 this.vm.isLoading = false;
             });
-            this.vm.sortHomeworks();
+            this.sortHomeworks();
             this.vm.isLoading = false;
             this.vm.showContent = true;
         },error =>{
@@ -145,6 +146,120 @@ export class IssueHomeworkServiceAdapter {
 
     }
 
+    createHomework():any{
+        this.vm.isLoading = true;
+        this.vm.currentHomework.parentClassSubject = this.vm.selectedSubject.classSubjectDbId;
+        let currentDate = new Date();
+        this.vm.currentHomework.startDate = this.vm.formatDate(currentDate, '');
+        this.vm.currentHomework.startTime = this.vm.formatTime(currentDate);
+        if(this.vm.currentHomework.endDate != null && this.vm.currentHomework.endTime == null){
+            this.vm.currentHomework.endTime =  '23:59';
+        }
+        
+        
+        Promise.all([
+            this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question , this.vm.currentHomework),
+        ]).then(value =>{
+            this.vm.currentHomework.id = value[0].id;
+            this.populateCurrentHomework();
+            
+            Promise.all(this.populateHomeworkImages()).then(sValue =>{
+                alert('Homework has been successfully created');
+                this.populateStudentList(this.vm.studentList, this.vm.currentHomework);
+                this.populateCurrentHomeworkImages(value[0].id, sValue);
+                this.vm.currentHomework = new Homework;
+                this.vm.currentHomeworkImages = [];
+                this.vm.isLoading = false;
+                if(this.vm.settings.sendCreateUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
+                    this.sendSMSNotification(this.vm.studentList, this.vm.homeworkCreatedMessage);
+                }
+            },error =>{
+                this.vm.isLoading = false;
+            })
+        },error =>{
+            this.vm.isLoading = false;
+        });
+        
+    }
+
+    sortHomeworks(): any{
+        this.vm.homeworkList.sort((a, b) => a.id > b.id ? -1 : a.id < b.id ? 1 : 0);
+    }
+
+    populateCurrentHomework(): any{
+        let tempHomework = {
+            id: this.vm.currentHomework.id,
+            homeworkName: this.vm.currentHomework.homeworkName ,
+            parentClassSubject: this.vm.currentHomework.parentClassSubject,
+            startDate: this.vm.currentHomework.startDate,
+            startTime: this.vm.currentHomework.startTime,
+            endDate: this.vm.currentHomework.endDate,
+            endTime: this.vm.currentHomework.endTime,
+            homeworkText: this.vm.currentHomework.homeworkText,
+            homeworkImages: [],
+        }
+        this.vm.homeworkList.push(tempHomework);
+        this.sortHomeworks();
+    }
+
+    populateCurrentHomeworkImages(homeworkId: any,imagesList: any): any{
+        let tempHomework = this.vm.homeworkList.find(homework => homework.id == homeworkId);
+        imagesList.forEach(image =>{
+            if(image.questionImage != undefined)
+                tempHomework.homeworkImages.push(image);
+        });
+        this.sortHomeworks();
+    }
+
+    populateHomeworkImages(): any{
+        let index = 0;
+        let promises = [];
+        this.vm.currentHomeworkImages.forEach(image =>{
+            image.parentHomework = this.vm.currentHomework.id;
+            image.orderNumber = index;
+            let temp_form_data = new FormData();
+            const layout_data = { ...image,};
+            Object.keys(layout_data).forEach(key => {
+                if (key === 'questionImage' ) {
+                    const file = this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg');
+                    temp_form_data.append(key, this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
+                } else {
+                    temp_form_data.append(key, layout_data[key]);
+                }
+            });
+            index = index + 1;
+            promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question_image, temp_form_data));
+        })
+
+        //This part of the code is used to create student-homework initial data in homeworkAnswer model.
+        let studentIdList = [];
+        this.vm.studentList.forEach(student =>{
+            studentIdList.push(student.dbId);
+        });
+
+        studentIdList.forEach(student =>{
+            let tempData = {
+                'parentStudent': student,
+                'parentHomework': this.vm.currentHomework.id,
+                'homeworkStatus': 'GIVEN',
+            }
+            promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_answer, tempData));
+        })
+
+        return promises;
+    }
+
+    
+    populateStudentList(studentList: any, homeworkData: any): any{
+        studentList.forEach(student =>{
+            student.homeworkName = homeworkData.homeworkName;
+            student.deadLine = this.vm.displayDateTime(homeworkData.endDate, homeworkData.endTime);
+        
+        });
+    }
+
+
+
 
     deleteHomework(homeworkId: any): any{
 
@@ -155,14 +270,14 @@ export class IssueHomeworkServiceAdapter {
         let tempHomeworkName;
 
         this.vm.isLoading = true;
-        this.vm.homeworkService.deleteObject(this.vm.homeworkService.homeworks, {id: homeworkId}).then(value =>{
+        this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question, {id: homeworkId}).then(value =>{
             this.vm.homeworkList.forEach( (homework,index) =>{
                 if(homework.id == homeworkId){
                     tempHomeworkName = homework.homeworkName;
                     this.vm.homeworkList.splice(index, 1);
                 }
             });
-            this.vm.populateStudentList(this.vm.studentList, {'homeworkName': tempHomeworkName});
+            this.populateStudentList(this.vm.studentList, {'homeworkName': tempHomeworkName});
             if(this.vm.settings.sendDeleteUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
                 this.sendSMSNotification(this.vm.studentList, this.vm.homeworkDeleteMessage);
             }
@@ -189,7 +304,7 @@ export class IssueHomeworkServiceAdapter {
             homeworkText: data.homeworkText,
         }
 
-        promises.push(this.vm.homeworkService.updateObject(this.vm.homeworkService.homeworks, tempHomeworkData));
+        promises.push(this.vm.homeworkService.updateObject(this.vm.homeworkService.homework_question, tempHomeworkData));
 
         let index = 0;
         data.homeworkImages.forEach(image =>{
@@ -209,14 +324,14 @@ export class IssueHomeworkServiceAdapter {
                         temp_form_data.append(key, layout_data[key]);
                     }
                 });
-                promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question, temp_form_data));
+                promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question_image, temp_form_data));
             }
             else{
                 let tempData ={
                     id: temp.id,
                     orderNumber: index,
                 }
-                promises.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_question, tempData));
+                promises.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_question_image, tempData));
                 let tempIndex = previousHomework.homeworkImages.indexOf(temp);
                 previousHomework.homeworkImages.splice(tempIndex, 1);
             }
@@ -224,12 +339,12 @@ export class IssueHomeworkServiceAdapter {
         });
 
         previousHomework.homeworkImages.forEach(image =>{
-            promises.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question, image));
+            promises.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question_image, image));
         });
 
         Promise.all(promises).then(value =>{
             this.vm.populateEditedHomework(value);
-            this.vm.populateStudentList(this.vm.studentList, value[0]);
+            this.populateStudentList(this.vm.studentList, value[0]);
             if(this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
                 this.sendSMSNotification(this.vm.studentList, this.vm.homeworkUpdateMessage);
             }

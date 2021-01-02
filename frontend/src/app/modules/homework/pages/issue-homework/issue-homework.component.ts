@@ -185,118 +185,6 @@ export class IssueHomeworkComponent implements OnInit {
     }
     
 
-    createHomework():any{
-        this.isLoading = true;
-        this.currentHomework.parentClassSubject = this.selectedSubject.classSubjectDbId;
-        let currentDate = new Date();
-        this.currentHomework.startDate = this.formatDate(currentDate, '');
-        this.currentHomework.startTime = this.formatTime(currentDate);
-        if(this.currentHomework.endDate != null && this.currentHomework.endTime == null){
-            this.currentHomework.endTime =  '23:59';
-        }
-        
-        
-        Promise.all([
-            this.homeworkService.createObject(this.homeworkService.homeworks , this.currentHomework),
-        ]).then(value =>{
-            this.currentHomework.id = value[0].id;
-            this.populateCurrentHomework();
-            
-            Promise.all(this.populateHomeworkImages()).then(sValue =>{
-                alert('Homework has been successfully created');
-                this.populateStudentList(this.studentList, this.currentHomework);
-                this.populateCurrentHomeworkImages(value[0].id, sValue);
-                this.currentHomework = new Homework;
-                this.currentHomeworkImages = [];
-                this.isLoading = false;
-                if(this.settings.sendCreateUpdate == true && this.settings.sentUpdateType !='NULL'){
-                    this.serviceAdapter.sendSMSNotification(this.studentList, this.homeworkCreatedMessage);
-                }
-            },error =>{
-                this.isLoading = false;
-            })
-        },error =>{
-            this.isLoading = false;
-        });
-        
-    }
-
-    sortHomeworks(): any{
-        this.homeworkList.sort((a, b) => a.id > b.id ? -1 : a.id < b.id ? 1 : 0);
-    }
-
-    populateCurrentHomework(): any{
-        let tempHomework = {
-            id: this.currentHomework.id,
-            homeworkName: this.currentHomework.homeworkName ,
-            parentClassSubject: this.currentHomework.parentClassSubject,
-            startDate: this.currentHomework.startDate,
-            startTime: this.currentHomework.startTime,
-            endDate: this.currentHomework.endDate,
-            endTime: this.currentHomework.endTime,
-            homeworkText: this.currentHomework.homeworkText,
-            homeworkImages: [],
-        }
-        this.homeworkList.push(tempHomework);
-        this.sortHomeworks();
-    }
-
-    populateCurrentHomeworkImages(homeworkId: any,imagesList: any): any{
-        let tempHomework = this.homeworkList.find(homework => homework.id == homeworkId);
-        imagesList.forEach(image =>{
-            if(image.questionImage != undefined)
-                tempHomework.homeworkImages.push(image);
-        });
-        this.sortHomeworks();
-    }
-
-    populateHomeworkImages(): any{
-        let index = 0;
-        let promises = [];
-        this.currentHomeworkImages.forEach(image =>{
-            image.parentHomework = this.currentHomework.id;
-            image.orderNumber = index;
-            let temp_form_data = new FormData();
-            const layout_data = { ...image,};
-            Object.keys(layout_data).forEach(key => {
-                if (key === 'questionImage' ) {
-                    const file = this.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg');
-                    temp_form_data.append(key, this.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
-                } else {
-                    temp_form_data.append(key, layout_data[key]);
-                }
-            });
-            index = index + 1;
-            promises.push(this.homeworkService.createObject(this.homeworkService.homework_question, temp_form_data));
-        })
-
-        let studentIdList = [];
-        this.studentList.forEach(student =>{
-            studentIdList.push(student.dbId);
-        });
-
-        studentIdList.forEach(student =>{
-            let tempData = {
-                'parentStudent': student,
-                'parentHomework': this.currentHomework.id,
-                'homeworkStatus': 'GIVEN',
-            }
-            promises.push(this.homeworkService.createObject(this.homeworkService.homework_status, tempData));
-        })
-
-        return promises;
-    }
-
-
-    populateStudentList(studentList: any, homeworkData: any): any{
-        studentList.forEach(student =>{
-            student.homeworkName = homeworkData.homeworkName;
-            if(homeworkData.endDate != undefined){
-                student.deadLine = this.displayDateTime(homeworkData.endDate, homeworkData.endTime);
-            }
-        });
-    }
-
     populateEditedHomework(data: any): any{
         let tempHomeworkData = data[0];
         let previousHomework = this.homeworkList.find(homework => homework.id === tempHomeworkData.id);
@@ -342,13 +230,15 @@ export class IssueHomeworkComponent implements OnInit {
 
         return [hours, minutes].join(':');
     }
-
+    func():any{
+        console.log('func');
+    }
     readURL(event): void {
-        
+        console.log('add');
         if (event.target.files && event.target.files[0]) {
             const image = event.target.files[0];
-            if (image.type !== 'image/jpeg' && image.type !== 'image/png' && image.type !== 'application/pdf') {
-                alert('File type should be either pdf, jpg, jpeg, or png');
+            if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+                alert('File type should be either jpg, jpeg, or png');
                 return;
             }
             
@@ -364,6 +254,7 @@ export class IssueHomeworkComponent implements OnInit {
             reader.readAsDataURL(image);
             
         }
+        console.log(this.currentHomeworkImages);
     }
 
     
@@ -496,13 +387,23 @@ export class IssueHomeworkComponent implements OnInit {
             data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
         });
     
-        dialogRef.afterClosed().subscribe(result => {
-            
-        });
+        dialogRef.afterClosed();
     }
     
     isMobile(): boolean {
         return isMobile();
+    }
+
+    isCreateButtonDisabled(str: string): boolean{
+        if(str == null){
+            return true;
+        }
+        for(let i=0;i<str.length ;i++){
+            if(str != ' '){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

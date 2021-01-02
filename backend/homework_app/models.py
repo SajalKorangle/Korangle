@@ -19,33 +19,33 @@ def upload_answer_to(instance, filename):
     return 'homeworks/%s/answer_file/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
 
 
-class Homework(models.Model):
+class HomeworkQuestion(models.Model):
 
-    homeworkName = models.TextField(null=False)
+    homeworkName = models.TextField(null=False ,default='')
     parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentClassSubject')
     startDate = models.DateField(null=False, verbose_name='startDate')
     endDate = models.DateField(null=True, verbose_name='endDate')
     startTime = models.TimeField(null=False, verbose_name='startTime')
     endTime = models.TimeField(null=True, blank=True, verbose_name='endTime', default='23:59:59')
-    homeworkText = models.TextField(null=True)
+    homeworkText = models.TextField(null=True, blank=True)
     
-
-    class Meta:
-        db_table = 'homework'
-
-class HomeworkQuestion(models.Model):
-
-    parentHomework = models.ForeignKey(Homework, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
-    questionImage = models.ImageField('question_image', upload_to = upload_question_to,blank = True,null=True)
-    orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
 
     class Meta:
         db_table = 'homework_question'
 
-class HomeworkStatus(models.Model):
+class HomeworkQuestionImage(models.Model):
+
+    parentHomework = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
+    questionImage = models.ImageField('question_image', upload_to = upload_question_to,blank = True,null=True)
+    orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
+
+    class Meta:
+        db_table = 'homework_question_image'
+
+class HomeworkAnswer(models.Model):
 
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentStudent')
-    parentHomework = models.ForeignKey(Homework, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
+    parentHomework = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
     
     HOMEWORK_GIVEN_STATUS = 'GIVEN'
     HOMEWORK_SUBMITTED_STATUS = 'SUBMITTED'
@@ -62,23 +62,23 @@ class HomeworkStatus(models.Model):
     homeworkStatus = models.TextField(null=False, choices=HOMEWORK_STATUS, default=HOMEWORK_GIVEN_STATUS)
     submissionDate = models.DateField(null=True, verbose_name='submissionDate')
     submissionTime = models.TimeField(null=True, verbose_name='submissionTime')
-    answerText = models.TextField(null=True)
+    answerText = models.TextField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True, verbose_name='remark')
     
     class Meta:
-        db_table = 'homework_status'
+        db_table = 'homework_answer'
         unique_together = ('parentStudent', 'parentHomework')
 
-class HomeworkAnswer(models.Model):
+class HomeworkAnswerImage(models.Model):
 
-    parentHomework = models.ForeignKey(Homework, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
+    parentHomework = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentStudent')
 
     answerImage = models.ImageField("answer_image", upload_to = upload_answer_to,blank = True,null=True)
     orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
 
     class Meta:
-        db_table = 'homework_answer'
+        db_table = 'homework_answer_image'
 
 class HomeworkSettings(models.Model):
     

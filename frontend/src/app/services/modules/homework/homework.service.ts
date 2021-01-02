@@ -10,15 +10,15 @@ export class HomeworkService extends ServiceObject {
     protected module_url = '/homework';
 
     // objects urls
-    public homeworks =  '/homework';
-    public homework_question = '/homework-question';
-    public homework_status = '/homework-status';
+    public homework_question =  '/homework-question';
+    public homework_question_image = '/homework-question-image';
     public homework_answer = '/homework-answer';
+    public homework_answer_image = '/homework-answer-image';
     public homework_settings = '/homework-settings';
     
     constructor(private http_class: HttpClient) {
         super(http_class);
-        this.file_list[this.homework_question] = this.homework_question;
-        this.file_list[this.homework_answer] = this.homework_answer;
+        this.file_list[this.homework_question_image] = this.homework_question_image;
+        this.file_list[this.homework_answer_image] = this.homework_answer_image;
     }
 }

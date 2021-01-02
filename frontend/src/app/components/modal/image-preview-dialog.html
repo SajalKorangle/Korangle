@@ -22,8 +22,8 @@
 
 <mat-dialog-content class="row" style="margin: 10px; height: 85vh; overflow: auto; display: flex; justify-content: center; align-items: center;" *ngIf="!data.isMobile">
     
-    <img *ngIf="data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" [ngStyle]="imageStyle">
-    <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" [ngStyle]="imageStyle">
+    <img *ngIf="data.homeworkImages.length>0 && data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" [ngStyle]="imageStyle">
+    <img *ngIf="data.homeworkImages.length>0 && data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" [ngStyle]="imageStyle">
    
 </mat-dialog-content>
 
@@ -69,6 +69,6 @@
 <mat-dialog-content class="row" style="margin: 10px; height: 85vh; overflow: auto; display: flex; justify-content: center; align-items: center;" *ngIf="data.isMobile"
         (swipeleft)="increaseIndex()" (swiperight)="decreaseIndex()" (pinchIn)="increaseSize()" (pinchOut)="decreaseSize()">
     
-        <img *ngIf="data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" [ngStyle]="imageStyle">
-        <img *ngIf="data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" [ngStyle]="imageStyle">
+        <img *ngIf="data.homeworkImages.length>0 && data.homeworkImages[data.index].questionImage != undefined" src="{{data.homeworkImages[data.index].questionImage}}" [ngStyle]="imageStyle">
+        <img *ngIf="data.homeworkImages.length>0 && data.homeworkImages[data.index].answerImage != undefined" src="{{data.homeworkImages[data.index].answerImage}}" [ngStyle]="imageStyle">
 </mat-dialog-content>

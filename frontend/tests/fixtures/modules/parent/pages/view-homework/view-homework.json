@@ -21,7 +21,7 @@
     },
     {
         "app": "homework_app",
-        "model": "HomeworkStatus",
+        "model": "HomeworkAnswer",
         "file": "one_student.json"
     }
 ]

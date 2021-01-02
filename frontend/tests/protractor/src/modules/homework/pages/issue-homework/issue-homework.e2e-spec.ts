@@ -32,7 +32,7 @@ describe('Homework -> Issue Homework', () => {
         });
 
         //Creating the homework
-        await (await containsFirst('button', 'CREATE HW')).click();
+        await (await containsFirst('button', 'CREATE')).click();
 
         //Verifying Created Homework in Check Homework Page
         await reClickPage('Check Homework');
