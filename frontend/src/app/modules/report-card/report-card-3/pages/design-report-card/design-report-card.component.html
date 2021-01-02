@@ -98,6 +98,14 @@
                         (click)="htmlAdapter.openPageResolutionDialog()">photo_size_select_large</button>
             </div>
 
+            <div class="tool" style="margin-left: auto;">
+                <mat-form-field style="width: 50px; height: 30px;">
+                <mat-select placeholder="DPI" [(ngModel)]="canvasAdapter.dpi">
+                    <mat-option *ngFor="let dpi of htmlAdapter.dpiList" [value]="dpi">{{dpi}}</mat-option>
+                </mat-select>
+                </mat-form-field>
+            </div>
+
         </mat-card>
 
 

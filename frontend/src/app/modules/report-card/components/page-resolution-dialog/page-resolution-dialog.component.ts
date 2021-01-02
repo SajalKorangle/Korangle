@@ -30,6 +30,22 @@ export class PageResolutionDialogComponent implements OnInit {
     this.activePageResolution = this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX];
   }
 
+  potraitOrientation(): void{
+    if (this.activePageResolution.orientation != 'p') {
+      const index = this.pageResolutionsList.findIndex((resolution: PageResolution) => resolution.resolutionName == this.activePageResolution.resolutionName)
+      this.pageResolutionsList[index] = getStructeredPageResolution(this.activePageResolution.resolutionName, this.activePageResolution.mm.width, this.activePageResolution.mm.height, 'p');
+      this.activePageResolution = this.pageResolutionsList[index];
+    }
+  }
+
+  landscapeOrientation(): void{
+    if (this.activePageResolution.orientation != 'l') {
+      const index = this.pageResolutionsList.findIndex((resolution: PageResolution) => resolution.resolutionName == this.activePageResolution.resolutionName)
+      this.pageResolutionsList[index] = getStructeredPageResolution(this.activePageResolution.resolutionName, this.activePageResolution.mm.width, this.activePageResolution.mm.height, 'l');
+      this.activePageResolution = this.pageResolutionsList[index];
+    }
+  }
+
   apply():void {
     if (this.activePageResolution.resolutionName == 'Custom') {
       this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX] = getStructeredPageResolution('Custom', this.activePageResolution.mm.height, this.activePageResolution.mm.width);

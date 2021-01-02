@@ -1,7 +1,6 @@
 import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
-import { variable } from '@angular/compiler/src/output/output_ast';
-import { Variable } from '@angular/compiler/src/render3/r3_ast';
+
 
 const FormulaParser = require('hot-formula-parser').Parser;
 
@@ -261,9 +260,17 @@ function getDateReplacements(date: any): {[key:string]: string} {
 }
 
 //Page Resolutions ---------------------------------------------
-export const mm_IN_ONE_INCH:number = 24.5;
+export const mm_IN_ONE_INCH: number = 24.5;
+export const DPI_LIST: number[] = [
+    600,
+    300,
+    200,
+    100,
+    50
+]
 export interface PageResolution{
     resolutionName: string;
+    orientation: string  // p: potrait, l:landscape
     aspectRatio: number;
     mm: {
         height: number;
@@ -275,11 +282,12 @@ export interface PageResolution{
     getCorrospondingHeight(width: number): number;
 }
 
-export function getStructeredPageResolution(resolutionName:string, mmHeight:number, mmWidth:number): PageResolution {
+export function getStructeredPageResolution(resolutionName:string, mmHeight:number, mmWidth:number, orientation:string='p'): PageResolution {
     let aspectRatio = mmWidth / mmHeight;
     return {
         resolutionName,
         aspectRatio,
+        orientation,
         mm: {
             height: mmHeight,
             width: mmWidth,
@@ -850,8 +858,54 @@ export interface CustomVariable{
     evaluate(parser?:any, depth?:number): any;
 }
 
+function setCustomFunctionsInParser(parser: any): void {
+    parser.setFunction('SUPP', function(params) {
+
+        // There should be at least 2 numbers and
+        // the final number will decide how many numbers will we choose out of these.
+        if (params.length < 5) {
+            console.log('Insufficient length');
+            return 'Insufficient length';
+        }
+
+        // All parameter arguments should be numbers
+        let flag = true;
+        params.every(argument => {
+           if (isNaN(Number(argument.toString())) || argument<0) {
+               console.log('All parameters are not positive numbers');
+               flag = false;
+               return false;
+           }
+        });
+        if (!flag) {
+            return 'All parameters are not positive numbers';
+        }
+
+        const passingMarks = params[params.length - 3]
+        const allowedSuplementry = params[params.length - 2];
+        const subjectsConsidered = params[params.length - 1];
+
+        if (subjectsConsidered + 3 > params.length)
+            return 'Subjects Considered cannot be more than given subject'
+
+        const marksList = params.slice(0, -3);  // removing last 3 arguments
+        const passSubjectCount: any[] = marksList.filter(marks => marks >= passingMarks).length;
+        const failedSubjectCount = marksList.filter(marks => marks < passingMarks).length;
+        const subjectCount = marksList.length;
+        const subjectsNotConsidered = subjectCount - subjectsConsidered;
+
+        if (passSubjectCount >= subjectsConsidered)
+            return 'PASS';
+        else if (failedSubjectCount - subjectsNotConsidered <= allowedSuplementry)
+            return `SUPPLEMENTRY(${failedSubjectCount - subjectsNotConsidered})`
+        return 'FAIL'
+
+    });
+}
+
 export function getParser(customVariablesList: CustomVariable[]) {
     const PARSER = new FormulaParser();
+    setCustomFunctionsInParser(PARSER);
     customVariablesList.forEach((variable: CustomVariable) => {
         if (variable.type != 'FORMULA') {
             PARSER.setVariable(variable.name, variable.evaluate());

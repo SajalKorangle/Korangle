@@ -1,11 +1,14 @@
 <h2 mat-dialog-title>Variables</h2>
-<mat-dialog-content style="min-height: 25vh; max-height: 60vh; min-width: 50vw;">
-    <mat-accordion>
+<mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw;">
+    <mat-accordion [multi]="true">
     <ng-container *ngFor="let customVariable of customVariablesList">
         <mat-expansion-panel>
-            <mat-expansion-panel-header>
+            <mat-expansion-panel-header [collapsedHeight]="'65px'">
                 <mat-panel-title>
-                {{customVariable.name}}
+                    <mat-form-field>
+                        <mat-label>Variable Name</mat-label>
+                        <input matInput type="text" [(ngModel)]="customVariable.name">
+                    </mat-form-field>
                 </mat-panel-title>
                 <mat-panel-description>
                 {{customVariable.type}}
@@ -13,10 +16,7 @@
             </mat-expansion-panel-header>
             
             <p class="expansion-pannel-content">
-                <mat-form-field>
-                    <mat-label>Variable Name</mat-label>
-                    <input matInput type="text" [(ngModel)]="customVariable.name">
-                </mat-form-field>
+                
                 <ng-container [ngSwitch]="customVariable.type">
 
                     <ng-container *ngSwitchCase="'CONSTANT'">

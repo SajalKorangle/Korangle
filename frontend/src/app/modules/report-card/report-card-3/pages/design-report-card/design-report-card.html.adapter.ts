@@ -1,5 +1,5 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution } from './../../../class/constants_3';
+import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST } from './../../../class/constants_3';
 import { CustomVariablesDialogComponent } from './../../../components/custom-variables-dialog/custom-variables-dialog.component';
 import { PageResolutionDialogComponent} from './../../../components/page-resolution-dialog/page-resolution-dialog.component'
 
@@ -10,6 +10,7 @@ export class DesignReportCardHtmlAdapter {
     parameterList: any[] = [...PARAMETER_LIST];
     testTypeList: string[] = TEST_TYPE_LIST;
     marksTypeList: string[] = MARKS_TYPE_LIST;
+    dpiList: number[] = DPI_LIST;
 
     vm: DesignReportCardComponent;
     canvasMargin = 24;
