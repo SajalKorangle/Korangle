@@ -1,0 +1,17 @@
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">functions</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Formula
+            </mat-label>
+            <input matInput type="text"  [(ngModel)]="layer.formulaVariable.formula">
+        </mat-form-field>
+
+        <button class="btn" style="padding: 6px;" (click)="layer.layerDataUpdate(); canvasRefresh();">Evaluate</button>
+
+    </div>
+</mat-card>

@@ -1,6 +1,19 @@
-// Currently supports only a4 size
 import { DesignReportCardComponent } from './design-report-card.component';
-import { A4, PageRelativeAttributes, DEFAULT_BACKGROUND_COLOR, Layer, CanvasImage, CanvasText, CanvasDate} from './../../../class/constants_3';
+import {
+    A4,
+    PageRelativeAttributes,
+    DEFAULT_BACKGROUND_COLOR,
+    Layer, CanvasImage, CanvasText,
+    CanvasDate, CustomVariable,
+    ConstantVariable,
+    MarksVariabe,
+    LayerVariable,
+    FormulaVariable,
+    Formula,
+    CUSTOM_VARIABLE_TYPES,
+    PageResolution,
+    PAGE_RESOLUTIONS
+} from './../../../class/constants_3';
 import * as jsPDF from 'jspdf'
 export class DesignReportCardCanvasAdapter {
 
@@ -8,6 +21,8 @@ export class DesignReportCardCanvasAdapter {
 
     virtualCanvas: HTMLCanvasElement;
     virtualContext: CanvasRenderingContext2D;
+
+    actualresolution: PageResolution = PAGE_RESOLUTIONS[1] // A4 size by default
 
     canvas: HTMLCanvasElement;  // html canvas rendered on screen
     context: CanvasRenderingContext2D;
@@ -18,6 +33,7 @@ export class DesignReportCardCanvasAdapter {
     activeLayer = null;
     activeLayerIndex = null;
     backgroundColor: string = null;
+    customVariablesList: CustomVariable[] = [];
 
     lastMouseX: number;
     lastMouseY: number;
@@ -118,25 +134,20 @@ export class DesignReportCardCanvasAdapter {
         try {
             this.backgroundColor = Data.backgroundColor;
             for (let i = 0; i < Data.layers.length; i++) {
-                if (Data.layers[i]) {
-                    let layerData = { ...Data.layers[i] };
-                
-                    Object.keys(layerData).forEach(key => { // conversion from mm to pixels
-                        if (key in PageRelativeAttributes)
-                            layerData['key'] = layerData['key'] / this.pixelTommFactor;
-                    });
-                
-                    let newLayerFromLayerData: Layer;   // update this for new architecture
-                    switch (layerData.LAYER_TYPE) {
-                        case 'IMAGE':
-                            newLayerFromLayerData = new CanvasImage(layerData, this);
-                            break;
-                    }
-                    this.layers.push(newLayerFromLayerData);
-                    newLayerFromLayerData.layerSetUp(this.vm.DATA, this.canvasWidth, this.canvasHeight, this.virtualContext);  // change empty object first arg to DATA object
-                } else {
-                    this.layers.push(null);
+                let layerData = { ...Data.layers[i] };
+            
+                Object.keys(layerData).forEach(key => { // conversion from mm to pixels
+                    if (key in PageRelativeAttributes)
+                        layerData['key'] = layerData['key'] / this.pixelTommFactor;
+                });
+            
+                let newLayerFromLayerData: Layer;   // update this for new architecture
+                switch (layerData.LAYER_TYPE) {
+                    case 'IMAGE':
+                        newLayerFromLayerData = new CanvasImage(layerData, this);
+                        break;
                 }
+                this.layers.push(newLayerFromLayerData);
             }
             this.drawAllLayers();
             console.log('canvas layers: ', this.layers);
@@ -195,7 +206,7 @@ export class DesignReportCardCanvasAdapter {
         this.activeLayer = this.layers[this.activeLayerIndex];
     }
 
-    getDataToSave() {
+    getDataToSave() {   // updating required
         let layers = [];
         for (let i = 0; i < this.layers.length; i++){    // Copying all layer objects
             if (this.layers[i])
@@ -251,8 +262,12 @@ export class DesignReportCardCanvasAdapter {
         this.newLayerInitilization(canvasDate);
     }
 
+    newFormulaLayer(initialParameters: object = {}) {
+        let canavsFormula = new Formula(initialParameters, this);
+        this.newLayerInitilization(canavsFormula);
+    }
+
     newLayerInitilization(layer: Layer): void{
-        layer.layerSetUp(this.vm.DATA, this.canvasHeight, this.canvasWidth, this.virtualContext)
         this.layers.push(layer);
         let status = layer.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
         if (status)
@@ -260,6 +275,8 @@ export class DesignReportCardCanvasAdapter {
         this.activeLayer = layer;
         this.activeLayerIndex = this.layers.length - 1;
     }
+
+    
 
 }
 

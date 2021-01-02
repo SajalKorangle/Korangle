@@ -1,0 +1,48 @@
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">book</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Decimal Places
+            </mat-label>
+            <input matInput type="number" min="0" max="10" [ngModel]="layer.decimalPlaces" (ngModelChange)="layer.decimalPlaces=$event; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-select 
+                placeholder="Examination"
+                [(ngModel)]="layer.parentExamination"
+                (ngModelChange)="layer.parentSubject=null; layer.testType=null; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+                <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList;" [value]="examination.id">{{examination.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-select placeholder="Subject"
+            [(ngModel)]="layer.parentSubject" 
+            (ngModelChange)="layer.testType=null; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics); ">
+                <mat-option *ngFor="let subject of layer.ca.vm.DATA.data.subjectList;" [value]="subject.id">
+                    {{subject.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field appearence="fill">
+            <mat-select placeholder="Test Type"
+            [(ngModel)]="layer.testType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+                <mat-option *ngFor="let testType of layer.ca.vm.htmlAdapter.testTypeList" [value]="testType">{{testType?testType:'NONE'}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-select placeholder="M.M. / M.O."
+            [(ngModel)]="layer.marksType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+                <mat-option *ngFor="let marksType of layer.ca.vm.htmlAdapter.marksTypeList" [value]="marksType">{{marksType}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </div>
+</mat-card>
