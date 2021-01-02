@@ -23,7 +23,7 @@ describe('Parents -> View Profile', () => {
 
         node =await getNode('b','Class');
         prop = await page.evaluate(el => el.innerHTML, node);
-        expect(prop).toBe("Class - 3 , Section - A");
+        expect(prop).toBe("Class - 12 , Section - A");
 
         await BeforeAfterEach.afterEach();
     });

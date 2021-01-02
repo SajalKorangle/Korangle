@@ -69,7 +69,7 @@ export class ViewTutorialsServiceAdapter {
                 return classSubject;
             }
         });
-        return classSub ? classSub[0].id : null;
+        return classSub.length > 0 ? classSub[0].id : null;
     }
 
     populateTutorialList() {
