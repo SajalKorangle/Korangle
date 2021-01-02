@@ -6,7 +6,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
 import { ParametersPannelModule } from './../../../components/parameters-pannel.module'
 import { MatDialogModule} from '@angular/material/dialog';
-import {CustomVariablesDialogComponent } from './../../../components/custom-variables-dialog/custom-variables-dialog.component'
+import { CustomVariablesDialogComponent } from './../../../components/custom-variables-dialog/custom-variables-dialog.component'
+import {PageResolutionDialogComponent} from './../../../components/page-resolution-dialog/page-resolution-dialog.component'
+
 @NgModule({
   declarations: [DesignReportCardComponent],
   imports: [
@@ -18,7 +20,8 @@ import {CustomVariablesDialogComponent } from './../../../components/custom-vari
     ParametersPannelModule
   ],
   entryComponents: [
-    CustomVariablesDialogComponent
+    CustomVariablesDialogComponent,
+    PageResolutionDialogComponent
   ],
   bootstrap: [DesignReportCardComponent]
 })

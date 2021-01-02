@@ -1,6 +1,6 @@
 import { DesignReportCardComponent } from './design-report-card.component';
+
 import {
-    A4,
     PageRelativeAttributes,
     DEFAULT_BACKGROUND_COLOR,
     Layer, CanvasImage, CanvasText,
@@ -14,7 +14,10 @@ import {
     PageResolution,
     PAGE_RESOLUTIONS
 } from './../../../class/constants_3';
+
 import * as jsPDF from 'jspdf'
+
+
 export class DesignReportCardCanvasAdapter {
 
     vm: DesignReportCardComponent;
@@ -23,10 +26,11 @@ export class DesignReportCardCanvasAdapter {
     virtualContext: CanvasRenderingContext2D;
 
     actualresolution: PageResolution = PAGE_RESOLUTIONS[1] // A4 size by default
+    dpi: number = 300;
 
     canvas: HTMLCanvasElement;  // html canvas rendered on screen
     context: CanvasRenderingContext2D;
-    canvasHeight: number = null;   // height and width are in pixels
+    canvasHeight: number = null;   // current height and width are in pixels
     canvasWidth: number = null;    
 
     layers: Array<Layer> = [];  // layers in thier order from back to front
@@ -39,7 +43,7 @@ export class DesignReportCardCanvasAdapter {
     lastMouseY: number;
     currentMouseDown: boolean = false;
 
-    pixelTommFactor: number;    // A4 width(height) in mm / Canvas width(height) in pixel
+    pixelTommFactor: number;    // width(height) in mm / Canvas width(height) in pixel
     isSaved = false;    // if canvas is not saved then give warning; to be implemented
 
     virtualPendingReDrawId: any;
@@ -104,20 +108,28 @@ export class DesignReportCardCanvasAdapter {
         });
     }
 
+    updateResolution(newResolution: PageResolution): void{
+        this.actualresolution = newResolution;
+        this.canvasWidth = null;
+        this.canvasWidth = null;
+        this.canvasSizing();
+        this.scheduleCanvasReDraw(0);
+    }
+
     canvasSizing(): void{
         let canvasPreviousWidth = this.canvasWidth;
-        if (this.canvas.width / this.canvas.height > A4.aspectRatio) {
+        if (this.canvas.width / this.canvas.height > this.actualresolution.aspectRatio) {
             this.canvasHeight = this.canvas.height;
-            this.canvasWidth = A4.getWidthRelativeToA4(this.canvasHeight);
+            this.canvasWidth = this.actualresolution.getCorrospondingWidth(this.canvasHeight);
             this.canvas.width = this.canvasWidth;
         }
         else {
             this.canvasWidth = this.canvas.width;
-            this.canvasHeight = A4.getHeightRelativeToA4(this.canvasWidth);
+            this.canvasHeight = this.actualresolution.getCorrospondingHeight(this.canvasWidth);
             this.canvas.height = this.canvasHeight;
         }
 
-        this.pixelTommFactor = A4.A4Resolution.mm.width / this.canvasWidth;
+        this.pixelTommFactor = this.actualresolution.mm.width / this.canvasWidth;
         
         this.virtualCanvas.height = this.canvasHeight;
         this.virtualCanvas.width = this.canvasWidth;
@@ -230,15 +242,15 @@ export class DesignReportCardCanvasAdapter {
 
     downloadPDF() { // apply a loading spinner and block the canvas user interaction while saving(to be done)
         let actualCanavsWidth = this.canvasWidth, actualCanavsHeight = this.canvasHeight;
-        this.canvas.width = A4.A4Resolution.px.dpi300.width;
-        this.canvas.height = A4.A4Resolution.px.dpi300.height;
+        this.canvas.width = this.actualresolution.getWidthInPixel(this.dpi);
+        this.canvas.height = this.actualresolution.getHeightInPixel(this.dpi);
 
         this.vm.htmlAdapter.isSaving = true;
         this.canvasSizing();
         setTimeout(() => {
-            let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [A4.A4Resolution.px.dpi300.height, A4.A4Resolution.px.dpi300.width] });
+            let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [this.canvasHeight, this.canvasWidth] });
             let dataurl = this.canvas.toDataURL()
-            doc.addImage(dataurl, 'PNG', 0, 0, A4.A4Resolution.px.dpi300.width, A4.A4Resolution.px.dpi300.height);
+            doc.addImage(dataurl, 'PNG', 0, 0, this.canvasWidth, this.canvasHeight);
             doc.save(this.vm.currentLayout.name + '.pdf');
             this.canvas.width = actualCanavsWidth;
             this.canvas.height = actualCanavsHeight;

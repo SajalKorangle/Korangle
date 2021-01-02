@@ -271,12 +271,15 @@ export interface PageResolution{
     }
     getHeightInPixel(dpi: number): number;
     getWidthInPixel(dpi: number): number;
+    getCorrospondingWidth(height: number): number;
+    getCorrospondingHeight(width: number): number;
 }
 
-function getStructeredPageResolution(resolutionName:string, mmHeight:number, mmWidth:number): PageResolution {
+export function getStructeredPageResolution(resolutionName:string, mmHeight:number, mmWidth:number): PageResolution {
+    let aspectRatio = mmWidth / mmHeight;
     return {
         resolutionName,
-        aspectRatio: mmWidth / mmHeight,
+        aspectRatio,
         mm: {
             height: mmHeight,
             width: mmWidth,
@@ -287,6 +290,8 @@ function getStructeredPageResolution(resolutionName:string, mmHeight:number, mmW
         getWidthInPixel: (dpi: number):number=> {
             return (mmWidth * dpi) / mm_IN_ONE_INCH;
         },
+        getCorrospondingHeight: (width: number) => width/aspectRatio,
+        getCorrospondingWidth: (height: number) => height*aspectRatio,
     }
 }
 
@@ -295,32 +300,10 @@ export const PAGE_RESOLUTIONS: PageResolution[] = [
     getStructeredPageResolution('A4', 297, 210),
     getStructeredPageResolution('A5', 210, 148),
     getStructeredPageResolution('A6', 148, 105),
+    getStructeredPageResolution('Custom', 100, 100)
 ]
-export class A4{
-    static resolutionName = 'A4';
-    static aspectRatio = 210 / 297;
-    static A4Resolution = {
-        mm: {
-            height: 297,
-            width: 210
-        },
-        px: {
-            dpi300: {
-                height: 3508,
-                width: 2480
-            }
-        }
-    }
 
-    static getHeightRelativeToA4(width: number): number{
-        return width/this.aspectRatio;
-    }
-
-    static getWidthRelativeToA4(height: number): number{
-        return this.aspectRatio*height;
-    }
-};
-
+export const CUSTOM_PAGE_RESOLUTION_INDEX: number = 4;
 
 // CANVAS DESIGN TOOL------------------------------------------------------------------------
 
