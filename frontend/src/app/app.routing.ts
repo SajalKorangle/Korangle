@@ -95,6 +95,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/school/school.module#SchoolModule',
     },
     {
+        path: 'homework',
+        loadChildren: 'app/modules/homework/homework.module#HomeworkModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [

@@ -26,8 +26,13 @@ const routes: Routes = [
         data: {moduleName: 'parent'},
     },
     {
-        path: 'view_tutorials',
-        loadChildren: 'app/modules/parent/pages/view-tutorials/view-tutorials.module#ViewTutorialsModule',
+        path:'view_tutorials',
+        loadChildren:'app/modules/parent/pages/view-tutorials/view-tutorials.module#ViewTutorialsModule',
+        data: {moduleName: 'parent'},
+    },
+    {
+        path: 'view_homework',
+        loadChildren: 'app/modules/parent/pages/view-homework/view-homework.module#ViewHomeworkModule',
         data: {moduleName: 'parent'},
     },
     {

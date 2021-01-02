@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'notification_app',
     'information_app',
     'id_card_app',
+    'homework_app',
     'feature_app',
     'tutorial_app',
 
