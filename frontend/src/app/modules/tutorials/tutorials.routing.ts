@@ -8,7 +8,7 @@ import {AddTutorialModule} from '@modules/tutorials/pages/add-tutorial/add-tutor
 const routes: Routes = [
     {
         path: 'add_tutorial',
-        loadChildren: () => AddTutorialModule,
+        loadChildren: 'app/modules/tutorials/pages/add-tutorial/add-tutorial.module#AddTutorialModule',
         data: {moduleName: 'tutorials'},
     },
     {
