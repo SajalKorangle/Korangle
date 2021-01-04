@@ -83,7 +83,7 @@
                                     {{getStudent(feeReceipt).name}}
                                 </div>
                             </div>
-                            <div *ngIf="!searchBy == searchFilterList[0]" class="row">
+                            <div *ngIf="searchBy !== searchFilterList[0]" class="row">
                                 <div class="col-sm-2 col-xs-6">
                                     Amount :
                                 </div>
@@ -102,7 +102,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div *ngIf="searchBy !== searchFilterList[2]" class="row">
                                 <div class="col-sm-2 col-xs-6">
                                     Father's Name:
                                 </div>
@@ -139,6 +139,15 @@
                                 <div class="col-sm-2 col-xs-6">
                                     {{getEmployeeName(feeReceipt)}}
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-6">
+                                    Date:
+                                </div>
+                                <div class="col-sm-2 col-xs-6">
+                                    {{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}
+                                </div>
+
 
                                 <button type="button"
                                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
