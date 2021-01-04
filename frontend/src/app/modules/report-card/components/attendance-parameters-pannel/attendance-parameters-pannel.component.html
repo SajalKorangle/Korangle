@@ -8,14 +8,14 @@
             <mat-label>
                 Start Date
             </mat-label>
-            <input matInput type="date" [ngModel]="layer.startDate.toISOString().substr(0,10)" (ngModelChange)="layer.startDate=toDate($event); layer.attendanceUpdate(); canvasRefresh(100);">
+            <input matInput type="date" [ngModel]="layer.startDate.toISOString().substr(0,10)" (ngModelChange)="layer.startDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();">
         </mat-form-field>
 
         <mat-form-field appearence="fill">
             <mat-label>
                 End Date
             </mat-label>
-            <input matInput type="date" [ngModel]="layer.endDate.toISOString().substr(0,10)" (ngModelChange)="layer.endDate=toDate($event); layer.attendanceUpdate(); canvasRefresh(100);">
+            <input matInput type="date" [ngModel]="layer.endDate.toISOString().substr(0,10)" (ngModelChange)="layer.endDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();">
         </mat-form-field>
        
     </div>
