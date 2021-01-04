@@ -7,6 +7,9 @@ import {FormControl} from "@angular/forms";
 import {INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST} from "../../classes/constants";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {DataStorage} from "../../../../classes/data-storage";
+import {CancelFeeReceiptModalComponent} from '@modules/fees/components/cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
+import {EmitterService} from '@services/emitter.service';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
     selector: 'cancel-fee-receipt',
@@ -22,7 +25,7 @@ export class CancelFeeReceiptComponent implements OnInit {
 
      user;
 
-    searchParameter = new FormControl();
+    searchParameter:any;
 
     feeReceiptList: any;
     subFeeReceiptList = [];
@@ -31,16 +34,21 @@ export class CancelFeeReceiptComponent implements OnInit {
     classList = [];
     sectionList = [];
     employeeList = [];
+    searchFilterList=['Receipt No./Cheque No.','Student\'s Name','Parent\'s Mobile No'];
 
     serviceAdapter: CancelFeeReceiptServiceAdapter;
 
     isLoading = false;
+    searchBy: any;
+    isStudentListLoading=false;
+    showReceipts=false;
 
     constructor(public feeService: FeeService,
                 public classService: ClassService,
                 public studentService: StudentService,
                 public employeeService: EmployeeService,
-                private cdRef: ChangeDetectorRef) {}
+                private cdRef: ChangeDetectorRef,
+                private dialog:MatDialog) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -48,6 +56,7 @@ export class CancelFeeReceiptComponent implements OnInit {
         this.serviceAdapter = new CancelFeeReceiptServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
     }
 
     detectChanges(): void {
@@ -56,12 +65,14 @@ export class CancelFeeReceiptComponent implements OnInit {
 
     policeNumberInput(event: any): boolean {
         let value = event.key;
-        if (value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
-            value !== '4' && value !== '5' && value !== '6' && value !== '7' &&
-            value !== '8' && value !== '9') {
-            return false;
+        const numRegex=/^\d+$/;
+        if(this.searchBy===this.searchFilterList[0] || this.searchBy===this.searchFilterList[2]) {
+            return !(value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
+                value !== '4' && value !== '5' && value !== '6' && value !== '7' &&
+                value !== '8' && value !== '9') || (event.type==='paste' && numRegex.test(event.clipboardData.getData('text').trim()));
+        }else{
+            return true;
         }
-        return true;
     }
 
     getEmployeeName(feeReceipt: any): any {
@@ -89,4 +100,33 @@ export class CancelFeeReceiptComponent implements OnInit {
         }, 0);
     }
 
+    handleStudentListSelection(studentList: any) {
+         this.searchParameter = studentList[0][0].name;
+        this.serviceAdapter.getFeeReceiptList();
+    }
+
+    handleParentListSelection(list: any) {
+          this.searchParameter = list[0][0].mobileNumber;
+         this.serviceAdapter.getFeeReceiptList();
+    }
+
+     showCancelReceiptModal(feeReceipt:any) {
+       const dialogRef=  this.dialog.open(CancelFeeReceiptModalComponent, {
+            height: '65vh',
+            width: '50vw',
+            data: {
+                user: this.user,
+                feeReceipt:feeReceipt,
+                totalAmount:this.getFeeReceiptTotalAmount(feeReceipt),
+                studentList:this.studentList,
+                collectedBy:this.getEmployeeName(feeReceipt),
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+               this.serviceAdapter.cancelFeeReceipt(feeReceipt)
+            }
+        });
+  }
 }

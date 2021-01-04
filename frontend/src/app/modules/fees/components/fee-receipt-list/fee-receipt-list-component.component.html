@@ -41,12 +41,12 @@
             <td *ngIf="receiptColumnFilter.employee" align="left">{{getEmployeeName(feeReceipt)}}</td>
             <td *ngIf="receiptColumnFilter.cancelledRemark" align="left">{{feeReceipt.cancelledRemark}}</td>
             <td *ngIf="receiptColumnFilter.status" align="center">
-                <ng-container *ngIf="feeReceipt.cancelled">
-                    <a href="javascript:void(0)" *ngIf="hasUserPermissionToCancel()"
+                <ng-container *ngIf="!feeReceipt.cancelled">
+                    <a href="javascript:void(0)"  (click)="showCancelReceiptModal(feeReceipt)" *ngIf="hasUserPermissionToCancel()"
                        style="text-decoration: underline;color: orange">Cancel Receipt</a>
-                    <span *ngIf="!hasUserPermissionToCancel()">Cancelled</span>
+                    <span *ngIf="!hasUserPermissionToCancel()">Valid</span>
                 </ng-container>
-                <span *ngIf="!feeReceipt.cancelled">Valid</span>
+                <span *ngIf="feeReceipt.cancelled">Cancelled</span>
             <td *ngIf="receiptColumnFilter.printButton" align="center">
                 <button type="button"
                         style="padding: 8px 11px; margin: 0px"

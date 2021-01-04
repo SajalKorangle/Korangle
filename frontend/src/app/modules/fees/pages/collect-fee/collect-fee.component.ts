@@ -108,7 +108,6 @@ export class CollectFeeComponent implements OnInit {
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.receiptNumber = false;
-            this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
             this.receiptColumnFilter.printButton = false;

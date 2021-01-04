@@ -3,6 +3,10 @@ import {INSTALLMENT_LIST} from "../../classes/constants";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import {SchoolService} from "../../../../services/modules/school/school.service";
+import {MatDialog} from '@angular/material/dialog';
+import {CancelFeeReceiptModalComponent} from '@modules/fees/components/cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
+import {TotalCollectionComponent} from '@modules/fees/pages/total-collection/total-collection.component';
+import {EmitterService} from '@services/emitter.service';
 
 @Component({
     selector: 'app-fee-receipt-list',
@@ -11,7 +15,6 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
     providers: [SchoolService]
 })
 export class FeeReceiptListComponent implements OnInit {
-
     @Input() user;
     @Input() feeTypeList;
     @Input() feeReceiptList;
@@ -31,7 +34,8 @@ export class FeeReceiptListComponent implements OnInit {
     installmentList = INSTALLMENT_LIST;
 
     constructor(private printService: PrintService,
-                private schoolService: SchoolService) { }
+                private schoolService: SchoolService,
+                private dialog: MatDialog) { }
 
     ngOnInit() { }
 
@@ -112,7 +116,7 @@ export class FeeReceiptListComponent implements OnInit {
 
     hasUserPermissionToCancel() {
         const module = this.user.activeSchool.moduleList.find(module => module.title === 'Fees 3.0');
-        return module.taskList.some(task => task.title === 'Cancel Fee Receipt');
+        return module.taskList.some(task => task.title === 'Cancel Fee Receipt') && window.location.href.indexOf("print") <= -1;
     }
 
 
@@ -122,4 +126,25 @@ export class FeeReceiptListComponent implements OnInit {
         });
         return student?student.mobileNumber:null;
     }
+
+    showCancelReceiptModal(feeReceipt:any) {
+       const dialogRef=  this.dialog.open(CancelFeeReceiptModalComponent, {
+            height: '65vh',
+            width: '50vw',
+            data: {
+                user: this.user,
+                feeReceipt:feeReceipt,
+                totalAmount:this.getFeeReceiptTotalAmount(feeReceipt),
+                studentList:this.studentList,
+                collectedBy:this.getEmployeeName(feeReceipt),
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                EmitterService.get('cancel-receipt').emit(feeReceipt);
+            }
+        });
+  }
+
 }

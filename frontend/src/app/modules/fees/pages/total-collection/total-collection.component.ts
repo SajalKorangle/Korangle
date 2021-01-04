@@ -85,7 +85,6 @@ export class TotalCollectionComponent implements OnInit {
         this.receiptColumnFilter.remark = false;*/
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
-            this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }
@@ -171,7 +170,6 @@ export class TotalCollectionComponent implements OnInit {
                 });
             }
             if (this.selectedFeeReceiptType) {
-               // this.receiptColumnFilter.cancelledRemark= Boolean(this.selectedFeeReceiptType == 'Cancelled Receipts');
                 tempList = tempList.filter(feeReceipt => {
                     return feeReceipt.cancelled == Boolean(this.selectedFeeReceiptType == 'Cancelled Receipts');
                 });

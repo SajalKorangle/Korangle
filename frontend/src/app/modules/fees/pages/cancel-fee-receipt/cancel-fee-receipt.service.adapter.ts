@@ -1,5 +1,7 @@
 
 import { CancelFeeReceiptComponent } from './cancel-fee-receipt.component';
+import {EmitterService} from '@services/emitter.service';
+import moment = require('moment');
 
 export class CancelFeeReceiptServiceAdapter {
 
@@ -31,8 +33,13 @@ export class CancelFeeReceiptServiceAdapter {
             this.vm.classList = value[0];
             this.vm.sectionList = value[1];
             this.vm.employeeList = value[2];
+            this.vm.searchBy=this.vm.searchFilterList[0];
 
             this.vm.isLoading = false;
+
+            EmitterService.get('cancel-receipt').subscribe(feeReceipt => {
+          this.cancelFeeReceipt(feeReceipt);
+        });
         }, error => {
             this.vm.isLoading = false;
         })
@@ -43,18 +50,26 @@ export class CancelFeeReceiptServiceAdapter {
     getFeeReceiptList(): void {
 
         this.vm.isLoading = true;
+        let fee_receipt_list = {};
+        let sub_fee_receipt_list = {};
+        //common for all searchFilter
+        fee_receipt_list['parentSchool'] = this.vm.user.activeSchool.dbId;
+        sub_fee_receipt_list['parentFeeReceipt__parentSchool'] = this.vm.user.activeSchool.dbId;
 
-        let fee_receipt_list = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'receiptNumber__or': this.vm.searchParameter,
-            'chequeNumber': this.vm.searchParameter,
-        };
+        if (this.vm.searchBy === this.vm.searchFilterList[0]) {
+            fee_receipt_list['receiptNumber__or'] = this.vm.searchParameter;
+            fee_receipt_list['chequeNumber'] = this.vm.searchParameter;
+            sub_fee_receipt_list['parentFeeReceipt__receiptNumber__or'] = this.vm.searchParameter;
+            sub_fee_receipt_list['parentFeeReceipt__chequeNumber'] = this.vm.searchParameter;
+        } else if (this.vm.searchBy === this.vm.searchFilterList[1]) {
+            fee_receipt_list['parentStudent__name'] = this.vm.searchParameter;
+            sub_fee_receipt_list['parentFeeReceipt__parentStudent__name'] = this.vm.searchParameter;
+        } else if (this.vm.searchBy === this.vm.searchFilterList[2]) {
+            fee_receipt_list['parentStudent__mobileNumber'] = this.vm.searchParameter;
+            sub_fee_receipt_list['parentFeeReceipt__parentStudent__mobileNumber'] = this.vm.searchParameter;
+        }
 
-        let sub_fee_receipt_list = {
-            'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentFeeReceipt__receiptNumber__or': this.vm.searchParameter,
-            'parentFeeReceipt__chequeNumber': this.vm.searchParameter,
-        };
+
 
         Promise.all([
             this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),
@@ -64,6 +79,11 @@ export class CancelFeeReceiptServiceAdapter {
             console.log(value);
 
             this.vm.feeReceiptList = value[0];
+            this.vm.feeReceiptList.sort(function (a, b) {
+                // @ts-ignore
+                return new Date(b.generationDateTime) - new Date(a.generationDateTime);
+            });
+
             this.vm.subFeeReceiptList = value[1];
 
             let service_list = [];
@@ -130,7 +150,7 @@ export class CancelFeeReceiptServiceAdapter {
         }, error => {
             this.vm.isLoading = false;
         })
-
+        this.vm.showReceipts=true;
     }
 
 
@@ -142,6 +162,9 @@ export class CancelFeeReceiptServiceAdapter {
         let fee_receipt_object = {
             'id': feeReceipt.id,
             'cancelled': true,
+            'cancelledBy':this.vm.user.activeSchool.employeeId,
+            'cancelledRemark':feeReceipt.cancelledRemark,
+            'cancelledDateTime':new Date(),
         };
 
         let student_fee_list = this.vm.subFeeReceiptList.filter(subFeeReceipt => {
