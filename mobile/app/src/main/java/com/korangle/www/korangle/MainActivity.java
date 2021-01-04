@@ -274,7 +274,11 @@ public class MainActivity extends AppCompatActivity {
         // progressBarView.setVisibility(ProgressBar.VISIBLE);
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
-        volleyFace.checkingUpdates();
+        if (BuildConfig.DEBUG) {
+            webview.loadUrl("http://10.0.2.2:4200");
+        } else {
+            volleyFace.checkingUpdates();
+        }
     }
 
     public void exitActivity(View view) {

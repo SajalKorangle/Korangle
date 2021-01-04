@@ -50,6 +50,10 @@ public class WebAppInterface {
     public void registerForNotification(String userId, String jwtToken, String url) {
         // Toast.makeText(mContext, "Token Saved", Toast.LENGTH_LONG).show();
 
+        if(BuildConfig.DEBUG) {
+            return;
+        }
+
         SharedPreferences sharedPreferences = mContext.getApplicationContext().getSharedPreferences(mContext.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
         int django_fcm_id = sharedPreferences.getInt(mContext.getString(R.string.DJANGO_FCM_ID), 0);
         String fcm_token = sharedPreferences.getString(mContext.getString(R.string.FCM_TOKEN), null);
@@ -111,6 +115,10 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void unregisterForNotification(String jwtToken, String url) {
+
+        if(BuildConfig.DEBUG) {
+            return;
+        }
 
         SharedPreferences sharedPreferences = mContext.getApplicationContext().getSharedPreferences(mContext.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
         int django_fcm_id = sharedPreferences.getInt(mContext.getString(R.string.DJANGO_FCM_ID), 0);
