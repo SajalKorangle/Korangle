@@ -54,6 +54,15 @@ export class TextParametersPannelComponent implements OnInit {
     return fontArgumentsArray[0] == 'italic';
   }
 
+  isUnderline(): boolean{
+    return this.layer.underline;
+  }
+
+  underlineToggle(event): any{
+    this.layer.underline = event.source.checked? true : false;
+  }
+
+
   logMessage(toast, msg): void{
     console.log(toast,msg);
   }

@@ -15,7 +15,7 @@
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">
             <mat-button-toggle value="bold" [checked]="isBold()" (change)="boldToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_bold</span></mat-button-toggle>
             <mat-button-toggle value="italic" [checked]="isItalics()" (change)="italicToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_italic</span></mat-button-toggle>
-            <mat-button-toggle value="underline"><span class="material-icons">format_underline</span></mat-button-toggle>
+            <mat-button-toggle value="true" [checked]="isUnderline()" (change)="underlineToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_underline</span></mat-button-toggle>
         </mat-button-toggle-group>
         </div>
 

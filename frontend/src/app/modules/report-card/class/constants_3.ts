@@ -346,6 +346,7 @@ export interface Layer{
         boundingBoxBottom: number,
     };
     fontStyle?: { [key: string]: any };
+    underline?: boolean;
     dateFormat?: string;
     date?: Date;
     startDate?: Date;
@@ -494,6 +495,7 @@ export class CanvasText implements Layer{
         fillStyle: DEFAULT_TEXT_COLOR,
         font: ' normal 12px Arial',
     };
+    underline?: boolean;
     parameterToolPannels: string[] = ['text'];
     ca: DesignReportCardCanvasAdapter;
 
@@ -504,6 +506,7 @@ export class CanvasText implements Layer{
         this.fontStyle.font = ` normal ${6/ca.pixelTommFactor}px Arial`;
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         this.LAYER_TYPE = 'TEXT';
+        this.underline = false;
     }
 
     layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
@@ -528,11 +531,23 @@ export class CanvasText implements Layer{
             boundingBoxTop: textMetrix.actualBoundingBoxAscent,
             boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
         };
+        if(this.underline){
+            ctx.beginPath()
+            ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
+            ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
+            ctx.stroke();
+        }
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
         ctx.fillText(this.text, this.x, this.y);
+        if(this.underline){
+            ctx.beginPath()
+            ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
+            ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
+            ctx.stroke();
+        }
         return true;    // Drawn successfully on canvas
     }
 
