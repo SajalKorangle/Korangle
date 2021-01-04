@@ -72,3 +72,4 @@ jobs:
         # sh scripts/protractor/check-coverage.sh github
         # For now we are not keeping track of implemented protractor tests using feature files
         # sh scripts/feature/check-coverage.sh github
+
