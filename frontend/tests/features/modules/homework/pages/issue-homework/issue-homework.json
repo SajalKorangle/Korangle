@@ -1,0 +1,11 @@
+[
+    {
+      "statement": "Issue Homework",
+      "testType": "protractor",
+      "steps": [
+        "Open issue-homework page and create homework",
+        "Verify created homework in create homework page"
+      ],
+      "testName": "Issue Homework"
+    }
+] 
