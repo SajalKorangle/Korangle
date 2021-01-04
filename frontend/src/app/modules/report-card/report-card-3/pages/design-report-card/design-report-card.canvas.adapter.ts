@@ -4,13 +4,8 @@ import {
     PageRelativeAttributes,
     DEFAULT_BACKGROUND_COLOR,
     Layer, CanvasImage, CanvasText,
-    CanvasDate, CustomVariable,
-    ConstantVariable,
-    MarksVariabe,
-    LayerVariable,
-    FormulaVariable,
+    CanvasDate,
     Formula,
-    CUSTOM_VARIABLE_TYPES,
     PageResolution,
     PAGE_RESOLUTIONS
 } from './../../../class/constants_3';
@@ -37,7 +32,6 @@ export class DesignReportCardCanvasAdapter {
     activeLayer = null;
     activeLayerIndex = null;
     backgroundColor: string = null;
-    customVariablesList: CustomVariable[] = [];
 
     lastMouseX: number;
     lastMouseY: number;
@@ -274,9 +268,10 @@ export class DesignReportCardCanvasAdapter {
         this.newLayerInitilization(canvasDate);
     }
 
-    newFormulaLayer(initialParameters: object = {}) {
+    newFormulaLayer(initialParameters: object = {}):Formula{
         let canavsFormula = new Formula(initialParameters, this);
         this.newLayerInitilization(canavsFormula);
+        return canavsFormula;
     }
 
     newLayerInitilization(layer: Layer): void{

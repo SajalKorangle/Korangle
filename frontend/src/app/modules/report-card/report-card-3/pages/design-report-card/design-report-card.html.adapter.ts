@@ -1,8 +1,7 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST } from './../../../class/constants_3';
-import { CustomVariablesDialogComponent } from './../../../components/custom-variables-dialog/custom-variables-dialog.component';
-import { PageResolutionDialogComponent} from './../../../components/page-resolution-dialog/page-resolution-dialog.component'
-
+import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula } from './../../../class/constants_3';
+import { PageResolutionDialogComponent } from './../../../components/page-resolution-dialog/page-resolution-dialog.component';
+import { CustomVariablesDialogComponent} from './../../../components/custom-variables-dialog/custom-variables-dialog.component'
 
 export class DesignReportCardHtmlAdapter {
 
@@ -84,13 +83,22 @@ export class DesignReportCardHtmlAdapter {
         }  
     }
 
-    openVariablesDialog():void {
+    newFormula() {
+        const formulaLayer = this.vm.canvasAdapter.newFormulaLayer();  
+        this.openCustomVariableDialog(formulaLayer);
+    }
+
+    openCustomVariableDialog(formulaLayer: Formula) {
         this.openedDialog = this.vm.dialog.open(CustomVariablesDialogComponent, {
             data: {
-                customVariablesList: this.vm.canvasAdapter.customVariablesList,
+                layer: formulaLayer,
                 ca: this.vm.canvasAdapter
             }
         });
+        this.openedDialog.afterClosed().subscribe(() => {
+            formulaLayer.layerDataUpdate();
+            this.vm.canvasAdapter.scheduleCanvasReDraw();
+        })
     }
 
     openPageResolutionDialog():void {

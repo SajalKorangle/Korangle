@@ -1,5 +1,10 @@
 <h2 mat-dialog-title>Variables</h2>
 <mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw;">
+    <div>
+        <mat-form-field appearence="fill">
+            <input matInput type="text" placeholder="Formula" [(ngModel)]="layer.formulaVariable.formula">
+        </mat-form-field>
+    </div>
     <mat-accordion [multi]="true">
     <ng-container *ngFor="let customVariable of customVariablesList">
         <mat-expansion-panel>
@@ -28,7 +33,7 @@
 
                     <ng-container *ngSwitchCase="'LAYER'">
                         <mat-select placeholder="Select Layer" [(ngModel)]="customVariable.layerID">
-                            <mat-option *ngFor="let layer of getMarksLayers();" [value]="layer.id">{{layer.displayName}} : {{layer.marks}}</mat-option>
+                            <mat-option *ngFor="let l of getMarksFormulaLayers();" [value]="l.id">{{l.displayName}} : {{l.marks}} #{{l.id}}</mat-option>
                         </mat-select>
                     </ng-container>
 
@@ -78,7 +83,7 @@
         </mat-expansion-panel>
     </ng-container>
     </mat-accordion>
-    <div style="display: flex; flex-direction: row; align-items: center; margin-top: 16px;">
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: fit-content;margin-left: auto; align-items: center; margin-top: 16px; ">
     <button class="btn" appearence="fill" style="padding: 6px;" (click)="createCustomVariable()">Add Variable</button>
     <mat-form-field appearence="fill" style="margin-left: 20px">
         <mat-select placeholder="Select Variable Type" [(ngModel)]="newCustomVariableType">
@@ -87,3 +92,6 @@
     </mat-form-field>
     </div>
 </mat-dialog-content>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close class="btn" style="background-color: blue; display: block; margin-left: auto;" cdkFocusInitial>Apply</button>
+</div>
