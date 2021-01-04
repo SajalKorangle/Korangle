@@ -18,7 +18,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    if: contains( github.event.pull_request.labels.*.name, 'Run Tests')
+    if: contains(github.event.pull_request.labels.*.name, 'Run Tests')
     # if: github.event.review.state == 'approved'
     # The type of runner that the job will run on 
     runs-on: ubuntu-18.04
