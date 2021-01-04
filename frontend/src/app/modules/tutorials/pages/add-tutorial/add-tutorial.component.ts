@@ -43,7 +43,7 @@ export class AddTutorialComponent implements OnInit {
     editedTutorial: any;
     showPreview = false;
     topicAlreadyPresent = false;
-    youtubeRegex = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$/;
+    youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
 
 
