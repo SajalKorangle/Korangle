@@ -23,7 +23,7 @@ def create_rzpay_order(reqData):
     rzData = {}
     rzData['amount'] = reqData['price']*100
     rzData['currency'] = 'INR'
-    rzData['receipt'] = str(reqData['id'])
+    # rzData['receipt'] = str(reqData['id'])
     rzData['payment_capture'] = 0
     rzresp = rzpay.order.create(data=rzData)  # Calling razorpay api to create order
     return rzresp

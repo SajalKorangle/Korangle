@@ -98,7 +98,7 @@ class SMSPurchaseView(CommonView, APIView):
         rzresp = create_rzpay_order(response)
         # update that record with order-id and send order id to front-end
         update_data = {}
-        update_data['id'] = int('0' + rzresp['receipt'])
+        update_data['id'] = response['id']
         update_data['orderId'] = rzresp['id']
         update_response = update_object(update_data, self.Model, self.ModelSerializer)
         return update_response
