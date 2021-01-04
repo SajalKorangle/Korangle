@@ -9,7 +9,7 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-    types: [opened, labeled, unlabeled, synchronize]
+  #   types: [opened, labeled, unlabeled, synchronize]
   # pull_request_review:
   #   branches: [ master ]
   #   types: [ submitted ]
