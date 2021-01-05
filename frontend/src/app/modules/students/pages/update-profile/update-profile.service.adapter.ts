@@ -1,4 +1,5 @@
 import {UpdateProfileComponent} from './update-profile.component'
+import { toInteger } from 'lodash'
 
 export class UpdateProfileServiceAdapter {
     vm: UpdateProfileComponent
@@ -25,6 +26,24 @@ export class UpdateProfileServiceAdapter {
         }, error => {
             this.vm.isLoading = false;
         })
+    }
+    
+    dataURLtoFile(dataurl, filename) {
+    	try {
+            const arr = dataurl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+
+            return new File([u8arr], filename, {type: mime});
+        } catch (e) {
+            return null;
+        }
     }
 
     updateProfile(): void {
@@ -69,8 +88,23 @@ export class UpdateProfileServiceAdapter {
 
         this.vm.isLoading = true;
         let service_list = [];
+        
+        const student_form_data= new FormData()
+        const data = { ...this.vm.currentStudent,content: JSON.stringify(this.vm.currentStudent.content) };
+        Object.keys(data).forEach(key => {
+                if (key === 'profileImage') {
+                    if(this.vm.profileImage!==null){
+                    	student_form_data.append(key, this.dataURLtoFile(this.vm.profileImage, 'profileImage.jpeg'));
+                    }
+                }
+                else {
+                    if (data[key]!==null){
+                        student_form_data.append(key,data[key]);
+                    }
+                }
+            });
 
-        service_list.push(this.vm.studentService.updateObject(this.vm.studentService.student,this.vm.currentStudent));
+        service_list.push(this.vm.studentService.updateObject(this.vm.studentService.student2,student_form_data));
 
         if (this.vm.selectedStudentSection.rollNumber != this.vm.currentStudentSection.rollNumber
             && this.vm.currentStudent.id == this.vm.currentStudentSection.parentStudent) {
@@ -79,31 +113,56 @@ export class UpdateProfileServiceAdapter {
             service_list.push(Promise.resolve(null))
         }
 
-        let generate_list = [];
-        let update_list = [];
+        let generateList = [];
+        let updateList = [];
+        this.vm.currentStudentParameterValueList.forEach(x => {
+            x.parentStudent = this.vm.selectedStudent.id;
+        });
         this.vm.studentParameterList.forEach(parameter => {
             if (this.vm.checkCustomFieldChanged(parameter)) {
                 let temp_obj = this.vm.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
-                if (temp_obj && temp_obj.id) {
-                    update_list.push(temp_obj);
-                } else if (temp_obj && !temp_obj.id) {
-                    generate_list.push(temp_obj);
+                if (temp_obj){
+                    const data = { ...temp_obj}
+                    const form_data = new FormData();
+                    Object.keys(data).forEach(key => {
+                        if (data[key]){
+                            if (key =="document_name"|| key=="document_size"){}
+                            else if (key=='document_value'){
+                                form_data.append(key,this.dataURLtoFile(data[key],data['document_name']))
+                                form_data.append('document_size',data['document_size'])
+                            }
+                            else {
+                                form_data.append(key,data[key])   
+                            }
+                        }
+                    })
+                    if (temp_obj.id) {
+                        updateList.push(form_data)
+                    } else if (!temp_obj.id) {
+                        generateList.push(form_data)
+                    }
                 }
             }
         });
-        if (generate_list.length) {
-            service_list.push(this.vm.studentService.createObjectList(this.vm.studentService.student_parameter_value, generate_list))
-        } else {
-            service_list.push(Promise.resolve(null))
-        }
-        if (update_list.length) {
-            service_list.push(this.vm.studentService.updateObjectList(this.vm.studentService.student_parameter_value, update_list))
-        } else {
-            service_list.push(Promise.resolve(null))
+        
+        if (generateList.length) {
+            generateList.forEach(x => {
+                service_list.push(this.vm.studentService.createObject(this.vm.studentService.student_parameter_value,x))
+            })
         }
 
-        console.log(generate_list);
-        console.log(update_list);
+        if (updateList.length) {
+            updateList.forEach(x => {
+                service_list.push(this.vm.studentService.updateObject(this.vm.studentService.student_parameter_value,x))
+
+            })
+        }
+
+        if(this.vm.deleteList.length){
+            this.vm.deleteList.forEach(x =>{
+                service_list.push(this.vm.studentService.deleteObject(this.vm.studentService.student_parameter_value,{'id':x}))
+            })
+        }
 
         Promise.all(service_list).then(value =>{
             Object.keys(value[0]).forEach(key =>{
@@ -117,26 +176,37 @@ export class UpdateProfileServiceAdapter {
                 });
                 this.vm.currentStudentSection = this.vm.commonFunctions.copyObject(this.vm.selectedStudentSection);
             }
-            if (generate_list.length) {
-                value[2].forEach(item => {
-                    this.vm.studentParameterValueList.push(item);
+            if (generateList.length) {
+                 value.slice(2,2+generateList.length).forEach(item => {
+                     this.vm.studentParameterValueList.push(item);
+                 })
+            }
+
+            if (updateList.length) {
+                value.slice(2+generateList.length,2+generateList.length+updateList.length).forEach(item => {
+                     this.vm.studentParameterValueList = this.vm.studentParameterValueList.filter(x => x.id !== item.id);
+                     this.vm.studentParameterValueList.push(item);
                 })
             }
-            if (update_list.length) {
-                value[3].forEach(item => {
-                    this.vm.studentParameterValueList = this.vm.studentParameterValueList.filter(x => x.id !== item.id);
-                    this.vm.studentParameterValueList.push(item);
+
+            if (this.vm.deleteList.length){
+                value.slice(2+generateList.length+updateList.length,2+generateList.length+updateList.length+this.vm.deleteList.length).forEach(item => {
+                    this.vm.studentParameterValueList = this.vm.studentParameterValueList.filter(x => x.id !== toInteger(item));
                 })
             }
+            
             this.vm.currentStudentParameterValueList = [];
             this.vm.studentParameterValueList.filter(x => x.parentStudent === this.vm.currentStudent.id).forEach(item => {
                 this.vm.currentStudentParameterValueList.push(this.vm.commonFunctions.copyObject(item))
             });
-
+            
+            this.vm.deleteList=[]
+            this.vm.profileImage=null;
             alert('Student: ' + this.vm.selectedStudent.name + ' updated successfully');
             this.vm.isLoading = false;
 
         },error => {
+            this.vm.profileImage=null;
             this.vm.isLoading = false;
         });
     }
