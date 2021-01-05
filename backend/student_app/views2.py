@@ -201,15 +201,15 @@ class TransferCertificateView(APIView):
 from .business.profile_image import partial_update_profile_image
 
 
-class StudentView(CommonView, APIView):
-    Model = Student
+# class StudentView(CommonView, APIView):
+#     Model = Student
 
-    @user_permission_new
-    def patch(self,request):
-        if 'profileImage' in request.FILES:
-            return partial_update_profile_image(request,self.Model,self.ModelSerializer)
-        else:
-            return super.patch(request)
+#     @user_permission_new
+#     def patch(self,request):
+#         if 'profileImage' in request.FILES:
+#             return partial_update_profile_image(request,self.Model,self.ModelSerializer)
+#         else:
+#             return super.patch(request)
 
 class StudentListView(CommonListView, APIView):
     Model = Student
@@ -246,3 +246,6 @@ class StudentParameterValueView(CommonView, APIView):
 
 class StudentParameterValueListView(CommonListView, APIView):
     Model = StudentParameterValue
+
+class StudentView(CommonView,APIView):   #for handling image-upload with form-data
+    Model = Student

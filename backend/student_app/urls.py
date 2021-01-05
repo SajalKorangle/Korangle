@@ -63,6 +63,11 @@ urlpatterns += [
 ##### Trying Common Views Below ####
 ####################################
 
+from student_app.views2 import StudentView
+urlpatterns += [
+    url(r'^students-2', StudentView.as_view()),
+]
+
 from student_app.views import StudentView, StudentListView
 
 urlpatterns += [

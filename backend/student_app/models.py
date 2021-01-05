@@ -167,6 +167,7 @@ class StudentParameter(models.Model):
     PARAMETER_TYPE = (
         ( 'TEXT', 'TEXT' ),
         ( 'FILTER', 'FILTER' ),
+        ( 'DOCUMENT','DOCUMENT')
     )
     parameterType = models.CharField(max_length=20, choices=PARAMETER_TYPE, null=False)
 
@@ -181,7 +182,9 @@ class StudentParameterValue(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
     parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
 
-    value = models.TextField(null=True)
+    value = models.TextField(null=True,blank=True)
+    document_value = models.FileField(upload_to="upload_student_parameter_document_to/", blank=True, null=True)
+    document_size = models.TextField(null=True,blank=True)
 
     class Meta:
         db_table = 'student_parameter_value'
