@@ -1,0 +1,5 @@
+[{"model": "subject_app.studentsubject", "pk": 1, "fields": {"parentSubject": 4, "parentStudent": 1, "parentSession": 1}},
+ {"model": "subject_app.studentsubject", "pk": 2, "fields": {"parentSubject": 3, "parentStudent": 1, "parentSession": 1}},
+ {"model": "subject_app.studentsubject", "pk": 3, "fields": {"parentSubject": 2, "parentStudent": 1, "parentSession": 1}},
+ {"model": "subject_app.studentsubject", "pk": 4, "fields": {"parentSubject": 7, "parentStudent": 1, "parentSession": 1}},
+ {"model": "subject_app.studentsubject", "pk": 5, "fields": {"parentSubject": 1, "parentStudent": 1, "parentSession": 1}}]

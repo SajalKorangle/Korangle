@@ -1,3 +1,4 @@
+# Frontend
 .vscode/
 .idea/
 *.iml
@@ -25,6 +26,8 @@ frontend/tests/karma/dummy.spec.ts
 backend/*db.sqlite3*
 *.pyc
 *.swp
+
+# Backend
 backend/*DS_Store
 backend/*message_app
 backend/copydatabasefromserver.sh
@@ -44,3 +47,56 @@ backend/helloworld_project/gunicorn.conf.py
 backend/backup_database.sh
 
 *.DS_Store
+
+# Mobile
+mobile/.idea/*
+mobile/*.iml
+mobile/.gradle/
+mobile/build/
+mobile/local.properties
+mobile/.DS_Store
+mobile/captures
+mobile/.externalNativeBuild
+mobile/.idea/caches/build_file_checksums.ser
+mobile/.idea/misc.xml
+
+#built application files
+mobile/*.apk
+mobile/*.aar
+mobile/*.ap_
+mobile/*.aab
+
+# Java class files
+mobile/*.class
+
+# files for the dex VM
+mobile/*.dex
+
+# generated files
+mobile/bin/
+mobile/gen/
+
+# Local configuration file (sdk path, etc)
+mobile/local.properties
+
+# Windows thumbnail db
+mobile/Thumbs.db
+
+# OSX files
+mobile/.DS_Store
+
+# Android Studio
+mobile/*.iml
+mobile/.idea
+
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+mobile/.gradle
+mobile/build/
+mobile/.navigation/
+mobile/captures/
+
+#NDK
+mobile/obj/
+mobile/.externalNativeBuild
+mobile/app/release/*
+
