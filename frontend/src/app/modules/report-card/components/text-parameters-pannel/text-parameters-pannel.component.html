@@ -33,5 +33,17 @@
             <input matInput type="color" [value]="layer.fontStyle.fillStyle" (input)="layer.fontStyle.fillStyle=$event.target.value; canvasRefresh(0);"/>
         </mat-form-field>
 
+        
+        <mat-form-field>
+            <mat-label>Font Family</mat-label>
+            <mat-select placeholder="Select Font Family"
+                    [ngModel]="selectedFont"
+                    (ngModelChange)="selectedFont=$event; changeFont(); canvasRefresh(0, layer.updateTextBoxMetrics);">
+                <mat-option *ngFor="let font of fontFamilyList" [value]="font">
+                    {{font.displayName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
     </div>
 </mat-card>

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Layer } from './../../class/constants_3';
+import { FONT_FAMILY_LIST } from './../../class/font';
 
 @Component({
   selector: 'app-text-parameters-pannel',
@@ -10,6 +11,9 @@ export class TextParametersPannelComponent implements OnInit {
 
   @Input() layer: Layer;
   @Input() canvasRefresh: any;
+  
+  fontFamilyList = FONT_FAMILY_LIST ;
+  selectedFont = FONT_FAMILY_LIST[0];
 
   constructor() { }
 
@@ -60,6 +64,16 @@ export class TextParametersPannelComponent implements OnInit {
 
   underlineToggle(event): any{
     this.layer.underline = event.source.checked? true : false;
+  }
+
+  changeFont(): any{
+    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
+    let tempFontArray = [];
+    tempFontArray[0] = fontArgumentsArray[0];
+    tempFontArray[1] = fontArgumentsArray[1];
+    tempFontArray[2] = fontArgumentsArray[2];
+    tempFontArray[3] = this.selectedFont.displayName;
+    this.layer.fontStyle.font = tempFontArray.join(' ');
   }
 
 
