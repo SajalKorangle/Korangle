@@ -37,10 +37,26 @@ export class PurchaseSmsServiceAdapter {
         let sms_purchase_data = {
             parentSchool :this.vm.user.activeSchool.dbId,
             purchseDateTime: Date.now(),
-            numberOfSMS : this.vm.selectedSmsPlan.noOfSms,
-            price : this.vm.selectedSmsPlan.price,
             orderId : -1,
             payment_capture : 0
+        }
+
+        if(this.vm.value1 >0)
+        {   
+            for(let i=0;i<this.vm.smsPlan.length;i++)
+            {
+                if(this.vm.smsPlan[i].selected)
+                {
+                    sms_purchase_data['price'] = this.vm.value1;
+                    sms_purchase_data['numberOfSMS'] = this.vm.smsPlan[i].noOfSms;
+                    break;
+                }
+            }
+        }
+        else
+        {   
+            sms_purchase_data['price'] = this.vm.price;
+            sms_purchase_data['numberOfSMS'] = this.vm.value;
         }
         this.purchasedSMS = +this.vm.selectedSmsPlan.price;
         this.vm.selectedSmsPlan = this.vm.defaultPlan;

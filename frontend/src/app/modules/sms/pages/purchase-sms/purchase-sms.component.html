@@ -4,32 +4,64 @@
     <ng-container *ngIf="!isInitialLoading">
         <div class="row">
             <div class="col-md-6">
-                <h3>Your current sms balance is {{SMSCount}}</h3>
+                <!-- <h3>Your current sms balance is {{SMSCount}}</h3> -->
     
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Purchase SMS Plan
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <mat-form-field>
-                        <mat-select placeholder='Select a Plan...' [(ngModel)]="selectedSmsPlan">
-                            <mat-option [value]='defaultPlan'>Select a Plan...</mat-option>
-                            <mat-option *ngFor='let plan of smsPlan;' [value]="plan">
-                                {{plan.noOfSms}} sms for Rs.{{plan.price}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    
-                    <button type="submit"
-                    [disabled]="selectedSmsPlan === defaultPlan"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.createRzpayOrder()">Pay</button>
-    
-                </mat-expansion-panel>
+
     
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <span><strong>Choose Your Custom Plan</strong></span>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 50px; margin-bottom: 30px;">
+            <mat-card [class.smsPrice] = "value1==0" style=" width: 11vw;">
+                <strong>
+                    {{value}}  SMS for Rs. {{price}}
+                </strong>
+            </mat-card>
+        </div>
+        <div class="row">
+            <div style="margin-left: 11vw;">
+                <strong>No of SMS</strong>
+            </div>
+        </div>
+        
+        <div class="range-wrap">
+            <input type="range" min="0" max="30000"  step="100" class="range" [(ngModel)]="value" (ngModelChange)="callSetBubble($event)">
+            <output class="bubble"></output>
+        </div>
+        <div style="width: 30vw;">
+            <span class="text-small" style="float: left;">0</span>
+            <span class="text-small" style="float: right;">30000</span>
+        </div>
+        <div class="row" style="margin-top: 75px; margin-bottom: 57px; border-bottom: 1px solid grey;">
+
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <span><strong>Select from our best selling plans</strong> </span>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-md-12 " style="display: flex;">
+                <div *ngFor="let plan of smsPlan">
+                    <div  [ngClass]="plan.selected ? 'selected' : 'unselected'" (click)="selectThisPlan($event,plan)" style="padding: 4vh; margin-right: 1vw; cursor: pointer;">
+                        <span>{{plan.noOfSms}} for Rs {{plan.price}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 75px; margin-bottom: 55px; border-bottom: 1px solid grey;">
+        </div>
+
+        <button type="submit"
+                    [disabled]="isPayButtonDisabled()"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="serviceAdapter.createRzpayOrder()">Pay</button>
     </ng-container>
     
 </div>
