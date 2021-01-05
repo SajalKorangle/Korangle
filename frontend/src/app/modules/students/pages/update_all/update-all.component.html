@@ -25,10 +25,6 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="showAllColumns(); $event.stopPropagation();">Select All
-                        </button>
-                        <button class="btn"
-                                style="padding: 4px 7px"
                                 (click)="hideAllColumns(); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
@@ -47,10 +43,6 @@
                         </mat-option>
                     </ng-container>
                     <mat-option>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="showAllColumns(); $event.stopPropagation();">Select All
-                        </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
                                 (click)="hideAllColumns(); $event.stopPropagation();">Clear All
@@ -192,6 +184,17 @@
                                         <mat-option [value]="NULL_CONSTANT">None</mat-option>
                                         <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
                                 </mat-select>
+                            </ng-container>
+                            <ng-container *ngIf="parameter.parameterType===parameter_type_list[2]">
+                            	<div class="text-center">
+                            		<input class="dropinput" type="file"
+                            			   [attr.id]="student.dbId+'-'+parameter.id"
+                            			   (input)="updateParameterDocumentValue(student,parameter,$event)">
+                                        <img [src]="getDocumentIcon(student, parameter)"
+                                        	 class="documenticon"
+                                        	 [id]="student.dbId+'-'+parameter.id+'-icon'">
+                                        <p [id]="student.dbId+'-'+parameter.id+'-text'"></p>
+                                    </div>
                             </ng-container>
                         </td>
                     </tr>

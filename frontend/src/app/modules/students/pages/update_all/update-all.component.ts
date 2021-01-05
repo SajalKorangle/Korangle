@@ -133,6 +133,10 @@ export class UpdateAllComponent implements OnInit {
     sectionList = [];
 
     studentFullProfileList = [];
+    
+    noFileIcon ="/assets/img/noFileIcon.png";
+    pdfIcon ="/assets/img/pdfIcon.png";
+    imageIcon ="/assets/img/imageIcon.png";
 
     isLoading = false;
 
@@ -454,6 +458,90 @@ export class UpdateAllComponent implements OnInit {
             return this.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
         } catch {
             return this.NULL_CONSTANT;
+        }
+    }
+    
+	getDocumentIcon(student,parameter){
+    	try {
+            let value =  this.studentParameterValueList.find(x =>x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).document_value;
+            if (value){
+                if (value ==="" || value===undefined){
+                    return this.NULL_CONSTANT;
+                }
+                else{
+                    let type = value.split(".")
+                    type = type[type.length-1]
+                    if (type=="pdf"){
+                        return this.pdfIcon;
+                    }
+                    else if (type=="jpg"|| type=="jpeg" || type=="png"){
+                        return this.imageIcon;
+                    }
+                }
+            } else{
+                return this.noFileIcon;
+            }
+        }
+        catch{
+            return this.noFileIcon;
+        }
+    }
+    
+    check_document(value): boolean {
+        let type = value.type
+        if (type !== 'image/jpeg' && type !== 'image/jpg' && type !== 'image/png' && type!='application/pdf' ) {
+            alert('Uploaded File should be either in jpg,jpeg,png or in pdf format');
+            return false;
+        }
+        else{
+            if (value.size/1000000.0 > 5){
+                alert ("File size should not exceed 5MB")
+                return false;
+            }
+            else{
+            return true;
+            }
+        }
+    }
+
+    updateParameterDocumentValue = (student,parameter,value)=>{
+        let promise = null;
+        let check = this.check_document(value.target.files[0]);
+        if (check==true){
+            let text = document.getElementById(student.dbId+'-'+parameter.id+'-text');
+            text.innerHTML="Updating...";
+            let icon = document.getElementById(student.dbId+'-'+parameter.id+'-icon');
+            let student_parameter_document_value = this.studentParameterValueList.find(x =>
+                x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id);
+            let data = new FormData();
+            data.append("parentStudentParameter",parameter.id);
+            data.append("parentStudent",student.dbId);
+            data.append("document_value",value.target.files[0]);
+            data.append("document_size",value.target.files[0].size);
+            if (!student_parameter_document_value) {
+                promise = this.studentService.createObject(this.studentService.student_parameter_value, data);
+            }
+            else{
+                data.append("id",student_parameter_document_value.id)
+                promise = this.studentService.updateObject(this.studentService.student_parameter_value, data);
+            }
+            promise.then(val => {
+                if (val){
+                    this.studentParameterValueList = this.studentParameterValueList.filter(x => x.id !== val.id);
+                    this.studentParameterValueList.push(val);  
+                    document.getElementById(parameter.id + '-' + student.dbId).classList.remove('updatingField');
+                    text.innerHTML="";
+                }
+                else{
+                    text.innerHTML="";
+                }
+            }, error => {
+                alert('Failed to update value');
+                text.innerHTML="";
+            })
+        }
+        else{
+            document.getElementById(student.dbId+'-'+parameter.id +'-text').innerHTML='';
         }
     }
 
