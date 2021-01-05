@@ -4,10 +4,10 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { trigger, transition, query, style, animate, group } from '@angular/animations';
 const left = [
   group([
-    query(':enter', [style({ transform: 'translateX(-100%)' }), animate('.3s ease-out', style({ transform: 'translateX(0%)' }))], {
+    query(':enter', [style({ transform: 'translateX(-100%)' }), animate('.3s linear', style({ transform: 'translateX(0%)' }))], {
         optional: true,
       }),
-    query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s ease-out', style({ transform: 'translateX(100%)' }))], {
+    query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s linear', style({ transform: 'translateX(100%)' }))], {
         optional: true,
       }),
   ]),
@@ -15,10 +15,10 @@ const left = [
 
 const right = [
     group([
-      query(':enter', [style({ transform: 'translateX(100%)' }), animate('.3s ease-out', style({ transform: 'translateX(0%)' }))], {
+      query(':enter', [style({ transform: 'translateX(100%)' }), animate('.3s linear', style({ transform: 'translateX(0%)' }))], {
         optional: true,
       }),
-      query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s ease-out', style({ transform: 'translateX(-100%)' }))], {
+      query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s linear', style({ transform: 'translateX(-100%)' }))], {
         optional: true,
       }),
     ]),
@@ -141,25 +141,25 @@ export class ImagePreviewDialogComponent {
     }
 
 
-  onNext() {
-    if (this.counter != this.data.homeworkImages.length - 1) {
-      this.counter++;
+    onNext() {
+        if (this.counter != this.data.homeworkImages.length - 1) {
+        this.counter++;
+        }
+        
+        this.moveToIndex = this.counter;
+        this.imageStyle.width = '50%';
+        this.imageStyleMobile.width = '100%';
     }
-    
-    this.moveToIndex = this.counter;
-    this.imageStyle.width = '50%';
-    this.imageStyleMobile.width = '100%';
-  }
 
-  onPrevious() {
-    if (this.counter > 0) {
-      this.counter--;
+    onPrevious() {
+        if (this.counter > 0) {
+        this.counter--;
+        }
+        
+        this.moveToIndex = this.counter;
+        this.imageStyle.width = '50%';
+        this.imageStyleMobile.width = '100%';
     }
-    
-    this.moveToIndex = this.counter;
-    this.imageStyle.width = '50%';
-    this.imageStyleMobile.width = '100%';
-  }
 
     
 }
