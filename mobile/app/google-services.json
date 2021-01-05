@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "179756097278",
+    "firebase_url": "https://korangle.firebaseio.com",
+    "project_id": "korangle",
+    "storage_bucket": "korangle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179756097278:android:c7c5bb88a76dca1d",
+        "android_client_info": {
+          "package_name": "com.korangle.www.korangle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "179756097278-q4qrhsj9k0tb90at2o46tnmehcebl7m2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.korangle.www.korangle",
+            "certificate_hash": "48d637049e2a946a5ff2b712cdcd4c223461c01e"
+          }
+        },
+        {
+          "client_id": "179756097278-gnjjud8bt1v6m991p3o5hdn8kaq3qr39.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALOiUU6_nL-S6k-a-Lz9DpQqTv1aycHLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "179756097278-gnjjud8bt1v6m991p3o5hdn8kaq3qr39.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
