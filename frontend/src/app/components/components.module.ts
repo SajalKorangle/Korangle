@@ -19,6 +19,7 @@ import { MatTableModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatListModule} from '@angular/material/list';
+import 'hammerjs';
  
 
 
