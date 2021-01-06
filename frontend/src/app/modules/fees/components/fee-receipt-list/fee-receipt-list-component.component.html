@@ -26,12 +26,7 @@
                 {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
                 {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
             </td>
-            <td *ngIf="receiptColumnFilter.name" align="left">{{getStudentName(feeReceipt.parentStudent)}}</td>
             <td *ngIf="receiptColumnFilter.scholarNumber" align="center">{{getStudentScholarNumber(feeReceipt.parentStudent)}}</td>
-            <td *ngIf="receiptColumnFilter.class" align="center">
-                {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
-                {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
-            </td>
             <td *ngIf="receiptColumnFilter.amount" style="padding-right: 15px;" align="right">{{getFeeReceiptTotalAmount(feeReceipt)}}</td>
             <td *ngIf="receiptColumnFilter.mobileNumber" style="padding-right: 15px;" align="right">{{getStudentMobileNumber(feeReceipt)}}</td>
             <td *ngIf="receiptColumnFilter.modeOfPayment" align="center">{{feeReceipt.modeOfPayment}}</td>

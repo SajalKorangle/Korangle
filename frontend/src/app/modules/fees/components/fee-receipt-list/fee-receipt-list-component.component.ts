@@ -5,7 +5,6 @@ import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants'
 import {SchoolService} from "../../../../services/modules/school/school.service";
 import {MatDialog} from '@angular/material/dialog';
 import {CancelFeeReceiptModalComponent} from '@modules/fees/components/cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
-import {TotalCollectionComponent} from '@modules/fees/pages/total-collection/total-collection.component';
 import {EmitterService} from '@services/emitter.service';
 
 @Component({

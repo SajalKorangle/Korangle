@@ -1,7 +1,6 @@
 
 import { CancelFeeReceiptComponent } from './cancel-fee-receipt.component';
 import {EmitterService} from '@services/emitter.service';
-import moment = require('moment');
 
 export class CancelFeeReceiptServiceAdapter {
 
