@@ -30,6 +30,7 @@ export class ViewTutorialsComponent implements OnInit {
     showTutorialVideo = false;
     noTutorials=false;
     filteredStudentSubject=[];
+    youtubeIdMatcher=/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
 
     constructor(public subjectService: SubjectService,
@@ -48,7 +49,7 @@ export class ViewTutorialsComponent implements OnInit {
 
 
     setTutorialVideo(): void {
-        this.videoUrl=this.selectedTopic.link.replace('watch?v=', 'embed/');
+        this.videoUrl="https://youtube.com/embed/"+this.selectedTopic.link.match(this.youtubeIdMatcher)[1];
         this.publishDate=moment(this.selectedTopic.generationDateTime).format('Do - MMMM - YYYY');
         if (!this.selectedChapter) {
             alert('Select a chapter');
