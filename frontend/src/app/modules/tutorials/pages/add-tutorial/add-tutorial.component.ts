@@ -43,8 +43,10 @@ export class AddTutorialComponent implements OnInit {
     editedTutorial: any;
     showPreview = false;
     topicAlreadyPresent = false;
-    youtubeRegex = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$/;
+    youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
+    youtubeIdMatcher=/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+
 
 
     createMessage = 'A new tutorial has been created in the Subject <subject>; Chapter <tutorialChapter>; Topic <tutorialTopic>';
@@ -115,7 +117,7 @@ export class AddTutorialComponent implements OnInit {
             height: '80vh',
             width: '80vw',
             data: {
-                videoUrl: tutorial.link.replace('watch?v=', 'embed/')
+                videoUrl: "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1],
             }
         });
     }
@@ -135,7 +137,7 @@ export class AddTutorialComponent implements OnInit {
             if (tutorial.link.startsWith('www.')) {
                 tutorial.link = 'https://' + tutorial.link;
             }
-            this.previewBeforeAddTutorialUrl = tutorial.link.replace('watch?v=', 'embed/');
+            this.previewBeforeAddTutorialUrl = "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1];
             this.showPreview = true;
             if (!tutorial.chapter || tutorial.chapter.trim() == '') {
                 this.isAddDisabled = true;
