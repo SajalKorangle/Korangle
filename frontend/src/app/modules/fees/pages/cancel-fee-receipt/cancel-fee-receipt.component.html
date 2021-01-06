@@ -1,7 +1,7 @@
 <div class="card-content">
 
     <div class="row">
-        <div *ngIf="searchBy==searchFilterList[1]" class="col-md-7">
+        <div [hidden]="searchBy!==searchFilterList[1]" class="col-md-7">
 
             <parent-student-filter [user]="user"
                                    (onStudentListSelected)="handleStudentListSelection($event)"
@@ -10,7 +10,7 @@
                                    [showFilter]="false"
                                    [studentTcGenerated]="false"></parent-student-filter>
         </div>
-        <div *ngIf="searchBy==searchFilterList[2]" class="col-md-7">
+        <div [hidden]="searchBy!==searchFilterList[2]" class="col-md-7">
 
             <parent-student-filter [user]="user"
                                    (onStudentListSelected)="handleParentListSelection($event)"

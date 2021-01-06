@@ -52,7 +52,7 @@ export class CancelFeeReceiptServiceAdapter {
         this.vm.isLoading = true;
         let fee_receipt_list = {};
         let sub_fee_receipt_list = {};
-        //common for all searchFilter
+        //common for all searchFilters
         fee_receipt_list['parentSchool'] = this.vm.user.activeSchool.dbId;
         sub_fee_receipt_list['parentFeeReceipt__parentSchool'] = this.vm.user.activeSchool.dbId;
 
