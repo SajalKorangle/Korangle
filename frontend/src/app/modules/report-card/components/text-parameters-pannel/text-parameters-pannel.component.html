@@ -37,8 +37,8 @@
         <mat-form-field>
             <mat-label>Font Family</mat-label>
             <mat-select placeholder="Select Font Family"
-                    [ngModel]="selectedFont"
-                    (ngModelChange)="selectedFont=$event; changeFont(); canvasRefresh(0, layer.updateTextBoxMetrics);">
+                    [ngModel]="getFontFamily()"
+                    (ngModelChange)="changeFont($event); canvasRefresh(0, layer.updateTextBoxMetrics);">
                 <mat-option *ngFor="let font of fontFamilyList" [value]="font">
                     {{font.displayName}}
                 </mat-option>

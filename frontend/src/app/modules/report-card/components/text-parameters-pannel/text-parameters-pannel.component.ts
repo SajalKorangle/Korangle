@@ -13,7 +13,6 @@ export class TextParametersPannelComponent implements OnInit {
   @Input() canvasRefresh: any;
   
   fontFamilyList = FONT_FAMILY_LIST ;
-  selectedFont = FONT_FAMILY_LIST[0];
 
   constructor() { }
 
@@ -66,13 +65,27 @@ export class TextParametersPannelComponent implements OnInit {
     this.layer.underline = event.source.checked? true : false;
   }
 
-  changeFont(): any{
+  getFontFamily(): any{
+    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
+    let tempFontFamily = '';
+    for(let i=3;i<fontArgumentsArray.length-1; i++){
+      tempFontFamily = tempFontFamily + fontArgumentsArray[i] + ' ';
+
+    }
+    tempFontFamily = tempFontFamily + fontArgumentsArray[fontArgumentsArray.length - 1];
+    // console.log(tempFontFamily);
+    return this.fontFamilyList.find(fontfamily => fontfamily.displayName == tempFontFamily);
+
+  }
+
+  changeFont(font): any{
     let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
     let tempFontArray = [];
     tempFontArray[0] = fontArgumentsArray[0];
     tempFontArray[1] = fontArgumentsArray[1];
     tempFontArray[2] = fontArgumentsArray[2];
-    tempFontArray[3] = this.selectedFont.displayName;
+    tempFontArray[3] = font.displayName;
+    // console.log(tempFontArray);
     this.layer.fontStyle.font = tempFontArray.join(' ');
   }
 
