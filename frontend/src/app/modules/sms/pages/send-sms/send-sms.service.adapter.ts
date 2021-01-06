@@ -276,18 +276,16 @@ export class SendSmsServiceAdapter {
 
     }
 
-    createRzpayOrder() {
+    createRzpayOrder(data) {
         this.vm.isLoading = true;
         let sms_purchase_data = {
             parentSchool :this.vm.user.activeSchool.dbId,
             purchseDateTime: Date.now(),
-            numberOfSMS : this.vm.selectedSmsPlan.noOfSms,
-            price : this.vm.selectedSmsPlan.price,
+            numberOfSMS : data.noOfSMS,
+            price : data.price,
             orderId : -1,
             payment_capture : 0
         }
-        this.purchasedSMS = +this.vm.selectedSmsPlan.price;
-        this.vm.selectedSmsPlan = this.vm.defaultPlan;
         //call api to create order_id
         Promise.all([
             this.vm.smsService.createObject(this.vm.smsService.sms_purchase,sms_purchase_data)

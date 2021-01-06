@@ -46,6 +46,12 @@
             <span *ngIf="getMobileNumberList('both').length !== 0 && message.length > 0">
                 <span *ngIf="(selectedSentType==sentTypeList[0] || selectedSentType==sentTypeList[2]) && smsBalance<getMobileNumberList('sms').length*getSMSCount()" style="font-size: 16px;">
                     You are short by <b>{{(getMobileNumberList('sms').length*getSMSCount()) - smsBalance}}</b> SMS.
+
+                    <div>
+                        <button type="submit"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="openPurchaseSMSDialog()">Purchase SMS</button>
+                    </div>
                 </span>
                 <ng-container *ngIf="smsBalance>=(getMobileNumberList('sms').length*getSMSCount())">
                     <button type="submit"
@@ -62,31 +68,6 @@
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('notification').length}} notifications</button>
             </span>
-        </div>
-        <div class="col-md-3" style="margin-top: 20px;">
-            <mat-accordion>
-                <mat-expansion-panel (opened)="panelOpenState = true"
-                                     (closed)="panelOpenState = false"
-                                     style="max-width: 210px;">
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Purchase SMS Plan
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-                    <mat-form-field>
-                        <mat-select placeholder='Select a Plan...' [(ngModel)]="selectedSmsPlan">
-                            <mat-option [value]='defaultPlan'>Select a Plan...</mat-option>
-                            <mat-option *ngFor='let plan of smsPlan;' [value]="plan">
-                                {{plan.noOfSms}} sms for Rs.{{plan.price}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <button type="submit"
-                    [disabled]="selectedSmsPlan === defaultPlan"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.createRzpayOrder()">Pay</button>
-                </mat-expansion-panel>
-            </mat-accordion>   
         </div>
     </div>
 

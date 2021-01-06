@@ -13,6 +13,14 @@ import {NotificationService} from "../../../../services/modules/notification/not
 import {UserService} from "../../../../services/modules/user/user.service";
 
 import { WindowRefService } from "../../../../services/modules/sms/window-ref.service"
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { Inject } from '@angular/core';
+
+export interface PurchaseSMSDialogData {
+    noOfSMS:any,
+    price:any,
+    purchase:any
+}
 
 @Component({
     selector: 'send-sms',
@@ -95,14 +103,7 @@ export class SendSmsComponent implements OnInit {
             no: false
         }
     }
-
-    smsPlan = [
-        { noOfSms: 5000,  price: 1250 },
-        { noOfSms: 20000, price: 5000 },
-        { noOfSms: 30000, price: 7200 }
-      ];
-    defaultPlan = {noOfSms:'',price:''};
-    selectedSmsPlan =this.defaultPlan;
+    purchase: any;
 
 
     constructor(public studentService: StudentService,
@@ -113,7 +114,8 @@ export class SendSmsComponent implements OnInit {
                 public notificationService: NotificationService,
                 public userService: UserService,
                 public cdRef: ChangeDetectorRef,
-                public winRef: WindowRefService) { }
+                public winRef: WindowRefService,
+                public dialog: MatDialog) { }
 
     onPage(event) {
         clearTimeout(this.timeout);
@@ -410,5 +412,144 @@ export class SendSmsComponent implements OnInit {
     }
 
 
+    openPurchaseSMSDialog(): void {
 
+        console.dir(this.user,{depth:null});
+
+        let moduleIdx = this.user.activeSchool.moduleList.findIndex(module => module.path === 'sms');
+        let taskIdx = -1;
+        if(moduleIdx != -1)
+        {
+            taskIdx   = this.user.activeSchool.moduleList[moduleIdx].taskList.find(task => task.path === 'purchase_sms');
+        }
+        if(moduleIdx === -1 || taskIdx === -1)
+        {
+            alert('Purchase sms permission denied');
+            return;
+        }
+        const dialogRef = this.dialog.open(PurchaseSMSDialogComponent, {
+            width: '1000px',
+            data: {'noOfSMS':0,'price':0,'purchase':this.purchase},
+            disableClose: true,
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+
+            if(result.payment != undefined)
+            {   
+                let data = {
+                    price : result.price,
+                    noOfSMS : result.noOfSMS
+                }
+                this.serviceAdapter.createRzpayOrder(data);
+            }
+            else
+            {
+                alert('Purchase has been cancelled');
+            }
+        });
+    }
+
+
+
+}
+
+
+
+
+@Component({
+    selector: 'purchase-sms-dialog',
+    templateUrl: 'purchase-sms-dialog.html',
+    styleUrls: ['./send-sms.component.css'],
+  })
+  export class PurchaseSMSDialogComponent {
+    
+    constructor(
+        public dialogRef: MatDialogRef<PurchaseSMSDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) 
+        public data: PurchaseSMSDialogData,
+        public dialog: MatDialog,) {
+    }
+  
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
+
+    smsPlan = [
+        { noOfSms: 5000,  price: 1250, selected:false },
+        { noOfSms: 20000, price: 5000, selected:false },
+        { noOfSms: 30000, price: 7200, selected:false }
+      ];    
+      SMSCount =0;
+      price = 0;
+      noOfSMS =0;
+
+    
+      value: number = 0;
+      value1: number = 0;
+    
+    
+      callSetBubble(event)
+      { 
+        let range = document.querySelector(".range");
+        let bubble = document.querySelector(".bubble");
+        this.setBubble(range,bubble);
+      }
+    
+      setBubble(range, bubble) {
+        const val = range.value;
+        this.value = val;
+        this.value1=0;
+        const min = range.min ? range.min : 0;
+        const max = range.max ? range.max : 100;
+        const newVal = Number(((val - min) * 100) / (max - min));
+        this.price = val / 5;
+        bubble.innerHTML = val;
+    
+        // Sorta magic numbers based on size of the native UI thumb
+        bubble.style.left = `calc(${val * (30/30000) +1}vw)`;
+        for(let i=0;i<this.smsPlan.length;i++)
+        this.smsPlan[i].selected = false;
+      }
+    
+      selectThisPlan(event:any,plan:any)
+      { 
+        for(let i=0;i<this.smsPlan.length;i++)
+        {
+          this.smsPlan[i].selected = false;
+        }
+    
+        plan.selected = true;
+        this.value1 = plan.price;
+      }
+    
+      isPayButtonDisabled()
+      {
+        if(this.value >0 || this.value1 >0)return false;
+        return true;
+      } 
+
+      startPayment()
+      { 
+        this.data.purchase = true;
+        this.data.noOfSMS = this.value1 ? this.value1 > 0 : this.price*5;
+        if(this.value1 >0)
+        {   
+            for(let i=0;i<this.smsPlan.length;i++)
+            {
+                if(this.smsPlan[i].selected)
+                this.data.noOfSMS = this.smsPlan[i].noOfSms;
+            }
+            this.data.price = this.value1;
+        }
+        else
+        {   
+            this.data.price = this.price;
+            this.data.noOfSMS = this.value
+        }
+        
+        this.dialogRef.close({payment:this.data.purchase, noOfSMS : this.data.noOfSMS, price :this.data.price});
+      }
+    
+ 
 }

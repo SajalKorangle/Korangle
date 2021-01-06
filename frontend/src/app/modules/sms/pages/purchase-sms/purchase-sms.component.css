@@ -10,6 +10,7 @@ EDIT ON
 }
 .range {
   width: 30vw;
+  min-width: 280px;
 }
 .bubble {
   background: #4CA750;
