@@ -3,11 +3,8 @@
 
     <ng-container *ngIf="!isInitialLoading">
         <div class="row">
-            <div class="col-md-6">
-                <!-- <h3>Your current sms balance is {{SMSCount}}</h3> -->
-    
-
-    
+            <div class="col-md-12">
+                <h3 style="float: right;">SMS balance is {{SMSCount}}</h3>
             </div>
         </div>
         <div class="row">
@@ -16,7 +13,7 @@
             </div>
         </div>
         <div class="row" style="margin-top: 50px; margin-bottom: 30px;">
-            <mat-card [class.smsPrice] = "value1==0" style=" width: 11vw; max-width: 186px;">
+            <mat-card [class.smsPrice] = "value1==0" style=" width: 11vw; min-width: 186px;">
                 <strong>
                     {{value}}  SMS for Rs. {{price}}
                 </strong>
@@ -43,7 +40,7 @@
             <span class="text-small" style="float: right;">30000</span>
         </div>
         
-        <div class="row" style="margin-top: 75px; margin-bottom: 57px; border-bottom: 1px solid grey;">
+        <div class="row" style="margin-top: 75px; margin-bottom: 40px; border-bottom: 1px solid grey;">
 
         </div>
         
@@ -63,10 +60,16 @@
         <div class="row" style="margin-top: 75px; margin-bottom: 55px; border-bottom: 1px solid grey;">
         </div>
 
-        <button type="submit"
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-12">
+                <div style="float: right;">
+                    <button 
                     [disabled]="isPayButtonDisabled()"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="serviceAdapter.createRzpayOrder()">Pay</button>
+                </div>
+            </div>
+        </div>
     </ng-container>
     
 </div>

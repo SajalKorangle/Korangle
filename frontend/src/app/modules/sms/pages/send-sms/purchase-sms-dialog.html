@@ -1,90 +1,76 @@
 
-    <mat-dialog-actions>
-        <div class="row" style="width: 100%; margin: 0px">
-            <div class="col-xs-1" style="padding: 0px;">
-            </div>
-            <div class="col-xs-10" style="text-align: center; padding: 0px">
-            </div>
-            <div class="col-xs-1" style="padding: 0px;">
-                <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 25px; float:right">clear</span>
-            </div>
+<mat-dialog-actions>
+    <div class="row" style="width: 100%; margin: 0px">
+        <div class="col-xs-1" style="padding: 0px;">
         </div>
-    </mat-dialog-actions>
-    <mat-dialog-content>
-        <div class="row">
-            <div class="col-md-6">
-                <!-- <h3>Your current sms balance is {{SMSCount}}</h3> -->
+        <div class="col-xs-10" style="text-align: center; padding: 0px">
+        </div>
+        <div class="col-xs-1" style="padding: 0px;">
+            <span class="material-icons cursor" (click)="closeDialog();" style="font-size: 25px; float:right">clear</span>
+        </div>
+    </div>
+</mat-dialog-actions>
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-md-12">
+            <span><strong>Choose Your Custom Plan</strong></span>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 50px; margin-bottom: 20px;">
+        <mat-card [class.smsPrice] = "value1==0" style=" width: 17vw; max-width: 186px;">
+            <strong>
+                {{sliderValue}}  SMS for Rs. {{sliderValue/5}}
+            </strong>
+        </mat-card>
+    </div>
+    <div class="row">
+        <div style="text-align: center;">
+            <strong>No of SMS</strong>
+        </div>
+    </div>
     
+    <div class="range-wrap" style="width: 30vw;height: auto;margin: 0 auto;padding: 10px;position: relative;">
+        <input type="range" min="0" max="30000"  step="100" class="range" [(ngModel)]="value" (ngModelChange)="callSetBubble($event)">
+        <output class="bubble"></output>
+    </div>
+    <div style="width: 30vw;margin: 0 auto;padding: 10px;position: relative;">
+        <span class="text-small" style="float: left;">0</span>
+        <span class="text-small" style="float: right;">30000</span>
+    </div>
+    
+    
+    
+    <div class="row" style="margin-top: 55px; margin-bottom: 30px; border-bottom: 1px solid grey;">
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <span><strong>Select from our best selling plans</strong> </span>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 30px;">
+        
+        <div *ngFor="let plan of smsPlan" style="display: inline-block;">
+            <div  [ngClass]="plan.selected ? 'selected' : 'unselected'" (click)="selectThisPlan($event,plan)" style="padding: 4vh; margin-right: 1vw; margin-bottom: 1vw; cursor: pointer; min-width: 192px;">
+                <span>{{plan.noOfSms}} for Rs {{plan.price}}</span>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-12">
+            <div style="float: right;">
+                <button 
+                class="btn btn-warning"
+                [disabled]="isPayButtonDisabled()"
+                (click)="startPayment()">Pay</button>
+            </div>
+        </div>
+    </div>
 
     
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <span><strong>Choose Your Custom Plan</strong></span>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 50px; margin-bottom: 30px;">
-            <mat-card [class.smsPrice] = "value1==0" style=" width: 17vw; max-width: 186px;">
-                <strong>
-                    {{value}}  SMS for Rs. {{price}}
-                </strong>
-            </mat-card>
-        </div>
-        <div class="row">
-            <div style="text-align: center;">
-                <strong>No of SMS</strong>
-            </div>
-        </div>
-        
-        <div class="range-wrap" style="width: 30vw;
-        height: auto;
-        margin: 0 auto;
-        padding: 10px;
-        position: relative;">
-            <input type="range" min="0" max="30000"  step="100" class="range" [(ngModel)]="value" (ngModelChange)="callSetBubble($event)">
-            <output class="bubble"></output>
-        </div>
-        <div style="width: 30vw;margin: 0 auto;
-        padding: 10px;
-        position: relative;">
-            <span class="text-small" style="float: left;">0</span>
-            <span class="text-small" style="float: right;">30000</span>
-        </div>
-        
-        
-        
-        <div class="row" style="margin-top: 75px; margin-bottom: 57px; border-bottom: 1px solid grey;">
-
-        </div>
-        
-        <div class="row">
-            <div class="col-md-12">
-                <span><strong>Select from our best selling plans</strong> </span>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 50px;">
-            
-            <div *ngFor="let plan of smsPlan" style="display: inline-block;">
-                <div  [ngClass]="plan.selected ? 'selected' : 'unselected'" (click)="selectThisPlan($event,plan)" style="padding: 4vh; margin-right: 1vw; margin-bottom: 1vw; cursor: pointer; min-width: 192px;">
-                    <span>{{plan.noOfSms}} for Rs {{plan.price}}</span>
-                </div>
-            </div>
-            
-        </div>
-
-        <div class="row" style="margin-top: 20px;">
-            <div class="col-md-12">
-                <div style="float: right;">
-                    <button
-                    [disabled]="isPayButtonDisabled()"
-                    (click)="startPayment()">Pay</button>
-                </div>
-            </div>
-        </div>
-
-        
-    </mat-dialog-content>
+</mat-dialog-content>
     
 
 

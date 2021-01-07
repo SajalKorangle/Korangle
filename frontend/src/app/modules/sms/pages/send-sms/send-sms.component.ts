@@ -15,12 +15,7 @@ import {UserService} from "../../../../services/modules/user/user.service";
 import { WindowRefService } from "../../../../services/modules/sms/window-ref.service"
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Inject } from '@angular/core';
-
-export interface PurchaseSMSDialogData {
-    noOfSMS:any,
-    price:any,
-    purchase:any
-}
+import { throwIfEmpty } from 'rxjs/operators';
 
 @Component({
     selector: 'send-sms',
@@ -413,9 +408,7 @@ export class SendSmsComponent implements OnInit {
 
 
     openPurchaseSMSDialog(): void {
-
-        console.dir(this.user,{depth:null});
-
+        console.dir(this.user,{depth:null})
         let moduleIdx = this.user.activeSchool.moduleList.findIndex(module => module.path === 'sms');
         let taskIdx = -1;
         if(moduleIdx != -1)
@@ -429,12 +422,10 @@ export class SendSmsComponent implements OnInit {
         }
         const dialogRef = this.dialog.open(PurchaseSMSDialogComponent, {
             width: '1000px',
-            data: {'noOfSMS':0,'price':0,'purchase':this.purchase},
             disableClose: true,
         });
     
         dialogRef.afterClosed().subscribe(result => {
-
             if(result.payment)
             {   
                 let data = {
@@ -467,11 +458,10 @@ export class SendSmsComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef<PurchaseSMSDialogComponent>,
         @Inject(MAT_DIALOG_DATA) 
-        public data: PurchaseSMSDialogData,
         public dialog: MatDialog,) {
     }
   
-    onNoClick(): void {
+    closeDialog(): void {
         this.dialogRef.close({payment:false});
     }
 
@@ -480,13 +470,11 @@ export class SendSmsComponent implements OnInit {
         { noOfSms: 20000, price: 5000, selected:false },
         { noOfSms: 30000, price: 7200, selected:false }
       ];    
-      SMSCount =0;
-      price = 0;
       noOfSMS =0;
-
+      price =0;
     
-      value: number = 0;
-      value1: number = 0;
+      sliderValue: number = 0; // value from slider
+      fixedPlanvalue: number = 0; // value from fixed plan
     
     
       callSetBubble(event)
@@ -498,12 +486,11 @@ export class SendSmsComponent implements OnInit {
     
       setBubble(range, bubble) {
         const val = range.value;
-        this.value = val;
-        this.value1=0;
+        this.sliderValue = val;
+        this.fixedPlanvalue=0;
         const min = range.min ? range.min : 0;
         const max = range.max ? range.max : 100;
         const newVal = Number(((val - min) * 100) / (max - min));
-        this.price = val / 5;
         bubble.innerHTML = val;
     
         // Sorta magic numbers based on size of the native UI thumb
@@ -520,35 +507,36 @@ export class SendSmsComponent implements OnInit {
         }
     
         plan.selected = true;
-        this.value1 = plan.price;
+        this.fixedPlanvalue = plan.price;
       }
     
       isPayButtonDisabled()
       {
-        if(this.value >0 || this.value1 >0)return false;
+        if(this.sliderValue >0 || this.fixedPlanvalue >0)return false;
         return true;
       } 
 
       startPayment()
       { 
-        this.data.purchase = true;
-        this.data.noOfSMS = this.value1 ? this.value1 > 0 : this.price*5;
-        if(this.value1 >0)
+        if(this.fixedPlanvalue >0)
         {   
             for(let i=0;i<this.smsPlan.length;i++)
             {
                 if(this.smsPlan[i].selected)
-                this.data.noOfSMS = this.smsPlan[i].noOfSms;
+                {
+                    this.noOfSMS = this.smsPlan[i].noOfSms;
+                    break;
+                }
             }
-            this.data.price = this.value1;
+            this.price = this.fixedPlanvalue;
         }
         else
         {   
-            this.data.price = this.price;
-            this.data.noOfSMS = this.value
+            this.price = this.sliderValue/5;
+            this.noOfSMS = this.sliderValue
         }
         
-        this.dialogRef.close({payment:this.data.purchase, noOfSMS : this.data.noOfSMS, price :this.data.price});
+        this.dialogRef.close({payment:true, noOfSMS : this.noOfSMS, price :this.price});
       }
     
  

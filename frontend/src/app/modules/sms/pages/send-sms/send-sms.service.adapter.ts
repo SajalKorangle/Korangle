@@ -286,6 +286,7 @@ export class SendSmsServiceAdapter {
             orderId : -1,
             payment_capture : 0
         }
+        this.purchasedSMS = sms_purchase_data.numberOfSMS;
         //call api to create order_id
         Promise.all([
             this.vm.smsService.createObject(this.vm.smsService.sms_purchase,sms_purchase_data)
