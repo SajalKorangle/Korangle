@@ -79,6 +79,11 @@
 	{ "model": "team_app.task", "pk": 94, "fields": { "path": "design_layout", "title": "Design Id Card", "parentModule": "19", "orderNumber": 1, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 95, "fields": { "path": "generate_id_card", "title": "Generate ID Card", "parentModule": "19", "orderNumber": 2, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 96, "fields": { "path": "update_via_excel", "title": "Upload Excel", "parentModule": "15", "orderNumber": 15, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 97, "fields": { "path": "purchase_sms", "title": "Purchase SMS", "parentModule": "9", "orderNumber": 4, "parentBoard": null } }
+	{ "model": "team_app.task", "pk": 97, "fields": { "path": "issue_homework", "title": "Issue Homework", "parentModule": "20", "orderNumber": 1, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 98, "fields": { "path": "check_homework", "title": "Check Homework", "parentModule": "20", "orderNumber": 2, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 99, "fields": { "path": "settings", "title": "Settings", "parentModule": "20", "orderNumber": 3, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 100, "fields": { "path": "add_tutorial", "title": "Add Tutorial", "parentModule": "21", "orderNumber": 1, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 101, "fields": { "path": "settings", "title": "Settings", "parentModule": "21", "orderNumber": 2, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 102, "fields": { "path": "purchase_sms", "title": "Purchase SMS", "parentModule": "9", "orderNumber": 4, "parentBoard": null } }
 
 ]

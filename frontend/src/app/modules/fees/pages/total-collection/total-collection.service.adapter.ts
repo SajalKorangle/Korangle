@@ -69,6 +69,8 @@ export class TotalCollectionServiceAdapter {
             'parentFeeReceipt__cancelled': 'false__boolean',
         };
 
+        this.vm.initializeSelection();
+
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
             this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),

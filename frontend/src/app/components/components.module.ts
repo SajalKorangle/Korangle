@@ -14,8 +14,17 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
+<<<<<<< HEAD
 import {MatSliderModule} from '@angular/material/slider';
 
+=======
+import { MatInputModule } from '@angular/material/input'
+import { MatTableModule } from '@angular/material';  
+import { MatDialogModule } from '@angular/material';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatListModule} from '@angular/material/list';
+ 
+>>>>>>> e17fcebcce7f56f59f724565237b6d7f5e62bac0
 
 
 
@@ -27,6 +36,7 @@ import { DayDateComponent } from "./day-date/day-date.component";
 import { EmployeeFilterComponent } from './employee-filter/employee-filter.component';
 import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
 import { CustomizedNumberInputComponent } from './customized-number-input/customized-number-input.component';
+import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.component'
 
 // Pipes
 
@@ -43,6 +53,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         DayDateOldComponent,
         DayDateComponent,
         CustomizedNumberInputComponent,
+        ImagePreviewDialogComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -70,7 +81,15 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
+<<<<<<< HEAD
         MatSliderModule,
+=======
+        MatInputModule,
+        MatTableModule,
+        MatDialogModule,
+        MatListModule,
+        DragDropModule,
+>>>>>>> e17fcebcce7f56f59f724565237b6d7f5e62bac0
 
         BasicComponentsModule,
 
@@ -85,6 +104,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         DayDateOldComponent,
         DayDateComponent,
         CustomizedNumberInputComponent,
+        ImagePreviewDialogComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -107,8 +127,16 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
+<<<<<<< HEAD
         MatSliderModule,
 
+=======
+        MatInputModule,
+        MatDialogModule,
+        MatListModule,
+        DragDropModule,
+        
+>>>>>>> e17fcebcce7f56f59f724565237b6d7f5e62bac0
     ]
 })
 export class ComponentsModule { }

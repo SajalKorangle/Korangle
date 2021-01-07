@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Korangle</string>
+    <string name="FCM_TOKEN">FcmToken</string>
+    <string name="FCM_REGISTERED">FcmRegistered</string>
+    <string name="DJANGO_FCM_ID">DjangoFcmId</string>
+    <string name="FCM_PREF">FcmPreference</string>
+</resources>

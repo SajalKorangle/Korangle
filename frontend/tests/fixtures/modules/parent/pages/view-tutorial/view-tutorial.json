@@ -1,0 +1,31 @@
+[{
+        "app": "auth",
+        "model": "User",
+        "file": "1.json"
+    },
+    {
+        "app": "employee_app",
+        "model": "EmployeePermission",
+        "file": "1.json"
+    },
+    {
+        "app": "employee_app",
+        "model": "EmployeeSessionDetail",
+        "file": "1.json"
+    },
+    {
+        "app": "student_app",
+        "model": "StudentSection",
+        "file": "one_student_section.json"
+    },
+   {
+        "app": "tutorial_app",
+        "model": "Tutorial",
+        "file": "single-tutorial.json"
+    },
+    {
+        "app": "subject_app",
+        "model": "StudentSubject",
+        "file": "one_student_subjects.json"
+    }
+]
