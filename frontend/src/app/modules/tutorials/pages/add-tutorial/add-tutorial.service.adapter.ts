@@ -187,7 +187,7 @@ export class AddTutorialServiceAdapter {
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
             this.vm.initializeNewTutorial();
             this.vm.isLoading = false;
-            if(this.vm.settings != 0 && this.vm.settings.sendCreateUpdate == true){
+            if(this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendCreateUpdate == true){
                 this.prepareSmsNotificationData(this.vm.createMessage);
             }
         }, error =>{
@@ -223,7 +223,7 @@ export class AddTutorialServiceAdapter {
                 this.vm.tutorialUpdating = false;
                 tutorial.editable = false;
                 this.populateStudentList(value[0]);
-                if(this.vm.settings != 0 && this.vm.settings.sendEditUpdate == true){
+                if(this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendEditUpdate == true){
                     this.prepareSmsNotificationData(this.vm.editMessage);
                 }
                 this.vm.checkEnableAddButton();
@@ -294,7 +294,7 @@ export class AddTutorialServiceAdapter {
                     this.vm.checkEnableAddButton();
                     this.populateStudentList(tutorial);
                     this.vm.tutorialUpdating = false;
-                    if (this.vm.settings != 0 && this.vm.settings.sendDeleteUpdate == true) {
+                    if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendDeleteUpdate == true) {
                         this.prepareSmsNotificationData(this.vm.deleteMessage);
                     }
                 }, error => {
