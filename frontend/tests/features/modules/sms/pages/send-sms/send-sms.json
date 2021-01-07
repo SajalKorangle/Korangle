@@ -4,8 +4,9 @@
       "testType": "protractor",
       "steps": [
         "Open Send sms page",
-        "Click on Student show button"
+        "Click on Student show button",
+        "Verify Purchase button"
       ],
-      "testName": "Able to open Contact Us Page"
+      "testName": "Send SMS Page is working"
     }
   ]

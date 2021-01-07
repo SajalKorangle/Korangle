@@ -37,4 +37,26 @@ describe('SMS -> Send SMS', () => {
         await containsFirst('div', 'Displaying: 2');
 
     });
+
+    it('Verify Purchase SMS button', async () => {
+
+        // Start Backend Server
+        startBackendServer(getFixtureFiles('modules/sms/pages/send-sms/send-sms.json'));
+
+        page = await BeforeAfterEach.beforeEach();
+
+        // Opening Page
+        await openModuleAndPage('SMS', 'Send SMS');
+
+        // Type the message
+        (await containsFirst('input', '')).type('Avinash');
+
+        //Show the student List
+        (await containsFirst('button', 'Show')).click();
+        //Start the purchase
+        (await containsFirst('button', 'Purchase SMS')).click();
+
+
+
+    });
 });
