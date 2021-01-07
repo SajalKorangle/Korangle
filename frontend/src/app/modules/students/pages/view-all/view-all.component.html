@@ -499,6 +499,11 @@
 		        <ng-container *cdkVirtualFor="let student of studentFullProfileList">
 		            <tr [class.hidden]="!student.show">
 		                <ng-container>
+		                    <td>
+                            	<mat-checkbox [(ngModel)]="student.selectProfile"
+                            				  (click)="$event.stopPropagation();">
+                                </mat-checkbox>
+                            </td>
 		                    <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
 		                    <td [class.hidden]="!columnFilter.showProfileImage" align="center">
 		                        <img *ngIf="student.profileImage"
