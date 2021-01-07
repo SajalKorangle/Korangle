@@ -107,12 +107,13 @@ public class ChromeClient extends WebChromeClient {
         }*/
 
     // For Android 5.0
-    public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
+    public boolean onShowFileChooser( WebView webView, ValueCallback<Uri[]> filePathCallback,
+            WebChromeClient.FileChooserParams fileChooserParams) {
 
-        if (mainActivity.mFilePathCallback != null) {
+        // Double check that we don't have any existing callbacks
+        if(mainActivity.mFilePathCallback != null) {
             mainActivity.mFilePathCallback.onReceiveValue(null);
         }
-        mainActivity.mFilePathCallback = filePath;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (mainActivity.checkSelfPermission(Manifest.permission.CAMERA)
@@ -121,56 +122,52 @@ public class ChromeClient extends WebChromeClient {
             }
         }
 
-        mainActivity.mCameraPhotoPath = null;
+        mainActivity.mFilePathCallback = filePathCallback;
 
+        // Set up the take picture intent
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(mainActivity.getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-                //takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
+                takePictureIntent.putExtra("PhotoPath", mainActivity.mCameraPhotoPath);
             } catch (IOException ex) {
                 Toast.makeText(mainActivity.getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
                 // Error occurred while creating the File
             }
+
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                // mCameraPhotoPath = photoFile.getAbsolutePath();
-                Uri photoURI = FileProvider.getUriForFile(mainActivity,
-                        BuildConfig.APPLICATION_ID + ".provider",
-                        photoFile);
+                mainActivity.mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        photoURI);
+                        Uri.fromFile(photoFile));
+            } else {
+                takePictureIntent = null;
             }
         }
 
-            /*Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            contentSelectionIntent.setType("image/*");*/
+        // Set up the intent to get an existing image
+        Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        contentSelectionIntent.setType("image/*");
 
+        // Set up the intents for the Intent chooser
         Intent[] intentArray;
-            /*if (takePictureIntent != null) {
-                intentArray = new Intent[]{takePictureIntent};
-            } else {
-                intentArray = new Intent[0];
-            }*/
-
-        intentArray = new Intent[0];
+        if(takePictureIntent != null) {
+            intentArray = new Intent[]{takePictureIntent};
+        } else {
+            intentArray = new Intent[0];
+        }
 
         Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-        // chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-        chooserIntent.putExtra(Intent.EXTRA_INTENT, takePictureIntent);
+        chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
         chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
 
         mainActivity.startActivityForResult(chooserIntent, mainActivity.INPUT_FILE_REQUEST_CODE);
 
-        // startActivityForResult(takePictureIntent, INPUT_FILE_REQUEST_CODE);
-
         return true;
-
     }
 
     public File createImageFile() throws IOException {
