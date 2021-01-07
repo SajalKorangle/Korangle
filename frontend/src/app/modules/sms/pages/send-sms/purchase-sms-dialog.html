@@ -30,7 +30,7 @@
     </div>
     
     <div class="range-wrap" style="width: 30vw;height: auto;margin: 0 auto;padding: 10px;position: relative;">
-        <input type="range" min="0" max="30000"  step="100" class="range" [(ngModel)]="value" (ngModelChange)="callSetBubble($event)">
+        <input type="range" testId="slider" min="0" max="30000"  step="100" class="range" [(ngModel)]="value" (ngModelChange)="callSetBubble($event)">
         <output class="bubble"></output>
     </div>
     <div style="width: 30vw;margin: 0 auto;padding: 10px;position: relative;">

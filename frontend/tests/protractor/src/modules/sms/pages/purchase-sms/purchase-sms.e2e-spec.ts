@@ -25,6 +25,23 @@ describe('SMS -> Purchase SMS', () => {
         // Opening Page
         await openModuleAndPage('SMS', 'Purchase SMS');
 
+        const rangeSlider = await BeforeAfterEach.page.waitForXPath('//input[@testId="slider"]');
+
+        const bounding_box = await rangeSlider.boundingBox();
+
+        await page.mouse.move(bounding_box.x + bounding_box.width / 3, bounding_box.y + bounding_box.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(bounding_box.x + bounding_box.width / 3, bounding_box.y + bounding_box.height / 2);
+        await page.mouse.up();
+
+        await page.waitForTimeout(3000);
+
+        (await containsFirst('button', 'Pay')).click();
+
+        await page.waitForTimeout(3000);
+
+
+
 
 
     });
