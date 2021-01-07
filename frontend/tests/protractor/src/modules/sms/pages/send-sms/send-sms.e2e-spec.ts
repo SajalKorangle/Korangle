@@ -2,7 +2,7 @@ import {BeforeAfterEach} from '../../../../beforeAterEach';
 import {startBackendServer} from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst} from '../../../../contains';
+import {containsAll, containsFirst} from '../../../../contains';
 
 
 
@@ -49,12 +49,22 @@ describe('SMS -> Send SMS', () => {
         await openModuleAndPage('SMS', 'Send SMS');
 
         // Type the message
-        (await containsFirst('input', '')).type('Avinash');
+        (await containsFirst('textarea', '')).type('Avinash');
+        await page.waitForTimeout(1000);
 
         //Show the student List
-        (await containsFirst('button', 'Show')).click();
+        const showButtons = (await containsAll('button', 'Show'));
+        (await showButtons[2]).click();
+
+        await page.waitForTimeout(1000);
+
+        (await containsFirst('button', 'Select All')).click();
+        await page.waitForTimeout(1000);
+
         //Start the purchase
         (await containsFirst('button', 'Purchase SMS')).click();
+        await page.waitForTimeout(1000);
+
 
 
 
