@@ -435,7 +435,7 @@ export class SendSmsComponent implements OnInit {
     
         dialogRef.afterClosed().subscribe(result => {
 
-            if(result.payment != undefined)
+            if(result.payment)
             {   
                 let data = {
                     price : result.price,
@@ -472,7 +472,7 @@ export class SendSmsComponent implements OnInit {
     }
   
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close({payment:false});
     }
 
     smsPlan = [
