@@ -29,8 +29,7 @@ export class PurchaseSmsComponent implements OnInit {
     { noOfSms: 20000, price: 5000, selected:false },
     { noOfSms: 30000, price: 7200, selected:false }
   ];
-  defaultPlan = {noOfSms:'',price:''};
-  selectedSmsPlan =this.defaultPlan;
+
 
   SMSCount =0;
   price = 0;
@@ -53,8 +52,8 @@ export class PurchaseSmsComponent implements OnInit {
   
 
 
-  value: number = 0;
-  value1: number = 0;
+  sliderValue: number = 0; // value from slider
+  fixedPlanvalue: number = 0; // value from fixed plan
 
 
 
@@ -67,8 +66,8 @@ export class PurchaseSmsComponent implements OnInit {
 
   setBubble(range, bubble) {
     const val = range.value;
-    this.value = val;
-    this.value1=0;
+    this.sliderValue = val;
+    this.fixedPlanvalue=0;
     const min = range.min ? range.min : 0;
     const max = range.max ? range.max : 100;
     const newVal = Number(((val - min) * 100) / (max - min));
@@ -89,12 +88,12 @@ export class PurchaseSmsComponent implements OnInit {
     }
 
     plan.selected = true;
-    this.value1 = plan.price;
+    this.fixedPlanvalue = plan.price;
   }
 
   isPayButtonDisabled()
   {
-    if(this.value >0 || this.value1 >0)return false;
+    if(this.sliderValue >0 || this.fixedPlanvalue >0)return false;
     return true;
   }
 

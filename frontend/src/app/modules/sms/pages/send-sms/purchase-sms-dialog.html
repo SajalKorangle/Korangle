@@ -6,7 +6,7 @@
         <div class="col-xs-10" style="text-align: center; padding: 0px">
         </div>
         <div class="col-xs-1" style="padding: 0px;">
-            <span class="material-icons cursor" (click)="closeDialog();" style="font-size: 25px; float:right">clear</span>
+            <span class="material-icons cursor" (click)="closeDialog();" style="font-size: 25px; float:right; cursor: pointer;">clear</span>
         </div>
     </div>
 </mat-dialog-actions>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="row" style="margin-top: 50px; margin-bottom: 20px;">
-        <mat-card [class.smsPrice] = "value1==0" style=" width: 17vw; max-width: 186px;">
+        <mat-card [class.smsPrice] = "fixedPlanvalue===0 && sliderValue!=0" style=" width: 17vw; max-width: 186px;">
             <strong>
                 {{sliderValue}}  SMS for Rs. {{sliderValue/5}}
             </strong>
@@ -30,7 +30,7 @@
     </div>
     
     <div class="range-wrap" style="width: 30vw;height: auto;margin: 0 auto;padding: 10px;position: relative;">
-        <input type="range" testId="slider" min="0" max="30000"  step="100" class="range" [(ngModel)]="value" (ngModelChange)="callSetBubble($event)">
+        <input type="range" testId="slider" min="0" max="30000"  step="100" class="range" [(ngModel)]="sliderValue" (ngModelChange)="callSetBubble($event)">
         <output class="bubble"></output>
     </div>
     <div style="width: 30vw;margin: 0 auto;padding: 10px;position: relative;">
