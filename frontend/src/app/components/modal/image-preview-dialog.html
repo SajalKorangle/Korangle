@@ -39,8 +39,7 @@
                 <span class="material-icons cursor" style="font-size: 30px; float: left" (click)="onPrevious()">keyboard_arrow_left</span>
             </div>
             <div class="col-md-10" style="text-align: center;">
-                <span class="material-icons cursor" style="font-size: 30px;" (click)="increaseSize()">zoom_in</span>
-                <span class="material-icons cursor" style="font-size: 30px;" (click)="decreaseSize()">zoom_out</span>
+                <mat-slider min="50" max="150" step="1" value="50" thumbLabel (input)=changeImageSize($event)></mat-slider>
             </div>
             <div class="col-md-1" style="padding: 0px;">
                 <span class="material-icons cursor" style="font-size: 30px; float: right" (click)="onNext()">keyboard_arrow_right</span>
@@ -76,8 +75,8 @@
         
         <div style="margin: 15px; height: 80vh; overflow: auto; display: flex; justify-content: center; align-items: center;" [@animImageSlider]="counter">
             <ng-container *ngFor="let img of data.homeworkImages; let i=index" style="margin: 15px; height: 80vh; overflow: auto; display: flex; justify-content: center; align-items: center;">
-                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" (pinchOut)="increaseSizeMobile()" (pinchIn)="decreaseSizeMobile()" *ngIf="data.homeworkImages.length>0 && data.homeworkImages[counter].questionImage != undefined && i===counter" [src]="img.questionImage" [ngStyle]="imageStyleMobile"/>
-                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" (pinchOut)="increaseSizeMobile()" (pinchIn)="decreaseSizeMobile()" *ngIf="data.homeworkImages.length>0 && data.homeworkImages[counter].answerImage != undefined && i===counter" [src]="img.answerImage" [ngStyle]="imageStyleMobile"/>
+                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" *ngIf="data.homeworkImages.length>0 && data.homeworkImages[counter].questionImage != undefined && i===counter" [src]="img.questionImage" [ngStyle]="imageStyleMobile"/>
+                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" *ngIf="data.homeworkImages.length>0 && data.homeworkImages[counter].answerImage != undefined && i===counter" [src]="img.answerImage" [ngStyle]="imageStyleMobile"/>
             </ng-container>
         </div>
         
@@ -85,7 +84,7 @@
     <mat-dialog-actions>
         <div class="row" style="width: 100%; margin: 0px; text-align: center">
             <strong>{{counter + 1 }}/{{data.homeworkImages.length}}</strong>
-            <span class="material-icons" style="float: right;" (click)="func(data.homeworkImages[counter])">crop_free</span>
+            <span class="material-icons" style="float: right;" (click)="showImageInGallery(data.homeworkImages[counter])">crop_free</span>
         </div>
     </mat-dialog-actions>
 </div>

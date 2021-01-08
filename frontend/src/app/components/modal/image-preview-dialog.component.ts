@@ -62,65 +62,20 @@ export class ImagePreviewDialogComponent {
         'display': 'inline-block',
         'margin': 'auto',
         'width': '50%',
-        'animation': '',
         'opacity': '1',
     }
 
     imageStyleMobile = {
         'display': 'inline-block',
         'margin': 'auto',
-        'width': '100%',
-        'transition': '',
-    }
-    increaseSize(): any{
-        this.imageStyle.width = '100%';
-    }
-    decreaseSize(): any{
-        this.imageStyle.width = '50%';
+        'width': '95vw',
+        'max-width': '100%',
     }
 
     onNoClick(): void {
         this.dialogRef.close();
     }
     
-    increaseSizeMobile(): any{
-        let tempstr = '';
-        for(let i=0; i<this.imageStyleMobile.width.length; i++){
-            if(this.imageStyleMobile.width[i] == '%'){
-                break;
-            }
-            else{
-                tempstr = tempstr + this.imageStyleMobile.width[i];
-            }
-        }
-        let tempWidth = Number(tempstr) + 20;
-        if(tempWidth > 400){
-            tempWidth = 400;
-        }
-        this.imageStyleMobile.width = tempWidth.toString() + '%';
-        
-        console.log(this.imageStyleMobile.width);
-        // this.imageStyleMobile.width = '300%';
-    }
-
-    decreaseSizeMobile(): any{
-        let tempstr = '';
-        for(let i=0; i<this.imageStyleMobile.width.length; i++){
-            if(this.imageStyleMobile.width[i] == '%'){
-                break;
-            }
-            else{
-                tempstr = tempstr + this.imageStyleMobile.width[i];
-            }
-        }
-        let tempWidth = Number(tempstr) - 20;
-        if(tempWidth < 100){
-            tempWidth = 100;
-        }
-        this.imageStyleMobile.width = tempWidth.toString() + '%';
-    }
-    
-
     removeImage(index: any):any{
         if(this.data.homeworkImages.length == 1){
             this.dialogRef.close();
@@ -166,7 +121,7 @@ export class ImagePreviewDialogComponent {
         this.imageStyleMobile.width = '100%';
     }
 
-    func(str: any):any{
+    showImageInGallery(str: any):any{
         let tempStr: string;
         if(str.questionImage != undefined){
             tempStr = str.questionImage;
@@ -177,5 +132,8 @@ export class ImagePreviewDialogComponent {
         showPhoto(tempStr)
     }
 
+    changeImageSize(event: any){
+        this.imageStyle.width = event.value.toString() + '%';
+    }
     
 }
