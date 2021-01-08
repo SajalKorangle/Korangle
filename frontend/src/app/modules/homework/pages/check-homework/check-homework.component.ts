@@ -172,10 +172,17 @@ export class CheckHomeworkComponent implements OnInit {
             }
         }
         let nextCounter = (counter+1)%(this.HOMEWORK_STATUS.length);
-        if(nextCounter == 0){
+        if(counter == 3){
+            nextCounter = (counter+3)%(this.HOMEWORK_STATUS.length);
+        }
+        else if(nextCounter == 3){
             nextCounter = (counter+2)%(this.HOMEWORK_STATUS.length);
         }
         temp.status = this.HOMEWORK_STATUS[nextCounter];
+    }
+
+    askForResubmission(temp: any): void{
+        temp.status = this.HOMEWORK_STATUS[3];
     }
 
     getButtonString(status: any): any {

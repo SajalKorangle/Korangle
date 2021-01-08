@@ -129,23 +129,24 @@
                         <div *ngIf="!isMobile()">
                             <span class="hidden-xs" style="color: #7b7b7b;">Submitted On: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
                         </div>
-                        
                         <div *ngIf="isMobile()">
                             <span style="color: #7b7b7b; font-size: 12px">Submitted On: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
                         </div>
                     </div>   
 
-
-                    <mat-form-field style="margin-top: 10px;">
-                        <input type="text" 
-                            matInput 
-                            cdkTextareaAutosize
-                            [ngModel]="studentHomework.remark"
-                            (ngModelChange)="studentHomework.remark=$event;" 
-                            (blur)="serviceAdapter.changeStudentRemark(studentHomework)"
-                            placeholder="Enter Remark">
-                    </mat-form-field><div *ngIf="studentHomework.isStatusLoading" class="loader-custom"></div>
-
+                    <div class="row col-md-12">
+                        <mat-form-field >
+                            <input type="text" 
+                                matInput 
+                                cdkTextareaAutosize
+                                [ngModel]="studentHomework.remark"
+                                (ngModelChange)="studentHomework.remark=$event;" 
+                                (blur)="serviceAdapter.changeStudentRemark(studentHomework)"
+                                placeholder="Enter Remark">
+                        </mat-form-field>
+                        <div *ngIf="studentHomework.isRemarkLoading" class="loader-custom"></div>
+                        <mat-slide-toggle [(ngModel)]="studentHomework.status == HOMEWORK_STATUS[3]" style="float: right; font-size: 30px; margin-top: 10px" (click)="askForResubmission(studentHomework);serviceAdapter.changeStudentHomeworkStatus(studentHomework);" [disabled]="studentHomework.status == HOMEWORK_STATUS[3]">Ask For Resubmission</mat-slide-toggle>
+                    </div>
                     <div style="margin-top: 10px;">
                         <span style="color: #7b7b7b;">Answer: <br></span>
                         <div >

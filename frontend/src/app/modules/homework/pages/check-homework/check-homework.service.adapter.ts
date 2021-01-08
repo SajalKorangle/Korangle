@@ -212,6 +212,7 @@ export class CheckHomeworkServiceAdapter {
                 'submissionTime': studentHomework.submissionTime,
                 'images': [],
                 'isStatusLoading': false,
+                'isRemarkLoading': false,
             }
             studentHomeworkImagesList.forEach(image =>{
                 if(image.parentStudent == tempData.parentStudent){
@@ -296,7 +297,7 @@ export class CheckHomeworkServiceAdapter {
             return ;
         }
 
-        studentHomework.isStatusLoading = true;
+        studentHomework.isRemarkLoading = true;
         let tempData = {
             'id': studentHomework.id,
             'remark': studentHomework.remark,
@@ -304,9 +305,9 @@ export class CheckHomeworkServiceAdapter {
         Promise.all([
             this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData),
         ]).then(value =>{
-            studentHomework.isStatusLoading = false;
+            studentHomework.isRemarkLoading = false;
         },error =>{
-            studentHomework.isStatusLoading = false;
+            studentHomework.isRemarkLoading = false;
         })
     }
 

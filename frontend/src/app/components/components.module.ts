@@ -19,6 +19,8 @@ import { MatTableModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatListModule} from '@angular/material/list';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 import 'hammerjs';
  
 
@@ -82,7 +84,8 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatDialogModule,
         MatListModule,
         DragDropModule,
-
+        MatSlideToggleModule,
+        
         BasicComponentsModule,
 
     ],
@@ -123,6 +126,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatDialogModule,
         MatListModule,
         DragDropModule,
+        MatSlideToggleModule,
         
     ]
 })
