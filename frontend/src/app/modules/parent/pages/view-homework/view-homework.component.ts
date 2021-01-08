@@ -281,7 +281,10 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
 
     openImagePreviewDialog(homeworkImages: any, index: any, editable): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
-            width: '1000px',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+            height: '100%',
+            width: '100%',
             data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
         });
     

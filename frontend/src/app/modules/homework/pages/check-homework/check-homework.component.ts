@@ -248,7 +248,10 @@ export class CheckHomeworkComponent implements OnInit {
 
     openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
-            width: '1000px',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+            height: '100%',
+            width: '100%',
             data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
         });
     
@@ -259,5 +262,23 @@ export class CheckHomeworkComponent implements OnInit {
 
     isMobile(): boolean {
         return isMobile();
+    }
+
+    isSubmittedLate(homeworkDate, homeworkTime, studentDate, studentTime): boolean{
+        if(homeworkDate == null || studentDate == null){
+            return false;
+        }
+        else if(studentDate > homeworkDate){
+            return true;
+        }
+        else if(studentDate < homeworkDate){
+            return false;
+        }
+        else{
+            if(studentTime > homeworkTime){
+                return true;
+            }
+        }
+        return false;
     }
 }

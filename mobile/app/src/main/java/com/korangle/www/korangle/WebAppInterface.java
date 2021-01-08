@@ -3,9 +3,9 @@ package com.korangle.www.korangle;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -26,6 +26,7 @@ public class WebAppInterface {
 
     WebAppInterface(Context ctx){
         this.mContext=ctx;
+//        this.images = new String[]{};
     }
 
     @JavascriptInterface
@@ -34,6 +35,7 @@ public class WebAppInterface {
         intent.setPackage("com.google.zxing.client.android");
         ((MainActivity)mContext).startActivityForResult(intent, MainActivity.SCANNER_REQUEST_CODE);
     }
+
 
     @JavascriptInterface
     public void closeBarCodeScanner() {
@@ -45,6 +47,83 @@ public class WebAppInterface {
         //Get the string value to process
         this.data=data;
     }
+
+//    String[] images;
+//    public void addElementInArray(String data) {
+//        Integer n = this.images.length;
+//        String[] temp = new String[n+1];
+//        for(int i=0;i<n;i++){
+//            temp[i] = this.images[i];
+//        }
+//        temp[n] = data;
+//        this.images = temp;
+//    }
+//
+//    @JavascriptInterface
+//    public void sendImages(String data) {
+//        //Get the string value to process
+//        addElementInArray(data);
+//    }
+
+//    @JavascriptInterface
+//    public void openGallery() throws IOException {
+//        //Get the string value to process
+////        for(int i=0;i<this.images.length; i++){
+//////            Log.d("personal", this.images[i]);
+////            URL url = new URL(this.images[i]);
+//////            Log.d("personal", String.valueOf(url));
+//////
+////            Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//////            saveToInternalStorage(image, i);
+////        }
+////        Uri uri =  Uri.parse(this.images[0]);
+////        showPhoto();
+//        URL imageUrl = new URL(this.images[0]);
+//        Bitmap bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+//        Log.d("personal", "hi");
+//        createDirectoryAndSaveFile(bitmap, "image0.jpg");
+//
+//    }
+
+
+//    private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) throws IOException {
+//
+////        File direct = new File(Environment.getExternalStorageDirectory() + "/DirName");
+//        File direct = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + mContext.getPackageName() + "/filee");
+////
+//        Log.d("personal", direct.toString());
+//        if (!direct.exists()) {
+//            Log.d("personal", "new Dir");
+//
+//            File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + mContext.getPackageName() + "/filee");
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        File file = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + mContext.getPackageName() + "/filee", fileName);
+//        if (file.exists()) {
+//            file.delete();
+//        }
+//        file.createNewFile();
+//        try {
+//            FileOutputStream out = new FileOutputStream(file);
+//            imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//            out.flush();
+//            out.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    @JavascriptInterface
+    public void showPhoto(String url){
+        Uri uri =  Uri.parse(url);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "image/*");
+        mContext.startActivity(intent);
+    }
+
+
 
     @JavascriptInterface
     public void registerForNotification(String userId, String jwtToken, String url) {
