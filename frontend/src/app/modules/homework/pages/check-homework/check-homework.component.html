@@ -112,6 +112,7 @@
                             <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px;">Student Name: &nbsp;</span><strong style="margin-top: 10px;">{{studentHomework.studentName}}</strong> &nbsp;
                         </mat-panel-title>
                         <mat-panel-description>
+                            <strong *ngIf="isSubmittedLate(currentHomework.endDate, currentHomework.endTime, studentHomework.submissionDate, studentHomework.submissionTime)" style="color: #fa0909; margin-top: 10px;">(L)&nbsp;</strong>
                             <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px;">Status: &nbsp;</span>
                             <button type="submit"
                                 style="padding: 3px 8px;"

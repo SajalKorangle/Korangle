@@ -11,6 +11,14 @@
 
 }
 
+.mat-dialog-content {
+    display: block;
+    margin: 0 -24px;
+    padding: 0 24px;
+	max-height: 83vh;
+	overflow: hidden;
+}
+
 .main-content {
 	height: 95%;
 }

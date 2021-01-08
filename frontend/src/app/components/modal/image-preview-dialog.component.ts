@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { showPhoto } from '../../classes/common.js';
 
 import { trigger, transition, query, style, animate, group } from '@angular/animations';
 const left = [
@@ -143,9 +144,11 @@ export class ImagePreviewDialogComponent {
 
     onNext() {
         if (this.counter != this.data.homeworkImages.length - 1) {
-        this.counter++;
+            this.counter++;
         }
-        
+        else{
+            return ;
+        }
         this.moveToIndex = this.counter;
         this.imageStyle.width = '50%';
         this.imageStyleMobile.width = '100%';
@@ -153,12 +156,25 @@ export class ImagePreviewDialogComponent {
 
     onPrevious() {
         if (this.counter > 0) {
-        this.counter--;
+            this.counter--;
         }
-        
+        else{
+            return ;
+        }
         this.moveToIndex = this.counter;
         this.imageStyle.width = '50%';
         this.imageStyleMobile.width = '100%';
+    }
+
+    func(str: any):any{
+        let tempStr: string;
+        if(str.questionImage != undefined){
+            tempStr = str.questionImage;
+        }
+        else{
+            tempStr = str.answerImage;
+        }
+        showPhoto(tempStr)
     }
 
     
