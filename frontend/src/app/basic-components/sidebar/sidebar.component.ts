@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, HostListener} from '@angular/core';
 
 import {Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart} from '@angular/router';
 
@@ -56,21 +56,31 @@ export class SidebarComponent implements OnInit {
 
     }
 
+    // @HostListener('window:popstate', ['$event'])
+    // onPopState(event) {
+    //     if (window.location.pathname == '/') {
+    //         history.back();
+    //         return;
+    //     }
+    //     this.user.initializeTask();
+    // }
+
     ngOnInit() {
         this.router.events
             .subscribe((event) => {
+                console.log('I came outside');
                 if(event instanceof NavigationStart) {
                     this.user.isLazyLoading = true;
-
-                    // Review: What are we checking here?
-                    if (event.navigationTrigger == "popstate"){
-                        if(event.url=='/'){
-                            history.back();
-                            return;
-                        }
-                        this.user.initializeTask();
-                    }
-                }
+            //         console.log('I came inside');
+            // if (event.navigationTrigger == "popstate"){
+            //
+            //             if(event.url=='/'){
+            //                 history.back();
+            //                 return;
+            //             }
+            //             this.user.initializeTask();
+            //         }
+            }
                 else if (event instanceof NavigationCancel) {
                     this.user.isLazyLoading = false;
                 } else if (event instanceof NavigationEnd) {
@@ -89,30 +99,7 @@ export class SidebarComponent implements OnInit {
         EmitterService.get('initialize-router').subscribe(value => {
             // Review : Ye cheez kahan check ho rahi hai ki agar student ke page ka route hai lekin student ki id nahi hai.
             // Us case me kya ho raha hai.
-            if(this.user.activeSchool.role == 'Parent'
-                && value.student.id != undefined
-                && this.user.section.subRoute != 'view_fee') { // Harshal: If we are routing to student specific page
-                this.router.navigateByUrl(this.router.createUrlTree(
-                    [this.user.section.route + '/' + this.user.section.subRoute],
-                    {
-                        queryParams: {
-                            school_id: this.user.activeSchool.dbId,
-                            session: this.user.activeSchool.currentSessionDbId,
-                            student_id: value.student.id
-                        }
-                    }
-                ));
-            } else { // Harshal: If we are routing to parent or employee specific page
-                this.router.navigateByUrl(this.router.createUrlTree(
-                    [this.user.section.route+'/'+this.user.section.subRoute],
-                    {
-                        queryParams:{
-                            school_id: this.user.activeSchool.dbId,
-                            session: this.user.activeSchool.currentSessionDbId
-                        }
-                    }
-                ));
-            }
+            this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {queryParams: value.queryParams}));
         });
     }
 
@@ -124,30 +111,9 @@ export class SidebarComponent implements OnInit {
     };
 
     changePage(task: any, module: any) {
-        if (!this.user.checkAuthentication()) {
-            alert("Authentication failed");
-        } else {
-            this.user.populateSection(task, module);
-            if(this.user.activeSchool.role == 'Parent' && module.name!=undefined && task.path!='view_fee'){ // view fee is common for all students in the case of multiple students
-                this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
-                queryParams: {
-                    school_id: this.user.activeSchool.dbId,
-                    session: this.user.activeSchool.currentSessionDbId,
-                    student_id:module.id  // the if case is for this param , if  student's task then student id must be a param
-                }
-            }));
-            }else {
-                this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {
-                    queryParams: {
-                        school_id: this.user.activeSchool.dbId,
-                        session: this.user.activeSchool.currentSessionDbId
-                    }
-                }));
-            }
+            this.user.populateSectionAndRoute(task, module);
             EmitterService.get('close-sidebar').emit();
-        }
     }
-
 
     handleSessionChange(){
         this.router.navigateByUrl('');

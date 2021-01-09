@@ -151,16 +151,21 @@ export class User {
 
         // Review: iska else kahan, agar urlPath empty nahi hai, aur schoolid and session bhi exist karti hai
         // uske baad user ko uski permission bhi nahi hai, tab kya karoge.
-        if (urlPath == '/'
-            || urlParams.get('school_id') == undefined
-            || urlParams.get('session') == undefined) { // on user login the path comes with '/' so on login showing notification page and even if there are no params or wrong params
-
-            this.redirectToDefaultPage();
-
-        } else if (this.checkUserSchoolSessionPermission(urlParams)) { // checking the school id  and session id in the url is valid for this user
-            switch (modulePath) {
+        // if (urlPath == '/'
+        //     || urlParams.get('school_id') == undefined
+        //     || urlParams.get('session') == undefined) { // on user login the path comes with '/' so on login showing notification page and even if there are no params or wrong params
+        //
+        //     module=undefined;
+        //
+        // }
+        if (this.checkUserSchoolSessionPermission(urlParams)) { // checking the school id  and session id in the url is valid for this user
+            switch (modulePath) { // from here i am population module
                 // if the user refreshes the notification or user - settings
                 // (i.e) we dont have these two in our user's active school module list
+
+                case '/':
+                    module=undefined;
+                    break;
                 case 'user-settings':
                     module = this.settings;
                     break;
@@ -175,43 +180,36 @@ export class User {
                 case 'parent':
                     // Review: Agar woh employee ke role se parent ke role me aa raha hai to? Permission hai dono ki uske paas.
                     if (this.activeSchool.role == 'Parent') {
+                        console.log(urlParams.get('student_id'));
                         if (urlParams.get('student_id') != undefined) {
                             module = this.activeSchool.studentList.find(s => s.id == Number(urlParams.get('student_id')));
                         } else {
                             // Review: agar path view_fee receipt ka nahi hua aur student id bhi undefined hai to?
                             // Aisa case is line tak pahunch sakta hai kya?
-                            module = this.activeSchool.parentModuleList[0];
+                            module = this.activeSchool.parentModuleList[0].taskList.some(t => t.path == taskPath) ? undefined:this.activeSchool.parentModuleList[0];
                         }
-                    } else {
-                        this.redirectToDefaultPage();
                     }
                     break;
                 // for employee
                 default:
                     module = this.activeSchool.moduleList.find(m => m.path == modulePath);
             }
-            if (module == undefined) { // if module doesn't exist redirect to default school notification page
-                this.redirectToDefaultPage();
-            } else {
+            if (module) { // if module doesn't exist redirect to default school notification page
                 task = module.taskList.find(t => t.path == taskPath);
-                if (task == undefined) { // if task doesn't exist redirect to default school notification page
-                     this.redirectToDefaultPage();
-                } else {
+                if (task) { // if task doesn't exist redirect to default school notification page
                     module.showTaskList = true;
-                    this.populateSection(task, module); // if all exist then populate that section
-                    if (this.activeSchool.currentSessionDbId != Number(urlParams.get('session'))) { // if the session params are wrong then navigate again to respective path with default session
-                        EmitterService.get('initialize-router').emit({student:module});                    // if all exist then populate that section
-                    }
+                    this.populateSectionAndRoute(task, module); // if all exist then populate that section
                 }
             }
         }
+
+        if (!module || !task) {
+            this.notification.showTaskList = true;
+            this.populateSectionAndRoute(this.notification.taskList[0], this.notification);
+        }
+
     }
 
-    redirectToDefaultPage() {
-        this.populateSection(this.notification.taskList[0], this.notification);
-        this.notification.showTaskList=true;
-        EmitterService.get('initialize-router').emit({student:'false'});
-    }
 
 
     checkUserSchoolSessionPermission(urlParams:any): boolean {
@@ -226,7 +224,7 @@ export class User {
             }
             return true; // if both are valid returns true
         } else { // if the school id or session id is not valid redirects him to his default school's notification page
-            // this.redirectToDefaultPage();
+            return false;
             // Review: yahan se false return hona chahiye tha na.
         }
     }
@@ -239,7 +237,8 @@ export class User {
         }) != undefined;
     }
 
-    populateSection(task: any, module: any): void {
+    populateSectionAndRoute(task: any, module: any): void {
+        let queryParams={school_id: this.activeSchool.dbId, session: this.activeSchool.currentSessionDbId};
         if (module.path === 'user-settings' || module.path === 'notification') {
             this.section = {
                 route: module.path,
@@ -255,6 +254,9 @@ export class User {
                 subTitle: task.title,
                 student: module,
             };
+            if(!this.activeSchool.parentModuleList[0].taskList.some(t => t.path == task.path)){
+                queryParams['student_id']=module.id;
+            }
         } else if (this.activeSchool.role === 'Employee') {
             this.section = {
                 route: module.path,
@@ -266,8 +268,8 @@ export class User {
                 this.section['videoUrl'] = task.videoUrl;
             }
         }
+         EmitterService.get('initialize-router').emit({queryParams: queryParams});
     }
-
 }
 
 /*
