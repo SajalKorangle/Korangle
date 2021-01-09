@@ -184,21 +184,6 @@ export class IssueHomeworkComponent implements OnInit {
         this.selectedSubject = this.selectedClassSection.subjectList[0];
     }
     
-
-    populateEditedHomework(data: any): any{
-        let tempHomeworkData = data[0];
-        let previousHomework = this.homeworkList.find(homework => homework.id === tempHomeworkData.id);
-        previousHomework.homeworkName = tempHomeworkData.homeworkName;
-        previousHomework.endDate = tempHomeworkData.endDate;
-        previousHomework.endTime = tempHomeworkData.endTime;
-        previousHomework.homeworkText = tempHomeworkData.homeworkText;
-        previousHomework.homeworkImages = [];
-        data.forEach(image => {
-            if(image.questionImage != undefined)
-                previousHomework.homeworkImages.push(image);
-        });
-    }
-
     formatDate(dateStr: any, status: any): any {
 
         let d = new Date(dateStr);

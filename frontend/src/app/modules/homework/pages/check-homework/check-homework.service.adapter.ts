@@ -32,13 +32,13 @@ export class CheckHomeworkServiceAdapter {
 
 
         Promise.all([
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, request_homework_list),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings,{'parentSchool' : this.vm.user.activeSchool.dbId}),
-            this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //0
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, request_homework_list), //3
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list), //4
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings,{'parentSchool' : this.vm.user.activeSchool.dbId}), //5
+            this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //6
         ]).then(value => {
             this.vm.smsBalance = value[6];
             if(value[5].length> 0){
@@ -115,7 +115,6 @@ export class CheckHomeworkServiceAdapter {
         
         this.vm.selectedClassSection = this.vm.classSectionHomeworkList[0];
         this.vm.selectedSubject = this.vm.selectedClassSection.subjectList[0];
-        this.vm.selectedHomework = this.vm.selectedSubject.homeworkList[0];
         
     }
 
@@ -148,8 +147,8 @@ export class CheckHomeworkServiceAdapter {
         }
 
         Promise.all([
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data), //0
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //1
         ]).then(value =>{
             this.vm.currentHomework.images = value[0];
             this.vm.currentHomework.images.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0)
@@ -167,9 +166,9 @@ export class CheckHomeworkServiceAdapter {
                 'parentStudent__in': studentIdList,
             }
             Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer, student_homework_data),
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_data),
+                this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //0
+                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer, student_homework_data), //1
+                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_data), //2
             ]).then(value =>{
                 value[0].forEach(element =>{
                     let tempData = {

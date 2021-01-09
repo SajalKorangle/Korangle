@@ -1,5 +1,4 @@
 
-import { elementAt } from 'rxjs/operators';
 import { ViewHomeworkComponent } from './view-homework.component';
 
 export class ViewHomeworkServiceAdapter {

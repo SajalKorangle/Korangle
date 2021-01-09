@@ -26,12 +26,12 @@ export class IssueHomeworkServiceAdapter {
         this.vm.isSessionLoading = true;
 
         Promise.all([
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings, {'parentSchool' : this.vm.user.activeSchool.dbId}),
-            this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list), //0
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //1
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //2
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //3
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings, {'parentSchool' : this.vm.user.activeSchool.dbId}), //4
+            this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //5
         ]).then(value => {
             this.vm.smsBalance = value[5];
             if(value[4].length > 0){
@@ -71,9 +71,9 @@ export class IssueHomeworkServiceAdapter {
         };
 
         Promise.all([
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, {parentClassSubject: this.vm.selectedSubject.classSubjectDbId}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, {parentClassSubject: this.vm.selectedSubject.classSubjectDbId}), //0
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data), //1 
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //2
             // this.vm.
         ]).then(value =>{
             this.vm.homeworkImagesList = value[1];
@@ -163,7 +163,7 @@ export class IssueHomeworkServiceAdapter {
             this.vm.currentHomework.id = value[0].id;
             this.populateCurrentHomework();
             
-            Promise.all(this.populateHomeworkImages()).then(sValue =>{
+            Promise.all(this.getHomeworkServices()).then(sValue =>{
                 alert('Homework has been successfully created');
                 this.populateStudentList(this.vm.studentList, this.vm.currentHomework);
                 this.populateCurrentHomeworkImages(value[0].id, sValue);
@@ -211,7 +211,7 @@ export class IssueHomeworkServiceAdapter {
         this.sortHomeworks();
     }
 
-    populateHomeworkImages(): any{
+    getHomeworkServices(): any{
         let index = 0;
         let promises = [];
         this.vm.currentHomeworkImages.forEach(image =>{
@@ -257,9 +257,6 @@ export class IssueHomeworkServiceAdapter {
         
         });
     }
-
-
-
 
     deleteHomework(homeworkId: any): any{
 
@@ -331,7 +328,9 @@ export class IssueHomeworkServiceAdapter {
                     id: temp.id,
                     orderNumber: index,
                 }
-                promises.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_question_image, tempData));
+                if(tempData.orderNumber != index){
+                    promises.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_question_image, tempData));
+                }
                 let tempIndex = previousHomework.homeworkImages.indexOf(temp);
                 previousHomework.homeworkImages.splice(tempIndex, 1);
             }
@@ -343,7 +342,7 @@ export class IssueHomeworkServiceAdapter {
         });
 
         Promise.all(promises).then(value =>{
-            this.vm.populateEditedHomework(value);
+            this.populateEditedHomework(value);
             this.populateStudentList(this.vm.studentList, value[0]);
             if(this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
                 this.sendSMSNotification(this.vm.studentList, this.vm.homeworkUpdateMessage);
@@ -356,7 +355,19 @@ export class IssueHomeworkServiceAdapter {
         
     }
 
-
+    populateEditedHomework(data: any): any{
+        let tempHomeworkData = data[0];
+        let previousHomework = this.vm.homeworkList.find(homework => homework.id === tempHomeworkData.id);
+        previousHomework.homeworkName = tempHomeworkData.homeworkName;
+        previousHomework.endDate = tempHomeworkData.endDate;
+        previousHomework.endTime = tempHomeworkData.endTime;
+        previousHomework.homeworkText = tempHomeworkData.homeworkText;
+        previousHomework.homeworkImages = [];
+        data.forEach(image => {
+            if(image.questionImage != undefined)
+                previousHomework.homeworkImages.push(image);
+        });
+    }
 
     fetchGCMDevices: any = (studentList: any) => {
         this.vm.isLoading = true;
