@@ -78,10 +78,10 @@ export class FeeReceiptListComponent implements OnInit {
         this.number += this.number;
     }
 
-    getStudentName(studentId: number): any {
+    getStudent(studentId: number): any {
         return this.studentList.find(student => {
             return student.id == studentId;
-        }).name;
+        });
     }
 
     getStudentScholarNumber(studentId: number): any {
@@ -128,14 +128,16 @@ export class FeeReceiptListComponent implements OnInit {
 
     showCancelReceiptModal(feeReceipt:any) {
        const dialogRef=  this.dialog.open(CancelFeeReceiptModalComponent, {
-            height: '65vh',
-            width: '50vw',
+            height: '440px',
+            width: '540px',
             data: {
                 user: this.user,
-                feeReceipt:feeReceipt,
-                totalAmount:this.getFeeReceiptTotalAmount(feeReceipt),
-                studentList:this.studentList,
-                collectedBy:this.getEmployeeName(feeReceipt),
+                feeReceipt: feeReceipt,
+                totalAmount: this.getFeeReceiptTotalAmount(feeReceipt),
+                studentName: this.getStudent(feeReceipt.parentStudent).name,
+                classSection:this.getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)+","+this.getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession),
+                fathersName:this.getStudent(feeReceipt.parentStudent).fathersName,
+                collectedBy: this.getEmployeeName(feeReceipt),
             }
         });
 

@@ -1,15 +1,15 @@
 <button mat-icon-button class="close-button" style="float: right;cursor: pointer" (click)="onNoClick()">
     <mat-icon class="close-icon">close</mat-icon>
 </button>
-<div mat-dialog-title class="row text-left" style="margin-left: 20px;font-family: Roboto;font-size: 16px">
+<div mat-dialog-title class="row text-left modal-whole-content">
     <b> Are you sure you want to cancel this receipt ?</b>
 </div>
 <div modal-dialog-content>
     <br>
-    <div class="row text-left" style="margin-left: 20px;font-family: Roboto;font-size: 16px">
+    <div class="row text-left modal-whole-content">
         <div class="col-md-12">
-            <span>{{getStudentName(feeReceipt.parentStudent)}}</span><br>
-            <span>Father's Name :{{getFatherName(feeReceipt.parentStudent)}}</span><br>
+            <span>{{studentName}} ( {{classSection}} )</span><br>
+            <span>Father's Name :{{fathersName}}</span><br>
             <span>Amount :{{totalAmount}}</span><br>
             <span>Receipt No :{{feeReceipt.receiptNumber}}</span><br>
             <span>Mode of Payment :{{feeReceipt.modeOfPayment}}</span><br>
@@ -31,7 +31,7 @@
             </mat-form-field>
         </div>
     </div>
-    <div class="row text-right" style="margin-right:15px;">
+    <div class="row text-right" style="margin-right: 15px;">
         <button type="button"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 [title]="!feeReceipt.cancelledRemark || feeReceipt.cancelledRemark.trim()=='' ? 'Fill all the required Fields' : ''"

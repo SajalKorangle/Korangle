@@ -36,9 +36,6 @@ export class CancelFeeReceiptServiceAdapter {
 
             this.vm.isLoading = false;
 
-            EmitterService.get('cancel-receipt').subscribe(feeReceipt => {
-          this.cancelFeeReceipt(feeReceipt);
-        });
         }, error => {
             this.vm.isLoading = false;
         })
@@ -51,24 +48,30 @@ export class CancelFeeReceiptServiceAdapter {
         this.vm.isLoading = true;
         let fee_receipt_list = {};
         let sub_fee_receipt_list = {};
-        //common for all searchFilters
-        fee_receipt_list['parentSchool'] = this.vm.user.activeSchool.dbId;
-        sub_fee_receipt_list['parentFeeReceipt__parentSchool'] = this.vm.user.activeSchool.dbId;
+
 
         if (this.vm.searchBy === this.vm.searchFilterList[0]) {
-            fee_receipt_list['receiptNumber__or'] = this.vm.searchParameter;
-            fee_receipt_list['chequeNumber'] = this.vm.searchParameter;
-            sub_fee_receipt_list['parentFeeReceipt__receiptNumber__or'] = this.vm.searchParameter;
-            sub_fee_receipt_list['parentFeeReceipt__chequeNumber'] = this.vm.searchParameter;
-        } else if (this.vm.searchBy === this.vm.searchFilterList[1]) {
-            fee_receipt_list['parentStudent__name'] = this.vm.searchParameter;
-            sub_fee_receipt_list['parentFeeReceipt__parentStudent__name'] = this.vm.searchParameter;
-        } else if (this.vm.searchBy === this.vm.searchFilterList[2]) {
-            fee_receipt_list['parentStudent__mobileNumber'] = this.vm.searchParameter;
-            sub_fee_receipt_list['parentFeeReceipt__parentStudent__mobileNumber'] = this.vm.searchParameter;
+            fee_receipt_list={
+                'parentSchool':this.vm.user.activeSchool.dbId,
+                'receiptNumber__or': this.vm.searchParameter,
+                'chequeNumber':this.vm.searchParameter,
+            }
+            sub_fee_receipt_list={
+                'parentFeeReceipt__parentSchool':this.vm.user.activeSchool.dbId,
+                'parentFeeReceipt__receiptNumber__or':this.vm.searchParameter,
+                'parentFeeReceipt__chequeNumber':this.vm.searchParameter,
+            }
+        } else  {
+            let studentListId = this.vm.selectedStudentList.map(a => a.id).join();
+             fee_receipt_list={
+                'parentSchool':this.vm.user.activeSchool.dbId,
+                'parentStudent__in': studentListId,
+            }
+            sub_fee_receipt_list={
+                'parentFeeReceipt__parentSchool':this.vm.user.activeSchool.dbId,
+                'parentFeeReceipt__parentStudent__in':studentListId,
+            }
         }
-
-
 
         Promise.all([
             this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),

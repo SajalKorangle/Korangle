@@ -1,0 +1,12 @@
+[
+    {
+      "file": "one_school_fee_rule.json",
+      "file_object_list": [
+        {
+          "app": "fee_third_app",
+          "model": "FeeType",
+          "file": "three_fee_types.json"
+        }
+      ]
+    }
+  ]

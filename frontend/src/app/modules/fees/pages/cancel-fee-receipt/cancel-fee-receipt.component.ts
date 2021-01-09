@@ -34,6 +34,7 @@ export class CancelFeeReceiptComponent implements OnInit {
     classList = [];
     sectionList = [];
     employeeList = [];
+    selectedStudentList=[];
     searchFilterList=['Receipt No./Cheque No.','Student\'s Name','Parent\'s Mobile No'];
 
     serviceAdapter: CancelFeeReceiptServiceAdapter;
@@ -100,33 +101,47 @@ export class CancelFeeReceiptComponent implements OnInit {
         }, 0);
     }
 
-    handleStudentListSelection(studentList: any) {
-         this.searchParameter = studentList[0][0].name;
+    handleParentOrStudentListSelection(studentList: any) {
+         this.selectedStudentList = studentList[0];
         this.serviceAdapter.getFeeReceiptList();
     }
 
-    handleParentListSelection(list: any) {
-          this.searchParameter = list[0][0].mobileNumber;
-         this.serviceAdapter.getFeeReceiptList();
+
+    getClassName(studentId: any, sessionId: any): any {
+        return this.classList.find(classs => {
+            return classs.id == this.studentSectionList.find(studentSection => {
+                return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
+            }).parentClass;
+        }).name;
     }
 
-     showCancelReceiptModal(feeReceipt:any) {
-       const dialogRef=  this.dialog.open(CancelFeeReceiptModalComponent, {
-            height: '65vh',
-            width: '50vw',
+    getSectionName(studentId: any, sessionId: any): any {
+        return this.sectionList.find(section => {
+            return section.id == this.studentSectionList.find(studentSection => {
+                return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
+            }).parentDivision;
+        }).name;
+    }
+
+    showCancelReceiptModal(feeReceipt: any) {
+        const dialogRef = this.dialog.open(CancelFeeReceiptModalComponent, {
+            height: '440px',
+            width: '540px',
             data: {
                 user: this.user,
-                feeReceipt:feeReceipt,
-                totalAmount:this.getFeeReceiptTotalAmount(feeReceipt),
-                studentList:this.studentList,
-                collectedBy:this.getEmployeeName(feeReceipt),
+                feeReceipt: feeReceipt,
+                totalAmount: this.getFeeReceiptTotalAmount(feeReceipt),
+                studentName: this.getStudent(feeReceipt).name,
+                classSection:this.getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)+","+this.getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession),
+                fathersName:this.getStudent(feeReceipt).fathersName,
+                collectedBy: this.getEmployeeName(feeReceipt),
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-               this.serviceAdapter.cancelFeeReceipt(feeReceipt)
+                this.serviceAdapter.cancelFeeReceipt(feeReceipt)
             }
         });
-  }
+    }
 }

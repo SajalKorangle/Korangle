@@ -20,7 +20,7 @@
         <tr *ngFor="let feeReceipt of feeReceiptList | slice:0:number">
             <td *ngIf="receiptColumnFilter.receiptNumber">{{feeReceipt.receiptNumber}}</td>
             <td *ngIf="receiptColumnFilter.nameClass" align="center">
-                {{getStudentName(feeReceipt.parentStudent)}}<br>
+                {{getStudent(feeReceipt.parentStudent).name}}<br>
                 {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
                 {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
             </td>

@@ -49,7 +49,9 @@ export class TotalCollectionServiceAdapter {
             this.vm.isInitialLoading = false;
         });
 
-
+        EmitterService.get('cancel-receipt').subscribe(feeReceipt => {
+          this.cancelFeeReceipt(feeReceipt);
+        });
     }
 
 
@@ -178,6 +180,7 @@ export class TotalCollectionServiceAdapter {
             return a != null;
         });
 
+
         //Filtered Fee Type list
         this.vm.filteredFeeTypeList = this.vm.feeTypeList.filter(feeType => {
             return this.vm.subFeeReceiptList.find(subFeeReceipt => {
@@ -187,5 +190,59 @@ export class TotalCollectionServiceAdapter {
 
     }
 
+
+
+    cancelFeeReceipt(feeReceipt: any): void {
+
+        this.vm.isLoading = true;
+
+        let fee_receipt_object = {
+            'id': feeReceipt.id,
+            'cancelled': true,
+            'cancelledBy':this.vm.user.activeSchool.employeeId,
+            'cancelledRemark':feeReceipt.cancelledRemark,
+            'cancelledDateTime':new Date(),
+        };
+
+        let student_fee_list = this.vm.subFeeReceiptList.filter(subFeeReceipt => {
+            return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+        }).map(item => {
+            let tempObject = {
+                'id': item.parentStudentFee,
+                'cleared': false,
+            };
+            this.vm.installmentList.forEach(installment => {
+                if (item[installment+'Amount'] && item[installment+'Amount']>0) {
+                    tempObject[installment+'ClearanceDate'] = null;
+                }
+            });
+            return tempObject;
+        });
+
+        Promise.all([
+            this.vm.feeService.partiallyUpdateObject(this.vm.feeService.fee_receipts, fee_receipt_object),
+            // this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+            this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
+        ]).then(value => {
+
+            alert('Fee Receipt is cancelled');
+
+            this.vm.feeReceiptList.find(item => {
+                return item.id == feeReceipt.id;
+            }).cancelled = true;
+
+            /*this.vm.subFeeReceiptList.filter(item => {
+                return item.parentFeeReceipt == feeReceipt.id;
+            }).forEach(item => {
+                item.cancelled = true;
+            });*/
+
+            this.vm.isLoading = false;
+
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
+    }
 
 }

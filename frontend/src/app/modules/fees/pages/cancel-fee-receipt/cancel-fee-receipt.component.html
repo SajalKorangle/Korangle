@@ -1,182 +1,196 @@
 <div class="card-content">
+        <div class="row">
+            <div [hidden]="searchBy!==searchFilterList[1]" class="col-md-7">
 
-    <div class="row">
-        <div [hidden]="searchBy!==searchFilterList[1]" class="col-md-7">
-
-            <parent-student-filter [user]="user"
-                                   (onStudentListSelected)="handleStudentListSelection($event)"
-                                   (onStudentListLoading)="isStudentListLoading=$event"
-                                   [selectedFilterType]="'Student'"
-                                   [showFilter]="false"
-                                   [studentTcGenerated]="false"></parent-student-filter>
-        </div>
-        <div [hidden]="searchBy!==searchFilterList[2]" class="col-md-7">
-
-            <parent-student-filter [user]="user"
-                                   (onStudentListSelected)="handleParentListSelection($event)"
-                                   (onStudentListLoading)="isStudentListLoading=$event"
-                                   [selectedFilterType]="'Parent'"
-                                   [showFilter]="false"
-                                   [studentTcGenerated]="false"></parent-student-filter>
-        </div>
-        <div *ngIf="searchBy==searchFilterList[0]" class="col-md-5">
-            <mat-form-field style="width: 100%">
-                <input matInput
-                       name="searchParamter"
-                       type="text"
-                       (paste)="policeNumberInput($event)"
-                       (keypress)="policeNumberInput($event)"
-                       [(ngModel)]="searchParameter"
-                       placeholder="Type {{searchBy}} here ..." value="Sushi">
-            </mat-form-field>
-        </div>
-        <div class="col-sm-2">
-            <button *ngIf="searchBy==searchFilterList[0]" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    [disabled]="!searchParameter"
-                    (click)="serviceAdapter.getFeeReceiptList()">
-                Get
-            </button>
-        </div>
-        <div class="col-sm-4" style="margin-left: 30px;float: right">
-            <strong>Search By:</strong>
-            <mat-form-field style="margin-left: 5px;">
-                <mat-select [(ngModel)]="searchBy"
-                            (ngModelChange)="searchParameter=null;showReceipts=false">
-                    <mat-option *ngFor="let searchFilter of searchFilterList;" [value]="searchFilter">
-                        {{searchFilter}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
- <ng-container *ngIf="!isLoading && !isStudentListLoading && showReceipts">
-
-
-        <ng-container *ngIf="feeReceiptList">
-
-            <div class="row" style="margin-bottom: 30px;">
-                <div class="col-md-12"
-                     style="border-bottom: 1px solid lightgrey;"></div>
+                <parent-student-filter [user]="user"
+                                       (onStudentListSelected)="handleParentOrStudentListSelection($event)"
+                                       (onStudentListLoading)="isLoading=$event"
+                                       [selectedFilterType]="'Student'"
+                                       [showFilter]="false"
+                                       [studentTcGenerated]="false"></parent-student-filter>
             </div>
-            <ng-container *ngIf="feeReceiptList.length > 0; else emptyFeeReceiptList">
+            <div [hidden]="searchBy!==searchFilterList[2]" class="col-md-7">
 
-                <mat-accordion>
+                <parent-student-filter [user]="user"
+                                       (onStudentListSelected)="handleParentOrStudentListSelection($event)"
+                                       (onStudentListLoading)="isLoading=$event"
+                                       [selectedFilterType]="'Parent'"
+                                       [showFilter]="false"
+                                       [studentTcGenerated]="false"></parent-student-filter>
+            </div>
+            <div *ngIf="searchBy==searchFilterList[0]" class="col-md-5">
+                <mat-form-field style="width: 100%">
+                    <input matInput
+                           name="searchParamter"
+                           type="text"
+                           (paste)="policeNumberInput($event)"
+                           (keypress)="policeNumberInput($event)"
+                           [(ngModel)]="searchParameter"
+                           placeholder="Type Receipt No./Cheque No. here ..." value="Sushi">
+                </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+                <button *ngIf="searchBy==searchFilterList[0]" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        [disabled]="!searchParameter"
+                        (click)="serviceAdapter.getFeeReceiptList()">
+                    Get
+                </button>
+            </div>
+            <ng-container *ngIf="!isLoading">
+            <div class="col-sm-4" style="margin-left: 30px;float: right">
+                <strong>Search By:</strong>
+                <mat-form-field style="margin-left: 5px;">
+                    <mat-select [(ngModel)]="searchBy"
+                                (ngModelChange)="searchParameter=null;showReceipts=false">
+                        <mat-option *ngFor="let searchFilter of searchFilterList;" [value]="searchFilter">
+                            {{searchFilter}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+                </ng-container>
+        </div>
+        <ng-container *ngIf="!isLoading && showReceipts">
 
 
-                    <ng-container *ngFor="let feeReceipt of feeReceiptList; let i=index; let first=first">
+            <ng-container *ngIf="feeReceiptList">
 
-                        <!--                        <mat-expansion-panel [expanded]="feeReceiptList.length == 1 && first">-->
-                        <strong *ngIf="feeReceiptList.length > 1 && i==0 && searchBy!==searchFilterList[2]">
-                            {{getStudent(feeReceipt).name}}
-                        </strong>
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-md-12"
+                         style="border-bottom: 1px solid lightgrey;">
+                    </div>
+                </div>
 
-                        <mat-card style="margin-top: 10px">
-                            <strong *ngIf="feeReceiptList.length == 1 && searchBy!==searchFilterList[2]">
-                                {{getStudent(feeReceipt).name}},
-                                Amount: {{getFeeReceiptTotalAmount(feeReceipt)}}
-                            </strong>
-                            <div *ngIf="searchBy==searchFilterList[2]" class="row">
-                                <div class="col-sm-2 col-xs-6">
-                                    Student Name :
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{getStudent(feeReceipt).name}}
-                                </div>
+                <ng-container *ngIf="feeReceiptList.length > 0; else emptyFeeReceiptList">
+
+                    <mat-accordion>
+
+                        <ng-container *ngFor="let feeReceipt of feeReceiptList; let i=index; let first=first">
+
+                            <div *ngIf="i==0 && searchBy!==searchFilterList[2]"
+                                 style="margin-bottom: 5px;">
+                                <strong>
+                                    {{getStudent(feeReceipt).name}} (
+                                    {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
+                                    {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}} )
+                                </strong>
                             </div>
-                            <div *ngIf="searchBy !== searchFilterList[0]" class="row">
-                                <div class="col-sm-2 col-xs-6">
-                                    Amount :
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{getFeeReceiptTotalAmount(feeReceipt)}}
-                                </div>
-                            </div>
 
+                            <mat-card style="margin-top: 10px">
 
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-6">
-                                    Receipt No. :
+                                <div *ngIf="searchBy==searchFilterList[2]" class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Student Name :
+                                    </div>
+                                    <div class="col-sm-3 col-xs-8">
+                                        {{getStudent(feeReceipt).name}}
+                                    </div>
                                 </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{feeReceipt.receiptNumber}}
-                                </div>
-                            </div>
 
-                            <div *ngIf="searchBy !== searchFilterList[2]" class="row">
-                                <div class="col-sm-2 col-xs-6">
-                                    Father's Name:
+                                <div *ngIf="searchBy==searchFilterList[2]" class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Class :
+                                    </div>
+                                    <div class="col-sm-3 col-xs-8">
+                                        {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
+                                        {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
+                                    </div>
                                 </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{getStudent(feeReceipt).fathersName}}
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-6">
-                                    Mode of Payment:
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Amount :
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{getFeeReceiptTotalAmount(feeReceipt)}}
+                                    </div>
                                 </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{feeReceipt.modeOfPayment}}
-                                    <span *ngIf="feeReceipt.modeOfPayment == modeOfPaymentList[1]">
+
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Receipt No. :
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{feeReceipt.receiptNumber}}
+                                    </div>
+                                </div>
+
+                                <div *ngIf="searchBy !== searchFilterList[2]" class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Father's Name:
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{getStudent(feeReceipt).fathersName}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Mode of Payment:
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{feeReceipt.modeOfPayment}}
+                                        <span *ngIf="feeReceipt.modeOfPayment == modeOfPaymentList[1]">
                                         {{feeReceipt.chequeNumber}}
                                     </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-6">
-                                    Remark:
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{feeReceipt.remark}}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-6">
-                                    Collected By:
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{getEmployeeName(feeReceipt)}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-2 col-xs-6">
-                                    Date:
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}
+                                    </div>
                                 </div>
 
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Remark:
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{feeReceipt.remark}}
+                                    </div>
+                                </div>
 
-                                <button type="button"
-                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                    *ngIf="!feeReceipt.cancelled"
-                                    style="float:right;margin-right: 20px;"
-                                    matTooltip="Cancel the receipt"
-                                    tooltip-position="right"
-                                    (click)="showCancelReceiptModal(feeReceipt);">
-                                Cancel</button>
-                            </div>
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Collected By:
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{getEmployeeName(feeReceipt)}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Date:
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}
+                                    </div>
+                                    <button type="button"
+                                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                            *ngIf="!feeReceipt.cancelled"
+                                            style="float:right;margin-right: 20px;"
+                                            matTooltip="Cancel the receipt"
+                                            tooltip-position="right"
+                                            (click)="showCancelReceiptModal(feeReceipt);">
+                                        Cancel
+                                    </button>
+                                </div>
                                 <br>
-
-                            <span style="color: grey" *ngIf="feeReceipt.cancelled">This fee receipt is cancelled <span *ngIf="feeReceipt.cancelledRemark"> Due to <strong>{{feeReceipt.cancelledRemark}}</strong></span></span>
-
+                                <span style="color: grey"
+                                      *ngIf="feeReceipt.cancelled">This fee receipt is cancelled <span
+                                        *ngIf="feeReceipt.cancelledRemark"> Due to <strong>{{feeReceipt.cancelledRemark}}</strong></span>
+                            </span>
                             </mat-card>
 
-                    </ng-container>
+                        </ng-container>
 
-                </mat-accordion>
+                    </mat-accordion>
+
+                </ng-container>
+
+                <ng-template #emptyFeeReceiptList>
+                    No Receipt Found
+                </ng-template>
 
             </ng-container>
 
-            <ng-template #emptyFeeReceiptList>
-                No Receipt Found
-            </ng-template>
-
         </ng-container>
-
-    </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
