@@ -196,17 +196,22 @@ export class User {
             }
             if (module) { // if module doesn't exist redirect to default school notification page
                 task = module.taskList.find(t => t.path == taskPath);
-                if (task) { // if task doesn't exist redirect to default school notification page
+                /* if (task) { // if task doesn't exist redirect to default school notification page
                     module.showTaskList = true;
                     this.populateSectionAndRoute(task, module); // if all exist then populate that section
-                }
+                }*/
             }
         }
 
         if (!module || !task) {
-            this.notification.showTaskList = true;
-            this.populateSectionAndRoute(this.notification.taskList[0], this.notification);
+            module = this.notification;
+            task = this.notification.taskList[0];
+            // this.notification.showTaskList = true;
+            // this.populateSectionAndRoute(this.notification.taskList[0], this.notification);
         }
+
+        module.showTaskList = true;
+        this.populateSectionAndRoute(task, module);
 
     }
 
