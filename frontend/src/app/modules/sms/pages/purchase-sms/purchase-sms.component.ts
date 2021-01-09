@@ -6,7 +6,7 @@ import { SmsService } from "../../../../services/modules/sms/sms.service";
 import { WindowRefService } from "../../../../services/modules/sms/window-ref.service"
 import { DataStorage } from 'app/classes/data-storage';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
-import { Options } from 'ng5-slider/options';
+import {RazorpayServiceAdapter} from  '../razor-pay/razor-pay.service.adapter'
 
 
 @Component({
@@ -21,80 +21,100 @@ export class PurchaseSmsComponent implements OnInit {
 
   user;
   serviceAdapter: PurchaseSmsServiceAdapter;
+  razorPayServiceAdapter: RazorpayServiceAdapter;
   isLoading = false;
   isInitialLoading = false
 
   smsPlan = [
-    { noOfSms: 5000,  price: 1250, selected:false },
-    { noOfSms: 20000, price: 5000, selected:false },
-    { noOfSms: 30000, price: 7200, selected:false }
+    { noOfSms: 5000, selected:false },
+    { noOfSms: 20000,selected:false },
+    { noOfSms: 30000,selected:false }
   ];
 
 
-  SMSCount =0;
-  price = 0;
-  noOfSMS =0;
+  smsBalance =0;
+  noOfSMS =100;
 
 
   constructor(public smsService: SmsService,
               public smsOldService: SmsOldService,
               public userService: UserService,
               public winRef: WindowRefService,
-              public ref: ChangeDetectorRef) { }
+              public cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
 
     this.user = DataStorage.getInstance().getUser();
     this.serviceAdapter = new PurchaseSmsServiceAdapter();
+    this.razorPayServiceAdapter = new RazorpayServiceAdapter();
     this.serviceAdapter.initializeAdapter(this);
     this.serviceAdapter.initializeData();
   }
   
 
 
-  sliderValue: number = 0; // value from slider
-  fixedPlanvalue: number = 0; // value from fixed plan
 
-
-
-  callSetBubble(event)
+  callSetBubble(event,value)
   { 
+    this.isPlanSelected();
     let range = document.querySelector(".range");
     let bubble = document.querySelector(".bubble");
-    this.setBubble(range,bubble);
+    this.setBubble(range,bubble,value);
   }
 
-  setBubble(range, bubble) {
-    const val = range.value;
-    this.sliderValue = val;
-    this.fixedPlanvalue=0;
-    const min = range.min ? range.min : 0;
-    const max = range.max ? range.max : 100;
-    const newVal = Number(((val - min) * 100) / (max - min));
-    this.price = val / 5;
-    bubble.innerHTML = val;
+  setBubble(range, bubble, value) {
+    if(value>=100)
+    this.noOfSMS = value;
+    bubble.innerHTML = this.noOfSMS;
 
     // Sorta magic numbers based on size of the native UI thumb
-    bubble.style.left = `calc(${val * (30/30000) +1}vw)`;
-    for(let i=0;i<this.smsPlan.length;i++)
-    this.smsPlan[i].selected = false;
-  }
+    bubble.style.left = `calc(${this.noOfSMS * (30/30000) +1}vw)`;
+    
+  } 
 
-  selectThisPlan(event:any,plan:any)
+  isPlanSelected()
   { 
     for(let i=0;i<this.smsPlan.length;i++)
-    {
-      this.smsPlan[i].selected = false;
+    { 
+      if(this.smsPlan[i].noOfSms === this.noOfSMS)
+        this.smsPlan[i].selected = true;
+      else
+        this.smsPlan[i].selected = false;
     }
-
-    plan.selected = true;
-    this.fixedPlanvalue = plan.price;
   }
 
-  isPayButtonDisabled()
+  // isPayButtonDisabled()
+  // {
+  //   if(this.noOfSMS >=100)return false;
+  //   return true;
+  // }
+
+  CallcreateRzpayOrder()
+  { 
+    let data = {
+      price : this.getPrice(this.noOfSMS),
+      noOfSMS : this.noOfSMS,
+      user : this.user,
+      smsBalance : this.smsBalance,
+  }
+    this.isLoading =true;
+    this.razorPayServiceAdapter.createRzpayOrder(data,this.smsService,this.winRef).then(value =>{
+      this.smsBalance += this.noOfSMS;
+      this.noOfSMS =100;
+      this.callSetBubble('',0);
+      this.cdRef.detectChanges();
+      this.isLoading = false;
+
+    },error =>{
+      console.log('error from RazorPayServiceAdapter '+error);
+      this.isLoading = false;
+    });
+    
+  }
+
+  getPrice(noOfSMS)
   {
-    if(this.sliderValue >0 || this.fixedPlanvalue >0)return false;
-    return true;
+    return noOfSMS*0.25;
   }
 
 }

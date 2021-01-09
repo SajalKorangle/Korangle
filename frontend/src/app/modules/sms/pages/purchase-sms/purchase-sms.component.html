@@ -4,7 +4,7 @@
     <ng-container *ngIf="!isInitialLoading">
         <div class="row">
             <div class="col-md-12">
-                <h3 style="float: right;">SMS balance is {{SMSCount}}</h3>
+                <h3 style="float: right;">SMS balance is {{smsBalance}}</h3>
             </div>
         </div>
         <div class="row">
@@ -13,9 +13,9 @@
             </div>
         </div>
         <div class="row" style="margin-top: 50px; margin-bottom: 30px;">
-            <mat-card [class.smsPrice] = "fixedPlanvalue===0 && sliderValue!=0" style=" width: 11vw; min-width: 186px;">
+            <mat-card style=" width: 11vw; min-width: 186px;  background-color: #4CA750;">
                 <strong>
-                    {{value}}  SMS for Rs. {{price}}
+                    {{noOfSMS}}  SMS for Rs. {{getPrice(noOfSMS)}}
                 </strong>
             </mat-card>
         </div>
@@ -30,13 +30,13 @@
         height: auto;
         padding: 10px;
         position: relative;">
-            <input type="range" testId = "slider" min="0" max="30000"  step="100" class="range" [(ngModel)]="sliderValue" (ngModelChange)="callSetBubble($event)">
-            <output class="bubble"></output>
+            <input type="range" testId = "slider" min="100" max="30000"  step="100" class="range" [(ngModel)]="noOfSMS" (ngModelChange)="callSetBubble($event,0);">
+            <output class="bubble">100</output>
         </div>
         <div style="width: 30vw;min-width: 280px;
         padding: 10px;
         position: relative;">
-            <span class="text-small" style="float: left;">0</span>
+            <span class="text-small" style="float: left;">100</span>
             <span class="text-small" style="float: right;">30000</span>
         </div>
         
@@ -51,8 +51,8 @@
         </div>
         <div class="row" style="margin-top: 50px;">
             <div *ngFor="let plan of smsPlan" style="display: inline-block;">
-                <div  [ngClass]="plan.selected ? 'selected' : 'unselected'" (click)="selectThisPlan($event,plan)" style="padding: 4vh; margin-right: 1vw; margin-bottom: 1vw; cursor: pointer; min-width: 192px;">
-                    <span>{{plan.noOfSms}} for Rs {{plan.price}}</span>
+                <div  (click)="noOfSMS = plan.noOfSms; callSetBubble('',noOfSMS)"  [ngClass]="plan.selected ? 'selected' : 'unselected'" style="padding: 4vh; margin-right: 1vw; margin-bottom: 1vw; cursor: pointer; min-width: 192px;">
+                    <span>{{plan.noOfSms}} for Rs {{getPrice(plan.noOfSms)}}</span>
                 </div>
             </div>
         </div>
@@ -64,9 +64,8 @@
             <div class="col-md-12">
                 <div style="float: right;">
                     <button 
-                    [disabled]="isPayButtonDisabled()"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.createRzpayOrder()">Pay</button>
+                    (click)="CallcreateRzpayOrder()">Pay</button>
                 </div>
             </div>
         </div>

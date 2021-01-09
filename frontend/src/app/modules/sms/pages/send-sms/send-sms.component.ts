@@ -15,8 +15,7 @@ import {UserService} from "../../../../services/modules/user/user.service";
 import { WindowRefService } from "../../../../services/modules/sms/window-ref.service"
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Inject } from '@angular/core';
-import { throwIfEmpty } from 'rxjs/operators';
-
+import {RazorpayServiceAdapter} from  '../razor-pay/razor-pay.service.adapter'
 @Component({
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
@@ -99,6 +98,7 @@ export class SendSmsComponent implements OnInit {
         }
     }
     purchase: any;
+    razorPayServiceAdapter: RazorpayServiceAdapter;
 
 
     constructor(public studentService: StudentService,
@@ -148,6 +148,7 @@ export class SendSmsComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new SendSmsServiceAdapter();
+        this.razorPayServiceAdapter = new RazorpayServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
@@ -406,20 +407,18 @@ export class SendSmsComponent implements OnInit {
         return classSection.class.name + (multipleSections?', '+classSection.section.name:'');
     }
 
-
-    openPurchaseSMSDialog(): void {
-        console.dir(this.user,{depth:null})
+    hasPurchaseSMSPermission():boolean {
         let moduleIdx = this.user.activeSchool.moduleList.findIndex(module => module.path === 'sms');
         let taskIdx = -1;
-        if(moduleIdx != -1)
-        {
-            taskIdx   = this.user.activeSchool.moduleList[moduleIdx].taskList.find(task => task.path === 'purchase_sms');
-        }
-        if(moduleIdx === -1 || taskIdx === -1)
-        {
-            alert('Purchase sms permission denied');
-            return;
-        }
+        taskIdx  = this.user.activeSchool.moduleList[moduleIdx].taskList.findIndex(task => task.path === 'purchase_sms');
+        if(taskIdx === -1)
+        return false;
+        
+        return true;
+    }
+
+
+    openPurchaseSMSDialog(): void {
         const dialogRef = this.dialog.open(PurchaseSMSDialogComponent, {
             width: '1000px',
             disableClose: true,
@@ -430,9 +429,20 @@ export class SendSmsComponent implements OnInit {
             {   
                 let data = {
                     price : result.price,
-                    noOfSMS : result.noOfSMS
+                    noOfSMS : result.noOfSMS,
+                    user : this.user,
+                    loader : this.isLoading,
+                    smsBalance : this.smsBalance,
                 }
-                this.serviceAdapter.createRzpayOrder(data);
+                this.isLoading = true;
+                this.razorPayServiceAdapter.createRzpayOrder(data,this.smsService,this.winRef).then(value =>{
+                    this.smsBalance += result.noOfSMS;
+                    this.cdRef.detectChanges();
+                    this.isLoading =false;
+                  },error =>{
+                    console.log('error from RazorPayServiceAdapter '+error);
+                    this.isLoading = false;
+                  });
             }
             else
             {
@@ -466,78 +476,58 @@ export class SendSmsComponent implements OnInit {
     }
 
     smsPlan = [
-        { noOfSms: 5000,  price: 1250, selected:false },
-        { noOfSms: 20000, price: 5000, selected:false },
-        { noOfSms: 30000, price: 7200, selected:false }
-      ];    
-      noOfSMS =0;
-      price =0;
+        { noOfSms: 5000, selected:false },
+        { noOfSms: 20000,selected:false },
+        { noOfSms: 30000,selected:false }
+      ];
     
-      sliderValue: number = 0; // value from slider
-      fixedPlanvalue: number = 0; // value from fixed plan
+    noOfSMS =100;
     
     
-      callSetBubble(event)
+    callSetBubble(event,value)
+    { 
+      this.isPlanSelected();
+      let range = document.querySelector(".range");
+      let bubble = document.querySelector(".bubble");
+      this.setBubble(range,bubble,value);
+    }
+  
+    setBubble(range, bubble, value) {
+      if(value>=100)
+      this.noOfSMS = value;
+      bubble.innerHTML = this.noOfSMS;
+  
+      // Sorta magic numbers based on size of the native UI thumb
+      bubble.style.left = `calc(${this.noOfSMS * (30/30000) +1}vw)`;
+      
+    } 
+  
+    isPlanSelected()
+    { 
+      for(let i=0;i<this.smsPlan.length;i++)
       { 
-        let range = document.querySelector(".range");
-        let bubble = document.querySelector(".bubble");
-        this.setBubble(range,bubble);
-      }
-    
-      setBubble(range, bubble) {
-        const val = range.value;
-        this.sliderValue = val;
-        this.fixedPlanvalue=0;
-        const min = range.min ? range.min : 0;
-        const max = range.max ? range.max : 100;
-        const newVal = Number(((val - min) * 100) / (max - min));
-        bubble.innerHTML = val;
-    
-        // Sorta magic numbers based on size of the native UI thumb
-        bubble.style.left = `calc(${val * (30/30000) +1}vw)`;
-        for(let i=0;i<this.smsPlan.length;i++)
-        this.smsPlan[i].selected = false;
-      }
-    
-      selectThisPlan(event:any,plan:any)
-      { 
-        for(let i=0;i<this.smsPlan.length;i++)
-        {
-          this.smsPlan[i].selected = false;
-        }
-    
-        plan.selected = true;
-        this.fixedPlanvalue = plan.price;
-      }
-    
-      isPayButtonDisabled()
-      {
-        if(this.sliderValue >0 || this.fixedPlanvalue >0)return false;
-        return true;
-      } 
-
-      startPayment()
-      { 
-        if(this.fixedPlanvalue >0)
-        {   
-            for(let i=0;i<this.smsPlan.length;i++)
-            {
-                if(this.smsPlan[i].selected)
-                {
-                    this.noOfSMS = this.smsPlan[i].noOfSms;
-                    break;
-                }
-            }
-            this.price = this.fixedPlanvalue;
-        }
+        if(this.smsPlan[i].noOfSms === this.noOfSMS)
+          this.smsPlan[i].selected = true;
         else
-        {   
-            this.price = this.sliderValue/5;
-            this.noOfSMS = this.sliderValue
-        }
-        
-        this.dialogRef.close({payment:true, noOfSMS : this.noOfSMS, price :this.price});
+          this.smsPlan[i].selected = false;
       }
+    }
+  
+    // isPayButtonDisabled()
+    // {
+    //   if(this.noOfSMS >0)return false;
+    //   return true;
+    // }
+  
+    getPrice(noOfSMS)
+    {
+      return noOfSMS*0.25;
+    } 
+
+    startPayment()
+    {         
+        this.dialogRef.close({payment:true, noOfSMS : this.noOfSMS, price :this.getPrice(this.noOfSMS)});
+    }
     
  
 }

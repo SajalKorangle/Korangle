@@ -47,7 +47,7 @@
                 <span *ngIf="(selectedSentType==sentTypeList[0] || selectedSentType==sentTypeList[2]) && smsBalance<getMobileNumberList('sms').length*getSMSCount()" style="font-size: 16px;">
                     You are short by <b>{{(getMobileNumberList('sms').length*getSMSCount()) - smsBalance}}</b> SMS.
 
-                    <div>
+                    <div *ngIf="hasPurchaseSMSPermission()">
                         <button type="submit"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="openPurchaseSMSDialog()">Purchase SMS</button>

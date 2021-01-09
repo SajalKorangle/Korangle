@@ -17,9 +17,9 @@
         </div>
     </div>
     <div class="row" style="margin-top: 50px; margin-bottom: 20px;">
-        <mat-card [class.smsPrice] = "fixedPlanvalue===0 && sliderValue!=0" style=" width: 17vw; max-width: 186px;">
+        <mat-card style=" width: 17vw; max-width: 186px;  background-color: #4CA750;">
             <strong>
-                {{sliderValue}}  SMS for Rs. {{sliderValue/5}}
+                {{noOfSMS}}  SMS for Rs. {{getPrice(noOfSMS)}}
             </strong>
         </mat-card>
     </div>
@@ -30,11 +30,11 @@
     </div>
     
     <div class="range-wrap" style="width: 30vw;height: auto;margin: 0 auto;padding: 10px;position: relative;">
-        <input type="range" testId="slider" min="0" max="30000"  step="100" class="range" [(ngModel)]="sliderValue" (ngModelChange)="callSetBubble($event)">
-        <output class="bubble"></output>
+        <input type="range" testId="slider" min="100" max="30000"  step="100" class="range" [(ngModel)]="noOfSMS" (ngModelChange)="callSetBubble($event,0);">
+        <output class="bubble">100</output>
     </div>
     <div style="width: 30vw;margin: 0 auto;padding: 10px;position: relative;">
-        <span class="text-small" style="float: left;">0</span>
+        <span class="text-small" style="float: left;">100</span>
         <span class="text-small" style="float: right;">30000</span>
     </div>
     
@@ -51,8 +51,8 @@
     <div class="row" style="margin-top: 30px;">
         
         <div *ngFor="let plan of smsPlan" style="display: inline-block;">
-            <div  [ngClass]="plan.selected ? 'selected' : 'unselected'" (click)="selectThisPlan($event,plan)" style="padding: 4vh; margin-right: 1vw; margin-bottom: 1vw; cursor: pointer; min-width: 192px;">
-                <span>{{plan.noOfSms}} for Rs {{plan.price}}</span>
+            <div  (click)="noOfSMS = plan.noOfSms; callSetBubble('',noOfSMS);"  [ngClass]="plan.selected ? 'selected' : 'unselected'"style="padding: 4vh; margin-right: 1vw; margin-bottom: 1vw; cursor: pointer; min-width: 192px;">
+                <span>{{plan.noOfSms}} for Rs {{getPrice(plan.noOfSms)}}</span>
             </div>
         </div>
         
@@ -63,7 +63,6 @@
             <div style="float: right;">
                 <button 
                 class="btn btn-warning"
-                [disabled]="isPayButtonDisabled()"
                 (click)="startPayment()">Pay</button>
             </div>
         </div>
