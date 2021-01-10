@@ -133,6 +133,7 @@
                                type="number"
                                min="0"
                                placeHolder="Type payment here ...."
+                               style="border: 1px solid black"
                                [ngModel]="getOverallPayment()==0?null:getOverallPayment()"
                                (keypress)="policeOverallPaymentInput($event)"
                                (ngModelChange)="handleOverallPaymentChange($event);">

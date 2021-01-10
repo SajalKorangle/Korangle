@@ -1,17 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import {SchoolService} from "../../../../services/modules/school/school.service";
 import {MatDialog} from '@angular/material/dialog';
 import {CancelFeeReceiptModalComponent} from '@modules/fees/components/cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
-import {EmitterService} from '@services/emitter.service';
+import {FeeReceiptListComponentServiceAdapter} from '@modules/fees/components/fee-receipt-list/fee-receipt-list.component.service.adapter';
+import {FeeService} from '@services/modules/fees/fee.service';
 
 @Component({
     selector: 'app-fee-receipt-list',
     templateUrl: './fee-receipt-list-component.component.html',
     styleUrls: ['./fee-receipt-list-component.component.css'],
-    providers: [SchoolService]
+    providers: [SchoolService,FeeService]
 })
 export class FeeReceiptListComponent implements OnInit {
     @Input() user;
@@ -29,14 +30,24 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() boardList;
     @Input() sessionList = [];
 
+    @Output() onCancelClick:any;
+
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
+    isLoading: boolean;
+    serviceAdapter:FeeReceiptListComponentServiceAdapter;
 
-    constructor(private printService: PrintService,
-                private schoolService: SchoolService,
-                private dialog: MatDialog) { }
 
-    ngOnInit() { }
+    constructor(private schoolService: SchoolService,
+        private dialog: MatDialog,
+        public printService: PrintService,
+        public feeService:FeeService) {
+    }
+
+    ngOnInit() {
+        this.serviceAdapter = new FeeReceiptListComponentServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+    }
 
     printFeeReceipt(feeReceipt: any): void {
 
@@ -106,14 +117,14 @@ export class FeeReceiptListComponent implements OnInit {
         }).name;
     }
 
-    getEmployeeName(feeReceipt: any): any {
+    getEmployeeName(parentEmployee: any): any {
         let employee = this.employeeList.find(employee => {
-            return employee.id == feeReceipt.parentEmployee;
+            return employee.id == parentEmployee;
         });
         return employee?employee.name:null;
     }
 
-    hasUserPermissionToCancel() {
+    hasUserPermissionToCancelAndNotPrintPage() {
         const module = this.user.activeSchool.moduleList.find(module => module.title === 'Fees 3.0');
         return module.taskList.some(task => task.title === 'Cancel Fee Receipt') && window.location.href.indexOf("print") <= -1;
     }
@@ -137,15 +148,14 @@ export class FeeReceiptListComponent implements OnInit {
                 studentName: this.getStudent(feeReceipt.parentStudent).name,
                 classSection:this.getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)+","+this.getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession),
                 fathersName:this.getStudent(feeReceipt.parentStudent).fathersName,
-                collectedBy: this.getEmployeeName(feeReceipt),
+                collectedBy: this.getEmployeeName(feeReceipt.parentEmployee),
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                EmitterService.get('cancel-receipt').emit(feeReceipt);
+               this.serviceAdapter.cancelFeeReceipt(feeReceipt);
             }
         });
   }
-
 }

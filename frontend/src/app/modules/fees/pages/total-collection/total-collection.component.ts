@@ -228,5 +228,6 @@ export class TotalCollectionComponent implements OnInit {
 
     checkCancelledRemark():void {
        this.receiptColumnFilter.cancelledRemark=Boolean(this.selectedFeeReceiptType === 'Cancelled Receipts');
+       this.receiptColumnFilter.cancelledBy=Boolean(this.selectedFeeReceiptType === 'Cancelled Receipts');
     }
 }

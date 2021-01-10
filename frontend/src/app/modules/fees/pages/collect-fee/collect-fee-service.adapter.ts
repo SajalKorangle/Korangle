@@ -216,5 +216,4 @@ export class CollectFeeServiceAdapter {
             return b.receiptNumber-a.receiptNumber;
         });
     }
-
 }

@@ -1169,11 +1169,9 @@ export class CollectFeeComponent implements OnInit {
     }
 
     updateNewFeeReceiptChequeNumber(): void {
-        if(this.newChequeNumber) {
             this.newFeeReceiptList.forEach(feeReceipt => {
                 feeReceipt.chequeNumber = this.newChequeNumber;
             });
-        }
     }
 
     getLastDaySubmittedAmount(lastFeeReceipt: any): number {

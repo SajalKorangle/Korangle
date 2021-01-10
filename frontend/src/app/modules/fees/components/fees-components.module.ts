@@ -5,8 +5,9 @@ import {FeeReceiptListComponent} from "./fee-receipt-list/fee-receipt-list-compo
 import {DiscountListComponent} from "./discount-list/discount-list-component.component";
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TextFieldModule} from '@angular/cdk/text-field';
-import {MatButtonModule, MatDialogModule, MatIconModule, MatInputModule} from '@angular/material';
+import {MatButtonModule, MatDialogModule, MatIconModule, MatInputModule, MatTooltipModule} from '@angular/material';
 import { CancelFeeReceiptModalComponent } from './cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
+import {BasicComponentsModule} from '@basic-components/basic-components.module';
 
 
 @NgModule({
@@ -28,6 +29,8 @@ import { CancelFeeReceiptModalComponent } from './cancel-fee-receipt-modal/cance
         MatDialogModule,
         MatButtonModule,
         MatIconModule,
+        MatTooltipModule,
+        BasicComponentsModule,
 
     ],
     exports: [

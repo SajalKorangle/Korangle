@@ -28,6 +28,7 @@ export class ReceiptColumnFilter {
     'amount'= true;
     'modeOfPayment' = false;
     'chequeNumber' = false;
+    'cancelledBy'=false;
     'date'= true;
     'remark'= true;
     'employee'= true;
@@ -35,6 +36,7 @@ export class ReceiptColumnFilter {
     'status'=true;
     'mobileNumber'=true;
     'cancelledRemark'=false;
+    'cancelledDate'=false;
 }
 
 export class DiscountColumnFilter {

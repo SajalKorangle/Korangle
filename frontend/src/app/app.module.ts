@@ -18,7 +18,6 @@ import { ContactUsComponent } from './frontpage/contact-us/contact-us.component'
 import { PricingComponent } from './frontpage/pricing/pricing.component';
 import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
 import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
-import { CancelFeeReceiptModalComponent } from './modules/fees/components/cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
 
 @NgModule({
     declarations: [
