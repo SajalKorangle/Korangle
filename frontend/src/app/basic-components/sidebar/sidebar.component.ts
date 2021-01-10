@@ -43,7 +43,7 @@ export class SidebarComponent implements OnInit {
 
     green = 'green';
     warning = 'warning';
-    session_list = [];
+    session_list = [];    
 
     constructor(private router: Router,
                 private notificationService: NotificationService,
@@ -56,31 +56,21 @@ export class SidebarComponent implements OnInit {
 
     }
 
-    // @HostListener('window:popstate', ['$event'])
-    // onPopState(event) {
-    //     if (window.location.pathname == '/') {
-    //         history.back();
-    //         return;
-    //     }
-    //     this.user.initializeTask();
-    // }
+    @HostListener('window:popstate', ['$event'])
+    onPopState(event) {
+        if (window.location.pathname == '/') {
+            history.back();
+            return;
+        }
+        this.user.initializeTask();
+    }
 
     ngOnInit() {
         this.router.events
             .subscribe((event) => {
-                console.log('I came outside');
                 if(event instanceof NavigationStart) {
                     this.user.isLazyLoading = true;
-            //         console.log('I came inside');
-            // if (event.navigationTrigger == "popstate"){
-            //
-            //             if(event.url=='/'){
-            //                 history.back();
-            //                 return;
-            //             }
-            //             this.user.initializeTask();
-            //         }
-            }
+                }
                 else if (event instanceof NavigationCancel) {
                     this.user.isLazyLoading = false;
                 } else if (event instanceof NavigationEnd) {
@@ -93,12 +83,11 @@ export class SidebarComponent implements OnInit {
                     CommonFunctions.scrollToTop();
                 }
             });
-        this.schoolService.getObjectList(this.schoolService.session,{}).then(value => {
-            this.session_list = value;
-        });
+        this.schoolService.getObjectList(this.schoolService.session,{})
+            .then(value=>{
+                this.session_list = value;
+            })
         EmitterService.get('initialize-router').subscribe(value => {
-            // Review : Ye cheez kahan check ho rahi hai ki agar student ke page ka route hai lekin student ki id nahi hai.
-            // Us case me kya ho raha hai.
             this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {queryParams: value.queryParams}));
         });
     }

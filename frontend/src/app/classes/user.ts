@@ -148,16 +148,7 @@ export class User {
         let urlParams = new URLSearchParams(window.location.search);
         let module: any;
         let task: any ;
-
-        // Review: iska else kahan, agar urlPath empty nahi hai, aur schoolid and session bhi exist karti hai
-        // uske baad user ko uski permission bhi nahi hai, tab kya karoge.
-        // if (urlPath == '/'
-        //     || urlParams.get('school_id') == undefined
-        //     || urlParams.get('session') == undefined) { // on user login the path comes with '/' so on login showing notification page and even if there are no params or wrong params
-        //
-        //     module=undefined;
-        //
-        // }
+        
         if (this.checkUserSchoolSessionPermission(urlParams)) { // checking the school id  and session id in the url is valid for this user
             switch (modulePath) { // from here i am population module
                 // if the user refreshes the notification or user - settings
@@ -179,14 +170,14 @@ export class User {
                 // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
                 case 'parent':
                     // Review: Agar woh employee ke role se parent ke role me aa raha hai to? Permission hai dono ki uske paas.
-                    if (this.activeSchool.role == 'Parent') {
-                        console.log(urlParams.get('student_id'));
+                    this.activeSchool.role=this.activeSchool.studentList.length > 0?'Parent':'Employee'; // if only the active school has student list then we can change the role
+                    if(this.activeSchool.role=='Parent') {
                         if (urlParams.get('student_id') != undefined) {
                             module = this.activeSchool.studentList.find(s => s.id == Number(urlParams.get('student_id')));
                         } else {
                             // Review: agar path view_fee receipt ka nahi hua aur student id bhi undefined hai to?
                             // Aisa case is line tak pahunch sakta hai kya?
-                            module = this.activeSchool.parentModuleList[0].taskList.some(t => t.path == taskPath) ? undefined:this.activeSchool.parentModuleList[0];
+                            module = this.activeSchool.parentModuleList[0].taskList.some(t => t.path == taskPath) ? this.activeSchool.parentModuleList[0] : undefined;
                         }
                     }
                     break;
@@ -196,18 +187,12 @@ export class User {
             }
             if (module) { // if module doesn't exist redirect to default school notification page
                 task = module.taskList.find(t => t.path == taskPath);
-                /* if (task) { // if task doesn't exist redirect to default school notification page
-                    module.showTaskList = true;
-                    this.populateSectionAndRoute(task, module); // if all exist then populate that section
-                }*/
             }
         }
 
         if (!module || !task) {
             module = this.notification;
             task = this.notification.taskList[0];
-            // this.notification.showTaskList = true;
-            // this.populateSectionAndRoute(this.notification.taskList[0], this.notification);
         }
 
         module.showTaskList = true;
@@ -215,8 +200,7 @@ export class User {
 
     }
 
-
-
+    
     checkUserSchoolSessionPermission(urlParams:any): boolean {
         const school = this.schoolList.find(s => s.dbId == Number(urlParams.get('school_id')));
         if (school != undefined
@@ -275,6 +259,7 @@ export class User {
         }
          EmitterService.get('initialize-router').emit({queryParams: queryParams});
     }
+
 }
 
 /*
