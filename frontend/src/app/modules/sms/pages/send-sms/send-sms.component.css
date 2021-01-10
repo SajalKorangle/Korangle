@@ -99,9 +99,7 @@ EDIT ON
   position: relative;
   margin: 0 auto 3rem;
 }
-.range {
-  width: 30vw;
-}
+
 .bubble {
   background: #4CA750;
   color: white;
@@ -124,8 +122,28 @@ body {
 }
 
 .selected {
-  border: 3px solid #4CA750;
+    border: 3px solid #4CA750;
+    box-sizing: border-box;
+    border-radius: 6px;
+    padding: 2vh; 
+    font-size: 18px;
+    margin-right: 3vw; 
+    margin-left: 4vw;
+    margin-bottom: 1vw; 
+    cursor: pointer; 
+    height: 81px;
+    width: 144px;
 }
 .unselected {
-  border: 2px dashed grey;
+    border: 2px dashed #ACACAC;
+    box-sizing: border-box;
+    border-radius: 6px;
+    padding: 2vh; 
+    font-size: 18px;
+    margin-right: 2vw; 
+    margin-left: 2vw;
+    margin-bottom: 1vw; 
+    cursor: pointer; 
+    height: 81px;
+    width: 144px;
 }

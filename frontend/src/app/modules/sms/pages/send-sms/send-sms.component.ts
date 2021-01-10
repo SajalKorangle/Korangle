@@ -420,7 +420,7 @@ export class SendSmsComponent implements OnInit {
 
     openPurchaseSMSDialog(): void {
         const dialogRef = this.dialog.open(PurchaseSMSDialogComponent, {
-            width: '1000px',
+            width: '800px',
             disableClose: true,
         });
     
@@ -496,10 +496,12 @@ export class SendSmsComponent implements OnInit {
       if(value>=100)
       this.noOfSMS = value;
       bubble.innerHTML = this.noOfSMS;
+      const min = range.min ? range.min : 0;
+      const max = range.max ? range.max : 100;
+      const newVal = Number(((this.noOfSMS - min) * 100) / (max - min));
   
       // Sorta magic numbers based on size of the native UI thumb
-      bubble.style.left = `calc(${this.noOfSMS * (30/30000) +1}vw)`;
-      
+      bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;      
     } 
   
     isPlanSelected()

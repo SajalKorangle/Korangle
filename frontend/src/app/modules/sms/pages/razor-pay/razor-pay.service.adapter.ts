@@ -82,6 +82,7 @@ export class RazorpayServiceAdapter {
             options.modal.ondismiss = (() => {
             // handle the case when user closes the form while transaction is in progress
             alert('Transaction cancelled.');
+                reject();
             });
             const rzp = new winRef.nativeWindow.Razorpay(options);
             rzp.open();
