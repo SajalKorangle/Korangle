@@ -15,6 +15,7 @@ import {FeeService} from '@services/modules/fees/fee.service';
     providers: [SchoolService,FeeService]
 })
 export class FeeReceiptListComponent implements OnInit {
+
     @Input() user;
     @Input() feeTypeList;
     @Input() feeReceiptList;
@@ -29,8 +30,6 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() selectedFeeType;
     @Input() boardList;
     @Input() sessionList = [];
-
-    @Output() onCancelClick:any;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;

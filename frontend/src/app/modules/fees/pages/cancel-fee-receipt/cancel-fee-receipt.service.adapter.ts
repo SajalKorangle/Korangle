@@ -1,6 +1,5 @@
 
 import { CancelFeeReceiptComponent } from './cancel-fee-receipt.component';
-import {EmitterService} from '@services/emitter.service';
 
 export class CancelFeeReceiptServiceAdapter {
 
@@ -35,7 +34,6 @@ export class CancelFeeReceiptServiceAdapter {
             this.vm.searchBy=this.vm.searchFilterList[0];
 
             this.vm.isLoading = false;
-
         }, error => {
             this.vm.isLoading = false;
         })

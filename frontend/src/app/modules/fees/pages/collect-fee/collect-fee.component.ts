@@ -81,8 +81,6 @@ export class CollectFeeComponent implements OnInit {
 
     isStudentListLoading = false;
 
-
-
     constructor(public feeService: FeeService,
                 public studentService: StudentService,
                 public vehicleService: VehicleOldService,
@@ -319,7 +317,7 @@ export class CollectFeeComponent implements OnInit {
     }
 
     handleOverallPaymentChange(payment: number): void {
-        let paymentLeft = payment?payment:0
+        let paymentLeft = payment?payment:0;
 
         this.sessionList.forEach(session => {
             this.installmentList.forEach(installment => {
@@ -1169,9 +1167,9 @@ export class CollectFeeComponent implements OnInit {
     }
 
     updateNewFeeReceiptChequeNumber(): void {
-            this.newFeeReceiptList.forEach(feeReceipt => {
-                feeReceipt.chequeNumber = this.newChequeNumber;
-            });
+        this.newFeeReceiptList.forEach(feeReceipt => {
+            feeReceipt.chequeNumber = this.newChequeNumber;
+        });
     }
 
     getLastDaySubmittedAmount(lastFeeReceipt: any): number {

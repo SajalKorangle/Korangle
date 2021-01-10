@@ -5,8 +5,7 @@ export class TotalCollectionServiceAdapter {
 
     vm: TotalCollectionComponent;
 
-    constructor() {
-    }
+    constructor() {}
 
     // Data
 
@@ -30,10 +29,10 @@ export class TotalCollectionServiceAdapter {
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {})
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
         ]).then(value => {
 
             this.vm.feeTypeList = value[0]
@@ -75,10 +74,7 @@ export class TotalCollectionServiceAdapter {
             this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
         ]).then(value => {
 
-            this.vm.feeReceiptList = value[0].sort((a, b) => {
-                return b.receiptNumber - a.receiptNumber
-            });
-            ;
+            this.vm.feeReceiptList = value[0].sort((a,b) => {return b.receiptNumber-a.receiptNumber});;
             this.vm.subFeeReceiptList = value[1];
 
             let service_list = [];
@@ -151,16 +147,16 @@ export class TotalCollectionServiceAdapter {
     initializeFilteredLists(): void {
 
         // Filtered Class Section List
-        this.vm.filteredClassSectionList = this.vm.feeReceiptList.map(fee => {
-            return this.vm.getClassAndSection(fee.parentStudent, fee.parentSession);
+        this.vm.filteredClassSectionList = this.vm.feeReceiptList.map(fee=>{
+            return this.vm.getClassAndSection(fee.parentStudent,fee.parentSession);
         }).filter((item, index, final) => {
             return final.findIndex(item2 => item2.classs.id == item.classs.id
-                && item2.section.id == item.section.id) == index;
-        }).sort((a, b) => {
+                && item2.section.id == item.section.id ) == index;
+        }).sort((a,b) => {
             if (a.classs.orderNumber == b.classs.orderNumber) {
-                return a.section.orderNumber - b.section.orderNumber;
+                return a.section.orderNumber-b.section.orderNumber;
             } else {
-                return a.classs.orderNumber - b.classs.orderNumber;
+                return a.classs.orderNumber-b.classs.orderNumber;
             }
         });
 
@@ -172,15 +168,12 @@ export class TotalCollectionServiceAdapter {
         });
 
         // Filtered Mode of Payment List
-        this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {
-            return a != null;
-        });
-
+        this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map(a => a.modeOfPayment))].filter(a => {return a != null;});
 
         //Filtered Fee Type list
-        this.vm.filteredFeeTypeList = this.vm.feeTypeList.filter(feeType => {
-            return this.vm.subFeeReceiptList.find(subFeeReceipt => {
-                return subFeeReceipt.parentFeeType == feeType.id;
+        this.vm.filteredFeeTypeList=this.vm.feeTypeList.filter(feeType=>{
+            return this.vm.subFeeReceiptList.find(subFeeReceipt =>{
+                return subFeeReceipt.parentFeeType==feeType.id;
             }) != undefined;
         });
 

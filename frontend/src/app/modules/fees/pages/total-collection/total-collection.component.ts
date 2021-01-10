@@ -104,15 +104,14 @@ export class TotalCollectionComponent implements OnInit {
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.remark = false;
 
-
     }
 
     printFeeReceiptList(): void {
 
         let data = {
+            'receiptColumnFilter': this.receiptColumnFilter,
             'feeTypeList': this.feeTypeList,
             'feeReceiptList': this.getFilteredFeeReceiptList(),
-            'receiptColumnFilter': this.receiptColumnFilter,
             'subFeeReceiptList': this.subFeeReceiptList,
             'studentList': this.studentList,
             'studentSectionList': this.studentSectionList,
@@ -163,7 +162,7 @@ export class TotalCollectionComponent implements OnInit {
 
     getFilteredFeeReceiptList(): any {
         let tempList = this.feeReceiptList;
-        if (tempList) {
+
             if (this.selectedEmployee) {
                 tempList = tempList.filter(feeReceipt => {
                     return feeReceipt.parentEmployee == this.selectedEmployee.id;
@@ -187,19 +186,18 @@ export class TotalCollectionComponent implements OnInit {
                 });
             }
 
-            if (this.selectedFeeType) {
-                let filteredSubFeeList = this.subFeeReceiptList.filter(subFeeRecipt => {
-                    return subFeeRecipt.parentFeeType == this.selectedFeeType.id;
-                }).map(a => a.parentFeeReceipt);
-                tempList = tempList.filter(feeReceipt => {
-                    return filteredSubFeeList.find(parentFeeId => {
-                        return parentFeeId == feeReceipt.id;
-                    }) != undefined;
-                });
-            }
-
-            return tempList;
+        if(this.selectedFeeType){
+            let filteredSubFeeList=this.subFeeReceiptList.filter(subFeeRecipt=>{
+                return subFeeRecipt.parentFeeType==this.selectedFeeType.id;
+            }).map(a=>a.parentFeeReceipt);
+            tempList = tempList.filter(feeReceipt => {
+                return filteredSubFeeList.find(parentFeeId => {
+                    return parentFeeId == feeReceipt.id;
+                }) != undefined;
+            });
         }
+
+        return tempList;
     }
 
     getFilteredFeeReceiptListTotalAmount(): any {

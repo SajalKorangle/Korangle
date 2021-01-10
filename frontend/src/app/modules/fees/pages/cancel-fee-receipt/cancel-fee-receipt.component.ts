@@ -3,12 +3,10 @@ import { CancelFeeReceiptServiceAdapter } from "./cancel-fee-receipt.service.ada
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {FormControl} from "@angular/forms";
 import {INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST} from "../../classes/constants";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {DataStorage} from "../../../../classes/data-storage";
 import {CancelFeeReceiptModalComponent} from '@modules/fees/components/cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
-import {EmitterService} from '@services/emitter.service';
 import {MatDialog} from '@angular/material/dialog';
 
 @Component({
@@ -57,7 +55,6 @@ export class CancelFeeReceiptComponent implements OnInit {
         this.serviceAdapter = new CancelFeeReceiptServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
     }
 
     detectChanges(): void {

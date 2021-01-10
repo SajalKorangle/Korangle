@@ -178,19 +178,19 @@
                             </span>
                             </mat-card>
 
-                        </ng-container>
+                    </ng-container>
 
-                    </mat-accordion>
-
-                </ng-container>
-
-                <ng-template #emptyFeeReceiptList>
-                    No Receipt Found
-                </ng-template>
+                </mat-accordion>
 
             </ng-container>
 
+            <ng-template #emptyFeeReceiptList>
+                No Receipt Found
+            </ng-template>
+
         </ng-container>
+
+    </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
