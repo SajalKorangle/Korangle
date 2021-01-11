@@ -7,6 +7,7 @@ import { WindowRefService } from "../../../../services/modules/sms/window-ref.se
 import { DataStorage } from 'app/classes/data-storage';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
 import {RazorpayServiceAdapter} from  '../razor-pay/razor-pay.service.adapter'
+import { isMobile } from '../../../../classes/common.js';
 
 
 @Component({
@@ -66,9 +67,16 @@ export class PurchaseSmsComponent implements OnInit {
     if(value>=100)
     this.noOfSMS = value;
     bubble.innerHTML = this.noOfSMS;
-
+    
+    const min = range.min ? range.min : 0;
+    const max = range.max ? range.max : 100;
+    const newVal = Number(((this.noOfSMS - min) * 100) / (max - min));
+  
     // Sorta magic numbers based on size of the native UI thumb
+    if(!this.isMobile())
     bubble.style.left = `calc(${this.noOfSMS * (30/30000) +1}vw)`;
+    else
+    bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
     
   } 
 
@@ -115,6 +123,11 @@ export class PurchaseSmsComponent implements OnInit {
   getPrice(noOfSMS)
   {
     return noOfSMS*0.25;
+  }
+
+  isMobile() :boolean
+  {   
+      return isMobile();
   }
 
 }

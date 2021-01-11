@@ -16,7 +16,7 @@
             <div style="float: left; font-size: 16px;"><strong>Purchase SMS</strong></div>
         </div>
     </div>
-    <div class="row"  [ngStyle]="{'margin-bottom': isMobile() ? '18px' : '37px'}">
+    <div class="row"  [ngStyle]="{'margin-top': isMobile() ? '28px' : '37px'}">
         <div class="col-xs-12 col-sm-6" [ngStyle]="{'margin-bottom': isMobile() ? '10px' : '0px'}" >
             <strong>Choose your custom plan</strong>
         </div>
@@ -98,7 +98,13 @@
     <div  *ngIf="!isMobile()"class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
     </div>
 
-    <div class="row" style="margin-top: 20px;">
+    
+
+    
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div class="row" style="margin-top: 30px; margin: 0 29%;">
         <div class="col-md-12">
             <div style="text-align: center;">
                 <button 
@@ -107,9 +113,7 @@
             </div>
         </div>
     </div>
-
-    
-</mat-dialog-content>
+</mat-dialog-actions>
     
 
 

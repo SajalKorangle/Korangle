@@ -60,3 +60,28 @@ body {
   width: 144px;
 }
 
+.selectedMobile {
+  border: 3px solid #4CA750;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding: 2vh; 
+  font-size: 18px;
+  margin-right: 1vw; 
+  margin-left: 1vw;
+  margin-bottom: 1vw; 
+  cursor: pointer; 
+  width: 230px;
+}
+.unselectedMobile{
+  border: 2px dashed #ACACAC;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding: 2vh; 
+  font-size: 18px;
+  margin-right: 1vw; 
+  margin-left: 1vw;
+  margin-bottom: 1vw; 
+  cursor: pointer; 
+  width: 230px;
+}
+

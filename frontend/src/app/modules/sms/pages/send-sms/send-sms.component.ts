@@ -455,13 +455,6 @@ export class SendSmsComponent implements OnInit {
         });
     }
 
-
-    isMobile() :boolean
-    {   
-        console.log('is mobile is ' + isMobile());
-        return isMobile();
-    }
-
 }
 
 
@@ -542,8 +535,7 @@ export class SendSmsComponent implements OnInit {
 
     isMobile() :boolean
     {   
-        console.log('is mobile is ' + isMobile());
-        return !isMobile();
+        return isMobile();
     }
     
  

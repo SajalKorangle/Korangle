@@ -1,7 +1,7 @@
 
 <div class="card-content table-responsive" [class.hidden]="isLoading">
 
-    <ng-container *ngIf="!isInitialLoading">
+    <ng-container *ngIf="!isInitialLoading && !isMobile()">
 
         <div class="row" style="margin-top:20px">
             
@@ -39,10 +39,7 @@
         
        
         
-        <div  *ngIf="!isMobile()"class="row" style="margin-top: 75px; margin-bottom: 40px; border-bottom: 1px solid#BFBFBF;">
-        </div>
-
-        <div  *ngIf="isMobile()"class="row" style="margin-top: 35px; margin-bottom: 20px; border-bottom: 1px solid#BFBFBF;">
+        <div class="row" style="margin-top: 75px; margin-bottom: 40px; border-bottom: 1px solid#BFBFBF;">
         </div>
         
         <div class="row">
@@ -64,6 +61,72 @@
         <div class="row" style="margin-top: 20px;">
             
             <div style="float: right;margin-right: 1vw;">
+                <button 
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                (click)="CallcreateRzpayOrder()">Pay</button>
+            </div>
+
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="!isInitialLoading && isMobile()">
+
+        <div class="row" style="margin-top:20px">
+            
+            <div class="col-sm-6">
+                <span><strong>Choose Your Custom Plan</strong></span>
+            </div>
+            <div class="col-sm-6">
+                <strong style="float: right;font-size: 14px;">SMS balance is {{smsBalance}}</strong>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-12 col-sm-6">
+                <div style="padding: 8px; width: 170px;height: 32px;background: #4CA750;border-radius: 4px; color: white;font-weight: bold;text-align: center;">
+                {{noOfSMS}}  SMS for Rs. {{getPrice(noOfSMS)}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" style="margin-top: 25px;margin-left: 2px;">
+            <div class="range-wrap" style="width: 30vw; min-width: 280px;
+            height: auto;
+            padding: 10px;
+            position: relative;">
+                <input type="range" testId = "slider" min="100" max="30000"  step="100" class="range" [(ngModel)]="noOfSMS" (ngModelChange)="callSetBubble($event,0);">
+                <output class="bubble">100</output>
+            </div>
+            <div style="width: 30vw;min-width: 280px;
+            padding: 10px;
+            position: relative;">
+                <span class="text-small" style="float: left;">100</span>
+                <span class="text-small" style="float: right;">30000</span>
+            </div>
+        </div>
+
+        <div  *ngIf="isMobile()"class="row" style="margin-top: 25px; margin-bottom: 20px; border-bottom: 1px solid#BFBFBF;">
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <span><strong>Select from our best selling plans</strong> </span>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 50px;">
+            <div *ngFor="let plan of smsPlan" style="display: inline-block; margin-left: 20px;">
+                <div  (click)="noOfSMS = plan.noOfSms; callSetBubble('',noOfSMS)"  [ngClass]="plan.selected ? 'selectedMobile' : 'unselectedMobile'">
+                    <span style="font-weight: 400;">{{plan.noOfSms}} SMS for Rs {{getPrice(plan.noOfSms)}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
+        </div>
+
+        <div class="row" style="margin-top: 20px; text-align:center;">
+            
+            <div style="margin-right: 1vw;">
                 <button 
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="CallcreateRzpayOrder()">Pay</button>
