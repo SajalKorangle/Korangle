@@ -162,12 +162,15 @@ export class CheckHomeworkServiceAdapter {
             }
             let student_homework_data = {
                 'parentHomeworkQuestion': this.vm.selectedHomework.id,
-                'parentStudent__in': studentIdList,
+            }
+            
+            let student_homework_image_data = {
+                'parentHomeworkAnswer__parentHomeworkQuestion': this.vm.selectedHomework.id,
             }
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //0
                 this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer, student_homework_data), //1
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_data), //2
+                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_image_data), //2
             ]).then(value =>{
                 value[0].forEach(element =>{
                     let tempData = {
@@ -213,7 +216,7 @@ export class CheckHomeworkServiceAdapter {
                 'isRemarkLoading': false,
             }
             studentHomeworkImagesList.forEach(image =>{
-                if(image.parentStudent == tempData.parentStudent){
+                if(image.parentHomeworkAnswer == tempData.id){
                     tempData.images.push(image);
                 }
             })

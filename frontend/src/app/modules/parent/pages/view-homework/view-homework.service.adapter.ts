@@ -23,7 +23,6 @@ export class ViewHomeworkServiceAdapter {
         this.vm.completedHomeworkList = [];
         this.vm.isLoadingCheckedHomeworks = true;
         this.vm.isLoadingSubmittedHomeworks = true;
-        let count = this.vm.completedHomeworkList.length;
         
         this.vm.selectedStudent = this.vm.user.section.student.id;
 
@@ -219,7 +218,6 @@ export class ViewHomeworkServiceAdapter {
     }
 
     loadMoreHomeworks(): any{
-        let count = this.vm.completedHomeworkList.length;
 
         let checked_homework_data = {
             'parentStudent': this.vm.selectedStudent,
@@ -313,8 +311,7 @@ export class ViewHomeworkServiceAdapter {
             if(tempImage == undefined){
                 let tempData = {
                     orderNumber: index,
-                    parentHomeworkQuestion: this.vm.toSubmitHomework.dbId,
-                    parentStudent: this.vm.selectedStudent,
+                    parentHomeworkAnswer: this.vm.toSubmitHomework.statusDbId,
                     answerImage: image.answerImage,
                 }
                 let temp_form_data = new FormData();
@@ -359,7 +356,7 @@ export class ViewHomeworkServiceAdapter {
         this.vm.currentHomeworkAnswerImages = [];
         Promise.all([
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image,{'parentHomeworkQuestion': homework.dbId}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image,{'parentHomeworkQuestion': homework.dbId, 'parentStudent': this.vm.selectedStudent}),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image,{'parentHomeworkAnswer__parentHomeworkQuestion': homework.dbId, 'parentHomeworkAnswer__parentStudent': this.vm.selectedStudent}),
             
         ]).then(value =>{
             value[0].forEach(element =>{
