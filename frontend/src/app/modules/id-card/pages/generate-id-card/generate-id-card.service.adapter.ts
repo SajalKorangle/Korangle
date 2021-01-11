@@ -1,8 +1,9 @@
 import {GenerateIdCardComponent} from './generate-id-card.component'
+import {StudentCustomParameterStructure} from '@modules/id-card/class/constants';
 
 export class GenerateIdCardServiceAdapter {
 
-    vm: GenerateIdCardComponent
+    vm: GenerateIdCardComponent;
 
     constructor() {}
 
@@ -50,10 +51,20 @@ export class GenerateIdCardServiceAdapter {
             this.vm.sessionList = data[5];
             this.vm.studentParameterList = data[6];
             this.vm.studentParameterValueList = data[7];
-            this.vm.isLoading = false
+            this.populateParameterListWithStudentCustomField();
+
+            this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false
         })
+    }
+
+    populateParameterListWithStudentCustomField(): void {
+        this.vm.studentParameterList.forEach(studentParameter => {
+            this.vm.parameterList.push(StudentCustomParameterStructure.getStructure(
+                studentParameter.id
+            ));
+        });
     }
 
 }

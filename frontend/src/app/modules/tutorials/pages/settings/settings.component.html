@@ -1,0 +1,30 @@
+<div class="card-content" *ngIf="!isLoading">
+
+    <mat-form-field style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px;" >
+        <mat-select placeholder="Send via"
+                    id="sentUpdateType"
+                    [ngModel]="sentUpdateType"
+                    (ngModelChange)="sentUpdateType = $event;">
+            <mat-option *ngFor='let sentType of sentUpdateList;' [value]="sentType">
+                {{sentType}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field> <br>
+
+    <span style="margin-right: 10px;">Send Update For: &nbsp;</span>    
+    <mat-checkbox style="margin-right: 5px;" [disabled]="sentUpdateType == 'NULL'" [(ngModel)]="sendCreateUpdate" >Homework Creation &nbsp;</mat-checkbox>
+    <mat-checkbox style="margin-right: 5px;" [disabled]="sentUpdateType == 'NULL'" [(ngModel)]="sendEditUpdate" >Homework Updation &nbsp;</mat-checkbox>
+    <mat-checkbox style="margin-right: 5px;" [disabled]="sentUpdateType == 'NULL'" [(ngModel)]="sendDeleteUpdate" >Homework Deletion &nbsp;</mat-checkbox>
+    <br>
+
+    <button type="submit"
+            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+            [disabled]="!isSettingsChanged()"
+            (click)="serviceAdapter.updateSettings()">Update</button>
+
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container> 
