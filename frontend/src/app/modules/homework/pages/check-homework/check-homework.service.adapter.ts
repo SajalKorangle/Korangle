@@ -1,5 +1,4 @@
 
-import { Homework } from 'app/services/modules/homework/models/homework';
 import { CheckHomeworkComponent } from './check-homework.component';
 
 export class CheckHomeworkServiceAdapter {
@@ -125,7 +124,7 @@ export class CheckHomeworkServiceAdapter {
         this.vm.studentList = [];
         this.vm.studentHomeworkList = [];
         let homework_data = {
-            'parentHomework': this.vm.selectedHomework.id,
+            'parentHomeworkQuestion': this.vm.selectedHomework.id,
         }
 
         let student_section_data = {
@@ -162,7 +161,7 @@ export class CheckHomeworkServiceAdapter {
                 'fields__korangle': 'id,name,mobileNumber',
             }
             let student_homework_data = {
-                'parentHomework': this.vm.selectedHomework.id,
+                'parentHomeworkQuestion': this.vm.selectedHomework.id,
                 'parentStudent__in': studentIdList,
             }
             Promise.all([
@@ -203,7 +202,7 @@ export class CheckHomeworkServiceAdapter {
                 'studentName': tempStudent.name,
                 'mobileNumber': tempStudent.mobileNumber,
                 'parentStudent': studentHomework.parentStudent,
-                'parentHomework': studentHomework.parentHomework,
+                'parentHomeworkQuestion': studentHomework.parentHomeworkQuestion,
                 'status': studentHomework.homeworkStatus,
                 'text': studentHomework.answerText,
                 'remark': studentHomework.remark,

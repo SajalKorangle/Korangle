@@ -40,40 +40,40 @@ export class ViewHomeworkServiceAdapter {
             this.vm.studentClassData = firstValue[1][0];
             let resubmission_homework_data = {
                 'parentStudent': this.vm.selectedStudent,
-                'parentHomework__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                'parentHomework__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
-                'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
-                'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
+                'parentHomeworkQuestion__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentHomeworkQuestion__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
+                'parentHomeworkQuestion__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
+                'parentHomeworkQuestion__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
                 'homeworkStatus': 'ASKED FOR RESUBMISSION',
             }
             let given_homework_data = {
                 'parentStudent': this.vm.selectedStudent,
-                'parentHomework__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                'parentHomework__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
-                'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
-                'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
+                'parentHomeworkQuestion__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentHomeworkQuestion__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
+                'parentHomeworkQuestion__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
+                'parentHomeworkQuestion__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
                 'homeworkStatus': 'GIVEN',
             }
             let checked_homework_data = {
                 'parentStudent': this.vm.selectedStudent,
-                'parentHomework__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                'parentHomework__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
-                'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
-                'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
+                'parentHomeworkQuestion__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentHomeworkQuestion__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
+                'parentHomeworkQuestion__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
+                'parentHomeworkQuestion__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
                 'homeworkStatus': 'CHECKED',
                 'korangle__count': this.vm.checkedHomeworkCount.toString() + ',' + (this.vm.checkedHomeworkCount + this.vm.loadingCount).toString(),
-                'korangle__order': '-parentHomework',
+                'korangle__order': '-parentHomeworkQuestion',
             }
 
             let submitted_homework_data = {
                 'parentStudent': this.vm.selectedStudent,
-                'parentHomework__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
-                'parentHomework__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
-                'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
-                'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
+                'parentHomeworkQuestion__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                'parentHomeworkQuestion__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
+                'parentHomeworkQuestion__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
+                'parentHomeworkQuestion__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
                 'homeworkStatus': 'SUBMITTED',
                 'korangle__count': this.vm.submittedHomeworkCount.toString() + ',' + (this.vm.submittedHomeworkCount + this.vm.loadingCount).toString(),
-                'korangle__order': '-parentHomework',
+                'korangle__order': '-parentHomeworkQuestion',
             }
             let class_subject_homework_data = {
                 'parentSession': this.vm.user.activeSchool.currentSessionDbId,
@@ -100,18 +100,18 @@ export class ViewHomeworkServiceAdapter {
                 }
                 let pendingHomeworkIdList = [];
                 secondValue[0].forEach(element =>{
-                    pendingHomeworkIdList.push(element.parentHomework);
+                    pendingHomeworkIdList.push(element.parentHomeworkQuestion);
                 })
                 secondValue[1].forEach(element =>{
-                    pendingHomeworkIdList.push(element.parentHomework);
+                    pendingHomeworkIdList.push(element.parentHomeworkQuestion);
                 })
 
                 let completedHomeworkIdList = [];
                 secondValue[3].forEach(element =>{
-                    completedHomeworkIdList.push(element.parentHomework);
+                    completedHomeworkIdList.push(element.parentHomeworkQuestion);
                 })
                 secondValue[4].forEach(element =>{
-                    completedHomeworkIdList.push(element.parentHomework);
+                    completedHomeworkIdList.push(element.parentHomeworkQuestion);
                 })
 
 
@@ -150,9 +150,9 @@ export class ViewHomeworkServiceAdapter {
         }
         this.vm.subjectList.push(all_subject);
         homeworkList.forEach(homework =>{
-            let currentHomeworkStatus = givenHomeworkList.find(homeworks => homeworks.parentHomework == homework.id);
+            let currentHomeworkStatus = givenHomeworkList.find(homeworks => homeworks.parentHomeworkQuestion == homework.id);
             if(currentHomeworkStatus == undefined){
-                currentHomeworkStatus = resubmitHomeworkList.find(homeworks => homeworks.parentHomework == homework.id);
+                currentHomeworkStatus = resubmitHomeworkList.find(homeworks => homeworks.parentHomeworkQuestion == homework.id);
             }
             let currentClassSubject = classSubjectList.find(classSubject => classSubject.id == homework.parentClassSubject);
             let currentSubject = subjectList.find(subject => subject.id == currentClassSubject.parentSubject);
@@ -186,9 +186,9 @@ export class ViewHomeworkServiceAdapter {
     populateCompletedHomeworkList(homeworkList: any, checkedHomeworkList: any, submittedHomeworkList: any, classSubjectList: any, subjectList: any): any{
         // this.vm.pendingHomeworkList = [];
         homeworkList.forEach(homework =>{
-            let currentHomeworkStatus = checkedHomeworkList.find(homeworks => homeworks.parentHomework == homework.id);
+            let currentHomeworkStatus = checkedHomeworkList.find(homeworks => homeworks.parentHomeworkQuestion == homework.id);
             if(currentHomeworkStatus == undefined){
-                currentHomeworkStatus = submittedHomeworkList.find(homeworks => homeworks.parentHomework == homework.id);
+                currentHomeworkStatus = submittedHomeworkList.find(homeworks => homeworks.parentHomeworkQuestion == homework.id);
             }
             let currentClassSubject = classSubjectList.find(classSubject => classSubject.id == homework.parentClassSubject);
             let currentSubject = subjectList.find(subject => subject.id == currentClassSubject.parentSubject);
@@ -223,24 +223,24 @@ export class ViewHomeworkServiceAdapter {
 
         let checked_homework_data = {
             'parentStudent': this.vm.selectedStudent,
-            'parentHomework__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentHomework__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
-            'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
-            'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
+            'parentHomeworkQuestion__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentHomeworkQuestion__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
+            'parentHomeworkQuestion__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
+            'parentHomeworkQuestion__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
             'homeworkStatus': 'CHECKED',
             'korangle__count': this.vm.checkedHomeworkCount.toString() + ',' + (this.vm.checkedHomeworkCount + this.vm.loadingCount).toString(),
-            'korangle__order': '-parentHomework',
+            'korangle__order': '-parentHomeworkQuestion',
         }
 
         let submitted_homework_data = {
             'parentStudent': this.vm.selectedStudent,
-            'parentHomework__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentHomework__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
-            'parentHomework__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
-            'parentHomework__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
+            'parentHomeworkQuestion__parentClassSubject__parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentHomeworkQuestion__parentClassSubject__parentSchool' : this.vm.user.activeSchool.dbId,
+            'parentHomeworkQuestion__parentClassSubject__parentClass' : this.vm.studentClassData.parentClass,
+            'parentHomeworkQuestion__parentClassSubject__parentDivision' : this.vm.studentClassData.parentDivision,
             'homeworkStatus': 'SUBMITTED',
             'korangle__count': this.vm.submittedHomeworkCount.toString() + ',' + (this.vm.submittedHomeworkCount + this.vm.loadingCount).toString(),
-            'korangle__order': '-parentHomework',
+            'korangle__order': '-parentHomeworkQuestion',
         }
 
         this.vm.isLoadingCheckedHomeworks = true;
@@ -254,10 +254,10 @@ export class ViewHomeworkServiceAdapter {
             this.vm.checkedHomeworkCount+= value[0].length;
             let completedHomeworkIdList = [];
             value[0].forEach(element =>{
-                completedHomeworkIdList.push(element.parentHomework);
+                completedHomeworkIdList.push(element.parentHomeworkQuestion);
             })
             value[1].forEach(element =>{
-                completedHomeworkIdList.push(element.parentHomework);
+                completedHomeworkIdList.push(element.parentHomeworkQuestion);
             })
             
             let completed_homework_data = {
@@ -313,7 +313,7 @@ export class ViewHomeworkServiceAdapter {
             if(tempImage == undefined){
                 let tempData = {
                     orderNumber: index,
-                    parentHomework: this.vm.toSubmitHomework.dbId,
+                    parentHomeworkQuestion: this.vm.toSubmitHomework.dbId,
                     parentStudent: this.vm.selectedStudent,
                     answerImage: image.answerImage,
                 }
@@ -358,8 +358,8 @@ export class ViewHomeworkServiceAdapter {
         this.vm.currentHomeworkImages = [];
         this.vm.currentHomeworkAnswerImages = [];
         Promise.all([
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image,{'parentHomework': homework.dbId}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image,{'parentHomework': homework.dbId, 'parentStudent': this.vm.selectedStudent}),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image,{'parentHomeworkQuestion': homework.dbId}),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image,{'parentHomeworkQuestion': homework.dbId, 'parentStudent': this.vm.selectedStudent}),
             
         ]).then(value =>{
             value[0].forEach(element =>{

@@ -136,7 +136,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
             reader.onload = e => {
                 let tempImageData = {
                     orderNumber: null,
-                    parentHomework: this.toSubmitHomework.dbId,
+                    parentHomeworkQuestion: this.toSubmitHomework.dbId,
                     parentStudent: this.selectedStudent,
                     answerImage: reader.result,
                 }

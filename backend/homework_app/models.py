@@ -35,7 +35,7 @@ class HomeworkQuestion(models.Model):
 
 class HomeworkQuestionImage(models.Model):
 
-    parentHomework = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
+    parentHomeworkQuestion = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomeworkQuestion')
     questionImage = models.ImageField('question_image', upload_to = upload_question_to,blank = True,null=True)
     orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
 
@@ -45,7 +45,7 @@ class HomeworkQuestionImage(models.Model):
 class HomeworkAnswer(models.Model):
 
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentStudent')
-    parentHomework = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
+    parentHomeworkQuestion = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomeworkQuestion')
     
     HOMEWORK_GIVEN_STATUS = 'GIVEN'
     HOMEWORK_SUBMITTED_STATUS = 'SUBMITTED'
@@ -67,11 +67,11 @@ class HomeworkAnswer(models.Model):
     
     class Meta:
         db_table = 'homework_answer'
-        unique_together = ('parentStudent', 'parentHomework')
+        unique_together = ('parentStudent', 'parentHomeworkQuestion')
 
 class HomeworkAnswerImage(models.Model):
 
-    parentHomework = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomework')
+    parentHomeworkQuestion = models.ForeignKey(HomeworkQuestion, on_delete= models.CASCADE, null=False, default=0, verbose_name='parentHomeworkQuestion')
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentStudent')
 
     answerImage = models.ImageField("answer_image", upload_to = upload_answer_to,blank = True,null=True)

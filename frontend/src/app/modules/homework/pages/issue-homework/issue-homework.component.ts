@@ -33,7 +33,6 @@ export interface EditHomeworkDialogData {
 
 
 export interface ImagePreviewDialogData {
-    
     homeworkImages: any;
     index: any;
     editable: any;
@@ -79,7 +78,7 @@ export class IssueHomeworkComponent implements OnInit {
     homeworkDisplayList: any;
 
     currentHomeworkImages: any;
-    isSessionLoading: any;
+    isInitialLoading: any;
     isLoading: any;
     showContent: any;
     editableHomework: any;
@@ -92,7 +91,7 @@ export class IssueHomeworkComponent implements OnInit {
     homeworkUpdateMessage = "Please note, there are changes in the Homework '<homeworkName>' of <subject>";
     homeworkDeleteMessage = "Please note, the homework '<homeworkName>' of subject <subject> has been removed";
     
-    studentList: any;
+    // studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
 
     constructor(
@@ -110,7 +109,7 @@ export class IssueHomeworkComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.isSessionLoading = true;
+        this.isInitialLoading = true;
         this.isLoading = false;
         this.showContent = false;
         this.noPermission = false;
@@ -120,65 +119,6 @@ export class IssueHomeworkComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
-
-    initialiseClassSubjectData(classSectionSubjectList: any, subjectList: any, classList: any, divisionList: any){
-        this.classSectionSubjectList = [];
-        if(classSectionSubjectList.length === 0){
-            this.noPermission = true;
-            this.isLoading = false;
-            this.isSessionLoading = false;
-            return ;
-        }
-        classSectionSubjectList.forEach(element =>{
-            let classSection = this.classSectionSubjectList.find(classSection => classSection.classDbId == element.parentClass && classSection.divisionDbId == element.parentDivision);
-            if(classSection === undefined)
-            {
-                let tempClass = classList.find(classs => classs.id == element.parentClass);
-                let tempDivision = divisionList.find(division => division.id == element.parentDivision); 
-                let tempClassSection ={
-                    classDbId: element.parentClass,
-                    divisionDbId: element.parentDivision,
-                    name: tempClass.name + ' ' + tempDivision.name,
-                    subjectList: []
-                }
-                this.classSectionSubjectList.push(tempClassSection);
-                classSection = this.classSectionSubjectList.find(classSection => classSection.classDbId == element.parentClass && classSection.divisionDbId == element.parentDivision);
-            }
-            let subject = classSection.subjectList.find(subject => subject.subjectDbId == element.parentSubject);
-            if(subject === undefined){
-                let tempSubject = subjectList.find(subject => subject.id == element.parentSubject);
-                let tempSubjectData = {
-                    classSubjectDbId: element.id,
-                    subjectDbId: tempSubject.id,
-                    name: tempSubject.name,
-                }
-                classSection.subjectList.push(tempSubjectData);
-            }    
-        })
-        
-        this.classSectionSubjectList.forEach(classsSection =>{
-            classsSection.subjectList.sort((a, b) => a.subjectDbId < b.subjectDbId ? -1 : a.subjectDbId > b.subjectDbId ? 1 : 0);
-        })
-        this.classSectionSubjectList.sort((a, b) => {
-            if(a.classDbId > b.classDbId){
-                return 1;
-            }
-            else if(a.classDbId < b.classDbId){
-                return -1;
-            }
-            else{
-                if(a.divisionDbId > b.divisionDbid){
-                    return 1;
-                }
-                else{
-                    return -1;
-                }
-            }
-        });
-        this.selectedClassSection = this.classSectionSubjectList[0];
-        this.selectedSubject = this.selectedClassSection.subjectList[0];
-    }
-
     
     changeClassSection():any{
         this.selectedSubject = this.selectedClassSection.subjectList[0];
@@ -228,7 +168,7 @@ export class IssueHomeworkComponent implements OnInit {
             reader.onload = e => {
                 let tempImageData = {
                     orderNumber: null,
-                    parentHomework: null,
+                    parentHomeworkQuestion: null,
                     questionImage: reader.result,
                 }
                 this.currentHomeworkImages.push(tempImageData);
@@ -309,43 +249,7 @@ export class IssueHomeworkComponent implements OnInit {
         });
     }
 
-    getMessageFromTemplate = (message, obj) => {
-        let ret = message;
-        for(let key in obj){
-            ret = ret.replace('<'+key+'>', obj[key]);
-        }
-        return ret;
-    }
-
-    hasUnicode(message): boolean {
-        for (let i=0; i<message.length; ++i) {
-            if (message.charCodeAt(i) > 127) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getEstimatedSMSCount = (message: any) => {
-        let count = 0;
-        if(this.settings.sentUpdateType=='NOTIFICATION')return 0;
-            this.studentList.filter(item => item.mobileNumber).forEach((item) => {
-                if(this.settings.sentUpdateType=='SMS' || item.notification==false){
-                    count += this.getMessageCount(this.getMessageFromTemplate(message, item));
-                }
-            })
-
-        return count;
-    }
-
-    getMessageCount = (message) => {
-        if (this.hasUnicode(message)){
-            return Math.ceil(message.length/70);
-        }else{
-            return Math.ceil( message.length/160);
-        }
-    }
-
+    
     openEditHomeworkDialog(): void {
         const dialogRef = this.dialog.open(EditHomeworkDialogComponent, {
             width: '1000px',
@@ -434,7 +338,7 @@ export class IssueHomeworkComponent implements OnInit {
 
                 let tempData = {
                     orderNumber: null,
-                    parentHomework: this.data.id,
+                    parentHomeworkQuestion: this.data.id,
                     questionImage: reader.result,
                 }
                 this.data.homeworkImages.push(tempData);

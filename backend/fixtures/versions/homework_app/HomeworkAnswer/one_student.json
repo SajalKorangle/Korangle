@@ -1,4 +1,4 @@
 [
-    { "model": "homework_app.homeworkanswer", "pk": 1, "fields": { "parentStudent": 1 , "parentHomework": 1, "homeworkStatus": "GIVEN" } }
+    { "model": "homework_app.homeworkanswer", "pk": 1, "fields": { "parentStudent": 1 , "parentHomeworkQuestion": 1, "homeworkStatus": "GIVEN" } }
     
 ]

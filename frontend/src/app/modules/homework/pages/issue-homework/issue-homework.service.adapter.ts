@@ -4,26 +4,25 @@ import { Homework } from '../../../../services/modules/homework/models/homework'
 export class IssueHomeworkServiceAdapter {
 
     vm: IssueHomeworkComponent;
-    questionImagesFormData : any;
     constructor() {}
 
+    
+    studentNotificationList: any;
     // Data
 
     initializeAdapter(vm: IssueHomeworkComponent): void {
         this.vm = vm;
-        this.questionImagesFormData = [];
     }
 
     //initialize data
     initializeData(): void {
 
         let request_class_subject_list = {
-            'parentSchool' : this.vm.user.activeSchool.dbId, 
             'parentEmployee': this.vm.user.activeSchool.employeeId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId
         }
 
-        this.vm.isSessionLoading = true;
+        this.vm.isInitialLoading = true;
 
         Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list), //0
@@ -45,18 +44,78 @@ export class IssueHomeworkServiceAdapter {
                     sendDeleteUpdate: false,
                 }
             }
-            this.vm.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);
-            this.vm.isSessionLoading =false;
+            this.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);
+            this.vm.isInitialLoading =false;
         },error =>{
-            this.vm.isSessionLoading =false;
+            this.vm.isInitialLoading =false;
         });
     }
+
+    
+    initialiseClassSubjectData(classSectionSubjectList: any, subjectList: any, classList: any, divisionList: any){
+        this.vm.classSectionSubjectList = [];
+        if(classSectionSubjectList.length === 0){
+            this.vm.noPermission = true;
+            this.vm.isLoading = false;
+            this.vm.isInitialLoading = false;
+            return ;
+        }
+        classSectionSubjectList.forEach(element =>{
+            let classSection = this.vm.classSectionSubjectList.find(classSection => classSection.classDbId == element.parentClass && classSection.divisionDbId == element.parentDivision);
+            if(classSection === undefined)
+            {
+                let tempClass = classList.find(classs => classs.id == element.parentClass);
+                let tempDivision = divisionList.find(division => division.id == element.parentDivision); 
+                let tempClassSection ={
+                    classDbId: element.parentClass,
+                    divisionDbId: element.parentDivision,
+                    name: tempClass.name + ' ' + tempDivision.name,
+                    subjectList: []
+                }
+                this.vm.classSectionSubjectList.push(tempClassSection);
+                classSection = this.vm.classSectionSubjectList.find(classSection => classSection.classDbId == element.parentClass && classSection.divisionDbId == element.parentDivision);
+            }
+            let subject = classSection.subjectList.find(subject => subject.subjectDbId == element.parentSubject);
+            if(subject === undefined){
+                let tempSubject = subjectList.find(subject => subject.id == element.parentSubject);
+                let tempSubjectData = {
+                    classSubjectDbId: element.id,
+                    subjectDbId: tempSubject.id,
+                    name: tempSubject.name,
+                }
+                classSection.subjectList.push(tempSubjectData);
+            }    
+        })
+        
+        this.vm.classSectionSubjectList.forEach(classsSection =>{
+            classsSection.subjectList.sort((a, b) => a.subjectDbId < b.subjectDbId ? -1 : a.subjectDbId > b.subjectDbId ? 1 : 0);
+        })
+        this.vm.classSectionSubjectList.sort((a, b) => {
+            if(a.classDbId > b.classDbId){
+                return 1;
+            }
+            else if(a.classDbId < b.classDbId){
+                return -1;
+            }
+            else{
+                if(a.divisionDbId > b.divisionDbid){
+                    return 1;
+                }
+                else{
+                    return -1;
+                }
+            }
+        });
+        this.vm.selectedClassSection = this.vm.classSectionSubjectList[0];
+        this.vm.selectedSubject = this.vm.selectedClassSection.subjectList[0];
+    }
+
 
     getHomeworks():any{
         this.vm.isLoading = true;
         this.vm.showContent = false;
         this.vm.homeworkList = [];
-        this.vm.studentList = [];
+        this.studentNotificationList = [];
         
         let student_section_data = {
             'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
@@ -67,7 +126,7 @@ export class IssueHomeworkServiceAdapter {
         }
 
         const homework_data = {
-            parentHomework__parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
+            parentHomeworkQuestion__parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
         };
 
         Promise.all([
@@ -98,9 +157,9 @@ export class IssueHomeworkServiceAdapter {
                         homeworkName: null,
                         deadLine: null,
                     }
-                    this.vm.studentList.push(tempData);
+                    this.studentNotificationList.push(tempData);
                 })
-                this.fetchGCMDevices(this.vm.studentList);
+                this.fetchGCMDevices(this.studentNotificationList);
                 this.vm.isLoading = false;
             });
             this.sortHomeworks();
@@ -133,7 +192,7 @@ export class IssueHomeworkServiceAdapter {
                 tempHomework = this.vm.homeworkList.find(homework => homework.id ==  currentHomework.id);
             }
             homeworkImageList.forEach(image =>{
-                if(image.parentHomework == currentHomework.id){
+                if(image.parentHomeworkQuestion == currentHomework.id){
                     tempHomework.homeworkImages.push(image);
                 }
             })
@@ -144,6 +203,44 @@ export class IssueHomeworkServiceAdapter {
             homework.homeworkImages.sort((a, b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0)
         })
 
+    }
+
+    getHomeworkServices(): any{
+        let index = 0;
+        let promises = [];
+        this.vm.currentHomeworkImages.forEach(image =>{
+            image.parentHomeworkQuestion = this.vm.currentHomework.id;
+            image.orderNumber = index;
+            let temp_form_data = new FormData();
+            const layout_data = { ...image,};
+            Object.keys(layout_data).forEach(key => {
+                if (key === 'questionImage' ) {
+                    const file = this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg');
+                    temp_form_data.append(key, this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
+                } else {
+                    temp_form_data.append(key, layout_data[key]);
+                }
+            });
+            index = index + 1;
+            promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question_image, temp_form_data));
+        })
+
+        //This part of the code is used to create student-homework initial data in homeworkAnswer model.
+        let studentIdList = [];
+        this.studentNotificationList.forEach(student =>{
+            studentIdList.push(student.dbId);
+        });
+
+        studentIdList.forEach(student =>{
+            let tempData = {
+                'parentStudent': student,
+                'parentHomeworkQuestion': this.vm.currentHomework.id,
+                'homeworkStatus': 'GIVEN',
+            }
+            promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_answer, tempData));
+        })
+
+        return promises;
     }
 
     createHomework():any{
@@ -165,13 +262,13 @@ export class IssueHomeworkServiceAdapter {
             
             Promise.all(this.getHomeworkServices()).then(sValue =>{
                 alert('Homework has been successfully created');
-                this.populateStudentList(this.vm.studentList, this.vm.currentHomework);
+                this.populateStudentList(this.studentNotificationList, this.vm.currentHomework);
                 this.populateCurrentHomeworkImages(value[0].id, sValue);
                 this.vm.currentHomework = new Homework;
                 this.vm.currentHomeworkImages = [];
                 this.vm.isLoading = false;
                 if(this.vm.settings.sendCreateUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
-                    this.sendSMSNotification(this.vm.studentList, this.vm.homeworkCreatedMessage);
+                    this.sendSMSNotification(this.studentNotificationList, this.vm.homeworkCreatedMessage);
                 }
             },error =>{
                 this.vm.isLoading = false;
@@ -210,45 +307,6 @@ export class IssueHomeworkServiceAdapter {
         });
         this.sortHomeworks();
     }
-
-    getHomeworkServices(): any{
-        let index = 0;
-        let promises = [];
-        this.vm.currentHomeworkImages.forEach(image =>{
-            image.parentHomework = this.vm.currentHomework.id;
-            image.orderNumber = index;
-            let temp_form_data = new FormData();
-            const layout_data = { ...image,};
-            Object.keys(layout_data).forEach(key => {
-                if (key === 'questionImage' ) {
-                    const file = this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg');
-                    temp_form_data.append(key, this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
-                } else {
-                    temp_form_data.append(key, layout_data[key]);
-                }
-            });
-            index = index + 1;
-            promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question_image, temp_form_data));
-        })
-
-        //This part of the code is used to create student-homework initial data in homeworkAnswer model.
-        let studentIdList = [];
-        this.vm.studentList.forEach(student =>{
-            studentIdList.push(student.dbId);
-        });
-
-        studentIdList.forEach(student =>{
-            let tempData = {
-                'parentStudent': student,
-                'parentHomework': this.vm.currentHomework.id,
-                'homeworkStatus': 'GIVEN',
-            }
-            promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_answer, tempData));
-        })
-
-        return promises;
-    }
-
     
     populateStudentList(studentList: any, homeworkData: any): any{
         studentList.forEach(student =>{
@@ -274,9 +332,9 @@ export class IssueHomeworkServiceAdapter {
                     this.vm.homeworkList.splice(index, 1);
                 }
             });
-            this.populateStudentList(this.vm.studentList, {'homeworkName': tempHomeworkName});
+            this.populateStudentList(this.studentNotificationList, {'homeworkName': tempHomeworkName});
             if(this.vm.settings.sendDeleteUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
-                this.sendSMSNotification(this.vm.studentList, this.vm.homeworkDeleteMessage);
+                this.sendSMSNotification(this.studentNotificationList, this.vm.homeworkDeleteMessage);
             }
             alert('Homework Deleted')
             this.vm.isLoading = false;
@@ -309,7 +367,7 @@ export class IssueHomeworkServiceAdapter {
             if(temp === undefined){
                 let tempData = {
                     orderNumber: index,
-                    parentHomework: data.id,
+                    parentHomeworkQuestion: data.id,
                     questionImage: image.questionImage,
                 }
                 let temp_form_data = new FormData();
@@ -343,9 +401,9 @@ export class IssueHomeworkServiceAdapter {
 
         Promise.all(promises).then(value =>{
             this.populateEditedHomework(value);
-            this.populateStudentList(this.vm.studentList, value[0]);
+            this.populateStudentList(this.studentNotificationList, value[0]);
             if(this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
-                this.sendSMSNotification(this.vm.studentList, this.vm.homeworkUpdateMessage);
+                this.sendSMSNotification(this.studentNotificationList, this.vm.homeworkUpdateMessage);
             }
             alert('Homework Edited Successfully');
             this.vm.isLoading = false;
@@ -460,14 +518,14 @@ export class IssueHomeworkServiceAdapter {
         })
         sms_mobile_string = sms_mobile_string.slice(0, -2);
         notif_mobile_string = notif_mobile_string.slice(0, -2);
-        if ((sms_list.length > 0) && (this.vm.getEstimatedSMSCount(message) > this.vm.smsBalance)) {
-            alert('You are short by ' + (this.vm.getEstimatedSMSCount(message) - this.vm.smsBalance) + ' SMS');
+        if ((sms_list.length > 0) && (this.getEstimatedSMSCount(message) > this.vm.smsBalance)) {
+            alert('You are short by ' + (this.getEstimatedSMSCount(message) - this.vm.smsBalance) + ' SMS');
         }
         let sms_data = {};
         const sms_converted_data = sms_list.map(item => {
             return {
                 'mobileNumber': item.mobileNumber.toString(),
-                'isAdvanceSms': this.vm.getMessageFromTemplate(message, item)
+                'isAdvanceSms': this.getMessageFromTemplate(message, item)
             }
         });
         if (sms_list.length != 0) {
@@ -477,7 +535,7 @@ export class IssueHomeworkServiceAdapter {
                 'data': sms_converted_data,
                 'content': sms_converted_data[0]['isAdvanceSms'],
                 'parentMessageType': 2,
-                'count': this.vm.getEstimatedSMSCount(message),
+                'count': this.getEstimatedSMSCount(message),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
                 'mobileNumberList': sms_mobile_string,
@@ -488,9 +546,9 @@ export class IssueHomeworkServiceAdapter {
             sms_data = {
                 'contentType': ('english'),
                 'data': sms_converted_data,
-                'content': this.vm.getMessageFromTemplate(message, notification_list[0]),
+                'content': this.getMessageFromTemplate(message, notification_list[0]),
                 'parentMessageType': 2,
-                'count': this.vm.getEstimatedSMSCount(message),
+                'count': this.getEstimatedSMSCount(message),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
                 'mobileNumberList': sms_mobile_string,
@@ -501,7 +559,7 @@ export class IssueHomeworkServiceAdapter {
         const notification_data = notification_list.map(item => {
             return {
                 'parentMessageType': 2,
-                'content': this.vm.getMessageFromTemplate(message, item),
+                'content': this.getMessageFromTemplate(message, item),
                 'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
                 'parentSchool': this.vm.user.activeSchool.dbId,
             };
@@ -531,4 +589,42 @@ export class IssueHomeworkServiceAdapter {
             this.vm.isLoading = false;
         })
     }
+
+    getMessageFromTemplate = (message, obj) => {
+        let ret = message;
+        for(let key in obj){
+            ret = ret.replace('<'+key+'>', obj[key]);
+        }
+        return ret;
+    }
+
+    hasUnicode(message): boolean {
+        for (let i=0; i<message.length; ++i) {
+            if (message.charCodeAt(i) > 127) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getEstimatedSMSCount = (message: any) => {
+        let count = 0;
+        if(this.vm.settings.sentUpdateType=='NOTIFICATION')return 0;
+            this.studentNotificationList.filter(item => item.mobileNumber).forEach((item) => {
+                if(this.vm.settings.sentUpdateType=='SMS' || item.notification==false){
+                    count += this.getMessageCount(this.getMessageFromTemplate(message, item));
+                }
+            })
+
+        return count;
+    }
+
+    getMessageCount = (message) => {
+        if (this.hasUnicode(message)){
+            return Math.ceil(message.length/70);
+        }else{
+            return Math.ceil( message.length/160);
+        }
+    }
+
 }
