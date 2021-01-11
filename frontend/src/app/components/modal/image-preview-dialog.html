@@ -75,8 +75,8 @@
         
         <div style="margin: 15px; height: 80vh; overflow: auto; display: flex; justify-content: center; align-items: center;" [@animImageSlider]="counter">
             <ng-container *ngFor="let img of data.homeworkImages; let i=index" style="margin: 15px; height: 80vh; overflow: auto; display: flex; justify-content: center; align-items: center;">
-                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" *ngIf="data.homeworkImages.length>0 && data.homeworkImages[counter].questionImage != undefined && i===counter" [src]="img.questionImage" [ngStyle]="imageStyleMobile"/>
-                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" *ngIf="data.homeworkImages.length>0 && data.homeworkImages[counter].answerImage != undefined && i===counter" [src]="img.answerImage" [ngStyle]="imageStyleMobile"/>
+                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" (tap)="showImageInGallery(data.homeworkImages[counter])" *ngIf="data.homeworkImages.length>0 && data.homeworkImages[counter].questionImage != undefined && i===counter" [src]="img.questionImage" [ngStyle]="imageStyleMobile"/>
+                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" (tap)="showImageInGallery(data.homeworkImages[counter])" *ngIf="data.homeworkImages.length>0 && data.homeworkImages[counter].answerImage != undefined && i===counter" [src]="img.answerImage" [ngStyle]="imageStyleMobile"/>
             </ng-container>
         </div>
         
