@@ -59,7 +59,7 @@ describe('SMS -> Send SMS', () => {
         await page.waitForTimeout(1000);
 
         (await containsFirst('button', 'Select All')).click();
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(3000);
 
         //Start the purchase
         (await containsFirst('button', 'Purchase SMS')).click();
@@ -77,7 +77,15 @@ describe('SMS -> Send SMS', () => {
         await page.waitForTimeout(3000);
 
         (await containsFirst('button', 'Pay')).click();
-        await page.waitForTimeout(3000);
+        await page.waitForTimeout(9000);
+
+        await BeforeAfterEach.page.waitForXPath('//input[@name="country-code"]');
+        const inputElement = await BeforeAfterEach.page.$x('//input[@name="country-code"]');
+        await inputElement.type('india');
+        await inputElement.press('Enter');
+
+
+
 
 
 
@@ -85,4 +93,6 @@ describe('SMS -> Send SMS', () => {
 
 
     });
+
+    
 });

@@ -39,6 +39,11 @@ describe('SMS -> Purchase SMS', () => {
         (await containsFirst('button', 'Pay')).click();
 
         await page.waitForTimeout(3000);
+        await BeforeAfterEach.page.waitForXPath('//input[@id="contact"]');
+        const inputElement = await BeforeAfterEach.page.$x('//input[@id=contact"]');
+        await inputElement.type('7050701850');
+        await inputElement.press('Enter');
+
 
 
 

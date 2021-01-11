@@ -15,15 +15,8 @@
 
         <div class="row" style="margin-top: 40px;">
             <div class="col-xs-12 col-sm-6">
-                <div style="display: flex;
-                padding: 8px;
-                width: 170px;
-                height: 32px;           
-                background: #4CA750;
-                border-radius: 4px;">
-                    <strong style="color: white;">
-                        {{noOfSMS}}  SMS for Rs. {{getPrice(noOfSMS)}}
-                    </strong>
+                <div style="padding: 8px; width: 170px;height: 32px;background: #4CA750;border-radius: 4px; color: white;font-weight: bold;text-align: center;">
+                {{noOfSMS}}  SMS for Rs. {{getPrice(noOfSMS)}}
                 </div>
             </div>
         </div>
@@ -67,7 +60,7 @@
 
         <div class="row" style="margin-top: 20px;">
             
-            <div style="text-align: center;">
+            <div style="float: right;margin-right: 1vw;">
                 <button 
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="CallcreateRzpayOrder()">Pay</button>

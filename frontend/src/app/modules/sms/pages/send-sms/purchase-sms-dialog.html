@@ -21,7 +21,7 @@
             <strong>Choose your custom plan</strong>
         </div>
         <div class="col-xs-12 col-sm-6">
-            <div style="display: flex;
+            <div style="text-align: center;
             float: right;
             flex-direction: row;
             align-items: flex-start;
@@ -30,12 +30,13 @@
             height: 32px;
             left: 843px;
             top: 164px;
-            
+            font-weight: bold;
             background: #4CA750;
-            border-radius: 4px;">
-                <strong style="color: white;">
-                    {{noOfSMS}}  SMS for Rs. {{getPrice(noOfSMS)}}
-                </strong>
+            border-radius: 4px;
+            color: white;">
+            
+            {{noOfSMS}}  SMS for Rs. {{getPrice(noOfSMS)}}
+
             </div>
         </div>
     </div>
