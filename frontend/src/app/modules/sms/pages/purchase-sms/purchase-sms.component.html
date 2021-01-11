@@ -39,7 +39,10 @@
         
        
         
-        <div class="row" style="margin-top: 75px; margin-bottom: 40px; border-bottom: 1px solid#BFBFBF;">
+        <div  *ngIf="!isMobile()"class="row" style="margin-top: 75px; margin-bottom: 40px; border-bottom: 1px solid#BFBFBF;">
+        </div>
+
+        <div  *ngIf="isMobile()"class="row" style="margin-top: 35px; margin-bottom: 20px; border-bottom: 1px solid#BFBFBF;">
         </div>
         
         <div class="row">

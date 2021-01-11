@@ -134,6 +134,19 @@ body {
     height: 81px;
     width: 144px;
 }
+
+.selectedMobile {
+    border: 3px solid #4CA750;
+    box-sizing: border-box;
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 1vh; 
+    margin-left: 1vw;
+    margin-bottom: 1vw; 
+    cursor: pointer; 
+    height: 11vh;
+    text-align: center;
+}
 .unselected {
     border: 2px dashed #ACACAC;
     box-sizing: border-box;
@@ -146,4 +159,22 @@ body {
     cursor: pointer; 
     height: 81px;
     width: 144px;
+}
+
+.unselectedMobile {
+    border: 2px dashed #ACACAC;
+    box-sizing: border-box;
+    border-radius: 6px;
+    padding: 1vh; 
+    font-size: 14px;
+    margin-left: 1vw;
+    margin-bottom: 1vw; 
+    cursor: pointer; 
+    height: 11vh;
+    text-align: center;
+}
+.mobileStyle {
+    float: right;
+    margin-top: -20px;
+
 }

@@ -16,31 +16,32 @@
             <div style="float: left; font-size: 16px;"><strong>Purchase SMS</strong></div>
         </div>
     </div>
-    <div class="row"  style="margin-top: 35px;">
-        <div class="col-xs-12 col-sm-6" >
+    <div class="row"  [ngStyle]="{'margin-bottom': isMobile() ? '18px' : '37px'}">
+        <div class="col-xs-12 col-sm-6" [ngStyle]="{'margin-bottom': isMobile() ? '10px' : '0px'}" >
             <strong>Choose your custom plan</strong>
         </div>
-        <div class="col-xs-12 col-sm-6">
+        <div *ngIf="isMobile()" class="col-xs-12 col-sm-6">
             <div style="text-align: center;
-            float: right;
             flex-direction: row;
             align-items: flex-start;
             padding: 8px;
             width: 170px;
             height: 32px;
             left: 843px;
+            margin-top: 20px;
             top: 164px;
             font-weight: bold;
             background: #4CA750;
             border-radius: 4px;
-            color: white;">
+            color: white;"
+            [class.mobileStyle]="!isMobile()">
             
             {{noOfSMS}}  SMS for Rs. {{getPrice(noOfSMS)}}
 
             </div>
         </div>
     </div>
-    <div class="row" style="margin-top: 37px;">
+    <div class="row" style="margin-top: 17px;">
         <div class="col-12 col-sm-3 col-md-3">
         </div>
 
@@ -69,12 +70,12 @@
             
     </div>
     
-    <div class="row" style="margin-top: 37px;">
+    <div class="row" [ngStyle]="{'margin-top': isMobile() ? '10px' : '37px'}">
         <div class="col-md-12">
             <span><strong>Select from our best selling plans</strong> </span>
         </div>
     </div>
-    <div class="row" style="margin-top: 30px; margin-left: 2vw">
+    <div *ngIf='!isMobile()' class="row" style="margin-top: 30px; margin-left: 2vw">
         
         <div *ngFor="let plan of smsPlan" style="display: inline-block;">
             <div  (click)="noOfSMS = plan.noOfSms; callSetBubble('',noOfSMS);"  [ngClass]="plan.selected ? 'selected' : 'unselected'">
@@ -84,7 +85,17 @@
         
     </div>
 
-    <div class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
+    <div *ngIf='isMobile()' class="row" style="margin-top: 10px; display: flex;">
+        
+        <div *ngFor="let plan of smsPlan" style="width: 80%;">
+            <div  (click)="noOfSMS = plan.noOfSms; callSetBubble('',noOfSMS);" [ngClass]="plan.selected ? 'selectedMobile' : 'unselectedMobile'">
+                <span>{{plan.noOfSms}} SMS for Rs {{getPrice(plan.noOfSms)}}</span>
+            </div>
+        </div>
+        
+    </div>
+
+    <div  *ngIf="!isMobile()"class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
     </div>
 
     <div class="row" style="margin-top: 20px;">

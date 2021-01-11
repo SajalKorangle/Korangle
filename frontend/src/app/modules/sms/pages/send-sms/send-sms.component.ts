@@ -16,6 +16,8 @@ import { WindowRefService } from "../../../../services/modules/sms/window-ref.se
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Inject } from '@angular/core';
 import {RazorpayServiceAdapter} from  '../razor-pay/razor-pay.service.adapter'
+import { isMobile } from '../../../../classes/common.js';
+
 @Component({
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
@@ -420,7 +422,9 @@ export class SendSmsComponent implements OnInit {
 
     openPurchaseSMSDialog(): void {
         const dialogRef = this.dialog.open(PurchaseSMSDialogComponent, {
-            width: '800px',
+            maxWidth: '80vw',
+            maxHeight: '80vh',
+            width: '1000px',
             disableClose: true,
         });
     
@@ -452,6 +456,11 @@ export class SendSmsComponent implements OnInit {
     }
 
 
+    isMobile() :boolean
+    {   
+        console.log('is mobile is ' + isMobile());
+        return isMobile();
+    }
 
 }
 
@@ -529,6 +538,12 @@ export class SendSmsComponent implements OnInit {
     startPayment()
     {         
         this.dialogRef.close({payment:true, noOfSMS : this.noOfSMS, price :this.getPrice(this.noOfSMS)});
+    }
+
+    isMobile() :boolean
+    {   
+        console.log('is mobile is ' + isMobile());
+        return !isMobile();
     }
     
  
