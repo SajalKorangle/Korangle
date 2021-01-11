@@ -17,7 +17,7 @@ export class CheckHomeworkServiceAdapter {
 
         this.vm.sendCheckUpdate = false;
         this.vm.sendResubmissionUpdate = false;
-        this.vm.sendUpdateType = 'NULL';
+        this.vm.sendUpdateType = 1;
 
         let request_homework_list = {
             'parentClassSubject__parentEmployee': this.vm.user.activeSchool.employeeId,
@@ -44,6 +44,18 @@ export class CheckHomeworkServiceAdapter {
                 this.vm.sendUpdateType = value[5][0].sentUpdateType;
                 this.vm.sendCheckUpdate = value[5][0].sendCheckUpdate;
                 this.vm.sendResubmissionUpdate = value[5][0].sendResubmissionUpdate;
+                if(this.vm.sendUpdateType == 'NULL'){
+                    this.vm.sendUpdateType = 1;
+                }
+                if(this.vm.sendUpdateType == 'SMS'){
+                    this.vm.sendUpdateType = 2;
+                }
+                if(this.vm.sendUpdateType == 'NOTIFICATION'){
+                    this.vm.sendUpdateType = 3;
+                }
+                else{
+                    this.vm.sendUpdateType = 4;
+                }
             }
             this.initialiseClassSubjectData(value[0], value[1], value[2], value[3], value[4]);
             this.vm.isInitialLoading =false;
@@ -186,7 +198,9 @@ export class CheckHomeworkServiceAdapter {
                 
                 this.initialiseStudentHomeworkData(value[2], value[1]);
                 this.getHomeworkReport();
-                this.fetchGCMDevices(this.vm.studentList);
+                // this.fetchGCMDevices(this.vm.studentList);
+                this.vm.updateService.fetchGCMDevicesNew(this.vm.studentList);
+                console.log(this.vm.studentList);
                 this.vm.isLoading = false;
             },error =>{
                 this.vm.isLoading = false;
@@ -272,7 +286,7 @@ export class CheckHomeworkServiceAdapter {
                 }
                 let mobile_list = [];
                 mobile_list.push(tempData);
-                this.sendSMSNotification(mobile_list, this.vm.checkUpdateMessage);
+                this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.checkUpdateMessage, 1, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             else if(studentHomework.status == this.vm.HOMEWORK_STATUS[3] && this.vm.sendResubmissionUpdate == true && this.vm.sendUpdateType!= 'NULL'){
                 let tempData = {
@@ -283,7 +297,7 @@ export class CheckHomeworkServiceAdapter {
                 }
                 let mobile_list = [];
                 mobile_list.push(tempData);
-                this.sendSMSNotification(mobile_list, this.vm.resubmissionUpdateMessage);
+                this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.resubmissionUpdateMessage, 1, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             this.getHomeworkReport();
             studentHomework.isStatusLoading = false;

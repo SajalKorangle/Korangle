@@ -2,6 +2,7 @@ import {Component, OnInit, Inject} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
+import { UpdateService } from '../../../../update/update-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -53,6 +54,7 @@ export interface ImagePreviewDialogData {
         UserService,
         SmsService,
         SmsOldService,
+        UpdateService,
     ],
 })
 
@@ -83,7 +85,7 @@ export class IssueHomeworkComponent implements OnInit {
     isLoading: any;
     showContent: any;
     editableHomework: any;
-
+    
     noPermission: any;
     settings : any;
     smsBalance: any;
@@ -105,11 +107,14 @@ export class IssueHomeworkComponent implements OnInit {
         public smsService: SmsService,
         public smsOldService: SmsOldService,
         public dialog: MatDialog,
-    ){}
+        public updateService: UpdateService,
+    ){ }
 
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        // this.updateService = new UpdateService(this.userService, this.notificationService, this.smsService);
+
         this.isInitialLoading = true;
         this.isLoading = false;
         this.showContent = false;
@@ -145,27 +150,6 @@ export class IssueHomeworkComponent implements OnInit {
             reader.readAsDataURL(image);
         }
     }
-
-    
-    dataURLtoFile(dataurl, filename) {
-
-        try {
-            const arr = dataurl.split(',');
-            const mime = arr[0].match(/:(.*?);/)[1];
-            const bstr = atob(arr[1]);
-            let n = bstr.length;
-            const u8arr = new Uint8Array(n);
-
-            while (n--) {
-                u8arr[n] = bstr.charCodeAt(n);
-            }
-
-            return new File([u8arr], filename, {type: mime});
-        } catch (e) {
-            return null;
-        }
-    }
-
     
     displayDateTime(date: any, time: any): any{
         let str='';

@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
+
+import { UpdateService } from '../../../../update/update-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -27,6 +29,7 @@ import { isMobile } from '../../../../classes/common.js';
         UserService,
         SmsService,
         SmsOldService,
+        UpdateService,
     ],
 })
 
@@ -79,6 +82,7 @@ export class CheckHomeworkComponent implements OnInit {
         public smsService: SmsService,
         public smsOldService: SmsOldService,
         public dialog: MatDialog,
+        public updateService: UpdateService,
     ){ }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -94,11 +98,6 @@ export class CheckHomeworkComponent implements OnInit {
 
     changeClassSection(): any{
         this.selectedSubject = this.selectedClassSection.subjectList[0];
-        this.selectedHomework = this.selectedSubject.homeworkList[0];
-    }
-
-    changeSubject(): any{
-        this.selectedHomework = this.selectedSubject.homeworkList[0];
     }
 
     displayDateTime(date: any, time: any): any{

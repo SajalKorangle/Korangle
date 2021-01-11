@@ -188,7 +188,7 @@ export class AddTutorialServiceAdapter {
             this.vm.initializeNewTutorial();
             this.vm.isLoading = false;
             if(this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendCreateUpdate == true){
-                this.prepareSmsNotificationData(this.vm.createMessage);
+                this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.createMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
         }, error =>{
             this.vm.isLoading = false;
@@ -224,7 +224,7 @@ export class AddTutorialServiceAdapter {
                 tutorial.editable = false;
                 this.populateStudentList(value[0]);
                 if(this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendEditUpdate == true){
-                    this.prepareSmsNotificationData(this.vm.editMessage);
+                    this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.editMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
                 }
                 this.vm.checkEnableAddButton();
             }, error => {
@@ -295,7 +295,7 @@ export class AddTutorialServiceAdapter {
                     this.populateStudentList(tutorial);
                     this.vm.tutorialUpdating = false;
                     if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendDeleteUpdate == true) {
-                        this.prepareSmsNotificationData(this.vm.deleteMessage);
+                        this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.deleteMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
                     }
                 }, error => {
                     this.vm.tutorialUpdating = false;
@@ -322,15 +322,8 @@ export class AddTutorialServiceAdapter {
         Promise.all([
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
         ]).then(value =>{
-            let fetch_gcm_data = this.vm.updateService.fetchGCMDevices(value[0]);
-            const service_list = [];
-            service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, fetch_gcm_data.gcm_data));
-            service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, fetch_gcm_data.user_data));
-            Promise.all(service_list).then(secondValue =>{
-                this.vm.updateService.populateNotificationTrueValue(secondValue, value[0]);
-                this.vm.currentClassStudentList = value[0];
-                 
-            })
+            this.vm.currentClassStudentList = value[0];
+            this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
         })
     }
 
@@ -357,26 +350,5 @@ export class AddTutorialServiceAdapter {
         });
     }
 
-    prepareSmsNotificationData(message: any): any{
-        let data = this.vm.updateService.sendSMSNotification(this.vm.currentClassStudentList, message, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
-        let service_list = [];
-        service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, data.sms_data));
-        if (data.notification_data.length > 0 ) {
-            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, data.notification_data));
-        }
-        Promise.all(service_list).then(value => {
-
-            if ((this.vm.settings.sentUpdateType === 2 ||
-                this.vm.settings.sentUpdateType === 4) &&
-                (data.sms_list_length > 0)) {
-                if (value[0].status === 'success') {
-                    this.vm.smsBalance -= value[0].data.count;
-                } else if (value[0].status === 'failure') {
-                    this.vm.smsBalance = value[0].count;
-                }
-            }
-        }, error => {
-        })
-    }
 
 }

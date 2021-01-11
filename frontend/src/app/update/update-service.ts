@@ -1,4 +1,7 @@
-import {Injectable} from '@angular/core';
+import {Component, Injectable} from '@angular/core';
+import {UserService} from '../services/modules/user/user.service';
+import {NotificationService} from '../services/modules/notification/notification.service';
+import {SmsService} from '../services/modules/sms/sms.service';
 
 /*
 SentUpdateType - 
@@ -7,6 +10,16 @@ SentUpdateType -
     3- NOTIFICATION
     4- NOTIF./SMS
 */
+
+
+@Component({
+    providers: [
+        NotificationService,
+        UserService,
+        SmsService,
+    ],
+})
+
 
 @Injectable()
 export class UpdateService{
@@ -19,11 +32,14 @@ export class UpdateService{
         'NOTIFICATION',
         'NOTIF./SMS',
     ];
-
     
-    fetchGCMDevices: any = (studentList: any) => {
+    constructor(
+        public notificationService: NotificationService,
+        public userService: UserService,
+        public smsService: SmsService,
+    ){ }
 
-        let return_data = {};
+    fetchGCMDevicesNew: any = (studentList: any) => {
         const service_list = [];
         const iterationCount = Math.ceil(studentList.length / this.STUDENT_LIMITER);
         let loopVariable = 0;
@@ -40,21 +56,15 @@ export class UpdateService{
                 'fields__korangle': 'username,id',
                 'username__in': mobile_list.slice(this.STUDENT_LIMITER * loopVariable, this.STUDENT_LIMITER * (loopVariable + 1)),
             };
-            return_data['gcm_data'] = gcm_data;
-            return_data['user_data'] = user_data;
+            service_list.push(this.notificationService.getObjectList(this.notificationService.gcm_device, gcm_data));
+            service_list.push(this.userService.getObjectList(this.userService.user, user_data));
             loopVariable = loopVariable + 1;
         }
-        return return_data;
 
-        
-    }
-
-    populateNotificationTrueValue(value: any, student_list: any){
-        let temp_gcm_list = [];
+        Promise.all(service_list).then((value) => {
+            let temp_gcm_list = [];
             let temp_user_list = [];
             let loopVariable = 0;
-            const iterationCount = Math.ceil(student_list.length / this.STUDENT_LIMITER);
-
             while (loopVariable < iterationCount) {
                 temp_gcm_list = temp_gcm_list.concat(value[loopVariable * 2]);
                 temp_user_list = temp_user_list.concat(value[loopVariable * 2 + 1]);
@@ -66,44 +76,44 @@ export class UpdateService{
                     return item.user == user.id;
                 }) != undefined;
             })
+            // Storing because they're used later
             this.notif_usernames = notif_usernames;
 
             let notification_list;
 
-            notification_list = student_list.filter(obj => {
+            notification_list = studentList.filter(obj => {
                 return notif_usernames.find(user => {
                     return user.username == obj.mobileNumber;
                 }) != undefined;
             });
-            student_list.forEach((item, i) => {
+            studentList.forEach((item, i) => {
                 item.notification = false;
             })
             notification_list.forEach((item, i) => {
                 item.notification = true;
             })
-        
+
+        })
     }
 
-    sendSMSNotification: any = (student_list: any, message: any, informationMessageType: any, sentUpdateType: any, schoolId: any, smsBalance: any) => {
+    sendSMSNotificationNew: any = (mobile_list: any, message: any, informationMessageType: any, sentUpdateType: any, schoolId: any, smsBalance: any) => {
+        let service_list = [];
         let notification_list = [];
         let sms_list = [];
-        student_list = student_list.filter(student =>{
-            if(this.checkMobileNumber(student.mobileNumber) == true) return true;
-            return false;
-        })
+        
         if (sentUpdateType == 2) {
-            sms_list = student_list;
+            sms_list = mobile_list;
             notification_list = [];
         } else if (sentUpdateType == 3) {       
             sms_list = [];
-            notification_list = student_list.filter(obj => {
+            notification_list = mobile_list.filter(obj => {
                 return obj.notification;
             });
         } else {
-            notification_list = student_list.filter(obj => {
+            notification_list = mobile_list.filter(obj => {
                 return obj.notification;
             });
-            sms_list = student_list.filter(obj => {
+            sms_list = mobile_list.filter(obj => {
                 return !obj.notification;
             })
         }
@@ -112,21 +122,21 @@ export class UpdateService{
         notification_list.forEach((item, index) => {
             notif_mobile_string += item.mobileNumber + ', ';
         });
+        // notif_mobile_string = notif_mobile_string.slice(0, -2);
         sms_list.forEach((item, index) => {
             sms_mobile_string += item.mobileNumber + ', ';
         })
         sms_mobile_string = sms_mobile_string.slice(0, -2);
         notif_mobile_string = notif_mobile_string.slice(0, -2);
-        if ((sms_list.length > 0) && (this.getEstimatedSMSCount(sentUpdateType, student_list, message) > smsBalance)) {
-            alert('You are short by ' + (this.getEstimatedSMSCount(sentUpdateType, student_list, message) - smsBalance) + ' SMS');
-        }
+        // if ((sms_list.length > 0) && (this.getEstimatedSMSCount(sentUpdateType, mobile_list, message) > smsBalance)) {
+        //     alert('You are short by ' + (this.getEstimatedSMSCount(sentUpdateType, mobile_list, message) - smsBalance) + ' SMS');
+        // }
         let sms_data = {};
         const sms_converted_data = sms_list.map(item => {
             return {
                 'mobileNumber': item.mobileNumber.toString(),
                 'isAdvanceSms': this.getMessageFromTemplate(message, item)
             }
-        
         });
         if (sms_list.length != 0) {
 
@@ -135,7 +145,7 @@ export class UpdateService{
                 'data': sms_converted_data,
                 'content': sms_converted_data[0]['isAdvanceSms'],
                 'parentMessageType': informationMessageType,
-                'count': this.getEstimatedSMSCount(sentUpdateType, student_list, message),
+                'count': this.getEstimatedSMSCount(sentUpdateType, mobile_list, message),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
                 'mobileNumberList': sms_mobile_string,
@@ -148,7 +158,7 @@ export class UpdateService{
                 'data': sms_converted_data,
                 'content': this.getMessageFromTemplate(message, notification_list[0]),
                 'parentMessageType': informationMessageType,
-                'count': this.getEstimatedSMSCount(sentUpdateType, student_list, message),
+                'count': this.getEstimatedSMSCount(sentUpdateType, mobile_list, message),
                 'notificationCount': notification_list.length,
                 'notificationMobileNumberList': notif_mobile_string,
                 'mobileNumberList': sms_mobile_string,
@@ -163,15 +173,23 @@ export class UpdateService{
                 'parentUser': this.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
                 'parentSchool': schoolId,
             };
-        
         });
+        service_list = [];
+        service_list.push(this.smsService.createObject(this.smsService.diff_sms, sms_data));
+        if (notification_data.length > 0 ) {
+            service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
+        }
 
-        let return_data = {};
-        return_data['sms_list_length'] = sms_list.length;
-        return_data['sms_data'] = sms_data;
-        return_data['notification_data'] = notification_data;
-        return return_data;
-        
+        Promise.all(service_list).then(value => {
+
+            if ((sentUpdateType == 2 || sentUpdateType == 3) && (sms_list.length > 0)) {
+                if (value[0].status === 'success') {
+                    smsBalance -= value[0].data.count;
+                } else if (value[0].status === 'failure') {
+                    smsBalance = value[0].count;
+                }
+            }
+        });
     }
 
     checkMobileNumber(mobileNumber: number): boolean {

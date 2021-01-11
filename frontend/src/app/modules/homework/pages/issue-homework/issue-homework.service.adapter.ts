@@ -36,10 +36,22 @@ export class IssueHomeworkServiceAdapter {
             this.vm.smsBalance = value[5];
             if(value[4].length > 0){
                 this.vm.settings = value[4][0];
+                if(this.vm.settings.sentUpdateType == 'NULL'){
+                    this.vm.settings.sentUpdateType = 1;
+                }
+                if(this.vm.settings.sentUpdateType == 'SMS'){
+                    this.vm.settings.sentUpdateType = 2;
+                }
+                if(this.vm.settings.sentUpdateType == 'NOTIFICATION'){
+                    this.vm.settings.sentUpdateType = 3;
+                }
+                else{
+                    this.vm.settings.sentUpdateType = 4;
+                }
             }
             else{
                 this.vm.settings = {
-                    sentUpdateType: 'NULL',
+                    sentUpdateType: 1,
                     sendCreateUpdate: false,
                     sendEditUpdate: false,
                     sendDeleteUpdate: false,
@@ -160,7 +172,9 @@ export class IssueHomeworkServiceAdapter {
                     }
                     this.studentNotificationList.push(tempData);
                 })
-                this.fetchGCMDevices(this.studentNotificationList);
+                // this.fetchGCMDevices(this.studentNotificationList);
+                this.vm.updateService.fetchGCMDevicesNew(this.studentNotificationList);
+                console.log(this.studentNotificationList);
                 this.vm.isLoading = false;
             });
             this.sortHomeworks();
@@ -207,8 +221,7 @@ export class IssueHomeworkServiceAdapter {
             const layout_data = { ...image,};
             Object.keys(layout_data).forEach(key => {
                 if (key === 'questionImage' ) {
-                    const file = this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg');
-                    temp_form_data.append(key, this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
+                    temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
                 } else {
                     temp_form_data.append(key, layout_data[key]);
                 }
@@ -259,8 +272,8 @@ export class IssueHomeworkServiceAdapter {
                 this.vm.currentHomework = new Homework;
                 this.vm.currentHomeworkImages = [];
                 this.vm.isLoading = false;
-                if(this.vm.settings.sendCreateUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
-                    this.sendSMSNotification(this.studentNotificationList, this.vm.homeworkCreatedMessage);
+                if(this.vm.settings.sendCreateUpdate == true && this.vm.settings.sentUpdateType != 1){
+                    this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkCreatedMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
                 }
             },error =>{
                 this.vm.isLoading = false;
@@ -316,8 +329,8 @@ export class IssueHomeworkServiceAdapter {
                 }
             });
             this.populateStudentList(this.studentNotificationList, {'homeworkName': tempHomeworkName});
-            if(this.vm.settings.sendDeleteUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
-                this.sendSMSNotification(this.studentNotificationList, this.vm.homeworkDeleteMessage);
+            if(this.vm.settings.sendDeleteUpdate == true && this.vm.settings.sentUpdateType != 1){
+                this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkDeleteMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             alert('Homework Deleted')
             this.vm.isLoading = false;
@@ -351,7 +364,7 @@ export class IssueHomeworkServiceAdapter {
                 const layout_data = { ...tempData,};
                 Object.keys(layout_data).forEach(key => {
                     if (key === 'questionImage' ) {
-                        temp_form_data.append(key, this.vm.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
+                        temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'questionImage' + index +'.jpeg'));
                     } else {
                         temp_form_data.append(key, layout_data[key]);
                     }
@@ -377,8 +390,8 @@ export class IssueHomeworkServiceAdapter {
         Promise.all(promises).then(value =>{
             this.populateEditedHomework(value);
             this.populateStudentList(this.studentNotificationList, value[0]);
-            if(this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType !='NULL'){
-                this.sendSMSNotification(this.studentNotificationList, this.vm.homeworkUpdateMessage);
+            if(this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType != 1){
+                this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkUpdateMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             alert('Homework Edited Successfully');
             this.vm.isLoading = false;
@@ -400,206 +413,6 @@ export class IssueHomeworkServiceAdapter {
             if(image.questionImage != undefined)
                 previousHomework.homeworkImages.push(image);
         });
-    }
-
-    fetchGCMDevices: any = (studentList: any) => {
-        this.vm.isLoading = true;
-        const service_list = [];
-        const iterationCount = Math.ceil(studentList.length / this.vm.STUDENT_LIMITER);
-        let loopVariable = 0;
-
-        while (loopVariable < iterationCount) {
-            const mobile_list = studentList.filter(item => item.mobileNumber).map(obj => obj.mobileNumber.toString());
-            const gcm_data = {
-                'user__username__in': mobile_list.slice(
-                    this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)
-                ),
-                'active': 'true__boolean',
-            }
-            const user_data = {
-                'fields__korangle': 'username,id',
-                'username__in': mobile_list.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)),
-            };
-            service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_data));
-            service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
-            loopVariable = loopVariable + 1;
-        }
-
-        Promise.all(service_list).then((value) => {
-            let temp_gcm_list = [];
-            let temp_user_list = [];
-            let loopVariable = 0;
-            while (loopVariable < iterationCount) {
-                temp_gcm_list = temp_gcm_list.concat(value[loopVariable * 2]);
-                temp_user_list = temp_user_list.concat(value[loopVariable * 2 + 1]);
-                loopVariable = loopVariable + 1;
-            }
-
-            const notif_usernames = temp_user_list.filter(user => {
-                return temp_gcm_list.find(item => {
-                    return item.user == user.id;
-                }) != undefined;
-            })
-            // Storing because they're used later
-            this.vm.notif_usernames = notif_usernames;
-
-            let notification_list;
-
-            notification_list = studentList.filter(obj => {
-                return notif_usernames.find(user => {
-                    return user.username == obj.mobileNumber;
-                }) != undefined;
-            });
-            studentList.forEach((item, i) => {
-                item.notification = false;
-            })
-            notification_list.forEach((item, i) => {
-                item.notification = true;
-            })
-
-
-            this.vm.isLoading = false;
-        })
-    }
-
-    sendSMSNotification: any = (mobile_list: any, message: any) => {
-        let service_list = [];
-        let notification_list = [];
-        let sms_list = [];
-        if (this.vm.settings.sentUpdateType == 'SMS') {
-            sms_list = mobile_list;
-            notification_list = [];
-        } else if (this.vm.settings.sentUpdateType == 'NOTIFICATION') {       
-            sms_list = [];
-            notification_list = mobile_list.filter(obj => {
-                return obj.notification;
-            });
-        } else {
-            notification_list = mobile_list.filter(obj => {
-                return obj.notification;
-            });
-            sms_list = mobile_list.filter(obj => {
-                return !obj.notification;
-            })
-        }
-        let notif_mobile_string = '';
-        let sms_mobile_string = '';
-        notification_list.forEach((item, index) => {
-            notif_mobile_string += item.mobileNumber + ', ';
-        });
-        // notif_mobile_string = notif_mobile_string.slice(0, -2);
-        sms_list.forEach((item, index) => {
-            sms_mobile_string += item.mobileNumber + ', ';
-        })
-        sms_mobile_string = sms_mobile_string.slice(0, -2);
-        notif_mobile_string = notif_mobile_string.slice(0, -2);
-        if ((sms_list.length > 0) && (this.getEstimatedSMSCount(message) > this.vm.smsBalance)) {
-            alert('You are short by ' + (this.getEstimatedSMSCount(message) - this.vm.smsBalance) + ' SMS');
-        }
-        let sms_data = {};
-        const sms_converted_data = sms_list.map(item => {
-            return {
-                'mobileNumber': item.mobileNumber.toString(),
-                'isAdvanceSms': this.getMessageFromTemplate(message, item)
-            }
-        });
-        if (sms_list.length != 0) {
-
-            sms_data = {
-                'contentType': ('english'),
-                'data': sms_converted_data,
-                'content': sms_converted_data[0]['isAdvanceSms'],
-                'parentMessageType': 2,
-                'count': this.getEstimatedSMSCount(message),
-                'notificationCount': notification_list.length,
-                'notificationMobileNumberList': notif_mobile_string,
-                'mobileNumberList': sms_mobile_string,
-                'parentSchool': this.vm.user.activeSchool.dbId,
-            };
-
-        } else {
-            sms_data = {
-                'contentType': ('english'),
-                'data': sms_converted_data,
-                'content': this.getMessageFromTemplate(message, notification_list[0]),
-                'parentMessageType': 2,
-                'count': this.getEstimatedSMSCount(message),
-                'notificationCount': notification_list.length,
-                'notificationMobileNumberList': notif_mobile_string,
-                'mobileNumberList': sms_mobile_string,
-                'parentSchool': this.vm.user.activeSchool.dbId,
-            };
-        }
-
-        const notification_data = notification_list.map(item => {
-            return {
-                'parentMessageType': 2,
-                'content': this.getMessageFromTemplate(message, item),
-                'parentUser': this.vm.notif_usernames.find(user => { return user.username == item.mobileNumber.toString(); }).id,
-                'parentSchool': this.vm.user.activeSchool.dbId,
-            };
-        });
-        service_list = [];
-        service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, sms_data));
-        if (notification_data.length > 0 ) {
-            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
-        }
-
-        this.vm.isLoading = true;
-
-        Promise.all(service_list).then(value => {
-
-            if ((this.vm.settings.sentUpdateType == 'SMS' ||
-            this.vm.settings.sentUpdateType == 'NOTIF./SMS') &&
-                (sms_list.length > 0)) {
-                if (value[0].status === 'success') {
-                    this.vm.smsBalance -= value[0].data.count;
-                } else if (value[0].status === 'failure') {
-                    this.vm.smsBalance = value[0].count;
-                }
-            }
-
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        })
-    }
-
-    getMessageFromTemplate = (message, obj) => {
-        let ret = message;
-        for(let key in obj){
-            ret = ret.replace('<'+key+'>', obj[key]);
-        }
-        return ret;
-    }
-
-    hasUnicode(message): boolean {
-        for (let i=0; i<message.length; ++i) {
-            if (message.charCodeAt(i) > 127) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getEstimatedSMSCount = (message: any) => {
-        let count = 0;
-        if(this.vm.settings.sentUpdateType=='NOTIFICATION')return 0;
-            this.studentNotificationList.filter(item => item.mobileNumber).forEach((item) => {
-                if(this.vm.settings.sentUpdateType=='SMS' || item.notification==false){
-                    count += this.getMessageCount(this.getMessageFromTemplate(message, item));
-                }
-            })
-
-        return count;
-    }
-
-    getMessageCount = (message) => {
-        if (this.hasUnicode(message)){
-            return Math.ceil(message.length/70);
-        }else{
-            return Math.ceil( message.length/160);
-        }
     }
 
 }

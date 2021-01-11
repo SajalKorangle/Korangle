@@ -282,6 +282,32 @@ export class ViewHomeworkServiceAdapter {
 
         });
     }
+    
+    getHomeworkDetails(homework: any){
+        this.vm.isHomeworkLoading = true;
+        this.vm.currentHomeworkImages = [];
+        this.vm.currentHomeworkAnswerImages = [];
+        Promise.all([
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image,{'parentHomeworkQuestion': homework.dbId}),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image,{'parentHomeworkAnswer__parentHomeworkQuestion': homework.dbId, 'parentHomeworkAnswer__parentStudent': this.vm.selectedStudent}),
+            
+        ]).then(value =>{
+            value[0].forEach(element =>{
+                this.vm.currentHomeworkImages.push(element);
+            })
+            value[1].forEach(element =>{
+                this.vm.currentHomeworkAnswerImages.push(element);
+            })
+            this.vm.currentHomeworkImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
+            this.vm.currentHomeworkAnswerImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
+            
+            if(this.vm.isMobile() == true){    
+                this.vm.submitHomework(homework);
+            }    
+            this.vm.isHomeworkLoading = false;
+            
+        })
+    }
 
 
     submitHomework(): any{
@@ -319,7 +345,7 @@ export class ViewHomeworkServiceAdapter {
                 const layout_data = { ...tempData,};
                 Object.keys(layout_data).forEach(key => {
                     if (key === 'answerImage' ) {
-                        temp_form_data.append(key, this.vm.dataURLtoFile(layout_data[key], 'answerImage' + index +'.jpeg'));
+                        temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'answerImage' + index +'.jpeg'));
                     } else {
                         temp_form_data.append(key, layout_data[key]);
                     }
@@ -350,33 +376,7 @@ export class ViewHomeworkServiceAdapter {
         })
     }
 
-
-    getHomeworkDetails(homework: any){
-        this.vm.isHomeworkLoading = true;
-        this.vm.currentHomeworkImages = [];
-        this.vm.currentHomeworkAnswerImages = [];
-        Promise.all([
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image,{'parentHomeworkQuestion': homework.dbId}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image,{'parentHomeworkAnswer__parentHomeworkQuestion': homework.dbId, 'parentHomeworkAnswer__parentStudent': this.vm.selectedStudent}),
-            
-        ]).then(value =>{
-            value[0].forEach(element =>{
-                this.vm.currentHomeworkImages.push(element);
-            })
-            value[1].forEach(element =>{
-                this.vm.currentHomeworkAnswerImages.push(element);
-            })
-            this.vm.currentHomeworkImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
-            this.vm.currentHomeworkAnswerImages.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0);
-            
-            if(this.vm.isMobile() == true){    
-                this.vm.submitHomework(homework);
-            }    
-            this.vm.isHomeworkLoading = false;
-            
-        })
-    }
-
+    
     populateSubmittedHomework(homework: any): any{
         let tempHomework = this.vm.pendingHomeworkList.find(homeworks => homeworks.statusDbId == homework[0].id);;
         let submittedHomework;
@@ -410,5 +410,5 @@ export class ViewHomeworkServiceAdapter {
         }
         this.vm.completedHomeworkList.splice(0,0,submittedHomework);
     }
-    
+
 }
