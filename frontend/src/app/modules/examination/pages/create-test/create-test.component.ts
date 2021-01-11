@@ -1,22 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+
 import { NgModel } from '@angular/forms';
-import { SubjectService } from 'app/services/modules/subject/subject.service';
-import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
-import { DataStorage } from '../../../../classes/data-storage';
-import { ClassService } from '../../../../services/modules/class/class.service';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
+import { SubjectService } from 'app/services/modules/subject/subject.service';
+
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
+import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
+import {DataStorage} from "../../../../classes/data-storage";
 
 @Component({
   selector: 'create-test',
   templateUrl: './create-test.component.html',
   styleUrls: ['./create-test.component.css'],
-  providers: [
-    ClassService,
-    ExaminationService,
-    SubjectService,
-  ],
+  providers: [ ExaminationService, ClassService,,SubjectService ],
 })
+
 export class CreateTestComponent implements OnInit {
   showSelectedClassAndSection: any = [];
   selectedExaminationNew: any;
@@ -65,17 +64,13 @@ export class CreateTestComponent implements OnInit {
 
   user;
 
-  fetchedList:any;
-
-  dataCanBeFetched = true;
-
-  showTestDetails = false;
-
-  selectedExamination : any = undefined;
+    showTestDetails = false;
+    fetchedList:any;
+    dataCanBeFetched = true;
+    selectedExamination : any = undefined;
 
   examinationList: any = [];
-
-  examinationClassSectionList: any;
+    examinationClassSectionList: any;
 
   classSectionSubjectList: Array<{
     className: any;
@@ -91,68 +86,67 @@ export class CreateTestComponent implements OnInit {
     }>;
   }>;
 
-  subjectList: any;
+    subjectList: any;
 
   // For New Test
-  selectedSubject: any;
-  selectedDate: any;
-  selectedStartTime = '10:30';
-  selectedEndTime = '13:30';
-  selectedTestType = null;
-  selectedMaximumMarks = 100;
+    selectedSubject: any;
+    selectedDate: any;
+    selectedStartTime = "10:30";
+    selectedEndTime = "13:30";
+    selectedTestType = null;
+    selectedMaximumMarks = 100;
 
-  testTypeList = TEST_TYPE_LIST;
+    testTypeList = TEST_TYPE_LIST;
 
-  serviceAdapter: CreateTestServiceAdapter;
+    serviceAdapter: CreateTestServiceAdapter;
 
-  isInitialLoading = false;
+    isInitialLoading = false;
 
-  isLoading = false;
+    isLoading = false;
 
-  constructor(
-    public examinationService: ExaminationService,
-    public classService: ClassService,
-    public subjectNewService: SubjectService
-  ) {}
+  constructor(  public examinationService: ExaminationService,
+                public classService: ClassService,
+                public subjectNewService: SubjectService) {}
 
-  ngOnInit(): void {
-    this.user = DataStorage.getInstance().getUser();
+    ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
 
-    this.serviceAdapter = new CreateTestServiceAdapter();
-    this.serviceAdapter.initializeAdapter(this);
-    this.serviceAdapter.initializeData();
-  }
-
-  onDateSelected(event: any): void {
-    this.selectedDate = this.formatDate(event, '');
-  }
-
-  formatDate(dateStr: any, status: any): any {
-    let d = new Date(dateStr);
-
-    if (status === 'firstDate') {
-      d = new Date(d.getFullYear(), d.getMonth(), 1);
-    } else if (status === 'lastDate') {
-      d = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+        this.serviceAdapter = new CreateTestServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
     }
 
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    let year = d.getFullYear();
+    onDateSelected(event: any): void {
+        this.selectedDate = this.formatDate(event, '');
+    }
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+    formatDate(dateStr: any, status: any): any {
 
-    return [year, month, day].join('-');
-  }
+        let d = new Date(dateStr);
 
-  getTestDate(test: any): any {
-    return new Date(test.startTime);
-  }
+        if (status === 'firstDate') {
+            d = new Date(d.getFullYear(), d.getMonth(), 1);
+        } else if (status === 'lastDate') {
+            d = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+        }
 
-  onTestDateUpdation(test: any, event: any): void {
-    test.newDate = this.formatDate(event, '');
-  }
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        let year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    getTestDate(test: any): any {
+        return new Date(test.startTime);
+    }
+
+    onTestDateUpdation(test: any, event: any): void {
+        test.newDate = this.formatDate(event, '');
+    }
 
   //This function is used to create a basic test template for all subjects in the selected class and section
   createTestFromTemplate() {

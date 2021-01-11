@@ -1,10 +1,13 @@
+
+import {CreateTestComponent} from './create-test.component';
+
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
-import { CreateTestComponent } from './create-test.component';
 
 export class CreateTestServiceAdapter {
-  vm: CreateTestComponent;
 
-  test_type_list = TEST_TYPE_LIST;
+    vm: CreateTestComponent;
+
+    test_type_list = TEST_TYPE_LIST;
 
   classListForTest: any;
 
@@ -26,64 +29,50 @@ export class CreateTestServiceAdapter {
   toBeDeletedTestList: any = [];
 
 
-  constructor() { }
+    constructor() {}
 
-  // Data
-  classList: any;
+    // Data
+    classList: any;
+    sectionList: any;
+    subjectList: any;
 
-  sectionList: any;
+    testList: any;
+    classSubjectList: any;
 
-  subjectList: any;
+    student_mini_profile_list: any;
 
-  testList: any;
 
-  classSubjectList: any;
+    initializeAdapter(vm: CreateTestComponent): void {
+        this.vm = vm;
+    }
 
-  student_mini_profile_list: any;
+    //initialize data
+    initializeData(): void {
+        this.vm.isInitialLoading = true;
 
-  initializeAdapter(vm: CreateTestComponent): void {
-    this.vm = vm;
-  }
+        let request_examination_data = {
+          parentSession: this.vm.user.activeSchool.currentSessionDbId,
+          parentSchool: this.vm.user.activeSchool.dbId,
+        };
 
-  //initialize data
-  initializeData(): void {
-    this.vm.isInitialLoading = true;
-
-    let request_examination_data = {
+     let request_class_section_subject_data = {
       parentSession: this.vm.user.activeSchool.currentSessionDbId,
       parentSchool: this.vm.user.activeSchool.dbId,
-    };
+        };
 
-    let request_class_section_subject_data = {
-      parentSession: this.vm.user.activeSchool.currentSessionDbId,
-      parentSchool: this.vm.user.activeSchool.dbId,
-    };
-
-    Promise.all([
-      this.vm.examinationService.getObjectList(
-        this.vm.examinationService.examination,
-        request_examination_data
-      ),
-      this.vm.classService.getObjectList(
-        this.vm.classService.classs, {}),
-      this.vm.classService.getObjectList(
-        this.vm.classService.division, {}),
-      this.vm.subjectNewService.getObjectList(
-        this.vm.subjectNewService.subject,
-        {}
-      ),
-      this.vm.subjectNewService.getObjectList(
-        this.vm.subjectNewService.class_subject,
-        request_class_section_subject_data
-      ),
-    ]).then(
-      (value) => {
-        this.vm.examinationList = value[0];
-        this.classList = value[1];
-        this.sectionList = value[2];
-        this.subjectList = value[3];
-        this.classSubjectList = value[4];
-        this.vm.classSectionSubjectList = [];
+        Promise.all([
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
+            this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.subject,{}),
+            this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject,request_class_section_subject_data),
+        ]).then(value => {
+            this.vm.examinationList = value[0];
+            this.classList = value[1];
+            this.sectionList = value[2];
+            this.subjectList = value[3];
+            this.classSubjectList = value[4];
+            this.vm.classSectionSubjectList = [];
 
         value[4].forEach((item) => {
           var classIndex = this.vm.classSectionSubjectList.findIndex(
@@ -148,13 +137,10 @@ export class CreateTestServiceAdapter {
         this.classSectionSubjectListSort();
         this.vm.subjectList = this.subjectList;
         this.vm.isInitialLoading = false;
-      },
-      (error) => {
-        this.vm.isInitialLoading = false;
-      }
-    );
+        }, error => {
+            this.vm.isInitialLoading = false;
+        });
   }
-
   //Get Test and Subject Details New implemented to ready the data and check if test list can be fetched or not
   getTestAndSubjectDetailsNew(): void {
     this.vm.isLoading = true;
@@ -252,10 +238,10 @@ export class CreateTestServiceAdapter {
         this.vm.isLoading = false;
       }
     );
-  }
+    }
 
-  //Get Test And Subject Details
-  getTestAndSubjectDetails(): void {
+    //Get Test And Subject Details
+    getTestAndSubjectDetails(): void {
     this.vm.isLoading = true;
 
     let request_test_data_list = {
@@ -266,10 +252,7 @@ export class CreateTestServiceAdapter {
 
     Promise.all([
       //fetch test list
-      this.vm.examinationService.getObjectList(
-        this.vm.examinationService.test_second,
-        request_test_data_list
-      ),
+      this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_test_data_list),
     ]).then(
       (value) => {
         this.vm.newTestList = [];
@@ -294,7 +277,7 @@ export class CreateTestServiceAdapter {
                 classIdx = this.vm.newTestList[subIdx].classList.findIndex(
                   (cl) => cl.classId === test.parentClass
                 );
-    
+
                 if (classIdx != -1) {
                   sectionIdx = this.vm.newTestList[subIdx].classList[
                     classIdx
@@ -384,17 +367,15 @@ export class CreateTestServiceAdapter {
       this.vm.selectedTestType = null;
     }
 
-    if (
-      !this.isOnlyGrade(this.vm.selectedSubject) &&
-      (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)
-    ) {
-      alert('Invalid Maximum Marks');
-      return;
-    }
+        if (!this.isOnlyGrade(this.vm.selectedSubject)
+            && (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)) {
+            alert('Invalid Maximum Marks');
+            return;
+        }
 
-    if (this.isOnlyGrade(this.vm.selectedSubject)) {
-      this.vm.selectedMaximumMarks = 100;
-    }
+   if (this.isOnlyGrade(this.vm.selectedSubject)) {
+            this.vm.selectedMaximumMarks = 100;
+        }
 
     let data = {
       parentExamination: this.vm.selectedExamination,
@@ -429,32 +410,28 @@ export class CreateTestServiceAdapter {
       }
     });
 
-    if (testAlreadyAdded) {
-      alert('Similar Test is already in the template');
-      return;
-    }
+        if (testAlreadyAdded) {
+            alert('Similar Test is already in the template');
+            return;
+        }
 
-    this.vm.isLoading = true;
+        this.vm.isLoading = true;
 
     Promise.all([
-      this.vm.examinationService.createObject(
-        this.vm.examinationService.test_second,
-        data
-      ),
+      this.vm.examinationService.createObject(this.vm.examinationService.test_second,data),
     ]).then(
       (value) => {
         this.addTestToNewTestList(value[0]);
         this.vm.isLoading = false;
-      },
-      (error) => {
+      },(error) => {
         this.vm.isLoading = false;
       }
     );
   }
 
-  getDateTime(selectedDate: any, selectedTime: any): any {
-    return selectedDate + 'T' + selectedTime + ':00+05:30';
-  }
+    getDateTime(selectedDate: any, selectedTime: any): any {
+        return selectedDate+'T'+selectedTime+':00+05:30';
+    }
 
   addTestToNewTestList(test: any): void {
     var subIdx = this.vm.newTestList.findIndex(
@@ -519,38 +496,26 @@ export class CreateTestServiceAdapter {
     }
   }
 
-  extractTime(dateStr: any): any {
-    let d = new Date(dateStr);
+    extractTime(dateStr: any): any {
+        let d = new Date(dateStr);
 
-    let hour = (d.getHours() < 10 ? '0' : '') + d.getHours();
-    let minute = '' + d.getMinutes();
+        let hour = ((d.getHours()<10)?'0':'') + d.getHours();
+        let minute = '' + d.getMinutes();
 
-    return hour + ':' + minute;
-  }
+        return hour+":"+minute;
+    }
 
-  getSubjectName(subjectId: any): any {
-    let result = '';
-    this.subjectList.every((subject) => {
-      if (subject.id === subjectId) {
-        result = subject.name;
-        return false;
-      }
-      return true;
-    });
-    return result;
-  }
-
-  getClassName(classId: any): any {
-    let result = '';
-    this.classList.every((item) => {
-      if (item.id === classId) {
-        result = item.name;
-        return false;
-      }
-      return true;
-    });
-    return result;
-  }
+    getSubjectName(subjectId: any): any {
+        let result = '';
+        this.subjectList.every(subject => {
+            if (subject.id === subjectId) {
+                result = subject.name;
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
 
   getSectionName(sectionId: any): any {
     let result = '';
@@ -564,19 +529,19 @@ export class CreateTestServiceAdapter {
     return result;
   }
 
-  isOnlyGrade(subjectId: any): boolean {
-    let result = false;
-    this.classSubjectList.every((item) => {
-      if (item.parentSubject === subjectId) {
-        if (item.onlyGrade) {
-          result = true;
-        }
-        return false;
-      }
-      return true;
-    });
-    return result;
-  }
+    isOnlyGrade(subjectId: any): boolean {
+        let result = false;
+        this.classSubjectList.every(item => {
+            if (item.parentSubject === subjectId) {
+                if(item.onlyGrade) {
+                    result = true;
+                }
+                return false;
+            }
+            return true;
+        });
+        return result;
+    }
 
   //Update Test List New
   updateTestNew(): any {
