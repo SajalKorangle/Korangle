@@ -1,4 +1,5 @@
 
+import { CommonFunctions } from '../../../../classes/common-functions.js';
 import { ViewHomeworkComponent } from './view-homework.component';
 
 export class ViewHomeworkServiceAdapter {
@@ -292,8 +293,8 @@ export class ViewHomeworkServiceAdapter {
         this.vm.isSubmitting = false;
         this.vm.isSessionLoading = true;
         let currentDate = new Date();
-        let submissionDate = this.vm.formatDate(currentDate, '');
-        let submissionTime = this.vm.formatTime(currentDate);
+        let submissionDate = CommonFunctions.formatDate(currentDate, '');
+        let submissionTime = CommonFunctions.formatTime(currentDate);
 
         let tempStatus = {
             'id': this.vm.toSubmitHomework.statusDbId,

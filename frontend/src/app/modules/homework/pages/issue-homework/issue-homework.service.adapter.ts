@@ -1,5 +1,6 @@
 import { IssueHomeworkComponent } from './issue-homework.component';
 import { Homework } from '../../../../services/modules/homework/models/homework';
+import { CommonFunctions } from '../../../../classes/common-functions.js';
 
 export class IssueHomeworkServiceAdapter {
 
@@ -177,19 +178,10 @@ export class IssueHomeworkServiceAdapter {
         homeworksList.forEach(currentHomework =>{
             let tempHomework = this.vm.homeworkList.find(homework => homework.id ==  currentHomework.id);
             if(tempHomework === undefined){
-                let tempData = {
-                    id: currentHomework.id,
-                    homeworkName: currentHomework.homeworkName,
-                    parentClassSubject: currentHomework.parentClassSubject,
-                    startDate: currentHomework.startDate,
-                    startTime: currentHomework.startTime,
-                    endDate: currentHomework.endDate,
-                    endTime: currentHomework.endTime,
-                    homeworkText: currentHomework.homeworkText,
-                    homeworkImages: [],
-                }
+                let tempData = JSON.parse(JSON.stringify(currentHomework));
+                tempData.homeworkImages = [];
                 this.vm.homeworkList.push(tempData);
-                tempHomework = this.vm.homeworkList.find(homework => homework.id ==  currentHomework.id);
+                tempHomework = tempData;
             }
             homeworkImageList.forEach(image =>{
                 if(image.parentHomeworkQuestion == currentHomework.id){
@@ -247,12 +239,12 @@ export class IssueHomeworkServiceAdapter {
         this.vm.isLoading = true;
         this.vm.currentHomework.parentClassSubject = this.vm.selectedSubject.classSubjectDbId;
         let currentDate = new Date();
-        this.vm.currentHomework.startDate = this.vm.formatDate(currentDate, '');
-        this.vm.currentHomework.startTime = this.vm.formatTime(currentDate);
+        this.vm.currentHomework.startDate = CommonFunctions.formatDate(currentDate, '');
+        this.vm.currentHomework.startTime = CommonFunctions.formatTime(currentDate);
+        
         if(this.vm.currentHomework.endDate != null && this.vm.currentHomework.endTime == null){
             this.vm.currentHomework.endTime =  '23:59';
         }
-        
         
         Promise.all([
             this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question , this.vm.currentHomework),
@@ -284,17 +276,8 @@ export class IssueHomeworkServiceAdapter {
     }
 
     populateCurrentHomework(): any{
-        let tempHomework = {
-            id: this.vm.currentHomework.id,
-            homeworkName: this.vm.currentHomework.homeworkName ,
-            parentClassSubject: this.vm.currentHomework.parentClassSubject,
-            startDate: this.vm.currentHomework.startDate,
-            startTime: this.vm.currentHomework.startTime,
-            endDate: this.vm.currentHomework.endDate,
-            endTime: this.vm.currentHomework.endTime,
-            homeworkText: this.vm.currentHomework.homeworkText,
-            homeworkImages: [],
-        }
+        let tempHomework = JSON.parse(JSON.stringify(this.vm.currentHomework));
+        tempHomework.homeworkImages = [];
         this.vm.homeworkList.push(tempHomework);
         this.sortHomeworks();
     }
@@ -345,19 +328,13 @@ export class IssueHomeworkServiceAdapter {
 
     updateHomework(data :any): any{
         
+
         const promises = [];
         let previousHomework = this.vm.homeworkList.find(homework => homework.id === data.id);
 
-        let tempHomeworkData = {
-            id: data.id,
-            homeworkName: data.homeworkName ,
-            parentClassSubject: data.parentClassSubject,
-            startDate: data.startDate,
-            startTime: data.startTime,
-            endDate: data.endDate,
-            endTime: data.endTime,
-            homeworkText: data.homeworkText,
-        }
+        let tempHomeworkData = JSON.parse(JSON.stringify(data));
+        delete tempHomeworkData.editRequired;
+        delete tempHomeworkData.homeworkImages;
 
         promises.push(this.vm.homeworkService.updateObject(this.vm.homeworkService.homework_question, tempHomeworkData));
 
@@ -386,9 +363,7 @@ export class IssueHomeworkServiceAdapter {
                     id: temp.id,
                     orderNumber: index,
                 }
-                if(tempData.orderNumber != index){
-                    promises.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_question_image, tempData));
-                }
+                promises.push(this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_question_image, tempData));
                 let tempIndex = previousHomework.homeworkImages.indexOf(temp);
                 previousHomework.homeworkImages.splice(tempIndex, 1);
             }
@@ -419,7 +394,7 @@ export class IssueHomeworkServiceAdapter {
         previousHomework.homeworkName = tempHomeworkData.homeworkName;
         previousHomework.endDate = tempHomeworkData.endDate;
         previousHomework.endTime = tempHomeworkData.endTime;
-        previousHomework.homeworkText = tempHomeworkData.homeworkText;
+        previousHomework.homeworkText = tempHomeworkData.homeworkText;  
         previousHomework.homeworkImages = [];
         data.forEach(image => {
             if(image.questionImage != undefined)
