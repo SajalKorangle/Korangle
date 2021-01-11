@@ -170,8 +170,9 @@ export class User {
                 // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
                 case 'parent':
                     // Review: Agar woh employee ke role se parent ke role me aa raha hai to? Permission hai dono ki uske paas.
-                    this.activeSchool.role=this.activeSchool.studentList.length > 0?'Parent':'Employee'; // if only the active school has student list then we can change the role
-                    if(this.activeSchool.role=='Parent') {
+                     // if only the active school has student list then we can change the role
+                    if(this.activeSchool.studentList.length > 0) {
+                        this.activeSchool.role='Parent';
                         if (urlParams.get('student_id') != undefined) {
                             module = this.activeSchool.studentList.find(s => s.id == Number(urlParams.get('student_id')));
                         } else {
