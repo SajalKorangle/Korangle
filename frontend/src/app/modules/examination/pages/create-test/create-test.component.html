@@ -190,7 +190,7 @@
 
 
                 <button type='submit' style='padding: 13px 15px;' [disabled]='!isUpdated'
-                    class='btn btn-{{user.activeSchool.secondaryThemeColor}}' (click)='serviceAdapter.updateTestNew();'>
+                    class='btn btn-{{user.activeSchool.secondaryThemeColor}}' (click)='serviceAdapter.UpdateHelper();'>
                     <span *ngIf='fetchedList === 0 ; else Update'>Create</span>
                     <ng-template #Update>Update</ng-template>
                 </button>

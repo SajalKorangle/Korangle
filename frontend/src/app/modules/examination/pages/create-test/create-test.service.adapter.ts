@@ -10,10 +10,6 @@ export class CreateTestServiceAdapter {
 
   sectionListForTest: any;
 
-  uniqueClassList: any;
-
-  uniqueSetionList: any;
-
   commonSubjectList: Array<{
     subjectId: any;
     subjectName: any;
@@ -583,9 +579,9 @@ export class CreateTestServiceAdapter {
   }
 
   //Update Test List New
-  updateTestNew(): void {
+  updateTestNew(): any {
     this.vm.isLoading = true;
-
+    let promises = [];
     //Update the test list if any value changed in any of the test from test list
     this.vm.newTestList.forEach((test) => {
       test.classList.forEach((cl) => {
@@ -605,43 +601,15 @@ export class CreateTestServiceAdapter {
           //if test id is null that means it is from template and has to be created in backend
           if (data.id === null) {
             if (test.deleted) {
-              this.getTestAndSubjectDetails();
+              //nothing has to be done!!
             } else {
-              Promise.all([
-                this.vm.examinationService.createObject(
-                  this.vm.examinationService.test_second,
-                  data
-                ),
-              ]).then(
-                (value) => {
-                  this.vm.isLoading = false;
-                  this.vm.selectedMaximumMarks = null;
-
-                  this.getTestAndSubjectDetails();
-                },
-                (error) => {
-                  this.vm.isLoading = false;
-                }
-              );
+              promises.push(this.vm.examinationService.createObject(this.vm.examinationService.test_second,data));
             }
           }
 
           //if deleted
           else if (test.deleted) {
-            Promise.all([
-              this.vm.examinationService.deleteObject(
-                this.vm.examinationService.test_second,
-                data
-              ),
-            ]).then(
-              (value) => {
-                this.vm.isLoading = false;
-                this.getTestAndSubjectDetails();
-              },
-              (error) => {
-                this.vm.isLoading = false;
-              }
-            );
+            promises.push(this.vm.examinationService.deleteObject(this.vm.examinationService.test_second,data));
           }
 
           //if updated
@@ -649,26 +617,25 @@ export class CreateTestServiceAdapter {
             test.newMaximumMarks != test.maximumMarks ||
             test.newTestType != test.testType
           ) {
-            Promise.all([
-              this.vm.examinationService.updateObject(
-                this.vm.examinationService.test_second,
-                data
-              ),
-            ]).then(
-              (value) => {
-                this.vm.isLoading = false;
-                this.getTestAndSubjectDetails();
-              },
-              (error) => {
-                this.vm.isLoading = false;
-              }
-            );
+            promises.push(this.vm.examinationService.updateObject(this.vm.examinationService.test_second,data));
           }
         });
       });
     });
-    this.vm.handleUpdate('', '');
-    this.vm.isLoading = false;
+    return promises;
+  }
+
+  UpdateHelper()
+  { 
+    let promises = this.updateTestNew();
+    Promise.all(promises).then(value =>{
+      alert('Updated Test list!!!');
+      this.getTestAndSubjectDetails();
+      this.vm.handleUpdate('', '');
+      this.vm.isLoading = false;
+    },error =>{
+      console.log(error);
+    })
   }
 
   //Sort the nested list
