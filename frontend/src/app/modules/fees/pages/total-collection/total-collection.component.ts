@@ -162,29 +162,29 @@ export class TotalCollectionComponent implements OnInit {
 
     getFilteredFeeReceiptList(): any {
         let tempList = this.feeReceiptList;
-
-            if (this.selectedEmployee) {
-                tempList = tempList.filter(feeReceipt => {
-                    return feeReceipt.parentEmployee == this.selectedEmployee.id;
-                });
-            }
-            if (this.selectedFeeReceiptType) {
-                tempList = tempList.filter(feeReceipt => {
-                    return feeReceipt.cancelled == Boolean(this.selectedFeeReceiptType == 'Cancelled Receipts');
-                });
-            }
-            if (this.selectedModeOfPayment) {
-                tempList = tempList.filter(feeReceipt => {
-                    return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
-                })
-            }
-            if (this.selectedClassSection) {
-                tempList = tempList.filter(feeReceipt => {
-                    let classSection = this.getClassAndSection(feeReceipt.parentStudent, feeReceipt.parentSession);
-                    return classSection.classs.id == this.selectedClassSection.classs.id
-                        && classSection.section.id == this.selectedClassSection.section.id;
-                });
-            }
+     
+        if (this.selectedEmployee) {
+            tempList = tempList.filter(feeReceipt => {
+                return feeReceipt.parentEmployee == this.selectedEmployee.id;
+            });
+        }
+        if (this.selectedFeeReceiptType) {
+            tempList = tempList.filter(feeReceipt => {
+                return feeReceipt.cancelled == Boolean(this.selectedFeeReceiptType == 'Cancelled Receipts');
+            });
+        }
+        if (this.selectedModeOfPayment) {
+            tempList = tempList.filter(feeReceipt => {
+                return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
+            })
+        }
+        if (this.selectedClassSection) {
+            tempList = tempList.filter(feeReceipt => {
+                let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
+                return classSection.classs.id == this.selectedClassSection.classs.id
+                    && classSection.section.id == this.selectedClassSection.section.id;
+            });
+        }
 
         if(this.selectedFeeType){
             let filteredSubFeeList=this.subFeeReceiptList.filter(subFeeRecipt=>{

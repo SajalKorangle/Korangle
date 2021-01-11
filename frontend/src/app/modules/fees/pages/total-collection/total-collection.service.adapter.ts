@@ -66,8 +66,7 @@ export class TotalCollectionServiceAdapter {
             'parentFeeReceipt__generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
             'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId
         };
-
-        this.vm.initializeSelection();
+        
 
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
@@ -76,7 +75,7 @@ export class TotalCollectionServiceAdapter {
 
             this.vm.feeReceiptList = value[0].sort((a,b) => {return b.receiptNumber-a.receiptNumber});;
             this.vm.subFeeReceiptList = value[1];
-
+           
             let service_list = [];
 
             let student_list = {
@@ -137,6 +136,8 @@ export class TotalCollectionServiceAdapter {
                 this.initializeFilteredLists();
                 this.vm.isLoading = false;
             }
+            
+            this.vm.initializeSelection();
 
         }, error => {
             this.vm.isLoading = false;

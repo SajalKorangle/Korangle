@@ -52,20 +52,18 @@
         </div>
         <ng-container *ngIf="!isLoading && showReceipts">
 
+        <ng-container *ngIf="feeReceiptList">
 
-            <ng-container *ngIf="feeReceiptList">
+            <div class="row" style="margin-bottom: 30px;">
+                <div class="col-md-12"
+                     style="border-bottom: 1px solid lightgrey;"></div>
+            </div>
 
-                <div class="row" style="margin-bottom: 30px;">
-                    <div class="col-md-12"
-                         style="border-bottom: 1px solid lightgrey;">
-                    </div>
-                </div>
+            <ng-container *ngIf="feeReceiptList.length > 0; else emptyFeeReceiptList">
 
-                <ng-container *ngIf="feeReceiptList.length > 0; else emptyFeeReceiptList">
+                <mat-accordion>
 
-                    <mat-accordion>
-
-                        <ng-container *ngFor="let feeReceipt of feeReceiptList; let i=index; let first=first">
+                    <ng-container *ngFor="let feeReceipt of feeReceiptList; let i=index; let first=first">
 
                             <div *ngIf="i==0 && searchBy!==searchFilterList[2]"
                                  style="margin-bottom: 5px;">
@@ -106,53 +104,53 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-6">
-                                        Receipt No. :
-                                    </div>
-                                    <div class="col-sm-2 col-xs-6">
-                                        {{feeReceipt.receiptNumber}}
-                                    </div>
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-6">
+                                    Receipt No. :
                                 </div>
-
-                                <div *ngIf="searchBy !== searchFilterList[2]" class="row">
-                                    <div class="col-sm-2 col-xs-6">
-                                        Father's Name:
-                                    </div>
-                                    <div class="col-sm-2 col-xs-6">
-                                        {{getStudent(feeReceipt).fathersName}}
-                                    </div>
+                                <div class="col-sm-2 col-xs-6">
+                                    {{feeReceipt.receiptNumber}}
                                 </div>
+                            </div>
 
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-6">
-                                        Mode of Payment:
-                                    </div>
-                                    <div class="col-sm-2 col-xs-6">
-                                        {{feeReceipt.modeOfPayment}}
-                                        <span *ngIf="feeReceipt.modeOfPayment == modeOfPaymentList[1]">
+                            <div *ngIf="searchBy !== searchFilterList[2]" class="row">
+                                <div class="col-sm-2 col-xs-6">
+                                    Father's Name:
+                                </div>
+                                <div class="col-sm-2 col-xs-6">
+                                    {{getStudent(feeReceipt).fathersName}}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-6">
+                                    Mode of Payment:
+                                </div>
+                                <div class="col-sm-2 col-xs-6">
+                                    {{feeReceipt.modeOfPayment}}
+                                    <span *ngIf="feeReceipt.modeOfPayment == modeOfPaymentList[1]">
                                         {{feeReceipt.chequeNumber}}
                                     </span>
-                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-6">
-                                        Remark:
-                                    </div>
-                                    <div class="col-sm-2 col-xs-6">
-                                        {{feeReceipt.remark}}
-                                    </div>
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-6">
+                                    Remark:
                                 </div>
+                                <div class="col-sm-2 col-xs-6">
+                                    {{feeReceipt.remark}}
+                                </div>
+                            </div>
 
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-6">
-                                        Collected By:
-                                    </div>
-                                    <div class="col-sm-2 col-xs-6">
-                                        {{getEmployeeName(feeReceipt)}}
-                                    </div>
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-6">
+                                    Collected By:
                                 </div>
+                                <div class="col-sm-2 col-xs-6">
+                                    {{getEmployeeName(feeReceipt)}}
+                                </div>
+                            </div>
 
                                 <div class="row">
                                     <div class="col-sm-2 col-xs-6">
