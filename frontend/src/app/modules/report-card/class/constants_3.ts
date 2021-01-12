@@ -510,7 +510,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             this.width = this.aspectRatio * this.height;
     }
 
-    updateWidthh(newWidth: number) {
+    updateWidth(newWidth: number) {
         this.width = newWidth;
         if (this.maintainAspectRatio)
             this.height = this.width / this.aspectRatio; 

@@ -8,9 +8,11 @@ import { MarksParametersPannelComponent } from './marks-parameters-pannel/marks-
 import { CustomVariablesDialogComponent } from './custom-variables-dialog/custom-variables-dialog.component';
 import { FormulaParametersPannelComponent } from './formula-parameters-pannel/formula-parameters-pannel.component';
 import { PageResolutionDialogComponent } from './page-resolution-dialog/page-resolution-dialog.component'
+import { ImageParametersPannelComponent } from './image-parameters-pannel/image-parameters-pannel.component'
 
 @NgModule({
-  declarations: [TextParametersPannelComponent, AttendanceParametersPannelComponent, PositionParameterPannelComponent, MarksParametersPannelComponent, CustomVariablesDialogComponent, FormulaParametersPannelComponent, PageResolutionDialogComponent],
+  declarations: [TextParametersPannelComponent, AttendanceParametersPannelComponent, PositionParameterPannelComponent, MarksParametersPannelComponent, CustomVariablesDialogComponent, FormulaParametersPannelComponent, PageResolutionDialogComponent,
+    ImageParametersPannelComponent],
   imports: [
     ComponentsModule,
     MatButtonToggleModule
@@ -22,7 +24,8 @@ import { PageResolutionDialogComponent } from './page-resolution-dialog/page-res
     MarksParametersPannelComponent,
     CustomVariablesDialogComponent,
     FormulaParametersPannelComponent,
-    PageResolutionDialogComponent
+    PageResolutionDialogComponent,
+    ImageParametersPannelComponent
   ]
 })
 export class ParametersPannelModule { }
