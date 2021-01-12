@@ -24,7 +24,7 @@ export class RestApiGateway {
             if (user.activeSchool.role === 'Employee') {
                 absolute_url.searchParams.append('activeSchoolID', user.activeSchool.dbId);
             } else if (user.activeSchool.role === 'Parent') {
-                absolute_url.searchParams.append('activeStudentId', user.section.student.id)
+                absolute_url.searchParams.append('activeStudentID', user.section.student.id)
             } else {
                 alert('Alert: Contact Admin');
             }

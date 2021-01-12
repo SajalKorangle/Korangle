@@ -13,6 +13,6 @@ def employeeHasSchoolPermission(user, schoolID):
 
 def parentHasStudentPermission(user, studentID):
     student = Student.objects.get(id=studentID)
-    return (user.username == student.mobileNumber
-                or user.username == student.secondMobileNumber)
+    return (user.username == str(student.mobileNumber)
+                or user.username == str(student.secondMobileNumber))
 

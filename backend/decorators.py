@@ -40,7 +40,7 @@ def user_permission_new(function):
                 request.GET._mutable = True
                 del request.GET['activeSchoolID']
                 request.GET._mutable = False
-            elif ('activeStudentId' in request.GET.keys()):  # User is requesting as parent
+            elif ('activeStudentID' in request.GET.keys()):  # User is requesting as parent
                 request.GET._mutable = True
                 del request.GET['activeStudentID']
                 request.GET._mutable = False
@@ -71,7 +71,7 @@ def user_permission_3(function):
                 else:
                     return JsonResponse({'response': get_error_response('Permission Issue')})
 
-            elif ('activeStudentId' in request.GET.keys()):  # User is requesting as parent
+            elif ('activeStudentID' in request.GET.keys()):  # User is requesting as parent
                 activeStudentID = request.GET['activeStudentID']
                 if (parentHasStudentPermission(request.user, activeStudentID)):
                     request.GET._mutable = True
