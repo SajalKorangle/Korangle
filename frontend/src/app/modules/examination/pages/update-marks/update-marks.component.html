@@ -85,7 +85,8 @@
                     <td>{{student.name}}</td>
                     <td>{{student.rollNumber}}</td>
                     <td *ngFor="let test of student.testDetails">
-                        <input type="number" [(ngModel)]="test.newMarksObtained"(ngModelChange)='activateUpdate()'
+                        <input type="number"
+                               [(ngModel)]="test.newMarksObtained"(ngModelChange)='activateUpdate()'
                                placeholder="Type marks here"
                                />
                     </td>

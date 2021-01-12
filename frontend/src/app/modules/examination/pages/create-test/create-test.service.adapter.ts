@@ -242,19 +242,18 @@ export class CreateTestServiceAdapter {
 
     //Get Test And Subject Details
     getTestAndSubjectDetails(): void {
-    this.vm.isLoading = true;
 
-    let request_test_data_list = {
-      parentExamination: this.vm.selectedExamination,
-      parentClass__in: this.classListForTest.join(','),
-      parentDivision__in: this.sectionListForTest.join(','),
-    };
+        this.vm.isLoading = true;
 
-    Promise.all([
-      //fetch test list
-      this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_test_data_list),
-    ]).then(
-      (value) => {
+        let request_test_data_list = {
+          parentExamination: this.vm.selectedExamination,
+          parentClass__in: this.classListForTest.join(','),
+          parentDivision__in: this.sectionListForTest.join(','),
+        };
+
+        Promise.all([
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_test_data_list),
+    ]).then(value => {
         this.vm.newTestList = [];
         value[0].forEach((test) => {
 
@@ -329,43 +328,43 @@ export class CreateTestServiceAdapter {
           }
         });
 
-        this.vm.fetchedList = this.vm.newTestList.length;
-        if (this.vm.newTestList.length === 0) {
-          this.vm.createTestFromTemplate();
-        }
-        this.vm.handleUpdate('', '');
-        this.vm.isLoading = false;
-        this.vm.showTestDetails = true;
-        this.vm.selectedSubject = null;
-        this.vm.selectedTestType = null;
-      },
-      (error) => {
-        this.vm.isLoading = false;
-      }
-    );
-  }
+                this.vm.fetchedList = this.vm.newTestList.length;
+                if (this.vm.newTestList.length === 0) {
+                this.vm.createTestFromTemplate();
+                }
+                this.vm.handleUpdate('', '');
+                this.vm.isLoading = false;
+                this.vm.showTestDetails = true;
+                this.vm.selectedSubject = null;
+                this.vm.selectedTestType = null;
+              },
+              (error) => {
+                this.vm.isLoading = false;
+        });
+    }
 
-  populateSubjectList(): void {
-    this.vm.subjectList = [];
-    this.commonSubjectList.forEach((item) => {
-      let tempSubject = {
-        id: item.subjectId,
-        name: item.subjectName,
-      };
-      this.vm.subjectList.push(tempSubject);
-    });
-  }
+    populateSubjectList(): void {
+        this.vm.subjectList = [];
+        this.commonSubjectList.forEach((item) => {
+            let tempSubject = {
+                id: item.subjectId,
+                name: item.subjectName,
+            };
+            this.vm.subjectList.push(tempSubject);
+        });
+    }
 
   //Create Test New implemented to created test with provided class and section parameter for specific subject and test type
   createTestNew(parentClass: any, parentDivision: any): void {
-    if (this.vm.selectedSubject === null) {
-      alert('Subject should be selected');
-      return;
-    }
 
-    if (this.vm.selectedTestType === 0) {
-      this.vm.selectedTestType = null;
-    }
+        if (this.vm.selectedSubject === null) {
+            alert('Subject should be selected');
+            return;
+        }
+
+        if (this.vm.selectedTestType === 0) {
+            this.vm.selectedTestType = null;
+        }
 
         if (!this.isOnlyGrade(this.vm.selectedSubject)
             && (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)) {
@@ -373,20 +372,20 @@ export class CreateTestServiceAdapter {
             return;
         }
 
-   if (this.isOnlyGrade(this.vm.selectedSubject)) {
+        if (this.isOnlyGrade(this.vm.selectedSubject)) {
             this.vm.selectedMaximumMarks = 100;
         }
 
-    let data = {
-      parentExamination: this.vm.selectedExamination,
-      parentClass: parentClass,
-      parentDivision: parentDivision,
-      parentSubject: this.vm.selectedSubject,
-      startTime: '2019-07-01T11:30:00+05:30',
-      endTime: '2019-07-01T13:30:00+05:30',
-      testType: this.vm.selectedTestType,
-      maximumMarks: this.vm.selectedMaximumMarks,
-    };
+        let data = {
+          parentExamination: this.vm.selectedExamination,
+          parentClass: parentClass,
+          parentDivision: parentDivision,
+          parentSubject: this.vm.selectedSubject,
+          startTime: '2019-07-01T11:30:00+05:30',
+          endTime: '2019-07-01T13:30:00+05:30',
+          testType: this.vm.selectedTestType,
+          maximumMarks: this.vm.selectedMaximumMarks,
+        };
 
     //Logic to check for test already or not...
 
@@ -406,9 +405,9 @@ export class CreateTestServiceAdapter {
               }
             });
           }
+          });
+          }
         });
-      }
-    });
 
         if (testAlreadyAdded) {
             alert('Similar Test is already in the template');

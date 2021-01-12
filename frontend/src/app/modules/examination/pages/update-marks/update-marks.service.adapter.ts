@@ -113,14 +113,10 @@ export class UpdateMarksServiceAdapter {
                         this.student_mini_profile_list.push(data);
                         
                     }
-                    
                     });
                 });
 
             })
-
-            
-
 
 
             let service_list = [];
@@ -277,7 +273,6 @@ export class UpdateMarksServiceAdapter {
         });
         this.vm.selectedExamination = this.vm.examinationClassSectionSubjectList[0];
 
-        console.log("Exam Class Section list "+this.vm.examinationClassSectionSubjectList);
 
     }
 
@@ -456,7 +451,7 @@ export class UpdateMarksServiceAdapter {
     updateStudentTestDetails(): void {
 
         let data = [];
-        
+
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(item => {
             item.testDetails.forEach(itemTwo => {
                 if (itemTwo.marksObtained == null) {
@@ -493,7 +488,7 @@ export class UpdateMarksServiceAdapter {
                 )
             }
             else if(item.id!=null)
-            {   
+            {
                 this.vm.isLoading = true;
                 item.marksObtained = item.newMarksObtained;
                 Promise.all([
@@ -508,11 +503,9 @@ export class UpdateMarksServiceAdapter {
             }
         });
 
-        
             this.vm.isLoading = false;
             this.getStudentTestDetails();
-            
-            
+
     }
-    
+
 }

@@ -62,14 +62,14 @@ export class CreateTestComponent implements OnInit {
 
   isUpdated = false;
 
-  user;
+    user;
 
     showTestDetails = false;
     fetchedList:any;
     dataCanBeFetched = true;
     selectedExamination : any = undefined;
 
-  examinationList: any = [];
+    examinationList: any = [];
     examinationClassSectionList: any;
 
   classSectionSubjectList: Array<{
@@ -88,7 +88,7 @@ export class CreateTestComponent implements OnInit {
 
     subjectList: any;
 
-  // For New Test
+    // For New Test
     selectedSubject: any;
     selectedDate: any;
     selectedStartTime = "10:30";
@@ -104,7 +104,7 @@ export class CreateTestComponent implements OnInit {
 
     isLoading = false;
 
-  constructor(  public examinationService: ExaminationService,
+    constructor(public examinationService: ExaminationService,
                 public classService: ClassService,
                 public subjectNewService: SubjectService) {}
 
