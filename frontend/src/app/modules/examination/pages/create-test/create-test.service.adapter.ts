@@ -515,6 +515,17 @@ export class CreateTestServiceAdapter {
         });
         return result;
     }
+     getClassName(classId: any): any {
+        let result = '';
+        this.classList.every((item) => {
+          if (item.id === classId) {
+            result = item.name;
+            return false;
+          }
+          return true;
+        });
+        return result;
+     }
 
   getSectionName(sectionId: any): any {
     let result = '';
