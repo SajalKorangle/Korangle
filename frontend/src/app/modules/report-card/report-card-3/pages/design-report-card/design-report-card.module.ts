@@ -4,10 +4,11 @@ import { DesignReportCardComponent } from './design-report-card.component';
 import { DesignReportCardRouting } from './design-report-card.routing';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
-import { ParametersPannelModule } from './../../../components/parameters-pannel.module'
+import { ParametersPannelModule } from './../../../components/parameters-pannel.module';
 import { MatDialogModule} from '@angular/material/dialog';
-import { CustomVariablesDialogComponent } from './../../../components/custom-variables-dialog/custom-variables-dialog.component'
-import {PageResolutionDialogComponent} from './../../../components/page-resolution-dialog/page-resolution-dialog.component'
+import { CustomVariablesDialogComponent } from './../../../components/custom-variables-dialog/custom-variables-dialog.component';
+import { PageResolutionDialogComponent } from './../../../components/page-resolution-dialog/page-resolution-dialog.component';
+import { ResultDialogComponent} from './../../../components/result-dialog/result-dialog.component'
 
 @NgModule({
   declarations: [DesignReportCardComponent],
@@ -21,7 +22,8 @@ import {PageResolutionDialogComponent} from './../../../components/page-resoluti
   ],
   entryComponents: [
     CustomVariablesDialogComponent,
-    PageResolutionDialogComponent
+    PageResolutionDialogComponent,
+    ResultDialogComponent
   ],
   bootstrap: [DesignReportCardComponent]
 })

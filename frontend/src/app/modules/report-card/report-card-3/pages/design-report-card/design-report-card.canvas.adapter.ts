@@ -7,7 +7,8 @@ import {
     CanvasDate,
     Formula,
     PageResolution,
-    PAGE_RESOLUTIONS
+    PAGE_RESOLUTIONS,
+    Result
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -253,25 +254,34 @@ export class DesignReportCardCanvasAdapter {
         },1000);    // bad design of waiting for canvas loading
     }
 
-    newImageLayer(initialParameters: object): void{
+    newImageLayer(initialParameters: object): CanvasImage{
         let canvasImage = new CanvasImage(initialParameters, this);
         this.newLayerInitilization(canvasImage);
+        return canvasImage
     }
 
-    newTextLayer(initialParameters: object = {}): void{
+    newTextLayer(initialParameters: object = {}): CanvasText{
         let canvasText = new CanvasText(initialParameters, this);
         this.newLayerInitilization(canvasText);
+        return canvasText;
     }
 
-    newDateLayer(initialParameters: object = {}) {
+    newDateLayer(initialParameters: object = {}): CanvasDate {
         let canvasDate = new CanvasDate(initialParameters, this);
         this.newLayerInitilization(canvasDate);
+        return canvasDate;
     }
 
     newFormulaLayer(initialParameters: object = {}):Formula{
         let canavsFormula = new Formula(initialParameters, this);
         this.newLayerInitilization(canavsFormula);
         return canavsFormula;
+    }
+
+    newReultLayer(initialParameters: object = {}): Result{
+        let result = new Result(initialParameters, this);
+        this.newLayerInitilization(result);
+        return result;
     }
 
     newLayerInitilization(layer: Layer): void{
