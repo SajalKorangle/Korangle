@@ -4,19 +4,30 @@
     </div>
     <div style="margin: 4px; padding: 4px;">
 
-        <mat-form-field appearence="fill">
-            <mat-label>
+        <!-- <mat-form-field appearence="fill"> -->
+            <!-- <mat-label>
                 Start Date
-            </mat-label>
-            <input matInput type="date" [ngModel]="layer.startDate.toISOString().substr(0,10)" (ngModelChange)="layer.startDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();">
-        </mat-form-field>
+            </mat-label> -->
+            <day-date [placeHolder]="'Start Date'"
+                    ngDefaultControl
+                    [initialValue]="layer.startDate.toISOString().substr(0,10)"
+                    (onDateSelected)="layer.startDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();"
+                    ></day-date>
+            <!-- <input matInput type="date" [ngModel]="layer.starstDate.toISOString().substr(0,10)" (ngModelChange)="layer.startDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();"> -->
+        <!-- </mat-form-field> -->
 
-        <mat-form-field appearence="fill">
-            <mat-label>
+        <!-- <mat-form-field appearence="fill"> -->
+            <!-- <mat-label>
                 End Date
             </mat-label>
-            <input matInput type="date" [ngModel]="layer.endDate.toISOString().substr(0,10)" (ngModelChange)="layer.endDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();">
-        </mat-form-field>
+            <input matInput type="date" [ngModel]="layer.endDate.toISOString().substr(0,10)" (ngModelChange)="layer.endDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();"> -->
+            <day-date [placeHolder]="'End Date'"
+                    ngDefaultControl
+                    [initialValue]="layer.endDate.toISOString().substr(0,10)"
+                    (onDateSelected)="layer.endDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();"
+                    ></day-date>
+            
+        <!-- </mat-form-field> -->
        
     </div>
 </mat-card>

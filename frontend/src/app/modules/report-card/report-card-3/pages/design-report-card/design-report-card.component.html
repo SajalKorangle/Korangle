@@ -65,7 +65,14 @@
 
             <div class="tool">
                 <button class="btn material-icons"
-                        (click)="logMessage('zoom_in')">zoom_in</button>    <!--To Be Implemented: Canavs resize-->
+                        [disabled]="canvasAdapter.maximumCanvasSize() == true"
+                        (click)="canvasAdapter.increaseCanvasSize()">zoom_in</button>    <!--To Be Implemented: Canavs resize-->
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        [disabled]="canvasAdapter.minimumCanvasSize() == true"
+                        (click)="canvasAdapter.decreaseCanvasSize()">zoom_out</button>    <!--To Be Implemented: Canavs resize-->
             </div>
 
             <div class="tool">

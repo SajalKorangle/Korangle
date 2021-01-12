@@ -4,12 +4,18 @@
     </div>
     <div style="margin: 4px; padding: 4px;">
 
-        <mat-form-field appearence="fill">
+        <mat-form-field appearence="fill" *ngIf="layer.LAYER_TYPE =='TEXT'">
             <mat-label>
                 Value
             </mat-label>
             <input matInput type="text" [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [ngModel]="layer.text" (ngModelChange)="layer.text=$event; canvasRefresh(500, layer.updateTextBoxMetrics);">
         </mat-form-field>
+        
+        <ng-container *ngIf="layer.LAYER_TYPE =='DATE'">
+            <day-date [placeHolder]="'Select Date'"
+                    (onDateSelected)="onDateSelected($event); canvasRefresh(500, layer.updateTextBoxMetrics);getCurrentDate()"
+                    [initialValue]="getCurrentDate()"></day-date>
+        </ng-container>
 
         <div style="text-align: center;">
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">

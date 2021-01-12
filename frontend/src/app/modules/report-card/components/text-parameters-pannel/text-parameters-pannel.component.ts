@@ -30,6 +30,15 @@ export class TextParametersPannelComponent implements OnInit {
     this.layer.fontStyle.font = fontArgumentsArray.join(' ');
   }
 
+  onDateSelected(event){
+    this.layer.date = new Date(event);
+    this.layer.dateFormatting();
+  }
+
+  getCurrentDate():any{
+    return this.layer.date.toISOString().substr(0,10);
+  }
+
   getFontSize(): string{
     let [,,fontSize] = this.layer.fontStyle.font.split(' ');
     return (parseFloat(fontSize.substr(0, fontSize.length - 2))*this.getPixelTommFactor()).toFixed(2);

@@ -708,6 +708,7 @@ export class CanvasDate extends CanvasText implements Layer{
     }
 
     dateFormatting(): void{
+        console.log(this.date);
         const dateReplacements:{[key:string]: string}  = getDateReplacements(this.date);
         let dateValue = this.dateFormat;
         Object.entries(dateReplacements).forEach(([dataReplacementKey, dateReplacementvalue]) => {
