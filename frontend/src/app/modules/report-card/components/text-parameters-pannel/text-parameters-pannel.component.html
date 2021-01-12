@@ -11,11 +11,10 @@
             <input matInput type="text" [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [ngModel]="layer.text" (ngModelChange)="layer.text=$event; canvasRefresh(500, layer.updateTextBoxMetrics);">
         </mat-form-field>
         
-        <ng-container *ngIf="layer.LAYER_TYPE =='DATE'">
-            <day-date [placeHolder]="'Select Date'"
-                    (onDateSelected)="onDateSelected($event); canvasRefresh(500, layer.updateTextBoxMetrics);getCurrentDate()"
-                    [initialValue]="getCurrentDate()"></day-date>
-        </ng-container>
+        <mat-form-field *ngIf="layer.LAYER_TYPE =='DATE'">
+            <input type="date" matInput [ngModel]="getCurrentDate()"
+                (ngModelChange)="onDateSelected($event); canvasRefresh(500, layer.updateTextBoxMetrics);" placeholder="End Date ">
+        </mat-form-field>
 
         <div style="text-align: center;">
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">
