@@ -1,115 +1,38 @@
 <h2 mat-dialog-title>Result</h2>
 <mat-dialog-content style="min-height: 35vh; max-height: 68vh; min-width: 50vw; max-width: 75vw;">
-    <mat-tab-group mat-align-tabs="center">
+    <mat-tab-group mat-align-tabs="center" style="padding: 10px;">
         
-        <mat-tab label="marks/variables">
-            <mat-accordion [multi]="false">
-            <ng-container *ngFor="let customVariable of marksVariables">
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header [collapsedHeight]="'65px'">
-                        <mat-panel-title>
-                            <mat-form-field>
-                                <mat-label>Variable Name</mat-label>
-                                <input matInput type="text" [(ngModel)]="customVariable.name">
-                            </mat-form-field>
-                        </mat-panel-title>
-                        <mat-panel-description>
-                        {{customVariable.type}}
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    
-                    <p class="expansion-pannel-content">
-                        
-                        <ng-container [ngSwitch]="customVariable.type">
-
-                            <ng-container *ngSwitchCase="'LAYER'">
-                                <mat-select placeholder="Select Layer" [(ngModel)]="customVariable.layerID" *ngIf="getMarksFormulaLayers().length>0">
-                                    <mat-option *ngFor="let l of getMarksFormulaLayers();" [value]="l.id">{{l.displayName}} : {{l.marks}} #{{l.id}}</mat-option>
-                                </mat-select>
-                            </ng-container>
-
-                            <ng-container *ngSwitchCase="'MARKS'">
-                                <mat-form-field>
-                                    <mat-select 
-                                        placeholder="Examination"
-                                        [(ngModel)]="customVariable.parentExamination">
-                                        <mat-option *ngFor="let examination of getExaminationList();" [value]="examination.id">{{examination.name}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                        
-                                <mat-form-field>
-                                    <mat-select placeholder="Subject"
-                                    [(ngModel)]="customVariable.parentSubject">
-                                        <mat-option *ngFor="let subject of getSubjectList();" [value]="subject.id">
-                                            {{subject.name}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field><br/>
-                        
-                                <mat-form-field>
-                                    <mat-select placeholder="Test Type"
-                                    [(ngModel)]="customVariable.testType">
-                                        <mat-option *ngFor="let testType of getTestTypeList()" [value]="testType">{{testType?testType:'NONE'}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                        
-                                <mat-form-field>
-                                    <mat-select placeholder="M.M. / M.O."
-                                    [(ngModel)]="customVariable.marksType">
-                                        <mat-option *ngFor="let marksType of getMarksTypeList()" [value]="marksType">{{marksType}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </ng-container>
-
-                            <ng-container *ngSwitchCase="'FORMULA'">
-                                <mat-form-field appearence="fill" style="width: 100%;">
-                                    <mat-label>Formula</mat-label>
-                                    <input type="text" matInput [(ngModel)]="customVariable.formula">
-                                </mat-form-field>
-                            </ng-container>
-
-                        </ng-container>
-                        <ng-container *ngIf="customVariable.isMarks">
-                            <mat-form-field style="width: 100%;">
-                                <mat-label>Passing Marks</mat-label>
-                                <input type="number" [min]="0" matInput>
-                            </mat-form-field>
-                        </ng-container>
-                        <mat-slide-toggle [(ngModel)]="customVariable.isMarks" style="float: right;">Marks</mat-slide-toggle>
-
-                    </p>
-
-                </mat-expansion-panel>
+        <mat-tab label="Marks">
+          
+            <ng-container *ngFor="let marksLayer of layer.marksLayers">
+                <div style="display: flex; flex-direction: row; justify-content: space-around;">
+                    <span>#{{marksLayer.id}}</span>
+                    <span>{{marksLayer.displayName}}</span>
+                </div>
             </ng-container>
-            </mat-accordion>
+
             <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: fit-content;margin-left: auto; align-items: center; margin-top: 16px; ">
-            <button class="btn" appearence="fill" style="padding: 6px;" (click)="createCustomVariable()">Add Variable</button>
+            <button class="btn" appearence="fill" style="padding: 6px;" (click)="addToMarksLayer()">Add Marks</button>
             <mat-form-field appearence="fill" style="margin-left: 20px">
-                <mat-select placeholder="Select Variable Type" [(ngModel)]="newCustomVariableType">
-                    <mat-option *ngFor="let type of customVariablesTypes()" [value]="type">{{type}}</mat-option>
+                <mat-select placeholder="Select Variable Type" [(ngModel)]="newMarksLayer">
+                    <ng-container *ngFor="let layer of layer.ca.layers"> 
+                        <mat-option *ngIf="layer.LAYER_TYPE=='MARKS'" [value]="layer">#{{layer.id}} {{layer.displayName}}</mat-option>
+                    </ng-container>
                 </mat-select>
             </mat-form-field>
             </div>
         </mat-tab>
 
         <mat-tab label="Rules" style="padding-top: 4px;">
-            <ng-container *ngFor="let cv of getMarksVariables(); let i = index;">
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            No. of failed subject
-                        </mat-panel-title>
-                        <mat-panel-description>
-                        {{i+1}}
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <p class="expansion-pannel-content">
-                        <mat-form-field appearence="fill" style="width: 100%;">
-                            <mat-label>Status</mat-label>
-                            <input type="text" matInput>
-                        </mat-form-field>
-                    </p>
-                </mat-expansion-panel>
+            <div style="display: flex; flex-direction: row; justify-content: space-around;">
+                <span>No. of failed subject</span>
+                <span>Remarks</span>
+            </div>
+            <ng-container *ngFor="let marksLayer of marksLayers; let i = index;">
+                <div style="display: flex; flex-direction: row; justify-content: space-around;">
+                    <span>{{i+1}}</span>
+                    <span><input #matInput type="text"></span>
+                </div>
             </ng-container>
         </mat-tab>
 

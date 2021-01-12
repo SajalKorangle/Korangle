@@ -1086,7 +1086,7 @@ export class Formula extends CanvasText implements Layer{
 export class Result extends CanvasText implements Layer{
     displayName: string = 'Result';
 
-    marksVariables: CustomVariable[] = []; 
+    marksLayers: MarksLayer[] = []; 
     rules: any[];
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
