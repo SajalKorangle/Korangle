@@ -49,6 +49,7 @@ import {SafePipe} from '../pipes/safe.pipe';
         MatFormFieldModule,
         MatInputModule,
         MatDialogModule,
+        SafePipe,
     ]
 })
 export class BasicComponentsModule { }

@@ -27,7 +27,7 @@ class Task(models.Model):
     path = models.TextField(default='', null=False, verbose_name='path')
     title = models.TextField(default='', null=False, verbose_name='title')
     orderNumber = models.IntegerField(default=1, null=False)
-    parentBoard = models.ForeignKey(Board, on_delete=models.PROTECT, null=True, verbose_name='parentBoard')
+    parentBoard = models.ForeignKey(Board, on_delete=models.PROTECT, null=True, blank=True, verbose_name='parentBoard')
     videoUrl = models.TextField(null=True, verbose_name='videoUrl')
 
     def __str__(self):
