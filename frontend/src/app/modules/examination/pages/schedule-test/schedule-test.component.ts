@@ -8,197 +8,192 @@ import { ExaminationService } from '../../../../services/modules/examination/exa
 import { ScheduleTestServiceAdapter } from './schedule-test.service.adapter';
 
 @Component({
-  selector: 'schedule-test',
-  templateUrl: './schedule-test.component.html',
-  styleUrls: ['./schedule-test.component.css'],
-  providers: [
-    ClassService,
-    ExaminationService,
-    SubjectService,
-  ],
+	selector: 'schedule-test',
+	templateUrl: './schedule-test.component.html',
+	styleUrls: ['./schedule-test.component.css'],
+	providers: [
+		ClassService,
+		ExaminationService,
+		SubjectService,
+	],
 })
 export class ScheduleTestComponent implements OnInit {
-  showSelectedClassAndSection: any = [];
-  selectedExaminationNew: any;
+	showSelectedClassAndSection: any = [];
+	selectedExaminationNew: any;
 
-  newTestList: Array<{
-    deleted: boolean;
-    parentExamination: any;
-    subjectId: any;
-    subjectName: any;
-    testType: any;
-    maximumMarks: any;
-    startTime: any;
-    newStartTime: any;
-    endTime: any;
-    newEndTime: any;
-    date: any;
-    newDate: any;
-    classList: Array<{
-      classId: any;
-      className: any;
-      sectionList: Array<{
-        sectionId: any;
-        sectionName: any;
-        testId: any;
-      }>;
-    }>;
-  }>;
+	newTestList: Array<{
+		deleted: boolean;
+		parentExamination: any;
+		subjectId: any;
+		subjectName: any;
+		testType: any;
+		maximumMarks: any;
+		startTime: any;
+		newStartTime: any;
+		endTime: any;
+		newEndTime: any;
+		date: any;
+		newDate: any;
+		classList: Array<{
+			classId: any;
+			className: any;
+			sectionList: Array<{
+				sectionId: any;
+				sectionName: any;
+				testId: any;
+			}>;
+		}>;
+	}>;
 
-  classSectionSubjectList: Array<{
-    className: any;
-    classId: any;
-    sectionList: Array<{
-      sectionName: any;
-      sectionId: any;
-      selected: boolean;
-      subjectList: Array<{
-        subjectName: any;
-        subjectId: any;
-      }>;
-    }>;
-  }>;
+	classSectionSubjectList: Array<{
+		className: any;
+		classId: any;
+		sectionList: Array<{
+			sectionName: any;
+			sectionId: any;
+			selected: boolean;
+			subjectList: Array<{
+				subjectName: any;
+				subjectId: any;
+			}>;
+		}>;
+	}>;
 
-  
 
-  isUpdated = false;
 
-  user;
+	isUpdated = false;
 
-  showTestDetails = false;
+	user;
 
-  selectedExamination : any = undefined;
+	showTestDetails = false;
 
-  dataCanBeFetched = true;
+	selectedExamination: any = undefined;
 
-  fetchedListLength: any;
+	dataCanBeFetched = true;
 
-  subjectList: any;
+	fetchedListLength: any;
 
-  testTypeList = TEST_TYPE_LIST;
+	subjectList: any;
 
-  examinationList: any = [];
+	testTypeList = TEST_TYPE_LIST;
 
-  serviceAdapter: ScheduleTestServiceAdapter;
+	examinationList: any = [];
 
-  isInitialLoading = false;
+	serviceAdapter: ScheduleTestServiceAdapter;
 
-  isLoading = false;
+	isInitialLoading = false;
 
-  constructor(
-    public examinationService: ExaminationService,
-    public classService: ClassService,
-    public subjectNewService: SubjectService
-  ) {}
+	isLoading = false;
 
-  ngOnInit(): void {
-    this.user = DataStorage.getInstance().getUser();
+	constructor(
+		public examinationService: ExaminationService,
+		public classService: ClassService,
+		public subjectNewService: SubjectService
+	) { }
 
-    this.serviceAdapter = new ScheduleTestServiceAdapter();
-    this.serviceAdapter.initializeAdapter(this);
-    this.serviceAdapter.initializeData();
-  }
+	ngOnInit(): void {
+		this.user = DataStorage.getInstance().getUser();
 
-  formatDate(dateStr: any, status: any): any {
-    let d = new Date(dateStr);
+		this.serviceAdapter = new ScheduleTestServiceAdapter();
+		this.serviceAdapter.initializeAdapter(this);
+		this.serviceAdapter.initializeData();
+	}
 
-    if (status === 'firstDate') {
-      d = new Date(d.getFullYear(), d.getMonth(), 1);
-    } else if (status === 'lastDate') {
-      d = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-    }
+	formatDate(dateStr: any, status: any): any {
+		let d = new Date(dateStr);
 
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    let year = d.getFullYear();
+		if (status === 'firstDate') {
+			d = new Date(d.getFullYear(), d.getMonth(), 1);
+		} else if (status === 'lastDate') {
+			d = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+		}
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+		let month = '' + (d.getMonth() + 1);
+		let day = '' + d.getDate();
+		let year = d.getFullYear();
 
-    return [year, month, day].join('-');
-  }
+		if (month.length < 2) month = '0' + month;
+		if (day.length < 2) day = '0' + day;
 
-  getTestDate(test: any): any {
-    return new Date(test.startTime);
-  }
+		return [year, month, day].join('-');
+	}
 
-  onTestDateUpdation(test: any, event: any): void {
-    var tempNewDate  = this.formatDate(event.value,'');
-    var tempOldDate = this.formatDate(test.date,'');
-    if(tempNewDate != tempOldDate)
-    {
-      test.newDate = event.value;
-    }
-    else
-    {
-      test.newDate = test.date;
-    }
-    this.handleUpdate();
+	getTestDate(test: any): any {
+		return new Date(test.startTime);
+	}
 
-  }
+	onTestDateUpdation(test: any, event: any): void {
+		var tempNewDate = this.formatDate(event.value, '');
+		var tempOldDate = this.formatDate(test.date, '');
+		if (tempNewDate != tempOldDate) {
+			test.newDate = event.value;
+		}
+		else {
+			test.newDate = test.date;
+		}
+		this.handleUpdate();
+
+	}
 
 
 
 
-  //It handles the update button
-  handleUpdate(): void {
-    var update = false;
+	//It handles the update button
+	handleUpdate(): void {
+		var update = false;
 
-    var timeError = 0;
-    this.newTestList.forEach((test) => {
-      if(test.newStartTime > test.newEndTime)
-      {
-        timeError++;
-      }
-    });
-    if(timeError>0)
-    { 
-      alert('Please correct start and end time of '+timeError+ 'tests');
-      return;
-    }
-    this.newTestList.forEach((test) => {
-      if(this.formatDate(test.newDate,'') != this.formatDate(test.date,'')
-         || test.newStartTime != test.startTime
-         || test.newEndTime != test.endTime
-         || test.deleted )
-      {
-        update = true;
-      }
-     
-
-    });
-    if (update) this.isUpdated = true;
-    else this.isUpdated = false;
+		var timeError = 0;
+		this.newTestList.forEach((test) => {
+			if (test.newStartTime > test.newEndTime) {
+				timeError++;
+			}
+		});
+		if (timeError > 0) {
+			alert('Please correct start and end time of ' + timeError + 'tests');
+			return;
+		}
+		this.newTestList.forEach((test) => {
+			if (this.formatDate(test.newDate, '') != this.formatDate(test.date, '')
+				|| test.newStartTime != test.startTime
+				|| test.newEndTime != test.endTime
+				|| test.deleted) {
+				update = true;
+			}
 
 
-  }
+		});
+		if (update) this.isUpdated = true;
+		else this.isUpdated = false;
 
-  //Check if current test is created for all the selected class and section
-  containsAllClass(test: any): boolean {
-    var containsAll = true;
 
-    this.showSelectedClassAndSection.forEach((item) => {
-      var cl = item.className;
-      var sec = item.sectionName;
-      var clFound = false;
-      test.classList.forEach((clas) => {
-        if (clas.className === cl) {
-          clFound = true;
-          var secIndex = clas.sectionList.findIndex(
-            (secc) => secc.sectionName === sec
-          );
-          if (secIndex === -1) containsAll = false;
-        }
-      });
-      if (!clFound) containsAll = false;
-    });
+	}
 
-    return containsAll;
-  }
+	//Check if current test is created for all the selected class and section
+	containsAllClass(test: any): boolean {
+		var containsAll = true;
 
-   //Reset the test list view if not updated or simply get the backend test list
-   resetList(): void {
-    this.serviceAdapter.getTestAndSubjectDetails();
-    this.isUpdated = false;
-  }
+		this.showSelectedClassAndSection.forEach((item) => {
+			var cl = item.className;
+			var sec = item.sectionName;
+			var clFound = false;
+			test.classList.forEach((clas) => {
+				if (clas.className === cl) {
+					clFound = true;
+					var secIndex = clas.sectionList.findIndex(
+						(secc) => secc.sectionName === sec
+					);
+					if (secIndex === -1) containsAll = false;
+				}
+			});
+			if (!clFound) containsAll = false;
+		});
+
+		return containsAll;
+	}
+
+	//Reset the test list view if not updated or simply get the backend test list
+	resetList(): void {
+		this.serviceAdapter.getTestAndSubjectDetails();
+		this.isUpdated = false;
+	}
 }

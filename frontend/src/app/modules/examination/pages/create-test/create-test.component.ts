@@ -6,14 +6,14 @@ import { ClassService } from '../../../../services/modules/class/class.service';
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
-import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
-import {DataStorage} from "../../../../classes/data-storage";
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
+import { DataStorage } from "../../../../classes/data-storage";
 
 @Component({
-  selector: 'create-test',
-  templateUrl: './create-test.component.html',
-  styleUrls: ['./create-test.component.css'],
-  providers: [ ExaminationService, ClassService,,SubjectService ],
+    selector: 'create-test',
+    templateUrl: './create-test.component.html',
+    styleUrls: ['./create-test.component.css'],
+    providers: [ExaminationService, ClassService, , SubjectService],
 })
 
 export class CreateTestComponent implements OnInit {
@@ -21,41 +21,41 @@ export class CreateTestComponent implements OnInit {
     selectedExaminationNew: any;
 
     newTestList: Array<{
-    deleted: boolean;
-    parentExamination: any;
-    subjectId: any;
-    subjectName: any;
-    testType: any;
-    newTestType: any;
-    maximumMarks: any;
-    newMaximumMarks: any;
-    classList: Array<{
-        classId: any;
-        className: any;
-        sectionList: Array<{
-            sectionId: any;
-            sectionName: any;
-            testId: any;
+        deleted: boolean;
+        parentExamination: any;
+        subjectId: any;
+        subjectName: any;
+        testType: any;
+        newTestType: any;
+        maximumMarks: any;
+        newMaximumMarks: any;
+        classList: Array<{
+            classId: any;
+            className: any;
+            sectionList: Array<{
+                sectionId: any;
+                sectionName: any;
+                testId: any;
+            }>;
         }>;
-    }>;
     }>;
 
     templateTestList: Array<{
-    deleted: boolean;
-    parentExamination: any;
-    subjectId: any;
-    subjectName: any;
-    testType: any;
-    newTestType: any;
-    maximumMarks: any;
-    newMaximumMarks: any;
-    classList: Array<{
-        classId: any;
-        className: any;
-        sectionList: Array<{
-            sectionId: any;
-            sectionName: any;
-            testId: any;
+        deleted: boolean;
+        parentExamination: any;
+        subjectId: any;
+        subjectName: any;
+        testType: any;
+        newTestType: any;
+        maximumMarks: any;
+        newMaximumMarks: any;
+        classList: Array<{
+            classId: any;
+            className: any;
+            sectionList: Array<{
+                sectionId: any;
+                sectionName: any;
+                testId: any;
             }>;
         }>;
     }>;
@@ -65,23 +65,23 @@ export class CreateTestComponent implements OnInit {
     user;
 
     showTestDetails = false;
-    fetchedList:any;
+    fetchedList: any;
     dataCanBeFetched = true;
-    selectedExamination : any = undefined;
+    selectedExamination: any = undefined;
 
     examinationList: any = [];
     examinationClassSectionList: any;
 
     classSectionSubjectList: Array<{
-    className: any;
-    classId: any;
-    sectionList: Array<{
-        sectionName: any;
-        sectionId: any;
-        selected: boolean;
-        subjectList: Array<{
-            subjectName: any;
-            subjectId: any;
+        className: any;
+        classId: any;
+        sectionList: Array<{
+            sectionName: any;
+            sectionId: any;
+            selected: boolean;
+            subjectList: Array<{
+                subjectName: any;
+                subjectId: any;
             }>;
         }>;
     }>;
@@ -105,8 +105,8 @@ export class CreateTestComponent implements OnInit {
     isLoading = false;
 
     constructor(public examinationService: ExaminationService,
-                public classService: ClassService,
-                public subjectNewService: SubjectService) {}
+        public classService: ClassService,
+        public subjectNewService: SubjectService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -168,23 +168,23 @@ export class CreateTestComponent implements OnInit {
                 };
 
                 var subIdx = this.newTestList.findIndex(
-                (sub) =>
-                    sub.subjectId === test.parentSubject &&
-                    sub.testType === test.testType &&
-                    sub.maximumMarks === test.maximumMarks
+                    (sub) =>
+                        sub.subjectId === test.parentSubject &&
+                        sub.testType === test.testType &&
+                        sub.maximumMarks === test.maximumMarks
                 );
 
                 var classIdx = -1,
-                sectionIdx = -1;
+                    sectionIdx = -1;
 
                 if (subIdx != -1) {
                     classIdx = this.newTestList[subIdx].classList.findIndex((cl) => cl.classId === test.parentClass);
 
                     if (classIdx != -1) {
                         sectionIdx = this.newTestList[subIdx].classList[
-                        classIdx
+                            classIdx
                         ].sectionList.findIndex(
-                        (sec) => sec.sectionId === test.parentDivision
+                            (sec) => sec.sectionId === test.parentDivision
                         );
                     }
                 }
@@ -219,11 +219,11 @@ export class CreateTestComponent implements OnInit {
                 };
 
                 if (subIdx === -1) {
-                        this.newTestList.push(tempSubject);
-                    } else if (classIdx === -1) {
-                        this.newTestList[subIdx].classList.push(tempClass);
-                    } else if (sectionIdx === -1) {
-                        this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
+                    this.newTestList.push(tempSubject);
+                } else if (classIdx === -1) {
+                    this.newTestList[subIdx].classList.push(tempClass);
+                } else if (sectionIdx === -1) {
+                    this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
                 }
             });
         }
@@ -259,7 +259,7 @@ export class CreateTestComponent implements OnInit {
             this.selectedTestType = null;
         }
 
-        if (!this.serviceAdapter.isOnlyGrade(this.selectedSubject.id) &&(!this.selectedMaximumMarks || this.selectedMaximumMarks < 1)) {
+        if (!this.serviceAdapter.isOnlyGrade(this.selectedSubject.id) && (!this.selectedMaximumMarks || this.selectedMaximumMarks < 1)) {
             alert('Invalid Maximum Marks');
             return;
         }
@@ -281,17 +281,17 @@ export class CreateTestComponent implements OnInit {
 
             var subIdx = this.newTestList.findIndex(
                 (sub) =>
-                sub.subjectId === test.parentSubject &&
-                sub.testType === test.testType &&
-                sub.maximumMarks === test.maximumMarks
+                    sub.subjectId === test.parentSubject &&
+                    sub.testType === test.testType &&
+                    sub.maximumMarks === test.maximumMarks
             );
 
             var classIdx = -1,
-            sectionIdx = -1;
+                sectionIdx = -1;
 
             if (subIdx != -1) {
                 classIdx = this.newTestList[subIdx].classList.findIndex(
-                (cl) => cl.classId === test.parentClass);
+                    (cl) => cl.classId === test.parentClass);
 
                 if (classIdx != -1) {
                     sectionIdx = this.newTestList[subIdx].classList[classIdx].sectionList.findIndex((sec) => sec.sectionId === test.parentDivision);
@@ -335,7 +335,7 @@ export class CreateTestComponent implements OnInit {
                 this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
             } else {
                 alert(
-                'Similar test is already in the template which is not created in database...'
+                    'Similar test is already in the template which is not created in database...'
                 );
                 this.selectedTestType = null;
                 this.selectedSubject = null;
@@ -350,15 +350,13 @@ export class CreateTestComponent implements OnInit {
     handleUpdate(value: any, test: any): void {
         var update = false;
         this.newTestList.forEach((test) => {
-            if(test.classList[0].sectionList[0].testId === null)
-            {
-                if(!test.deleted)update = true;
+            if (test.classList[0].sectionList[0].testId === null) {
+                if (!test.deleted) update = true;
             }
-            else
-            {
-                if(test.deleted)update =true;
-                if(test.newMaximumMarks != test.maximumMarks ||test.newTestType != test.testType)
-                update = true;
+            else {
+                if (test.deleted) update = true;
+                if (test.newMaximumMarks != test.maximumMarks || test.newTestType != test.testType)
+                    update = true;
             }
         });
         if (update) this.isUpdated = true;
@@ -377,7 +375,7 @@ export class CreateTestComponent implements OnInit {
                 if (clas.className === cl) {
                     clFound = true;
                     var secIndex = clas.sectionList.findIndex(
-                    (secc) => secc.sectionName === sec
+                        (secc) => secc.sectionName === sec
                     );
                     if (secIndex === -1) containsAll = false;
                 }

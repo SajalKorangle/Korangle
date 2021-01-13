@@ -4,10 +4,10 @@ import { ExaminationService } from '../../../../services/modules/examination/exa
 import { ClassService } from '../../../../services/modules/class/class.service';
 
 import { UpdateMarksServiceAdapter } from './update-marks.service.adapter';
-import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from "../../../../classes/data-storage";
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { StudentService } from 'app/services/modules/student/student.service';
 
@@ -15,7 +15,7 @@ import { StudentService } from 'app/services/modules/student/student.service';
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ ClassService, SubjectService, ExaminationService, StudentService ],
+    providers: [ClassService, SubjectService, ExaminationService, StudentService],
 })
 
 export class UpdateMarksComponent implements OnInit {
@@ -38,13 +38,13 @@ export class UpdateMarksComponent implements OnInit {
     isInitialLoading = false;
 
     isLoading = false;
-    isUpdated =  false;
+    isUpdated = false;
 
-    constructor(public examinationService : ExaminationService,
-                public classService: ClassService,
-                public subjectService: SubjectService,
-                public studentNewService: StudentService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(public examinationService: ExaminationService,
+        public classService: ClassService,
+        public subjectService: SubjectService,
+        public studentNewService: StudentService,
+        private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -80,19 +80,18 @@ export class UpdateMarksComponent implements OnInit {
         })
     }
 
-    handleUpdate(event: any,student: any): void {
-        
-        
+    handleUpdate(event: any, student: any): void {
+
+
         student.testDetails.forEach(item => {
-            if(event != item.marksObtained)
-            {   
+            if (event != item.marksObtained) {
                 item.newMarksObtained = event;
-                
+
             }
         });
 
         this.activateUpdate();
-        
+
     }
     activateUpdate(): void {
         var updateCheck = false;
@@ -101,15 +100,15 @@ export class UpdateMarksComponent implements OnInit {
 
         student_list.forEach(st => {
             st.testDetails.forEach(test => {
-                if(test.newMarksObtained != test.marksObtained)
-                updateCheck = true;;
+                if (test.newMarksObtained != test.marksObtained)
+                    updateCheck = true;;
             });
         });
 
-        if(updateCheck)
-        this.isUpdated = true;
+        if (updateCheck)
+            this.isUpdated = true;
         else
-        this.isUpdated = false;
+            this.isUpdated = false;
     }
 
 }
