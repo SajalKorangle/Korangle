@@ -174,7 +174,6 @@ export class IssueHomeworkServiceAdapter {
                 })
                 // this.fetchGCMDevices(this.studentNotificationList);
                 this.vm.updateService.fetchGCMDevicesNew(this.studentNotificationList);
-                console.log(this.studentNotificationList);
                 this.vm.isLoading = false;
             });
             this.sortHomeworks();
@@ -228,21 +227,6 @@ export class IssueHomeworkServiceAdapter {
             });
             index = index + 1;
             promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question_image, temp_form_data));
-        })
-
-        //This part of the code is used to create student-homework initial data in homeworkAnswer model.
-        let studentIdList = [];
-        this.studentNotificationList.forEach(student =>{
-            studentIdList.push(student.dbId);
-        });
-
-        studentIdList.forEach(student =>{
-            let tempData = {
-                'parentStudent': student,
-                'parentHomeworkQuestion': this.vm.currentHomework.id,
-                'homeworkStatus': 'GIVEN',
-            }
-            promises.push(this.vm.homeworkService.createObject(this.vm.homeworkService.homework_answer, tempData));
         })
 
         return promises;

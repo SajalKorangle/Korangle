@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" *ngIf="!isSubmitting || isMobile()" (scroll)="onScroll($event)">
+<div class="card-content table-responsive" *ngIf="!isSubmitting || isMobile()">
 
 
     <div *ngIf="!isSessionLoading">
@@ -276,7 +276,7 @@
         <ng-container *ngIf="loadMoreHomework">
             <span *ngIf="isMobile()" style="color: #817ae9;" (click)="serviceAdapter.loadMoreHomeworks()"><u>Load
                     More..</u></span>
-            <div *ngIf="isLoadingCheckedHomeworks || isLoadingSubmittedHomeworks">
+            <div *ngIf="isLoadingHomeworks">
                 <br>
                 <div style="width: 100%" align="center">
                     <div class="loaderCustom"></div>

@@ -24,13 +24,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
 
     user;
 
-    
-    loadingCount = 4;
-    checkedHomeworkCount =  0;
-    submittedHomeworkCount= 0;
-
-    isLoadingCheckedHomeworks = true;
-    isLoadingSubmittedHomeworks = true;
+    isLoadingHomeworks: false;
     loadMoreHomework = true;
 
     selectedStudent: any;

@@ -130,6 +130,7 @@ export class CheckHomeworkServiceAdapter {
     }
 
     getHomework(homework: any): any{
+        this.vm.studentHomeworkList = [];
         this.vm.isChecking = true;
         this.vm.selectedHomework = homework;
         this.vm.isLoading = true;
@@ -195,13 +196,33 @@ export class CheckHomeworkServiceAdapter {
                     }
                     this.vm.studentList.push(tempData);
                 })
-                
                 this.initialiseStudentHomeworkData(value[2], value[1]);
-                this.getHomeworkReport();
-                // this.fetchGCMDevices(this.vm.studentList);
+                if(value[1].length != studentIdList.length){
+                    const createList = [];
+                    studentIdList.forEach(element =>{
+                        let temp = value[1].find(student => student.parentStudent == element);
+                        if(temp == undefined){
+                            let tempData = {
+                                'parentStudent': element,
+                                'parentHomeworkQuestion': this.vm.selectedHomework.id,
+                                'homeworkStatus': 'GIVEN',
+                            }
+                            createList.push(tempData);
+                        }
+                    })
+                    Promise.all([
+                        this.vm.homeworkService.createObjectList(this.vm.homeworkService.homework_answer, createList),
+                    ]).then(cValue =>{
+                        this.initialiseStudentHomeworkData([], cValue[0]);
+                        this.getHomeworkReport();
+                        this.vm.isLoading = false;
+                    })
+                }
+                else{
+                    this.getHomeworkReport();
+                    this.vm.isLoading = false;
+                }
                 this.vm.updateService.fetchGCMDevicesNew(this.vm.studentList);
-                console.log(this.vm.studentList);
-                this.vm.isLoading = false;
             },error =>{
                 this.vm.isLoading = false;
             });
@@ -211,7 +232,6 @@ export class CheckHomeworkServiceAdapter {
     }
 
     initialiseStudentHomeworkData(studentHomeworkImagesList: any, studentHomeworkList: any): any{
-        this.vm.studentHomeworkList = [];
         studentHomeworkList.forEach(studentHomework =>{
             let tempStudent = this.vm.studentList.find(student => student.dbId == studentHomework.parentStudent);
             let tempData = {
