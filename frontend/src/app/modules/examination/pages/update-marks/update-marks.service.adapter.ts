@@ -342,7 +342,6 @@ export class UpdateMarksServiceAdapter {
         this.vm.isLoading = true;
         this.vm.isUpdated = false;
         //Prepare the testTypeListInCurrentTest
-        const map = new Map();
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.testDetails.forEach(test => {
 
             if(this.testTypeListInCurrentTest.findIndex(tempTestType => tempTestType===test.testType)===-1)
@@ -472,39 +471,23 @@ export class UpdateMarksServiceAdapter {
     updateAndCreateStudentTestData(data: any): void {
 
         this.vm.isLoading = true;
+        let toBeUpdated  = [];
+        let toBeCreated  = [];
         data.forEach(item => {
-            if(item.id === null)
-            {   
-                this.vm.isLoading = true;
-                item.marksObtained = item.newMarksObtained;
-                Promise.all([
-                this.vm.examinationService.createObject(this.vm.examinationService.student_test,item)
-                ]).then(
-                    (value) => {
-                      },
-                      (error) => {
-                        this.vm.isLoading = false;
-                      }
-                )
-            }
-            else if(item.id!=null)
-            {
-                this.vm.isLoading = true;
-                item.marksObtained = item.newMarksObtained;
-                Promise.all([
-                    this.vm.examinationService.updateObject(this.vm.examinationService.student_test,item)
-                    ]).then(
-                        (value) => {                          
-                          },
-                          (error) => {
-                            this.vm.isLoading = false;
-                          }
-                    )            
-            }
+            item.marksObtained = item.newMarksObtained;
+            if(item.id != null) toBeUpdated.push(item);
+            else toBeCreated.push(item);
         });
 
+        Promise.all([
+            this.vm.examinationService.updateObjectList(this.vm.examinationService.student_test,toBeUpdated),
+            this.vm.examinationService.createObjectList(this.vm.examinationService.student_test,toBeCreated)
+        ]).then( value => {
             this.vm.isLoading = false;
             this.getStudentTestDetails();
+        }, error => {
+            this.vm.isLoading = false;
+        })
 
     }
 

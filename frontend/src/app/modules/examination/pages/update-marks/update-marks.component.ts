@@ -1,12 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 
 import { UpdateMarksServiceAdapter } from './update-marks.service.adapter';
 import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
-import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -17,12 +15,12 @@ import { StudentService } from 'app/services/modules/student/student.service';
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ ExaminationOldService, ClassService, SubjectService, StudentOldService, ExaminationService, StudentService ],
+    providers: [ ClassService, SubjectService, ExaminationService, StudentService ],
 })
 
 export class UpdateMarksComponent implements OnInit {
 
-   user;
+    user;
 
     showTestDetails = false;
 
@@ -45,7 +43,6 @@ export class UpdateMarksComponent implements OnInit {
     constructor(public examinationService : ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectService,
-                public studentService: StudentOldService,
                 public studentNewService: StudentService,
                 private cdRef: ChangeDetectorRef) {}
 

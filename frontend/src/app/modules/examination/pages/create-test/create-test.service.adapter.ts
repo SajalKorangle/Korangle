@@ -609,6 +609,7 @@ export class CreateTestServiceAdapter {
       this.vm.handleUpdate('', '');
       this.vm.isLoading = false;
     },error =>{
+      this.vm.isLoading = false;
       console.log(error);
     })
   }

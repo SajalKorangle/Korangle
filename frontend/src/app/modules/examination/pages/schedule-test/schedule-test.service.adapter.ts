@@ -65,101 +65,88 @@ export class ScheduleTestServiceAdapter {
     };
 
     Promise.all([
-      this.vm.examinationService.getObjectList(
-        this.vm.examinationService.examination,
-        request_examination_data
-      ),
-      this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-      this.vm.classService.getObjectList(this.vm.classService.division, {}),
-      this.vm.subjectNewService.getObjectList(
-        this.vm.subjectNewService.subject,
-        {}
-      ),
-      this.vm.subjectNewService.getObjectList(
-        this.vm.subjectNewService.class_subject,
-        request_class_section_subject_data
-      ),
-    ]).then(
-      (value) => {
-        this.vm.examinationList = value[0];
+        this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
+        this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+        this.vm.classService.getObjectList(this.vm.classService.division, {}),
+        this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.subject,{}),
+        this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject,request_class_section_subject_data),
+        ]).then(
+            (value) => {
+            this.vm.examinationList = value[0];
 
-        this.classList = value[1];
-        this.sectionList = value[2];
-        this.subjectList = value[3];
+            this.classList = value[1];
+            this.sectionList = value[2];
+            this.subjectList = value[3];
 
-        this.examTypeList = value[4];
-        this.classSubjectList = value[4];
+            this.examTypeList = value[4];
+            this.classSubjectList = value[4];
 
-        this.vm.classSectionSubjectList = [];
+            this.vm.classSectionSubjectList = [];
 
-        value[4].forEach((item) => {
-          var classIndex = this.vm.classSectionSubjectList.findIndex(
-            (data) => data.classId === item.parentClass
-          );
-          var sectionIndex = -1,
-            subjectIndex = -1;
-          if (classIndex != -1) {
-            sectionIndex = this.vm.classSectionSubjectList[
-              classIndex
-            ].sectionList.findIndex(
-              (section) => section.sectionId === item.parentDivision
-            );
-
-            if (sectionIndex != -1) {
-              subjectIndex = this.vm.classSectionSubjectList[
-                classIndex
-              ].sectionList[sectionIndex].subjectList.findIndex(
-                (subject) => subject.subjectId === item.parentSubject
+            value[4].forEach((item) => {
+              var classIndex = this.vm.classSectionSubjectList.findIndex(
+                (data) => data.classId === item.parentClass
               );
+              var sectionIndex = -1,
+                subjectIndex = -1;
+              if (classIndex != -1) {
+                sectionIndex = this.vm.classSectionSubjectList[
+                  classIndex
+                ].sectionList.findIndex(
+                  (section) => section.sectionId === item.parentDivision
+                );
+
+                if (sectionIndex != -1) {
+                  subjectIndex = this.vm.classSectionSubjectList[
+                    classIndex
+                  ].sectionList[sectionIndex].subjectList.findIndex(
+                    (subject) => subject.subjectId === item.parentSubject
+                  );
+                }
+              }
+
+              let tempSubject = {
+                subjectName: this.getSubjectName(item.parentSubject),
+                subjectId: item.parentSubject,
+              };
+
+              let tempSubjectList = [];
+              tempSubjectList.push(tempSubject);
+
+              let tempSection = {
+                sectionName: this.getSectionName(item.parentDivision),
+                sectionId: item.parentDivision,
+                selected: false,
+                subjectList: tempSubjectList,
+              };
+
+              let tempSectionList = [];
+              tempSectionList.push(tempSection);
+
+              let tempClass = {
+                className: this.getClassName(item.parentClass),
+                classId: item.parentClass,
+                sectionList: tempSectionList,
+              };
+
+              if (classIndex === -1) {
+                this.vm.classSectionSubjectList.push(tempClass);
+              } else if (sectionIndex === -1) {
+                this.vm.classSectionSubjectList[classIndex].sectionList.push(tempSection);
+              } else if (subjectIndex === -1) {
+                this.vm.classSectionSubjectList[classIndex].sectionList[sectionIndex].subjectList.push(tempSubject);
+              }
+            });
+
+            //sort the classSection list
+            this.classSectionSubjectListSort();
+            this.vm.subjectList = this.subjectList;
+            this.vm.isInitialLoading = false;
+            },
+            (error) => {
+            this.vm.isInitialLoading = false;
             }
-          }
-
-          let tempSubject = {
-            subjectName: this.getSubjectName(item.parentSubject),
-            subjectId: item.parentSubject,
-          };
-
-          let tempSubjectList = [];
-          tempSubjectList.push(tempSubject);
-
-          let tempSection = {
-            sectionName: this.getSectionName(item.parentDivision),
-            sectionId: item.parentDivision,
-            selected: false,
-            subjectList: tempSubjectList,
-          };
-
-          let tempSectionList = [];
-          tempSectionList.push(tempSection);
-
-          let tempClass = {
-            className: this.getClassName(item.parentClass),
-            classId: item.parentClass,
-            sectionList: tempSectionList,
-          };
-
-          if (classIndex === -1) {
-            this.vm.classSectionSubjectList.push(tempClass);
-          } else if (sectionIndex === -1) {
-            this.vm.classSectionSubjectList[classIndex].sectionList.push(
-              tempSection
-            );
-          } else if (subjectIndex === -1) {
-            this.vm.classSectionSubjectList[classIndex].sectionList[
-              sectionIndex
-            ].subjectList.push(tempSubject);
-          }
-        });
-
-        //sort the classSection list
-        this.classSectionSubjectListSort();
-        this.vm.subjectList = this.subjectList;
-        this.vm.isInitialLoading = false;
-      },
-      (error) => {
-        this.vm.isInitialLoading = false;
-      }
-    );
+        );
   }
 
   //Get Test and Subject Details New implemented to ready the data and check if test list can be fetched or not
@@ -191,10 +178,7 @@ export class ScheduleTestServiceAdapter {
     };
 
     Promise.all([
-      this.vm.subjectNewService.getObjectList(
-        this.vm.subjectNewService.class_subject,
-        request_subject_data
-      ),
+      this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject,request_subject_data),
     ]).then(
       (value) => {
         this.commonSubjectList = [];
@@ -276,10 +260,7 @@ export class ScheduleTestServiceAdapter {
 
     Promise.all([
       //fetch test list
-      this.vm.examinationService.getObjectList(
-        this.vm.examinationService.test_second,
-        request_test_data_list
-      ),
+      this.vm.examinationService.getObjectList(this.vm.examinationService.test_second,request_test_data_list),
     ]).then(
       (value) => {
         //test list obtained...
@@ -287,7 +268,6 @@ export class ScheduleTestServiceAdapter {
         console.log('value: ', value[0]);
         this.vm.newTestList = [];
         value[0].forEach((test) => {
-
           for(let i=0;i<this.classListForTest.length;i++)
           {
             if(this.classListForTest[i]===test.parentClass && this.sectionListForTest[i]===test.parentDivision)
@@ -459,9 +439,9 @@ export class ScheduleTestServiceAdapter {
   }
 
   //Update Test List New
-  updateTestNew(): void {
+  updateTestNew(): any {
     this.vm.isLoading = true;
-
+    let promises = [];
     //Update the test list if any value changed in any of the test from test list
     this.vm.newTestList.forEach((test) => {
       test.classList.forEach((cl) => {
@@ -482,52 +462,33 @@ export class ScheduleTestServiceAdapter {
           if (test.deleted) {
             console.log('A delete request for');
             console.log(test);
-            Promise.all([
-              this.vm.examinationService.deleteObject(
-                this.vm.examinationService.test_second,
-                data
-              ),
-            ]).then(
-              (value) => {
-                this.vm.isLoading = false;
-                console.log('Deleted Test');
-                console.log(value[0]);
-
-                this.getTestAndSubjectDetails();
-              },
-              (error) => {
-                console.log('Delete Test failed');
-                this.vm.isLoading = false;
-              }
-            );
+            promises.push(this.vm.examinationService.deleteObject(this.vm.examinationService.test_second,data));
           }
 
           //if updated
           else if (data.startTime != test.startTime || data.endTime != test.endTime) 
           {
-            Promise.all([
-              this.vm.examinationService.updateObject(
-                this.vm.examinationService.test_second,
-                data
-              ),
-            ]).then(
-              (value) => {
-                this.vm.isLoading = false;
-                console.log('Test Updated');
-
-                this.getTestAndSubjectDetails();
-              },
-              (error) => {
-                this.vm.isLoading = false;
-              }
-            );
+            promises.push(this.vm.examinationService.updateObject(this.vm.examinationService.test_second,data));
           }
         });
       });
     });
-    this.vm.handleUpdate();
-    this.vm.isLoading = false;
+    return promises;
   }
+
+  UpdateHelper()
+    {
+      let promises = this.updateTestNew();
+      Promise.all(promises).then(value =>{
+        alert('Updated Test list!!!');
+        this.getTestAndSubjectDetails();
+        this.vm.handleUpdate();
+        this.vm.isLoading = false;
+      },error =>{
+        this.vm.isLoading = false;
+        console.log(error);
+      })
+    }
 
   //Sort the nested list
   classSectionSubjectListSort() {
