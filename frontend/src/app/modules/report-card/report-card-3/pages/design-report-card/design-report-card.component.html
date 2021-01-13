@@ -148,8 +148,14 @@
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
                     <div class="flex-column inner-content" style="flex-direction: column-reverse;">
                         <ng-container *ngFor="let layer of canvasAdapter.layers; index as i">
-                            <span *ngIf="layer"
-                                    (click)="canvasAdapter.updateActiveLayer(i);"
+                            <hr style="margin:0; background-color: gray; height: 3px; display: none;" [id]="layer.id"/>
+                            <span *ngIf="layer" draggable="true" 
+                                    (dragover)="$event.preventDefault(); htmlAdapter.dropAssistanceDisplay(layer.id);"
+                                    (dragleave)="htmlAdapter.dropAssistanceHide(layer.id)"
+                                    (dragstart)="$event.target.style.opacity='0.5'; $event.dataTransfer.setData('layerId', layer.id);" 
+                                    (dragend)="$event.target.style.opacity='1'"
+                                    (drop)="$event.preventDefault(); canvasAdapter.layerMove(layer.id, $event.dataTransfer.getData('layerId')); htmlAdapter.dropAssistanceHide(layer.id);"
+                                    (mousedown)="canvasAdapter.updateActiveLayer(i);"
                                     style="width: calc(100% - 8px); text-align: center; margin: 4px; padding: 4px; border-radius: 3px; cursor: pointer; white-space: nowrap;" 
                                     [class]="i==canvasAdapter.activeLayerIndex?'bg-active':'bg-white'"> 
                                 <span (blur)="layer.displayName=$event.target.innerText" style="display: inline-block;" contenteditable="true"> {{layer.displayName}} </span>   <!--this is layer name-->

@@ -125,5 +125,13 @@ export class DesignReportCardHtmlAdapter {
         })
     }
 
+    dropAssistanceDisplay(id:number) {
+        document.getElementById(id.toString()).style.display = 'inline-block';
+    }
+
+    dropAssistanceHide(id: number) {
+        document.getElementById(id.toString()).style.display = 'none';
+    }
+
 }
 

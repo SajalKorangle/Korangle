@@ -196,6 +196,18 @@ export class DesignReportCardCanvasAdapter {
         this.scheduleCanvasReDraw(0);
     }
 
+    layerMove(id1: number, id2:number): void{   // move layer of id2 above layer of id1
+        let layer1Index: number = this.layers.findIndex(l => l.id == id1);
+        let layer2Index: number = this.layers.findIndex(l => l.id == id2);
+        let layerToMove = this.layers[layer2Index];
+        delete this.layers[layer2Index];
+        this.layers.splice(layer1Index, 0, layerToMove);
+        this.layers = this.layers.filter(Boolean);
+        this.scheduleCanvasReDraw(0);
+        this.activeLayer = layerToMove;
+        this.activeLayerIndex = this.layers.findIndex(l => l.id ==layerToMove.id);
+    }
+
     applyDefaultbackground(): void{
         this.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         this.scheduleCanvasReDraw(0);
