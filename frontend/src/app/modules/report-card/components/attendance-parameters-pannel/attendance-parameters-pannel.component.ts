@@ -24,4 +24,8 @@ export class AttendanceParametersPannelComponent implements OnInit {
     return new Date(dateString);
   }
 
+  func(event: any){
+    console.log(event);
+  }
+
 }

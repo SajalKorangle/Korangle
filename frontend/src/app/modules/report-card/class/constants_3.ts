@@ -411,6 +411,7 @@ export interface Layer{
         boundingBoxBottom: number,
     };
     fontStyle?: { [key: string]: any };
+    underline?: boolean;
     dateFormat?: string;
     date?: Date;
     startDate?: Date;
@@ -522,7 +523,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             this.width = this.aspectRatio * this.height;
     }
 
-    updateWidthh(newWidth: number) {
+    updateWidth(newWidth: number) {
         this.width = newWidth;
         if (this.maintainAspectRatio)
             this.height = this.width / this.aspectRatio; 
@@ -596,6 +597,9 @@ export class CanvasText extends BaseLayer implements Layer{
         fillStyle: DEFAULT_TEXT_COLOR,
         font: ' normal 12px Arial',
     };
+    underline?: boolean;
+    parameterToolPannels: string[] = ['text'];
+    ca: DesignReportCardCanvasAdapter;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
         super(ca);
@@ -603,6 +607,10 @@ export class CanvasText extends BaseLayer implements Layer{
         
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
+        this.fontStyle.font = ` normal ${6/ca.pixelTommFactor}px Arial`;
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
+        this.LAYER_TYPE = 'TEXT';
+        this.underline = false;
         this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
 
         if (initilize) {
@@ -630,11 +638,23 @@ export class CanvasText extends BaseLayer implements Layer{
             boundingBoxTop: textMetrix.actualBoundingBoxAscent,
             boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
         };
+        // if(this.underline){
+        //     ctx.beginPath()
+        //     ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
+        //     ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
+        //     ctx.stroke();
+        // }
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
         ctx.fillText(this.text, this.x, this.y);
+        if(this.underline){
+            ctx.beginPath()
+            ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
+            ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
+            ctx.stroke();
+        }
         return true;    // Drawn successfully on canvas
     }
 
@@ -701,6 +721,7 @@ export class CanvasDate extends CanvasText implements Layer{
     }
 
     dateFormatting(): void{
+        console.log(this.date);
         const dateReplacements:{[key:string]: string}  = getDateReplacements(this.date);
         let dateValue = this.dateFormat;
         Object.entries(dateReplacements).forEach(([dataReplacementKey, dateReplacementvalue]) => {

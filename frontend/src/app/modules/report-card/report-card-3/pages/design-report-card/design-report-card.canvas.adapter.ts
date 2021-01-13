@@ -111,6 +111,32 @@ export class DesignReportCardCanvasAdapter {
         this.scheduleCanvasReDraw(0);
     }
 
+    increaseCanvasSize():any{
+        this.canvas.width = this.canvas.width + 30;
+        this.canvas.height = this.canvas.height + 30;
+        this.canvasSizing();
+    }
+    decreaseCanvasSize():any{
+        this.canvas.width = this.canvas.width - 30;
+        this.canvas.height = this.canvas.height - 30;
+        this.canvasSizing();
+        console.log(this.canvas.height, this.canvas.width);
+        
+    }
+
+    maximumCanvasSize():boolean{
+        if(this.canvas.height> 850 || this.canvas.width > 650){
+            return true;
+        }
+        return false;
+    }
+
+    minimumCanvasSize():boolean{
+        if(this.canvas.height < 100 || this.canvas.width < 100){
+            return true;
+        }
+        return false;
+    }
     canvasSizing(): void{
         let canvasPreviousWidth = this.canvasWidth;
         if (this.canvas.width / this.canvas.height > this.actualresolution.aspectRatio) {
