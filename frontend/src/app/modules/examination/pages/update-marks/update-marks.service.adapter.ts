@@ -1,5 +1,5 @@
 
-import { UpdateMarksComponent } from './update-marks.component';
+import {UpdateMarksComponent} from './update-marks.component';
 
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
@@ -11,7 +11,7 @@ export class UpdateMarksServiceAdapter {
     student_section_data_list: any;
     student_data_list: any;
 
-    constructor() { }
+    constructor() {}
 
     // Data
     examinationList: any;
@@ -127,7 +127,7 @@ export class UpdateMarksServiceAdapter {
                     'parentExamination__in': examination_id_list,
                     'parentClass': item.parentClass,
                     'parentDivision': item.parentDivision,
-                    'parentSubject': item.parentSubject
+                    'parentSubject' : item.parentSubject
                 };
 
                 // let request_class_test_data = {
@@ -380,11 +380,11 @@ export class UpdateMarksServiceAdapter {
                 return true;
             }
             return false;
-        }).sort((a, b) => {
+        }).sort((a,b) => {
             if (a.rollNumber && b.rollNumber) {
-                return (a.rollNumber.toString() < b.rollNumber.toString()) ? -1 : 1;
+                return (a.rollNumber.toString() < b.rollNumber.toString())? -1:1;
             }
-            return (b.rollNumber) ? -1 : 1;
+            return (b.rollNumber)? -1:1;
         }).forEach(item => {
             let tempItem = {};
             tempItem = this.copyObject(item);
@@ -450,9 +450,8 @@ export class UpdateMarksServiceAdapter {
                 } else {
                     itemTwo.marksObtained = parseFloat(itemTwo.marksObtained.toString()).toFixed(1);
                 }
-
                 if (itemTwo.newMarksObtained != itemTwo.marksObtained)
-                    data.push(itemTwo);
+                data.push(itemTwo);
             });
         });
 
@@ -479,7 +478,7 @@ export class UpdateMarksServiceAdapter {
             this.getStudentTestDetails();
         }, error => {
             this.vm.isLoading = false;
-        })
+        });
 
     }
 

@@ -1,5 +1,5 @@
 
-import { CreateTestComponent } from './create-test.component';
+import {CreateTestComponent} from './create-test.component';
 
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
@@ -28,8 +28,7 @@ export class CreateTestServiceAdapter {
 
     toBeDeletedTestList: any = [];
 
-
-    constructor() { }
+    constructor() {}
 
     // Data
     classList: any;
@@ -486,10 +485,10 @@ export class CreateTestServiceAdapter {
     extractTime(dateStr: any): any {
         let d = new Date(dateStr);
 
-        let hour = ((d.getHours() < 10) ? '0' : '') + d.getHours();
+        let hour = ((d.getHours()<10)?'0':'') + d.getHours();
         let minute = '' + d.getMinutes();
 
-        return hour + ":" + minute;
+        return hour+":"+minute;
     }
 
     getSubjectName(subjectId: any): any {
@@ -531,7 +530,7 @@ export class CreateTestServiceAdapter {
         let result = false;
         this.classSubjectList.every(item => {
             if (item.parentSubject === subjectId) {
-                if (item.onlyGrade) {
+                if(item.onlyGrade) {
                     result = true;
                 }
                 return false;

@@ -4,10 +4,10 @@ import { ExaminationService } from '../../../../services/modules/examination/exa
 import { ClassService } from '../../../../services/modules/class/class.service';
 
 import { UpdateMarksServiceAdapter } from './update-marks.service.adapter';
-import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
+import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
 
 import { ChangeDetectorRef } from '@angular/core';
-import { DataStorage } from "../../../../classes/data-storage";
+import {DataStorage} from "../../../../classes/data-storage";
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { StudentService } from 'app/services/modules/student/student.service';
 
@@ -20,7 +20,7 @@ import { StudentService } from 'app/services/modules/student/student.service';
 
 export class UpdateMarksComponent implements OnInit {
 
-    user;
+   user;
 
     showTestDetails = false;
 
@@ -40,11 +40,11 @@ export class UpdateMarksComponent implements OnInit {
     isLoading = false;
     isUpdated = false;
 
-    constructor(public examinationService: ExaminationService,
-        public classService: ClassService,
-        public subjectService: SubjectService,
-        public studentNewService: StudentService,
-        private cdRef: ChangeDetectorRef) { }
+    constructor(public examinationService : ExaminationService,
+                public classService: ClassService,
+                public subjectService: SubjectService,
+                public studentNewService: StudentService,
+                private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
