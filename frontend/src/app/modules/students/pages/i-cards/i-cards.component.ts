@@ -120,7 +120,7 @@ export class ICardsComponent implements OnInit {
             console.log(value);
             this.isLoading = false;
             value[0].forEach(classs => {
-                classs.sectionList = value[1];
+                classs.sectionList = JSON.parse(JSON.stringify(value[1]));
             });
             this.initializeClassSectionList(value[0]);
             this.initializeStudentFullProfileList(value[2]);
