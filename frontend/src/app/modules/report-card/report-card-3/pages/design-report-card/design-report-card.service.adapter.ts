@@ -120,7 +120,7 @@ export class DesignReportCardServiceAdapter {
     populateParameterListWithStudentCustomField(): void {
         this.vm.DATA.data.studentParameterList.forEach(studentParameter => {
             this.vm.htmlAdapter.parameterList.push(StudentCustomParameterStructure.getStructure(
-                studentParameter.name, studentParameter.id,
+                studentParameter.name, studentParameter.id
             ));
         });
     }

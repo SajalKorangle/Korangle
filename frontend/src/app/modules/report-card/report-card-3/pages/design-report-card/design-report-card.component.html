@@ -92,12 +92,7 @@
 
             <div class="tool">
                 <button class="btn" style="padding: 8px;"
-                        (click)="htmlAdapter.openVariablesDialog()">Variables</button>
-            </div>
-
-            <div class="tool">
-                <button class="btn material-icons"
-                        (click)="canvasAdapter.newFormulaLayer()">functions</button>
+                        (click)="htmlAdapter.openCustomVariableDialog(canvasAdapter.newFormulaLayer())">FORMULA</button>
             </div>
 
             <div class="tool">
@@ -145,6 +140,12 @@
                         </mat-select>
                     </mat-form-field>
                 </ng-container>
+                <mat-form-field>
+                    <mat-label>Reult</mat-label>
+                    <mat-select [value]="null">
+                        <mat-option (click)="htmlAdapter.openResultDialog(canvasAdapter.newReultLayer())">Pass/Fail/Supplementary</mat-option>
+                    </mat-select>
+                </mat-form-field>
                     
                 </div>
                 </ng-container>

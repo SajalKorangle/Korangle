@@ -6,6 +6,17 @@ const FormulaParser = require('hot-formula-parser').Parser;
 
 // Utility Functions ---------------------------------------------------------------------------
 
+function numberToVariable(n:number):string {
+    let variable = '';
+    let temp;
+    do {
+        temp = n % 26;
+        variable = String.fromCharCode(65 + temp)+variable;
+        n = Math.floor(n / 26);
+    } while (n > 0);
+    return variable
+}
+
 function getNumberInWords(numerical: number): string {
     switch (numerical) {
         case 1: return 'One';
@@ -409,10 +420,12 @@ export interface Layer{
     parentSubject?: any;
     testType?: string;
     marksType?: string;
-    formula?: string;
     decimalPlaces?: number;
+    factor?: number;
     marks?: number;
     formulaVariable?: FormulaVariable;
+    customVariables?: any[];
+    formula?:string;
 };
 
 export class BaseLayer {
@@ -823,7 +836,8 @@ export class MarksLayer extends CanvasText implements Layer{
     source: { [key: string]: any };    // required attribute
 
     marks: number = null;
-    decimalPlaces: number=1;
+    decimalPlaces: number = 1;
+    factor: number = 1;
     parentExamination: any = null;
     parentSubject: any = null;
     testType: string = null;
@@ -845,7 +859,7 @@ export class MarksLayer extends CanvasText implements Layer{
                 this.parentExamination,
                 this.parentSubject,
                 this.testType,
-                this.marksType);
+                this.marksType)*this.factor;
             this.text = this.marks!=-1?this.marks.toFixed(this.decimalPlaces):'N/A';
         } else {
             this.text = 'Make apprpiate selection from right pannel';
@@ -865,8 +879,8 @@ export class MarksLayer extends CanvasText implements Layer{
 
 export interface CustomVariable{
     id: number;
-    ca: DesignReportCardCanvasAdapter;
-    type: string;   // can be of three types, layer, marks and formula
+    parent: any;
+    type: string;   // can be of three types, layer, marks and formula constant
     name: string;   // name of variable
     layerID?: number; 
     formula?: string;
@@ -875,8 +889,9 @@ export interface CustomVariable{
     testType?: any
     marksType?: string;
     value?: number;
+    isMarks?: boolean;
 
-    evaluate(parser?:any, depth?:number): any;
+    evaluate(parser:any): any;
 }
 
 function setCustomFunctionsInParser(parser: any): void {
@@ -928,23 +943,24 @@ export function getParser(customVariablesList: CustomVariable[]) {
     const PARSER = new FormulaParser();
     setCustomFunctionsInParser(PARSER);
     customVariablesList.forEach((variable: CustomVariable) => {
-        if (variable.type != 'FORMULA') {
-            PARSER.setVariable(variable.name, variable.evaluate());
-        }
-    })
+        if (variable.type != 'FORMULA') 
+            PARSER.setVariable(variable.name, variable.evaluate(PARSER));
+    });
+    customVariablesList.forEach((variable: CustomVariable) => {
+        if (variable.type == 'FORMULA')
+            PARSER.setVariable(variable.name, variable.evaluate(PARSER));
+    });
     return PARSER;
 }
 
 export class BaseVariable{
-    static maxID = 0;
     id: number;
-    ca: DesignReportCardCanvasAdapter;
+    parent: any;
     type: string;
     name: string = 'variable';
-    constructor(ca: DesignReportCardCanvasAdapter) {
-        this.ca = ca;
-        BaseLayer.maxID += 1;
-        this.id = BaseLayer.maxID;
+    constructor(id: number, parent:any) {
+        this.parent = parent;
+        this.id = id;
         this.name += `_${this.id}`;
     }
 }
@@ -952,8 +968,8 @@ export class BaseVariable{
 export class ConstantVariable extends BaseVariable implements CustomVariable{
     type: string = 'CONSTANT';
     value: number = 0;
-    constructor(ca: DesignReportCardCanvasAdapter) {
-        super(ca);
+    constructor(id:number, parent:any) {
+        super(id, parent);
     }
     evaluate(parser:any): number{
         return this.value;
@@ -963,12 +979,13 @@ export class ConstantVariable extends BaseVariable implements CustomVariable{
 export class LayerVariable extends BaseVariable implements CustomVariable{
     type: string = 'LAYER'  // supports only marks layer and marksformula layer
     layerID: number;
-    constructor(ca :DesignReportCardCanvasAdapter) {
-        super(ca);
+    constructor(id:number, parent:any) {
+        super(id, parent);
     }
 
     evaluate(parser:any): number {
-        const layer = this.ca.layers.find(layer => layer.id == this.layerID);
+        const layer = this.parent.ca.layers.find(layer => layer.id == this.layerID);
+        console.log('layer id from evaluate: ', this.layerID);
         if (!layer || !layer.marks)
             return 0;
         return layer.marks;
@@ -982,18 +999,16 @@ export class MarksVariabe extends BaseVariable implements CustomVariable{
     testType: any = null;
     marksType: string = null; 
     
-    constructor(ca :DesignReportCardCanvasAdapter) {
-        super(ca);
+    constructor(id:number, parent:any) {
+        super(id, parent);
     }
 
     evaluate(parser:any): number {
         let result;
-        console.log('marks var = ', this);
         if (this.marksType == MARKS_TYPE_LIST[0])
-            result = ExaminationParameterStructure.getMarks(this.ca.vm.DATA, this.parentExamination, this.parentSubject, this.testType);
+            result = ExaminationParameterStructure.getMarks(this.parent.ca.vm.DATA, this.parentExamination, this.parentSubject, this.testType);
         else if (this.marksType == MARKS_TYPE_LIST[1])
-            result = ExaminationParameterStructure.getMarks(this.ca.vm.DATA, this.parentExamination, this.parentSubject, this.testType);
-        console.log('result = ', result);
+            result = ExaminationParameterStructure.getMarks(this.parent.ca.vm.DATA, this.parentExamination, this.parentSubject, this.testType);
         return result
     }
 }
@@ -1001,26 +1016,12 @@ export class MarksVariabe extends BaseVariable implements CustomVariable{
 export class FormulaVariable extends BaseVariable implements CustomVariable{
     type: string = 'FORMULA';
     formula: string = '';
-    constructor(ca: DesignReportCardCanvasAdapter) {
-        super(ca);
+    constructor(id:number, parent:any) {
+        super(id, parent);
     }
 
-    evaluate(parser: any = null): any{
-        let parsedData;
-        if (parser) {
-            parsedData = parser.parse(this.formula);
-        }
-        else {
-            parser = getParser(this.ca.customVariablesList);
-            this.ca.customVariablesList.every((variable: CustomVariable) => {
-                if (variable == this)
-                    return false;
-                if (variable.type == 'FORMULA')
-                    parser.setVariable(variable.name, variable.evaluate(parser));
-                return true;
-            })
-            parsedData = parser.parse(this.formula);
-        }
+    evaluate(parser): any{
+        const parsedData = parser.parse(this.formula);
         if (parsedData.error)
             return parsedData.error;
         return parsedData.result;
@@ -1034,16 +1035,26 @@ export const CUSTOM_VARIABLE_TYPES = {
     'FORMULA': FormulaVariable
 }
 
+export function getParser2(layers: Layer[]) {
+    const PARSER = new FormulaParser();
+    // setCustomFunctionsInParser(PARSER);
+    layers.forEach((layer: Layer) => {
+        if (layer.LAYER_TYPE == 'MARKS') {
+            console.log('added toparser for layer : ', layer);
+            PARSER.setVariable(numberToVariable(layer.id), layer.marks);
+        }
+    });
+    return PARSER;
+}
+
 export class Formula extends CanvasText implements Layer{
     displayName: string = 'Formula';
 
-    formulaVariable: FormulaVariable;
+    // customVariables: CustomVariable[] = []; 
+    // formulaVariable: FormulaVariable;
+    formula: string= '';
     decimalPlaces: number = 1;
     marks: number = null;
-
-
-    dataSourceType: string = 'DATA';
-    source: { [key: string]: any };    // required attribute
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
@@ -1051,24 +1062,64 @@ export class Formula extends CanvasText implements Layer{
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'FORMULA';
-        if (!this.formulaVariable) {
-            this.formulaVariable = new FormulaVariable(ca);
-            this.formulaVariable.name = `formula_${this.id}`;
-            ca.customVariablesList.push(this.formulaVariable);
-        }
         this.layerDataUpdate();          
     }
 
     layerDataUpdate(): void {
-        let result = this.formulaVariable.evaluate();
-        console.log('evaluated marks = ', this.marks);
-        console.log('Result from layerDataUpdate  =', result);
-        if (isNaN(Number(result)))
-            this.text = result
-        else {
-            this.marks = Number(result)
-            this.text = this.marks.toFixed(this.decimalPlaces);
+        if (this.formula.length > 0) {
+            let formulaCopy: string = this.formula;
+            let indexOfLayerIdNextDigit: number = formulaCopy.search(/#[0-9]+/);
+            while (indexOfLayerIdNextDigit != -1) { // converting all #layerId to a unique variables
+
+                indexOfLayerIdNextDigit++;   // moving ahead of # symbol
+                let nextDigit: string = formulaCopy[indexOfLayerIdNextDigit];
+                let layerId: string | number = '';
+            
+                while (!isNaN(parseInt(nextDigit))) {
+                    layerId += nextDigit;
+                    indexOfLayerIdNextDigit += 1;
+                    nextDigit = formulaCopy[indexOfLayerIdNextDigit];
+                }
+                layerId = parseInt(layerId);
+                formulaCopy = formulaCopy.replace('#' + layerId, numberToVariable(layerId));
+
+                indexOfLayerIdNextDigit = formulaCopy.search(/#[0-9]+/)
+            }
+            console.log('final Formula Copy = ', formulaCopy);
+
+            const parser = getParser2(this.ca.layers);
+            console.log('parser from formula = ', parser);
+            let result = parser.parse(formulaCopy);
+            if (result.error) {
+                this.text = result.error;
+            } else {
+                this.marks = Number(result.result)
+                this.text = this.marks.toFixed(this.decimalPlaces);
+            }
+        } else {
+            this.text = 'Write Formula'
         }
+        this.updateTextBoxMetrics();
+    }
+
+}
+
+export class Result extends CanvasText implements Layer{
+    displayName: string = 'Result';
+
+    marksVariables: CustomVariable[] = []; 
+    rules: any[];
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('result');
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'RESULT';
+        this.layerDataUpdate();          
+    }
+
+    layerDataUpdate(): void {
         this.updateTextBoxMetrics();
     }
 

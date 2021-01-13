@@ -5,13 +5,6 @@
     <div style="margin: 4px; padding: 4px;">
 
         <mat-form-field appearence="fill">
-            <mat-label>
-                Decimal Places
-            </mat-label>
-            <input matInput type="number" min="0" max="10" [ngModel]="layer.decimalPlaces" (ngModelChange)="layer.decimalPlaces=$event; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
-        </mat-form-field>
-
-        <mat-form-field appearence="fill">
             <mat-select 
                 placeholder="Examination"
                 [(ngModel)]="layer.parentExamination"
@@ -42,6 +35,20 @@
             [(ngModel)]="layer.marksType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
                 <mat-option *ngFor="let marksType of layer.ca.vm.htmlAdapter.marksTypeList" [value]="marksType">{{marksType}}</mat-option>
             </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Decimal Places
+            </mat-label>
+            <input matInput type="number" min="0" max="10" [(ngModel)]="layer.decimalPlaces" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Factor
+            </mat-label>
+            <input matInput type="number" min="0" [(ngModel)]="layer.factor" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
         </mat-form-field>
 
     </div>

@@ -4,15 +4,11 @@ import {
     PageRelativeAttributes,
     DEFAULT_BACKGROUND_COLOR,
     Layer, CanvasImage, CanvasText,
-    CanvasDate, CustomVariable,
-    ConstantVariable,
-    MarksVariabe,
-    LayerVariable,
-    FormulaVariable,
+    CanvasDate,
     Formula,
-    CUSTOM_VARIABLE_TYPES,
     PageResolution,
-    PAGE_RESOLUTIONS
+    PAGE_RESOLUTIONS,
+    Result
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -37,7 +33,6 @@ export class DesignReportCardCanvasAdapter {
     activeLayer = null;
     activeLayerIndex = null;
     backgroundColor: string = null;
-    customVariablesList: CustomVariable[] = [];
 
     lastMouseX: number;
     lastMouseY: number;
@@ -285,24 +280,34 @@ export class DesignReportCardCanvasAdapter {
         },1000);    // bad design of waiting for canvas loading
     }
 
-    newImageLayer(initialParameters: object): void{
+    newImageLayer(initialParameters: object): CanvasImage{
         let canvasImage = new CanvasImage(initialParameters, this);
         this.newLayerInitilization(canvasImage);
+        return canvasImage
     }
 
-    newTextLayer(initialParameters: object = {}): void{
+    newTextLayer(initialParameters: object = {}): CanvasText{
         let canvasText = new CanvasText(initialParameters, this);
         this.newLayerInitilization(canvasText);
+        return canvasText;
     }
 
-    newDateLayer(initialParameters: object = {}) {
+    newDateLayer(initialParameters: object = {}): CanvasDate {
         let canvasDate = new CanvasDate(initialParameters, this);
         this.newLayerInitilization(canvasDate);
+        return canvasDate;
     }
 
-    newFormulaLayer(initialParameters: object = {}) {
+    newFormulaLayer(initialParameters: object = {}):Formula{
         let canavsFormula = new Formula(initialParameters, this);
         this.newLayerInitilization(canavsFormula);
+        return canavsFormula;
+    }
+
+    newReultLayer(initialParameters: object = {}): Result{
+        let result = new Result(initialParameters, this);
+        this.newLayerInitilization(result);
+        return result;
     }
 
     newLayerInitilization(layer: Layer): void{
