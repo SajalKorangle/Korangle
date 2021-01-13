@@ -1,22 +1,19 @@
-<mat-card style="padding: 0; width: 100%; margin:6px; overflow: hidden;">
+<mat-card style="padding: 0; width: 100%; margin-top:6px; overflow: hidden;">
     <div style="background-color: grey; text-align: center;">
         <i class="material-icons" style="margin-top: 4px;">date_range</i>
     </div>
     <div style="margin: 4px; padding: 4px;">
 
-        <mat-form-field appearence="fill">
-            <mat-label>
-                Start Date
-            </mat-label>
-            <input matInput type="date" [ngModel]="layer.startDate.toISOString().substr(0,10)" (ngModelChange)="layer.startDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();">
+        <mat-form-field>
+            <input type="date" matInput [ngModel]="layer.startDate.toISOString().substr(0,10)"
+                (ngModelChange)="layer.startDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();" placeholder="Start Date ">
         </mat-form-field>
 
-        <mat-form-field appearence="fill">
-            <mat-label>
-                End Date
-            </mat-label>
-            <input matInput type="date" [ngModel]="layer.endDate.toISOString().substr(0,10)" (ngModelChange)="layer.endDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();">
+        <mat-form-field>
+            <input type="date" matInput [ngModel]="layer.endDate.toISOString().substr(0,10)"
+                (ngModelChange)="layer.endDate=toDate($event); layer.layerDataUpdate(); canvasRefresh();" placeholder="End Date ">
         </mat-form-field>
        
     </div>
+
 </mat-card>

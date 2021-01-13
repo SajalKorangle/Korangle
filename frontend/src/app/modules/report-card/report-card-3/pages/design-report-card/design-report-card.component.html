@@ -65,7 +65,14 @@
 
             <div class="tool">
                 <button class="btn material-icons"
-                        (click)="logMessage('zoom_in')">zoom_in</button>    <!--To Be Implemented: Canavs resize-->
+                        [disabled]="canvasAdapter.maximumCanvasSize() == true"
+                        (click)="canvasAdapter.increaseCanvasSize()">zoom_in</button>    <!--To Be Implemented: Canavs resize-->
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        [disabled]="canvasAdapter.minimumCanvasSize() == true"
+                        (click)="canvasAdapter.decreaseCanvasSize()">zoom_out</button>    <!--To Be Implemented: Canavs resize-->
             </div>
 
             <div class="tool">
@@ -193,6 +200,14 @@
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-text-parameters-pannel>
+                </div>
+                
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-image-parameters-pannel 
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('image')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-image-parameters-pannel>
                 </div>
 
                 <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('attendance')" class="parameters-tool" style="margin:0; width: 100%;">
