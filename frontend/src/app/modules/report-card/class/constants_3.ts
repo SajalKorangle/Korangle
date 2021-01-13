@@ -1,6 +1,21 @@
 import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
+
+
+const FormulaParser = require('hot-formula-parser').Parser;
+
 // Utility Functions ---------------------------------------------------------------------------
+
+function numberToVariable(n:number):string {
+    let variable = '';
+    let temp;
+    do {
+        temp = n % 26;
+        variable = String.fromCharCode(65 + temp)+variable;
+        n = Math.floor(n / 26);
+    } while (n > 0);
+    return variable
+}
 
 function getNumberInWords(numerical: number): string {
     switch (numerical) {
@@ -256,33 +271,58 @@ function getDateReplacements(date: any): {[key:string]: string} {
 }
 
 //Page Resolutions ---------------------------------------------
-export class A4{
-    static aspectRatio = 210 / 297;
-    static A4Resolution = {
+export const mm_IN_ONE_INCH: number = 24.5;
+export const DPI_LIST: number[] = [
+    600,
+    300,
+    200,
+    100,
+    50
+]
+export interface PageResolution{
+    resolutionName: string;
+    orientation: string  // p: potrait, l:landscape
+    aspectRatio: number;
+    mm: {
+        height: number;
+        width: number;
+    }
+    getHeightInPixel(dpi: number): number;
+    getWidthInPixel(dpi: number): number;
+    getCorrospondingWidth(height: number): number;
+    getCorrospondingHeight(width: number): number;
+}
+
+export function getStructeredPageResolution(resolutionName:string, mmHeight:number, mmWidth:number, orientation:string='p'): PageResolution {
+    let aspectRatio = mmWidth / mmHeight;
+    return {
+        resolutionName,
+        aspectRatio,
+        orientation,
         mm: {
-            height: 297,
-            width: 210
+            height: mmHeight,
+            width: mmWidth,
         },
-        px: {
-            dpi300: {
-                height: 3508,
-                width: 2480
-            }
-        }
+        getHeightInPixel: (dpi: number) => {
+            return (mmHeight * dpi) / mm_IN_ONE_INCH;
+        },
+        getWidthInPixel: (dpi: number):number=> {
+            return (mmWidth * dpi) / mm_IN_ONE_INCH;
+        },
+        getCorrospondingHeight: (width: number) => width/aspectRatio,
+        getCorrospondingWidth: (height: number) => height*aspectRatio,
     }
+}
 
-    static getHeightRelativeToA4(width: number): number{
-        return width/this.aspectRatio;
-    }
+export const PAGE_RESOLUTIONS: PageResolution[] = [
+    getStructeredPageResolution('A3', 420, 297),
+    getStructeredPageResolution('A4', 297, 210),
+    getStructeredPageResolution('A5', 210, 148),
+    getStructeredPageResolution('A6', 148, 105),
+    getStructeredPageResolution('Custom', 100, 100)
+]
 
-    static getWidthRelativeToA4(height: number): number{
-        return this.aspectRatio*height;
-    }
-};
-
-Object.seal(A4);    // Making these objects immutable
-Object.seal(A4.A4Resolution);
-Object.seal(A4.A4Resolution.mm);
+export const CUSTOM_PAGE_RESOLUTION_INDEX: number = 4;
 
 // CANVAS DESIGN TOOL------------------------------------------------------------------------
 
@@ -312,11 +352,36 @@ export const ATTENDANCE_TYPE_LIST = [
     'Total Record',
 ];
 
+export const EXAMINATION_TYPE_LIST = [
+    'Marks', // 0
+    'Grades', // 1
+    'Remarks', // 2
+    'Marks-To-Grade', // 3
+];
+
+export const MARKS_TYPE_LIST = [
+    'Marks Obtained',
+    'Maximum Marks',
+];
+
+export const ALPHABET_LIST = 'abcdefghijklmnopqrstuvwxyz';
+
+export const TEST_TYPE_LIST = [
+    null,
+    'Oral',
+    'Written',
+    'Theory',
+    'Practical',
+];
+
+export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
+export var DEFAULT_MAXIMUM_MARKS = 100;
 
 //Layers--------------------------------------
 
 // To be implemented by all Canvas Layers
 export interface Layer{
+    id: number;
     displayName: string;    // layer name displayed to user
     LAYER_TYPE: string; // Type description for JSON parsing
     x: number;
@@ -325,7 +390,7 @@ export interface Layer{
     dataSourceType: string;    // options: DATA_SOURCE_TYPE
     source?: { [key: string]: any };   // object containing information about the source of data
     ca: DesignReportCardCanvasAdapter;  // canvas adapter
-    layerSetUp(Data: object, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void;
+    layerDataUpdate(): void;
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
     isClicked(mouseX: number, mouseY: number): boolean;
@@ -350,35 +415,77 @@ export interface Layer{
     date?: Date;
     startDate?: Date;
     endDate?: Date;
+    parentExamination?: any;
+    parentSubject?: any;
+    testType?: string;
+    marksType?: string;
+    decimalPlaces?: number;
+    factor?: number;
+    marks?: number;
+    formulaVariable?: FormulaVariable;
+    customVariables?: any[];
+    formula?:string;
 };
 
-export class CanvasImage implements Layer{  // Canvas Image Layer
-    displayName: string = 'Image';
-    LAYER_TYPE: string = 'IMAGE';   
-    image: HTMLImageElement;    // not included in content json data
+export class BaseLayer {
+    id: number = null;
+    static maxID: number = 0;
+
+    x: number = 0;
+    y: number = 0;
+
+    displayName: string; 
+    LAYER_TYPE: string;
+    parameterToolPannels: string[] = ['position'];
+
+    dataSourceType: string = 'N/A';
+    source?: {[key:string]: any};
+
+    ca: DesignReportCardCanvasAdapter;  // canvas adapter
+
+    constructor(ca: DesignReportCardCanvasAdapter) { 
+        this.ca = ca;
+        BaseLayer.maxID += 1;
+        this.id = BaseLayer.maxID;
+    }
+
+    initilizeSelf(attributes:object): void{
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
+        BaseLayer.maxID = Math.max(BaseLayer.maxID, this.id);   // always keeping static maxID maximum of all layers
+    }
+
+    updatePosition(dx = 0, dy = 0):void {
+        this.x += dx;
+        this.y += dy;
+    }
+}
+
+export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image Layer
+    displayName: string = 'Image'; 
+    image: HTMLImageElement = null;    // not included in content json data
     uri: string;
-    x: number=0;
-    y: number=0;
     height: number = null;
     width: number = null;
     aspectRatio: any = null;    
     maintainAspectRatio = true; 
-    dataSourceType: string = 'N/A';
-    source?: { [key: string]: any };
 
-    ca: DesignReportCardCanvasAdapter;
-    
-    parameterToolPannels: string[] = ['image'];
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('image');
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
-        this.ca = ca;
         this.image = new Image();
-        this.image.crossOrigin = "anonymous";
-        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
-        this.LAYER_TYPE = 'IMAGE';
+        
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'IMAGE';
+            this.layerDataUpdate();
+        }
     }
 
-    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void{
+    layerDataUpdate(): void{
+        const DATA = this.ca.vm.DATA;
+        const canvasWidth = this.ca.canvasWidth, canvasHeight = this.ca.canvasHeight;
+        
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
             this.uri = this.source.getValueFunc(DATA)+'?javascript=';
         }
@@ -427,7 +534,6 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        console.log('draw on canvas called');
         if (this.image.complete && this.image.naturalHeight > 0) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             return true;    // Drawn successfully on canvas
@@ -470,12 +576,9 @@ export class CanvasImage implements Layer{  // Canvas Image Layer
     }
 }
 
-export class CanvasText implements Layer{
+export class CanvasText extends BaseLayer implements Layer{
     displayName: string = 'Text';
-    LAYER_TYPE: string = 'TEXT';   // Type description for parsing
     text: string = 'Lorem Ipsum';    
-    x: number = 50;
-    y: number = 50;
     textBoxMetrx: {
         boundingBoxLeft: number,
         boundingBoxRight: number,
@@ -487,35 +590,34 @@ export class CanvasText implements Layer{
         boundingBoxTop: null,
         boundingBoxBottom: null,
     };
-    dataSourceType: string = 'N/A';
-    source?: {[key:string]: any};
+
 
     fontStyle: { [key: string]: string } = {
         fillStyle: DEFAULT_TEXT_COLOR,
         font: ' normal 12px Arial',
     };
-    parameterToolPannels: string[] = ['text'];
-    ca: DesignReportCardCanvasAdapter;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
-        this.ca = ca;
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('text');
+        
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
-        this.fontStyle.font = ` normal ${6/ca.pixelTommFactor}px Arial`;
-        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
-        this.LAYER_TYPE = 'TEXT';
+        this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
+
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'TEXT';
+            this.layerDataUpdate();
+        }
     }
 
-    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
+    layerDataUpdate(): void {
+        const DATA = this.ca.vm.DATA;
         if (this.dataSourceType == 'DATA') {
             this.text = this.source.getValueFunc(DATA);
         }
         this.updateTextBoxMetrics();
-    }
-
-    updatePosition(dx = 0, dy = 0):void {
-        this.x += dx;
-        this.y += dy;
     }
 
     updateTextBoxMetrics = ():void=>{
@@ -579,12 +681,17 @@ export class CanvasDate extends CanvasText implements Layer{
     dateFormat: string = '<dd>/<mm>/<yyy>';
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
-        super(attributes, ca);
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('date')
+
+        this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'DATE';
+        this.layerDataUpdate();
     }
 
-    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
+    layerDataUpdate(): void {
         if (this.dataSourceType == 'DATA') {
+            const DATA = this.ca.vm.DATA;
             this.date = new Date(this.source.getValueFunc(DATA));
         }
 
@@ -622,7 +729,7 @@ export class CanvasDate extends CanvasText implements Layer{
 
 }
 
-class CanavsAttendance extends CanvasText implements Layer{
+class AttendanceLayer extends CanvasText implements Layer{
     displayName: string = 'Attendance';
     startDate: Date = new Date();
     endDate: Date = new Date();
@@ -631,35 +738,371 @@ class CanavsAttendance extends CanvasText implements Layer{
     source: {[key:string]: any};    // required attribute
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
-        super(attributes, ca);
-        this.LAYER_TYPE = 'ATTENDANCE';
+        super(attributes, ca, false);
         this.parameterToolPannels.push('attendance');
 
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'ATTENDANCE';
+        this.layerDataUpdate();
     }
 
-    layerSetUp(DATA: object = {}, canvasWidth: number, canvasHeight: number, ctx: CanvasRenderingContext2D): void {
+    layerDataUpdate(): void {
+        const DATA = this.ca.vm.DATA;
         this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate);
         this.updateTextBoxMetrics();
     }
 
-    attendanceUpdate():void { //remove this afetr fixing layer setup arguments
-        this.layerSetUp(this.ca.vm.DATA, null, null, null);
+    // Dato to save need to be implemented
+}
+
+export class GradeLayer extends CanvasText implements Layer{
+    displayName: string = 'Grade';
+    examinationId: any = null;
+    subGradeId: any = null;
+
+    dataSourceType: string = 'DATA';
+    source: { [key: string]: any };    // required attribute
+    
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('grade');
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'GRADE';
+        this.layerDataUpdate();
+    }
+
+    layerDataUpdate(): void {
+        const DATA = this.ca.vm.DATA;
+        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.examinationId, this.subGradeId);
+        this.updateTextBoxMetrics();
+    }
+
+    // data to save need to be implemented
+
+}
+
+export class RemarksLayer extends CanvasText implements Layer{
+    displayName: string = 'Reamrks';
+    examinationId: any = null;
+
+    dataSourceType: string = 'DATA';
+    source: { [key: string]: any };    // required attribute
+    
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('remark');
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'REMARK';
+        this.layerDataUpdate();
+    }
+
+    layerDataUpdate(): void {
+        const DATA = this.ca.vm.DATA;
+        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.examinationId);
+        this.updateTextBoxMetrics();
+    }
+
+    // data to save need to be implemented
+
+}
+
+export class MarksLayer extends CanvasText implements Layer{
+    displayName: string = 'Marks';
+
+    dataSourceType: string = 'DATA';
+    source: { [key: string]: any };    // required attribute
+
+    marks: number = null;
+    decimalPlaces: number = 1;
+    factor: number = 1;
+    parentExamination: any = null;
+    parentSubject: any = null;
+    testType: string = null;
+    marksType:string = MARKS_TYPE_LIST[0];
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('marks');
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'MARKS';
+        this.layerDataUpdate();          
+    }
+
+    layerDataUpdate(): void {
+        if (this.parentExamination && this.parentSubject) {
+            this.marks = this.source.getValueFunc(
+                this.ca.vm.DATA,
+                this.parentExamination,
+                this.parentSubject,
+                this.testType,
+                this.marksType)*this.factor;
+            this.text = this.marks!=-1?this.marks.toFixed(this.decimalPlaces):'N/A';
+        } else {
+            this.text = 'Make apprpiate selection from right pannel';
+        }
+        this.updateTextBoxMetrics();
+    }
+
+    // Data To Save need to be implemented
+
+}
+
+
+
+
+
+// Variables----------------------------------------
+
+export interface CustomVariable{
+    id: number;
+    parent: any;
+    type: string;   // can be of three types, layer, marks and formula constant
+    name: string;   // name of variable
+    layerID?: number; 
+    formula?: string;
+    parentExamination?: any,
+    parentSubject?: any,
+    testType?: any
+    marksType?: string;
+    value?: number;
+    isMarks?: boolean;
+
+    evaluate(parser:any): any;
+}
+
+function setCustomFunctionsInParser(parser: any): void {
+    parser.setFunction('SUPP', function(params) {
+
+        // There should be at least 2 numbers and
+        // the final number will decide how many numbers will we choose out of these.
+        if (params.length < 5) {
+            console.log('Insufficient length');
+            return 'Insufficient length';
+        }
+
+        // All parameter arguments should be numbers
+        let flag = true;
+        params.every(argument => {
+           if (isNaN(Number(argument.toString())) || argument<0) {
+               console.log('All parameters are not positive numbers');
+               flag = false;
+               return false;
+           }
+        });
+        if (!flag) {
+            return 'All parameters are not positive numbers';
+        }
+
+        const passingMarks = params[params.length - 3]
+        const allowedSuplementry = params[params.length - 2];
+        const subjectsConsidered = params[params.length - 1];
+
+        if (subjectsConsidered + 3 > params.length)
+            return 'Subjects Considered cannot be more than given subject'
+
+        const marksList = params.slice(0, -3);  // removing last 3 arguments
+        const passSubjectCount: any[] = marksList.filter(marks => marks >= passingMarks).length;
+        const failedSubjectCount = marksList.filter(marks => marks < passingMarks).length;
+        const subjectCount = marksList.length;
+        const subjectsNotConsidered = subjectCount - subjectsConsidered;
+
+        if (passSubjectCount >= subjectsConsidered)
+            return 'PASS';
+        else if (failedSubjectCount - subjectsNotConsidered <= allowedSuplementry)
+            return `SUPPLEMENTRY(${failedSubjectCount - subjectsNotConsidered})`
+        return 'FAIL'
+
+    });
+}
+
+export function getParser(customVariablesList: CustomVariable[]) {
+    const PARSER = new FormulaParser();
+    setCustomFunctionsInParser(PARSER);
+    customVariablesList.forEach((variable: CustomVariable) => {
+        if (variable.type != 'FORMULA') 
+            PARSER.setVariable(variable.name, variable.evaluate(PARSER));
+    });
+    customVariablesList.forEach((variable: CustomVariable) => {
+        if (variable.type == 'FORMULA')
+            PARSER.setVariable(variable.name, variable.evaluate(PARSER));
+    });
+    return PARSER;
+}
+
+export class BaseVariable{
+    id: number;
+    parent: any;
+    type: string;
+    name: string = 'variable';
+    constructor(id: number, parent:any) {
+        this.parent = parent;
+        this.id = id;
+        this.name += `_${this.id}`;
     }
 }
 
-export const LAYER_TYPES: { [key: string]: any } = {    // all nulls to be implemented
-    'IMAGE': CanvasImage,
-    'TEXT': CanvasText,
-    'DATE': CanvasDate,
-    'ATTENDANCE': null,
-    'TABLE': null,
-};
+export class ConstantVariable extends BaseVariable implements CustomVariable{
+    type: string = 'CONSTANT';
+    value: number = 0;
+    constructor(id:number, parent:any) {
+        super(id, parent);
+    }
+    evaluate(parser:any): number{
+        return this.value;
+    }
+}
 
+export class LayerVariable extends BaseVariable implements CustomVariable{
+    type: string = 'LAYER'  // supports only marks layer and marksformula layer
+    layerID: number;
+    constructor(id:number, parent:any) {
+        super(id, parent);
+    }
 
+    evaluate(parser:any): number {
+        const layer = this.parent.ca.layers.find(layer => layer.id == this.layerID);
+        console.log('layer id from evaluate: ', this.layerID);
+        if (!layer || !layer.marks)
+            return 0;
+        return layer.marks;
+    }
+}
 
+export class MarksVariabe extends BaseVariable implements CustomVariable{
+    type: string = 'MARKS';
+    parentExamination: any = null;
+    parentSubject: any = null;
+    testType: any = null;
+    marksType: string = null; 
+    
+    constructor(id:number, parent:any) {
+        super(id, parent);
+    }
 
+    evaluate(parser:any): number {
+        let result;
+        if (this.marksType == MARKS_TYPE_LIST[0])
+            result = ExaminationParameterStructure.getMarks(this.parent.ca.vm.DATA, this.parentExamination, this.parentSubject, this.testType);
+        else if (this.marksType == MARKS_TYPE_LIST[1])
+            result = ExaminationParameterStructure.getMarks(this.parent.ca.vm.DATA, this.parentExamination, this.parentSubject, this.testType);
+        return result
+    }
+}
 
+export class FormulaVariable extends BaseVariable implements CustomVariable{
+    type: string = 'FORMULA';
+    formula: string = '';
+    constructor(id:number, parent:any) {
+        super(id, parent);
+    }
 
+    evaluate(parser): any{
+        const parsedData = parser.parse(this.formula);
+        if (parsedData.error)
+            return parsedData.error;
+        return parsedData.result;
+    }
+}
+
+export const CUSTOM_VARIABLE_TYPES = {
+    'CONSTANT': ConstantVariable,
+    'LAYER': LayerVariable,
+    'MARKS': MarksVariabe,
+    'FORMULA': FormulaVariable
+}
+
+export function getParser2(layers: Layer[]) {
+    const PARSER = new FormulaParser();
+    // setCustomFunctionsInParser(PARSER);
+    layers.forEach((layer: Layer) => {
+        if (layer.LAYER_TYPE == 'MARKS') {
+            console.log('added toparser for layer : ', layer);
+            PARSER.setVariable(numberToVariable(layer.id), layer.marks);
+        }
+    });
+    return PARSER;
+}
+
+export class Formula extends CanvasText implements Layer{
+    displayName: string = 'Formula';
+
+    // customVariables: CustomVariable[] = []; 
+    // formulaVariable: FormulaVariable;
+    formula: string= '';
+    decimalPlaces: number = 1;
+    marks: number = null;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('formula');
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'FORMULA';
+        this.layerDataUpdate();          
+    }
+
+    layerDataUpdate(): void {
+        if (this.formula.length > 0) {
+            let formulaCopy: string = this.formula;
+            let indexOfLayerIdNextDigit: number = formulaCopy.search(/#[0-9]+/);
+            while (indexOfLayerIdNextDigit != -1) { // converting all #layerId to a unique variables
+
+                indexOfLayerIdNextDigit++;   // moving ahead of # symbol
+                let nextDigit: string = formulaCopy[indexOfLayerIdNextDigit];
+                let layerId: string | number = '';
+            
+                while (!isNaN(parseInt(nextDigit))) {
+                    layerId += nextDigit;
+                    indexOfLayerIdNextDigit += 1;
+                    nextDigit = formulaCopy[indexOfLayerIdNextDigit];
+                }
+                layerId = parseInt(layerId);
+                formulaCopy = formulaCopy.replace('#' + layerId, numberToVariable(layerId));
+
+                indexOfLayerIdNextDigit = formulaCopy.search(/#[0-9]+/)
+            }
+            console.log('final Formula Copy = ', formulaCopy);
+
+            const parser = getParser2(this.ca.layers);
+            console.log('parser from formula = ', parser);
+            let result = parser.parse(formulaCopy);
+            if (result.error) {
+                this.text = result.error;
+            } else {
+                this.marks = Number(result.result)
+                this.text = this.marks.toFixed(this.decimalPlaces);
+            }
+        } else {
+            this.text = 'Write Formula'
+        }
+        this.updateTextBoxMetrics();
+    }
+
+}
+
+export class Result extends CanvasText implements Layer{
+    displayName: string = 'Result';
+
+    marksVariables: CustomVariable[] = []; 
+    rules: any[];
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('result');
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'RESULT';
+        this.layerDataUpdate();          
+    }
+
+    layerDataUpdate(): void {
+        this.updateTextBoxMetrics();
+    }
+
+}
 
 
 
@@ -786,7 +1229,7 @@ class AttendanceParameterStructure {
         return ParameterStructure.getStructure(
             variableType,
             FIELDS.ATTENDANCE,
-            CanavsAttendance,
+            AttendanceLayer,
             () => {
                 return variableType;
             },
@@ -838,6 +1281,55 @@ export class StudentCustomParameterStructure {
             });
     }
 
+}
+
+class ExaminationParameterStructure {
+
+    // Data Type is the parameter key
+
+    static getStructure(variableType: any, getValueFunc:any, layerType:any = CanvasText): any {
+
+        return ParameterStructure.getStructure(
+            variableType,
+            FIELDS.EXAMINATION,
+            layerType,
+            (dataObject) => {
+                return variableType;
+            },
+            getValueFunc
+        );
+    }
+
+    static getMarks(dataObject:any, parentExamination:any, parentSubject:any, testType:string):number {  
+        const student_test_object = dataObject.data.studentTestList.find(studentTest => {
+            return studentTest.parentExamination === parentExamination
+                && studentTest.parentSubject === parentSubject
+                && studentTest.testType === testType
+                && studentTest.parentStudent === dataObject.studentId
+        });
+        if (student_test_object !== undefined && !isNaN(student_test_object.marksObtained)) {
+            return student_test_object.marksObtained;
+        } else {
+            return MARKS_NOT_AVAILABLE_CORROSPONDING_INT;
+        }  
+    }
+
+    static getMaximumMarks(dataObject:any, parentExamination:any, parentSubject:any, testType:string):number {
+        const test_object = dataObject.data.testList.find(test => {
+            return test.parentExamination === parentExamination
+                && test.parentSubject === parentSubject
+                && test.testType === testType
+                && test.parentClass === dataObject.data.studentSectionList.find(item =>
+                    item.parentStudent === dataObject.studentId).parentClass
+                && test.parentDivision === dataObject.data.studentSectionList.find(item =>
+                    item.parentStudent === dataObject.studentId).parentDivision
+        });
+        if (test_object !== undefined && !isNaN(test_object.maximumMarks)) {
+            return test_object.maximumMarks;
+        } else {
+            return DEFAULT_MAXIMUM_MARKS;
+        }
+    }
 }
 
 export const PARAMETER_LIST = [
@@ -964,8 +1456,53 @@ export const PARAMETER_LIST = [
     SchoolParameterStructure.getStructure(`Medium`, 'medium'),
 
 
-     /* Attendance Field */
-     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[0]),
-     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[1]),
-     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[2]),
+    /* Attendance Field */
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[0]),
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[1]),
+    AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[2]),
+     
+    /* Examination Field */
+    ExaminationParameterStructure.getStructure(
+        EXAMINATION_TYPE_LIST[1],
+        (dataObject: any, examinationId:any, subGradeId: any) => {
+            const value = dataObject.data.studentSubGradeList.find(studentSubGrade => {
+                return studentSubGrade.parentStudent === dataObject.studentId
+                    && studentSubGrade.parentExamination === examinationId
+                    && studentSubGrade.parentSubGrade === dataObject.userHandle.value.subGradeId;   // yet to understand
+            });
+            if (value !== undefined) {
+                return value.gradeObtained;
+            } else {
+                return 'N/A';
+            }
+        },
+        GradeLayer
+    ),
+    ExaminationParameterStructure.getStructure(
+        EXAMINATION_TYPE_LIST[2],
+        (dataObject: any, examinationId:any) => {
+            const value = dataObject.data.studentExaminationRemarksList.find(studentExaminationRemarks => {
+                return studentExaminationRemarks.parentStudent === dataObject.studentId
+                    && studentExaminationRemarks.parentExamination === examinationId;
+            });
+            if (value !== undefined) {
+                return value.remark;
+            } else {
+                return 'N/A';
+            }
+        },
+        GradeLayer
+    ),
+    ExaminationParameterStructure.getStructure(
+        EXAMINATION_TYPE_LIST[0],
+        (dataObject: any, parentExamination: any, parentSubject: any, testType: string, marksType: string) => {
+            let marks:any = -1;
+            if (marksType == MARKS_TYPE_LIST[0])
+                marks =  ExaminationParameterStructure.getMarks(dataObject, parentExamination, parentSubject, testType)
+            else if (marksType == MARKS_TYPE_LIST[1])
+                marks = ExaminationParameterStructure.getMaximumMarks(dataObject, parentExamination, parentSubject, testType)
+            return parseFloat(marks)
+        },
+        MarksLayer
+    )
 ]

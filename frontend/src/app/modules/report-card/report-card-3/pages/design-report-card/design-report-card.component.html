@@ -39,10 +39,10 @@
         
         <div *ngIf="htmlAdapter.isSaving" style="width: 100%; height: 100%; position: absolute; z-index: 1; backdrop-filter: blur(1px);"></div>
         
-        <mat-card class="bg-grey flex-row" style="width: 100%; padding: 4px; margin-top: 6px;" [class.stickyTop]="htmlAdapter.isFullScreen">
+        <mat-card class="bg-grey flex-row" style="width: 100%; padding: 4px; margin-top: 6px; align-items: center;" [class.stickyTop]="htmlAdapter.isFullScreen">
             <!-- Top Toolbar -->
 
-            <div class="tool"> <!--Background Color Picker-->   
+            <div class="tool" style="padding: 2px;"> <!--Background Color Picker-->   
                     <label>Background Color: </label>
                     <input type="color" [value]="canvasAdapter.backgroundColor" (input)="canvasAdapter.applyBackground($event.target.value)"/>
             </div>
@@ -83,6 +83,24 @@
                         (click)="canvasAdapter.newDateLayer()">calendar_today</button>
             </div>
 
+            <div class="tool">
+                <button class="btn" style="padding: 8px;"
+                        (click)="htmlAdapter.openCustomVariableDialog(canvasAdapter.newFormulaLayer())">FORMULA</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        (click)="htmlAdapter.openPageResolutionDialog()">photo_size_select_large</button>
+            </div>
+
+            <div class="tool" style="margin-left: auto;">
+                <mat-form-field style="width: 50px; height: 30px;">
+                <mat-select placeholder="DPI" [(ngModel)]="canvasAdapter.dpi">
+                    <mat-option *ngFor="let dpi of htmlAdapter.dpiList" [value]="dpi">{{dpi}}</mat-option>
+                </mat-select>
+                </mat-form-field>
+            </div>
+
         </mat-card>
 
 
@@ -108,7 +126,6 @@
                             {{htmlAdapter.fields[fieldKey].displayFieldName}}
                         </mat-label>
                         <mat-select [value]="null">
-                            <mat-option *ngIf="htmlAdapter.getFilteredParameterList(htmlAdapter.fields[fieldKey]).length == 0">--Comming Soon--</mat-option>
                             <mat-option *ngFor="let parameter of htmlAdapter.getFilteredParameterList(htmlAdapter.fields[fieldKey])"
                                     (click)="htmlAdapter.addNewLayerForAsset(parameter)">
                                 {{parameter.displayParameterNameFunc()}}
@@ -116,6 +133,12 @@
                         </mat-select>
                     </mat-form-field>
                 </ng-container>
+                <mat-form-field>
+                    <mat-label>Reult</mat-label>
+                    <mat-select [value]="null">
+                        <mat-option (click)="htmlAdapter.openResultDialog(canvasAdapter.newReultLayer())">Pass/Fail/Supplementary</mat-option>
+                    </mat-select>
+                </mat-form-field>
                     
                 </div>
                 </ng-container>
@@ -123,14 +146,14 @@
                 
                 <!-- Layers Column -->
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
-                    <div class="flex-column inner-content">
+                    <div class="flex-column inner-content" style="flex-direction: column-reverse;">
                         <ng-container *ngFor="let layer of canvasAdapter.layers; index as i">
                             <span *ngIf="layer"
                                     (click)="canvasAdapter.updateActiveLayer(i);"
                                     style="width: calc(100% - 8px); text-align: center; margin: 4px; padding: 4px; border-radius: 3px; cursor: pointer; white-space: nowrap;" 
                                     [class]="i==canvasAdapter.activeLayerIndex?'bg-active':'bg-white'"> 
                                 <span (blur)="layer.displayName=$event.target.innerText" style="display: inline-block;" contenteditable="true"> {{layer.displayName}} </span>   <!--this is layer name-->
-                                <span style="float: right; margin-right: 12px;">#{{i}}</span>   <!-- i is id which is the array index no.of layers -->
+                                <span style="float: right; margin-right: 12px;">#{{layer.id}}</span>   <!-- i is id which is the array index no.of layers -->
                             </span>
                         </ng-container>
                     </div>
@@ -149,7 +172,7 @@
 
            
             <!-- column 3: Right Pannel -->
-            <mat-card class="inline-block flex-column" style="width: 240px; padding-top: 8px; align-items: center;">
+            <mat-card class="inline-block flex-column" style="width: 240px; padding-top: 8px; align-items: center; overflow-y: auto; overflow-x: hidden;">
                 <span *ngIf="!canvasAdapter.activeLayer" style="margin-top: 25px;">No Layers Selected </span>
                 
                 <div class="parameters-tool" style="margin:0; width: 100%;">
@@ -174,6 +197,22 @@
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-attendance-parameters-pannel>
+                </div>
+
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-marks-parameters-pannel
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('marks')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-marks-parameters-pannel>
+                </div>
+
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-formula-parameters-pannel
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('formula')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-formula-parameters-pannel>
                 </div>
 
             </mat-card>

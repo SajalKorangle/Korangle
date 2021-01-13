@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog'
 import { DataStorage } from "../../../../../classes/data-storage";
 
 import { DesignReportCardServiceAdapter } from './design-report-card.service.adapter';
@@ -29,7 +30,8 @@ import { DEFAULT_BACKGROUND_COLOR } from './../../../class/constants_3';
     SubjectService,
     SchoolService,
     AttendanceService,
-    GradeService
+    GradeService, 
+    MatDialog
   ]
 })
 export class DesignReportCardComponent implements OnInit {
@@ -50,7 +52,25 @@ export class DesignReportCardComponent implements OnInit {
 
   DATA: {
     studentId: number,
-    data: any
+    data: {
+      school: any,
+      studentList: any[],
+      studentSectionList: any[],
+      studentParameterList: any[],
+      studentParameterValueList: any[],
+      classList: any[],
+      divisionList: any[],
+      examinationList: any[],
+      testList: any[],
+      studentTestList: any[],
+      subjectList: any[],
+      attendanceList: any[],
+      sessionList: any[],
+      gradeList: any[],
+      subGradeList: any[],
+      studentSubGradeList: any[],
+      studentExaminationRemarksList: any[],
+    }
   } = {
     studentId: null,
     data: {
@@ -82,7 +102,8 @@ export class DesignReportCardComponent implements OnInit {
     public subjectService: SubjectService,
     public schoolService: SchoolService,
     public attendanceService: AttendanceService,
-    public gradeService: GradeService
+    public gradeService: GradeService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -97,6 +118,7 @@ export class DesignReportCardComponent implements OnInit {
     this.canvasAdapter.initilizeAdapter(this);
 
     this.htmlAdapter.initializeAdapter(this);
+    console.log(this.dialog);
   }
 
   newLayout(): void { // populating current layout to empty vaues and current activeSchool ID

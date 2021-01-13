@@ -1,17 +1,24 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset } from './../../../class/constants_3';
+import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result } from './../../../class/constants_3';
+import { PageResolutionDialogComponent } from './../../../components/page-resolution-dialog/page-resolution-dialog.component';
+import { CustomVariablesDialogComponent} from './../../../components/custom-variables-dialog/custom-variables-dialog.component'
+import {ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component'
 
 export class DesignReportCardHtmlAdapter {
 
     fields: any = FIELDS;
     parameterList: any[] = [...PARAMETER_LIST];
+    testTypeList: string[] = TEST_TYPE_LIST;
+    marksTypeList: string[] = MARKS_TYPE_LIST;
+    dpiList: number[] = DPI_LIST;
 
     vm: DesignReportCardComponent;
     canvasMargin = 24;
 
-    isSaving = false;
-    isLoading = false;
-    isFullScreen = false;
+    isSaving:boolean = false;
+    isLoading:boolean = false;
+    isFullScreen:boolean = false;
+    openedDialog:any = null;
 
     activeLeftColumn: string = 'layers';
 
@@ -75,6 +82,47 @@ export class DesignReportCardHtmlAdapter {
                 .catch(err=>console.log(err));
             this.isFullScreen = true;
         }  
+    }
+
+    openCustomVariableDialog(formulaLayer: Formula) {
+        // this.openedDialog = this.vm.dialog.open(CustomVariablesDialogComponent, {
+        //     data: {
+        //         layer: formulaLayer,
+        //         ca: this.vm.canvasAdapter
+        //     }
+        // });
+        // this.openedDialog.afterClosed().subscribe(() => {
+        //     formulaLayer.layerDataUpdate();
+        //     this.vm.canvasAdapter.scheduleCanvasReDraw();
+        // })
+    }
+
+    openPageResolutionDialog():void {
+        this.openedDialog = this.vm.dialog.open(PageResolutionDialogComponent, {
+            data: {
+                activePageResolution: this.vm.canvasAdapter.actualresolution
+            }
+        });
+        this.openedDialog.afterClosed().subscribe((result: PageResolution)=> {
+            if (result) {
+                console.log('activePageResolution acalled, result = ', result);
+                this.canvasSetUp();
+                this.vm.canvasAdapter.updateResolution(result);
+            }
+        })
+    }
+
+    openResultDialog(resultLayer: Result) {
+        this.openedDialog = this.vm.dialog.open(ResultDialogComponent, {
+            data: {
+                ca: this.vm.canvasAdapter,
+                layer: resultLayer
+            }
+        });
+        this.openedDialog.afterClosed().subscribe(() => {
+            resultLayer.layerDataUpdate();
+            this.vm.canvasAdapter.scheduleCanvasReDraw();
+        })
     }
 
 }
