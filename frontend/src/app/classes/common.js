@@ -5,13 +5,6 @@ export function sendDataToAndroid(data) {
     }
 }
 
-// export function sendImagesToAndroid(data) {
-//     if (navigator.userAgent == "Mobile") {
-//         Android.sendImages(data);
-//     }
-// }
-
-
 export function showPhoto(data) {
     if (navigator.userAgent == "Mobile") {
         Android.showPhoto(data);

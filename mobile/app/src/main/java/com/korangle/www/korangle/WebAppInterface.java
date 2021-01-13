@@ -26,7 +26,6 @@ public class WebAppInterface {
 
     WebAppInterface(Context ctx){
         this.mContext=ctx;
-//        this.images = new String[]{};
     }
 
     @JavascriptInterface
@@ -48,44 +47,8 @@ public class WebAppInterface {
         this.data=data;
     }
 
-//    String[] images;
-//    public void addElementInArray(String data) {
-//        Integer n = this.images.length;
-//        String[] temp = new String[n+1];
-//        for(int i=0;i<n;i++){
-//            temp[i] = this.images[i];
-//        }
-//        temp[n] = data;
-//        this.images = temp;
-//    }
-//
-//    @JavascriptInterface
-//    public void sendImages(String data) {
-//        //Get the string value to process
-//        addElementInArray(data);
-//    }
 
-//    @JavascriptInterface
-//    public void openGallery() throws IOException {
-//        //Get the string value to process
-////        for(int i=0;i<this.images.length; i++){
-//////            Log.d("personal", this.images[i]);
-////            URL url = new URL(this.images[i]);
-//////            Log.d("personal", String.valueOf(url));
-//////
-////            Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//////            saveToInternalStorage(image, i);
-////        }
-////        Uri uri =  Uri.parse(this.images[0]);
-////        showPhoto();
-//        URL imageUrl = new URL(this.images[0]);
-//        Bitmap bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
-//        Log.d("personal", "hi");
-//        createDirectoryAndSaveFile(bitmap, "image0.jpg");
-//
-//    }
-
-
+      // this code an attempt to send multiple images to the phone default image viewer
 //    private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) throws IOException {
 //
 ////        File direct = new File(Environment.getExternalStorageDirectory() + "/DirName");
