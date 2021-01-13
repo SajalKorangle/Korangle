@@ -6,8 +6,7 @@
             <div class="col-md-9" *ngIf="examinationClassSectionSubjectList.length > 0">
                 <mat-form-field>
                     <mat-select placeholder="Select Examination"
-                                [ngModel]="selectedExamination"
-                                id='selectExam'
+                                [ngModel]="selectedExamination" id='selectExam'
                                 [disabled]="isLoading"
                                 (ngModelChange)="selectedExamination=$event;detectChanges();">
                         <mat-option *ngFor='let examination of examinationClassSectionSubjectList;' testId = "examination.id"[value]="examination">
@@ -18,8 +17,7 @@
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
                     <mat-select placeholder="Select Class"
-                                [ngModel]="selectedExamination.selectedClass"
-                                id='selectClass'
+                                [ngModel]="selectedExamination.selectedClass"id='selectClass'
                                 (ngModelChange)="selectedExamination.selectedClass=$event;detectChanges();">
                         <mat-option *ngFor='let classs of selectedExamination.classList;' testId = "classs.id" [value]="classs">
                             {{classs.name}}
@@ -28,8 +26,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Section"
-                                id='selectSection'
+                    <mat-select placeholder="Select Section"id='selectSection'
                                 [ngModel]="selectedExamination.selectedClass.selectedSection"
                                 (ngModelChange)="selectedExamination.selectedClass.selectedSection=$event;detectChanges();">
                         <mat-option *ngFor='let section of selectedExamination.selectedClass.sectionList;' testId = "section.id" [value]="section">
@@ -39,8 +36,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Subject"
-                                id='selectSubject'
+                    <mat-select placeholder="Select Subject"id='selectSubject'
                                 [ngModel]="selectedExamination.selectedClass.selectedSection.selectedSubject"
                                 (ngModelChange)="selectedExamination.selectedClass.selectedSection.selectedSubject=$event;detectChanges();">
                         <mat-option *ngFor='let subject of selectedExamination.selectedClass.selectedSection.subjectList;' testId = "subject.id" [value]="subject">
@@ -87,8 +83,7 @@
                     <td *ngFor="let test of student.testDetails">
                         <input type="number"
                                [(ngModel)]="test.newMarksObtained"(ngModelChange)='activateUpdate()'
-                               placeholder="Type marks here"
-                               />
+                               placeholder="Type marks here"/>
                     </td>
                 </tr>
                 </tbody>

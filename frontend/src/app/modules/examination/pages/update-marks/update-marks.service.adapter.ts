@@ -55,10 +55,6 @@ export class UpdateMarksServiceAdapter {
 
         };
 
-        let request_student_mini_profile_data = {
-            'schoolDbId': this.vm.user.activeSchool.dbId,
-            'sessionDbId': this.vm.user.activeSchool.currentSessionDbId,
-        };
         let request_student_mini_profile_data_new = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
