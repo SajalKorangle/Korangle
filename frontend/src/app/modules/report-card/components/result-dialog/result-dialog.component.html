@@ -1,39 +1,62 @@
 <h2 mat-dialog-title>Result</h2>
 <mat-dialog-content style="min-height: 35vh; max-height: 68vh; min-width: 50vw; max-width: 75vw;">
-    <mat-tab-group mat-align-tabs="center" style="padding: 10px;">
+    <mat-tab-group mat-align-tabs="center" >
         
         <mat-tab label="Marks">
-          
-            <ng-container *ngFor="let marksLayer of layer.marksLayers">
-                <div style="display: flex; flex-direction: row; justify-content: space-around;">
-                    <span>#{{marksLayer.id}}</span>
-                    <span>{{marksLayer.displayName}}</span>
-                </div>
-            </ng-container>
+            <div style="padding-top: 6px;">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Layer ID</th>
+                            <th>Name</th>
+                            <th>Passing Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <ng-container *ngFor="let marksLayer of layer.marksLayers, let i = index;" style="margin-top: 10px;">
+                        <tr>
+                            <td>#{{marksLayer.id}}</td>
+                            <td>{{marksLayer.displayName}}</td>
+                            <td><input matInput type="number" [(ngModel)]="rules.passingMarks[i]" style="background-color: lightgrey; width:fit-content; padding: 3px;"></td>
+                        </tr>
+                    </ng-container>
+                    </tbody>
+                </table>
 
             <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: fit-content;margin-left: auto; align-items: center; margin-top: 16px; ">
             <button class="btn" appearence="fill" style="padding: 6px;" (click)="addToMarksLayer()">Add Marks</button>
             <mat-form-field appearence="fill" style="margin-left: 20px">
-                <mat-select placeholder="Select Variable Type" [(ngModel)]="newMarksLayer">
+                <mat-select placeholder="Select Marks Layer" [(ngModel)]="newMarksLayer">
                     <ng-container *ngFor="let layer of layer.ca.layers"> 
-                        <mat-option *ngIf="layer.LAYER_TYPE=='MARKS'" [value]="layer">#{{layer.id}} {{layer.displayName}}</mat-option>
+                        <mat-option *ngIf="layer.LAYER_TYPE=='MARKS' || layer.LAYER_TYPE=='FORMULA'" [value]="layer">#{{layer.id}} {{layer.displayName}}</mat-option>
                     </ng-container>
                 </mat-select>
             </mat-form-field>
             </div>
+            </div>
         </mat-tab>
 
         <mat-tab label="Rules" style="padding-top: 4px;">
-            <div style="display: flex; flex-direction: row; justify-content: space-around;">
-                <span>No. of failed subject</span>
-                <span>Remarks</span>
+            <div style="padding-top: 6px;">
+            <table class="table table-hover">
+                <thead><tr>
+                    <th>No. of failed subject</th>
+                    <th>Remarks</th>
+                    <th>Color</th>
+                </tr></thead>
+
+                <tbody>
+                <ng-container *ngFor="let i of getRemarksLengthKeys();">
+                    <tr>
+                        <td>{{i}}</td>
+                        <td><input matInput type="text" [(ngModel)]="rules.remarks[i]" style="background-color: lightgrey; width:fit-content; padding: 3px"></td>
+                        <td><input matInput type="color" [(ngModel)]="rules.colorRule[i]"></td>
+                    </tr>
+                </ng-container>
+                </tbody>
+
+            </table>
             </div>
-            <ng-container *ngFor="let marksLayer of marksLayers; let i = index;">
-                <div style="display: flex; flex-direction: row; justify-content: space-around;">
-                    <span>{{i+1}}</span>
-                    <span><input #matInput type="text"></span>
-                </div>
-            </ng-container>
         </mat-tab>
 
     </mat-tab-group>

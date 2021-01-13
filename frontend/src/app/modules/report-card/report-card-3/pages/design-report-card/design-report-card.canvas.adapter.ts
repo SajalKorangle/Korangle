@@ -189,6 +189,13 @@ export class DesignReportCardCanvasAdapter {
         }, duration);
     }
 
+    fullCanavsRefresh():void {
+        this.layers.forEach((layer: Layer) => {
+            layer.layerDataUpdate();
+        })
+        this.scheduleCanvasReDraw(0);
+    }
+
     applyDefaultbackground(): void{
         this.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         this.scheduleCanvasReDraw(0);

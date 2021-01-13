@@ -55,7 +55,7 @@
 
             <div class="tool">
                 <button class="btn material-icons"
-                        (click)="canvasAdapter.scheduleCanvasReDraw(0)" [disabled]="htmlAdapter.isSaving">refresh</button>
+                        (click)="canvasAdapter.fullCanavsRefresh()" [disabled]="htmlAdapter.isSaving">refresh</button>
             </div>
 
             <div class="tool">
@@ -134,7 +134,7 @@
                     </mat-form-field>
                 </ng-container>
                 <mat-form-field>
-                    <mat-label>Reult</mat-label>
+                    <mat-label>Result</mat-label>
                     <mat-select [value]="null">
                         <mat-option (click)="htmlAdapter.openResultDialog(canvasAdapter.newReultLayer())">Pass/Fail/Supplementary</mat-option>
                     </mat-select>
@@ -175,44 +175,42 @@
             <mat-card class="inline-block flex-column" style="width: 240px; padding-top: 8px; align-items: center; overflow-y: auto; overflow-x: hidden;">
                 <span *ngIf="!canvasAdapter.activeLayer" style="margin-top: 25px;">No Layers Selected </span>
                 
-                <div class="parameters-tool" style="margin:0; width: 100%;">
+                <div *ngIf="canvasAdapter.activeLayer" class="parameters-tool" style="margin:0; width: 100%;">
                     <app-position-parameter-pannel
-                            *ngIf="canvasAdapter.activeLayer"
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-position-parameter-pannel>
                 </div>
 
-                <div class="parameters-tool" style="margin:0; width: 100%;">
-                    <app-text-parameters-pannel 
-                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('text')"
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('text')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-text-parameters-pannel
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-text-parameters-pannel>
                 </div>
 
-                <div class="parameters-tool" style="margin:0; width: 100%;">
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('attendance')" class="parameters-tool" style="margin:0; width: 100%;">
                     <app-attendance-parameters-pannel
-                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('attendance')"
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-attendance-parameters-pannel>
                 </div>
 
-                <div class="parameters-tool" style="margin:0; width: 100%;">
-                    <app-marks-parameters-pannel
-                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('marks')"
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('marks')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-marks-parameters-pannel 
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-marks-parameters-pannel>
                 </div>
 
-                <div class="parameters-tool" style="margin:0; width: 100%;">
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('formula')" class="parameters-tool" style="margin:0; width: 100%;">
                     <app-formula-parameters-pannel
-                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('formula')"
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-formula-parameters-pannel>
+                </div>
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('result')" class="parameters-tool" style="margin:0; width: 100%; text-align: center;">
+                    <button class="btn" style="padding: 8px;" (click)="htmlAdapter.openResultDialog(canvasAdapter.activeLayer)">Result Configuration</button>
                 </div>
 
             </mat-card>

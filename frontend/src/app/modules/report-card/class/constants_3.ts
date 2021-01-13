@@ -376,6 +376,7 @@ export const TEST_TYPE_LIST = [
 
 export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
 export var DEFAULT_MAXIMUM_MARKS = 100;
+export const DEFAULT_PASSING_MARKS = 40;
 
 //Layers--------------------------------------
 
@@ -1086,8 +1087,8 @@ export class Formula extends CanvasText implements Layer{
 export class Result extends CanvasText implements Layer{
     displayName: string = 'Result';
 
-    marksLayers: MarksLayer[] = []; 
-    rules: any[];
+    marksLayers: (MarksLayer|Formula)[] = []; 
+    rules: {passingMarks: number[], remarks: string[], colorRule:any[]} = {passingMarks:[], remarks:['PASS'], colorRule:['#008000']};
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
@@ -1099,6 +1100,14 @@ export class Result extends CanvasText implements Layer{
     }
 
     layerDataUpdate(): void {
+        let numberOfFailedSubjects = 0;
+        this.marksLayers.forEach((layer: MarksLayer | Formula, index: number) => {
+            if (!layer.marks || layer.marks < this.rules.passingMarks[index]) {
+                numberOfFailedSubjects++;
+            } 
+        });
+        this.text = this.rules.remarks[numberOfFailedSubjects];
+        this.fontStyle.fillStyle = this.rules.colorRule[numberOfFailedSubjects];
         this.updateTextBoxMetrics();
     }
 
