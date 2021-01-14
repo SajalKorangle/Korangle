@@ -36,6 +36,9 @@
                     <input matInput type="number" [(ngModel)]="gradeRules[i].upperMarks" class="short-input">
                     </div>
                 </td>
+                <td>
+                    <button class="btn material-icons" style="padding: 4px 12px; background-color: transparent; color: red;"(click)="deleteGradeRule(i)">delete</button>
+                </td>
             </tr>
         </ng-container>
         </tbody>

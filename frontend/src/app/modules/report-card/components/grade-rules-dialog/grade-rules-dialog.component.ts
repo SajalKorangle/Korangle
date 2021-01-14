@@ -29,4 +29,8 @@ export class GradeRulesDialogComponent implements OnInit {
     return this.gradeRules.map((e, i) => i);
   }
 
+  deleteGradeRule(index: number): void{
+    this.gradeRules.splice(index, 1);
+  }
+
 }

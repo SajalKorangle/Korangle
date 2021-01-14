@@ -31,8 +31,10 @@ export class DesignReportCardCanvasAdapter {
     canvasWidth: number = null;    
 
     layers: Array<Layer> = [];  // layers in thier order from back to front
-    activeLayer = null;
-    activeLayerIndex = null;
+    activeLayer:Layer = null;
+    activeLayerIndex:number = null;
+    // selectedLayers: Array<Layer> = [];
+    // selectedLayersIndices: Array<number> = [];
 
     gradeRules: Array<GradeRule> = [];
 
@@ -80,14 +82,18 @@ export class DesignReportCardCanvasAdapter {
 
             for (let i = this.layers.length - 1; i >= 0; i--) {
                 if (this.layers[i].isClicked(clickedX, clickedY)) {
-                    this.activeLayer = this.layers[i];
-                    this.activeLayerIndex = i;
+                    this.updateActiveLayer(i, event);
                     this.lastMouseX = clickedX;
                     this.lastMouseY = clickedY;
                     this.currentMouseDown = true;
                     break;
                 }
             }
+
+            // if (!this.activeLayer) {
+            //     this.selectedLayers = [];
+            //     this.selectedLayersIndices = [];
+            // }
         });
 
         this.canvas.addEventListener('mousemove', (event) => {  // Handling movement via mouse
@@ -129,18 +135,19 @@ export class DesignReportCardCanvasAdapter {
     }
 
     maximumCanvasSize():boolean{
-        if(this.canvas.height> 850 || this.canvas.width > 650){
+        if(this.canvas && (this.canvas.height> 850 || this.canvas.width > 650)){
             return true;
         }
         return false;
     }
 
     minimumCanvasSize():boolean{
-        if(this.canvas.height < 100 || this.canvas.width < 100){
+        if(this.canvas && (this.canvas.height < 100 || this.canvas.width < 100)){
             return true;
         }
         return false;
     }
+    
     canvasSizing(): void{
         let canvasPreviousWidth = this.canvasWidth;
         if (this.canvas.width / this.canvas.height > this.actualresolution.aspectRatio) {
@@ -238,6 +245,16 @@ export class DesignReportCardCanvasAdapter {
         this.activeLayerIndex = this.layers.findIndex(l => l.id ==layerToMove.id);
     }
 
+    duplicateLayer(layer: Layer): void{
+        let layer_shallow_copy = { ...layer };
+        delete layer_shallow_copy.ca;
+        let json_parsed_layer_copy = JSON.parse(JSON.stringify(layer_shallow_copy));
+        delete json_parsed_layer_copy.id;
+        json_parsed_layer_copy.displayName += ' copy';
+        let newLayer = new layer.constructor(json_parsed_layer_copy, this);
+        this.newLayerInitilization(newLayer);
+    }
+
     applyDefaultbackground(): void{
         this.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         this.scheduleCanvasReDraw(0);
@@ -257,9 +274,19 @@ export class DesignReportCardCanvasAdapter {
         this.applyDefaultbackground();
     }
 
-    updateActiveLayer(activeLayerIndex:number): void{   // used by left layer pannel
+    updateActiveLayer(activeLayerIndex:number, event: MouseEvent=null): void{   // used by left layer pannel
+        
         this.activeLayerIndex = activeLayerIndex;
         this.activeLayer = this.layers[this.activeLayerIndex];
+        // if (event) {    // if event is a mouse event then check for control key pressed and select multiple layers
+        //     if (event.shiftKey) {
+        //         this.selectedLayers.push(this.activeLayer);
+        //         this.selectedLayersIndices.push(this.activeLayerIndex);
+        //     } else {
+        //         this.selectedLayers = [];
+        //         this.selectedLayersIndices = [];
+        //     }
+        // }
     }
 
     getDataToSave() {   // updating required

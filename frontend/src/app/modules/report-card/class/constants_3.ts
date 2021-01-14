@@ -391,6 +391,7 @@ export interface Layer{
     dataSourceType: string;    // options: DATA_SOURCE_TYPE
     source?: { [key: string]: any };   // object containing information about the source of data
     ca: DesignReportCardCanvasAdapter;  // canvas adapter
+    constructor: any;
     layerDataUpdate(): void;
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
@@ -608,8 +609,6 @@ export class CanvasText extends BaseLayer implements Layer{
         
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
-        this.fontStyle.font = ` normal ${6/ca.pixelTommFactor}px Arial`;
-        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         this.LAYER_TYPE = 'TEXT';
         this.underline = false;
         this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
@@ -749,6 +748,50 @@ export class CanvasDate extends CanvasText implements Layer{
         return { ...savingData };
     }
 
+}
+
+export class CanvasGroup extends BaseLayer implements Layer{
+    layers: Array<Layer> = [];
+    height: number = 0;
+    width: number = 0;
+    locked: boolean = false;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('group');
+
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.layerDataUpdate();
+        }
+        this.LAYER_TYPE = 'GROUP';
+    }
+
+    layerDataUpdate(): void {
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        return true;
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+        if (this.locked) {
+            let anyLayerClicked: boolean = false;
+            this.layers.forEach((layer: Layer) => {
+                anyLayerClicked = anyLayerClicked || layer.isClicked(mouseX, mouseY);
+            });
+            return anyLayerClicked;
+        } 
+        return false;
+    }
+
+    scale(scaleFactor: number): void {
+    }
+
+    getDataToSave():object {
+        // To be implemented
+        return {};
+    }
 }
 
 class AttendanceLayer extends CanvasText implements Layer{

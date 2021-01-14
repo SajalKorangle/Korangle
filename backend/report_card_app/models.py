@@ -30,7 +30,7 @@ class ReportCardLayoutNew(models.Model):
     class Meta:
         unique_together = ('parentSchool', 'name')
 
-class ImageAssets(models.Model):
+class ImageAssets(models.Model): # implement image data size
     parentLayout = models.ForeignKey(ReportCardLayoutNew, on_delete=models.CASCADE, blank=False)
     image = models.ImageField(upload_to="report_cards/imageAssets")
 

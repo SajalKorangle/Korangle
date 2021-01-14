@@ -77,6 +77,11 @@
 
             <div class="tool">
                 <button class="btn material-icons"
+                        (click)="canvasAdapter.duplicateLayer(canvasAdapter.activeLayer)">content_copy</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
                         (click)="canvasAdapter.downloadPDF()">save_alt</button>
             </div>
 
@@ -167,7 +172,7 @@
                                     (dragstart)="$event.target.style.opacity='0.5'; $event.dataTransfer.setData('layerId', layer.id);" 
                                     (dragend)="$event.target.style.opacity='1'"
                                     (drop)="$event.preventDefault(); canvasAdapter.layerMove(layer.id, $event.dataTransfer.getData('layerId')); htmlAdapter.dropAssistanceHide(layer.id);"
-                                    (mousedown)="canvasAdapter.updateActiveLayer(i);"
+                                    (mousedown)="canvasAdapter.updateActiveLayer(i, $event);"
                                     style="width: calc(100% - 8px); text-align: center; margin: 4px; padding: 4px; border-radius: 3px; cursor: pointer; white-space: nowrap;" 
                                     [class]="i==canvasAdapter.activeLayerIndex?'bg-active':'bg-white'"> 
                                 <span (blur)="layer.displayName=$event.target.innerText" style="display: inline-block;" contenteditable="true"> {{layer.displayName}} </span>   <!--this is layer name-->

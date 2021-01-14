@@ -1,10 +1,10 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result } from './../../../class/constants_3';
+import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer } from './../../../class/constants_3';
 import { PageResolutionDialogComponent } from './../../../components/page-resolution-dialog/page-resolution-dialog.component';
 import { CustomVariablesDialogComponent} from './../../../components/custom-variables-dialog/custom-variables-dialog.component'
 import {ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component'
 import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
-
+import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
 export class DesignReportCardHtmlAdapter {
 
     fields: any = FIELDS;
@@ -126,11 +126,24 @@ export class DesignReportCardHtmlAdapter {
         })
     }
 
-    openGradeRulesDialog() {
+    openGradeRulesDialog():void {
         this.openedDialog = this.vm.dialog.open(GradeRulesDialogComponent, {
             data: {
                 ca: this.vm.canvasAdapter
             }
+        })
+    }
+
+    openMarksDialog(layer:MarksLayer):void {
+        this.openedDialog = this.vm.dialog.open(MarksDialogComponent, {
+            data: {
+                ca: this.vm.canvasAdapter,
+                layer: layer
+            }
+        });
+        this.openedDialog.afterClosed().subscribe(() => {
+            layer.layerDataUpdate();
+            this.vm.canvasAdapter.scheduleCanvasReDraw();
         })
     }
 
