@@ -1,18 +1,21 @@
 import { IssueHomeworkComponent } from './issue-homework.component';
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { CommonFunctions } from '../../../../classes/common-functions.js';
+import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type'
 
 export class IssueHomeworkServiceAdapter {
 
     vm: IssueHomeworkComponent;
     constructor() {}
 
+    informationMessageType: any;
     
     studentNotificationList: any;
     // Data
 
     initializeAdapter(vm: IssueHomeworkComponent): void {
         this.vm = vm;
+        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Homework') + 1;
     }
 
     //initialize data
@@ -257,7 +260,7 @@ export class IssueHomeworkServiceAdapter {
                 this.vm.currentHomeworkImages = [];
                 this.vm.isLoading = false;
                 if(this.vm.settings.sendCreateUpdate == true && this.vm.settings.sentUpdateType != 1){
-                    this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkCreatedMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
+                    this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkCreatedMessage, this.informationMessageType, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
                 }
             },error =>{
                 this.vm.isLoading = false;
@@ -314,7 +317,7 @@ export class IssueHomeworkServiceAdapter {
             });
             this.populateStudentList(this.studentNotificationList, {'homeworkName': tempHomeworkName});
             if(this.vm.settings.sendDeleteUpdate == true && this.vm.settings.sentUpdateType != 1){
-                this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkDeleteMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
+                this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkDeleteMessage, this.informationMessageType, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             alert('Homework Deleted')
             this.vm.isLoading = false;
@@ -375,7 +378,7 @@ export class IssueHomeworkServiceAdapter {
             this.populateEditedHomework(value);
             this.populateStudentList(this.studentNotificationList, value[0]);
             if(this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType != 1){
-                this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkUpdateMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
+                this.vm.updateService.sendSMSNotificationNew(this.studentNotificationList, this.vm.homeworkUpdateMessage, this.informationMessageType, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             alert('Homework Edited Successfully');
             this.vm.isLoading = false;

@@ -1,5 +1,5 @@
 import {AddTutorialComponent} from './add-tutorial.component';
-
+import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type'
 
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
@@ -10,6 +10,7 @@ export class AddTutorialServiceAdapter {
     subjectList: any;
     classSectionSubjectList: any;
     fullStudentList: any;
+    informationMessageType: any;
 
     constructor(
     ) { }
@@ -17,6 +18,7 @@ export class AddTutorialServiceAdapter {
 
     initializeAdapter(vm: AddTutorialComponent): void {
         this.vm = vm;
+        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Tutorial')+1;
     }
 
 
@@ -188,7 +190,7 @@ export class AddTutorialServiceAdapter {
             this.vm.initializeNewTutorial();
             this.vm.isLoading = false;
             if(this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendCreateUpdate == true){
-                this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.createMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
+                this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.createMessage, this.informationMessageType, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
         }, error =>{
             this.vm.isLoading = false;
@@ -224,7 +226,7 @@ export class AddTutorialServiceAdapter {
                 tutorial.editable = false;
                 this.populateStudentList(value[0]);
                 if(this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendEditUpdate == true){
-                    this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.editMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
+                    this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.editMessage, this.informationMessageType, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
                 }
                 this.vm.checkEnableAddButton();
             }, error => {
@@ -295,7 +297,7 @@ export class AddTutorialServiceAdapter {
                     this.populateStudentList(tutorial);
                     this.vm.tutorialUpdating = false;
                     if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendDeleteUpdate == true) {
-                        this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.deleteMessage, 1, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
+                        this.vm.updateService.sendSMSNotificationNew(this.vm.currentClassStudentList, this.vm.deleteMessage, this.informationMessageType, this.vm.settings.sentUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
                     }
                 }, error => {
                     this.vm.tutorialUpdating = false;

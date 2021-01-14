@@ -1,4 +1,4 @@
-
+import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type'
 import { CheckHomeworkComponent } from './check-homework.component';
 
 export class CheckHomeworkServiceAdapter {
@@ -6,9 +6,12 @@ export class CheckHomeworkServiceAdapter {
     vm: CheckHomeworkComponent;
 
     constructor() {}
+   
+    informationMessageType: any;
 
     initializeAdapter(vm: CheckHomeworkComponent): void {
         this.vm = vm;
+        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Homework')+1;
     }
 
     initializeData(): void {
@@ -306,7 +309,7 @@ export class CheckHomeworkServiceAdapter {
                 }
                 let mobile_list = [];
                 mobile_list.push(tempData);
-                this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.checkUpdateMessage, 1, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
+                this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.checkUpdateMessage, this.informationMessageType, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             else if(studentHomework.status == this.vm.HOMEWORK_STATUS[3] && this.vm.sendResubmissionUpdate == true && this.vm.sendUpdateType!= 'NULL'){
                 let tempData = {
@@ -317,7 +320,7 @@ export class CheckHomeworkServiceAdapter {
                 }
                 let mobile_list = [];
                 mobile_list.push(tempData);
-                this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.resubmissionUpdateMessage, 1, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
+                this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.resubmissionUpdateMessage, this.informationMessageType, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             this.getHomeworkReport();
             studentHomework.isStatusLoading = false;
