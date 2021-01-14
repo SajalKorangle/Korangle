@@ -36,6 +36,8 @@ export class DesignReportCardCanvasAdapter {
     // selectedLayers: Array<Layer> = [];
     // selectedLayersIndices: Array<number> = [];
 
+    activePageIndex: number = 0;
+
     gradeRuleSetList: Array<GradeRuleSet> = [];
 
     backgroundColor: string = null;
@@ -51,6 +53,24 @@ export class DesignReportCardCanvasAdapter {
     pendingReDrawId: any;
 
     constructor() {
+    }
+
+    getEmptyLayout(): any[] {
+        return [{ backgroundColor: DEFAULT_BACKGROUND_COLOR, layers: [] }];
+    }
+    
+    addEmptyPage(): void{
+        this.vm.currentLayout.content.push({ backgroundColor: DEFAULT_BACKGROUND_COLOR, layers: [] });
+        this.updatePage(this.vm.currentLayout.content.length-1);
+    }
+
+    updatePage(pageIndex: number): void{
+        if (this.activePageIndex == pageIndex)
+            return;
+        // save current page to currentLayout.content here
+        this.clearCanvas();
+        this.loadData(this.vm.currentLayout.content[pageIndex]);
+        this.activePageIndex = pageIndex;
     }
 
     initilizeAdapter(vm: DesignReportCardComponent) {

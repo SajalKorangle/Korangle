@@ -125,7 +125,7 @@ export class DesignReportCardComponent implements OnInit {
     this.currentLayout = {
         parentSchool: this.user.activeSchool.dbId,
         name: '',
-        content: {backgroundColor: DEFAULT_BACKGROUND_COLOR, layers: []},
+        content: this.canvasAdapter.getEmptyLayout(),
     };
   } 
 
@@ -142,7 +142,7 @@ export class DesignReportCardComponent implements OnInit {
           this.canvas = canvas;
           this.htmlAdapter.canvasSetUp();
           this.canvasAdapter.initilizeCanvas(this.canvas);
-          this.canvasAdapter.loadData(this.currentLayout.content);
+          this.canvasAdapter.loadData(this.currentLayout.content[0]);
           me.disconnect();
         }
       });
@@ -158,7 +158,7 @@ export class DesignReportCardComponent implements OnInit {
       this.currentLayout = { ...value, content: JSON.parse(value.content) };
     }
     if (this.canvas)
-        this.canvasAdapter.loadData(this.currentLayout.content);
+        this.canvasAdapter.loadData(this.currentLayout.content[0]);
   }
 
   doesCurrentLayoutHasUniqueName(): boolean {

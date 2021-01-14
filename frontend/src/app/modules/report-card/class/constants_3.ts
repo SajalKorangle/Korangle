@@ -122,6 +122,15 @@ function getNumberInWords(numerical: number): string {
     }
 }
 
+function getMarksInWords(num: number): string{
+    let unitTens = getNumberInWords(num % 100);
+    num /= 100;
+    let hundreds = getNumberInWords(num % 10);
+    num /= 10;
+    let thousands = getNumberInWords(num % 100);
+    return `${thousands?thousands+' Thousand':''} ${hundreds?hundreds+' Hundred':''} ${unitTens}`
+}
+
 function getYear(year: any): string {
     if (year < 2000) {
         return getNumberInWords(Math.floor(year / 100))
@@ -935,6 +944,7 @@ export class MarksLayer extends CanvasText implements Layer{
     parentSubject: any = null;
     testType: string = null;
     marksType: string = MARKS_TYPE_LIST[0];
+    inWords: boolean = false;
     
     gradeRuleSet: GradeRuleSet;
 
@@ -962,10 +972,16 @@ export class MarksLayer extends CanvasText implements Layer{
                         gradeValue = gradeRule.gradeValue;
                 });
             }
-            if (gradeValue)
+            if (gradeValue) {
                 this.text = gradeValue;
-            else
-                this.text = this.marks!=-1?this.marks.toFixed(this.decimalPlaces):'N/A';
+            }
+            else {
+                if (this.inWords) {
+                    this.text = getMarksInWords(this.marks);
+                } else {
+                    this.text = this.marks != -1 ? this.marks.toFixed(this.decimalPlaces) : 'N/A';
+                }
+            }
         } else {
             this.text = 'Make apprpiate selection from right pannel';
         }
