@@ -3,6 +3,7 @@ import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST
 import { PageResolutionDialogComponent } from './../../../components/page-resolution-dialog/page-resolution-dialog.component';
 import { CustomVariablesDialogComponent} from './../../../components/custom-variables-dialog/custom-variables-dialog.component'
 import {ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component'
+import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
 
 export class DesignReportCardHtmlAdapter {
 
@@ -122,6 +123,14 @@ export class DesignReportCardHtmlAdapter {
         this.openedDialog.afterClosed().subscribe(() => {
             resultLayer.layerDataUpdate();
             this.vm.canvasAdapter.scheduleCanvasReDraw();
+        })
+    }
+
+    openGradeRulesDialog() {
+        this.openedDialog = this.vm.dialog.open(GradeRulesDialogComponent, {
+            data: {
+                ca: this.vm.canvasAdapter
+            }
         })
     }
 

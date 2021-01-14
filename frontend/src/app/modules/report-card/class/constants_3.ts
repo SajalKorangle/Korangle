@@ -830,6 +830,40 @@ export class RemarksLayer extends CanvasText implements Layer{
 
 }
 
+export class GradeRule{
+    id: number;
+    ruleDisplayName: string;  //unique
+    lowerMarks: number = 0;
+    upperMarks: number = 100;
+    lowerInclusion: boolean = true;
+    upperInclusion: boolean = true;
+    gradeValue: string = 'A';
+
+    static maxID = 0;
+    constructor(attributes: object = {}) {   
+        GradeRule.maxID++;
+        this.id = GradeRule.maxID;
+        this.initilizeSelf(attributes);
+    }
+    initilizeSelf(attributes:object): void{
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
+        GradeRule.maxID = Math.max(GradeRule.maxID, this.id);   // always keeping static maxID maximum of all layers
+        if (!this.ruleDisplayName) {
+            this.ruleDisplayName = 'Rule ' + this.id;
+        }
+    }
+
+    belongsToGrade(marks: number):boolean {
+        if (((this.lowerInclusion && this.lowerMarks <= marks)
+                || (!this.lowerInclusion && this.lowerMarks < marks))
+                && ((this.upperInclusion && this.upperMarks >= marks)
+                || (!this.upperInclusion && this.upperMarks > marks))) {
+            return true;
+        }
+        return false;
+    }
+};
+
 export class MarksLayer extends CanvasText implements Layer{
     displayName: string = 'Marks';
 
@@ -842,7 +876,9 @@ export class MarksLayer extends CanvasText implements Layer{
     parentExamination: any = null;
     parentSubject: any = null;
     testType: string = null;
-    marksType:string = MARKS_TYPE_LIST[0];
+    marksType: string = MARKS_TYPE_LIST[0];
+    
+    gradeRules: GradeRule[] = [];
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
@@ -855,13 +891,21 @@ export class MarksLayer extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         if (this.parentExamination && this.parentSubject) {
+            let gradeValue:string = null;
             this.marks = this.source.getValueFunc(
                 this.ca.vm.DATA,
                 this.parentExamination,
                 this.parentSubject,
                 this.testType,
-                this.marksType)*this.factor;
-            this.text = this.marks!=-1?this.marks.toFixed(this.decimalPlaces):'N/A';
+                this.marksType) * this.factor;
+            this.gradeRules.forEach((gradeRule:GradeRule)=> {
+                if (gradeRule.belongsToGrade(this.marks))
+                    gradeValue = gradeRule.gradeValue;
+            })
+            if (gradeValue)
+                this.text = gradeValue;
+            else
+                this.text = this.marks!=-1?this.marks.toFixed(this.decimalPlaces):'N/A';
         } else {
             this.text = 'Make apprpiate selection from right pannel';
         }

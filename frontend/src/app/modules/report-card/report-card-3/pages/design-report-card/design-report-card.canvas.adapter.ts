@@ -8,7 +8,8 @@ import {
     Formula,
     PageResolution,
     PAGE_RESOLUTIONS,
-    Result
+    Result,
+    GradeRule
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -32,6 +33,9 @@ export class DesignReportCardCanvasAdapter {
     layers: Array<Layer> = [];  // layers in thier order from back to front
     activeLayer = null;
     activeLayerIndex = null;
+
+    gradeRules: Array<GradeRule> = [];
+
     backgroundColor: string = null;
 
     lastMouseX: number;
