@@ -162,7 +162,7 @@ export class TotalCollectionComponent implements OnInit {
 
     getFilteredFeeReceiptList(): any {
         let tempList = this.feeReceiptList;
-     
+
         if (this.selectedEmployee) {
             tempList = tempList.filter(feeReceipt => {
                 return feeReceipt.parentEmployee == this.selectedEmployee.id;

@@ -41,116 +41,12 @@ export class CancelFeeReceiptServiceAdapter {
 
 
     // Get Fee Receipt List
-    getFeeReceiptList(): void {
-
-        this.vm.isLoading = true;
-        let fee_receipt_list = {};
-        let sub_fee_receipt_list = {};
-
-
-        if (this.vm.searchBy === this.vm.searchFilterList[0]) {
-            fee_receipt_list={
-                'parentSchool':this.vm.user.activeSchool.dbId,
-                'receiptNumber__or': this.vm.searchParameter,
-                'chequeNumber':this.vm.searchParameter,
-            }
-            sub_fee_receipt_list={
-                'parentFeeReceipt__parentSchool':this.vm.user.activeSchool.dbId,
-                'parentFeeReceipt__receiptNumber__or':this.vm.searchParameter,
-                'parentFeeReceipt__chequeNumber':this.vm.searchParameter,
-            }
-        } else  {
-            let studentListId = this.vm.selectedStudentList.map(a => a.id).join();
-             fee_receipt_list={
-                'parentSchool':this.vm.user.activeSchool.dbId,
-                'parentStudent__in': studentListId,
-            }
-            sub_fee_receipt_list={
-                'parentFeeReceipt__parentSchool':this.vm.user.activeSchool.dbId,
-                'parentFeeReceipt__parentStudent__in':studentListId,
-            }
-        }
-
-        Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-        ]).then(value => {
-
-            console.log(value);
-
-            this.vm.feeReceiptList = value[0];
-            this.vm.feeReceiptList.sort(function (a, b) {
-                // @ts-ignore
-                return new Date(b.generationDateTime) - new Date(a.generationDateTime);
-            });
-
-            this.vm.subFeeReceiptList = value[1];
-
-            let service_list = [];
-
-            let student_list = {
-                'id__in': [...new Set(value[0].filter(item => {
-                    return !this.vm.studentList.find(student => {
-                        return student.id == item.parentStudent;
-                    })
-                }).map(item => item.parentStudent))],
-            };
-
-            if (student_list.id__in.length != 0) {
-                service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
-            }
-
-            let tempList = value[0].map(item => item.parentSession);
-            tempList.filter((item, index) => {
-                return tempList.indexOf(item) == index;
-            }).forEach(item => {
-
-                let student_section_list = {
-                    'parentSession': item,
-                    'parentStudent__in': [...new Set(value[0].filter(item2 => {
-                        return item2.parentSession == item
-                    }).map(item2 => item2.parentStudent).filter(item2 => {
-                        return !this.vm.studentSectionList.find(studentSection => {
-                            return studentSection.parentSession == item && studentSection.parentStudent == item2;
-                        });
-                    }))],
-                };
-
-                if (student_section_list.parentStudent__in.length != 0) {
-                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student_section,
-                        student_section_list),)
-                }
-
-            });
-
-            if (service_list.length > 0) {
-
-                Promise.all(service_list).then(value2 => {
-
-                    console.log(value2);
-
-                    if (student_list.id__in.length != 0) {
-                        this.vm.studentList = this.vm.studentList.concat(value2[0]);
-                        value2 = value2.slice(1);
-                    }
-
-                    value2.forEach(item => {
-                        this.vm.studentSectionList = this.vm.studentSectionList.concat(item);
-                    });
-
-                    this.vm.isLoading = false;
-                }, error => {
-                    this.vm.isLoading = false;
-                });
-
-            } else {
-                this.vm.isLoading = false;
-            }
-
-        }, error => {
-            this.vm.isLoading = false;
-        })
-        this.vm.showReceipts=true;
+    getInitialFeeReceiptList(): void {
+        this.vm.isLoading=true;
+        this.vm.feeReceiptList=[];
+        this.vm.subFeeReceiptList=[];
+        this.vm.receiptCount=0;
+        this.fetchReceiptsOfCount();
     }
 
 
@@ -208,4 +104,136 @@ export class CancelFeeReceiptServiceAdapter {
 
     }
 
+    fetchReceiptsOfCount() {
+
+        let fee_receipt_list = {};
+        let sub_fee_receipt_list = {};
+        
+        if (this.vm.searchBy === this.vm.searchFilterList[0]) { //if cheque or receipt no search
+            fee_receipt_list = {
+                'parentSchool': this.vm.user.activeSchool.dbId,
+                'receiptNumber__or': this.vm.searchParameter,
+                'chequeNumber': this.vm.searchParameter,
+                'korangle__order': '-generationDateTime',
+                'korangle__count': this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),
+            }
+            sub_fee_receipt_list = {
+                'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentFeeReceipt__receiptNumber__or': this.vm.searchParameter,
+                'parentFeeReceipt__chequeNumber': this.vm.searchParameter,
+                'korangle__order': '-parentFeeReceipt__generationDateTime',
+                'korangle__count': this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),
+            }
+        } else { //if parent or student search
+            let studentListId = this.vm.selectedStudentList.map(a => a.id).join();
+            fee_receipt_list = {
+                'parentSchool': this.vm.user.activeSchool.dbId,
+                'parentStudent__in': studentListId,
+                'korangle__order': '-generationDateTime',
+                'korangle__count': this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),
+            }
+            sub_fee_receipt_list = {
+                'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentFeeReceipt__parentStudent__in': studentListId,
+                'korangle__order': '-parentFeeReceipt__generationDateTime',
+                'korangle__count': this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),
+            }
+        }
+
+        Promise.all([
+            this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),  //0
+            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list), //1
+        ]).then(value => {
+
+            console.log(value);
+            this.vm.receiptCount += value[0].length; // incrementing receipt count
+
+            if (value[0].length < this.vm.loadingCount) {
+                this.vm.loadMoreReceipts = false;    // if the fee receipts are less than the loading count then dont loadMore
+            }
+
+            let service_list = [];
+
+            let student_list = {
+                'id__in': [...new Set(value[0].filter(item => {
+                    return !this.vm.studentList.find(student => {
+                        return student.id == item.parentStudent;
+                    })
+                }).map(item => item.parentStudent))],
+            };
+
+            if (student_list.id__in.length != 0) {
+                service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
+            }
+
+            let tempList = value[0].map(item => item.parentSession);
+            tempList.filter((item, index) => {
+                return tempList.indexOf(item) == index;
+            }).forEach(item => {
+
+                let student_section_list = {
+                    'parentSession': item,
+                    'parentStudent__in': [...new Set(value[0].filter(item2 => {
+                        return item2.parentSession == item
+                    }).map(item2 => item2.parentStudent).filter(item2 => {
+                        return !this.vm.studentSectionList.find(studentSection => {
+                            return studentSection.parentSession == item && studentSection.parentStudent == item2;
+                        });
+                    }))],
+                };
+
+                if (student_section_list.parentStudent__in.length != 0) {
+                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student_section,
+                        student_section_list),)
+                }
+
+            });
+
+            if (service_list.length > 0) {
+
+                Promise.all(service_list).then(value2 => {
+
+                    console.log(value2);
+
+                    if (student_list.id__in.length != 0) {
+                        this.vm.studentList = this.vm.studentList.concat(value2[0]);
+                        value2 = value2.slice(1);
+                    }
+
+                    value2.forEach(item => {
+                        this.vm.studentSectionList = this.vm.studentSectionList.concat(item);
+                    });
+
+                    value[0].forEach(val => {
+                        this.vm.feeReceiptList.push(val);
+                    });
+                }, error => {
+                    this.makeLoadingFalse()
+                });
+            } else {
+                value[0].forEach(val => {
+                    this.vm.feeReceiptList.push(val);
+                });
+            }
+            
+            this.makeLoadingFalse();
+            this.vm.showReceipts = true;
+        }, error => {
+            this.makeLoadingFalse()
+        });
+        this.vm.loadMoreReceipts = true;
+    }
+
+    loadMoreReceipts() {
+        this.vm.isReceiptListLoading = true;
+        this.fetchReceiptsOfCount();
+    }
+
+    makeLoadingFalse() {
+        if (this.vm.receiptCount <= 6) {
+            this.vm.isLoading = false;
+        } else {
+            this.vm.isReceiptListLoading = false;
+        }
+    }
 }

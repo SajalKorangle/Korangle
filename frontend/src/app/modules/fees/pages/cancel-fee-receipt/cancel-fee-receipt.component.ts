@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, Input, OnInit} from '@angular/core';
 import { CancelFeeReceiptServiceAdapter } from "./cancel-fee-receipt.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {ClassService} from "../../../../services/modules/class/class.service";
@@ -8,6 +8,7 @@ import {EmployeeService} from "../../../../services/modules/employee/employee.se
 import {DataStorage} from "../../../../classes/data-storage";
 import {CancelFeeReceiptModalComponent} from '@modules/fees/components/cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
 import {MatDialog} from '@angular/material/dialog';
+import { isMobile } from '../../../../classes/common.js';
 
 @Component({
     selector: 'cancel-fee-receipt',
@@ -33,14 +34,18 @@ export class CancelFeeReceiptComponent implements OnInit {
     sectionList = [];
     employeeList = [];
     selectedStudentList=[];
-    searchFilterList=['Receipt No./Cheque No.','Student\'s Name','Parent\'s Mobile No'];
+    searchFilterList=[{displayName:'Receipt No./Cheque No.',fiterName:'receiptCheque'},{displayName:'Student\'s Name',filterName:'Student'},{displayName:'Parent\'s Mobile No',filterName:'Parent'}];
 
     serviceAdapter: CancelFeeReceiptServiceAdapter;
-
+    
+    receiptCount=0;
+    loadingCount=6;
     isLoading = false;
     searchBy: any;
     isStudentListLoading=false;
     showReceipts=false;
+    isReceiptListLoading=false;
+    loadMoreReceipts=false;
 
     constructor(public feeService: FeeService,
                 public classService: ClassService,
@@ -56,6 +61,12 @@ export class CancelFeeReceiptComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
+    
+     @HostListener('window:scroll', ['$event']) onScrollEvent(event){
+        if((document.documentElement.clientHeight + document.documentElement.scrollTop + 1) > document.documentElement.scrollHeight && this.loadMoreReceipts && !this.isReceiptListLoading){
+            this.serviceAdapter.loadMoreReceipts();
+        }
+    } 
 
     detectChanges(): void {
         this.cdRef.detectChanges();
@@ -100,7 +111,7 @@ export class CancelFeeReceiptComponent implements OnInit {
 
     handleParentOrStudentListSelection(studentList: any) {
          this.selectedStudentList = studentList[0];
-        this.serviceAdapter.getFeeReceiptList();
+        this.serviceAdapter.getInitialFeeReceiptList();
     }
 
 
@@ -140,5 +151,9 @@ export class CancelFeeReceiptComponent implements OnInit {
                 this.serviceAdapter.cancelFeeReceipt(feeReceipt)
             }
         });
+    }
+    
+    isMobile(): boolean {
+        return isMobile();
     }
 }

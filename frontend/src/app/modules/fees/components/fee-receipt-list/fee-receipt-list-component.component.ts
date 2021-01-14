@@ -30,6 +30,7 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() selectedFeeType;
     @Input() boardList;
     @Input() sessionList = [];
+    @Input() isPrinting=false;
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -125,7 +126,7 @@ export class FeeReceiptListComponent implements OnInit {
 
     hasUserPermissionToCancelAndNotPrintPage() {
         const module = this.user.activeSchool.moduleList.find(module => module.title === 'Fees 3.0');
-        return module.taskList.some(task => task.title === 'Cancel Fee Receipt') && window.location.href.indexOf("print") <= -1;
+        return module.taskList.some(task => task.title === 'Cancel Fee Receipt') && !this.isPrinting;
     }
 
 

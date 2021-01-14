@@ -45,9 +45,8 @@ export class FeeReceiptListComponentServiceAdapter {
         ]).then(value => {
 
             alert('Fee Receipt is cancelled');
-
-           Object.assign(this.vm.feeReceiptList.find(t => t.id === feeReceipt.id), value[0]);
-
+            
+            Object.assign(this.vm.feeReceiptList.find(t => t.id === feeReceipt.id), JSON.parse(JSON.stringify(value[0])));
             this.vm.isLoading = false;
 
         }, error => {
