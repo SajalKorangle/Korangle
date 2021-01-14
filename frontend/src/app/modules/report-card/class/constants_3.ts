@@ -874,26 +874,18 @@ export class RemarksLayer extends CanvasText implements Layer{
 }
 
 export class GradeRule{
-    id: number;
-    ruleDisplayName: string;  //unique
     lowerMarks: number = 0;
     upperMarks: number = 100;
     lowerInclusion: boolean = true;
     upperInclusion: boolean = true;
     gradeValue: string = 'A';
 
-    static maxID = 0;
-    constructor(attributes: object = {}) {   
-        GradeRule.maxID++;
-        this.id = GradeRule.maxID;
+    
+    constructor(attributes: object = {}) { 
         this.initilizeSelf(attributes);
     }
     initilizeSelf(attributes:object): void{
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
-        GradeRule.maxID = Math.max(GradeRule.maxID, this.id);   // always keeping static maxID maximum of all layers
-        if (!this.ruleDisplayName) {
-            this.ruleDisplayName = 'Rule ' + this.id;
-        }
     }
 
     belongsToGrade(marks: number):boolean {
@@ -906,6 +898,29 @@ export class GradeRule{
         return false;
     }
 };
+
+export class GradeRuleSet{
+    id: number;
+    name: string;
+
+    gradeRules: Array<GradeRule> = [new GradeRule()];
+
+    static maxID = 0;
+
+    constructor(attributes: object = {}) {
+        GradeRuleSet.maxID++;
+        this.id = GradeRuleSet.maxID;
+        this.initilizeSelf(attributes);
+    }
+
+    initilizeSelf(attributes:object): void{
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
+        GradeRuleSet.maxID = Math.max(GradeRuleSet.maxID, this.id);   // always keeping static maxID maximum of all layers
+        if (!this.name) {
+            this.name = 'Grade Rule Set - ' + this.id;
+        }
+    }
+}
 
 export class MarksLayer extends CanvasText implements Layer{
     displayName: string = 'Marks';
@@ -921,7 +936,7 @@ export class MarksLayer extends CanvasText implements Layer{
     testType: string = null;
     marksType: string = MARKS_TYPE_LIST[0];
     
-    gradeRules: GradeRule[] = [];
+    gradeRuleSet: GradeRuleSet;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
@@ -941,10 +956,12 @@ export class MarksLayer extends CanvasText implements Layer{
                 this.parentSubject,
                 this.testType,
                 this.marksType) * this.factor;
-            this.gradeRules.forEach((gradeRule:GradeRule)=> {
-                if (gradeRule.belongsToGrade(this.marks))
-                    gradeValue = gradeRule.gradeValue;
-            })
+            if (this.gradeRuleSet) {
+                this.gradeRuleSet.gradeRules.forEach((gradeRule: GradeRule) => {
+                    if (gradeRule.belongsToGrade(this.marks))
+                        gradeValue = gradeRule.gradeValue;
+                });
+            }
             if (gradeValue)
                 this.text = gradeValue;
             else

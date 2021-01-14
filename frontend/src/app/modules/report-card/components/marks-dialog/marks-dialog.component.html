@@ -52,24 +52,29 @@
                 </mat-label>
                 <input matInput type="number" min="0" [(ngModel)]="layer.factor">
             </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Grade Rule Set"
+                [(ngModel)]="layer.gradeRuleSet">
+                    <mat-option [value]="null">None</mat-option>
+                    <mat-option *ngFor="let gradeRuleSet of layer.ca.gradeRuleSetList" [value]="gradeRuleSet">{{gradeRuleSet.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
         </mat-tab>
     
-        <mat-tab label="Grade Rules">
+        <mat-tab label="Grade Rules" *ngIf="layer.gradeRuleSet">
             <div>
-
                 <table class="table table-hover" style="margin-top: 6px;">
                     <thead>
                         <tr>
-                            <th>Name</th>
                             <th>Grade</th>
                             <th>Criretia</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <ng-container *ngFor="let gradeRule of layerGradeRules; let i = index" style="margin-top: 10px;">
+                    <ng-container *ngFor="let gradeRule of layer.gradeRuleSet.gradeRules; let i = index" style="margin-top: 10px;">
                         <tr>
-                            <td>{{gradeRule.ruleDisplayName}}</td>
                             <td>{{gradeRule.gradeValue}}</td>
                             <td>
                                 {{gradeRule.lowerMarks}}
@@ -84,21 +89,17 @@
                                 </span>
                                 <span> {{gradeRule.upperMarks}}</span>
                             </td>
-                            <td>
-                                <button class="btn material-icons" style="padding: 4px 12px; background-color: transparent; color: red;"(click)="removeGradeRule(i)">delete</button>
-                            </td>
                         </tr>
                     </ng-container>
                     </tbody>
                 </table>
 
                 <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: fit-content;margin-left: auto; align-items: center; margin-top: 16px; ">
-                    <button class="btn" appearence="fill" style="padding: 6px;" (click)="addGradeRule()">Add Grade Rule</button>
-                    <mat-form-field appearence="fill" style="margin-left: 20px">
-                        <mat-select placeholder="Select Grade Rule" [(ngModel)]="newGradeRule">
-                            <ng-container *ngFor="let gradeRule of ca.gradeRules"> 
-                                <mat-option [value]="gradeRule">{{gradeRule.ruleDisplayName}} : {{gradeRule.gradeValue}}</mat-option>
-                            </ng-container>
+                    <mat-form-field>
+                        <mat-select placeholder="Grade Rule Set"
+                        [(ngModel)]="layer.gradeRuleSet">
+                            <mat-option [value]="null">None</mat-option>
+                            <mat-option *ngFor="let gradeRuleSet of layer.ca.gradeRuleSetList" [value]="gradeRuleSet">{{gradeRuleSet.name}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

@@ -9,7 +9,7 @@ import {
     PageResolution,
     PAGE_RESOLUTIONS,
     Result,
-    GradeRule
+    GradeRuleSet
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -36,7 +36,7 @@ export class DesignReportCardCanvasAdapter {
     // selectedLayers: Array<Layer> = [];
     // selectedLayersIndices: Array<number> = [];
 
-    gradeRules: Array<GradeRule> = [];
+    gradeRuleSetList: Array<GradeRuleSet> = [];
 
     backgroundColor: string = null;
 

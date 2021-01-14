@@ -12,26 +12,13 @@ export class MarksDialogComponent implements OnInit {
 
   ca: DesignReportCardCanvasAdapter;
   layer: MarksLayer;
-  layerGradeRules: Array<GradeRule>;
-  newGradeRule: GradeRule;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) {
     this.ca = data.ca;
     this.layer = data.layer;
-    this.layerGradeRules = this.layer.gradeRules;
   }
 
   ngOnInit() {
-  }
-
-  addGradeRule():void {
-    if (this.layerGradeRules.findIndex(g => g.ruleDisplayName == this.newGradeRule.ruleDisplayName) == -1) {
-      this.layerGradeRules.push(this.newGradeRule);
-    }
-  }
-
-  removeGradeRule(index: number): void{
-    this.layerGradeRules.splice(index, 1);
   }
 
 }

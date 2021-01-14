@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GradeRule} from './../../class/constants_3';
+import { GradeRule, GradeRuleSet} from './../../class/constants_3';
 import { DesignReportCardCanvasAdapter } from './../../report-card-3/pages/design-report-card/design-report-card.canvas.adapter';
 
 @Component({
@@ -11,26 +11,22 @@ import { DesignReportCardCanvasAdapter } from './../../report-card-3/pages/desig
 export class GradeRulesDialogComponent implements OnInit {
 
   ca: DesignReportCardCanvasAdapter;
-  gradeRules: Array<GradeRule>;
+  gradeRuleSetList: Array<GradeRuleSet>;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) { 
     this.ca = data.ca;
-    this.gradeRules = this.ca.gradeRules;
+    this.gradeRuleSetList = this.ca.gradeRuleSetList;
   }
 
   ngOnInit() {
   }
 
-  addNewGradeRule() {
-    this.gradeRules.push(new GradeRule());
+  addNewGradeRule(gradeRuleSet: GradeRuleSet):void {
+    gradeRuleSet.gradeRules.push(new GradeRule);
   }
 
-  getGradeRulesKeys(): Array<number>{
-    return this.gradeRules.map((e, i) => i);
-  }
-
-  deleteGradeRule(index: number): void{
-    this.gradeRules.splice(index, 1);
+  addNewGradeRuleSet():void {
+    this.gradeRuleSetList.push(new GradeRuleSet());
   }
 
 }
