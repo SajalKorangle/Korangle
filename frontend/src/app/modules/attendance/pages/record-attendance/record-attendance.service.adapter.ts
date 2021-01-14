@@ -1,18 +1,21 @@
 import { RecordAttendanceComponent } from './record-attendance.component';
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
+import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type'
 
 
 export class RecordAttendanceServiceAdapter {
 
     vm: RecordAttendanceComponent;
 
-    informationMessageType = 4; //Attendance Message
+    informationMessageType : any; 
 
     constructor() {}
     // Data
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
         this.vm = vm;
+        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Attendance') + 1;
+        console.log(this.informationMessageType);
     }
 
     initializeData(): void {
@@ -27,27 +30,15 @@ export class RecordAttendanceServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        let student_section_data = {
-            'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-        };
-
-        let student_data = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'fields__korangle': 'id,name,mobileNumber,scholarNumber,parentTransferCertificate'
-        };
-
         Promise.all([
-            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {'parentSchool': this.vm.user.activeSchool.dbId}),
-            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission, request_attendance_permission_list_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
-            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
+            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {'parentSchool': this.vm.user.activeSchool.dbId}), //0
+            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission, request_attendance_permission_list_data), //1
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //2
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //3
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //4
         ]).then(value => {
-            this.initializeClassSectionStudentList(value[3], value[4], value[2], value[5], value[1]);
-            this.vm.smsBalance = value[6];
+
+            this.vm.smsBalance = value[4];
             if(value[0].length > 0){
                 this.vm.selectedSentType = value[0][0].sentUpdateType;
                 this.vm.selectedReceiver = value[0][0].receiverType;
@@ -56,7 +47,40 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.selectedSentType = this.vm.sentTypeList[0]; // NULL
                 this.vm.selectedReceiver = this.vm.receiverList[1]; // Only Absent Students
             }
-            this.vm.isInitialLoading = false;
+            let class_permission_list = [];
+            let division_permission_list = [];
+            value[1].forEach(element =>{
+                class_permission_list.push(element.parentClass);
+                division_permission_list.push(element.parentDivision);
+            })
+            let student_section_data = {
+                'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentClass__in': class_permission_list,
+                'parentDivision__in': division_permission_list,
+                'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+
+            }
+            
+            Promise.all([
+                this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data)
+            ]).then(secondValue =>{
+                console.log(value);
+                let student_id_list = [];
+                let student_data = {
+                    'id__in': student_id_list,
+                    'fields__korangle': 'id,name,mobileNumber,scholarNumber,parentTransferCertificate'
+                };
+                secondValue[0].forEach(element =>{
+                    student_id_list.push(element.parentStudent);
+                })
+                Promise.all([
+                    this.vm.studentService.getObjectList(this.vm.studentService.student,student_data)
+                ]).then(thirdValue =>{
+                    console.log(thirdValue);
+                    this.initializeClassSectionStudentList(value[2], value[3], secondValue[0], thirdValue[0], value[1]);
+                    this.vm.isInitialLoading = false;
+                })
+            })
         }, error => {
             this.vm.isInitialLoading = false;
         });
@@ -221,27 +245,10 @@ export class RecordAttendanceServiceAdapter {
             }
         })
         promises.push(this.vm.attendanceService.createObjectList(this.vm.attendanceService.student_attendance, toCreateAttendance));
-        toUpdateAttendance.forEach(attendance =>{
-            promises.push(this.vm.attendanceService.updateObject(this.vm.attendanceService.student_attendance, attendance));
-        });
-        promises.push(this.notifyParents());
+        promises.push(this.vm.attendanceService.updateObjectList(this.vm.attendanceService.student_attendance, toUpdateAttendance));
         this.vm.isLoading = true;
         Promise.all(promises).then(response =>{
-            response[0].forEach(element =>{
-                let tempData = {
-                    dbId : element.parentStudent,
-                }
-                let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(tempData, new Date(element.dateOfAttendance));
-                this.vm.currentAttendanceList[previousAttendanceIndex].status = element.status;
-                this.vm.currentAttendanceList[previousAttendanceIndex].id = element.id;
-            })
-            for(let i=1; i<(response.length-1); i++){
-                let tempData = {
-                    dbId : response[i].parentStudent,
-                }
-                let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(tempData, new Date(response[i].dateOfAttendance));
-                this.vm.currentAttendanceList[previousAttendanceIndex].status = response[i].status;
-            }
+            this.notifyParents();
             alert('Student Attendance recorded successfully');
             this.vm.isLoading = false;
         }, error => {
@@ -286,6 +293,7 @@ export class RecordAttendanceServiceAdapter {
                             this.vm.studentList.push(tempData);
                         }
                     }
+                    this.vm.currentAttendanceList[previousAttendanceIndex].status = attendanceStatus.status;
                 }
             });
             
