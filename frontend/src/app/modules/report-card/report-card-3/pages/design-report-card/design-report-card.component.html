@@ -131,7 +131,7 @@
         <div class="flex-row" style="margin-top: 8px; width: 100%; height: calc(100vh - 90px); justify-content: space-between;">
 
             <!-- column1: Left Pannel -->
-            <mat-card class="inline-block" style="width: 240px; padding: 4px; overflow:hidden;" class="leftPannel bg-grey">
+            <mat-card class="inline-block" style="width: 240px; padding: 4px;" class="leftPannel bg-grey">
                 <mat-button-toggle-group style="width: 100%; margin-top: 2px;">
                     <mat-button-toggle value="layers" [checked]="htmlAdapter.activeLeftColumn === 'layers'"  (click)="htmlAdapter.activeLeftColumn = 'layers'">Layers</mat-button-toggle>
                     <mat-button-toggle value="parameters" (click)="htmlAdapter.activeLeftColumn = 'parameters'">Parameters</mat-button-toggle>
@@ -168,7 +168,7 @@
                 
                 <!-- Layers Column -->
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
-                    <div class="flex-column inner-content" style="flex-direction: column-reverse;">
+                    <div class="flex-column inner-content" style="flex-direction: column-reverse; position: relative; overflow: visible;" id="layersListContainer">
                         <ng-container *ngFor="let layer of canvasAdapter.layers; index as i">
                             <hr style="margin:0; background-color: gray; height: 3px; display: none;" [id]="layer.id"/>
                             <span *ngIf="layer" draggable="true" 
@@ -178,11 +178,21 @@
                                     (dragend)="$event.target.style.opacity='1'"
                                     (drop)="$event.preventDefault(); canvasAdapter.layerMove(layer.id, $event.dataTransfer.getData('layerId')); htmlAdapter.dropAssistanceHide(layer.id);"
                                     (mousedown)="canvasAdapter.updateActiveLayer(i, $event);"
+                                    (contextmenu)="$event.preventDefault(); htmlAdapter.openContextMenu($event);"
                                     style="width: calc(100% - 8px); text-align: center; margin: 4px; padding: 4px; border-radius: 3px; cursor: pointer; white-space: nowrap;" 
                                     [class]="i==canvasAdapter.activeLayerIndex?'bg-active':'bg-white'"> 
                                 <span (blur)="layer.displayName=$event.target.innerText" style="display: inline-block;" contenteditable="true"> {{layer.displayName}} </span>   <!--this is layer name-->
                                 <span style="float: right; margin-right: 12px;">#{{layer.id}}</span>   <!-- i is id which is the array index no.of layers -->
                             </span>
+                        </ng-container>
+                        <ng-container *ngIf="htmlAdapter.customMenuDisplay">
+                            <app-custom-menu [left]="htmlAdapter.customMenuLeft"
+                                    [top]="htmlAdapter.customMenuTop"
+                                    [layer]="canvasAdapter.activeLayer" 
+                                    [ca]="canvasAdapter" 
+                                    [layerIndex]="canvasAdapter.activeLayerIndex"
+                                    (closeMenu)="htmlAdapter.closeContextMenu()">
+                                </app-custom-menu>
                         </ng-container>
                     </div>
                 </ng-container>

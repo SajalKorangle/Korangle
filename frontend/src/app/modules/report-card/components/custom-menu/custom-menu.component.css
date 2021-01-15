@@ -1,0 +1,11 @@
+.menuButton {
+    display: block;
+    background-color: white;
+    padding: 4px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.menuButton:hover {
+    background-color: lightgray;
+}

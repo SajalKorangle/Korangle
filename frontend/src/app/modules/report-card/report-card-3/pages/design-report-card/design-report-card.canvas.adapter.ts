@@ -116,6 +116,14 @@ export class DesignReportCardCanvasAdapter {
             // }
         });
 
+        this.canvas.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            if (this.activeLayer) {
+                this.vm.htmlAdapter.openContextMenu(event);
+                this.currentMouseDown = false;
+            }
+        })
+
         this.canvas.addEventListener('mousemove', (event) => {  // Handling movement via mouse
             if (!this.currentMouseDown)
                 return;

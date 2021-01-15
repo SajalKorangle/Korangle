@@ -20,7 +20,7 @@ import { GradeRulesDialogComponent } from './../../../components/grade-rules-dia
     MatDialogModule,
     MatButtonToggleModule,
     MatIconModule,
-    ParametersPannelModule
+    ParametersPannelModule,
   ],
   entryComponents: [
     CustomVariablesDialogComponent,

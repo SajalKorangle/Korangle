@@ -19,7 +19,11 @@ export class DesignReportCardHtmlAdapter {
     isSaving:boolean = false;
     isLoading:boolean = false;
     isFullScreen:boolean = false;
-    openedDialog:any = null;
+    openedDialog: any = null;
+
+    customMenuDisplay:boolean = false;
+    customMenuTop: number = 0;
+    customMenuLeft: number = 0;
 
     activeLeftColumn: string = 'layers';
 
@@ -153,6 +157,18 @@ export class DesignReportCardHtmlAdapter {
 
     dropAssistanceHide(id: number) {
         document.getElementById(id.toString()).style.display = 'none';
+    }
+
+    openContextMenu(event: MouseEvent): void{
+        this.customMenuDisplay = true;
+
+        let layersListContainerRect = document.getElementById('layersListContainer').getBoundingClientRect();
+        this.customMenuLeft = event.x - layersListContainerRect.left;
+        this.customMenuTop = event.y - layersListContainerRect.top;
+    }
+
+    closeContextMenu(): void{
+        this.customMenuDisplay = false;
     }
 
 }
