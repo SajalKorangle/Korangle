@@ -61,6 +61,11 @@ describe('Examination -> Schedule Test', () => {
 
 
         (await containsFirst('button', 'Update')).click();
+        page.on('dialog', async dialog => {
+            expect(dialog.message()).toBe('Updated Test list!!!');
+            await dialog.dismiss();
+        });
+
         await page.waitForTimeout(3000);
 
         

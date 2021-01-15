@@ -57,7 +57,11 @@ describe('Examination -> Create Test', () => {
 
         (await containsFirst('button', 'Update')).click();
 
-        await page.waitForTimeout(3000);
+
+        page.on('dialog', async dialog => {
+            expect(dialog.message()).toBe('Updated Test list!!!');
+            await dialog.dismiss();
+        });
 
         await page.waitForXPath('//td[@testId="count"]');
         const list = await page.$x('//td[@testId="count"]');
@@ -82,6 +86,11 @@ describe('Examination -> Create Test', () => {
         (await containsFirst('button', 'Update')).click();
 
         await page.waitForTimeout(3000);
+
+        page.on('dialog', async dialog => {
+            expect(dialog.message()).toBe('Updated Test list!!!');
+            await dialog.dismiss();
+        });
 
         await page.waitForXPath('//td[@testId="count"]');
         const newlist = await page.$x('//td[@testId="count"]');
