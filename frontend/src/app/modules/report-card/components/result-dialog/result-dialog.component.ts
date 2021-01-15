@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CustomVariable, CUSTOM_VARIABLE_TYPES, Result} from './../../class/constants_3';
+import { MarksLayer, Formula, Result, DEFAULT_PASSING_MARKS} from './../../class/constants_3';
 import { DesignReportCardCanvasAdapter } from './../../report-card-3/pages/design-report-card/design-report-card.canvas.adapter';
 
 
@@ -14,58 +14,39 @@ export class ResultDialogComponent implements OnInit {
   ca: DesignReportCardCanvasAdapter;
   layer: Result;
 
-  marksVariables: CustomVariable[];
-  newCustomVariableType: string = Object.keys(CUSTOM_VARIABLE_TYPES)[1];
+  marksLayers:(MarksLayer|Formula)[];
+  newMarksLayer: MarksLayer|Formula = null;
+  rules: { passingMarks: number[], remarks: string[], colorRule:any[]};
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) {
     this.layer = data.layer;
-    this.marksVariables = data.layer.marksVariables;
+    this.marksLayers = data.layer.marksLayers;
+    this.rules = data.layer.rules;
     this.ca = data.ca;
-    console.log('marks variable: ', this.marksVariables)
    }
 
   ngOnInit() {
   }
 
-  customVariablesTypes(): string[]{
-    return Object.keys(CUSTOM_VARIABLE_TYPES).slice(1);
-  }
-
-  createCustomVariable() {
-    if (CUSTOM_VARIABLE_TYPES[this.newCustomVariableType]) {
-      let newVariable = new CUSTOM_VARIABLE_TYPES[this.newCustomVariableType](this.layer.marksVariables.length + 1, this.layer);
-      newVariable.isMarks = false;
-      this.marksVariables.push(newVariable);
+  addToMarksLayer(): void{
+    if (this.newMarksLayer) {
+      let alreadyPresent: boolean = false;
+      this.marksLayers.forEach((marksLayer: MarksLayer|Formula) => {
+        if (marksLayer.id == this.newMarksLayer.id)
+          alreadyPresent = true;
+      });
+      if (!alreadyPresent) {
+        this.marksLayers.push(this.newMarksLayer);
+        this.rules.remarks[this.marksLayers.length] = '';
+        this.rules.colorRule[this.marksLayers.length] = '#000000';
+        this.rules.passingMarks[this.marksLayers.length-1] = DEFAULT_PASSING_MARKS;
+      }
     }
   }
 
-  getMarksVariables(): CustomVariable[]{
-    return this.marksVariables.filter(m => m.isMarks);
+  getRemarksLengthKeys(): any{
+    return this.rules.remarks.map((e,i)=>i);
   }
-
-  getMarksFormulaLayers() {
-    const ca = this.ca;
-    return ca.layers.filter(layer => layer.LAYER_TYPE == "MARKS" || layer.LAYER_TYPE=="FORMULA");
-  }
-
-  getExaminationList() {
-    const DATA = this.ca.vm.DATA;
-    return DATA.data.examinationList;
-  }
-
-  getSubjectList() {
-    const DATA = this.ca.vm.DATA;
-    return DATA.data.subjectList;
-  }
-
-  getTestTypeList() {
-    const htmlAdapter = this.ca.vm.htmlAdapter;
-    return htmlAdapter.testTypeList;
-  }
-
-  getMarksTypeList() {
-    const htmlAdapter = this.ca.vm.htmlAdapter;
-    return htmlAdapter.marksTypeList;
-  }
+  
 
 }

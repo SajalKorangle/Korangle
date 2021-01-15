@@ -12,6 +12,7 @@ import {
     CanvasLine,
     CanvasRectangle,
     CanvasSquare,
+    GradeRuleSet,
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -33,8 +34,15 @@ export class DesignReportCardCanvasAdapter {
     canvasWidth: number = null;    
 
     layers: Array<Layer> = [];  // layers in thier order from back to front
-    activeLayer = null;
-    activeLayerIndex = null;
+    activeLayer:Layer = null;
+    activeLayerIndex:number = null;
+    // selectedLayers: Array<Layer> = [];
+    // selectedLayersIndices: Array<number> = [];
+
+    activePageIndex: number = 0;
+
+    gradeRuleSetList: Array<GradeRuleSet> = [];
+
     backgroundColor: string = null;
 
     lastMouseX: number;
@@ -51,8 +59,22 @@ export class DesignReportCardCanvasAdapter {
     constructor() {
     }
 
-    func():any{
-        console.log(this.shape);
+    getEmptyLayout(): any[] {
+        return [{ backgroundColor: DEFAULT_BACKGROUND_COLOR, layers: [] }];
+    }
+    
+    addEmptyPage(): void{
+        this.vm.currentLayout.content.push({ backgroundColor: DEFAULT_BACKGROUND_COLOR, layers: [] });
+        this.updatePage(this.vm.currentLayout.content.length-1);
+    }
+
+    updatePage(pageIndex: number): void{
+        if (this.activePageIndex == pageIndex)
+            return;
+        // save current page to currentLayout.content here
+        this.clearCanvas();
+        this.loadData(this.vm.currentLayout.content[pageIndex]);
+        this.activePageIndex = pageIndex;
     }
 
     initilizeAdapter(vm: DesignReportCardComponent) {
@@ -84,14 +106,18 @@ export class DesignReportCardCanvasAdapter {
 
             for (let i = this.layers.length - 1; i >= 0; i--) {
                 if (this.layers[i].isClicked(clickedX, clickedY)) {
-                    this.activeLayer = this.layers[i];
-                    this.activeLayerIndex = i;
+                    this.updateActiveLayer(i, event);
                     this.lastMouseX = clickedX;
                     this.lastMouseY = clickedY;
                     this.currentMouseDown = true;
                     break;
                 }
             }
+
+            // if (!this.activeLayer) {
+            //     this.selectedLayers = [];
+            //     this.selectedLayersIndices = [];
+            // }
         });
 
         this.canvas.addEventListener('mousemove', (event) => {  // Handling movement via mouse
@@ -133,18 +159,19 @@ export class DesignReportCardCanvasAdapter {
     }
 
     maximumCanvasSize():boolean{
-        if(this.canvas.height> 850 || this.canvas.width > 650){
+        if(this.canvas && (this.canvas.height> 850 || this.canvas.width > 650)){
             return true;
         }
         return false;
     }
 
     minimumCanvasSize():boolean{
-        if(this.canvas.height < 100 || this.canvas.width < 100){
+        if(this.canvas && (this.canvas.height < 100 || this.canvas.width < 100)){
             return true;
         }
         return false;
     }
+    
     canvasSizing(): void{
         let canvasPreviousWidth = this.canvasWidth;
         if (this.canvas.width / this.canvas.height > this.actualresolution.aspectRatio) {
@@ -223,6 +250,35 @@ export class DesignReportCardCanvasAdapter {
         }, duration);
     }
 
+    fullCanavsRefresh():void {
+        this.layers.forEach((layer: Layer) => {
+            layer.layerDataUpdate();
+        })
+        this.scheduleCanvasReDraw(0);
+    }
+
+    layerMove(id1: number, id2:number): void{   // move layer of id2 above layer of id1
+        let layer1Index: number = this.layers.findIndex(l => l.id == id1);
+        let layer2Index: number = this.layers.findIndex(l => l.id == id2);
+        let layerToMove = this.layers[layer2Index];
+        delete this.layers[layer2Index];
+        this.layers.splice(layer1Index, 0, layerToMove);
+        this.layers = this.layers.filter(Boolean);
+        this.scheduleCanvasReDraw(0);
+        this.activeLayer = layerToMove;
+        this.activeLayerIndex = this.layers.findIndex(l => l.id ==layerToMove.id);
+    }
+
+    duplicateLayer(layer: Layer): void{
+        let layer_shallow_copy = { ...layer };
+        delete layer_shallow_copy.ca;
+        let json_parsed_layer_copy = JSON.parse(JSON.stringify(layer_shallow_copy));
+        delete json_parsed_layer_copy.id;
+        json_parsed_layer_copy.displayName += ' copy';
+        let newLayer = new layer.constructor(json_parsed_layer_copy, this);
+        this.newLayerInitilization(newLayer);
+    }
+
     applyDefaultbackground(): void{
         this.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         this.scheduleCanvasReDraw(0);
@@ -242,9 +298,19 @@ export class DesignReportCardCanvasAdapter {
         this.applyDefaultbackground();
     }
 
-    updateActiveLayer(activeLayerIndex:number): void{   // used by left layer pannel
+    updateActiveLayer(activeLayerIndex:number, event: MouseEvent=null): void{   // used by left layer pannel
+        
         this.activeLayerIndex = activeLayerIndex;
         this.activeLayer = this.layers[this.activeLayerIndex];
+        // if (event) {    // if event is a mouse event then check for control key pressed and select multiple layers
+        //     if (event.shiftKey) {
+        //         this.selectedLayers.push(this.activeLayer);
+        //         this.selectedLayersIndices.push(this.activeLayerIndex);
+        //     } else {
+        //         this.selectedLayers = [];
+        //         this.selectedLayersIndices = [];
+        //     }
+        // }
     }
 
     getDataToSave() {   // updating required

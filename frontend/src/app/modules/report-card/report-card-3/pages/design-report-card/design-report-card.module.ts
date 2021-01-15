@@ -8,7 +8,9 @@ import { ParametersPannelModule } from './../../../components/parameters-pannel.
 import { MatDialogModule} from '@angular/material/dialog';
 import { CustomVariablesDialogComponent } from './../../../components/custom-variables-dialog/custom-variables-dialog.component';
 import { PageResolutionDialogComponent } from './../../../components/page-resolution-dialog/page-resolution-dialog.component';
-import { ResultDialogComponent} from './../../../components/result-dialog/result-dialog.component'
+import { ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component';
+import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
+import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
 
 @NgModule({
   declarations: [DesignReportCardComponent],
@@ -23,7 +25,9 @@ import { ResultDialogComponent} from './../../../components/result-dialog/result
   entryComponents: [
     CustomVariablesDialogComponent,
     PageResolutionDialogComponent,
-    ResultDialogComponent
+    ResultDialogComponent,
+    MarksDialogComponent,
+    GradeRulesDialogComponent
   ],
   bootstrap: [DesignReportCardComponent]
 })

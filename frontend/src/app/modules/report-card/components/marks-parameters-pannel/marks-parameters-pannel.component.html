@@ -2,7 +2,7 @@
     <div style="background-color: grey; text-align: center;">
         <i class="material-icons" style="margin-top: 4px;">book</i>
     </div>
-    <div style="margin: 4px; padding: 4px;">
+    <div style="margin: 4px; padding: 4px; text-align: center;">
 
         <mat-form-field appearence="fill">
             <mat-select 
@@ -50,6 +50,8 @@
             </mat-label>
             <input matInput type="number" min="0" [(ngModel)]="layer.factor" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
         </mat-form-field>
+
+        <button class="btn" style="padding: 6px 12px; width: 100%;" (click)="layer.ca.vm.htmlAdapter.openMarksDialog(layer)">More ...</button>
 
     </div>
 </mat-card>

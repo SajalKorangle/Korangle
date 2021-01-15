@@ -1,5 +1,6 @@
 .bg-white {
     background-color: white;
+    color: gray;
 }
 .bg-grey {
     background-color: lightgray;
@@ -7,6 +8,7 @@
 .bg-active {
     background-color: skyblue;
     box-shadow: 0 0 3px darkgray;
+    color: white;
 }
 
 .bg-active::selection {

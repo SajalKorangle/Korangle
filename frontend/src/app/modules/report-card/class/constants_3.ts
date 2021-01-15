@@ -122,6 +122,15 @@ function getNumberInWords(numerical: number): string {
     }
 }
 
+function getMarksInWords(num: number): string{
+    let unitTens = getNumberInWords(num % 100);
+    num /= 100;
+    let hundreds = getNumberInWords(num % 10);
+    num /= 10;
+    let thousands = getNumberInWords(num % 100);
+    return `${thousands?thousands+' Thousand':''} ${hundreds?hundreds+' Hundred':''} ${unitTens}`
+}
+
 function getYear(year: any): string {
     if (year < 2000) {
         return getNumberInWords(Math.floor(year / 100))
@@ -376,6 +385,7 @@ export const TEST_TYPE_LIST = [
 
 export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
 export var DEFAULT_MAXIMUM_MARKS = 100;
+export const DEFAULT_PASSING_MARKS = 40;
 
 //Layers--------------------------------------
 
@@ -390,6 +400,7 @@ export interface Layer{
     dataSourceType: string;    // options: DATA_SOURCE_TYPE
     source?: { [key: string]: any };   // object containing information about the source of data
     ca: DesignReportCardCanvasAdapter;  // canvas adapter
+    constructor: any;
     layerDataUpdate(): void;
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
@@ -822,8 +833,6 @@ export class CanvasText extends BaseLayer implements Layer{
         
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
-        this.fontStyle.font = ` normal ${6/ca.pixelTommFactor}px Arial`;
-        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         this.LAYER_TYPE = 'TEXT';
         this.underline = false;
         this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
@@ -975,6 +984,50 @@ export class CanvasDate extends CanvasText implements Layer{
 
 }
 
+export class CanvasGroup extends BaseLayer implements Layer{
+    layers: Array<Layer> = [];
+    height: number = 0;
+    width: number = 0;
+    locked: boolean = false;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('group');
+
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.layerDataUpdate();
+        }
+        this.LAYER_TYPE = 'GROUP';
+    }
+
+    layerDataUpdate(): void {
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        return true;
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+        if (this.locked) {
+            let anyLayerClicked: boolean = false;
+            this.layers.forEach((layer: Layer) => {
+                anyLayerClicked = anyLayerClicked || layer.isClicked(mouseX, mouseY);
+            });
+            return anyLayerClicked;
+        } 
+        return false;
+    }
+
+    scale(scaleFactor: number): void {
+    }
+
+    getDataToSave():object {
+        // To be implemented
+        return {};
+    }
+}
+
 class AttendanceLayer extends CanvasText implements Layer{
     displayName: string = 'Attendance';
     startDate: Date = new Date();
@@ -1054,6 +1107,55 @@ export class RemarksLayer extends CanvasText implements Layer{
 
 }
 
+export class GradeRule{
+    lowerMarks: number = 0;
+    upperMarks: number = 100;
+    lowerInclusion: boolean = true;
+    upperInclusion: boolean = true;
+    gradeValue: string = 'A';
+
+    
+    constructor(attributes: object = {}) { 
+        this.initilizeSelf(attributes);
+    }
+    initilizeSelf(attributes:object): void{
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
+    }
+
+    belongsToGrade(marks: number):boolean {
+        if (((this.lowerInclusion && this.lowerMarks <= marks)
+                || (!this.lowerInclusion && this.lowerMarks < marks))
+                && ((this.upperInclusion && this.upperMarks >= marks)
+                || (!this.upperInclusion && this.upperMarks > marks))) {
+            return true;
+        }
+        return false;
+    }
+};
+
+export class GradeRuleSet{
+    id: number;
+    name: string;
+
+    gradeRules: Array<GradeRule> = [new GradeRule()];
+
+    static maxID = 0;
+
+    constructor(attributes: object = {}) {
+        GradeRuleSet.maxID++;
+        this.id = GradeRuleSet.maxID;
+        this.initilizeSelf(attributes);
+    }
+
+    initilizeSelf(attributes:object): void{
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
+        GradeRuleSet.maxID = Math.max(GradeRuleSet.maxID, this.id);   // always keeping static maxID maximum of all layers
+        if (!this.name) {
+            this.name = 'Grade Rule Set - ' + this.id;
+        }
+    }
+}
+
 export class MarksLayer extends CanvasText implements Layer{
     displayName: string = 'Marks';
 
@@ -1066,7 +1168,10 @@ export class MarksLayer extends CanvasText implements Layer{
     parentExamination: any = null;
     parentSubject: any = null;
     testType: string = null;
-    marksType:string = MARKS_TYPE_LIST[0];
+    marksType: string = MARKS_TYPE_LIST[0];
+    inWords: boolean = false;
+    
+    gradeRuleSet: GradeRuleSet;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
@@ -1079,13 +1184,29 @@ export class MarksLayer extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         if (this.parentExamination && this.parentSubject) {
+            let gradeValue:string = null;
             this.marks = this.source.getValueFunc(
                 this.ca.vm.DATA,
                 this.parentExamination,
                 this.parentSubject,
                 this.testType,
-                this.marksType)*this.factor;
-            this.text = this.marks!=-1?this.marks.toFixed(this.decimalPlaces):'N/A';
+                this.marksType) * this.factor;
+            if (this.gradeRuleSet) {
+                this.gradeRuleSet.gradeRules.forEach((gradeRule: GradeRule) => {
+                    if (gradeRule.belongsToGrade(this.marks))
+                        gradeValue = gradeRule.gradeValue;
+                });
+            }
+            if (gradeValue) {
+                this.text = gradeValue;
+            }
+            else {
+                if (this.inWords) {
+                    this.text = getMarksInWords(this.marks);
+                } else {
+                    this.text = this.marks != -1 ? this.marks.toFixed(this.decimalPlaces) : 'N/A';
+                }
+            }
         } else {
             this.text = 'Make apprpiate selection from right pannel';
         }
@@ -1332,8 +1453,8 @@ export class Formula extends CanvasText implements Layer{
 export class Result extends CanvasText implements Layer{
     displayName: string = 'Result';
 
-    marksVariables: CustomVariable[] = []; 
-    rules: any[];
+    marksLayers: (MarksLayer|Formula)[] = []; 
+    rules: {passingMarks: number[], remarks: string[], colorRule:any[]} = {passingMarks:[], remarks:['PASS'], colorRule:['#008000']};
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
@@ -1345,6 +1466,14 @@ export class Result extends CanvasText implements Layer{
     }
 
     layerDataUpdate(): void {
+        let numberOfFailedSubjects = 0;
+        this.marksLayers.forEach((layer: MarksLayer | Formula, index: number) => {
+            if (!layer.marks || layer.marks < this.rules.passingMarks[index]) {
+                numberOfFailedSubjects++;
+            } 
+        });
+        this.text = this.rules.remarks[numberOfFailedSubjects];
+        this.fontStyle.fillStyle = this.rules.colorRule[numberOfFailedSubjects];
         this.updateTextBoxMetrics();
     }
 

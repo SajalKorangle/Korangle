@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>Grade Rules</h2>
+<mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw;">
+
+    <mat-accordion class="example-headers-align" multi>
+        
+        <mat-expansion-panel *ngFor="let gradeRuleSet of gradeRuleSetList">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{gradeRuleSet.name}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+        <table class="table table-hover" style="margin-top: 6px;">
+            <thead>
+                <tr>
+                    <th>Grade</th>
+                    <th>Criretia</th>
+                </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let gradeRule of gradeRuleSet.gradeRules; let i = index" style="margin-top: 10px;">
+                <tr>
+                    <td><input matInput type="text" [(ngModel)]="gradeRule.gradeValue" class="short-input"></td>
+                    <td>
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                        <input matInput type="number" [(ngModel)]="gradeRule.lowerMarks" class="short-input">
+                        &nbsp;
+                        <button type="button"
+                                class="btn"
+                                style="padding: 4px 7px;"
+                                (click)="gradeRule.upperInclusion=!gradeRule.upperInclusion">
+                            <ng-container *ngIf="gradeRule.upperInclusion; else greterThanEquals1">=&gt;</ng-container>
+                            <ng-template #greterThanEquals1>&nbsp;&gt;</ng-template>
+                        </button> &nbsp;
+                            Marks &nbsp;
+                        <button type="button"
+                                class="btn"
+                                style="padding: 4px 7px;"
+                                (click)="gradeRule.lowerInclusion=!gradeRule.lowerInclusion">
+                            <ng-container *ngIf="gradeRule.lowerInclusion else greaterThanEquals2">=&gt;</ng-container>
+                            <ng-template #greaterThanEquals2>&nbsp;&gt;</ng-template>
+                        </button> &nbsp;
+                        <input matInput type="number" [(ngModel)]="gradeRule.upperMarks" class="short-input">
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn material-icons" style="padding: 4px 12px; background-color: transparent; color: red;"(click)="gradeRuleSet.gradeRules.splice(i,1)">delete</button>
+                    </td>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+            
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: fit-content;margin-left: auto; align-items: center; margin-top: 16px; ">
+            <button class="btn" appearence="fill" style="padding: 6px;" (click)="addNewGradeRule(gradeRuleSet)">Add Grade Rule</button>
+        </div>
+    </mat-expansion-panel>
+    </mat-accordion>
+
+    <div style="margin-top: 16px; ">
+        <button class="btn" appearence="fill" style="padding: 6px;" (click)="addNewGradeRuleSet()">Add Grade Rule Set</button>
+    </div>
+
+</mat-dialog-content>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close class="btn" style="background-color: blue; display: block; margin-left: auto;" cdkFocusInitial>Apply</button>
+</div>

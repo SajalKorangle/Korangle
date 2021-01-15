@@ -8,12 +8,17 @@
             <mat-label>
                 Formula
             </mat-label>
-            <input matInput type="text"  [(ngModel)]="layer.formula">
+            <input matInput type="text"  [(ngModel)]="layer.formula" (ngModelChange)="smartLayerUpdate()">
         </mat-form-field>
+        
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Decimal Places
+            </mat-label>
+            <input matInput type="number" min="0"  [(ngModel)]="layer.decimalPlaces" (ngModelChange)="smartLayerUpdate(750)">
+        </mat-form-field>
+        
 
-        <button class="btn" style="padding: 6px;" (click)="layer.layerDataUpdate(); canvasRefresh();">Evaluate</button>
-
-        <!-- <button class="btn" style="padding: 6px; margin-left: 8px;" (click)="layer.ca.vm.htmlAdapter.openCustomVariableDialog(layer)">VARIABLES</button> -->
 
     </div>
 </mat-card>
