@@ -248,7 +248,6 @@ export class ScheduleTestServiceAdapter {
 	//Get Test And Subject Details
 	getTestAndSubjectDetails(): void {
 		this.vm.isLoading = true;
-		console.log(this.vm.classSectionSubjectList);
 
 		let request_test_data_list = {
 			parentExamination: this.vm.selectedExamination,
@@ -262,8 +261,7 @@ export class ScheduleTestServiceAdapter {
 		]).then(
 			(value) => {
 				//test list obtained...
-				console.log('Test list fetched...');
-				console.log('value: ', value[0]);
+
 				this.vm.newTestList = [];
 				value[0].forEach((test) => {
 					for (let i = 0; i < this.classListForTest.length; i++) {
@@ -283,7 +281,6 @@ export class ScheduleTestServiceAdapter {
 								sectionIdx = -1;
 
 							if (subIdx != -1) {
-								console.log("test is true :" + test);
 								classIdx = this.vm.newTestList[subIdx].classList.findIndex(
 									(cl) => cl.classId === test.parentClass
 								);
@@ -346,8 +343,7 @@ export class ScheduleTestServiceAdapter {
 
 				});
 
-				console.log('Test listed created in nested fashion...');
-				console.log(this.vm.newTestList);
+
 				this.vm.fetchedListLength = this.vm.newTestList.length;
 				this.vm.isLoading = false;
 				this.vm.showTestDetails = true;
@@ -420,19 +416,6 @@ export class ScheduleTestServiceAdapter {
 		return result;
 	}
 
-	isOnlyGrade(subjectId: any): boolean {
-		let result = false;
-		this.classSubjectList.every((item) => {
-			if (item.parentSubject === subjectId) {
-				if (item.onlyGrade) {
-					result = true;
-				}
-				return false;
-			}
-			return true;
-		});
-		return result;
-	}
 
 	//Update Test List New
 	updateTestNew(): any {
@@ -456,8 +439,7 @@ export class ScheduleTestServiceAdapter {
 
 					//if deleted
 					if (test.deleted) {
-						console.log('A delete request for');
-						console.log(test);
+
 						promises.push(this.vm.examinationService.deleteObject(this.vm.examinationService.test_second, data));
 					}
 
@@ -480,7 +462,6 @@ export class ScheduleTestServiceAdapter {
 			this.vm.isLoading = false;
 		}, error => {
 			this.vm.isLoading = false;
-			console.log(error);
 		})
 	}
 
@@ -519,36 +500,4 @@ export class ScheduleTestServiceAdapter {
 		}
 	}
 
-	//Check for any duplicate test is present or not
-	findAnyDuplicate(tempTest: any, value: any): boolean {
-		var ans = false;
-
-		tempTest.classList.forEach((cl) => {
-			cl.sectionList.forEach((sec) => {
-				this.vm.newTestList.forEach((test) => {
-					if (
-						test.subjectId === tempTest.subjectId &&
-						test.testType === value
-					) {
-						test.classList.forEach((cll) => {
-							if (cll.classId === cl.classId) {
-								cll.sectionList.forEach((secc) => {
-									if (
-										secc.sectionId === sec.sectionId &&
-										secc.testId != sec.testId
-									) {
-										console.log('a test is found with same parameter...');
-										console.log(test);
-										ans = true;
-									}
-								});
-							}
-						});
-					}
-				});
-			});
-		});
-
-		return ans;
-	}
 }

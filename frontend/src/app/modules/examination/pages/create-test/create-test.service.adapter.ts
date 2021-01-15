@@ -13,19 +13,6 @@ export class CreateTestServiceAdapter {
 
     sectionListForTest: any;
 
-    commonSubjectList: Array<{
-        subjectId: any;
-        subjectName: any;
-        classList: Array<{
-            className: any;
-            classId: any;
-        }>;
-        sectionList: Array<{
-            sectionName: any;
-            sectionId: any;
-        }>;
-    }>;
-
     toBeDeletedTestList: any = [];
 
     constructor() {}
@@ -172,12 +159,12 @@ export class CreateTestServiceAdapter {
             this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject, request_subject_data),
         ]).then(
             (value) => {
-                this.commonSubjectList = [];
+                let commonSubjectList = [];
 
                 value[0].forEach((item) => {
                     for (let i = 0; i < this.classListForTest.length; i++) {
                         if (this.classListForTest[i] === item.parentClass && this.sectionListForTest[i] === item.parentDivision) {
-                            var subIdx = this.commonSubjectList.findIndex(
+                            var subIdx = commonSubjectList.findIndex(
                                 (sub) => sub.subjectId === item.parentSubject
                             );
 
@@ -197,8 +184,8 @@ export class CreateTestServiceAdapter {
                             tempSectionList.push(tempSection);
 
                             if (subIdx != -1) {
-                                this.commonSubjectList[subIdx].classList.push(tempClass);
-                                this.commonSubjectList[subIdx].sectionList.push(tempSection);
+                                commonSubjectList[subIdx].classList.push(tempClass);
+                                commonSubjectList[subIdx].sectionList.push(tempSection);
                             } else {
                                 let tempSub = {
                                     subjectName: this.getSubjectName(item.parentSubject),
@@ -206,15 +193,15 @@ export class CreateTestServiceAdapter {
                                     classList: tempClassList,
                                     sectionList: tempSectionList,
                                 };
-                                this.commonSubjectList.push(tempSub);
+                                commonSubjectList.push(tempSub);
                             }
                         }
                     }
 
                 });
-                this.populateSubjectList();
+                this.populateSubjectList(commonSubjectList);
 
-                var findOne = this.commonSubjectList.findIndex(
+                var findOne = commonSubjectList.findIndex(
                     (item) => item.classList.length != totalNumberOfListRequired
                 );
 
@@ -335,9 +322,9 @@ export class CreateTestServiceAdapter {
             });
     }
 
-    populateSubjectList(): void {
+    populateSubjectList(commonSubjectList): void {
         this.vm.subjectList = [];
-        this.commonSubjectList.forEach((item) => {
+        commonSubjectList.forEach((item) => {
             let tempSubject = {
                 id: item.subjectId,
                 name: item.subjectName,
@@ -596,7 +583,6 @@ export class CreateTestServiceAdapter {
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
-            console.log(error);
         })
     }
 
@@ -635,34 +621,5 @@ export class CreateTestServiceAdapter {
         }
     }
 
-    //Check for any duplicate test is present or not
-    findAnyDuplicate(tempTest: any, value: any): boolean {
-        var ans = false;
 
-        tempTest.classList.forEach((cl) => {
-            cl.sectionList.forEach((sec) => {
-                this.vm.newTestList.forEach((test) => {
-                    if (
-                        test.subjectId === tempTest.subjectId &&
-                        test.testType === value
-                    ) {
-                        test.classList.forEach((cll) => {
-                            if (cll.classId === cl.classId) {
-                                cll.sectionList.forEach((secc) => {
-                                    if (
-                                        secc.sectionId === sec.sectionId &&
-                                        secc.testId != sec.testId
-                                    ) {
-                                        ans = true;
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        });
-
-        return ans;
-    }
 }

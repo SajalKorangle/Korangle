@@ -43,7 +43,7 @@ export class UpdateMarksComponent implements OnInit {
     constructor(public examinationService : ExaminationService,
                 public classService: ClassService,
                 public subjectService: SubjectService,
-                public studentNewService: StudentService,
+                public studentService: StudentService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

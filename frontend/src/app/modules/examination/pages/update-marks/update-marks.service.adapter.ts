@@ -18,8 +18,6 @@ export class UpdateMarksServiceAdapter {
     classList: any;
     sectionList: any;
     subjectList: any;
-    testTypeListInCurrentTest: any = [];
-
     testList: any;
     classSubjectList: any;
 
@@ -48,17 +46,8 @@ export class UpdateMarksServiceAdapter {
         };
 
         let request_class_subject_data = {
-
             'parentEmployee': this.vm.user.activeSchool.employeeId,
-            'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-
-        };
-
-        let request_student_mini_profile_data_new = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'fields__korangle': 'id,name,fathersName,profileImage,gender,scholarNumber,parentTransferCertificate'
         };
 
 
@@ -68,7 +57,6 @@ export class UpdateMarksServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_data),
-            this.vm.studentNewService.getObjectList(this.vm.studentNewService.student, request_student_mini_profile_data_new),
         ]).then(value => {
 
             this.examinationList = value[0];
@@ -76,92 +64,119 @@ export class UpdateMarksServiceAdapter {
             this.sectionList = value[2];
             this.subjectList = value[3];
             this.classSubjectList = value[4];
-            this.student_data_list = value[5];
 
+            
+            let classes=[],sections=[];
+            value[4].forEach(classSubject => {
+                classes.push(classSubject.parentClass);
+                sections.push(classSubject.parentDivision);
+            });
 
             let request_student_section_data = {
-                'parentStudent__in': this.getStudentIdList(value[5]).join(','),
+                'parentStudent__parentSchool' :this.vm.user.activeSchool.dbId,
+                'parentClass__in': classes,
+                'parentDivision__in': sections,
                 'parentSession': this.vm.user.activeSchool.currentSessionDbId
             }
-            this.vm.studentNewService.getObjectList(this.vm.studentNewService.student_section, request_student_section_data).then(value => {
+
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(value => {
                 this.student_section_data_list = value;
-                this.student_data_list.forEach(student => {
-                    this.student_section_data_list.forEach(stud_sec => {
-
-                        if (stud_sec.parentStudent === student.id) {
-                            let data = {
-                                dbId: student.id,
-                                name: student.name,
-                                fatherName: student.fatherName,
-                                gender: student.gender,
-                                profileImage: student.profileImage,
-                                scholarNumber: student.scholarNumber,
-                                parentTransferCertificate: student.parentTransferCertificate,
-                                classDbId: stud_sec.parentClass,
-                                className: this.getClassName(stud_sec.parentClass),
-                                sectionDbId: stud_sec.parentDivision,
-                                sectionName: this.getSectionName(stud_sec.parentDivision),
-                                studentSectionDbId: stud_sec.id,
-                                rollNumber: stud_sec.rollNumber
-                            }
-                            this.vm.student_mini_profile_list.push(data);
-                            this.student_mini_profile_list.push(data);
-
-                        }
-                    });
-                });
-
-            })
 
 
-            let service_list = [];
 
-            let examination_id_list = this.getExaminationIdList();
+                let studentInThisClassSection = [];
+                this.student_section_data_list.forEach(studentSection => {
+                    studentInThisClassSection.push(studentSection.parentStudent);
+                })
 
-            this.classSubjectList.forEach(item => {
-
-                let request_class_test_data = {
-                    /*'examinationId': this.vm.selectedExamination.id,
-                    'classId': this.vm.selectedExamination.selectedClass.id,
-                    'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
-                    'parentExamination__in': examination_id_list,
-                    'parentClass': item.parentClass,
-                    'parentDivision': item.parentDivision,
-                    'parentSubject' : item.parentSubject
+                let request_student_mini_profile_data_new = {
+                    'id__in': studentInThisClassSection.join(','),
+                    'fields__korangle': 'id,name,fathersName,profileImage,gender,scholarNumber,parentTransferCertificate'
                 };
 
-                // let request_class_test_data = {
-                //     'examinationList': [examination_id_list],
-                //     'subjectList': [item.parentSubject],
-                //     'classList': [item.parentClass],
-                //     'sectionList': [item.parentDivision],
-                //     'startTimeList': [],
-                //     'endTimeList': [],
-                //     'testTypeList': [],
-                //     'maximumMarksList': [],
-                // };
+                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_mini_profile_data_new).then(value => {
+                    this.student_data_list = value;
 
-                service_list.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data));
-
-            });
-
-            Promise.all(service_list).then(value => {
-
-                this.testList = [];
-
-                value.forEach(item => {
-                    if (item.length > 0) {
-                        item.forEach(itemTwo => {
-                            this.testList.push(itemTwo);
+                    this.student_data_list.forEach(student => {
+                        this.student_section_data_list.forEach(stud_sec => {
+    
+                            if (stud_sec.parentStudent === student.id) {
+                                let data = {
+                                    dbId: student.id,
+                                    name: student.name,
+                                    fatherName: student.fatherName,
+                                    gender: student.gender,
+                                    profileImage: student.profileImage,
+                                    scholarNumber: student.scholarNumber,
+                                    parentTransferCertificate: student.parentTransferCertificate,
+                                    classDbId: stud_sec.parentClass,
+                                    className: this.getClassName(stud_sec.parentClass),
+                                    sectionDbId: stud_sec.parentDivision,
+                                    sectionName: this.getSectionName(stud_sec.parentDivision),
+                                    studentSectionDbId: stud_sec.id,
+                                    rollNumber: stud_sec.rollNumber
+                                }
+                                this.vm.student_mini_profile_list.push(data);
+                                this.student_mini_profile_list.push(data);
+    
+                            }
                         });
-                    }
-                });
+                    });
 
-                this.populateExaminationClassSectionSubjectList();
-                this.vm.subjectList = this.subjectList;
-                this.vm.isInitialLoading = false;
 
+
+                    let service_list = [];
+
+                    let examination_id_list = this.getExaminationIdList();
+        
+                    this.classSubjectList.forEach(item => {
+        
+                        let request_class_test_data = {
+                            /*'examinationId': this.vm.selectedExamination.id,
+                            'classId': this.vm.selectedExamination.selectedClass.id,
+                            'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
+                            'parentExamination__in': examination_id_list,
+                            'parentClass': item.parentClass,
+                            'parentDivision': item.parentDivision,
+                            'parentSubject' : item.parentSubject
+                        };
+        
+                        // let request_class_test_data = {
+                        //     'examinationList': [examination_id_list],
+                        //     'subjectList': [item.parentSubject],
+                        //     'classList': [item.parentClass],
+                        //     'sectionList': [item.parentDivision],
+                        //     'startTimeList': [],
+                        //     'endTimeList': [],
+                        //     'testTypeList': [],
+                        //     'maximumMarksList': [],
+                        // };
+        
+                        service_list.push(this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data));
+        
+                    });
+        
+                    Promise.all(service_list).then(value => {
+        
+                        this.testList = [];
+        
+                        value.forEach(item => {
+                            if (item.length > 0) {
+                                item.forEach(itemTwo => {
+                                    this.testList.push(itemTwo);
+                                });
+                            }
+                        });
+        
+                        this.populateExaminationClassSectionSubjectList();
+                        this.vm.subjectList = this.subjectList;
+                        this.vm.isInitialLoading = false;
+        
+                    });
+    
+                })
             });
+
 
         }, error => {
             this.vm.isInitialLoading = false;
@@ -337,10 +352,11 @@ export class UpdateMarksServiceAdapter {
         this.vm.isLoading = true;
         this.vm.isUpdated = false;
         //Prepare the testTypeListInCurrentTest
+        let testTypeListInCurrentTest :any = [];
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.testDetails.forEach(test => {
 
-            if (this.testTypeListInCurrentTest.findIndex(tempTestType => tempTestType === test.testType) === -1) {
-                this.testTypeListInCurrentTest.push(test.testType);
+            if (testTypeListInCurrentTest.findIndex(tempTestType => tempTestType === test.testType) === -1) {
+                testTypeListInCurrentTest.push(test.testType);
             }
 
         });
@@ -352,7 +368,7 @@ export class UpdateMarksServiceAdapter {
         };
 
         this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data).then(value2 => {
-            this.populateStudentList(value2);
+            this.populateStudentList(value2,testTypeListInCurrentTest);
             this.vm.showTestDetails = true;
             this.vm.isLoading = false;
         }, error => {
@@ -372,7 +388,7 @@ export class UpdateMarksServiceAdapter {
         return id_list;
     }
 
-    populateStudentList(student_test_list: any): void {
+    populateStudentList(student_test_list: any,testTypeListInCurrentTest :any): void {
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject['studentList'] = [];
         this.student_mini_profile_list.filter(item => {
             if (item.classDbId === this.vm.selectedExamination.selectedClass.id
@@ -388,15 +404,14 @@ export class UpdateMarksServiceAdapter {
         }).forEach(item => {
             let tempItem = {};
             tempItem = this.copyObject(item);
-            tempItem['testDetails'] = this.getStudentTestList(tempItem, student_test_list);
+            tempItem['testDetails'] = this.getStudentTestList(tempItem, student_test_list,testTypeListInCurrentTest);
             this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject['studentList'].push(tempItem);
         });
-        console.log(this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject['studentList']);
     }
 
-    getStudentTestList(student: any, student_test_list: any): any {
+    getStudentTestList(student: any, student_test_list: any,testTypeListInCurrentTest :any): any {
         let result = [];
-        this.testTypeListInCurrentTest.forEach(testType => {
+        testTypeListInCurrentTest.forEach(testType => {
             var studentPresent = false;
             student_test_list.forEach(item => {
                 if (item.parentStudent === student.dbId && item.testType === testType) {
@@ -441,6 +456,7 @@ export class UpdateMarksServiceAdapter {
     // Update Student Test Details
     updateStudentTestDetails(): void {
 
+        this.vm.isLoading = true;
         let data = [];
 
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(item => {
@@ -455,13 +471,8 @@ export class UpdateMarksServiceAdapter {
             });
         });
 
-        this.updateAndCreateStudentTestData(data);
-        this.getStudentTestDetails();
 
-    }
-    updateAndCreateStudentTestData(data: any): void {
 
-        this.vm.isLoading = true;
         let toBeUpdated = [];
         let toBeCreated = [];
         data.forEach(item => {
@@ -474,8 +485,43 @@ export class UpdateMarksServiceAdapter {
             this.vm.examinationService.updateObjectList(this.vm.examinationService.student_test, toBeUpdated),
             this.vm.examinationService.createObjectList(this.vm.examinationService.student_test, toBeCreated)
         ]).then(value => {
+            if(value[0]!=null)
+            value[0].forEach(test => {
+                this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(student => {
+                    student.testDetails.forEach(studentTest => {
+                        if(test.id === studentTest.id)
+                        {       
+                            if (test.marksObtained == 0.0) {
+                                studentTest.newMarksObtained = null;
+                            }
+                            else {
+                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(1);
+                            } 
+                        }
+                    });
+                    
+                })
+            });
+            if(value[1]!=null)
+            value[1].forEach(test => {
+                this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(student => {
+                    student.testDetails.forEach(studentTest => {
+                        if(test.id === studentTest.id)
+                        {       
+                            if (test.marksObtained == 0.0) {
+                                studentTest.newMarksObtained = null;
+                            }
+                            else {
+                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(1);
+                            } 
+                        }
+                    });
+                    
+                })
+            });
+            this.vm.isUpdated = false;
             this.vm.isLoading = false;
-            this.getStudentTestDetails();
+
         }, error => {
             this.vm.isLoading = false;
         });

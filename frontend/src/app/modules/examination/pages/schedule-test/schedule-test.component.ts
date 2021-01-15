@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgModel } from '@angular/forms';
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 import { DataStorage } from '../../../../classes/data-storage';

@@ -150,7 +150,6 @@ export class CreateTestComponent implements OnInit {
 
     //This function is used to create a basic test template for all subjects in the selected class and section
     createTestFromTemplate() {
-        console.log('Basic Test creation called...');
         this.newTestList = [];
 
         for (let i = 0; i < this.serviceAdapter.classListForTest.length; i++) {
@@ -231,24 +230,14 @@ export class CreateTestComponent implements OnInit {
 
     //It handles which test type can be selected
     handleTestTypeSelection(value: any, ngModelControl: NgModel, test: any) {
-        if (this.serviceAdapter.findAnyDuplicate(test, value)) {
+        if (this.findAnyDuplicate(test, value)) {
             ngModelControl.control.setValue(test.testType);
-            console.log('not changing the value');
-            alert('Similar Test is already in the template');
             test.newTestType = test.testType;
-            console.log(test);
-        }
-        else {
-            console.log('changing the value');
-            console.log(test);
         }
     }
 
     //This function creates specific test by chosen subject name
     createSpecificTest() {
-        console.log('Subject wise test creation called...');
-
-        // this.selectedDate = this.formatDate(new Date(),'');
 
         if (this.selectedSubject === null) {
             alert('Subject should be selected');
@@ -390,5 +379,36 @@ export class CreateTestComponent implements OnInit {
     resetList(): void {
         this.serviceAdapter.getTestAndSubjectDetails();
         this.isUpdated = false;
+    }
+
+    //Check for any duplicate test is present or not
+    findAnyDuplicate(tempTest: any, value: any): boolean {
+        var ans = false;
+
+        tempTest.classList.forEach((cl) => {
+            cl.sectionList.forEach((sec) => {
+                this.newTestList.forEach((test) => {
+                    if (
+                        test.subjectId === tempTest.subjectId &&
+                        test.testType === value
+                    ) {
+                        test.classList.forEach((cll) => {
+                            if (cll.classId === cl.classId) {
+                                cll.sectionList.forEach((secc) => {
+                                    if (
+                                        secc.sectionId === sec.sectionId &&
+                                        secc.testId != sec.testId
+                                    ) {
+                                        ans = true;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        return ans;
     }
 }
