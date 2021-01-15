@@ -63,7 +63,7 @@ export class CancelFeeReceiptComponent implements OnInit {
     }
     
      @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-        if((document.documentElement.clientHeight + document.documentElement.scrollTop + 1) > document.documentElement.scrollHeight && this.loadMoreReceipts && !this.isReceiptListLoading){
+        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreReceipts && !this.isReceiptListLoading){
             this.serviceAdapter.loadMoreReceipts();
         }
     } 
