@@ -12,6 +12,8 @@ import {
     CanvasLine,
     CanvasRectangle,
     CanvasSquare,
+    CanvasCircle,
+    CanvasRoundedRectangle,
     GradeRuleSet,
 } from './../../../class/constants_3';
 
@@ -146,6 +148,7 @@ export class DesignReportCardCanvasAdapter {
     }
 
     increaseCanvasSize():any{
+        console.log(this.actualresolution);
         this.canvas.width = this.canvas.width + 30;
         this.canvas.height = this.canvas.height + 30;
         this.canvasSizing();
@@ -154,7 +157,6 @@ export class DesignReportCardCanvasAdapter {
         this.canvas.width = this.canvas.width - 30;
         this.canvas.height = this.canvas.height - 30;
         this.canvasSizing();
-        console.log(this.canvas.height, this.canvas.width);
         
     }
 
@@ -387,6 +389,18 @@ export class DesignReportCardCanvasAdapter {
 
     newSquareLayer(initialParameters: object = {}): CanvasSquare {
         let canvasShape = new CanvasSquare(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
+    }
+
+    newCircleLayer(initialParameters: object = {}): CanvasCircle {
+        let canvasShape = new CanvasCircle(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
+    }
+
+    newRoundedRectangleLayer(initialParameters: object = {}): CanvasRoundedRectangle {
+        let canvasShape = new CanvasRoundedRectangle(initialParameters, this);
         this.newLayerInitilization(canvasShape);
         return canvasShape;
     }

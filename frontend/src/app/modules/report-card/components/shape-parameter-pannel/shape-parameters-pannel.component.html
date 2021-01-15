@@ -4,19 +4,25 @@
     </div>
     <div style="margin: 4px; padding: 4px;">
 
-        <mat-form-field>
-            <input type="number" matInput [ngModel]="layer.length"
-                (ngModelChange)="layer.updateLength($event);canvasRefresh();" placeholder="Choose Length">
+        <mat-form-field *ngIf="layer.LAYER_TYPE != 'CIRCLE'">
+            <input type="number" step="1" matInput [ngModel]="(layer.length*getPixelTommFactor())"
+                (ngModelChange)="layer.updateLength($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Length">
         </mat-form-field>
 
         
-        <mat-form-field *ngIf="layer.LAYER_TYPE == 'RECTANGLE'">
-            <input type="number" matInput [ngModel]="layer.width"
-                (ngModelChange)="layer.updateWidth($event);canvasRefresh();" placeholder="Choose Width">
+        <mat-form-field *ngIf="layer.LAYER_TYPE == 'CIRCLE' || layer.LAYER_TYPE == 'ROUNDED-RECTANGLE'">
+            <input type="number" step="1" matInput [ngModel]="(layer.radius*getPixelTommFactor())"
+                (ngModelChange)="layer.updateRadius($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Radius">
+        </mat-form-field>
+
+        
+        <mat-form-field *ngIf="layer.LAYER_TYPE == 'RECTANGLE' || layer.LAYER_TYPE == 'ROUNDED-RECTANGLE'">
+            <input type="number" step="1" matInput [ngModel]="(layer.width*getPixelTommFactor())"
+                (ngModelChange)="layer.updateWidth($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Width">
         </mat-form-field>
 
         <mat-form-field *ngIf="layer.LAYER_TYPE == 'LINE'">
-            <input type="number" matInput [ngModel]="layer.orientation"
+            <input type="number" step="1" matInput [ngModel]="layer.orientation"
                 (ngModelChange)="layer.updateOrientation($event);canvasRefresh();" placeholder="Choose Orientation">
         </mat-form-field>
 

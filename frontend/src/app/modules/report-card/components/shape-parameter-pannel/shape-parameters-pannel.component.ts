@@ -20,4 +20,9 @@ export class ShapeParametersPannelComponent implements OnInit {
     console.log(tag, msg);
   }
 
+  
+  getPixelTommFactor(): number{
+    return this.layer.ca.pixelTommFactor;
+  }
+
 }

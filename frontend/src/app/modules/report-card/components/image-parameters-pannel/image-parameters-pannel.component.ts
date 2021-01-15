@@ -19,5 +19,9 @@ export class ImageParametersPannelComponent implements OnInit {
   logMessage(tag, msg) {
     console.log(tag, msg);
   }
+  
+  getPixelTommFactor(): number{
+    return this.layer.ca.pixelTommFactor;
+  }
 
 }

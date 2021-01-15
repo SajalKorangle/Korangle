@@ -5,13 +5,13 @@
     <div style="margin: 4px; padding: 4px;">
 
         <mat-form-field>
-            <input type="number" matInput [ngModel]="layer.height"
-                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateHeight($event);canvasRefresh();" placeholder="Choose Height">
+            <input type="number" matInput [ngModel]="layer.height*getPixelTommFactor()"
+                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateHeight($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Height">
         </mat-form-field>
 
         <mat-form-field>
-            <input type="number" matInput [ngModel]="layer.width"
-                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateWidth($event); canvasRefresh();" placeholder="Choose Width">
+            <input type="number" matInput [ngModel]="layer.width*getPixelTommFactor()"
+                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateWidth($event/getPixelTommFactor()); canvasRefresh();" placeholder="Choose Width">
         </mat-form-field>
        
     </div>
