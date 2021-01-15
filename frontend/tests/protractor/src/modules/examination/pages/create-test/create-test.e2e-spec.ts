@@ -62,10 +62,6 @@ describe('Examination -> Create Test', () => {
             expect(dialog.message()).toBe('Updated Test list!!!');
             await dialog.dismiss();
         });
-
-        await page.waitForXPath('//td[@testId="count"]');
-        const list = await page.$x('//td[@testId="count"]');
-        expect(list.length).toBe(4);
         
     });
 

@@ -53,7 +53,7 @@ describe('Examination -> Schedule Test', () => {
         const startTime = await page.$x('//input[@testId="startTime"]');
 
         await Date.click({ clickCount: 3 })
-        await Date.type('10/10/2020')
+        await Date.type('05/10/2018')
         await Date.press('Enter');
 
         await startTime[0].type('1030');
