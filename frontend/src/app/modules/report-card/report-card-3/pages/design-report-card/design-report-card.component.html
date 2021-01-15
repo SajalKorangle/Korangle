@@ -100,6 +100,22 @@
                         (click)="htmlAdapter.openPageResolutionDialog()">photo_size_select_large</button>
             </div>
 
+            <div class="tool">
+                <!-- <mat-form-field style="width: 100px;">
+                    <mat-select placeholder="Add Shape" [ngModel]="canvasAdapter.shape" (ngModelChange)="canvasAdapter.shape=$event; canvasAdapter.func()">
+                        <mat-option [value]="'Line'">Line</mat-option>
+                        <mat-option [value]="'Rectangle'">Rectangle</mat-option>
+                        <mat-option [value]="'Square'">Square</mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+
+                <button class="btn" style="padding: 8px;"
+                        (click)="canvasAdapter.newLineLayer()">Add Shape</button>
+                
+
+                
+            </div>
+
             <div class="tool" style="margin-left: auto;">
                 <mat-form-field style="width: 50px; height: 30px;">
                 <mat-select placeholder="DPI" [(ngModel)]="canvasAdapter.dpi">
@@ -204,6 +220,23 @@
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-image-parameters-pannel>
+                </div>
+                
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-shape-parameters-pannel 
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('shape')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-shape-parameters-pannel>
+                </div>
+
+                
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-date-parameters-pannel 
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('date')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-date-parameters-pannel>
                 </div>
 
                 <div class="parameters-tool" style="margin:0; width: 100%;">

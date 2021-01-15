@@ -8,7 +8,9 @@ import {
     Formula,
     PageResolution,
     PAGE_RESOLUTIONS,
-    Result
+    Result,
+    CanvasLine,
+    CanvasRectangle
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -43,8 +45,13 @@ export class DesignReportCardCanvasAdapter {
 
     virtualPendingReDrawId: any;
     pendingReDrawId: any;
+    shape: any;
 
     constructor() {
+    }
+
+    func():any{
+        console.log(this.shape);
     }
 
     initilizeAdapter(vm: DesignReportCardComponent) {
@@ -296,6 +303,19 @@ export class DesignReportCardCanvasAdapter {
         let canvasDate = new CanvasDate(initialParameters, this);
         this.newLayerInitilization(canvasDate);
         return canvasDate;
+    }
+
+    
+    newLineLayer(initialParameters: object = {}): CanvasLine {
+        let canvasShape = new CanvasLine(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
+    }
+
+    newRectangleLayer(initialParameters: object = {}): CanvasRectangle {
+        let canvasShape = new CanvasRectangle(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
     }
 
     newFormulaLayer(initialParameters: object = {}):Formula{

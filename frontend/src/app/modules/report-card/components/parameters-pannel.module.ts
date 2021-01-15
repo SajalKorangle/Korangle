@@ -10,11 +10,15 @@ import { CustomVariablesDialogComponent } from './custom-variables-dialog/custom
 import { FormulaParametersPannelComponent } from './formula-parameters-pannel/formula-parameters-pannel.component';
 import { PageResolutionDialogComponent } from './page-resolution-dialog/page-resolution-dialog.component';
 import { ResultDialogComponent } from './result-dialog/result-dialog.component'
-import { ImageParametersPannelComponent } from './image-parameters-pannel/image-parameters-pannel.component'
+import { ImageParametersPannelComponent } from './image-parameters-pannel/image-parameters-pannel.component';
+import { ShapeParametersPannelComponent } from './shape-parameter-pannel/shape-parameters-pannel.component';
+import { DateParametersPannelComponent } from './Date-parameters-pannel/date-parameters-pannel.component';
 
 @NgModule({
   declarations: [TextParametersPannelComponent, AttendanceParametersPannelComponent, PositionParameterPannelComponent, MarksParametersPannelComponent, CustomVariablesDialogComponent, FormulaParametersPannelComponent, PageResolutionDialogComponent, ResultDialogComponent,
-    ImageParametersPannelComponent],
+    ImageParametersPannelComponent,
+    ShapeParametersPannelComponent,
+    DateParametersPannelComponent],
   imports: [
     ComponentsModule,
     MatButtonToggleModule,
@@ -29,7 +33,9 @@ import { ImageParametersPannelComponent } from './image-parameters-pannel/image-
     FormulaParametersPannelComponent,
     PageResolutionDialogComponent,
     ImageParametersPannelComponent,
-    ResultDialogComponent
+    ResultDialogComponent,
+    ShapeParametersPannelComponent,
+    DateParametersPannelComponent,
   ]
 })
 export class ParametersPannelModule { }

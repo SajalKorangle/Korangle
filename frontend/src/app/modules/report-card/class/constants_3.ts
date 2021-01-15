@@ -577,6 +577,154 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
 }
 
+export class CanvasLine extends BaseLayer implements Layer{
+    displayName: string = 'LINE';    
+    
+    parameterToolPannels: string[] = ['shape'];
+    ca: DesignReportCardCanvasAdapter;
+    length: any;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('shape');
+        this.LAYER_TYPE = 'LINE';
+        this.x = 20;
+        this.y = 20;
+        this.length = 20;
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'LINE';
+            this.layerDataUpdate();
+        }
+    }
+
+    layerDataUpdate(): void {
+        this.updateBoxMetrics();
+    }
+
+    updateBoxMetrics = ():void=>{
+        const ctx = this.ca.virtualContext;
+        this.drawOnCanvas(ctx, 0);
+    }
+
+    updateLength(newlength: any){
+        this.length = newlength;
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        console.log('draw');
+        console.log(this.x, this.y);
+        ctx.beginPath()
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + this.length, this.y);
+        ctx.stroke();
+        return true;    // Drawn successfully on canvas
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+        return (mouseX > this.x - permissibleClickError
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + permissibleClickError)
+    }
+
+    scale(scaleFactor: number): void {
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        this.length *= scaleFactor;
+    }
+
+    getDataToSave() {
+        let savingData: any = {
+            'displayName': this.displayName,
+            'LAYER_TYPE': this.LAYER_TYPE,
+            'x': this.x,
+            'y': this.y,
+            'length': this.length,
+            'dataSourceType': this.dataSourceType,
+        }
+        return { ...savingData };
+    }
+
+}
+
+
+export class CanvasRectangle extends BaseLayer implements Layer{
+    displayName: string = 'Rectangle';    
+    
+    parameterToolPannels: string[] = ['shape'];
+    ca: DesignReportCardCanvasAdapter;
+    length: any;
+    width: any;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('shape');
+        this.LAYER_TYPE = 'SHAPE';
+        this.x = 20;
+        this.y = 20;
+        this.length = 20;
+        this.width = 20;
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'RECTANGLE';
+            this.layerDataUpdate();
+        }
+    }
+
+    layerDataUpdate(): void {
+        this.updateBoxMetrics();
+    }
+
+    updateBoxMetrics = ():void=>{
+        const ctx = this.ca.virtualContext;
+        this.drawOnCanvas(ctx, 0);
+    }
+
+    updateLength(newlength: any){
+        this.length = newlength;
+    }
+
+    updateWidth(newWidth: any){
+        this.width = newWidth;
+    }
+    
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        console.log('draw');
+        console.log(this.x, this.y);
+        ctx.beginPath();
+        ctx.rect(this.x, this.y, this.x+this.length, this.y + this.width);
+        ctx.stroke();
+        return true;    // Drawn successfully on canvas
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+        return (mouseX > this.x - permissibleClickError
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError)
+    }
+
+    scale(scaleFactor: number): void {
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        this.length *= scaleFactor;
+    }
+
+    getDataToSave() {
+        let savingData: any = {
+            'displayName': this.displayName,
+            'LAYER_TYPE': this.LAYER_TYPE,
+            'x': this.x,
+            'y': this.y,
+            'length': this.length,
+            'dataSourceType': this.dataSourceType,
+        }
+        return { ...savingData };
+    }
+
+}
+
 export class CanvasText extends BaseLayer implements Layer{
     displayName: string = 'Text';
     text: string = 'Lorem Ipsum';    
@@ -593,6 +741,7 @@ export class CanvasText extends BaseLayer implements Layer{
     };
 
 
+    ctx = this.ca.virtualContext;
     fontStyle: { [key: string]: string } = {
         fillStyle: DEFAULT_TEXT_COLOR,
         font: ' normal 12px Arial',
@@ -638,23 +787,29 @@ export class CanvasText extends BaseLayer implements Layer{
             boundingBoxTop: textMetrix.actualBoundingBoxAscent,
             boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
         };
+        this.drawUnderline();
+    }
+
+    drawUnderline():void{
+        if(this.underline){
+            this.ctx.beginPath()
+            this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
+            this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
+            this.ctx.stroke();
+        }
+        return ;
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
+        ctx.fillText(this.text, this.x, this.y);
         // if(this.underline){
         //     ctx.beginPath()
         //     ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
         //     ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
         //     ctx.stroke();
         // }
-    }
-
-    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
-        ctx.fillText(this.text, this.x, this.y);
-        if(this.underline){
-            ctx.beginPath()
-            ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
-            ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
-            ctx.stroke();
-        }
+        this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }
 
@@ -673,6 +828,7 @@ export class CanvasText extends BaseLayer implements Layer{
         let newFontSize = parseFloat(fontSize.substr(0, fontSize.length - 2));
         newFontSize *= scaleFactor;
         this.fontStyle.font = [italics, fontWeight, newFontSize + 'px', font].join(' ');
+        this.drawUnderline();
     }
 
     getDataToSave() {
@@ -682,7 +838,8 @@ export class CanvasText extends BaseLayer implements Layer{
             'x': this.x,
             'y': this.y,
             'dataSourceType': this.dataSourceType,
-            'fontStyle': this.fontStyle
+            'fontStyle': this.fontStyle,
+            'underLine': this.underline,
         }
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.text = this.text;
@@ -694,6 +851,7 @@ export class CanvasText extends BaseLayer implements Layer{
     }
 
 }
+
 
 export class CanvasDate extends CanvasText implements Layer{
     displayName: string = 'Date';
@@ -721,7 +879,6 @@ export class CanvasDate extends CanvasText implements Layer{
     }
 
     dateFormatting(): void{
-        console.log(this.date);
         const dateReplacements:{[key:string]: string}  = getDateReplacements(this.date);
         let dateValue = this.dateFormat;
         Object.entries(dateReplacements).forEach(([dataReplacementKey, dateReplacementvalue]) => {
