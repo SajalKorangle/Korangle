@@ -142,7 +142,6 @@ export class CancelFeeReceiptServiceAdapter {
 
         Promise.all([
             this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),  //0
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list), //1
         ]).then(value => {
 
             console.log(value);
@@ -151,72 +150,88 @@ export class CancelFeeReceiptServiceAdapter {
             if (value[0].length < this.vm.loadingCount) {
                 this.vm.loadMoreReceipts = false;    // if the fee receipts are less than the loading count then dont loadMore
             }
-
-            let service_list = [];
-
-            let student_list = {
-                'id__in': [...new Set(value[0].filter(item => {
-                    return !this.vm.studentList.find(student => {
-                        return student.id == item.parentStudent;
-                    })
-                }).map(item => item.parentStudent))],
-            };
-
-            if (student_list.id__in.length != 0) {
-                service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
+            
+            let subFee_List = {
+                'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId,
+                'parentFeeReceipt__in': value[0].map(fee => fee.id).join()
             }
 
-            let tempList = value[0].map(item => item.parentSession);
-            tempList.filter((item, index) => {
-                return tempList.indexOf(item) == index;
-            }).forEach(item => {
+            Promise.all([
+                this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, subFee_List),
+            ]).then(subFeeValue => {
 
-                let student_section_list = {
-                    'parentSession': item,
-                    'parentStudent__in': [...new Set(value[0].filter(item2 => {
-                        return item2.parentSession == item
-                    }).map(item2 => item2.parentStudent).filter(item2 => {
-                        return !this.vm.studentSectionList.find(studentSection => {
-                            return studentSection.parentSession == item && studentSection.parentStudent == item2;
-                        });
-                    }))],
+                subFeeValue[0].forEach(val => {
+                    this.vm.subFeeReceiptList.push(val);
+                });
+
+                let service_list = [];
+
+                let student_list = {
+                    'id__in': [...new Set(value[0].filter(item => {
+                        return !this.vm.studentList.find(student => {
+                            return student.id == item.parentStudent;
+                        })
+                    }).map(item => item.parentStudent))],
                 };
 
-                if (student_section_list.parentStudent__in.length != 0) {
-                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student_section,
-                        student_section_list),)
+                if (student_list.id__in.length != 0) {
+                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
                 }
 
-            });
+                let tempList = value[0].map(item => item.parentSession);
+                tempList.filter((item, index) => {
+                    return tempList.indexOf(item) == index;
+                }).forEach(item => {
 
-            if (service_list.length > 0) {
+                    let student_section_list = {
+                        'parentSession': item,
+                        'parentStudent__in': [...new Set(value[0].filter(item2 => {
+                            return item2.parentSession == item
+                        }).map(item2 => item2.parentStudent).filter(item2 => {
+                            return !this.vm.studentSectionList.find(studentSection => {
+                                return studentSection.parentSession == item && studentSection.parentStudent == item2;
+                            });
+                        }))],
+                    };
 
-                Promise.all(service_list).then(value2 => {
-
-                    console.log(value2);
-
-                    if (student_list.id__in.length != 0) {
-                        this.vm.studentList = this.vm.studentList.concat(value2[0]);
-                        value2 = value2.slice(1);
+                    if (student_section_list.parentStudent__in.length != 0) {
+                        service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student_section,
+                            student_section_list),)
                     }
 
-                    value2.forEach(item => {
-                        this.vm.studentSectionList = this.vm.studentSectionList.concat(item);
-                    });
+                });
 
+                if (service_list.length > 0) {
+
+                    Promise.all(service_list).then(value2 => {
+
+                        console.log(value2);
+
+                        if (student_list.id__in.length != 0) {
+                            this.vm.studentList = this.vm.studentList.concat(value2[0]);
+                            value2 = value2.slice(1);
+                        }
+
+                        value2.forEach(item => {
+                            this.vm.studentSectionList = this.vm.studentSectionList.concat(item);
+                        });
+
+                        value[0].forEach(val => {
+                            this.vm.feeReceiptList.push(val);
+                        });
+                        this.makeLoadingFalse();
+                    }, error => {
+                        this.makeLoadingFalse()
+                    });
+                } else {
                     value[0].forEach(val => {
                         this.vm.feeReceiptList.push(val);
                     });
-                }, error => {
-                    this.makeLoadingFalse()
-                });
-            } else {
-                value[0].forEach(val => {
-                    this.vm.feeReceiptList.push(val);
-                });
-            }
-            
-            this.makeLoadingFalse();
+                    this.makeLoadingFalse();
+                }
+            },error=>{
+                this.makeLoadingFalse();
+            });
             this.vm.showReceipts = true;
         }, error => {
             this.makeLoadingFalse()
