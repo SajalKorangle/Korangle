@@ -15,6 +15,11 @@
                 (ngModelChange)="layer.updateWidth($event);canvasRefresh();" placeholder="Choose Width">
         </mat-form-field>
 
+        <mat-form-field *ngIf="layer.LAYER_TYPE == 'LINE'">
+            <input type="number" matInput [ngModel]="layer.orientation"
+                (ngModelChange)="layer.updateOrientation($event);canvasRefresh();" placeholder="Choose Orientation">
+        </mat-form-field>
+
         <!-- <mat-form-field>
             <input type="number" matInput [ngModel]="layer.width"
                 (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateWidth($event); canvasRefresh();" placeholder="Choose Width">

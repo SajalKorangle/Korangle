@@ -10,7 +10,8 @@ import {
     PAGE_RESOLUTIONS,
     Result,
     CanvasLine,
-    CanvasRectangle
+    CanvasRectangle,
+    CanvasSquare,
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -314,6 +315,12 @@ export class DesignReportCardCanvasAdapter {
 
     newRectangleLayer(initialParameters: object = {}): CanvasRectangle {
         let canvasShape = new CanvasRectangle(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
+    }
+
+    newSquareLayer(initialParameters: object = {}): CanvasSquare {
+        let canvasShape = new CanvasSquare(initialParameters, this);
         this.newLayerInitilization(canvasShape);
         return canvasShape;
     }

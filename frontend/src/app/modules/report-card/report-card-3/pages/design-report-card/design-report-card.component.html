@@ -101,18 +101,13 @@
             </div>
 
             <div class="tool">
-                <!-- <mat-form-field style="width: 100px;">
-                    <mat-select placeholder="Add Shape" [ngModel]="canvasAdapter.shape" (ngModelChange)="canvasAdapter.shape=$event; canvasAdapter.func()">
-                        <mat-option [value]="'Line'">Line</mat-option>
-                        <mat-option [value]="'Rectangle'">Rectangle</mat-option>
-                        <mat-option [value]="'Square'">Square</mat-option>
+                <mat-form-field style="width: 100px;">
+                    <mat-select placeholder="Add Shape">
+                        <mat-option [value]="'Line'" (click)="canvasAdapter.newLineLayer()">Line</mat-option>
+                        <mat-option [value]="'Rectangle'" (click)="canvasAdapter.newRectangleLayer()">Rectangle</mat-option>
+                        <mat-option [value]="'Square'" (click)="canvasAdapter.newSquareLayer()">Square</mat-option>
                     </mat-select>
-                </mat-form-field> -->
-
-                <button class="btn" style="padding: 8px;"
-                        (click)="canvasAdapter.newLineLayer()">Add Shape</button>
-                
-
+                </mat-form-field>
                 
             </div>
 

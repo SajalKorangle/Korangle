@@ -583,6 +583,8 @@ export class CanvasLine extends BaseLayer implements Layer{
     parameterToolPannels: string[] = ['shape'];
     ca: DesignReportCardCanvasAdapter;
     length: any;
+    rotation: any;
+    orientation: any;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
         super(ca);
@@ -591,6 +593,7 @@ export class CanvasLine extends BaseLayer implements Layer{
         this.x = 20;
         this.y = 20;
         this.length = 20;
+        this.orientation = 0;
         if (initilize) {
             this.initilizeSelf(attributes);
             this.LAYER_TYPE = 'LINE';
@@ -611,21 +614,44 @@ export class CanvasLine extends BaseLayer implements Layer{
         this.length = newlength;
     }
 
+    updateOrientation(newOrientation : any){
+        this.orientation = newOrientation;
+    }
+
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        console.log('draw');
-        console.log(this.x, this.y);
         ctx.beginPath()
         ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x + this.length, this.y);
+        ctx.lineTo(this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)), this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
         ctx.stroke();
         return true;    // Drawn successfully on canvas
     }
 
-    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        return (mouseX > this.x - permissibleClickError
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + permissibleClickError)
+    isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
+        if(Math.cos((this.orientation*Math.PI)/180) >= 0 && Math.sin((this.orientation*Math.PI)/180) >= 0){
+            return (mouseX > this.x - permissibleClickError
+                && mouseX < this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) + permissibleClickError
+                && mouseY > this.y - permissibleClickError
+                && mouseY < this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) + permissibleClickError)
+        }
+        else if(Math.cos((this.orientation*Math.PI)/180) <= 0 && Math.sin((this.orientation*Math.PI)/180) <= 0){
+            return (mouseX < this.x + permissibleClickError
+                && mouseX > this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) - permissibleClickError
+                && mouseY < this.y + permissibleClickError
+                && mouseY > this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) - permissibleClickError)
+        }
+        else if(Math.cos((this.orientation*Math.PI)/180) >= 0 && Math.sin((this.orientation*Math.PI)/180) <= 0){
+            return (mouseX > this.x - permissibleClickError
+                && mouseX < this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) + permissibleClickError
+                && mouseY < this.y + permissibleClickError
+                && mouseY > this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) - permissibleClickError)
+        }
+
+        else if(Math.cos((this.orientation*Math.PI)/180) <= 0 && Math.sin((this.orientation*Math.PI)/180) >= 0){
+            return (mouseX < this.x + permissibleClickError
+                && mouseX > this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) - permissibleClickError
+                && mouseY > this.y - permissibleClickError
+                && mouseY < this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) + permissibleClickError)
+        }
     }
 
     scale(scaleFactor: number): void {
@@ -641,6 +667,7 @@ export class CanvasLine extends BaseLayer implements Layer{
             'x': this.x,
             'y': this.y,
             'length': this.length,
+            'orientation': this.orientation,
             'dataSourceType': this.dataSourceType,
         }
         return { ...savingData };
@@ -690,25 +717,36 @@ export class CanvasRectangle extends BaseLayer implements Layer{
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        console.log('draw');
-        console.log(this.x, this.y);
         ctx.beginPath();
-        ctx.rect(this.x, this.y, this.x+this.length, this.y + this.width);
+        ctx.rect(this.x, this.y, this.length, this.width);
         ctx.stroke();
         return true;    // Drawn successfully on canvas
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        return (mouseX > this.x - permissibleClickError
+        return ((mouseX > this.x - permissibleClickError //top line 
             && mouseX < this.x + this.length + permissibleClickError
             && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError)
+            && mouseY < this.y + permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // bottom line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y + this.width - permissibleClickError
+            && mouseY < this.y + this.width +  permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // left line
+            && mouseX < this.x + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError) || 
+            (mouseX > this.x + this.length - permissibleClickError // right line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError))
     }
 
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
         this.y *= scaleFactor;
         this.length *= scaleFactor;
+        this.width *= scaleFactor;
     }
 
     getDataToSave() {
@@ -718,9 +756,37 @@ export class CanvasRectangle extends BaseLayer implements Layer{
             'x': this.x,
             'y': this.y,
             'length': this.length,
+            'width': this.width,
             'dataSourceType': this.dataSourceType,
         }
         return { ...savingData };
+    }
+
+}
+export class CanvasSquare extends CanvasRectangle implements Layer{
+    displayName: string = 'Square';    
+    
+    parameterToolPannels: string[] = ['shape'];
+    ca: DesignReportCardCanvasAdapter;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('shape');
+        this.LAYER_TYPE = 'SHAPE';
+        this.x = 20;
+        this.y = 20;
+        this.length = 20;
+        this.width = this.length;
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'SQUARE';
+            this.layerDataUpdate();
+        }
+    }
+
+    updateLength(newlength: any){
+        this.length = newlength;
+        this.width = this.length;
     }
 
 }
@@ -851,6 +917,8 @@ export class CanvasText extends BaseLayer implements Layer{
     }
 
 }
+
+
 
 
 export class CanvasDate extends CanvasText implements Layer{
