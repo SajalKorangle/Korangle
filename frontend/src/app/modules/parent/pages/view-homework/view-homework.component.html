@@ -258,7 +258,9 @@
                                     (click)="imageInput.click()">+</button>
                             </div><br>
                         </div>
-                        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        <button type="submit" 
+                            [disabled]="toSubmitHomework.homeworkStatus == 'CHECKED'"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                             style="float:right ;cursor: pointer; padding: 4px 7px;"
                             (click)="serviceAdapter.submitHomework()">
                             Submit Answer</button>
@@ -274,16 +276,12 @@
         </mat-accordion>
 
         <ng-container *ngIf="loadMoreHomework">
-            <span *ngIf="isMobile()" style="color: #817ae9;" (click)="serviceAdapter.loadMoreHomeworks()"><u>Load
-                    More..</u></span>
             <div *ngIf="isLoadingHomeworks">
-                <br>
                 <div style="width: 100%" align="center">
                     <div class="loaderCustom"></div>
-                </div>
-            </div>
+                </div><br>
+            </div><span style="color: #817ae9;" (click)="serviceAdapter.loadMoreHomeworks()"><u>Load More..</u></span>
         </ng-container>
-
     </div>
 </div>
 
@@ -361,8 +359,11 @@
                 </div>
 
                 <div class="row" style="margin-right: 5px;">
-                    <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            style="float:right ;cursor: pointer; padding: 4px 7px;" (click)="serviceAdapter.submitHomework()">
+                    <button type="submit" 
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            [disabled]="toSubmitHomework.homeworkStatus == 'CHECKED'"   
+                            style="float:right ;padding: 4px 7px;" 
+                            (click)="serviceAdapter.submitHomework()">
                             Submit Answer</button>
                 </div>
             </div>

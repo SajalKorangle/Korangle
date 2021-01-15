@@ -198,7 +198,6 @@ export class ViewHomeworkServiceAdapter {
                             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, homework_data),
                             this.vm.homeworkService.createObjectList(this.vm.homeworkService.homework_answer, createList),
                         ]).then( cValue =>{
-                            console.log(cValue);
                             this.initializePendingHomeworkList(cValue[0], cValue[1], [], this.classSubjectList, this.subjectList);
                         })
                     }
@@ -320,7 +319,7 @@ export class ViewHomeworkServiceAdapter {
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer, completed_homework_student_data)
         ]).then(value => {
             this.populateCompletedHomeworkList(value[0], value[1],this.classSubjectList, this.subjectList);
-
+            this.vm.isLoadingHomeworks = false;
         }, error => {
             this.vm.isLoadingHomeworks = false;
 
