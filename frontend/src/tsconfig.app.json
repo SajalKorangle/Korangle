@@ -4,7 +4,7 @@
     "outDir": "../out-tsc/app",
     "module": "commonjs",
     "baseUrl": "./",
-    "types": ["node","jquery"],
+    "types": ["node"],
     "paths": {
       "@modules/*": ["app/modules/*"],
       "@basic-components/*": ["app/basic-components/*"],
