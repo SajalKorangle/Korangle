@@ -93,7 +93,7 @@ mat-form-field {
     position: absolute;
     left: 102px;
     top: 19px;
-    font-size: 14px;
+    font-size: 16px;
     color: black;
 }
 
@@ -120,11 +120,6 @@ mat-form-field {
     padding-top: 10px;
     padding-left: 5px;
     z-index: 3;
-}
-
-.drop:hover {
-    background: rgba(86, 174, 90, 0.1);
-    border: 1px dashed #56AE5A;
 }
 
 .none {

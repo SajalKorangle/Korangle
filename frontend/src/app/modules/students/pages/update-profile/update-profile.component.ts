@@ -14,6 +14,8 @@ import {MatDialog} from '@angular/material';
 import {MultipleFileDialogComponent} from '../../multiple-file-dialog/multiple-file-dialog.component';
 import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 
+declare const $: any;
+
 @Component({
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
@@ -104,8 +106,17 @@ export class UpdateProfileComponent implements OnInit {
     checkCustomFieldChanged = (parameter) => {
         const item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
         const old_item = this.studentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        if (!item && old_item){
+            return true
+        }
+        if (old_item){
+            if (old_item.value===this.NULL_CONSTANT){
+                return item && (!old_item || item.document_value != old_item.document_value);
+            }
+        }
         return item && (!old_item || item.value !== old_item.value || item.document_value != old_item.document_value);
     }
+
 
     getBusStopName(busStopDbId: any) {
         let stopName = 'None';
@@ -320,6 +331,27 @@ export class UpdateProfileComponent implements OnInit {
             this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(para => para.parentStudentParameter !== item.parentStudentParameter)
         }
     }
+
+    resetDocument(parameter){
+        let item = this.currentStudentParameterValueList.find(x=>x.parentStudentParameter === parameter.id)
+        let old_item = this.studentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
+        if (item){
+            if (old_item){
+                item.document_value = old_item.document_value
+                item.document_size = old_item.document_size
+                item.document_name = old_item.document_name
+                this.deleteList = this.deleteList.filter(x=>x!== old_item.id)
+            }
+            else{
+                this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(para => para.parentStudentParameter !== item.parentStudentParameter)
+            }
+        }
+        else if(old_item){
+            item = {parentStudentParameter: parameter.id, document_value: old_item.document_value,document_name:old_item.document_name,document_size:old_item.document_size};
+            this.currentStudentParameterValueList.push(item);
+            this.deleteList = this.deleteList.filter(x=>x!== old_item.id)
+        }
+    }
     
     check_document(value): boolean {
     	let type = value.type
@@ -411,6 +443,7 @@ export class UpdateProfileComponent implements OnInit {
                 else{
                     item.document_value = document_value;
                     item.document_name = document_name;
+                    item.document_size= document_size;
                 }
             };
             reader.readAsDataURL(document_value);
@@ -418,10 +451,16 @@ export class UpdateProfileComponent implements OnInit {
     
     dragEnter(value){
         $(".dropinput").css({"z-index":"6"})
+        $(value.path[1]).css({"background":"rgba(182, 224, 184, 0.1)","border": "1px dashed #7db580"})
     }
 
-    onDrop(parameter,value){
+    onDrop(value){
         $('.dropinput').css({"z-index":"-1"})
+        $(value.path[1]).css({"background":"","border": ""})
+    }
+
+    dragLeave(value){
+        $(value.path[1]).css({"background":"","border": ""})
     }
     
     openFilePreviewDialog(parameter): void {

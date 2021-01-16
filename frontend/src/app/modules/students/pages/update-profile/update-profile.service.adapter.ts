@@ -91,6 +91,7 @@ export class UpdateProfileServiceAdapter {
         
         const student_form_data= new FormData()
         const data = { ...this.vm.currentStudent,content: JSON.stringify(this.vm.currentStudent.content) };
+        console.log(data)
         Object.keys(data).forEach(key => {
                 if (key === 'profileImage') {
                     if(this.vm.profileImage!==null){
@@ -98,7 +99,10 @@ export class UpdateProfileServiceAdapter {
                     }
                 }
                 else {
-                    if (data[key]!==null){
+                    if (data[key]==this.vm.NULL_CONSTANT){
+                        student_form_data.append(key,"");
+                    }
+                    else{
                         student_form_data.append(key,data[key]);
                     }
                 }
@@ -135,6 +139,9 @@ export class UpdateProfileServiceAdapter {
                                 form_data.append(key,data[key])   
                             }
                         }
+                        else{
+                            form_data.append(key,"")
+                        } 
                     })
                     if (temp_obj.id) {
                         updateList.push(form_data)
@@ -231,6 +238,15 @@ export class UpdateProfileServiceAdapter {
             // Copying the student parameter values for reference
             this.vm.studentParameterValueList = value[1];
             this.vm.currentStudentParameterValueList = [];
+            this.vm.studentParameterValueList.filter(x => x.parentStudent===studentId).forEach(item=>{
+                if (item.document_value){
+                    let document_name = item.document_value.split("/")
+                    document_name = document_name[document_name.length-1]
+                    item.document_name = document_name
+                }
+            });
+
+            console.log(this.vm.studentParameterValueList)
             this.vm.studentParameterValueList.filter(x => x.parentStudent===studentId).forEach(item => {
                 this.vm.currentStudentParameterValueList.push(this.vm.commonFunctions.copyObject(item))
             });

@@ -181,7 +181,8 @@
                            (ngModelChange)="currentStudent.mobileNumber=$event">
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3"
+                 [class.fieldChanged]="checkFieldChanged(selectedStudent.admissionSession,currentStudent.admissionSession)">
                 <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Admission Session"
                                 [ngModel]="selectedStudent.admissionSession"
@@ -191,7 +192,8 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="busStopList.length > 0" class="col-md-3">
+            <div *ngIf="busStopList.length > 0" class="col-md-3" 
+                 [class.fieldChanged]="checkFieldChanged(selectedStudent.currentBusStop,currentStudent.currentBusStop)">
                 <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Bus Stop"
                                 [ngModel]="selectedStudent.currentBusStop"
@@ -455,8 +457,9 @@
         
         <!-- Custom Text/Filter Parameter -->
         <div class="row">
-            <div *ngFor="let parameter of studentParameterList" class="col-md-3" [class.fieldChanged]="checkCustomFieldChanged(currentStudent, parameter)">
-            	<div *ngIf="parameter.parameterType!=='DOCUMENT'">
+            <div *ngFor="let parameter of studentParameterList">
+                <div *ngIf="parameter.parameterType!=='DOCUMENT'" class="col-md-3"
+                     [class.fieldChanged]="checkCustomFieldChanged(parameter)">
 		            <mat-form-field  style="width: 100%;">
 		                <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
 		                <input matInput  *ngIf="parameter.parameterType==='TEXT'"
@@ -480,7 +483,7 @@
         <div class="row">
             <div *ngFor="let parameter of studentParameterList">
             	<div *ngIf="parameter.parameterType=='DOCUMENT'" class="col-md-3" style="padding-top: 18px;" [class.fieldChanged]="checkCustomFieldChanged(parameter)">
-                    <div (dragenter)="dragEnter($event)" (drop)="onDrop($event)" [class]="getParameterDocumentType(parameter)=='none'?'drop none':'drop'">
+                    <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
                     	<input id="{{parameter.id}}" class="dropinput"
                     		type="file"
                     		multiple="true"
@@ -493,6 +496,7 @@
                             <div class="documentText">
                                 <p class="documentName">Select a file or Drag it here</p>
                                 <button (click)="imageInput.click()" class="documentButton">Upload</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
                             </div>
                         </div>
                         <div *ngIf="getParameterDocumentType(parameter)=='img'">
@@ -503,6 +507,7 @@
                                 <p class="documentName">{{getDocumentName(parameter)}}</p>
                                 <button (click)="imageInput.click()" class="documentButton">Replace</button>
                                 <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
                             </div>
                         </div>
                         <div *ngIf="getParameterDocumentType(parameter)=='pdf'">
@@ -513,6 +518,7 @@
                                 <p class="documentName">{{getDocumentName(parameter)}}</p>
                                 <button (click)="imageInput.click()" class="documentButton">Replace</button>
                                 <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
                             </div>
                         </div>
                     </div>
