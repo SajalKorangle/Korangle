@@ -63,7 +63,7 @@ export class ViewAllComponent implements OnInit {
 
     NULL_CONSTANT = null;
 
-    showCustomFilters = false;
+    showFilters = false;
 
     session_list = [];
 
