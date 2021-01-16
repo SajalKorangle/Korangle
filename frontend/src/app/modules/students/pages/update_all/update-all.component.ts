@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {StudentService} from '../../../../services/modules/student/student.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -64,7 +64,7 @@ const RELIGION_LIST = [
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentOldService, ClassOldService, StudentService],
+    providers: [StudentOldService, ClassService, StudentService],
 })
 
 export class UpdateAllComponent implements OnInit {
@@ -142,7 +142,7 @@ export class UpdateAllComponent implements OnInit {
 
     constructor(public studentOldService: StudentOldService,
             public studentService: StudentService,
-            public classService: ClassOldService,
+            public classService: ClassService,
             public cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
@@ -150,7 +150,6 @@ export class UpdateAllComponent implements OnInit {
         this.serviceAdapter = new UpdateAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData()
-
     }
 
     initializeClassSectionList(classSectionList: any): void {
@@ -178,7 +177,7 @@ export class UpdateAllComponent implements OnInit {
         let sectionObject = null;
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
+                if (sectionDbId === section.id && classDbId === classs.id) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;

@@ -50,7 +50,7 @@ def get_school_list(user):
     for student_section_object in \
         StudentSection.objects.filter(Q(parentStudent__mobileNumber=user.username)
                                       | Q(parentStudent__secondMobileNumber=user.username),
-                                      parentStudent__parentSchool__dateOfExpiration__gte=date.today(),
+                                      parentStudent__parentSchool__expired=False,
                                       parentSession=F('parentStudent__parentSchool__currentSession')) \
                 .select_related('parentStudent__parentSchool'):
 
@@ -65,7 +65,7 @@ def get_school_list(user):
 
     # Employee User
     for employee_object in Employee.objects.filter(mobileNumber=user.username,
-                                                   parentSchool__dateOfExpiration__gte=date.today(),
+                                                   parentSchool__expired=False,
                                                    dateOfLeaving=None).select_related('parentSchool'):
 
         school_data = get_data_from_school_list(school_list, employee_object.parentSchool_id)
@@ -109,6 +109,7 @@ def get_employee_school_module_list(employee_object):
             tempTask['dbId'] = permission_object.parentTask.id
             tempTask['path'] = permission_object.parentTask.path
             tempTask['title'] = permission_object.parentTask.title
+            tempTask['videoUrl'] = permission_object.parentTask.videoUrl
             tempModule['taskList'].append(tempTask)
         if len(tempModule['taskList']) > 0:
             moduleList.append(tempModule)
@@ -156,7 +157,7 @@ def get_school_data_by_object(school_object):
 
     school_data['employeeId'] = None
 
-    school_data['dateOfExpiration'] = school_object.dateOfExpiration
+    school_data['expired'] = school_object.expired
 
     school_data['moduleList'] = []
     school_data['studentList'] = []

@@ -1,12 +1,24 @@
 [
   {
-    "statement": "Add Student to the database and get the success message",
+    "statement": "Add Student",
     "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Add Student",
+      "Check the success message"
+    ],
     "testName": "Add Student"
   },
   {
-    "statement": "Add Student with an in place fee structure and check the students fee profile to be updated accordingly",
+    "statement": "Add Student with an in place fee structure",
     "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Add Student",
+      "Check the success message",
+      "Open view all page and confirm student addition",
+      "Open collect fee page and confirm fee addition"
+    ],
     "testName": null
   }
 ]

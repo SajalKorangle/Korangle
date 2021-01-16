@@ -112,7 +112,7 @@ export class UpdateProfileComponent implements OnInit {
 
     getClassName(): any {
         return this.classList.find(classs => {
-            return this.selectedStudentSection.parentClass == classs.dbId;
+            return this.selectedStudentSection.parentClass == classs.id;
         }).name;
     }
 
@@ -208,7 +208,6 @@ export class UpdateProfileComponent implements OnInit {
             type: 'application/json'
         }));
         profile_image_data.append('profileImage', image);
-
 
         this.studentService.partiallyUpdateObject(this.studentService.student, profile_image_data).then(value => {
             Object.keys(value).forEach(key => {

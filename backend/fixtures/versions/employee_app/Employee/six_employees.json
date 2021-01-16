@@ -1,0 +1,8 @@
+[
+	{ "model": "employee_app.employee", "pk": 1, "fields": { "name": "Rohit Agrawal" , "fatherName": "Malik Agrawal", "mobileNumber": "1234567890", "parentSchool": 1} },
+	{ "model": "employee_app.employee", "pk": 2, "fields": { "name": "Pariniti Sharma" , "fatherName": "Devansh Sharma", "mobileNumber": "1234567891", "parentSchool": 1} },
+	{ "model": "employee_app.employee", "pk": 3, "fields": { "name": "Vivan Malviya" , "fatherName": "Jayant Malviya", "mobileNumber": "1234567892", "parentSchool": 1} },
+	{ "model": "employee_app.employee", "pk": 4, "fields": { "name": "Payal Choubey" , "fatherName": "Ankur Choubey", "mobileNumber": "1234567893", "parentSchool": 1} },
+	{ "model": "employee_app.employee", "pk": 5, "fields": { "name": "Neha Pratap" , "fatherName": "Pawan Pratap", "mobileNumber": "1234567894", "parentSchool": 1} },
+	{ "model": "employee_app.employee", "pk": 6, "fields": { "name": "Mohit Anand" , "fatherName": "Rohit Anand", "mobileNumber": "1234567895", "parentSchool": 1} }
+]

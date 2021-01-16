@@ -1,0 +1,3 @@
+[{"model": "fees_third_app.feetype", "pk": 1, "fields": {"name": "Caution Money", "parentSchool": 1, "orderNumber": 1}},
+ {"model": "fees_third_app.feetype", "pk": 2, "fields": {"name": "Late Fee", "parentSchool": 1, "orderNumber": 2}},
+ {"model": "fees_third_app.feetype", "pk": 3, "fields": {"name": "Tuition Fee", "parentSchool": 1, "orderNumber": 3}}]

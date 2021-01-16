@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import { StudentService } from "../../../../services/modules/student/student.service";
 import { EmployeeService } from "../../../../services/modules/employee/employee.service";
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
@@ -16,7 +16,7 @@ import {UserService} from "../../../../services/modules/user/user.service";
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
     styleUrls: ['./send-sms.component.css'],
-    providers: [ StudentService, ClassOldService, EmployeeService, NotificationService, UserService, SmsService],
+    providers: [ StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService],
 })
 
 export class SendSmsComponent implements OnInit {
@@ -25,7 +25,7 @@ export class SendSmsComponent implements OnInit {
 
     NULL_CONSTANT = null;
 
-    showCustomFilters = false;
+    showFilters = false;
 
     sentTypeList = [
         'SMS',
@@ -36,6 +36,8 @@ export class SendSmsComponent implements OnInit {
     selectedSentType = 'SMS';
 
     includeSecondMobileNumber = false;
+
+    invalidmobilenumber = false;
 
     employeeList = [];
 
@@ -67,6 +69,8 @@ export class SendSmsComponent implements OnInit {
     rows;
     timeout: any;
 
+    nameFilter = "" ;
+
     serviceAdapter: SendSmsServiceAdapter;
     studentFilters: any = {
         category: {
@@ -92,7 +96,7 @@ export class SendSmsComponent implements OnInit {
 
     constructor(public studentService: StudentService,
                 public employeeService: EmployeeService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 public smsOldService: SmsOldService,
                 public smsService: SmsService,
                 public notificationService: NotificationService,
@@ -111,9 +115,18 @@ export class SendSmsComponent implements OnInit {
     }
 
     getRowClass(row): any {
-        return {
-            'hoverRow': true,
-        };
+        if(row.validMobileNumber)
+        {
+            return {
+                'hoverRow': true,
+            };
+        }
+        else    
+        {
+            return {
+                'highlight': true,
+            };
+        }
     }
 
     updateRowValue(row: any, value: boolean): void {
@@ -320,6 +333,19 @@ export class SendSmsComponent implements OnInit {
             if(studentSection.student.rte==="YES" && this.studentFilters.rte.yes)return true;
             if(studentSection.student.rte==="NO" && this.studentFilters.rte.no)return true;
             return false;
+        }).filter(studentSection =>{
+            // by student's or father's name
+            this.nameFilter = this.nameFilter.toString().toLowerCase().replace(/^\s+/gm,'');
+
+            return this.nameFilter === ""
+                || studentSection.student.name.toLowerCase().indexOf(this.nameFilter) === 0
+                || studentSection.student.fathersName.toLowerCase().indexOf(this.nameFilter) === 0;
+
+        }).filter(studentSection => {
+            if (!(this.invalidmobilenumber && this.isMobileNumberValid(studentSection.student.mobileNumber))) {
+                return true;
+            }
+            return false;
         })
     }
 
@@ -358,16 +384,16 @@ export class SendSmsComponent implements OnInit {
 
     isClassSectionSelected(classId: number, sectionId: number): boolean {
         return this.classSectionList.find(classSection => {
-            return classSection['class'].dbId == classId && classSection['section'].id == sectionId;
+            return classSection['class'].id == classId && classSection['section'].id == sectionId;
         }).selected;
     }
 
     getClassSectionName(classId: number, sectionId: number): string {
         let classSection = this.classSectionList.find(classSection => {
-            return classSection.class.dbId == classId && classSection.section.id == sectionId;
+            return classSection.class.id == classId && classSection.section.id == sectionId;
         });
         let multipleSections = this.classSectionList.filter(classSection => {
-            return classSection.class.dbId == classId;
+            return classSection.class.id == classId;
         }).length > 1;
         return classSection.class.name + (multipleSections?', '+classSection.section.name:'');
     }

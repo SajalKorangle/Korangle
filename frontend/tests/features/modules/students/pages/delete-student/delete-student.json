@@ -1,0 +1,13 @@
+[
+  {
+    "statement": "Delete Student",
+    "testType": "protractor",
+    "steps": [
+      "Open the page",
+      "Delete the student",
+      "Check the success message",
+      "Re-open the page & confirm the deletion"
+    ],
+    "testName": null
+  }
+]

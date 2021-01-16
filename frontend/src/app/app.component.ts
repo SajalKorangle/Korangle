@@ -6,12 +6,12 @@ import { DataStorage } from './classes/data-storage';
 import {AuthenticationService} from './services/authentication.service';
 import {VersionCheckService} from './services/version-check.service';
 import {environment} from '../environments/environment.prod';
-import moment = require('moment');
 import {NotificationService} from "./services/modules/notification/notification.service";
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
-import {EmitterService} from "./services/emitter.service";
 import {CommonFunctions} from './classes/common-functions';
+import {MatDialog} from '@angular/material/dialog';
+import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
 
 
 @Component({
@@ -22,16 +22,13 @@ import {CommonFunctions} from './classes/common-functions';
 })
 
 export class AppComponent implements OnInit {
-    subRouteValue: string;
+
     isLoading = false;
-    countDownForValidity = -1;
-
-	public user = new User();
-
-
+    public user = new User();
 
     constructor(private authenticationService: AuthenticationService,
                 private versionCheckService: VersionCheckService,
+                private dialog: MatDialog,
                 private notificationService: NotificationService) {}
 
     ngOnInit() {
@@ -46,7 +43,8 @@ export class AppComponent implements OnInit {
                     localStorage.setItem('schoolJWT', '');
                 } else {
                     this.user.initializeUserData(data);
-                    this.lastMonthIsGoingOn();
+                    (<any>window).ga('set', 'userId', 'id: '+data.id);
+                    (<any>window).ga('send', 'event', 'authentication', 'Direct Entry');
                     registerForNotification({
                         'user': this.user.id,
                         'jwt': this.user.jwt,
@@ -59,14 +57,14 @@ export class AppComponent implements OnInit {
         this.versionCheckService.initVersionCheck(environment.versionCheckURL);
     }
 
-    refresh() {
-        this.subRouteValue = this.user.section.subRoute ;
-        this.user.section.subRoute = null;
-        this.isLoading = true;
-        setTimeout(() => {
-            this.user.section.subRoute = this.subRouteValue;
-            this.isLoading = false;
-        }, 1000);
+    showTutorial(url:any) {
+        this.dialog.open(ModalVideoComponent, {
+            height: '80vh',
+            width: '80vw',
+            data: {
+                videoUrl: url
+            }
+        });
     }
 
     userHasAssignTaskCapability(): boolean {
@@ -83,24 +81,7 @@ export class AppComponent implements OnInit {
         return false;
     }
 
-    lastMonthIsGoingOn(): boolean {
-        const date1 = new Date();
-        if (this.userHasAssignTaskCapability()) {
-            const date2 = moment(this.user.activeSchool.dateOfExpiration);
-            const diff1 = moment.duration(date2.diff(date1)).asDays();
-            const diff2 = Math.ceil(diff1);
-            if (diff2 <= 15) {
-                this.countDownForValidity = diff2;
-            }
-            if (diff2 <= 30) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
     isMobile(): boolean {
-        //return isMobile();
         return CommonFunctions.getInstance().isMobileMenu();
     }
 }

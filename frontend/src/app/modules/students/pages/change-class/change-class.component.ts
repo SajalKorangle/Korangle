@@ -36,7 +36,7 @@ export class ChangeClassComponent implements OnInit {
         };
     }
 
-    handleDetailsFromParentStudentFilter(details: any): void {        
+    handleDetailsFromParentStudentFilter(details: any): void {
         this.classList = details.classList;
         this.sectionList = details.sectionList;
         this.classSectionList = this.classList;
@@ -54,7 +54,7 @@ export class ChangeClassComponent implements OnInit {
 
     getClassName(studentSection: any): any{
         return this.classList.find(classs => {
-            return classs.dbId == studentSection.parentClass;
+            return classs.id == studentSection.parentClass;
         }).name;
     }
 
@@ -68,7 +68,7 @@ export class ChangeClassComponent implements OnInit {
         let data = {
             id: this.selectedStudentSection.id,
             parentDivision: this.selectedClass.selectedSection.id,
-            parentClass: this.selectedClass.dbId,
+            parentClass: this.selectedClass.id,
         };
         this.isLoading = true;
         this.studentService.partiallyUpdateObject(this.studentService.student_section,data).then(response => {

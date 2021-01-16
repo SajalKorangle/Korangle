@@ -50,8 +50,8 @@ export class SetClassSubjectServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getClassList(this.vm.user.jwt),
-            this.vm.classService.getSectionList(this.vm.user.jwt),
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
@@ -99,7 +99,7 @@ export class SetClassSubjectServiceAdapter {
                 });
                 tempSection['subjectList'] = [];
                 this.classSubjectList.forEach(classSubject => {
-                    if (classSubject.parentClass === tempClass['dbId']
+                    if (classSubject.parentClass === tempClass['id']
                         && classSubject.parentDivision === tempSection['id']) {
 
                         let tempSubject = {};
@@ -181,7 +181,7 @@ export class SetClassSubjectServiceAdapter {
                     }
                 });*/
                 this.studentSectionList.forEach(studentSection => {
-                    if (studentSection.classDbId === tempClass['dbId']
+                    if (studentSection.classDbId === tempClass['id']
                         && studentSection.sectionDbId === tempSection['id']) {
                         let tempStudent = {};
                         Object.keys(studentSection).forEach(key => {
@@ -231,7 +231,7 @@ export class SetClassSubjectServiceAdapter {
         }
 
         let class_subject_data = {
-            'parentClass': this.vm.selectedClass.dbId,
+            'parentClass': this.vm.selectedClass.id,
             'parentDivision': this.vm.selectedClass.selectedSection.id,
             'parentSession': this.vm.selectedSession.id,
             'parentSubject': this.vm.selectedSubject.id,
@@ -262,7 +262,7 @@ export class SetClassSubjectServiceAdapter {
     prepareStudentSubjectDataToAdd(): any {
         let data = [];
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === this.vm.selectedClass.dbId) {
+            if (classs.id === this.vm.selectedClass.id) {
                 classs.sectionList.every(section => {
                     if (section.id === this.vm.selectedClass.selectedSection.id) {
                         section.studentList.forEach(student => {
@@ -296,7 +296,7 @@ export class SetClassSubjectServiceAdapter {
 
     addSubjectInClassSectionStudentSubjectList(classSubject: any, studentSubjectList): void {
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === classSubject.parentClass) {
+            if (classs.id === classSubject.parentClass) {
                 classs.sectionList.every(section => {
                     if (section.id === classSubject.parentDivision) {
                         // section['subjectList'].push(classSubject);
@@ -321,7 +321,7 @@ export class SetClassSubjectServiceAdapter {
 
     addSubjectInClassSectionSubjectList(classSubject: any): void {
         this.vm.classSectionSubjectList.every(classs => {
-            if (classs.dbId === classSubject.parentClass) {
+            if (classs.id === classSubject.parentClass) {
                 classs.sectionList.every(section => {
                     if (section.id === classSubject.parentDivision) {
 
@@ -349,29 +349,31 @@ export class SetClassSubjectServiceAdapter {
     // Remove Subject
     removeSubject(subject: any): void {
 
-        this.vm.isLoading = true;
+        if (confirm('Are you sure ? removing the subject will remove all its corresponding tutorial videos')) {
+            this.vm.isLoading = true;
 
-        let class_subject_data = subject.id;
+            let class_subject_data = subject.id;
 
-        let student_subject_data = this.prepareStudentSubjectDataToRemove(subject);
+            let student_subject_data = this.prepareStudentSubjectDataToRemove(subject);
 
-        Promise.all([
-            this.vm.subjectService.deleteClassSubject(class_subject_data, this.vm.user.jwt),
-            ((student_subject_data.length>0)?this.vm.subjectService.deleteStudentSubjectList(student_subject_data, this.vm.user.jwt):''),
-        ]).then(value => {
-            alert('Subject removed from class successfully');
-            this.removeSubjectFromClassSectionSubjectList(subject.parentClass, subject.parentDivision, subject.parentSubject);
-            this.removeSubjectFromClassSectionStudentSubjectList(subject.parentClass, subject.parentDivision, subject.parentSubject);
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
+            Promise.all([
+                this.vm.subjectService.deleteClassSubject(class_subject_data, this.vm.user.jwt),
+                ((student_subject_data.length > 0) ? this.vm.subjectService.deleteStudentSubjectList(student_subject_data, this.vm.user.jwt) : ''),
+            ]).then(value => {
+                alert('Subject removed from class successfully');
+                this.removeSubjectFromClassSectionSubjectList(subject.parentClass, subject.parentDivision, subject.parentSubject);
+                this.removeSubjectFromClassSectionStudentSubjectList(subject.parentClass, subject.parentDivision, subject.parentSubject);
+                this.vm.isLoading = false;
+            }, error => {
+                this.vm.isLoading = false;
+            });
+        }
     }
 
     prepareStudentSubjectDataToRemove(subject: any): any {
         let data = [];
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === subject.parentClass) {
+            if (classs.id === subject.parentClass) {
                 classs.sectionList.every(section => {
                     if (section.id === subject.parentDivision) {
                         section.studentList.forEach(student => {
@@ -396,7 +398,7 @@ export class SetClassSubjectServiceAdapter {
 
     removeSubjectFromClassSectionStudentSubjectList(classId: any, sectionId: any, subjectId: any): void {
         this.classSectionStudentSubjectList.every(classs => {
-            if (classs.dbId === classId) {
+            if (classs.id === classId) {
                 classs.sectionList.every(section => {
                     if (section.id === sectionId) {
                         /*section['subjectList'] = section['subjectList'].filter(subject => {
@@ -425,7 +427,7 @@ export class SetClassSubjectServiceAdapter {
 
     removeSubjectFromClassSectionSubjectList(classId: any, sectionId: any, subjectId: any): void {
         this.vm.classSectionSubjectList.every(classs => {
-            if (classs.dbId === classId) {
+            if (classs.id === classId) {
                 classs.sectionList.every(section => {
                     if (section.id === sectionId) {
                         section['subjectList'] = section['subjectList'].filter(subject => {

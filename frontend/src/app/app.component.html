@@ -9,9 +9,9 @@
 
         <mat-progress-bar *ngIf="user.isLazyLoading"  mode="indeterminate"></mat-progress-bar>
 
-        <div class="main-panel">
+        <div class="main-panel" id="main-pannel">
 
-            <app-navbar [user]="user" class="visible-sm visible-xs"></app-navbar>
+            <app-navbar [user]="user" class="visible-sm visible-xs mobile-sticky-top"></app-navbar>
 
             <div class="main-content">
                 <div class="container-fluid">
@@ -23,13 +23,8 @@
                             <div class="card-header-part1">
                                 <h4 class="title">{{user.section.title}} - {{user.section.subTitle}}</h4>
                                 <div style="display: flex">
-                                    <span style="margin-right: 15px; margin-top: 2px;font-size: 18.2px" *ngIf="lastMonthIsGoingOn()">
-                                        Valid till &nbsp;{{user.activeSchool.dateOfExpiration | date}}&nbsp;
-                                        <span *ngIf="countDownForValidity >= 0">
-                                            <b> (&nbsp;{{countDownForValidity}}&nbsp; days left !&nbsp;)</b>
-                                        </span></span>
-                                    <a style="text-decoration: none" (click)="refresh()">
-                                        <i class="material-icons">refresh</i>
+                                    <a *ngIf="user.section.videoUrl" style="text-decoration: none; cursor: pointer" (click)="showTutorial(user.section.videoUrl)">
+                                        <i class="material-icons playButtonShadow">play_circle_outline</i>
                                     </a>
                                 </div>
                             </div>
@@ -43,8 +38,8 @@
                         <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="'green'">
                             <div class="card-header-part1">
                                 <h4 class="title">{{user.section.title}} - {{user.section.subTitle}}</h4>
-                                <a style="text-decoration: none;" (click)="refresh()">
-                                    <i class="material-icons">refresh</i>
+                                <a *ngIf="user.section.videoUrl" style="text-decoration: none; cursor: pointer" (click)="showTutorial(user.section.videoUrl)">
+                                    <i class="material-icons playButtonShadow">play_circle_outline</i>
                                 </a>
                             </div>
                         </div>

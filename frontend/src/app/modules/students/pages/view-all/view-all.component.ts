@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import {ClassOldService} from '../../../../services/modules/class/class-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 import {StudentService} from '../../../../services/modules/student/student.service';
 
@@ -50,7 +50,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassOldService, ExcelService, BusStopService, SchoolService]
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService]
 })
 
 export class ViewAllComponent implements OnInit {
@@ -83,6 +83,7 @@ export class ViewAllComponent implements OnInit {
     /* RTE Options */
     yesRTE = true;
     noRTE = true;
+    noneRTE = true;
 
     displayStudentNumber = 0;
 
@@ -103,7 +104,7 @@ export class ViewAllComponent implements OnInit {
 
     constructor(public studentOldService: StudentOldService,
                 public studentService: StudentService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 public excelService: ExcelService,
                 public schoolService: SchoolService,
                 public printService: PrintService,
@@ -112,9 +113,9 @@ export class ViewAllComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.columnFilter = new ColumnFilter();
-        this.serviceAdapter = new ViewAllServiceAdapter()
-        this.serviceAdapter.initializeAdapter(this)
-        this.serviceAdapter.initializeData()
+        this.serviceAdapter = new ViewAllServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
     }
 
     initializeClassSectionList(classSectionList: any): void {
@@ -129,7 +130,9 @@ export class ViewAllComponent implements OnInit {
 
     getParameterValue(student, parameter) {
         try {
-            return this.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
+            return this.studentParameterValueList.find(x =>
+                x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
+            ).value;
         } catch {
             return this.NULL_CONSTANT;
         }
@@ -195,7 +198,7 @@ export class ViewAllComponent implements OnInit {
         let sectionObject = null;
         this.classSectionList.every(classs => {
             classs.sectionList.every(section => {
-                if (sectionDbId === section.dbId && classDbId === classs.dbId) {
+                if (sectionDbId === section.id && classDbId === classs.id) {
                     sectionObject = section;
                     section.containsStudent = true;
                     return false;
@@ -367,10 +370,11 @@ export class ViewAllComponent implements OnInit {
             }
 
             /* RTE Filter Check */
-            if (!this.yesRTE && student.rte === "YES") {
-                student.show = false;
-                return;
-            } else if (!this.noRTE && student.rte === "NO") {
+            if (!(
+                (this.yesRTE && student.rte === "YES")
+                || (this.noRTE && student.rte === "NO")
+                || (this.noneRTE && student.rte != "YES" && student.rte != "NO")
+            )) { // First we are checking for which conditions student should be visible then we are applying a 'NOT' to the whole to get student invisible condition
                 student.show = false;
                 return;
             }

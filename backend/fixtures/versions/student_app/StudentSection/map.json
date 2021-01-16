@@ -1,0 +1,32 @@
+[
+  {
+    "file": "twenty_student_section.json",
+    "file_object_list": [
+      {
+        "app": "student_app",
+        "model": "Student",
+        "file": "twenty_students.json"
+      }
+    ]
+  },
+  {
+    "file": "sixty_eight_students_section.json",
+    "file_object_list": [
+      {
+        "app": "student_app",
+        "model": "Student",
+        "file": "sixty_eight_students.json"
+      }
+    ]
+  },
+  {
+    "file": "one_student_section.json",
+    "file_object_list": [
+      {
+        "app": "student_app",
+        "model": "Student",
+        "file": "one_student.json"
+      }
+    ]
+  }
+]

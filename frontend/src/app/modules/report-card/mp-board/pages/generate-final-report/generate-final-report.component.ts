@@ -7,7 +7,7 @@ import { GenerateFinalReportServiceAdapter } from './generate-final-report.servi
 import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {ClassOldService} from '../../../../../services/modules/class/class-old.service';
+
 import {ClassService} from '../../../../../services/modules/class/class.service';
 import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
 import {SubjectOldService} from '../../../../../services/modules/subject/subject-old.service';
@@ -22,7 +22,7 @@ import {ReportCardMpBoardService} from "../../../../../services/modules/report-c
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ ExaminationOldService, ClassOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ReportCardMpBoardService, ClassService, ExaminationService ],
+    providers: [ ExaminationOldService, StudentOldService, SubjectOldService, AttendanceOldService, SchoolService, ReportCardMpBoardService, ClassService, ExaminationService ],
 })
 
 export class GenerateFinalReportComponent implements OnInit {
@@ -56,7 +56,6 @@ export class GenerateFinalReportComponent implements OnInit {
 
     constructor(public examinationOldService: ExaminationOldService,
                 public examinationService : ExaminationService,
-                public classOldService: ClassOldService,
                 public classService: ClassService,
                 public studentService: StudentOldService,
                 public subjectService: SubjectOldService,
@@ -194,7 +193,7 @@ export class GenerateFinalReportComponent implements OnInit {
                 if (section.selected) {
                     selectedClassSection = {
                         'className': classs.name,
-                        'classDbId': classs.dbId,
+                        'classDbId': classs.id,
                         'sectionName': section.name,
                         'sectionDbId': section.id,
                     };

@@ -1,0 +1,34 @@
+[
+  {
+    "statement": "Check isValidNumber function for all possibilities",
+    "testType": "karma",
+    "steps": [
+      "Set up the CustomizedNumberInput component",
+      "Call the isValidNumber function with various values",
+      "Check the return value to be true & false"
+    ],
+    "testName": "Check isValidNumber function for all possibilities"
+  },
+  {
+    "statement": "Check handleChange function for all possibilities",
+    "testType": "karma",
+    "steps": [
+      "Set up the CustomizedNumberInput component",
+      "Call the handleChange function with various values",
+      "Check the emitted value with the expected value & their types",
+      "Check the element value with the expected value & their types"
+    ],
+    "testName": "Check handleChange function for all possibilities"
+  },
+  {
+    "statement": "Check onBlur function for all possibilities",
+    "testType": "karma",
+    "steps": [
+      "Set up the CustomizedNumberInput component",
+      "Call the onBlur function with various event values",
+      "Check the emitted value with the expected value & their types",
+      "Check the element value with the expected value & their types"
+    ],
+    "testName": "Check onBlur function for all possibilities"
+  }
+]

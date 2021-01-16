@@ -3,7 +3,7 @@ import { TotalCollectionServiceAdapter } from "./total-collection.service.adapte
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import {EmployeeService} from "../../../../services/modules/employee/employee.service";
 import {StudentService} from "../../../../services/modules/student/student.service";
-import {ClassOldService} from "../../../../services/modules/class/class-old.service";
+import {ClassService} from "../../../../services/modules/class/class.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import { PrintService } from '../../../../print/print-service';
@@ -15,7 +15,7 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
     selector: 'total-collection',
     templateUrl: './total-collection.component.html',
     styleUrls: ['./total-collection.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService, ClassOldService, SchoolService ],
+    providers: [ FeeService, EmployeeService, StudentService,ClassService, SchoolService ],
 })
 
 export class TotalCollectionComponent implements OnInit {
@@ -64,7 +64,7 @@ export class TotalCollectionComponent implements OnInit {
     constructor(public feeService: FeeService,
                 public employeeService: EmployeeService,
                 public studentService: StudentService,
-                public classService: ClassOldService,
+                public classService: ClassService,
                 public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef,
                 private printService: PrintService) {}
@@ -76,16 +76,31 @@ export class TotalCollectionComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        delete this.receiptColumnFilter['printButton'];
+        this.initializeSelection();
+        /*delete this.receiptColumnFilter['printButton'];
 
         this.receiptColumnFilter.scholarNumber = false;
-        this.receiptColumnFilter.remark = false;
+        this.receiptColumnFilter.remark = false;*/
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }
+
+    }
+
+    initializeSelection(): void {
+
+        this.selectedEmployee = null;
+        this.selectedClassSection = null;
+        this.selectedModeOfPayment = null;
+        this.selectedFeeType = null;
+
+        this.receiptColumnFilter = new ReceiptColumnFilter();
+        delete this.receiptColumnFilter['printButton'];
+        this.receiptColumnFilter.scholarNumber = false;
+        this.receiptColumnFilter.remark = false;
 
     }
 
@@ -112,7 +127,7 @@ export class TotalCollectionComponent implements OnInit {
 
     getClass(studentId: any, sessionId: any): any {
         return  this.classList.find(classs => {
-            return classs.dbId == this.studentSectionList.find(studentSection => {
+            return classs.id == this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
             }).parentClass;
         });
@@ -159,7 +174,7 @@ export class TotalCollectionComponent implements OnInit {
         if (this.selectedClassSection) {
             tempList = tempList.filter(feeReceipt => {
                 let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
-                return classSection.classs.dbId == this.selectedClassSection.classs.dbId
+                return classSection.classs.id == this.selectedClassSection.classs.id
                     && classSection.section.id == this.selectedClassSection.section.id;
             });
         }

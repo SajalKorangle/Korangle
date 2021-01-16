@@ -36,7 +36,16 @@ export class ViewDefaultersServiceAdapter {
         ]).then(val => {
             let sessionList = val[0];
             this.vm.sessionList = sessionList;
-            this.vm.studentParameterList = val[1].map(x => ({...x, filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false})), showNone: false, filterFilterValues: ''}));
+            this.vm.studentParameterList = val[1].map(x =>
+                (
+                    {
+                        ...x,
+                        filterValues: JSON.parse(x.filterValues).map(x => ({name: x, show: false})),
+                        showNone: false,
+                        filterFilterValues: ''
+                    }
+                )
+            );
             this.vm.studentParameterValueList = val[2];
             const todaysDate = new Date();
             this.vm.currentSession = this.vm.sessionList.find(session => {
@@ -59,35 +68,43 @@ export class ViewDefaultersServiceAdapter {
                 parentSchool: this.vm.user.activeSchool.dbId,
             };
 
-            service_list.push(this.vm.classService.getClassList(this.vm.user.jwt));
-            service_list.push(this.vm.classService.getSectionList(this.vm.user.jwt));
+            service_list.push(this.vm.classService.getObjectList(this.vm.classService.classs, {}));
+            service_list.push(this.vm.classService.getObjectList(this.vm.classService.division, {}));
             service_list.push(this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt));
 
             let loopVariable = 0;
             while (loopVariable < iterationCount) {
 
                 const student_list = {
-                    'id__in': tempStudentIdList.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)).join(),
+                    'id__in': tempStudentIdList.slice(
+                        this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)
+                    ).join(),
                     'fields__korangle': 'id,name,fathersName,mobileNumber,secondMobileNumber,address',
                 };
 
                 const student_fee_list = {
                     'parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
                     'cleared': 'false__boolean',
-                    'parentStudent__in': tempStudentIdList.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)).join(),
+                    'parentStudent__in': tempStudentIdList.slice(
+                        this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)
+                    ).join(),
                 };
 
                 const sub_fee_receipt_list = {
                     'parentStudentFee__parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
                     'parentStudentFee__cleared': 'false__boolean',
-                    'parentStudentFee__parentStudent__in': tempStudentIdList.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)).join(),
+                    'parentStudentFee__parentStudent__in': tempStudentIdList.slice(
+                        this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)
+                    ).join(),
                     'parentFeeReceipt__cancelled': 'false__boolean',
                 };
 
                 const sub_discount_list = {
                     'parentStudentFee__parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
                     'parentStudentFee__cleared': 'false__boolean',
-                    'parentStudentFee__parentStudent__in': tempStudentIdList.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)).join(),
+                    'parentStudentFee__parentStudent__in': tempStudentIdList.slice(
+                        this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)
+                    ).join(),
                     'parentDiscount__cancelled': 'false__boolean',
                 };
                 service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
@@ -142,7 +159,9 @@ export class ViewDefaultersServiceAdapter {
             const mobile_list = studentList.filter(item => item.mobileNumber).map(obj => obj.mobileNumber.toString());
 
             const gcm_data = {
-                'user__username__in': mobile_list.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)),
+                'user__username__in': mobile_list.slice(
+                    this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)
+                ),
                 'active': 'true__boolean',
             }
             const user_data = {
@@ -294,10 +313,12 @@ export class ViewDefaultersServiceAdapter {
 
             alert('Operation Successful');
 
-            if ((this.vm.selectedSentType == this.vm.sentTypeList[0] || this.vm.selectedSentType == this.vm.sentTypeList[2]) && (sms_list.length > 0)) {
-                if (value[0].status == 'success') {
+            if ((this.vm.selectedSentType === this.vm.sentTypeList[0] ||
+                this.vm.selectedSentType === this.vm.sentTypeList[2]) &&
+                (sms_list.length > 0)) {
+                if (value[0].status === 'success') {
                     this.vm.smsBalance -= value[0].data.count;
-                } else if (value[0].status == 'failure') {
+                } else if (value[0].status === 'failure') {
                     this.vm.smsBalance = value[0].count;
                 }
             }

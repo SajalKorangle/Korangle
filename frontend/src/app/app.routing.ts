@@ -42,6 +42,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/subject/subject.module#SubjectModule',
     },
     {
+        path: 'tutorials',
+        loadChildren: 'app/modules/tutorials/tutorials.module#TutorialsModule',
+    },
+    {
         path: 'examinations',
         loadChildren: 'app/modules/examination/examination.module#ExaminationModule',
     },
@@ -91,6 +95,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/school/school.module#SchoolModule',
     },
     {
+        path: 'homework',
+        loadChildren: 'app/modules/homework/homework.module#HomeworkModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
@@ -103,7 +111,6 @@ const routes: Routes = [
             {path: 'report_card_cbse', loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule'},
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
             {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
-            /*{path: 'marksheet', loadChildren: 'app/modules/marksheet/marksheet.module#MarksheetModule'},*/
             {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
 
         ]

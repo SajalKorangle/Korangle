@@ -52,7 +52,7 @@
                 <mat-form-field>
                     <mat-select placeholder="Select Class"
                                 [ngModel]="getClass(selectedEnquiry.parentClass)"
-                                (ngModelChange)="currentEnquiry.parentClass=$event.dbId;">
+                                (ngModelChange)="currentEnquiry.parentClass=$event.id;">
                         <mat-option *ngFor='let classs of classList;' [value]="classs">
                             {{classs.name}}
                         </mat-option>
