@@ -52,7 +52,6 @@ describe('Examination -> Schedule Test', () => {
         await page.waitForXPath('//input[@testId="startTime"]');
         const startTime = await page.$x('//input[@testId="startTime"]');
 
-        await page.waitForTimeout(10000);
 
         await Date.click({ clickCount: 3 })
         await Date.type('10/10/2018')

@@ -144,6 +144,7 @@ export class ScheduleTestComponent implements OnInit {
 		var timeError = 0;
 		this.newTestList.forEach((test) => {
 			if (test.newStartTime > test.newEndTime) {
+				console.log('new StartTime is ' + test.newStartTime + ' new End time is ' + test.newEndTime)
 				timeError++;
 			}
 		});
