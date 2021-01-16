@@ -246,3 +246,6 @@ class StudentParameterValueView(CommonView, APIView):
 
 class StudentParameterValueListView(CommonListView, APIView):
     Model = StudentParameterValue
+
+class StudentView2(CommonView,APIView):   #for handling image-upload with form-data
+    Model = Student

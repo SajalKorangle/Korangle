@@ -21,7 +21,10 @@ from django.utils.timezone import now
 
 def upload_avatar_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'students/%s/profile_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
+    return 'students/profile_image/%s%s' % (now().timestamp(), filename_ext.lower())
+
+def upload_document_to(instance,filename):
+    return 'student_app/StudentParameterValue/document_value/%s_%s' % (now().timestamp(),filename)
 
 
 class TransferCertificate(models.Model):
@@ -183,7 +186,7 @@ class StudentParameterValue(models.Model):
     parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
 
     value = models.TextField(null=True,blank=True)
-    document_value = models.FileField(upload_to="upload_student_parameter_document_to/", blank=True, null=True)
+    document_value = models.FileField(upload_to=upload_document_to, blank=True, null=True)
     document_size = models.TextField(null=True,blank=True)
 
     class Meta:
