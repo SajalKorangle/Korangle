@@ -20,6 +20,8 @@ import {MultipleFileDialogComponent} from '../../multiple-file-dialog/multiple-f
 import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 import {MatDialog} from '@angular/material';
 
+declare const $: any;
+
 @Component({
   selector: 'add-student',
   templateUrl: './add-student.component.html',
@@ -398,10 +400,16 @@ export class AddStudentComponent implements OnInit {
 
     dragEnter(value){
         $(".dropinput").css({"z-index":"6"})
+        $(value.path[1]).css({"background":"rgba(182, 224, 184, 0.1)","border": "1px dashed #7db580"})
     }
 
-    onDrop(parameter,value){
+    onDrop(value){
         $('.dropinput').css({"z-index":"-1"})
+        $(value.path[1]).css({"background":"","border": ""})
+    }
+
+    dragLeave(value){
+        $(value.path[1]).css({"background":"","border": ""})
     }
 
     openFilePreviewDialog(parameter): void {

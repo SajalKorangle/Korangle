@@ -330,8 +330,8 @@
         </div>
 
         <div class="row">
-            <div *ngFor="let parameter of studentParameterList" class="col-md-3">
-                <div *ngIf="parameter.parameterType!=='DOCUMENT'">
+            <div *ngFor="let parameter of studentParameterList">
+                <div *ngIf="parameter.parameterType!=='DOCUMENT'" class="col-md-3">
                     <mat-form-field style="width: 100%;">
                         <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
                         <input matInput *ngIf="parameter.parameterType==='TEXT'" type="text" (ngModelChange)="updateParameterValue(parameter,$event)" [ngModel]="getParameterValue(parameter)">
@@ -346,11 +346,11 @@
             </div>
         </div>
         <br>
-        <p>Documents</p>
+
         <div class="row">
             <div *ngFor="let parameter of studentParameterList">
                 <div *ngIf="parameter.parameterType==='DOCUMENT'" class="col-md-3" style="padding-top: 19px;">
-                    <div (dragenter)="dragEnter($event)" (drop)="onDrop($event)" [class]="getParameterDocumentType(parameter)=='none'?'drop none':'drop'">
+                    <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
                         <input class="dropinput" type="file" multiple="false" (input)="updateDocuments(parameter, $event)" #imageInput>
                         <label class="documentLabel">{{parameter.name}}</label>
                         <div *ngIf="getParameterDocumentType(parameter)=='none'">

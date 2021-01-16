@@ -121,14 +121,9 @@ mat-form-field {
     z-index: 3;
 }
 
-.drop:hover {
-    background: rgba(86, 174, 90, 0.1);
-    border: 1px dashed #56AE5A;
-}
-
 .none {
-    background: rgba(86, 174, 90, 0.1);
-    border: 1px dashed #56AE5A;
+    background: rgba(182, 224, 184, 0.1);
+    border: 1px dashed #7db580;
 }
 
 .sticky {
