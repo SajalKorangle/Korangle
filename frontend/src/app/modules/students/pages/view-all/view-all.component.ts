@@ -12,9 +12,12 @@ import { BusStopService} from '@services/modules/school/bus-stop.service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import {SchoolService} from '@services/modules/school/school.service';
 
+import {MatDialog} from '@angular/material';
+import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
-import { toInteger } from 'lodash';
+import { toInteger, filter } from 'lodash';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -136,7 +139,8 @@ export class ViewAllComponent implements OnInit {
                 public excelService: ExcelService,
                 public schoolService: SchoolService,
                 public printService: PrintService,
-                public busStopService: BusStopService) { }
+                public busStopService: BusStopService,
+                public dialog:MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -166,7 +170,7 @@ export class ViewAllComponent implements OnInit {
 
     getParameterValue(student, parameter) {
         try {
-            if (parameter.type === 'PROFILE'){
+            if (this.currentProfileDocumentFilter === 'Profile'){
             	return this.studentParameterValueList.find(x =>
                 	x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
             }
@@ -297,15 +301,13 @@ export class ViewAllComponent implements OnInit {
 
     printStudentList(): void {
         // alert('Functionality needs to be implemented once again');
-        if (this.currentProfileDocumentFilter==='Profile'){
-		    const value = {
-		        studentList: this.studentFullProfileList.filter(student => {
-		            return student.show
-		        }),
-		        columnFilter: this.columnFilter
-		    };
-		    this.printService.navigateToPrintRoute(PRINT_STUDENT_LIST, {user: this.user, value});
-		};
+        const value = {
+            studentList: this.studentFullProfileList.filter(student => {
+                return student.show
+            }),
+            columnFilter: this.columnFilter
+        };
+        this.printService.navigateToPrintRoute(PRINT_STUDENT_LIST, {user: this.user, value});
 	};
 
     unselectAllClasses(): void {
@@ -565,7 +567,8 @@ export class ViewAllComponent implements OnInit {
                 this.studentParameterDocumentList.forEach(parameter=>{
                     if (parameter.show){
                         let item = this.studentParameterValueList.find(x =>
-                            x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id)
+                            (x.parentStudent === student.dbId) && (x.parentStudentParameter === parameter.id)
+                        )
                         if (item){
                             this.totalFiles+=1
                             if(item.document_size){
@@ -599,7 +602,9 @@ export class ViewAllComponent implements OnInit {
 
     async download_each_file(document_url){
         const response = await fetch(document_url)
-        if (response.status ==403){}
+        if (response.status ==403){
+            ++this.totalFailed;
+        }
         else{
 		    const reader = response.body.getReader();
 		    const contentLength = response.headers.get('Content-Length');
@@ -615,7 +620,6 @@ export class ViewAllComponent implements OnInit {
 		        this.percent_download_comlpleted+=(value.length*1.0)/(this.totalDownloadSize*1.0)*100;
 		        console.log(`Received ${receivedLength} of ${contentLength}`)
 		        console.log(`now total received is ${this.percent_download_comlpleted} %`)
-		        console.log(this.totalDownloadSize);
 		    }
 		    let blob = new Blob(chunks);
 		    return blob;
@@ -642,33 +646,26 @@ export class ViewAllComponent implements OnInit {
 		                        check1=check1+1;
 		                        this.download_each_file(document_url).then(blob => {
 		                            if (blob){
-				                        this.downloadedFiles=this.downloadedFiles+1; 
-				                        let type = document_url.slice(document_url.length-3);
+                                        let type = document_url.split(".");
+                                        type = type[type.length-1];
 				                        let file = new Blob([blob], { type: type});
-				                        console.log(student);
-				                        Folder.file(student.name+"_"+student.dbId+"_"+parameter.name+"."+type,file);
-				                        if (check1===this.downloadedFiles){
-				                            let zipdone = false;
-				                            zip.generateAsync({ type: "blob"})
-				                            .then(content => {
-				                                FileSaver.saveAs(content, "Documents.zip");
-				                                this.download='NOT'
-				                            });
-				                            this.isLoading=false
-				                            this.download='END'
-				                            this.downloadedFiles=0
-				                            this.totalFiles=0
-				                            this.percent_download_comlpleted=0
-				                            this.totalDownloadSize =0
-				                            if (zipdone){
-				                                
-				                            }
-				                        }
-		                            }
-		                            else{
-		                                ++this.downloadedFiles;
-		                                ++this.totalFailed;
-		                            }
+                                        Folder.file(student.name+"_"+student.dbId+"_"+parameter.name+"."+type,file);
+                                        this.downloadedFiles=this.downloadedFiles+1;
+                                        console.log(check1,this.downloadedFiles)
+                                    }
+                                    if (check1===this.downloadedFiles+this.totalFailed){
+                                        zip.generateAsync({ type: "blob"})
+                                        .then(content => {
+                                            FileSaver.saveAs(content, "Documents.zip");
+                                            this.download='NOT'
+                                        });
+                                        this.isLoading=false
+                                        this.download='END'
+                                        this.downloadedFiles=0
+                                        this.totalFiles=0
+                                        this.percent_download_comlpleted=0
+                                        this.totalDownloadSize =0
+                                    }
 		                        },error=>{
 		                            this.download="FAIL"
 		                            this.isLoading = false;
@@ -704,6 +701,26 @@ export class ViewAllComponent implements OnInit {
 		} else if (this.currentProfileDocumentFilter==='Documents'){
 			this.downloadDocuments();
     	}
+    }
+
+    openFilePreviewDialog(student,parameter): void {
+        let file =this.getParameterValue(student,parameter)
+        let urlList = file.split(".")
+        let extension = urlList[urlList.length-1]
+        let type
+        if (extension=="pdf"){
+            type="pdf"
+        }
+        else if (extension=="jpg"||extension=="jpeg"||extension=="png"){
+            type="img"
+        }
+        const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
+            width: '600px',
+            data: {'file': file, 'type': type}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+        });
     }
 
     getHeaderValues(): any {

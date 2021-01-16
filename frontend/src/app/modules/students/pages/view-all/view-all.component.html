@@ -425,10 +425,7 @@
                 </div>
             </div>
             <div class="text-center">
-                <h4><b>{{downloadedFiles-totalFailed}} out of {{totalFiles}} files downloaded</b></h4>
-                <div *ngIf="totalFailed!=0">
-                    <h5><b><i style="color:red">Failed to download {{totalFailed}} files</i></b></h5>
-                </div>
+                <h4><b>{{downloadedFiles}} out of {{totalFiles}} files downloaded</b></h4>
             </div>
         </div>
         <div *ngIf="download=='END'">
@@ -438,72 +435,62 @@
                 </div>
                 <b>Download Done now Unziping</b>
             </h4>
-            <div *ngIf="totalFailed!=0" class="text-center">
-                <h5><b><i style="color:red">Failed to download {{totalFailed}} files</i></b></h5>
-            </div>
         </div>
         <div *ngIf="download=='FAIL'">
             <h4 class="text-danger text-center">
                 <b>Download failed restart again.</b>
             </h4>
         </div>
+        <div *ngIf="totalFailed!=0" class="text-center">
+            <h5><b><i style="color:red">Failed to download {{totalFailed}} files</i></b></h5>
+        </div>
     </ng-container>
-    <p>Total Students: <b>{{studentFullProfileList.length}}</b>, Displaying: <b>{{displayStudentNumber}}</b>, Selected: <b>{{getSelectedStudents()}}</b></p>
-    <button class="btn" style="padding: 7px 7px; margin-right: 5px;" (click)="selectAllStudents(); $event.stopPropagation();">Select All
-    </button>
-    <button class="btn" style="padding: 7px 7px" (click)="unselectAllStudents(); $event.stopPropagation();">Clear All
-    </button>
 
     <!-- Student Table Profile Data List -->
     <ng-container *ngIf="!isLoading  && currentProfileDocumentFilter==='Profile'">
+        <p>Total Students: <b>{{studentFullProfileList.length}}</b>, Selected : <b>{{displayStudentNumber}}</b></p>
     	<cdk-virtual-scroll-viewport itemSize="15" class="example-viewport">
         	<table class="table table-hover">
-		        <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-		        <tr>
-		        	<th></th>
-		            <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
-		            <th [class.hidden]="!columnFilter.showProfileImage" style="text-align: center">Profile Image</th>
-		            <th [class.hidden]="!columnFilter.showName">Name</th>
-		            <th [class.hidden]="!columnFilter.showClassName">Class</th>
-		            <th [class.hidden]="!columnFilter.showSectionName">Section</th>
-		            <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
-		            <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
-		            <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
-		            <th [class.hidden]="!columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
-		            <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
-		            <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
-		            <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
-		            <th [class.hidden]="!columnFilter.showGender">Gender</th>
-		            <th [class.hidden]="!columnFilter.showCaste">Caste</th>
-		            <th [class.hidden]="!columnFilter.showCategory">Category</th>
-		            <th [class.hidden]="!columnFilter.showReligion">Religion</th>
-		            <th [class.hidden]="!columnFilter.showFatherOccupation">Father's Occupation</th>
-		            <th [class.hidden]="!columnFilter.showAddress">Address</th>
-		            <th [class.hidden]="!columnFilter.showChildSSMID">Child SSMID</th>
-		            <th [class.hidden]="!columnFilter.showFamilySSMID">Family SSMID</th>
-		            <th [class.hidden]="!columnFilter.showBankName">Bank Name</th>
-		            <th [class.hidden]="!columnFilter.showBankIfscCode">Bank Ifsc Code</th>
-		            <th [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
-		            <th [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
-		            <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
-		            <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
-		            <th [class.hidden]="!columnFilter.showRTE">RTE</th>
-		            <th [class.hidden]="!columnFilter.showAdmissionSession">Admission Session</th>
-		            <th [class.hidden]="!columnFilter.showBusStopName">Bus Stop Name</th>
-		            <th [class.hidden]="!columnFilter.showDateOfAdmission">Date Of Admission</th>
-		            <th [class.hidden]="!columnFilter.showRemark">Remark</th>
-		            <th *ngFor="let parameter of studentParameterOtherList" [class.hidden]="!parameter.show">{{parameter.name}}</th>
-		        </tr>
-		        </thead>
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                    <tr>
+                        <th style="min-width: 60px;" [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+                        <th [class.hidden]="!columnFilter.showProfileImage" style="min-width: 120px;text-align: center">Profile Image</th>
+                        <th style="min-width: 180px;" [class.hidden]="!columnFilter.showName">Name</th>
+                        <th style="min-width: 100px;" [class.hidden]="!columnFilter.showClassName">Class</th>
+                        <th style="min-width: 100px;" [class.hidden]="!columnFilter.showSectionName">Section</th>
+                        <th style="min-width: 80px;" [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
+                        <th style="min-width: 180px;" [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
+                        <th style="min-width: 100px;" [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
+                        <th style="min-width: 110px;" [class.hidden]="!columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
+                        <th style="min-width: 90px;" [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
+                        <th style="min-width: 100px;" [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
+                        <th style="min-width: 180px;" [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
+                        <th style="min-width: 80px;" [class.hidden]="!columnFilter.showGender">Gender</th>
+                        <th style="min-width: 100px;" [class.hidden]="!columnFilter.showCaste">Caste</th>
+                        <th style="min-width: 80px;" [class.hidden]="!columnFilter.showCategory">Category</th>
+                        <th style="min-width: 90px;" [class.hidden]="!columnFilter.showReligion">Religion</th>
+                        <th style="min-width: 150px;" [class.hidden]="!columnFilter.showFatherOccupation">Father's Occupation</th>
+                        <th style="min-width: 200px;" [class.hidden]="!columnFilter.showAddress">Address</th>
+                        <th style="min-width: 100px;" [class.hidden]="!columnFilter.showChildSSMID">Child SSMID</th>
+                        <th style="min-width: 100px;" [class.hidden]="!columnFilter.showFamilySSMID">Family SSMID</th>
+                        <th style="min-width: 180px;" [class.hidden]="!columnFilter.showBankName">Bank Name</th>
+                        <th style="min-width: 150px;" [class.hidden]="!columnFilter.showBankIfscCode">Bank Ifsc Code</th>
+                        <th style="min-width: 150px;" [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
+                        <th style="min-width: 150px;" [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
+                        <th style="min-width: 100px;" [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
+                        <th style="min-width: 110px;" [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
+                        <th style="min-width: 60px;" [class.hidden]="!columnFilter.showRTE">RTE</th>
+                        <th style="min-width: 140px;" [class.hidden]="!columnFilter.showAdmissionSession">Admission Session</th>
+                        <th style="min-width: 150px;" [class.hidden]="!columnFilter.showBusStopName">Bus Stop Name</th>
+                        <th style="min-width: 150px;" [class.hidden]="!columnFilter.showDateOfAdmission">Date Of Admission</th>
+                        <th style="min-width: 200px;" [class.hidden]="!columnFilter.showRemark">Remark</th>
+                        <th style="min-width: 150px;" *ngFor="let parameter of studentParameterOtherList" [class.hidden]="!parameter.show">{{parameter.name}}</th>
+                    </tr>
+                </thead>
 		        <tbody>
 		        <ng-container *cdkVirtualFor="let student of studentFullProfileList">
 		            <tr [class.hidden]="!student.show">
 		                <ng-container>
-		                    <td>
-                            	<mat-checkbox [(ngModel)]="student.selectProfile"
-                            				  (click)="$event.stopPropagation();">
-                                </mat-checkbox>
-                            </td>
 		                    <td [class.hidden]="!columnFilter.showSerialNumber">{{student.serialNumber}}.</td>
 		                    <td [class.hidden]="!columnFilter.showProfileImage" align="center">
 		                        <img *ngIf="student.profileImage"
@@ -557,7 +544,7 @@
 		                    </td>
 		                    <td [class.hidden]="!columnFilter.showDateOfAdmission">{{student.dateOfAdmission | date: 'dd/MM/yyyy'}}</td>
 		                    <td [class.hidden]="!columnFilter.showRemark">{{student.remark}}</td>
-		                    <td *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">{{getParameterValue(student, parameter)}}</td>
+		                    <td *ngFor="let parameter of studentParameterOtherList" [class.hidden]="!parameter.show">{{getParameterValue(student, parameter)}}</td>
 		                </ng-container>
 		            </tr>
 		        </ng-container>
@@ -569,6 +556,14 @@
 
 <!-- Student Table Documents List -->
     <ng-container *ngIf="!isLoading && currentProfileDocumentFilter==='Documents'">
+        <p>Total Students: <b>{{studentFullProfileList.length}}</b>, Displaying: <b>{{displayStudentNumber}}</b>, Selected: <b>{{getSelectedStudents()}}</b></p>
+        <button class="btn" style="padding: 7px 7px; margin-right: 5px;" 
+                (click)="selectAllStudents(); $event.stopPropagation();">Select All
+        </button>
+        <button class="btn" style="padding: 7px 7px"
+                (click)="unselectAllStudents(); $event.stopPropagation();">Clear All
+        </button>
+
         <cdk-virtual-scroll-viewport itemSize="15" class="example-viewport">
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
@@ -606,7 +601,7 @@
                                     <a class="visible-xs visible-sm" href="tel:{{student.mobileNumber}}">Call Me</a>
                                 </td>
                                 <td class="text-center" *ngFor="let parameter of studentParameterDocumentList" [class.hidden]="!parameter.show">
-                                    <img src="{{getDocumentIcon(student,parameter)}}" style="width:20px"></td>
+                                    <img src="{{getDocumentIcon(student,parameter)}}" style="width:20px" (click)="openFilePreviewDialog(student,parameter)"></td>
                             </ng-container>
                         </tr>
                     </ng-container>
