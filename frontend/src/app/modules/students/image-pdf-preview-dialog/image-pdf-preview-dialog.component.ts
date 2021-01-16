@@ -9,7 +9,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
     
     constructor(
         public dialogRef: MatDialogRef<ImagePdfPreviewDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) 
+        @Inject(MAT_DIALOG_DATA)
         public data: any) {
     }
 
