@@ -70,6 +70,7 @@ describe('Tutorials -> Add Tutorial', () => {
         const [save] = await page.$x('//button[contains(.,\'Save\')][1]');
         await save.click();
 
+        await page.waitForXPath('//td[contains(.,\'Tutorial Topic Edited\')][1]');
         nodes = await getNodes('td', 'Tutorial Topic Edited');
         expect(nodes.length).toBe(1);
 
