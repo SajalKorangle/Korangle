@@ -29,8 +29,8 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         let nodes, node;
 
         // Typing Receipt Number And click Get button
-        await page.waitForXPath('//input//following::input[2]');
-        [node] = await page.$x('//input//following::input[2]');
+        await page.waitForXPath('//input');
+        [node] = await page.$x('//input');
         await node.type('1');
         [node] = await page.$x('//button[contains(text(),\'Get\')]');
         await node.click();
@@ -57,7 +57,7 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         expect(nodes.length).toBe(1);
 
         // Typing Cheque no.
-        [node]=await page.$x("(//input//following::input[2])");
+        [node]=await page.$x("//input");
         await page.evaluate(el => el.value = '12345',node);
         [node] = await page.$x('//button[contains(text(),\'Get\')]');
         await node.click();
@@ -119,8 +119,8 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         node.click();
 
         // Entering the Parent Number and selecting the parent
-        await page.waitForXPath('//input//following::input[1]');
-        [node] = await page.$x('//input//following::input[1]');
+        await page.waitForXPath('//input');
+        [node] = await page.$x('//input');
         await node.type('9617159429');
         node = await getNode('span', 'VIJAY PARCHHE');
         await node.click();

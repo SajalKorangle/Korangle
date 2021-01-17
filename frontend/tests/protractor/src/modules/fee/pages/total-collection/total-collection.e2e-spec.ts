@@ -61,9 +61,9 @@ describe('Fees 3.0 -> Total Collection', () => {
         nodes = await containsAll('tr', '');  //count check
         expect(nodes.length).toBe(2);
 
-        // Checking the number of cols to be equals to 8 -> cancelled remark gets added automatically then there are 8 cols
+        // Checking the number of cols to be equals to 8 -> cancelled remark and cancelled by gets added automatically then there are 8 cols
         nodes = await containsAll('th', '');  //count check
-        expect(nodes.length).toBe(8);
+        expect(nodes.length).toBe(9);
 
         nodes = await containsFirst('mat-select', 'Cancelled Receipts');
         await nodes.click();
