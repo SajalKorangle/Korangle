@@ -82,6 +82,7 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await page.waitForXPath('//input');
         [node] = await page.$x('//input');
         await node.type('Falak');
+         await page.waitForXPath('//span[contains(.,\'FALAK KHAN\')]');
         node = await getNode('span', 'FALAK KHAN');
         await node.click();
 
@@ -103,6 +104,7 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await node.click();
 
         // Checking the cancelled text exists in the mat cards
+        await page.waitForXPath('//strong[contains(.,\'Invalid Receipt 2\')]');
         nodes = await containsAll('span', 'This fee receipt is cancelled');  //count check
         expect(nodes.length).toBe(2);
 
@@ -122,6 +124,7 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await page.waitForXPath('//input');
         [node] = await page.$x('//input');
         await node.type('9617159429');
+         await page.waitForXPath('//span[contains(.,\'VIJAY PARCHHE\')]');
         node = await getNode('span', 'VIJAY PARCHHE');
         await node.click();
 
