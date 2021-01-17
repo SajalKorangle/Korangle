@@ -95,7 +95,7 @@ describe('Fees 3.0 -> Total Collection', () => {
             await dialog.dismiss();
         });
 
-        [node] = await page.$x(' //a[contains(text(),\'Cancel Receipt\')]');
+        [node] = await page.$x('//a[contains(text(),\'Cancel Receipt\')]');
         node.click();
         await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
 

@@ -86,7 +86,7 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await node.click();
 
         // Checking mat card ( Fee receipts ) is 2 for this student
-        await page.waitForXPath('//mat-card');
+        await page.waitForXPath('//mat-card[2]');
         nodes = await containsAll('mat-card', '');  //count check
         expect(nodes.length).toBe(2);
 
@@ -139,9 +139,10 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
          [node] = await page.$x('//mat-dialog-container//following::textarea[1]');
         await node.type('Invalid Receipt 3');
-        await page.waitForTimeout(1000);
+
+         await page.waitForXPath('//mat-dialog-container//following::button[2]');
          [node] = await page.$x('//mat-dialog-container//following::button[2]');  // click show subject filter button
-        node.click();
+         node.click();
 
         // Checking the cancelled text exists in the mat cards
         nodes = await containsAll('span', 'This fee receipt is cancelled');  //count check
