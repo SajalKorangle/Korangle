@@ -123,8 +123,9 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         // Entering the Parent Number and selecting the parent
         await page.waitForXPath('//input');
         [node] = await page.$x('//input');
-        await node.type('9617');
-        node = await getNode('span', 'VIJAY PARCHHE');
+        await node.type('9617159429');
+        await page.waitForXPath('//mat-option[contains(.,\'VIJAY PARCHHE\')]');
+        node = await getNode('mat-option', 'VIJAY PARCHHE');
         await node.click();
 
         // Checking mat card is only one
