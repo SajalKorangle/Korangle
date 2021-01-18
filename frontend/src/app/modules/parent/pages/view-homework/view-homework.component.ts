@@ -184,7 +184,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     }
 
     @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-        if((document.documentElement.clientHeight + document.documentElement.scrollTop + 1) > document.documentElement.scrollHeight && this.loadMoreHomework == true){
+        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreHomework == true){
             this.serviceAdapter.loadMoreHomeworks();
         }
     } 
