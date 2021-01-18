@@ -29,6 +29,10 @@ def which_digit(html):  # because the numbers in just-dial are in this format
     return mapping_dict.get(html, '')
 
 
+def get_address(body):
+    return body.find('span', {'class': 'cont_fl_addr'}).text.strip()
+
+
 def get_phone_number(body):
     i = 0
     phone_no = "No Number!"
@@ -47,11 +51,11 @@ def get_phone_number(body):
                     pass
     except:
         pass
-    body = body['data-href']
-    soup = BeautifulSoup(body, 'html.parser')
-    for a in soup.find_all('a', {"id": "whatsapptriggeer"}):
-        # print (a)
-        phone_no = str(a['href'][-10:])
+
+    phone_no = phone_no.replace("-", "", 1)
+    phone_no = phone_no.replace("+(91)", "", 1)
+    if phone_no.startswith('0'):
+        phone_no = phone_no.replace("0", "", 1)
 
     return phone_no
 
@@ -71,7 +75,7 @@ def scroll_to_bottom(body):
 
 # main start from here
 cityList = ['Bhopal']
-fields = ['School Name', 'Mobile Number', 'Telephone Number']
+fields = ['School Name', 'Mobile Number', 'Telephone Number', 'Address']
 max_page = 50
 
 for city in cityList:
@@ -79,7 +83,9 @@ for city in cityList:
     file_name = "%s Shools.csv" % city
     out_file = open(file_name, "w")
     csv_writer = csv.DictWriter(out_file, delimiter=',', fieldnames=fields)
-    csv_writer.writerow({'School Name': 'School Name', 'Mobile Number': 'Mobile Number', 'Telephone Number': 'Telephone Number'})
+    csv_writer.writerow(
+        {'School Name': 'School Name', 'Mobile Number': 'Mobile Number', 'Telephone Number': 'Telephone Number',
+         'Address': 'Address'})
     while max_page + 1 > page_number:
 
         # initializing driver on every page because Just Dial is not allowing to pass through next pages using selenium
@@ -87,24 +93,28 @@ for city in cityList:
         url = "https://www.justdial.com/%s/Schools/nct-10422444/page-%s" % (city, page_number)
         driver.get(url)
         scroll_to_bottom(driver)  # scrolling to the bottom
-        time.sleep(30)
+        time.sleep(30)  # waiting for all the loading to complete
         page = driver.page_source
         soup = BeautifulSoup(page, features='html.parser')
         services = soup.find_all('li', {'class': 'cntanr'})
+        if len(services) < 10:
+            page_number = max_page
 
         for school_html in services:
 
             dict_service = {}
             name = get_school_name(school_html)
             phone = get_phone_number(school_html)
-
+            address = get_address(school_html)
             if name is not None:
                 dict_service['School Name'] = name
             if phone is not None:
-                if phone.count('-') >= 2:
+                if phone.count('-') >= 1:
                     dict_service['Telephone Number'] = phone
                 else:
                     dict_service['Mobile Number'] = phone
+            if address is not None:
+                dict_service['Address'] = address
 
             # Write row to CSV
             csv_writer.writerow(dict_service)
