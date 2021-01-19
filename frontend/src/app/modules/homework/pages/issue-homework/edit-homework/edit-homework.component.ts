@@ -95,5 +95,15 @@ export interface ImagePreviewDialogData {
         return isMobile();
     }
 
+    isCreateButtonDisabled(str: string): boolean{
+        if(str == null){
+            return true;
+        }
+        if((str.trim()).length == 0){
+            return true;
+        }
+        return false;
+    }
+
 }
 

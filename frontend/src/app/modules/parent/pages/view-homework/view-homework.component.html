@@ -305,9 +305,9 @@
                     &nbsp;</span><i>{{displayDateTime(toSubmitHomework.startDate, toSubmitHomework.startTime)}}</i> <br>
                 <span style="color: #7b7b7b;">Due On:
                     &nbsp;</span><i>{{displayDateTime(toSubmitHomework.endDate, toSubmitHomework.endTime)}}</i> <br>
-                <span style="color: #7b7b7b;">Submission On On:
-                    &nbsp;</span><i>{{displayDateTime(toSubmitHomework.submissionDate,
-                    toSubmitHomework.submissionTime)}}</i> <br>
+                <span style="color: #7b7b7b;" *ngIf="toSubmitHomework.submissionDate != NULL">Submitted On:
+                    &nbsp;</span><i *ngIf="toSubmitHomework.submissionDate != NULL">{{displayDateTime(toSubmitHomework.submissionDate,
+                    toSubmitHomework.submissionTime)}} <br></i>
                 <span style="color: #7b7b7b;">Teacher's Remark:
                     &nbsp;</span><i>{{toSubmitHomework.homeworkRemark}}</i>
                 <div style="margin-top: 30px;">

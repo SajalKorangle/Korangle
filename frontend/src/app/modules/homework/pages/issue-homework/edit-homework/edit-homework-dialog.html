@@ -1,11 +1,16 @@
 <h1 mat-dialog-title>EDIT HOMEWORK</h1>
 <mat-dialog-content style="max-height: 80vh;">
-    <div class="row col-md-12">
-        <span class="hidden-xs" style="color: #7b7b7b;">Homework Title: &nbsp;</span>
-        <mat-form-field style="margin-right: 15px;">
-            <input type="text" matInput [ngModel]="data.homeworkName"
-            (ngModelChange)="data.homeworkName=$event;">
-        </mat-form-field>
+    <div class="row">
+        <div class="col-md-10">
+            <span class="hidden-xs" style="color: #7b7b7b;">Homework Title: &nbsp;</span>
+            <mat-form-field style="margin-right: 15px;">
+                <input type="text" matInput [ngModel]="data.homeworkName"
+                (ngModelChange)="data.homeworkName=$event;">
+            </mat-form-field>
+        </div>
+        <div class="col-md-2">
+            <span *ngIf="isCreateButtonDisabled(data.homeworkName);" style="color: red;font-size: small;">Please Enter A Valid Homework Name<br></span>
+        </div>
     </div>
 
     <div class="row col-md-12">
@@ -63,6 +68,6 @@
 
 <mat-dialog-actions>
     <span style='font-size:17px;'>Confirm Changes:</span>
-    <span class="cursor" style="font-size:20px;margin-left: 10px;color:green;border-style: solid;" [mat-dialog-close]="data.editRequired" cdkFocusInitial>&#x2714;</span>
     <span class="cursor" style="font-size:20px;margin-left: 15px;color:red;border-style: solid;" (click)="onNoClick()">&#x2716;</span>
+    <span class="cursor" *ngIf="!isCreateButtonDisabled(data.homeworkName);" style="font-size:20px;margin-left: 10px;color:green;border-style: solid;" [mat-dialog-close]="data.editRequired" cdkFocusInitial>&#x2714;</span>
 </mat-dialog-actions>

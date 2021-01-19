@@ -224,12 +224,10 @@ export class IssueHomeworkComponent implements OnInit {
         if(str == null){
             return true;
         }
-        for(let i=0;i<str.length ;i++){
-            if(str != ' '){
-                return false;
-            }
+        if((str.trim()).length == 0){
+            return true;
         }
-        return true;
+        return false;
     }
 
 
