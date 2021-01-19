@@ -11,6 +11,7 @@ import { PageResolutionDialogComponent } from './../../../components/page-resolu
 import { ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component';
 import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
 import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
+import { TableParameterPannelComponent } from './../../../components/table-parameter-pannel/table-parameter-pannel.component';
 
 @NgModule({
   declarations: [DesignReportCardComponent],
@@ -21,6 +22,7 @@ import { GradeRulesDialogComponent } from './../../../components/grade-rules-dia
     MatButtonToggleModule,
     MatIconModule,
     ParametersPannelModule,
+    TableParameterPannelComponent
   ],
   entryComponents: [
     CustomVariablesDialogComponent,

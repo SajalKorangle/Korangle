@@ -608,7 +608,7 @@ export class CanvasTable extends BaseLayer implements Layer{
     width: number = 0;
 
     tableStyle:{[key:string]: any} = {
-        'strokeStyle': 'black',
+        strokeStyle: 'black',
     };
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {

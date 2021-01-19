@@ -1,0 +1,32 @@
+<mat-card style="padding: 0; width: 100%; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">backup_table</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+
+        
+        <mat-form-field style="max-width: 50px;">
+            <mat-label>
+                X(mm)
+            </mat-label>
+            <input matInput type="number" step="1" [ngModel]="(layer.x*getPixelTommFactor()).toFixed(2)" (ngModelChange)="layer.x=$event/getPixelTommFactor(); canvasRefresh();">
+        </mat-form-field>
+
+        <mat-form-field style="max-width: 50px; margin-left: 40px;">
+            <mat-label>
+                Y(mm)
+            </mat-label>
+            <input matInput type="number" [ngModel]="(layer.y*getPixelTommFactor()).toFixed(2)" (ngModelChange)="layer.y=$event/getPixelTommFactor(); canvasRefresh();">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                Stroke Color
+            </mat-label>
+            <input matInput type="color" [value]="layer.tableStyle.strokeStyle" (input)="layer.tableStyle.strokeStyle=$event.target.value; canvasRefresh(0);"/>
+        </mat-form-field>
+        
+
+        
+    </div>
+</mat-card>

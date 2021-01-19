@@ -13,14 +13,16 @@ import { ResultDialogComponent } from './result-dialog/result-dialog.component'
 import { ImageParametersPannelComponent } from './image-parameters-pannel/image-parameters-pannel.component';
 import { GradeRulesDialogComponent } from './grade-rules-dialog/grade-rules-dialog.component';
 import { MarksDialogComponent } from './marks-dialog/marks-dialog.component';
-import { CustomMenuComponent } from './custom-menu/custom-menu.component'
+import { CustomMenuComponent } from './custom-menu/custom-menu.component';
+import { TableParameterPannelComponent } from './table-parameter-pannel/table-parameter-pannel.component'
 
 @NgModule({
   declarations: [TextParametersPannelComponent, AttendanceParametersPannelComponent, PositionParameterPannelComponent, MarksParametersPannelComponent, CustomVariablesDialogComponent, FormulaParametersPannelComponent, PageResolutionDialogComponent, ResultDialogComponent,
     ImageParametersPannelComponent,
     GradeRulesDialogComponent,
     MarksDialogComponent,
-    CustomMenuComponent],
+    CustomMenuComponent,
+    TableParameterPannelComponent],
   imports: [
     ComponentsModule,
     MatButtonToggleModule,
@@ -38,7 +40,8 @@ import { CustomMenuComponent } from './custom-menu/custom-menu.component'
     ResultDialogComponent,
     GradeRulesDialogComponent,
     MarksDialogComponent,
-    CustomMenuComponent
+    CustomMenuComponent,
+    TableParameterPannelComponent
   ]
 })
 export class ParametersPannelModule { }

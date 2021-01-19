@@ -284,8 +284,16 @@
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-formula-parameters-pannel>
                 </div>
+
                 <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('result')" class="parameters-tool" style="margin:0; width: 100%; text-align: center;">
                     <button class="btn" style="padding: 8px;" (click)="htmlAdapter.openResultDialog(canvasAdapter.activeLayer)">Result Configuration</button>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('table')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-table-parameter-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-table-parameter-pannel>
                 </div>
 
             </mat-card>
