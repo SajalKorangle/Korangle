@@ -588,6 +588,115 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
 }
 
+class TableRow{
+    height: number = 20; // in pixels
+}
+
+class TableColumn{
+    width: number = 50; // in pixels
+}
+
+export class CanvasTable extends BaseLayer implements Layer{
+    displayName: string = 'Table';
+
+    rowsList: Array<TableRow> = [];
+    columsList: Array<TableColumn> = [];
+    rowCount: number = 0;
+    columnCount: number = 0;
+
+    height: number = 0;
+    width: number = 0;
+
+    tableStyle:{[key:string]: any} = {
+        'strokeStyle': 'black',
+    };
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('table');
+        
+        this.x = 50 / ca.pixelTommFactor;
+        this.y = 50 / ca.pixelTommFactor;
+
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.layerDataUpdate();
+            this.updateTableMetrix();
+        }
+
+        this.LAYER_TYPE = 'TABLE';
+    }
+
+    initilizeSelf(attributes:object): void {
+        super.initilizeSelf(attributes);
+        while (this.rowsList.length < this.rowCount) {
+            this.rowsList.push(new TableRow);
+        }
+        while (this.columsList.length < this.columnCount) {
+            this.columsList.push(new TableColumn);
+        }
+    }
+
+    layerDataUpdate(): void {
+    }
+
+    updateTableMetrix(): void{
+        this.height = 0;
+        this.width = 0;
+
+        this.rowsList.forEach(tableRow => {
+            this.height += tableRow.height;
+        });
+
+        this.columsList.forEach(tableColumn => {
+            this.width += tableColumn.width;
+        })
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        let pointerX = this.x;
+        let pointerY = this.y;
+        Object.entries(this.tableStyle).forEach(([key, value]) => ctx[key] = value);
+
+        this.rowsList.forEach(tableRow => {
+            this.columsList.forEach(tableColumn => {
+                ctx.strokeRect(pointerX, pointerY, tableColumn.width, tableRow.height);
+                pointerX += tableColumn.width;
+            });
+            pointerX = this.x;
+            pointerY += tableRow.height;
+        });
+
+        return true;    // Drawn successfully on canvas
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {
+        return (mouseX > this.x - permissibleClickError
+            && mouseX < this.x + this.width + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y+this.height+permissibleClickError)
+    }
+
+    scale(scaleFactor: number): void {
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+
+        this.rowsList.forEach(row => {
+            row.height *= scaleFactor;
+        });
+
+        this.columsList.forEach(column => {
+            column.width *= scaleFactor;
+        });
+
+        this.updateTableMetrix();
+    }
+
+    getDataToSave() {
+       // to be implemented
+    }
+};
+
 export class CanvasText extends BaseLayer implements Layer{
     displayName: string = 'Text';
     text: string = 'Lorem Ipsum';    
@@ -609,8 +718,6 @@ export class CanvasText extends BaseLayer implements Layer{
         font: ' normal 12px Arial',
     };
     underline?: boolean;
-    parameterToolPannels: string[] = ['text'];
-    ca: DesignReportCardCanvasAdapter;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
         super(ca);

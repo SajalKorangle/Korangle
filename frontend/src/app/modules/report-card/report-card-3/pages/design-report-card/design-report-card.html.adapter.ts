@@ -1,7 +1,6 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, DATA_SOUCE_TYPE, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer } from './../../../class/constants_3';
+import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer} from './../../../class/constants_3';
 import { PageResolutionDialogComponent } from './../../../components/page-resolution-dialog/page-resolution-dialog.component';
-import { CustomVariablesDialogComponent} from './../../../components/custom-variables-dialog/custom-variables-dialog.component'
 import {ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component'
 import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
 import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
@@ -24,6 +23,11 @@ export class DesignReportCardHtmlAdapter {
     customMenuDisplay:boolean = false;
     customMenuTop: number = 0;
     customMenuLeft: number = 0;
+
+    tableToolbarAssistanceRowCount = 12;
+    tableToolbarAssistanceColumnCount = 20;
+    newTableRowCount = 0;
+    newTableColumnCount = 0;
 
     activeLeftColumn: string = 'layers';
 
@@ -162,13 +166,19 @@ export class DesignReportCardHtmlAdapter {
     openContextMenu(event: MouseEvent): void{
         this.customMenuDisplay = true;
 
-        let layersListContainerRect = document.getElementById('layersListContainer').getBoundingClientRect();
+        let layersListContainerRect = document.getElementById('canvasDesigningWrapper').getBoundingClientRect();
         this.customMenuLeft = event.x - layersListContainerRect.left;
         this.customMenuTop = event.y - layersListContainerRect.top;
     }
 
     closeContextMenu(): void{
         this.customMenuDisplay = false;
+    }
+
+    getArrayOfLength(length: number): Array<number> {
+        let resultArray = [...Array(length + 1).keys()];
+        resultArray.splice(0, 1);
+        return resultArray;
     }
 
 }

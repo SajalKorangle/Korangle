@@ -9,7 +9,8 @@ import {
     PageResolution,
     PAGE_RESOLUTIONS,
     Result,
-    GradeRuleSet
+    GradeRuleSet,
+    CanvasTable
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -386,6 +387,12 @@ export class DesignReportCardCanvasAdapter {
         let result = new Result(initialParameters, this);
         this.newLayerInitilization(result);
         return result;
+    }
+
+    newTableLayer(initialParameters: object = {}): CanvasTable{
+        let canavsTable = new CanvasTable(initialParameters, this);
+        this.newLayerInitilization(canavsTable);
+        return canavsTable;
     }
 
     newLayerInitilization(layer: Layer): void{

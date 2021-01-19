@@ -101,6 +101,25 @@
             </div>
 
             <div class="tool">
+                <button class="btn material-icons"
+                        (click)="logMessage('table added')"
+                        mat-button [matMenuTriggerFor]="tableMenu" >backup_table</button>
+                <mat-menu #tableMenu="matMenu">
+                    <div style="display: flex; flex-direction: column; margin: 4px 12px;" (click)="canvasAdapter.newTableLayer({rowCount: htmlAdapter.newTableRowCount, columnCount: htmlAdapter.newTableColumnCount})">
+                        <div style="width: 100%; display: flex; flex-direction: row;justify-content: space-between;"
+                                *ngFor="let row of htmlAdapter.getArrayOfLength(htmlAdapter.tableToolbarAssistanceRowCount);">
+                            <ng-container *ngFor="let col of htmlAdapter.getArrayOfLength(htmlAdapter.tableToolbarAssistanceColumnCount);">
+                                <span style="height: 10px; width: 10px;; margin: 1px"
+                                    [style.backgroundColor]="row<=htmlAdapter.newTableRowCount&&col<=htmlAdapter.newTableColumnCount?'blue':'lightgrey'"
+                                    (mouseover)="htmlAdapter.newTableColumnCount = col; htmlAdapter.newTableRowCount=row;">
+                                </span>
+                            </ng-container>
+                        </div>
+                    </div>
+                </mat-menu>
+            </div>
+
+            <div class="tool">
                 <button class="btn" style="padding: 8px;"
                         (click)="htmlAdapter.openCustomVariableDialog(canvasAdapter.newFormulaLayer())">FORMULA</button>
             </div>
@@ -128,7 +147,18 @@
 
 
 
-        <div class="flex-row" style="margin-top: 8px; width: 100%; height: calc(100vh - 90px); justify-content: space-between;">
+        <div class="flex-row" style="margin-top: 8px; width: 100%; height: calc(100vh - 90px); justify-content: space-between; position: relative;" id="canvasDesigningWrapper">
+
+            <!--Custom Context Menu-->
+            <ng-container *ngIf="htmlAdapter.customMenuDisplay">
+                <app-custom-menu [left]="htmlAdapter.customMenuLeft"
+                        [top]="htmlAdapter.customMenuTop"
+                        [layer]="canvasAdapter.activeLayer" 
+                        [ca]="canvasAdapter" 
+                        [layerIndex]="canvasAdapter.activeLayerIndex"
+                        (closeMenu)="htmlAdapter.closeContextMenu()">
+                    </app-custom-menu>
+            </ng-container>
 
             <!-- column1: Left Pannel -->
             <mat-card class="inline-block" style="width: 240px; padding: 4px;" class="leftPannel bg-grey">
@@ -168,7 +198,7 @@
                 
                 <!-- Layers Column -->
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
-                    <div class="flex-column inner-content" style="flex-direction: column-reverse; position: relative; overflow: visible;" id="layersListContainer">
+                    <div class="flex-column inner-content" style="flex-direction: column-reverse; position: relative; overflow: visible;">
                         <ng-container *ngFor="let layer of canvasAdapter.layers; index as i">
                             <hr style="margin:0; background-color: gray; height: 3px; display: none;" [id]="layer.id"/>
                             <span *ngIf="layer" draggable="true" 
@@ -184,15 +214,6 @@
                                 <span (blur)="layer.displayName=$event.target.innerText" style="display: inline-block;" contenteditable="true"> {{layer.displayName}} </span>   <!--this is layer name-->
                                 <span style="float: right; margin-right: 12px;">#{{layer.id}}</span>   <!-- i is id which is the array index no.of layers -->
                             </span>
-                        </ng-container>
-                        <ng-container *ngIf="htmlAdapter.customMenuDisplay">
-                            <app-custom-menu [left]="htmlAdapter.customMenuLeft"
-                                    [top]="htmlAdapter.customMenuTop"
-                                    [layer]="canvasAdapter.activeLayer" 
-                                    [ca]="canvasAdapter" 
-                                    [layerIndex]="canvasAdapter.activeLayerIndex"
-                                    (closeMenu)="htmlAdapter.closeContextMenu()">
-                                </app-custom-menu>
                         </ng-container>
                     </div>
                 </ng-container>
