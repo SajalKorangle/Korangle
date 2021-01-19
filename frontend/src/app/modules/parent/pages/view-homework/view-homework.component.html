@@ -238,7 +238,8 @@
 
                         <div><strong>Answers</strong><br></div>
                         <mat-form-field style="width: 100%;" *ngIf="isSubmitting == true">
-                            <textarea matInput cdkTextareaAutosize style="white-space: pre-wrap;"
+                            <textarea matInput cdkTextareaAutosize
+                                style="padding-top: 10px; padding-bottom: 20px;"        
                                 [ngModel]="toSubmitHomework.answerText"
                                 (ngModelChange)="toSubmitHomework.answerText=$event" placeholder="Enter Answer Text">
                             </textarea>
@@ -337,7 +338,7 @@
                         <mat-form-field style="width: 100%;">
                             <span style="color: #7b7b7b;">Answer:</span> <br>
                             <textarea matInput cdkTextareaAutosize
-                                style="padding-top: 10px; padding-bottom: 10px; white-space: pre-wrap;"
+                                style="padding-top: 10px; padding-bottom: 20px;"        
                                 [ngModel]="toSubmitHomework.answerText" (ngModelChange)="toSubmitHomework.answerText=$event">
                                 </textarea>
                         </mat-form-field>
