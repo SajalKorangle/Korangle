@@ -19,6 +19,14 @@ export class ImageParametersPannelComponent implements OnInit {
   logMessage(tag, msg) {
     console.log(tag, msg);
   }
+
+  getImageHeight(): any{
+    return Math.round(this.layer.height*this.getPixelTommFactor() * 100) / 100;
+  }
+
+  getImageWidth(): any{
+    return Math.round(this.layer.width*this.getPixelTommFactor() * 100) / 100;
+  }
   
   getPixelTommFactor(): number{
     return this.layer.ca.pixelTommFactor;

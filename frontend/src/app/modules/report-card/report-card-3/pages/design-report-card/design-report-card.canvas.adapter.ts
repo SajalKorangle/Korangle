@@ -28,7 +28,7 @@ export class DesignReportCardCanvasAdapter {
     virtualContext: CanvasRenderingContext2D;
 
     actualresolution: PageResolution = PAGE_RESOLUTIONS[1] // A4 size by default
-    dpi: number = 300;
+    dpi: number = 72;
 
     canvas: HTMLCanvasElement;  // html canvas rendered on screen
     context: CanvasRenderingContext2D;
@@ -57,7 +57,10 @@ export class DesignReportCardCanvasAdapter {
     virtualPendingReDrawId: any;
     pendingReDrawId: any;
     shape: any;
-
+    currentZoom = 100;
+    originalHeight: any;
+    originalWidth: any;
+    
     constructor() {
     }
 
@@ -93,6 +96,10 @@ export class DesignReportCardCanvasAdapter {
 
         console.log('virtual canvas : ', this.virtualCanvas);
         console.log('virtual context: ', this.virtualContext);
+        
+        this.originalWidth = this.canvas.width;
+        this.originalHeight = this.canvas.height;
+        this.currentZoom = 100;
  
         this.applyDefaultbackground();
 
@@ -148,27 +155,29 @@ export class DesignReportCardCanvasAdapter {
     }
 
     increaseCanvasSize():any{
-        console.log(this.actualresolution);
-        this.canvas.width = this.canvas.width + 30;
-        this.canvas.height = this.canvas.height + 30;
+        this.currentZoom += 25;
+        this.canvas.height = this.currentZoom*this.originalHeight/100;
+        this.canvas.width = this.currentZoom*this.originalWidth/100;
         this.canvasSizing();
+        
     }
     decreaseCanvasSize():any{
-        this.canvas.width = this.canvas.width - 30;
-        this.canvas.height = this.canvas.height - 30;
+        this.currentZoom -= 25;
+        this.canvas.height = this.currentZoom*this.originalHeight/100;
+        this.canvas.width = this.currentZoom*this.originalWidth/100;
         this.canvasSizing();
         
     }
 
     maximumCanvasSize():boolean{
-        if(this.canvas && (this.canvas.height> 850 || this.canvas.width > 650)){
+        if(this.canvas && (this.canvas.height/this.actualresolution.getHeightInPixel(this.dpi) >= 2)){  
             return true;
         }
         return false;
     }
 
     minimumCanvasSize():boolean{
-        if(this.canvas && (this.canvas.height < 100 || this.canvas.width < 100)){
+        if(this.canvas && (this.canvas.height/this.actualresolution.getHeightInPixel(this.dpi) <= 0.1)){
             return true;
         }
         return false;

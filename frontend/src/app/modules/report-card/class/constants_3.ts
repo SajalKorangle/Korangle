@@ -1039,11 +1039,11 @@ export class CanvasText extends BaseLayer implements Layer{
             boundingBoxTop: textMetrix.actualBoundingBoxAscent,
             boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
         };
-        this.drawUnderline();
     }
 
     drawUnderline():void{
         if(this.underline){
+            console.log('underline');
             this.ctx.beginPath()
             this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
             this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
@@ -1055,12 +1055,6 @@ export class CanvasText extends BaseLayer implements Layer{
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
         ctx.fillText(this.text, this.x, this.y);
-        // if(this.underline){
-        //     ctx.beginPath()
-        //     ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
-        //     ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
-        //     ctx.stroke();
-        // }
         this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }

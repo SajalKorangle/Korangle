@@ -20,6 +20,9 @@ export class ShapeParametersPannelComponent implements OnInit {
     console.log(tag, msg);
   }
 
+  getMeasurementInMM(measurement: any){
+    return Math.round(measurement*this.getPixelTommFactor() * 100) / 100;
+  }
   
   getPixelTommFactor(): number{
     return this.layer.ca.pixelTommFactor;

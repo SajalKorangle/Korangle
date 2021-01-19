@@ -13,9 +13,9 @@
 
         <div style="text-align: center;">
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">
-            <mat-button-toggle value="bold" [checked]="isBold()" (change)="boldToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_bold</span></mat-button-toggle>
-            <mat-button-toggle value="italic" [checked]="isItalics()" (change)="italicToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_italic</span></mat-button-toggle>
-            <mat-button-toggle value="true" [checked]="isUnderline()" (change)="underlineToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_underline</span></mat-button-toggle>
+            <mat-button-toggle value="bold" [checked]="isBold()" (change)="boldToggle($event);layer.updateTextBoxMetrics(); canvasRefresh(0);"><span class="material-icons">format_bold</span></mat-button-toggle>
+            <mat-button-toggle value="italic" [checked]="isItalics()" (change)="italicToggle($event);layer.updateTextBoxMetrics(); canvasRefresh(0);"><span class="material-icons">format_italic</span></mat-button-toggle>
+            <mat-button-toggle value="true" [checked]="isUnderline()" (change)="underlineToggle($event);layer.updateTextBoxMetrics(); canvasRefresh(0);"><span class="material-icons">format_underline</span></mat-button-toggle>
         </mat-button-toggle-group>
         </div>
 
@@ -23,7 +23,7 @@
             <mat-label>
                 Font Size(mm)
             </mat-label>
-            <input matInput type="number" [ngModel]="getFontSize()" (ngModelChange)="updateFontSize($event); canvasRefresh(500, layer.updateTextBoxMetrics);">
+            <input matInput type="number" [ngModel]="getFontSize()" (ngModelChange)="updateFontSize($event);layer.updateTextBoxMetrics(); canvasRefresh(500);">
         </mat-form-field>
 
         <mat-form-field>
@@ -38,7 +38,7 @@
             <mat-label>Font Family</mat-label>
             <mat-select placeholder="Select Font Family"
                     [ngModel]="getFontFamily()"
-                    (ngModelChange)="changeFont($event); canvasRefresh(0, layer.updateTextBoxMetrics);">
+                    (ngModelChange)="changeFont($event);layer.updateTextBoxMetrics() ;canvasRefresh(0);">
                 <mat-option *ngFor="let font of fontFamilyList" [value]="font">
                     {{font.displayName}}
                 </mat-option>
