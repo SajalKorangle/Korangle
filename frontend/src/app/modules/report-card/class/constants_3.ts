@@ -1,6 +1,8 @@
-import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
+// import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
-
+interface DesignReportCardCanvasAdapter{
+    [key: string]: any;
+}
 
 const FormulaParser = require('hot-formula-parser').Parser;
 
@@ -1233,8 +1235,6 @@ export function getParser(layers: Layer[]) {
 export class Formula extends CanvasText implements Layer{
     displayName: string = 'Formula';
 
-    // customVariables: CustomVariable[] = []; 
-    // formulaVariable: FormulaVariable;
     formula: string= '';
     decimalPlaces: number = 1;
     marks: number = null;

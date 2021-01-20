@@ -11,6 +11,11 @@ const routes: Routes = [
         data: {moduleName: 'report_card_3.0'}, // TODO: These should be called modulePath instead of moduleName everywhwere
     },
     {
+        path: 'generate_report_card',
+        loadChildren: 'app/modules/report-card/report-card-3/pages/generate-report-card/generate-report-card.module#GenerateReportCardModule',
+        data: {moduleName: 'report_card_3.0'}, // TODO: These should be called modulePath instead of moduleName everywhwere
+    },
+    {
         path: '',
         component: ReportCardComponent,
     },
