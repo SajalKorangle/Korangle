@@ -24,7 +24,7 @@ export class DesignReportCardHtmlAdapter {
     customMenuTop: number = 0;
     customMenuLeft: number = 0;
 
-    tableToolbarAssistanceRowCount = 12;
+    tableToolbarAssistanceRowCount = 20;
     tableToolbarAssistanceColumnCount = 20;
     newTableRowCount = 0;
     newTableColumnCount = 0;
@@ -93,19 +93,6 @@ export class DesignReportCardHtmlAdapter {
         }  
     }
 
-    openCustomVariableDialog(formulaLayer: Formula) {
-        // this.openedDialog = this.vm.dialog.open(CustomVariablesDialogComponent, {
-        //     data: {
-        //         layer: formulaLayer,
-        //         ca: this.vm.canvasAdapter
-        //     }
-        // });
-        // this.openedDialog.afterClosed().subscribe(() => {
-        //     formulaLayer.layerDataUpdate();
-        //     this.vm.canvasAdapter.scheduleCanvasReDraw();
-        // })
-    }
-
     openPageResolutionDialog():void {
         this.openedDialog = this.vm.dialog.open(PageResolutionDialogComponent, {
             data: {
@@ -167,8 +154,8 @@ export class DesignReportCardHtmlAdapter {
         this.customMenuDisplay = true;
 
         let layersListContainerRect = document.getElementById('canvasDesigningWrapper').getBoundingClientRect();
-        this.customMenuLeft = event.x - layersListContainerRect.left;
-        this.customMenuTop = event.y - layersListContainerRect.top;
+        this.customMenuLeft = event.x - layersListContainerRect.left+5;
+        this.customMenuTop = event.y - layersListContainerRect.top+5;
     }
 
     closeContextMenu(): void{

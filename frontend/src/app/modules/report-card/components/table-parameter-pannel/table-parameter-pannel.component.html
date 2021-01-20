@@ -1,22 +1,40 @@
-<mat-card style="padding: 0; width: 100%; overflow: hidden;">
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
     <div style="background-color: grey; text-align: center;">
         <i class="material-icons" style="margin-top: 4px;">backup_table</i>
     </div>
     <div style="margin: 4px; padding: 4px;">
 
-        
-        <mat-form-field style="max-width: 50px;">
+        <div style="display: flex; flex-direction: column; margin: 6px; margin-bottom: 12px;">
+            <div style="width: 100%; display: flex; flex-direction: row;"
+                    *ngFor="let row of layer.rowsList">
+                <ng-container *ngFor="let column of layer.columnsList">
+                    <span style="height: 10px; width: 10px;; margin: 1px; cursor: pointer;"
+                         (click)="selectedRow=row; selectedColumn = column;"
+                         [style.backgroundColor]="selectedColumn==column&&selectedRow==row?'blue':'lightgrey'">
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+
+        <mat-form-field>
             <mat-label>
-                X(mm)
+                Row Height(mm)
             </mat-label>
-            <input matInput type="number" step="1" [ngModel]="(layer.x*getPixelTommFactor()).toFixed(2)" (ngModelChange)="layer.x=$event/getPixelTommFactor(); canvasRefresh();">
+            <input matInput type="number" [ngModel]="(selectedRow.height*getPixelTommFactor()).toFixed(2)" (ngModelChange)="selectedRow.height= $event/getPixelTommFactor() ;layer.updateTableMetrix(); canvasRefresh()"/>
         </mat-form-field>
 
-        <mat-form-field style="max-width: 50px; margin-left: 40px;">
+        <mat-form-field>
             <mat-label>
-                Y(mm)
+                Column Width(mm)
             </mat-label>
-            <input matInput type="number" [ngModel]="(layer.y*getPixelTommFactor()).toFixed(2)" (ngModelChange)="layer.y=$event/getPixelTommFactor(); canvasRefresh();">
+            <input matInput type="number" [ngModel]="(selectedColumn.width*getPixelTommFactor()).toFixed(2)" (ngModelChange)="selectedColumn.width = $event/getPixelTommFactor(); layer.updateTableMetrix(); canvasRefresh()"/>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                Stroke Weight(mm)
+            </mat-label>
+            <input matInput type="number" [ngModel]="(layer.tableStyle.lineWidth*getPixelTommFactor()).toFixed(2)" (ngModelChange)="layer.tableStyle.lineWidth = $event/getPixelTommFactor(); layer.updateTableMetrix(); canvasRefresh()"/>
         </mat-form-field>
 
         <mat-form-field>
@@ -25,8 +43,6 @@
             </mat-label>
             <input matInput type="color" [value]="layer.tableStyle.strokeStyle" (input)="layer.tableStyle.strokeStyle=$event.target.value; canvasRefresh(0);"/>
         </mat-form-field>
-        
-
-        
+              
     </div>
 </mat-card>

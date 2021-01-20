@@ -8,7 +8,7 @@
             <mat-label>
                 Value
             </mat-label>
-            <input matInput type="text" [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [ngModel]="layer.text" (ngModelChange)="layer.text=$event; canvasRefresh(500, layer.updateTextBoxMetrics);">
+            <input matInput type="text" [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh(500, layer.updateTextBoxMetrics);">
         </mat-form-field>
         
         <mat-form-field *ngIf="layer.LAYER_TYPE =='DATE'">

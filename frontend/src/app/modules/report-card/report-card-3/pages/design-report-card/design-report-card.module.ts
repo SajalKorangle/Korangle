@@ -6,12 +6,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
 import { ParametersPannelModule } from './../../../components/parameters-pannel.module';
 import { MatDialogModule} from '@angular/material/dialog';
-import { CustomVariablesDialogComponent } from './../../../components/custom-variables-dialog/custom-variables-dialog.component';
 import { PageResolutionDialogComponent } from './../../../components/page-resolution-dialog/page-resolution-dialog.component';
 import { ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component';
 import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
 import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
-import { TableParameterPannelComponent } from './../../../components/table-parameter-pannel/table-parameter-pannel.component';
 
 @NgModule({
   declarations: [DesignReportCardComponent],
@@ -22,10 +20,8 @@ import { TableParameterPannelComponent } from './../../../components/table-param
     MatButtonToggleModule,
     MatIconModule,
     ParametersPannelModule,
-    TableParameterPannelComponent
   ],
   entryComponents: [
-    CustomVariablesDialogComponent,
     PageResolutionDialogComponent,
     ResultDialogComponent,
     MarksDialogComponent,

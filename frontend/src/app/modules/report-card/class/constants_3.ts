@@ -286,6 +286,7 @@ export const DPI_LIST: number[] = [
     300,
     200,
     100,
+    72,
     50
 ]
 export interface PageResolution{
@@ -365,7 +366,6 @@ export const EXAMINATION_TYPE_LIST = [
     'Marks', // 0
     'Grades', // 1
     'Remarks', // 2
-    'Marks-To-Grade', // 3
 ];
 
 export const MARKS_TYPE_LIST = [
@@ -434,8 +434,6 @@ export interface Layer{
     decimalPlaces?: number;
     factor?: number;
     marks?: number;
-    formulaVariable?: FormulaVariable;
-    customVariables?: any[];
     formula?:string;
 };
 
@@ -588,19 +586,19 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
 }
 
-class TableRow{
-    height: number = 20; // in pixels
+export class TableRow{
+    height: number = 10;
 }
 
-class TableColumn{
-    width: number = 50; // in pixels
+export class TableColumn{
+    width: number = 30;
 }
 
 export class CanvasTable extends BaseLayer implements Layer{
     displayName: string = 'Table';
 
     rowsList: Array<TableRow> = [];
-    columsList: Array<TableColumn> = [];
+    columnsList: Array<TableColumn> = [];
     rowCount: number = 0;
     columnCount: number = 0;
 
@@ -609,6 +607,7 @@ export class CanvasTable extends BaseLayer implements Layer{
 
     tableStyle:{[key:string]: any} = {
         strokeStyle: 'black',
+        lineWidth: 2,
     };
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
@@ -617,6 +616,7 @@ export class CanvasTable extends BaseLayer implements Layer{
         
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
+        this.tableStyle.lineWidth = 0.5 / ca.pixelTommFactor;
 
         if (initilize) {
             this.initilizeSelf(attributes);
@@ -630,10 +630,14 @@ export class CanvasTable extends BaseLayer implements Layer{
     initilizeSelf(attributes:object): void {
         super.initilizeSelf(attributes);
         while (this.rowsList.length < this.rowCount) {
-            this.rowsList.push(new TableRow);
+            let newTableRow = new TableRow;
+            newTableRow.height /= this.ca.pixelTommFactor;
+            this.rowsList.push(newTableRow);
         }
-        while (this.columsList.length < this.columnCount) {
-            this.columsList.push(new TableColumn);
+        while (this.columnsList.length < this.columnCount) {
+            let newTableRowColumn = new TableColumn;
+            newTableRowColumn.width /= this.ca.pixelTommFactor;
+            this.columnsList.push(newTableRowColumn);
         }
     }
 
@@ -648,7 +652,7 @@ export class CanvasTable extends BaseLayer implements Layer{
             this.height += tableRow.height;
         });
 
-        this.columsList.forEach(tableColumn => {
+        this.columnsList.forEach(tableColumn => {
             this.width += tableColumn.width;
         })
     }
@@ -658,23 +662,31 @@ export class CanvasTable extends BaseLayer implements Layer{
         let pointerY = this.y;
         Object.entries(this.tableStyle).forEach(([key, value]) => ctx[key] = value);
 
-        this.rowsList.forEach(tableRow => {
-            this.columsList.forEach(tableColumn => {
-                ctx.strokeRect(pointerX, pointerY, tableColumn.width, tableRow.height);
-                pointerX += tableColumn.width;
-            });
-            pointerX = this.x;
-            pointerY += tableRow.height;
-        });
+        ctx.strokeRect(pointerX, pointerY, this.width, this.height);
+        ctx.beginPath();
+        for (let i = 0; i < this.rowsList.length - 1; i++){
+            pointerY += this.rowsList[i].height;
+            ctx.moveTo(pointerX, pointerY);
+            ctx.lineTo(pointerX + this.width, pointerY);
+        }
+        pointerY = this.y;
+        for (let i = 0; i < this.columnsList.length - 1; i++){
+            pointerX += this.columnsList[i].width;
+            ctx.moveTo(pointerX, pointerY);
+            ctx.lineTo(pointerX, pointerY+this.height);
+        }
+        ctx.closePath();
+        ctx.stroke();
 
         return true;    // Drawn successfully on canvas
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {
-        return (mouseX > this.x - permissibleClickError
+        let result = (mouseX > this.x - permissibleClickError
             && mouseX < this.x + this.width + permissibleClickError
             && mouseY > this.y - permissibleClickError
-            && mouseY < this.y+this.height+permissibleClickError)
+            && mouseY < this.y + this.height + permissibleClickError);
+        return result;
     }
 
     scale(scaleFactor: number): void {
@@ -685,7 +697,7 @@ export class CanvasTable extends BaseLayer implements Layer{
             row.height *= scaleFactor;
         });
 
-        this.columsList.forEach(column => {
+        this.columnsList.forEach(column => {
             column.width *= scaleFactor;
         });
 
@@ -938,7 +950,7 @@ class AttendanceLayer extends CanvasText implements Layer{
 
 export class GradeLayer extends CanvasText implements Layer{
     displayName: string = 'Grade';
-    examinationId: any = null;
+    parentExamination: any = null;
     subGradeId: any = null;
 
     dataSourceType: string = 'DATA';
@@ -955,7 +967,7 @@ export class GradeLayer extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         const DATA = this.ca.vm.DATA;
-        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.examinationId, this.subGradeId);
+        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination, this.subGradeId);
         this.updateTextBoxMetrics();
     }
 
@@ -963,9 +975,9 @@ export class GradeLayer extends CanvasText implements Layer{
 
 }
 
-export class RemarksLayer extends CanvasText implements Layer{
-    displayName: string = 'Reamrks';
-    examinationId: any = null;
+export class RemarkLayer extends CanvasText implements Layer{
+    displayName: string = 'Examination Remark';
+    parentExamination: any = null;
 
     dataSourceType: string = 'DATA';
     source: { [key: string]: any };    // required attribute
@@ -981,7 +993,7 @@ export class RemarksLayer extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         const DATA = this.ca.vm.DATA;
-        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.examinationId);
+        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination);
         this.updateTextBoxMetrics();
     }
 
@@ -1122,148 +1134,8 @@ export interface CustomVariable{
     evaluate(parser:any): any;
 }
 
-function setCustomFunctionsInParser(parser: any): void {
-    parser.setFunction('SUPP', function(params) {
 
-        // There should be at least 2 numbers and
-        // the final number will decide how many numbers will we choose out of these.
-        if (params.length < 5) {
-            console.log('Insufficient length');
-            return 'Insufficient length';
-        }
-
-        // All parameter arguments should be numbers
-        let flag = true;
-        params.every(argument => {
-           if (isNaN(Number(argument.toString())) || argument<0) {
-               console.log('All parameters are not positive numbers');
-               flag = false;
-               return false;
-           }
-        });
-        if (!flag) {
-            return 'All parameters are not positive numbers';
-        }
-
-        const passingMarks = params[params.length - 3]
-        const allowedSuplementry = params[params.length - 2];
-        const subjectsConsidered = params[params.length - 1];
-
-        if (subjectsConsidered + 3 > params.length)
-            return 'Subjects Considered cannot be more than given subject'
-
-        const marksList = params.slice(0, -3);  // removing last 3 arguments
-        const passSubjectCount: any[] = marksList.filter(marks => marks >= passingMarks).length;
-        const failedSubjectCount = marksList.filter(marks => marks < passingMarks).length;
-        const subjectCount = marksList.length;
-        const subjectsNotConsidered = subjectCount - subjectsConsidered;
-
-        if (passSubjectCount >= subjectsConsidered)
-            return 'PASS';
-        else if (failedSubjectCount - subjectsNotConsidered <= allowedSuplementry)
-            return `SUPPLEMENTRY(${failedSubjectCount - subjectsNotConsidered})`
-        return 'FAIL'
-
-    });
-}
-
-export function getParser(customVariablesList: CustomVariable[]) {
-    const PARSER = new FormulaParser();
-    setCustomFunctionsInParser(PARSER);
-    customVariablesList.forEach((variable: CustomVariable) => {
-        if (variable.type != 'FORMULA') 
-            PARSER.setVariable(variable.name, variable.evaluate(PARSER));
-    });
-    customVariablesList.forEach((variable: CustomVariable) => {
-        if (variable.type == 'FORMULA')
-            PARSER.setVariable(variable.name, variable.evaluate(PARSER));
-    });
-    return PARSER;
-}
-
-export class BaseVariable{
-    id: number;
-    parent: any;
-    type: string;
-    name: string = 'variable';
-    constructor(id: number, parent:any) {
-        this.parent = parent;
-        this.id = id;
-        this.name += `_${this.id}`;
-    }
-}
-
-export class ConstantVariable extends BaseVariable implements CustomVariable{
-    type: string = 'CONSTANT';
-    value: number = 0;
-    constructor(id:number, parent:any) {
-        super(id, parent);
-    }
-    evaluate(parser:any): number{
-        return this.value;
-    }
-}
-
-export class LayerVariable extends BaseVariable implements CustomVariable{
-    type: string = 'LAYER'  // supports only marks layer and marksformula layer
-    layerID: number;
-    constructor(id:number, parent:any) {
-        super(id, parent);
-    }
-
-    evaluate(parser:any): number {
-        const layer = this.parent.ca.layers.find(layer => layer.id == this.layerID);
-        console.log('layer id from evaluate: ', this.layerID);
-        if (!layer || !layer.marks)
-            return 0;
-        return layer.marks;
-    }
-}
-
-export class MarksVariabe extends BaseVariable implements CustomVariable{
-    type: string = 'MARKS';
-    parentExamination: any = null;
-    parentSubject: any = null;
-    testType: any = null;
-    marksType: string = null; 
-    
-    constructor(id:number, parent:any) {
-        super(id, parent);
-    }
-
-    evaluate(parser:any): number {
-        let result;
-        if (this.marksType == MARKS_TYPE_LIST[0])
-            result = ExaminationParameterStructure.getMarks(this.parent.ca.vm.DATA, this.parentExamination, this.parentSubject, this.testType);
-        else if (this.marksType == MARKS_TYPE_LIST[1])
-            result = ExaminationParameterStructure.getMarks(this.parent.ca.vm.DATA, this.parentExamination, this.parentSubject, this.testType);
-        return result
-    }
-}
-
-export class FormulaVariable extends BaseVariable implements CustomVariable{
-    type: string = 'FORMULA';
-    formula: string = '';
-    constructor(id:number, parent:any) {
-        super(id, parent);
-    }
-
-    evaluate(parser): any{
-        const parsedData = parser.parse(this.formula);
-        if (parsedData.error)
-            return parsedData.error;
-        return parsedData.result;
-    }
-}
-
-export const CUSTOM_VARIABLE_TYPES = {
-    'CONSTANT': ConstantVariable,
-    'LAYER': LayerVariable,
-    'MARKS': MarksVariabe,
-    'FORMULA': FormulaVariable
-}
-
-export function getParser2(layers: Layer[]) {
+export function getParser(layers: Layer[]) {
     const PARSER = new FormulaParser();
     // setCustomFunctionsInParser(PARSER);
     layers.forEach((layer: Layer) => {
@@ -1315,7 +1187,7 @@ export class Formula extends CanvasText implements Layer{
             }
             console.log('final Formula Copy = ', formulaCopy);
 
-            const parser = getParser2(this.ca.layers);
+            const parser = getParser(this.ca.layers);
             console.log('parser from formula = ', parser);
             let result = parser.parse(formulaCopy);
             if (result.error) {
@@ -1491,14 +1363,16 @@ class AttendanceParameterStructure {
                 return variableType;
             },
             (dataObject, startDate, endDate) => {
-                return dataObject.data.attendanceList.filter(attendance => {
+                let filteredAttendence = dataObject.data.attendanceList.filter(attendance => {
                     if (attendance.parentStudent === dataObject.studentId) {
                         const dateOfAttendance = new Date(attendance.dateOfAttendance);
                         return dateOfAttendance >= startDate
                             && dateOfAttendance <= endDate;
                     }
                     return false;
-                }).reduce((total, attendance) => {
+                });
+                console.log('filtered Attendence  = ', filteredAttendence);
+                return filteredAttendence.reduce((total, attendance) => {
                     switch (variableType) {
                         case ATTENDANCE_TYPE_LIST[0]:
                             return total + (attendance.status === ATTENDANCE_STATUS_LIST[0] ? 1 : (attendance.status === ATTENDANCE_STATUS_LIST[3] ? 0.5 : 0));
@@ -1721,17 +1595,16 @@ export const PARAMETER_LIST = [
     /* Examination Field */
     ExaminationParameterStructure.getStructure(
         EXAMINATION_TYPE_LIST[1],
-        (dataObject: any, examinationId:any, subGradeId: any) => {
+        (dataObject: any, examinationId: any, subGradeId: any) => {
             const value = dataObject.data.studentSubGradeList.find(studentSubGrade => {
                 return studentSubGrade.parentStudent === dataObject.studentId
                     && studentSubGrade.parentExamination === examinationId
-                    && studentSubGrade.parentSubGrade === dataObject.userHandle.value.subGradeId;   // yet to understand
+                    && studentSubGrade.parentSubGrade === subGradeId; 
             });
             if (value !== undefined) {
                 return value.gradeObtained;
-            } else {
-                return 'N/A';
             }
+            return 'N/A';
         },
         GradeLayer
     ),
@@ -1748,7 +1621,7 @@ export const PARAMETER_LIST = [
                 return 'N/A';
             }
         },
-        GradeLayer
+        RemarkLayer
     ),
     ExaminationParameterStructure.getStructure(
         EXAMINATION_TYPE_LIST[0],

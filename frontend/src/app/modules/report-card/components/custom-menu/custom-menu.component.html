@@ -1,3 +1,4 @@
-<div (mousedown)="menuClickHandler()" style="position: absolute; z-index: 100; width: 100px; box-shadow: 0 0 6px grey;" [style.left.px]="left" [style.top.px]="top">
-    <span (mousedown)="deleteLayer($event)" class="menuButton">Delete Layer</span>
+<div (mousedown)="menuClickHandler()" style="position: absolute; z-index: 100; width: 160px; box-shadow: 0 0 6px grey;" [style.left.px]="left" [style.top.px]="top">
+    <span (mousedown)="deleteLayer()" class="menuButton">Delete Layer</span>
+    <span (mousedown)="duplicateLayer()" class="menuButton">Duplicate Layer</span>
 </div>

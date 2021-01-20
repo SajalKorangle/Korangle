@@ -1,67 +1,57 @@
-<h2 mat-dialog-title>Grade Rules</h2>
-<mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw;">
-
-    <mat-accordion class="example-headers-align" multi>
-        
-        <mat-expansion-panel *ngFor="let gradeRuleSet of gradeRuleSetList">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              {{gradeRuleSet.name}}
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-        <table class="table table-hover" style="margin-top: 6px;">
-            <thead>
-                <tr>
-                    <th>Grade</th>
-                    <th>Criretia</th>
-                </tr>
-            </thead>
-            <tbody>
-            <ng-container *ngFor="let gradeRule of gradeRuleSet.gradeRules; let i = index" style="margin-top: 10px;">
-                <tr>
-                    <td><input matInput type="text" [(ngModel)]="gradeRule.gradeValue" class="short-input"></td>
-                    <td>
-                        <div style="display: flex; flex-direction: row; align-items: center;">
-                        <input matInput type="number" [(ngModel)]="gradeRule.lowerMarks" class="short-input">
-                        &nbsp;
-                        <button type="button"
-                                class="btn"
-                                style="padding: 4px 7px;"
-                                (click)="gradeRule.upperInclusion=!gradeRule.upperInclusion">
-                            <ng-container *ngIf="gradeRule.upperInclusion; else greterThanEquals1">=&gt;</ng-container>
-                            <ng-template #greterThanEquals1>&nbsp;&gt;</ng-template>
-                        </button> &nbsp;
-                            Marks &nbsp;
-                        <button type="button"
-                                class="btn"
-                                style="padding: 4px 7px;"
-                                (click)="gradeRule.lowerInclusion=!gradeRule.lowerInclusion">
-                            <ng-container *ngIf="gradeRule.lowerInclusion else greaterThanEquals2">=&gt;</ng-container>
-                            <ng-template #greaterThanEquals2>&nbsp;&gt;</ng-template>
-                        </button> &nbsp;
-                        <input matInput type="number" [(ngModel)]="gradeRule.upperMarks" class="short-input">
-                        </div>
-                    </td>
-                    <td>
-                        <button class="btn material-icons" style="padding: 4px 12px; background-color: transparent; color: red;"(click)="gradeRuleSet.gradeRules.splice(i,1)">delete</button>
-                    </td>
-                </tr>
-            </ng-container>
-            </tbody>
-        </table>
-            
-        <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: fit-content;margin-left: auto; align-items: center; margin-top: 16px; ">
-            <button class="btn" appearence="fill" style="padding: 6px;" (click)="addNewGradeRule(gradeRuleSet)">Add Grade Rule</button>
-        </div>
-    </mat-expansion-panel>
-    </mat-accordion>
-
-    <div style="margin-top: 16px; ">
-        <button class="btn" appearence="fill" style="padding: 6px;" (click)="addNewGradeRuleSet()">Add Grade Rule Set</button>
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">book</i>
     </div>
+    <div style="margin: 4px; padding: 4px; text-align: center;">
 
-</mat-dialog-content>
-<div mat-dialog-actions>
-    <button mat-button mat-dialog-close class="btn" style="background-color: blue; display: block; margin-left: auto;" cdkFocusInitial>Apply</button>
-</div>
+        <mat-form-field appearence="fill">
+            <mat-select 
+                placeholder="Examination"
+                [(ngModel)]="layer.parentExamination"
+                (ngModelChange)="layer.parentSubject=null; layer.testType=null; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+                <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList;" [value]="examination.id">{{examination.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-select placeholder="Subject"
+            [(ngModel)]="layer.parentSubject" 
+            (ngModelChange)="layer.testType=null; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics); ">
+                <mat-option *ngFor="let subject of layer.ca.vm.DATA.data.subjectList;" [value]="subject.id">
+                    {{subject.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field><br/>
+
+        <mat-form-field appearence="fill">
+            <mat-select placeholder="Test Type"
+            [(ngModel)]="layer.testType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+                <mat-option *ngFor="let testType of layer.ca.vm.htmlAdapter.testTypeList" [value]="testType">{{testType?testType:'NONE'}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-select placeholder="M.M. / M.O."
+            [(ngModel)]="layer.marksType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+                <mat-option *ngFor="let marksType of layer.ca.vm.htmlAdapter.marksTypeList" [value]="marksType">{{marksType}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Decimal Places
+            </mat-label>
+            <input matInput type="number" min="0" max="10" [(ngModel)]="layer.decimalPlaces" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+        </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Factor
+            </mat-label>
+            <input matInput type="number" min="0" [(ngModel)]="layer.factor" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+        </mat-form-field>
+
+        <button class="btn" style="padding: 6px 12px; width: 100%;" (click)="layer.ca.vm.htmlAdapter.openMarksDialog(layer)">More ...</button>
+
+    </div>
+</mat-card>

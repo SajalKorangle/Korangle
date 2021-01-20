@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CanvasTable} from './../../class/constants_3'
+import { CanvasTable, TableRow, TableColumn} from './../../class/constants_3'
 
 @Component({
   selector: 'app-table-parameter-pannel',
@@ -11,9 +11,14 @@ export class TableParameterPannelComponent implements OnInit {
   @Input() layer: CanvasTable;
   @Input() canvasRefresh: any;
 
+  selectedRow: TableRow;
+  selectedColumn: TableColumn;
+
   constructor() { }
 
   ngOnInit() {
+    this.selectedRow = this.layer.rowsList[0];
+    this.selectedColumn = this.layer.columnsList[0];
   }
 
   getPixelTommFactor(): number{

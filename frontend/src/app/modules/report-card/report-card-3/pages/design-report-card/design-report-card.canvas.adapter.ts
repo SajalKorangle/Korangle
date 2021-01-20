@@ -10,7 +10,9 @@ import {
     PAGE_RESOLUTIONS,
     Result,
     GradeRuleSet,
-    CanvasTable
+    CanvasTable,
+    BaseLayer,
+    DPI_LIST
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -24,7 +26,7 @@ export class DesignReportCardCanvasAdapter {
     virtualContext: CanvasRenderingContext2D;
 
     actualresolution: PageResolution = PAGE_RESOLUTIONS[1] // A4 size by default
-    dpi: number = 300;
+    dpi: number = DPI_LIST[4];
 
     canvas: HTMLCanvasElement;  // html canvas rendered on screen
     context: CanvasRenderingContext2D;
@@ -205,6 +207,7 @@ export class DesignReportCardCanvasAdapter {
 
     loadData(Data): void{   // handle this method
         try {
+            BaseLayer.maxID = 0;
             this.backgroundColor = Data.backgroundColor;
             for (let i = 0; i < Data.layers.length; i++) {
                 let layerData = { ...Data.layers[i] };
@@ -247,9 +250,10 @@ export class DesignReportCardCanvasAdapter {
         this.pendingReDrawId = setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
     }
 
-    scheduleCanvasReDraw = (duration: number = 500, successCallback: any = () => { })=>{
+    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, successCallback: any = () => { })=>{
         clearTimeout(this.virtualPendingReDrawId);
         this.virtualPendingReDrawId = setTimeout(() => {
+            preCallback();
             this.drawAllLayers();
             successCallback();
         }, duration);

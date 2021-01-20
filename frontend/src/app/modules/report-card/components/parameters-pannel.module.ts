@@ -6,7 +6,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AttendanceParametersPannelComponent } from './attendance-parameters-pannel/attendance-parameters-pannel.component';
 import { PositionParameterPannelComponent } from './position-parameter-pannel/position-parameter-pannel.component';
 import { MarksParametersPannelComponent } from './marks-parameters-pannel/marks-parameters-pannel.component';
-import { CustomVariablesDialogComponent } from './custom-variables-dialog/custom-variables-dialog.component';
 import { FormulaParametersPannelComponent } from './formula-parameters-pannel/formula-parameters-pannel.component';
 import { PageResolutionDialogComponent } from './page-resolution-dialog/page-resolution-dialog.component';
 import { ResultDialogComponent } from './result-dialog/result-dialog.component'
@@ -14,15 +13,26 @@ import { ImageParametersPannelComponent } from './image-parameters-pannel/image-
 import { GradeRulesDialogComponent } from './grade-rules-dialog/grade-rules-dialog.component';
 import { MarksDialogComponent } from './marks-dialog/marks-dialog.component';
 import { CustomMenuComponent } from './custom-menu/custom-menu.component';
-import { TableParameterPannelComponent } from './table-parameter-pannel/table-parameter-pannel.component'
+import { TableParameterPannelComponent } from './table-parameter-pannel/table-parameter-pannel.component';
+import { GradeParametersPannelComponent } from './grade-parameters-pannel/grade-parameters-pannel.component';
+import { RemarkParametersPannelComponent } from './remark-parameters-pannel/remark-parameter-pannel.component';
 
 @NgModule({
-  declarations: [TextParametersPannelComponent, AttendanceParametersPannelComponent, PositionParameterPannelComponent, MarksParametersPannelComponent, CustomVariablesDialogComponent, FormulaParametersPannelComponent, PageResolutionDialogComponent, ResultDialogComponent,
+  declarations: [
+    TextParametersPannelComponent,
+    AttendanceParametersPannelComponent,
+    PositionParameterPannelComponent,
+    MarksParametersPannelComponent,
+    FormulaParametersPannelComponent,
+    PageResolutionDialogComponent,
+    ResultDialogComponent,
     ImageParametersPannelComponent,
     GradeRulesDialogComponent,
     MarksDialogComponent,
     CustomMenuComponent,
-    TableParameterPannelComponent],
+    TableParameterPannelComponent,
+    GradeParametersPannelComponent,
+    RemarkParametersPannelComponent],
   imports: [
     ComponentsModule,
     MatButtonToggleModule,
@@ -33,7 +43,6 @@ import { TableParameterPannelComponent } from './table-parameter-pannel/table-pa
     AttendanceParametersPannelComponent,
     PositionParameterPannelComponent,
     MarksParametersPannelComponent,
-    CustomVariablesDialogComponent,
     FormulaParametersPannelComponent,
     PageResolutionDialogComponent,
     ImageParametersPannelComponent,
@@ -41,7 +50,9 @@ import { TableParameterPannelComponent } from './table-parameter-pannel/table-pa
     GradeRulesDialogComponent,
     MarksDialogComponent,
     CustomMenuComponent,
-    TableParameterPannelComponent
+    TableParameterPannelComponent,
+    GradeParametersPannelComponent,
+    RemarkParametersPannelComponent
   ]
 })
 export class ParametersPannelModule { }

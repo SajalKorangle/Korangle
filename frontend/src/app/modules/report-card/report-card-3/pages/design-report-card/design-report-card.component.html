@@ -102,10 +102,10 @@
 
             <div class="tool">
                 <button class="btn material-icons"
-                        (click)="logMessage('table added')"
+                        (click)="htmlAdapter.newTableColumnCount = 0; htmlAdapter.newTableRowCount = 0;"
                         mat-button [matMenuTriggerFor]="tableMenu" >backup_table</button>
                 <mat-menu #tableMenu="matMenu">
-                    <div style="display: flex; flex-direction: column; margin: 4px 12px;" (click)="canvasAdapter.newTableLayer({rowCount: htmlAdapter.newTableRowCount, columnCount: htmlAdapter.newTableColumnCount})">
+                    <div style="display: flex; flex-direction: column; margin: 4px 12px;" (click)="canvasAdapter.newTableLayer({rowCount: htmlAdapter.newTableRowCount, columnCount: htmlAdapter.newTableColumnCount});">
                         <div style="width: 100%; display: flex; flex-direction: row;justify-content: space-between;"
                                 *ngFor="let row of htmlAdapter.getArrayOfLength(htmlAdapter.tableToolbarAssistanceRowCount);">
                             <ng-container *ngFor="let col of htmlAdapter.getArrayOfLength(htmlAdapter.tableToolbarAssistanceColumnCount);">
@@ -198,7 +198,7 @@
                 
                 <!-- Layers Column -->
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
-                    <div class="flex-column inner-content" style="flex-direction: column-reverse; position: relative; overflow: visible;">
+                    <div class="flex-column inner-content" style="flex-direction: column-reverse; position: relative; overflow-y: auto; overflow-x: hidden;">
                         <ng-container *ngFor="let layer of canvasAdapter.layers; index as i">
                             <hr style="margin:0; background-color: gray; height: 3px; display: none;" [id]="layer.id"/>
                             <span *ngIf="layer" draggable="true" 
@@ -294,6 +294,20 @@
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-table-parameter-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('grade')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-grade-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-grade-parameters-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('remark')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-remark-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-remark-parameters-pannel>
                 </div>
 
             </mat-card>
