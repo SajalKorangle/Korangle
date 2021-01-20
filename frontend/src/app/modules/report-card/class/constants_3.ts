@@ -6,18 +6,21 @@ const FormulaParser = require('hot-formula-parser').Parser;
 
 // Utility Functions ---------------------------------------------------------------------------
 
-function numberToVariable(n:number):string {
+function numberToVariable(n: number): string {  // used to convert layer id to a unique variabla name
+    // converts decimal number to base 26; 0-25 is encoded as A-Z
     let variable = '';
     let temp;
+
     do {
         temp = n % 26;
         variable = String.fromCharCode(65 + temp)+variable;
         n = Math.floor(n / 26);
     } while (n > 0);
+
     return variable
 }
 
-function getNumberInWords(numerical: number): string {
+function getNumberInWords(numerical: number): string {  // mapping of 1 to 99 in words
     switch (numerical) {
         case 1: return 'One';
         case 2: return 'Two';
@@ -122,7 +125,11 @@ function getNumberInWords(numerical: number): string {
     }
 }
 
-function getMarksInWords(num: number): string{
+function getMarksInWords(num: number): string{  // converts numbers from 0 to 99999 in words
+    // used in conversion of marks to words
+    if (num == 0) {
+        return 'Zero';
+    }
     let unitTens = getNumberInWords(num % 100);
     num /= 100;
     let hundreds = getNumberInWords(num % 10);
@@ -131,7 +138,7 @@ function getMarksInWords(num: number): string{
     return `${thousands?thousands+' Thousand':''} ${hundreds?hundreds+' Hundred':''} ${unitTens}`
 }
 
-function getYear(year: any): string {
+function getYear(year: number): string {   // converts year number in words
     if (year < 2000) {
         return getNumberInWords(Math.floor(year / 100))
             + ' ' + getNumberInWords(year % 100);
@@ -140,7 +147,8 @@ function getYear(year: any): string {
     }
 }
 
-function getDateReplacements(date: any): {[key:string]: string} {
+function getDateReplacements(date: any): { [key: string]: string } {
+    // maps components(day, month , year) of given date to different available format
 
     // Calculating dddValue
     const s = ['th', 'st', 'nd', 'rd'];
@@ -279,27 +287,33 @@ function getDateReplacements(date: any): {[key:string]: string} {
     return replacements;
 }
 
+// CANVAS DESIGN TOOL ------------------------------------------------------------------------
+
+
+//Constants -------------------------------------- 
+
 //Page Resolutions ---------------------------------------------
 export const mm_IN_ONE_INCH: number = 24.5;
-export const DPI_LIST: number[] = [
+export const DPI_LIST: number[] = [ // standard DPIs
     600,
     300,
     200,
     100,
     72,
     50
-]
-export interface PageResolution{
+];
+
+export interface PageResolution{    
     resolutionName: string;
     orientation: string  // p: potrait, l:landscape
-    aspectRatio: number;
+    aspectRatio: number;    // width/height
     mm: {
         height: number;
         width: number;
     }
-    getHeightInPixel(dpi: number): number;
+    getHeightInPixel(dpi: number): number;  // returns height in pixels given dpi as argument
     getWidthInPixel(dpi: number): number;
-    getCorrospondingWidth(height: number): number;
+    getCorrospondingWidth(height: number): number;  // returns width given height while maintaining aspect ratio
     getCorrospondingHeight(width: number): number;
 }
 
@@ -324,7 +338,7 @@ export function getStructeredPageResolution(resolutionName:string, mmHeight:numb
     }
 }
 
-export const PAGE_RESOLUTIONS: PageResolution[] = [
+export const PAGE_RESOLUTIONS: PageResolution[] = [ // standard page resolutions
     getStructeredPageResolution('A3', 420, 297),
     getStructeredPageResolution('A4', 297, 210),
     getStructeredPageResolution('A5', 210, 148),
@@ -332,28 +346,17 @@ export const PAGE_RESOLUTIONS: PageResolution[] = [
     getStructeredPageResolution('Custom', 100, 100)
 ]
 
-export const CUSTOM_PAGE_RESOLUTION_INDEX: number = 4;
-
-// CANVAS DESIGN TOOL------------------------------------------------------------------------
-
-//Constants--------------------------------------
+export const CUSTOM_PAGE_RESOLUTION_INDEX: number = PAGE_RESOLUTIONS.length-1;
 
 export const permissibleClickError = 4;    // in pixels
 
-export const PageRelativeAttributes = [
-    'x',
-    'y',
-    'width',
-    'height'
-];
-
-export const DATA_SOUCE_TYPE = [
-    'N/A',
-    'DATA'
+export const DATA_SOUCE_TYPE = [    // used in all canvas layers
+    'N/A',  // no data source, constant eement
+    'DATA'  // data source availabel, get data from the provided data source
 ]
 
-export const DEFAULT_BACKGROUND_COLOR = '#ffffff';
-export const DEFAULT_TEXT_COLOR = '#000000'
+export const DEFAULT_BACKGROUND_COLOR = '#ffffff'; // white
+export const DEFAULT_TEXT_COLOR = '#000000'; // black
 
 
 export const ATTENDANCE_TYPE_LIST = [
@@ -363,17 +366,15 @@ export const ATTENDANCE_TYPE_LIST = [
 ];
 
 export const EXAMINATION_TYPE_LIST = [
-    'Marks', // 0
-    'Grades', // 1
-    'Remarks', // 2
+    'Marks', 
+    'Grades', 
+    'Remarks',
 ];
 
 export const MARKS_TYPE_LIST = [
     'Marks Obtained',
     'Maximum Marks',
 ];
-
-export const ALPHABET_LIST = 'abcdefghijklmnopqrstuvwxyz';
 
 export const TEST_TYPE_LIST = [
     null,
@@ -391,31 +392,41 @@ export const DEFAULT_PASSING_MARKS = 40;
 
 // To be implemented by all Canvas Layers
 export interface Layer{
+    // contains definition all class variables to be implemented by any canvas layer
+    constructor: any;   // constructor of class
     id: number;
     displayName: string;    // layer name displayed to user
     LAYER_TYPE: string; // Type description for JSON parsing
-    x: number;
-    y: number;
-    parameterToolPannels: string[];
-    dataSourceType: string;    // options: DATA_SOURCE_TYPE
-    source?: { [key: string]: any };   // object containing information about the source of data
-    ca: DesignReportCardCanvasAdapter;  // canvas adapter
-    constructor: any;
-    layerDataUpdate(): void;
+    x: number;  // distance in pixels from left edge of canvas
+    y: number;  // distance in pixels from top edge of canvas
+    parameterToolPannels: string[]; // list of right pannel parameter toolbar
+    dataSourceType: string;    // options: DATA_SOURCE_TYPE, if 'N/A', all data of layer is constant; if 'DATA' use source class variable to get data 
+    source?: { [key: string]: any };   // object containing information about the source of data, stores reference of element from PARAMETER_LIST
+    ca: DesignReportCardCanvasAdapter;  // canvas adapter,
+    layerDataUpdate(): void;    // gets data of layer if dataSourceType is 'DATA', 
     updatePosition(dx: number, dy: number): void;
-    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
-    isClicked(mouseX: number, mouseY: number): boolean;
-    scale(scaleFactor: number): void;
-    getDataToSave(): any;
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;  // draws layer to canavs or schedules redraw after some time if layer is not ready yet
+    isClicked(mouseX: number, mouseY: number): boolean; // given clicked x and y if this layer is clicked or not
+    scale(scaleFactor: number): void;   // scales all parameters of layer by given scale factor, used while zooming, fullscreen etc.
+    getDataToSave(): {[object:string]:any};   // retunn data to be saved to database
 
-    updateTextBoxMetrics?(): void;
-    dateFormatting?(): void;
+    updateTextBoxMetrics?(): void;  // update bounding box imformation of text layer
+    dateFormatting?(): void;    // formats data according to selectd format
 
-    image?: HTMLImageElement;
-    text?: string;
+    image?: HTMLImageElement;   // for CanavsImage Layer
+    uri?: string;
+    aspectRatio?: number;    
+    maintainAspectRatio?: boolean; 
+
+    rowsList?: Array<TableRow>; // for CanavsTable Layer
+    columnsList?: Array<TableColumn>;
+    rowCount?: number;
+    columnCount?: number;
+
+    text?: string;  // for CanavsText Layer
     height?: number;
     width?: number;
-    textBoxMetrx?: {
+    textBoxMetrx?: {    // text bounding box nformation
         boundingBoxLeft: number,
         boundingBoxRight: number,
         boundingBoxTop: number,
@@ -423,7 +434,7 @@ export interface Layer{
     };
     fontStyle?: { [key: string]: any };
     underline?: boolean;
-    dateFormat?: string;
+    dateFormat?: string;    // format of date, check getDateReplacements(date) function for details
     date?: Date;
     startDate?: Date;
     endDate?: Date;
@@ -437,16 +448,16 @@ export interface Layer{
     formula?:string;
 };
 
-export class BaseLayer {
+export class BaseLayer {    // this layer is inherited by all canvas layers
     id: number = null;
-    static maxID: number = 0;
+    static maxID: number = 0;   // for auto incrementing id
 
     x: number = 0;
     y: number = 0;
 
     displayName: string; 
     LAYER_TYPE: string;
-    parameterToolPannels: string[] = ['position'];
+    parameterToolPannels: string[] = ['position'];  // position right toolbar pannel is present in all layers
 
     dataSourceType: string = 'N/A';
     source?: {[key:string]: any};
@@ -459,19 +470,35 @@ export class BaseLayer {
         this.id = BaseLayer.maxID;
     }
 
-    initilizeSelf(attributes:object): void{
+    initilizeSelf(attributes:object): void{ // initilizes all class variables according to provided initial parameters data as object
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         BaseLayer.maxID = Math.max(BaseLayer.maxID, this.id);   // always keeping static maxID maximum of all layers
+        if (this.dataSourceType == DATA_SOUCE_TYPE[1] && this.source && !this.source.getValueFunc) {
+            this.source = PARAMETER_LIST.find(el => el.key == this.source.key && el.field.fieldStructureKey == this.source.field.fieldStructureKey);
+        }
     }
 
     updatePosition(dx = 0, dy = 0):void {
         this.x += dx;
         this.y += dy;
     }
+
+    getDataToSave(): {[object:string]:any} {   // common data to be saved in database
+        let savingData: any = {
+            id: this.id,
+            displayName: this.displayName,
+            LAYER_TYPE: this.LAYER_TYPE,
+            x: this.x * this.ca.pixelTommFactor,  // converting pixels to mm
+            y: this.y * this.ca.pixelTommFactor,
+            dataSourceType: this.dataSourceType,
+        }
+        return savingData;
+    }
 }
 
 export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image Layer
     displayName: string = 'Image'; 
+
     image: HTMLImageElement = null;    // not included in content json data
     uri: string;
     height: number = null;
@@ -479,24 +506,29 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     aspectRatio: any = null;    
     maintainAspectRatio = true; 
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
-        super(ca);
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(ca);  // parent constructor
         this.parameterToolPannels.push('image');
 
         this.image = new Image();
         
-        if (initilize) {
-            this.initilizeSelf(attributes);
-            this.LAYER_TYPE = 'IMAGE';
-            this.layerDataUpdate();
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'IMAGE';
+        this.layerDataUpdate();
+    }
+
+    initilizeSelf(attributes:object): void{
+        super.initilizeSelf(attributes);
+        if (this.height && this.width && (!this.aspectRatio)) { // calculate aspect ratio if height and width is available
+            this.aspectRatio = this.width / this.height;
         }
     }
 
     layerDataUpdate(): void{
-        const DATA = this.ca.vm.DATA;
         const canvasWidth = this.ca.canvasWidth, canvasHeight = this.ca.canvasHeight;
         
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
+            const DATA = this.ca.vm.DATA;
             this.uri = this.source.getValueFunc(DATA)+'?javascript=';
         }
         if (!this.height && !this.width) {
@@ -505,16 +537,16 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
                 this.width = this.image.width;
                 this.aspectRatio = this.width / this.height;
 
-                if (canvasHeight && this.height > canvasHeight) {
-                    this.height = canvasHeight;
+                if (this.height > canvasHeight) {  
+                    this.height = canvasHeight; // so that image does not exceeds canvas boundry
                     this.width = this.aspectRatio * this.height;    // maintaining aspect ratio
                 }
-                if (canvasWidth && this.width > canvasWidth) {
-                    this.width = canvasWidth;
+                if (this.width > canvasWidth) {
+                    this.width = canvasWidth; // so that image does not exceeds canvas boundry
                     this.height = this.width / this.aspectRatio;    // maintaining aspect ratio
                 }
             }
-            if (this.image.complete && this.image.naturalHeight > 0) {
+            if (this.image.complete && this.image.naturalHeight > 0) { // if image is loaded do the setup otherwise do setup on load
                 getHeightAndWidth();
             } else {
                 this.image.onload = () => {
@@ -528,27 +560,26 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
 
     updateHeight(newHeight: number) {
         this.height = newHeight;
-        if (this.maintainAspectRatio)
+        if (this.maintainAspectRatio) {
             this.width = this.aspectRatio * this.height;
+        }
     }
 
     updateWidth(newWidth: number) {
         this.width = newWidth;
-        if (this.maintainAspectRatio)
-            this.height = this.width / this.aspectRatio; 
-    }
-
-    updatePosition(dx = 0, dy = 0):void {
-        this.x += dx;
-        this.y += dy;
+        if (this.maintainAspectRatio) {
+            this.height = this.width / this.aspectRatio;
+        }
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        console.log('Canavs Image Draw on canvas called');
         if (this.image.complete && this.image.naturalHeight > 0) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            console.log('Canavs Image context draw successfull');
             return true;    // Drawn successfully on canvas
         }
-        scheduleReDraw();
+        scheduleReDraw();   // draw again after some time
         return false;   // Canvas Drawing failed, scheduled redraw for later
     }
 
@@ -566,32 +597,30 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         this.width *= scaleFactor;
     }
 
-    getDataToSave() {
-        let savingData: any = {
-            'displayName': this.displayName,
-            'LAYER_TYPE': this.LAYER_TYPE,
-            'x': this.x,
-            'y': this.y,
-            'height': this.height,
-            'width': this.width,
-            'dataSourceType': this.dataSourceType,
-        }
+    getDataToSave(): {[object:string]:any} {
+        let savingData = super.getDataToSave();
+        savingData = {
+            ...savingData,
+            height: this.height * this.ca.pixelTommFactor,
+            width: this.width * this.ca.pixelTommFactor,
+            maintainAspectRatio: this.maintainAspectRatio,
+        };
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.uri = this.uri;
-        } else {
-            savingData.source = this.source;
+        } else {    // if data source store source of data
+            savingData.source = { ...this.source };
             delete savingData.source.layerType;
         }
-        return { ...savingData };
+        return savingData;
     }
 }
 
 export class TableRow{
-    height: number = 10;
+    height: number = 10;    // in mm 
 }
 
 export class TableColumn{
-    width: number = 30;
+    width: number = 30;     // in mm
 }
 
 export class CanvasTable extends BaseLayer implements Layer{
@@ -602,7 +631,7 @@ export class CanvasTable extends BaseLayer implements Layer{
     rowCount: number = 0;
     columnCount: number = 0;
 
-    height: number = 0;
+    height: number = 0; // computed from rowsList and columnsList
     width: number = 0;
 
     tableStyle:{[key:string]: any} = {
@@ -610,7 +639,7 @@ export class CanvasTable extends BaseLayer implements Layer{
         lineWidth: 2,
     };
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(ca);
         this.parameterToolPannels.push('table');
         
@@ -618,25 +647,25 @@ export class CanvasTable extends BaseLayer implements Layer{
         this.y = 50 / ca.pixelTommFactor;
         this.tableStyle.lineWidth = 0.5 / ca.pixelTommFactor;
 
-        if (initilize) {
-            this.initilizeSelf(attributes);
-            this.layerDataUpdate();
-            this.updateTableMetrix();
-        }
+        this.initilizeSelf(attributes);
+        this.layerDataUpdate();
+        this.updateTableMetrix();
 
         this.LAYER_TYPE = 'TABLE';
     }
 
     initilizeSelf(attributes:object): void {
         super.initilizeSelf(attributes);
-        while (this.rowsList.length < this.rowCount) {
+        this.rowCount = Math.max(this.rowCount, this.rowsList.length);  // if rowCount is less that this.rowList.length that update rowCount accordingly
+        this.columnCount = Math.max(this.columnCount, this.columnsList.length);
+        while (this.rowsList.length < this.rowCount) {  // rowCount is greater that the rows in rowsList then add rows in rowList
             let newTableRow = new TableRow;
-            newTableRow.height /= this.ca.pixelTommFactor;
+            newTableRow.height /= this.ca.pixelTommFactor;  // converting mm to pixels
             this.rowsList.push(newTableRow);
         }
         while (this.columnsList.length < this.columnCount) {
             let newTableRowColumn = new TableColumn;
-            newTableRowColumn.width /= this.ca.pixelTommFactor;
+            newTableRowColumn.width /= this.ca.pixelTommFactor; // converting mm to pixels
             this.columnsList.push(newTableRowColumn);
         }
     }
@@ -644,7 +673,7 @@ export class CanvasTable extends BaseLayer implements Layer{
     layerDataUpdate(): void {
     }
 
-    updateTableMetrix(): void{
+    updateTableMetrix(): void{  // computing height and width of table from its rows and columns
         this.height = 0;
         this.width = 0;
 
@@ -662,15 +691,17 @@ export class CanvasTable extends BaseLayer implements Layer{
         let pointerY = this.y;
         Object.entries(this.tableStyle).forEach(([key, value]) => ctx[key] = value);
 
-        ctx.strokeRect(pointerX, pointerY, this.width, this.height);
+        ctx.strokeRect(pointerX, pointerY, this.width, this.height);    // outer boundry
         ctx.beginPath();
-        for (let i = 0; i < this.rowsList.length - 1; i++){
+
+        for (let i = 0; i < this.rowsList.length - 1; i++){ // horizontal lines
             pointerY += this.rowsList[i].height;
             ctx.moveTo(pointerX, pointerY);
             ctx.lineTo(pointerX + this.width, pointerY);
         }
+
         pointerY = this.y;
-        for (let i = 0; i < this.columnsList.length - 1; i++){
+        for (let i = 0; i < this.columnsList.length - 1; i++){  // vertical lines
             pointerX += this.columnsList[i].width;
             ctx.moveTo(pointerX, pointerY);
             ctx.lineTo(pointerX, pointerY+this.height);
@@ -692,6 +723,7 @@ export class CanvasTable extends BaseLayer implements Layer{
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
         this.y *= scaleFactor;
+        this.tableStyle.lineWidth *= scaleFactor;
 
         this.rowsList.forEach(row => {
             row.height *= scaleFactor;
@@ -704,8 +736,27 @@ export class CanvasTable extends BaseLayer implements Layer{
         this.updateTableMetrix();
     }
 
-    getDataToSave() {
-       // to be implemented
+    getDataToSave(): {[object:string]:any} {
+        let savingData = super.getDataToSave();
+        savingData = {
+            ...savingData,
+            rowsList: [],
+            columnsList: [],
+            tableStyle: {...this.tableStyle}
+        };
+        savingData.tableStyle.lineWidth *= this.ca.pixelTommFactor;
+        this.rowsList.forEach(row => {
+            let rowCopy = { ...row };
+            rowCopy.height *= this.ca.pixelTommFactor;
+            savingData.rowsList.push(rowCopy);
+        });
+        this.columnsList.forEach(columns => {
+            let columnCopy = { ...columns };
+            columnCopy.width *= this.ca.pixelTommFactor;
+            savingData.columnsList.push(columnCopy);
+        });
+        console.log(savingData);
+        return savingData;
     }
 };
 
@@ -729,7 +780,7 @@ export class CanvasText extends BaseLayer implements Layer{
         fillStyle: DEFAULT_TEXT_COLOR,
         font: ' normal 12px Arial',
     };
-    underline?: boolean;
+    underline: boolean = false;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
         super(ca);
@@ -741,7 +792,7 @@ export class CanvasText extends BaseLayer implements Layer{
         this.underline = false;
         this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
 
-        if (initilize) {
+        if (initilize) {    // initilize is sent as false is this class is super class of some other layer, in that case child class handles this block
             this.initilizeSelf(attributes);
             this.LAYER_TYPE = 'TEXT';
             this.layerDataUpdate();
@@ -796,29 +847,35 @@ export class CanvasText extends BaseLayer implements Layer{
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
         this.y *= scaleFactor;
-        Object.keys(this.textBoxMetrx).forEach(key => this.textBoxMetrx[key] *= scaleFactor);
         const [italics, fontWeight, fontSize, font] = this.fontStyle.font.split(' ');
         let newFontSize = parseFloat(fontSize.substr(0, fontSize.length - 2));
         newFontSize *= scaleFactor;
         this.fontStyle.font = [italics, fontWeight, newFontSize + 'px', font].join(' ');
+        this.updateTextBoxMetrics();
     }
 
-    getDataToSave() {
-        let savingData: any = {
-            'displayName': this.displayName,
-            'LAYER_TYPE': this.LAYER_TYPE,
-            'x': this.x,
-            'y': this.y,
-            'dataSourceType': this.dataSourceType,
-            'fontStyle': this.fontStyle
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+
+        const [italics, fontWeight, fontSize, ...font]:any[] = this.fontStyle.font.split(' ');
+
+        savingData = {
+            ...savingData,
+            fontSize: parseFloat(fontSize.substr(0, fontSize.length - 2))*this.ca.pixelTommFactor,
+            italics,
+            fontWeight,
+            font: font.join(' '),
+            underline: this.underline,
+            fillStyle: this.fontStyle.fillStyle
         }
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.text = this.text;
         } else {
-            savingData.source = this.source;
+            savingData.source = { ...this.source };
             delete savingData.source.layerType;
         }
-        return { ...savingData };
+        console.log('SavingData from Canas tetx = ', savingData);
+        return savingData;
     }
 
 }
@@ -849,7 +906,6 @@ export class CanvasDate extends CanvasText implements Layer{
     }
 
     dateFormatting(): void{
-        console.log(this.date);
         const dateReplacements:{[key:string]: string}  = getDateReplacements(this.date);
         let dateValue = this.dateFormat;
         Object.entries(dateReplacements).forEach(([dataReplacementKey, dateReplacementvalue]) => {
@@ -858,69 +914,64 @@ export class CanvasDate extends CanvasText implements Layer{
         this.text = dateValue;
     }
 
-    getDataToSave() {
-        let savingData: any = {
-            'displayName': this.displayName,
-            'LAYER_TYPE': this.LAYER_TYPE,
-            'x': this.x,
-            'y': this.y,
-            'dataSourceType': this.dataSourceType,
-            'fontStyle': this.fontStyle,
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
             'dateFormat': this.dateFormat
         }
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.date = this.date;
-        } else {
-            savingData.source = this.source;
-        }
-        return { ...savingData };
+        } // else part is alreday handled in super.getDataToSave call
+        return savingData;
     }
 
 }
 
-export class CanvasGroup extends BaseLayer implements Layer{
-    layers: Array<Layer> = [];
-    height: number = 0;
-    width: number = 0;
-    locked: boolean = false;
+// export class CanvasGroup extends BaseLayer implements Layer{
+//     layers: Array<Layer> = [];
+//     height: number = 0;
+//     width: number = 0;
+//     locked: boolean = false;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
-        super(ca);
-        this.parameterToolPannels.push('group');
+//     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+//         super(ca);
+//         this.parameterToolPannels.push('group');
 
-        if (initilize) {
-            this.initilizeSelf(attributes);
-            this.layerDataUpdate();
-        }
-        this.LAYER_TYPE = 'GROUP';
-    }
+//         if (initilize) {
+//             this.initilizeSelf(attributes);
+//             this.layerDataUpdate();
+//         }
+//         this.LAYER_TYPE = 'GROUP';
+//     }
 
-    layerDataUpdate(): void {
-    }
+//     layerDataUpdate(): void {
+//     }
 
-    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        return true;
-    }
+//     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+//         return true;
+//     }
 
-    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        if (this.locked) {
-            let anyLayerClicked: boolean = false;
-            this.layers.forEach((layer: Layer) => {
-                anyLayerClicked = anyLayerClicked || layer.isClicked(mouseX, mouseY);
-            });
-            return anyLayerClicked;
-        } 
-        return false;
-    }
+//     isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+//         if (this.locked) {
+//             let anyLayerClicked: boolean = false;
+//             this.layers.forEach((layer: Layer) => {
+//                 anyLayerClicked = anyLayerClicked || layer.isClicked(mouseX, mouseY);
+//             });
+//             return anyLayerClicked;
+//         } 
+//         return false;
+//     }
 
-    scale(scaleFactor: number): void {
-    }
+//     scale(scaleFactor: number): void {
+//     }
 
-    getDataToSave():object {
-        // To be implemented
-        return {};
-    }
-}
+//     getDataToSave():object {
+//         // To be implemented
+//         return {};
+//     }
+// }
 
 class AttendanceLayer extends CanvasText implements Layer{
     displayName: string = 'Attendance';
@@ -1110,30 +1161,6 @@ export class MarksLayer extends CanvasText implements Layer{
     // Data To Save need to be implemented
 
 }
-
-
-
-
-
-// Variables----------------------------------------
-
-export interface CustomVariable{
-    id: number;
-    parent: any;
-    type: string;   // can be of three types, layer, marks and formula constant
-    name: string;   // name of variable
-    layerID?: number; 
-    formula?: string;
-    parentExamination?: any,
-    parentSubject?: any,
-    testType?: any
-    marksType?: string;
-    value?: number;
-    isMarks?: boolean;
-
-    evaluate(parser:any): any;
-}
-
 
 export function getParser(layers: Layer[]) {
     const PARSER = new FormulaParser();

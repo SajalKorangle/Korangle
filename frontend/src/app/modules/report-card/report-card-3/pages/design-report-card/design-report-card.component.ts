@@ -16,7 +16,7 @@ import {GradeService} from '@services/modules/grade/grade.service';
 import { DesignReportCardHtmlAdapter } from './design-report-card.html.adapter';
 import { DesignReportCardCanvasAdapter } from './design-report-card.canvas.adapter';
 
-import { DEFAULT_BACKGROUND_COLOR } from './../../../class/constants_3';
+import { Layer, DATA_SOUCE_TYPE } from './../../../class/constants_3';
 
 @Component({
   selector: 'app-design-report-card',
@@ -157,6 +157,7 @@ export class DesignReportCardComponent implements OnInit {
     } else {
       this.currentLayout = { ...value, content: JSON.parse(value.content) };
     }
+    console.log('Current Layout= ', this.currentLayout);
     if (this.canvas)
         this.canvasAdapter.loadData(this.currentLayout.content[0]);
   }
@@ -189,25 +190,28 @@ export class DesignReportCardComponent implements OnInit {
       return;
     }
 
-    if (!this.currentLayout.id) // if new layout upload it
-      await this.serviceAdapter.uploadCurrentLayout();
-    const DataToSave = this.canvasAdapter.getDataToSave();
-    const layers = DataToSave.layers;
-    console.log('to be uploaded layers = ', layers);
-    for (let i = 0; i < layers.length; i++){
-      if (layers[i].LAYER_TYPE == 'IMAGE') {
-        if (this.unuploadedFiles[layers[i].uri]) {
-          let image = await fetch(layers[i].uri).then(response => response.blob());
-          console.log(image)
-          layers[i].uri = await this.serviceAdapter.uploadImageForCurrentLayout(image, this.unuploadedFiles[layers[i].uri]);
-          console.log('image url = ', layers[i].image);
-        }
-      }
+    if (!this.currentLayout.id) { // if new layout, upload it
+      await this.serviceAdapter.uploadCurrentLayout(); // blank layout, we will update it after all assets are uploaded
     }
-    this.currentLayout.content = DataToSave;
-    await this.serviceAdapter.uploadCurrentLayout();
+    this.currentLayout.content[this.canvasAdapter.activePageIndex] = this.canvasAdapter.getDataToSave();
+
+    this.currentLayout.content.forEach(async layoutPage => {
+      const layers:Array<Layer> = layoutPage.layers;
+      for (let i = 0; i < layers.length; i++){
+        if (layers[i].LAYER_TYPE == 'IMAGE' && layers[i].dataSourceType == DATA_SOUCE_TYPE[1]) {
+          if (this.unuploadedFiles[layers[i].uri]) {
+            let image = await fetch(layers[i].uri).then(response => response.blob());
+            layers[i].uri = await this.serviceAdapter.uploadImageForCurrentLayout(image, this.unuploadedFiles[layers[i].uri]);
+            console.log('image url = ', layers[i].image);
+          }
+        }
+      }       
+    });
+
+    await this.serviceAdapter.uploadCurrentLayout();  // final update/upload of layout
     
     this.htmlAdapter.isSaving = false;
+    alert('Layout Saved Successfully');
   }
 
   logMessage(msg: any): void{

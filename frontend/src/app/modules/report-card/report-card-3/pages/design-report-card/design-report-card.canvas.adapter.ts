@@ -1,7 +1,7 @@
 import { DesignReportCardComponent } from './design-report-card.component';
 
 import {
-    PageRelativeAttributes,
+    PARAMETER_LIST,
     DEFAULT_BACKGROUND_COLOR,
     Layer, CanvasImage, CanvasText,
     CanvasDate,
@@ -12,7 +12,10 @@ import {
     GradeRuleSet,
     CanvasTable,
     BaseLayer,
-    DPI_LIST
+    DPI_LIST,
+    getStructeredPageResolution,
+    DATA_SOUCE_TYPE,
+    TableColumn
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -58,19 +61,30 @@ export class DesignReportCardCanvasAdapter {
     constructor() {
     }
 
+    getEmptyLayoutPage(): { [key: string]: any }{
+        return {
+            actualresolution: {
+                resolutionName: PAGE_RESOLUTIONS[1].resolutionName,
+                orientation: 'p',
+            },
+            backgroundColor: DEFAULT_BACKGROUND_COLOR,
+            layers: []
+        };
+    }
+
     getEmptyLayout(): any[] {
-        return [{ backgroundColor: DEFAULT_BACKGROUND_COLOR, layers: [] }];
+        return [this.getEmptyLayoutPage()];
     }
     
     addEmptyPage(): void{
-        this.vm.currentLayout.content.push({ backgroundColor: DEFAULT_BACKGROUND_COLOR, layers: [] });
+        this.vm.currentLayout.content.push(this.getEmptyLayoutPage());
         this.updatePage(this.vm.currentLayout.content.length-1);
     }
 
     updatePage(pageIndex: number): void{
         if (this.activePageIndex == pageIndex)
             return;
-        // save current page to currentLayout.content here
+        this.vm.currentLayout.content[this.activePageIndex] = this.getDataToSave();
         this.clearCanvas();
         this.loadData(this.vm.currentLayout.content[pageIndex]);
         this.activePageIndex = pageIndex;
@@ -205,32 +219,108 @@ export class DesignReportCardCanvasAdapter {
         console.log('canvas sizing called; previous width ', canvasPreviousWidth, 'currentHeight: ', this.canvasHeight)
     }
 
+    getDataToSave() {   // updating required
+        let layers = [];
+        for (let i = 0; i < this.layers.length; i++){    // Copying all layer objects
+            layers[i] = this.layers[i].getDataToSave();
+        };
+
+        let dataToSave:{[key:string]:any} = {
+            actualresolution: {
+                resolutionName: this.actualresolution.resolutionName,
+                orientation: this.actualresolution.orientation
+            },
+            backgroundColor: this.backgroundColor,
+            layers: layers
+            // gradeRuleSetList, to be implemented
+        };
+
+        if (this.actualresolution.resolutionName == PAGE_RESOLUTIONS[4].resolutionName) {   //custom resolution
+            dataToSave.actualresolution.mmHeight = this.actualresolution.mm.height;
+            dataToSave.actualresolution.mmWidth = this.actualresolution.mm.width;
+        }
+
+        return dataToSave
+    }
+
     loadData(Data): void{   // handle this method
+        console.log('loading Data = ', Data);
+        BaseLayer.maxID = 0;
         try {
-            BaseLayer.maxID = 0;
+            
+            // load resolution
+            let resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
+            if (!resolution) {
+                PAGE_RESOLUTIONS[4] = getStructeredPageResolution('Custom', Data.actualresolution.mmHeight, Data.actualresolution.mmWidth, Data.actualresolution.orientation)
+                resolution = PAGE_RESOLUTIONS[4];
+            }
+
+            // apply resolution
+            this.vm.htmlAdapter.canvasSetUp();
+            this.updateResolution(resolution);
+
+            let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
+
             this.backgroundColor = Data.backgroundColor;
+
             for (let i = 0; i < Data.layers.length; i++) {
                 let layerData = { ...Data.layers[i] };
-            
-                Object.keys(layerData).forEach(key => { // conversion from mm to pixels
-                    if (key in PageRelativeAttributes)
-                        layerData['key'] = layerData['key'] / this.pixelTommFactor;
-                });
             
                 let newLayerFromLayerData: Layer;   // update this for new architecture
                 switch (layerData.LAYER_TYPE) {
                     case 'IMAGE':
                         newLayerFromLayerData = new CanvasImage(layerData, this);
                         break;
+                    
+                    case 'TEXT':
+                        layerData.fontStyle = { // structuring according to canvas
+                            fillStyle: layerData.fillStyle,
+                            font: [layerData.italics, layerData.fontWeight, layerData.fontSize+'px', layerData.font].join(' ')
+                        };
+                        delete layerData.fillStyle;
+                        delete layerData.italics;
+                        delete layerData.fontWeight;
+                        delete layerData.fontSize;
+                        delete layerData.font;
+                        newLayerFromLayerData = new CanvasText(layerData, this);
+                        break;
+                    
+                    case 'TABLE':
+                        newLayerFromLayerData = new CanvasTable(layerData, this);
+                        break;
+                    
+                    case 'DATE':
+                        layerData.fontStyle = { // structuring according to canvas
+                            fillStyle: layerData.fillStyle,
+                            font: [layerData.italics, layerData.fontWeight, layerData.fontSize+'px', layerData.font].join(' ')
+                        };
+                        delete layerData.fillStyle;
+                        delete layerData.italics;
+                        delete layerData.fontWeight;
+                        delete layerData.fontSize;
+                        delete layerData.font;
+                        if (layerData.date) {
+                            layerData.date = new Date(layerData.date);
+                        }
+                        newLayerFromLayerData = new CanvasDate(layerData, this);
+                        break;
+                        
                 }
+                console.log('newLayerFromLayerData = ', newLayerFromLayerData, 'data = ', layerData);
+                newLayerFromLayerData.scale(mmToPixelScaleFactor);
                 this.layers.push(newLayerFromLayerData);
             }
-            this.drawAllLayers();
+            if (this.layers.length > 0) {
+                this.drawAllLayers();
+                this.activeLayer = this.layers[this.layers.length - 1];
+                this.activeLayerIndex = this.layers.length - 1;
+            }
             console.log('canvas layers: ', this.layers);
+
         } catch (err) {
-            console.log(err);
+            console.error(err);
             alert('data corupted');
-            clearTimeout(this.virtualPendingReDrawId);
+            this.clearCanvas();
         }
     }
 
@@ -250,12 +340,12 @@ export class DesignReportCardCanvasAdapter {
         this.pendingReDrawId = setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
     }
 
-    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, successCallback: any = () => { })=>{
+    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, postCallback: any = () => { })=>{
         clearTimeout(this.virtualPendingReDrawId);
         this.virtualPendingReDrawId = setTimeout(() => {
             preCallback();
             this.drawAllLayers();
-            successCallback();
+            postCallback();
         }, duration);
     }
 
@@ -279,12 +369,15 @@ export class DesignReportCardCanvasAdapter {
     }
 
     duplicateLayer(layer: Layer): void{
-        let layer_shallow_copy = { ...layer };
-        delete layer_shallow_copy.ca;
-        let json_parsed_layer_copy = JSON.parse(JSON.stringify(layer_shallow_copy));
-        delete json_parsed_layer_copy.id;
-        json_parsed_layer_copy.displayName += ' copy';
-        let newLayer = new layer.constructor(json_parsed_layer_copy, this);
+        let layerParticularData = layer.getDataToSave();
+        let deepCopyLayerData = JSON.parse(JSON.stringify(layerParticularData));
+        delete deepCopyLayerData.id;
+        deepCopyLayerData.displayName += ' copy';
+        let newLayer = new layer.constructor(deepCopyLayerData, this);
+        let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
+        newLayer.scale(mmToPixelScaleFactor);
+        newLayer.x += 15;   // slightly shifting layer 
+        newLayer.y += 15;
         this.newLayerInitilization(newLayer);
     }
 
@@ -299,6 +392,8 @@ export class DesignReportCardCanvasAdapter {
     }
 
     clearCanvas(): void {
+        clearTimeout(this.virtualPendingReDrawId);
+
         this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.layers = [];
         this.currentMouseDown = false;
@@ -322,28 +417,6 @@ export class DesignReportCardCanvasAdapter {
         // }
     }
 
-    getDataToSave() {   // updating required
-        let layers = [];
-        for (let i = 0; i < this.layers.length; i++){    // Copying all layer objects
-            if (this.layers[i])
-                layers[i] = this.layers[i].getDataToSave();
-            else
-                layers[i] = null;   // optimization scope: a better approach is not to store this nulls in db
-        }
-        layers.forEach(layer => {   // Converting pixels to mm
-            if (layers) {
-                Object.keys(layer).forEach(key => {
-                    if (key in PageRelativeAttributes)
-                        layer['key'] = this.pixelTommFactor * layer['key'];
-                });
-            }
-        })
-        return {
-            backgroundColor: this.backgroundColor,
-            layers: layers
-        };
-    }
-
     downloadPDF() { // apply a loading spinner and block the canvas user interaction while saving(to be done)
         let actualCanavsWidth = this.canvasWidth, actualCanavsHeight = this.canvasHeight;
         this.canvas.width = this.actualresolution.getWidthInPixel(this.dpi);
@@ -363,7 +436,7 @@ export class DesignReportCardCanvasAdapter {
         },1000);    // bad design of waiting for canvas loading
     }
 
-    newImageLayer(initialParameters: object): CanvasImage{
+    newImageLayer(initialParameters: object = {}): CanvasImage{
         let canvasImage = new CanvasImage(initialParameters, this);
         this.newLayerInitilization(canvasImage);
         return canvasImage

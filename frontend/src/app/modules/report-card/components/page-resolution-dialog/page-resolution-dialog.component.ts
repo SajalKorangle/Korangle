@@ -27,7 +27,10 @@ export class PageResolutionDialogComponent implements OnInit {
   }
 
   selectCustomPageResolution() {
-    this.activePageResolution = this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX];
+    if (this.activePageResolution.resolutionName != 'Custom') {
+      this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX] = getStructeredPageResolution('Cusotm', this.activePageResolution.mm.height, this.activePageResolution.mm.width, this.activePageResolution.orientation);
+      this.activePageResolution = this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX];
+    }
   }
 
   potraitOrientation(): void{

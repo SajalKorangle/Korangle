@@ -55,6 +55,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 10
         ]).then(data => { 
             this.vm.reportCardLayoutList = data[0];
+            console.log('layouts = ', data[0]);
             this.vm.DATA.data.studentSectionList = data[1];
             this.vm.DATA.data.studentParameterList = data[2];
             this.vm.DATA.data.classList = data[3];
@@ -158,10 +159,9 @@ export class DesignReportCardServiceAdapter {
             };
             this.vm.htmlAdapter.isSaving = true;
             this.vm.reportCardService.deleteObject(this.vm.reportCardService.report_card_layout_new, layout_delete_request).then(response => {
-                delete this.vm.currentLayout.id;
                 const currentLayoutIndex = this.vm.reportCardLayoutList.findIndex(layout => layout.id == current_layut_id);
-                delete this.vm.reportCardLayoutList[currentLayoutIndex];
-                this.vm.reportCardLayoutList = this.vm.reportCardLayoutList.filter(Boolean); // removing empty slots from array
+                this.vm.reportCardLayoutList.splice(currentLayoutIndex, 1);
+                this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING);
                 this.vm.htmlAdapter.isSaving = false;
             })
         }
