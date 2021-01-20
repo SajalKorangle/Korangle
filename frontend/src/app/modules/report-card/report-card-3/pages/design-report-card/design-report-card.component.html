@@ -121,7 +121,7 @@
 
             <div class="tool">
                 <button class="btn" style="padding: 8px;"
-                        (click)="htmlAdapter.openCustomVariableDialog(canvasAdapter.newFormulaLayer())">FORMULA</button>
+                        (click)="canvasAdapter.newFormulaLayer()">FORMULA</button>
             </div>
 
             <div class="tool">
@@ -133,6 +133,12 @@
                 <button class="btn material-icons"
                         (click)="htmlAdapter.openPageResolutionDialog()">photo_size_select_large</button>
             </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        (click)="htmlAdapter.openLayoutSharingDialog()">share</button>
+            </div>
+
 
             <div class="tool" style="margin-left: auto;">
                 <mat-form-field style="width: 50px; height: 30px;">

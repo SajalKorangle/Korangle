@@ -4,6 +4,7 @@ import { PageResolutionDialogComponent } from './../../../components/page-resolu
 import {ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component'
 import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
 import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
+import {LayoutSharingDialogComponent } from './../../../components/layout-sharing-dialog/layout-sharing-dialog.component'
 
 export class DesignReportCardHtmlAdapter {
 
@@ -140,6 +141,17 @@ export class DesignReportCardHtmlAdapter {
         this.openedDialog.afterClosed().subscribe(() => {
             layer.layerDataUpdate();
             this.vm.canvasAdapter.scheduleCanvasReDraw();
+        })
+    }
+
+    openLayoutSharingDialog():void {
+        this.openedDialog = this.vm.dialog.open(LayoutSharingDialogComponent, {
+            data: {
+                vm: this.vm
+            }
+        });
+        this.openedDialog.afterClosed().subscribe(() => {
+            // Do sharing operation here
         })
     }
 

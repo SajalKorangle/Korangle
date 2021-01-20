@@ -22,13 +22,24 @@ class ReportCardLayout(models.Model):
     class Meta:
         unique_together = ('parentSchool', 'name')
 
+
 class ReportCardLayoutNew(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
+    public= models.BooleanField(default=False)
     content = models.TextField()    # Contains the JSON content for the layout
     
     class Meta:
         unique_together = ('parentSchool', 'name')
+
+
+class LayoutAccess(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    layout = models.ForeignKey(ReportCardLayoutNew, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('school', 'layout')
+
 
 class ImageAssets(models.Model): # implement image data size
     parentLayout = models.ForeignKey(ReportCardLayoutNew, on_delete=models.CASCADE, blank=False)

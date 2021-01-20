@@ -1,6 +1,6 @@
 from common.common_views_file import CommonView, CommonListView
 from rest_framework.views import APIView
-from report_card_app.models import ReportCardLayout, ReportCardLayoutNew, ImageAssets
+from report_card_app.models import ReportCardLayout, ReportCardLayoutNew, LayoutAccess, ImageAssets
 
 
 # ReportCardLayout
@@ -18,6 +18,12 @@ class ReportCardLayoutNewView(CommonView, APIView):
 
 class ReportCardLayoutNewListView(CommonListView, APIView):
     Model = ReportCardLayoutNew
+
+class LayoutAccessView(CommonView, APIView):
+    Model = LayoutAccess
+
+class LayoutAccessListView(CommonListView, APIView):
+    Model = LayoutAccess
 
 class ImageAssetsView(CommonView, APIView):
     Model = ImageAssets

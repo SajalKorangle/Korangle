@@ -166,6 +166,13 @@ export class DesignReportCardServiceAdapter {
             })
         }
     }
+
+    async shareCurrentLayoutWithSchool(schoolKID: number) {
+        if (schoolKID != this.vm.user.activeSchool.dbId) {
+            const layoutSharingData = { school: schoolKID, layout: this.vm.currentLayout.id };
+            this.vm.reportCardService.createObject(this.vm.reportCardService.layout_access, layoutSharingData);
+        }
+    }
 }
 
 

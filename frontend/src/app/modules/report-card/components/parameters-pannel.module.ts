@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { TextParametersPannelComponent} from './text-parameters-pannel/text-parameters-pannel.component'
 import { ComponentsModule } from './../../../components/components.module'
 import { MatButtonToggleModule } from '@angular/material';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { AttendanceParametersPannelComponent } from './attendance-parameters-pannel/attendance-parameters-pannel.component';
 import { PositionParameterPannelComponent } from './position-parameter-pannel/position-parameter-pannel.component';
 import { MarksParametersPannelComponent } from './marks-parameters-pannel/marks-parameters-pannel.component';
@@ -16,6 +17,7 @@ import { CustomMenuComponent } from './custom-menu/custom-menu.component';
 import { TableParameterPannelComponent } from './table-parameter-pannel/table-parameter-pannel.component';
 import { GradeParametersPannelComponent } from './grade-parameters-pannel/grade-parameters-pannel.component';
 import { RemarkParametersPannelComponent } from './remark-parameters-pannel/remark-parameter-pannel.component';
+import { LayoutSharingDialogComponent } from './layout-sharing-dialog/layout-sharing-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,11 +34,13 @@ import { RemarkParametersPannelComponent } from './remark-parameters-pannel/rema
     CustomMenuComponent,
     TableParameterPannelComponent,
     GradeParametersPannelComponent,
-    RemarkParametersPannelComponent],
+    RemarkParametersPannelComponent,
+    LayoutSharingDialogComponent],
   imports: [
     ComponentsModule,
     MatButtonToggleModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     TextParametersPannelComponent,
@@ -52,7 +56,8 @@ import { RemarkParametersPannelComponent } from './remark-parameters-pannel/rema
     CustomMenuComponent,
     TableParameterPannelComponent,
     GradeParametersPannelComponent,
-    RemarkParametersPannelComponent
+    RemarkParametersPannelComponent,
+    LayoutSharingDialogComponent
   ]
 })
 export class ParametersPannelModule { }
