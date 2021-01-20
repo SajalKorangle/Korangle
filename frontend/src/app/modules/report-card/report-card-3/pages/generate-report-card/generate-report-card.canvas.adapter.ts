@@ -20,7 +20,7 @@ import {
     MarksLayer,
 } from './../../../class/constants_3';
 
-import * as jsPDF from 'jspdf'
+
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -55,22 +55,27 @@ export class GenerateReportCardCanvasAdapter {
         this.vm = vm;
         this.virtualCanvas = document.createElement('canvas');
         this.virtualContext = this.virtualCanvas.getContext('2d');
+        console.log('virtual canvas = ', this.virtualCanvas);
     }
 
-    
+    clearCanvas(): void {
+        clearTimeout(this.virtualPendingReDrawId);
+        this.layersFullyDrawn = false;
+        this.virtualContext.clearRect(0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
+        this.layers = [];
+        this.gradeRuleSetList = [];
+    }
+
     canvasSizing(): void{
         this.virtualCanvas.height = this.actualresolution.getHeightInPixel(this.dpi);
         this.virtualCanvas.width = this.actualresolution.getWidthInPixel(this.dpi);
     }
 
     loadData(Data): void{   // handle this method
-        console.log('loading Data = ', Data);
-        Data = { ...Data };
-        Data.layers = [...Data.layers];
-        this.layersFullyDrawn = false;
+        this.clearCanvas();
+        Data = JSON.parse(JSON.stringify(Data));
 
         BaseLayer.maxID = 0;
-        try {
             
             // loading resolution
             let resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
@@ -186,12 +191,6 @@ export class GenerateReportCardCanvasAdapter {
                 this.drawAllLayers();
             }
             console.log('canvas layers: ', this.layers);
-
-        } catch (err) {
-            console.error(err);
-            alert('data corupted');
-            this.clearCanvas();
-        }
     }
 
     private drawAllLayers(): void {
@@ -218,22 +217,16 @@ export class GenerateReportCardCanvasAdapter {
         }, duration);
     }
 
-
-    clearCanvas(): void {
-        clearTimeout(this.virtualPendingReDrawId);
-
-        this.virtualContext.clearRect(0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
-        this.layers = [];
-    }
-
-    async downloadPDF() { 
+    async downloadPDF(doc:any) { 
         while (!this.layersFullyDrawn) {    // wait until all layers are drawn
             await sleep(1000);
         }
-        let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [this.virtualCanvas.height, this.virtualCanvas.width] });
+        this.drawAllLayers();
+        console.log('student id = ', this.vm.DATA.studentId);
+        console.log('all layers drawn =', this.layersFullyDrawn);
+        doc.addPage([this.virtualCanvas.width, this.virtualCanvas.height]);
         let dataurl = this.virtualCanvas.toDataURL()
         doc.addImage(dataurl, 'PNG', 0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
-        doc.save(this.vm.selectedLayout.name + '.pdf');
         return;
     }
 }

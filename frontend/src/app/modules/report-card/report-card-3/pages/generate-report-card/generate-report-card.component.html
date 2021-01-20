@@ -111,4 +111,8 @@
 
 <ng-template #spinner>
     <app-loading-spinner [user]="user"></app-loading-spinner>
+    <div style="text-align: center;" *ngIf="generatedReportCards!=0">
+        <mat-progress-bar mode="determinate" [value]="generatedReportCards*100/getSelectedStudentList().length"></mat-progress-bar>
+        {{generatedReportCards}}/{{getSelectedStudentList().length}}
+    </div>
 </ng-template>

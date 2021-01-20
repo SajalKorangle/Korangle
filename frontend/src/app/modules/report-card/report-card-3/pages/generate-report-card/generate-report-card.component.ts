@@ -15,6 +15,8 @@ import { GradeService } from '@services/modules/grade/grade.service';
 import { PARAMETER_LIST, DPI_LIST } from './../../../class/constants_3';
 import { GenerateReportCardCanvasAdapter } from './generate-report-card.canvas.adapter';
 
+import * as jsPDF from 'jspdf';
+
 @Component({
   selector: 'app-generate-report-card',
   templateUrl: './generate-report-card.component.html',
@@ -96,6 +98,7 @@ export class GenerateReportCardComponent implements OnInit {
   canvasAdapter: GenerateReportCardCanvasAdapter;
   serviceAdapter: GenerateReportCardServiceAdapter;
 
+  generatedReportCards:number = 0;
   isLoading:boolean = false
 
   constructor(
@@ -172,19 +175,31 @@ export class GenerateReportCardComponent implements OnInit {
   }
 
   async generateReportCard() {
+    this.isLoading = true;
+    this.generatedReportCards = 0;
     let selectedLayutContent = JSON.parse(this.selectedLayout.content);
     this.DATA.data.studentSectionList = this.getSelectedStudentList();
     this.DATA.data.studentList = this.DATA.data.studentSectionList.map(ss => this.studentList.find(s => s.id == ss.parentStudent));
     await this.serviceAdapter.getDataForGeneratingeportCard();
 
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    let doc = new jsPDF({ orientation: 'p', unit: 'pt' });
+    doc.deletePage(1);
     for (let si = 0; si < this.DATA.data.studentList.length; si++){
       this.DATA.studentId = this.DATA.data.studentList[si].id;
       for (let i = 0; i < selectedLayutContent.length;i++){
         let layoutPage = selectedLayutContent[i];
         this.canvasAdapter.loadData(layoutPage);
-        await this.canvasAdapter.downloadPDF();
+        await this.canvasAdapter.downloadPDF(doc);
       }
+      this.generatedReportCards++;
+      await sleep(10);
     }
 
+    doc.save(this.selectedLayout.name + '.pdf');
+    this.isLoading = false;
   }
 }

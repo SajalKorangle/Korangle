@@ -73,7 +73,7 @@ export class GenerateReportCardServiceAdapter {
             parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
             parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
-        this.vm.isLoading = true;
+        // this.vm.isLoading = true;
         return Promise.all([
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data), // 0
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data), // 1
@@ -125,13 +125,13 @@ export class GenerateReportCardServiceAdapter {
                 this.vm.DATA.data.studentSubGradeList = value[3];
                 this.vm.DATA.data.studentExaminationRemarksList = value[4];
                 console.log('DATA: ', this.vm.DATA);
-                this.vm.isLoading = false;
+                // this.vm.isLoading = false;
             }, error => {
-                this.vm.isLoading = false;
+                // this.vm.isLoading = false;
             });
             this.populateParameterListWithStudentCustomField();
         }).catch(err => {
-            this.vm.isLoading = false;
+            // this.vm.isLoading = false;
         })
     }
 
