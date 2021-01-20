@@ -10,12 +10,14 @@ import {
     PAGE_RESOLUTIONS,
     Result,
     GradeRuleSet,
+    GradeRule,
     CanvasTable,
     BaseLayer,
     DPI_LIST,
     getStructeredPageResolution,
-    DATA_SOUCE_TYPE,
-    TableColumn
+    AttendanceLayer,
+    GradeLayer,
+    RemarkLayer,
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -220,6 +222,7 @@ export class DesignReportCardCanvasAdapter {
     }
 
     getDataToSave() {   // updating required
+
         let layers = [];
         for (let i = 0; i < this.layers.length; i++){    // Copying all layer objects
             layers[i] = this.layers[i].getDataToSave();
@@ -231,6 +234,8 @@ export class DesignReportCardCanvasAdapter {
                 orientation: this.actualresolution.orientation
             },
             backgroundColor: this.backgroundColor,
+
+            gradeRuleSetList: this.gradeRuleSetList.map(gradeRuleSet=>gradeRuleSet.getDataToSave()),
             layers: layers
             // gradeRuleSetList, to be implemented
         };
@@ -248,7 +253,7 @@ export class DesignReportCardCanvasAdapter {
         BaseLayer.maxID = 0;
         try {
             
-            // load resolution
+            // loading resolution
             let resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
             if (!resolution) {
                 PAGE_RESOLUTIONS[4] = getStructeredPageResolution('Custom', Data.actualresolution.mmHeight, Data.actualresolution.mmWidth, Data.actualresolution.orientation)
@@ -258,6 +263,14 @@ export class DesignReportCardCanvasAdapter {
             // apply resolution
             this.vm.htmlAdapter.canvasSetUp();
             this.updateResolution(resolution);
+
+            // loding Grade Rules
+            Data.gradeRuleSetList.forEach(gradeRuleSet => {
+                gradeRuleSet.gradeRules = gradeRuleSet.gradeRules.map(gradeRule => new GradeRule(gradeRule));   // creating GradeRules from GradeRules data if GradeRuleSet
+            });
+
+            this.gradeRuleSetList = Data.gradeRuleSetList.map(gradeRuleSet => new GradeRuleSet(gradeRuleSet));  // creating GradeRuleSet 
+
 
             let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
 
@@ -272,24 +285,15 @@ export class DesignReportCardCanvasAdapter {
                         newLayerFromLayerData = new CanvasImage(layerData, this);
                         break;
                     
-                    case 'TEXT':
-                        layerData.fontStyle = { // structuring according to canvas
-                            fillStyle: layerData.fillStyle,
-                            font: [layerData.italics, layerData.fontWeight, layerData.fontSize+'px', layerData.font].join(' ')
-                        };
-                        delete layerData.fillStyle;
-                        delete layerData.italics;
-                        delete layerData.fontWeight;
-                        delete layerData.fontSize;
-                        delete layerData.font;
-                        newLayerFromLayerData = new CanvasText(layerData, this);
-                        break;
-                    
                     case 'TABLE':
                         newLayerFromLayerData = new CanvasTable(layerData, this);
                         break;
                     
+                    case 'TEXT':
                     case 'DATE':
+                    case 'ATTENDANCE':
+                    case 'GRADE':
+                    case 'REMARK':
                         layerData.fontStyle = { // structuring according to canvas
                             fillStyle: layerData.fillStyle,
                             font: [layerData.italics, layerData.fontWeight, layerData.fontSize+'px', layerData.font].join(' ')
@@ -299,11 +303,32 @@ export class DesignReportCardCanvasAdapter {
                         delete layerData.fontWeight;
                         delete layerData.fontSize;
                         delete layerData.font;
-                        if (layerData.date) {
-                            layerData.date = new Date(layerData.date);
+                        switch (layerData.LAYER_TYPE) {
+                            case 'TEXT':
+                                newLayerFromLayerData = new CanvasText(layerData, this);
+                                break;
+                            case 'DATE':
+                                if (layerData.date) {
+                                    layerData.date = new Date(layerData.date);
+                                }
+                                newLayerFromLayerData = new CanvasDate(layerData, this);
+                                break;
+                            case 'ATTENDANCE':
+                                layerData.startDate = new Date(layerData.startDate);
+                                layerData.endDate = new Date(layerData.endDate);
+                                newLayerFromLayerData = new AttendanceLayer(layerData, this);
+                                break;
+                            case 'GRADE':
+                                newLayerFromLayerData = new GradeLayer(layerData, this);
+                                break;
+                            case 'REMARK':
+                                newLayerFromLayerData = new RemarkLayer(layerData, this);
+                                break;
                         }
-                        newLayerFromLayerData = new CanvasDate(layerData, this);
+                        
                         break;
+                
+                        
                         
                 }
                 console.log('newLayerFromLayerData = ', newLayerFromLayerData, 'data = ', layerData);

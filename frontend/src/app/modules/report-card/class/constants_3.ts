@@ -434,9 +434,9 @@ export interface Layer{
     };
     fontStyle?: { [key: string]: any };
     underline?: boolean;
-    dateFormat?: string;    // format of date, check getDateReplacements(date) function for details
+    dateFormat?: string; // for Canavs Date   // format of date, check getDateReplacements(date) function for details
     date?: Date;
-    startDate?: Date;
+    startDate?: Date;   // for Attendance 
     endDate?: Date;
     parentExamination?: any;
     parentSubject?: any;
@@ -973,7 +973,7 @@ export class CanvasDate extends CanvasText implements Layer{
 //     }
 // }
 
-class AttendanceLayer extends CanvasText implements Layer{
+export class AttendanceLayer extends CanvasText implements Layer{
     displayName: string = 'Attendance';
     startDate: Date = new Date();
     endDate: Date = new Date();
@@ -992,11 +992,20 @@ class AttendanceLayer extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         const DATA = this.ca.vm.DATA;
-        this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate);
+        this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate);   // check PARAMETER_LIST with field = attendance
         this.updateTextBoxMetrics();
     }
 
-    // Dato to save need to be implemented
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
+            startDate: this.startDate,
+            endDate: this.endDate,
+        }
+        return savingData;
+    }
 }
 
 export class GradeLayer extends CanvasText implements Layer{
@@ -1022,7 +1031,16 @@ export class GradeLayer extends CanvasText implements Layer{
         this.updateTextBoxMetrics();
     }
 
-    // data to save need to be implemented
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
+            parentExamination: this.parentExamination,
+            subGradeId: this.subGradeId,
+        }
+        return savingData;
+    }
 
 }
 
@@ -1048,7 +1066,15 @@ export class RemarkLayer extends CanvasText implements Layer{
         this.updateTextBoxMetrics();
     }
 
-    // data to save need to be implemented
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
+            parentExamination: this.parentExamination,
+        }
+        return savingData;
+    }
 
 }
 
@@ -1098,6 +1124,19 @@ export class GradeRuleSet{
         if (!this.name) {
             this.name = 'Grade Rule Set - ' + this.id;
         }
+    }
+
+    getDataToSave(): { [object: string]: any } {
+        let savingData = {
+            id: this.id,
+            name: this.name,
+            gradeRules: []
+        };
+        this.gradeRules.forEach(gradeRule => {
+            let gradeRuleCopy = { ...gradeRule };
+            savingData.gradeRules.push(gradeRuleCopy);
+        });
+        return savingData;
     }
 }
 

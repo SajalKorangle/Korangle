@@ -4,6 +4,7 @@ import { PageResolutionDialogComponent } from './../../../components/page-resolu
 import {ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component'
 import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
 import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
+
 export class DesignReportCardHtmlAdapter {
 
     fields: any = FIELDS;
