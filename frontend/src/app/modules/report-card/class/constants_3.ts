@@ -1197,7 +1197,24 @@ export class MarksLayer extends CanvasText implements Layer{
         this.updateTextBoxMetrics();
     }
 
-    // Data To Save need to be implemented
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
+            decimalPlaces: this.decimalPlaces,
+            factor: this.factor,
+            parentExamination: this.parentExamination,
+            parentSubject: this.parentSubject,
+            testType: this.testType,
+            marksType: this.marksType,
+            inWords: this.inWords,
+        }
+        if (this.gradeRuleSet) {
+            savingData.gradeRuleSet = this.gradeRuleSet.id;
+        }
+        return savingData;
+    }
 
 }
 
@@ -1205,7 +1222,7 @@ export function getParser(layers: Layer[]) {
     const PARSER = new FormulaParser();
     // setCustomFunctionsInParser(PARSER);
     layers.forEach((layer: Layer) => {
-        if (layer.LAYER_TYPE == 'MARKS') {
+        if (layer && layer.LAYER_TYPE == 'MARKS') {
             console.log('added toparser for layer : ', layer);
             PARSER.setVariable(numberToVariable(layer.id), layer.marks);
         }
@@ -1268,6 +1285,17 @@ export class Formula extends CanvasText implements Layer{
         this.updateTextBoxMetrics();
     }
 
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
+            formula: this.formula,
+            decimalPlaces:this.decimalPlaces,
+        }
+        return savingData;
+    }
+
 }
 
 export class Result extends CanvasText implements Layer{
@@ -1295,6 +1323,17 @@ export class Result extends CanvasText implements Layer{
         this.text = this.rules.remarks[numberOfFailedSubjects];
         this.fontStyle.fillStyle = this.rules.colorRule[numberOfFailedSubjects];
         this.updateTextBoxMetrics();
+    }
+
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
+            marksLayers: this.marksLayers.map(layer => layer.id),
+            rules: {...this.rules},
+        }
+        return savingData;
     }
 
 }

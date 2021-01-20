@@ -1,7 +1,6 @@
 import { DesignReportCardComponent } from './design-report-card.component';
 
 import {
-    PARAMETER_LIST,
     DEFAULT_BACKGROUND_COLOR,
     Layer, CanvasImage, CanvasText,
     CanvasDate,
@@ -18,6 +17,7 @@ import {
     AttendanceLayer,
     GradeLayer,
     RemarkLayer,
+    MarksLayer,
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -70,6 +70,7 @@ export class DesignReportCardCanvasAdapter {
                 orientation: 'p',
             },
             backgroundColor: DEFAULT_BACKGROUND_COLOR,
+            gradeRuleSetList:[],
             layers: []
         };
     }
@@ -250,6 +251,9 @@ export class DesignReportCardCanvasAdapter {
 
     loadData(Data): void{   // handle this method
         console.log('loading Data = ', Data);
+        Data = { ...Data };
+        Data.layers = [...Data.layers];
+
         BaseLayer.maxID = 0;
         try {
             
@@ -277,7 +281,7 @@ export class DesignReportCardCanvasAdapter {
             this.backgroundColor = Data.backgroundColor;
 
             for (let i = 0; i < Data.layers.length; i++) {
-                let layerData = { ...Data.layers[i] };
+                let layerData = Data.layers[i];
             
                 let newLayerFromLayerData: Layer;   // update this for new architecture
                 switch (layerData.LAYER_TYPE) {
@@ -294,6 +298,9 @@ export class DesignReportCardCanvasAdapter {
                     case 'ATTENDANCE':
                     case 'GRADE':
                     case 'REMARK':
+                    case 'MARKS':
+                    case 'FORMULA':
+                    case 'RESULT':
                         layerData.fontStyle = { // structuring according to canvas
                             fillStyle: layerData.fillStyle,
                             font: [layerData.italics, layerData.fontWeight, layerData.fontSize+'px', layerData.font].join(' ')
@@ -324,17 +331,43 @@ export class DesignReportCardCanvasAdapter {
                             case 'REMARK':
                                 newLayerFromLayerData = new RemarkLayer(layerData, this);
                                 break;
+                            case 'MARKS':
+                                if (layerData.gradeRuleSet) {
+                                    layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
+                                }
+                                newLayerFromLayerData = new MarksLayer(layerData, this);
+                                break;
+                            case 'FORMULA': // Formula can depend in some layers that is not initilized yet
+                                this.layers.push(null); // This null will be replaces during formula layer initilization
+                                continue;
+                            case 'RESULT':
+                                this.layers.push(null); // This null will be replaces during result layer initilization
+                                continue;
                         }
-                        
-                        break;
-                
-                        
-                        
+                        break;        
                 }
                 console.log('newLayerFromLayerData = ', newLayerFromLayerData, 'data = ', layerData);
                 newLayerFromLayerData.scale(mmToPixelScaleFactor);
                 this.layers.push(newLayerFromLayerData);
             }
+
+            Data.layers.forEach((layerData, index) => { // For Formula layers
+                if (layerData.LAYER_TYPE == 'FORMULA') {
+                    let newLayerFromLayerData = new Formula(layerData, this);
+                    newLayerFromLayerData.scale(mmToPixelScaleFactor);
+                    this.layers[index] = newLayerFromLayerData;
+                }
+            });
+
+            Data.layers.forEach((layerData, index) => { // For Result layers
+                if (layerData.LAYER_TYPE == 'RESULT') {
+                    layerData.marksLayers = layerData.marksLayers.map(layerId => this.layers.find(layer => layer && layer.id == layerId));
+                    let newLayerFromLayerData = new Result(layerData, this);
+                    newLayerFromLayerData.scale(mmToPixelScaleFactor);
+                    this.layers[index] = newLayerFromLayerData;
+                }
+            });
+
             if (this.layers.length > 0) {
                 this.drawAllLayers();
                 this.activeLayer = this.layers[this.layers.length - 1];
