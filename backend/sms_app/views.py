@@ -126,9 +126,9 @@ class SmsDifferentView(CommonView, APIView):
             return_data = send_different_sms(data)
             if return_data["status"] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data["data"] = create_object(data, self.ModelSerializer, *args, **kwargs)
+                return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         else:
-            return_data["data"] = create_object(data, self.ModelSerializer, *args, **kwargs)
+            return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
             print(return_data)
         return return_data
 

@@ -121,7 +121,10 @@ def partial_update_list(data_list, query_set, ModelSerializer, activeSchoolID, a
 
 
 def partial_update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
-    serializer = ModelSerializer(query_set.get(id=data['id']), data=data, partial=True)
+    concernedInstance = query_set.get(id=data['id']);
+    serializedData = ModelSerializer(concernedInstance).data
+    serializedData.update(data)
+    serializer = ModelSerializer(concernedInstance, data=serializedData)
     if serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID):
         serializer.save()
         return serializer.data

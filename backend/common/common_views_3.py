@@ -49,7 +49,7 @@ class CommonBaseView():
         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
 
     def validator(self, validated_data, activeSchoolID, activeStudentID):
-
+        
         # Checking for Parent
         if(activeStudentID):
             for relation in self.RelationsToStudent:
