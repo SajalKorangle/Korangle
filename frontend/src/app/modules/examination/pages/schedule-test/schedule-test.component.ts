@@ -140,6 +140,28 @@ export class ScheduleTestComponent implements OnInit {
 	//It handles the update button
 	handleUpdate(): void {
 		var update = false;
+
+
+		var timeError = 0;
+		this.newTestList.forEach((test) => {
+			let tempStartTime = test.newStartTime.toString().split(":",2);
+			let tempEndTime = test.newEndTime.toString().split(":",2);
+
+			let oldTime  = +(tempStartTime[0]) *60 + +(tempStartTime[1]);
+			let newTime = +(tempEndTime[0])*60 + +(tempEndTime[1]);
+
+
+
+			if (oldTime > newTime) {
+				timeError++;
+			}
+		});
+		if (timeError > 0) {
+			alert('Please correct start and end time of ' + timeError + 'tests');
+			return;
+		}
+
+
 		this.newTestList.forEach((test) => {
 			if (this.formatDate(test.newDate, '') != this.formatDate(test.date, '')
 				|| test.newStartTime != test.startTime
