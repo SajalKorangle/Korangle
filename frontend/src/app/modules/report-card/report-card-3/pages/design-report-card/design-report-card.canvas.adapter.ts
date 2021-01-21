@@ -251,8 +251,7 @@ export class DesignReportCardCanvasAdapter {
 
     loadData(Data): void{   // handle this method
         console.log('loading Data = ', Data);
-        Data = { ...Data };
-        Data.layers = [...Data.layers];
+        Data = JSON.parse(JSON.stringify(Data)); // deep copy of layoutPageData
 
         BaseLayer.maxID = 0;
         try {
