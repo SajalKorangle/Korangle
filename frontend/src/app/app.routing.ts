@@ -99,6 +99,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/homework/homework.module#HomeworkModule',
     },
     {
+        path: 'event_gallery',
+        loadChildren: 'app/modules/event-gallery/event-gallery.module#EventGalleryModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
