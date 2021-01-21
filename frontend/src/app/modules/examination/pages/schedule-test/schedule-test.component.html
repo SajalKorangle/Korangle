@@ -162,8 +162,8 @@
                     class='btn btn-{{user.activeSchool.secondaryThemeColor}}' (click)='serviceAdapter.UpdateHelper();'>
                     Update
                 </button>
-                <button type='submit' style='padding: 13px 15px;margin-right: 20px;' class='btn '
-                    (click)='resetList();'>Reset</button>
+                <button type='submit' style='padding: 13px 15px;margin-right: 20px;' [disabled]='!isUpdated'
+                class='btn ' (click)='resetList();'>Reset</button>
 
             </ng-container>
 
