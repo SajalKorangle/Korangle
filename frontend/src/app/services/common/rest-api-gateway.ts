@@ -20,11 +20,13 @@ export class RestApiGateway {
     getAbsoluteURL(url: string): string{
         let absolute_url = new URL(environment.DJANGO_SERVER + Constants.api_version + url);
         let user = DataStorage.getInstance().getUser();
+        console.log('user activeschool = ', user);
+        console.log('role = ', user.activeSchool.role);
         if (user.activeSchool) {
             if (user.activeSchool.role === 'Employee') {
                 absolute_url.searchParams.append('activeSchoolID', user.activeSchool.dbId);
             } else if (user.activeSchool.role === 'Parent') {
-                absolute_url.searchParams.append('activeStudentID', user.section.student.id)
+                absolute_url.searchParams.append('activeStudentID', user.activeSchool.studentList.map(s=>s.id).join(','));
             } else {
                 alert('Alert: Contact Admin');
             }

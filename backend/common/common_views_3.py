@@ -55,7 +55,7 @@ class CommonBaseView():
             for relation in self.RelationsToStudent:
                 splitted_relation = relation.split('__')
                 splitted_relation[0] = validated_data[splitted_relation[0]]
-                if (splitted_relation[0] and reduce(lambda a, b: getattr(a, b), splitted_relation) != activeStudentID):
+                if not (splitted_relation[0] and reduce(lambda a, b: getattr(a, b), splitted_relation) in activeStudentID):
                     return False
 
         # Checking for Parent & Employee Both
@@ -75,7 +75,7 @@ class CommonBaseView():
         # 2. activeStudentId represents parent, non existance of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
 
         if (activeStudentID and len(self.RelationsToStudent) > 0):  # for parent only
-            query_filters[self.RelationsToStudent[0]] = activeStudentID     # takes the first relation to student only(should be the closest)
+            query_filters[self.RelationsToStudent[0]+'__in'] = activeStudentID     # takes the first relation to student only(should be the closest)
         elif (len(self.RelationsToSchool)>0):
             query_filters[self.RelationsToSchool[0]] = activeSchoolID    # takes the first relation to school only(should be the the closest)
 

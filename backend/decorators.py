@@ -72,13 +72,16 @@ def user_permission_3(function):
                     return JsonResponse({'response': get_error_response('Permission Issue')})
 
             elif ('activeStudentID' in request.GET.keys()):  # User is requesting as parent
-                activeStudentID = request.GET['activeStudentID']
-                if (parentHasStudentPermission(request.user, activeStudentID)):
+                activeStudentID = list(map(int, request.GET['activeStudentID'].split(','))) # activeStudentID can be a single id or a list of id's seperated by ','
+                hasPermission = True
+                for studentID in activeStudentID:
+                    hasPermission = hasPermission and parentHasStudentPermission(request.user, studentID)
+                if (hasPermission):
                     request.GET._mutable = True
                     del request.GET['activeStudentID']
                     request.GET._mutable = False
-                    activeSchoolID = Student.objects.get(id=activeStudentID).parentSchool.id
-                    data = {'response': get_success_response(function(*args, **kwargs, activeSchoolID=int(activeSchoolID), activeStudentID=int(activeStudentID)))}
+                    activeSchoolID = Student.objects.get(id=activeStudentID[0]).parentSchool.id
+                    data = {'response': get_success_response(function(*args, **kwargs, activeSchoolID=int(activeSchoolID), activeStudentID=activeStudentID))}
                     return JsonResponse(data)
                 else:
                     return JsonResponse({'response': get_error_response('Permission Issue')})
