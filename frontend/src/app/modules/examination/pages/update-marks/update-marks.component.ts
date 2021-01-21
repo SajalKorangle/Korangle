@@ -100,7 +100,7 @@ export class UpdateMarksComponent implements OnInit {
 
         student_list.forEach(st => {
             st.testDetails.forEach(test => {
-                if (test.newMarksObtained != test.marksObtained)
+                if ((test.newMarksObtained != test.marksObtained) && !(test.newMarksObtained == null && test.marksObtained==0.0))
                     updateCheck = true;;
             });
         });

@@ -466,7 +466,7 @@ export class UpdateMarksServiceAdapter {
                 } else {
                     itemTwo.marksObtained = parseFloat(itemTwo.marksObtained.toString()).toFixed(1);
                 }
-                if (itemTwo.newMarksObtained != itemTwo.marksObtained)
+                if ((itemTwo.newMarksObtained != itemTwo.marksObtained) && (itemTwo.newMarksObtained!= null))
                 data.push(itemTwo);
             });
         });
@@ -487,6 +487,7 @@ export class UpdateMarksServiceAdapter {
         ]).then(value => {
             if(value[0]!=null)
             value[0].forEach(test => {
+                console.log(test);
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(student => {
                     student.testDetails.forEach(studentTest => {
                         if(test.id === studentTest.id)
@@ -504,6 +505,7 @@ export class UpdateMarksServiceAdapter {
             });
             if(value[1]!=null)
             value[1].forEach(test => {
+                console.log(test);
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(student => {
                     student.testDetails.forEach(studentTest => {
                         if(test.id === studentTest.id)
