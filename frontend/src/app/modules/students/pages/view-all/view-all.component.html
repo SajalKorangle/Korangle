@@ -421,7 +421,7 @@
             <div class="progress" style="height: 20px;">
                 <div class="progress-bar progress-bar-success"
                 	role="progressbar"
-                	[style.width.%]="percent_download_comlpleted">{{percent_download_comlpleted}}%
+                	[style.width.%]="percent_download_comlpleted">{{percent_download_comlpleted | number : '1.0-0'}}%
                 </div>
             </div>
             <div class="text-center">
@@ -449,7 +449,7 @@
     <!-- Student Table Profile Data List -->
     <ng-container *ngIf="!isLoading  && currentProfileDocumentFilter==='Profile'">
         <p>Total Students: <b>{{studentFullProfileList.length}}</b>, Selected : <b>{{displayStudentNumber}}</b></p>
-    	<cdk-virtual-scroll-viewport itemSize="15" class="example-viewport">
+    	<cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
         	<table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                     <tr>
@@ -564,7 +564,7 @@
                 (click)="unselectAllStudents(); $event.stopPropagation();">Clear All
         </button>
 
-        <cdk-virtual-scroll-viewport itemSize="15" class="example-viewport">
+        <cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                     <tr>

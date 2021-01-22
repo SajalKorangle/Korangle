@@ -493,8 +493,8 @@
                             <div class="documentIcon">
                                 <img src="/assets/img/nofile.png">
                             </div>
-                            <div class="documentText">
-                                <p class="documentName">Select a file or Drag it here</p>
+                            <div class="documentText text-wrap">
+                                <p class="documentName text-wrap">Select a file or Drag it here</p>
                                 <button (click)="imageInput.click()" class="documentButton">Upload</button>
                                 <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
                             </div>
@@ -503,8 +503,8 @@
                             <div class="documentIcon">
                                 <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)">
                             </div>
-                            <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
+                            <div class="documentText text-wrap">
+                                <p class="documentName text-wrap">{{getDocumentName(parameter)}}</p>
                                 <button (click)="imageInput.click()" class="documentButton">Replace</button>
                                 <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
                                 <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
@@ -514,8 +514,8 @@
                             <div class="documentIcon">
                                 <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)">
                             </div>
-                            <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
+                            <div class="documentText text-wrap">
+                                <p class="documentName text-wrap">{{getDocumentName(parameter)}}</p>
                                 <button (click)="imageInput.click()" class="documentButton">Replace</button>
                                 <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
                                 <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>

@@ -82,10 +82,10 @@ mat-form-field {
 }
 
 .documentText {
-    position: absolute;
-    left: 102px;
-    top: 47px;
-    z-index: 3;
+        position: absolute;
+        left: 102px;
+        top: 47px;
+        z-index: 3;
 }
 
 .documentLabel {
