@@ -106,11 +106,9 @@ def update_list(data_list, query_set, ModelSerializer, activeSchoolID, activeStu
 
 def update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):        
     serializer = ModelSerializer(query_set.get(id=data['id']), data=data)
-    if serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID):
-        serializer.save()
-        return serializer.data
-    else:
-        return 'Updation failed'
+    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID)
+    serializer.save()
+    return serializer.data
 
 
 def partial_update_list(data_list, query_set, ModelSerializer, activeSchoolID, activeStudentID):
@@ -125,11 +123,9 @@ def partial_update_object(data, query_set, ModelSerializer, activeSchoolID, acti
     serializedData = ModelSerializer(concernedInstance).data
     serializedData.update(data)
     serializer = ModelSerializer(concernedInstance, data=serializedData)
-    if serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID):
-        serializer.save()
-        return serializer.data
-    else:
-        return 'Updation failed'
+    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID)
+    serializer.save()
+    return serializer.data
 
 
 def delete_object(data, query_set):
