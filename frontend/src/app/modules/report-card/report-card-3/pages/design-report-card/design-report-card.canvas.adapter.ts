@@ -170,10 +170,6 @@ export class DesignReportCardCanvasAdapter {
     }
 
     maximumCanvasSize():any{
-        // if(this.canvas && (this.canvas.height/this.actualresolution.getHeightInPixel(this.dpi) >= 2)){  
-        //     return true;
-        // }
-        // return false;
         return this.actualresolution.getHeightInPixel(this.dpi)*2;
     }
 
