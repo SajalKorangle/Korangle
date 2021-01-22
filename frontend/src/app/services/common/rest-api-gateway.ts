@@ -17,11 +17,12 @@ export class RestApiGateway {
         return DataStorage.getInstance().getUser().jwt;
     }
 
-    public reportError(url:string, error:any, prompt:string) {
+    public reportError(url: string, error: any, prompt: string) {
         (<any>window).ga('send', 'exception', {
             'exDescription': JSON.stringify({ from:'RestApiGateway: api error', url, error, prompt }),
             'exFatal': false
-          });
+        });
+        console.log('Error Reported: RestApiGateway');
     }
 
     public returnResponse(response: any, url:any = null, prompt:string = null): any {
@@ -34,7 +35,8 @@ export class RestApiGateway {
             (<any>window).ga('send', 'exception', {
                 'exDescription': JSON.stringify({ from:'RestApiGateway: failed response', url, response, prompt }),
                 'exFatal': false
-              });
+            });
+            console.log('Error Reported: RestApiGateway');
             alert(jsonResponse.message);
             // return null;
             throw new Error();
@@ -42,7 +44,8 @@ export class RestApiGateway {
             (<any>window).ga('send', 'exception', {
                 'exDescription': JSON.stringify({ from:'RestApiGateway: unexpected response', url, response, prompt }),
                 'exFatal': true
-              });
+            });
+            console.log('Error Reported: RestApiGateway');
             alert('Unexpected response from server');
             return null;
         }

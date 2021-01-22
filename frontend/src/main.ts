@@ -12,10 +12,10 @@ if (environment.production) {
 platformBrowserDynamic().bootstrapModule(AppModule);
 
 window.onerror = (message, source, lineno, colno, error) => {
-  console.log('custom error logger');
   (<any>window).ga('send', 'exception', {
       'exDescription': JSON.stringify({ from:'window.onerror', message, source, lineno, colno, error }),
       'exFatal': true
-    });
+  });
+  console.log('Error Reported: window.onerror');
   return false;
 }
