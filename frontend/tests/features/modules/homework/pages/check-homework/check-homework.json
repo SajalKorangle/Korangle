@@ -1,0 +1,12 @@
+[
+    {
+      "statement": "Check Homework",
+      "testType": "protractor",
+      "steps": [
+        "Open check-homework page and get the list",
+        "Open first homework and change status of students for the homework",
+        "Reopen the check homework and verify the status of students"
+      ],
+      "testName": "Check Homework"
+    }
+] 
