@@ -119,6 +119,7 @@ def partial_update_list(data_list, query_set, ModelSerializer, activeSchoolID, a
 
 
 def partial_update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
+    # Not a good architecture, scope of development: Currently we are serializing the existing data then updating it, a better appproach would be : ModelSerializer(concernedInstance, data=newData, partially= True) and it should not interrupt validater
     concernedInstance = query_set.get(id=data['id']);
     serializedData = ModelSerializer(concernedInstance).data
     serializedData.update(data)
