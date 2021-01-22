@@ -1,17 +1,17 @@
 <mat-card style="padding: 0; width: 100%; margin-top:6px; overflow: hidden;">
     <div style="background-color: grey; text-align: center;">
-        <i class="material-icons" style="margin-top: 4px;">date_range</i>
+        <i class="material-icons" style="margin-top: 4px;">settings_overscan</i>
     </div>
     <div style="margin: 4px; padding: 4px;">
 
         <mat-form-field>
-            <input type="number" matInput [ngModel]="layer.height"
-                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateHeight($event);canvasRefresh();" placeholder="Choose Height">
+            <input type="number" matInput [ngModel]="getImageHeight()"
+                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateHeight($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Height">
         </mat-form-field>
 
         <mat-form-field>
-            <input type="number" matInput [ngModel]="layer.width"
-                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateWidth($event); canvasRefresh();" placeholder="Choose Width">
+            <input type="number" matInput [ngModel]="getImageWidth()"
+                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateWidth($event/getPixelTommFactor()); canvasRefresh();" placeholder="Choose Width">
         </mat-form-field>
        
     </div>

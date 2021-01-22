@@ -1,0 +1,36 @@
+<mat-card style="padding: 0; width: 100%; margin-top:6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">date_range</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+
+        <mat-form-field *ngIf="layer.LAYER_TYPE != 'CIRCLE'">
+            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.length)"
+                (ngModelChange)="layer.updateLength($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Length">
+        </mat-form-field>
+
+        
+        <mat-form-field *ngIf="layer.LAYER_TYPE == 'CIRCLE' || layer.LAYER_TYPE == 'ROUNDED-RECTANGLE'">
+            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.radius)"
+                (ngModelChange)="layer.updateRadius($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Radius">
+        </mat-form-field>
+
+        
+        <mat-form-field *ngIf="layer.LAYER_TYPE == 'RECTANGLE' || layer.LAYER_TYPE == 'ROUNDED-RECTANGLE'">
+            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.width)"
+                (ngModelChange)="layer.updateWidth($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Width">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="layer.LAYER_TYPE == 'LINE'">
+            <input type="number" step="1" matInput [ngModel]="layer.orientation"
+                (ngModelChange)="layer.updateOrientation($event);canvasRefresh();" placeholder="Choose Orientation">
+        </mat-form-field>
+
+        <!-- <mat-form-field>
+            <input type="number" matInput [ngModel]="layer.width"
+                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateWidth($event); canvasRefresh();" placeholder="Choose Width">
+        </mat-form-field>
+        -->
+    </div>
+
+</mat-card>
