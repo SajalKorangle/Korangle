@@ -169,18 +169,26 @@ export class DesignReportCardCanvasAdapter {
         
     }
 
-    maximumCanvasSize():boolean{
-        if(this.canvas && (this.canvas.height/this.actualresolution.getHeightInPixel(this.dpi) >= 2)){  
-            return true;
-        }
-        return false;
+    maximumCanvasSize():any{
+        // if(this.canvas && (this.canvas.height/this.actualresolution.getHeightInPixel(this.dpi) >= 2)){  
+        //     return true;
+        // }
+        // return false;
+        return this.actualresolution.getHeightInPixel(this.dpi)*2;
     }
 
-    minimumCanvasSize():boolean{
-        if(this.canvas && (this.canvas.height/this.actualresolution.getHeightInPixel(this.dpi) <= 0.1)){
-            return true;
-        }
-        return false;
+    minimumCanvasSize():any{
+        return this.actualresolution.getHeightInPixel(this.dpi)*(0.1);
+    }
+
+    changeZoomLevel(event: any): any{
+        this.currentZoom = event.value;
+        this.canvas.height = event.value;
+        this.canvas.width = event.value;
+        this.canvasSizing();
+        // this.canvas.height = this.currentZoom*this.originalHeight/100;
+        // this.canvas.width = this.currentZoom*this.originalWidth/100;
+
     }
     
     canvasSizing(): void{

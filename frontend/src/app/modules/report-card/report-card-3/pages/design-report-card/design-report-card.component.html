@@ -68,16 +68,26 @@
                         (click)="htmlAdapter.fullScreenToggle()">{{htmlAdapter.isFullScreen?'fullscreen_exit':'fullscreen'}}</button>
             </div>
 
-            <div class="tool">
+            <!-- <div class="tool">
                 <button class="btn material-icons"
                         [disabled]="canvasAdapter.maximumCanvasSize() == true"
-                        (click)="canvasAdapter.increaseCanvasSize()">zoom_in</button>    <!--To Be Implemented: Canavs resize-->
+                        (click)="canvasAdapter.increaseCanvasSize()">zoom_in</button>   
             </div>
 
             <div class="tool">
                 <button class="btn material-icons"
                         [disabled]="canvasAdapter.minimumCanvasSize() == true"
-                        (click)="canvasAdapter.decreaseCanvasSize()">zoom_out</button>    <!--To Be Implemented: Canavs resize-->
+                        (click)="canvasAdapter.decreaseCanvasSize()">zoom_out</button>  
+            </div> -->
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        mat-button [matMenuTriggerFor]="zoomMenu" >zoom_in</button>
+                <mat-menu #zoomMenu="matMenu">
+                    <div style="display: flex; flex-direction: column; margin: 4px 12px;">
+                        <mat-slider min="{{canvasAdapter.minimumCanvasSize()}}" max="{{canvasAdapter.maximumCanvasSize()}}" step="0.5" value="{{canvasAdapter.canvas.height}}" (input)="canvasAdapter.changeZoomLevel($event)" (click)="$event.stopPropagation()"></mat-slider>
+                    </div>
+                </mat-menu>
             </div>
 
             <div class="tool">
