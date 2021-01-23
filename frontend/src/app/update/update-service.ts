@@ -146,7 +146,7 @@ export class UpdateService{
                 'content': sms_converted_data[0]['isAdvanceSms'],
                 'parentMessageType': informationMessageType,
                 'count': this.getEstimatedSMSCount(sentUpdateType, mobile_list, message),
-                'notificationCount': notification_list.length,
+                'notificationCount': this.getEstimatedNotificationCount(sentUpdateType, mobile_list),
                 'notificationMobileNumberList': notif_mobile_string,
                 'mobileNumberList': sms_mobile_string,
                 'parentSchool': schoolId,
@@ -159,7 +159,7 @@ export class UpdateService{
                 'content': this.getMessageFromTemplate(message, notification_list[0]),
                 'parentMessageType': informationMessageType,
                 'count': this.getEstimatedSMSCount(sentUpdateType, mobile_list, message),
-                'notificationCount': notification_list.length,
+                'notificationCount': this.getEstimatedNotificationCount(sentUpdateType, mobile_list),
                 'notificationMobileNumberList': notif_mobile_string,
                 'mobileNumberList': sms_mobile_string,
                 'parentSchool': schoolId,
@@ -225,6 +225,18 @@ export class UpdateService{
                 }
             })
 
+        return count;
+    }
+
+    
+    getEstimatedNotificationCount = (sentUpdateType: any, student_list: any,) => {
+        let count = 0;
+        if(sentUpdateType == 1)return 0;
+    
+        count = student_list.filter((item) => {
+            return item.mobileNumber && item.notification;
+        }).length;
+    
         return count;
     }
 
