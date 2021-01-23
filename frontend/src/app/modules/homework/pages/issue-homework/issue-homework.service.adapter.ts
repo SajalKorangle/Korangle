@@ -42,10 +42,10 @@ export class IssueHomeworkServiceAdapter {
                 if(this.vm.settings.sentUpdateType == 'NULL'){
                     this.vm.settings.sentUpdateType = 1;
                 }
-                if(this.vm.settings.sentUpdateType == 'SMS'){
+                else if(this.vm.settings.sentUpdateType == 'SMS'){
                     this.vm.settings.sentUpdateType = 2;
                 }
-                if(this.vm.settings.sentUpdateType == 'NOTIFICATION'){
+                else if(this.vm.settings.sentUpdateType == 'NOTIFICATION'){
                     this.vm.settings.sentUpdateType = 3;
                 }
                 else{

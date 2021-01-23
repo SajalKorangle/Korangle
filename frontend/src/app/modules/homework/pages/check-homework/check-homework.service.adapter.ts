@@ -50,10 +50,10 @@ export class CheckHomeworkServiceAdapter {
                 if(this.vm.sendUpdateType == 'NULL'){
                     this.vm.sendUpdateType = 1;
                 }
-                if(this.vm.sendUpdateType == 'SMS'){
+                else if(this.vm.sendUpdateType == 'SMS'){
                     this.vm.sendUpdateType = 2;
                 }
-                if(this.vm.sendUpdateType == 'NOTIFICATION'){
+                else if(this.vm.sendUpdateType == 'NOTIFICATION'){
                     this.vm.sendUpdateType = 3;
                 }
                 else{

@@ -100,7 +100,7 @@ export class UpdateService{
         let service_list = [];
         let notification_list = [];
         let sms_list = [];
-        
+
         if (sentUpdateType == 2) {
             sms_list = mobile_list;
             notification_list = [];
@@ -180,19 +180,16 @@ export class UpdateService{
             service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
         }
 
-        console.log(sms_data);
-        console.log(notification_data);
+        Promise.all(service_list).then(value => {
 
-        // Promise.all(service_list).then(value => {
-
-        //     if ((sentUpdateType == 2 || sentUpdateType == 3) && (sms_list.length > 0)) {
-        //         if (value[0].status === 'success') {
-        //             smsBalance -= value[0].data.count;
-        //         } else if (value[0].status === 'failure') {
-        //             smsBalance = value[0].count;
-        //         }
-        //     }
-        // });
+            if ((sentUpdateType == 2 || sentUpdateType == 3) && (sms_list.length > 0)) {
+                if (value[0].status === 'success') {
+                    smsBalance -= value[0].data.count;
+                } else if (value[0].status === 'failure') {
+                    smsBalance = value[0].count;
+                }
+            }
+        });
     }
 
     checkMobileNumber(mobileNumber: number): boolean {
