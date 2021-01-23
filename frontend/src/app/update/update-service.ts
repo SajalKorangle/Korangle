@@ -180,16 +180,19 @@ export class UpdateService{
             service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
         }
 
-        Promise.all(service_list).then(value => {
+        console.log(sms_data);
+        console.log(notification_data);
 
-            if ((sentUpdateType == 2 || sentUpdateType == 3) && (sms_list.length > 0)) {
-                if (value[0].status === 'success') {
-                    smsBalance -= value[0].data.count;
-                } else if (value[0].status === 'failure') {
-                    smsBalance = value[0].count;
-                }
-            }
-        });
+        // Promise.all(service_list).then(value => {
+
+        //     if ((sentUpdateType == 2 || sentUpdateType == 3) && (sms_list.length > 0)) {
+        //         if (value[0].status === 'success') {
+        //             smsBalance -= value[0].data.count;
+        //         } else if (value[0].status === 'failure') {
+        //             smsBalance = value[0].count;
+        //         }
+        //     }
+        // });
     }
 
     checkMobileNumber(mobileNumber: number): boolean {
@@ -231,7 +234,7 @@ export class UpdateService{
     
     getEstimatedNotificationCount = (sentUpdateType: any, student_list: any,) => {
         let count = 0;
-        if(sentUpdateType == 1)return 0;
+        if(sentUpdateType == 2)return 0;
     
         count = student_list.filter((item) => {
             return item.mobileNumber && item.notification;
