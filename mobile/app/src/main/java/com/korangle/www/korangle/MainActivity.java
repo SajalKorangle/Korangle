@@ -342,12 +342,19 @@ public class MainActivity extends AppCompatActivity {
 
             // Check that the response is a good one
             if (resultCode == Activity.RESULT_OK) {
-                if (mCameraPhotoPath != null) {
-                    results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                if (data == null || data.getDataString() == null) {
+                    // If there is not data, then we may have taken a photo
+                    if (mCameraPhotoPath != null) {
+                        results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                    }
+                } else {
+                    String dataString = data.getDataString();
+                    if (dataString != null) {
+                        results = new Uri[]{Uri.parse(dataString)};
+                    }
                 }
             }
 
-            // Toast.makeText(getApplicationContext(), "Seven", Toast.LENGTH_SHORT).show();
             mFilePathCallback.onReceiveValue(results);
             mFilePathCallback = null;
 
