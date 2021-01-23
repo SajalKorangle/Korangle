@@ -54,7 +54,6 @@ export interface ImagePreviewDialogData {
         UserService,
         SmsService,
         SmsOldService,
-        UpdateService,
     ],
 })
 
@@ -97,6 +96,8 @@ export class IssueHomeworkComponent implements OnInit {
     // studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
 
+    updateService: any;
+
     constructor(
         public subjectService: SubjectService,
         public homeworkService: HomeworkService,
@@ -107,7 +108,6 @@ export class IssueHomeworkComponent implements OnInit {
         public smsService: SmsService,
         public smsOldService: SmsOldService,
         public dialog: MatDialog,
-        public updateService: UpdateService,
     ){ }
 
     // Server Handling - Initial
@@ -121,6 +121,9 @@ export class IssueHomeworkComponent implements OnInit {
         this.noPermission = false;
         this.currentHomework = new Homework;
         this.currentHomeworkImages = [];
+
+        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+
         this.serviceAdapter = new IssueHomeworkServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

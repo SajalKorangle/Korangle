@@ -29,7 +29,6 @@ import { isMobile } from '../../../../classes/common.js';
         UserService,
         SmsService,
         SmsOldService,
-        UpdateService,
     ],
 })
 
@@ -70,7 +69,9 @@ export class CheckHomeworkComponent implements OnInit {
         'SUBMITTED',
         'CHECKED',
         'ASKED FOR RESUBMISSION',
-    ]
+    ];
+
+    updateService: any;
     
     constructor( 
         public classService: ClassService,
@@ -82,7 +83,6 @@ export class CheckHomeworkComponent implements OnInit {
         public smsService: SmsService,
         public smsOldService: SmsOldService,
         public dialog: MatDialog,
-        public updateService: UpdateService,
     ){ }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -91,6 +91,9 @@ export class CheckHomeworkComponent implements OnInit {
         this.isChecking = false;
         this.classSectionHomeworkList = [];
         this.user = DataStorage.getInstance().getUser();
+
+        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+
         this.serviceAdapter = new CheckHomeworkServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

@@ -1,4 +1,3 @@
-import {Component, Injectable} from '@angular/core';
 import {UserService} from '../services/modules/user/user.service';
 import {NotificationService} from '../services/modules/notification/notification.service';
 import {SmsService} from '../services/modules/sms/sms.service';
@@ -12,17 +11,16 @@ SentUpdateType -
 */
 
 
-@Component({
+/*@Component({
     providers: [
         NotificationService,
         UserService,
         SmsService,
     ],
-})
+})*/
 
 
-@Injectable()
-export class UpdateService{
+export class UpdateService {
 
     STUDENT_LIMITER = 200;
     notif_usernames = [];
@@ -32,12 +30,19 @@ export class UpdateService{
         'NOTIFICATION',
         'NOTIF./SMS',
     ];
-    
-    constructor(
-        public notificationService: NotificationService,
-        public userService: UserService,
-        public smsService: SmsService,
-    ){ }
+
+    notificationService: any;
+    userService: any;
+    smsService: any;
+
+    constructor(notificationService: NotificationService,
+                userService: UserService,
+                smsService: SmsService,
+    ) {
+        this.notificationService = notificationService;
+        this.userService = userService;
+        this.smsService = smsService;
+    }
 
     fetchGCMDevicesNew: any = (studentList: any) => {
         const service_list = [];
