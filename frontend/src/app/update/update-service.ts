@@ -179,7 +179,7 @@ export class UpdateService{
         if (notification_data.length > 0 ) {
             service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
         }
-
+        
         Promise.all(service_list).then(value => {
 
             if ((sentUpdateType == 2 || sentUpdateType == 3) && (sms_list.length > 0)) {
@@ -220,7 +220,7 @@ export class UpdateService{
         let count = 0;
         if(sentUpdateType==3)return 0;
             student_list.filter(item => item.mobileNumber).forEach((item, i) => {
-                if(sentUpdateType==1 || item.notification==false){
+                if(sentUpdateType == 2 || item.notification == false){
                     count += this.getMessageCount(this.getMessageFromTemplate(message, item));
                 }
             })
