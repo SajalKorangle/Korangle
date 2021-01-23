@@ -276,8 +276,7 @@ export class CreateTestComponent implements OnInit {
             var subIdx = this.newTestList.findIndex(
                 (sub) =>
                     sub.subjectId === test.parentSubject &&
-                    (sub.testType === test.testType || sub.newTestType === test.testType) &&
-                    sub.maximumMarks === test.maximumMarks
+                    (sub.testType === test.testType || sub.newTestType === test.testType)
             );
 
             var classIdx = -1,
