@@ -1,5 +1,5 @@
 from decorators import user_permission
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 
 from rest_framework.views import APIView
 
@@ -11,6 +11,9 @@ from .business.enquiry \
     import get_enquiry, create_enquiry, delete_enquiry, update_enquiry, get_enquiry_list
 
 
+# deprecated
+# current usage
+# enquiry_app/urls.py: 3 lines
 class EnquiryProfileView(APIView):
 
     @user_permission
@@ -37,7 +40,9 @@ class EnquiryProfileView(APIView):
         }
         return delete_enquiry(data)
 
-
+# deprecated
+# current usage
+# enquiry_app/urls.py: 2 lines
 class EnquiryListView(APIView):
 
     @user_permission
@@ -53,7 +58,9 @@ class EnquiryListView(APIView):
 ############## Mini Enquiry ##############
 from .business.mini_enquiry import get_mini_enquriry_list
 
-
+# deprecated
+# current usage
+# enquiry_app/urls.py: 2 lines
 class MiniEnquiryView(APIView):
 
     @user_permission
@@ -67,6 +74,8 @@ from .models import Enquiry
 
 class EnquiryyView(CommonView,APIView):
     Model = Enquiry
+    RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
 
 class EnquiryyListView(CommonListView,APIView):
     Model = Enquiry
+    RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
