@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
+
+import { UpdateService } from '../../../../update/update-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -67,7 +69,9 @@ export class CheckHomeworkComponent implements OnInit {
         'SUBMITTED',
         'CHECKED',
         'ASKED FOR RESUBMISSION',
-    ]
+    ];
+
+    updateService: any;
     
     constructor( 
         public classService: ClassService,
@@ -87,6 +91,9 @@ export class CheckHomeworkComponent implements OnInit {
         this.isChecking = false;
         this.classSectionHomeworkList = [];
         this.user = DataStorage.getInstance().getUser();
+
+        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+
         this.serviceAdapter = new CheckHomeworkServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -94,11 +101,6 @@ export class CheckHomeworkComponent implements OnInit {
 
     changeClassSection(): any{
         this.selectedSubject = this.selectedClassSection.subjectList[0];
-        this.selectedHomework = this.selectedSubject.homeworkList[0];
-    }
-
-    changeSubject(): any{
-        this.selectedHomework = this.selectedSubject.homeworkList[0];
     }
 
     displayDateTime(date: any, time: any): any{
@@ -172,10 +174,17 @@ export class CheckHomeworkComponent implements OnInit {
             }
         }
         let nextCounter = (counter+1)%(this.HOMEWORK_STATUS.length);
-        if(nextCounter == 0){
+        if(counter == 3){
+            nextCounter = (counter+3)%(this.HOMEWORK_STATUS.length);
+        }
+        else if(nextCounter == 3){
             nextCounter = (counter+2)%(this.HOMEWORK_STATUS.length);
         }
         temp.status = this.HOMEWORK_STATUS[nextCounter];
+    }
+
+    askForResubmission(temp: any): void{
+        temp.status = this.HOMEWORK_STATUS[3];
     }
 
     getButtonString(status: any): any {
@@ -248,7 +257,10 @@ export class CheckHomeworkComponent implements OnInit {
 
     openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
-            width: '1000px',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+            height: '100%',
+            width: '100%',
             data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
         });
     
@@ -259,5 +271,23 @@ export class CheckHomeworkComponent implements OnInit {
 
     isMobile(): boolean {
         return isMobile();
+    }
+
+    isSubmittedLate(homeworkDate, homeworkTime, studentDate, studentTime): boolean{
+        if(homeworkDate == null || studentDate == null){
+            return false;
+        }
+        else if(studentDate > homeworkDate){
+            return true;
+        }
+        else if(studentDate < homeworkDate){
+            return false;
+        }
+        else{
+            if(studentTime > homeworkTime){
+                return true;
+            }
+        }
+        return false;
     }
 }

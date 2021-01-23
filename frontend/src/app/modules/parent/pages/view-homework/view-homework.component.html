@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" *ngIf="!isSubmitting || isMobile()" (scroll)="onScroll($event)">
+<div class="card-content table-responsive" *ngIf="!isSubmitting || isMobile()">
 
 
     <div *ngIf="!isSessionLoading">
@@ -238,7 +238,8 @@
 
                         <div><strong>Answers</strong><br></div>
                         <mat-form-field style="width: 100%;" *ngIf="isSubmitting == true">
-                            <textarea matInput cdkTextareaAutosize style="white-space: pre-wrap;"
+                            <textarea matInput cdkTextareaAutosize
+                                style="padding-top: 10px; padding-bottom: 20px;"        
                                 [ngModel]="toSubmitHomework.answerText"
                                 (ngModelChange)="toSubmitHomework.answerText=$event" placeholder="Enter Answer Text">
                             </textarea>
@@ -258,7 +259,9 @@
                                     (click)="imageInput.click()">+</button>
                             </div><br>
                         </div>
-                        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        <button type="submit" 
+                            [disabled]="toSubmitHomework.homeworkStatus == 'CHECKED'"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                             style="float:right ;cursor: pointer; padding: 4px 7px;"
                             (click)="serviceAdapter.submitHomework()">
                             Submit Answer</button>
@@ -274,16 +277,12 @@
         </mat-accordion>
 
         <ng-container *ngIf="loadMoreHomework">
-            <span *ngIf="isMobile()" style="color: #817ae9;" (click)="serviceAdapter.loadMoreHomeworks()"><u>Load
-                    More..</u></span>
-            <div *ngIf="isLoadingCheckedHomeworks || isLoadingSubmittedHomeworks">
-                <br>
+            <div *ngIf="isLoadingHomeworks">
                 <div style="width: 100%" align="center">
                     <div class="loaderCustom"></div>
-                </div>
-            </div>
+                </div><br>
+            </div><span style="color: #817ae9;" (click)="serviceAdapter.loadMoreHomeworks()"><u>Load More..</u></span>
         </ng-container>
-
     </div>
 </div>
 
@@ -307,9 +306,9 @@
                     &nbsp;</span><i>{{displayDateTime(toSubmitHomework.startDate, toSubmitHomework.startTime)}}</i> <br>
                 <span style="color: #7b7b7b;">Due On:
                     &nbsp;</span><i>{{displayDateTime(toSubmitHomework.endDate, toSubmitHomework.endTime)}}</i> <br>
-                <span style="color: #7b7b7b;">Submission On On:
-                    &nbsp;</span><i>{{displayDateTime(toSubmitHomework.submissionDate,
-                    toSubmitHomework.submissionTime)}}</i> <br>
+                <span style="color: #7b7b7b;" *ngIf="toSubmitHomework.submissionDate != NULL">Submitted On:
+                    &nbsp;</span><i *ngIf="toSubmitHomework.submissionDate != NULL">{{displayDateTime(toSubmitHomework.submissionDate,
+                    toSubmitHomework.submissionTime)}} <br></i>
                 <span style="color: #7b7b7b;">Teacher's Remark:
                     &nbsp;</span><i>{{toSubmitHomework.homeworkRemark}}</i>
                 <div style="margin-top: 30px;">
@@ -339,7 +338,7 @@
                         <mat-form-field style="width: 100%;">
                             <span style="color: #7b7b7b;">Answer:</span> <br>
                             <textarea matInput cdkTextareaAutosize
-                                style="padding-top: 10px; padding-bottom: 10px; white-space: pre-wrap;"
+                                style="padding-top: 10px; padding-bottom: 20px;"        
                                 [ngModel]="toSubmitHomework.answerText" (ngModelChange)="toSubmitHomework.answerText=$event">
                                 </textarea>
                         </mat-form-field>
@@ -361,8 +360,11 @@
                 </div>
 
                 <div class="row" style="margin-right: 5px;">
-                    <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            style="float:right ;cursor: pointer; padding: 4px 7px;" (click)="serviceAdapter.submitHomework()">
+                    <button type="submit" 
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            [disabled]="toSubmitHomework.homeworkStatus == 'CHECKED'"   
+                            style="float:right ;padding: 4px 7px;" 
+                            (click)="serviceAdapter.submitHomework()">
                             Submit Answer</button>
                 </div>
             </div>
