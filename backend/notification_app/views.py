@@ -1,10 +1,8 @@
 
 import json
 
-from common.common_views import CommonView, CommonListView, APIView
-from common.common_serializer_interface import create_list, create_object
-from decorators import user_permission_new
-
+from common.common_views_3 import CommonView, CommonListView, APIView
+from decorators import user_permission_3
 from push_notifications.models import GCMDevice
 from .models import Notification
 
@@ -30,20 +28,20 @@ class GCMDeviceListView(CommonListView, APIView):
 
 class NotificationView(CommonView, APIView):
     Model = Notification
+    RelationsToSchool = ['parentSchool__id']
 
-    @user_permission_new
     def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        send_notification([].append(data))
-        return create_object(data, self.Model, self.ModelSerializer)
+        response = super().post(request)
+        send_notification([].append(request.data))
+        return response
 
 
 class NotificationListView(CommonListView, APIView):
     Model = Notification
+    RelationsToSchool = ['parentSchool__id']
 
-    @user_permission_new
     def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        send_notification(data)
-        return create_list(data, self.Model, self.ModelSerializer)
+        response = super().post(request)
+        send_notification(request.data)
+        return response
 
