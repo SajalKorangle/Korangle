@@ -6,14 +6,14 @@ from django.db.models import Max
 from student_app.models import Student
 
 
-def create_discount_list(data_list, Model, ModelSerializer):
+def create_discount_list(data_list, Model, ModelSerializer, activeSchoolID, activeStudentID):
     return_data = []
     for data in data_list:
-        return_data.append(create_discount_object(data, Model, ModelSerializer))
+        return_data.append(create_discount_object(data, Model, ModelSerializer, activeSchoolID, activeStudentID))
     return return_data
 
 
-def create_discount_object(data, Model, ModelSerializer):
+def create_discount_object(data, Model, ModelSerializer, activeSchoolID, activeStudentID):
 
     data['discountNumber'] = 1
     schoolId = Student.objects.get(id=data['parentStudent']).parentSchool.id
@@ -26,7 +26,7 @@ def create_discount_object(data, Model, ModelSerializer):
             data['discountNumber'] = last_discount_number + 1
 
     serializer = ModelSerializer(data=data)
-    if serializer.is_valid(raise_exception=True):
+    if serializer.is_valid(raise_exception=True, activeSchoolID=activeSchoolID, activeStudentID = activeStudentID):
         serializer.save()
         return serializer.data
     else:
