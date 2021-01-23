@@ -300,7 +300,7 @@ export class CheckHomeworkServiceAdapter {
         Promise.all([
             this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData),
         ]).then(value =>{
-            if(studentHomework.status == this.vm.HOMEWORK_STATUS[2] && this.vm.sendCheckUpdate == true && this.vm.sendUpdateType!= 'NULL'){
+            if(studentHomework.status == this.vm.HOMEWORK_STATUS[2] && this.vm.sendCheckUpdate == true && this.vm.sendUpdateType!= 1){
                 let tempData = {
                     'mobileNumber': studentHomework.mobileNumber,
                     'homeworkName': this.vm.selectedHomework.homeworkName,
@@ -311,7 +311,7 @@ export class CheckHomeworkServiceAdapter {
                 mobile_list.push(tempData);
                 this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.checkUpdateMessage, this.informationMessageType, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
-            else if(studentHomework.status == this.vm.HOMEWORK_STATUS[3] && this.vm.sendResubmissionUpdate == true && this.vm.sendUpdateType!= 'NULL'){
+            else if(studentHomework.status == this.vm.HOMEWORK_STATUS[3] && this.vm.sendResubmissionUpdate == true && this.vm.sendUpdateType!= 1){
                 let tempData = {
                     'mobileNumber': studentHomework.mobileNumber,
                     'homeworkName': this.vm.selectedHomework.homeworkName,
