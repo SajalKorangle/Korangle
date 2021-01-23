@@ -15,7 +15,6 @@ export class RecordAttendanceServiceAdapter {
     initializeAdapter(vm: RecordAttendanceComponent): void {
         this.vm = vm;
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Attendance') + 1;
-        console.log(this.informationMessageType);
     }
 
     initializeData(): void {
@@ -64,7 +63,6 @@ export class RecordAttendanceServiceAdapter {
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data)
             ]).then(secondValue =>{
-                console.log(value);
                 let student_id_list = [];
                 let student_data = {
                     'id__in': student_id_list,
@@ -76,7 +74,6 @@ export class RecordAttendanceServiceAdapter {
                 Promise.all([
                     this.vm.studentService.getObjectList(this.vm.studentService.student,student_data)
                 ]).then(thirdValue =>{
-                    console.log(thirdValue);
                     this.initializeClassSectionStudentList(value[2], value[3], secondValue[0], thirdValue[0], value[1]);
                     this.vm.isInitialLoading = false;
                 })
@@ -248,6 +245,10 @@ export class RecordAttendanceServiceAdapter {
         promises.push(this.vm.attendanceService.updateObjectList(this.vm.attendanceService.student_attendance, toUpdateAttendance));
         this.vm.isLoading = true;
         Promise.all(promises).then(response =>{
+            response[0].forEach(element =>{
+                let previousIndex = this.vm.currentAttendanceList.find(attendance => attendance.parentStudent == element.parentStudent && attendance.dateOfAttendance == element.dateOfAttendance);
+                previousIndex.id = element.id;
+            })
             this.notifyParents();
             alert('Student Attendance recorded successfully');
             this.vm.isLoading = false;
@@ -305,7 +306,6 @@ export class RecordAttendanceServiceAdapter {
     }   
 
     fetchGCMDevices: any = (studentList: any) => {
-        // console.log(studentList);
         const service_list = [];
         const iterationCount = Math.ceil(studentList.length / this.vm.STUDENT_LIMITER);
         let loopVariable = 0;
@@ -318,15 +318,12 @@ export class RecordAttendanceServiceAdapter {
                 ),
                 'active': 'true__boolean',
             }
-            // console.log(gcm_data);
             const user_data = {
                 'fields__korangle': 'username,id',
                 'username__in': mobile_list.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)),
             };
-            // console.log(user_data);
             service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_data));
             service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
-            // console.log(service_list);
             loopVariable = loopVariable + 1;
         }
         
@@ -375,10 +372,10 @@ export class RecordAttendanceServiceAdapter {
         let service_list = [];
         let notification_list = [];
         let sms_list = [];
-        if (this.vm.selectedSentType == this.vm.sentTypeList[0]) {
+        if (this.vm.selectedSentType == this.vm.sentTypeList[1]) {
             sms_list = mobile_list;
             notification_list = [];
-        } else if (this.vm.selectedSentType == this.vm.sentTypeList[1]) {       
+        } else if (this.vm.selectedSentType == this.vm.sentTypeList[2]) {       
             sms_list = [];
             notification_list = mobile_list.filter(obj => {
                 return obj.notification;
@@ -478,25 +475,23 @@ export class RecordAttendanceServiceAdapter {
         }
 
         this.vm.isLoading = true;
-        console.log(sms_data);
-        console.log(notification_data);
 
-        // Promise.all(service_list).then(value => {
+        Promise.all(service_list).then(value => {
 
-        //     if ((this.vm.selectedSentType === this.vm.sentTypeList[0] ||
-        //         this.vm.selectedSentType === this.vm.sentTypeList[2]) &&
-        //         (sms_list.length > 0)) {
-        //         if (value[0].status === 'success') {
-        //             this.vm.smsBalance -= value[0].data.count;
-        //         } else if (value[0].status === 'failure') {
-        //             this.vm.smsBalance = value[0].count;
-        //         }
-        //     }
+            if ((this.vm.selectedSentType === this.vm.sentTypeList[1] ||
+                this.vm.selectedSentType === this.vm.sentTypeList[3]) &&
+                (sms_list.length > 0)) {
+                if (value[0].status === 'success') {
+                    this.vm.smsBalance -= value[0].data.count;
+                } else if (value[0].status === 'failure') {
+                    this.vm.smsBalance = value[0].count;
+                }
+            }
 
-        //     this.vm.isLoading = false;
-        // }, error => {
-        //     this.vm.isLoading = false;
-        // })
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        })
     }
 
     getStudentIdList(): any {
@@ -540,7 +535,7 @@ export class RecordAttendanceServiceAdapter {
 
     getEstimatedSMSCount = () => {
         let count = 0;
-        if(this.vm.selectedSentType==this.vm.sentTypeList[1])return 0;
+        if(this.vm.selectedSentType==this.vm.sentTypeList[2])return 0;
             this.vm.studentList.filter(item => item.mobileNumber).forEach((item, i) => {
                 if(this.vm.selectedSentType==this.vm.sentTypeList[0] || item.notification==false){
                     count += this.getMessageCount(this.getMessageFromTemplate(this.vm.studentUpdateMessage, item));
@@ -560,7 +555,7 @@ export class RecordAttendanceServiceAdapter {
 
     getEstimatedNotificationCount = () => {
         let count = 0;
-        if(this.vm.selectedSentType==this.vm.sentTypeList[0])return 0;
+        if(this.vm.selectedSentType==this.vm.sentTypeList[1])return 0;
     
         count = this.vm.studentList.filter((item) => {
             return item.mobileNumber && item.notification;
