@@ -122,15 +122,13 @@ export class UpdateService{
         notification_list.forEach((item, index) => {
             notif_mobile_string += item.mobileNumber + ', ';
         });
-        // notif_mobile_string = notif_mobile_string.slice(0, -2);
+
         sms_list.forEach((item, index) => {
             sms_mobile_string += item.mobileNumber + ', ';
         })
         sms_mobile_string = sms_mobile_string.slice(0, -2);
         notif_mobile_string = notif_mobile_string.slice(0, -2);
-        // if ((sms_list.length > 0) && (this.getEstimatedSMSCount(sentUpdateType, mobile_list, message) > smsBalance)) {
-        //     alert('You are short by ' + (this.getEstimatedSMSCount(sentUpdateType, mobile_list, message) - smsBalance) + ' SMS');
-        // }
+        
         let sms_data = {};
         const sms_converted_data = sms_list.map(item => {
             return {
@@ -182,7 +180,7 @@ export class UpdateService{
         
         Promise.all(service_list).then(value => {
 
-            if ((sentUpdateType == 2 || sentUpdateType == 3) && (sms_list.length > 0)) {
+            if ((sentUpdateType == 2 || sentUpdateType == 4) && (sms_list.length > 0)) {
                 if (value[0].status === 'success') {
                     smsBalance -= value[0].data.count;
                 } else if (value[0].status === 'failure') {
