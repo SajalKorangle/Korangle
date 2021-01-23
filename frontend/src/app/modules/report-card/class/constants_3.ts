@@ -589,7 +589,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
 }
 
 export class CanvasLine extends BaseLayer implements Layer{
-    displayName: string = 'LINE';    
+    displayName: string = 'Line';    
     
     parameterToolPannels: string[] = ['shape'];
     ca: DesignReportCardCanvasAdapter;
@@ -738,19 +738,8 @@ export class CanvasRectangle extends BaseLayer implements Layer{
         return ((mouseX > this.x - permissibleClickError //top line 
             && mouseX < this.x + this.length + permissibleClickError
             && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // bottom line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y + this.width - permissibleClickError
-            && mouseY < this.y + this.width +  permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // left line
-            && mouseX < this.x + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError) || 
-            (mouseX > this.x + this.length - permissibleClickError // right line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError))
+            && mouseY < this.y + this.width + permissibleClickError)
+        )
     }
 
     scale(scaleFactor: number): void {
@@ -776,7 +765,7 @@ export class CanvasRectangle extends BaseLayer implements Layer{
 }
 
 export class CanvasCircle extends BaseLayer implements Layer{
-    displayName: string = 'CIRCLE';    
+    displayName: string = 'Circle';    
     
     parameterToolPannels: string[] = ['shape'];
     ca: DesignReportCardCanvasAdapter;
@@ -819,8 +808,7 @@ export class CanvasCircle extends BaseLayer implements Layer{
     isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
         // return true;
         return (
-            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) &&
-            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) >= (this.radius - permissibleClickError)
+            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) 
         )
     }
 
