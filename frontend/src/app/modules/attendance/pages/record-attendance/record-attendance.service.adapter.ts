@@ -369,6 +369,9 @@ export class RecordAttendanceServiceAdapter {
     }
 
     sendSMSNotification: any = (mobile_list: any) => {
+        if(mobile_list.length ==0){
+            return ;
+        }
         let service_list = [];
         let notification_list = [];
         let sms_list = [];
@@ -387,6 +390,9 @@ export class RecordAttendanceServiceAdapter {
             sms_list = mobile_list.filter(obj => {
                 return !obj.notification;
             })
+        }
+        if(sms_list.length ==0 && notification_list.length == 0){
+            return ;
         }
         let notif_mobile_string = '';
         let sms_mobile_string = '';
@@ -442,7 +448,7 @@ export class RecordAttendanceServiceAdapter {
                 'mobileNumberList': sms_mobile_string,
                 'parentSchool': this.vm.user.activeSchool.dbId,
             };
-            if(notification_list[0].messageType === 2){
+            if(notification_list.length>0 && notification_list[0].messageType === 2){
                 sms_data['content'] = this.getMessageFromTemplate(this.vm.studentAlternateMessage, notification_list[0]);
             }
         }
@@ -472,23 +478,25 @@ export class RecordAttendanceServiceAdapter {
         }
 
         this.vm.isLoading = true;
+        console.log(sms_data);
+        console.log(notification_data);
 
-        Promise.all(service_list).then(value => {
+        // Promise.all(service_list).then(value => {
 
-            if ((this.vm.selectedSentType === this.vm.sentTypeList[0] ||
-                this.vm.selectedSentType === this.vm.sentTypeList[2]) &&
-                (sms_list.length > 0)) {
-                if (value[0].status === 'success') {
-                    this.vm.smsBalance -= value[0].data.count;
-                } else if (value[0].status === 'failure') {
-                    this.vm.smsBalance = value[0].count;
-                }
-            }
+        //     if ((this.vm.selectedSentType === this.vm.sentTypeList[0] ||
+        //         this.vm.selectedSentType === this.vm.sentTypeList[2]) &&
+        //         (sms_list.length > 0)) {
+        //         if (value[0].status === 'success') {
+        //             this.vm.smsBalance -= value[0].data.count;
+        //         } else if (value[0].status === 'failure') {
+        //             this.vm.smsBalance = value[0].count;
+        //         }
+        //     }
 
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        })
+        //     this.vm.isLoading = false;
+        // }, error => {
+        //     this.vm.isLoading = false;
+        // })
     }
 
     getStudentIdList(): any {
