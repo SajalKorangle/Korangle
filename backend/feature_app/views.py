@@ -1,7 +1,6 @@
 
 
-from common.common_views import CommonView, CommonListView, APIView
-from decorators import user_permission_new
+from common.common_views_3 import CommonView, CommonListView, APIView
 
 from .models import Feature
 

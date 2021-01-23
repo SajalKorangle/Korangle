@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 import json
 
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 from decorators import user_permission
 
 from django.contrib.auth.models import User
