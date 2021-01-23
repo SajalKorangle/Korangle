@@ -537,7 +537,7 @@ export class RecordAttendanceServiceAdapter {
         let count = 0;
         if(this.vm.selectedSentType==this.vm.sentTypeList[2])return 0;
             this.vm.studentList.filter(item => item.mobileNumber).forEach((item, i) => {
-                if(this.vm.selectedSentType==this.vm.sentTypeList[0] || item.notification==false){
+                if(this.vm.selectedSentType==this.vm.sentTypeList[1] || item.notification==false){
                     count += this.getMessageCount(this.getMessageFromTemplate(this.vm.studentUpdateMessage, item));
                 }
             })
