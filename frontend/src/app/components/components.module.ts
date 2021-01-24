@@ -17,12 +17,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input'
 import { MatTableModule } from '@angular/material';  
 import { MatDialogModule } from '@angular/material';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatListModule} from '@angular/material/list';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSliderModule} from '@angular/material/slider';
+
+import 'hammerjs';
  
-
-
-
 import { BasicComponentsModule } from "../basic-components/basic-components.module";
 
 import { MonthDateComponent } from './month-date/month-date.component';
@@ -80,8 +80,9 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatTableModule,
         MatDialogModule,
         MatListModule,
-        DragDropModule,
-
+        MatSliderModule,
+        MatSlideToggleModule,
+        
         BasicComponentsModule,
 
     ],
@@ -121,8 +122,9 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatInputModule,
         MatDialogModule,
         MatListModule,
-        DragDropModule,
+        MatSliderModule,
+        MatSlideToggleModule,
         
-    ]
+    ],
 })
 export class ComponentsModule { }

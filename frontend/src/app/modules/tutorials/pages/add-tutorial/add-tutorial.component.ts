@@ -18,7 +18,7 @@ import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
     selector: 'app-add-tutorial',
     templateUrl: './add-tutorial.component.html',
     styleUrls: ['./add-tutorial.component.css'],
-    providers: [SubjectService, ClassService, StudentService, TutorialsService, UpdateService, NotificationService,SmsService, UserService, SmsOldService],
+    providers: [SubjectService, ClassService, StudentService, TutorialsService, NotificationService,SmsService, UserService, SmsOldService],
 
 })
 export class AddTutorialComponent implements OnInit {
@@ -58,13 +58,13 @@ export class AddTutorialComponent implements OnInit {
     currentClassStudentList: any;
     noSubjects: boolean;
 
+    updateService: any;
 
     constructor(public subjectService: SubjectService,
                 public classService: ClassService,
                 public studentService: StudentService,
                 public tutorialService: TutorialsService,
                 private dialog: MatDialog,
-                public updateService: UpdateService,
                 public notificationService: NotificationService,
                 public smsService: SmsService,
                 public userService: UserService,
@@ -73,6 +73,8 @@ export class AddTutorialComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
+
+        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new AddTutorialServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
