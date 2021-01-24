@@ -5,11 +5,13 @@ import { environment } from '../../../environments/environment';
 
 import { HttpHeaders, HttpClient, } from '@angular/common/http';
 import {DataStorage} from '../../classes/data-storage';
-
+import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
 
 
 @Injectable()
 export class RestApiGateway {
+
+    reportError = reportError;
 
     constructor(private http: HttpClient) { }
 
@@ -17,12 +19,19 @@ export class RestApiGateway {
         return DataStorage.getInstance().getUser().jwt;
     }
 
-    public reportError(url: string, error: any, prompt: string) {
-        (<any>window).ga('send', 'exception', {
-            'exDescription': JSON.stringify({ from:'RestApiGateway: api error', url, error, prompt }),
-            'exFatal': false
-        });
-        console.log('Error Reported: RestApiGateway');
+    getAbsoluteURL(url: string): string{
+        let absolute_url = new URL(environment.DJANGO_SERVER + Constants.api_version + url);
+        let user = DataStorage.getInstance().getUser();
+        if (user.activeSchool) {
+            if (user.activeSchool.role === 'Employee') {
+                absolute_url.searchParams.append('activeSchoolID', user.activeSchool.dbId);
+            } else if (user.activeSchool.role === 'Parent') {
+                absolute_url.searchParams.append('activeStudentID', user.activeSchool.studentList.map(s=>s.id).join(','));
+            } else {
+                alert('Alert: Contact Admin');
+            }
+        }
+        return absolute_url.toString()
     }
 
     public returnResponse(response: any, url:any = null, prompt:string = null): any {
@@ -32,20 +41,12 @@ export class RestApiGateway {
             if (jsonResponse.data) return jsonResponse.data;
             else return jsonResponse.message;
         } else if (jsonResponse.status === 'fail') {
-            (<any>window).ga('send', 'exception', {
-                'exDescription': JSON.stringify({ from:'RestApiGateway: failed response', url, response, prompt }),
-                'exFatal': false
-            });
-            console.log('Error Reported: RestApiGateway');
+            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${response}`, prompt);
             alert(jsonResponse.message);
             // return null;
             throw new Error();
         } else {
-            (<any>window).ga('send', 'exception', {
-                'exDescription': JSON.stringify({ from:'RestApiGateway: unexpected response', url, response, prompt }),
-                'exFatal': true
-            });
-            console.log('Error Reported: RestApiGateway');
+            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${response}`, prompt, true);
             alert('Unexpected response from server');
             return null;
         }
@@ -53,12 +54,12 @@ export class RestApiGateway {
 
     public deleteData(url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.delete(environment.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
+        return this.http.delete(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from deleteData');
             }, error => {
-                this.reportError(url, error, 'from deleteData in RAG')
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from deleteData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -67,12 +68,12 @@ export class RestApiGateway {
 
     public putData(body: any, url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.put(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.put(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from putData');
             }, error => {
-                    this.reportError(url, error, 'from putData')
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -82,12 +83,12 @@ export class RestApiGateway {
     public putFileData(body: any, url: any): Promise<any> {
         // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
         const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.put(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.put(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from putFileData');
             }, error => {
-                    this.reportError(url, error, 'from putFileData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putFileData');
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -96,12 +97,12 @@ export class RestApiGateway {
 
     public patchData(body: any, url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.patch(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.patch(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from patchData');
             }, error => {
-                    this.reportError(url, error, 'from patchData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchData');
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -111,12 +112,12 @@ export class RestApiGateway {
     public patchFileData(body: any, url: any): Promise<any> {
         // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
         const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.patch(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.patch(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from patchFileData');
             }, error => {
-                    this.reportError(url, error, 'from patchFileData')
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchFileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -125,12 +126,12 @@ export class RestApiGateway {
 
     public postData(body: any, url: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.post(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from postData');
             }, error => {
-                    this.reportError(url, error, 'from postData')
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -140,12 +141,12 @@ export class RestApiGateway {
     public postFileData(body: any, url: any): Promise<any> {
         // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
         const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, body, {headers: headers})
+        return this.http.post(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from postFileData');
             }, error => {
-                    this.reportError(url, error, 'from postFileData')
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postFileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -156,12 +157,12 @@ export class RestApiGateway {
         const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
         let uploadData = new FormData();
         uploadData.append('myFile', file);
-        return this.http.post(environment.DJANGO_SERVER + Constants.api_version + url, uploadData, {headers: headers})
+        return this.http.post(this.getAbsoluteURL(url), uploadData, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from fileData');
             }, error => {
-                    this.reportError(url, error, 'from fileData')
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from fileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -169,13 +170,13 @@ export class RestApiGateway {
     }
 
     public getData(url: any, params?: any): Promise<any> {
-        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        return this.http.get(environment.DJANGO_SERVER + Constants.api_version + url, {headers: headers})
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'JWT ' + this.getToken()});
+        return this.http.get(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from getData');
             }, error => {
-                    this.reportError(url, error, 'from getData')
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })

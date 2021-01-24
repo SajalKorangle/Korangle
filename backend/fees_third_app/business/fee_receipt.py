@@ -6,14 +6,14 @@ from django.db.models import Max
 from student_app.models import Student
 
 
-def create_fee_receipt_list(data_list, Model, ModelSerializer):
+def create_fee_receipt_list(data_list, Model, ModelSerializer, activeSchoolID, activeStudentID):
     return_data = []
     for data in data_list:
-        return_data.append(create_fee_receipt_object(data, Model, ModelSerializer))
+        return_data.append(create_fee_receipt_object(data, Model, ModelSerializer, activeSchoolID, activeStudentID))
     return return_data
 
 
-def create_fee_receipt_object(data, Model, ModelSerializer):
+def create_fee_receipt_object(data, Model, ModelSerializer, activeSchoolID, activeStudentID):
 
     data['receiptNumber'] = 1
     schoolId = Student.objects.get(id=data['parentStudent']).parentSchool.id
@@ -27,7 +27,7 @@ def create_fee_receipt_object(data, Model, ModelSerializer):
 
     serializer = ModelSerializer(data=data)
 
-    if serializer.is_valid(raise_exception=True):
+    if serializer.is_valid(raise_exception=True, activeSchoolID=activeSchoolID, activeStudentID = activeStudentID):
         serializer.save()
         return serializer.data
     else:

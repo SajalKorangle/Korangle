@@ -8,24 +8,7 @@ from rest_framework.views import APIView
 
 import json
 
-def get_error_response(message):
-    error_response = {}
-    error_response['status'] = 'fail'
-    error_response['message'] = message
-    return error_response
-
-def get_success_response(data):
-    message_response = {}
-    message_response['status'] = 'success'
-    message_response['data'] = data
-    return message_response
-
-def get_success_message(message):
-    message_response = {}
-    message_response['status'] = 'success'
-    message_response['message'] = message
-    return message_response
-
+from common.common_functions import get_error_response, get_success_message, get_success_response
 
 ################ School Profile ############
 from .handlers.school_profile import update_school_profile
@@ -109,12 +92,14 @@ class PrincipalSignatureImageView(APIView):
     def post(request, school_id):
         return update_principal_signature_image(request.FILES['myFile'], school_id)
 
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 from .model.models import BusStop
 
 class BusStopView(CommonView, APIView):
     Model = BusStop
+    RelationsToSchool = ['parentSchool__id']
 
 
 class BusStopListView(CommonListView, APIView):
     Model = BusStop
+    RelationsToSchool = ['parentSchool__id']
