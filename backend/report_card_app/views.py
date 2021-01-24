@@ -2,6 +2,7 @@ from common.common_views_3 import CommonView, CommonListView, APIView
 from common.common_serializer_interface_3 import get_object, get_list
 from report_card_app.models import ReportCardLayout, ReportCardLayoutNew, LayoutSharing, ImageAssets
 from decorators import user_permission_3
+from django.db.models import Q
 
 # ReportCardLayout
 class ReportCardLayoutView(CommonView, APIView):
@@ -18,11 +19,11 @@ class ReportCardLayoutNewView(CommonView, APIView):
     RelationsToSchool = ['parentSchool__id']
 
     @user_permission_3
-    def get(self, request, activeSchoolId, activeStudentID):
-        layoutSharingList = LayoutSharing.objects.filter(parentSchool=activeSchoolId)
-        sharedLayouts = list(map(lambda o:o.parentLayout, list(layoutSharingList)))
+    def get(self, request, activeSchoolID, activeStudentID):
+        layoutSharingList = LayoutSharing.objects.filter(parentSchool=activeSchoolID)
+        sharedLayouts = list(map(lambda o:o.parentLayout.id, list(layoutSharingList)))
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(Q(public=True) or Q(id__in=sharedLayouts)))   # extending filtered query set
+        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(Q(publiclyShared=True) or Q(id__in=sharedLayouts)))   # extending filtered query set
         return get_object(request.GET, filtered_query_set, self.ModelSerializer)
             
 
@@ -31,11 +32,11 @@ class ReportCardLayoutNewListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id']
 
     @user_permission_3
-    def get(self, request, activeSchoolId, activeStudentID):
-        layoutSharingList = LayoutSharing.objects.filter(parentSchool=activeSchoolId)
-        sharedLayouts = list(map(lambda o:o.parentLayout, list(layoutSharingList)))
+    def get(self, request, activeSchoolID, activeStudentID):
+        layoutSharingList = LayoutSharing.objects.filter(parentSchool=activeSchoolID)
+        sharedLayouts = list(map(lambda o:o.parentLayout.id, list(layoutSharingList)))
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(Q(public=True) or Q(id__in=sharedLayouts)))   # extending filtered query set
+        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(Q(publiclyShared=True) or Q(id__in=sharedLayouts)))   # extending filtered query set
         return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
 class LayoutSharingView(CommonView, APIView):
@@ -43,9 +44,9 @@ class LayoutSharingView(CommonView, APIView):
     Model = LayoutSharing
 
     @user_permission_3
-    def get(self, request, activeSchoolId, activeStudentID):
+    def get(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(parentSchool=activeSchoolId))   # extending filtered query set
+        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(parentSchool=activeSchoolID))   # extending filtered query set
         return get_object(request.GET, filtered_query_set, self.ModelSerializer)
 
 class LayoutSharingListView(CommonListView, APIView):
@@ -53,9 +54,9 @@ class LayoutSharingListView(CommonListView, APIView):
     Model = LayoutSharing
 
     @user_permission_3
-    def get(self, request, activeSchoolId, activeStudentID):
+    def get(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(parentSchool=activeSchoolId))   # extending filtered query set
+        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(parentSchool=activeSchoolID))   # extending filtered query set
         return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
 class ImageAssetsView(CommonView, APIView):

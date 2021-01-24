@@ -102,13 +102,13 @@ export class DesignReportCardHtmlAdapter {
                 activePageResolution: this.vm.canvasAdapter.actualresolution
             }
         });
-        this.openedDialog.afterClosed().subscribe((result: PageResolution)=> {
+        this.openedDialog.afterClosed().subscribe((result: PageResolution) => {
             if (result) {
                 console.log('activePageResolution acalled, result = ', result);
                 this.canvasSetUp();
                 this.vm.canvasAdapter.updateResolution(result);
             }
-        })
+        });
     }
 
     openResultDialog(resultLayer: Result) {
@@ -121,7 +121,7 @@ export class DesignReportCardHtmlAdapter {
         this.openedDialog.afterClosed().subscribe(() => {
             resultLayer.layerDataUpdate();
             this.vm.canvasAdapter.scheduleCanvasReDraw();
-        })
+        });
     }
 
     openGradeRulesDialog():void {
@@ -129,7 +129,7 @@ export class DesignReportCardHtmlAdapter {
             data: {
                 ca: this.vm.canvasAdapter
             }
-        })
+        });
     }
 
     openMarksDialog(layer:MarksLayer):void {
@@ -142,7 +142,7 @@ export class DesignReportCardHtmlAdapter {
         this.openedDialog.afterClosed().subscribe(() => {
             layer.layerDataUpdate();
             this.vm.canvasAdapter.scheduleCanvasReDraw();
-        })
+        });
     }
 
     openLayoutSharingDialog():void {
@@ -151,9 +151,6 @@ export class DesignReportCardHtmlAdapter {
                 vm: this.vm
             }
         });
-        this.openedDialog.afterClosed().subscribe(() => {
-            // Do sharing operation here
-        })
     }
 
     openInventory(): void{
@@ -162,6 +159,12 @@ export class DesignReportCardHtmlAdapter {
                 vm: this.vm
             }
         });
+        this.openedDialog.afterClosed().subscribe((selection:any)=> {
+            switch (selection.type) {
+                case 'myLayout':
+                    this.vm.populateCurrentLayoutWithGivenValue(this.vm.reportCardLayoutList[selection.index]);
+            }
+        })
     }
 
     dropAssistanceDisplay(id:number) {

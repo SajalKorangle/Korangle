@@ -1,7 +1,28 @@
 <h2 mat-dialog-title>Inventory</h2>
 <mat-dialog-content style="height: 62vh; width: 75vw;">
+    <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="My Layouts">
+            <div style="display: flex; flex-wrap: wrap;">
+                <ng-container *ngFor="let layout of vm.reportCardLayoutList, let i = index;">
+                <div style="text-align: center; max-width: 150px; cursor: pointer;" (click)="selectedLayout.type='myLayout'; selectedLayout.index=i;">
+                    <div style="height:144px; width:96px; margin: 4px 12px; border: solid 3px;" [style.borderColor]="selectedLayout.type=='myLayout'&&selectedLayout.index==i?'blue':'lightgrey'">
+                        <img [src]="layout.thumbnail" style="display: block; max-height: 144px; max-width: 96px;" alt="preview unavailable">
+                    </div>
+                    <span>{{layout.name}}</span>
+                </div>
+                </ng-container>
+            </div>
+        </mat-tab>
 
+        <mat-tab label="Public">
+
+        </mat-tab>
+        
+        <mat-tab label="Shared with me">
+
+        </mat-tab>
+    </mat-tab-group>
 </mat-dialog-content>
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close class="btn" style="background-color: blue; display: block; margin-left: auto;" cdkFocusInitial>Apply</button>
+    <button mat-button (click)="apply()" class="btn" style="background-color: blue; display: block; margin-left: auto;" cdkFocusInitial>Apply</button>
 </div>
