@@ -71,7 +71,7 @@ const routes: Routes = [
     },
     {
         path: 'report_card_3.0',
-        loadChildren: 'app/modules/report-card/report-card-3/report-card.module#ReportCardModule',
+        loadChildren: 'app/modules/report-card-3/report-card.module#ReportCardModule',
     },
     {
         path: 'salary',
