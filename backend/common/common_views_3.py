@@ -48,11 +48,11 @@ class CommonBaseView():
     ModelSerializer = ''
     RelationsToSchool = []   # ex: parentStudent__parentSchool__id
     RelationsToStudent = []
-    unpermittedMethods = []
+    permittedMethods = ['get', 'post', 'put', 'patch', 'delete']
 
     def __init__(self):
         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
-        for method in self.unpermittedMethods:
+        for method in list(set(['get', 'post', 'put', 'patch', 'delete']) - set(self.permittedMethods)):
             setattr(self, method, notPermittedFunction)
 
     def validator(self, validated_data, activeSchoolID, activeStudentID):

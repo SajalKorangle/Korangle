@@ -13,7 +13,7 @@ class Error(models.Model):
     url = models.CharField(max_length=200, null=False, blank=False)
     description = models.TextField()
     prompt = models.CharField(max_length=200)
-    flatal = models.BooleanField(default=False);
+    fatal = models.BooleanField(default=False);
 
     class Meta:
         db_table = 'error'
