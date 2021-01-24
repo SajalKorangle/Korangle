@@ -42,8 +42,13 @@ const routes: Routes = [
         loadChildren: 'app/modules/subject/subject.module#SubjectModule',
     },
     {
+<<<<<<< HEAD
         path: 'grade',
         loadChildren: 'app/modules/grade/grade.module#GradeModule',
+=======
+        path: 'tutorials',
+        loadChildren: 'app/modules/tutorials/tutorials.module#TutorialsModule',
+>>>>>>> dac89486e0d3400d0fec1ca6dbefebc54e1ab0fd
     },
     {
         path: 'examinations',
@@ -105,6 +110,10 @@ const routes: Routes = [
     {
         path: 'school',
         loadChildren: 'app/modules/school/school.module#SchoolModule',
+    },
+    {
+        path: 'homework',
+        loadChildren: 'app/modules/homework/homework.module#HomeworkModule',
     },
     {
         path: 'print',

@@ -91,6 +91,10 @@ export class DesignReportCardServiceAdapter {
                 parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
 
+            const request_layout_access_data = {
+                layout__in: this.vm.reportCardLayoutList.map(l => l.id).join(',')
+            }
+
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
                 this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 1
@@ -98,6 +102,7 @@ export class DesignReportCardServiceAdapter {
                 this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
                 this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
                 this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
+                this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_access, request_layout_access_data),//6
             ]).then(value => {
                 this.vm.DATA.data.studentList = value[0];
                 this.vm.DATA.data.studentParameterValueList = value[1];
@@ -107,6 +112,7 @@ export class DesignReportCardServiceAdapter {
                 this.vm.DATA.data.studentExaminationRemarksList = value[5];
 
                 this.vm.DATA.studentId = this.vm.DATA.data.studentList[0].id;
+                this.populateLayoutAccessData(value[6]);
                 console.log('DATA: ', this.vm.DATA);
                 this.vm.htmlAdapter.isLoading = false;
             }, error => {
@@ -123,6 +129,13 @@ export class DesignReportCardServiceAdapter {
             this.vm.htmlAdapter.parameterList.push(StudentCustomParameterStructure.getStructure(
                 studentParameter.name, studentParameter.id
             ));
+        });
+    }
+
+    populateLayoutAccessData(layoutAccessDataList:Array<any>):void {
+        this.vm.reportCardLayoutList.forEach(layout => this.vm.layoutAccessData[layout.id] = []);
+        layoutAccessDataList.forEach(layoutAccessData => {
+            this.vm.layoutAccessData[layoutAccessData.layout].push(layoutAccessData);
         });
     }
 
@@ -167,10 +180,10 @@ export class DesignReportCardServiceAdapter {
         }
     }
 
-    async shareCurrentLayoutWithSchool(schoolKID: number) {
+    shareCurrentLayoutWithSchool(schoolKID: number) {
         if (schoolKID != this.vm.user.activeSchool.dbId) {
             const layoutSharingData = { school: schoolKID, layout: this.vm.currentLayout.id };
-            this.vm.reportCardService.createObject(this.vm.reportCardService.layout_access, layoutSharingData);
+            return this.vm.reportCardService.createObject(this.vm.reportCardService.layout_access, layoutSharingData);
         }
     }
 }

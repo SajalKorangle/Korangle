@@ -1,0 +1,377 @@
+<div class="card-content table-responsive" *ngIf="!isSubmitting || isMobile()">
+
+
+    <div *ngIf="!isSessionLoading">
+
+        <div *ngIf="subjectList.length == 0">
+            No Subjects Registered
+        </div>
+
+        <ng-container *ngIf="subjectList.length > 0">
+            <mat-form-field style="margin-top: 23px ; margin-right: 15px;">
+                <mat-select placeholder="Select Subject" [ngModel]="selectedSubject"
+                    (ngModelChange)="selectedSubject = $event;">
+                    <mat-option *ngFor="let subject of subjectList" style="width: 100%;" [value]="subject">
+                        {{subject.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container><br>
+
+        <div class="row" style="border-bottom: 1px solid lightgrey; margin-top: 10px;margin-bottom: 10px;">
+            <div class="col-md-12"></div>
+        </div>
+        <strong>Pending Homeworks</strong>
+
+
+        <mat-accordion [multi]="false">
+            <ng-container *ngFor="let homework of getFilteredHomeworkList(); let i=index;">
+                <mat-expansion-panel style="margin-top: 5px; margin-bottom:5px;"
+                    (opened)="serviceAdapter.getHomeworkDetails(homework)">
+                    <mat-expansion-panel-header *ngIf="!isMobile()">
+                        <mat-panel-title>
+                            <span class="hidden-xs" *ngIf="selectedSubject.id == -1"
+                                style="color: #7b7b7b;">{{homework.subjectName}} / </span>
+                            <i>{{homework.homeworkName}}</i> &nbsp;
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <span *ngIf="homework.endDate!= null" class="hidden-xs" style="color: #7b7b7b;">Deadline:
+                                &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}; </i>
+                            &nbsp;&nbsp;
+                            <span class="hidden-xs" style="color: #7b7b7b;">Status:
+                                &nbsp;</span><strong>{{homework.homeworkStatus}}</strong>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <mat-expansion-panel-header *ngIf="isMobile()">
+                        <mat-panel-title>
+                            <span *ngIf="selectedSubject.id == -1" style="color: #7b7b7b;">{{homework.subjectName}} /
+                            </span>
+                            <i>{{homework.homeworkName}}</i> &nbsp;
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+
+                    <ng-container *ngIf="isHomeworkLoading">
+                        <div style="width: 100%;" align="center">
+                            <div class="loaderCustom"></div>
+                        </div>
+                    </ng-container>
+
+                    <div *ngIf="!isHomeworkLoading && !isMobile()">
+                        <span class="hidden-xs" style="color: #7b7b7b;">Issued On:
+                            &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Due On:
+                            &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i> <br>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Teacher's Remark:
+                            &nbsp;</span><i>{{homework.homeworkRemark}}</i>
+
+                        <div style="margin-top: 30px;">
+                            <span class="hidden-xs" style="color: #7b7b7b;">Homework Questions: <br></span>
+                            <pre>{{homework.homeworkText}}</pre>
+                        </div><br>
+
+                        <div style="margin-top: 5px;">
+                            <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
+                            <div class="image-row">
+                                <div *ngFor="let images of currentHomeworkImages; let i = index">
+                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column"
+                                        (click)="openImagePreviewDialog(currentHomeworkImages, i, 0)">
+                                </div>
+                            </div>
+                        </div><br>
+                    </div>
+
+                    <div *ngIf="!isHomeworkLoading && isMobile()" style="font-size: 12px;">
+                        <span style="color: #7b7b7b;">Status:
+                            &nbsp;</span><i>{{homework.homeworkStatus}}</i> <br>
+
+                        <span style="color: #7b7b7b;">Issued On:
+                            &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
+                        <span style="color: #7b7b7b;">Due On:
+                            &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i> <br>
+                        <span *ngIf="homework.homeworkRemark!=null" style="color: #7b7b7b;">Teacher's Remark:
+                            &nbsp;</span><i>{{homework.homeworkRemark}}</i>
+
+                        <div><strong>Questions</strong><br></div>
+                        <div style="margin-top: 5px;">
+                            <span style="color: #7b7b7b;">Questions: <br></span>
+                            <pre>{{homework.homeworkText}}</pre>
+                        </div><br>
+
+                        <div>
+                            <span style="color: #7b7b7b;">Homework Images: <br></span>
+                            <div class="image-row">
+                                <div *ngFor="let images of currentHomeworkImages; let i = index">
+                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column-mobile"
+                                        (click)="openImagePreviewDialog(currentHomeworkImages, i, 0)">
+                                </div>
+                            </div>
+                        </div><br>
+
+                        <div><strong>Answers</strong><br></div>
+                        <mat-form-field style="width: 100%;" *ngIf="isSubmitting == true">
+                            <textarea matInput cdkTextareaAutosize style="white-space: pre-wrap;"
+                                [ngModel]="toSubmitHomework.answerText"
+                                (ngModelChange)="toSubmitHomework.answerText=$event" placeholder="Enter Answer Text">
+                            </textarea>
+                        </mat-form-field>
+
+                        <div style="margin-top: 5px;" *ngIf="isSubmitting == true">
+                            <span style="color: #7b7b7b;">Answer Images: <br></span>
+                            <div class="image-row">
+                                <div *ngFor="let images of toSubmitHomework.answerImages; let i = index">
+                                    <img src="{{images.answerImage}}" class="hover-shadow cursor image-column-mobile"
+                                        (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 1)">
+                                </div>
+                                <input type='file' (click)="imageInput.value = null" (change)="readURL($event);" multiple="false" style="display: none"
+                                    accept="image/jpeg,image/png" #imageInput />
+                                <button type="submit" class="image-column-mobile"
+                                    style="cursor: pointer; font-size: 35px;color: grey;border-radius: 5px;"
+                                    (click)="imageInput.click()">+</button>
+                            </div><br>
+                        </div>
+                        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="float:right ;cursor: pointer; padding: 4px 7px;"
+                            (click)="serviceAdapter.submitHomework()">
+                            Submit Answer</button>
+                    </div>
+
+                    <button *ngIf="!isMobile()" type="submit" class="btn"
+                        style="margin-top: 15px ; margin-right: 15px;cursor: pointer; padding: 4px 7px;"
+                        (click)="submitHomework(homework)">Submit Answer</button>
+
+                </mat-expansion-panel>
+
+            </ng-container>
+        </mat-accordion>
+
+        <div class="row" style="border-bottom: 1px solid lightgrey; margin-top: 10px;margin-bottom: 10px;">
+            <div class="col-md-12"></div>
+        </div>
+        <strong>Completed Homeworks</strong>
+
+        <mat-accordion [multi]="false">
+            <ng-container *ngFor="let homework of getFilteredCompletedHomeworkList(); let i=index;">
+                <mat-expansion-panel style="margin-top: 5px; margin-bottom:5px;"
+                    (opened)="serviceAdapter.getHomeworkDetails(homework)">
+                    <mat-expansion-panel-header *ngIf="!isMobile()">
+                        <mat-panel-title>
+                            <span class="hidden-xs" *ngIf="selectedSubject.id == -1"
+                                style="color: #7b7b7b;">{{homework.subjectName}} / </span>
+                            <i>{{homework.homeworkName}}</i> &nbsp;
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <span *ngIf="homework.endDate!= null" class="hidden-xs" style="color: #7b7b7b;">Deadline:
+                                &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}; </i>
+                            &nbsp;&nbsp;
+                            <span class="hidden-xs" style="color: #7b7b7b;">Status:
+                                &nbsp;</span><strong>{{homework.homeworkStatus}}</strong>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <mat-expansion-panel-header *ngIf="isMobile()">
+                        <mat-panel-title>
+                            <span *ngIf="selectedSubject.id == -1" style="color: #7b7b7b;">{{homework.subjectName}} /
+                            </span>
+                            <i>{{homework.homeworkName}}</i> &nbsp;
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+
+                    <ng-container *ngIf="isHomeworkLoading">
+                        <div style="width: 100%;" align="center">
+                            <div class="loaderCustom"></div>
+                        </div>
+                    </ng-container>
+
+                    <div *ngIf="!isHomeworkLoading && !isMobile()">
+                        <span class="hidden-xs" style="color: #7b7b7b;">Issued On:
+                            &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Due On:
+                            &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i> <br>
+                        <span class="hidden-xs" style="color: #7b7b7b;">Teacher's Remark:
+                            &nbsp;</span><i>{{homework.homeworkRemark}}</i>
+
+                        <div style="margin-top: 30px;">
+                            <span class="hidden-xs" style="color: #7b7b7b;">Homework Questions: <br></span>
+                            <pre>{{homework.homeworkText}}</pre>
+                        </div><br>
+
+                        <div style="margin-top: 5px;">
+                            <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
+                            <div class="image-row">
+                                <div *ngFor="let images of currentHomeworkImages; let i = index">
+                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column"
+                                        (click)="openImagePreviewDialog(currentHomeworkImages, i, 0)">
+                                </div>
+                            </div>
+                        </div><br>
+                    </div>
+
+                    <div *ngIf="!isHomeworkLoading && isMobile()" style="font-size: 12px;">
+                        <span style="color: #7b7b7b;">Status:
+                            &nbsp;</span><i>{{homework.homeworkStatus}}</i> <br>
+
+                        <span style="color: #7b7b7b;">Issued On:
+                            &nbsp;</span><i>{{displayDateTime(homework.startDate, homework.startTime)}}</i> <br>
+                        <span style="color: #7b7b7b;">Due On:
+                            &nbsp;</span><i>{{displayDateTime(homework.endDate, homework.endTime)}}</i> <br>
+                        <span *ngIf="homework.homeworkRemark!=null" style="color: #7b7b7b;">Teacher's Remark:
+                            &nbsp;</span><i>{{homework.homeworkRemark}}</i>
+
+                        <div><strong>Questions</strong><br></div>
+                        <div style="margin-top: 5px;">
+                            <span style="color: #7b7b7b;">Questions: <br></span>
+                            <pre>{{homework.homeworkText}}</pre>
+                        </div><br>
+
+                        <div>
+                            <span style="color: #7b7b7b;">Homework Images: <br></span>
+                            <div class="image-row">
+                                <div *ngFor="let images of currentHomeworkImages; let i = index">
+                                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column-mobile"
+                                        (click)="openImagePreviewDialog(currentHomeworkImages, i, 0)">
+                                </div>
+                            </div>
+                        </div><br>
+
+                        <div><strong>Answers</strong><br></div>
+                        <mat-form-field style="width: 100%;" *ngIf="isSubmitting == true">
+                            <textarea matInput cdkTextareaAutosize
+                                style="padding-top: 10px; padding-bottom: 20px;"        
+                                [ngModel]="toSubmitHomework.answerText"
+                                (ngModelChange)="toSubmitHomework.answerText=$event" placeholder="Enter Answer Text">
+                            </textarea>
+                        </mat-form-field>
+
+                        <div style="margin-top: 5px;" *ngIf="isSubmitting == true">
+                            <span style="color: #7b7b7b;">Answer Images: <br></span>
+                            <div class="image-row">
+                                <div *ngFor="let images of toSubmitHomework.answerImages; let i = index">
+                                    <img src="{{images.answerImage}}" class="hover-shadow cursor image-column-mobile"
+                                        (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 1)">
+                                </div>
+                                <input type='file' (change)="readURL($event);" multiple="false" style="display: none"
+                                    accept="image/jpeg,image/png" #imageInput />
+                                <button type="submit" class="image-column-mobile"
+                                    style="cursor: pointer; font-size: 35px;color: grey;border-radius: 5px;width: 0.525in"
+                                    (click)="imageInput.click()">+</button>
+                            </div><br>
+                        </div>
+                        <button type="submit" 
+                            [disabled]="toSubmitHomework.homeworkStatus == 'CHECKED'"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="float:right ;cursor: pointer; padding: 4px 7px;"
+                            (click)="serviceAdapter.submitHomework()">
+                            Submit Answer</button>
+                    </div>
+
+                    <button *ngIf="!isMobile()" type="submit" class="btn"
+                        style="margin-top: 15px ; margin-right: 15px;cursor: pointer; padding: 4px 7px;"
+                        (click)="submitHomework(homework)">Submit Answer</button>
+
+                </mat-expansion-panel>
+
+            </ng-container>
+        </mat-accordion>
+
+        <ng-container *ngIf="loadMoreHomework">
+            <div *ngIf="isLoadingHomeworks">
+                <div style="width: 100%" align="center">
+                    <div class="loaderCustom"></div>
+                </div><br>
+            </div><span style="color: #817ae9;" (click)="serviceAdapter.loadMoreHomeworks()"><u>Load More..</u></span>
+        </ng-container>
+    </div>
+</div>
+
+<div class="card-content table-responsive" *ngIf="isSubmitting && !isMobile()">
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="submit" class="btn" style="float:left ;cursor: pointer; padding: 4px 7px;"
+                (click)="onNoClick()">Go Back</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6" style="padding: 5px;">
+            <div style="border: 2px solid lightgrey; border-radius: 10px ;overflow: auto; padding: 10px; max-height: 80vh">
+
+                <span style="color: #7b7b7b;">Subject:
+                    &nbsp;</span><i>{{toSubmitHomework.subjectName}}</i> &nbsp;
+                <span style="color: #7b7b7b;">Title:
+                    &nbsp;</span><i>{{toSubmitHomework.homeworkName}}</i> &nbsp;
+                <i style="float: right;">{{toSubmitHomework.homeworkStatus}}</i> &nbsp;<br>
+                <span style="color: #7b7b7b;">Issued On:
+                    &nbsp;</span><i>{{displayDateTime(toSubmitHomework.startDate, toSubmitHomework.startTime)}}</i> <br>
+                <span style="color: #7b7b7b;">Due On:
+                    &nbsp;</span><i>{{displayDateTime(toSubmitHomework.endDate, toSubmitHomework.endTime)}}</i> <br>
+                <span style="color: #7b7b7b;" *ngIf="toSubmitHomework.submissionDate != NULL">Submitted On:
+                    &nbsp;</span><i *ngIf="toSubmitHomework.submissionDate != NULL">{{displayDateTime(toSubmitHomework.submissionDate,
+                    toSubmitHomework.submissionTime)}} <br></i>
+                <span style="color: #7b7b7b;">Teacher's Remark:
+                    &nbsp;</span><i>{{toSubmitHomework.homeworkRemark}}</i>
+                <div style="margin-top: 30px;">
+                    <span class="hidden-xs" style="color: #7b7b7b;">Homework Questions: <br></span>
+                    <pre>{{toSubmitHomework.homeworkText}}</pre>
+                </div><br>
+
+                <div class="row col-sm-12">
+                    <div style="margin-top: 5px;">
+                        <span style="color: #7b7b7b;">Homework Images: <br></span>
+                        <div class="image-row">
+                            <div *ngFor="let images of toSubmitHomework.questionImages; let i = index">
+                                <img src="{{images.questionImage}}" class="hover-shadow cursor image-column"
+                                    (click)="openImagePreviewDialog(toSubmitHomework.questionImages, i, 0)">
+                            </div>
+                        </div><br>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-6" style="padding: 5px;">
+            
+            <div style="border: 2px solid lightgrey; border-radius: 10px ;overflow-y: auto; padding: 10px; max-height: 80vh">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <mat-form-field style="width: 100%;">
+                            <span style="color: #7b7b7b;">Answer:</span> <br>
+                            <textarea matInput cdkTextareaAutosize
+                                style="padding-top: 10px; padding-bottom: 20px;"        
+                                [ngModel]="toSubmitHomework.answerText" (ngModelChange)="toSubmitHomework.answerText=$event">
+                                </textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row col-sm-12" style="margin-top: 5px;">
+                    <span style="color: #7b7b7b;">Answer Images: <br></span>
+                    <div class="image-row" >
+                        <div  *ngFor="let images of toSubmitHomework.answerImages; let i = index">
+                            <img src="{{images.answerImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(toSubmitHomework.answerImages, i, 1)">
+                        </div>
+                        <input type='file' (click)="imageInput.value = null" (change)="readURL($event);" multiple="false" style="display: none"
+                                    accept="image/jpeg,image/png" #imageInput />
+                        <button type="submit" class="image-column"
+                            style="cursor: pointer; font-size: 45px;color: grey;border-radius: 5px;width: 1.375in"
+                            (click)="imageInput.click()">+</button>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-right: 5px;">
+                    <button type="submit" 
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            [disabled]="toSubmitHomework.homeworkStatus == 'CHECKED'"   
+                            style="float:right ;padding: 4px 7px;" 
+                            (click)="serviceAdapter.submitHomework()">
+                            Submit Answer</button>
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>
+
+<ng-container *ngIf="isLoading || isSessionLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
