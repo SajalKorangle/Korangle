@@ -10,6 +10,8 @@
         </mat-select>
     </mat-form-field>
 
+    <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" style="padding: 4px 8px; float: right; font-size: medium;" (click)="htmlAdapter.openInventory()">Inventory <span class="material-icons">inventory_2</span></button>
+
     <div id="drc-mainCard" style="margin:0; padding:0;" class="bg-white">
     <ng-container *ngIf="currentLayout">
     <mat-card>

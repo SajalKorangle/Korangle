@@ -14,7 +14,13 @@
             </mat-label>
             <input matInput type="number" [(ngModel)]="newKIDForSharing">
         </mat-form-field>
-        <button class="btn material-icons" style="padding: 4px 8px; margin-left: 12px;" (click)="shareCurrentLayoutWithSchool()">reply</button>
+        <button class="btn btn-{{vm.user.activeSchool.secondaryThemeColor}} material-icons" style="padding: 4px 8px; margin-left: 12px;" (click)="shareCurrentLayoutWithSchool()">reply</button>
+        <button class="material-icons btn" 
+            style="padding: 4px 4px; float: right;" 
+            [style.backgroundColor]="vm.currentLayout.public?'blue':''"
+            (click)="layoutPublicAccessHandler()">
+            {{vm.currentLayout.public?'public':'public_off'}}
+        </button>
     </ng-container>
 
     <div *ngIf="layoutAccessList.length>0">

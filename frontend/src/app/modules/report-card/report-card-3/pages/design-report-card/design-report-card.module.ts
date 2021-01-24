@@ -10,7 +10,8 @@ import { PageResolutionDialogComponent } from './../../../components/page-resolu
 import { ResultDialogComponent } from './../../../components/result-dialog/result-dialog.component';
 import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
 import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
-import { LayoutSharingDialogComponent } from 'app/modules/report-card/components/layout-sharing-dialog/layout-sharing-dialog.component';
+import { LayoutSharingDialogComponent } from './../../../components/layout-sharing-dialog/layout-sharing-dialog.component';
+import { InventoryDialogComponent} from './../../../components/inventory-dialog/inventory-dialog.component';
 
 @NgModule({
   declarations: [DesignReportCardComponent],
@@ -27,7 +28,8 @@ import { LayoutSharingDialogComponent } from 'app/modules/report-card/components
     ResultDialogComponent,
     MarksDialogComponent,
     GradeRulesDialogComponent,
-    LayoutSharingDialogComponent
+    LayoutSharingDialogComponent,
+    InventoryDialogComponent
   ],
   bootstrap: [DesignReportCardComponent]
 })

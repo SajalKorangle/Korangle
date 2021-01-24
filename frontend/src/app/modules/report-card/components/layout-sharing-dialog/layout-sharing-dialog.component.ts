@@ -38,4 +38,11 @@ export class LayoutSharingDialogComponent implements OnInit {
     }
   }
 
+  layoutPublicAccessHandler(): void{
+    this.isSharing = true;
+    this.vm.serviceAdapter.currentLayoutPublicToggle().then(res => {
+      this.isSharing = false;
+    })
+  }
+
 }

@@ -38,12 +38,12 @@ export class DesignReportCardComponent implements OnInit {
   user: any;
   canvas: any;
 
-  currentLayout: { id?: any, parentSchool: string, name: string, content: any };
+  currentLayout: { id?: any, parentSchool: string, name: string, public:boolean, content: any };
   
   ADD_LAYOUT_STRING = '<Add New Layout>';
 
   // stores the layour list from backend, new layout or modified layout is added to this list only after saving to backend
-  reportCardLayoutList: {id?:any, parentSchool:string, name:string, content: any}[] = [];
+  reportCardLayoutList: {id?:any, parentSchool:string, name:string, public:boolean, content: any}[] = [];
   layoutAccessData: { [key: number]: any } = {};
   
   unuploadedFiles: {string:string}[] = []; // Local urls of files to be uploaded, format [{file_uri : file_name},...]
@@ -126,7 +126,8 @@ export class DesignReportCardComponent implements OnInit {
   newLayout(): void { // populating current layout to empty vaues and current activeSchool ID
     this.currentLayout = {
         parentSchool: this.user.activeSchool.dbId,
-        name: '',
+      name: '',
+        public: false,
         content: this.canvasAdapter.getEmptyLayout(),
     };
   } 

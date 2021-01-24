@@ -5,6 +5,7 @@ import {ResultDialogComponent } from './../../../components/result-dialog/result
 import { GradeRulesDialogComponent } from './../../../components/grade-rules-dialog/grade-rules-dialog.component';
 import { MarksDialogComponent } from './../../../components/marks-dialog/marks-dialog.component';
 import {LayoutSharingDialogComponent } from './../../../components/layout-sharing-dialog/layout-sharing-dialog.component'
+import { InventoryDialogComponent } from './../../../components/inventory-dialog/inventory-dialog.component';
 
 export class DesignReportCardHtmlAdapter {
 
@@ -153,6 +154,14 @@ export class DesignReportCardHtmlAdapter {
         this.openedDialog.afterClosed().subscribe(() => {
             // Do sharing operation here
         })
+    }
+
+    openInventory(): void{
+        this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
+            data: {
+                vm: this.vm
+            }
+        });
     }
 
     dropAssistanceDisplay(id:number) {
