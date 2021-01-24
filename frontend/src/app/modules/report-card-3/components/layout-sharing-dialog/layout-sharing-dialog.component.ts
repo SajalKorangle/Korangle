@@ -10,7 +10,7 @@ import {DesignReportCardComponent } from './../../pages/design-report-card/desig
 export class LayoutSharingDialogComponent implements OnInit {
 
   vm: DesignReportCardComponent;
-  layoutAccessList: any[]=[];
+  layoutSharingList: any[]=[];
 
   isSharing: boolean = false;
 
@@ -19,7 +19,7 @@ export class LayoutSharingDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) {
     this.vm = data.vm;
     if(this.vm.currentLayout.id)
-      this.layoutAccessList = this.vm.layoutAccessData[this.vm.currentLayout.id]
+      this.layoutSharingList = this.vm.layoutSharingData[this.vm.currentLayout.id]
    }
 
   ngOnInit() {
@@ -32,7 +32,7 @@ export class LayoutSharingDialogComponent implements OnInit {
         this.isSharing = false;
         this.newKIDForSharing = null;
         console.log('response = ', res);
-        this.layoutAccessList.push(res);
+        this.layoutSharingList.push(res);
         alert('Layout Shared Successfully');
       })
     }
@@ -43,6 +43,15 @@ export class LayoutSharingDialogComponent implements OnInit {
     this.vm.serviceAdapter.currentLayoutPublicToggle().then(res => {
       this.isSharing = false;
     })
+  }
+
+  deleteLayoutSharing(index: number): void{
+    console.log('sharing data to be deleted = ', index);
+    this.isSharing = true;
+    this.vm.serviceAdapter.deleteLayoutSharing(this.layoutSharingList[index]).then(res => {
+      this.layoutSharingList.splice(index, 1);
+      this.isSharing = false;
+    });
   }
 
 }

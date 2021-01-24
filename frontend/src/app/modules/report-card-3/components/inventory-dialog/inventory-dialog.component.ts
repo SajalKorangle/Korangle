@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DesignReportCardComponent } from './../../pages/design-report-card/design-report-card.component';
 
 
@@ -12,11 +12,17 @@ export class InventoryDialogComponent implements OnInit {
 
   vm: DesignReportCardComponent;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) {
+  selectedLayout: { type: string, index: number } = { type: null, index: null };  // type = page
+
+  constructor(public dialogRef: MatDialogRef<InventoryDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) {
     this.vm = data.vm;
   }
 
   ngOnInit() {
+  }
+
+  apply():void {
+    this.dialogRef.close({ ...this.selectedLayout });
   }
 
 }

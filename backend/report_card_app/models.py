@@ -27,7 +27,7 @@ class ReportCardLayoutNew(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
     thumbnail = models.ImageField(upload_to="report_cards/layout_thumbnails",null=True)
-    public= models.BooleanField(default=False)
+    publiclyShared = models.BooleanField(default=False)
     content = models.TextField()    # Contains the JSON content for the layout
     
     class Meta:
