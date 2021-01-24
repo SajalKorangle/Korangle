@@ -14,13 +14,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
-<<<<<<< HEAD
 import { MatTabsModule } from '@angular/material';
-import {MatSliderModule} from '@angular/material/slider';
 
-
-
-=======
 import { MatInputModule } from '@angular/material/input'
 import { MatTableModule } from '@angular/material';  
 import { MatDialogModule } from '@angular/material';
@@ -30,7 +25,6 @@ import {MatSliderModule} from '@angular/material/slider';
 
 import 'hammerjs';
  
->>>>>>> dac89486e0d3400d0fec1ca6dbefebc54e1ab0fd
 import { BasicComponentsModule } from "../basic-components/basic-components.module";
 
 import { MonthDateComponent } from './month-date/month-date.component';
@@ -86,19 +80,15 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
-<<<<<<< HEAD
         MatTabsModule,
         MatSliderModule,
 
-=======
         MatInputModule,
         MatTableModule,
         MatDialogModule,
         MatListModule,
-        MatSliderModule,
         MatSlideToggleModule,
         
->>>>>>> dac89486e0d3400d0fec1ca6dbefebc54e1ab0fd
         BasicComponentsModule,
 
     ],
@@ -136,19 +126,13 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
-<<<<<<< HEAD
         MatTabsModule,
         MatSliderModule,
-
-    ]
-=======
         MatInputModule,
         MatDialogModule,
         MatListModule,
-        MatSliderModule,
         MatSlideToggleModule,
         
     ],
->>>>>>> dac89486e0d3400d0fec1ca6dbefebc54e1ab0fd
 })
 export class ComponentsModule { }
