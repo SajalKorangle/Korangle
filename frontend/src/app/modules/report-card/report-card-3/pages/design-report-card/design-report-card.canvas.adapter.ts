@@ -8,7 +8,6 @@ import {
     PageResolution,
     PAGE_RESOLUTIONS,
     Result,
-    GradeRuleSet,
     GradeRule,
     CanvasTable,
     BaseLayer,
@@ -18,6 +17,12 @@ import {
     GradeLayer,
     RemarkLayer,
     MarksLayer,
+    CanvasLine,
+    CanvasRectangle,
+    CanvasSquare,
+    CanvasCircle,
+    CanvasRoundedRectangle,
+    GradeRuleSet,
 } from './../../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -31,7 +36,7 @@ export class DesignReportCardCanvasAdapter {
     virtualContext: CanvasRenderingContext2D;
 
     actualresolution: PageResolution = PAGE_RESOLUTIONS[1] // A4 size by default
-    dpi: number = DPI_LIST[4];
+    dpi: number = 72;
 
     canvas: HTMLCanvasElement;  // html canvas rendered on screen
     context: CanvasRenderingContext2D;
@@ -59,7 +64,11 @@ export class DesignReportCardCanvasAdapter {
 
     virtualPendingReDrawId: any;
     pendingReDrawId: any;
-
+    shape: any;
+    currentZoom = 100;
+    originalHeight: any;
+    originalWidth: any;
+    
     constructor() {
     }
 
@@ -107,6 +116,10 @@ export class DesignReportCardCanvasAdapter {
 
         console.log('virtual canvas : ', this.virtualCanvas);
         console.log('virtual context: ', this.virtualContext);
+        
+        this.originalWidth = this.canvas.width;
+        this.originalHeight = this.canvas.height;
+        this.currentZoom = 100;
  
         this.applyDefaultbackground();
 
@@ -170,30 +183,36 @@ export class DesignReportCardCanvasAdapter {
     }
 
     increaseCanvasSize():any{
-        this.canvas.width = this.canvas.width + 30;
-        this.canvas.height = this.canvas.height + 30;
+        this.currentZoom += 25;
+        this.canvas.height = this.currentZoom*this.originalHeight/100;
+        this.canvas.width = this.currentZoom*this.originalWidth/100;
         this.canvasSizing();
+        
     }
     decreaseCanvasSize():any{
-        this.canvas.width = this.canvas.width - 30;
-        this.canvas.height = this.canvas.height - 30;
+        this.currentZoom -= 25;
+        this.canvas.height = this.currentZoom*this.originalHeight/100;
+        this.canvas.width = this.currentZoom*this.originalWidth/100;
         this.canvasSizing();
-        console.log(this.canvas.height, this.canvas.width);
         
     }
 
-    maximumCanvasSize():boolean{
-        if(this.canvas && (this.canvas.height> 850 || this.canvas.width > 650)){
-            return true;
-        }
-        return false;
+    maximumCanvasSize():any{
+        return this.actualresolution.getHeightInPixel(this.dpi)*2;
     }
 
-    minimumCanvasSize():boolean{
-        if(this.canvas && (this.canvas.height < 100 || this.canvas.width < 100)){
-            return true;
-        }
-        return false;
+    minimumCanvasSize():any{
+        return this.actualresolution.getHeightInPixel(this.dpi)*(0.1);
+    }
+
+    changeZoomLevel(event: any): any{
+        this.currentZoom = event.value;
+        this.canvas.height = event.value;
+        this.canvas.width = event.value;
+        this.canvasSizing();
+        // this.canvas.height = this.currentZoom*this.originalHeight/100;
+        // this.canvas.width = this.currentZoom*this.originalWidth/100;
+
     }
     
     canvasSizing(): void{
@@ -509,6 +528,37 @@ export class DesignReportCardCanvasAdapter {
         let canvasDate = new CanvasDate(initialParameters, this);
         this.newLayerInitilization(canvasDate);
         return canvasDate;
+    }
+
+    
+    newLineLayer(initialParameters: object = {}): CanvasLine {
+        let canvasShape = new CanvasLine(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
+    }
+
+    newRectangleLayer(initialParameters: object = {}): CanvasRectangle {
+        let canvasShape = new CanvasRectangle(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
+    }
+
+    newSquareLayer(initialParameters: object = {}): CanvasSquare {
+        let canvasShape = new CanvasSquare(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
+    }
+
+    newCircleLayer(initialParameters: object = {}): CanvasCircle {
+        let canvasShape = new CanvasCircle(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
+    }
+
+    newRoundedRectangleLayer(initialParameters: object = {}): CanvasRoundedRectangle {
+        let canvasShape = new CanvasRoundedRectangle(initialParameters, this);
+        this.newLayerInitilization(canvasShape);
+        return canvasShape;
     }
 
     newFormulaLayer(initialParameters: object = {}):Formula{

@@ -762,6 +762,397 @@ export class CanvasTable extends BaseLayer implements Layer{
     }
 };
 
+export class CanvasLine extends BaseLayer implements Layer{
+    displayName: string = 'LINE';    
+    
+    parameterToolPannels: string[] = ['shape'];
+    ca: DesignReportCardCanvasAdapter;
+    length: any;
+    rotation: any;
+    orientation: any;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('shape');
+        this.LAYER_TYPE = 'LINE';
+        this.x = 20;
+        this.y = 20;
+        this.length = 20;
+        this.orientation = 0;
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'LINE';
+            this.layerDataUpdate();
+        }
+    }
+
+    layerDataUpdate(): void {
+        this.updateBoxMetrics();
+    }
+
+    updateBoxMetrics = ():void=>{
+        const ctx = this.ca.virtualContext;
+        this.drawOnCanvas(ctx, 0);
+    }
+
+    updateLength(newlength: any){
+        this.length = newlength;
+    }
+
+    updateOrientation(newOrientation : any){
+        this.orientation = newOrientation;
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        ctx.beginPath()
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)), this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
+        ctx.stroke();
+        return true;    // Drawn successfully on canvas
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
+        if(Math.cos((this.orientation*Math.PI)/180) >= 0 && Math.sin((this.orientation*Math.PI)/180) >= 0){
+            return (mouseX > this.x - permissibleClickError
+                && mouseX < this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) + permissibleClickError
+                && mouseY > this.y - permissibleClickError
+                && mouseY < this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) + permissibleClickError)
+        }
+        else if(Math.cos((this.orientation*Math.PI)/180) <= 0 && Math.sin((this.orientation*Math.PI)/180) <= 0){
+            return (mouseX < this.x + permissibleClickError
+                && mouseX > this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) - permissibleClickError
+                && mouseY < this.y + permissibleClickError
+                && mouseY > this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) - permissibleClickError)
+        }
+        else if(Math.cos((this.orientation*Math.PI)/180) >= 0 && Math.sin((this.orientation*Math.PI)/180) <= 0){
+            return (mouseX > this.x - permissibleClickError
+                && mouseX < this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) + permissibleClickError
+                && mouseY < this.y + permissibleClickError
+                && mouseY > this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) - permissibleClickError)
+        }
+
+        else if(Math.cos((this.orientation*Math.PI)/180) <= 0 && Math.sin((this.orientation*Math.PI)/180) >= 0){
+            return (mouseX < this.x + permissibleClickError
+                && mouseX > this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) - permissibleClickError
+                && mouseY > this.y - permissibleClickError
+                && mouseY < this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) + permissibleClickError)
+        }
+    }
+
+    scale(scaleFactor: number): void {
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        this.length *= scaleFactor;
+    }
+
+    getDataToSave() {
+        let savingData: any = {
+            'displayName': this.displayName,
+            'LAYER_TYPE': this.LAYER_TYPE,
+            'x': this.x,
+            'y': this.y,
+            'length': this.length,
+            'orientation': this.orientation,
+            'dataSourceType': this.dataSourceType,
+        }
+        return { ...savingData };
+    }
+
+}
+
+
+export class CanvasRectangle extends BaseLayer implements Layer{
+    displayName: string = 'Rectangle';    
+    
+    parameterToolPannels: string[] = ['shape'];
+    ca: DesignReportCardCanvasAdapter;
+    length: any;
+    width: any;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('shape');
+        this.LAYER_TYPE = 'SHAPE';
+        this.x = 20;
+        this.y = 20;
+        this.length = 20;
+        this.width = 20;
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'RECTANGLE';
+            this.layerDataUpdate();
+        }
+    }
+
+    layerDataUpdate(): void {
+        this.updateBoxMetrics();
+    }
+
+    updateBoxMetrics = ():void=>{
+        const ctx = this.ca.virtualContext;
+        this.drawOnCanvas(ctx, 0);
+    }
+
+    updateLength(newlength: any){
+        this.length = newlength;
+    }
+
+    updateWidth(newWidth: any){
+        this.width = newWidth;
+    }
+    
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        ctx.beginPath();
+        ctx.rect(this.x, this.y, this.length, this.width);
+        ctx.stroke();
+        return true;    // Drawn successfully on canvas
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+        return ((mouseX > this.x - permissibleClickError //top line 
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // bottom line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y + this.width - permissibleClickError
+            && mouseY < this.y + this.width +  permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // left line
+            && mouseX < this.x + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError) || 
+            (mouseX > this.x + this.length - permissibleClickError // right line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError))
+    }
+
+    scale(scaleFactor: number): void {
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        this.length *= scaleFactor;
+        this.width *= scaleFactor;
+    }
+
+    getDataToSave() {
+        let savingData: any = {
+            'displayName': this.displayName,
+            'LAYER_TYPE': this.LAYER_TYPE,
+            'x': this.x,
+            'y': this.y,
+            'length': this.length,
+            'width': this.width,
+            'dataSourceType': this.dataSourceType,
+        }
+        return { ...savingData };
+    }
+
+}
+
+export class CanvasCircle extends BaseLayer implements Layer{
+    displayName: string = 'CIRCLE';    
+    
+    parameterToolPannels: string[] = ['shape'];
+    ca: DesignReportCardCanvasAdapter;
+    radius: any;
+    
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('shape');
+        this.LAYER_TYPE = 'CIRCLE';
+        this.x = 50;
+        this.y = 50;
+        this.radius = 20;
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'CIRCLE';
+            this.layerDataUpdate();
+        }
+    }
+
+    layerDataUpdate(): void {
+        this.updateBoxMetrics();
+    }
+
+    updateBoxMetrics = ():void=>{
+        const ctx = this.ca.virtualContext;
+        this.drawOnCanvas(ctx, 0);
+    }
+
+    updateRadius(newRadius: any){
+        this.radius = newRadius;
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+        ctx.stroke();
+        return true;    // Drawn successfully on canvas
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
+        // return true;
+        return (
+            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) &&
+            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) >= (this.radius - permissibleClickError)
+        )
+    }
+
+    scale(scaleFactor: number): void {
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        this.radius *= scaleFactor;
+    }
+
+    getDataToSave() {
+        let savingData: any = {
+            'displayName': this.displayName,
+            'LAYER_TYPE': this.LAYER_TYPE,
+            'x': this.x,
+            'y': this.y,
+            'radius': this.radius,
+            'dataSourceType': this.dataSourceType,
+        }
+        return { ...savingData };
+    }
+
+}
+
+export class CanvasRoundedRectangle extends BaseLayer implements Layer{
+    displayName: string = 'Rounded Rectangle';    
+    
+    parameterToolPannels: string[] = ['shape'];
+    ca: DesignReportCardCanvasAdapter;
+    length: any;
+    width: any;
+    radius: any;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('shape');
+        this.LAYER_TYPE = 'SHAPE';
+        this.x = 20;
+        this.y = 20;
+        this.length = 20;
+        this.width = 20;
+        this.radius = 5;
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'ROUNDED-RECTANGLE';
+            this.layerDataUpdate();
+        }
+    }
+
+    layerDataUpdate(): void {
+        this.updateBoxMetrics();
+    }
+
+    updateBoxMetrics = ():void=>{
+        const ctx = this.ca.virtualContext;
+        this.drawOnCanvas(ctx, 0);
+    }
+
+    updateLength(newlength: any){
+        this.length = newlength;
+    }
+
+    updateWidth(newWidth: any){
+        this.width = newWidth;
+    }
+
+    updateRadius(newRadius: any){
+        this.radius = newRadius;
+    }
+    
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        // ctx.beginPath();
+        // ctx.rect(this.x, this.y, this.length, this.width);
+        // ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(this.x + this.radius, this.y);
+        ctx.lineTo(this.x + this.width - this.radius, this.y);
+        ctx.quadraticCurveTo(this.x + this.width, this.y, this.x + this.width, this.y + this.radius);
+        ctx.lineTo(this.x + this.width, this.y + this.length - this.radius);
+        ctx.quadraticCurveTo(this.x + this.width, this.y + this.length, this.x + this.width - this.radius, this.y + this.length);
+        ctx.lineTo(this.x + this.radius, this.y + this.length);
+        ctx.quadraticCurveTo(this.x, this.y + this.length, this.x, this.y + this.length - this.radius);
+        ctx.lineTo(this.x, this.y + this.radius);
+        ctx.quadraticCurveTo(this.x, this.y, this.x + this.radius, this.y);
+        ctx.stroke();
+        return true;    // Drawn successfully on canvas
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+        return ((mouseX > this.x - permissibleClickError //top line 
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // bottom line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y + this.width - permissibleClickError
+            && mouseY < this.y + this.width +  permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // left line
+            && mouseX < this.x + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError) || 
+            (mouseX > this.x + this.length - permissibleClickError // right line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError))
+    }
+
+    scale(scaleFactor: number): void {
+        this.x *= scaleFactor;
+        this.y *= scaleFactor;
+        this.length *= scaleFactor;
+        this.width *= scaleFactor;
+    }
+
+    getDataToSave() {
+        let savingData: any = {
+            'displayName': this.displayName,
+            'LAYER_TYPE': this.LAYER_TYPE,
+            'x': this.x,
+            'y': this.y,
+            'length': this.length,
+            'width': this.width,
+            'dataSourceType': this.dataSourceType,
+        }
+        return { ...savingData };
+    }
+
+}
+
+
+export class CanvasSquare extends CanvasRectangle implements Layer{
+    displayName: string = 'Square';    
+    
+    parameterToolPannels: string[] = ['shape'];
+    ca: DesignReportCardCanvasAdapter;
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('shape');
+        this.LAYER_TYPE = 'SHAPE';
+        this.x = 20;
+        this.y = 20;
+        this.length = 20;
+        this.width = this.length;
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.LAYER_TYPE = 'SQUARE';
+            this.layerDataUpdate();
+        }
+    }
+
+    updateLength(newlength: any){
+        this.length = newlength;
+        this.width = this.length;
+    }
+
+}
+
 export class CanvasText extends BaseLayer implements Layer{
     displayName: string = 'Text';
     text: string = 'Lorem Ipsum';    
@@ -778,6 +1169,7 @@ export class CanvasText extends BaseLayer implements Layer{
     };
 
 
+    ctx = this.ca.virtualContext;
     fontStyle: { [key: string]: string } = {
         fillStyle: DEFAULT_TEXT_COLOR,
         font: ' normal 12px Arial',
@@ -819,23 +1211,23 @@ export class CanvasText extends BaseLayer implements Layer{
             boundingBoxTop: textMetrix.actualBoundingBoxAscent,
             boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
         };
-        // if(this.underline){
-        //     ctx.beginPath()
-        //     ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
-        //     ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
-        //     ctx.stroke();
-        // }
+    }
+
+    drawUnderline():void{
+        if(this.underline){
+            console.log('underline');
+            this.ctx.beginPath()
+            this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
+            this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
+            this.ctx.stroke();
+        }
+        return ;
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
         ctx.fillText(this.text, this.x, this.y);
-        if(this.underline){
-            ctx.beginPath()
-            ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
-            ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
-            ctx.stroke();
-        }
+        this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }
 
@@ -881,6 +1273,9 @@ export class CanvasText extends BaseLayer implements Layer{
     }
 
 }
+
+
+
 
 export class CanvasDate extends CanvasText implements Layer{
     displayName: string = 'Date';

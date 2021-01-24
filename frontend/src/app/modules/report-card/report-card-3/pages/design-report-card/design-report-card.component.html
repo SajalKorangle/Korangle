@@ -68,16 +68,26 @@
                         (click)="htmlAdapter.fullScreenToggle()">{{htmlAdapter.isFullScreen?'fullscreen_exit':'fullscreen'}}</button>
             </div>
 
-            <div class="tool">
+            <!-- <div class="tool">
                 <button class="btn material-icons"
                         [disabled]="canvasAdapter.maximumCanvasSize() == true"
-                        (click)="canvasAdapter.increaseCanvasSize()">zoom_in</button>    <!--To Be Implemented: Canavs resize-->
+                        (click)="canvasAdapter.increaseCanvasSize()">zoom_in</button>   
             </div>
 
             <div class="tool">
                 <button class="btn material-icons"
                         [disabled]="canvasAdapter.minimumCanvasSize() == true"
-                        (click)="canvasAdapter.decreaseCanvasSize()">zoom_out</button>    <!--To Be Implemented: Canavs resize-->
+                        (click)="canvasAdapter.decreaseCanvasSize()">zoom_out</button>  
+            </div> -->
+
+            <div class="tool">
+                <button class="btn material-icons"
+                        mat-button [matMenuTriggerFor]="zoomMenu" >zoom_in</button>
+                <mat-menu #zoomMenu="matMenu">
+                    <div style="display: flex; flex-direction: column; margin: 4px 12px;">
+                        <mat-slider min="{{canvasAdapter.minimumCanvasSize()}}" max="{{canvasAdapter.maximumCanvasSize()}}" step="0.5" value="{{canvasAdapter.canvas.height}}" (input)="canvasAdapter.changeZoomLevel($event)" (click)="$event.stopPropagation()"></mat-slider>
+                    </div>
+                </mat-menu>
             </div>
 
             <div class="tool">
@@ -139,6 +149,18 @@
                         (click)="htmlAdapter.openLayoutSharingDialog()">share</button>
             </div>
 
+            <div>
+                <mat-form-field style="width: 100px;">
+                    <mat-select placeholder="Add Shape">
+                        <mat-option [value]="'Line'" (click)="canvasAdapter.newLineLayer()">Line</mat-option>
+                        <mat-option [value]="'Rectangle'" (click)="canvasAdapter.newRectangleLayer()">Rectangle</mat-option>
+                        <mat-option [value]="'Square'" (click)="canvasAdapter.newSquareLayer()">Square</mat-option>
+                        <mat-option [value]="'Circle'" (click)="canvasAdapter.newCircleLayer()">Circle</mat-option>
+                        <mat-option [value]="'Rounded Rectangle'" (click)="canvasAdapter.newRoundedRectangleLayer()">Rounded Rectangle</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                
+            </div>
 
             <div class="tool" style="margin-left: auto;">
                 <mat-form-field style="width: 50px; height: 30px;">
@@ -268,6 +290,23 @@
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-image-parameters-pannel>
+                </div>
+                
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-shape-parameters-pannel 
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('shape')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-shape-parameters-pannel>
+                </div>
+
+                
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-date-parameters-pannel 
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('date')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-date-parameters-pannel>
                 </div>
 
                 <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('attendance')" class="parameters-tool" style="margin:0; width: 100%;">

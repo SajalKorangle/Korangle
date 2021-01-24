@@ -4,23 +4,18 @@
     </div>
     <div style="margin: 4px; padding: 4px;">
 
-        <mat-form-field appearence="fill" *ngIf="layer.LAYER_TYPE =='TEXT'">
+        <mat-form-field appearence="fill" *ngIf="layer.LAYER_TYPE=='TEXT'">
             <mat-label>
                 Value
             </mat-label>
             <input matInput type="text" [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh(500, layer.updateTextBoxMetrics);">
         </mat-form-field>
-        
-        <mat-form-field *ngIf="layer.LAYER_TYPE =='DATE'">
-            <input type="date" matInput [ngModel]="getCurrentDate()"
-                (ngModelChange)="onDateSelected($event); canvasRefresh(500, layer.updateTextBoxMetrics);" placeholder="End Date ">
-        </mat-form-field>
 
         <div style="text-align: center;">
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">
-            <mat-button-toggle value="bold" [checked]="isBold()" (change)="boldToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_bold</span></mat-button-toggle>
-            <mat-button-toggle value="italic" [checked]="isItalics()" (change)="italicToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_italic</span></mat-button-toggle>
-            <mat-button-toggle value="true" [checked]="isUnderline()" (change)="underlineToggle($event); canvasRefresh(0, layer.updateTextBoxMetrics);"><span class="material-icons">format_underline</span></mat-button-toggle>
+            <mat-button-toggle value="bold" [checked]="isBold()" (change)="boldToggle($event);layer.updateTextBoxMetrics(); canvasRefresh(0);"><span class="material-icons">format_bold</span></mat-button-toggle>
+            <mat-button-toggle value="italic" [checked]="isItalics()" (change)="italicToggle($event);layer.updateTextBoxMetrics(); canvasRefresh(0);"><span class="material-icons">format_italic</span></mat-button-toggle>
+            <mat-button-toggle value="true" [checked]="isUnderline()" (change)="underlineToggle($event);layer.updateTextBoxMetrics(); canvasRefresh(0);"><span class="material-icons">format_underline</span></mat-button-toggle>
         </mat-button-toggle-group>
         </div>
 
@@ -28,7 +23,7 @@
             <mat-label>
                 Font Size(mm)
             </mat-label>
-            <input matInput type="number" [ngModel]="getFontSize()" (ngModelChange)="updateFontSize($event); canvasRefresh(500, layer.updateTextBoxMetrics);">
+            <input matInput type="number" [ngModel]="getFontSize()" (ngModelChange)="updateFontSize($event);layer.updateTextBoxMetrics(); canvasRefresh(500);">
         </mat-form-field>
 
         <mat-form-field>
@@ -43,7 +38,7 @@
             <mat-label>Font Family</mat-label>
             <mat-select placeholder="Select Font Family"
                     [ngModel]="getFontFamily()"
-                    (ngModelChange)="changeFont($event); canvasRefresh(0, layer.updateTextBoxMetrics);">
+                    (ngModelChange)="changeFont($event);layer.updateTextBoxMetrics() ;canvasRefresh(0);">
                 <mat-option *ngFor="let font of fontFamilyList" [value]="font">
                     {{font.displayName}}
                 </mat-option>

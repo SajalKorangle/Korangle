@@ -11,6 +11,8 @@ import { FormulaParametersPannelComponent } from './formula-parameters-pannel/fo
 import { PageResolutionDialogComponent } from './page-resolution-dialog/page-resolution-dialog.component';
 import { ResultDialogComponent } from './result-dialog/result-dialog.component'
 import { ImageParametersPannelComponent } from './image-parameters-pannel/image-parameters-pannel.component';
+import { ShapeParametersPannelComponent } from './shape-parameter-pannel/shape-parameters-pannel.component';
+import { DateParametersPannelComponent } from './Date-parameters-pannel/date-parameters-pannel.component';
 import { GradeRulesDialogComponent } from './grade-rules-dialog/grade-rules-dialog.component';
 import { MarksDialogComponent } from './marks-dialog/marks-dialog.component';
 import { CustomMenuComponent } from './custom-menu/custom-menu.component';
@@ -29,6 +31,8 @@ import { LayoutSharingDialogComponent } from './layout-sharing-dialog/layout-sha
     PageResolutionDialogComponent,
     ResultDialogComponent,
     ImageParametersPannelComponent,
+    ShapeParametersPannelComponent,
+    DateParametersPannelComponent,
     GradeRulesDialogComponent,
     MarksDialogComponent,
     CustomMenuComponent,
@@ -51,6 +55,8 @@ import { LayoutSharingDialogComponent } from './layout-sharing-dialog/layout-sha
     PageResolutionDialogComponent,
     ImageParametersPannelComponent,
     ResultDialogComponent,
+    ShapeParametersPannelComponent,
+    DateParametersPannelComponent,
     GradeRulesDialogComponent,
     MarksDialogComponent,
     CustomMenuComponent,
