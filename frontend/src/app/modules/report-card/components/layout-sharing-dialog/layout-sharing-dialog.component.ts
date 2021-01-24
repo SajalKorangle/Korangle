@@ -10,7 +10,7 @@ import {DesignReportCardComponent } from './../../report-card-3/pages/design-rep
 export class LayoutSharingDialogComponent implements OnInit {
 
   vm: DesignReportCardComponent;
-  layoutAccessData: any[]=[];
+  layoutAccessList: any[]=[];
 
   isSharing: boolean = false;
 
@@ -19,7 +19,7 @@ export class LayoutSharingDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) {
     this.vm = data.vm;
     if(this.vm.currentLayout.id)
-      this.layoutAccessData = this.vm.layoutAccessData[this.vm.currentLayout.id]
+      this.layoutAccessList = this.vm.layoutAccessData[this.vm.currentLayout.id]
    }
 
   ngOnInit() {
@@ -32,7 +32,7 @@ export class LayoutSharingDialogComponent implements OnInit {
         this.isSharing = false;
         this.newKIDForSharing = null;
         console.log('response = ', res);
-        this.vm.layoutAccessData[this.vm.currentLayout.id].push(res);
+        this.layoutAccessList.push(res);
         alert('Layout Shared Successfully');
       })
     }

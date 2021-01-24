@@ -9,8 +9,8 @@ urlpatterns += [
 
     url(r'^report-card-layout-new/batch', ReportCardLayoutNewListView.as_view()),
     url(r'^report-card-layout-new', ReportCardLayoutNewView.as_view()),
-    url(r'^layout-access', LayoutAccessView.as_view()),
     url(r'^layout-access/batch', LayoutAccessListView.as_view()),
+    url(r'^layout-access', LayoutAccessView.as_view()),
     url(r'^image-assets/batch', ImageAssetsListView.as_view()),
     url(r'^image-assets', ImageAssetsView.as_view()),
     url(r'^report-card-layout/batch', ReportCardLayoutListView.as_view()),
