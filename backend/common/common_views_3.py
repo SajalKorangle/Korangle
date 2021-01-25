@@ -11,6 +11,10 @@ from common.common_serializer_interface_3 import get_object, get_list, create_ob
     update_object, update_list, partial_update_object, partial_update_list, delete_object, delete_list
 
 from functools import reduce
+from django.http import HttpResponseForbidden
+
+def notPermittedFunction(*args, **kwargs):
+    return HttpResponseForbidden()
 
 def get_model_serializer(Model, fields__korangle, validator):
 
@@ -44,9 +48,12 @@ class CommonBaseView():
     ModelSerializer = ''
     RelationsToSchool = []   # ex: parentStudent__parentSchool__id
     RelationsToStudent = []
+    permittedMethods = ['get', 'post', 'put', 'patch', 'delete']
 
     def __init__(self):
         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
+        for method in list(set(['get', 'post', 'put', 'patch', 'delete']) - set(self.permittedMethods)):
+            setattr(self, method, notPermittedFunction)
 
     def validator(self, validated_data, activeSchoolID, activeStudentID):
         
