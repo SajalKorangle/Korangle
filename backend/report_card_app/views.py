@@ -23,7 +23,7 @@ class ReportCardLayoutNewView(CommonView, APIView):
         layoutSharingList = LayoutSharing.objects.filter(parentSchool=activeSchoolID)
         sharedLayouts = list(map(lambda o:o.parentLayout.id, list(layoutSharingList)))
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(Q(publiclyShared=True) or Q(id__in=sharedLayouts)))   # extending filtered query set
+        filtered_query_set = (filtered_query_set | self.Model.objects.filter(Q(publiclyShared=True) or Q(id__in=sharedLayouts))).distinct()  # extending filtered query set
         return get_object(request.GET, filtered_query_set, self.ModelSerializer)
             
 
@@ -36,7 +36,7 @@ class ReportCardLayoutNewListView(CommonListView, APIView):
         layoutSharingList = LayoutSharing.objects.filter(parentSchool=activeSchoolID)
         sharedLayouts = list(map(lambda o:o.parentLayout.id, list(layoutSharingList)))
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(Q(publiclyShared=True) or Q(id__in=sharedLayouts)))   # extending filtered query set
+        filtered_query_set = (filtered_query_set | self.Model.objects.filter(Q(publiclyShared=True) or Q(id__in=sharedLayouts))).distinct()   # extending filtered query set
         return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
 class LayoutSharingView(CommonView, APIView):
@@ -46,7 +46,7 @@ class LayoutSharingView(CommonView, APIView):
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(parentSchool=activeSchoolID))   # extending filtered query set
+        filtered_query_set = (filtered_query_set | self.Model.objects.filter(parentSchool=activeSchoolID)).distinct()   # extending filtered query set
         return get_object(request.GET, filtered_query_set, self.ModelSerializer)
 
 class LayoutSharingListView(CommonListView, APIView):
@@ -56,7 +56,7 @@ class LayoutSharingListView(CommonListView, APIView):
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-        filtered_query_set = filtered_query_set.union(self.Model.objects.filter(parentSchool=activeSchoolID))   # extending filtered query set
+        filtered_query_set = (filtered_query_set | self.Model.objects.filter(parentSchool=activeSchoolID)).distinct()   # extending filtered query set
         return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
 class ImageAssetsView(CommonView, APIView):

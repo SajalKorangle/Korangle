@@ -64,7 +64,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, shared_layout_list_data), //12
         ]).then(data => { 
             this.vm.reportCardLayoutList = data[0];
-            console.log('layouts = ', data[0]);
+            console.log('data = ', data);
             this.vm.DATA.data.studentSectionList = data[1];
             this.vm.DATA.data.studentParameterList = data[2];
             this.vm.DATA.data.classList = data[3];
@@ -75,6 +75,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.DATA.data.sessionList = data[8];
             this.vm.DATA.data.gradeList = data[9];
             this.vm.DATA.data.subGradeList = data[10];
+            this.vm.publicLayoutList = data[11];
 
             const request_student_data = {
                 id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
@@ -124,8 +125,9 @@ export class DesignReportCardServiceAdapter {
                 this.vm.DATA.data.attendanceList = value[3];
                 this.vm.DATA.data.studentSubGradeList = value[4];
                 this.vm.DATA.data.studentExaminationRemarksList = value[5];
+                this.vm.sharedLayoutList = value[7];
 
-                this.vm.DATA.studentId = this.vm.DATA.data.studentList[0].id;
+                this.vm.DATA.studentId = this.vm.DATA.data.studentList.length>0?this.vm.DATA.data.studentList[0].id:null;
                 this.populateLayoutSharingData(value[6]);
                 console.log('DATA: ', this.vm.DATA);
                 this.vm.htmlAdapter.isLoading = false;

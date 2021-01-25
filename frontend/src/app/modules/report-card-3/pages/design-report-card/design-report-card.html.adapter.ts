@@ -159,10 +159,12 @@ export class DesignReportCardHtmlAdapter {
                 vm: this.vm
             }
         });
-        this.openedDialog.afterClosed().subscribe((selection:any)=> {
-            switch (selection.type) {
-                case 'myLayout':
-                    this.vm.populateCurrentLayoutWithGivenValue(this.vm.reportCardLayoutList[selection.index]);
+        this.openedDialog.afterClosed().subscribe((selection: any) => {
+            if (selection) {
+                switch (selection.type) {
+                    case 'myLayout':
+                        this.vm.populateCurrentLayoutWithGivenValue(this.vm.reportCardLayoutList[selection.index]);
+                }
             }
         })
     }

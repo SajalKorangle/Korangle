@@ -15,12 +15,31 @@
         </mat-tab>
 
         <mat-tab label="Public">
-
+            <div style="display: flex; flex-wrap: wrap;">
+                <ng-container *ngFor="let layout of vm.publicLayoutList, let i = index;">
+                <div style="text-align: center; max-width: 150px; cursor: pointer;" (click)="selectedLayout.type='public'; selectedLayout.index=i;">
+                    <div style="height:144px; width:96px; margin: 4px 12px; border: solid 3px;" [style.borderColor]="selectedLayout.type=='public'&&selectedLayout.index==i?'blue':'lightgrey'">
+                        <img [src]="layout.thumbnail" style="display: block; max-height: 144px; max-width: 96px;" alt="preview unavailable">
+                    </div>
+                    <span>{{layout.name}}</span>
+                </div>
+                </ng-container>
+            </div>
         </mat-tab>
         
         <mat-tab label="Shared with me">
-
+            <div style="display: flex; flex-wrap: wrap;">
+                <ng-container *ngFor="let layout of vm.sharedLayoutList, let i = index;">
+                <div style="text-align: center; max-width: 150px; cursor: pointer;" (click)="selectedLayout.type='shared'; selectedLayout.index=i;">
+                    <div style="height:144px; width:96px; margin: 4px 12px; border: solid 3px;" [style.borderColor]="selectedLayout.type=='shared'&&selectedLayout.index==i?'blue':'lightgrey'">
+                        <img [src]="layout.thumbnail" style="display: block; max-height: 144px; max-width: 96px;" alt="preview unavailable">
+                    </div>
+                    <span>{{layout.name}}</span>
+                </div>
+                </ng-container>
+            </div>
         </mat-tab>
+
     </mat-tab-group>
 </mat-dialog-content>
 <div mat-dialog-actions>

@@ -45,7 +45,9 @@ export class DesignReportCardComponent implements OnInit {
   // stores the layour list from backend, new layout or modified layout is added to this list only after saving to backend
   reportCardLayoutList: {id?:any, parentSchool:string, name:string, thumbnail?:string, publiclyShared:boolean, content: any}[] = [];
   layoutSharingData: { [key: number]: any } = {};
-  
+  publicLayoutList: { id?: any, parentSchool: string, name: string, thumbnail?: string, publiclyShared: boolean, content: any }[] = [];
+  sharedLayoutList: { id?: any, parentSchool: string, name: string, thumbnail?: string, publiclyShared: boolean, content: any }[] = [];
+
   unuploadedFiles: {string:string}[] = []; // Local urls of files to be uploaded, format [{file_uri : file_name},...]
 
   serviceAdapter: DesignReportCardServiceAdapter;
