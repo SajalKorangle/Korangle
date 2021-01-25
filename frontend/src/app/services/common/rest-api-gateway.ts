@@ -73,7 +73,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from putData');
             }, error => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putData')
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -88,7 +88,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from putFileData');
             }, error => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putFileData');
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putFileData');
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -102,7 +102,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from patchData');
             }, error => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchData');
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchData');
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -117,7 +117,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from patchFileData');
             }, error => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchFileData')
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchFileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -131,7 +131,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from postData');
             }, error => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postData')
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -146,7 +146,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from postFileData');
             }, error => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postFileData')
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postFileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -162,7 +162,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from fileData');
             }, error => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from fileData')
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from fileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -176,7 +176,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from getData');
             }, error => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getData')
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
