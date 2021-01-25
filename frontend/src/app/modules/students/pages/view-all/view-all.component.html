@@ -449,7 +449,7 @@
     <!-- Student Table Profile Data List -->
     <ng-container *ngIf="!isLoading  && currentProfileDocumentFilter==='Profile'">
         <p>Total Students: <b>{{studentFullProfileList.length}}</b>, Selected : <b>{{displayStudentNumber}}</b></p>
-    	<cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
+    	<cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
         	<table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                     <tr>
@@ -564,7 +564,7 @@
                 (click)="unselectAllStudents(); $event.stopPropagation();">Clear All
         </button>
 
-        <cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
+        <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                     <tr>

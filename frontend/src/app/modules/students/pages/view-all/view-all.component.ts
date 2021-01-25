@@ -125,7 +125,7 @@ export class ViewAllComponent implements OnInit {
     profileColumns;
     documentColumns;
 
-    noFileIcon ="/assets/img/noFileIcon.png";
+    noFileIcon ="/assets/img/nofile.png";
     pdfIcon ="/assets/img/pdfIcon.png";
     imageIcon ="/assets/img/imageIcon.png";
 
@@ -704,23 +704,24 @@ export class ViewAllComponent implements OnInit {
     }
 
     openFilePreviewDialog(student,parameter): void {
-        let file =this.getParameterValue(student,parameter)
-        let urlList = file.split(".")
-        let extension = urlList[urlList.length-1]
-        let type
-        if (extension=="pdf"){
-            type="pdf"
+        let file =this.getParameterValue(student,parameter);
+        if(file) {
+            let urlList = file.split(".")
+            let extension = urlList[urlList.length - 1]
+            let type
+            if (extension == "pdf") {
+                type = "pdf"
+            } else if (extension == "jpg" || extension == "jpeg" || extension == "png") {
+                type = "img"
+            }
+            const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
+                width: '600px',
+                data: {'file': file, 'type': type}
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('The dialog was closed');
+            });
         }
-        else if (extension=="jpg"||extension=="jpeg"||extension=="png"){
-            type="img"
-        }
-        const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
-            width: '600px',
-            data: {'file': file, 'type': type}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
-        });
     }
 
     getHeaderValues(): any {
