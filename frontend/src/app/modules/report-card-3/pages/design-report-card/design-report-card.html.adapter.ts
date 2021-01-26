@@ -164,6 +164,25 @@ export class DesignReportCardHtmlAdapter {
                 switch (selection.type) {
                     case 'myLayout':
                         this.vm.populateCurrentLayoutWithGivenValue(this.vm.reportCardLayoutList[selection.index]);
+                        break;
+                    case 'public':
+                        let newLayout1: any = {
+                            parentSchool: this.vm.user.activeSchool.dbId,
+                            name: '',
+                            publiclyShared: false,
+                            content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(this.vm.publicLayoutList[selection.index].content))
+                        };
+                        this.vm.populateCurrentLayoutWithGivenValue(newLayout1, true);
+                        break;
+                    case 'shared':
+                        let newLayout2: any = {
+                            parentSchool: this.vm.user.activeSchool.dbId,
+                            name: '',
+                            publiclyShared: false,
+                            content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(this.vm.sharedLayoutList[selection.index].content))
+                        };
+                        this.vm.populateCurrentLayoutWithGivenValue(newLayout2, true);
+                        break;
                 }
             }
         })

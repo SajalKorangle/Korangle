@@ -399,6 +399,7 @@ export interface Layer{
     id: number;
     displayName: string;    // layer name displayed to user
     LAYER_TYPE: string; // Type description for JSON parsing
+    error: boolean;
     x: number;  // distance in pixels from left edge of canvas
     y: number;  // distance in pixels from top edge of canvas
     parameterToolPannels: string[]; // list of right pannel parameter toolbar
@@ -454,6 +455,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     id: number = null;
     static maxID: number = 0;   // for auto incrementing id
 
+    error: boolean = false;
     x: number = 0;
     y: number = 0;
 
@@ -1424,7 +1426,13 @@ export class GradeLayer extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         const DATA = this.ca.vm.DATA;
-        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination, this.subGradeId);
+        if (this.parentExamination && this.subGradeId) {
+            this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination, this.subGradeId);
+            this.error = false;
+        } else {
+            this.text = 'N/A';
+            this.error = true;
+        }
         this.updateTextBoxMetrics();
     }
 
@@ -1459,7 +1467,13 @@ export class RemarkLayer extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         const DATA = this.ca.vm.DATA;
-        this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination);
+        if (this.parentExamination) {
+            this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination);
+            this.error = false;
+        } else {
+            this.text = 'N/A';
+            this.error = true;
+        }
         this.updateTextBoxMetrics();
     }
 
@@ -1588,8 +1602,10 @@ export class MarksLayer extends CanvasText implements Layer{
                     this.text = this.marks != -1 ? this.marks.toFixed(this.decimalPlaces) : 'N/A';
                 }
             }
+            this.error = false;
         } else {
-            this.text = 'Make apprpiate selection from right pannel';
+            this.text = 'N/A';
+            this.error = true;
         }
         this.updateTextBoxMetrics();
     }

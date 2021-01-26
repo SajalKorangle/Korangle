@@ -60,7 +60,7 @@ export class DesignReportCardCanvasAdapter {
     currentMouseDown: boolean = false;
 
     pixelTommFactor: number;    // width(height) in mm / Canvas width(height) in pixel
-    isSaved = false;    // if canvas is not saved then give warning; to be implemented
+    isSaved = true;    // if canvas is not saved then give warning; to be implemented
 
     virtualPendingReDrawId: any;
     pendingReDrawId: any;
@@ -392,7 +392,7 @@ export class DesignReportCardCanvasAdapter {
                 this.activeLayerIndex = this.layers.length - 1;
             }
             console.log('canvas layers: ', this.layers);
-
+            this.isSaved = false;
         } catch (err) {
             console.error(err);
             alert('data corupted');
@@ -476,6 +476,31 @@ export class DesignReportCardCanvasAdapter {
         this.isSaved = false;
 
         this.applyDefaultbackground();
+    }
+
+    removeSchoolSpecificDataFromLayout(layoutContent: any[]): any[] {
+        layoutContent = JSON.parse(JSON.stringify(layoutContent));
+        for (let i=0; i < layoutContent.length; i++) {
+            layoutContent[i].layers = layoutContent[i].layers.map(layer => {
+                switch (layer.LAYER_TYPE) {
+                    case 'GRADE':
+                        layer.parentExamination = null;
+                        layer.subsubGradeId = null;
+                        layer.error = true;
+                        break;
+                    case 'REMARK':
+                        layer.parentExamination = null;
+                        layer.error = true;
+                        break;
+                    case 'MARKS':
+                        layer.parentExamination = null;
+                        layer.error = true;
+                        break;
+                }
+                return layer;
+            })
+        }
+        return layoutContent;
     }
 
     updateActiveLayer(activeLayerIndex:number, event: MouseEvent=null): void{   // used by left layer pannel

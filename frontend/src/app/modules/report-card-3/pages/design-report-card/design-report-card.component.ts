@@ -127,14 +127,16 @@ export class DesignReportCardComponent implements OnInit {
   newLayout(): void { // populating current layout to empty vaues and current activeSchool ID
     this.currentLayout = {
         parentSchool: this.user.activeSchool.dbId,
-      name: '',
+        name: '',
         publiclyShared: false,
         content: this.canvasAdapter.getEmptyLayout(),
     };
   } 
 
-  populateCurrentLayoutWithGivenValue(value: any): void {
-    // Check and give warning if the previous canvas is not saved
+  populateCurrentLayoutWithGivenValue(value: any, alreadyParsed:boolean = false): void {
+    if (!this.canvasAdapter.isSaved && !window.confirm('Current Layout is not saved. To save cancle and save current layout.')){
+      return
+    }
     if (this.canvas) {
       this.canvasAdapter.clearCanvas();
     }
@@ -159,7 +161,11 @@ export class DesignReportCardComponent implements OnInit {
     if (value === this.ADD_LAYOUT_STRING) {
       this.newLayout();
     } else {
-      this.currentLayout = { ...value, content: JSON.parse(value.content) };
+      if (alreadyParsed) {
+        this.currentLayout = { ...value };
+      } else {
+        this.currentLayout = { ...value, content: JSON.parse(value.content) };
+      }
     }
     console.log('Current Layout= ', this.currentLayout);
     if (this.canvas)
@@ -215,6 +221,7 @@ export class DesignReportCardComponent implements OnInit {
     await this.serviceAdapter.uploadCurrentLayout();  // final update/upload of layout
     
     this.htmlAdapter.isSaving = false;
+    this.canvasAdapter.isSaved = true;
     alert('Layout Saved Successfully');
   }
 

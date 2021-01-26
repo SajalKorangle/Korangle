@@ -106,7 +106,7 @@ export class DesignReportCardServiceAdapter {
             }
 
             const shared_layout_data = {
-                id__in: data[12].map(layoutAccess => layoutAccess.id).join(',')
+                id__in: data[12].map(sharedLayoutRelation => sharedLayoutRelation.parentLayout).join(',')
             };
 
             Promise.all([
@@ -127,7 +127,11 @@ export class DesignReportCardServiceAdapter {
                 this.vm.DATA.data.studentExaminationRemarksList = value[5];
                 this.vm.sharedLayoutList = value[7];
 
-                this.vm.DATA.studentId = this.vm.DATA.data.studentList.length>0?this.vm.DATA.data.studentList[0].id:null;
+                if (this.vm.DATA.data.studentList.length > 0)
+                    this.vm.DATA.studentId = this.vm.DATA.data.studentList[0].id;
+                else
+                    alert('Student Data unavaiable');
+                
                 this.populateLayoutSharingData(value[6]);
                 console.log('DATA: ', this.vm.DATA);
                 this.vm.htmlAdapter.isLoading = false;

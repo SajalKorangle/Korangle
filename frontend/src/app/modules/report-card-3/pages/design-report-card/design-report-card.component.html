@@ -241,6 +241,7 @@
                                     (contextmenu)="$event.preventDefault(); htmlAdapter.openContextMenu($event);"
                                     style="width: calc(100% - 8px); text-align: center; margin: 4px; padding: 4px; border-radius: 3px; cursor: pointer; white-space: nowrap;" 
                                     [class]="i==canvasAdapter.activeLayerIndex?'bg-active':'bg-white'"> 
+                                <span *ngIf="layer.error" style="color: red; float: left; font-size: x-large;">•</span>
                                 <span (blur)="layer.displayName=$event.target.innerText" style="display: inline-block;" contenteditable="true"> {{layer.displayName}} </span>   <!--this is layer name-->
                                 <span style="float: right; margin-right: 12px;">#{{layer.id}}</span>   <!-- i is id which is the array index no.of layers -->
                             </span>
