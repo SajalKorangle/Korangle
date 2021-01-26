@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog'
-import { DataStorage } from "./../../../../classes/data-storage";
+import { DataStorage } from "../../../../classes/data-storage";
+import { FONT_FAMILY_LIST } from '@modules/report-card/class/font';
 
 import { DesignReportCardServiceAdapter } from './design-report-card.service.adapter';
 
@@ -46,6 +47,8 @@ export class DesignReportCardComponent implements OnInit {
   reportCardLayoutList: {id?:any, parentSchool:string, name:string, thumbnail?:string, publiclyShared:boolean, content: any}[] = [];
   layoutSharingData: { [key: number]: any } = {};
   
+  fontFamilyList = FONT_FAMILY_LIST;
+
   unuploadedFiles: {string:string}[] = []; // Local urls of files to be uploaded, format [{file_uri : file_name},...]
 
   serviceAdapter: DesignReportCardServiceAdapter;
@@ -120,6 +123,36 @@ export class DesignReportCardComponent implements OnInit {
     this.canvasAdapter.initilizeAdapter(this);
 
     this.htmlAdapter.initializeAdapter(this);
+    console.log(this.dialog);
+    this.downloadFont();
+  }
+  
+  getFontStyleList(fontFamilyDisplayName: any): any {
+    return this.fontFamilyList.find(fontFamily => {
+        return fontFamily.displayName === fontFamilyDisplayName;
+    }).styleList;
+  }
+
+  downloadFont(): void {
+    this.fontFamilyList.forEach(fontFamily => {
+        const newStyle = document.createElement('style');
+        newStyle.appendChild(document.createTextNode(
+            '@font-face {' +
+            'font-family: ' + fontFamily.displayName + ';' +
+            'src: url("'
+                + 'https://korangleplus.s3.amazonaws.com/'
+                + this.encodeURIComponent('assets/fonts/' +
+                    fontFamily.displayName +
+                    '/' + fontFamily.displayName + '-' + this.getFontStyleList(fontFamily.displayName)[0] + '.ttf')
+            + '");' +
+            '}'
+        ));
+        document.head.appendChild(newStyle);
+    });
+  }
+
+  encodeURIComponent(url: any): any {
+    return encodeURIComponent(url);
   }
 
   newLayout(): void { // populating current layout to empty vaues and current activeSchool ID
