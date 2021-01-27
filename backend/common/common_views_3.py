@@ -61,17 +61,17 @@ class CommonBaseView():
         if(activeStudentID):    #activeStudentID can be a list of studentId's
             for relation in self.RelationsToStudent:
                 splitted_relation = relation.split('__')
-                splitted_relation[0] = validated_data.get(splitted_relation[0], None)
-                if splitted_relation[0] is not None:
-                    if not (splitted_relation[0] and reduce(lambda a, b: getattr(a, b), splitted_relation) in activeStudentID):
+                related_object = validated_data.get(splitted_relation[0], None)
+                if related_object is not None:
+                    if not (reduce(lambda a, b: getattr(a, b), splitted_relation[1:], related_object) in activeStudentID):
                         return False
 
         # Checking for Parent & Employee Both
         for relation in self.RelationsToSchool:
             splitted_relation = relation.split('__')
-            splitted_relation[0] = validated_data.get(splitted_relation[0], None)
-            if splitted_relation[0] is not None:
-                if (splitted_relation[0] and reduce(lambda a, b: getattr(a, b), splitted_relation) != activeSchoolID):
+            related_object = validated_data.get(splitted_relation[0], None)
+            if related_object is not None:
+                if (reduce(lambda a, b: getattr(a, b), splitted_relation[1:], related_object) != activeSchoolID):
                     return False
 
         return True
