@@ -130,7 +130,8 @@ export class DesignReportCardComponent implements OnInit {
   newLayout(): void { // populating current layout to empty vaues and current activeSchool ID
     this.currentLayout = {
         parentSchool: this.user.activeSchool.dbId,
-        name: '',
+      name: '',
+        thumbnail: null,
         publiclyShared: false,
         content: this.canvasAdapter.getEmptyLayout(),
     };
@@ -244,7 +245,7 @@ export class DesignReportCardComponent implements OnInit {
         }
       }       
     });
-    await this.serviceAdapter.uploadThumbnail();
+
     await this.serviceAdapter.uploadCurrentLayout();  // final update/upload of layout
     
     this.htmlAdapter.isSaving = false;
