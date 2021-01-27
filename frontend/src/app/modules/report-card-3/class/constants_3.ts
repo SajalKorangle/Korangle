@@ -773,7 +773,7 @@ export class CanvasTable extends BaseLayer implements Layer{
 };
 
 export class CanvasLine extends BaseLayer implements Layer{
-    displayName: string = 'LINE';    
+    displayName: string = 'Line';    
     
     parameterToolPannels: string[] = ['shape'];
     ca: DesignReportCardCanvasAdapter;
@@ -822,31 +822,17 @@ export class CanvasLine extends BaseLayer implements Layer{
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
-        if(Math.cos((this.orientation*Math.PI)/180) >= 0 && Math.sin((this.orientation*Math.PI)/180) >= 0){
-            return (mouseX > this.x - permissibleClickError
-                && mouseX < this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) + permissibleClickError
-                && mouseY > this.y - permissibleClickError
-                && mouseY < this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) + permissibleClickError)
-        }
-        else if(Math.cos((this.orientation*Math.PI)/180) <= 0 && Math.sin((this.orientation*Math.PI)/180) <= 0){
-            return (mouseX < this.x + permissibleClickError
-                && mouseX > this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) - permissibleClickError
-                && mouseY < this.y + permissibleClickError
-                && mouseY > this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) - permissibleClickError)
-        }
-        else if(Math.cos((this.orientation*Math.PI)/180) >= 0 && Math.sin((this.orientation*Math.PI)/180) <= 0){
-            return (mouseX > this.x - permissibleClickError
-                && mouseX < this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) + permissibleClickError
-                && mouseY < this.y + permissibleClickError
-                && mouseY > this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) - permissibleClickError)
-        }
+        // Distance between the clicked point and the two points is used here
+        // if sum of the distance between the clicked points and the two points, with the difference of the length of line is in permissible range, we will return true 
+        // temp1. temp2 is distance between clicked point and the two points, temp3 is length of line
+        
+        let temp1 = Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y)));
+        let temp2 = Math.sqrt(((mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))*(mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))) + ((mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))*(mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))));
+        
+        let temp3 = Math.sqrt(((this.x - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))*(this.x - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))) + ((this.y - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))*(this.y - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))));
+         
+        return ((temp1 + temp2 - temp3 <= permissibleClickError) && (temp1 + temp2 - temp3 >= (-1)*permissibleClickError));
 
-        else if(Math.cos((this.orientation*Math.PI)/180) <= 0 && Math.sin((this.orientation*Math.PI)/180) >= 0){
-            return (mouseX < this.x + permissibleClickError
-                && mouseX > this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)) - permissibleClickError
-                && mouseY > this.y - permissibleClickError
-                && mouseY < this.y + (this.length*Math.sin((this.orientation*Math.PI)/180)) + permissibleClickError)
-        }
     }
 
     scale(scaleFactor: number): void {
@@ -922,19 +908,8 @@ export class CanvasRectangle extends BaseLayer implements Layer{
         return ((mouseX > this.x - permissibleClickError //top line 
             && mouseX < this.x + this.length + permissibleClickError
             && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // bottom line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y + this.width - permissibleClickError
-            && mouseY < this.y + this.width +  permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // left line
-            && mouseX < this.x + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError) || 
-            (mouseX > this.x + this.length - permissibleClickError // right line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError))
+            && mouseY < this.y + this.width + permissibleClickError)
+        )
     }
 
     scale(scaleFactor: number): void {
@@ -960,7 +935,7 @@ export class CanvasRectangle extends BaseLayer implements Layer{
 }
 
 export class CanvasCircle extends BaseLayer implements Layer{
-    displayName: string = 'CIRCLE';    
+    displayName: string = 'Circle';    
     
     parameterToolPannels: string[] = ['shape'];
     ca: DesignReportCardCanvasAdapter;
@@ -1003,8 +978,7 @@ export class CanvasCircle extends BaseLayer implements Layer{
     isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
         // return true;
         return (
-            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) &&
-            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) >= (this.radius - permissibleClickError)
+            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) 
         )
     }
 
