@@ -45,4 +45,8 @@ export class CustomMenuComponent implements OnInit, OnDestroy {
     this.ca.duplicateLayer(this.layer);
   }
 
+  replaceLayer(): void{
+    this.ca.vm.htmlAdapter.openLayerReplacementDialog(this.layer);
+  }
+
 }

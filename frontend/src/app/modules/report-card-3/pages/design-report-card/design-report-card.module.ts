@@ -12,6 +12,7 @@ import { MarksDialogComponent } from './../../components/marks-dialog/marks-dial
 import { GradeRulesDialogComponent } from './../../components/grade-rules-dialog/grade-rules-dialog.component';
 import { LayoutSharingDialogComponent } from './../../components/layout-sharing-dialog/layout-sharing-dialog.component';
 import { InventoryDialogComponent} from './../../components/inventory-dialog/inventory-dialog.component';
+import { LayerReplacementDialogComponent } from './../../components/layer-replacement-dialog/layer-replacement-dialog.component';
 
 @NgModule({
   declarations: [DesignReportCardComponent],
@@ -29,7 +30,8 @@ import { InventoryDialogComponent} from './../../components/inventory-dialog/inv
     MarksDialogComponent,
     GradeRulesDialogComponent,
     LayoutSharingDialogComponent,
-    InventoryDialogComponent
+    InventoryDialogComponent,
+    LayerReplacementDialogComponent
   ],
   bootstrap: [DesignReportCardComponent]
 })

@@ -39,7 +39,8 @@ export class DesignReportCardComponent implements OnInit {
   canvas: any;
 
   currentLayout: { id?: any, parentSchool: string, name: string, thumbnail?:string, publiclyShared:boolean, content: any };
-  
+  thumbnailUpdated = false;
+
   ADD_LAYOUT_STRING = '<Add New Layout>';
 
   // stores the layour list from backend, new layout or modified layout is added to this list only after saving to backend
@@ -122,6 +123,8 @@ export class DesignReportCardComponent implements OnInit {
     this.canvasAdapter.initilizeAdapter(this);
 
     this.htmlAdapter.initializeAdapter(this);
+
+    this.populateCurrentLayoutWithGivenValue(this.ADD_LAYOUT_STRING);
   }
 
   newLayout(): void { // populating current layout to empty vaues and current activeSchool ID
@@ -134,28 +137,36 @@ export class DesignReportCardComponent implements OnInit {
   } 
 
   populateCurrentLayoutWithGivenValue(value: any, alreadyParsed:boolean = false): void {
-    if (!this.canvasAdapter.isSaved && !window.confirm('Current Layout is not saved. To save cancle and save current layout.')){
+    if (!this.isLayoutSaved() && !window.confirm('Current Layout is not saved. To save cancle and save current layout.')){
       return
     }
     if (this.canvas) {
       this.canvasAdapter.clearCanvas();
     }
     else {
-      // if canvs is not already rendered subscribe to mutations while canvas is rendered
-      let observer = new MutationObserver((mutations, me) => {  
-        let canvas = document.getElementById('mainCanvas');
-        if (canvas) {
-          this.canvas = canvas;
-          this.htmlAdapter.canvasSetUp();
-          this.canvasAdapter.initilizeCanvas(this.canvas);
-          this.canvasAdapter.loadData(this.currentLayout.content[0]);
-          me.disconnect();
-        }
-      });
-      observer.observe(document, {
-        childList: true,
-        subtree: true
-      });
+      let mainCanavs = document.getElementById('mainCanvas');
+      if (mainCanavs) {
+        this.canvas = mainCanavs;
+        this.htmlAdapter.canvasSetUp();
+        this.canvasAdapter.initilizeCanvas(this.canvas);
+      }
+      else {
+        // if canvs is not already rendered subscribe to mutations while canvas is rendered
+        let observer = new MutationObserver((mutations, me) => {
+          let canvas = document.getElementById('mainCanvas');
+          if (canvas) {
+            this.canvas = canvas;
+            this.htmlAdapter.canvasSetUp();
+            this.canvasAdapter.initilizeCanvas(this.canvas);
+            this.canvasAdapter.loadData(this.currentLayout.content[0]);
+            me.disconnect();
+          }
+        });
+        observer.observe(document, {
+          childList: true,
+          subtree: true
+        });
+      }
     }
 
     if (value === this.ADD_LAYOUT_STRING) {
@@ -193,11 +204,27 @@ export class DesignReportCardComponent implements OnInit {
     this.populateCurrentLayoutWithGivenValue(layout === undefined ? this.ADD_LAYOUT_STRING : layout);
   }
 
+  isLayoutSaved(): boolean {
+    if (!this.currentLayout)
+      return true;
+    if (!this.currentLayout.name && this.canvasAdapter.layers.length == 0 && this.canvasAdapter.gradeRuleSetList.length == 0)
+      return true;
+    if (!this.currentLayout.id)
+      return false;
+    this.currentLayout.content[this.canvasAdapter.activePageIndex] = this.canvasAdapter.getDataToSave();
+    let dbSavedLayout = this.reportCardLayoutList.find(layout => layout.id == this.currentLayout.id);
+    return JSON.stringify(this.currentLayout.content) == dbSavedLayout.content && this.currentLayout.name == dbSavedLayout.name;
+  }
+
   async saveLayout() {
     if (this.currentLayout.name.trim() == '') {
       await window.confirm("Layout Name Cannot Be Empty!");
       this.htmlAdapter.isSaving = false;
       return;
+    }
+
+    if (this.canvasAdapter.activePageIndex == 0) {
+      this.canvasAdapter.storeThumbnail();
     }
 
     if (!this.currentLayout.id) { // if new layout, upload it
@@ -217,7 +244,7 @@ export class DesignReportCardComponent implements OnInit {
         }
       }       
     });
-
+    await this.serviceAdapter.uploadThumbnail();
     await this.serviceAdapter.uploadCurrentLayout();  // final update/upload of layout
     
     this.htmlAdapter.isSaving = false;

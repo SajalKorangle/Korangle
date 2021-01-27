@@ -1,11 +1,12 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer} from './../../class/constants_3';
+import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer, Layer} from './../../class/constants_3';
 import { PageResolutionDialogComponent } from './../../components/page-resolution-dialog/page-resolution-dialog.component';
 import {ResultDialogComponent } from './../../components/result-dialog/result-dialog.component'
 import { GradeRulesDialogComponent } from './../../components/grade-rules-dialog/grade-rules-dialog.component';
 import { MarksDialogComponent } from './../../components/marks-dialog/marks-dialog.component';
 import {LayoutSharingDialogComponent } from './../../components/layout-sharing-dialog/layout-sharing-dialog.component'
 import { InventoryDialogComponent } from './../../components/inventory-dialog/inventory-dialog.component';
+import { LayerReplacementDialogComponent } from './../../components/layer-replacement-dialog/layer-replacement-dialog.component';
 
 export class DesignReportCardHtmlAdapter {
 
@@ -153,17 +154,36 @@ export class DesignReportCardHtmlAdapter {
         });
     }
 
+    openLayerReplacementDialog(layer:Layer): void{
+        this.openedDialog = this.vm.dialog.open(LayerReplacementDialogComponent, {
+            data: {
+                ca: this.vm.canvasAdapter,
+                layer: layer
+            }
+        });
+        this.openedDialog.afterClosed().subscribe((parameterAsset: any) => { 
+            if (parameterAsset) {
+                this.vm.canvasAdapter.replaceLayerWithNewLayerType(layer, { 'dataSourceType': 'DATA', 'source': parameterAsset });
+            }
+        })
+    }
+
     openInventory(): void{
         this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
             data: {
-                vm: this.vm
+                vm: this.vm,
             }
         });
         this.openedDialog.afterClosed().subscribe((selection: any) => {
             if (selection) {
                 switch (selection.type) {
                     case 'myLayout':
-                        this.vm.populateCurrentLayoutWithGivenValue(this.vm.reportCardLayoutList[selection.index]);
+                        if (selection.index == -1) { // -1 is representing add new layout
+                            this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING);
+                        }
+                        else {
+                            this.vm.populateCurrentLayoutWithGivenValue(this.vm.reportCardLayoutList[selection.index]);
+                        }
                         break;
                     case 'public':
                         let newLayout1: any = {

@@ -96,10 +96,23 @@ export class DesignReportCardCanvasAdapter {
     updatePage(pageIndex: number): void{
         if (this.activePageIndex == pageIndex)
             return;
+        if (pageIndex == 0) {
+            this.storeThumbnail()
+        }
         this.vm.currentLayout.content[this.activePageIndex] = this.getDataToSave();
         this.clearCanvas();
         this.loadData(this.vm.currentLayout.content[pageIndex]);
         this.activePageIndex = pageIndex;
+    }
+
+    storeThumbnail(): void{
+        let canavs:any = document.createElement('canvas');
+        canavs.height = this.actualresolution.mm.height;
+        canavs.width = this.actualresolution.mm.width;
+        let ctx = canavs.getContext('2d');
+        ctx.drawImage(this.virtualCanvas, 0, 0, canavs.width, canavs.height);
+        this.vm.currentLayout.thumbnail = canavs.toDataURL();
+        this.vm.thumbnailUpdated = true;
     }
 
     initilizeAdapter(vm: DesignReportCardComponent) {
@@ -398,6 +411,55 @@ export class DesignReportCardCanvasAdapter {
             alert('data corupted');
             this.clearCanvas();
         }
+    }
+
+    replaceLayerWithNewLayerType(layer:Layer, initialParameters: {[key:string]:any} = {}): void{
+        let layerIndex = this.layers.findIndex(l => l.id == layer.id);
+        let layerData = layer.getDataToSave();
+        switch (layerData.LAYER_TYPE) {
+            case 'TEXT':
+            case 'DATE':
+            case 'ATTENDANCE':
+            case 'GRADE':
+            case 'REMARK':
+            case 'MARKS':
+            case 'FORMULA':
+            case 'RESULT':
+                layerData.fontStyle = { // structuring according to canvas
+                    fillStyle: layerData.fillStyle,
+                    font: [layerData.italics, layerData.fontWeight, layerData.fontSize+'px', layerData.font].join(' ')
+                };
+                delete layerData.fillStyle;
+                delete layerData.italics;
+                delete layerData.fontWeight;
+                delete layerData.fontSize;
+                delete layerData.font;
+                switch (layerData.LAYER_TYPE) {
+                    case 'DATE':
+                        if (layerData.date) {
+                            layerData.date = new Date(layerData.date);
+                        }
+                        break;
+                    case 'ATTENDANCE':
+                        layerData.startDate = new Date(layerData.startDate);
+                        layerData.endDate = new Date(layerData.endDate);
+                        break;
+                    case 'MARKS':
+                        if (layerData.gradeRuleSet) {
+                            layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
+                        }
+                        break;
+                }
+                break;      
+        }
+        initialParameters = { ...layerData, ...initialParameters };
+        let newLayer:Layer = layer.constructor(initialParameters, this);
+        newLayer.scale(1 / this.pixelTommFactor);
+        console.log('new layer = ', newLayer);
+        this.layers[layerIndex] = newLayer;
+        this.activeLayer = newLayer;
+        this.activeLayerIndex = layerIndex;
+        this.scheduleCanvasReDraw();
     }
 
     private drawAllLayers(): void {

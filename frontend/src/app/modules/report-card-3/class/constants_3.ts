@@ -416,7 +416,7 @@ export interface Layer{
     updateTextBoxMetrics?(): void;  // update bounding box imformation of text layer
     dateFormatting?(): void;    // formats data according to selectd format
 
-    image?: HTMLImageElement;   // for CanavsImage Layer
+    image?: HTMLImageElement;   // for CanvasImage Layer
     uri?: string;
     aspectRatio?: number;    
     maintainAspectRatio?: boolean; 
@@ -426,7 +426,7 @@ export interface Layer{
     rowCount?: number;
     columnCount?: number;
 
-    text?: string;  // for CanavsText Layer
+    text?: string;  // for CanvasText Layer
     height?: number;
     width?: number;
     textBoxMetrx?: {    // text bounding box nformation
@@ -478,7 +478,9 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         BaseLayer.maxID = Math.max(BaseLayer.maxID, this.id);   // always keeping static maxID maximum of all layers
         if (this.dataSourceType == DATA_SOUCE_TYPE[1] && this.source && !this.source.getValueFunc) {
-            this.source = PARAMETER_LIST.find(el => el.key == this.source.key && el.field.fieldStructureKey == this.source.field.fieldStructureKey);
+            this.source = this.ca.vm.htmlAdapter.parameterList.find(el => el.key == this.source.key && el.field.fieldStructureKey == this.source.field.fieldStructureKey);
+            if (!this.source)
+                this.error = true;
         }
     }
 
@@ -556,6 +558,9 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
                 this.image.onload = () => {
                     getHeightAndWidth();
                 }
+                this.image.onerror = () => {
+                    this.error = true;
+                }
             }
         }
         this.image.setAttribute('crossOrigin', 'anonymous');
@@ -577,6 +582,9 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        if (!this.error)    // id error the don't draw
+            return true;
+        
         console.log('Canavs Image Draw on canvas called');
         if (this.image.complete && this.image.naturalHeight > 0) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -1198,8 +1206,14 @@ export class CanvasText extends BaseLayer implements Layer{
     layerDataUpdate(): void {
         const DATA = this.ca.vm.DATA;
         if (this.dataSourceType == 'DATA') {
-            this.text = this.source.getValueFunc(DATA);
+            if (this.error) {
+                this.text = '!ERROR'
+            } else {
+                let value = this.source.getValueFunc(DATA);
+                this.text = value ? value : 'N/A';
+            }
         }
+        
         this.updateTextBoxMetrics();
     }
 

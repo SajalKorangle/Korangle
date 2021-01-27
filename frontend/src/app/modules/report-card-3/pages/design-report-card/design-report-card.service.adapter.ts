@@ -166,10 +166,10 @@ export class DesignReportCardServiceAdapter {
             delete layoutToUpload.thumbnail
         }
         if (layoutToUpload.id) {    // if previously saved then update
-            return this.vm.reportCardService.updateObject(this.vm.reportCardService.report_card_layout_new, layoutToUpload).then(savedLayout => {
+            return this.vm.reportCardService.partiallyUpdateObject(this.vm.reportCardService.report_card_layout_new, layoutToUpload).then(savedLayout => {
                 let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(layout => layout.id == savedLayout.id);
-                this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList] = savedLayout;
-            })
+                this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList] = { ...this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList], ...savedLayout };
+            });
         }
         else {  // if previously not saved then create
             return this.vm.reportCardService.createObject(this.vm.reportCardService.report_card_layout_new, layoutToUpload).then(savedLayout => {
@@ -178,6 +178,20 @@ export class DesignReportCardServiceAdapter {
                 this.vm.currentLayout.id = savedLayout.id;
                 this.vm.reportCardLayoutList.push(savedLayout);
             })
+        }
+    }
+
+    async uploadThumbnail() {
+        if (this.vm.thumbnailUpdated) {
+            let thumbnailBlob = await fetch(this.vm.currentLayout.thumbnail).then(response => response.blob());
+            let form = new FormData();
+            form.append('id', this.vm.currentLayout.id);
+            form.append('thumbnail', thumbnailBlob, `${this.vm.currentLayout.parentSchool}-${this.vm.currentLayout.name}.png`);
+            return this.vm.reportCardService.partiallyUpdateObjectFile(this.vm.reportCardService.report_card_layout_new, form).then(savedLayout => {
+                let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(layout => layout.id == savedLayout.id);
+                this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList] = { ...this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList], ...savedLayout };
+                this.vm.thumbnailUpdated = false;
+            });
         }
     }
 

@@ -78,6 +78,13 @@ export class ServiceObject extends RestApiGateway {
         return super.patchData(data, this.module_url + object_url);
     }
 
+    partiallyUpdateObjectFile(object_url: any, data: any): Promise<any> {
+        if (object_url in this.constant_list) {
+            return Promise.resolve(null);
+        } 
+        return super.patchFileData(data, this.module_url + object_url);
+    }
+
     partiallyUpdateObjectList(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);

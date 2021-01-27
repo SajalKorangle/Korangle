@@ -21,6 +21,7 @@ import { GradeParametersPannelComponent } from './grade-parameters-pannel/grade-
 import { RemarkParametersPannelComponent } from './remark-parameters-pannel/remark-parameter-pannel.component';
 import { LayoutSharingDialogComponent } from './layout-sharing-dialog/layout-sharing-dialog.component';
 import { InventoryDialogComponent } from './inventory-dialog/inventory-dialog.component';
+import { LayerReplacementDialogComponent } from './layer-replacement-dialog/layer-replacement-dialog.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { InventoryDialogComponent } from './inventory-dialog/inventory-dialog.co
     GradeParametersPannelComponent,
     RemarkParametersPannelComponent,
     LayoutSharingDialogComponent,
-    InventoryDialogComponent],
+    InventoryDialogComponent,
+    LayerReplacementDialogComponent],
   imports: [
     ComponentsModule,
     MatButtonToggleModule,
@@ -66,7 +68,8 @@ import { InventoryDialogComponent } from './inventory-dialog/inventory-dialog.co
     GradeParametersPannelComponent,
     RemarkParametersPannelComponent,
     LayoutSharingDialogComponent,
-    InventoryDialogComponent
+    InventoryDialogComponent,
+    LayerReplacementDialogComponent
   ]
 })
 export class ParametersPannelModule { }
