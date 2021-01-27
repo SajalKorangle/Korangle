@@ -594,7 +594,6 @@ export class CanvasLine extends BaseLayer implements Layer{
     parameterToolPannels: string[] = ['shape'];
     ca: DesignReportCardCanvasAdapter;
     length: any;
-    rotation: any;
     orientation: any;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
@@ -613,12 +612,7 @@ export class CanvasLine extends BaseLayer implements Layer{
     }
 
     layerDataUpdate(): void {
-        this.updateBoxMetrics();
-    }
-
-    updateBoxMetrics = ():void=>{
-        const ctx = this.ca.virtualContext;
-        this.drawOnCanvas(ctx, 0);
+        return ;
     }
 
     updateLength(newlength: any){
@@ -640,14 +634,12 @@ export class CanvasLine extends BaseLayer implements Layer{
     isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
         // Distance between the clicked point and the two points is used here
         // if sum of the distance between the clicked points and the two points, with the difference of the length of line is in permissible range, we will return true 
-        // temp1. temp2 is distance between clicked point and the two points, temp3 is length of line
+        // temp1. temp2 is distance between clicked point and the two points
         
         let temp1 = Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y)));
         let temp2 = Math.sqrt(((mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))*(mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))) + ((mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))*(mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))));
         
-        let temp3 = Math.sqrt(((this.x - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))*(this.x - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))) + ((this.y - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))*(this.y - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))));
-         
-        return ((temp1 + temp2 - temp3 <= permissibleClickError) && (temp1 + temp2 - temp3 >= (-1)*permissibleClickError));
+        return ((temp1 + temp2 - this.length) <= permissibleClickError);
 
     }
 
@@ -697,13 +689,9 @@ export class CanvasRectangle extends BaseLayer implements Layer{
     }
 
     layerDataUpdate(): void {
-        this.updateBoxMetrics();
+        return ;
     }
 
-    updateBoxMetrics = ():void=>{
-        const ctx = this.ca.virtualContext;
-        this.drawOnCanvas(ctx, 0);
-    }
 
     updateLength(newlength: any){
         this.length = newlength;
@@ -772,12 +760,7 @@ export class CanvasCircle extends BaseLayer implements Layer{
     }
 
     layerDataUpdate(): void {
-        this.updateBoxMetrics();
-    }
-
-    updateBoxMetrics = ():void=>{
-        const ctx = this.ca.virtualContext;
-        this.drawOnCanvas(ctx, 0);
+        return ;
     }
 
     updateRadius(newRadius: any){
@@ -844,12 +827,7 @@ export class CanvasRoundedRectangle extends BaseLayer implements Layer{
     }
 
     layerDataUpdate(): void {
-        this.updateBoxMetrics();
-    }
-
-    updateBoxMetrics = ():void=>{
-        const ctx = this.ca.virtualContext;
-        this.drawOnCanvas(ctx, 0);
+        return ;
     }
 
     updateLength(newlength: any){
@@ -865,10 +843,6 @@ export class CanvasRoundedRectangle extends BaseLayer implements Layer{
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        // ctx.beginPath();
-        // ctx.rect(this.x, this.y, this.length, this.width);
-        // ctx.stroke();
-
         ctx.beginPath();
         ctx.moveTo(this.x + this.radius, this.y);
         ctx.lineTo(this.x + this.width - this.radius, this.y);
@@ -887,19 +861,8 @@ export class CanvasRoundedRectangle extends BaseLayer implements Layer{
         return ((mouseX > this.x - permissibleClickError //top line 
             && mouseX < this.x + this.length + permissibleClickError
             && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // bottom line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y + this.width - permissibleClickError
-            && mouseY < this.y + this.width +  permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // left line
-            && mouseX < this.x + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError) || 
-            (mouseX > this.x + this.length - permissibleClickError // right line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError))
+            && mouseY < this.y + this.width + permissibleClickError)
+        )
     }
 
     scale(scaleFactor: number): void {
@@ -917,6 +880,7 @@ export class CanvasRoundedRectangle extends BaseLayer implements Layer{
             'y': this.y,
             'length': this.length,
             'width': this.width,
+            'radius': this.radius,
             'dataSourceType': this.dataSourceType,
         }
         return { ...savingData };
