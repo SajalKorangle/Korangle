@@ -15,6 +15,8 @@ export class AddStudentRemarksHtmlAdapter {
     filteredSortedStudentSectionList = [];
     filteredStudentList = [];
 
+    editMode: boolean = false;
+
     constructor() {}
 
     initializeAdapter(vm: AddStudentRemarksComponent): void {
