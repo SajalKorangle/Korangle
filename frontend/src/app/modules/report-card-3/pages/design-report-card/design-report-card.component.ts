@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog'
 import { DataStorage } from "../../../../classes/data-storage";
-import { FONT_FAMILY_LIST } from '@modules/report-card/class/font';
+import { FONT_FAMILY_LIST } from '@modules/report-card-3/class/font';
 
 import { DesignReportCardServiceAdapter } from './design-report-card.service.adapter';
 

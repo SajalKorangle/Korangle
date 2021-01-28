@@ -62,14 +62,6 @@ const routes: Routes = [
         loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule',
     },
     {
-        path: 'custom_reportcard',
-        loadChildren: 'app/modules/report-card/custom_reportcard/custom_reportcard.module#CustomReportCardModule',
-    },
-    {
-        path: 'report_card',
-        loadChildren: 'app/modules/report-card/report-card.module#ReportCardModule',
-    },
-    {
         path: 'report_card_3.0',
         loadChildren: 'app/modules/report-card-3/report-card.module#ReportCardModule',
     },
@@ -127,7 +119,6 @@ const routes: Routes = [
             {path: 'report_card_cbse', loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule'},
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
             {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
-            {path: 'custom_reportcard', loadChildren: 'app/modules/report-card/custom_reportcard/custom_reportcard.module#CustomReportCardModule'},
             {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
         ]
     }
