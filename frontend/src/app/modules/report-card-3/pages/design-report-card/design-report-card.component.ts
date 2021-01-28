@@ -170,8 +170,8 @@ export class DesignReportCardComponent implements OnInit {
     };
   } 
 
-  populateCurrentLayoutWithGivenValue(value: any, alreadyParsed:boolean = false): void {
-    if (!this.isLayoutSaved() && !window.confirm('Current Layout is not saved. To save cancle and save current layout.')){
+  populateCurrentLayoutWithGivenValue(value: any, alreadyParsed:boolean = false, forceUpdate:boolean = false): void {
+    if (!forceUpdate && !this.isLayoutSaved() && !window.confirm('Current Layout is not saved. To save cancle and save current layout.')){
       return
     }
     if (this.canvas) {

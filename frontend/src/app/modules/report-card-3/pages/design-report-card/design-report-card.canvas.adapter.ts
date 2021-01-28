@@ -95,7 +95,7 @@ export class DesignReportCardCanvasAdapter {
     updatePage(pageIndex: number): void{
         if (this.activePageIndex == pageIndex)
             return;
-        if (pageIndex == 0) {
+        if (this.activePageIndex == 0) {
             this.storeThumbnail()
         }
         this.vm.currentLayout.content[this.activePageIndex] = this.getDataToSave();
@@ -560,6 +560,7 @@ export class DesignReportCardCanvasAdapter {
         this.layers = [];
         this.currentMouseDown = false;
         this.isSaved = false;
+        this.activePageIndex = 0;
 
         this.applyDefaultbackground();
     }

@@ -190,6 +190,7 @@ export class DesignReportCardServiceAdapter {
                 console.log('created Object: ', savedLayout);
                 this.vm.currentLayout.id = savedLayout.id;
                 this.vm.reportCardLayoutList.push(savedLayout);
+                this.vm.layoutSharingData[savedLayout.id] = []
             })
         }
     }
@@ -225,7 +226,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.reportCardService.deleteObject(this.vm.reportCardService.report_card_layout_new, layout_delete_request).then(response => {
                 const currentLayoutIndex = this.vm.reportCardLayoutList.findIndex(layout => layout.id == current_layut_id);
                 this.vm.reportCardLayoutList.splice(currentLayoutIndex, 1);
-                this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING);
+                this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING, false, true);
                 this.vm.htmlAdapter.isSaving = false;
             })
         }
