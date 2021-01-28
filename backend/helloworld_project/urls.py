@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^'+api_version+'id-card/', include('id_card_app.urls')),
     url(r'^'+api_version+'homework/', include('homework_app.urls')),
     url(r'^'+api_version+'feature/', include('feature_app.urls')),
-    url(r'^'+api_version+'tutorial/', include('tutorial_app.urls')),
+    url(r'^' + api_version + 'tutorial/', include('tutorial_app.urls')),
+    url(r'^'+api_version+'errors/', include('errors_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
