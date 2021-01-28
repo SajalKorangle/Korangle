@@ -38,7 +38,7 @@
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="serviceAdapter.getStudentRemarkDetails()">GET</button>
             
-            <button *ngIf="!isLoading && htmlAdapter.showStudentList" class="btn material-icons" style="float: right;" [style.backgroundColor]="htmlAdapter.editMode?'blue':''" (click)="htmlAdapter.editMode = !htmlAdapter.editMode">edit</button>
+            <!-- <button *ngIf="!isLoading && htmlAdapter.showStudentList" class="btn material-icons" style="float: right;" [style.backgroundColor]="htmlAdapter.editMode?'blue':''" (click)="htmlAdapter.editMode = !htmlAdapter.editMode">edit</button> -->
 
         </ng-container>
 

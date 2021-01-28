@@ -44,11 +44,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/examination/pages/add-student-remarks/add-student-remarks.module#AddStudentRemarksModule',
         data: {moduleName: 'examinations'},
     },
-    /*{
+    {
         path: 'view_student_remarks',
-        loadChildren: 'app/modules/examination/pages/view-student-remarks/ViewStudentRemarks.module#ViewStudentRemarksModule',
+        loadChildren: 'app/modules/examination/pages/view-student-remarks/view-student-remarks.module#ViewStudentRemarksModule',
         data: {moduleName: 'examinations'},
-    },*/
+    },
     {
         path: '',
         component: ExaminationComponent,
