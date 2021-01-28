@@ -252,7 +252,10 @@ class CCEMarksListView(CommonListView, APIView):
 
 class StudentExaminationRemarksView(CommonView, APIView):
     Model = StudentExaminationRemarks
-
+    RelationsToSchool = ['parentExamination__parentSchool__id', 'parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 class StudentExaminationRemarksListView(CommonListView, APIView):
     Model = StudentExaminationRemarks
+    RelationsToSchool = ['parentExamination__parentSchool__id', 'parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']

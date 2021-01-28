@@ -8,7 +8,6 @@ import {HttpClient} from '@angular/common/http';
 export class ReportCardService extends ServiceObject {
 
     // objects urls
-    public report_card_layout = '/report-card-layout';
     public report_card_layout_new = '/report-card-layout-new';
     public layout_sharing = '/layout-sharing';
     public image_assets = '/image-assets';
@@ -17,7 +16,6 @@ export class ReportCardService extends ServiceObject {
 
     constructor(private http_class: HttpClient) {
         super(http_class);
-        this.file_list[this.report_card_layout] = this.report_card_layout;
         this.file_list[this.image_assets] = this.image_assets;
         this.file_list[this.report_card_layout_new] = this.report_card_layout_new;
     }
