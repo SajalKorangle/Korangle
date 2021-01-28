@@ -31,7 +31,7 @@
         
         <div *ngIf="htmlAdapter.isSaving" style="width: 100%; height: 100%; position: absolute; z-index: 1; backdrop-filter: blur(1px);"></div>
         
-        <mat-card class="bg-grey flex-row" style="width: 100%; padding: 4px; margin-top: 6px; align-items: center;" [class.stickyTop]="htmlAdapter.isFullScreen">
+        <mat-card class="bg-grey" style="width: 100%; padding: 4px; margin-top: 6px; align-items: center; display: flex; flex-wrap: wrap;" [class.stickyTop]="htmlAdapter.isFullScreen">
             <!-- Top Toolbar -->
 
             <div class="tool" style="padding: 2px;"> <!--Background Color Picker-->   
@@ -141,17 +141,28 @@
                         (click)="htmlAdapter.openLayoutSharingDialog()">share</button>
             </div>
 
-            <div>
-                <mat-form-field style="width: 100px;">
-                    <mat-select placeholder="Add Shape">
-                        <mat-option [value]="'Line'" (click)="canvasAdapter.newLineLayer()">Line</mat-option>
-                        <mat-option [value]="'Rectangle'" (click)="canvasAdapter.newRectangleLayer()">Rectangle</mat-option>
-                        <mat-option [value]="'Square'" (click)="canvasAdapter.newSquareLayer()">Square</mat-option>
-                        <mat-option [value]="'Circle'" (click)="canvasAdapter.newCircleLayer()">Circle</mat-option>
-                        <mat-option [value]="'Rounded Rectangle'" (click)="canvasAdapter.newRoundedRectangleLayer()">Rounded Rectangle</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                
+            <div class="tool">
+                <button class="btn material-icons"
+                mat-button [matMenuTriggerFor]="shapesMenu">category</button>
+                <mat-menu #shapesMenu="matMenu">
+                    <div style="display: flex; flex-wrap: wrap; max-width: 128px; margin: 0 2px;">
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newLineLayer()">
+                            <div style="background-color: black; width: 22px; height: 2px; display: inline-block;"></div>
+                        </div>
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newRectangleLayer()">
+                            <div style="background-color: black; width: 22px; height: 12px; display: inline-block;"></div>
+                        </div>
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newSquareLayer()">
+                            <div style="background-color: black; width: 20px; height: 20px; display: inline-block;"></div>
+                        </div>
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newRoundedRectangleLayer()">
+                            <div style="background-color: black; width: 22px; height: 12px; border-radius: 3px; display: inline-block;"></div>
+                        </div>
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newCircleLayer()">
+                            <div style="background-color: black; width: 20px; height: 20px; border-radius: 50%; display: inline-block;"></div>
+                        </div>
+                    </div>
+                </mat-menu>
             </div>
 
             <div class="tool" style="margin-left: auto;">
