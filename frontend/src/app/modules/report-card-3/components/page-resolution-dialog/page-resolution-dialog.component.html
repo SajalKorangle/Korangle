@@ -13,11 +13,11 @@
         </ng-container>
     </div>
 
-    <div style="width: 60px; display: flex; flex-direction: column; align-items: center;">
+    <div style="width: 180px; display: flex; flex-direction: column; align-items: center;">
             <mat-form-field>
                 <input matInput placeholder="Height(mm)" type="number" [ngModel]="activePageResolution.mm.height" (ngModelChange)="selectCustomPageResolution(); activePageResolution.mm.height = $event;">
             </mat-form-field>
-            <!-- <button class="btn material-icons" style="padding: 8px; margin-top: 6px; margin-bottom: 10px;">link</button> -->
+
             <mat-form-field>
                 <input matInput placeholder="Width(mm)" type="number" [ngModel]="activePageResolution.mm.width" (ngModelChange)="selectCustomPageResolution(); activePageResolution.mm.width = $event;">
             </mat-form-field>

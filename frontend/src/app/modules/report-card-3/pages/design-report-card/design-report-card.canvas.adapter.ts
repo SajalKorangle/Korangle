@@ -269,7 +269,6 @@ export class DesignReportCardCanvasAdapter {
 
             gradeRuleSetList: this.gradeRuleSetList.map(gradeRuleSet=>gradeRuleSet.getDataToSave()),
             layers: layers
-            // gradeRuleSetList, to be implemented
         };
 
         if (this.actualresolution.resolutionName == PAGE_RESOLUTIONS[4].resolutionName) {   //custom resolution
@@ -419,10 +418,10 @@ export class DesignReportCardCanvasAdapter {
             });
 
             if (this.layers.length > 0) {
-                this.drawAllLayers();
                 this.activeLayer = this.layers[this.layers.length - 1];
                 this.activeLayerIndex = this.layers.length - 1;
             }
+            this.drawAllLayers();
             console.log('canvas layers: ', this.layers);
             this.isSaved = false;
         } catch (err) {

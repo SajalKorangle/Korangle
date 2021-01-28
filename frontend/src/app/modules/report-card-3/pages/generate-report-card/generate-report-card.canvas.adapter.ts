@@ -214,9 +214,8 @@ export class GenerateReportCardCanvasAdapter {
                 }
             });
 
-            if (this.layers.length > 0) {
-                this.drawAllLayers();
-            }
+
+            this.drawAllLayers();
             console.log('canvas layers: ', this.layers);
     }
 
