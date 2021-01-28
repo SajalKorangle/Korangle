@@ -20,6 +20,7 @@ export class FeeService extends ServiceObject {
     public sub_discounts = '/sub-discounts';
     public fee_features = '/fee-features';
     public lock_fees = '/lock-fees';
+    public online_payment_account = '/online-payment-account';
 
     // Fee Type
     get(object_url: any, data: any): Promise<any> {

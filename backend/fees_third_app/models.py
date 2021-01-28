@@ -411,3 +411,11 @@ class LockFee(models.Model):
     class Meta:
         db_table = 'lock_fee'
 
+class OnlinePaymentAccount(models.Model):
+
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, verbose_name='parentEmployee')
+    stripeConnectId = models.TextField(null=False, default=0, verbose_name='stripeConnectId')
+
+    class Meta:
+        db_table = 'online_payment_account'
