@@ -8,16 +8,21 @@ import {
     PageResolution,
     PAGE_RESOLUTIONS,
     Result,
-    GradeRuleSet,
     GradeRule,
     CanvasTable,
     BaseLayer,
-    DPI_LIST,
     getStructeredPageResolution,
     AttendanceLayer,
     GradeLayer,
     RemarkLayer,
     MarksLayer,
+    DPI_LIST,
+    CanvasLine,
+    CanvasRectangle,
+    CanvasSquare,
+    CanvasCircle,
+    CanvasRoundedRectangle,
+    GradeRuleSet,
 } from './../../class/constants_3';
 
 
@@ -40,6 +45,8 @@ export class GenerateReportCardCanvasAdapter {
  
 
     layers: Array<Layer> = [];  // layers in thier order from back to front
+
+    activePageIndex: number = 0;
 
     gradeRuleSetList: Array<GradeRuleSet> = [];
 
@@ -110,6 +117,26 @@ export class GenerateReportCardCanvasAdapter {
                     
                     case 'TABLE':
                         newLayerFromLayerData = new CanvasTable(layerData, this);
+                        break;
+                    
+                    case 'LINE':
+                        newLayerFromLayerData = new CanvasLine(layerData, this);
+                        break;
+                    
+                    case 'RECTANGLE':
+                        newLayerFromLayerData = new CanvasRectangle(layerData, this);
+                        break;
+                    
+                    case 'CIRCLE':
+                        newLayerFromLayerData = new CanvasCircle(layerData, this);
+                        break;
+                
+                    case 'ROUNDED-RECTANGLE':
+                        newLayerFromLayerData = new CanvasRoundedRectangle(layerData, this);
+                        break;
+                    
+                    case 'SQUARE':
+                        newLayerFromLayerData = new CanvasSquare(layerData, this);
                         break;
                     
                     case 'TEXT':

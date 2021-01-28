@@ -36,11 +36,13 @@ export class GenerateReportCardComponent implements OnInit {
 
   user: any;
 
-  parameterList: any[] = [...PARAMETER_LIST];
+  htmlAdapter: any = {
+    parameterList: [...PARAMETER_LIST]
+  }
   dpiList: number[] = DPI_LIST;
 
-  selectedLayout: {id?:any, parentSchool:string, name:string, content: any};
-  reportCardLayoutList: { id?: any, parentSchool: string, name: string, content: any }[] = [];
+  selectedLayout: { id?: any, parentSchool: string, name: string, thumbnail?:string, publiclyShared:boolean, content: any };
+  reportCardLayoutList: {id?:any, parentSchool:string, name:string, thumbnail?:string, publiclyShared:boolean, content: any}[] = [];
   
   studentList: any[];
   studentSectionList: any[];

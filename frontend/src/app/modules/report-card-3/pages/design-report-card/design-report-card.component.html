@@ -288,9 +288,8 @@
                             ></app-text-parameters-pannel>
                 </div>
                 
-                <div class="parameters-tool" style="margin:0; width: 100%;">
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('image')" class="parameters-tool" style="margin:0; width: 100%;">
                     <app-image-parameters-pannel 
-                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('image')"
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-image-parameters-pannel>

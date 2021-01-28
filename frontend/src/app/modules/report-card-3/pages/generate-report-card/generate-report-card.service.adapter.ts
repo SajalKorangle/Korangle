@@ -137,7 +137,7 @@ export class GenerateReportCardServiceAdapter {
 
     populateParameterListWithStudentCustomField(): void {
         this.vm.DATA.data.studentParameterList.forEach(studentParameter => {
-            this.vm.parameterList.push(StudentCustomParameterStructure.getStructure(
+            this.vm.htmlAdapter.parameterList.push(StudentCustomParameterStructure.getStructure(
                 studentParameter.name, studentParameter.id
             ));
         });

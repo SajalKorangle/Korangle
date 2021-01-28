@@ -531,19 +531,21 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
 
     layerDataUpdate(): void{
-        const canvasWidth = this.ca.canvasWidth, canvasHeight = this.ca.canvasHeight;
-        
+         
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
             const DATA = this.ca.vm.DATA;
             this.uri = this.source.getValueFunc(DATA)+'?javascript=';
         }
-        if (!this.height && !this.width) {
-            let getHeightAndWidth = () => {
+       
+        const canvasWidth = this.ca.canvasWidth, canvasHeight = this.ca.canvasHeight;
+            
+        let getHeightAndWidth = () => {
+            if (!this.height && !this.width) {
                 this.height = this.image.height;
                 this.width = this.image.width;
                 this.aspectRatio = this.width / this.height;
 
-                if (this.height > canvasHeight) {  
+                if (this.height > canvasHeight) {
                     this.height = canvasHeight; // so that image does not exceeds canvas boundry
                     this.width = this.aspectRatio * this.height;    // maintaining aspect ratio
                 }
@@ -552,22 +554,20 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
                     this.height = this.width / this.aspectRatio;    // maintaining aspect ratio
                 }
             }
-            if (this.image.complete && this.image.naturalHeight > 0) { // if image is loaded do the setup otherwise do setup on load
-                getHeightAndWidth();
-            } else {
-                this.image.onload = () => {
-                    getHeightAndWidth();
-                }
-                this.image.onerror = () => {
-                    this.error = true;
-                }
-            }
+        }
+           
+        this.image.onload = () => {
+            getHeightAndWidth();
+        }
+        this.image.onerror = () => {
+            this.error = true;
         }
         this.image.setAttribute('crossOrigin', 'anonymous');
         this.image.src = this.uri;
     }
 
     updateHeight(newHeight: number) {
+        console.log('update height called = #', this.id)
         this.height = newHeight;
         if (this.maintainAspectRatio) {
             this.width = this.aspectRatio * this.height;
@@ -575,6 +575,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
 
     updateWidth(newWidth: number) {
+        console.log('update width called = #', this.id)
         this.width = newWidth;
         if (this.maintainAspectRatio) {
             this.height = this.width / this.aspectRatio;
@@ -582,13 +583,11 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        if (!this.error)    // id error the don't draw
+        if (this.error)    // id error the don't draw
             return true;
         
-        console.log('Canavs Image Draw on canvas called');
         if (this.image.complete && this.image.naturalHeight > 0) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-            console.log('Canavs Image context draw successfull');
             return true;    // Drawn successfully on canvas
         }
         scheduleReDraw();   // draw again after some time

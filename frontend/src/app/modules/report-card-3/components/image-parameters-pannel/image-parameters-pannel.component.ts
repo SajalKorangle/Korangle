@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Layer } from './../../class/constants_3';
+import { CanvasImage } from './../../class/constants_3';
 
 @Component({
   selector: 'app-image-parameters-pannel',
@@ -8,7 +8,7 @@ import { Layer } from './../../class/constants_3';
 })
 export class ImageParametersPannelComponent implements OnInit {
 
-  @Input() layer: Layer;
+  @Input() layer: CanvasImage;
   @Input() canvasRefresh: any;
 
   constructor() { }
