@@ -38,7 +38,8 @@ export class GenerateReportCardComponent implements OnInit {
 
   htmlAdapter: any = {
     parameterList: [...PARAMETER_LIST]
-  }
+  };
+
   dpiList: number[] = DPI_LIST;
 
   selectedLayout: { id?: any, parentSchool: string, name: string, thumbnail?:string, publiclyShared:boolean, content: any };

@@ -432,9 +432,7 @@ export class DesignReportCardCanvasAdapter {
         }
     }
 
-    replaceLayerWithNewLayerType(layer:Layer, initialParameters: {[key:string]:any} = {}): void{
-        let layerIndex = this.layers.findIndex(l => l.id == layer.id);
-        let layerData = layer.getDataToSave();
+    getLayerFromLayerData(layerData: any, constructor:any): Layer{
         switch (layerData.LAYER_TYPE) {
             case 'TEXT':
             case 'DATE':
@@ -471,10 +469,17 @@ export class DesignReportCardCanvasAdapter {
                 }
                 break;      
         }
+        return new constructor(layerData, this);
+    }
+
+    replaceLayerWithNewLayerType(layer:Layer, initialParameters: {[key:string]:any} = {}): void{
+        let layerIndex = this.layers.findIndex(l => l.id == layer.id);
+        let layerData = JSON.parse(JSON.stringify(layer.getDataToSave()));
         initialParameters = { ...layerData, ...initialParameters };
-        let newLayer:Layer = layer.constructor(initialParameters, this);
+
+        let newLayer: Layer = this.getLayerFromLayerData(initialParameters, layer.constructor);
         newLayer.scale(1 / this.pixelTommFactor);
-        console.log('new layer = ', newLayer);
+
         this.layers[layerIndex] = newLayer;
         this.activeLayer = newLayer;
         this.activeLayerIndex = layerIndex;
@@ -530,7 +535,7 @@ export class DesignReportCardCanvasAdapter {
         let deepCopyLayerData = JSON.parse(JSON.stringify(layerParticularData));
         delete deepCopyLayerData.id;
         deepCopyLayerData.displayName += ' copy';
-        let newLayer = new layer.constructor(deepCopyLayerData, this);
+        let newLayer = this.getLayerFromLayerData(deepCopyLayerData, layer.constructor);
         let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
         newLayer.scale(mmToPixelScaleFactor);
         newLayer.x += 15;   // slightly shifting layer 
