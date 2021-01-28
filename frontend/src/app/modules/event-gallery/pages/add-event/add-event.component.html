@@ -1,24 +1,92 @@
 <div class="card-content table-responsive">
     <div class="row">
+        <div class="col-md-1" style="width: 60px;margin-top: 20px">
+            <span style="font-size: 16px">Title</span>
+        </div>
         <div class="col-md-10">
-            <span style="margin-right:25px;font-size: 16px;vertical-align: middle;">Title</span>
-            <mat-form-field style="width: 70%;" appearance="none">
+            <mat-form-field style="width: 75%;" appearance="none">
                 <input matInput
                        type="text"
-                       style="overflow: hidden;height:30px;background-color: #C4C4C4">
+                       maxlength="50"
+                       style="overflow: hidden;height:35px;background-color: #C4C4C4;padding-left:12px;font-weight: bold">
             </mat-form-field>
         </div>
     </div>
-     <div class="row">
-        <div class="col-md-10">
-            <span style="margin-right:25px;font-size: 16px;vertical-align: middle;">Text</span>
-            <mat-form-field style="width: 70%;" appearance="none">
+    <div class="row">
+        <div class="col-md-1" style="width: 60px;margin-top: 20px">
+            <span style="font-size: 16px">Text</span>
+        </div>
+        <div class="col-md-11">
+            <mat-form-field style="width: 95%" appearance="none">
                 <textarea matInput
-                       type="text"
-                        cdkTextareaAutosize
-                       style="overflow: hidden;height:30px;background-color: #C4C4C4;min-height: 250px;">
-                </textarea>
+                          type="text"
+                          cdkTextareaAutosize
+                          style="overflow: hidden;background-color: #C4C4C4;min-height: 100px;padding: 12px;"></textarea>
             </mat-form-field>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-1" style="width: 230px;margin-top: 20px">
+            <span style="font-size: 16px">Send Media update Notify to</span>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field  style="width: 100%" appearance="none">
+                    <mat-select class="notifyList" style="background-color: #C4C4C4;" [formControl]="selectionList" multiple>
+                        <mat-option class="options" *ngFor="let notifyTo of notifySelectionList" 
+                                    (click)="handleSelectionChange(notifyTo)"
+                                    [value]="notifyTo">
+                           {{notifyTo}}
+                    </mat-option>
+                    </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <button type="submit"
+                style="float:right;margin: 10px"
+                class="btn btn-warning">Post Event
+        </button>
+    </div>
+    
+                <div class="row" style="margin-bottom: 30px;">
+                <div class="col-md-12"
+                     style="border-bottom: 1px solid lightgrey;"></div>
+            </div>
+    <div class="row">
+        <div class="col-md-2">
+        <strong>Edit Previous Events</strong>
+            </div>
+    </div>
+    <div class="row">
+         <div class="col-md-4">
+         <mat-form-field style="width: 100%" floatPlaceholder="never">
+        <input matInput
+               type="text"
+               placeholder="search event title">
+         </mat-form-field>
+         </div>
+    </div>
+     <mat-card style="margin-top: 10px;">
+         <div class="row">
+             <div class="col-md-5">
+                <mat-card-title>
+                  <strong style="font-size: 16px;">Annual Day Function</strong>
+                    <span style="float:right;font-weight:400;font-size: 16px;">21/2/2021</span>
+                </mat-card-title>
+                <mat-card-content style="font-weight:400;font-size: 16px; white-space: pre-line; margin-top: 5px;line-height: 19px">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip. Lorem ipsum dolor sit amet, consectetur adi                </mat-card-content>
+             </div>
+             <div class="col-md-5">
+                 <img  src="http://www.thenewsnow.co.in/newsadmin/photo/304201719183384.jpg"  alt="Event Images" style="width: 170px;height: 115px;margin-top: 30px;margin-right:10px;">
+                 <img  src="http://www.thenewsnow.co.in/newsadmin/photo/304201719183384.jpg"  alt="Event Images" style="width: 170px;height: 115px;margin-top: 30px;margin-right:10px;">
+             </div>
+             <div class="col-md-2"> 
+                 <button type="submit"
+                style="float:right;margin: 45% 10px 10px;"
+                class="btn btn-warning">Edit Event
+        </button>
+         </div>
+         </div>
+            </mat-card>
+    
 </div>

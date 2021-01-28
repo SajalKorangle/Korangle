@@ -1,5 +1,40 @@
-label {
-  display: inline-block;
-  width: 140px;
-  text-align: right;
+ .notifyList::ng-deep .mat-select-arrow {
+     width: 0;
+     height: 0;
+     border-left: 8px solid transparent;
+     border-right: 8px solid transparent;
+     border-top: 8px solid;
+     margin: 10px 4px;
+ }
+ 
+ 
+.option mat-select :host /deep/ .mat-select-panel-wrap .mat-select-panel {
+background: #c4c4c4 !important;
+   margin-top:45px !important;
+ }
+
+ 
+  .options::ng-deep .mat-checkbox-label{
+   color: black;
+ }
+ 
+  .options::ng-deep .mat-checkbox-frame{
+   background-color: #ffff !important;
+   border-color: black;
+ }
+ 
+   /deep/ .mat-option-pseudo-checkbox {
+    margin-right: 8px;
+    background-color: #ffff;
+}
+   .options::ng-deep .mat-pseudo-checkbox {
+    color: black;
+}
+
+   .options::ng-deep .mat-option-text{
+  color: black;
+}
+ 
+  .notifyList::ng-deep .mat-select-value{
+  padding:10px;
 }
