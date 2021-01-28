@@ -26,11 +26,16 @@
                 (ngModelChange)="layer.updateOrientation($event);canvasRefresh();" placeholder="Choose Orientation(degree)">
         </mat-form-field>
 
-        <!-- <mat-form-field>
-            <input type="number" matInput [ngModel]="layer.width"
-                (ngModelChange)="layer.maintainAspectRatio = false ;layer.updateWidth($event); canvasRefresh();" placeholder="Choose Width">
+        <mat-form-field>
+            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.shapeStyle.lineWidth)"
+                (ngModelChange)="layer.shapeStyle.lineWidth = $event/getPixelTommFactor(); canvasRefresh();" placeholder="Line Width(mm)">
         </mat-form-field>
-        -->
+
+        <mat-form-field>
+            <input type="color" matInput [value]="layer.shapeStyle.strokeStyle"
+                (input)="layer.shapeStyle.strokeStyle = $event.target.value; canvasRefresh(0);" placeholder="Stroke Color">
+        </mat-form-field>
+        
     </div>
 
 </mat-card>

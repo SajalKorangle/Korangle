@@ -421,7 +421,7 @@ export interface Layer{
     aspectRatio?: number;    
     maintainAspectRatio?: boolean; 
 
-    rowsList?: Array<TableRow>; // for CanavsTable Layer
+    rowsList?: Array<TableRow>; // for CanvasTable Layer
     columnsList?: Array<TableColumn>;
     rowCount?: number;
     columnCount?: number;
@@ -772,27 +772,54 @@ export class CanvasTable extends BaseLayer implements Layer{
     }
 };
 
-export class CanvasLine extends BaseLayer implements Layer{
+class ShapeBaseLayer extends BaseLayer{
+    shapeStyle: {
+        lineWidth: number,
+        strokeStyle: string,
+    } = {
+            lineWidth: 2,
+            strokeStyle: '#000000',
+    }
+
+    constructor(ca: DesignReportCardCanvasAdapter) { 
+        super(ca);
+        this.shapeStyle.lineWidth = 0.5 / ca.pixelTommFactor;
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean { 
+        Object.entries(this.shapeStyle).forEach(([key, value]) => ctx[key] = value);
+        return true;
+    }
+
+    getDataToSave() {
+        let savingData = super.getDataToSave();
+        savingData = {
+            ...savingData,
+            shapeStyle: this.shapeStyle
+        }
+        return savingData;
+    }
+
+}
+
+export class CanvasLine extends ShapeBaseLayer implements Layer{
     displayName: string = 'Line';    
     
-    parameterToolPannels: string[] = ['shape'];
-    ca: DesignReportCardCanvasAdapter;
-    length: any;
-    orientation: any;
+    length: number = 40;
+    orientation: number = 0;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(ca);
         this.parameterToolPannels.push('shape');
+        
+        this.x = 20/ca.pixelTommFactor;
+        this.y = 20/ca.pixelTommFactor;
+        this.length = 40 / ca.pixelTommFactor;
+        
+        this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'LINE';
-        this.x = 20;
-        this.y = 20;
-        this.length = 20;
-        this.orientation = 0;
-        if (initilize) {
-            this.initilizeSelf(attributes);
-            this.LAYER_TYPE = 'LINE';
-            this.layerDataUpdate();
-        }
+        this.layerDataUpdate();
+        
     }
 
     layerDataUpdate(): void {
@@ -808,6 +835,7 @@ export class CanvasLine extends BaseLayer implements Layer{
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        super.drawOnCanvas(ctx, scheduleReDraw);
         ctx.beginPath()
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)), this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
@@ -820,10 +848,10 @@ export class CanvasLine extends BaseLayer implements Layer{
         // if sum of the distance between the clicked points and the two points, with the difference of the length of line is in permissible range, we will return true 
         // temp1. temp2 is distance between clicked point and the two points
         
-        let temp1 = Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y)));
-        let temp2 = Math.sqrt(((mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))*(mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))) + ((mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))*(mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))));
+        let distanceFromXYEnd = Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y)));
+        let distanceFromOppositeEnd = Math.sqrt(((mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))*(mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))) + ((mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))*(mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))));
         
-        return ((temp1 + temp2 - this.length) <= permissibleClickError);
+        return ((distanceFromXYEnd + distanceFromOppositeEnd - this.length) <= permissibleClickError+this.shapeStyle.lineWidth/2);
 
     }
 
@@ -834,42 +862,42 @@ export class CanvasLine extends BaseLayer implements Layer{
     }
 
     getDataToSave() {
-        let savingData: any = {
-            'displayName': this.displayName,
-            'LAYER_TYPE': this.LAYER_TYPE,
-            'x': this.x,
-            'y': this.y,
-            'length': this.length,
-            'orientation': this.orientation,
-            'dataSourceType': this.dataSourceType,
-        }
+        let savingData = super.getDataToSave();
+        savingData = {
+            ...savingData,
+            length: this.length*this.ca.pixelTommFactor,
+            orientation: this.orientation,
+        };
+ 
         return { ...savingData };
     }
 
 }
 
 
-export class CanvasRectangle extends BaseLayer implements Layer{
+export class CanvasRectangle extends ShapeBaseLayer implements Layer{
     displayName: string = 'Rectangle';    
     
-    parameterToolPannels: string[] = ['shape'];
     ca: DesignReportCardCanvasAdapter;
-    length: any;
-    width: any;
+    length: any = 30;
+    width: any = 20;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean = true) {
         super(ca);
         this.parameterToolPannels.push('shape');
-        this.LAYER_TYPE = 'SHAPE';
-        this.x = 20;
-        this.y = 20;
-        this.length = 20;
-        this.width = 20;
+        
+        this.x = 20/ca.pixelTommFactor;
+        this.y = 20/ca.pixelTommFactor;
+        this.length = 30/ca.pixelTommFactor;
+        this.width = 20 / ca.pixelTommFactor;
+
         if (initilize) {
             this.initilizeSelf(attributes);
-            this.LAYER_TYPE = 'RECTANGLE';
             this.layerDataUpdate();
         }
+
+        this.LAYER_TYPE = 'RECTANGLE';
+
     }
 
     layerDataUpdate(): void {
@@ -886,6 +914,7 @@ export class CanvasRectangle extends BaseLayer implements Layer{
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        super.drawOnCanvas(ctx, scheduleReDraw);
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.length, this.width);
         ctx.stroke();
@@ -893,11 +922,11 @@ export class CanvasRectangle extends BaseLayer implements Layer{
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        return ((mouseX > this.x - permissibleClickError //top line 
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError)
-        )
+        return ((mouseX > this.x - (permissibleClickError + this.shapeStyle.lineWidth / 2) //top line 
+            && mouseX < this.x + this.length + (permissibleClickError + this.shapeStyle.lineWidth / 2)
+            && mouseY > this.y - (permissibleClickError + this.shapeStyle.lineWidth / 2)
+            && mouseY < this.y + this.width + (permissibleClickError + this.shapeStyle.lineWidth / 2))
+        );
     }
 
     scale(scaleFactor: number): void {
@@ -908,34 +937,31 @@ export class CanvasRectangle extends BaseLayer implements Layer{
     }
 
     getDataToSave() {
-        let savingData: any = {
-            'displayName': this.displayName,
-            'LAYER_TYPE': this.LAYER_TYPE,
-            'x': this.x,
-            'y': this.y,
-            'length': this.length,
-            'width': this.width,
-            'dataSourceType': this.dataSourceType,
+        let savingData = super.getDataToSave();
+        savingData = {
+            ...savingData,
+            length: this.length*this.ca.pixelTommFactor,
+            width: this.width*this.ca.pixelTommFactor,
         }
+
         return { ...savingData };
     }
 
 }
 
-export class CanvasCircle extends BaseLayer implements Layer{
+export class CanvasCircle extends ShapeBaseLayer implements Layer{
     displayName: string = 'Circle';    
     
-    parameterToolPannels: string[] = ['shape'];
-    ca: DesignReportCardCanvasAdapter;
-    radius: any;
+    radius: number = 20;
     
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
         super(ca);
         this.parameterToolPannels.push('shape');
-        this.LAYER_TYPE = 'CIRCLE';
-        this.x = 50;
-        this.y = 50;
-        this.radius = 20;
+
+        this.x = 50/ca.pixelTommFactor;
+        this.y = 50/ca.pixelTommFactor;
+        this.radius = 20/ca.pixelTommFactor;
+
         if (initilize) {
             this.initilizeSelf(attributes);
             this.LAYER_TYPE = 'CIRCLE';
@@ -952,6 +978,7 @@ export class CanvasCircle extends BaseLayer implements Layer{
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        super.drawOnCanvas(ctx, scheduleReDraw);
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         ctx.stroke();
@@ -961,7 +988,7 @@ export class CanvasCircle extends BaseLayer implements Layer{
     isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
         // return true;
         return (
-            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) 
+            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError+this.shapeStyle.lineWidth/2) 
         )
     }
 
@@ -972,42 +999,38 @@ export class CanvasCircle extends BaseLayer implements Layer{
     }
 
     getDataToSave() {
-        let savingData: any = {
-            'displayName': this.displayName,
-            'LAYER_TYPE': this.LAYER_TYPE,
-            'x': this.x,
-            'y': this.y,
-            'radius': this.radius,
-            'dataSourceType': this.dataSourceType,
+        let savingData = super.getDataToSave();
+        savingData = {
+            ...savingData,
+            radius: this.radius*this.ca.pixelTommFactor,
         }
+
         return { ...savingData };
     }
 
 }
 
-export class CanvasRoundedRectangle extends BaseLayer implements Layer{
+export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
     displayName: string = 'Rounded Rectangle';    
     
-    parameterToolPannels: string[] = ['shape'];
-    ca: DesignReportCardCanvasAdapter;
-    length: any;
-    width: any;
-    radius: any;
+    length: number;
+    width: number;
+    radius: number;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(ca);
         this.parameterToolPannels.push('shape');
-        this.LAYER_TYPE = 'SHAPE';
-        this.x = 20;
-        this.y = 20;
-        this.length = 20;
-        this.width = 20;
-        this.radius = 5;
-        if (initilize) {
-            this.initilizeSelf(attributes);
-            this.LAYER_TYPE = 'ROUNDED-RECTANGLE';
-            this.layerDataUpdate();
-        }
+
+        this.x = 20/ca.pixelTommFactor;
+        this.y = 20/ca.pixelTommFactor;
+        this.length = 30/ca.pixelTommFactor;
+        this.width = 20/ca.pixelTommFactor;
+        this.radius = 5/ca.pixelTommFactor;
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'ROUNDED-RECTANGLE';
+        this.layerDataUpdate();
+
     }
 
     layerDataUpdate(): void {
@@ -1027,6 +1050,7 @@ export class CanvasRoundedRectangle extends BaseLayer implements Layer{
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        super.drawOnCanvas(ctx, scheduleReDraw);
         ctx.beginPath();
         ctx.moveTo(this.x + this.radius, this.y);
         ctx.lineTo(this.x + this.width - this.radius, this.y);
@@ -1042,11 +1066,11 @@ export class CanvasRoundedRectangle extends BaseLayer implements Layer{
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        return ((mouseX > this.x - permissibleClickError //top line 
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError)
-        )
+        return ((mouseX > this.x - (permissibleClickError + this.shapeStyle.lineWidth / 2) //top line 
+            && mouseX < this.x + this.length + (permissibleClickError + this.shapeStyle.lineWidth / 2)
+            && mouseY > this.y - (permissibleClickError + this.shapeStyle.lineWidth / 2)
+            && mouseY < this.y + this.width + (permissibleClickError + this.shapeStyle.lineWidth / 2))
+        );
     }
 
     scale(scaleFactor: number): void {
@@ -1054,19 +1078,18 @@ export class CanvasRoundedRectangle extends BaseLayer implements Layer{
         this.y *= scaleFactor;
         this.length *= scaleFactor;
         this.width *= scaleFactor;
+        this.radius *= scaleFactor;
     }
 
     getDataToSave() {
-        let savingData: any = {
-            'displayName': this.displayName,
-            'LAYER_TYPE': this.LAYER_TYPE,
-            'x': this.x,
-            'y': this.y,
-            'length': this.length,
-            'width': this.width,
-            'radius': this.radius,
-            'dataSourceType': this.dataSourceType,
+        let savingData = super.getDataToSave();
+        savingData = {
+            ...savingData,
+            length: this.length*this.ca.pixelTommFactor,
+            width: this.width*this.ca.pixelTommFactor,
+            radius: this.radius*this.ca.pixelTommFactor,
         }
+
         return { ...savingData };
     }
 
@@ -1076,22 +1099,19 @@ export class CanvasRoundedRectangle extends BaseLayer implements Layer{
 export class CanvasSquare extends CanvasRectangle implements Layer{
     displayName: string = 'Square';    
     
-    parameterToolPannels: string[] = ['shape'];
-    ca: DesignReportCardCanvasAdapter;
-
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
-        this.parameterToolPannels.push('shape');
-        this.LAYER_TYPE = 'SHAPE';
-        this.x = 20;
-        this.y = 20;
-        this.length = 20;
+
+
+        this.x = 20/ca.pixelTommFactor;
+        this.y = 20/ca.pixelTommFactor;
+        this.length = 20/ca.pixelTommFactor;
         this.width = this.length;
-        if (initilize) {
-            this.initilizeSelf(attributes);
-            this.LAYER_TYPE = 'SQUARE';
-            this.layerDataUpdate();
-        }
+
+        this.initilizeSelf(attributes);
+        this.layerDataUpdate();
+
+        this.LAYER_TYPE = 'SQUARE';
     }
 
     updateLength(newlength: any){
@@ -1130,15 +1150,14 @@ export class CanvasText extends BaseLayer implements Layer{
         
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
-        this.LAYER_TYPE = 'TEXT';
         this.underline = false;
         this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
 
         if (initilize) {    // initilize is sent as false is this class is super class of some other layer, in that case child class handles this block
             this.initilizeSelf(attributes);
-            this.LAYER_TYPE = 'TEXT';
             this.layerDataUpdate();
         }
+        this.LAYER_TYPE = 'TEXT';
     }
 
     layerDataUpdate(): void {
@@ -1875,7 +1894,7 @@ export class StudentCustomParameterStructure {
                 if (studentParameterValue !== undefined) {
                     return studentParameterValue.value;
                 } else {
-                    return 'Parameter Not available';
+                    return 'N/A';
                 }
             });
     }
