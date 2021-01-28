@@ -1,16 +1,8 @@
 from common.common_views_3 import CommonView, CommonListView, APIView
 from common.common_serializer_interface_3 import get_object, get_list
-from report_card_app.models import ReportCardLayout, ReportCardLayoutNew, LayoutSharing, ImageAssets
+from report_card_app.models import ReportCardLayoutNew, LayoutSharing, ImageAssets
 from decorators import user_permission_3
 from django.db.models import Q
-
-# ReportCardLayout
-class ReportCardLayoutView(CommonView, APIView):
-    Model = ReportCardLayout
-
-
-class ReportCardLayoutListView(CommonListView, APIView):
-    Model = ReportCardLayout
 
 
 
