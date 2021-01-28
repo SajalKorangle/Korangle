@@ -1,5 +1,4 @@
-
-import { Homework } from 'app/services/modules/homework/models/homework';
+import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type'
 import { CheckHomeworkComponent } from './check-homework.component';
 
 export class CheckHomeworkServiceAdapter {
@@ -7,9 +6,12 @@ export class CheckHomeworkServiceAdapter {
     vm: CheckHomeworkComponent;
 
     constructor() {}
+   
+    informationMessageType: any;
 
     initializeAdapter(vm: CheckHomeworkComponent): void {
         this.vm = vm;
+        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Homework')+1;
     }
 
     initializeData(): void {
@@ -18,7 +20,7 @@ export class CheckHomeworkServiceAdapter {
 
         this.vm.sendCheckUpdate = false;
         this.vm.sendResubmissionUpdate = false;
-        this.vm.sendUpdateType = 'NULL';
+        this.vm.sendUpdateType = 1;
 
         let request_homework_list = {
             'parentClassSubject__parentEmployee': this.vm.user.activeSchool.employeeId,
@@ -32,19 +34,31 @@ export class CheckHomeworkServiceAdapter {
 
 
         Promise.all([
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, request_homework_list),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list),
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings,{'parentSchool' : this.vm.user.activeSchool.dbId}),
-            this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //0
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, request_homework_list), //3
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list), //4
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings,{'parentSchool' : this.vm.user.activeSchool.dbId}), //5
+            this.vm.smsOldService.getSMSCount({'parentSchool' : this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //6
         ]).then(value => {
             this.vm.smsBalance = value[6];
             if(value[5].length> 0){
                 this.vm.sendUpdateType = value[5][0].sentUpdateType;
                 this.vm.sendCheckUpdate = value[5][0].sendCheckUpdate;
                 this.vm.sendResubmissionUpdate = value[5][0].sendResubmissionUpdate;
+                if(this.vm.sendUpdateType == 'NULL'){
+                    this.vm.sendUpdateType = 1;
+                }
+                else if(this.vm.sendUpdateType == 'SMS'){
+                    this.vm.sendUpdateType = 2;
+                }
+                else if(this.vm.sendUpdateType == 'NOTIFICATION'){
+                    this.vm.sendUpdateType = 3;
+                }
+                else{
+                    this.vm.sendUpdateType = 4;
+                }
             }
             this.initialiseClassSubjectData(value[0], value[1], value[2], value[3], value[4]);
             this.vm.isInitialLoading =false;
@@ -115,18 +129,18 @@ export class CheckHomeworkServiceAdapter {
         
         this.vm.selectedClassSection = this.vm.classSectionHomeworkList[0];
         this.vm.selectedSubject = this.vm.selectedClassSection.subjectList[0];
-        this.vm.selectedHomework = this.vm.selectedSubject.homeworkList[0];
         
     }
 
     getHomework(homework: any): any{
+        this.vm.studentHomeworkList = [];
         this.vm.isChecking = true;
         this.vm.selectedHomework = homework;
         this.vm.isLoading = true;
         this.vm.studentList = [];
         this.vm.studentHomeworkList = [];
         let homework_data = {
-            'parentHomework': this.vm.selectedHomework.id,
+            'parentHomeworkQuestion': this.vm.selectedHomework.id,
         }
 
         let student_section_data = {
@@ -148,8 +162,8 @@ export class CheckHomeworkServiceAdapter {
         }
 
         Promise.all([
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
+            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data), //0
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //1
         ]).then(value =>{
             this.vm.currentHomework.images = value[0];
             this.vm.currentHomework.images.sort((a,b) => a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0)
@@ -163,13 +177,16 @@ export class CheckHomeworkServiceAdapter {
                 'fields__korangle': 'id,name,mobileNumber',
             }
             let student_homework_data = {
-                'parentHomework': this.vm.selectedHomework.id,
-                'parentStudent__in': studentIdList,
+                'parentHomeworkQuestion': this.vm.selectedHomework.id,
+            }
+            
+            let student_homework_image_data = {
+                'parentHomeworkAnswer__parentHomeworkQuestion': this.vm.selectedHomework.id,
             }
             Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer, student_homework_data),
-                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_data),
+                this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //0
+                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer, student_homework_data), //1
+                this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_image_data), //2
             ]).then(value =>{
                 value[0].forEach(element =>{
                     let tempData = {
@@ -182,11 +199,33 @@ export class CheckHomeworkServiceAdapter {
                     }
                     this.vm.studentList.push(tempData);
                 })
-                
                 this.initialiseStudentHomeworkData(value[2], value[1]);
-                this.getHomeworkReport();
-                this.fetchGCMDevices(this.vm.studentList);
-                this.vm.isLoading = false;
+                if(value[1].length != studentIdList.length){
+                    const createList = [];
+                    studentIdList.forEach(element =>{
+                        let temp = value[1].find(student => student.parentStudent == element);
+                        if(temp == undefined){
+                            let tempData = {
+                                'parentStudent': element,
+                                'parentHomeworkQuestion': this.vm.selectedHomework.id,
+                                'homeworkStatus': 'GIVEN',
+                            }
+                            createList.push(tempData);
+                        }
+                    })
+                    Promise.all([
+                        this.vm.homeworkService.createObjectList(this.vm.homeworkService.homework_answer, createList),
+                    ]).then(cValue =>{
+                        this.initialiseStudentHomeworkData([], cValue[0]);
+                        this.getHomeworkReport();
+                        this.vm.isLoading = false;
+                    })
+                }
+                else{
+                    this.getHomeworkReport();
+                    this.vm.isLoading = false;
+                }
+                this.vm.updateService.fetchGCMDevicesNew(this.vm.studentList);
             },error =>{
                 this.vm.isLoading = false;
             });
@@ -196,7 +235,6 @@ export class CheckHomeworkServiceAdapter {
     }
 
     initialiseStudentHomeworkData(studentHomeworkImagesList: any, studentHomeworkList: any): any{
-        this.vm.studentHomeworkList = [];
         studentHomeworkList.forEach(studentHomework =>{
             let tempStudent = this.vm.studentList.find(student => student.dbId == studentHomework.parentStudent);
             let tempData = {
@@ -204,7 +242,7 @@ export class CheckHomeworkServiceAdapter {
                 'studentName': tempStudent.name,
                 'mobileNumber': tempStudent.mobileNumber,
                 'parentStudent': studentHomework.parentStudent,
-                'parentHomework': studentHomework.parentHomework,
+                'parentHomeworkQuestion': studentHomework.parentHomeworkQuestion,
                 'status': studentHomework.homeworkStatus,
                 'text': studentHomework.answerText,
                 'remark': studentHomework.remark,
@@ -212,9 +250,10 @@ export class CheckHomeworkServiceAdapter {
                 'submissionTime': studentHomework.submissionTime,
                 'images': [],
                 'isStatusLoading': false,
+                'isRemarkLoading': false,
             }
             studentHomeworkImagesList.forEach(image =>{
-                if(image.parentStudent == tempData.parentStudent){
+                if(image.parentHomeworkAnswer == tempData.id){
                     tempData.images.push(image);
                 }
             })
@@ -261,7 +300,7 @@ export class CheckHomeworkServiceAdapter {
         Promise.all([
             this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData),
         ]).then(value =>{
-            if(studentHomework.status == this.vm.HOMEWORK_STATUS[2] && this.vm.sendCheckUpdate == true && this.vm.sendUpdateType!= 'NULL'){
+            if(studentHomework.status == this.vm.HOMEWORK_STATUS[2] && this.vm.sendCheckUpdate == true && this.vm.sendUpdateType!= 1){
                 let tempData = {
                     'mobileNumber': studentHomework.mobileNumber,
                     'homeworkName': this.vm.selectedHomework.homeworkName,
@@ -270,9 +309,9 @@ export class CheckHomeworkServiceAdapter {
                 }
                 let mobile_list = [];
                 mobile_list.push(tempData);
-                this.sendSMSNotification(mobile_list, this.vm.checkUpdateMessage);
+                this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.checkUpdateMessage, this.informationMessageType, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
-            else if(studentHomework.status == this.vm.HOMEWORK_STATUS[3] && this.vm.sendResubmissionUpdate == true && this.vm.sendUpdateType!= 'NULL'){
+            else if(studentHomework.status == this.vm.HOMEWORK_STATUS[3] && this.vm.sendResubmissionUpdate == true && this.vm.sendUpdateType!= 1){
                 let tempData = {
                     'mobileNumber': studentHomework.mobileNumber,
                     'homeworkName': this.vm.selectedHomework.homeworkName,
@@ -281,7 +320,7 @@ export class CheckHomeworkServiceAdapter {
                 }
                 let mobile_list = [];
                 mobile_list.push(tempData);
-                this.sendSMSNotification(mobile_list, this.vm.resubmissionUpdateMessage);
+                this.vm.updateService.sendSMSNotificationNew(mobile_list, this.vm.resubmissionUpdateMessage, this.informationMessageType, this.vm.sendUpdateType, this.vm.user.activeSchool.dbId, this.vm.smsBalance);
             }
             this.getHomeworkReport();
             studentHomework.isStatusLoading = false;
@@ -296,7 +335,7 @@ export class CheckHomeworkServiceAdapter {
             return ;
         }
 
-        studentHomework.isStatusLoading = true;
+        studentHomework.isRemarkLoading = true;
         let tempData = {
             'id': studentHomework.id,
             'remark': studentHomework.remark,
@@ -304,9 +343,9 @@ export class CheckHomeworkServiceAdapter {
         Promise.all([
             this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData),
         ]).then(value =>{
-            studentHomework.isStatusLoading = false;
+            studentHomework.isRemarkLoading = false;
         },error =>{
-            studentHomework.isStatusLoading = false;
+            studentHomework.isRemarkLoading = false;
         })
     }
 

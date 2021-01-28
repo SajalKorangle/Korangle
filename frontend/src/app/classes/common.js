@@ -5,7 +5,13 @@ export function sendDataToAndroid(data) {
     }
 }
 
-export function registerForNotification(data) {
+export function showPhoto(data) {
+    if (navigator.userAgent == "Mobile") {
+        Android.showPhoto(data);
+    }
+}
+
+export function registerForNotification(data) { 
     if (navigator.userAgent == "Mobile") {
         Android.registerForNotification(data['user'], data['jwt'], data['url']);
     }
