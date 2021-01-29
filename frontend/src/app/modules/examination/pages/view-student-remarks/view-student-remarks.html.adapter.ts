@@ -1,11 +1,11 @@
 
-import {AddStudentRemarksComponent} from './add-student-remarks.component';
+import {ViewStudentRemarksComponent} from './view-student-remarks.component';
 
 declare const $: any;
 
-export class AddStudentRemarksHtmlAdapter {
+export class ViewStudentRemarksHtmlAdapter {
 
-    vm: AddStudentRemarksComponent;
+    vm: ViewStudentRemarksComponent;
 
     selectedExamination: any;
     selectedClassSection: any;
@@ -17,7 +17,7 @@ export class AddStudentRemarksHtmlAdapter {
 
     constructor() {}
 
-    initializeAdapter(vm: AddStudentRemarksComponent): void {
+    initializeAdapter(vm: ViewStudentRemarksComponent): void {
         this.vm = vm;
     }
 
