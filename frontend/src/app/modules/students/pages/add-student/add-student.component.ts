@@ -155,11 +155,13 @@ export class AddStudentComponent implements OnInit {
         }
     }
     
-    deleteDocument(parameter){
+    deleteDocument(parameter) {
+        if (confirm('Are you sure want to delete this document?')) {
         let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
-        if (item){
+        if (item) {
             this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(para => para.parentStudentParameter !== item.parentStudentParameter)
         }
+    }
     }
 
     getParameterDocumentType(parameter){
