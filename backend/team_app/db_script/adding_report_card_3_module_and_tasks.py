@@ -1,6 +1,6 @@
 def add_report_card_3_module(apps, schema_editor):
     Module = apps.get_model('team_app', 'Module')
-    report_card_module = Module(path='report_card_3.0', title='Report Card 3.0', icon='book', orderNumber=8, parentBoard=None)
+    report_card_module = Module(path='report_card_3.0', title='R.C. 3.0', icon='book', orderNumber=9, parentBoard=None)
     report_card_module.save()
 
 def add_design_report_card_task(apps, schema_editor):
