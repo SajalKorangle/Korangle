@@ -11,7 +11,6 @@ export class ServiceObject extends RestApiGateway {
     protected object_url = '/object';
 
     protected constant_list = {};
-    protected file_list = {};
 
     // Object
     getObject(object_url: any, data: any): Promise<any> {
@@ -36,35 +35,27 @@ export class ServiceObject extends RestApiGateway {
     createObject(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
-        } else if (object_url in this.file_list) {
-            return super.postFileData(data, this.module_url + object_url);
-        }
+        } 
         return super.postData(data, this.module_url + object_url);
     }
 
     createObjectList(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
-        } else if (object_url in this.file_list) {
-            return super.postFileData(data, this.module_url + object_url + '/batch');
-        }
+        } 
         return super.postData(data, this.module_url + object_url + '/batch');
     }
 
     updateObject(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
-        } else if (object_url in this.file_list) {
-            return super.putFileData(data, this.module_url + object_url);
-        }
+        } 
         return super.putData(data, this.module_url + object_url);
     }
 
     updateObjectList(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
-        } else if (object_url in this.file_list) {
-            return super.putFileData(data, this.module_url + object_url + '/batch');
         }
         return super.putData(data, this.module_url + object_url + '/batch');
     }
@@ -72,18 +63,14 @@ export class ServiceObject extends RestApiGateway {
     partiallyUpdateObject(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
-        } else if (object_url in this.file_list) {
-            return super.patchFileData(data, this.module_url + object_url);
-        }
+        } 
         return super.patchData(data, this.module_url + object_url);
     }
 
     partiallyUpdateObjectList(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
-        } else if (object_url in this.file_list) {
-            return super.patchFileData(data, this.module_url + object_url + '/batch');
-        }
+        } 
         return super.patchData(data, this.module_url + object_url + '/batch');
     }
 
