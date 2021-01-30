@@ -42,6 +42,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/subject/subject.module#SubjectModule',
     },
     {
+        path: 'tutorials',
+        loadChildren: 'app/modules/tutorials/tutorials.module#TutorialsModule',
+    },
+    {
         path: 'examinations',
         loadChildren: 'app/modules/examination/examination.module#ExaminationModule',
     },
@@ -91,6 +95,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/school/school.module#SchoolModule',
     },
     {
+        path: 'homework',
+        loadChildren: 'app/modules/homework/homework.module#HomeworkModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
@@ -115,7 +123,8 @@ const routes: Routes = [
     RouterModule.forRoot(
         routes,
         {
-            preloadingStrategy: CustomPreload
+            preloadingStrategy: CustomPreload,
+            onSameUrlNavigation:'reload'
         }
     )
   ],

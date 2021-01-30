@@ -1,0 +1,12 @@
+[
+  {
+    "file": "single-feature.json",
+    "file_object_list": [
+      {
+        "app": "auth",
+        "model": "User",
+        "file": "1.json"
+      }
+    ]
+  }
+]

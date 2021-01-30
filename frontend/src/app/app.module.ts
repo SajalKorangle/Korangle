@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserModule  } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { GestureConfig} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app.routing';
@@ -50,7 +51,7 @@ import {SignupComponent} from './authentication/signup/signup.component';
     ],
     exports: [
     ],
-  providers: [ PrintService ],
+  providers: [ { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

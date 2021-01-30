@@ -1,0 +1,105 @@
+@media only screen and (min-width: 992px) {
+	.main-content {
+		padding: 0px;
+		margin: 0px;
+	}
+
+	.table-content {
+		margin-top: 40px;
+		margin-left: 40px;
+	}
+
+}
+
+.main-content {
+	height: 95%;
+}
+
+.container-fluid {
+	height: 100%;
+}
+
+mat-form-field textarea{
+	width: 100%;
+}
+/* mat-form-field {
+	margin-top: 15px;
+	width: 100%;
+} */
+/*
+mat-form-field input,
+mat-form-field mat-select {
+	padding-top: 5px;
+	padding-bottom: 4px;
+}
+
+mat-form-field input[type='date'] {
+	padding-top: 2px;
+	padding-bottom: 1px;
+} */
+
+
+.image-row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 5px;
+}
+.image-row > .image-column {
+	padding: 5px 10px;
+}
+.image-row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+.image-column {
+	max-width: 1.525in; 
+	height: 1.525in; 
+	margin-right: 10px;
+	margin-top: 10px
+}
+
+.image-column-mobile {
+	max-width: 0.525in; 
+	height: 0.525in; 
+	margin-right: 5px;
+	margin-top: 5px
+}
+
+.close {
+    color: rgb(17, 17, 17);
+    position: relative;
+    top: 10px;
+    right: 7px;
+    font-size: 25px;
+    font-weight: bold;
+    z-index: 2;
+	margin-right: 20px;
+	
+}
+.close:hover{
+	cursor: pointer;
+	color: #ddd8d8;
+	background-color: #706d6d;
+	border-radius: 50px;
+}
+.cursor {
+	cursor: pointer;
+}
+.cursor:hover {
+	background-color: #b9b7b7;
+}
+
+.images {
+	opacity: 0.7;
+}
+.active,
+.images:hover {
+    opacity: 1;
+}
+img.hover-shadow {
+    transition: 0.3s;
+}
+.hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
+}
