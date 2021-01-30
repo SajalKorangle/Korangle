@@ -386,7 +386,7 @@ export class CreateTestServiceAdapter {
         });
 
         if (testAlreadyAdded) {
-            alert('Similar Test is already in the template');
+            alert('Test already exists!!');
             return;
         }
 
@@ -577,7 +577,7 @@ export class CreateTestServiceAdapter {
     UpdateHelper() {
         let promises = this.updateTestNew();
         Promise.all(promises).then(value => {
-            alert('Updated Test list!!!');
+            alert('Test/s updated successfully');
             this.getTestAndSubjectDetails();
             this.vm.handleUpdate('', '');
             this.vm.isLoading = false;

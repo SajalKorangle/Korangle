@@ -457,7 +457,7 @@ export class ScheduleTestServiceAdapter {
 	UpdateHelper() {
 		let promises = this.updateTestNew();
 		Promise.all(promises).then(value => {
-			alert('Updated Test list!!!');
+			alert('Test/s scheduled successfully');
 			this.getTestAndSubjectDetails();
 			this.vm.handleUpdate();
 			this.vm.isLoading = false;

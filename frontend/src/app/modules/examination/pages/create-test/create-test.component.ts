@@ -234,7 +234,7 @@ export class CreateTestComponent implements OnInit {
         console.log(test);
         console.dir(this.newTestList , {depth:null})
         if (this.findAnyDuplicate(test, value)) {
-            alert('already similar test in the template')
+            alert('Test already exists!!')
             ngModelControl.control.setValue(test.testType);
             test.newTestType = test.testType;
             this.cdRef.detectChanges();
@@ -328,7 +328,7 @@ export class CreateTestComponent implements OnInit {
                 this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
             } else {
                 alert(
-                    'Similar test is already in the template which is not created in database...'
+                    'Test already exists!!'
                 );
                 this.selectedTestType = null;
                 this.selectedSubject = null;
