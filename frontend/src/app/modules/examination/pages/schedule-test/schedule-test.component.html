@@ -18,7 +18,7 @@
                     <mat-select placeholder='Select class section' [disabled]='isLoading' id='selectClassSection'>
                         <ng-container *ngFor='let class of classSectionSubjectList'>    
                             <mat-option *ngFor='let section of class.sectionList'>
-                                <mat-checkbox [(ngModel)]='section.selected' (click)='$event.stopPropagation();'>
+                                <mat-checkbox [(ngModel)]='section.selected' (ngModelChange)='showTestDetails = false; showSelectedClassAndSection.length=0' (click)='$event.stopPropagation();'>
                                     {{class.className}}, {{section.sectionName}}
                                 </mat-checkbox>
                             </mat-option>
@@ -38,11 +38,8 @@
 
         </div>
 
-        <div class='row'
-            style='border-bottom: 1px solid #eae2e2ad; margin-top: 15px; margin-bottom: 35px; border-width: thin;'>
-            <div class='col-md-12'></div>
-        </div>
-        <div class='row' *ngIf='showSelectedClassAndSection.length >0'>
+        
+        <div class='row' style="margin-top: 25px;" *ngIf='showSelectedClassAndSection.length >0'>
             <div class='col-md-12'>
                 <div *ngFor='let item of showSelectedClassAndSection'
                     style='display: inline-block; padding-right: 50px;'>
@@ -55,6 +52,11 @@
             <div class='col-md-12' *ngIf='!(dataCanBeFetched)'>
                 <h3>Selected Class and Section have different Subjects</h3>
             </div>
+        </div>
+
+        <div class='row'
+            style='border-bottom: 1px solid #eae2e2ad; margin-top: 25px; margin-bottom: 35px; border-width: thin;'>
+            <div class='col-md-12'></div>
         </div>
 
 
@@ -124,7 +126,7 @@
 
 
                                 <mat-form-field>
-                                    <input  matInput [matDatepicker]='picker' (dateChange)='onTestDateUpdation(test,$event)'  [value]='formatDate(test.date,"")' style='border-bottom: none;'>
+                                    <input  matInput [matDatepicker]='picker' readonly (dateChange)='onTestDateUpdation(test,$event)'  [value]='formatDate(test.date,"")' style='border-bottom: none;'>
                                     <mat-datepicker-toggle matSuffix [for]='picker'></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
@@ -160,8 +162,8 @@
                     class='btn btn-{{user.activeSchool.secondaryThemeColor}}' (click)='serviceAdapter.UpdateHelper();'>
                     Update
                 </button>
-                <button type='submit' style='padding: 13px 15px;margin-right: 20px;' class='btn '
-                    (click)='resetList();'>Reset</button>
+                <button type='submit' style='padding: 13px 15px;margin-right: 20px;' [disabled]='!isUpdated'
+                class='btn ' (click)='resetList();'>Reset</button>
 
             </ng-container>
 

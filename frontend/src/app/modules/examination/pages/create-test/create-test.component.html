@@ -108,7 +108,7 @@
                     No Tests added yet!
                 </span>
                 <span>
-                    Test Templated Created
+                    Test Template Created
                 </span>
             </ng-container>
 
@@ -186,8 +186,8 @@
                     <span *ngIf='fetchedList === 0 ; else Update'>Create</span>
                     <ng-template #Update>Update</ng-template>
                 </button>
-                <button type='submit' style='padding: 13px 15px;margin-right: 20px;' class='btn '
-                    (click)='resetList();'>Reset</button>
+                <button type='submit' style='padding: 13px 15px;margin-right: 20px;' [disabled]='!isUpdated'
+                class='btn ' (click)='resetList();'>Reset</button>
 
             </ng-container>
 

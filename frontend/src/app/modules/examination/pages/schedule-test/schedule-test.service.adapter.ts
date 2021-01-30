@@ -260,6 +260,7 @@ export class ScheduleTestServiceAdapter {
 			this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data_list),
 		]).then(
 			(value) => {
+				console.dir(value , {depth:null})
 				//test list obtained...
 
 				this.vm.newTestList = [];
@@ -456,7 +457,7 @@ export class ScheduleTestServiceAdapter {
 	UpdateHelper() {
 		let promises = this.updateTestNew();
 		Promise.all(promises).then(value => {
-			alert('Updated Test list!!!');
+			alert('Test/s scheduled successfully');
 			this.getTestAndSubjectDetails();
 			this.vm.handleUpdate();
 			this.vm.isLoading = false;

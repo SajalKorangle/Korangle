@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import {ChangeDetectorRef} from '@angular/core'
 import { NgModel } from '@angular/forms';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -106,7 +106,8 @@ export class CreateTestComponent implements OnInit {
 
     constructor(public examinationService: ExaminationService,
         public classService: ClassService,
-        public subjectNewService: SubjectService) { }
+        public subjectNewService: SubjectService,
+        public cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -230,9 +231,13 @@ export class CreateTestComponent implements OnInit {
 
     //It handles which test type can be selected
     handleTestTypeSelection(value: any, ngModelControl: NgModel, test: any) {
+        console.log(test);
+        console.dir(this.newTestList , {depth:null})
         if (this.findAnyDuplicate(test, value)) {
+            alert('Test already exists!!')
             ngModelControl.control.setValue(test.testType);
             test.newTestType = test.testType;
+            this.cdRef.detectChanges();
         }
     }
 
@@ -271,8 +276,7 @@ export class CreateTestComponent implements OnInit {
             var subIdx = this.newTestList.findIndex(
                 (sub) =>
                     sub.subjectId === test.parentSubject &&
-                    sub.testType === test.testType &&
-                    sub.maximumMarks === test.maximumMarks
+                    (sub.testType === test.testType || sub.newTestType === test.testType)
             );
 
             var classIdx = -1,
@@ -324,7 +328,7 @@ export class CreateTestComponent implements OnInit {
                 this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
             } else {
                 alert(
-                    'Similar test is already in the template which is not created in database...'
+                    'Test already exists!!'
                 );
                 this.selectedTestType = null;
                 this.selectedSubject = null;
@@ -384,22 +388,27 @@ export class CreateTestComponent implements OnInit {
     //Check for any duplicate test is present or not
     findAnyDuplicate(tempTest: any, value: any): boolean {
         var ans = false;
-
+        var count =0;
         tempTest.classList.forEach((cl) => {
             cl.sectionList.forEach((sec) => {
                 this.newTestList.forEach((test) => {
                     if (
                         test.subjectId === tempTest.subjectId &&
-                        test.testType === value
+                        (test.newTestType === value || test.testType === value)
                     ) {
                         test.classList.forEach((cll) => {
                             if (cll.classId === cl.classId) {
                                 cll.sectionList.forEach((secc) => {
-                                    if (
-                                        secc.sectionId === sec.sectionId &&
-                                        secc.testId != sec.testId
-                                    ) {
+                                    if (secc.sectionId === sec.sectionId ) 
+                                    {
+                                        if(secc.testId != sec.testId)
                                         ans = true;
+                                        else
+                                        {
+                                            count++;
+                                            if(count ==2)
+                                            ans= true;
+                                        }
                                     }
                                 });
                             }
