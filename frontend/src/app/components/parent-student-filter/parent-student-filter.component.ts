@@ -135,8 +135,12 @@ export class ParentStudentFilterComponent implements OnInit {
 
     displayStudentFunction(student?: any): any {
         if (student) {
-            return student.name
-                + (student.scholarNumber? ' (' + student.scholarNumber + ')': '');
+            if (typeof student == "string") {
+                return student;
+            } else {
+                return student.name
+                    + (student.scholarNumber? ' (' + student.scholarNumber + ')': '');
+            }
         }
         return '';
     }
