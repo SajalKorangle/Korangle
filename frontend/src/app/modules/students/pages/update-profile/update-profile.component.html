@@ -487,7 +487,7 @@
                     	<input id="{{parameter.id}}" class="dropinput"
                     		type="file"
                     		multiple="true"
-                    		(input)="updateDocuments(parameter, $event)" #imageInput>
+                    		(input)="updateDocuments(parameter,$event,imageInput)" #imageInput>
                         <label class="documentLabel">{{parameter.name}}</label>
                         <div *ngIf="getParameterDocumentType(parameter)=='none'">
                             <div class="documentIcon">

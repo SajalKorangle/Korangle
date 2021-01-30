@@ -61,8 +61,6 @@ export class UpdateProfileComponent implements OnInit {
 
     commonFunctions: CommonFunctions;
     
-    @ViewChild('imageInput', {static: false})  
-    InputVar: ElementRef; 
 
     constructor (public studentService: StudentService,
         public schoolService: SchoolService,
@@ -394,12 +392,12 @@ export class UpdateProfileComponent implements OnInit {
             else{
                 let document_name = item.document_value.split("/")
                 document_name = document_name[document_name.length-1]
-                return document_name 
+                return document_name.substring(document_name.indexOf("_")+1,document_name.length);
             }
         }
     }
     
-    updateDocuments = (parameter,value) => {
+    updateDocuments = (parameter, value,element) => {
         const options = this.studentParameterList.filter(parameter=>(parameter.parameterType=="DOCUMENT"))
         if (value.target.files.length>1){
             if (value.target.files.length<=options.length){
@@ -441,6 +439,7 @@ export class UpdateProfileComponent implements OnInit {
                 this.updateDocumentValue(parameter,value.target.files[0])
             }
         }
+        element.value='';
     }
 
     updateDocumentValue=(parameter,file)=>{

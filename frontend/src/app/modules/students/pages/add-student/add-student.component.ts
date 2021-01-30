@@ -335,7 +335,7 @@ export class AddStudentComponent implements OnInit {
         });
     }
 
-    updateDocuments = (parameter,value) => {
+    updateDocuments = (parameter,value,element) => {
     console.log("yeah");
         const options = this.studentParameterList.filter(parameter=>(parameter.parameterType=="DOCUMENT"))
         if (value.target.files.length>1){
@@ -378,6 +378,7 @@ export class AddStudentComponent implements OnInit {
                 this.updateDocumentValue(parameter,value.target.files[0])
             }
         }
+        element.value='';
     }
 
     updateDocumentValue=(parameter,file)=>{

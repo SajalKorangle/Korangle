@@ -189,6 +189,7 @@
                             	<div class="text-center">
                             		<input class="dropinput" type="file"
                             			   [attr.id]="student.dbId+'-'+parameter.id"
+                                           title="{{getDocumentName(student, parameter)}}"
                             			   (input)="serviceAdapter.updateParameterDocumentValue(student,parameter,$event)">
                                         <img [src]="getDocumentIcon(student, parameter)"
                                         	 class="documenticon"

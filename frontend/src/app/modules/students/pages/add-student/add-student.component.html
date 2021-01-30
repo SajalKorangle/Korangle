@@ -351,7 +351,7 @@
             <div *ngFor="let parameter of studentParameterList">
                 <div *ngIf="parameter.parameterType==='DOCUMENT'" class="col-md-5" style="margin-top: 10px;margin-right:10px">
                     <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
-                        <input class="dropinput" type="file" multiple="false" (input)="updateDocuments(parameter, $event)" #imageInput>
+                        <input class="dropinput" type="file" multiple="false" (input)="updateDocuments(parameter, $event,imageInput)" #imageInput>
                         <label class="documentLabel">{{parameter.name}}</label>
                         <div *ngIf="getParameterDocumentType(parameter)=='none'">
                             <div class="documentIcon">
