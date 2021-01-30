@@ -14,7 +14,6 @@ export class IdCardService extends ServiceObject {
 
     constructor(private http_class: HttpClient) {
         super(http_class);
-        this.file_list[this.id_card_layout] = this.id_card_layout;
     }
 
 }
