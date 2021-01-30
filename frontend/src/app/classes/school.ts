@@ -23,7 +23,7 @@ export class School {
     registrationNumber: string;
     affiliationNumber: string;
 
-    dateOfExpiration: string;
+    expired: boolean;
 
     opacity: number;
 
@@ -73,7 +73,7 @@ export class School {
 
         this.employeeId = schoolData.employeeId;
 
-        this.dateOfExpiration = schoolData.dateOfExpiration;
+        this.expired = schoolData.expired
 
         this.parentBoard = schoolData.parentBoard;
 
@@ -130,6 +130,16 @@ export class School {
                     title: 'Marks',
                     path: 'view_marks',
                     icon: 'receipt',
+                },
+                {
+                    title:'Tutorials',
+                    path:'view_tutorials',
+                    icon:'video_library',
+                },
+                {
+                    title: 'Homework',
+                    path: 'view_homework',
+                    icon: 'assignment',
                 }
             ];
         });

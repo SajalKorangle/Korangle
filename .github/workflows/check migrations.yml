@@ -5,14 +5,22 @@ name: Test Code
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
+  push:
+    branches: [ master ]
   pull_request:
     branches: [ master ]
+    types: [opened, labeled, unlabeled, synchronize]
+  # pull_request_review:
+  #   branches: [ master ]
+  #   types: [ submitted ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
+    if: contains( github.event.pull_request.labels.*.name, 'Run Tests')
+    # if: github.event.review.state == 'approved'
+    # The type of runner that the job will run on 
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -68,3 +76,4 @@ jobs:
         # sh scripts/protractor/check-coverage.sh github
         # For now we are not keeping track of implemented protractor tests using feature files
         # sh scripts/feature/check-coverage.sh github
+

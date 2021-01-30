@@ -1,0 +1,11 @@
+[
+    {
+      "statement": "Settings",
+      "testType": "protractor",
+      "steps": [
+        "Open settings page and change sent type, checkbox status",
+        "Reopen settings page and verify the changes"
+      ],
+      "testName": "Settings"
+    }
+] 

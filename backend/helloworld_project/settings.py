@@ -37,7 +37,7 @@ SECRET_KEY = '59g0wy_6v_=f7l8getixb1b87!ee_^#lajh^zli2b+9zkvm0jw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '10.0.2.2']
 
 TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
 
@@ -75,10 +75,14 @@ INSTALLED_APPS = [
     'information_app',
     'id_card_app',
     'authentication_app',
+    'homework_app',
+    'feature_app',
+    'tutorial_app',
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',
     'report_card_app.report_card_mp_board_app',
+    'errors_app',
 
     'corsheaders',
 

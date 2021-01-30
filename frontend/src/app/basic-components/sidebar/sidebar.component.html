@@ -47,7 +47,7 @@
             </ng-container>
         </ng-container>
 
-        <ng-container *ngIf="checkChangeSession()">
+        <ng-container *ngIf="user.checkChangeSession()">
 
             <select [class.sessionMargin61]="user.schoolList.length>1"
                     [class.sessionMargin60]="user.schoolList.length==1"
@@ -64,7 +64,7 @@
         </ng-container>
 
         <!-- Current Session Name -->
-        <div  *ngIf="!checkChangeSession()"
+        <div  *ngIf="!user.checkChangeSession()"
               [class.sessionMargin68]="user.schoolList.length>1"
               [class.sessionMargin60]="user.schoolList.length==1">
             <!-- ToDo: Handle more generecally in future -->
@@ -93,23 +93,23 @@
         <ul class="nav" *ngIf="user.activeSchool">
 
             <!-- Notification -->
-            <li [class.active]="notification.path === user.section.route"
+            <li [class.active]="user.notification.path === user.section.route"
                 [attr.data-color]='user.activeSchool.primaryThemeColor'
                 style="border-bottom: 0.1px solid lightgrey;">
-                <a (click)="notification.showTaskList = !notification.showTaskList;">
-                    <i class="material-icons">{{notification.icon}}</i>
+                <a (click)="user.notification.showTaskList = !user.notification.showTaskList;">
+                    <i class="material-icons">{{user.notification.icon}}</i>
                     <p>
-                        {{notification.title}}
-                        <i *ngIf="!notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                        <i *ngIf="notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                        {{user.notification.title}}
+                        <i *ngIf="!user.notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                        <i *ngIf="user.notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
                     </p>
                 </a>
-                <ng-container *ngIf="notification.showTaskList">
-                    <div *ngFor="let task of notification.taskList"
+                <ng-container *ngIf="user.notification.showTaskList">
+                    <div *ngFor="let task of user.notification.taskList"
                          [attr.data-color]="user.activeSchool.secondaryThemeColor"
-                         [class.active]="notification.path===user.section.route && task.title===user.section.subTitle"
+                         [class.active]="user.notification.path===user.section.route && task.title===user.section.subTitle"
                          class="subsectionDiv"
-                         (click)="changePage(task, notification);">
+                         (click)="changePage(task, user.notification);">
                         <i class="material-icons">remove</i>
                         <p>{{task.title}}</p>
                     </div>
@@ -210,23 +210,23 @@
             </ng-container>
 
             <!-- User Settings -->
-            <li [class.active]="settings.path === user.section.route"
+            <li [class.active]="user.settings.path === user.section.route"
                 [attr.data-color]='user.activeSchool.primaryThemeColor'
                 style="border-bottom: 0.1px solid lightgrey;">
-                <a (click)="settings.showTaskList = !settings.showTaskList;">
-                    <i class="material-icons">{{settings.icon}}</i>
+                <a (click)="user.settings.showTaskList = !user.settings.showTaskList;">
+                    <i class="material-icons">{{user.settings.icon}}</i>
                     <p [attr.id]="'settings'">
-                        {{settings.title}}
-                        <i *ngIf="!settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                        <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                        {{user.settings.title}}
+                        <i *ngIf="!user.settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                        <i *ngIf="user.settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
                     </p>
                 </a>
-                <ng-container *ngIf="settings.showTaskList">
-                    <div *ngFor="let task of settings.taskList"
+                <ng-container *ngIf="user.settings.showTaskList">
+                    <div *ngFor="let task of user.settings.taskList"
                          [attr.data-color]="user.activeSchool.secondaryThemeColor"
-                         [class.active]="settings.path===user.section.route && task.title===user.section.subTitle"
+                         [class.active]="user.settings.path===user.section.route && task.title===user.section.subTitle"
                          class="subsectionDiv"
-                         (click)="changePage(task, settings);">
+                         (click)="changePage(task, user.settings);">
                         <i class="material-icons">remove</i>
                         <p [attr.id]="'settings-'+task.path">{{task.title}}</p>
                     </div>
@@ -246,23 +246,23 @@
         <ul class="nav" *ngIf="!user.activeSchool && user.section">
 
             <!--User Settings-->
-            <li [class.active]="settings.path === user.section.route"
+            <li [class.active]="user.settings.path === user.section.route"
                 [attr.data-color]="green"
                     style="border-bottom: 0.1px solid lightgrey;">
-                <a (click)="settings.showTaskList = !settings.showTaskList;">
-                    <i class="material-icons">{{settings.icon}}</i>
+                <a (click)="user.settings.showTaskList = !user.settings.showTaskList;">
+                    <i class="material-icons">{{user.settings.icon}}</i>
                     <p [attr.id]="'settings'">
-                        {{settings.title}}
-                        <i *ngIf="!settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                        <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                        {{user.settings.title}}
+                        <i *ngIf="!user.settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
+                        <i *ngIf="user.settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
                     </p>
                 </a>
-                <ng-container *ngIf="settings.showTaskList">
-                    <div *ngFor="let task of settings.taskList"
+                <ng-container *ngIf="user.settings.showTaskList">
+                    <div *ngFor="let task of user.settings.taskList"
                          [attr.data-color]="'warning'"
-                         [class.active]="settings.path===user.section.route && task.title===user.section.subTitle"
+                         [class.active]="user.settings.path===user.section.route && task.title===user.section.subTitle"
                          class="subsectionDiv"
-                         (click)="changePage(task, settings);">
+                         (click)="changePage(task, user.settings);">
                         <i class="material-icons">remove</i>
                         <p [attr.id]="'settings-'+task.path">{{task.title}}</p>
                     </div>

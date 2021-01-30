@@ -47,6 +47,10 @@ export class LoginComponent implements OnInit {
                 this.user.jwt = data.token;
                 this.user.isAuthenticated = true;
                 this.user.initializeUserData(data);
+                //Sending the user-id of user to google-analytics to monitor per user flow
+                // (<any>window).ga('set', 'userId', 'id: '+data.id+' user-name: '+data.username+ ' name: '+data.first_name+' '+data.last_name);
+                (<any>window).ga('set', 'userId', 'id: '+data.id);
+                (<any>window).ga('send', 'event', 'authentication', 'Login');
                 registerForNotification({
                     'user': this.user.id,
                     'jwt': this.user.jwt,
