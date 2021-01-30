@@ -126,7 +126,7 @@
 
 
                                 <mat-form-field>
-                                    <input  matInput [matDatepicker]='picker' (dateChange)='onTestDateUpdation(test,$event)'  [value]='formatDate(test.date,"")' style='border-bottom: none;'>
+                                    <input  matInput [matDatepicker]='picker' readonly (dateChange)='onTestDateUpdation(test,$event)'  [value]='formatDate(test.date,"")' style='border-bottom: none;'>
                                     <mat-datepicker-toggle matSuffix [for]='picker'></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
