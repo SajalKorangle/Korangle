@@ -18,6 +18,9 @@
                 </tbody>
             </table>
 
+            <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+            (click)="initiatePayment()" >PAY</button>
+
             <table class="table table-hover">
                 <tbody>
                 <tr *ngIf="lateFeeVisible">

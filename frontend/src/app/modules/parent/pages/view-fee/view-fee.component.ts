@@ -620,4 +620,9 @@ export class ViewFeeComponent implements OnInit {
         }, 0);
     }
 
+    initiatePayment() 
+    {
+        console.log("call backend to initiate payment intent")
+    }
+
 }

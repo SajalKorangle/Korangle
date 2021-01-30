@@ -1,5 +1,6 @@
 import stripe
 stripe.api_key = "sk_test_51IBXMWA39a3NFkF9PBgNjGnnGdOIxUQiqlXnQ40aeX0srz65TqVPN5bPwoaiWqRwORbeaRM148gs2OeYZ3uslDB9009MyrpA0C"
+publishableKey = "pk_test_51IBXMWA39a3NFkF9lvbE9nwPJuNRIfqShrD3Rg1iSoZSgcFfytI5kNnufZlWyU8PdBvd7zKzTbPyMolwtHjnIAXs009g09EIsl"
 import datetime
 
 def get_client_ip(request):
@@ -96,4 +97,22 @@ def create_stripe_account(data,ip):
     account =  stripe.Account.retrieve(id)
     print(account)
     return account
-    
+
+
+def create_payment_intent(data):
+
+    #get stripe account id of respective school and pass the id in destination id
+
+    paymentIntent = stripe.paymentIntents.create({
+        payment_method_types: ['card'],
+        amount: data['amount'],
+        currency: 'inr',
+        application_fee_amount: 123,
+        transfer_data: {
+            destination: 'acct_1ICiWWPGYLq3aOD2',
+        },
+    })
+
+    response = {'publishableKey': publishableKey,'clientSecret' : paymentIntent.client_secret}
+
+    return response

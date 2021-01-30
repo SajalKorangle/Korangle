@@ -419,3 +419,12 @@ class OnlinePaymentAccount(models.Model):
 
     class Meta:
         db_table = 'online_payment_account'
+
+class ParentFeeTransaction(models.Model):
+
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
+    amount = models.IntegerField(null=True, verbose_name='amount')
+    status = models.TextField(null=False, default=0, verbose_name='status')
+
+    class Meta:
+        db_table = 'parent_fee_transaction'
