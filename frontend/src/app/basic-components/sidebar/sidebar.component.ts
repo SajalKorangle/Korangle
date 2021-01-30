@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, HostListener} from '@angular/core';
 
 import {Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart} from '@angular/router';
 
@@ -45,51 +45,24 @@ export class SidebarComponent implements OnInit {
     warning = 'warning';
     session_list = [];    
 
-    notification = {
-        path: 'notification',
-        title: 'Notification',
-        icon: 'notifications_active',
-        showTaskList: false,
-        taskList: [
-            {
-                path: 'view_notification',
-                title: 'View Notification',
-            },
-        ],
-    };
-
-    settings = {
-        path: 'user-settings',
-        title: 'Settings',
-        icon: 'settings',
-        showTaskList: false,
-        taskList: [
-            {
-                path: 'update_profile',
-                title: 'Update Profile',
-            },
-            {
-                path: 'change_password',
-                title: 'Change Password',
-            },
-            {
-                path: 'contact_us',
-                title: 'Contact Us',
-            },
-            {
-                path: 'suggest_feature',
-                title: 'Suggest Feature',
-            },
-            {
-                path: 'create_school',
-                title: 'Create School',
-            }
-        ],
-    };
-
     constructor(private router: Router,
                 private notificationService: NotificationService,
                 private schoolService : SchoolService) {
+
+        // Review: Ye code kisliye likha hai.
+        this.router.routeReuseStrategy.shouldReuseRoute = function() {
+            return false;
+        };
+
+    }
+
+    @HostListener('window:popstate', ['$event'])
+    onPopState(event) {
+        if (window.location.pathname == '/') {
+            history.back();
+            return;
+        }
+        this.user.initializeTask();
     }
 
     ngOnInit() {
@@ -115,11 +88,8 @@ export class SidebarComponent implements OnInit {
                 this.session_list = value;
             })
         EmitterService.get('initialize-router').subscribe(value => {
-            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
+            this.router.navigateByUrl(this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {queryParams: value.queryParams}));
         });
-        if (this.user.section) {
-            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
-        }
     }
 
     isMobileMenu() {
@@ -130,20 +100,8 @@ export class SidebarComponent implements OnInit {
     };
 
     changePage(task: any, module: any) {
-        this.router.navigateByUrl('');
-        setTimeout(() => {
-            this.user.populateSection(task, module);
-            this.router.navigateByUrl(this.user.section.route+'/'+this.user.section.subRoute);
+            this.user.populateSectionAndRoute(task, module);
             EmitterService.get('close-sidebar').emit();
-        });
-    }
-
-    checkChangeSession(){
-        return this.user.activeSchool && this.user.activeSchool.moduleList.find(module=>{
-            return module.path=='school' && module.taskList.find(task=>{
-                return task.path=='change_session';
-            })!=undefined;
-        })!=undefined;
     }
 
     handleSessionChange(){

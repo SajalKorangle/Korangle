@@ -123,7 +123,8 @@ const routes: Routes = [
     RouterModule.forRoot(
         routes,
         {
-            preloadingStrategy: CustomPreload
+            preloadingStrategy: CustomPreload,
+            onSameUrlNavigation:'reload'
         }
     )
   ],

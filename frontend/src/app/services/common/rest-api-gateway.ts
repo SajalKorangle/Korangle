@@ -5,11 +5,13 @@ import { environment } from '../../../environments/environment';
 
 import { HttpHeaders, HttpClient, } from '@angular/common/http';
 import {DataStorage} from '../../classes/data-storage';
-
+import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
 
 
 @Injectable()
 export class RestApiGateway {
+
+    reportError = reportError;
 
     constructor(private http: HttpClient) { }
 
@@ -32,17 +34,19 @@ export class RestApiGateway {
         return absolute_url.toString()
     }
 
-    public returnResponse(response: any): any {
+    public returnResponse(response: any, url:any = null, prompt:string = null): any {
         // const jsonResponse = response.json().response;
         const jsonResponse = response.response;
         if (jsonResponse.status === 'success') {
             if (jsonResponse.data) return jsonResponse.data;
             else return jsonResponse.message;
         } else if (jsonResponse.status === 'fail') {
+            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${response}`, prompt);
             alert(jsonResponse.message);
             // return null;
             throw new Error();
         } else {
+            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${response}`, prompt, true);
             alert('Unexpected response from server');
             return null;
         }
@@ -53,8 +57,9 @@ export class RestApiGateway {
         return this.http.delete(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from deleteData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from deleteData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -66,8 +71,9 @@ export class RestApiGateway {
         return this.http.put(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from putData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -80,8 +86,9 @@ export class RestApiGateway {
         return this.http.put(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from putFileData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putFileData');
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -93,8 +100,9 @@ export class RestApiGateway {
         return this.http.patch(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from patchData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchData');
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -107,8 +115,9 @@ export class RestApiGateway {
         return this.http.patch(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from patchFileData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchFileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -120,8 +129,9 @@ export class RestApiGateway {
         return this.http.post(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from postData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -134,8 +144,9 @@ export class RestApiGateway {
         return this.http.post(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from postFileData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postFileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -149,8 +160,9 @@ export class RestApiGateway {
         return this.http.post(this.getAbsoluteURL(url), uploadData, {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from fileData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from fileData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
@@ -162,8 +174,9 @@ export class RestApiGateway {
         return this.http.get(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {
-                return this.returnResponse(response);
+                return this.returnResponse(response, url, 'from getData');
             }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
             })
