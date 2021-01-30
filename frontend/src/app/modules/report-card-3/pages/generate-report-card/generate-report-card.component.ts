@@ -195,7 +195,7 @@ export class GenerateReportCardComponent implements OnInit {
       this.DATA.studentId = this.DATA.data.studentList[si].id;
       for (let i = 0; i < selectedLayutContent.length;i++){
         let layoutPage = selectedLayutContent[i];
-        this.canvasAdapter.loadData(layoutPage);
+        await this.canvasAdapter.loadData(layoutPage);
         await this.canvasAdapter.downloadPDF(doc);
       }
       this.generatedReportCards++;

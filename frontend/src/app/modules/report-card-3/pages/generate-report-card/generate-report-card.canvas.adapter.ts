@@ -53,7 +53,7 @@ export class GenerateReportCardCanvasAdapter {
     backgroundColor: string = null;
 
     virtualPendingReDrawId: any;
-    layersFullyDrawn: boolean = false;
+    layersFullyDrawnPromiseList:any[] = [];
 
     constructor() {
     }
@@ -67,7 +67,6 @@ export class GenerateReportCardCanvasAdapter {
 
     clearCanvas(): void {
         clearTimeout(this.virtualPendingReDrawId);
-        this.layersFullyDrawn = false;
         this.virtualContext.clearRect(0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
         this.layers = [];
         this.gradeRuleSetList = [];
@@ -78,7 +77,7 @@ export class GenerateReportCardCanvasAdapter {
         this.virtualCanvas.width = this.actualresolution.getWidthInPixel(this.dpi);
     }
 
-    loadData(Data): void{   // handle this method
+    loadData(Data): Promise<any>{   // handle this method
         this.clearCanvas();
         Data = JSON.parse(JSON.stringify(Data));
 
@@ -214,9 +213,7 @@ export class GenerateReportCardCanvasAdapter {
                 }
             });
 
-
-            this.drawAllLayers();
-            console.log('canvas layers: ', this.layers);
+        return this.scheduleCanvasReDraw(0);
     }
 
     private drawAllLayers(): void {
@@ -231,25 +228,24 @@ export class GenerateReportCardCanvasAdapter {
             if (!status)
                 return;
         }
-        this.layersFullyDrawn = true;
+        this.layersFullyDrawnPromiseList.forEach(resolve => resolve());
+        this.layersFullyDrawnPromiseList = [];
     }
 
-    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, postCallback: any = () => { })=>{
+    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, postCallback: any = () => { }):Promise<any>=>{
         clearTimeout(this.virtualPendingReDrawId);
-        this.virtualPendingReDrawId = setTimeout(() => {
-            preCallback();
-            this.drawAllLayers();
-            postCallback();
-        }, duration);
+        return new Promise(resolve => {
+            this.layersFullyDrawnPromiseList.push(resolve);
+            this.virtualPendingReDrawId = setTimeout(() => {
+                preCallback();
+                this.drawAllLayers();
+                postCallback();
+            }, duration);
+        });
     }
 
     async downloadPDF(doc:any) { 
-        while (!this.layersFullyDrawn) {    // wait until all layers are drawn
-            await sleep(1000);
-        }
-        this.drawAllLayers();
-        console.log('student id = ', this.vm.DATA.studentId);
-        console.log('all layers drawn =', this.layersFullyDrawn);
+        await this.scheduleCanvasReDraw(0); // ensuring that all the images are loaded
         doc.addPage([this.virtualCanvas.width, this.virtualCanvas.height]);
         let dataurl = this.virtualCanvas.toDataURL()
         doc.addImage(dataurl, 'PNG', 0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
