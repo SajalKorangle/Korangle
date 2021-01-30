@@ -59,7 +59,7 @@ describe('Examination -> Create Test', () => {
 
 
         page.on('dialog', async dialog => {
-            expect(dialog.message()).toBe('Updated Test list!!!');
+            expect(dialog.message()).toBe('Test/s updated successfully');
             await dialog.dismiss();
         });
         
@@ -84,7 +84,7 @@ describe('Examination -> Create Test', () => {
         await page.waitForTimeout(3000);
 
         page.on('dialog', async dialog => {
-            expect(dialog.message()).toBe('Updated Test list!!!');
+            expect(dialog.message()).toBe('Test/s updated successfully');
             await dialog.dismiss();
         });
 
