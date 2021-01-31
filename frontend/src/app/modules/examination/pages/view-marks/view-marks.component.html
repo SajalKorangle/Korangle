@@ -91,7 +91,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td *ngFor="let test of testList">
+                    <td *ngFor="let test of getFilteredTestList()">
                         <ng-container *ngIf="!isMobile()">
                             {{getEmployeeName(test)}}<br/>
                             {{getEmployeeMobileNumber(test)}}
