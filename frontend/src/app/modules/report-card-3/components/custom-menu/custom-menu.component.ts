@@ -31,7 +31,7 @@ export class CustomMenuComponent implements OnInit, OnDestroy {
     this.closeMenu.emit()
   }
 
-  menuClickHandler(event) {
+  menuClickHandler() {
     this.ca.scheduleCanvasReDraw(0);
   }
 

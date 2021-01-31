@@ -50,9 +50,9 @@ export class SidebarComponent implements OnInit {
                 private schoolService : SchoolService) {
 
         // Review: Ye code kisliye likha hai.
-        this.router.routeReuseStrategy.shouldReuseRoute = function() {
+        /*this.router.routeReuseStrategy.shouldReuseRoute = function() {
             return false;
-        };
+        };*/
 
     }
 
