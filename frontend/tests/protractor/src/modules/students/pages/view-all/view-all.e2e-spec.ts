@@ -15,7 +15,8 @@ describe('View All', () => {
             await openModuleAndPage('Students','View All');
         });
         describe ('Pofile filter :',()=>{
-        it('View Parameters : All Columns', async () => {
+            it('View Parameters : All Columns', async () => {
+            await page.waitForXPath('//mat-select[@id="select-profile-column"]'); 
             await page.click('mat-select[id="select-profile-column"]');
             await page.click('button[id="select-all-profile-columns"]');
             await page.waitForTimeout(500);

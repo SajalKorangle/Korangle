@@ -168,7 +168,8 @@
                                        [ngModel]="student[column.key]"/>
                             </ng-container>
                         </td>
-                        <td *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show"
+                        <ng-container *ngFor="let parameter of studentParameterList" >
+                        <td *ngIf="parameter.show"
                             [attr.id]="parameter.id+'-'+student.dbId">
                             <input matInput *ngIf="parameter.parameterType===parameter_type_list[0]"
                                 type="text"
@@ -198,6 +199,7 @@
                                     </div>
                             </ng-container>
                         </td>
+                        </ng-container>
                     </tr>
                 </ng-container>
                 </tbody>
