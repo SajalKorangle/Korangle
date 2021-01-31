@@ -17,7 +17,6 @@ export class StudentService extends ServiceObject {
 
     constructor(private http_class: HttpClient) {
         super(http_class);
-        this.file_list[this.student] = this.student;
     }
 
 }
