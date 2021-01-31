@@ -66,6 +66,10 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
         // this will be true if the route has been stored before
         let canAttach: boolean = !!route.routeConfig && !!this.storedRoutes[route.routeConfig.path];
 
+        if (route._routerState.url.match(/print:print/g)) {
+            canAttach = false;
+        }
+
         // this decides whether the route already stored should be rendered in place of the requested route, and is the return value
         // at this point we already know that the paths match because the storedResults key is the route.routeConfig.path
         // so, if the route.params and route.queryParams also match, then we should reuse the component
