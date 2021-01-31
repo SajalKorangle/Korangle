@@ -332,7 +332,7 @@ export class UpdateProfileComponent implements OnInit {
             let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
             if (item) {
                 if (item.id) {
-                    this.deleteList.push(item.id)
+                    this.deleteList.push(item)
                 }
                 this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(para => para.parentStudentParameter !== item.parentStudentParameter)
             }
@@ -346,22 +346,24 @@ export class UpdateProfileComponent implements OnInit {
             let old_item = this.studentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
             if (item) {
                 if (old_item) {
+                    item.id = old_item.id;
                     item.document_value = old_item.document_value
                     item.document_size = old_item.document_size
                     item.document_name = old_item.document_name
-                    this.deleteList = this.deleteList.filter(x => x !== old_item.id)
+                    this.deleteList = this.deleteList.filter(x => x.id !== old_item.id)
                 } else {
                     this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(para => para.parentStudentParameter !== item.parentStudentParameter)
                 }
             } else if (old_item) {
                 item = {
+                    id:old_item.id,
                     parentStudentParameter: parameter.id,
                     document_value: old_item.document_value,
                     document_name: old_item.document_name,
                     document_size: old_item.document_size
                 };
                 this.currentStudentParameterValueList.push(item);
-                this.deleteList = this.deleteList.filter(x => x !== old_item.id)
+                this.deleteList = this.deleteList.filter(x => x.id !== old_item.id)
             }
         }
     }
@@ -444,15 +446,28 @@ export class UpdateProfileComponent implements OnInit {
 
     updateDocumentValue=(parameter,file)=>{
         let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        let inDeletedList=this.deleteList.find(x=> x.parentStudentParameter === parameter.id);
         let document_value =file;
             let document_size = document_value.size;
             let document_name = document_value.name;
             const reader = new FileReader();
             reader.onload = e => {
                 document_value = reader.result
-                if (!item){
+                if (!item && !inDeletedList){
                 item = {parentStudentParameter: parameter.id, document_value: document_value,document_name:document_name,document_size:document_size};
                 this.currentStudentParameterValueList.push(item);
+                } else if (inDeletedList) {
+                    this.deleteList = this.deleteList.filter(x => x.id !== inDeletedList.id);
+                    console.log(this.deleteList)
+                    let Item = {
+                        id:inDeletedList.id,
+                        parentStudentParameter: inDeletedList.parentStudentParameter,
+                        document_value: document_value,
+                        document_name: document_name,
+                        document_size: document_size
+                    };
+                    console.log(Item)
+                    this.currentStudentParameterValueList.push(Item);
                 }
                 else{
                     item.document_value = document_value;

@@ -151,12 +151,6 @@ export class UpdateProfileServiceAdapter {
                 }
             }
         });
-
-        if (this.vm.deleteList.length) {
-            this.vm.deleteList.forEach(x => {
-                service_list.push(this.vm.studentService.deleteObject(this.vm.studentService.student_parameter_value, {'id': x}))
-            })
-        }
         
         if (generateList.length) {
             generateList.forEach(x => {
@@ -171,7 +165,11 @@ export class UpdateProfileServiceAdapter {
             })
         }
 
-
+        if(this.vm.deleteList.length){
+            this.vm.deleteList.forEach(x =>{
+                service_list.push(this.vm.studentService.deleteObject(this.vm.studentService.student_parameter_value,{'id':x.id}))
+            })
+        }
 
         Promise.all(service_list).then(value =>{
             Object.keys(value[0]).forEach(key =>{
@@ -185,14 +183,6 @@ export class UpdateProfileServiceAdapter {
                 });
                 this.vm.currentStudentSection = this.vm.commonFunctions.copyObject(this.vm.selectedStudentSection);
             }
-
-
-            if (this.vm.deleteList.length) {
-                value.slice(2 + generateList.length + updateList.length, 2 + generateList.length + updateList.length + this.vm.deleteList.length).forEach(item => {
-                    this.vm.studentParameterValueList = this.vm.studentParameterValueList.filter(x => x.id !== toInteger(item));
-                })
-            }
-            
             if (generateList.length) {
                  value.slice(2,2+generateList.length).forEach(item => {
                      this.vm.studentParameterValueList.push(item);
@@ -206,7 +196,11 @@ export class UpdateProfileServiceAdapter {
                 })
             }
 
-
+            if (this.vm.deleteList.length){
+                value.slice(2+generateList.length+updateList.length,2+generateList.length+updateList.length+this.vm.deleteList.length).forEach(item => {
+                    this.vm.studentParameterValueList = this.vm.studentParameterValueList.filter(x => x.id !== toInteger(item));
+                })
+            }
             
             this.vm.currentStudentParameterValueList = [];
             this.vm.studentParameterValueList.filter(x => x.parentStudent === this.vm.currentStudent.id).forEach(item => {
