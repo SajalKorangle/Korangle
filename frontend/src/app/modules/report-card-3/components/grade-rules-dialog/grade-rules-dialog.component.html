@@ -28,17 +28,17 @@
                         <button type="button"
                                 class="btn"
                                 style="padding: 4px 7px;"
-                                (click)="gradeRule.upperInclusion=!gradeRule.upperInclusion">
-                            <ng-container *ngIf="gradeRule.upperInclusion; else greterThanEquals1">=&gt;</ng-container>
-                            <ng-template #greterThanEquals1>&nbsp;&gt;</ng-template>
+                                (click)="gradeRule.lowerInclusion=!gradeRule.lowerInclusion">
+                            <ng-container *ngIf="gradeRule.lowerInclusion else greaterThanEquals2">&lt;=</ng-container>
+                            <ng-template #greaterThanEquals2>&nbsp;&lt;</ng-template>
                         </button> &nbsp;
                             Marks &nbsp;
                         <button type="button"
                                 class="btn"
                                 style="padding: 4px 7px;"
-                                (click)="gradeRule.lowerInclusion=!gradeRule.lowerInclusion">
-                            <ng-container *ngIf="gradeRule.lowerInclusion else greaterThanEquals2">=&gt;</ng-container>
-                            <ng-template #greaterThanEquals2>&nbsp;&gt;</ng-template>
+                                (click)="gradeRule.upperInclusion=!gradeRule.upperInclusion">
+                            <ng-container *ngIf="gradeRule.upperInclusion; else greterThanEquals1">&lt;=</ng-container>
+                            <ng-template #greterThanEquals1>&nbsp;&lt;</ng-template>
                         </button> &nbsp;
                         <input matInput type="number" [(ngModel)]="gradeRule.upperMarks" class="short-input">
                         </div>

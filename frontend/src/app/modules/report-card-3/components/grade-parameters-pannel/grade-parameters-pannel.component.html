@@ -15,7 +15,7 @@
 
         <mat-form-field appearence="fill">
             <mat-select required
-            placeholder="Subject"
+            placeholder="Grade"
             [(ngModel)]="parentGrade" 
             (ngModelChange)="layer.subGradeId=null; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
                 <mat-option *ngFor="let grade of layer.ca.vm.DATA.data.gradeList;" [value]="grade.id">
@@ -25,7 +25,7 @@
         </mat-form-field>
 
         <mat-form-field appearence="fill">
-            <mat-select placeholder="Test Type"
+            <mat-select placeholder="Sub Grade"
             [(ngModel)]="layer.subGradeId" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
                 <mat-option *ngFor="let subGrade of getFilteredSubGradeList()" [value]="subGrade.id">{{subGrade.name}}</mat-option>
             </mat-select>

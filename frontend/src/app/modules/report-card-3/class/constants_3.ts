@@ -567,7 +567,6 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
 
     updateHeight(newHeight: number) {
-        console.log('update height called = #', this.id)
         this.height = newHeight;
         if (this.maintainAspectRatio) {
             this.width = this.aspectRatio * this.height;
@@ -575,7 +574,6 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
 
     updateWidth(newWidth: number) {
-        console.log('update width called = #', this.id)
         this.width = newWidth;
         if (this.maintainAspectRatio) {
             this.height = this.width / this.aspectRatio;
