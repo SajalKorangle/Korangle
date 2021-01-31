@@ -103,3 +103,15 @@ class BusStopView(CommonView, APIView):
 class BusStopListView(CommonListView, APIView):
     Model = BusStop
     RelationsToSchool = ['parentSchool__id']
+
+
+
+from .model.models import SchoolSummary
+
+class SchoolSummaryView(CommonView, APIView):  # testing code
+    permittedMethods=['get']
+    Model = SchoolSummary
+
+class SchoolSummaryListView(CommonListView, APIView):  # testing code
+    permittedMethods=['get']
+    Model = SchoolSummary

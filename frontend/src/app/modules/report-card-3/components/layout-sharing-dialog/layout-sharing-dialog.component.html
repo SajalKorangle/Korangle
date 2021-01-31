@@ -1,0 +1,74 @@
+<h2 mat-dialog-title>Share</h2>
+<mat-dialog-content style="min-height: 45vh; max-height: 68vh; min-width: 50vw; position: relative;">
+
+    <ng-container *ngIf="!vm.currentLayout.id">
+        <div>
+            Save Layout Before Sharing
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="vm.currentLayout.id">
+        <mat-form-field style="width: 40px; margin-right: 8px;">
+            <mat-label>
+                KID
+            </mat-label>
+            <input matInput type="number" [(ngModel)]="schoolKidForSearch">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>
+                School Name
+            </mat-label>
+            <input matInput type="text" [(ngModel)]="schoolNameForSearch">
+        </mat-form-field>
+        <button mat-button [matMenuTriggerFor]="schoolSearchMenu" class="btn btn-{{vm.user.activeSchool.secondaryThemeColor}} material-icons" style="padding: 4px 8px; margin-left: 18px;" (click)="getSchoolList()">search</button>
+        <button class="material-icons btn" 
+            style="padding: 4px 4px; float: right;" 
+            [style.backgroundColor]="vm.currentLayout.publiclyShared?'blue':''"
+            (click)="layoutPublicAccessHandler()">
+            {{vm.currentLayout.publiclyShared?'public':'public_off'}}
+        </button>
+        <mat-menu #schoolSearchMenu="matMenu" xPosition="before">
+            <div style="overflow: auto; max-height: 36vh; width: 300px;">
+                <mat-progress-bar mode="indeterminate" *ngIf="fetchingSchoolList"></mat-progress-bar>
+                <table class="table table-hover" *ngIf="schoolList.length>0">
+                <tbody>
+                    <ng-container *ngFor="let school of schoolList">
+                    <tr style="display: flex; flex-direction: row; justify-content: space-around;">
+                        <td>KID-{{school.id}}</td>
+                        <td>{{school.name}}</td>
+                        <td><button class="btn btn-{{vm.user.activeSchool.secondaryThemeColor}} material-icons" style="padding: 2px 4px;" (click)="shareCurrentLayoutWithSchool(school.id)">reply</button></td>
+                    </tr>
+                    </ng-container>
+                </tbody>
+                </table>
+            </div>
+        </mat-menu>
+    </ng-container>
+
+    <div *ngIf="layoutSharingList.length>0">
+        <h5>Layout Shared With Schools: </h5>
+        <table class="table table-hover" style="margin-top: 6px;">
+            <thead>
+                <tr>
+                    <th>School's KID</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+        <tbody>
+            <ng-container *ngFor="let layoutSharing of layoutSharingList, let i = index;">
+            <tr>
+                <td>{{layoutSharing.parentSchool}}</td>
+                <td><button class="material-icons btn" style="padding: 4px 6px;" (click)="deleteLayoutSharing(i)">delete</button></td>
+            </tr>
+            </ng-container>
+        </tbody>
+        </table>
+    </div>
+
+</mat-dialog-content>
+<div mat-dialog-actions>
+    <button [disabled]="isSharing" mat-button mat-dialog-close class="btn" style="background-color: blue; display: block; margin-left: auto;" cdkFocusInitial>
+        <ng-container>OK</ng-container>
+        <mat-spinner diameter="20" style="display: inline-block;" color="warn" *ngIf="isSharing"></mat-spinner>
+    </button>
+</div>
