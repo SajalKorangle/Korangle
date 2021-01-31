@@ -53,15 +53,12 @@ export class SidebarComponent implements OnInit {
         // storedRoutes: { [key: string]: RouteStorageObject } = {};
 
         // Review: Ye code kisliye likha hai.
-        /*this.router.routeReuseStrategy.shouldReuseRoute = function(futureRoute: ActivatedRouteSnapshot, currentRoute: ActivatedRouteSnapshot) {
-            if (futureRoute._routerState.url.match(/print:print/g) || currentRoute._routerState.url.match(/print:print/g)) {
-                // console.log("Coming Here");
-                // console.log(futureRoute);
-                // console.log(currentRoute);
-                return false;
+        this.router.routeReuseStrategy.shouldReuseRoute = function(future: any, curr: any) {
+            if (curr._routerState.url.includes('print:print') || future._routerState.url.includes('print:print')) {
+                return curr.routeConfig === future.routeConfig
             }
             return false;
-        };*/
+        };
 
         /*this.router.routeReuseStrategy.shouldDetach = function(route: ActivatedRouteSnapshot) {
             console.log(route);
