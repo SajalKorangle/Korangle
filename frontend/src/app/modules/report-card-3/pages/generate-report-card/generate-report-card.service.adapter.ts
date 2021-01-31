@@ -30,7 +30,6 @@ export class GenerateReportCardServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
         ]).then(data => { 
             this.vm.reportCardLayoutList = data[0];
-            console.log('layouts = ', data[0]);
             this.vm.studentSectionList = data[1];
             this.vm.classList = data[2];
             this.vm.divisionList = data[3];
@@ -124,14 +123,10 @@ export class GenerateReportCardServiceAdapter {
                 this.vm.DATA.data.attendanceList = value[2];
                 this.vm.DATA.data.studentSubGradeList = value[3];
                 this.vm.DATA.data.studentExaminationRemarksList = value[4];
-                console.log('DATA: ', this.vm.DATA);
-                // this.vm.isLoading = false;
             }, error => {
-                // this.vm.isLoading = false;
             });
             this.populateParameterListWithStudentCustomField();
         }).catch(err => {
-            // this.vm.isLoading = false;
         })
     }
 

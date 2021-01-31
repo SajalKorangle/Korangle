@@ -65,7 +65,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, shared_layout_list_data), //12
         ]).then(data => { 
             this.vm.reportCardLayoutList = data[0];
-            console.log('data = ', data);
+            // console.log('data = ', data);
             this.vm.DATA.data.studentSectionList = data[1];
             this.vm.DATA.data.studentParameterList = data[2];
             this.vm.DATA.data.classList = data[3];
@@ -134,7 +134,7 @@ export class DesignReportCardServiceAdapter {
                     alert('Student Data unavaiable');
                 
                 this.populateLayoutSharingData(value[6]);
-                console.log('DATA: ', this.vm.DATA);
+                // console.log('DATA: ', this.vm.DATA);
                 this.vm.htmlAdapter.isLoading = false;
                 this.vm.htmlAdapter.openInventory();
             }, error => {
@@ -187,7 +187,6 @@ export class DesignReportCardServiceAdapter {
         else {  // if previously not saved then create
             return this.vm.reportCardService.createObject(this.vm.reportCardService.report_card_layout_new, form_data).then(savedLayout => {
                 savedLayout.id = parseInt(savedLayout.id);
-                console.log('created Object: ', savedLayout);
                 this.vm.currentLayout.id = savedLayout.id;
                 this.vm.reportCardLayoutList.push(savedLayout);
                 this.vm.layoutSharingData[savedLayout.id] = []

@@ -16,10 +16,6 @@ export class ImageParametersPannelComponent implements OnInit {
   ngOnInit() {
   }
 
-  logMessage(tag, msg) {
-    console.log(tag, msg);
-  }
-
   getImageHeight(): any{
     return Math.round(this.layer.height*this.getPixelTommFactor() * 100) / 100;
   }

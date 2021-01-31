@@ -1,4 +1,5 @@
 import { DesignReportCardComponent } from './design-report-card.component';
+import {reportError, ERROR_SOURCES } from './../../../../services/modules/errors/error-reporting.service'
 
 import {
     DEFAULT_BACKGROUND_COLOR,
@@ -124,9 +125,6 @@ export class DesignReportCardCanvasAdapter {
         this.context = canvas.getContext('2d');
 
         this.canvasSizing();
-
-        console.log('virtual canvas : ', this.virtualCanvas);
-        console.log('virtual context: ', this.virtualContext);
         
         this.originalWidth = this.canvas.width;
         this.originalHeight = this.canvas.height;
@@ -138,7 +136,6 @@ export class DesignReportCardCanvasAdapter {
             let clickedX, clickedY;
             clickedX = event.offsetX;
             clickedY = event.offsetY;
-            console.log('clicked point: ', clickedX, clickedY);
 
             this.activeLayer = null;
             this.activeLayerIndex = null;
@@ -249,7 +246,6 @@ export class DesignReportCardCanvasAdapter {
             this.layers.forEach((layer: Layer) => layer.scale(scaleFactor));
             this.scheduleCanvasReDraw(0);
         }
-        console.log('canvas sizing called; previous width ', canvasPreviousWidth, 'currentHeight: ', this.canvasHeight)
     }
 
     getDataToSave() {   // updating required
@@ -280,7 +276,6 @@ export class DesignReportCardCanvasAdapter {
 
     loadData(Data): void{   // handle this method
         this.clearCanvas()
-        console.log('loading Data = ', Data);
         Data = JSON.parse(JSON.stringify(Data)); // deep copy of layoutPageData
 
         BaseLayer.maxID = 0;
@@ -395,7 +390,6 @@ export class DesignReportCardCanvasAdapter {
                         }
                         break;        
                 }
-                console.log('newLayerFromLayerData = ', newLayerFromLayerData, 'data = ', layerData);
                 newLayerFromLayerData.scale(mmToPixelScaleFactor);
                 this.layers.push(newLayerFromLayerData);
             }
@@ -422,10 +416,11 @@ export class DesignReportCardCanvasAdapter {
                 this.activeLayerIndex = this.layers.length - 1;
             }
             this.drawAllLayers();
-            console.log('canvas layers: ', this.layers);
+            // console.log('canvas layers: ', this.layers);
             this.isSaved = false;
         } catch (err) {
             console.error(err);
+            reportError(ERROR_SOURCES[1], location.pathname + location.search, err, 'error in loading saved layout page; data croupted');
             alert('data corupted');
             this.clearCanvas();
         }

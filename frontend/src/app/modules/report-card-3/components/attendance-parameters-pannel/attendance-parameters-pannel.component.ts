@@ -16,16 +16,8 @@ export class AttendanceParametersPannelComponent implements OnInit {
   ngOnInit() {
   }
 
-  logMessage(tag, msg) {
-    console.log(tag, msg);
-  }
-
   toDate(dateString: string): Date{
     return new Date(dateString);
-  }
-
-  func(event: any){
-    console.log(event);
   }
 
 }

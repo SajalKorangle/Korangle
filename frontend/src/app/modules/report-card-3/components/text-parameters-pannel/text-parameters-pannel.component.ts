@@ -73,7 +73,6 @@ export class TextParametersPannelComponent implements OnInit {
 
     }
     tempFontFamily = tempFontFamily + fontArgumentsArray[fontArgumentsArray.length - 1];
-    // console.log(tempFontFamily);
     return this.fontFamilyList.find(fontfamily => fontfamily.displayName == tempFontFamily);
 
   }
@@ -85,13 +84,7 @@ export class TextParametersPannelComponent implements OnInit {
     tempFontArray[1] = fontArgumentsArray[1];
     tempFontArray[2] = fontArgumentsArray[2];
     tempFontArray[3] = font.displayName;
-    // console.log(tempFontArray);
     this.layer.fontStyle.font = tempFontArray.join(' ');
-  }
-
-
-  logMessage(toast, msg): void{
-    console.log(toast,msg);
   }
 
 }

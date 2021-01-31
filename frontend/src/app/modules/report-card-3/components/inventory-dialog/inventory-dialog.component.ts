@@ -18,10 +18,7 @@ export class InventoryDialogComponent implements OnInit {
     this.vm = data.vm;
   }
 
-  ngOnInit() {
-    console.log('sharedLayout List = ', this.vm.sharedLayoutList);
-    console.log('public Layout List = ', this.vm.publicLayoutList);
-  }
+  ngOnInit() {}
 
   apply():void {
     this.dialogRef.close({ ...this.selectedLayout });

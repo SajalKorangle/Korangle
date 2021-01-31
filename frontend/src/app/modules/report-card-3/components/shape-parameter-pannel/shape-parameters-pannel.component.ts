@@ -16,10 +16,6 @@ export class ShapeParametersPannelComponent implements OnInit {
   ngOnInit() {
   }
 
-  logMessage(tag, msg) {
-    console.log(tag, msg);
-  }
-
   getMeasurementInMM(measurement: any){
     return Math.round(measurement*this.getPixelTommFactor() * 100) / 100;
   }

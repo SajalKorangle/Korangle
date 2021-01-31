@@ -46,13 +46,11 @@ export class DesignReportCardHtmlAdapter {
     canvasSetUp():void {    // Setting canvas height and width to according to parent div
         let canvasWrapper = document.getElementById('canvasWrapper');
         let wrapperBoundingDimensions = canvasWrapper.getBoundingClientRect();
-        console.log('canvas Wrapper bounding client rect: ', wrapperBoundingDimensions);
         let computedCavasWidth = wrapperBoundingDimensions.width - 2 * this.canvasMargin;
         let computedCanvasHeight = wrapperBoundingDimensions.height - 2 * this.canvasMargin;
         
         this.vm.canvas.width = computedCavasWidth;
         this.vm.canvas.height = computedCanvasHeight;
-        console.log('canvas new width and height: ', computedCavasWidth, computedCanvasHeight)
     }
 
     getFieldKeys(): any{

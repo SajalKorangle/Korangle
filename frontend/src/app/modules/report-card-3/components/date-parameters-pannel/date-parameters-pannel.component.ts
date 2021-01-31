@@ -61,15 +61,10 @@ export class DateParametersPannelComponent implements OnInit {
   }
 
   changeDateFormat():any{
-    console.log(this.dayFormat, this.monthFormat, this.yearFormat);
     let currentDateFormat = '';
     currentDateFormat = this.dayFormat + '/' + this.monthFormat + '/' + this.yearFormat;
     this.layer.dateFormat = currentDateFormat;
     this.layer.dateFormatting();
-  }
-
-  logMessage(tag, msg) {
-    console.log(tag, msg);
   }
 
   onDateSelected(event){

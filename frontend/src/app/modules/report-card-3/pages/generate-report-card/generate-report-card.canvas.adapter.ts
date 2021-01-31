@@ -62,7 +62,6 @@ export class GenerateReportCardCanvasAdapter {
         this.vm = vm;
         this.virtualCanvas = document.createElement('canvas');
         this.virtualContext = this.virtualCanvas.getContext('2d');
-        console.log('virtual canvas = ', this.virtualCanvas);
     }
 
     clearCanvas(): void {
@@ -191,7 +190,6 @@ export class GenerateReportCardCanvasAdapter {
                         }
                         break;        
                 }
-                console.log('newLayerFromLayerData = ', newLayerFromLayerData, 'data = ', layerData);
                 newLayerFromLayerData.scale(mmToPixelScaleFactor);
                 this.layers.push(newLayerFromLayerData);
             }

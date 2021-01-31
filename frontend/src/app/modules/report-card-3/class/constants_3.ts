@@ -764,7 +764,6 @@ export class CanvasTable extends BaseLayer implements Layer{
             columnCopy.width *= this.ca.pixelTommFactor;
             savingData.columnsList.push(columnCopy);
         });
-        console.log(savingData);
         return savingData;
     }
 };
@@ -1185,7 +1184,6 @@ export class CanvasText extends BaseLayer implements Layer{
 
     drawUnderline():void{
         if(this.underline){
-            console.log('underline');
             this.ctx.beginPath()
             this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
             this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
@@ -1238,7 +1236,6 @@ export class CanvasText extends BaseLayer implements Layer{
             savingData.source = { ...this.source };
             delete savingData.source.layerType;
         }
-        console.log('SavingData from Canas tetx = ', savingData);
         return savingData;
     }
 
@@ -1604,7 +1601,6 @@ export function getParser(layers: Layer[]) {
     // setCustomFunctionsInParser(PARSER);
     layers.forEach((layer: Layer) => {
         if (layer && layer.LAYER_TYPE == 'MARKS') {
-            console.log('added toparser for layer : ', layer);
             PARSER.setVariable(numberToVariable(layer.id), layer.marks);
         }
     });
@@ -1647,10 +1643,8 @@ export class Formula extends CanvasText implements Layer{
 
                 indexOfLayerIdNextDigit = formulaCopy.search(/#[0-9]+/)
             }
-            console.log('final Formula Copy = ', formulaCopy);
 
             const parser = getParser(this.ca.layers);
-            console.log('parser from formula = ', parser);
             let result = parser.parse(formulaCopy);
             if (result.error) {
                 this.text = result.error;
@@ -1855,7 +1849,6 @@ class AttendanceParameterStructure {
                     }
                     return false;
                 });
-                console.log('filtered Attendence  = ', filteredAttendence);
                 return filteredAttendence.reduce((total, attendance) => {
                     switch (variableType) {
                         case ATTENDANCE_TYPE_LIST[0]:
