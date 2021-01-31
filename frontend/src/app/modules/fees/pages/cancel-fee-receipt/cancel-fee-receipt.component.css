@@ -64,3 +64,39 @@ i {
 .example-full-width {
     width: 100%;
 }
+
+.main-row .col-sm-4 {
+    float: right;
+}
+
+@media only screen and (max-width: 992px) {
+
+    .main-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: left;
+    }
+
+    .main-row .col-md-7 {
+        float: left;
+        width: 75%;
+        order: 2;
+    }
+
+    .main-row .col-md-5 {
+        float: left;
+        width: 75%;
+        order: 3;
+    }
+
+    .main-row .col-sm-2 {
+        float: left;
+        width: 100%;
+        order: 4;
+    }
+
+    .main-row .col-sm-4 {
+        float: left;
+        order: 1;
+    }
+}

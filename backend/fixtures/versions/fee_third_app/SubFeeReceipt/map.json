@@ -1,0 +1,23 @@
+[
+
+   {
+      "file": "four_subFee_receipts.json",
+      "file_object_list": [
+        {
+          "app": "fee_third_app",
+          "model": "FeeReceipt",
+          "file": "four_fee_receipts.json"
+        },
+        {
+          "app": "fee_third_app",
+          "model": "StudentFee",
+          "file": "four_student_fee.json"
+        },
+        {
+          "app": "fee_third_app",
+          "model": "FeeType",
+          "file": "three_fee_types.json"
+        }
+      ]
+    }
+]

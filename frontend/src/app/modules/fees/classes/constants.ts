@@ -23,16 +23,20 @@ export const MODE_OF_PAYMENT_LIST = [
 
 export class ReceiptColumnFilter {
     'receiptNumber'= true;
-    'name'= true;
+    'nameClass'= true;
     'scholarNumber'= true;
-    'class'= true;
     'amount'= true;
     'modeOfPayment' = false;
     'chequeNumber' = false;
+    'cancelledBy'=false;
     'date'= true;
     'remark'= true;
     'employee'= true;
     'printButton'= true;
+    'status'=true;
+    'mobileNumber'=true;
+    'cancelledRemark'=false;
+    'cancelledDate'=false;
 }
 
 export class DiscountColumnFilter {
