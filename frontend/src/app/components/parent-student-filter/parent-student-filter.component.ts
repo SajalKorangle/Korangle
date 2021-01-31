@@ -21,6 +21,8 @@ export class ParentStudentFilterComponent implements OnInit {
 
     @Input() bothFilters = true;
 
+    @Input() showFilter = true;
+
     @Input() selectedFilterType = 'Student';
 
     @Output() onDataLoaded = new EventEmitter<any>();
