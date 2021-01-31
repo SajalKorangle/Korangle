@@ -13,7 +13,6 @@ export class AttendanceService extends ServiceObject {
     public student_attendance = '/student-attendance';
     public employee_applied_leave = '/employee-applied-leave';
     public attendance_permission = '/attendance-permission';
-
-    // public employees = '/employees';
+    public attendance_settings = '/attendance-settings';
 
 }
