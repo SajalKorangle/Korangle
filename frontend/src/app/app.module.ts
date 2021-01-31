@@ -19,6 +19,8 @@ import { ContactUsComponent } from './frontpage/contact-us/contact-us.component'
 import { PricingComponent } from './frontpage/pricing/pricing.component';
 import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
 import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
+import {RouteReuseStrategy} from '@angular/router';
+import {CustomReuseStrategy} from './custom-reuse-strategy';
 
 @NgModule({
     declarations: [
@@ -41,7 +43,7 @@ import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/wha
     ],
     exports: [
     ],
-  providers: [ { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService ],
+  providers: [ { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, {provide: RouteReuseStrategy, useClass: CustomReuseStrategy} ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

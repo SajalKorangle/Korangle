@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, HostListener} from '@angular/core';
 
-import {Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart} from '@angular/router';
+import {Router,NavigationStart,NavigationEnd,NavigationCancel,ActivationStart,ActivatedRouteSnapshot} from '@angular/router';
 
 import { EmitterService } from '../../services/emitter.service';
 
@@ -49,10 +49,32 @@ export class SidebarComponent implements OnInit {
                 private notificationService: NotificationService,
                 private schoolService : SchoolService) {
 
+
+        // storedRoutes: { [key: string]: RouteStorageObject } = {};
+
         // Review: Ye code kisliye likha hai.
-        this.router.routeReuseStrategy.shouldReuseRoute = function() {
+        /*this.router.routeReuseStrategy.shouldReuseRoute = function(futureRoute: ActivatedRouteSnapshot, currentRoute: ActivatedRouteSnapshot) {
+            if (futureRoute._routerState.url.match(/print:print/g) || currentRoute._routerState.url.match(/print:print/g)) {
+                // console.log("Coming Here");
+                // console.log(futureRoute);
+                // console.log(currentRoute);
+                return false;
+            }
             return false;
-        };
+        };*/
+
+        /*this.router.routeReuseStrategy.shouldDetach = function(route: ActivatedRouteSnapshot) {
+            console.log(route);
+            if (!route._routerState.url.match(/print:print/g)) {
+                return true;
+            }
+            return false;
+        };*/
+
+        /*this.router.routeReuseStrategy.shouldAttach = function(route: ActivatedRouteSnapshot) {
+            console.log(route);
+            return false;
+        };*/
 
     }
 
