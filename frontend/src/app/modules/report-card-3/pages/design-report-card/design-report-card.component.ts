@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog'
 import { DataStorage } from "../../../../classes/data-storage";
 import { FONT_FAMILY_LIST } from '@modules/report-card-3/class/font';
@@ -35,7 +35,7 @@ import { Layer, DATA_SOUCE_TYPE } from './../../class/constants_3';
     MatDialog
   ]
 })
-export class DesignReportCardComponent implements OnInit {
+export class DesignReportCardComponent implements OnInit, OnDestroy {
   user: any;
   canvas: any;
 
@@ -126,10 +126,15 @@ export class DesignReportCardComponent implements OnInit {
     this.canvasAdapter.initilizeAdapter(this);
 
     this.htmlAdapter.initializeAdapter(this);
-
     this.populateCurrentLayoutWithGivenValue(this.ADD_LAYOUT_STRING);
-    console.log(this.dialog);
+
     this.downloadFont();
+  }
+
+  ngOnDestroy() {
+    let canavsWrapper = document.getElementById('mainCanvas');
+    if(canavsWrapper)
+      canavsWrapper.parentNode.removeChild(canavsWrapper);
   }
   
   getFontStyleList(fontFamilyDisplayName: any): any {
@@ -174,10 +179,7 @@ export class DesignReportCardComponent implements OnInit {
     if (!forceUpdate && !this.isLayoutSaved() && !window.confirm('Current Layout is not saved. To save cancle and save current layout.')){
       return
     }
-    if (this.canvas) {
-      this.canvasAdapter.clearCanvas();
-    }
-    else {
+    if (!this.canvas){
       let mainCanavs = document.getElementById('mainCanvas');
       if (mainCanavs) {
         this.canvas = mainCanavs;
@@ -212,7 +214,6 @@ export class DesignReportCardComponent implements OnInit {
         this.currentLayout = { ...value, content: JSON.parse(value.content) };
       }
     }
-    console.log('Current Layout= ', this.currentLayout);
     if (this.canvas)
         this.canvasAdapter.loadData(this.currentLayout.content[0]);
   }
@@ -252,7 +253,7 @@ export class DesignReportCardComponent implements OnInit {
 
   async saveLayout() {
     if (this.currentLayout.name.trim() == '') {
-      await window.confirm("Layout Name Cannot Be Empty!");
+      await window.alert("Layout Name Cannot Be Empty!");
       this.htmlAdapter.isSaving = false;
       return;
     }
@@ -266,28 +267,22 @@ export class DesignReportCardComponent implements OnInit {
     }
     this.currentLayout.content[this.canvasAdapter.activePageIndex] = this.canvasAdapter.getDataToSave();
 
-    this.currentLayout.content.forEach(async layoutPage => {
+    for(const layoutPage of this.currentLayout.content){
       const layers:Array<Layer> = layoutPage.layers;
       for (let i = 0; i < layers.length; i++){
-        if (layers[i].LAYER_TYPE == 'IMAGE' && layers[i].dataSourceType == DATA_SOUCE_TYPE[1]) {
+        if (layers[i].LAYER_TYPE == 'IMAGE' && layers[i].dataSourceType == DATA_SOUCE_TYPE[0]) {
           if (this.unuploadedFiles[layers[i].uri]) {
             let image = await fetch(layers[i].uri).then(response => response.blob());
             layers[i].uri = await this.serviceAdapter.uploadImageForCurrentLayout(image, this.unuploadedFiles[layers[i].uri]);
-            console.log('image url = ', layers[i].image);
           }
         }
       }       
-    });
-
+    }
     await this.serviceAdapter.uploadCurrentLayout();  // final update/upload of layout
     
     this.htmlAdapter.isSaving = false;
     this.canvasAdapter.isSaved = true;
     alert('Layout Saved Successfully');
-  }
-
-  logMessage(msg: any): void{
-    console.log("message: ", msg);
   }
 
 }

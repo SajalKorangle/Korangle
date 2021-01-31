@@ -99,7 +99,6 @@ export class DesignReportCardCanvasAdapter {
             this.storeThumbnail()
         }
         this.vm.currentLayout.content[this.activePageIndex] = this.getDataToSave();
-        this.clearCanvas();
         this.loadData(this.vm.currentLayout.content[pageIndex]);
         this.activePageIndex = pageIndex;
     }
@@ -280,6 +279,7 @@ export class DesignReportCardCanvasAdapter {
     }
 
     loadData(Data): void{   // handle this method
+        this.clearCanvas()
         console.log('loading Data = ', Data);
         Data = JSON.parse(JSON.stringify(Data)); // deep copy of layoutPageData
 
