@@ -5,7 +5,7 @@ import {DesignReportCardComponent } from './../../pages/design-report-card/desig
 @Component({
   selector: 'app-layout-sharing-dialog',
   templateUrl: './layout-sharing-dialog.component.html',
-  styleUrls: ['./layout-sharing-dialog.component.css']
+  styleUrls: ['./layout-sharing-dialog.component.css'],
 })
 export class LayoutSharingDialogComponent implements OnInit {
 
@@ -13,8 +13,12 @@ export class LayoutSharingDialogComponent implements OnInit {
   layoutSharingList: any[]=[];
 
   isSharing: boolean = false;
+  fetchingSchoolList: boolean = false;
 
-  newKIDForSharing: number = null;
+  schoolKidForSearch: number= null;
+  schoolNameForSearch: string = '';
+
+  schoolList: any[] = [];
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) {
     this.vm = data.vm;
@@ -25,17 +29,13 @@ export class LayoutSharingDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  shareCurrentLayoutWithSchool(): void{
-    if (this.newKIDForSharing) {
-      this.isSharing = true;
-      this.vm.serviceAdapter.shareCurrentLayoutWithSchool(this.newKIDForSharing).then(res => {
-        this.isSharing = false;
-        this.newKIDForSharing = null;
-        console.log('response = ', res);
-        this.layoutSharingList.push(res);
-        alert('Layout Shared Successfully');
-      })
-    }
+  shareCurrentLayoutWithSchool(kid:number): void{
+    this.isSharing = true;
+    this.vm.serviceAdapter.shareCurrentLayoutWithSchool(kid).then(res => {
+      this.isSharing = false;
+      this.layoutSharingList.push(res);
+      alert('Layout Shared Successfully');
+    })
   }
 
   layoutPublicAccessHandler(): void{
@@ -46,11 +46,23 @@ export class LayoutSharingDialogComponent implements OnInit {
   }
 
   deleteLayoutSharing(index: number): void{
-    console.log('sharing data to be deleted = ', index);
     this.isSharing = true;
     this.vm.serviceAdapter.deleteLayoutSharing(this.layoutSharingList[index]).then(res => {
       this.layoutSharingList.splice(index, 1);
       this.isSharing = false;
+    });
+  }
+
+  getSchoolList(): void{
+    this.fetchingSchoolList = true;
+    const requestData: any = {
+      id__startswith: this.schoolKidForSearch?this.schoolKidForSearch:'',
+      name__startswith: this.schoolNameForSearch,
+      korangle__count: '0,9',
+    }
+    this.vm.serviceAdapter.getSchoolList(requestData).then(response => {
+      this.schoolList = response;
+      this.fetchingSchoolList = false;
     });
   }
 

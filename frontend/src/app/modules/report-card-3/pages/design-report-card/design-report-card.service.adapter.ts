@@ -262,6 +262,10 @@ export class DesignReportCardServiceAdapter {
         const delete_request = { id: layoutSharingData.id };
         return this.vm.reportCardService.deleteObject(this.vm.reportCardService.layout_sharing, delete_request);
     }
+
+    getSchoolList(data:any) {
+        return this.vm.schoolService.getObjectList(this.vm.schoolService.school_summary, data)
+    }
 }
 
 

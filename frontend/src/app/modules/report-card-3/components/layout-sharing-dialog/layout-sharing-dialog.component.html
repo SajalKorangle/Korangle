@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>Share</h2>
-<mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw;">
+<mat-dialog-content style="min-height: 45vh; max-height: 68vh; min-width: 50vw; position: relative;">
 
     <ng-container *ngIf="!vm.currentLayout.id">
         <div>
@@ -8,19 +8,41 @@
     </ng-container>
 
     <ng-container *ngIf="vm.currentLayout.id">
+        <mat-form-field style="width: 40px; margin-right: 8px;">
+            <mat-label>
+                KID
+            </mat-label>
+            <input matInput type="number" [(ngModel)]="schoolKidForSearch">
+        </mat-form-field>
         <mat-form-field>
             <mat-label>
-                School KID
+                School Name
             </mat-label>
-            <input matInput type="number" [(ngModel)]="newKIDForSharing">
+            <input matInput type="text" [(ngModel)]="schoolNameForSearch">
         </mat-form-field>
-        <button class="btn btn-{{vm.user.activeSchool.secondaryThemeColor}} material-icons" style="padding: 4px 8px; margin-left: 12px;" (click)="shareCurrentLayoutWithSchool()">reply</button>
+        <button mat-button [matMenuTriggerFor]="schoolSearchMenu" class="btn btn-{{vm.user.activeSchool.secondaryThemeColor}} material-icons" style="padding: 4px 8px; margin-left: 18px;" (click)="getSchoolList()">search</button>
         <button class="material-icons btn" 
             style="padding: 4px 4px; float: right;" 
             [style.backgroundColor]="vm.currentLayout.publiclyShared?'blue':''"
             (click)="layoutPublicAccessHandler()">
             {{vm.currentLayout.publiclyShared?'public':'public_off'}}
         </button>
+        <mat-menu #schoolSearchMenu="matMenu" xPosition="before">
+            <div style="overflow: auto; max-height: 36vh; width: 300px;">
+                <mat-progress-bar mode="indeterminate" *ngIf="fetchingSchoolList"></mat-progress-bar>
+                <table class="table table-hover" *ngIf="schoolList.length>0">
+                <tbody>
+                    <ng-container *ngFor="let school of schoolList">
+                    <tr style="display: flex; flex-direction: row; justify-content: space-around;">
+                        <td>KID-{{school.id}}</td>
+                        <td>{{school.name}}</td>
+                        <td><button class="btn btn-{{vm.user.activeSchool.secondaryThemeColor}} material-icons" style="padding: 2px 4px;" (click)="shareCurrentLayoutWithSchool(school.id)">reply</button></td>
+                    </tr>
+                    </ng-container>
+                </tbody>
+                </table>
+            </div>
+        </mat-menu>
     </ng-container>
 
     <div *ngIf="layoutSharingList.length>0">
