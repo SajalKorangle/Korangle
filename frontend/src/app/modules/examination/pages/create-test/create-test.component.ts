@@ -13,7 +13,7 @@ import { DataStorage } from "../../../../classes/data-storage";
     selector: 'create-test',
     templateUrl: './create-test.component.html',
     styleUrls: ['./create-test.component.css'],
-    providers: [ExaminationService, ClassService, , SubjectService],
+    providers: [ExaminationService, ClassService, SubjectService],
 })
 
 export class CreateTestComponent implements OnInit {

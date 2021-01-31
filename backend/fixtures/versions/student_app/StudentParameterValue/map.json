@@ -1,0 +1,9 @@
+[{
+        "file": "twenty_students_studentParameterValue.json",
+        "file_object_list": [{
+            "app": "student_app",
+            "model": "StudentParameter",
+            "file": "four_parameter.json"
+        }]
+    }
+]

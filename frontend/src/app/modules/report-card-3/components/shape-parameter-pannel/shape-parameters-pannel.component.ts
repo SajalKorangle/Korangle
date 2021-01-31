@@ -8,7 +8,7 @@ import { Layer } from './../../class/constants_3';
 })
 export class ShapeParametersPannelComponent implements OnInit {
 
-  @Input() layer: Layer;
+  @Input() layer: any;
   @Input() canvasRefresh: any;
 
   constructor() { }

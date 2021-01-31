@@ -75,15 +75,14 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         nodes = await containsFirst('mat-select', '');
         await nodes.click();
         await page.waitForXPath('//mat-option');
-        [node] = await page.$x('//mat-option[2]');
+        [node] = await page.$x('//mat-option[contains(.,\'Student\')]');
         await node.click();
 
         // Entering the student name and selecting a student
         await page.waitForXPath('//input');
         [node] = await page.$x('//input');
         await node.type('Falak');
-         await page.waitForXPath('//span[contains(.,\'FALAK KHAN\')]');
-        node = await getNode('span', 'FALAK KHAN');
+        node = await containsFirst('span', 'FALAK KHAN');
         await node.click();
 
         // Checking mat card ( Fee receipts ) is 2 for this student
@@ -100,7 +99,7 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
         [node] = await page.$x('//mat-dialog-container//following::textarea[1]');
         await node.type('Invalid Receipt 2');
-        [node]= await page.$x('//mat-dialog-container//following::button[2]');  // click show subject filter button
+        [node]= await page.$x('//mat-dialog-container//following::button[2]'); 
         await node.click();
 
         // Checking the cancelled text exists in the mat cards
@@ -116,16 +115,14 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         // Selecting Parent's Number search
         nodes = await containsFirst('mat-select', '');
         await nodes.click();
-        await page.waitForXPath('//mat-option');
-        [node] = await page.$x('//mat-option[3]');
+        [node] = await page.$x('//mat-option[contains(.,\'Parent\')]')
         node.click();
 
         // Entering the Parent Number and selecting the parent
         await page.waitForXPath('//input');
         [node] = await page.$x('//input');
         await node.type('9617159429');
-        await page.waitForXPath('//mat-option[contains(.,\'VIJAY PARCHHE\')]');
-        node = await getNode('mat-option', 'VIJAY PARCHHE');
+        node = await containsFirst('mat-option', 'VIJAY PARCHHE');
         await node.click();
 
         // Checking mat card is only one

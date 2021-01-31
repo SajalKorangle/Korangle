@@ -55,7 +55,7 @@ export class SidebarComponent implements OnInit {
         // Review: Ye code kisliye likha hai.
         this.router.routeReuseStrategy.shouldReuseRoute = function(future: any, curr: any) {
             if (curr._routerState.url.includes('print:print') || future._routerState.url.includes('print:print')) {
-                return curr.routeConfig === future.routeConfig
+                return curr.routeConfig === future.routeConfig;
             }
             return false;
         };
