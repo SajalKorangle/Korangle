@@ -77,3 +77,8 @@ input {
 .example-full-width {
     width: 100%;
 }*/
+
+.lowOpacity{
+    pointer-events:none;
+    opacity: 0.2;
+}

@@ -3,9 +3,9 @@ package com.korangle.www.korangle;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -35,6 +35,7 @@ public class WebAppInterface {
         ((MainActivity)mContext).startActivityForResult(intent, MainActivity.SCANNER_REQUEST_CODE);
     }
 
+
     @JavascriptInterface
     public void closeBarCodeScanner() {
         ((MainActivity)mContext).finish();
@@ -45,6 +46,47 @@ public class WebAppInterface {
         //Get the string value to process
         this.data=data;
     }
+
+
+      // this code an attempt to send multiple images to the phone default image viewer
+//    private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) throws IOException {
+//
+////        File direct = new File(Environment.getExternalStorageDirectory() + "/DirName");
+//        File direct = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + mContext.getPackageName() + "/filee");
+////
+//        Log.d("personal", direct.toString());
+//        if (!direct.exists()) {
+//            Log.d("personal", "new Dir");
+//
+//            File wallpaperDirectory = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + mContext.getPackageName() + "/filee");
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        File file = new File(Environment.getExternalStorageDirectory().toString() + "/Android/data/" + mContext.getPackageName() + "/filee", fileName);
+//        if (file.exists()) {
+//            file.delete();
+//        }
+//        file.createNewFile();
+//        try {
+//            FileOutputStream out = new FileOutputStream(file);
+//            imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//            out.flush();
+//            out.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    @JavascriptInterface
+    public void showPhoto(String url){
+        Uri uri =  Uri.parse(url);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "image/*");
+        mContext.startActivity(intent);
+    }
+
+
 
     @JavascriptInterface
     public void registerForNotification(String userId, String jwtToken, String url) {

@@ -20,6 +20,11 @@ const routes: Routes = [
         data: {moduleName: 'examinations'},
     },
     {
+        path: 'schedule_test',
+        loadChildren: 'app/modules/examination/pages/schedule-test/schedule-test.module#ScheduleTestModule',
+        data: {moduleName: 'examinations'},
+    },
+    {
         path: 'generate_hall_ticket',
         loadChildren: 'app/modules/examination/pages/generate-hall-ticket/generate-hall-ticket.module#GenerateHallTicketModule',
         data: {moduleName: 'examinations'},
@@ -37,6 +42,16 @@ const routes: Routes = [
     {
         path: 'view_marks',
         loadChildren: 'app/modules/examination/pages/view-marks/view-marks.module#ViewMarksModule',
+        data: {moduleName: 'examinations'},
+    },
+    {
+        path: 'add_student_remarks',
+        loadChildren: 'app/modules/examination/pages/add-student-remarks/add-student-remarks.module#AddStudentRemarksModule',
+        data: {moduleName: 'examinations'},
+    },
+    {
+        path: 'view_student_remarks',
+        loadChildren: 'app/modules/examination/pages/view-student-remarks/view-student-remarks.module#ViewStudentRemarksModule',
         data: {moduleName: 'examinations'},
     },
     {

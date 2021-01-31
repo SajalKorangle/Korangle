@@ -119,7 +119,7 @@ export class UpdateAllServiceAdapter {
             } else if (inputType === 'list') {
 
             }
-            this.vm.studentService.partiallyUpdateObject(this.vm.studentService.student2,data).then(
+            this.vm.studentService.partiallyUpdateObject(this.vm.studentService.student,data).then(
                 response => {
                     if (response!='Updation failed') {
                         student[key] = newValue;

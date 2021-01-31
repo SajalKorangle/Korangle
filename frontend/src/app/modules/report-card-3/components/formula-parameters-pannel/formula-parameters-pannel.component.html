@@ -1,0 +1,24 @@
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">functions</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Formula
+            </mat-label>
+            <input matInput type="text"  [(ngModel)]="layer.formula" (ngModelChange)="smartLayerUpdate()">
+        </mat-form-field>
+        
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Decimal Places
+            </mat-label>
+            <input matInput type="number" min="0"  [(ngModel)]="layer.decimalPlaces" (ngModelChange)="smartLayerUpdate(750)">
+        </mat-form-field>
+        
+
+
+    </div>
+</mat-card>

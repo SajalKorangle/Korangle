@@ -108,7 +108,7 @@ export class UpdateProfileServiceAdapter {
                 }
             });
 
-        service_list.push(this.vm.studentService.updateObject(this.vm.studentService.student2,student_form_data));
+        service_list.push(this.vm.studentService.updateObject(this.vm.studentService.student,student_form_data));
 
         if (this.vm.selectedStudentSection.rollNumber != this.vm.currentStudentSection.rollNumber
             && this.vm.currentStudent.id == this.vm.currentStudentSection.parentStudent) {

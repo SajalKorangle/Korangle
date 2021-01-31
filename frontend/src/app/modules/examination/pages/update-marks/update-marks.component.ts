@@ -1,22 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ExaminationOldService } from '../../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
-import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 
 import { UpdateMarksServiceAdapter } from './update-marks.service.adapter';
 import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
-import {StudentOldService} from '../../../../services/modules/student/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
+import { SubjectService } from 'app/services/modules/subject/subject.service';
+import { StudentService } from 'app/services/modules/student/student.service';
 
 @Component({
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService, ExaminationService ],
+    providers: [ClassService, SubjectService, ExaminationService, StudentService],
 })
 
 export class UpdateMarksComponent implements OnInit {
@@ -28,7 +27,7 @@ export class UpdateMarksComponent implements OnInit {
     selectedExamination: any;
     examinationClassSectionSubjectList: any;
 
-    student_mini_profile_list: any;
+    student_mini_profile_list: any = [];
 
     subjectList: any;
 
@@ -39,12 +38,12 @@ export class UpdateMarksComponent implements OnInit {
     isInitialLoading = false;
 
     isLoading = false;
+    isUpdated = false;
 
-    constructor(public examinationOldService: ExaminationOldService,
-                public examinationService : ExaminationService,
+    constructor(public examinationService : ExaminationService,
                 public classService: ClassService,
-                public subjectService: SubjectOldService,
-                public studentService: StudentOldService,
+                public subjectService: SubjectService,
+                public studentService: StudentService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -79,6 +78,37 @@ export class UpdateMarksComponent implements OnInit {
             }
             return false;
         })
+    }
+
+    handleUpdate(event: any, student: any): void {
+
+
+        student.testDetails.forEach(item => {
+            if (event != item.marksObtained) {
+                item.newMarksObtained = event;
+
+            }
+        });
+
+        this.activateUpdate();
+
+    }
+    activateUpdate(): void {
+        var updateCheck = false;
+
+        let student_list = this.getFilteredStudentList(this.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList);
+
+        student_list.forEach(st => {
+            st.testDetails.forEach(test => {
+                if ((test.newMarksObtained != test.marksObtained) && !(test.newMarksObtained == null && test.marksObtained==0.0))
+                    updateCheck = true;;
+            });
+        });
+
+        if (updateCheck)
+            this.isUpdated = true;
+        else
+            this.isUpdated = false;
     }
 
 }

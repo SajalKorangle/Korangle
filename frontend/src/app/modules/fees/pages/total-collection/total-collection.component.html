@@ -86,6 +86,19 @@
                     </mat-select>
                 </mat-form-field>
 
+                <mat-form-field style="margin-right: 15px;">
+                    <mat-select placeholder="Select Fee receipt type"
+                                [(ngModel)]="selectedFeeReceiptType"
+                                 (ngModelChange)="checkCancelledRemark();">
+                        <mat-option *ngFor="let receiptType of receiptTypeList;" [value]="receiptType">
+                            {{receiptType}}
+                        </mat-option>
+                        <mat-option [value]="nullValue">
+                            All
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
 
                 <mat-form-field style="margin-right: 15px;">
                     <mat-select placeholder="Select Columns">

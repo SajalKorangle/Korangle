@@ -50,3 +50,10 @@ urlpatterns += [
 	url(r'^bus-stops/batch', BusStopListView.as_view()),
 	url(r'^bus-stops', BusStopView.as_view()),
 ]
+
+from .views import SchoolSummaryView, SchoolSummaryListView	# testing code
+
+urlpatterns += [
+	url(r'^school-summary/batch', SchoolSummaryListView.as_view()),
+	url(r'^school-summary', SchoolSummaryView.as_view()),
+]

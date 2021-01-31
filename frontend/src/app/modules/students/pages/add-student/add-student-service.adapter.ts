@@ -177,7 +177,7 @@ export class AddStudentServiceAdapter {
                     }
                 }
             });
-        this.vm.studentService.createObject(this.vm.studentService.student2,student_form_data).then(value => {
+        this.vm.studentService.createObject(this.vm.studentService.student,student_form_data).then(value => {
             this.vm.newStudentSection.parentStudent = value.id;
             this.vm.isLoading = true;
             let student_subject_list = [];

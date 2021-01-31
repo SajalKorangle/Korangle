@@ -16,6 +16,7 @@ export class SchoolService extends ServiceObject {
     public board = '/board';
     public session = '/session';
     public bus_stop = '/bus-stops';
+    public school_summary = '/school-summary';
 
     constructor(private http_class: HttpClient) {
         super(http_class);

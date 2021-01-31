@@ -48,6 +48,9 @@ backend/backup_database.sh
 
 *.DS_Store
 
+# Webscrappers
+WebScrapers/JusDialWebScraper/*.csv
+
 # Mobile
 mobile/.idea/*
 mobile/*.iml
