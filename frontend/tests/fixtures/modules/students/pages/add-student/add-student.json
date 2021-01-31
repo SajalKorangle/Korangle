@@ -13,5 +13,10 @@
     "app": "auth",
     "model": "User",
     "file": "1.json"
-  }
+  },
+  {
+		"app": "student_app",
+		"model": "StudentParameter",
+		"file": "four_parameter.json"
+	}
 ]

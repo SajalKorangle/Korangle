@@ -133,6 +133,10 @@ export class UpdateAllComponent implements OnInit {
     sectionList = [];
 
     studentFullProfileList = [];
+    
+    noFileIcon ="/assets/img/noFileIcon.png";
+    pdfIcon ="/assets/img/pdfIcon.png";
+    imageIcon ="/assets/img/imageIcon.png";
 
     isLoading = false;
 
@@ -227,6 +231,9 @@ export class UpdateAllComponent implements OnInit {
         this.COLUMNHANDLES.forEach(item => {
             item.show = false;
         });
+        this.studentParameterList.forEach(item=>{
+            item.show = false;
+        })
     }
 
     showSectionName(classs: any): boolean {
@@ -354,101 +361,7 @@ export class UpdateAllComponent implements OnInit {
             return item.show;
         });
     }
-
-    updateStudentField(key: any, student: any, newValue: any, inputType: any): void {
-        // console.log(key);
-        if (student[key] != newValue) {
-            // console.log('Prev Value: ' + student[key] + ', New Value: ' + newValue);
-            // console.log('Type of prev: ' + typeof student[key] + ', Type of new: ' + typeof newValue);
-            const data = {
-                id: student['dbId'],
-            };
-            if (key == 'category') {
-                data['newCategoryField'] = newValue;
-            }else if (key == 'mobileNumber') {
-                if (newValue.toString().length!==10){
-                    if (student.mobileNumber!=null) {
-                        alert('Mobile number should be 10 digits!');
-                    }
-                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.mobileNumber;
-                    return;
-                }else{
-                    data['mobileNumber'] = newValue;
-                }
-
-            }else if (key == 'secondMobileNumber') {
-                if (newValue.toString().length!==10){
-                    if (student.secondMobileNumber!=null) {
-                        alert('Alternate Mobile number should be 10 digits!');
-                    }
-                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.secondMobileNumber;
-                    return;
-                }else{
-                    data['secondMobileNumber'] = newValue;
-                }
-
-            }else if (key == 'familySSMID') {
-                if (newValue.toString().length!==8){
-                    if (student.familySSMID!=null) {
-                        alert('familySSMID should be 8 digits!');
-                    }
-                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.familySSMID;
-                    return;
-                }else{
-                    data['familySSMID'] = newValue;
-                }
-            }else if (key == 'childSSMID') {
-                if (newValue.toString().length!==9){
-                    if (student.childSSMID!=null) {
-                        alert('childSSMID should be 9 digits!');
-                    }
-                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.childSSMID;
-                    return;
-                }else{
-                    data['childSSMID'] = newValue;
-                }
-            }else if (key == 'aadharNum') {
-                if (newValue.toString().length!==12){
-                    if (student.aadharNum!=null) {
-                        alert('Aadhar number should be 12 digits!');
-                    }
-                    (<HTMLInputElement> document.getElementById(student.dbId.toString()+key.toString())).value=student.aadharNum;
-                    return;
-                }else{
-                    data['aadharNum'] = newValue;
-                }
-            }else if (key == 'religion') {
-                data['newReligionField'] = newValue;
-            } else {
-                data[key] = newValue;
-            }
-
-            document.getElementById(key + student.dbId).classList.add('updatingField');
-            if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
-                (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = true;
-            } else if (inputType === 'list') {
-
-            }
-            this.studentOldService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
-                response => {
-                    if (response.status === 'success') {
-                        student[key] = newValue;
-                        document.getElementById(key + student.dbId).classList.remove('updatingField');
-                        if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
-                            (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = false;
-                        } else if (inputType === 'list') {
-
-                        }
-                    } else {
-                        alert('Not able to update ' + key + ' for value: ' + newValue);
-                    }
-                }, error => {
-                    alert('Server Error: Contact Admin');
-                }
-            );
-        }
-    }
-
+    
     getParameterValue = (student, parameter) => {
         try {
             return this.studentParameterValueList.find(x => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
@@ -456,5 +369,44 @@ export class UpdateAllComponent implements OnInit {
             return this.NULL_CONSTANT;
         }
     }
-
+    
+    getDocumentName(student, parameter){
+        let item =  this.studentParameterValueList.find(x =>x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id);
+        if (item) {
+            if (item.document_name){
+                return item.document_name;
+            }else{
+                 let document_name = item.document_value.split("/")
+                 document_name = document_name[document_name.length-1];
+                 return document_name.substring(document_name.indexOf("_")+1,document_name.length);
+            }
+        }
+        return "No File Chosen";
+    }
+    
+	getDocumentIcon(student,parameter){
+    	try {
+            let value =  this.studentParameterValueList.find(x =>x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).document_value;
+            if (value){
+                if (value ==="" || value===undefined){
+                    return this.NULL_CONSTANT;
+                }
+                else{
+                    let type = value.split(".")
+                    type = type[type.length-1]
+                    if (type=="pdf"){
+                        return this.pdfIcon;
+                    }
+                    else if (type=="jpg"|| type=="jpeg" || type=="png"){
+                        return this.imageIcon;
+                    }
+                }
+            } else{
+                return this.noFileIcon;
+            }
+        }
+        catch{
+            return this.noFileIcon;
+        }
+    }
 }

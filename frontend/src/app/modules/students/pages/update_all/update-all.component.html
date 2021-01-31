@@ -25,10 +25,6 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="showAllColumns(); $event.stopPropagation();">Select All
-                        </button>
-                        <button class="btn"
-                                style="padding: 4px 7px"
                                 (click)="hideAllColumns(); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
@@ -47,10 +43,6 @@
                         </mat-option>
                     </ng-container>
                     <mat-option>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="showAllColumns(); $event.stopPropagation();">Select All
-                        </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
                                 (click)="hideAllColumns(); $event.stopPropagation();">Clear All
@@ -139,11 +131,11 @@
             <table class="table table-hover">
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
-                    <th *ngFor="let column of COLUMNHANDLES"
+                    <th style="min-width: 150px;" *ngFor="let column of COLUMNHANDLES"
                         [class.hidden]="!column.show">
                             {{column.name}}
                     </th>
-                    <th *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">
+                    <th style="min-width: 150px;" *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">
                         {{parameter.name}}
                     <th>
                 </tr>
@@ -161,7 +153,7 @@
                                 <mat-form-field>
                                     <mat-select [ngModel]="student[column.key]"
                                                 [attr.id]="student.dbId+column.key"
-                                                (ngModelChange)="updateStudentField(column.key, student, $event, 'list')">
+                                                (ngModelChange)="serviceAdapter.updateStudentField(column.key, student, $event, 'list')">
                                         <mat-option *ngFor='let item of column.list;' [value]="item">
                                             {{item}}
                                         </mat-option>
@@ -172,11 +164,12 @@
                                 <input [attr.type]="column.inputType"
                                        [attr.id]="student.dbId+column.key"
                                        class="customInput"
-                                       (blur)="updateStudentField(column.key,student, $event.target.value, column.inputType)"
+                                       (blur)="serviceAdapter.updateStudentField(column.key,student, $event.target.value, column.inputType)"
                                        [ngModel]="student[column.key]"/>
                             </ng-container>
                         </td>
-                        <td *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show"
+                        <ng-container *ngFor="let parameter of studentParameterList" >
+                        <td *ngIf="parameter.show"
                             [attr.id]="parameter.id+'-'+student.dbId">
                             <input matInput *ngIf="parameter.parameterType===parameter_type_list[0]"
                                 type="text"
@@ -193,7 +186,20 @@
                                         <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
                                 </mat-select>
                             </ng-container>
+                            <ng-container *ngIf="parameter.parameterType===parameter_type_list[2]">
+                            	<div class="text-center">
+                            		<input class="dropinput" type="file"
+                            			   [attr.id]="student.dbId+'-'+parameter.id"
+                                           title="{{getDocumentName(student, parameter)}}"
+                            			   (input)="serviceAdapter.updateParameterDocumentValue(student,parameter,$event)">
+                                        <img [src]="getDocumentIcon(student, parameter)"
+                                        	 class="documenticon"
+                                        	 [id]="student.dbId+'-'+parameter.id+'-icon'">
+                                        <p [id]="student.dbId+'-'+parameter.id+'-text'"></p>
+                                    </div>
+                            </ng-container>
                         </td>
+                        </ng-container>
                     </tr>
                 </ng-container>
                 </tbody>
