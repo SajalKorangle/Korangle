@@ -81,6 +81,15 @@ describe('Fees 3.0 -> Collect Fee', () => {
         await page.waitForTimeout(1000);
         await page.goBack(); // to go back from print popup box
 
+        
+        // type again the student
+        await page.waitForXPath('//input');
+        const [input] = await page.$x('//input');
+        await input.type('Falak');
+        node = await getNode('span', 'FALAK KHAN');
+        await node.click();
+        await page.waitForTimeout(1000);
+        
         // checking the receipt is added in the receipts expansion panel
         await page.waitForXPath('//mat-expansion-panel//following::mat-expansion-panel');
         let nodes=await page.$x('//mat-expansion-panel//following::mat-expansion-panel//following::tr')
