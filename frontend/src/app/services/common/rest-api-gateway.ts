@@ -35,7 +35,6 @@ export class RestApiGateway {
     }
 
     public returnResponse(response: any, url:any = null, prompt:string = null): any {
-        // const jsonResponse = response.json().response;
         const jsonResponse = response.response;
         if (jsonResponse.status === 'success') {
             if (jsonResponse.data) return jsonResponse.data;
@@ -43,7 +42,6 @@ export class RestApiGateway {
         } else if (jsonResponse.status === 'fail') {
             this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${response}`, prompt);
             alert(jsonResponse.message);
-            // return null;
             throw new Error();
         } else {
             this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${response}`, prompt, true);
@@ -53,7 +51,7 @@ export class RestApiGateway {
     }
 
     public deleteData(url: any): Promise<any> {
-        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken() });
         return this.http.delete(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {
@@ -67,7 +65,7 @@ export class RestApiGateway {
     }
 
     public putData(body: any, url: any): Promise<any> {
-        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken() });
         return this.http.put(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
@@ -80,23 +78,8 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    public putFileData(body: any, url: any): Promise<any> {
-        // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.put(this.getAbsoluteURL(url), body, {headers: headers})
-            .toPromise()
-            .then(response => {
-                return this.returnResponse(response, url, 'from putFileData');
-            }, error => {
-                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putFileData');
-                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
-                return null;
-            })
-            .catch(this.handleError);
-    }
-
     public patchData(body: any, url: any): Promise<any> {
-        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken() });
         return this.http.patch(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
@@ -109,23 +92,8 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    public patchFileData(body: any, url: any): Promise<any> {
-        // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.patch(this.getAbsoluteURL(url), body, {headers: headers})
-            .toPromise()
-            .then(response => {
-                return this.returnResponse(response, url, 'from patchFileData');
-            }, error => {
-                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchFileData')
-                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
-                return null;
-            })
-            .catch(this.handleError);
-    }
-
     public postData(body: any, url: any): Promise<any> {
-        const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken() });
         return this.http.post(this.getAbsoluteURL(url), body, {headers: headers})
             .toPromise()
             .then(response => {
@@ -138,39 +106,8 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    public postFileData(body: any, url: any): Promise<any> {
-        // const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization' : 'JWT ' + this.getToken() });
-        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        return this.http.post(this.getAbsoluteURL(url), body, {headers: headers})
-            .toPromise()
-            .then(response => {
-                return this.returnResponse(response, url, 'from postFileData');
-            }, error => {
-                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postFileData')
-                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
-                return null;
-            })
-            .catch(this.handleError);
-    }
-
-    public fileData(file: any, url: any): Promise<any> {
-        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken(), 'Accept': 'application/json' });
-        let uploadData = new FormData();
-        uploadData.append('myFile', file);
-        return this.http.post(this.getAbsoluteURL(url), uploadData, {headers: headers})
-            .toPromise()
-            .then(response => {
-                return this.returnResponse(response, url, 'from fileData');
-            }, error => {
-                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from fileData')
-                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
-                return null;
-            })
-            .catch(this.handleError);
-    }
-
     public getData(url: any, params?: any): Promise<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'JWT ' + this.getToken()});
+        const headers = new HttpHeaders({ 'Authorization': 'JWT ' + this.getToken()});
         return this.http.get(this.getAbsoluteURL(url), {headers: headers})
             .toPromise()
             .then(response => {

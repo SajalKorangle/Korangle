@@ -1,0 +1,11 @@
+[
+    {
+      "statement": "Schedule test",
+      "testType": "protractor",
+      "steps": [
+        "Open schedule-test page and get the list",
+        "Change start time for a test and update it"
+      ],
+      "testName": "Schedule Test"
+    }
+]

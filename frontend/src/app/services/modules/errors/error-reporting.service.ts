@@ -15,7 +15,6 @@ export function reportError(errorSource: string, url: string, description: strin
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-
             },
             body: JSON.stringify(body)
         }).then(response => {
