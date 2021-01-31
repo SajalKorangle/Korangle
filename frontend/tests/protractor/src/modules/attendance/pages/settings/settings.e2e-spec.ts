@@ -32,17 +32,15 @@ describe('Attendance -> Change Attendance Settings', () => {
         nodes = await containsFirst('mat-select', 'NULL');
         await nodes.click();
         await page.waitForXPath('//mat-option');
-        nodes = await getNodes('mat-option', '');
-        const [option] = await page.$x('//mat-option[2]');
-        await option.click()
+        nodes = await containsFirst('mat-option', 'SMS');
+        await nodes.click();
 
         
         nodes = await containsFirst('mat-select', 'Only Absent Students');
         await nodes.click();
         await page.waitForXPath('//mat-option');
-        nodes = await getNodes('mat-option', '');
-        const [option1] = await page.$x('//mat-option[1]');
-        await option1.click();
+        nodes = await containsFirst('mat-option', 'All Students');
+        await nodes.click();
         
         page.on('dialog', async dialog => {
             expect(dialog.message()).toBe('Settings Updated Successfully');
