@@ -83,5 +83,7 @@
 	{ "model": "team_app.task", "pk": 98, "fields": { "path": "check_homework", "title": "Check Homework", "parentModule": "20", "orderNumber": 2, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 99, "fields": { "path": "settings", "title": "Settings", "parentModule": "20", "orderNumber": 3, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 100, "fields": { "path": "add_tutorial", "title": "Add Tutorial", "parentModule": "21", "orderNumber": 1, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 101, "fields": { "path": "settings", "title": "Settings", "parentModule": "21", "orderNumber": 2, "parentBoard": null } }
+	{ "model": "team_app.task", "pk": 101, "fields": { "path": "settings", "title": "Settings", "parentModule": "21", "orderNumber": 2, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 102, "fields": { "path": "schedule_test", "title": "Schedule Test", "parentModule": "14", "orderNumber": 6, "parentBoard": null } }
+
 ]
