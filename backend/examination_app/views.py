@@ -7,7 +7,7 @@ from decorators import user_permission
 
 import json
 
-from examination_app.models import Examination, TestSecond, StudentTest, StudentExtraSubField, CCEMarks
+from examination_app.models import Examination, TestSecond, StudentTest, StudentExtraSubField, CCEMarks, StudentExaminationRemarks
 
 from common.common_functions import get_error_response, get_success_message, get_success_response
 
@@ -244,4 +244,18 @@ class CCEMarksListView(CommonListView, APIView):
     Model = CCEMarks
     RelationsToSchool = ['parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
+
     
+    
+########### Remarks #############
+
+
+class StudentExaminationRemarksView(CommonView, APIView):
+    Model = StudentExaminationRemarks
+    RelationsToSchool = ['parentExamination__parentSchool__id', 'parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
+
+class StudentExaminationRemarksListView(CommonListView, APIView):
+    Model = StudentExaminationRemarks
+    RelationsToSchool = ['parentExamination__parentSchool__id', 'parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']

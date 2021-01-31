@@ -42,6 +42,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/subject/subject.module#SubjectModule',
     },
     {
+        path: 'grade',
+        loadChildren: 'app/modules/grade/grade.module#GradeModule',
+    },
+    {
         path: 'tutorials',
         loadChildren: 'app/modules/tutorials/tutorials.module#TutorialsModule',
     },
@@ -56,6 +60,10 @@ const routes: Routes = [
     {
         path: 'report_card_cbse',
         loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule',
+    },
+    {
+        path: 'report_card_3.0',
+        loadChildren: 'app/modules/report-card-3/report-card.module#ReportCardModule',
     },
     {
         path: 'salary',
@@ -112,7 +120,6 @@ const routes: Routes = [
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
             {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
             {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
-
         ]
     }
 ];

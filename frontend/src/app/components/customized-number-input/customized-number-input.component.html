@@ -1,5 +1,5 @@
-<mat-form-field style="width: 100%;">
-    <mat-label>
+<mat-form-field [style.width.%]="width">
+    <mat-label style="color: black;">
         {{placeHolder}}
     </mat-label>
     <input matInput
@@ -7,5 +7,6 @@
            type="number"
            [ngModel]="inputValue"
            (blur)="onBlur($event)"
+           [disabled]="disabled"
            (ngModelChange)="handleChange($event, customizedInput)">
 </mat-form-field>

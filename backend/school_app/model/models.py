@@ -125,6 +125,15 @@ class School(models.Model):
         db_table = 'school'
 
 
+class SchoolSummary(models.Model):  # testing code
+    name = models.TextField(null=True)
+    printName = models.TextField(null=True)
+    profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True)
+    class Meta:
+        managed = False
+        db_table = "school"
+
+
 class SchoolSession(models.Model):
 
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='parentSession')
