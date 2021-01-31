@@ -167,7 +167,7 @@ export class UpdateProfileServiceAdapter {
 
         if(this.vm.deleteList.length){
             this.vm.deleteList.forEach(x =>{
-                service_list.push(this.vm.studentService.deleteObject(this.vm.studentService.student_parameter_value,{'id':x}))
+                service_list.push(this.vm.studentService.deleteObject(this.vm.studentService.student_parameter_value,{'id':x.id}))
             })
         }
 

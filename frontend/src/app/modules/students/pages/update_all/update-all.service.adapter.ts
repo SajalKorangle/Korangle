@@ -199,6 +199,7 @@ export class UpdateAllServiceAdapter {
 
     updateParameterDocumentValue = (student,parameter,value)=>{
         let promise = null;
+        console.log(value.target.files)
         let check = this.check_document(value.target.files[0]);
         if (check==true){
             let text = document.getElementById(student.dbId+'-'+parameter.id+'-text');

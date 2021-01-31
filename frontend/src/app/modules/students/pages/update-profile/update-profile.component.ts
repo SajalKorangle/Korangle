@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
 import { Student } from '../../../../classes/student';
 import { Classs } from '../../../../classes/classs';
@@ -25,6 +25,8 @@ declare const $: any;
 
 export class UpdateProfileComponent implements OnInit {
 
+    
+    
     user;
 
     NULL_CONSTANT = null;
@@ -43,6 +45,8 @@ export class UpdateProfileComponent implements OnInit {
 
     classList: any;
     sectionList: any;
+    
+    
 
     studentList: any;
     studentSectionList: any;
@@ -56,6 +60,7 @@ export class UpdateProfileComponent implements OnInit {
     serviceAdapter: UpdateProfileServiceAdapter
 
     commonFunctions: CommonFunctions;
+    
 
     constructor (public studentService: StudentService,
         public schoolService: SchoolService,
@@ -322,34 +327,44 @@ export class UpdateProfileComponent implements OnInit {
         }
     }
     
-    deleteDocument(parameter){
-        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
-        if (item){
-            if (item.id){
-                this.deleteList.push(item.id)
-            }
-            this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(para => para.parentStudentParameter !== item.parentStudentParameter)
-        }
-    }
-
-    resetDocument(parameter){
-        let item = this.currentStudentParameterValueList.find(x=>x.parentStudentParameter === parameter.id)
-        let old_item = this.studentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
-        if (item){
-            if (old_item){
-                item.document_value = old_item.document_value
-                item.document_size = old_item.document_size
-                item.document_name = old_item.document_name
-                this.deleteList = this.deleteList.filter(x=>x!== old_item.id)
-            }
-            else{
+    deleteDocument(parameter) {
+        if (confirm('Are you sure want to delete this document?')) {
+            let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
+            if (item) {
+                if (item.id) {
+                    this.deleteList.push(item)
+                }
                 this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(para => para.parentStudentParameter !== item.parentStudentParameter)
             }
         }
-        else if(old_item){
-            item = {parentStudentParameter: parameter.id, document_value: old_item.document_value,document_name:old_item.document_name,document_size:old_item.document_size};
-            this.currentStudentParameterValueList.push(item);
-            this.deleteList = this.deleteList.filter(x=>x!== old_item.id)
+    }
+    
+
+    resetDocument(parameter) {
+        if (confirm('Are you sure want to reset this document?')) {
+            let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
+            let old_item = this.studentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
+            if (item) {
+                if (old_item) {
+                    item.id = old_item.id;
+                    item.document_value = old_item.document_value
+                    item.document_size = old_item.document_size
+                    item.document_name = old_item.document_name
+                    this.deleteList = this.deleteList.filter(x => x.id !== old_item.id)
+                } else {
+                    this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(para => para.parentStudentParameter !== item.parentStudentParameter)
+                }
+            } else if (old_item) {
+                item = {
+                    id:old_item.id,
+                    parentStudentParameter: parameter.id,
+                    document_value: old_item.document_value,
+                    document_name: old_item.document_name,
+                    document_size: old_item.document_size
+                };
+                this.currentStudentParameterValueList.push(item);
+                this.deleteList = this.deleteList.filter(x => x.id !== old_item.id)
+            }
         }
     }
     
@@ -379,12 +394,12 @@ export class UpdateProfileComponent implements OnInit {
             else{
                 let document_name = item.document_value.split("/")
                 document_name = document_name[document_name.length-1]
-                return document_name 
+                return document_name.substring(document_name.indexOf("_")+1,document_name.length);
             }
         }
     }
     
-    updateDocuments = (parameter,value) => {
+    updateDocuments = (parameter, value,element) => {
         const options = this.studentParameterList.filter(parameter=>(parameter.parameterType=="DOCUMENT"))
         if (value.target.files.length>1){
             if (value.target.files.length<=options.length){
@@ -426,19 +441,33 @@ export class UpdateProfileComponent implements OnInit {
                 this.updateDocumentValue(parameter,value.target.files[0])
             }
         }
+        element.value='';
     }
 
     updateDocumentValue=(parameter,file)=>{
         let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        let inDeletedList=this.deleteList.find(x=> x.parentStudentParameter === parameter.id);
         let document_value =file;
             let document_size = document_value.size;
             let document_name = document_value.name;
             const reader = new FileReader();
             reader.onload = e => {
                 document_value = reader.result
-                if (!item){
+                if (!item && !inDeletedList){
                 item = {parentStudentParameter: parameter.id, document_value: document_value,document_name:document_name,document_size:document_size};
                 this.currentStudentParameterValueList.push(item);
+                } else if (inDeletedList) {
+                    this.deleteList = this.deleteList.filter(x => x.id !== inDeletedList.id);
+                    console.log(this.deleteList)
+                    let Item = {
+                        id:inDeletedList.id,
+                        parentStudentParameter: inDeletedList.parentStudentParameter,
+                        document_value: document_value,
+                        document_name: document_name,
+                        document_size: document_size
+                    };
+                    console.log(Item)
+                    this.currentStudentParameterValueList.push(Item);
                 }
                 else{
                     item.document_value = document_value;

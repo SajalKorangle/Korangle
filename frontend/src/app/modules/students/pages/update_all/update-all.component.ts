@@ -370,6 +370,20 @@ export class UpdateAllComponent implements OnInit {
         }
     }
     
+    getDocumentName(student, parameter){
+        let item =  this.studentParameterValueList.find(x =>x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id);
+        if (item) {
+            if (item.document_name){
+                return item.document_name;
+            }else{
+                 let document_name = item.document_value.split("/")
+                 document_name = document_name[document_name.length-1];
+                 return document_name.substring(document_name.indexOf("_")+1,document_name.length);
+            }
+        }
+        return "No File Chosen";
+    }
+    
 	getDocumentIcon(student,parameter){
     	try {
             let value =  this.studentParameterValueList.find(x =>x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).document_value;
