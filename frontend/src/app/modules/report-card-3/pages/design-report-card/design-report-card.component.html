@@ -62,25 +62,11 @@
                         (click)="htmlAdapter.fullScreenToggle()">{{htmlAdapter.isFullScreen?'fullscreen_exit':'fullscreen'}}</button>
             </div>
 
-            <!-- <div class="tool">
-                <button class="btn material-icons"
-                        [disabled]="canvasAdapter.maximumCanvasSize() == true"
-                        (click)="canvasAdapter.increaseCanvasSize()">zoom_in</button>   
-            </div>
-
             <div class="tool">
                 <button class="btn material-icons"
-                        [disabled]="canvasAdapter.minimumCanvasSize() == true"
-                        (click)="canvasAdapter.decreaseCanvasSize()">zoom_out</button>  
-            </div> -->
-
-            <div class="tool">
-                <button class="btn material-icons"
-                        mat-button [matMenuTriggerFor]="zoomMenu" >zoom_in</button>
+                        [matMenuTriggerFor]="zoomMenu" >zoom_in</button>
                 <mat-menu #zoomMenu="matMenu">
-                    <div style="display: flex; flex-direction: column; margin: 4px 12px;">
                         <mat-slider min="{{canvasAdapter.minimumCanvasSize()}}" max="{{canvasAdapter.maximumCanvasSize()}}" step="0.5" value="{{canvasAdapter.canvasHeight}}" (input)="canvasAdapter.changeZoomLevel($event)" (click)="$event.stopPropagation()"></mat-slider>
-                    </div>
                 </mat-menu>
             </div>
 
@@ -107,7 +93,7 @@
             <div class="tool">
                 <button class="btn material-icons"
                         (click)="htmlAdapter.newTableColumnCount = 0; htmlAdapter.newTableRowCount = 0;"
-                        mat-button [matMenuTriggerFor]="tableMenu" >backup_table</button>
+                        [matMenuTriggerFor]="tableMenu">backup_table</button>
                 <mat-menu #tableMenu="matMenu">
                     <div style="display: flex; flex-direction: column; margin: 4px 12px;" (click)="canvasAdapter.newTableLayer({rowCount: htmlAdapter.newTableRowCount, columnCount: htmlAdapter.newTableColumnCount});">
                         <div style="width: 100%; display: flex; flex-direction: row;justify-content: space-between;"
@@ -145,7 +131,7 @@
 
             <div class="tool">
                 <button class="btn material-icons"
-                mat-button [matMenuTriggerFor]="shapesMenu">category</button>
+                [matMenuTriggerFor]="shapesMenu">category</button>
                 <mat-menu #shapesMenu="matMenu">
                     <div style="display: flex; flex-wrap: wrap; max-width: 128px; margin: 0 2px;">
                         <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newLineLayer()">
