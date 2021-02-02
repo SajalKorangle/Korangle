@@ -29,6 +29,11 @@ const routes: Routes = [
         data: {moduleName: 'attendance'},
     },
     {
+        path: 'settings',
+        loadChildren: 'app/modules/attendance/pages/settings/settings.module#SettingsModule',
+        data: {moduleName: 'attendance'},
+    },
+    {
         path: '',
         component: AttendanceComponent,
     },

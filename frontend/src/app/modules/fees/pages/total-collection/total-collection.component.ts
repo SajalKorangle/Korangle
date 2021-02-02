@@ -56,6 +56,8 @@ export class TotalCollectionComponent implements OnInit {
     filteredClassSectionList = [];
 
     selectedFeeType=null;
+    selectedFeeReceiptType=null;
+    receiptTypeList=['Valid Receipts','Cancelled Receipts']
     filteredFeeTypeList=[];
 
     isInitialLoading = false;
@@ -76,14 +78,13 @@ export class TotalCollectionComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.initializeSelection();
+        //this.initializeSelection();
         /*delete this.receiptColumnFilter['printButton'];
 
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.remark = false;*/
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
-            this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }
@@ -96,6 +97,7 @@ export class TotalCollectionComponent implements OnInit {
         this.selectedClassSection = null;
         this.selectedModeOfPayment = null;
         this.selectedFeeType = null;
+        this.selectedFeeReceiptType=this.receiptTypeList[0];
 
         this.receiptColumnFilter = new ReceiptColumnFilter();
         delete this.receiptColumnFilter['printButton'];
@@ -166,6 +168,11 @@ export class TotalCollectionComponent implements OnInit {
                 return feeReceipt.parentEmployee == this.selectedEmployee.id;
             });
         }
+        if (this.selectedFeeReceiptType) {
+            tempList = tempList.filter(feeReceipt => {
+                return feeReceipt.cancelled == Boolean(this.selectedFeeReceiptType == 'Cancelled Receipts');
+            });
+        }
         if (this.selectedModeOfPayment) {
             tempList = tempList.filter(feeReceipt => {
                 return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
@@ -217,4 +224,8 @@ export class TotalCollectionComponent implements OnInit {
         }, 0);
     }
 
+    checkCancelledRemark():void {
+       this.receiptColumnFilter.cancelledRemark=Boolean(this.selectedFeeReceiptType === 'Cancelled Receipts');
+       this.receiptColumnFilter.cancelledBy=Boolean(this.selectedFeeReceiptType === 'Cancelled Receipts');
+    }
 }

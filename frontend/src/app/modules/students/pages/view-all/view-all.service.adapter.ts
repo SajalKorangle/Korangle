@@ -57,6 +57,8 @@ export class ViewAllServiceAdapter {
                 })
             );
             this.vm.studentParameterValueList = value[4];
+            this.vm.studentParameterDocumentList = this.vm.studentParameterList.filter(x => x.parameterType == 'DOCUMENT');
+            this.vm.studentParameterOtherList = this.vm.studentParameterList.filter(x => x.parameterType !== 'DOCUMENT');
             this.vm.busStopList = value[5];
             this.vm.session_list = value[6];
             this.vm.isLoading = false;

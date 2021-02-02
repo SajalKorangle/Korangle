@@ -11,16 +11,18 @@ export class CustomizedNumberInputComponent {
 
     @Input() placeHolder;
 
+    @Input() width = 100;
     @Input() minimum = null;
     @Input() maximum = null;
     @Input() maximumDecimal = null;
 
+    @Input() disabled;
     @Input() inputValue;
 
     @Output() outputValue = new EventEmitter<any>();
 
     isValidNumber(value: any): boolean {
-        if (!value) {
+        if (value === null || value === undefined || value === '') {
             return false;
         }
         if (isNaN(value)) {

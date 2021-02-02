@@ -1,0 +1,103 @@
+<div class="card-content">
+    <ng-container *ngIf="!isInitialLoading">
+
+        <div class="row">
+            <div class="col-md-12" *ngIf="gradeList.length > 0 && examinationList.length > 0 && studentList.length > 0">
+
+                <mat-form-field style="margin-right: 5px;">
+                    <mat-select placeholder="Select Class"
+                                [ngModel]="selectedClassSection"
+                                (ngModelChange)="selectedClassSection = $event; showTestDetails = false;">
+                        <mat-option *ngFor="let classSection of filteredClassSectionList;" [value]="classSection">
+                            {{classSection.class.name}}, {{classSection.section.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- mat-form-field *ngIf="selectedClass!=null" style="margin-right: 5px;">
+                    <mat-select placeholder="Select Section"
+                                [ngModel]="selectedSection"
+                                (ngModelChange)="selectedSection = $event; showTestDetails = false">
+                        <mat-option *ngFor='let section of sectionList;' [value]="section.id">
+                            {{section.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field -->
+
+                <mat-form-field style="margin-right: 5px;">
+                    <mat-select placeholder="Select Examination"
+                                [ngModel]="selectedExamination"
+                                (ngModelChange)="selectedExamination = $event;showTestDetails = false">
+                        <mat-option *ngFor='let examination of examinationList;' [value]="examination">
+                            {{examination.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="margin-right: 5px;">
+                    <mat-select placeholder="Select Grade"
+                                [ngModel]="selectedGrade"
+                                (ngModelChange)="selectedGrade = $event;showTestDetails = false">
+                        <mat-option *ngFor='let grade of gradeList;' [value]="grade">
+                            {{grade.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button *ngIf="selectedClassSection && selectedExamination && selectedGrade"
+                        type="submit"
+                        style="margin-left: 20px;"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="serviceAdapter.getStudentSubGradeDetails()">GET</button>
+            </div>
+
+            <div class="col-md-9" *ngIf="studentList.length === 0">
+                No Student Present
+            </div>
+
+            <div class="col-md-9" *ngIf="examinationList.length === 0">
+                No Examination Present
+            </div>
+
+            <div class="col-md-9" *ngIf="gradeList.length === 0">
+                No Grade Present
+            </div>
+
+        </div>
+
+
+        <ng-container *ngIf="showTestDetails && !isLoading">
+
+            <table class="table table-hover">
+                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                <tr>
+                    <th>S No.</th>
+                    <th>Student</th>
+                    <th>Roll No.</th>
+                    <th *ngFor="let subGrade of selectedGrade.subGradeList">
+                        {{subGrade.name}}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let student of getFilteredStudentList(); let i=index;">
+                    <td>{{(i+1)}}.</td>
+                    <td>{{student.name}}</td>
+                    <td>{{student.studentSection.rollNumber}}</td>
+                    <td *ngFor="let studentSubGrade of student.subGradeList">
+                        {{studentSubGrade.gradeObtained}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </ng-container>
+
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading || isInitialLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
+</div>

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import {AddStudentRoutingModule} from './add-student.routing';
 import {ComponentsModule} from "../../../../components/components.module";
 import {AddStudentComponent} from "./add-student.component";
-
+import {MultipleFileDialogModule} from '../../multiple-file-dialog/multiple-file-dialog.module';
 
 @NgModule({
     declarations: [
@@ -13,6 +13,7 @@ import {AddStudentComponent} from "./add-student.component";
     imports: [
         AddStudentRoutingModule ,
         ComponentsModule,
+        MultipleFileDialogModule,
     ],
     exports: [
     ],

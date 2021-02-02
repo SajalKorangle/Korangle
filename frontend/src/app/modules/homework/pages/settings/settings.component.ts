@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 import {UserService} from "../../../../services/modules/user/user.service";
 import {DataStorage} from "../../../../classes/data-storage";
-import { SettingsServiceAdapter } from './settings.servie.adapter';
+import { SettingsServiceAdapter } from './settings.service.adapter';
 import { HomeworkService } from '../../../../services/modules/homework/homework.service'
  
 @Component({

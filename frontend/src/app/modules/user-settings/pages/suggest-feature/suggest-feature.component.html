@@ -68,10 +68,17 @@
         </div>
 
 
-        <button type="submit"
+        <button *ngIf="user.activeSchool"
+                type="submit"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 (click)="serviceAdapter.createFeature()">Submit
         </button>
+        <button *ngIf="!user.activeSchool"
+                type="submit"
+                class="btn btn-warning"
+                (click)="serviceAdapter.createFeature()">Submit
+        </button>
+        <div style="margin-bottom: 5px"></div>
         <div style="margin-bottom: 5px"></div>
 
     </ng-container>
@@ -107,8 +114,15 @@
             </div>
 
             <!-- Delete -->
-            <button type="submit"
+            <button *ngIf="user.activeSchool"
+                    type="submit"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="serviceAdapter.deleteFeature(feature)">Delete
+            </button>
+
+            <button *ngIf="!user.activeSchool"
+                    type="submit"
+                    class="btn btn-warning"
                     (click)="serviceAdapter.deleteFeature(feature)">Delete
             </button>
 

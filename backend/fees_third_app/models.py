@@ -247,9 +247,13 @@ class FeeReceipt(models.Model):
 
     parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, verbose_name='parentStudent')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee', related_name='parentEmployee')
 
     chequeNumber = models.IntegerField(null=True, verbose_name='chequeNumber')
+
+    cancelledDateTime = models.DateTimeField(null=True, verbose_name='cancelledDateTime')
+    cancelledRemark = models.TextField(null=True, verbose_name='cancelledRemark')
+    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='cancelledBy', related_name='cancelledBy')
 
     MODE_OF_PAYMENT = (
         ( 'Cash', 'Cash' ),

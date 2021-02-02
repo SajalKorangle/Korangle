@@ -1,8 +1,8 @@
 import {BeforeAfterEach} from '../../../../beforeAterEach';
 import {startBackendServer} from '../../../../backend-server';
-// import { getFixtureFiles } from '@fixtures/fixture-map';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage} from '../../../../open-page';
+import { containsAll } from '../../../../contains';
 
 describe('Students -> Add Student', () => {
 
@@ -17,6 +17,9 @@ describe('Students -> Add Student', () => {
             console.log(dialog.message());
             await dialog.dismiss();
         });
+        
+        let node;
+        let nodes;
 
         // Opening Page
         await openModuleAndPage('Students', 'Add Student');
@@ -30,7 +33,17 @@ describe('Students -> Add Student', () => {
         await page.waitForTimeout(500);
         await page.waitForSelector('#section-button-6');
         await page.click('#section-button-6');
-        await page.type('input#mat-input-4', '1231231230');
+        await page.waitForTimeout(500);
+        nodes = await containsAll('input','');
+        await nodes[3].type('1234567890');
+        await page.waitForTimeout(500);
+        await nodes[nodes.length-3].type('HouseWife');
+        await page.waitForTimeout(500);
+        nodes = await containsAll('mat-select','');
+        await nodes[nodes.length-1].click();
+        node = await containsAll('mat-option','');
+        await node[1].click();
+        await page.waitForTimeout(500);
         await page.click('#action-add-student');
         await page.click('#students-view_all');
         await page.waitForSelector('#select-class');

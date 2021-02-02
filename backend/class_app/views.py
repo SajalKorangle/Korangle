@@ -1,24 +1,6 @@
-from django.http import JsonResponse
-from rest_framework.decorators import api_view
-
-from decorators import user_permission
-
-from common.common_views import CommonView, CommonListView, APIView
-from decorators import user_permission_new
+from common.common_views_3 import CommonView, CommonListView, APIView
+from decorators import user_permission_3
 from class_app.models import ClassTeacherSignature
-
-def get_error_response(message):
-    error_response = {}
-    error_response['status'] = 'fail'
-    error_response['message'] = message
-    return error_response
-
-def get_success_response(data):
-    message_response = {}
-    message_response['status'] = 'success'
-    message_response['data'] = data
-    return message_response
-
 
 
 
@@ -28,16 +10,17 @@ from .business.class_teacher_signature import create_class_teacher_signature_obj
 
 class ClassTeacherSignatureView(CommonView, APIView):
     Model = ClassTeacherSignature
+    RelationsToSchool = ['parentSchool__id']
 
-    @user_permission_new
-    def post(self, request):
+    @user_permission_3
+    def post(self, request, *args, **kwargs):   # Remove this after fixing the frontend request data format; Future iteration
         return create_class_teacher_signature_object(request, self.Model, self.ModelSerializer)
 
-    @user_permission_new
-    def patch(self, request):
+    @user_permission_3
+    def patch(self, request, *args, **kwargs):  # Remove this after fixing the frontend request data format; Future iteration
         return partial_update_class_teacher_signature_object(request, self.Model, self.ModelSerializer)
 
 
 class ClassTeacherSignatureListView(CommonListView, APIView):
     Model = ClassTeacherSignature
-
+    RelationsToSchool = ['parentSchool__id']

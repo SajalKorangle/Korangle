@@ -5,23 +5,12 @@ from rest_framework.views import APIView
 
 import json
 
-from common.common_views import CommonView, CommonListView
-from decorators import user_permission, user_permission_new
+from common.common_views import CommonView as OldCommonView, CommonListView as OldCommonListView
+from common.common_views_3 import CommonView, CommonListView
+from decorators import user_permission, user_permission_new, user_permission_3
 from student_app.models import Student, StudentSection, StudentParameter, StudentParameterValue
+from common.common_functions import get_error_response, get_success_response
 
-
-def get_error_response(message):
-    error_response = {}
-    error_response['status'] = 'fail'
-    error_response['message'] = message
-    return error_response
-
-
-def get_success_response(data):
-    message_response = {}
-    message_response['status'] = 'success'
-    message_response['data'] = data
-    return message_response
 
 ################ Update Profile ##################
 from .handlers.update_profile import get_class_section_student_list
@@ -203,16 +192,13 @@ from .business.profile_image import partial_update_profile_image
 
 class StudentView(CommonView, APIView):
     Model = Student
-
-    @user_permission_new
-    def patch(self,request):
-        if 'profileImage' in request.FILES:
-            return partial_update_profile_image(request,self.Model,self.ModelSerializer)
-        else:
-            return super.patch(request)
+    RelationsToSchool = ['parentSchool__id']
+    RelationsToStudent = ['id']
 
 class StudentListView(CommonListView, APIView):
     Model = Student
+    RelationsToSchool = ['parentSchool__id']
+    RelationsToStudent = ['id']
 
 
 ########### Student Section #############
@@ -220,10 +206,14 @@ class StudentListView(CommonListView, APIView):
 
 class StudentSectionView(CommonView, APIView):
     Model = StudentSection
+    RelationsToSchool = ['parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 
 class StudentSectionListView(CommonListView, APIView):
     Model = StudentSection
+    RelationsToSchool = ['parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 
 ########### Student Parameter #############
@@ -231,18 +221,24 @@ class StudentSectionListView(CommonListView, APIView):
 
 class StudentParameterView(CommonView, APIView):
     Model = StudentParameter
+    RelationsToSchool = ['parentSchool__id']
 
 
 class StudentParameterListView(CommonListView, APIView):
     Model = StudentParameter
+    RelationsToSchool = ['parentSchool__id']
 
 
 ########### Student Parameter Value#############
 
-
+from common.common_views_file import CommonView, CommonListView  #for file handling
 class StudentParameterValueView(CommonView, APIView):
     Model = StudentParameterValue
+    RelationsToSchool = ['parentStudent__parentSchool__id', 'parentStudentParameter__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
 
 class StudentParameterValueListView(CommonListView, APIView):
     Model = StudentParameterValue
+    RelationsToSchool = ['parentStudent__parentSchool__id', 'parentStudentParameter__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
