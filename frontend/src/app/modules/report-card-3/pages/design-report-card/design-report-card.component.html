@@ -360,6 +360,13 @@
                             ></app-remark-parameters-pannel>
                 </div>
 
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('settings')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-settings-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-settings-parameters-pannel>
+                </div>
+
             </mat-card>
 
         </div>

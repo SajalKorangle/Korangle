@@ -17,7 +17,24 @@
             </mat-label>
             <input matInput type="number" min="0"  [(ngModel)]="layer.decimalPlaces" (ngModelChange)="smartLayerUpdate(750)">
         </mat-form-field>
+
+        <mat-form-field>
+            <mat-select placeholder="Grade Rule Set"
+            [ngModel]="layer.gradeRuleSet"
+            (ngModelChange)="layer.gradeRuleSet=$event; layer.layerDataUpdate(); canvasRefresh(0, layer.updateTextBoxMetrics);">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option *ngFor="let gradeRuleSet of layer.ca.gradeRuleSetList" [value]="gradeRuleSet">{{gradeRuleSet.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
         
+        <mat-form-field>
+            <mat-select placeholder="Marks In Words"
+            [ngModel]="layer.inWords"
+            (ngModelChange)="layer.inWords=$event; layer.layerDataUpdate(); canvasRefresh(0, layer.updateTextBoxMetrics);">
+                <mat-option [value]="true">True</mat-option>
+                <mat-option [value]="false">False</mat-option>
+            </mat-select>
+        </mat-form-field>
 
 
     </div>

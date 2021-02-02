@@ -437,7 +437,7 @@ export interface Layer{
     };
     fontStyle?: { [key: string]: any };
     underline?: boolean;
-    dateFormat?: string; // for Canavs Date   // format of date, check getDateReplacements(date) function for details
+    dateFormat?: string; // for Canavs Date   // format of date, check getDateReplacements(date) function for details 
     date?: Date;
     startDate?: Date;   // for Attendance 
     endDate?: Date;
@@ -458,10 +458,10 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     error: boolean = false;
     x: number = 0;
     y: number = 0;
-
+    alternateText: string = 'N/A';
     displayName: string; 
     LAYER_TYPE: string;
-    parameterToolPannels: string[] = ['position'];  // position right toolbar pannel is present in all layers
+    parameterToolPannels: string[] = ['position', 'settings'];  // position right toolbar pannel is present in all layers
 
     dataSourceType: string = 'N/A';
     source?: {[key:string]: any};
@@ -1163,7 +1163,7 @@ export class CanvasText extends BaseLayer implements Layer{
                 this.text = '!ERROR'
             } else {
                 let value = this.source.getValueFunc(DATA);
-                this.text = value ? value : 'N/A';
+                this.text = value ? value : this.alternateText;
             }
         }
         
@@ -1395,7 +1395,7 @@ export class GradeLayer extends CanvasText implements Layer{
             this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination, this.subGradeId);
             this.error = false;
         } else {
-            this.text = 'N/A';
+            this.text = this.alternateText;
             this.error = true;
         }
         this.updateTextBoxMetrics();
@@ -1436,7 +1436,7 @@ export class RemarkLayer extends CanvasText implements Layer{
             this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination);
             this.error = false;
         } else {
-            this.text = 'N/A';
+            this.text = this.alternateText;
             this.error = true;
         }
         this.updateTextBoxMetrics();
@@ -1564,12 +1564,12 @@ export class MarksLayer extends CanvasText implements Layer{
                 if (this.inWords) {
                     this.text = getMarksInWords(this.marks);
                 } else {
-                    this.text = this.marks != -1 ? this.marks.toFixed(this.decimalPlaces) : 'N/A';
+                    this.text = this.marks != -1 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
                 }
             }
             this.error = false;
         } else {
-            this.text = 'N/A';
+            this.text = this.alternateText;
             this.error = true;
         }
         this.updateTextBoxMetrics();
@@ -1613,6 +1613,8 @@ export class Formula extends CanvasText implements Layer{
     formula: string= '';
     decimalPlaces: number = 1;
     marks: number = null;
+    inWords: boolean = false;
+    gradeRuleSet: GradeRuleSet;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
@@ -1650,7 +1652,23 @@ export class Formula extends CanvasText implements Layer{
                 this.text = result.error;
             } else {
                 this.marks = Number(result.result)
-                this.text = this.marks.toFixed(this.decimalPlaces);
+                let gradeValue:string = null;
+            
+                if (this.gradeRuleSet) {
+                    this.gradeRuleSet.gradeRules.forEach((gradeRule: GradeRule) => {
+                        if (gradeRule.belongsToGrade(this.marks))
+                            gradeValue = gradeRule.gradeValue;
+                    });
+                }
+                if (gradeValue) {
+                    this.text = gradeValue;
+                }
+                else if(this.inWords){
+                    this.text = getMarksInWords(this.marks);
+                }
+                else{
+                    this.text = this.marks.toFixed(this.decimalPlaces);
+                }
             }
         } else {
             this.text = 'Write Formula'
@@ -1664,6 +1682,7 @@ export class Formula extends CanvasText implements Layer{
         savingData = {
             ...savingData,
             formula: this.formula,
+            inWords: this.inWords,
             decimalPlaces:this.decimalPlaces,
         }
         return savingData;

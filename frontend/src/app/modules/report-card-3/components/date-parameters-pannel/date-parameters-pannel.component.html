@@ -8,7 +8,19 @@
                 (ngModelChange)="onDateSelected($event); canvasRefresh(500, layer.updateTextBoxMetrics);" placeholder="Choose Date ">
         </mat-form-field>
 
+
+
         <span style="color: rgb(65, 62, 62);">Date Format</span>
+
+        <mat-form-field class="row col-md-12">
+            <mat-select [ngModel]="getDateFormat()" (ngModelChange)="dateFormat = $event; changeDateFormat();canvasRefresh(0, layer.updateTextBoxMetrics);">
+                <mat-option [value]="'dmy'">dd / mm / yyyy</mat-option>
+                <mat-option [value]="'mdy'">mm / dd / yyyy</mat-option>
+                <mat-option [value]="'ydm'">yyyy / dd / mm</mat-option>
+                <mat-option [value]="'ymd'">yyyy / mm / dd</mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <div class="col-md-12" style="padding: 0px;">
             
             <mat-form-field class="col-md-3" style="padding: 0px;padding-right: 2px">
@@ -22,7 +34,8 @@
             </mat-form-field>
 
             
-            <mat-form-field class="col-md-4" style="padding: 0px; padding-right: 2px">
+
+            <mat-form-field class="col-md-3" style="padding: 0px; padding-right: 2px">
                 <!-- <mat-label>Day Format</mat-label> -->
                 <mat-select [ngModel]="getMonthFormat()" (ngModelChange)="monthFormat = $event; changeDateFormat();canvasRefresh(0, layer.updateTextBoxMetrics);">
                     <mat-option [value]="'<m>'">1</mat-option>
@@ -32,7 +45,9 @@
                 </mat-select>
             </mat-form-field>
             
-            <mat-form-field class="col-md-5" style="padding: 0px;">
+            
+
+            <mat-form-field class="col-md-4" style="padding: 0px; float:right">
                 <!-- <mat-label>Day Format</mat-label> -->
                 <mat-select [ngModel]="getYearFormat()" (ngModelChange)="yearFormat = $event; changeDateFormat();canvasRefresh(0, layer.updateTextBoxMetrics);">
                     <mat-option [value]="'<yy>'">01</mat-option>
@@ -40,7 +55,21 @@
                     <mat-option [value]="'<yyyy>'">Two Thousand One</mat-option>
                 </mat-select>
             </mat-form-field>
+
+            
         </div>
+
+        <!-- First Separator -->
+        <mat-form-field style="padding: 0px; padding-right: 2px"> 
+            <input matInput [ngModel]="getFirstSeparator()"
+                (ngModelChange)="firstSeparator = $event; changeDateFormat();canvasRefresh(0, layer.updateTextBoxMetrics);" placeholder="Enter First Separator">
+        </mat-form-field><br>
+
+            <!-- Second Separator -->
+        <mat-form-field style="padding: 0px; padding-right: 2px"> 
+            <input matInput [ngModel]="getSecondSeparator()"
+                (ngModelChange)="secondSeparator = $event; changeDateFormat();canvasRefresh(0, layer.updateTextBoxMetrics);;" placeholder="Enter Second Separator">
+        </mat-form-field>
     </div>
 
 </mat-card>

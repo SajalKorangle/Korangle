@@ -22,6 +22,7 @@ import { RemarkParametersPannelComponent } from './remark-parameters-pannel/rema
 import { LayoutSharingDialogComponent } from './layout-sharing-dialog/layout-sharing-dialog.component';
 import { InventoryDialogComponent } from './inventory-dialog/inventory-dialog.component';
 import { LayerReplacementDialogComponent } from './layer-replacement-dialog/layer-replacement-dialog.component';
+import { SettingsParametersPannelComponent } from './settings-parameter-pannel/settings-parameters-pannel.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,9 @@ import { LayerReplacementDialogComponent } from './layer-replacement-dialog/laye
     RemarkParametersPannelComponent,
     LayoutSharingDialogComponent,
     InventoryDialogComponent,
-    LayerReplacementDialogComponent],
+    LayerReplacementDialogComponent,
+    SettingsParametersPannelComponent,
+  ],
   imports: [
     ComponentsModule,
     MatButtonToggleModule,
@@ -69,7 +72,8 @@ import { LayerReplacementDialogComponent } from './layer-replacement-dialog/laye
     RemarkParametersPannelComponent,
     LayoutSharingDialogComponent,
     InventoryDialogComponent,
-    LayerReplacementDialogComponent
+    LayerReplacementDialogComponent,
+    SettingsParametersPannelComponent,
   ]
 })
 export class ParametersPannelModule { }
