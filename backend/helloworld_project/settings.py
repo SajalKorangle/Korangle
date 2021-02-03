@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+
 import os
 
 import datetime
@@ -276,8 +277,8 @@ if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] 
 else:
     print("KORANGLE DEVELOPMENT/TESTING")
 
-    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
-    AWS_SECRET_ACCESS_KEY = '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'
-    AWS_STORAGE_BUCKET_NAME = 'korangletesting'
-    AWS_QUERYSTRING_AUTH = False
-    AWS_S3_SECURE_URLS = False # to use http instead of https
+    # korangle/backend/helloworld_project/dev_conf.py
+    try:
+        from helloworld_project.dev_conf import *
+    except ImportError:
+        print("ERROR!\nTesting Configuration File Not Found: korangle/backend/helloworld_project/dev_conf.py")
