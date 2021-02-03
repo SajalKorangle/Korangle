@@ -1,5 +1,6 @@
 // import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
+import { data } from 'jquery';
 interface DesignReportCardCanvasAdapter{
     [key: string]: any;
 }
@@ -565,7 +566,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         this.image.onerror = () => {
             this.error = true;
         }
-        this.image.setAttribute('crossOrigin', 'anonymous');
+        this.image.setAttribute('crossOrigin', 'anonymous');  
         this.image.src = this.uri;
     }
 
@@ -2018,6 +2019,16 @@ export const PARAMETER_LIST = [
         }
     ),
     StudentSessionParameterStructure.getStructure(
+        'Class Teacher Signature',
+        'signatureImage',
+        (dataObject) => {
+            return dataObject.data.classSectionSignatureList.find(classs => 
+                classs.parentClass == dataObject.data.studentSectionList.find(x => x.parentStudent === dataObject.studentId).parentClass &&
+                classs.parentDivision == dataObject.data.studentSectionList.find(x => x.parentStudent === dataObject.studentId).parentDivision).signatureImage
+        },
+        CanvasImage
+    ),
+    StudentSessionParameterStructure.getStructure(
         'Section',
         'section',
         (dataObject) => {
@@ -2084,6 +2095,15 @@ export const PARAMETER_LIST = [
     SchoolParameterStructure.getStructure(`Registration No.`, 'registrationNumber'),
     SchoolParameterStructure.getStructure(`Affiliation No.`, 'affiliationNumber'),
     SchoolParameterStructure.getStructure(`Medium`, 'medium'),
+
+    
+    ParameterStructure.getStructure(
+        'currentSession',
+        FIELDS.SCHOOL,
+        CanvasText,
+        () => {return 'Current Session'},
+        (dataObject) => {return dataObject.data.sessionList.find(session => session.id  == dataObject.currentSession).name},
+    ), 
 
 
     /* Attendance Field */

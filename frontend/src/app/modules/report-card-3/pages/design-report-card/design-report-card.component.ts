@@ -60,6 +60,7 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
 
   DATA: {
     studentId: number,
+    currentSession: number,
     data: {
       school: any,
       studentList: any[],
@@ -78,9 +79,11 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
       subGradeList: any[],
       studentSubGradeList: any[],
       studentExaminationRemarksList: any[],
+      classSectionSignatureList: any[],
     }
   } = {
     studentId: null,
+    currentSession: null,
     data: {
       school: null,
       studentList: [],
@@ -99,6 +102,7 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
       subGradeList: [],
       studentSubGradeList: [],
       studentExaminationRemarksList: [],
+      classSectionSignatureList: [],
     }
   }
 
@@ -151,6 +155,7 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
       }
       else{
         this.DATA.studentId = this.selectedStudent.id;
+        this.canvasAdapter.fullCanavsRefresh();
       }
   }
 

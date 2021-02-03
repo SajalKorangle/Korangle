@@ -16,6 +16,7 @@ export class DesignReportCardServiceAdapter {
 
     // initialize data
     initializeData(): void {
+        this.vm.DATA.currentSession = this.vm.user.activeSchool.currentSessionDbId;
         const report_card_layouts_data = {
             parentSchool: this.vm.user.activeSchool.dbId
         };
@@ -48,6 +49,10 @@ export class DesignReportCardServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId
         };
 
+        const request_class_signature_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        }
+
         this.vm.htmlAdapter.isLoading = true;
         Promise.all([
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, report_card_layouts_data),
@@ -63,6 +68,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 10
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, public_layouts_data), //11
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, shared_layout_list_data), //12
+            this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //13
         ]).then(data => { 
             this.vm.reportCardLayoutList = data[0];
             // console.log('data = ', data);
@@ -77,6 +83,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.DATA.data.gradeList = data[9];
             this.vm.DATA.data.subGradeList = data[10];
             this.vm.publicLayoutList = data[11];
+            this.vm.DATA.data.classSectionSignatureList = data[13];
 
             const request_student_data = {
                 id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
@@ -209,6 +216,7 @@ export class DesignReportCardServiceAdapter {
             else
                 alert('Student Data unavaiable');
             console.log(this.vm.DATA);
+            this.vm.canvasAdapter.fullCanavsRefresh();
             
             this.vm.htmlAdapter.isSaving = false;
         }), error =>{
