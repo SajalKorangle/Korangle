@@ -129,16 +129,19 @@ function getNumberInWords(numerical: number): string {  // mapping of 1 to 99 in
 
 function getMarksInWords(num: number): string{  // converts numbers from 0 to 99999 in words
     // used in conversion of marks to words
+    num = Math.floor(num);
     if (num == 0) {
         return 'Zero';
     }
     let unitTens = getNumberInWords(num % 100);
-    num /= 100;
+    num = Math.floor(num/100);
     let hundreds = getNumberInWords(num % 10);
-    num /= 10;
+    num = Math.floor(num/10);
     let thousands = getNumberInWords(num % 100);
-    return `${thousands?thousands+' Thousand':''} ${hundreds?hundreds+' Hundred':''} ${unitTens}`
+    return `${thousands?thousands+' Thousand ':''}${hundreds?hundreds+' Hundred ':''}${unitTens}`
 }
+
+console.log('marks to words = ', getMarksInWords);
 
 function getYear(year: number): string {   // converts year number in words
     if (year < 2000) {
