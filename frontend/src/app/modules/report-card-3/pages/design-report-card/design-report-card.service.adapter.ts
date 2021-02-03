@@ -22,7 +22,7 @@ export class DesignReportCardServiceAdapter {
         const request_student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            korangle__count: '0,9'
+            korangle__count: '0,1'
         };
         const request_student_parameter_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -126,13 +126,13 @@ export class DesignReportCardServiceAdapter {
                 this.vm.DATA.data.attendanceList = value[3];
                 this.vm.DATA.data.studentSubGradeList = value[4];
                 this.vm.DATA.data.studentExaminationRemarksList = value[5];
+                console.log(this.vm.DATA);
                 this.vm.sharedLayoutList = value[7];
 
                 if (this.vm.DATA.data.studentList.length > 0)
                     this.vm.DATA.studentId = this.vm.DATA.data.studentList[0].id;
                 else
                     alert('Student Data unavaiable');
-                
                 this.populateLayoutSharingData(value[6]);
                 // console.log('DATA: ', this.vm.DATA);
                 this.vm.htmlAdapter.isLoading = false;
@@ -152,6 +152,68 @@ export class DesignReportCardServiceAdapter {
                 studentParameter.name, studentParameter.id
             ));
         });
+    }
+
+    changeSelectedStudent(): any{
+        this.vm.htmlAdapter.isSaving = true;
+        const request_student_section_data = {
+            parentStudent: this.vm.selectedStudent.id,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        const request_student_data = {
+            id: this.vm.selectedStudent.id,
+        };
+        const request_student_parameter_value_data = {
+            parentStudent: this.vm.selectedStudent.id,
+        };
+        const request_student_test_data = {
+            parentStudent: this.vm.selectedStudent.id,
+            parentExamination__in: this.vm.DATA.data.examinationList.map(item => item.id).join(','),
+        };
+        const request_attendance_data = {
+            parentStudent: this.vm.selectedStudent,
+            'dateOfAttendance__gte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
+            'dateOfAttendance__lte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
+        };
+        const request_student_sub_grade_data = {
+            parentStudent: this.vm.selectedStudent,
+        };
+        const request_student_examination_remarks_data = {
+            parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
+            parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentStudent: this.vm.selectedStudent,
+        };
+
+        Promise.all([
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1
+            this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 1
+            this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 2
+            this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
+            this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
+            this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
+            
+        ]).then (value =>{
+            console.log(value);
+            this.vm.DATA.data.studentSectionList.push(value[0][0]);
+            this.vm.DATA.data.studentList.push(value[1][0]);
+            this.vm.DATA.data.studentParameterValueList.push(value[2][0]);
+            this.vm.DATA.data.studentTestList.push(value[3][0]);
+            this.vm.DATA.data.attendanceList.push(value[4][0]);
+            this.vm.DATA.data.studentSubGradeList.push(value[5][0]);
+            this.vm.DATA.data.studentExaminationRemarksList.push(value[6][0]);
+            this.populateParameterListWithStudentCustomField();
+            if (this.vm.DATA.data.studentList.length > 0)
+                this.vm.DATA.studentId = this.vm.selectedStudent.id;
+            else
+                alert('Student Data unavaiable');
+            console.log(this.vm.DATA);
+            
+            this.vm.htmlAdapter.isSaving = false;
+        }), error =>{
+            this.vm.htmlAdapter.isSaving = false;
+        };
     }
 
     populateLayoutSharingData(layoutSharingDataList:Array<any>):void {

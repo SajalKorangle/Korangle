@@ -1,6 +1,16 @@
 <div class="card-content table-responsive" id="drc-wrapper" style="height: 90vh;" *ngIf="!htmlAdapter.isLoading; else spinner">
 
     <button class="btn" style="padding: 4px 8px; font-size: medium; background-color: blue;" (click)="htmlAdapter.openInventory()">Inventory <span class="material-icons">inventory_2</span></button>
+    
+    <parent-student-filter [user]="user"
+                               (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+                               (onStudentListSelected)="handleStudentListSelection($event)"
+                               (onStudentListLoading)="isStudentListLoading=$event"
+                               [selectedFilterType]="'Student'"
+                               [studentTcGenerated]="true"
+                               [bothFilters]="false"
+                               [showFilter]="false"
+                               style="float: right;margin-right: 0px; width: 250px"></parent-student-filter>
 
     <div id="drc-mainCard" style="margin:0; padding:0;" class="bg-white">
     <ng-container>
