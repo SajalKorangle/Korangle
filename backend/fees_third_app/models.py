@@ -411,3 +411,11 @@ class LockFee(models.Model):
     class Meta:
         db_table = 'lock_fee'
 
+
+class ParentTransaction(models.Model):
+
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
+    amount = models.IntegerField(default=0, verbose_name='amount')
+
+    class Meta:
+        db_table = 'lock_fee'

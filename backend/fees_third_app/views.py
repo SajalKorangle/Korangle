@@ -4,9 +4,10 @@ import json
 from common.common_views import CommonView, CommonListView, APIView
 from decorators import user_permission_new
 from fees_third_app.business.discount import create_discount_object, create_discount_list
+from fees_third_app.business.cashfree import generatePaymentToken
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
-    SubFeeReceipt, Discount, SubDiscount, LockFee
+    SubFeeReceipt, Discount, SubDiscount, LockFee, ParentTransaction
 
 
 # Create your views here.
@@ -142,4 +143,24 @@ class LockFeeView(CommonView, APIView):
 class LockFeeListView(CommonListView, APIView):
     Model = LockFee
 
+
+########### Parent Transaction #############
+
+class ParentTransactionListView(CommonListView, APIView):
+    Model = ParentTransaction
+
+class ParentTransactionView(CommonView, APIView):
+    Model = ParentTransaction
+    @user_permission_new
+    def post(self, request):
+        print(request)
+        print('request data from frontend is....................................................')
+        
+        data = json.loads(request.body.decode('utf-8'))
+
+        print(data)
+        response = generatePaymentToken(data)
+        print('response is /............................')
+        print (response)
+        return response
 

@@ -34,6 +34,79 @@
                     <td *ngIf="lateFeeVisible" align="center">Total</td>
                     <td></td>
                 </tr>
+                <button (click)="initiatePayment()">
+                    PAY
+                </button>
+    <h1>Payment Form</h1>
+    <table border = "3" cellpadding = "5" cellspacing = "5">
+      <tr>
+        <th>Type</th>
+        <th>Details</th>
+        <th>Submit</th>
+      </tr>
+      <tr>
+        <td>Cards</td>
+        <td>
+          <form>
+            <p>Card Number: <input type="text" id="card-num" value ="4111111111111111"/>
+            CVV:<input type="text" id="card-cvv" value="123"/></p>
+            <p>MM:<input type="text" id="card-mm" value="09"/>
+            YYYY:<input type="text" id="card-yyyy" value="2018"/></p>
+            Name:<input type="text" id="card-name" value="test"/>
+          </form>
+        </td>
+        <td>
+          <button (click)="payCard()">Pay with Card</button>      
+        </td>
+      </tr>
+      <tr>
+        <td>Net Banking</td>
+        <td>
+          Select Bank: 
+          <select id="bank-code">
+            <option value="3333">TEST Bank</option>
+            <option value="3003">Axis Bank</option>
+            <option value="3028">IndusInd Bank</option>
+            <option value="3057">Vijaya Bank</option>
+          </select>
+        </td>
+        <td>
+          <button (click)="payBank()">Pay with Net Banking</button>      
+        </td>
+      </tr>
+      <tr>
+        <td>Wallet</td>
+        <td>
+          Select Wallet: 
+          <select id="wallet-code">
+            <option value="4001">FreeCharge</option>
+            <option value="4002">MobiKwik</option>
+            <option value="4003">Ola Money</option>
+          </select>
+        </td>
+        <td>
+          <button (click)="payWallet()">Pay with Wallet</button>      
+        </td>
+      </tr>
+      <tr>
+        <td>UPI</td>
+        <td>
+          Your UPI VPA: 
+          <input type="text" id="upi-vpa"/>
+        </td>
+        <td>
+          <button (click)="payUpi()">Pay with UPI</button>      
+        </td>
+      </tr>
+    </table>
+  
+
+
+
+
+
+
+
                 <ng-container *ngFor="let student of getStudentList();">
 
                     <!-- Student -->

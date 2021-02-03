@@ -24,8 +24,10 @@ import {CommonFunctions} from "../../../../classes/common-functions";
 import {ClassService} from "../../../../services/modules/class/class.service";
 import {DataStorage} from "../../../../classes/data-storage";
 import { SchoolService } from '../../../../services/modules/school/school.service';
-
+import { values } from 'lodash';
+import { time } from 'console';
 declare const $: any;
+declare const CashFree: any;
 
 @Component({
     selector: 'view-fee',
@@ -82,6 +84,23 @@ export class ViewFeeComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
+          var config = {
+            layout : {},
+            checkout : "transparent",
+            mode : "TEST",
+          }
+            var response = CashFree.init(config);
+
+            if (response.status != "OK") {
+            // Handle error in initializing
+                console.log('response from cashfree init ' + '     '+response.status); 
+                console.dir(response)
+            }
+            else {
+                console.log('response from cashfree init' + response)
+                console.dir(response)
+            }
+
         this.selectedStudentList = this.user.section.student.studentList;
 
         this.serviceAdapter = new ViewFeeServiceAdapter();
@@ -106,6 +125,93 @@ export class ViewFeeComponent implements OnInit {
         }
 
     }
+    postPaymentCallback = function (event) {
+        console.log('recived resposne is ' + event);
+        // Callback method that handles Payment 
+        if (event.name == "PAYMENT_RESPONSE" && event.status == "SUCCESS") {
+          // Handle Success 
+        } 
+        else if (event.name == "PAYMENT_RESPONSE" && event.status == "CANCELLED") {
+          // Handle Cancelled
+        } 
+        else if (event.name == "PAYMENT_RESPONSE" && event.status == "FAILED") {
+          // Handle Failed
+        } 
+        else if (event.name == "VALIDATION_ERROR") { 
+          // Incorrect inputs
+        }
+      };
+      pc() {
+        let data = {
+            appId : "50334e5204e60357816fa8e6d43305",
+            orderId : "000004",
+            orderAmount : 1,
+            customerName : "Avinash",
+            customerPhone : "7050701850",
+            customerEmail : "avinash7may@gmail.com",
+            returnUrl : "",
+            orderNote : "testing",
+            pc : "no",
+            orderCurrency : "INR",
+            paymentToken : "",
+            paymentOption : "card",
+            card : {
+                number : (<HTMLInputElement>document.getElementById("card-num")).value,
+                expiryMonth : (<HTMLInputElement>document.getElementById("card-mm")).value,
+                expiryYear : (<HTMLInputElement>document.getElementById("card-yyyy")).value,
+                holder : (<HTMLInputElement>document.getElementById("card-name")).value,
+                cvv : (<HTMLInputElement>document.getElementById("card-cvv")).value,
+            }
+        }
+        console.log(data)
+        CashFree.paySeamless(data,this.postPaymentCallback);
+        return false;
+        
+    }
+    payCard = function() {
+        let data = {
+            appId : "50334e5204e60357816fa8e6d43305",
+            orderId : Date.now().toString(),
+            orderAmount : '1',
+            customerName : "Avinash",
+            customerPhone : "7050701850",
+            customerEmail : "avinash7may@gmail.com",
+            returnUrl : "",
+            orderNote : "testing",
+            pc : "no",
+            orderCurrency : "INR",
+            paymentToken : "",
+            paymentOption : "card",
+            card : {
+                number : (<HTMLInputElement>document.getElementById("card-num")).value,
+                expiryMonth : (<HTMLInputElement>document.getElementById("card-mm")).value,
+                expiryYear : (<HTMLInputElement>document.getElementById("card-yyyy")).value,
+                holder : (<HTMLInputElement>document.getElementById("card-name")).value,
+                cvv : (<HTMLInputElement>document.getElementById("card-cvv")).value,
+            }
+        }
+        this.feeService.createObject(this.feeService.parent_transaction,data).then(value => {
+            console.log('response of payment token ' + value);
+            data.paymentToken =  value;
+        })
+
+
+    CashFree.initPopup(); // This is required for the popup to work even in case of callback.
+        $.ajax({
+        url: "https://reqres.in/api/users?page=2", // This is an open endpoint.
+        type: "GET",
+        success: function(response){
+            console.log('success response is ');
+            console.dir(response)
+            
+            console.log(data)
+            CashFree.paySeamless(data,this.postPaymentCallback);
+            return false;
+
+        }
+        });
+    };
+    
 
     detectChanges(): void {
         this.cdRef.detectChanges();
@@ -618,6 +724,44 @@ export class ViewFeeComponent implements OnInit {
                     + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
             }, 0);
         }, 0);
+    }
+    
+    // initiatePayment() {
+        
+    //     let data = {
+    //         appId : '50334e5204e60357816fa8e6d43305',
+    //         orderId : (Math.floor(Math.random() * 6) + 1).toString() ,
+    //         orderAmount : '1',
+    //         orderCurrency: 'INR',
+    //         customerName : 'Avinash',
+    //         customerPhone : '7050702850',
+    //         customerEmail : 'avinash7may@gmail.com',            
+
+    //     }
+    //     var callback = function (event) {
+    //         var eventName = event.name;
+    //         switch(eventName) {
+    //           case "PAYMENT_REQUEST":
+    //              console.log(event.message);
+    //              break;
+    //           default:
+    //              console.log(event.message);
+    //          };
+    //     }
+        
+    //     this.feeService.createObject(this.feeService.parent_transaction,data).then( value => {
+    //         console.log('payment token is ' + value)
+    //         data['paymentToken']=value;
+
+    //         Cashfree.paySeamless(data, callback);
+    //     },
+    //     error => {
+    //         alert('Something went Wrong!!!')
+    //     })
+    // }
+
+    starting(data){
+        console.log(data)
     }
 
 }
