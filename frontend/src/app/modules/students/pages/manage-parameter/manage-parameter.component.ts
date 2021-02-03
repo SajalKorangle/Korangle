@@ -51,7 +51,8 @@ export class ManageParameterComponent implements OnInit {
     // customParameterTypeList: any[] = [{type: 'TEXT', name: 'Text'}, {type: 'FILTER', name: 'Filter'}];
     customParameterTypeList = [
         'TEXT',
-        'FILTER'
+        'FILTER',
+        'DOCUMENT'
     ];
     customParameterList = [];
     currentParameter: any;

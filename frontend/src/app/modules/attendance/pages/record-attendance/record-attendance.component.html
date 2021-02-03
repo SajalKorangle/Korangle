@@ -45,7 +45,7 @@
         <button type="submit"
                 style="padding: 3px 8px;"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="getStudentsAttendanceStatusList()">Get</button>
+                (click)="serviceAdapter.getStudentsAttendanceStatusList()">Get</button>
 
     </ng-container>
 
@@ -121,7 +121,8 @@
 
         <button type="submit"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="updateStudentAttendanceList()">Update</button>
+                [disabled]="prepareStudentAttendanceStatusListData().length == 0"
+                (click)="serviceAdapter.updateStudentAttendanceList()">Update</button>
 
         <button type="submit"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"

@@ -137,6 +137,7 @@
                                [ngModel]="getOverallPayment()==0?null:getOverallPayment()"
                                (keypress)="policeOverallPaymentInput($event)"
                                (ngModelChange)="handleOverallPaymentChange($event);">
+                            <span *ngIf="!newFeeReceiptList.length>0" style="position:absolute;display:inline-block;margin-top:5px;color: red" class="fa fa-exclamation-circle "></span>
                     </td>
                     <td align="right">Total Fees: {{getOverallTotalFees() | indianCurrency}}</td>
                 </tr>
@@ -358,13 +359,12 @@
                 </tbody>
             </table>
 
-            <ng-container *ngIf="newFeeReceiptList.length>0">
-
                 <div class="row">
                     <div class="col-sm-3">
                         <mat-form-field style="margin-top: 22px;">
                             <mat-select placeholder="Select Payment Mode"
                                         [ngModel]="newModeOfPayment"
+                                        [disabled]="!newFeeReceiptList.length>0"
                                         (ngModelChange)="newModeOfPayment=$event;updateNewFeeReceiptPaymentMode()">
                                 <mat-option *ngFor='let paymentMode of modeOfPaymentList;' [value]="paymentMode">
                                     {{paymentMode}}
@@ -377,8 +377,10 @@
                             <label class="control-label">Cheque No.</label>
                             <input type="number"
                                    class="form-control"
+                                   [disabled]="!newFeeReceiptList.length>0"
                                    [ngModel]="newChequeNumber"
                                    (ngModelChange)="newChequeNumber=$event;updateNewFeeReceiptChequeNumber()"/>
+                           <span *ngIf="!newChequeNumber" style="position:absolute;font-size: 15px; right:15px;top:10px;color: red" class="fa fa-exclamation-circle "></span>
                         </div>
                     </div>
                     <div class="col-sm-3" >
@@ -386,6 +388,7 @@
                             <label class="control-label">Remark</label>
                             <input type="text"
                                    class="form-control"
+                                   [disabled]="!newFeeReceiptList.length>0"
                                    [ngModel]="newRemark"
                                    (ngModelChange)="newRemark=$event;updateNewFeeReceiptRemark()"/>
                         </div>
@@ -395,6 +398,8 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                [title]="isGenerateReceiptDisabled()? 'Fill all the required Fields' : ''"
+                                [disabled]="isGenerateReceiptDisabled()"
                                 (click)="serviceAdapter.generateFeeReceipts()">
                             Generate {{newFeeReceiptList.length}} Receipts for Rs. {{getOverallPayment()}}
                         </button>
@@ -402,8 +407,6 @@
                 </div>
 
             </ng-container>
-
-        </ng-container>
 
         <ng-container *ngIf="getOverallFeesDue(false) == 0">
 

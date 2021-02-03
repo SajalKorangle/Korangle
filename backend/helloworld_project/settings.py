@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'user_app',
     'notification_app',
     'information_app',
+    'grade_app',
     'id_card_app',
     'homework_app',
     'feature_app',
@@ -81,6 +82,7 @@ INSTALLED_APPS = [
     'report_card_app',
     'report_card_app.report_card_cbse_app',
     'report_card_app.report_card_mp_board_app',
+    'errors_app',
 
     'corsheaders',
 

@@ -1,27 +1,47 @@
 <div class="card-content">
+        <div class="row main-row">
+            <div [hidden]="searchBy==searchFilterList[0]" class="col-md-7">
 
-    <ng-container *ngIf="!isLoading">
-
-        <div class="row">
-            <div class="col-sm-6">
-                <form class="example-form">
-                    <mat-form-field class="example-full-width">
-                        <input matInput
-                               name="searchParamter"
-                               type="number"
-                               (keypress)="policeNumberInput($event)"
-                               [(ngModel)]="searchParameter"
-                               placeholder="Type Fee Receipt No. / Cheque No. here ..."value="Sushi">
-                    </mat-form-field>
-                </form>
+                <parent-student-filter [user]="user"
+                                       (onStudentListSelected)="handleParentOrStudentListSelection($event)"
+                                       (onStudentListLoading)="isLoading=$event"
+                                       [selectedFilterType]="searchBy?searchBy.filterName:searchFilterList[1][1]"
+                                       [showFilter]="false"
+                                       [studentTcGenerated]="false"></parent-student-filter>
             </div>
-            <div class="col-sm-3">
-                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.getFeeReceiptList()">
+            <div *ngIf="searchBy==searchFilterList[0]" class="col-md-5">
+                <mat-form-field style="width: 100%">
+                    <input matInput
+                           name="searchParamter"
+                           type="text"
+                           (paste)="policeNumberInput($event)"
+                           (keypress)="policeNumberInput($event)"
+                           [(ngModel)]="searchParameter"
+                           placeholder="Type Receipt No./Cheque No. here ..." value="Sushi">
+                </mat-form-field>
+            </div>
+            <ng-container *ngIf="!isLoading">
+            <div class="col-sm-2">
+                <button *ngIf="searchBy==searchFilterList[0]" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        [disabled]="!searchParameter"
+                        (click)="serviceAdapter.getInitialFeeReceiptList()">
                     Get
                 </button>
             </div>
+            <div class="col-sm-4" >
+                <strong>Search By:</strong>
+                <mat-form-field style="margin-left: 5px;">
+                    <mat-select [(ngModel)]="searchBy"
+                                (ngModelChange)="searchParameter=null;showReceipts=false;">
+                        <mat-option *ngFor="let searchFilter of searchFilterList;" [value]="searchFilter">
+                            {{searchFilter.displayName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+                </ng-container>
         </div>
+        <ng-container *ngIf="!isLoading && showReceipts">
 
         <ng-container *ngIf="feeReceiptList">
 
@@ -36,16 +56,44 @@
 
                     <ng-container *ngFor="let feeReceipt of feeReceiptList; let i=index; let first=first">
 
-                        <mat-expansion-panel [expanded]="feeReceiptList.length == 1 && first">
+                            <div *ngIf="i==0 && searchBy!==searchFilterList[2]"
+                                 style="margin-bottom: 5px;">
+                                <strong>
+                                    {{getStudent(feeReceipt).name}} (
+                                    {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
+                                    {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}} )
+                                </strong>
+                            </div>
 
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    <span>
-                                        {{getStudent(feeReceipt).name}},
-                                        Amount: {{getFeeReceiptTotalAmount(feeReceipt)}}
-                                    </span>
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
+                            <mat-card style="margin-top: 10px">
+
+                                <div *ngIf="searchBy==searchFilterList[2]" class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Student Name :
+                                    </div>
+                                    <div class="col-sm-3 col-xs-8">
+                                        {{getStudent(feeReceipt).name}}
+                                    </div>
+                                </div>
+
+                                <div *ngIf="searchBy==searchFilterList[2]" class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Class :
+                                    </div>
+                                    <div class="col-sm-3 col-xs-8">
+                                        {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
+                                        {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Amount :
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{getFeeReceiptTotalAmount(feeReceipt)}}
+                                    </div>
+                                </div>
 
                             <div class="row">
                                 <div class="col-sm-2 col-xs-6">
@@ -56,7 +104,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div *ngIf="searchBy !== searchFilterList[2]" class="row">
                                 <div class="col-sm-2 col-xs-6">
                                     Father's Name:
                                 </div>
@@ -95,20 +143,40 @@
                                 </div>
                             </div>
 
-                            <button type="button"
-                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                    *ngIf="!feeReceipt.cancelled"
-                                    style="padding: 12px 15px"
-                                    matTooltip="Cancel the receipt"
-                                    tooltip-position="right"
-                                    (click)="serviceAdapter.cancelFeeReceipt(feeReceipt);">
-                                Cancel</button>
-
-                            <span *ngIf="feeReceipt.cancelled">This fee receipt is cancelled</span>
-
-                        </mat-expansion-panel>
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-6">
+                                        Date:
+                                    </div>
+                                    <div class="col-sm-2 col-xs-6">
+                                        {{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}
+                                    </div>
+                                    <button type="button"
+                                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                            *ngIf="!feeReceipt.cancelled"
+                                            style="float:right;margin-right: 20px;"
+                                            matTooltip="Cancel the receipt"
+                                            tooltip-position="right"
+                                            (click)="showCancelReceiptModal(feeReceipt);">
+                                        Cancel
+                                    </button>
+                                </div>
+                                <br>
+                                <span style="color: grey"
+                                      *ngIf="feeReceipt.cancelled">This fee receipt is cancelled <span
+                                        *ngIf="feeReceipt.cancelledRemark"> Due to <strong>{{feeReceipt.cancelledRemark}}</strong></span>
+                            </span>
+                            </mat-card>
 
                     </ng-container>
+                   
+                    <div *ngIf="loadMoreReceipts">
+                         <span *ngIf="isMobile()" style="color: #817ae9;" (click)="serviceAdapter.loadMoreReceipts()"><u>Load
+                    More..</u></span>
+                        <br>
+                        <div *ngIf="isReceiptListLoading" style="width: 100%" align="center">
+                            <div class="loaderCustom"></div>
+                        </div>
+                    </div>
 
                 </mat-accordion>
 

@@ -95,7 +95,6 @@ export class GiveDiscountComponent implements OnInit {
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.receiptNumber = false;
-            this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }

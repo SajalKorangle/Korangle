@@ -21,7 +21,7 @@ import {ExcelService} from "../../excel/excel-service";
         ExaminationComponent,
 
         PrintStudentMarksheetListComponent,
-        PrintHallTicketComponent
+        PrintHallTicketComponent,
     ],
 
     imports: [

@@ -112,7 +112,6 @@ export class ViewFeeComponent implements OnInit {
         this.receiptColumnFilter.printButton = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
-            this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.employee = false;
         }
 

@@ -1,0 +1,6 @@
+[
+    { "model": "student_app.studentparameter", "pk": 1, "fields": { "parentSchool": 1, "name": "Mother-Occupation", "parameterType": "TEXT", "filterValues": [] } },
+    { "model": "student_app.studentparameter", "pk": 2, "fields": { "parentSchool": 1, "name": "ContactLens", "parameterType": "FILTER", "filterValues": ["'YES'", "'NO'"] } },
+    { "model": "student_app.studentparameter", "pk": 3, "fields": { "parentSchool": 1, "name": "AadharCard", "parameterType": "DOCUMENT", "filterValues": [] } },
+    { "model": "student_app.studentparameter", "pk": 4, "fields": { "parentSchool": 1, "name": "IncomeCertificate", "parameterType": "DOCUMENT", "filterValues": [] } }
+]

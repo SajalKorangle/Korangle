@@ -64,7 +64,6 @@ export class MyCollectionComponent implements OnInit {
         this.receiptColumnFilter.employee = false;
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
-            this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
         }
 

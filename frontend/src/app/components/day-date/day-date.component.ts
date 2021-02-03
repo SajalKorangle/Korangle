@@ -31,9 +31,11 @@ const moment = _moment;
 })
 export class DayDateComponent implements OnInit {
 
-    @Input() placeHolder = "Choose a date";
+    @Input() placeHolder = 'Choose a date';
 
     @Input() initialValue = new Date();
+
+    @Input() nullButtonDisabled = false; // used in Design Report Card
 
     // @Input() acceptNull = false;
 
