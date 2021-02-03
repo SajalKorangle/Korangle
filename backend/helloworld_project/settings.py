@@ -260,29 +260,24 @@ if current_branch != 'master':
             },
         }
 
+
 # AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'
 # AWS_SECRET_ACCESS_KEY = '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'
 # AWS_STORAGE_BUCKET_NAME = 'korangle'
-#if current_branch != 'master':
-#    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
-#    AWS_SECRET_ACCESS_KEY = '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'
-#    AWS_STORAGE_BUCKET_NAME = 'korangletesting'
-#    AWS_QUERYSTRING_AUTH = False
-#    AWS_S3_SECURE_URLS = False # to use http instead of https
-#else:
-#    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
-#    #AWS_SECRET_ACCESS_KEY = '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'
-#    AWS_STORAGE_BUCKET_NAME = 'korangleplus'
-#    AWS_QUERYSTRING_AUTH = False
-#    AWS_S3_SECURE_URLS = False # to use http instead of https
 
+if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] == 'TRUE'):
+    print("KORANGLE PRODUCTION")
+    
+    # korangle/backend/helloworld_project/prod_conf.py
+    try:
+        from helloworld_project.prod_conf import *
+    except ImportError:
+        print("ERROR!\nProduction Configuration File Not Found: korangle/backend/helloworld_project/prod_conf.py")
+else:
+    print("KORANGLE DEVELOPMENT/TESTING")
 
-korangle_env = os.environ["KORANGLE_ENVIRONMENT"]
-
-if korangle_env == "KORANGLE_TESTING":
-    from helloworld_project.dev_conf import *
-if korangle_env == "KORANGLE_PRODUCTION":
-    from helloworld_project.prod_conf import *
-
-# test imported sample key
-print(SAMPLE_SECRET_ACCESS_KEY)
+    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
+    AWS_SECRET_ACCESS_KEY = 'oLYa8rZF9O3DwW/l4HBCFqF5PuEEJxCX0EkUI1gk'
+    AWS_STORAGE_BUCKET_NAME = 'korangletesting'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_SECURE_URLS = False # to use http instead of https
