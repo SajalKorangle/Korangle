@@ -82,6 +82,20 @@ urlpatterns += [
     url(r'^lock-fees', LockFeeView.as_view()),
 ]
 
+from fees_third_app.views import OnlinePaymentAccountView, OnlinePaymentAccountListView
+
+urlpatterns += [
+    url(r'^online-payment-account/batch', OnlinePaymentAccountListView.as_view()),
+    url(r'^online-payment-account', OnlinePaymentAccountView.as_view()),
+]
+
+from fees_third_app.views import ParentFeeTransactionListView, ParentFeeTransactionView
+
+urlpatterns += [
+    url(r'^parent-fee-transaction/batch', ParentFeeTransactionListView.as_view()),
+    url(r'^parent-fee-transaction', ParentFeeTransactionView.as_view()),
+]
+
 
 from fees_third_app.views import ParentTransactionListView, ParentTransactionView
 

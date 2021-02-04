@@ -733,4 +733,9 @@ export class ViewFeeComponent implements OnInit {
         console.log(data)
     }
 
+    initiatePayment() 
+    {
+        console.log("call backend to initiate payment intent")
+    }
+
 }

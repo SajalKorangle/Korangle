@@ -24,7 +24,7 @@ import { PrintFeesReportComponent } from './print/print-fees-report/print-fees-r
         PrintFeeReceiptListComponent,
         PrintFullFeeReceiptListComponent,
         PrintFeesCertificateComponent,
-        PrintFeesReportComponent
+        PrintFeesReportComponent,
 
     ],
 

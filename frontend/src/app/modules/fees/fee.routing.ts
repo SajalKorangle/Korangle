@@ -96,6 +96,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/fees/pages/update-via-excel/update-via-excel.module#UpdateViaExcelModule',
         data: {moduleName: 'fees'},
     },
+    {
+        path: 'online_payment_account',
+        loadChildren: 'app/modules/fees/pages/online-payment-account/online-payment-account.module#OnlinePaymentAccountModule',
+        data: {moduleName: 'fees'},
+    },
 
     {
         path: '',
