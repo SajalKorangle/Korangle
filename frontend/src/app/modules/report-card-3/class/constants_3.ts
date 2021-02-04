@@ -1566,7 +1566,7 @@ export class MarksLayer extends CanvasText implements Layer{
             }
             else {
                 if (this.inWords) {
-                    this.text = getMarksInWords(this.marks);
+                    this.text = this.marks != -1 ? getMarksInWords(this.marks) : this.alternateText;
                 } else {
                     this.text = this.marks != -1 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
                 }
