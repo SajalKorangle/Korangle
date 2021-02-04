@@ -1,6 +1,5 @@
 # prod specific config
 
-<<<<<<< HEAD
 
 import os
 
@@ -27,8 +26,6 @@ DATABASES = {
 
 
 # S3 Bucket config
-=======
->>>>>>> 2b700b1a032862a0ebac5fcaa7dd51c771bcf1ec
 AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'korangleplus'

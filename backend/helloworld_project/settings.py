@@ -10,11 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-<<<<<<< HEAD
-=======
-
-import os
->>>>>>> 2b700b1a032862a0ebac5fcaa7dd51c771bcf1ec
 
 import os
 import datetime
@@ -219,11 +214,7 @@ EMAIL_PORT = 587
 # AWS_SECRET_ACCESS_KEY = 'GvA2Pih8s7pZ2jeFTyfeoC3m3KiXx+OrGOn8xvsY'
 # AWS_STORAGE_BUCKET_NAME = 'korangle'
 
-<<<<<<< HEAD
 if PROD:
-=======
-if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] == 'TRUE'):
->>>>>>> 2b700b1a032862a0ebac5fcaa7dd51c771bcf1ec
     print("KORANGLE PRODUCTION")
     
     # korangle/backend/helloworld_project/prod_conf.py
@@ -231,10 +222,7 @@ if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] 
         from helloworld_project.prod_conf import *
     except ImportError:
         print("ERROR!\nProduction Configuration File Not Found: korangle/backend/helloworld_project/prod_conf.py")
-<<<<<<< HEAD
         exit()
-=======
->>>>>>> 2b700b1a032862a0ebac5fcaa7dd51c771bcf1ec
 else:
     print("KORANGLE DEVELOPMENT/TESTING")
 
@@ -243,7 +231,4 @@ else:
         from helloworld_project.dev_conf import *
     except ImportError:
         print("ERROR!\nTesting Configuration File Not Found: korangle/backend/helloworld_project/dev_conf.py")
-<<<<<<< HEAD
         exit()
-=======
->>>>>>> 2b700b1a032862a0ebac5fcaa7dd51c771bcf1ec
