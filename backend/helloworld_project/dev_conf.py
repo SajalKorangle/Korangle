@@ -11,9 +11,14 @@ except ImportError:
     exit()
 
 
+# default: DEBUG = True
+DEBUG = True
+
+
 # Database config
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 import subprocess
+
 command = 'git rev-parse --abbrev-ref HEAD'
 proc = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
 (out, err) = proc.communicate()

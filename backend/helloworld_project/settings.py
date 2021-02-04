@@ -18,13 +18,6 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
 
-# Check running environment
-if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] == 'TRUE'):
-    PROD = True
-else:
-    PROD = False
-
-
 sentry_sdk.init(
     dsn="https://eaa952693a9545d787e92662a961ea25@sentry.io/1437770",
     integrations=[DjangoIntegration()]
@@ -41,12 +34,6 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '59g0wy_6v_=f7l8getixb1b87!ee_^#lajh^zli2b+9zkvm0jw'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-if PROD:
-    DEBUG = False
-else:
-    DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '10.0.2.2']
 
@@ -214,7 +201,8 @@ EMAIL_PORT = 587
 # AWS_SECRET_ACCESS_KEY = 'GvA2Pih8s7pZ2jeFTyfeoC3m3KiXx+OrGOn8xvsY'
 # AWS_STORAGE_BUCKET_NAME = 'korangle'
 
-if PROD:
+# Check running environment & load config
+if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] == 'TRUE'):
     print("KORANGLE PRODUCTION")
     
     # korangle/backend/helloworld_project/prod_conf.py
