@@ -106,11 +106,7 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  classList: any;
-  sectionList: any;
   selectedStudent: any;
-  selectedStudentSection: any;
-
 
   constructor(
     public reportCardService: ReportCardService,
@@ -141,17 +137,11 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
     this.downloadFont();
   }
 
-  handleDetailsFromParentStudentFilter(value): void {
-    this.classList = value['classList'];
-    this.sectionList = value['sectionList'];
-  }
-
   handleStudentListSelection(value): void{
       this.selectedStudent = value[0][0];
-      this.selectedStudentSection = value[1][0];  
       let temp = this.DATA.data.studentList.find(student => student.id == this.selectedStudent.id);
       if(temp == undefined){
-        this.serviceAdapter.changeSelectedStudent();
+        this.serviceAdapter.loadSelectedStudent();
       }
       else{
         this.DATA.studentId = this.selectedStudent.id;

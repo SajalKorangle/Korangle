@@ -1604,7 +1604,7 @@ export function getParser(layers: Layer[]) {
     const PARSER = new FormulaParser();
     // setCustomFunctionsInParser(PARSER);
     layers.forEach((layer: Layer) => {
-        if (layer && layer.LAYER_TYPE == 'MARKS') {
+        if (layer && (layer.LAYER_TYPE == 'MARKS' || layer.LAYER_TYPE == 'FORMULA')) {
             PARSER.setVariable(numberToVariable(layer.id), layer.marks);
         }
     });
@@ -1668,10 +1668,10 @@ export class Formula extends CanvasText implements Layer{
                     this.text = gradeValue;
                 }
                 else if(this.inWords){
-                    this.text = getMarksInWords(this.marks);
+                    this.text = this.marks >=0 ? getMarksInWords(this.marks) : this.alternateText;
                 }
                 else{
-                    this.text = this.marks.toFixed(this.decimalPlaces);
+                    this.text = this.marks >=0 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
                 }
             }
         } else {

@@ -133,7 +133,6 @@ export class DesignReportCardServiceAdapter {
                 this.vm.DATA.data.attendanceList = value[3];
                 this.vm.DATA.data.studentSubGradeList = value[4];
                 this.vm.DATA.data.studentExaminationRemarksList = value[5];
-                console.log(this.vm.DATA);
                 this.vm.sharedLayoutList = value[7];
 
                 if (this.vm.DATA.data.studentList.length > 0)
@@ -161,7 +160,7 @@ export class DesignReportCardServiceAdapter {
         });
     }
 
-    changeSelectedStudent(): any{
+    async loadSelectedStudent() {
         this.vm.htmlAdapter.isSaving = true;
         const request_student_section_data = {
             parentStudent: this.vm.selectedStudent.id,
@@ -215,7 +214,6 @@ export class DesignReportCardServiceAdapter {
                 this.vm.DATA.studentId = this.vm.selectedStudent.id;
             else
                 alert('Student Data unavaiable');
-            console.log(this.vm.DATA);
             this.vm.canvasAdapter.fullCanavsRefresh();
             
             this.vm.htmlAdapter.isSaving = false;
