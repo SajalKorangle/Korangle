@@ -124,49 +124,6 @@ export class ViewFeeComponent implements OnInit {
         }
 
     }
-    postPaymentCallback = function (event) {
-        console.log('recived resposne is ' + event);
-        // Callback method that handles Payment 
-        if (event.name == "PAYMENT_RESPONSE" && event.status == "SUCCESS") {
-          // Handle Success 
-        } 
-        else if (event.name == "PAYMENT_RESPONSE" && event.status == "CANCELLED") {
-          // Handle Cancelled
-        } 
-        else if (event.name == "PAYMENT_RESPONSE" && event.status == "FAILED") {
-          // Handle Failed
-        } 
-        else if (event.name == "VALIDATION_ERROR") { 
-          // Incorrect inputs
-        }
-      };
-      pc() {
-        let data = {
-            appId : "50334e5204e60357816fa8e6d43305",
-            orderId : "000004",
-            orderAmount : 1,
-            customerName : "Avinash",
-            customerPhone : "7050701850",
-            customerEmail : "avinash7may@gmail.com",
-            returnUrl : "",
-            orderNote : "testing",
-            pc : "no",
-            orderCurrency : "INR",
-            paymentToken : "",
-            paymentOption : "card",
-            card : {
-                number : (<HTMLInputElement>document.getElementById("card-num")).value,
-                expiryMonth : (<HTMLInputElement>document.getElementById("card-mm")).value,
-                expiryYear : (<HTMLInputElement>document.getElementById("card-yyyy")).value,
-                holder : (<HTMLInputElement>document.getElementById("card-name")).value,
-                cvv : (<HTMLInputElement>document.getElementById("card-cvv")).value,
-            }
-        }
-        console.log(data)
-        CashFree.paySeamless(data,this.postPaymentCallback);
-        return false;
-        
-    }
     payCard = function() {
         let data = {
             appId : "50334e5204e60357816fa8e6d43305",
@@ -187,12 +144,25 @@ export class ViewFeeComponent implements OnInit {
                 expiryYear : (<HTMLInputElement>document.getElementById("card-yyyy")).value,
                 holder : (<HTMLInputElement>document.getElementById("card-name")).value,
                 cvv : (<HTMLInputElement>document.getElementById("card-cvv")).value,
-            }
+            },
+            vendors:[
+                {
+                  "vendorId":"SELF", 
+                  "commission":50
+                },
+                {
+                  "vendorId":"VEN001", 
+                  "commission":50
+                }
+              ], 
         }
         this.feeService.createObject(this.feeService.parent_transaction,data).then(value => {
-            console.log('response of payment token ' + value);
-            data.paymentToken =  value;
+            console.log('response of payment token ');
+            console.dir(value)
+            data.paymentToken =  value.paymentToken;
+            data['vendorSplit'] = value.vsplit;
         })
+        
 
 
     CashFree.initPopup(); // This is required for the popup to work even in case of callback.
@@ -204,8 +174,8 @@ export class ViewFeeComponent implements OnInit {
             console.dir(response)
             
             console.log(data)
-            CashFree.paySeamless(data,this.postPaymentCallback);
-            return false;
+            CashFree.paySeamless(data);
+            // return false;
 
         }
         });

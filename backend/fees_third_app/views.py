@@ -4,7 +4,7 @@ import json
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_new, user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list
-from fees_third_app.business.cashfree import generatePaymentToken
+from fees_third_app.business.cashfree import generatePaymentToken, generateAuthToken
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
     SubFeeReceipt, Discount, SubDiscount, LockFee, ParentTransaction
@@ -187,10 +187,11 @@ class ParentTransactionView(CommonView, APIView):
         print('request data from frontend is....................................................')
         
         data = json.loads(request.body.decode('utf-8'))
-
         print(data)
         response = generatePaymentToken(data)
         print('response is /............................')
         print (response)
         return response
+    
+        
 
