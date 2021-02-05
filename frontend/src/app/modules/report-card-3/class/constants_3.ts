@@ -1,6 +1,7 @@
 // import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
 import { data } from 'jquery';
+import { bindCallback } from 'rxjs';
 interface DesignReportCardCanvasAdapter{
     [key: string]: any;
 }
@@ -429,6 +430,7 @@ export interface Layer{
     columnsList?: Array<TableColumn>;
     rowCount?: number;
     columnCount?: number;
+    cells?: any;
 
     text?: string;  // for CanvasText Layer
     height?: number;
@@ -647,6 +649,8 @@ export class CanvasTable extends BaseLayer implements Layer{
     height: number = 0; // computed from rowsList and columnsList
     width: number = 0;
 
+    cells: any;
+
     tableStyle:{[key:string]: any} = {
         strokeStyle: 'black',
         lineWidth: 2,
@@ -681,6 +685,38 @@ export class CanvasTable extends BaseLayer implements Layer{
             newTableRowColumn.width /= this.ca.pixelTommFactor; // converting mm to pixels
             this.columnsList.push(newTableRowColumn);
         }
+
+        this.cells = new Array(this.rowCount);
+        for(let i=0;i<this.rowCount; i++){
+            this.cells[i] = new Array(this.columnCount);
+            for(let j=0;j<this.columnCount; j++){
+                this.cells[i][j] = {
+                    'topBorder': {
+                        'visible': true,
+                        'lineWidth':2,
+                        'strokeStyle': 'black',
+                    },
+                    'bottomBorder': {
+                        'visible': true,
+                        'lineWidth':2,
+                        'strokeStyle': 'black',
+                    },
+                    'leftBorder': {
+                        'visible': true,
+                        'lineWidth':2,
+                        'strokeStyle': 'black',
+                    },
+                    'rightBorder': {
+                        'visible': true,
+                        'lineWidth':2,
+                        'strokeStyle': 'black',
+                    },
+                    'cellBackground': '#ffffff',
+                    'borderWidth': null,
+                }
+            }
+        }
+
     }
 
     layerDataUpdate(): void {
@@ -702,25 +738,106 @@ export class CanvasTable extends BaseLayer implements Layer{
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         let pointerX = this.x;
         let pointerY = this.y;
-        Object.entries(this.tableStyle).forEach(([key, value]) => ctx[key] = value);
 
-        ctx.strokeRect(pointerX, pointerY, this.width, this.height);    // outer boundry
-        ctx.beginPath();
+        // ctx.strokeRect(pointerX, pointerY, this.width, this.height);    // outer boundry
+        // ctx.beginPath();
 
-        for (let i = 0; i < this.rowsList.length - 1; i++){ // horizontal lines
+        // for (let i = 0; i < this.rowsList.length - 1; i++){ // horizontal lines
+        //     pointerY += this.rowsList[i].height;
+        //     ctx.moveTo(pointerX, pointerY);
+        //     ctx.lineTo(pointerX + this.width, pointerY);
+        // }
+
+        // pointerY = this.y;
+        // for (let i = 0; i < this.columnsList.length - 1; i++){  // vertical lines
+        //     pointerX += this.columnsList[i].width;
+        //     ctx.moveTo(pointerX, pointerY);
+        //     ctx.lineTo(pointerX, pointerY+this.height);
+        // }
+        // ctx.closePath();
+        // ctx.stroke();
+
+        for(let i=0;i<this.rowCount; i++){
+            for(let j=0;j<this.columnCount; j++){
+                if(this.cells[i][j].cellBackground != null){
+                    ctx.beginPath();
+                    ctx.rect(pointerX, pointerY, this.columnsList[j].width, this.rowsList[i].height);       // cells background
+                    ctx.fillStyle = this.cells[i][j].cellBackground;
+                    ctx.fill();
+                } 
+                pointerX += this.columnsList[j].width;
+            }
+            pointerX = this.x;
             pointerY += this.rowsList[i].height;
-            ctx.moveTo(pointerX, pointerY);
-            ctx.lineTo(pointerX + this.width, pointerY);
         }
 
+        pointerX = this.x;
         pointerY = this.y;
-        for (let i = 0; i < this.columnsList.length - 1; i++){  // vertical lines
-            pointerX += this.columnsList[i].width;
-            ctx.moveTo(pointerX, pointerY);
-            ctx.lineTo(pointerX, pointerY+this.height);
+
+        for(let j=0;j<this.rowsList.length; j++){
+            for(let i=0;i <this.columnsList.length; i++){
+                if(this.cells[j][i].leftBorder.visible == true){
+                    ctx.beginPath();
+                    ctx.moveTo(pointerX, pointerY);
+                    ctx.lineTo(pointerX, pointerY+this.rowsList[j].height);   
+                    ctx.lineWidth = this.cells[j][i].leftBorder.lineWidth;
+                    ctx.strokeStyle = this.cells[j][i].leftBorder.strokeStyle;
+                    ctx.stroke();       // vertical lines
+                }                                                                     
+                pointerX += this.columnsList[i].width;
+            }
+            pointerX = this.x;
+            pointerY += this.rowsList[j].height;
         }
+        pointerX = this.x;
+        pointerY = this.y;
+
+        for(let j=0;j<this.columnsList.length; j++){
+            for(let i=0;i <this.rowsList.length; i++){
+                if(this.cells[i][j].topBorder.visible == true){
+                    ctx.beginPath();
+                    ctx.lineWidth = this.cells[i][j].topBorder.lineWidth;
+                    ctx.strokeStyle = this.cells[i][j].topBorder.strokeStyle;
+                    ctx.moveTo(pointerX, pointerY);
+                    ctx.lineTo(pointerX + this.columnsList[j].width, pointerY);   
+                    ctx.stroke();      // horizontal lines
+                }   
+                pointerY += this.rowsList[i].height;
+            }
+            pointerY = this.y;
+            pointerX += this.columnsList[j].width;
+        }
+
+        pointerX = this.x + this.width;
+        pointerY = this.y;
+        for(let i=0;i<this.rowsList.length; i++){
+            if(this.cells[i][this.columnCount-1].rightBorder.visible == true){
+                ctx.beginPath();
+                ctx.lineWidth = this.cells[i][this.columnCount-1].rightBorder.lineWidth;
+                ctx.strokeStyle = this.cells[i][this.columnCount-1].rightBorder.strokeStyle;
+                ctx.moveTo(pointerX, pointerY); 
+                ctx.lineTo(pointerX, pointerY + this.rowsList[i].height);  
+                ctx.stroke();     
+                 // last vertical line
+            }    
+            pointerY += this.rowsList[i].height;
+        }
+
+        pointerY = this.y + this.height;
+        pointerX = this.x;
+        for(let i=0;i<this.columnsList.length; i++){
+            if(this.cells[this.rowCount-1][i].bottomBorder.visible == true){
+                ctx.beginPath();
+                ctx.lineWidth = this.cells[this.rowCount-1][i].bottomBorder.lineWidth;
+                ctx.strokeStyle = this.cells[this.rowCount-1][i].bottomBorder.strokeStyle;
+                ctx.moveTo(pointerX, pointerY);
+                ctx.lineTo(pointerX + this.columnsList[i].width, pointerY);
+                ctx.stroke();        // last horizontal line
+            }        
+            pointerX += this.columnsList[i].width;
+        }
+
         ctx.closePath();
-        ctx.stroke();
 
         return true;    // Drawn successfully on canvas
     }
