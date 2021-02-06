@@ -1,5 +1,3 @@
-# TESTING boilerplate
-
 if [ "$1" = "set" ]; then
 
     echo $'Updating linting error count..\nRunning tslint...\n'
@@ -10,7 +8,7 @@ if [ "$1" = "set" ]; then
 elif [ "$1" = "count" ]; then
 
     echo $'Counting linting errors..\nRunning tslint...\n'
-    echo $'\n\n'$(ng lint | grep -c "ERROR: /")' linting errors'
+    node run_linter.js "count" $(ng lint | grep -c "ERROR: /")
 
 else
 
