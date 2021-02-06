@@ -12,7 +12,7 @@ var lint_data = JSON.parse(fs.readFileSync(lint_data_loc,
                     {encoding: 'utf8', flag: 'r+'}));
 
 
-if (process.argv[2] === 'set') {
+if (process.argv[2] === 'ci') {
     lint_data['tslint-errors'] = process.argv[3];   // update
 
     console.log('\n\nBenchmark updated: ' + lint_data['tslint-errors'] + ' errors remaining.');
@@ -21,12 +21,12 @@ if (process.argv[2] === 'set') {
     fs.writeFileSync(lint_data_loc, JSON.stringify(lint_data, null, 4));
 
     // upload the output to aws here or from the shell script
-    /// ...
+    // ...
 }
 
-if (process.argv[2] === 'count') {
+if (process.argv[2] === 'dev') {
     if (process.argv[3] > lint_data['tslint-errors']) {
-        console.log('\n\nERROR: Please fix ' + (process.argv[3] - lint_data['tslint-errors']) + ' linting errors.');
+        console.log('\n\nERROR: Please fix atleast ' + (process.argv[3] - lint_data['tslint-errors']));
         process.exit(1);
     }
     if (process.argv[3] <= lint_data['tslint-errors']) {
