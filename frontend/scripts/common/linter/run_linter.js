@@ -15,12 +15,13 @@ var lint_data = JSON.parse(fs.readFileSync(lint_data_loc,
 if (process.argv[2] === 'set') {
     lint_data['tslint-errors'] = process.argv[3];   // update
 
-    console.log('Benchmark updated: ' + lint_data['tslint-errors'] + ' errors remaining.');
+    console.log('\n\nBenchmark updated: ' + lint_data['tslint-errors'] + ' errors remaining.');
 
     // write json
-    fs.writeFileSync(lint_data_loc, JSON.stringify(lint_data, null, 4))
+    fs.writeFileSync(lint_data_loc, JSON.stringify(lint_data, null, 4));
 
     // upload the output to aws here or from the shell script
+    /// ...
 }
 
 if (process.argv[2] === 'count') {
@@ -33,3 +34,11 @@ if (process.argv[2] === 'count') {
         process.exit(0);
     }
 }
+
+
+// linting_error_count.json:
+/*
+{
+    "tslint-errors": "9233"
+}
+*/
