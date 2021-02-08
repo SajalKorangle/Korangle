@@ -1,18 +1,7 @@
-if [ "$1" = "set" ]; then
+# for CI platform only
 
-    echo $'Updating linting error count...\nRunning tslint...\n'
-    node run_linter.js "set" $(ng lint | grep -c "ERROR: /")
+echo $'CI: Testing linting error count...\n'
+node run_linter.js "ci" $(ng lint | grep -c "ERROR: /")
 
-    # upload the output to aws here or from the nodejs script
+# upload to aws
 
-elif [ "$1" = "count" ]; then
-
-    echo $'Counting linting errors...\nRunning tslint...\n'
-    node run_linter.js "count" $(ng lint | grep -c "ERROR: /")
-
-else
-
-    echo $'Running tslint...\n'
-    ng lint
-
-fi
