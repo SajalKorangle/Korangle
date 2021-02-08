@@ -196,28 +196,34 @@ export class DeclareHolidaysComponent implements OnInit {
 
         let studentList = this.getStudentIdList();
         let employeeList = this.getEmployeeIdList();
+        let service_list = []
 
         if (studentList.length === 0 && employeeList.length === 0) {
             alert('Nothing to delete');
             return;
         }
 
-        let student_data = {
-            studentIdList: studentList,
-            startDate: this.startDate,
-            endDate: this.endDate,
-        };
-        let employee_data = {
-            employeeIdList: employeeList,
-            startDate: this.startDate,
-            endDate: this.endDate,
+        this.isLoading=true;
+        if (studentList.length != 0 ){
+            let student_data = {
+                studentIdList: studentList,
+                startDate: this.startDate,
+                endDate: this.endDate,
+            };
+            service_list.push(this.attendanceService.deleteStudentAttendance(student_data, this.user.jwt));
         };
 
-        this.isLoading = true;
-        Promise.all([
-            this.attendanceService.deleteStudentAttendance(student_data, this.user.jwt),
-            this.attendanceService.deleteEmployeeAttendance(employee_data, this.user.jwt),
-        ]).then(value => {
+        if (employeeList.length != 0 ){
+            let employee_data = {
+                employeeIdList: employeeList,
+                startDate: this.startDate,
+                endDate: this.endDate,
+            };
+            service_list.push(this.attendanceService.deleteEmployeeAttendance(employee_data, this.user.jwt));
+        };
+
+        
+        Promise.all(service_list).then(value => {
             this.isLoading = false;
             alert('All records for the selected dates are deleted');
         }, error => {
