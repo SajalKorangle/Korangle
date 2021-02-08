@@ -1,5 +1,6 @@
 # for CI platform only
 
+# gen json file
 echo "{
  \"numberOfSemiColonInTests\": 1
 }" > benchmark-linting-error-count.json
