@@ -8,7 +8,7 @@ frontend/node_modules/
 frontend/school.iml
 frontend/preparePackage.sh
 frontend/tmp
-frontend/scripts/ng-lint/tmp/*
+frontend/scripts/ng-lint/tmp/*.*
 frontend/src/src.iml
 frontend/.DS_Store
 frontend/md-angular-v1.4.1.iml
