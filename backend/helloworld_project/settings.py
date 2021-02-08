@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'homework_app',
     'feature_app',
     'tutorial_app',
+    'accounts_app',
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',

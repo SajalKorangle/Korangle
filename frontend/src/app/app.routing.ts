@@ -107,6 +107,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/homework/homework.module#HomeworkModule',
     },
     {
+        path: 'accounts',
+        loadChildren: 'app/modules/accounts/accounts.module#AccountsModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
