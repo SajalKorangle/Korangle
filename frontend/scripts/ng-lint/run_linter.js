@@ -3,7 +3,7 @@ const https = require('https');
 
 
 const lint_data_cloud = 'http://0.0.0.0:8000/benchmark-linting-error-count.json'
-const lint_data_local = './tmp/benchmark-linting-error-count.json';
+const lint_data_local = './benchmark-linting-error-count.json';
 
 
 // download json
