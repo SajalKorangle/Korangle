@@ -8,7 +8,7 @@ from django.db.models import Q
 
 class ReportCardLayoutNewView(CommonView, APIView):
     Model = ReportCardLayoutNew
-    RelationsToSchool = ['parentSchool__id']
+    # RelationsToSchool = ['parentSchool__id']
 
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
@@ -21,7 +21,7 @@ class ReportCardLayoutNewView(CommonView, APIView):
 
 class ReportCardLayoutNewListView(CommonListView, APIView):
     Model = ReportCardLayoutNew
-    RelationsToSchool = ['parentSchool__id']
+    # RelationsToSchool = ['parentSchool__id']
 
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):

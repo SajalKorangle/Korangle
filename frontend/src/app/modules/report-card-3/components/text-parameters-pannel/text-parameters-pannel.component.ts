@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Layer } from './../../class/constants_3';
 import { FONT_FAMILY_LIST } from './../../class/font';
+import { VERTICAL_ALIGNMENT_LIST, HORIZONTAL_ALIGNMENT_LIST } from './../../class/constants_3'
 
 @Component({
   selector: 'app-text-parameters-pannel',
@@ -13,6 +14,8 @@ export class TextParametersPannelComponent implements OnInit {
   @Input() canvasRefresh: any;
   
   fontFamilyList = FONT_FAMILY_LIST ;
+  verticalAlignmentList = VERTICAL_ALIGNMENT_LIST;
+  horizontalAlignmentList = HORIZONTAL_ALIGNMENT_LIST;
 
   constructor() { }
 
@@ -30,9 +33,9 @@ export class TextParametersPannelComponent implements OnInit {
     this.layer.fontStyle.font = fontArgumentsArray.join(' ');
   }
 
-  getFontSize(): string{
+  getFontSize(): number{
     let [,,fontSize] = this.layer.fontStyle.font.split(' ');
-    return (parseFloat(fontSize.substr(0, fontSize.length - 2))*this.getPixelTommFactor()).toFixed(2);
+    return (Math.round(parseFloat(fontSize.substr(0, fontSize.length - 2))*this.getPixelTommFactor() * 100))/100;
   }
 
   boldToggle(event): void{

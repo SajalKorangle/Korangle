@@ -143,8 +143,6 @@ function getMarksInWords(num: number): string{  // converts numbers from 0 to 99
     return `${thousands?thousands+' Thousand ':''}${hundreds?hundreds+' Hundred ':''}${unitTens}`
 }
 
-console.log('marks to words = ', getMarksInWords);
-
 function getYear(year: number): string {   // converts year number in words
     if (year < 2000) {
         return getNumberInWords(Math.floor(year / 100))
@@ -391,6 +389,19 @@ export const TEST_TYPE_LIST = [
     'Practical',
 ];
 
+export const VERTICAL_ALIGNMENT_LIST = [
+    'Top',
+    'Middle',
+    'Bottom',
+    'Normal',
+];
+
+export const HORIZONTAL_ALIGNMENT_LIST = [
+    'Left',
+    'Right',
+    'Center',
+];
+
 export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
 export var DEFAULT_MAXIMUM_MARKS = 100;
 export const DEFAULT_PASSING_MARKS = 40;
@@ -407,6 +418,7 @@ export interface Layer{
     error: boolean;
     x: number;  // distance in pixels from left edge of canvas
     y: number;  // distance in pixels from top edge of canvas
+    isLocked: boolean; // if element is locked on the canvas 
     parameterToolPannels: string[]; // list of right pannel parameter toolbar
     dataSourceType: string;    // options: DATA_SOURCE_TYPE, if 'N/A', all data of layer is constant; if 'DATA' use source class variable to get data 
     source?: { [key: string]: any };   // object containing information about the source of data, stores reference of element from PARAMETER_LIST
@@ -431,10 +443,13 @@ export interface Layer{
     rowCount?: number;
     columnCount?: number;
     cells?: any;
+    selectedCells?: any;
 
     text?: string;  // for CanvasText Layer
     height?: number;
     width?: number;
+    verticalAlignment?: string;
+    horizontalAlighment?: string;
     textBoxMetrx?: {    // text bounding box nformation
         boundingBoxLeft: number,
         boundingBoxRight: number,
@@ -468,7 +483,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     displayName: string; 
     LAYER_TYPE: string;
     parameterToolPannels: string[] = ['position', 'settings'];  // position right toolbar pannel is present in all layers
-
+    isLocked: boolean;
     dataSourceType: string = 'N/A';
     source?: {[key:string]: any};
 
@@ -478,6 +493,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
         this.ca = ca;
         BaseLayer.maxID += 1;
         this.id = BaseLayer.maxID;
+        this.isLocked = false;
     }
 
     initilizeSelf(attributes:object): void{ // initilizes all class variables according to provided initial parameters data as object
@@ -491,8 +507,13 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     }
 
     updatePosition(dx = 0, dy = 0):void {
-        this.x += dx;
-        this.y += dy;
+        if(this.isLocked){
+            return ;
+        }
+        else {
+            this.x += dx;
+            this.y += dy;
+        }
     }
 
     getDataToSave(): {[object:string]:any} {   // common data to be saved in database
@@ -570,6 +591,9 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         }
         this.image.setAttribute('crossOrigin', 'anonymous');  
         this.image.src = this.uri;
+        
+        // this.height = 20/this.ca.pixelTommFactor;
+        // this.width = this.aspectRatio*this.height;
     }
 
     updateHeight(newHeight: number) {
@@ -645,6 +669,7 @@ export class CanvasTable extends BaseLayer implements Layer{
     columnsList: Array<TableColumn> = [];
     rowCount: number = 0;
     columnCount: number = 0;
+    selectedCells: any;
 
     height: number = 0; // computed from rowsList and columnsList
     width: number = 0;
@@ -663,6 +688,11 @@ export class CanvasTable extends BaseLayer implements Layer{
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
         this.tableStyle.lineWidth = 0.5 / ca.pixelTommFactor;
+        this.selectedCells = [];
+        this.selectedCells.push({
+            'row': 0,
+            'column': 0,
+        })
 
         this.initilizeSelf(attributes);
         this.layerDataUpdate();
@@ -673,6 +703,7 @@ export class CanvasTable extends BaseLayer implements Layer{
 
     initilizeSelf(attributes:object): void {
         super.initilizeSelf(attributes);
+        console.log(attributes);
         this.rowCount = Math.max(this.rowCount, this.rowsList.length);  // if rowCount is less that this.rowList.length that update rowCount accordingly
         this.columnCount = Math.max(this.columnCount, this.columnsList.length);
         while (this.rowsList.length < this.rowCount) {  // rowCount is greater that the rows in rowsList then add rows in rowList
@@ -686,33 +717,45 @@ export class CanvasTable extends BaseLayer implements Layer{
             this.columnsList.push(newTableRowColumn);
         }
 
-        this.cells = new Array(this.rowCount);
-        for(let i=0;i<this.rowCount; i++){
-            this.cells[i] = new Array(this.columnCount);
-            for(let j=0;j<this.columnCount; j++){
-                this.cells[i][j] = {
-                    'topBorder': {
-                        'visible': true,
-                        'lineWidth':2,
-                        'strokeStyle': 'black',
-                    },
-                    'bottomBorder': {
-                        'visible': true,
-                        'lineWidth':2,
-                        'strokeStyle': 'black',
-                    },
-                    'leftBorder': {
-                        'visible': true,
-                        'lineWidth':2,
-                        'strokeStyle': 'black',
-                    },
-                    'rightBorder': {
-                        'visible': true,
-                        'lineWidth':2,
-                        'strokeStyle': 'black',
-                    },
-                    'cellBackground': '#ffffff',
-                    'borderWidth': null,
+        if(attributes['cells'] == undefined){
+            this.cells = new Array(this.rowCount);
+            for(let i=0;i<this.rowCount; i++){
+                this.cells[i] = new Array(this.columnCount);
+                for(let j=0;j<this.columnCount; j++){
+                    this.cells[i][j] = {
+                        'topBorder': {
+                            'visible': true,
+                            'lineWidth':2,
+                            'strokeStyle': 'black',
+                        },
+                        'bottomBorder': {
+                            'visible': true,
+                            'lineWidth':2,
+                            'strokeStyle': 'black',
+                        },
+                        'leftBorder': {
+                            'visible': true,
+                            'lineWidth':2,
+                            'strokeStyle': 'black',
+                        },
+                        'rightBorder': {
+                            'visible': true,
+                            'lineWidth':2,
+                            'strokeStyle': 'black',
+                        },
+                        'cellBackground': '#ffffff',
+                    }
+                }
+            }
+        }
+        else{
+            this.cells = attributes['cells'];
+            for(let i=0;i<this.rowCount; i++){
+                for(let j=0;j<this.columnCount; j++){
+                    this.cells[i][j].topBorder.lineWidth *= this.ca.pixelTommFactor;
+                    this.cells[i][j].bottomBorder.lineWidth *= this.ca.pixelTommFactor;
+                    this.cells[i][j].leftBorder.lineWidth *= this.ca.pixelTommFactor;
+                    this.cells[i][j].rightBorder.lineWidth *= this.ca.pixelTommFactor;
                 }
             }
         }
@@ -721,6 +764,7 @@ export class CanvasTable extends BaseLayer implements Layer{
 
     layerDataUpdate(): void {
     }
+
 
     updateTableMetrix(): void{  // computing height and width of table from its rows and columns
         this.height = 0;
@@ -773,34 +817,70 @@ export class CanvasTable extends BaseLayer implements Layer{
 
         pointerX = this.x;
         pointerY = this.y;
-
         for(let j=0;j<this.rowsList.length; j++){
             for(let i=0;i <this.columnsList.length; i++){
+                
+                let temp1 = this.cells[j][i].topBorder.lineWidth;
+                let temp2 = this.cells[j][i].bottomBorder.lineWidth;
+                if(i>0){
+                    temp1 = Math.min(temp1, this.cells[j][i-1].topBorder.lineWidth);
+                    temp2 = Math.min(temp2, this.cells[j][i-1].bottomBorder.lineWidth);
+                }
+                temp1 = temp1 / 2;
+                temp2 = temp2 / 2;
                 if(this.cells[j][i].leftBorder.visible == true){
                     ctx.beginPath();
-                    ctx.moveTo(pointerX, pointerY);
-                    ctx.lineTo(pointerX, pointerY+this.rowsList[j].height);   
+                    ctx.moveTo(pointerX, pointerY - temp1);
+                    ctx.lineTo(pointerX, pointerY+this.rowsList[j].height - temp2);          // vertical lines
                     ctx.lineWidth = this.cells[j][i].leftBorder.lineWidth;
                     ctx.strokeStyle = this.cells[j][i].leftBorder.strokeStyle;
-                    ctx.stroke();       // vertical lines
+                    ctx.stroke();       
                 }                                                                     
                 pointerX += this.columnsList[i].width;
             }
             pointerX = this.x;
             pointerY += this.rowsList[j].height;
         }
+
+        pointerX = this.x + this.width;
+        pointerY = this.y;
+        for(let i=0;i<this.rowsList.length; i++){
+            
+            let temp1 = this.cells[i][this.columnCount-1].topBorder.lineWidth;
+            let temp2 = this.cells[i][this.columnCount-1].bottomBorder.lineWidth;
+            temp1 = temp1 / 2;
+            temp2 = temp2 / 2;
+            if(this.cells[i][this.columnCount-1].rightBorder.visible == true){
+                ctx.beginPath();
+                ctx.lineWidth = this.cells[i][this.columnCount-1].rightBorder.lineWidth;
+                ctx.strokeStyle = this.cells[i][this.columnCount-1].rightBorder.strokeStyle;       // last vertical line
+                ctx.moveTo(pointerX, pointerY - temp1); 
+                ctx.lineTo(pointerX, pointerY + this.rowsList[i].height + temp2);  
+                ctx.stroke();     
+                
+            }    
+            pointerY += this.rowsList[i].height;
+        }
+
         pointerX = this.x;
         pointerY = this.y;
-
         for(let j=0;j<this.columnsList.length; j++){
             for(let i=0;i <this.rowsList.length; i++){
+                let temp1 = this.cells[i][j].leftBorder.lineWidth;
+                let temp2 = this.cells[i][j].leftBorder.lineWidth;
+                if(i>0){
+                    temp1 = Math.min(temp1, this.cells[i-1][j].leftBorder.lineWidth);
+                    temp2 = Math.min(temp2, this.cells[i-1][j].rightBorder.lineWidth);
+                }
+                temp1 = temp1 / 2;
+                temp2 = temp2 / 2;
                 if(this.cells[i][j].topBorder.visible == true){
                     ctx.beginPath();
                     ctx.lineWidth = this.cells[i][j].topBorder.lineWidth;
                     ctx.strokeStyle = this.cells[i][j].topBorder.strokeStyle;
-                    ctx.moveTo(pointerX, pointerY);
-                    ctx.lineTo(pointerX + this.columnsList[j].width, pointerY);   
-                    ctx.stroke();      // horizontal lines
+                    ctx.moveTo(pointerX - temp1, pointerY);
+                    ctx.lineTo(pointerX + this.columnsList[j].width - temp2, pointerY);          // horizontal lines
+                    ctx.stroke();      
                 }   
                 pointerY += this.rowsList[i].height;
             }
@@ -808,31 +888,20 @@ export class CanvasTable extends BaseLayer implements Layer{
             pointerX += this.columnsList[j].width;
         }
 
-        pointerX = this.x + this.width;
-        pointerY = this.y;
-        for(let i=0;i<this.rowsList.length; i++){
-            if(this.cells[i][this.columnCount-1].rightBorder.visible == true){
-                ctx.beginPath();
-                ctx.lineWidth = this.cells[i][this.columnCount-1].rightBorder.lineWidth;
-                ctx.strokeStyle = this.cells[i][this.columnCount-1].rightBorder.strokeStyle;
-                ctx.moveTo(pointerX, pointerY); 
-                ctx.lineTo(pointerX, pointerY + this.rowsList[i].height);  
-                ctx.stroke();     
-                 // last vertical line
-            }    
-            pointerY += this.rowsList[i].height;
-        }
-
         pointerY = this.y + this.height;
         pointerX = this.x;
         for(let i=0;i<this.columnsList.length; i++){
+            let temp1 = this.cells[this.rowCount-1][i].leftBorder.lineWidth;
+            let temp2 = this.cells[this.rowCount-1][i].rightBorder.lineWidth;
+            temp1 = temp1 / 2;
+            temp2 = temp2 / 2;
             if(this.cells[this.rowCount-1][i].bottomBorder.visible == true){
                 ctx.beginPath();
                 ctx.lineWidth = this.cells[this.rowCount-1][i].bottomBorder.lineWidth;
-                ctx.strokeStyle = this.cells[this.rowCount-1][i].bottomBorder.strokeStyle;
-                ctx.moveTo(pointerX, pointerY);
-                ctx.lineTo(pointerX + this.columnsList[i].width, pointerY);
-                ctx.stroke();        // last horizontal line
+                ctx.strokeStyle = this.cells[this.rowCount-1][i].bottomBorder.strokeStyle;           // last horizontal line
+                ctx.moveTo(pointerX - temp1, pointerY);
+                ctx.lineTo(pointerX + this.columnsList[i].width + temp2, pointerY);
+                ctx.stroke();        
             }        
             pointerX += this.columnsList[i].width;
         }
@@ -863,6 +932,15 @@ export class CanvasTable extends BaseLayer implements Layer{
             column.width *= scaleFactor;
         });
 
+        for(let i=0;i<this.rowCount; i++){
+            for(let j=0;j<this.columnCount; j++){
+                this.cells[i][j].topBorder.lineWidth *= scaleFactor;
+                this.cells[i][j].bottomBorder.lineWidth *= scaleFactor;
+                this.cells[i][j].leftBorder.lineWidth *= scaleFactor;
+                this.cells[i][j].rightBorder.lineWidth *= scaleFactor;
+            }
+        }
+
         this.updateTableMetrix();
     }
 
@@ -872,7 +950,8 @@ export class CanvasTable extends BaseLayer implements Layer{
             ...savingData,
             rowsList: [],
             columnsList: [],
-            tableStyle: {...this.tableStyle}
+            tableStyle: {...this.tableStyle},
+            cells: JSON.parse(JSON.stringify(this.cells)),
         };
         savingData.tableStyle.lineWidth *= this.ca.pixelTommFactor;
         this.rowsList.forEach(row => {
@@ -976,6 +1055,7 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
         this.x *= scaleFactor;
         this.y *= scaleFactor;
         this.length *= scaleFactor;
+        this.shapeStyle.lineWidth *= scaleFactor;
     }
 
     getDataToSave() {
@@ -1039,11 +1119,22 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        return ((mouseX > this.x - (permissibleClickError + this.shapeStyle.lineWidth / 2) //top line 
-            && mouseX < this.x + this.length + (permissibleClickError + this.shapeStyle.lineWidth / 2)
-            && mouseY > this.y - (permissibleClickError + this.shapeStyle.lineWidth / 2)
-            && mouseY < this.y + this.width + (permissibleClickError + this.shapeStyle.lineWidth / 2))
-        );
+        return ((mouseX > this.x - permissibleClickError //top line 
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // bottom line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y + this.width - permissibleClickError
+            && mouseY < this.y + this.width +  permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // left line
+            && mouseX < this.x + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError) || 
+            (mouseX > this.x + this.length - permissibleClickError // right line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError))
     }
 
     scale(scaleFactor: number): void {
@@ -1051,6 +1142,7 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
         this.y *= scaleFactor;
         this.length *= scaleFactor;
         this.width *= scaleFactor;
+        this.shapeStyle.lineWidth *= scaleFactor;
     }
 
     getDataToSave() {
@@ -1105,7 +1197,8 @@ export class CanvasCircle extends ShapeBaseLayer implements Layer{
     isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
         // return true;
         return (
-            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError+this.shapeStyle.lineWidth/2) 
+            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) &&
+            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) >= (this.radius - permissibleClickError)
         )
     }
 
@@ -1113,6 +1206,7 @@ export class CanvasCircle extends ShapeBaseLayer implements Layer{
         this.x *= scaleFactor;
         this.y *= scaleFactor;
         this.radius *= scaleFactor;
+        this.shapeStyle.lineWidth *= scaleFactor;
     }
 
     getDataToSave() {
@@ -1183,11 +1277,22 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        return ((mouseX > this.x - (permissibleClickError + this.shapeStyle.lineWidth / 2) //top line 
-            && mouseX < this.x + this.length + (permissibleClickError + this.shapeStyle.lineWidth / 2)
-            && mouseY > this.y - (permissibleClickError + this.shapeStyle.lineWidth / 2)
-            && mouseY < this.y + this.width + (permissibleClickError + this.shapeStyle.lineWidth / 2))
-        );
+        return ((mouseX > this.x - permissibleClickError //top line 
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // bottom line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y + this.width - permissibleClickError
+            && mouseY < this.y + this.width +  permissibleClickError) || 
+            (mouseX > this.x - permissibleClickError // left line
+            && mouseX < this.x + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError) || 
+            (mouseX > this.x + this.length - permissibleClickError // right line
+            && mouseX < this.x + this.length + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y + this.width + permissibleClickError))
     }
 
     scale(scaleFactor: number): void {
@@ -1196,6 +1301,7 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
         this.length *= scaleFactor;
         this.width *= scaleFactor;
         this.radius *= scaleFactor;
+        this.shapeStyle.lineWidth *= scaleFactor;
     }
 
     getDataToSave() {
@@ -1255,11 +1361,14 @@ export class CanvasText extends BaseLayer implements Layer{
 
 
     ctx = this.ca.virtualContext;
+    // clicked: boolean;
     fontStyle: { [key: string]: string } = {
         fillStyle: DEFAULT_TEXT_COLOR,
         font: ' normal 12px Arial',
     };
     underline: boolean = false;
+    verticalAlignment: string;
+    horizontalAlignment: string;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
         super(ca);
@@ -1268,6 +1377,8 @@ export class CanvasText extends BaseLayer implements Layer{
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
         this.underline = false;
+        this.horizontalAlignment = HORIZONTAL_ALIGNMENT_LIST[0];
+        this.verticalAlignment = VERTICAL_ALIGNMENT_LIST[3];
         this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
 
         if (initilize) {    // initilize is sent as false is this class is super class of some other layer, in that case child class handles this block
@@ -1281,14 +1392,28 @@ export class CanvasText extends BaseLayer implements Layer{
         const DATA = this.ca.vm.DATA;
         if (this.dataSourceType == 'DATA') {
             if (this.error) {
-                this.text = '!ERROR'
+                this.text = this.alternateText;
             } else {
                 let value = this.source.getValueFunc(DATA);
                 this.text = value ? value : this.alternateText;
             }
         }
+        this.changeLayerName();
         
         this.updateTextBoxMetrics();
+    }
+
+    changeLayerName(): void{
+        if(this.text != this.alternateText){
+            let maxLength = Math.min(this.text.length, 10);
+            this.displayName = '';
+            for(let i=0;i<maxLength; i++){
+                this.displayName += this.text[i];
+            }
+            if(maxLength < this.text.length){
+                this.displayName += '...';
+            }
+        }
     }
 
     updateTextBoxMetrics = ():void=>{
@@ -1306,21 +1431,70 @@ export class CanvasText extends BaseLayer implements Layer{
     drawUnderline():void{
         if(this.underline){
             this.ctx.beginPath()
-            this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y + this.textBoxMetrx.boundingBoxBottom );
-            this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxLeft+ this.textBoxMetrx.boundingBoxRight, this.y + this.textBoxMetrx.boundingBoxBottom);
+            this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y);
+            this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxRight, this.y);
             this.ctx.stroke();
         }
         return ;
     }
 
+    // drawSelectionHighlight():void{
+    //     if(this.clicked){
+    //         console.log('clicked');
+    //         this.ctx.setLineDash([5, 5]);
+    //         this.ctx.strokeStyle = 'blue';
+    //         this.ctx.beginPath();
+    //         this.ctx.rect(this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError, this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError, this.textBoxMetrx.boundingBoxLeft + this.textBoxMetrx.boundingBoxRight + 2*permissibleClickError, this.textBoxMetrx.boundingBoxTop + this.textBoxMetrx.boundingBoxBottom + permissibleClickError);
+    //         this.ctx.stroke();
+    //     }
+    // }
+
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
+        
+        if(this.verticalAlignment == VERTICAL_ALIGNMENT_LIST[0]){
+            ctx.textBaseline = 'top'
+        }
+        else if(this.verticalAlignment == VERTICAL_ALIGNMENT_LIST[1]){
+            ctx.textBaseline = 'middle';
+        }
+        else if(this.verticalAlignment == VERTICAL_ALIGNMENT_LIST[2]){
+            ctx.textBaseline = 'bottom';
+        }
+        else if(this.verticalAlignment == VERTICAL_ALIGNMENT_LIST[3]){
+            ctx.textBaseline = 'alphabetic';
+        }
+        if(this.horizontalAlignment == HORIZONTAL_ALIGNMENT_LIST[0]){
+            ctx.textAlign = 'left'
+        }
+        else if(this.horizontalAlignment == HORIZONTAL_ALIGNMENT_LIST[1]){
+            ctx.textAlign = 'right';
+        }
+        else if(this.horizontalAlignment == HORIZONTAL_ALIGNMENT_LIST[2]){
+            ctx.textAlign = 'center';
+        }
         ctx.fillText(this.text, this.x, this.y);
         this.drawUnderline();
+        // this.drawSelectionHighlight();
+
         return true;    // Drawn successfully on canvas
     }
 
     isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
+        // if((mouseX > this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError
+        //     && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
+        //     && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
+        //     && mouseY < this.y + this.textBoxMetrx.boundingBoxBottom + permissibleClickError)){
+        //         this.drawSelectionHighlight();
+        //         return true;
+
+        // }
+        // return false;
+        // this.clicked = (mouseX > this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError
+        //     && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
+        //     && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
+        //     && mouseY < this.y + this.textBoxMetrx.boundingBoxBottom + permissibleClickError)
+        // return this.clicked;
         return (mouseX > this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError
             && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
             && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
@@ -1349,7 +1523,9 @@ export class CanvasText extends BaseLayer implements Layer{
             fontWeight,
             font: font.join(' '),
             underline: this.underline,
-            fillStyle: this.fontStyle.fillStyle
+            fillStyle: this.fontStyle.fillStyle,
+            verticalAlignment: this.verticalAlignment,
+            horizontalAlignment: this.horizontalAlignment,
         }
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.text = this.text;
@@ -1386,6 +1562,7 @@ export class CanvasDate extends CanvasText implements Layer{
         }
 
         this.dateFormatting();
+        this.changeLayerName();
 
         this.updateTextBoxMetrics();
     }

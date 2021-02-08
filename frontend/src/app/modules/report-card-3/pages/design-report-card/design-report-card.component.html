@@ -1,7 +1,23 @@
 <div class="card-content table-responsive" id="drc-wrapper" style="height: 90vh;" *ngIf="!htmlAdapter.isLoading; else spinner">
 
-    <button class="btn" style="padding: 4px 8px; font-size: medium; background-color: blue;" (click)="htmlAdapter.openInventory()">Inventory <span class="material-icons">inventory_2</span></button>
-    
+    <div>
+        <button class="btn" style="padding: 4px 8px; font-size: medium; background-color: blue;" (click)="htmlAdapter.openInventory()">Inventory <span class="material-icons">inventory_2</span></button>
+        
+        <button *ngIf="currentLayout.id"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}} material-icons"
+                [disabled]="htmlAdapter.isSaving"
+                (click)="serviceAdapter.deleteCurrentLayout()"
+                matTooltip="Delete Layout"
+                style="padding: 8px 12px; margin-right: 12px; float: right;">delete</button>
+
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}} material-icons"
+                (click)="htmlAdapter.isSaving=true; saveLayout();" 
+                style="padding: 8px 12px; margin-right: 12px; float: right;" 
+                matTooltip="Save Layout"
+                [disabled]="htmlAdapter.isSaving">save</button>
+        
+
+    </div>
     <parent-student-filter [user]="user"
                                (onStudentListSelected)="handleStudentListSelection($event)"
                                (onStudentListLoading)="isStudentListLoading=$event"
@@ -25,11 +41,11 @@
             </mat-hint>
         </mat-form-field>
 
-        <button *ngIf="currentLayout.id"
-                class="btn material-icons"
+        <!-- <button *ngIf="currentLayout.id"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}} material-icons"
                 [disabled]="htmlAdapter.isSaving"
                 (click)="serviceAdapter.deleteCurrentLayout()"
-                style="padding: 4px 7px; margin-right: 12px; float: right;">delete</button>
+                style="padding: 4px 7px; margin-right: 12px; float: right;">delete</button> -->
 
         <button class="btn"
                 (click)="resetCurrentLayout()"
@@ -46,64 +62,68 @@
 
             <div class="tool" style="padding: 2px;"> <!--Background Color Picker-->   
                     <label>Background Color: </label>
-                    <input type="color" [value]="canvasAdapter.backgroundColor" (input)="canvasAdapter.applyBackground($event.target.value)"/>
+                    <input matTooltip="Add Background Color" type="color" [value]="canvasAdapter.backgroundColor" (input)="canvasAdapter.applyBackground($event.target.value)"/>
             </div>
 
             <div class="tool">
                 <button class="btn material-icons"
+                matTooltip="Add New Page"
                         (click)="canvasAdapter.addEmptyPage()">note_add</button>
             </div>
 
             <div class="tool">  <!--Add Image-->
                 <input type='file' (change)="imageUploadHandler($event)" multiple="false" style="display: none" accept="image/x-png,image/jpeg" #imageInput/>
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Add Image"
                         (click)="imageInput.click()">add_photo_alternate</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Refresh"
                         (click)="canvasAdapter.fullCanavsRefresh()" [disabled]="htmlAdapter.isSaving">refresh</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Toggle FullScreen"
                         (click)="htmlAdapter.fullScreenToggle()">{{htmlAdapter.isFullScreen?'fullscreen_exit':'fullscreen'}}</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Zoom Level"
                         [matMenuTriggerFor]="zoomMenu" >zoom_in</button>
                 <mat-menu #zoomMenu="matMenu">
                         <mat-slider min="{{canvasAdapter.minimumCanvasSize()}}" max="{{canvasAdapter.maximumCanvasSize()}}" step="0.5" value="{{canvasAdapter.canvasHeight}}" (input)="canvasAdapter.changeZoomLevel($event)" (click)="$event.stopPropagation()"></mat-slider>
                 </mat-menu>
             </div>
 
-            <div class="tool">
-                <button class="btn material-icons"
+            <div class="tool"> 
+                <button class="btn material-icons" matTooltip="Copy Layer"
                         (click)="canvasAdapter.duplicateLayer(canvasAdapter.activeLayer)">content_copy</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Download"
                         (click)="canvasAdapter.downloadPDF()">save_alt</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Add Text"
                         (click)="canvasAdapter.newTextLayer()">title</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Add Date"
                         (click)="canvasAdapter.newDateLayer()">calendar_today</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Add Table"
                         (click)="htmlAdapter.newTableColumnCount = 0; htmlAdapter.newTableRowCount = 0;"
                         [matMenuTriggerFor]="tableMenu">backup_table</button>
                 <mat-menu #tableMenu="matMenu">
+                    
+                    
                     <div style="display: flex; flex-direction: column; margin: 4px 12px;" (click)="canvasAdapter.newTableLayer({rowCount: htmlAdapter.newTableRowCount, columnCount: htmlAdapter.newTableColumnCount});">
+                        <span style="text-align: center;">{{htmlAdapter.newTableRowCount}}&nbsp;*&nbsp;{{htmlAdapter.newTableColumnCount}}</span>
                         <div style="width: 100%; display: flex; flex-direction: row;justify-content: space-between;"
                                 *ngFor="let row of htmlAdapter.getArrayOfLength(htmlAdapter.tableToolbarAssistanceRowCount);">
                             <ng-container *ngFor="let col of htmlAdapter.getArrayOfLength(htmlAdapter.tableToolbarAssistanceColumnCount);">
@@ -128,17 +148,17 @@
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Change Page Resolution"
                         (click)="htmlAdapter.openPageResolutionDialog()">photo_size_select_large</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Share Layout"
                         (click)="htmlAdapter.openLayoutSharingDialog()">share</button>
             </div>
 
             <div class="tool">
-                <button class="btn material-icons"
+                <button class="btn material-icons" matTooltip="Add Shape"
                 [matMenuTriggerFor]="shapesMenu">category</button>
                 <mat-menu #shapesMenu="matMenu">
                     <div style="display: flex; flex-wrap: wrap; max-width: 128px; margin: 0 2px;">

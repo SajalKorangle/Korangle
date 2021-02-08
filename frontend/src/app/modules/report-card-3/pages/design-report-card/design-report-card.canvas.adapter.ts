@@ -687,7 +687,6 @@ export class DesignReportCardCanvasAdapter {
 
     newLayerInitilization(layer: Layer): void{
         this.layers.push(layer);
-        console.log('added');
         let status = layer.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
         if (status)
             this.context.drawImage(this.virtualCanvas, 0, 0);

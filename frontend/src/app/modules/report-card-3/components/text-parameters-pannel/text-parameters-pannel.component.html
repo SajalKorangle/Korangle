@@ -45,5 +45,27 @@
             </mat-select>
         </mat-form-field>
 
+        <mat-form-field>
+            <mat-label>Vertical</mat-label>
+            <mat-select placeholder="Select Font Family"
+                    [ngModel]="layer.verticalAlignment"
+                    (ngModelChange)="layer.verticalAlignment = $event;layer.updateTextBoxMetrics() ;canvasRefresh(0);">
+                <mat-option *ngFor="let align of verticalAlignmentList" [value]="align">
+                    <span>{{align}}</span>                
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Horizontal</mat-label>
+            <mat-select placeholder="Select Font Family"
+                    [ngModel]="layer.horizontalAlignment"
+                    (ngModelChange)="layer.horizontalAlignment = $event;layer.updateTextBoxMetrics() ;canvasRefresh(0);">
+                <mat-option *ngFor="let align of horizontalAlignmentList" [value]="align">
+                    <span>{{align}}</span>                
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
     </div>
 </mat-card>

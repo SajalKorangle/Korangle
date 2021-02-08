@@ -70,8 +70,8 @@ export class DesignReportCardServiceAdapter {
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, shared_layout_list_data), //12
             this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //13
         ]).then(data => { 
+            console.log(data);
             this.vm.reportCardLayoutList = data[0];
-            // console.log('data = ', data);
             this.vm.DATA.data.studentSectionList = data[1];
             this.vm.DATA.data.studentParameterList = data[2];
             this.vm.DATA.data.classList = data[3];
@@ -117,6 +117,8 @@ export class DesignReportCardServiceAdapter {
                 id__in: data[12].map(sharedLayoutRelation => sharedLayoutRelation.parentLayout).join(',')
             };
 
+            // console.log(shared_layout_data);
+
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
                 this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 1
@@ -126,7 +128,9 @@ export class DesignReportCardServiceAdapter {
                 this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
                 this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, request_layout_sharing_data),//6
                 this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, shared_layout_data), //7
+                this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, {}),
             ]).then(value => {
+                console.log(value);
                 this.vm.DATA.data.studentList = value[0];
                 this.vm.DATA.data.studentParameterValueList = value[1];
                 this.vm.DATA.data.studentTestList = value[2];
@@ -140,7 +144,6 @@ export class DesignReportCardServiceAdapter {
                 else
                     alert('Student Data unavaiable');
                 this.populateLayoutSharingData(value[6]);
-                // console.log('DATA: ', this.vm.DATA);
                 this.vm.htmlAdapter.isLoading = false;
                 this.vm.htmlAdapter.openInventory();
             }, error => {
@@ -285,6 +288,9 @@ export class DesignReportCardServiceAdapter {
 
     deleteCurrentLayout(): void{
         if (this.vm.currentLayout.id) {
+            if(!confirm('Are you sure you want to delete the current layout')){
+                return ;
+            }
             const current_layut_id = this.vm.currentLayout.id
             const layout_delete_request = {
                 id: current_layut_id
@@ -302,6 +308,7 @@ export class DesignReportCardServiceAdapter {
     shareCurrentLayoutWithSchool(schoolKID: number) {
         if (schoolKID != this.vm.user.activeSchool.dbId) {
             const layoutSharingData = { parentSchool: schoolKID, parentLayout: this.vm.currentLayout.id };
+            console.log(layoutSharingData);
             return this.vm.reportCardService.createObject(this.vm.reportCardService.layout_sharing, layoutSharingData);
         }
     }

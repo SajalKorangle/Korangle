@@ -3,11 +3,12 @@
 
     <mat-accordion class="example-headers-align" multi>
         
-        <mat-expansion-panel *ngFor="let gradeRuleSet of gradeRuleSetList">
+        <mat-expansion-panel *ngFor="let gradeRuleSet of gradeRuleSetList; let j = index">
           <mat-expansion-panel-header>
-            <mat-panel-title>
+            <mat-panel-title style="display: flex;flex-grow: 1;margin-right: 16px;margin-top: 15px;">
               {{gradeRuleSet.name}}
             </mat-panel-title>
+            <button class="btn material-icons" style="padding: 4px 12px; background-color: transparent; color: red; float: right; margin-right: 5px" (click)="gradeRuleSetList.splice(j,1)">delete</button> 
           </mat-expansion-panel-header>
 
         <table class="table table-hover" style="margin-top: 6px;">
