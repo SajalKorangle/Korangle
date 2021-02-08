@@ -80,7 +80,8 @@ export class TotalCollectionServiceAdapter {
 
             let student_list = {
                 'id__in': [...new Set(value[0].filter(item => {
-                    return !this.vm.studentList.find(student => {
+                    // checking item.parentStudent because cancelled receipt student could also be deleted.
+                    return item.parentStudent && !this.vm.studentList.find(student => {
                         return student.id == item.parentStudent;
                     });
                 }).map(item => item.parentStudent))],
@@ -98,7 +99,8 @@ export class TotalCollectionServiceAdapter {
                 let student_section_list = {
                     'parentSession': item,
                     'parentStudent__in': [...new Set(value[0].filter(item2 => {
-                        return item2.parentSession == item;
+                        // checking item2 because cancelled receipt student could also be deleted.
+                        return item2.parentStudent && item2.parentSession == item;
                     }).map(item2 => item2.parentStudent).filter(item2 => {
                         return !this.vm.studentSectionList.find(studentSection => {
                             return studentSection.parentSession == item && studentSection.parentStudent == item2;
@@ -151,7 +153,8 @@ export class TotalCollectionServiceAdapter {
         this.vm.filteredClassSectionList = this.vm.feeReceiptList.map(fee=>{
             return this.vm.getClassAndSection(fee.parentStudent,fee.parentSession);
         }).filter((item, index, final) => {
-            return final.findIndex(item2 => item2.classs.id == item.classs.id
+            // checking item && item2 because cancelled receipt student could also be deleted.
+            return final.findIndex(item2 => item2 && item && item2.classs.id == item.classs.id
                 && item2.section.id == item.section.id ) == index;
         }).sort((a,b) => {
             if (a.classs.orderNumber == b.classs.orderNumber) {
