@@ -2,7 +2,7 @@
 
 # gen json file
 echo "{
- \"numberOfSemiColonInTests\": 1
+ \"tslint-errors\": 1
 }" > benchmark-linting-error-count.json
 
 echo $'CI: Testing linting error count...\n'
