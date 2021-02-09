@@ -77,3 +77,7 @@ jobs:
         # For now we are not keeping track of implemented protractor tests using feature files
         # sh scripts/feature/check-coverage.sh github
 
+    - name: Testing Linting
+      run: |
+        cd frontend/scripts/ng-lint
+        ./run_linter_ci.sh
