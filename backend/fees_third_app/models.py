@@ -415,7 +415,6 @@ class LockFee(models.Model):
     class Meta:
         db_table = 'lock_fee'
 
-<<<<<<< HEAD
 
 class ParentTransaction(models.Model):
 
@@ -424,7 +423,6 @@ class ParentTransaction(models.Model):
 
     class Meta:
         db_table = 'lock_fee'
-=======
 class OnlinePaymentAccount(models.Model):
 
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
@@ -442,4 +440,3 @@ class ParentFeeTransaction(models.Model):
 
     class Meta:
         db_table = 'parent_fee_transaction'
->>>>>>> 09e381f1931c6e199c2a10ec64b632cd17e51682
