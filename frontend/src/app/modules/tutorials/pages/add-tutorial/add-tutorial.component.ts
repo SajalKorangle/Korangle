@@ -139,6 +139,14 @@ export class AddTutorialComponent implements OnInit {
             if (tutorial.link.startsWith('www.')) {
                 tutorial.link = 'https://' + tutorial.link;
             }
+            if(tutorial.link.match(this.youtubeIdMatcher) === null)
+            {
+                
+                this.showPreview = false;
+                this.isAddDisabled = true;
+                alert('Please enter a valid link');
+                return; 
+            }
             this.previewBeforeAddTutorialUrl = "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1];
             this.showPreview = true;
             if (!tutorial.chapter || tutorial.chapter.trim() == '') {
@@ -155,6 +163,15 @@ export class AddTutorialComponent implements OnInit {
         } else {
             this.showPreview = false;
             this.isAddDisabled = true;
+        }
+    }
+
+    handleEditYouTubeLink(editedTutorial, $event) : void {
+        editedTutorial.link = $event;
+        if($event.match(this.youtubeIdMatcher) === null)
+        {
+            alert('Please enter a valid link');
+            return; 
         }
     }
 }

@@ -267,6 +267,11 @@ export class AddTutorialServiceAdapter {
             alert('OrderNumber should be greater than 0 with 1 decimal place');
             return false;
         }
+        if(tutorial.link.match(this.vm.youtubeIdMatcher) === null)
+        {
+            alert('Please enter a valid link');
+            return false; 
+        }
         if (!this.vm.youtubeRegex.test(tutorial.link.trim())) {
             alert('Please enter a valid link');
             return false;
