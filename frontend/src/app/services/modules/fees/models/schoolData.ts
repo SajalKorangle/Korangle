@@ -1,18 +1,21 @@
 export class School {
 
-    
 	name: any
     email: any
     phone: any
-    registrationNumber: any
-    pan: any
-    taxId: any
+    aadharNo: any
+    panNo: any
+    gstin: any
+    bankAccount: any
+    accountHolder: any
+    ifsc:any
 
-    addressLine1: any
+    address1: any
+    address2: any
     city: any
     state: any
-    country: any
-    postalCode: any    
-    document: any
+    pincode: any  
+
+    status:any;
 
 }

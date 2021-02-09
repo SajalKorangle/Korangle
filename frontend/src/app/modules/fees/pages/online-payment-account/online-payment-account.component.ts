@@ -4,6 +4,7 @@ import { Representative } from '../../../../services/modules/fees/models/represe
 import { Owner } from '../../../../services/modules/fees/models/owner'
 import { DataStorage } from 'app/classes/data-storage';
 import { FeeService } from 'app/services/modules/fees/fee.service';
+import { OnlinePaymentAccountServiceAdapter } from './online-payment-account.service.adapter';
 
 
 @Component({
@@ -16,20 +17,20 @@ export class OnlinePaymentAccountComponent implements OnInit {
 
   user;
 
+  serviceAdapter: OnlinePaymentAccountServiceAdapter;
   //School data
   school = new School
-  
-  //Representative data
-  representative = new Representative
-  
-  //Owner's data
-  owner = new Owner
+  schoolData : any
 
+  schoolExistingAccount = false;
 
   constructor(public feeService: FeeService) { }
 
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
+    this.serviceAdapter = new OnlinePaymentAccountServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
   }
 
   submitForm()
@@ -38,9 +39,7 @@ export class OnlinePaymentAccountComponent implements OnInit {
     let data = {
       parentSchool : this.user.activeSchool.dbId,
       parentEmployee : this.user.activeSchool.employeeId,
-      school : this.school,
-      representative : this.representative,
-      owner : this.owner
+      schoolData  : this.school
     }
 
     console.dir(data, {depth:null})

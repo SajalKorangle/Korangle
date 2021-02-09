@@ -128,7 +128,7 @@ export class ViewFeeComponent implements OnInit {
         let data = {
             appId : "50334e5204e60357816fa8e6d43305",
             orderId : Date.now().toString(),
-            orderAmount : '1',
+            orderAmount : '2',
             customerName : "Avinash",
             customerPhone : "7050701850",
             customerEmail : "avinash7may@gmail.com",
@@ -145,16 +145,7 @@ export class ViewFeeComponent implements OnInit {
                 holder : (<HTMLInputElement>document.getElementById("card-name")).value,
                 cvv : (<HTMLInputElement>document.getElementById("card-cvv")).value,
             },
-            vendors:[
-                {
-                  "vendorId":"SELF", 
-                  "commission":50
-                },
-                {
-                  "vendorId":"VEN001", 
-                  "commission":50
-                }
-              ], 
+            parentSchool : this.user.activeSchool.dbId
         }
         this.feeService.createObject(this.feeService.parent_transaction,data).then(value => {
             console.log('response of payment token ');

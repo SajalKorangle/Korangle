@@ -419,24 +419,20 @@ class LockFee(models.Model):
 class ParentTransaction(models.Model):
 
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
-    amount = models.IntegerField(default=0, verbose_name='amount')
+    amount = models.IntegerField(null=True, verbose_name='amount')
+    status = models.TextField(null=False, default=0, verbose_name='status')
+    orderId = models.TextField(null=False, default=-1, verbose_name='orderId')
 
     class Meta:
-        db_table = 'lock_fee'
+        db_table = 'parent_transaction'
+
+    
 class OnlinePaymentAccount(models.Model):
 
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
     parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, verbose_name='parentEmployee')
-    stripeConnectId = models.TextField(null=False, default=0, verbose_name='stripeConnectId')
+    vendorId = models.TextField(null=False, default=-1, verbose_name='vendorId')
 
     class Meta:
         db_table = 'online_payment_account'
 
-class ParentFeeTransaction(models.Model):
-
-    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
-    amount = models.IntegerField(null=True, verbose_name='amount')
-    status = models.TextField(null=False, default=0, verbose_name='status')
-
-    class Meta:
-        db_table = 'parent_fee_transaction'

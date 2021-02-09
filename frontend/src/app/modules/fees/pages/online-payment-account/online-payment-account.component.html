@@ -2,7 +2,10 @@
 <div class="card-content table-responsive">
 
     <div class="row" style="margin-bottom: 3vh;">
-        <h3 style="font-weight: bolder; padding-left: 1vw;">School Profile</h3>
+        <h3 style="font-weight: bolder; padding-left: 1vw;">Payment Account</h3>
+        <div *ngIf="schoolExistingAccount" style="float: right;">
+            <h4>Status : {{school.status}}</h4>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-4">
@@ -38,10 +41,10 @@
     <div class="row">
         <div class="col-md-4">
             <mat-form-field >
-                <mat-label>Registration Number</mat-label>
+                <mat-label>addhar Number</mat-label>
                 <input matInput
                        type="number"
-                       [(ngModel)]="school.registrationNumber"                       >
+                       [(ngModel)]="school.aadharNo" >
             </mat-form-field>
         </div>
 
@@ -50,20 +53,55 @@
                 <mat-label>Pan number</mat-label>
                 <input matInput
                        type="text"
-                       [(ngModel)]="school.pan"
+                       [(ngModel)]="school.panNo"
                        >
             </mat-form-field>
         </div>
 
         <div class="col-md-4">
             <mat-form-field>
-                <mat-label>Tax id</mat-label>
+                <mat-label>GSTIN</mat-label>
                 <input matInput
-                       type="number"
-                       [(ngModel)]="school.taxId"
+                       type="text"
+                       [(ngModel)]="school.gstin"
                        >
             </mat-form-field>
         </div>
+    </div>
+
+    <div class="row">
+        
+        <div class="col-md-4">
+            <mat-form-field>
+                <mat-label>Account Number</mat-label>
+                <input matInput
+                       type="number"
+                       [(ngModel)]="school.bankAccount"
+                       >
+            </mat-form-field>
+        </div>
+        <div class="col-md-4">
+            <mat-form-field>
+                <mat-label>IFSC</mat-label>
+                <input matInput
+                       type="text"
+                       [(ngModel)]="school.ifsc"
+                       >
+            </mat-form-field>
+        </div>
+        <div class="col-md-4">
+            <mat-form-field>
+                <mat-label>Account Holder Name</mat-label>
+                <input matInput
+                       type="text"
+                       [(ngModel)]="school.accountHolder"
+                       >
+            </mat-form-field>
+        </div>
+
+        
+
+        
     </div>
 
     
@@ -71,24 +109,24 @@
 
     <div class="row">
         <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Country</mat-label>
+            <mat-form-field style="width: 25vw;">
+                <mat-label>Address 1</mat-label>
                 <input matInput
                        type="text"
-                       [(ngModel)]="school.country"
+                       [(ngModel)]="school.address1"
                        >
             </mat-form-field>
         </div>
 
         <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>State</mat-label>
+            <mat-form-field style="width: 25vw;">
+                <mat-label>Address 2</mat-label>
                 <input matInput
                        type="text"
-                       [(ngModel)]="school.state"
+                       [(ngModel)]="school.address2"
                        >
             </mat-form-field>
-        </div>
+        </div>        
 
         <div class="col-md-4">
             <mat-form-field>
@@ -102,12 +140,13 @@
     </div>
 
     <div class="row">
+        
         <div class="col-md-4">
-            <mat-form-field style="width: 25vw;">
-                <mat-label>Address</mat-label>
+            <mat-form-field>
+                <mat-label>State</mat-label>
                 <input matInput
                        type="text"
-                       [(ngModel)]="school.addressLine1"
+                       [(ngModel)]="school.state"
                        >
             </mat-form-field>
         </div>
@@ -116,17 +155,9 @@
                 <mat-label>Postal Code</mat-label>
                 <input matInput
                        type="number"
-                       [(ngModel)]="school.postalCode"
+                       [(ngModel)]="school.pincode"
                        >
             </mat-form-field>
-        </div>
-        <div class="col-md-4">
-                <label>Document</label>
-                <input 
-                       type="file"
-                       [(ngModel)]="school.document"
-                       >
-                       
         </div>
 
         
@@ -134,192 +165,10 @@
         
     </div>
 
-    <div class="row" style="margin-bottom: 3vh; margin-top:3vh" >
-        <h3 style="font-weight: bolder; padding-left: 1vw;">Representative Profile</h3> <span style="font-size: smaller;padding-left: 1vw;">(must be either Owner or Executive)</span>
-    </div>
+    <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="submitForm()">
+        Submit
+    </button>
 
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>First name</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="representative.firstName"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Last name</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="representative.lastName"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>PAN</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="representative.pan"
-                       >
-            </mat-form-field>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Date of Birth</mat-label>
-                <input matInput
-                       type="date"
-                       [(ngModel)]="representative.dob"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>State</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="representative.state"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>City</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="representative.city"
-                       >
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field style="width: 25vw;">
-                <mat-label>Address</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="representative.addressLine1"
-                       >
-            </mat-form-field>
-        </div>
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Postal Code</mat-label>
-                <input matInput
-                       type="number"
-                       [(ngModel)]="representative.postalCode"
-                       >
-            </mat-form-field>
-        </div>
-
-    
-    </div>
-
-    <div class="row" style="margin-bottom: 3vh;">
-        <h3 style="font-weight: bolder; padding-left: 1vw;">School Owner's Profile</h3>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>First name</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="owner.firstName"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Last name</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="owner.lastName"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>PAN</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="owner.pan"
-                       >
-            </mat-form-field>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Date of Birth</mat-label>
-                <input matInput
-                       type="date"
-                       [(ngModel)]="owner.dob"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>State</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="owner.state"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>City</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="owner.city"
-                       >
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field style="width: 25vw;">
-                <mat-label>Address</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="owner.addressLine1"
-                       >
-            </mat-form-field>
-        </div>
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Postal Code</mat-label>
-                <input matInput
-                       type="number"
-                       [(ngModel)]="owner.postalCode"
-                       >
-            </mat-form-field>
-        </div>
-
-    
-    </div>
-
-
-    <div class="row">
-        <div class="col-md-12">
-            <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="submitForm()">Submit</button>
-        </div>
-    </div>
     
    
     

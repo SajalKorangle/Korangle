@@ -4,20 +4,14 @@ import json
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_new, user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list
-from fees_third_app.business.cashfree import generatePaymentToken, generateAuthToken
+from fees_third_app.business.cashfree import generatePaymentToken, generateAuthToken, addVendor, getVendor
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
-    SubFeeReceipt, Discount, SubDiscount, LockFee, ParentTransaction
+    SubFeeReceipt, Discount, SubDiscount, LockFee, ParentTransaction, OnlinePaymentAccount
 from common.common_views import CommonView, CommonListView, APIView
-from common.common_serializer_interface import create_object
-
-from decorators import user_permission_new
-from fees_third_app.business.discount import create_discount_object, create_discount_list
-from fees_third_app.business.stripe import create_stripe_account, get_client_ip
+from common.common_serializer_interface import create_object, get_object, get_list
 
 
-from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
-    SubFeeReceipt, Discount, SubDiscount, LockFee, OnlinePaymentAccount, ParentFeeTransaction
 
 
 # Create your views here.
@@ -193,35 +187,16 @@ class ParentTransactionView(CommonView, APIView):
     Model = ParentTransaction
     @user_permission_new
     def post(self, request):
-        print(request)
-        print('request data from frontend is....................................................')
-        
         data = json.loads(request.body.decode('utf-8'))
         print(data)
         response = generatePaymentToken(data)
-        print('response is /............................')
         print (response)
         return response
     
         
 
 
-########### Online Payment Account #############
-
-
-class OnlinePaymentAccountView(CommonView, APIView):
-    Model = OnlinePaymentAccount
-
-    @user_permission_new
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        response =  create_stripe_account(data,get_client_ip(request))  
-        if response['id']:
-            data['stripeConnectId'] = response['id']
-            return create_object(data, self.Model, self.ModelSerializer)
-        else:
-            return False
-            
+########### Online Payment Account #############   
 
 
 class OnlinePaymentAccountListView(CommonListView, APIView):
@@ -234,23 +209,24 @@ class OnlinePaymentAccountView(CommonView, APIView):
     @user_permission_new
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
-        response =  create_stripe_account(data,get_client_ip(request))  
-        if response['id']:
-            data['stripeConnectId'] = response['id']
-            return create_object(data, self.Model, self.ModelSerializer)
-        else:
-            return False
-            
-
-
-class ParentFeeTransactionListView(CommonListView, APIView):
-    Model = ParentFeeTransaction
-
-class ParentFeeTransactionView(CommonView, APIView):
-    Model = ParentFeeTransaction
-
-    @user_permission_new
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
         print(data)
-        return create_payment_intent(data)
+        response =  addVendor(data) 
+        if(response['status']=='SUCCESS'):
+            temp = {
+                'parentSchool' : data['parentSchool'],
+                'parentEmployee' : data['parentEmployee'],
+                'vendorId' : 'VEN_'+ str(data['parentSchool']) + '_' + str(data['parentEmployee'])
+            }
+            return create_object(temp, self.Model, self.ModelSerializer)
+        else:
+            return response
+    
+    @user_permission_new
+    def get(self, request):
+        response =  get_list(request.GET, self.Model,  self.ModelSerializer)
+        if(len(response)>0):
+            vendorId = response[0]['vendorId']
+            print(vendorId)
+            return(getVendor(vendorId))
+        else:
+            return response

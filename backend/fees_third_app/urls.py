@@ -89,19 +89,11 @@ urlpatterns += [
     url(r'^online-payment-account', OnlinePaymentAccountView.as_view()),
 ]
 
-from fees_third_app.views import ParentFeeTransactionListView, ParentFeeTransactionView
-
-urlpatterns += [
-    url(r'^parent-fee-transaction/batch', ParentFeeTransactionListView.as_view()),
-    url(r'^parent-fee-transaction', ParentFeeTransactionView.as_view()),
-]
-
 
 from fees_third_app.views import ParentTransactionListView, ParentTransactionView
 
 urlpatterns += [
     url(r'^parent-transaction/batch', ParentTransactionListView.as_view()),
     url(r'^parent-transaction', ParentTransactionView.as_view()),
-    url(r'^webhook', ParentTransactionView.as_view()),
 
 ]

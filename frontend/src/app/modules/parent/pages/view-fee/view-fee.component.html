@@ -18,8 +18,43 @@
                 </tbody>
             </table>
 
-            <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-            (click)="initiatePayment()" >PAY</button>
+            <mat-accordion>
+              <mat-expansion-panel (opened)="panelOpenState = true"
+                                   (closed)="panelOpenState = false"
+                                   style="width: 35vw;">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Payment panel
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Card Number:</mat-label>
+                  <input type="text"id="card-num" value ="4111111111111111" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>CVV:</mat-label>
+                  <input  type="text"id="card-cvv" value="123" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>MM:</mat-label>
+                  <input type="text" id="card-mm" value="09" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>YYYY:</mat-label>
+                  <input type="text" id="card-yyyy" value="2018" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Name:</mat-label>
+                  <input id="card-name" value="test" matInput>
+                </mat-form-field>
+                
+                
+                <button  class="btn btn-{{user.activeSchool.secondaryThemeColor}}"(click)="payCard()">Pay with Card</button>
+              </mat-expansion-panel>
+            </mat-accordion>
 
             <table class="table table-hover">
                 <tbody>
@@ -201,77 +236,4 @@
     </ng-container>
 
 </div>
-
-<mat-accordion>
-  <mat-expansion-panel (opened)="panelOpenState = true"
-                       (closed)="panelOpenState = false">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Payment panel
-      </mat-panel-title>
-      <mat-panel-description>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <table border = "3" cellpadding = "5" cellspacing = "5">
-      <tr>
-        <th>Type</th>
-        <th>Details</th>
-        <th>Submit</th>
-      </tr>
-      <tr>
-        <td>Cards</td>
-        <td>
-          <form>
-            <p>Card Number: <input matInput type="text" id="card-num" value ="4111111111111111"/>
-            CVV:<input type="text" id="card-cvv" value="123"/></p>
-            <p>MM:<input type="text" id="card-mm" value="09"/>
-            YYYY:<input type="text" id="card-yyyy" value="2018"/></p>
-            Name:<input type="text" id="card-name" value="test"/>
-          </form>
-        </td>
-        <td>
-          <button (click)="payCard()">Pay with Card</button>      
-        </td>
-      </tr>
-      <!-- <tr>
-        <td>Net Banking</td>
-        <td>
-          Select Bank: 
-          <select id="bank-code">
-            <option value="3333">TEST Bank</option>
-            <option value="3003">Axis Bank</option>
-            <option value="3028">IndusInd Bank</option>
-            <option value="3057">Vijaya Bank</option>
-          </select>
-        </td>
-        <td>
-          <button (click)="payBank()">Pay with Net Banking</button>      
-        </td>
-      </tr>
-      <tr>
-        <td>Wallet</td>
-        <td>
-          Select Wallet: 
-          <select id="wallet-code">
-            <option value="4001">FreeCharge</option>
-            <option value="4002">MobiKwik</option>
-            <option value="4003">Ola Money</option>
-          </select>
-        </td>
-        <td>
-          <button (click)="payWallet()">Pay with Wallet</button>      
-        </td>
-      </tr>
-      <tr>
-        <td>UPI</td>
-        <td>
-          Your UPI VPA: 
-          <input type="text" id="upi-vpa"/>
-        </td>
-        <td>
-          <button (click)="payUpi()">Pay with UPI</button>      
-        </td>
-      </tr> -->
-    </table>
-  </mat-expansion-panel>
-</mat-accordion>  
+ 
