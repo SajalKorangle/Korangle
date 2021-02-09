@@ -392,6 +392,18 @@
                           (ngModelChange)="handleStudentDisplay()"
                           (click)="$event.stopPropagation();">No
             </mat-checkbox>
+            
+            <br><br><b>Transfer Certificate</b><br>
+            <mat-checkbox [(ngModel)]="noTC"
+                          style="margin-right: 5px;"
+                          (ngModelChange)="handleStudentDisplay()"
+                          (click)="$event.stopPropagation();">Not-Generated
+            </mat-checkbox>
+            <mat-checkbox [(ngModel)]="yesTC"
+                          style="margin-right: 5px;"
+                          (ngModelChange)="handleStudentDisplay()"
+                          (click)="$event.stopPropagation();">Generated
+            </mat-checkbox>
             <br>
             <hr>
             <h5>Custom Filters</h5>
