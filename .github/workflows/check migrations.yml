@@ -50,6 +50,11 @@ jobs:
         cd frontend
         npm ci
 
+    - name: Testing Linting
+      run: |
+        cd frontend/scripts/ng-lint
+        ./run_linter_ci.sh
+
     - name: Checking Migration
       run: |
         cd backend
@@ -63,11 +68,6 @@ jobs:
         cd frontend
         aws configure list
         sh scripts/karma/run-tests.sh github
-    
-    - name: Testing Linting
-      run: |
-        cd frontend/scripts/ng-lint
-        ./run_linter_ci.sh
 
     - name: Protractor Tests
       env:
