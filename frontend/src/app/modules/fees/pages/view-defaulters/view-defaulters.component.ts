@@ -92,6 +92,12 @@ export class ViewDefaultersComponent implements OnInit {
 
     isLoading = false;
 
+    totalFees: number =0;
+    totalFessDue: number =0;
+    totalFeesPaid: number =0;
+    totalDiscount: number =0;
+
+
     constructor(public schoolService: SchoolService,
                 public feeService: FeeService,
                 public studentService: StudentService,
@@ -321,7 +327,11 @@ export class ViewDefaultersComponent implements OnInit {
                 };
                 this.parentList.push(newParentObject);
             }
-
+            this.totalFessDue += student.feesDueOverall;
+            this.totalFees += student.totalFeesThisSession;
+            this.totalFeesPaid += student.feesPaidThisSession;
+            this.totalDiscount += student.discountThisSession;
+            
         });
 
         this.parentList = this.parentList.sort((a, b) => {
