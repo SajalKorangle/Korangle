@@ -54,6 +54,16 @@
             </mat-form-field>
         </form>
     </div>
-    <div *ngIf="showFilter" class="col-md-3">
+    <div *ngIf="showFilter && bothFilters" class="col-md-3">
+        <mat-form-field>
+            <mat-select placeholder="Select Filter Type"
+                        [ngModel]="selectedFilterType"
+                        [disabled]="!bothFilters"
+                        (ngModelChange)="selectedFilterType=$event;">
+                <mat-option *ngFor='let filterType of filterTypeList;' [value]="filterType">
+                    {{filterType}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 </div>
