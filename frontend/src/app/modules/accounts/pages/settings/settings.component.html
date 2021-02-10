@@ -1,0 +1,27 @@
+<div class="card-content table-responsive" >
+
+    <app-employee-filter [user]="user"
+                         [showAllEmployees]="true"
+                         (employee)="serviceAdapter.getEmployeeAmount($event)"
+                         ></app-employee-filter>
+    <div class="row col-md-12"  *ngIf="selectedEmployee != null">
+        <span style="font-family: Roboto;font-style: normal;font-weight: normal;font-size: 15px;">Amount Restriction :  </span>
+        <mat-form-field>
+            <input type="number" 
+                    (blur)="serviceAdapter.changeAmountRestriction()"
+                    matInput [ngModel]="selectedEmployeeAmount" 
+                    (ngModelChange)="selectedEmployeeAmount=$event;" 
+                    placeholder="Enter Amount">
+        </mat-form-field>
+        <div *ngIf="isUpdating" class="loader-custom"></div>
+        <span *ngIf="selectedEmployeeAmount == null"  
+            style="font-family: Roboto;font-style: normal;font-weight: normal;font-size: 15px; color: rgb(221, 160, 27); margin-left: 10px">
+            <span class="material-icons">error_outline</span>
+            No Restriction Given Yet</span>
+    </div>
+    
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

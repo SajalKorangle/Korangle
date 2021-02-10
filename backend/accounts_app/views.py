@@ -58,10 +58,27 @@ class TransactionAccountDetailsView(CommonView, APIView):
 class TransactionAccountDetailsListView(CommonListView, APIView):
     Model = TransactionAccountDetails
 
-from .models import ApprovalRequests
+from .models import Approval
 
-class ApprovalRequestsView(CommonView, APIView):
-    Model = ApprovalRequests
+class ApprovalView(CommonView, APIView):
+    Model = Approval
 
-class ApprovalRequestsListView(CommonListView, APIView):
-    Model = ApprovalRequests
+class ApprovalListView(CommonListView, APIView):
+    Model = Approval
+
+
+from .models import ApprovalImages
+
+class ApprovalImagesView(CommonView, APIView):
+    Model = ApprovalImages
+
+class ApprovalImagesListView(CommonListView, APIView):
+    Model = ApprovalImages
+
+from .models import ApprovalAccountDetails
+
+class ApprovalAccountDetailsView(CommonView, APIView):
+    Model = ApprovalAccountDetails
+
+class ApprovalAccountDetailsListView(CommonListView, APIView):
+    Model = ApprovalAccountDetails

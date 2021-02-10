@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {ServiceObject} from "../../common/service-object";
 
 @Injectable()
-export class AttendanceService extends ServiceObject {
+export class AccountsService extends ServiceObject {
 
     protected module_url = '/accounts';
 
@@ -14,9 +14,11 @@ export class AttendanceService extends ServiceObject {
     public accounts = '/accounts';
     public account_session = '/account-session';
     public transaction = '/transaction';
-    public approval_requests = '/approval-requests';
+    public approval = '/approval';
     public transaction_account_details = '/transaction-account-details';
     public transaction_images = '/transaction-images';
     public settings = '/settings';
+    public approval_request_account_details = '/approval-account-details';
+    public approval_request_images = '/approval-images';
 
 }

@@ -1,0 +1,181 @@
+<div class="card-content table-responsive">
+    <div class="row col-md-12">
+        <mat-form-field style="margin-top: 5px ; margin-right: 15px; margin-bottom: 5px; width: 150px">
+            <input type="date" matInput
+                onkeydown="return false"
+                [ngModel]="selectedDate"
+                (ngModelChange)="selectedDate=$event; func();" placeholder="Choose Date ">
+        </mat-form-field>
+    </div>
+
+    <div *ngFor="let transaction of transactions; let i = index">
+        <div class="row">
+            <div class="col-md-1" style="width: 4%; margin-top: 15px">
+                <strong>{{i+1}}.</strong>
+            </div>
+            <div class="col-md-4">
+                <div *ngFor="let account of transaction.debitAccounts; let j = index">
+                    <div class="row col-md-12">
+                        <mat-form-field style="width: 100%;">
+                            <mat-select placeholder="Pay To" [ngModel]="account.debitAccount"
+                                (ngModelChange)="account.debitAccount = $event; account">
+                                <mat-option *ngFor="let account of accountsList"
+                                    [value]="account">
+                                    {{account.title}}
+                                </mat-option>   
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: -17px">
+                        <span *ngIf="account.debitAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance - {{account.debitAccount.balance}} </span>
+                        <span *ngIf="transaction.debitAccounts.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeDebitAccount(i, j); handleAmountChange(transaction)">
+                            <u>Remove</u>
+                        </span>
+                    </div>
+                    <div class="row col-md-12">
+                        <mat-form-field style="float: left;">
+                            <input type="number" matInput [ngModel]="account.debitAmount" (ngModelChange)="account.debitAmount=$event;handleAmountChange(transaction)" placeholder="Amount">
+                        </mat-form-field>
+                        <span *ngIf="j == transaction.debitAccounts.length-1" style="float: right;margin-top:20px; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewDebitAccount(i)">
+                            <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add Account</span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div *ngFor="let account of transaction.creditAccounts; let j = index">
+                    <div class="row col-md-12">
+                        <mat-form-field style="width: 100%;">
+                            <mat-select placeholder="Pay From" [ngModel]="account.creditAccount"
+                                (ngModelChange)="account.creditAccount = $event">
+                                <mat-option *ngFor="let account of accountsList"
+                                    [value]="account">
+                                    {{account.title}}
+                                </mat-option>   
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: -17px">
+                        <span *ngIf="account.creditAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance - {{account.creditAccount.balance}}</span>
+                        <span *ngIf="transaction.creditAccounts.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeCreditAccount(i, j); handleAmountChange(transaction)">
+                            <u>Remove</u>
+                        </span>
+
+                    </div>
+                    <div class="row col-md-12">
+                        <mat-form-field style="float: left;">
+                            <input type="number" matInput [ngModel]="account.creditAmount" (ngModelChange)="account.creditAmount=$event; handleAmountChange(transaction)" placeholder="Amount">
+                        </mat-form-field>
+                        <span *ngIf="j == transaction.creditAccounts.length-1" style="float: right; margin-top:20px;font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewCreditAccount(i)">
+                            <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add Account</span>
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-md-3">
+                <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
+                    <span *ngIf="isAccountNotMentioned(transaction) == true" style="color: rgb(243, 59, 59);">
+                        <strong class="material-icons" style="font-size: 15px;">dangerous</strong><strong> &nbsp;Please Select An Account</strong>
+                    </span>
+                </div>
+                <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                    <span *ngIf="isAmountUnEqual(transaction) == true" style="color: rgb(243, 59, 59);">
+                        <strong class="material-icons" style="font-size: 15px;">dangerous</strong><strong> &nbsp;Total Credit And Debit Amount Should Be Equal</strong>
+                    </span>
+                </div>
+                <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                    <span *ngIf="isApprovalRequired(transaction) == true" style="color: rgb(243 170 3);">
+                        <strong class="material-icons" style="font-size: 15px;">error_outline</strong><strong> &nbsp;Approval Is Required For This Transaction</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1" style="width: 4%;"></div>
+            <div class="col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <input type="text" matInput [ngModel]="transaction.remark"
+                        (ngModelChange)="transaction.remark=$event;" placeholder="Enter Remark"><br>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field >
+                    <mat-select placeholder="Approval ID" [ngModel]="transaction.approvalId"
+                        (ngModelChange)="transaction.approvalId = $event">
+                        <mat-option *ngFor="let id of approvalIdList"
+                            [value]="id">
+                            {{id.id}}
+                        </mat-option>   
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3"></div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-1" style="width: 4%;"></div>
+            <div class="col-md-4">
+                <div class="row col-md-12 custom-font">Add Bill :</div>
+                <input type='file' (click)="imageInput.value = null" (change)="readURL($event, transaction, 'bill');" multiple="false" style="display: none"
+                            accept="image/jpeg,image/png" #imageInput />
+                <div style="display: inline-block;">
+                    <button type="submit" class="image-column" (click)="imageInput.click()"
+                    style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228);"
+                    >+</button>
+                </div>
+                <div style="display: inline-block;" *ngFor="let image of transaction.billImages">
+                    <img src="{{image.imageURL}}" class="image-column" >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row col-md-12 custom-font">Add Quotation :</div>
+                <input type='file' (click)="imageInput.value = null" (change)="readURL($event, transaction, 'quo');" multiple="false" style="display: none"
+                            accept="image/jpeg,image/png" #imageInput1 />
+                <div style="display: inline-block;">
+                    <button type="submit" class="image-column" (click)="imageInput1.click()"
+                    style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228)"
+                    >+</button>
+                </div>
+                <div style="display: inline-block;" *ngFor="let image of transaction.quotationImages">
+                    <img src="{{image.imageURL}}" class="image-column" >
+                </div>
+            </div>
+            <div class="col-md-3">
+                <span *ngIf="transactions.length > 1"  style="float: right; margin-top:20px;font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeTransaction(i)">
+                    <span class="material-icons" style="font-size: 13px;">remove_circle_outline</span><span> &nbsp;Delete</span>
+                </span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-1" style="width: 4%;"></div>
+            <div class="col-md-10" style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 15px;"></div>
+            <div class="col-md-1" style="width: 4%;"></div>
+        </div>
+
+    </div>
+    <div class="row col-md-12" style="margin-top: 10px">
+        <mat-form-field>
+            <input type="number" matInput [ngModel]="moreTransaction" (ngModelChange)="moreTransaction=$event;" placeholder="Add More Transactions">
+        </mat-form-field>
+        <span style="margin-top:20px;font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewTransaction()">
+            <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add</span>
+        </span>
+    </div>
+    <div class="row col-md-12" style="margin-top: 10px">
+        <mat-checkbox [ngModel]="autoAdd" (ngModelChange)="autoAdd=$event">Add Transactions Once Approved</mat-checkbox>
+    </div>
+    <div class="row col-md-12" style="margin-top: 0px">
+        <button type="submit" class="custom-button" *ngIf="!isApprovalButtonDisabled()" (click)="serviceAdapter.requestApprovals()">Request Approval</button>
+        <button type="submit" style="color:  rgba(196, 196, 196, 1); cursor: not-allowed; border:2px solid rgba(196, 196, 196, 1); background: white" class="custom-button" *ngIf="isApprovalButtonDisabled()">Request Approval</button>
+        <button type="submit" style="float: right;background:rgba(255, 152, 0, 1); color: white" class="custom-button" (click)="serviceAdapter.addTransactions()"  *ngIf="!isAddButtonDisabled()" >Add Transactions</button>
+        <button type="submit" style="float: right;background:rgba(196, 196, 196, 1); color: white; cursor: not-allowed; border:2px solid rgba(196, 196, 196, 1);" class="custom-button" *ngIf="isAddButtonDisabled()" >Add Transactions</button>
+    </div>
+    
+</div>
+
+<ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

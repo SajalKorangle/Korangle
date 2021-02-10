@@ -8,8 +8,20 @@ from .views import TransactionListView, TransactionView
 from .views import AccountsView, AccountsListView
 from .views import AccountSessionView, AccountSessionListView
 from .views import EmployeeAmountPermissionListView, EmployeeAmountPermissionView
-from .views import ApprovalRequestsListView, ApprovalRequestsView
+from .views import ApprovalListView, ApprovalView
 from .views import TransactionImagesListView, TransactionImagesView
+from .views import ApprovalAccountDetailsListView, ApprovalAccountDetailsView
+from .views import ApprovalImagesListView ,ApprovalImagesView
+
+urlpatterns += [
+    url(r'^approval-account-details/batch', ApprovalAccountDetailsListView.as_view()),
+    url(r'^approval-account-details', ApprovalAccountDetailsView.as_view()),
+]
+
+urlpatterns += [
+    url(r'^approval-images/batch', ApprovalImagesListView.as_view()),
+    url(r'^approval-images', ApprovalImagesView.as_view()),
+]
 
 urlpatterns += [
     url(r'^transaction-account-details/batch', TransactionAccountDetailsListView.as_view()),
@@ -33,8 +45,8 @@ urlpatterns += [
 
 
 urlpatterns += [
-    url(r'^approval-requests/batch', ApprovalRequestsListView.as_view()),
-    url(r'^approval', ApprovalRequestsView.as_view()),
+    url(r'^approval/batch', ApprovalListView.as_view()),
+    url(r'^approval', ApprovalView.as_view()),
 ]
 
 

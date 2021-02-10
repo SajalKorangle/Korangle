@@ -1,0 +1,10 @@
+
+
+<div class="card-content table-responsive" *ngIf="!noPermission">
+    <button (click)="openAddAccountDialog()" class="btn btn-outline-warning">Add Account</button>
+    
+</div>
+
+<ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
