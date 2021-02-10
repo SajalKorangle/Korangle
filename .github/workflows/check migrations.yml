@@ -63,6 +63,11 @@ jobs:
         cd frontend
         aws configure list
         sh scripts/karma/run-tests.sh github
+    
+    - name: Testing Linting
+      run: |
+        cd frontend/scripts/ng-lint
+        ./run_linter_ci.sh
 
     - name: Protractor Tests
       env:
@@ -76,8 +81,3 @@ jobs:
         # sh scripts/protractor/check-coverage.sh github
         # For now we are not keeping track of implemented protractor tests using feature files
         # sh scripts/feature/check-coverage.sh github
-
-    - name: Testing Linting
-      run: |
-        cd frontend/scripts/ng-lint
-        ./run_linter_ci.sh
