@@ -128,7 +128,6 @@ export class DesignReportCardServiceAdapter {
                 this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
                 this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, request_layout_sharing_data),//6
                 this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, shared_layout_data), //7
-                this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, {}),
             ]).then(value => {
                 console.log(value);
                 this.vm.DATA.data.studentList = value[0];
