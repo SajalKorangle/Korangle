@@ -31,7 +31,13 @@ if current_branch != 'master':
             'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
         }
     }
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # S3 Bucket config
 AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
