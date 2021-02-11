@@ -50,7 +50,7 @@ export class ManageAccountsServiceAdapter {
         this.vm.accountsList = [];
         this.vm.groupsList = [];
         accountSessionList.forEach(account =>{
-            let type = accountList.find(accounts => accounts.id == account.parentAccount);
+            let type = accountList.find(accounts => accounts.id == account.parentAccount).accountType;
             if(type == 'ACCOUNT'){
                 this.vm.accountsList.push(account);
             }

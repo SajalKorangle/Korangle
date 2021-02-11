@@ -54,8 +54,8 @@
         <div class="col-md-2">
             <mat-form-field >
                 <mat-select placeholder="Filter By Head">
-                    <mat-option *ngFor="let account of filterAccountsList">
-                        <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}</mat-checkbox>
+                    <mat-option *ngFor="let head of filterHeadsList">
+                        <mat-checkbox [(ngModel)]="head.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{head.title}}</mat-checkbox>
                     </mat-option>   
                 </mat-select>
             </mat-form-field>
@@ -64,8 +64,8 @@
         <div class="col-md-2">
             <mat-form-field>
                 <mat-select placeholder="Filter By Group">
-                    <mat-option *ngFor="let employee of filterEmployeeList">
-                        <mat-checkbox [(ngModel)]="employee.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{employee.name}}</mat-checkbox>
+                    <mat-option *ngFor="let group of filterGroupsList">
+                        <mat-checkbox [(ngModel)]="group.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{group.title}}</mat-checkbox>
                     </mat-option>   
                 </mat-select>
             </mat-form-field>

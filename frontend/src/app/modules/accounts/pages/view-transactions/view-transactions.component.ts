@@ -121,10 +121,14 @@ export class ViewTransactionsComponent implements OnInit {
     transactionsList: any;
     employeeList = [];
     accountsList: any;
+    groupsList: any;
+    headsList: any;
 
     filterColumnsList: any;
     filterAccountsList: any;
     filterEmployeeList: any;
+    filterHeadsList: any;
+    filterGroupsList: any;
 
     isInitialLoading: any;
 
@@ -154,6 +158,8 @@ export class ViewTransactionsComponent implements OnInit {
       let tempList = [];
       tempList = this.applyAccountFilter(this.transactionsList);
       tempList = this.applyEmployeeFilter(tempList);
+      tempList = this.applyHeadFilter(tempList);
+      tempList = this.applyGroupFilter(tempList);
       return tempList;
     }
 
@@ -190,6 +196,54 @@ export class ViewTransactionsComponent implements OnInit {
       let tempList = [];
       list.forEach(trans =>{
         if(this.filterEmployeeList.find(employee => trans.parentEmployee == employee.employeeId).selected){
+          tempList.push(trans);
+        }
+      })
+      return tempList;
+    }
+
+    applyHeadFilter(list: any){
+      let tempList = [];
+      list.forEach(trans =>{
+        let containHead = false;
+        trans.debitAccounts.forEach(account =>{
+          if(this.filterHeadsList.find(head => head.headDbId == account.parentHead).selected){
+            containHead = true;
+          }
+        })
+        trans.creditAccounts.forEach(account =>{
+          if(this.filterHeadsList.find(head => head.headDbId == account.parentHead).selected){
+            containHead = true;
+          }
+        })
+        if(containHead){
+          tempList.push(trans);
+        }
+      })
+      return tempList;
+    }
+
+    applyGroupFilter(list: any){
+      let tempList = [];
+      list.forEach(trans =>{
+        let containGroup = false;
+        trans.debitAccounts.forEach(account =>{
+          if(account.parentGroup == null && this.filterGroupsList[0].selected){
+            containGroup = true;
+          }
+          else if(account.parentGroup != null && this.filterGroupsList.find(group => group.groupDbId == account.parentGroup).selected){
+            containGroup = true;
+          }
+        })
+        trans.creditAccounts.forEach(account =>{
+          if(account.parentGroup == null && this.filterGroupsList[0].selected){
+            containGroup = true;
+          }
+          else if(account.parentGroup != null && this.filterGroupsList.find(group => group.groupDbId == account.parentGroup).selected){
+            containGroup = true;
+          }
+        })
+        if(containGroup){
           tempList.push(trans);
         }
       })

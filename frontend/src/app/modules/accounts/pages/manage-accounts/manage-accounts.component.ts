@@ -3,6 +3,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { AddAccountDialogComponent } from './add-account-dialog/add-account-dialog.component'
 import { EditAccountDialogComponent } from './edit-account-dialog/edit-account-dialog.component'   
+import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.component'
 import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 
@@ -41,6 +42,18 @@ export class ManageAccountsComponent{
 
     openAddAccountDialog(){
         const dialogRef = this.dialog.open(AddAccountDialogComponent, {
+            width: '300px',
+            data: {
+                vm: this,
+            }
+        });
+    
+        dialogRef.afterClosed();
+    }
+
+    openAddGroupDialog(){
+        const dialogRef = this.dialog.open(AddGroupDialogComponent, {
+            width: '300px',
             data: {
                 vm: this,
             }
