@@ -1,0 +1,135 @@
+<div class="card-content table-responsive ">
+    <div class="row col-md-12" *ngIf="!isInitialLoading" >
+        <mat-form-field style="margin-right: 20px;">
+            <input type="date" matInput
+                onkeydown="return false"
+                [ngModel]="startDate"
+                (ngModelChange)="startDate=$event;" placeholder="Start Date ">
+        </mat-form-field>
+        
+        <mat-form-field style="margin-right: 20px;">
+            <input type="date" matInput
+                onkeydown="return false"
+                [ngModel]="endDate"
+                (ngModelChange)="endDate=$event; " placeholder="End Date ">
+        </mat-form-field>
+
+        <button class="custom-button" style="background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="serviceAdapter.loadTransactions()"><i class="material-icons">search</i></button>
+        <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" ><i class="material-icons">print</i></button>
+        <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" ><i class="material-icons">download</i></button>
+    </div>
+
+    <div class="row" *ngIf="!isLoading">
+        
+        <div class="col-md-2">
+            <mat-form-field >
+                <mat-select placeholder="Select Columns">
+                    <mat-option *ngFor="let filter of filterColumnsList">
+                        <mat-checkbox [(ngModel)]="filter.value" (click)="$event.stopPropagation()">{{filter.displayName}}</mat-checkbox>
+                    </mat-option>   
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+            <mat-form-field >
+                <mat-select placeholder="Filter By A/C">
+                    <mat-option *ngFor="let account of filterAccountsList">
+                        <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}</mat-checkbox>
+                    </mat-option>   
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+            <mat-form-field>
+                <mat-select placeholder="Filter By Employee">
+                    <mat-option *ngFor="let employee of filterEmployeeList">
+                        <mat-checkbox [(ngModel)]="employee.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{employee.name}}</mat-checkbox>
+                    </mat-option>   
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+            <mat-form-field >
+                <mat-select placeholder="Filter By Head">
+                    <mat-option *ngFor="let account of filterAccountsList">
+                        <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}</mat-checkbox>
+                    </mat-option>   
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+            <mat-form-field>
+                <mat-select placeholder="Filter By Group">
+                    <mat-option *ngFor="let employee of filterEmployeeList">
+                        <mat-checkbox [(ngModel)]="employee.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{employee.name}}</mat-checkbox>
+                    </mat-option>   
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+            <mat-slide-toggle [(ngModel)]="showSelectedOnly" (click)="getFilteredTransactionList();" style="margin-top:20px" >View Selected Only</mat-slide-toggle>
+        </div>
+
+    </div>
+
+    <table class="table table-hover" *ngIf="!isLoading">
+        <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+            <tr> 
+                <th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
+                <th *ngIf="columnFilter.date.value" class="text-left"><span>Date</span></th>
+                <th *ngIf="columnFilter.debitAccount.value" class="text-left"><span>Debit A/C</span></th>
+                <th *ngIf="columnFilter.creditAccount.value" class="text-left"><span>Credit A/C</span></th>
+                <th *ngIf="columnFilter.remark.value" class="text-left"><span>Remark</span></th>
+                <th *ngIf="columnFilter.approvalId.value" class="text-left"><span>Approval ID</span></th>
+                <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
+                <th *ngIf="columnFilter.quotation.value" class="text-center"><span>Quotation</span></th>
+                <th *ngIf="columnFilter.bill.value" class="text-center"><span>Bill</span></th>
+                <th *ngIf="columnFilter.update" class="text-center"><span>Update</span></th>
+                <th *ngIf="columnFilter.delete" class="text-center"><span>Delete</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let transaction of getFilteredTransactionList()">
+                
+                <td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top;"><span>{{transaction.voucherNumber}}</span></td>
+                <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{transaction.transactionDate}}</span></td>
+                <td *ngIf="columnFilter.debitAccount.value" class="text-left" style="vertical-align: top;" >
+                    <div *ngFor="let account of transaction.debitAccounts;" style="margin-bottom: 10px;">
+                        <span>{{account.account}}</span><br>
+                        <span style="color: rgba(76, 175, 80, 1);">{{account.amount}}</span>
+                    </div>
+                </td>
+                <td *ngIf="columnFilter.creditAccount.value" class="text-left" style="vertical-align: top;">
+                    <div *ngFor="let account of transaction.creditAccounts" style="margin-bottom: 10px;">
+                        <span>{{account.account}}</span><br>
+                        <span style="color:rgba(86, 142, 174, 1)">{{account.amount}}</span>
+                    </div>
+                </td>
+                <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top;"><span>{{transaction.remark}}</span></td>
+                <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top;"><span>{{transaction.approvalId}}</span></td>
+                <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top;"><span>{{transaction.parentEmployeeName}}</span></td>
+                <td *ngIf="columnFilter.quotation.value" class="text-center"><i class="material-icons">
+                    insert_photo
+                </i></td>
+                <td *ngIf="columnFilter.bill.value" class="text-center"><i class="material-icons">
+                    insert_photo
+                </i></td>
+                <td *ngIf="columnFilter.update" class="text-center">Update</td>
+                <td *ngIf="columnFilter.delete" class="text-center">Delete</td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+    
+    
+</div>
+
+<!-- <ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container> -->

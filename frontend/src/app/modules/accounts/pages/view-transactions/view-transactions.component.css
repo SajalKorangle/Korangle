@@ -1,0 +1,18 @@
+
+.custom-button {
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    border:2px solid #ff9800;
+    color:#ff9800;
+    background: #ffffff;
+    padding: 8px 8px;
+}
+
+span {
+    font-family: 'Roboto';
+    font-weight: 400;
+    font-size: 16px;
+}
