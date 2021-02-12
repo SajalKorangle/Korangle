@@ -853,7 +853,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     isMobile(): boolean {
-        return isMobile();
+        return !isMobile();
     }
 
     hasPermission(): boolean {
