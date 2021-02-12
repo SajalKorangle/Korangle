@@ -13,6 +13,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import { SchoolService } from '../../../../services/modules/school/school.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEES_REPORT} from '../../print/print-routes.constants';
+import { isMobile } from '../../../../classes/common.js';
 
 @Component({
     selector: 'view-defaulters',
@@ -93,7 +94,7 @@ export class ViewDefaultersComponent implements OnInit {
     isLoading = false;
 
     totalFees: number =0;
-    totalFessDue: number =0;
+    totalFeesDue: number =0;
     totalFeesPaid: number =0;
     totalDiscount: number =0;
 
@@ -327,7 +328,7 @@ export class ViewDefaultersComponent implements OnInit {
                 };
                 this.parentList.push(newParentObject);
             }
-            this.totalFessDue += student.feesDueOverall;
+            this.totalFeesDue += student.feesDueOverall;
             this.totalFees += student.totalFeesThisSession;
             this.totalFeesPaid += student.feesPaidThisSession;
             this.totalDiscount += student.discountThisSession;
@@ -851,4 +852,17 @@ export class ViewDefaultersComponent implements OnInit {
         return "Rs. " + Number(data).toLocaleString('en-IN');
     }
 
+    isMobile(): boolean {
+        return !isMobile();
+    }
+
+    hasPermission(): boolean {
+
+        let moduleIdx = this.user.activeSchool.moduleList.findIndex( module => module.path == 'fees');
+
+        if(this.user.activeSchool.moduleList[moduleIdx].taskList.findIndex( task => task.path == 'generate_fees_report') == -1)
+        return false;
+
+        return true;
+    }
 }

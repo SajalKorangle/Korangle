@@ -164,20 +164,137 @@
         <!-- Parent -->
 
         <ng-container *ngIf="selectedFilterType==filterTypeList[1]">
-
-            <div class="row">
-                <div class="col-sm-6">
-                    Selected: <b>{{getSelectedParentCount()}}</b>, Showing: <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        Selected: <b>{{getSelectedParentCount()}}</b>, Showing: <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
+                    </div>
                 </div>
-                <div class="col-sm-6" align="end">
-                    Fees Due (Till Month): <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency:true}}</b>
-                    <br>
-                    Total Fees Due (overall) : <b>{{totalFessDue | indianCurrency :true}}</b>
-                    <br>
-                    Fees Paid ({{getCurrentSessionName()}}) : <b>{{totalFeesPaid | indianCurrency :true}}</b>
-                    <br>
-                    Discount ({{getCurrentSessionName()}}) : <b>{{totalDiscount | indianCurrency :true}}</b>
+            </div>
+            
+            <div class="container-fluid" *ngIf="hasPermission()">
+                <div *ngIf="!isMobile()" align="end">
+                    
+                    <div class="row">
+                        <div class="col-sm-10">
+                            Total Fees ({{getCurrentSessionName()}}) : 
+                        </div>
+                        <div class="col-sm-1" style="width: 10px;">
+                            <b>Rs.</b>
+                        </div>
+                        <div class="col-sm-1" align="end" style="width: 120px;">
+                            <b>{{totalFees | indianCurrency }}</b>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-10">
+                            Fees Paid ({{getCurrentSessionName()}}) : 
+                        </div>
+                        <div class="col-sm-1" style="width: 10px;">
+                            <b>Rs.</b>
+                        </div>
+                        <div class="col-sm-1" align="end" style="width: 120px;">
+                            <b>{{totalFeesPaid | indianCurrency }}</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            Total Fees Due (overall) : 
+                        </div>
+                        <div class="col-sm-1" style="width: 10px;">
+                            <b>Rs.</b>
+                        </div>
+                        <div class="col-sm-1" align="end" style="width: 120px;">
+                            <b>{{totalFeesDue | indianCurrency }}</b>
+                        </div>
+                    </div>
+                    <div class="row" align="end">
+                        <div class="col-sm-10">
+                            Fees Due (Till Month): 
+                        </div>
+                        <div class="col-sm-1" style="width: 10px;">
+                            <b>Rs.</b>
+                        </div>
+                        <div class="col-sm-1" align="end" style="width: 120px;">
+                            <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency}}</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            Discount :
+                        </div>
+                        <div class="col-sm-1" style="width: 10px;">
+                            <b>Rs.</b>
+                        </div>
+                        <div class="col-sm-1" align="end" style="width: 120px;">
+                            <b>{{totalDiscount | indianCurrency}}</b>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            
+            <div *ngIf="isMobile() && hasPermission()" style="margin-top: 20px;">
+                <div class="container-fluid">
+                    
+                    <div class="row">
+                        <div class="col-xs-7 ">
+                            Total Fees ({{getCurrentSessionName()}}) : 
+                        </div>
+                        <div class="col-xs-2 ">
+                            <b>Rs.</b>
+                        </div>
+                        <div style="text-align: right;">
+                            <b>{{totalFees | indianCurrency }}</b>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-xs-7 ">
+                            Fees Paid ({{getCurrentSessionName()}}) : 
+                        </div>
+                        <div class="col-xs-2 ">
+                            <b>Rs.</b>
+                        </div>
+                        <div style="text-align: right;">
+                            <b>{{totalFeesPaid | indianCurrency }}</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-7 ">
+                            Total Fees Due (overall) : 
+                        </div>
+                        <div class="col-xs-2 ">
+                            <b>Rs.</b>
+                        </div>
+                        <div style="text-align: right;">
+                            <b>{{totalFeesDue | indianCurrency }}</b>
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-xs-7 ">
+                            Fees Due (Till Month): 
+                        </div>
+                        <div class="col-xs-2 ">
+                            <b>Rs.</b>
+                        </div>
+                        <div style="text-align: right;">
+                            <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency}}</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-7 ">
+                            Discount :
+                        </div>
+                        <div class="col-xs-2 ">
+                            <b>Rs.</b>
+                        </div>
+                        <div style="text-align: right;">
+                            <b>{{totalDiscount | indianCurrency}}</b>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -291,20 +408,139 @@
 
         <ng-container *ngIf="selectedFilterType==filterTypeList[0]">
 
-            <div class="row">
-                <div class="col-sm-6">
-                    Selected:  <b>{{getSelectedChildrenCount()}}</b>, Showing: <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
-                </div>
-                <div class="col-sm-6" align="end">
-                    Fees Due (Till Month): <b>{{getFilteredStudentListFeesDueTillMonth() | indianCurrency:true}}</b>
-                    <br>
-                    Total Fees Due (overall) : <b>{{totalFessDue | indianCurrency :true}}</b>
-                    <br>
-                    Fees Paid ({{getCurrentSessionName()}}) : <b>{{totalFeesPaid | indianCurrency :true}}</b>
-                    <br>
-                    Discount ({{getCurrentSessionName()}}) : <b>{{totalDiscount | indianCurrency :true}}</b>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        Selected:  <b>{{getSelectedChildrenCount()}}</b>, Showing: <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
+                    </div>
                 </div>
             </div>
+            
+                <div class="container-fluid" *ngIf="hasPermission()">
+                    <div *ngIf="!isMobile()" align="end">
+                        
+                        <div class="row">
+                            <div class="col-sm-10">
+                                Total Fees ({{getCurrentSessionName()}}) : 
+                            </div>
+                            <div class="col-sm-1" style="width: 10px;">
+                                <b>Rs.</b>
+                            </div>
+                            <div class="col-sm-1" align="end" style="width: 120px;">
+                                <b>{{totalFees | indianCurrency }}</b>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-10">
+                                Fees Paid ({{getCurrentSessionName()}}) : 
+                            </div>
+                            <div class="col-sm-1" style="width: 10px;">
+                                <b>Rs.</b>
+                            </div>
+                            <div class="col-sm-1" align="end" style="width: 120px;">
+                                <b>{{totalFeesPaid | indianCurrency }}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-10">
+                                Total Fees Due (overall) : 
+                            </div>
+                            <div class="col-sm-1" style="width: 10px;">
+                                <b>Rs.</b>
+                            </div>
+                            <div class="col-sm-1" align="end" style="width: 120px;">
+                                <b>{{totalFeesDue | indianCurrency }}</b>
+                            </div>
+                        </div>
+                        <div class="row" align="end">
+                            <div class="col-sm-10">
+                                Fees Due (Till Month): 
+                            </div>
+                            <div class="col-sm-1" style="width: 10px;">
+                                <b>Rs.</b>
+                            </div>
+                            <div class="col-sm-1" align="end" style="width: 120px;">
+                                <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency}}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-10">
+                                Discount :
+                            </div>
+                            <div class="col-sm-1" style="width: 10px;">
+                                <b>Rs.</b>
+                            </div>
+                            <div class="col-sm-1" align="end" style="width: 120px;">
+                                <b>{{totalDiscount | indianCurrency}}</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div *ngIf="isMobile() && hasPermission()" style="margin-top: 20px;">
+                    <div class="container-fluid">
+                        
+                        <div class="row">
+                            <div class="col-xs-7 ">
+                                Total Fees ({{getCurrentSessionName()}}) : 
+                            </div>
+                            <div class="col-xs-2 ">
+                                <b>Rs.</b>
+                            </div>
+                            <div style="text-align: right;">
+                                <b>{{totalFees | indianCurrency }}</b>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-xs-7 ">
+                                Fees Paid ({{getCurrentSessionName()}}) : 
+                            </div>
+                            <div class="col-xs-2 ">
+                                <b>Rs.</b>
+                            </div>
+                            <div style="text-align: right;">
+                                <b>{{totalFeesPaid | indianCurrency }}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 ">
+                                Total Fees Due (overall) : 
+                            </div>
+                            <div class="col-xs-2 ">
+                                <b>Rs.</b>
+                            </div>
+                            <div style="text-align: right;">
+                                <b>{{totalFeesDue | indianCurrency }}</b>
+                            </div>
+                        </div>
+                        <div class="row"> 
+                            <div class="col-xs-7 ">
+                                Fees Due (Till Month): 
+                            </div>
+                            <div class="col-xs-2 ">
+                                <b>Rs.</b>
+                            </div>
+                            <div style="text-align: right;">
+                                <b>{{getFilteredParentListFeesDueTillMonth() | indianCurrency}}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 ">
+                                Discount :
+                            </div>
+                            <div class="col-xs-2 ">
+                                <b>Rs.</b>
+                            </div>
+                            <div style="text-align: right;">
+                                <b>{{totalDiscount | indianCurrency}}</b>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            
             <div class="row">
                 <div class="col-sm-12">
                     <button class="btn"
