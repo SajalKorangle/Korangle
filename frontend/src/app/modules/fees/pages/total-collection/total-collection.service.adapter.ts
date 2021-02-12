@@ -181,12 +181,6 @@ export class TotalCollectionServiceAdapter {
             }) != undefined;
         });
 
-        //Filtered Session List
-        this.vm.filteredSessionList = this.vm.sessionList.filter(session => {
-            return this.vm.feeReceiptList.map(a => a.parentSession).filter((item, index, final) => {
-                return final.indexOf(item) == index;
-            }).includes(session.id);
-        })
     }
 
 }

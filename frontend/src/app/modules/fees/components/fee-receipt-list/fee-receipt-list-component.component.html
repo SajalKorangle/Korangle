@@ -16,7 +16,6 @@
             <th *ngIf="receiptColumnFilter.cancelledRemark" class="text-center">Cancelled Remark</th>
             <th *ngIf="receiptColumnFilter.cancelledDate" class="text-center">Cancelled Date</th>
             <th *ngIf="receiptColumnFilter.status" class="text-center">Status</th>
-            <th *ngIf="receiptColumnFilter.session" class="text-center">Session</th>
             <th *ngIf="receiptColumnFilter.printButton" class="text-center">-</th>
         </tr>
     </thead>
@@ -55,7 +54,6 @@
                     <span *ngIf="!hasUserPermissionToCancelAndNotPrintPage()">Valid</span>
                 </ng-container>
                 <span *ngIf="feeReceipt.cancelled">Cancelled</span>
-            <td *ngIf="receiptColumnFilter.session" align="center">{{getSessionName(feeReceipt.parentSession)}}</td>
             <td *ngIf="receiptColumnFilter.printButton" align="center">
                 <button type="button"
                         style="padding: 8px 11px; margin: 0px"

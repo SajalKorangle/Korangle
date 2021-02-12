@@ -124,14 +124,6 @@ export class FeeReceiptListComponent implements OnInit {
         return employee?employee.name:null;
     }
 
-    getSessionName(parentSession: any): any {
-
-        let session = this.sessionList.find(session => {
-            return session.id == parentSession;
-        });
-        return session?session.name:null;
-    }
-
     hasUserPermissionToCancelAndNotPrintPage() {
         const module = this.user.activeSchool.moduleList.find(module => module.title === 'Fees 3.0');
         return module.taskList.some(task => task.title === 'Cancel Fee Receipt') && !this.isPrinting;

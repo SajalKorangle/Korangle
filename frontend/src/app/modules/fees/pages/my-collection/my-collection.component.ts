@@ -7,13 +7,12 @@ import {ClassService} from "../../../../services/modules/class/class.service";
 import {INSTALLMENT_LIST, ReceiptColumnFilter} from "../../classes/constants";
 import {CommonFunctions} from "../../../../classes/common-functions";
 import {DataStorage} from "../../../../classes/data-storage";
-import { SchoolService } from 'app/services/modules/school/school.service';
 
 @Component({
     selector: 'my-collection',
     templateUrl: './my-collection.component.html',
     styleUrls: ['./my-collection.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService,ClassService, SchoolService ],
+    providers: [ FeeService, EmployeeService, StudentService,ClassService ],
 })
 
 export class MyCollectionComponent implements OnInit {
@@ -43,10 +42,6 @@ export class MyCollectionComponent implements OnInit {
 
     selectedModeOfPayment = null;
 
-    selectedSession = null;
-    sessionList;
-    filteredSessionList = [];
-
     isInitialLoading = false;
     isLoading = false;
 
@@ -54,7 +49,6 @@ export class MyCollectionComponent implements OnInit {
                 public employeeService: EmployeeService,
                 public studentService: StudentService,
                 public classService: ClassService,
-                public schoolService: SchoolService,
                 private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -112,11 +106,6 @@ export class MyCollectionComponent implements OnInit {
             tempList = this.feeReceiptList.filter(feeReceipt => {
                 return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
             })
-        }
-        if (this.selectedSession) {
-            tempList = tempList.filter(feeReceipt => {
-                return feeReceipt.parentSession == this.selectedSession.id;
-            });
         }
         return tempList;
     }

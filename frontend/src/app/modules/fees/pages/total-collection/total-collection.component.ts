@@ -49,9 +49,6 @@ export class TotalCollectionComponent implements OnInit {
     selectedEmployee = null;
     filteredEmployeeList = [];
 
-    selectedSession = null;
-    filteredSessionList = [];
-
     selectedModeOfPayment = null;
     filteredModeOfPaymentList = [];
 
@@ -101,7 +98,6 @@ export class TotalCollectionComponent implements OnInit {
         this.selectedModeOfPayment = null;
         this.selectedFeeType = null;
         this.selectedFeeReceiptType=this.receiptTypeList[0];
-        this.selectedSession = null;
 
         this.receiptColumnFilter = new ReceiptColumnFilter();
         delete this.receiptColumnFilter['printButton'];
@@ -125,7 +121,7 @@ export class TotalCollectionComponent implements OnInit {
             'selectedEmployee': this.selectedEmployee,
             'selectedModeOfPayment': this.selectedModeOfPayment,
             'selectedFeeType':this.selectedFeeType,
-            'sessionList':this.filteredSessionList,
+            'sessionList':this.sessionList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
@@ -207,11 +203,6 @@ export class TotalCollectionComponent implements OnInit {
                 return filteredSubFeeList.find(parentFeeId => {
                     return parentFeeId == feeReceipt.id;
                 }) != undefined;
-            });
-        }
-        if (this.selectedSession) {
-            tempList = tempList.filter(feeReceipt => {
-                return feeReceipt.parentSession == this.selectedSession.id;
             });
         }
 
