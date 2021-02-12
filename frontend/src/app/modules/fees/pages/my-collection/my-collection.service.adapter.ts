@@ -74,12 +74,7 @@ export class MyCollectionServiceAdapter {
 
             this.vm.feeReceiptList = value[0].sort((a,b) => {return b.receiptNumber-a.receiptNumber});;
             this.vm.subFeeReceiptList = value[1];
-            //Filtered Session List
-            this.vm.filteredSessionList = this.vm.sessionList.filter(session => {
-                return this.vm.feeReceiptList.map(a => a.parentSession).filter((item, index, final) => {
-                    return final.indexOf(item) == index;
-                }).includes(session.id);
-            })
+            
             let service_list = [];
 
             let student_list = {

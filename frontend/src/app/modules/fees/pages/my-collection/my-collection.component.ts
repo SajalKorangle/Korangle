@@ -43,9 +43,7 @@ export class MyCollectionComponent implements OnInit {
 
     selectedModeOfPayment = null;
 
-    selectedSession = null;
     sessionList;
-    filteredSessionList = [];
 
     isInitialLoading = false;
     isLoading = false;
@@ -113,11 +111,7 @@ export class MyCollectionComponent implements OnInit {
                 return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
             })
         }
-        if (this.selectedSession) {
-            tempList = tempList.filter(feeReceipt => {
-                return feeReceipt.parentSession == this.selectedSession.id;
-            });
-        }
+        
         return tempList;
     }
 
