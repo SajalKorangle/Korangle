@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
                 private dialog: MatDialog,
                 private notificationService: NotificationService) {}
 
-    ngOnInit() {
+    ngOnInit {
 
         DataStorage.getInstance().setUser(this.user);
         if (this.user.checkAuthentication()) {
