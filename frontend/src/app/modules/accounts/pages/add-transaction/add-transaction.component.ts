@@ -127,15 +127,15 @@ export class AddTransactionComponent implements OnInit {
           transaction.errorMessages.unequalAmount = true;
         }
       }
-      else if(transaction.debitAccounts.length == 1){
-        if(transaction.debitAccounts[0].debitAmount < totalCreditAmount){
-          transaction.debitAccounts[0].debitAmount = totalCreditAmount;
+      else if(transaction.creditAccounts.length == 1){                                                      
+        if(transaction.creditAccounts[0].creditAmount < totalDebitAmount){
+          transaction.creditAccounts[0].creditAmount = totalDebitAmount;
         }
         transaction.errorMessages.unequalAmount = false;
       }
-      else{                                                      
-        if(transaction.creditAccounts[0].creditAmount < totalDebitAmount){
-          transaction.creditAccounts[0].creditAmount = totalDebitAmount;
+      else{
+        if(transaction.debitAccounts[0].debitAmount < totalCreditAmount){
+          transaction.debitAccounts[0].debitAmount = totalCreditAmount;
         }
         transaction.errorMessages.unequalAmount = false;
       }
@@ -192,9 +192,45 @@ export class AddTransactionComponent implements OnInit {
       return temp;
     }
 
+    isAccountRepeated(transaction): boolean{
+      let temp = false;
+      
+      for(let i=0;i<transaction.debitAccounts.length ;i++){
+        if(transaction.debitAccounts[i].debitAccount != null){
+          for(let j=i+1;j<transaction.debitAccounts.length; j++){
+            if(transaction.debitAccounts[j].debitAccount == transaction.debitAccounts[i].debitAccount){
+              temp = true;
+            }
+          }
+          for(let j=0;j<transaction.creditAccounts.length; j++){
+            if(transaction.creditAccounts[j].creditAccount == transaction.debitAccounts[i].debitAccount){
+              temp = true;
+            }
+          }
+        }
+      }
+
+      for(let i=0;i<transaction.creditAccounts.length ;i++){
+        if(transaction.creditAccounts[i].creditAccount != null){
+          for(let j=i+1;j<transaction.creditAccounts.length; j++){
+            if(transaction.creditAccounts[j].creditAccount == transaction.creditAccounts[i].creditAccount){
+              temp = true;
+            }
+          }
+          for(let j=0;j<transaction.debitAccounts.length; j++){
+            if(transaction.debitAccounts[j].debitAmount == transaction.creditAccounts[i].creditAccount){
+              temp = true;
+            }
+          }
+        }
+      }
+
+      return temp;
+    }
+
     isAddButtonDisabled(): boolean{
       for(let i=0;i<this.transactions.length; i++){
-        if(this.isApprovalRequired(this.transactions[i]) || this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i])){
+        if(this.isApprovalRequired(this.transactions[i]) || this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i]) || this.isAccountRepeated(this.transactions[i])){
           return true;
         }
       }
@@ -203,7 +239,7 @@ export class AddTransactionComponent implements OnInit {
 
     isApprovalButtonDisabled(): boolean{
       for(let i=0;i<this.transactions.length; i++){
-        if(this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i])){
+        if(this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i]) || this.isAccountRepeated(this.transactions[i])){
           return true;
         }
       }

@@ -142,7 +142,7 @@ export class ViewTransactionsServiceAdapter {
         let transaction_data = {
             'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
             'korangle__order': '-id',
-            'korangle__count': this.vm.transactionsList.toString() + ',' + this.vm.loadingCount.toString(),
+            'korangle__count': this.vm.transactionsList.length.toString() + ',' + this.vm.loadingCount.toString(),
             'transactionDate__gte': this.vm.startDate,
             'transactionDate__lte': this.vm.endDate,
             

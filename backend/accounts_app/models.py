@@ -65,7 +65,7 @@ class Transaction(models.Model):
     voucherNumber = models.IntegerField(null=True, blank=True, verbose_name='voucherNumber')
     remark = models.TextField(null=True, blank=True, verbose_name='remark')
     transactionDate = models.DateField(null=True, verbose_name='transactionDate')
-    parentApproval = models.IntegerField(null=True, blank=True, verbose_name='parentApproval')
+    approvalId = models.IntegerField(null=True, blank=True)
     
     class Meta:
         db_table = 'transaction'

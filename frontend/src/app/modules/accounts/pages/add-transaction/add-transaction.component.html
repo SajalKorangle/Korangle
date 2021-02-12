@@ -86,6 +86,11 @@
                     </span>
                 </div>
                 <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                    <span *ngIf="isAccountRepeated(transaction) == true" style="color: rgb(243, 59, 59);">
+                        <strong class="material-icons" style="font-size: 15px;">dangerous</strong><strong> &nbsp;Same Account Can Not Be Used In The Same Transaction</strong>
+                    </span>
+                </div>
+                <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
                     <span *ngIf="isApprovalRequired(transaction) == true" style="color: rgb(243 170 3);">
                         <strong class="material-icons" style="font-size: 15px;">error_outline</strong><strong> &nbsp;Approval Is Required For This Transaction</strong>
                     </span>

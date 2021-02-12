@@ -65,7 +65,6 @@ export class AddTransactionServiceAdapter {
                     voucherNumber: lastVoucherNumber,
                     remark: transaction.remark,
                     transactionDate: this.vm.selectedDate,
-                    parentApproval: null,
                 }
                 lastVoucherNumber = lastVoucherNumber + 1; 
                 toCreateList.push(tempData);
@@ -121,7 +120,7 @@ export class AddTransactionServiceAdapter {
                         const layout_data = { ...tempData,};
                         Object.keys(layout_data).forEach(key => {
                             if (key === 'imageURL' ) {
-                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + index +'.jpeg'));
+                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
                             } else {
                                 temp_form_data.append(key, layout_data[key]);
                             }
@@ -143,7 +142,7 @@ export class AddTransactionServiceAdapter {
                         const layout_data = { ...tempData,};
                         Object.keys(layout_data).forEach(key => {
                             if (key === 'imageURL' ) {
-                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + index +'.jpeg'));
+                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
                             } else {
                                 temp_form_data.append(key, layout_data[key]);
                             }
@@ -200,7 +199,7 @@ export class AddTransactionServiceAdapter {
                 let tempData = {
                     parentEmployeeRequestedBy: this.vm.user.activeSchool.employeeId,
                     remark: transaction.remark,
-                    approvalRequestDate: this.vm.selectedDate,
+                    requestedGenerationDateTime: this.vm.selectedDate,
                     autoAdd: this.vm.autoAdd,
                     requestStatus: 'PENDING',
                     approvalId: lastApprovalID,
@@ -247,7 +246,7 @@ export class AddTransactionServiceAdapter {
                         const layout_data = { ...tempData,};
                         Object.keys(layout_data).forEach(key => {
                             if (key === 'imageURL' ) {
-                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + index +'.jpeg'));
+                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
                             } else {
                                 temp_form_data.append(key, layout_data[key]);
                             }
@@ -269,7 +268,7 @@ export class AddTransactionServiceAdapter {
                         const layout_data = { ...tempData,};
                         Object.keys(layout_data).forEach(key => {
                             if (key === 'imageURL' ) {
-                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + index +'.jpeg'));
+                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
                             } else {
                                 temp_form_data.append(key, layout_data[key]);
                             }

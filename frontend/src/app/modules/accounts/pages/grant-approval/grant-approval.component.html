@@ -1,0 +1,90 @@
+<div class="card-content table-responsive ">
+    
+    <div *ngFor='let approval of approvalsList'>
+        <div class="row">
+            <div class="col-md-10">
+                <mat-card style="width: 100%;margin-bottom: 20px">
+                    <mat-card-title style="margin-bottom: 15px;">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span style="font-size: 14px;">Approval ID: {{approval.approvalId}}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <span style="font-size: 14px;">{{approval.requestedGenerationDateTime}}</span>
+                            </div>
+                            <div class="col-md-7">
+                                <span *ngIf="approval.parentTransaction != null" style="font-size: 14px; float: right">Used for Transaction, Status Can Not Be Changed Now</span>
+                                <span *ngIf="approval.parentTransaction == null && approval.autoAdd" style="font-size: 14px;float:right">This transaction will be added once granted</span>
+                            </div>
+                        </div>
+                    </mat-card-title>
+                    <mat-card-content>
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="padding-right: 0px;">
+                                        <span style="color: rgba(255, 152, 0, 1);">Debit A/C</span>
+                                    </div>
+                                    <div class="col-md-9" style="padding: 0px;">
+                                        <div *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="font-size: 14px;">{{account.amount}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="padding-right: 0px;">
+                                        <span style="color: rgba(255, 152, 0, 1);">Credit A/C</span>
+                                    </div>
+                                    <div class="col-md-9" style="padding: 0px;">
+                                        <div *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="font-size: 14px;">{{account.amount}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-md-12" style="margin-bottom: 15px;">
+                            <span style="color: rgba(255, 152, 0, 1);">Remark: </span>
+                            <span style="margin-left: 60px;">{{approval.remark}}</span>
+                        </div>
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-6">
+                                <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
+
+                                <div style="display: inline-block;" *ngFor="let image of approval.billImages">
+                                    <img src="{{image.imageURL}}" class="image-column" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
+
+                                <div style="display: inline-block;" *ngFor="let image of approval.quotationImages">
+                                    <img src="{{image.imageURL}}" class="image-column" >
+                                </div>
+                            </div>
+                        </div>
+
+                    </mat-card-content>
+
+                </mat-card>
+
+            </div>
+            <div class="col-md-2" style="align-items:center">
+                <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
+                    <button class="custom-button" style="width:90px;" [ngStyle]="getGrantButtonStyle(approval)" [disabled]="approval.requestStatus == 'APPROVED' || approval.parentTransaction != null" (click)="serviceAdapter.changeApprovalStatus(approval, 'APPROVED')">Grant</button>
+                </div>
+                <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
+                    <button class="custom-button" style="width:90px;" [ngStyle]="getDeclineButtonStyle(approval)" [disabled]="approval.requestStatus == 'DECLINED' || approval.parentTransaction != null" (click)="serviceAdapter.changeApprovalStatus(approval, 'DECLINED')">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+
+<!-- <ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container> -->
