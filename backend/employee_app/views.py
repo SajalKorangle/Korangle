@@ -8,7 +8,7 @@ import json
 
 
 ############## Employee Profile ##############
-from employee_app.models import Employee
+from employee_app.models import Employee, EmployeeParameter, EmployeeParameterValue
 from .business.employee_profile \
     import get_employee_profile, create_employee_profile, delete_employee_profile, \
     update_employee_profile, get_employee_profile_list
@@ -181,3 +181,28 @@ class EmployeeeSessionDetailView(CommonView,APIView):
 class EmployeeeSessionDetailListView(CommonListView,APIView):
     Model = EmployeeSessionDetail
     RelationsToSchool = ['parentEmployee__parentSchool__id']
+
+########### Employee Parameter #############
+
+
+class EmployeeParameterView(CommonView, APIView):
+    Model = EmployeeParameter
+    RelationsToSchool = ['parentSchool__id']
+
+
+class EmployeeParameterListView(CommonListView, APIView):
+    Model = EmployeeParameter
+    RelationsToSchool = ['parentSchool__id']
+
+
+########### Employee Parameter Value#############
+
+from common.common_views_file import CommonView, CommonListView  #for file handling
+class EmployeeParameterValueView(CommonView, APIView):
+    Model = EmployeeParameterValue
+    RelationsToSchool = ['parentEmployee__parentSchool__id', 'parentEmployeeParameter__parentSchool__id']
+
+
+class EmployeeParameterValueListView(CommonListView, APIView):
+    Model = EmployeeParameterValue
+    RelationsToSchool = ['parentEmployee__parentSchool__id', 'parentEmployeeParameter__parentSchool__id']
