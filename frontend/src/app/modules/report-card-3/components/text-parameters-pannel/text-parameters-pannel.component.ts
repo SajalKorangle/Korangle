@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { Layer } from './../../class/constants_3';
+import { CanvasText } from './../../class/constants_3';
 import { FONT_FAMILY_LIST } from './../../class/font';
 import { VERTICAL_ALIGNMENT_LIST_MAP, HORIZONTAL_ALIGNMENT_LIST_MAP } from './../../class/constants_3'
 
@@ -10,7 +10,7 @@ import { VERTICAL_ALIGNMENT_LIST_MAP, HORIZONTAL_ALIGNMENT_LIST_MAP } from './..
 })
 export class TextParametersPannelComponent implements OnInit {
 
-  @Input() layer: Layer;
+  @Input() layer: CanvasText;
   @Input() canvasRefresh: any;
   
   fontFamilyList = FONT_FAMILY_LIST;
@@ -28,67 +28,25 @@ export class TextParametersPannelComponent implements OnInit {
 
   updateFontSize(newSize: number): void{
     newSize = newSize / this.getPixelTommFactor();
-    const fontArgumentsArray = this.layer.fontStyle.font.split(' ');
-    fontArgumentsArray[2] = newSize + 'px';
-    this.layer.fontStyle.font = fontArgumentsArray.join(' ');
+    this.layer.fontSize = newSize;
   }
 
   getFontSize(): number{
-    let [,,fontSize] = this.layer.fontStyle.font.split(' ');
-    return (Math.round(parseFloat(fontSize.substr(0, fontSize.length - 2))*this.getPixelTommFactor() * 100))/100;
+    return (Math.round(this.layer.fontSize*this.getPixelTommFactor() * 100))/100;
   }
 
-  boldToggle(event): void{
-    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
-    fontArgumentsArray[1] = event.source.checked ? 'bold' : 'normal';
-    this.layer.fontStyle.font = fontArgumentsArray.join(' ');
+  boldToggle(): void{
+    this.layer.fontWeight = this.layer.fontWeight=='bold' ? 'normal' : 'bold';
   }
 
-  italicToggle(event): void{
-    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
-    fontArgumentsArray[0] = event.source.checked ? 'italic' : '';
-    this.layer.fontStyle.font = fontArgumentsArray.join(' ');
+  italicToggle(): void{
+    this.layer.italics = this.layer.italics=='italic' ? '': 'italic';
   }
 
-  isBold(): boolean{
-    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
-    return fontArgumentsArray[1] == 'bold';
-  }
-   
-  isItalics(): boolean{
-    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
-    return fontArgumentsArray[0] == 'italic';
-  }
+  // underlineToggle(event): any{
+  //   this.layer.underline = event.source.checked? true : false;
+  // }
 
-  isUnderline(): boolean{
-    return this.layer.underline;
-  }
-
-  underlineToggle(event): any{
-    this.layer.underline = event.source.checked? true : false;
-  }
-
-  getFontFamily(): any{
-    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
-    let tempFontFamily = '';
-    for(let i=3;i<fontArgumentsArray.length-1; i++){
-      tempFontFamily = tempFontFamily + fontArgumentsArray[i] + ' ';
-
-    }
-    tempFontFamily = tempFontFamily + fontArgumentsArray[fontArgumentsArray.length - 1];
-    return this.fontFamilyList.find(fontfamily => fontfamily.displayName == tempFontFamily);
-
-  }
-
-  changeFont(font): any{
-    let fontArgumentsArray = this.layer.fontStyle.font.split(' ');
-    let tempFontArray = [];
-    tempFontArray[0] = fontArgumentsArray[0];
-    tempFontArray[1] = fontArgumentsArray[1];
-    tempFontArray[2] = fontArgumentsArray[2];
-    tempFontArray[3] = font.displayName;
-    this.layer.fontStyle.font = tempFontArray.join(' ');
-  }
 
   getVerticalAlignmentKeys(): Array<string>{
     return Object.keys(VERTICAL_ALIGNMENT_LIST_MAP);
@@ -96,6 +54,24 @@ export class TextParametersPannelComponent implements OnInit {
 
   getHorizontalAlignmentKeys(): Array<string>{
     return Object.keys(HORIZONTAL_ALIGNMENT_LIST_MAP);
+  }
+
+  getWidth() {
+    return Math.round(this.layer.maxWidth * this.getPixelTommFactor() * 100) / 100;
+  }
+
+  updateWidth(newWidth) {
+    newWidth = newWidth / this.getPixelTommFactor();
+    this.layer.maxWidth = newWidth;
+  }
+
+  getHeight() {
+    return Math.round(this.layer.minHeight * this.getPixelTommFactor() * 100) / 100;
+  }
+
+  updateHeight(newHeight) {
+    newHeight = newHeight / this.getPixelTommFactor();
+    this.layer.minHeight = newHeight;
   }
 
 }

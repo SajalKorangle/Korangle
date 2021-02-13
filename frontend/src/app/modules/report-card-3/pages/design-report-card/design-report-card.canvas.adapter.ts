@@ -178,7 +178,7 @@ export class DesignReportCardCanvasAdapter {
             let clickedX, clickedY;
             clickedX = event.offsetX;
             clickedY = event.offsetY;
-
+            console.log('clicked point = ', clickedX, clickedY);
             this.activeLayer = null;
             this.activeLayerIndex = null;
             this.currentMouseDown = false;
@@ -382,61 +382,37 @@ export class DesignReportCardCanvasAdapter {
                         break;
                     
                     case 'TEXT':
+                        newLayerFromLayerData = new CanvasText(layerData, this);
+                        break;
                     case 'DATE':
-                    case 'ATTENDANCE':
-                    case 'GRADE':
-                    case 'REMARK':
-                    case 'MARKS':
-                    case 'FORMULA':
-                    case 'RESULT':
-                        layerData.fontStyle = { // structuring according to canvas
-                            fillStyle: layerData.fillStyle,
-                            font: [layerData.italics, layerData.fontWeight, layerData.fontSize + 'px', layerData.font].join(' '),
-                            textBaseline: layerData.textBaseline,
-                            textAlign: layerData.textAlign,
-                        };
-                        delete layerData.fillStyle;
-                        delete layerData.italics;
-                        delete layerData.fontWeight;
-                        delete layerData.fontSize;
-                        delete layerData.font;
-                        delete layerData.textBaseline;
-                        delete layerData.textAlign;
-                        switch (layerData.LAYER_TYPE) {
-                            case 'TEXT':
-                                newLayerFromLayerData = new CanvasText(layerData, this);
-                                break;
-                            case 'DATE':
-                                if (layerData.date) {
-                                    layerData.date = new Date(layerData.date);
-                                }
-                                newLayerFromLayerData = new CanvasDate(layerData, this);
-                                break;
-                            case 'ATTENDANCE':
-                                layerData.startDate = new Date(layerData.startDate);
-                                layerData.endDate = new Date(layerData.endDate);
-                                newLayerFromLayerData = new AttendanceLayer(layerData, this);
-                                break;
-                            case 'GRADE':
-                                newLayerFromLayerData = new GradeLayer(layerData, this);
-                                break;
-                            case 'REMARK':
-                                newLayerFromLayerData = new RemarkLayer(layerData, this);
-                                break;
-                            case 'MARKS':
-                                if (layerData.gradeRuleSet) {
-                                    layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
-                                }
-                                newLayerFromLayerData = new MarksLayer(layerData, this);
-                                break;
-                            case 'FORMULA': // Formula can depend in some layers that is not initilized yet
-                                this.layers.push(null); // This null will be replaces during formula layer initilization
-                                continue;
-                            case 'RESULT':
-                                this.layers.push(null); // This null will be replaces during result layer initilization
-                                continue;
+                        if (layerData.date) {
+                            layerData.date = new Date(layerData.date);
                         }
-                        break;        
+                        newLayerFromLayerData = new CanvasDate(layerData, this);
+                        break;
+                    case 'ATTENDANCE':
+                        layerData.startDate = new Date(layerData.startDate);
+                        layerData.endDate = new Date(layerData.endDate);
+                        newLayerFromLayerData = new AttendanceLayer(layerData, this);
+                        break;
+                    case 'GRADE':
+                        newLayerFromLayerData = new GradeLayer(layerData, this);
+                        break;
+                    case 'REMARK':
+                        newLayerFromLayerData = new RemarkLayer(layerData, this);
+                        break;
+                    case 'MARKS':
+                        if (layerData.gradeRuleSet) {
+                            layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
+                        }
+                        newLayerFromLayerData = new MarksLayer(layerData, this);
+                        break;
+                    case 'FORMULA':
+                        this.layers.push(null); // This null will be replaces during formula layer initilization
+                            continue;
+                    case 'RESULT':
+                        this.layers.push(null); // This null will be replaces during result layer initilization
+                        continue;      
                 }
                 newLayerFromLayerData.scale(mmToPixelScaleFactor);
                 this.layers.push(newLayerFromLayerData);
@@ -476,44 +452,19 @@ export class DesignReportCardCanvasAdapter {
 
     getLayerFromLayerData(layerData: any, constructor:any): Layer{
         switch (layerData.LAYER_TYPE) {
-            case 'TEXT':
             case 'DATE':
-            case 'ATTENDANCE':
-            case 'GRADE':
-            case 'REMARK':
-            case 'MARKS':
-            case 'FORMULA':
-            case 'RESULT':
-                layerData.fontStyle = { // structuring according to canvas
-                    fillStyle: layerData.fillStyle,
-                    font: [layerData.italics, layerData.fontWeight, layerData.fontSize + 'px', layerData.font].join(' '),
-                    textBaseline: layerData.textBaseline,
-                    textAlign: layerData.textAlign,
-                };
-                delete layerData.fillStyle;
-                delete layerData.italics;
-                delete layerData.fontWeight;
-                delete layerData.fontSize;
-                delete layerData.font;
-                delete layerData.textBaseline;
-                delete layerData.textAlign;
-                switch (layerData.LAYER_TYPE) {
-                    case 'DATE':
-                        if (layerData.date) {
-                            layerData.date = new Date(layerData.date);
-                        }
-                        break;
-                    case 'ATTENDANCE':
-                        layerData.startDate = new Date(layerData.startDate);
-                        layerData.endDate = new Date(layerData.endDate);
-                        break;
-                    case 'MARKS':
-                        if (layerData.gradeRuleSet) {
-                            layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
-                        }
-                        break;
+                if (layerData.date) {
+                    layerData.date = new Date(layerData.date);
                 }
-                break;      
+            case 'ATTENDANCE':
+                layerData.startDate = new Date(layerData.startDate);
+                layerData.endDate = new Date(layerData.endDate);
+                break;
+            case 'MARKS':
+                if (layerData.gradeRuleSet) {
+                    layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
+                }
+                break;    
         }
         return new constructor(layerData, this);
     }

@@ -1,5 +1,6 @@
 // import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
-import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
+import { ATTENDANCE_STATUS_LIST } from '@modules/attendance/classes/constants';
+import canvasTxt from 'canvas-txt'
 
 interface DesignReportCardCanvasAdapter{
     [key: string]: any;
@@ -396,7 +397,6 @@ export const VERTICAL_ALIGNMENT_LIST_MAP = {
     'top' : 'Top',
     'middle' : 'Middle',
     'bottom' : 'Bottom',
-    'alphabetic' : 'Normal',
 };
 
 export const HORIZONTAL_ALIGNMENT_LIST_MAP = {
@@ -459,7 +459,6 @@ export interface Layer{
         boundingBoxTop: number,
         boundingBoxBottom: number,
     };
-    fontStyle?: { [key: string]: any };
     underline?: boolean;
     dateFormat?: string; // for Canavs Date   // format of date, check getDateReplacements(date) function for details 
     date?: Date;
@@ -1354,28 +1353,20 @@ export class CanvasSquare extends CanvasRectangle implements Layer{
 export class CanvasText extends BaseLayer implements Layer{
     displayName: string = 'Text';
     text: string = 'Lorem Ipsum';    
-    textBoxMetrx: {
-        boundingBoxLeft: number,
-        boundingBoxRight: number,
-        boundingBoxTop: number,
-        boundingBoxBottom: number,
-    } = {
-        boundingBoxLeft: null,
-        boundingBoxRight: null,
-        boundingBoxTop: null,
-        boundingBoxBottom: null,
-    };
 
-
-    ctx = this.ca.virtualContext;
-    // clicked: boolean;
-    fontStyle: { [key: string]: string } = {
-        fillStyle: DEFAULT_TEXT_COLOR,
-        font: ' normal 12px Arial',
-        textBaseline: 'top',
-        textAlign: 'center',
-    };
+    font: string = 'Arial';
+    fontSize: number = 12;
+    fontWeight: string = 'normal';
+    italics:string =  '';
+    fillStyle: string = DEFAULT_TEXT_COLOR;
+    textBaseline: string = 'top';
+    textAlign: string = 'center';
+    
+    maxWidth: number = 100;
+    minHeight: number = 100;
+    height: number = null;
     underline: boolean = false;
+
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
         super(ca);
@@ -1383,8 +1374,10 @@ export class CanvasText extends BaseLayer implements Layer{
         
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
+        this.maxWidth = Math.round(5000 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(7500 / ca.pixelTommFactor) / 100;
         this.underline = false;
-        this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
+        this.fontSize = 6 / ca.pixelTommFactor;
 
         if (initilize) {    // initilize is sent as false is this class is super class of some other layer, in that case child class handles this block
             this.initilizeSelf(attributes);
@@ -1422,66 +1415,88 @@ export class CanvasText extends BaseLayer implements Layer{
     }
 
     updateTextBoxMetrics = ():void=>{
-        const ctx = this.ca.virtualContext;
-        Object.entries(this.fontStyle).forEach(([key, value]) => ctx[key] = value); 
-        let textMetrix = ctx.measureText(this.text);
-        this.textBoxMetrx = {
-            boundingBoxLeft: textMetrix.actualBoundingBoxLeft,
-            boundingBoxRight: textMetrix.actualBoundingBoxRight,
-            boundingBoxTop: textMetrix.actualBoundingBoxAscent,
-            boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
-        };
+        // const ctx = this.ca.virtualContext;
+        // Object.entries(this.fontStyle).forEach(([key, value]) => ctx[key] = value); 
+        // let textMetrix = ctx.measureText(this.text);
+        // this.textBoxMetrx = {
+        //     boundingBoxLeft: textMetrix.actualBoundingBoxLeft,
+        //     boundingBoxRight: textMetrix.actualBoundingBoxRight,
+        //     boundingBoxTop: textMetrix.actualBoundingBoxAscent,
+        //     boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
+        // };
     }
 
     drawUnderline():void{
-        if(this.underline){
-            this.ctx.beginPath()
-            this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y);
-            this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxRight, this.y);
-            this.ctx.stroke();
-        }
-        return ;
+        // if(this.underline){
+        //     this.ctx.beginPath()
+        //     this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y);
+        //     this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxRight, this.y);
+        //     this.ctx.stroke();
+        // }
+        // return ;
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-        Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
-        ctx.fillText(this.text, this.x, this.y);
-        this.drawUnderline();
+        ctx.fillStyle = this.fillStyle;
+        canvasTxt.font = this.font;
+        canvasTxt.fontSize = this.fontSize;
+        canvasTxt.align = this.textAlign;
+        canvasTxt.vAlign = this.textBaseline;
+        canvasTxt.fontStyle = this.italics;
+        canvasTxt.fontWeight = this.fontWeight;
+        this.height = canvasTxt.drawText(ctx, this.text, this.x, this.y, this.maxWidth, this.minHeight).height;
+        // this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }
 
     isClicked(mouseX: number, mouseY: number): boolean { 
-        return (mouseX > this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError
-            && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
-            && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
-            && mouseY < this.y + this.textBoxMetrx.boundingBoxBottom + permissibleClickError)
+        let result = (mouseX > this.x - permissibleClickError
+            && mouseX < this.x + this.maxWidth + permissibleClickError)
+        if (result) {
+            if (this.textBaseline == 'top') {
+                return (mouseY > this.y - permissibleClickError && 
+                    mouseY < this.y + this.height + permissibleClickError)
+            }
+            else if (this.textBaseline == 'middle') {
+                let midY = this.y + this.minHeight/ 2;
+                let halfHeight = this.height / 2;
+                console.log('midY = ', midY);
+                console.log('haldHeight = ', halfHeight);
+                return (mouseY > midY - halfHeight - permissibleClickError && 
+                    mouseY < midY + halfHeight + permissibleClickError)
+            }
+            else {
+                return (mouseY > this.y + this.minHeight - this.height - permissibleClickError && 
+                    mouseY < this.y + this.minHeight + permissibleClickError)
+            }
+        }
+        return false;
     }
 
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
         this.y *= scaleFactor;
-        const [italics, fontWeight, fontSize, font] = this.fontStyle.font.split(' ');
-        let newFontSize = parseFloat(fontSize.substr(0, fontSize.length - 2));
-        newFontSize *= scaleFactor;
-        this.fontStyle.font = [italics, fontWeight, newFontSize + 'px', font].join(' ');
+        this.fontSize *= scaleFactor;
+        this.minHeight *= scaleFactor;
+        this.maxWidth *= scaleFactor;
         this.updateTextBoxMetrics();
     }
 
     getDataToSave(): { [object: string]: any } {
         let savingData = super.getDataToSave();
 
-        const [italics, fontWeight, fontSize, ...font]:any[] = this.fontStyle.font.split(' ');
-
         savingData = {
             ...savingData,
-            fontSize: parseFloat(fontSize.substr(0, fontSize.length - 2))*this.ca.pixelTommFactor,
-            italics,
-            fontWeight,
-            font: font.join(' '),
+            fontSize: this.fontSize*this.ca.pixelTommFactor,
+            italics: this.italics,
+            fontWeight: this.fontWeight,
+            font: this.font,
             underline: this.underline,
-            fillStyle: this.fontStyle.fillStyle,
-            textBaseline: this.fontStyle.textBaseline,
-            textAlign: this.fontStyle.textAlign,
+            fillStyle: this.fillStyle,
+            textBaseline: this.textBaseline,
+            textAlign: this.textAlign,
+            maxWidth: this.maxWidth,
+            minHeight: this.minHeight
         }
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.text = this.text;
@@ -1967,7 +1982,7 @@ export class Result extends CanvasText implements Layer{
             } 
         });
         this.text = this.rules.remarks[numberOfFailedSubjects];
-        this.fontStyle.fillStyle = this.rules.colorRule[numberOfFailedSubjects];
+        this.fillStyle = this.rules.colorRule[numberOfFailedSubjects];
         this.updateTextBoxMetrics();
     }
 
