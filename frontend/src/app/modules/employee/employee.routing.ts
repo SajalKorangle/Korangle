@@ -49,6 +49,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/employee/pages/update-all/update-all.module#UpdateAllModule',
         data: {moduleName: 'employee'},
     },
+    {
+        path: 'manage_parameter',
+        loadChildren: 'app/modules/employee/pages/manage-parameter/manage-parameter.module#ManageParameterModule',
+        data: {moduleName: 'employee'},
+    },
 
     {
         path: '',
