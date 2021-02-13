@@ -8,7 +8,7 @@
             <mat-label>
                 Value
             </mat-label>
-            <input matInput type="text" [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh(500, layer.updateTextBoxMetrics);">
+            <textarea matInput type="text" [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh(500, layer.updateTextBoxMetrics);"></textarea>
         </mat-form-field>
 
         <div style="text-align: center;">

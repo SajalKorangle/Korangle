@@ -75,7 +75,6 @@ export class DesignReportCardCanvasAdapter {
     constructor() {
         console.log(this)
         this.documentEventListners.keydown = (event) => {
-            console.log('target event', event.target);
             if (!this.activeLayer || !(event.target instanceof HTMLBodyElement))
                 return;
             if (event.key == 'ArrowUp') {
