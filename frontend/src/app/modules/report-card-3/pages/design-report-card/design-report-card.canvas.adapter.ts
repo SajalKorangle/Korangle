@@ -72,6 +72,7 @@ export class DesignReportCardCanvasAdapter {
     documentEventListners: {keydown: any} = {keydown : null};
     
     constructor() {
+        console.log(this)
         this.documentEventListners.keydown = (event) => {
             console.log('target event', event.target);
             if (!this.activeLayer || !(event.target instanceof HTMLBodyElement))
@@ -122,6 +123,16 @@ export class DesignReportCardCanvasAdapter {
     addEmptyPage(): void{
         this.vm.currentLayout.content.push(this.getEmptyLayoutPage());
         this.updatePage(this.vm.currentLayout.content.length-1);
+    }
+
+    removeCurretPage(): void{
+        let lastPage = this.activePageIndex;
+        if (this.activePageIndex == 0)
+            this.updatePage(1);
+        else
+            this.updatePage(this.activePageIndex - 1);
+        this.vm.currentLayout.content.splice(lastPage, 1);
+        console.log(this.vm.currentLayout.content)
     }
 
     updatePage(pageIndex: number): void{

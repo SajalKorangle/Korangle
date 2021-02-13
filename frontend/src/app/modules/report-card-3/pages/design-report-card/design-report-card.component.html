@@ -71,6 +71,13 @@
                         (click)="canvasAdapter.addEmptyPage()">note_add</button>
             </div>
 
+            <div class="tool">
+                <button class="btn material-icons"
+                matTooltip="Delete This Page"
+                [disabled]="currentLayout.content.length<=1"
+                        (click)="canvasAdapter.removeCurretPage()">remove_circle</button>
+            </div>
+
             <div class="tool">  <!--Add Image-->
                 <input type='file' (change)="imageUploadHandler($event)" multiple="false" style="display: none" accept="image/x-png,image/jpeg" #imageInput/>
                 <button class="btn material-icons" matTooltip="Add Image"
