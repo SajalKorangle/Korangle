@@ -20,7 +20,7 @@ elif [ "$1" == "-count" ]; then
 
         echo $'Counting all linting errors...\n'
 
-        node run_linter.js "dev" $(ng lint | grep -c "ERROR: /")
+        node ./scripts/ng-lint/run_linter.js "dev" $(ng lint | grep -c "ERROR: /")
 
     else
 
