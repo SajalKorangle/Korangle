@@ -23,13 +23,22 @@
         <tr *ngFor="let feeReceipt of feeReceiptList | slice:0:number">
             <td *ngIf="receiptColumnFilter.receiptNumber">{{feeReceipt.receiptNumber}}</td>
             <td *ngIf="receiptColumnFilter.nameClass" align="center">
-                {{getStudent(feeReceipt.parentStudent).name}}<br>
-                {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
-                {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
+                <ng-container *ngIf="!feeReceipt.parentStudent">Deleted Student</ng-container>
+                <ng-container *ngIf="feeReceipt.parentStudent">
+                    {{getStudent(feeReceipt.parentStudent).name}}<br>
+                    {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
+                    {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
+                </ng-container>
             </td>
-            <td *ngIf="receiptColumnFilter.scholarNumber" align="center">{{getStudentScholarNumber(feeReceipt.parentStudent)}}</td>
+            <td *ngIf="receiptColumnFilter.scholarNumber" align="center">
+                <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
+                <ng-container *ngIf="feeReceipt.parentStudent">{{getStudentScholarNumber(feeReceipt.parentStudent)}}</ng-container>
+            </td>
             <td *ngIf="receiptColumnFilter.amount" style="padding-right: 15px;" align="right">{{getFeeReceiptTotalAmount(feeReceipt)}}</td>
-            <td *ngIf="receiptColumnFilter.mobileNumber" style="padding-right: 15px;" align="right">{{getStudentMobileNumber(feeReceipt)}}</td>
+            <td *ngIf="receiptColumnFilter.mobileNumber" style="padding-right: 15px;" align="right">
+                <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
+                <ng-container *ngIf="feeReceipt.parentStudent">{{getStudentMobileNumber(feeReceipt)}}</ng-container>
+            </td>
             <td *ngIf="receiptColumnFilter.modeOfPayment" align="center">{{feeReceipt.modeOfPayment}}</td>
             <td *ngIf="receiptColumnFilter.chequeNumber" align="center">{{feeReceipt.chequeNumber}}</td>
             <td *ngIf="receiptColumnFilter.date" align="center">{{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
