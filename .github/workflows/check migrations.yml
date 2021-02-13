@@ -58,7 +58,7 @@ jobs:
     - name: Build Test
       run: |
         cd frontend
-        cp environment.ts environment.prod.ts
+        cp src/environments/environment.ts src/environments/environment.prod.ts
         node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod --build-optimizer
 
     - name: Karma Tests
