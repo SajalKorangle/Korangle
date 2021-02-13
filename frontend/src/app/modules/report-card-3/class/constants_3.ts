@@ -389,18 +389,18 @@ export const TEST_TYPE_LIST = [
     'Practical',
 ];
 
-export const VERTICAL_ALIGNMENT_LIST = [
-    'Top',
-    'Middle',
-    'Bottom',
-    'Normal',
-];
+export const VERTICAL_ALIGNMENT_LIST_MAP = {
+    'top' : 'Top',
+    'middle' : 'Middle',
+    'bottom' : 'Bottom',
+    'alphabetic' : 'Normal',
+};
 
-export const HORIZONTAL_ALIGNMENT_LIST = [
-    'Left',
-    'Right',
-    'Center',
-];
+export const HORIZONTAL_ALIGNMENT_LIST_MAP = {
+    'left' : 'Left',
+    'right' : 'Right',
+    'center' : 'Center',
+};
 
 export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
 export var DEFAULT_MAXIMUM_MARKS = 100;
@@ -558,7 +558,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     }
 
     layerDataUpdate(): void{
-         
+        this.error = false;
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
             const DATA = this.ca.vm.DATA;
             this.uri = this.source.getValueFunc(DATA)+'?javascript=';
@@ -581,6 +581,13 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
                     this.height = this.width / this.aspectRatio;    // maintaining aspect ratio
                 }
             }
+            else if (this.height || this.width) {
+                this.aspectRatio = this.image.width / this.image.height;
+                if (this.height)
+                    this.width = this.height * this.aspectRatio;
+                else
+                    this.height = this.width / this.aspectRatio;
+            }
         }
            
         this.image.onload = () => {
@@ -591,9 +598,6 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         }
         this.image.setAttribute('crossOrigin', 'anonymous');  
         this.image.src = this.uri;
-        
-        // this.height = 20/this.ca.pixelTommFactor;
-        // this.width = this.aspectRatio*this.height;
     }
 
     updateHeight(newHeight: number) {
@@ -1365,10 +1369,10 @@ export class CanvasText extends BaseLayer implements Layer{
     fontStyle: { [key: string]: string } = {
         fillStyle: DEFAULT_TEXT_COLOR,
         font: ' normal 12px Arial',
+        textBaseline: 'top',
+        textAlign: 'center',
     };
     underline: boolean = false;
-    verticalAlignment: string;
-    horizontalAlignment: string;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
         super(ca);
@@ -1377,8 +1381,6 @@ export class CanvasText extends BaseLayer implements Layer{
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
         this.underline = false;
-        this.horizontalAlignment = HORIZONTAL_ALIGNMENT_LIST[0];
-        this.verticalAlignment = VERTICAL_ALIGNMENT_LIST[3];
         this.fontStyle.font = ` normal ${6 / ca.pixelTommFactor}px Arial`;
 
         if (initilize) {    // initilize is sent as false is this class is super class of some other layer, in that case child class handles this block
@@ -1438,63 +1440,14 @@ export class CanvasText extends BaseLayer implements Layer{
         return ;
     }
 
-    // drawSelectionHighlight():void{
-    //     if(this.clicked){
-    //         console.log('clicked');
-    //         this.ctx.setLineDash([5, 5]);
-    //         this.ctx.strokeStyle = 'blue';
-    //         this.ctx.beginPath();
-    //         this.ctx.rect(this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError, this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError, this.textBoxMetrx.boundingBoxLeft + this.textBoxMetrx.boundingBoxRight + 2*permissibleClickError, this.textBoxMetrx.boundingBoxTop + this.textBoxMetrx.boundingBoxBottom + permissibleClickError);
-    //         this.ctx.stroke();
-    //     }
-    // }
-
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         Object.entries(this.fontStyle).forEach(([key, value])=> ctx[key] = value);  // applying font styles
-        
-        if(this.verticalAlignment == VERTICAL_ALIGNMENT_LIST[0]){
-            ctx.textBaseline = 'top'
-        }
-        else if(this.verticalAlignment == VERTICAL_ALIGNMENT_LIST[1]){
-            ctx.textBaseline = 'middle';
-        }
-        else if(this.verticalAlignment == VERTICAL_ALIGNMENT_LIST[2]){
-            ctx.textBaseline = 'bottom';
-        }
-        else if(this.verticalAlignment == VERTICAL_ALIGNMENT_LIST[3]){
-            ctx.textBaseline = 'alphabetic';
-        }
-        if(this.horizontalAlignment == HORIZONTAL_ALIGNMENT_LIST[0]){
-            ctx.textAlign = 'left'
-        }
-        else if(this.horizontalAlignment == HORIZONTAL_ALIGNMENT_LIST[1]){
-            ctx.textAlign = 'right';
-        }
-        else if(this.horizontalAlignment == HORIZONTAL_ALIGNMENT_LIST[2]){
-            ctx.textAlign = 'center';
-        }
         ctx.fillText(this.text, this.x, this.y);
         this.drawUnderline();
-        // this.drawSelectionHighlight();
-
         return true;    // Drawn successfully on canvas
     }
 
-    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        // if((mouseX > this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError
-        //     && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
-        //     && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
-        //     && mouseY < this.y + this.textBoxMetrx.boundingBoxBottom + permissibleClickError)){
-        //         this.drawSelectionHighlight();
-        //         return true;
-
-        // }
-        // return false;
-        // this.clicked = (mouseX > this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError
-        //     && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
-        //     && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
-        //     && mouseY < this.y + this.textBoxMetrx.boundingBoxBottom + permissibleClickError)
-        // return this.clicked;
+    isClicked(mouseX: number, mouseY: number): boolean { 
         return (mouseX > this.x - this.textBoxMetrx.boundingBoxLeft - permissibleClickError
             && mouseX < this.x + this.textBoxMetrx.boundingBoxRight + permissibleClickError
             && mouseY > this.y - this.textBoxMetrx.boundingBoxTop - permissibleClickError
@@ -1524,8 +1477,8 @@ export class CanvasText extends BaseLayer implements Layer{
             font: font.join(' '),
             underline: this.underline,
             fillStyle: this.fontStyle.fillStyle,
-            verticalAlignment: this.verticalAlignment,
-            horizontalAlignment: this.horizontalAlignment,
+            textBaseline: this.fontStyle.textBaseline,
+            textAlign: this.fontStyle.textAlign,
         }
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.text = this.text;

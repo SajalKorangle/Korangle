@@ -137,6 +137,13 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
     this.downloadFont();
   }
 
+  ngOnDestroy() {
+    this.canvasAdapter.destructor();
+    let canavsWrapper = document.getElementById('mainCanvas');
+    if(canavsWrapper)
+      canavsWrapper.parentNode.removeChild(canavsWrapper);
+  }
+
   handleStudentListSelection(value): void{
       this.selectedStudent = value[0][0];
       let temp = this.DATA.data.studentList.find(student => student.id == this.selectedStudent.id);
@@ -147,13 +154,6 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
         this.DATA.studentId = this.selectedStudent.id;
         this.canvasAdapter.fullCanavsRefresh();
       }
-  }
-
-
-  ngOnDestroy() {
-    let canavsWrapper = document.getElementById('mainCanvas');
-    if(canavsWrapper)
-      canavsWrapper.parentNode.removeChild(canavsWrapper);
   }
   
   getFontStyleList(fontFamilyDisplayName: any): any {

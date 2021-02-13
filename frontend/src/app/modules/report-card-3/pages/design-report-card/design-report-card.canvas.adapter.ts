@@ -68,8 +68,39 @@ export class DesignReportCardCanvasAdapter {
     currentZoom = 100;
     originalHeight: any;
     originalWidth: any;
+
+    documentEventListners: {keydown: any} = {keydown : null};
     
     constructor() {
+        this.documentEventListners.keydown = (event) => {
+            console.log('target event', event.target);
+            if (!this.activeLayer || !(event.target instanceof HTMLBodyElement))
+                return;
+            if (event.key == 'ArrowUp') {
+                this.activeLayer.updatePosition(0, -1)
+                event.preventDefault();
+                this.scheduleCanvasReDraw(); 
+            }
+            if (event.key == 'ArrowDown') {
+                this.activeLayer.updatePosition(0, 1);
+                event.preventDefault();
+                this.scheduleCanvasReDraw(); 
+            }
+            if (event.key == 'ArrowLeft') {
+                this.activeLayer.updatePosition(-1, 0);
+                event.preventDefault();
+                this.scheduleCanvasReDraw(); 
+            }
+            if (event.key == 'ArrowRight') {
+                this.activeLayer.updatePosition(1, 0);
+                event.preventDefault();
+                this.scheduleCanvasReDraw(); 
+            } 
+        }
+    }
+
+    destructor() {
+        document.removeEventListener('keydown', this.documentEventListners.keydown);
     }
 
     getEmptyLayoutPage(): { [key: string]: any }{
@@ -180,6 +211,8 @@ export class DesignReportCardCanvasAdapter {
         this.canvas.addEventListener('mouseup', (event) => {
             this.currentMouseDown = false;
         });
+
+        document.addEventListener('keydown', this.documentEventListners.keydown);
     }
 
     updateResolution(newResolution: PageResolution): void{
@@ -347,13 +380,17 @@ export class DesignReportCardCanvasAdapter {
                     case 'RESULT':
                         layerData.fontStyle = { // structuring according to canvas
                             fillStyle: layerData.fillStyle,
-                            font: [layerData.italics, layerData.fontWeight, layerData.fontSize+'px', layerData.font].join(' ')
+                            font: [layerData.italics, layerData.fontWeight, layerData.fontSize + 'px', layerData.font].join(' '),
+                            textBaseline: layerData.textBaseline,
+                            textAlign: layerData.textAlign,
                         };
                         delete layerData.fillStyle;
                         delete layerData.italics;
                         delete layerData.fontWeight;
                         delete layerData.fontSize;
                         delete layerData.font;
+                        delete layerData.textBaseline;
+                        delete layerData.textAlign;
                         switch (layerData.LAYER_TYPE) {
                             case 'TEXT':
                                 newLayerFromLayerData = new CanvasText(layerData, this);
@@ -438,13 +475,17 @@ export class DesignReportCardCanvasAdapter {
             case 'RESULT':
                 layerData.fontStyle = { // structuring according to canvas
                     fillStyle: layerData.fillStyle,
-                    font: [layerData.italics, layerData.fontWeight, layerData.fontSize+'px', layerData.font].join(' ')
+                    font: [layerData.italics, layerData.fontWeight, layerData.fontSize + 'px', layerData.font].join(' '),
+                    textBaseline: layerData.textBaseline,
+                    textAlign: layerData.textAlign,
                 };
                 delete layerData.fillStyle;
                 delete layerData.italics;
                 delete layerData.fontWeight;
                 delete layerData.fontSize;
                 delete layerData.font;
+                delete layerData.textBaseline;
+                delete layerData.textAlign;
                 switch (layerData.LAYER_TYPE) {
                     case 'DATE':
                         if (layerData.date) {

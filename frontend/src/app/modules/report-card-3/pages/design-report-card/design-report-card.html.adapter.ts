@@ -1,5 +1,5 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer, Layer} from './../../class/constants_3';
+import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer, Layer, CanvasImage} from './../../class/constants_3';
 import { PageResolutionDialogComponent } from './../../components/page-resolution-dialog/page-resolution-dialog.component';
 import {ResultDialogComponent } from './../../components/result-dialog/result-dialog.component'
 import { GradeRulesDialogComponent } from './../../components/grade-rules-dialog/grade-rules-dialog.component';
@@ -64,7 +64,10 @@ export class DesignReportCardHtmlAdapter {
     }
 
     addNewLayerForAsset(asset: ParameterAsset): void {
-        this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }, this.vm.canvasAdapter));   
+        if (asset.layerType == CanvasImage)
+            this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset, width: 25 / this.vm.canvasAdapter.pixelTommFactor }, this.vm.canvasAdapter));
+        else
+            this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }, this.vm.canvasAdapter));   
     }
 
     fullScreenToggle(): void{

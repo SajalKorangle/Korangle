@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Layer } from './../../class/constants_3';
 import { FONT_FAMILY_LIST } from './../../class/font';
-import { VERTICAL_ALIGNMENT_LIST, HORIZONTAL_ALIGNMENT_LIST } from './../../class/constants_3'
+import { VERTICAL_ALIGNMENT_LIST_MAP, HORIZONTAL_ALIGNMENT_LIST_MAP } from './../../class/constants_3'
 
 @Component({
   selector: 'app-text-parameters-pannel',
@@ -13,9 +13,9 @@ export class TextParametersPannelComponent implements OnInit {
   @Input() layer: Layer;
   @Input() canvasRefresh: any;
   
-  fontFamilyList = FONT_FAMILY_LIST ;
-  verticalAlignmentList = VERTICAL_ALIGNMENT_LIST;
-  horizontalAlignmentList = HORIZONTAL_ALIGNMENT_LIST;
+  fontFamilyList = FONT_FAMILY_LIST;
+  horizontalAlignmentKeyMap = HORIZONTAL_ALIGNMENT_LIST_MAP;
+  verticalAlignmentKeyMapMap = VERTICAL_ALIGNMENT_LIST_MAP;
 
   constructor() { }
 
@@ -88,6 +88,14 @@ export class TextParametersPannelComponent implements OnInit {
     tempFontArray[2] = fontArgumentsArray[2];
     tempFontArray[3] = font.displayName;
     this.layer.fontStyle.font = tempFontArray.join(' ');
+  }
+
+  getVerticalAlignmentKeys(): Array<string>{
+    return Object.keys(VERTICAL_ALIGNMENT_LIST_MAP);
+  }
+
+  getHorizontalAlignmentKeys(): Array<string>{
+    return Object.keys(HORIZONTAL_ALIGNMENT_LIST_MAP);
   }
 
 }
