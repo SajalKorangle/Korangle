@@ -1,7 +1,6 @@
 // import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 import {ATTENDANCE_STATUS_LIST} from '@modules/attendance/classes/constants';
-import { data } from 'jquery';
-import { bindCallback } from 'rxjs';
+
 interface DesignReportCardCanvasAdapter{
     [key: string]: any;
 }
@@ -9,6 +8,10 @@ interface DesignReportCardCanvasAdapter{
 const FormulaParser = require('hot-formula-parser').Parser;
 
 // Utility Functions ---------------------------------------------------------------------------
+
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function numberToVariable(n: number): string {  // used to convert layer id to a unique variabla name
     // converts decimal number to base 26; 0-25 is encoded as A-Z

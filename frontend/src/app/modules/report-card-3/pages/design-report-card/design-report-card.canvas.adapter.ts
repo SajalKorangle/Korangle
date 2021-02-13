@@ -69,7 +69,8 @@ export class DesignReportCardCanvasAdapter {
     originalHeight: any;
     originalWidth: any;
 
-    documentEventListners: {keydown: any} = {keydown : null};
+    documentEventListners: { keydown: any } = { keydown: null };
+    layerClickEvents: any[] = [];
     
     constructor() {
         console.log(this)
@@ -640,6 +641,7 @@ export class DesignReportCardCanvasAdapter {
         
         this.activeLayerIndex = activeLayerIndex;
         this.activeLayer = this.layers[this.activeLayerIndex];
+        this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.activeLayer));
         // if (event) {    // if event is a mouse event then check for control key pressed and select multiple layers
         //     if (event.shiftKey) {
         //         this.selectedLayers.push(this.activeLayer);
@@ -742,8 +744,7 @@ export class DesignReportCardCanvasAdapter {
         let status = layer.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
         if (status)
             this.context.drawImage(this.virtualCanvas, 0, 0);
-        this.activeLayer = layer;
-        this.activeLayerIndex = this.layers.length - 1;
+        this.updateActiveLayer(this.layers.length - 1)
     }
 
     

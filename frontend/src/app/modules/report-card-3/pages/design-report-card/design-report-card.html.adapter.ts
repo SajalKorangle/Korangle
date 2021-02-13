@@ -1,5 +1,5 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer, Layer, CanvasImage} from './../../class/constants_3';
+import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer, Layer, CanvasImage, sleep} from './../../class/constants_3';
 import { PageResolutionDialogComponent } from './../../components/page-resolution-dialog/page-resolution-dialog.component';
 import {ResultDialogComponent } from './../../components/result-dialog/result-dialog.component'
 import { GradeRulesDialogComponent } from './../../components/grade-rules-dialog/grade-rules-dialog.component';
@@ -7,6 +7,7 @@ import { MarksDialogComponent } from './../../components/marks-dialog/marks-dial
 import {LayoutSharingDialogComponent } from './../../components/layout-sharing-dialog/layout-sharing-dialog.component'
 import { InventoryDialogComponent } from './../../components/inventory-dialog/inventory-dialog.component';
 import { LayerReplacementDialogComponent } from './../../components/layer-replacement-dialog/layer-replacement-dialog.component';
+import { async } from '@angular/core/testing';
 
 export class DesignReportCardHtmlAdapter {
 
@@ -35,12 +36,24 @@ export class DesignReportCardHtmlAdapter {
 
     activeLeftColumn: string = 'layers';
 
-    constructor() {}
+    constructor() {
+    }
 
     // Data
 
     initializeAdapter(vm: DesignReportCardComponent): void {
         this.vm = vm;
+        this.vm.canvasAdapter.layerClickEvents.push(async (layer) => {
+            let el = document.getElementById('layer_#' + layer.id)
+            let count = 10;
+            while (!el && count--) {
+                await sleep(50);
+                el = document.getElementById('layer_#' + layer.id);
+            }
+            if(el)
+                el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            
+        })
     }
 
     canvasSetUp():void {    // Setting canvas height and width to according to parent div
