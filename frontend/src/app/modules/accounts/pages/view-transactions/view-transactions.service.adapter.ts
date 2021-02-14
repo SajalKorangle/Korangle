@@ -10,17 +10,11 @@ export class ViewTransactionsServiceAdapter {
 
 
     initialiseData(){
+        this.vm.transactionsList = [];
         this.vm.isInitialLoading = true;
         this.vm.isLoading = true;
+        this.vm.isLoadingTransaction = true;
         this.vm.loadMoreTransactions = true;
-        this.vm.columnFilter.voucherNumber.value = true;
-        this.vm.columnFilter.date.value = true;
-        this.vm.columnFilter.debitAccount.value = true;
-        this.vm.columnFilter.creditAccount.value = true;
-        this.vm.columnFilter.remark.value = true;
-        this.vm.columnFilter.addedBy.value = false;
-        this.vm.columnFilter.bill.value = false;
-        this.vm.columnFilter.quotation.value = false;
 
         let request_account_session_data = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
@@ -137,14 +131,18 @@ export class ViewTransactionsServiceAdapter {
 
 
     loadTransactions():any{
-        this.vm.transactionsList = [];
-        this.vm.isLoading = true;
+        if(this.vm.transactionsList.length == 0){
+            this.vm.isLoading = true;
+        }
+        console.log('loading', this.vm.transactionsList.length);
+        this.vm.isLoadingTransaction = true;
         let transaction_data = {
-            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
-            'korangle__order': '-id',
-            'korangle__count': this.vm.transactionsList.length.toString() + ',' + this.vm.loadingCount.toString(),
+            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
             'transactionDate__gte': this.vm.startDate,
             'transactionDate__lte': this.vm.endDate,
+            'korangle__order': '-id',
+            'korangle__count': this.vm.transactionsList.length.toString() + ',' + (this.vm.transactionsList.length + this.vm.loadingCount).toString(),
+
             
         }
         console.log(transaction_data);
@@ -152,7 +150,7 @@ export class ViewTransactionsServiceAdapter {
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
         ]).then(value =>{
-            console.log(value);
+            // console.log(value);
             if(value[0].length < this.vm.loadingCount){
                 this.vm.loadMoreTransactions = false;
             }
@@ -167,14 +165,17 @@ export class ViewTransactionsServiceAdapter {
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
             ]).then(data =>{
-                console.log(data);
+                // console.log(data);
                 this.initialiseTransactionData(value[0], data[0], data[1]);
+                this.vm.isLoadingTransaction = false;
                 this.vm.isLoading = false;
             },error =>{
+                this.vm.isLoadingTransaction = false;
                 this.vm.isLoading = false;
             })
             
         }, error =>{
+            this.vm.isLoadingTransaction = false;
             this.vm.isLoading = false;
         })
 
@@ -229,7 +230,7 @@ export class ViewTransactionsServiceAdapter {
 
         })
         this.vm.transactionsList.sort((a,b) => { return (b.voucherNumber - a.voucherNumber)});
-        console.log(this.vm.transactionsList);
+        // console.log(this.vm.transactionsList);
     }
 
 }

@@ -4,17 +4,17 @@
             <input type="date" matInput
                 onkeydown="return false"
                 [ngModel]="startDate"
-                (ngModelChange)="startDate=$event;" placeholder="Start Date ">
+                (ngModelChange)="startDate=$event;transactionsList = [];  " placeholder="Start Date ">
         </mat-form-field>
         
         <mat-form-field style="margin-right: 20px;">
             <input type="date" matInput
                 onkeydown="return false"
                 [ngModel]="endDate"
-                (ngModelChange)="endDate=$event; " placeholder="End Date ">
+                (ngModelChange)="endDate=$event; transactionsList = []; " placeholder="End Date ">
         </mat-form-field>
 
-        <button class="custom-button" style="background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="serviceAdapter.loadTransactions()"><i class="material-icons">search</i></button>
+        <button class="custom-button" style="background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="transactionsList = []; serviceAdapter.loadTransactions(); "><i class="material-icons">search</i></button>
         <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" ><i class="material-icons">print</i></button>
         <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" ><i class="material-icons">download</i></button>
     </div>
@@ -82,7 +82,7 @@
             <tr> 
                 <th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
                 <th *ngIf="columnFilter.date.value" class="text-left"><span>Date</span></th>
-                <th *ngIf="columnFilter.debitAccount.value" class="text-left"><span>Debit A/C</span></th>
+                <th *ngIf="columnFilter.debitAccount.value" class="text-left"><span>Paid To</span></th>
                 <th *ngIf="columnFilter.creditAccount.value" class="text-left"><span>Credit A/C</span></th>
                 <th *ngIf="columnFilter.remark.value" class="text-left"><span>Remark</span></th>
                 <th *ngIf="columnFilter.approvalId.value" class="text-left"><span>Approval ID</span></th>
@@ -124,12 +124,19 @@
             </tr>
             
         </tbody>
-    </table>
 
+    </table>
+    <div *ngIf="loadMoreTransactions && !isLoading">
+        <div *ngIf="isLoadingTransaction">
+            <div style="width: 100%" align="center">
+                <div class="loaderCustom"></div>
+            </div><br>
+        </div><span *ngIf="!isLoadingTransaction" style="color: #817ae9;" (click)="serviceAdapter.loadTransactions()"><u>Load More..</u></span>
+    </div>
     
     
 </div>
 
-<!-- <ng-container *ngIf="isLoading || isInitialLoading">
+<ng-container *ngIf="isInitialLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container> -->
+</ng-container>

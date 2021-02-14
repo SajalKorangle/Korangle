@@ -3,7 +3,8 @@ import {DataStorage} from "../../../../classes/data-storage";
 import { AddTransactionServiceAdapter } from './add-transaction.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { CommonFunctions } from './../../../../classes/common-functions'
-
+import {MatDialog} from '@angular/material';
+import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
 
 @Component({
   selector: 'add-transaction',
@@ -34,12 +35,13 @@ export class AddTransactionComponent implements OnInit {
     serviceAdapter: any;
     autoAdd: any;
 
-    approvalIdList: any;
+    approvalsList: any;
     moreTransaction: any;
     maximumPermittedAmount: any;
 
     constructor( 
       public accountsService: AccountsService,
+      public dialog: MatDialog,
     ){ }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -67,15 +69,7 @@ export class AddTransactionComponent implements OnInit {
           billImages: [],
           quotationImages: [],
           approvalId: null,
-          totalAmount: null,
-          warningMessages: {
-            approvalRequired: false,
-          },
-          errorMessages: {
-            unequalAmount: false,
-            noAccountAdded: false,
-            noAmountAdded: false,
-          },
+          approvalDbId: null,
           
         }
         this.transactions.push(transaction);
@@ -120,24 +114,17 @@ export class AddTransactionComponent implements OnInit {
         totalDebitAmount += account.debitAmount;
       })
       if(transaction.debitAccounts.length>1 && transaction.creditAccounts.length>1){
-        if(totalCreditAmount == totalDebitAmount){
-          transaction.errorMessages.unequalAmount = false;
-        }
-        else{
-          transaction.errorMessages.unequalAmount = true;
-        }
+        
       }
       else if(transaction.creditAccounts.length == 1){                                                      
         if(transaction.creditAccounts[0].creditAmount < totalDebitAmount){
           transaction.creditAccounts[0].creditAmount = totalDebitAmount;
         }
-        transaction.errorMessages.unequalAmount = false;
       }
       else{
         if(transaction.debitAccounts[0].debitAmount < totalCreditAmount){
           transaction.debitAccounts[0].debitAmount = totalCreditAmount;
         }
-        transaction.errorMessages.unequalAmount = false;
       }
     }
 
@@ -159,6 +146,9 @@ export class AddTransactionComponent implements OnInit {
     }
 
     isApprovalRequired(transaction): boolean{
+      if(transaction.approvalId != null){
+        return false;
+      }
       let totalCreditAmount = 0;
       transaction.creditAccounts.forEach(account =>{
         totalCreditAmount += account.creditAmount;
@@ -167,6 +157,7 @@ export class AddTransactionComponent implements OnInit {
       transaction.debitAccounts.forEach(account =>{
         totalDebitAmount += account.debitAmount;
       })
+      
       if(totalCreditAmount > this.maximumPermittedAmount || totalDebitAmount > this.maximumPermittedAmount){
         return true;
       }
@@ -174,6 +165,45 @@ export class AddTransactionComponent implements OnInit {
         return false;
       }
     }
+
+    isAmountMoreThanApproval(transaction): boolean{
+      if(transaction.approvalId == null){
+        return false;
+      }
+      let maxAmount = this.approvalsList.find(approval => approval.dbId == transaction.approvalDbId).totalAmount;
+      let totalCreditAmount = 0;
+      transaction.creditAccounts.forEach(account =>{
+        totalCreditAmount += account.creditAmount;
+      })
+      if(totalCreditAmount > maxAmount){
+        return true;
+      }
+      return false;
+
+    }
+
+    // isReapprovalRequired(transaction): boolean{
+    //   if(transaction.approvalId == null){
+    //     return false;
+    //   }
+    //   let temp = false;
+    //   for(let i=0;i<this.transactions.length; i++){
+    //     if(this.isApprovalRequired(this.transactions[i]) == true){
+    //       temp = true;
+    //       return temp;
+    //     }
+    //   }
+    //   return temp;
+    // }
+
+    isApprovalAttached(transaction): boolean{
+      if(transaction.approvalId != null){
+        return true;
+      }
+      return false;
+    }
+
+
 
     isAccountNotMentioned(transaction): boolean{
       // console.log(transaction);
@@ -230,7 +260,9 @@ export class AddTransactionComponent implements OnInit {
 
     isAddButtonDisabled(): boolean{
       for(let i=0;i<this.transactions.length; i++){
-        if(this.isApprovalRequired(this.transactions[i]) || this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i]) || this.isAccountRepeated(this.transactions[i])){
+        if(this.isApprovalRequired(this.transactions[i]) || this.isAmountUnEqual(this.transactions[i]) || 
+        this.isAccountNotMentioned(this.transactions[i]) || this.isAccountRepeated(this.transactions[i]) || 
+        this.isAmountMoreThanApproval(this.transactions[i]) ){
           return true;
         }
       }
@@ -239,7 +271,9 @@ export class AddTransactionComponent implements OnInit {
 
     isApprovalButtonDisabled(): boolean{
       for(let i=0;i<this.transactions.length; i++){
-        if(this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i]) || this.isAccountRepeated(this.transactions[i])){
+        if(this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i]) || 
+        this.isAccountRepeated(this.transactions[i]) || this.isAmountMoreThanApproval(this.transactions[i]) ||
+        this.isApprovalAttached(this.transactions[i])){
           return true;
         }
       }
@@ -272,6 +306,33 @@ export class AddTransactionComponent implements OnInit {
       }
       console.log(transaction.billImages);
       console.log(transaction.quotationImages);
+  }
+
+  assignApproval(approval, transaction){
+    transaction.approvalId = approval.approvalId;
+    transaction.remark = approval.remark;
+    transaction.debitAccounts = approval.debitAccounts;
+    transaction.creditAccounts = approval.creditAccounts;
+    transaction.billImages = approval.billImages;
+    transaction.quotationImages = approval.quotationImages;
+    transaction.approvalDbId = approval.dbId,
+    console.log(approval);
+    console.log(transaction);
+
+  }
+
+  openImagePreviewDialog(images: any, index: any, editable): void {
+    console.log(images);
+    const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '100%',
+        width: '100%',
+        data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
 

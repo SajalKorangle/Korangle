@@ -1,10 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, HostListener} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
 import { ViewTransactionsServiceAdapter } from './view-transactions.service.adapter'
 import { CommonFunctions } from './../../../../classes/common-functions'
-import { element } from 'protractor';
 
 
 @Component({
@@ -30,6 +29,7 @@ export class ViewTransactionsComponent implements OnInit {
     ){ }
 
     isLoading: any;
+    isLoadingTransaction: any;
     loadMoreTransactions: any;
     loadingCount = 15;
 
@@ -142,6 +142,7 @@ export class ViewTransactionsComponent implements OnInit {
       this.serviceAdapter.initialiseData();
       this.popoulateColumnFilter();
       this.showSelectedOnly = false;
+      console.log(this.isLoadingTransaction);
     }
 
     popoulateColumnFilter(): any{
@@ -263,4 +264,10 @@ export class ViewTransactionsComponent implements OnInit {
       }
       return false;
     }
+
+    // @HostListener('window:scroll', ['$event']) onScrollEvent(event){
+    //   if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreTransactions == true && this.isLoadingTransaction == false){
+    //       this.serviceAdapter.loadTransactions();
+    //   }
+    // } 
 }

@@ -21,3 +21,8 @@ span {
     background: #ffffff;
     padding: 8px 8px;
 }
+.custom-button:hover {
+    background: #ff9800;
+    color:white;
+    box-shadow: 0 0 11px rgba(33,33,33,.2); 
+}

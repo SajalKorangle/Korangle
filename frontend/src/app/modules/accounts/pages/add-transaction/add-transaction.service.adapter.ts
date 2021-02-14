@@ -13,6 +13,7 @@ export class AddTransactionServiceAdapter {
 
     //initialize data
     initializeData(): void {
+        this.vm.approvalsList = [];
         let request_account_data = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
             parentAccount__accountType: 'ACCOUNT',
@@ -23,10 +24,16 @@ export class AddTransactionServiceAdapter {
         }
         this.vm.isLoading = true;
 
+        let granted_approval_data = {
+            'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
+            'requestStatus': 'APPROVED',
+            'parentTransaction': 'null__korangle',
+        }
+
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_data),
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
-
+            this.vm.accountsService.getObjectList(this.vm.accountsService.approval, granted_approval_data),
         ]).then(value =>{
             console.log(value);
             this.vm.accountsList = value[0];
@@ -36,12 +43,88 @@ export class AddTransactionServiceAdapter {
             else{
                 this.vm.maximumPermittedAmount = null;
             }
+            let approval_id = [];
+            value[2].forEach(approval =>{
+                if(approval.parentTransaction == null){
+                    approval_id.push(approval.id);
+                }
+            })
+            let approval_details_data = {
+                'parentApproval__in': approval_id,
+            }
+            Promise.all([
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+            ]).then(data =>{
+                console.log(data);
+                this.initialiseApprovalData(value[2], data[0], data[1]);
+            })
             this.vm.isLoading = false;
             
         },error =>{
             this.vm.isLoading = false;
         })
     }
+
+    initialiseApprovalData(approvalList, approvalAccounts, approvalImages){
+        approvalList.forEach(approval =>{
+            if(approval.parentTransaction == null){
+                let tempData = {
+                    dbId: approval.id,
+                    debitAccounts: [],
+                    creditAccounts: [],
+                    remark: approval.remark,
+                    billImages: [],
+                    quotationImages: [],
+                    approvalId: approval.approvalId,
+                    parentTransaction: approval.parentTransaction,
+                    transactionDate: approval.transactionDate,
+                    totalAmount: 0,
+                }
+
+                
+
+                approvalAccounts.forEach(account =>{
+                    if(account.parentApproval == approval.id){
+                        let tempAccount = this.vm.accountsList.find(acccount => acccount.parentAccount == account.parentAccount);
+                        if(account.transactionType == 'DEBIT'){
+                            let temp_data = {
+                                'debitAccount': tempAccount,
+                                'debitAmount': account.amount,
+                            }
+                            tempData.debitAccounts.push(temp_data);
+                        }
+                        else{
+                            let temp_data = {
+                                'creditAccount': tempAccount,
+                                'creditAmount': account.amount,
+                            }
+                            tempData.creditAccounts.push(temp_data);
+                        }
+                    }
+                })
+                approvalImages.forEach(image =>{
+                    if(image.parentApproval == approval.id){
+                        if(image.imageType == 'BILL'){
+                            tempData.billImages.push(image);
+                        }
+                        else{
+                            tempData.quotationImages.push(image);
+                        }
+                    }
+                })
+
+                tempData.debitAccounts.forEach(account =>{
+                    tempData.totalAmount += account.debitAmount;
+                })
+                
+                this.vm.approvalsList.push(tempData);
+            }
+        })
+        this.vm.approvalsList.sort((a,b) => { return (b.approvalId - a.approvalId)});
+        console.log(this.vm.approvalsList);
+    }
+
 
     
     addTransactions():any{
@@ -65,6 +148,7 @@ export class AddTransactionServiceAdapter {
                     voucherNumber: lastVoucherNumber,
                     remark: transaction.remark,
                     transactionDate: this.vm.selectedDate,
+                    approvalId: transaction.approvalId,
                 }
                 lastVoucherNumber = lastVoucherNumber + 1; 
                 toCreateList.push(tempData);
@@ -150,10 +234,10 @@ export class AddTransactionServiceAdapter {
                         i = i + 1;
                         service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
                     })
-                    service.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
-                    service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList));
 
                 });
+                service.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
+                service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList));
                 Promise.all(service).then(data =>{
                     console.log(data);
                     alert('Transaction Recorded Successfully');
@@ -166,21 +250,13 @@ export class AddTransactionServiceAdapter {
     }
 
     requestApprovals(): any{
-        // let id = [];
-        // this.vm.accountsList.forEach(a =>{
-        //     id.push(a.id);
-        //     let d = {
-        //         id: a.id,
-        //         balance: 40000,
+        // let tempList = [];
+        // this.vm.transactions.forEach(transaction =>{
+        //     if(transaction.approvalId == null){
+        //         tempList.push(transaction);
         //     }
-            
-        // this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.account_session, d).then(v => {
-        //     console.log(v);
-        // });
         // })
-        // this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction, {}).then(v =>{
-        //     console.log(v);
-        // })
+        // this.vm.transactions = tempList;
         let data = {
             'parentEmployeeRequestedBy__parentSchool': this.vm.user.activeSchool.dbId,
             'korangle__order': '-approvalId',
@@ -199,10 +275,12 @@ export class AddTransactionServiceAdapter {
                 let tempData = {
                     parentEmployeeRequestedBy: this.vm.user.activeSchool.employeeId,
                     remark: transaction.remark,
-                    requestedGenerationDateTime: this.vm.selectedDate,
+                    requestedGenerationDateTime: CommonFunctions.formatDate(new Date(), ''),
                     autoAdd: this.vm.autoAdd,
                     requestStatus: 'PENDING',
                     approvalId: lastApprovalID,
+                    transactionDate: this.vm.selectedDate,
+
                 }
                 lastApprovalID = lastApprovalID + 1;
                 toCreateList.push(tempData);

@@ -73,6 +73,7 @@ export class GrantApprovalServiceAdapter {
                 approvedByName: null,
                 requestStatus: approval.requestStatus,
                 parentTransaction: approval.parentTransaction,
+                transactionDate: approval.transactionDate,
                 autoAdd: approval.autoAdd,
             }
 
@@ -130,7 +131,7 @@ export class GrantApprovalServiceAdapter {
             this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.approval, tempData),
         ]).then(value =>{
             console.log(value);
-            if(approval.autoAdd){
+            if(approval.autoAdd && status=='APPROVED'){
                 let data = {
                     'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
                     'korangle__order': '-voucherNumber',
@@ -147,7 +148,7 @@ export class GrantApprovalServiceAdapter {
                         parentEmployee: approval.requestedBy,
                         voucherNumber: lastVoucherNumber,
                         remark: approval.remark,
-                        transactionDate: CommonFunctions.formatDate(new Date(), ''),
+                        transactionDate: approval.transactionDate,
                         approvalId: approval.approvalId,
 
                     }

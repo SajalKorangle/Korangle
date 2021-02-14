@@ -80,6 +80,8 @@ class Approval(models.Model):
     approvedGenerationDateTime = models.DateField(null=True, verbose_name='approvedGenerationDateTime')
     remark = models.TextField(null=True, blank=True, verbose_name='remark')
     autoAdd = models.BooleanField(null = False, default=False)
+    transactionDate = models.DateField(null=True, verbose_name='transactionDate')
+    
 
     APPROVED_STATUS = 'APPROVED'
     PENDING_STATUS = 'PENDING'
