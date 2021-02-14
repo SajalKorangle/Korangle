@@ -60,6 +60,12 @@ jobs:
         cd backend
         ./manage.py makemigrations --check
 
+    - name: Build Test
+      run: |
+        cd frontend
+        cp src/environments/environment.ts src/environments/environment.prod.ts
+        node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod --build-optimizer
+
     - name: Karma Tests
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
