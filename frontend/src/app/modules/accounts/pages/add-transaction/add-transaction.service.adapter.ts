@@ -240,6 +240,8 @@ export class AddTransactionServiceAdapter {
                 service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList));
                 Promise.all(service).then(data =>{
                     console.log(data);
+                    this.vm.transactions = [];
+                    this.vm.addNewTransaction();
                     alert('Transaction Recorded Successfully');
                 })
 
@@ -358,6 +360,8 @@ export class AddTransactionServiceAdapter {
                 services.push(this.vm.accountsService.createObjectList(this.vm.accountsService.approval_request_account_details, toCreateAccountList));
                 Promise.all(services).then(data =>{
                     console.log(data);
+                    this.vm.transactions = [];
+                    this.vm.addNewTransaction();
                     alert('Approval Request Generated Successfully');
                 })
 
@@ -365,6 +369,7 @@ export class AddTransactionServiceAdapter {
         })
         
     }
+    
     
 
 }

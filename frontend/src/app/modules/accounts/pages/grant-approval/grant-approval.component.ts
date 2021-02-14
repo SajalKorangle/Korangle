@@ -3,6 +3,8 @@ import {DataStorage} from "../../../../classes/data-storage";
 import { GrantApprovalServiceAdapter } from './grant-approval.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
+import {MatDialog} from '@angular/material';
+import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
 
 @Component({
     selector: 'grant-approval',
@@ -31,6 +33,7 @@ export class GrantApprovalComponent implements OnInit {
     constructor( 
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
+        public dialog: MatDialog,
     ){ }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -78,6 +81,20 @@ export class GrantApprovalComponent implements OnInit {
         }
         
         return style;
+    }
+
+    openImagePreviewDialog(images: any, index: any, editable): void {
+        console.log(images);
+        const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+            height: '100%',
+            width: '100%',
+            data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+        });
     }
 
 

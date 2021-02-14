@@ -4,6 +4,11 @@ import { AccountsService } from './../../../../services/modules/accounts/account
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
 import { ViewTransactionsServiceAdapter } from './view-transactions.service.adapter'
 import { CommonFunctions } from './../../../../classes/common-functions'
+import {MatDialog} from '@angular/material';
+import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_TRANSACTIONS } from '../../../../print/print-routes.constants';
+
 
 
 @Component({
@@ -26,6 +31,8 @@ export class ViewTransactionsComponent implements OnInit {
     constructor( 
       public accountsService: AccountsService,
       public employeeService: EmployeeService,
+      public dialog: MatDialog,
+      public printService: PrintService,
     ){ }
 
     isLoading: any;
@@ -95,7 +102,7 @@ export class ViewTransactionsComponent implements OnInit {
       },
       remark: {
         displayName: 'Remark',
-        value: true,
+        value: false,
       },
       approvalId: {
         displayName: 'Approval ID',
@@ -145,6 +152,14 @@ export class ViewTransactionsComponent implements OnInit {
       console.log(this.isLoadingTransaction);
     }
 
+
+    resetValues(){
+      this.transactionsList = [];
+      this.isLoading = true;
+      this.isLoadingTransaction = true;
+      this.loadMoreTransactions = true;
+    }
+  
     popoulateColumnFilter(): any{
       let columnFilter = [];
       for(let filter in this.columnFilter){
@@ -265,9 +280,33 @@ export class ViewTransactionsComponent implements OnInit {
       return false;
     }
 
-    // @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-    //   if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreTransactions == true && this.isLoadingTransaction == false){
-    //       this.serviceAdapter.loadTransactions();
-    //   }
-    // } 
+    @HostListener('window:scroll', ['$event']) onScrollEvent(event){
+      if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) ){
+        
+        console.log('added', this.loadMoreTransactions, this.isLoadingTransaction);
+      }
+      if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreTransactions == true && this.isLoadingTransaction == false){
+          this.serviceAdapter.loadTransactions();
+      }
+    } 
+
+    func(a){
+      console.log(a);
+    }
+
+    openImagePreviewDialog(images: any, index: any, editable): void {
+      console.log(images);
+      const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+          maxWidth: '100vw',
+          maxHeight: '100vh',
+          height: '100%',
+          width: '100%',
+          data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+      });
+  }
+
+
 }

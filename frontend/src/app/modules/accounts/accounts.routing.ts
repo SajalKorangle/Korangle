@@ -3,6 +3,8 @@ import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AccountsComponent } from './accounts.component';
+import { PRINT_TRANSACTIONS } from './../../print/print-routes.constants';
+import { PrintTransactionsListComponent } from './print/print-transactions/print-transactions.component' 
 
 const routes: Routes = [
     {
@@ -54,6 +56,11 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: 'app/modules/accounts/pages/settings/settings.module#SettingsModule',
         data: {moduleName: 'accounts'},
+    },
+    
+    {
+        path: PRINT_TRANSACTIONS,
+        component: PrintTransactionsListComponent,
     },
     
     {

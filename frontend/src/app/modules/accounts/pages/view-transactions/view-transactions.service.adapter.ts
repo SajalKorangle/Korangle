@@ -1,4 +1,5 @@
 import { ViewTransactionsComponent } from './view-transactions.component'
+import { PRINT_TRANSACTIONS } from '../../../../print/print-routes.constants';
 
 export class ViewTransactionsServiceAdapter { 
     
@@ -181,6 +182,59 @@ export class ViewTransactionsServiceAdapter {
 
     }
 
+    loadAllTransactions():any{
+        
+        this.vm.transactionsList = [];
+        let transaction_data = {
+            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
+            'transactionDate__gte': this.vm.startDate,
+            'transactionDate__lte': this.vm.endDate,
+            'korangle__order': '-id',
+            // 'korangle__count': this.vm.transactionsList.length.toString() + ',' + (this.vm.transactionsList.length + this.vm.loadingCount).toString(),
+
+            
+        }
+
+        Promise.all([
+            this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
+        ]).then(value =>{
+            // console.log(value);
+            if(value[0].length < this.vm.loadingCount){
+                this.vm.loadMoreTransactions = false;
+            }
+            let transaction_id_data = [];
+            value[0].forEach(element =>{
+                transaction_id_data.push(element.id);
+            })
+            let transaction_details_data = {
+                'parentTransaction__in': transaction_id_data
+            }
+            Promise.all([
+                this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
+                this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
+            ]).then(data =>{
+                // console.log(data);
+                this.initialiseTransactionData(value[0], data[0], data[1]);
+                this.printTransactionsList();
+                
+            },error =>{
+            })
+            
+        }, error =>{
+        })
+
+    }
+
+    printTransactionsList(){
+        let value = {
+          transactionsList: this.vm.transactionsList,
+            startDate: this.vm.startDate,
+            endDate: this.vm.endDate,
+            columnFilter: this.vm.columnFilter,
+          };
+          this.vm.printService.navigateToPrintRoute(PRINT_TRANSACTIONS, {user: this.vm.user, value});
+      }
+
     initialiseTransactionData(transactionList, transactionAccounts, transactionImages){
         transactionList.forEach(transaction =>{
             let tempData = {
@@ -226,11 +280,13 @@ export class ViewTransactionsServiceAdapter {
                     }
                 }
             })
+            tempData.billImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
+            tempData.quotationImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
             this.vm.transactionsList.push(tempData);
 
         })
         this.vm.transactionsList.sort((a,b) => { return (b.voucherNumber - a.voucherNumber)});
-        // console.log(this.vm.transactionsList);
+        console.log(this.vm.transactionsList);
     }
 
 }

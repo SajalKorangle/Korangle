@@ -124,6 +124,7 @@ const routes: Routes = [
             {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
             {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
             {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
+            {path: 'accounts', loadChildren: 'app/modules/accounts/accounts.module#AccountsModule'},
         ]
     }
 ];

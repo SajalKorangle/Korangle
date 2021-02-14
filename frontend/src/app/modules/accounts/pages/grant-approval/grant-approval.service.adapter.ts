@@ -111,6 +111,9 @@ export class GrantApprovalServiceAdapter {
                     }
                 }
             })
+            
+            tempData.billImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
+            tempData.quotationImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
             this.vm.approvalsList.push(tempData);
 
         })

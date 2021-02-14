@@ -53,15 +53,15 @@
                             <div class="col-md-6">
                                 <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
 
-                                <div style="display: inline-block;" *ngFor="let image of approval.billImages">
-                                    <img src="{{image.imageURL}}" class="image-column" >
+                                <div style="display: inline-block;" *ngFor="let image of approval.billImages; let i = index">
+                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.billImages, i, 0)">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
 
-                                <div style="display: inline-block;" *ngFor="let image of approval.quotationImages">
-                                    <img src="{{image.imageURL}}" class="image-column" >
+                                <div style="display: inline-block;" *ngFor="let image of approval.quotationImages; let i = index">
+                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.quotationImages, i, 0)">
                                 </div>
                             </div>
                         </div>
