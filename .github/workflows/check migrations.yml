@@ -52,8 +52,8 @@ jobs:
 
     - name: Testing Linting
       run: |
-        cd frontend/scripts/ng-lint
-        ./run_linter_ci.sh
+        cd frontend
+        ./scripts/ng-lint/run_linter_ci.sh
 
     - name: Checking Migration
       run: |
