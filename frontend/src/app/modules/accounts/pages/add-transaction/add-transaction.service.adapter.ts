@@ -169,11 +169,17 @@ export class AddTransactionServiceAdapter {
                             transactionType: 'DEBIT',
                         }
                         toCreateAccountList.push(tempData);
-                        let tempData1 = {
-                            id: account.debitAccount.id,
-                            balance: account.debitAccount.balance + account.debitAmount
+                        let tempAccount = toUpdateAccountBalanceList.find(acccount => acccount.id == account.debitAccount.id);
+                        if(tempAccount == undefined){
+                            let tempData1 = {
+                                id: account.debitAccount.id,
+                                balance: account.debitAccount.balance + account.debitAmount
+                            }
+                            toUpdateAccountBalanceList.push(tempData1);
                         }
-                        toUpdateAccountBalanceList.push(tempData1);
+                        else{
+                            tempAccount.balance += account.debitAccount;
+                        }
                     });
                     this.vm.transactions[index].creditAccounts.forEach(account =>{
                         let tempData = {
@@ -184,11 +190,17 @@ export class AddTransactionServiceAdapter {
                         }
                         toCreateAccountList.push(tempData);
                         
-                        let tempData1 = {
-                            id: account.creditAccount.id,
-                            balance: account.creditAccount.balance - account.creditAmount
+                        let tempAccount = toUpdateAccountBalanceList.find(acccount => acccount.id == account.debitAccount.id);
+                        if(tempAccount == undefined){
+                            let tempData1 = {
+                                id: account.debitAccount.id,
+                                balance: account.debitAccount.balance - account.creditAmount
+                            }
+                            toUpdateAccountBalanceList.push(tempData1);
                         }
-                        toUpdateAccountBalanceList.push(tempData1);
+                        else{
+                            tempAccount.balance -= account.creditAmount;
+                        }
                     });
                     
                     

@@ -1,8 +1,11 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit, Inject, HostListener} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { MyApprovalRequestsServiceAdapter } from './my-approval-requests.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
+import {MatDialog} from '@angular/material';
+import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
+import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/use-for-transaction-dialog.component'
 
 @Component({
     selector: 'my-approval-requests',
@@ -26,14 +29,19 @@ export class MyApprovalRequestsComponent implements OnInit {
     serviceAdapter: MyApprovalRequestsServiceAdapter;
 
     approvalsList: any;
-    loadingCount = 15;
+    loadingCount = 10;
 
     accountsList: any;
     employeeList: any;
 
+    
+    loadMoreApprovals: any;
+    isLoadingApproval: any;
+
     constructor( 
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
+        public dialog: MatDialog,
     ){ }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -79,6 +87,39 @@ export class MyApprovalRequestsComponent implements OnInit {
             return 'Declined';
         }
     }
+
+    openImagePreviewDialog(images: any, index: any, editable): void {
+        console.log(images);
+        const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+            height: '100%',
+            width: '100%',
+            data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+        });
+    }
+
+    openUseForPaymentDialog(approval: any): void {
+        const dialogRef = this.dialog.open(UseFortransactionDialogComponent, {
+            data: {'approval': JSON.parse(JSON.stringify(approval)), 'originalApproval': approval, 'vm': this}
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+        });
+    }
+
+    @HostListener('window:scroll', ['$event']) onScrollEvent(event){
+        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) ){
+          
+          console.log('added', this.loadMoreApprovals, this.isLoadingApproval);
+        }
+        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreApprovals == true && this.isLoadingApproval == false){
+            this.serviceAdapter.loadMoreApprovals();
+        }
+    } 
 
 
 }

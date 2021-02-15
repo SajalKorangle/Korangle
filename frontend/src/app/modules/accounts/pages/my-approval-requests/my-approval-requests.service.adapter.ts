@@ -1,5 +1,6 @@
 import { MyApprovalRequestsComponent } from './my-approval-requests.component'
 import { CommonFunctions } from './../../../../classes/common-functions'
+import { ThrowStmt } from '@angular/compiler';
 
 export class MyApprovalRequestsServiceAdapter {
 
@@ -12,9 +13,11 @@ export class MyApprovalRequestsServiceAdapter {
     initialiseData(){
 
         this.vm.approvalsList = [];
+        this.vm.loadMoreApprovals = true;
+        this.vm.isLoadingApproval = true;
 
         let approval_request_data = {
-            parentEmployeeRequestedBy__parentSchool: this.vm.user.activeSchool.dbId,
+            parentEmployeeRequestedBy: this.vm.user.activeSchool.employeeId,
             'korangle__order': '-id',
             'korangle__count': this.vm.approvalsList.length.toString() + ',' + this.vm.loadingCount.toString(),
         }
@@ -44,15 +47,56 @@ export class MyApprovalRequestsServiceAdapter {
             let approval_details_data = {
                 'parentApproval__in': approval_id,
             }
+            
+            if(value[0].length < this.vm.loadingCount){
+                this.vm.loadMoreApprovals = false;
+            }
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
             ]).then(data =>{
                 console.log(data);
                 this.initialiseApprovalData(value[0], data[0], data[1]);
+                this.vm.isLoadingApproval = false;
             })
         })
         
+    }
+
+    loadMoreApprovals(){
+        this.vm.isLoadingApproval = true;
+
+        let approval_request_data = {
+            parentEmployeeRequestedBy: this.vm.user.activeSchool.employeeId,
+            'korangle__order': '-id',
+            'korangle__count': this.vm.approvalsList.length.toString() + ',' + (this.vm.approvalsList.length + this.vm.loadingCount).toString(),
+        }
+        console.log(approval_request_data);
+        Promise.all([
+            this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
+        ]).then(value =>{
+            console.log(value);
+            let approval_id = [];
+            if(value[0].length < this.vm.loadingCount){
+                this.vm.loadMoreApprovals = false;
+            }
+            value[0].forEach(approval =>{
+                approval_id.push(approval.id);
+            })
+            let approval_details_data = {
+                'parentApproval__in': approval_id,
+            }
+            Promise.all([
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+            ]).then(data =>{
+                this.initialiseApprovalData(value[0], data[0], data[1]);
+                this.vm.isLoadingApproval = false;
+            })
+        },error =>{
+            this.vm.isLoadingApproval = false;
+        })
+
     }
 
     initialiseApprovalData(approvalList, approvalAccounts, approvalImages){
@@ -111,6 +155,8 @@ export class MyApprovalRequestsServiceAdapter {
                     }
                 }
             })
+            tempData.billImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
+            tempData.quotationImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
             this.vm.approvalsList.push(tempData);
 
         })
@@ -118,148 +164,6 @@ export class MyApprovalRequestsServiceAdapter {
         console.log(this.vm.approvalsList);
     }
 
-    changeApprovalStatus(approval, status){
-        approval.requestStatus = status;
-        let tempData = {
-            id: approval.dbId,
-            requestStatus: approval.requestStatus,
-            parentEmployeeApprovedBy: this.vm.user.activeSchool.employeeId,
-            approvedGenerationDateTime: CommonFunctions.formatDate(new Date(), ''),
-        }
-        console.log(approval);
-        Promise.all([
-            this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.approval, tempData),
-        ]).then(value =>{
-            console.log(value);
-            if(approval.autoAdd && status=='APPROVED'){
-                let data = {
-                    'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
-                    'korangle__order': '-voucherNumber',
-                    'korangle__count': '0,1',
-                }
-                let lastVoucherNumber = 1;
-                Promise.all([
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
-                ]).then(val =>{
-                    if(val[0].length > 0){
-                        lastVoucherNumber = val[0][0].voucherNumber + 1;
-                    }
-                    let transaction_data = {
-                        parentEmployee: approval.requestedBy,
-                        voucherNumber: lastVoucherNumber,
-                        remark: approval.remark,
-                        transactionDate: approval.transactionDate,
-                        approvalId: approval.approvalId,
-
-                    }
-                    Promise.all([
-                        this.vm.accountsService.createObject(this.vm.accountsService.transaction, transaction_data),
-                    ]).then(value1 =>{
-                        console.log(value1);
-                        let toCreateAccountList = [];
-                        let toUpdateAccountBalanceList = [];
-                        const service = [];
-
-                        // value[0].forEach((element,index) =>{
-                        approval.debitAccounts.forEach(account =>{
-                            let tempData = {
-                                parentTransaction: value1[0].id,
-                                parentAccount: account.accountDbId,
-                                amount: account.amount,
-                                transactionType: 'DEBIT',
-                            }
-                            toCreateAccountList.push(tempData);
-                            let tempData1 = {
-                                id: account.dbId,
-                                balance: account.balance + account.amount,
-                            }
-                            toUpdateAccountBalanceList.push(tempData1);
-                        });
-                        approval.creditAccounts.forEach(account =>{
-                            let tempData = {
-                                parentTransaction: value1[0].id,
-                                parentAccount: account.accountDbId,
-                                amount: account.amount,
-                                transactionType: 'CREDIT',
-                            }
-                            toCreateAccountList.push(tempData);
-                            
-                            let tempData1 = {
-                                id: account.dbId,
-                                balance: account.balance - account.amount,
-                            }
-                            toUpdateAccountBalanceList.push(tempData1);
-                        });
-                            
-                            
-                        let i=1;
-                        approval.billImages.forEach(image =>{
-                        let tempData = {
-                            parentTransaction: value1[0].id,
-                            imageURL: image.imageURL,
-                            orderNumber: i,
-                            imageType: 'BILL',
-                        }
-                        let temp_form_data = new FormData();
-                        const layout_data = { ...tempData,};
-                        Object.keys(layout_data).forEach(key => {
-                            if (key === 'imageURL' ) {
-                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                            } else {
-                                temp_form_data.append(key, layout_data[key]);
-                            }
-                        });
-                        i = i + 1;
-                        service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
     
-                        })
-                            
-                        i=1;
-                        approval.quotationImages.forEach(image =>{
-                            let tempData = {
-                                parentTransaction: value1[0].id,
-                                imageURL: image.imageURL,
-                                orderNumber: i,
-                                imageType: 'QUOTATION',
-                            }
-                            let temp_form_data = new FormData();
-                            const layout_data = { ...tempData,};
-                            Object.keys(layout_data).forEach(key => {
-                                if (key === 'imageURL' ) {
-                                    temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                                } else {
-                                    temp_form_data.append(key, layout_data[key]);
-                                }
-                            });
-                            i = i + 1;
-                            service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
-                        })
-                        service.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
-                        service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList));
-                        
-                        let tempData = {
-                            id: approval.dbId,
-                            parentTransaction: value1[0].id,
-                        }
-                        approval.parentTransaction = value1[0].id;
-                        service.push(this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.approval, tempData))
-
-
-                        // });
-                        Promise.all(service).then(data =>{
-                            console.log(data);
-                            alert('Request Status Changed Successfully');
-                        })
-        
-                    })
-        
-                })
-            }
-            else{
-                alert('Request Status Changed Successfully');
-
-            }
-        })
-    }
 
 }

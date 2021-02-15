@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_TRANSACTIONS } from '../../../../print/print-routes.constants';
+import {ExcelService} from '../../../../excel/excel-service';
 
 
 
@@ -33,6 +34,7 @@ export class ViewTransactionsComponent implements OnInit {
       public employeeService: EmployeeService,
       public dialog: MatDialog,
       public printService: PrintService,
+      public excelService: ExcelService,
     ){ }
 
     isLoading: any;
@@ -79,9 +81,7 @@ export class ViewTransactionsComponent implements OnInit {
       bill: {
         displayName: string,
         value: boolean,
-      },
-      update: {},
-      delete: {},
+      }
     } = {
       voucherNumber: {
         displayName: 'Voucher Number',
@@ -119,9 +119,7 @@ export class ViewTransactionsComponent implements OnInit {
       bill: {
         displayName: 'Bills',
         value: false,
-      },
-      update: false,
-      delete: false,
+      }
     }
     
 
@@ -306,7 +304,8 @@ export class ViewTransactionsComponent implements OnInit {
   
       dialogRef.afterClosed().subscribe(result => {
       });
-  }
+    }
+
 
 
 }

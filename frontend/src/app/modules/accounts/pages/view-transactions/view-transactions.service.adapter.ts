@@ -182,58 +182,63 @@ export class ViewTransactionsServiceAdapter {
 
     }
 
-    loadAllTransactions():any{
-        
-        this.vm.transactionsList = [];
-        let transaction_data = {
-            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
-            'transactionDate__gte': this.vm.startDate,
-            'transactionDate__lte': this.vm.endDate,
-            'korangle__order': '-id',
-            // 'korangle__count': this.vm.transactionsList.length.toString() + ',' + (this.vm.transactionsList.length + this.vm.loadingCount).toString(),
+    loadAllTransactions(str):any{
 
-            
-        }
-
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
-        ]).then(value =>{
-            // console.log(value);
-            if(value[0].length < this.vm.loadingCount){
-                this.vm.loadMoreTransactions = false;
-            }
-            let transaction_id_data = [];
-            value[0].forEach(element =>{
-                transaction_id_data.push(element.id);
-            })
-            let transaction_details_data = {
-                'parentTransaction__in': transaction_id_data
-            }
-            Promise.all([
-                this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
-                this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
-            ]).then(data =>{
-                // console.log(data);
-                this.initialiseTransactionData(value[0], data[0], data[1]);
+        if(this.vm.loadMoreTransactions == false){
+            if(str == 'print'){
                 this.printTransactionsList();
-                
-            },error =>{
+            }
+            else{
+                this.downloadList();
+            }
+        }
+        
+        else{
+            this.vm.transactionsList = [];
+            let transaction_data = {
+                'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
+                'transactionDate__gte': this.vm.startDate,
+                'transactionDate__lte': this.vm.endDate,
+                'korangle__order': '-id',
+                // 'korangle__count': this.vm.transactionsList.length.toString() + ',' + (this.vm.transactionsList.length + this.vm.loadingCount).toString(),
+            }
+    
+            Promise.all([
+                this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
+            ]).then(value =>{
+                // console.log(value);
+                if(value[0].length < this.vm.loadingCount){
+                    this.vm.loadMoreTransactions = false;
+                }
+                let transaction_id_data = [];
+                value[0].forEach(element =>{
+                    transaction_id_data.push(element.id);
+                })
+                let transaction_details_data = {
+                    'parentTransaction__in': transaction_id_data
+                }
+                Promise.all([
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
+                ]).then(data =>{
+                    // console.log(data);
+                    this.initialiseTransactionData(value[0], data[0], data[1]);
+                    this.vm.loadMoreTransactions = false;
+                    if(str == 'print'){
+                        this.printTransactionsList();
+                    }
+                    else{
+                        this.downloadList();
+                    }
+                    
+                },error =>{
+                })
+            }, error =>{
             })
-            
-        }, error =>{
-        })
 
+        }
+        
     }
-
-    printTransactionsList(){
-        let value = {
-          transactionsList: this.vm.transactionsList,
-            startDate: this.vm.startDate,
-            endDate: this.vm.endDate,
-            columnFilter: this.vm.columnFilter,
-          };
-          this.vm.printService.navigateToPrintRoute(PRINT_TRANSACTIONS, {user: this.vm.user, value});
-      }
 
     initialiseTransactionData(transactionList, transactionAccounts, transactionImages){
         transactionList.forEach(transaction =>{
@@ -288,5 +293,74 @@ export class ViewTransactionsServiceAdapter {
         this.vm.transactionsList.sort((a,b) => { return (b.voucherNumber - a.voucherNumber)});
         console.log(this.vm.transactionsList);
     }
+
+    getHeaderValue():any{
+        let headerValues = [];
+        for(let filter in this.vm.columnFilter){
+            if(this.vm.columnFilter[filter].value == true){
+            headerValues.push(this.vm.columnFilter[filter].displayName);
+            }
+        }
+        return headerValues;                
+    }
+    
+    getTransactionsData(transaction):any{
+        let transactionData = [];
+        if(this.vm.columnFilter.voucherNumber.value){
+            transactionData.push(transaction.voucherNumber)
+        }
+        if(this.vm.columnFilter.date.value){
+            transactionData.push(transaction.transactionDate)
+        }
+        if(this.vm.columnFilter.debitAccount.value){
+            let tempData = ''
+            transaction.debitAccounts.forEach(account =>{
+                tempData += account.account + ' - ' + account.amount;
+                tempData += '\n';
+            })
+            transactionData.push(tempData);    
+        }
+        if(this.vm.columnFilter.creditAccount.value){
+            let tempData = ''
+            transaction.creditAccounts.forEach(account =>{
+                tempData += account.account + ' - ' + account.amount;
+                tempData += '\n';
+            })
+            transactionData.push(tempData);   
+        }
+        if(this.vm.columnFilter.remark.value){
+            transactionData.push(transaction.remark)
+        }
+        if(this.vm.columnFilter.approvalId.value){
+            transactionData.push(transaction.approvalId)    
+        }
+        if(this.vm.columnFilter.addedBy.value){
+            transactionData.push(transaction.parentEmployeeName);   
+        }
+        return transactionData
+    }
+
+    downloadList(): any{
+        console.log(this.getHeaderValue());
+        let excelData = [];
+        excelData.push(this.getHeaderValue());
+        this.vm.getFilteredTransactionList().forEach(transaction =>{
+            excelData.push(this.getTransactionsData(transaction));
+        })
+        console.log(excelData);
+        this.vm.excelService.downloadFile(excelData, 'korangle_transactions.csv')
+    }
+
+    printTransactionsList(){
+        let value = {
+          transactionsList: this.vm.getFilteredTransactionList(),
+            startDate: this.vm.startDate,
+            endDate: this.vm.endDate,
+            columnFilter: this.vm.columnFilter,
+          };
+          this.vm.printService.navigateToPrintRoute(PRINT_TRANSACTIONS, {user: this.vm.user, value});
+      }
+
+    
 
 }

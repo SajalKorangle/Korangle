@@ -22,6 +22,12 @@ span {
     font-size: 16px;
 }
 
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
 .loaderCustom {
     border: 8px solid #FFFFFF; /* White */
     border-top: 8px solid Red; /* Red */

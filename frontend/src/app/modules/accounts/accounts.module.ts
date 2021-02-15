@@ -8,6 +8,7 @@ import { AccountsRoutingModule } from './accounts.routing';
 import { AccountsComponentsModule } from './components/component.module'
 import { ImagePreviewDialogComponent } from './components/image-preview-dialog/image-preview-dialog.component'
 import { PrintTransactionsListComponent } from './print/print-transactions/print-transactions.component'
+import {ExcelService} from "../../excel/excel-service";
 
 
 @NgModule({
@@ -22,7 +23,7 @@ import { PrintTransactionsListComponent } from './print/print-transactions/print
         AccountsComponentsModule,
     ],
     exports: [],
-    providers: [],
+    providers: [ExcelService],
     bootstrap: [AccountsComponent],
     entryComponents: [
         ImagePreviewDialogComponent,

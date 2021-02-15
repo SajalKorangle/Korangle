@@ -1,0 +1,83 @@
+<h2 mat-dialog-title>Use For Transaction</h2>
+<mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw;">
+    <div class="row col-md-12">
+        <span *ngIf="isAmountMoreThanApproved()" style="font-size:13px; color: rgb(243, 59, 59); margin-bottom: 10px">Maximum Approved Amount Is {{getMaximumApprovedAmount()}}</span>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3" style="padding-right: 0px;">
+                    <span style="color: rgba(255, 152, 0, 1);">Paid To</span>
+                </div>
+                <div class="col-md-9">
+                    <div *ngFor = "let account of data.approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                        <span style="font-size: 14px;">{{account.account}}</span><br>
+                        <mat-form-field style="float: left;">
+                            <input type="number" min="0.01" matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event;" placeholder="Amount">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3" style="padding-right: 0px;">
+                    <span style="color: rgba(255, 152, 0, 1);">Paid From</span>
+                </div>
+                <div class="col-md-9">
+                    <div *ngFor = "let account of data.approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                        <span style="font-size: 14px;">{{account.account}}</span><br>
+                        <mat-form-field style="float: left;">
+                            <input type="number" min="0.01" matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event;" placeholder="Amount">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-md-12">
+    
+        <span style="color: rgba(255, 152, 0, 1);">Remark </span>
+        <mat-form-field style="width: 100%; display:inline-block">
+            <input type="text" matInput [ngModel]="data.approval.remark"
+                (ngModelChange)="data.approval.remark=$event;" placeholder="Enter Remark"><br>
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row col-md-12 custom-font"><span>Add Bill :</span></div>
+            <input type='file' (click)="imageInput.value = null" (change)="readURL($event, 'bill');" multiple="false" style="display: none"
+                        accept="image/jpeg,image/png" #imageInput />
+            <div style="display: inline-block;">
+                <button type="submit" class="image-column" (click)="imageInput.click()"
+                style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228);"
+                >+</button>
+            </div>
+            <div style="display: inline-block;" *ngFor="let image of data.approval.billImages; let i = index">
+                <img src="{{image.imageURL}}" style="margin-top: -15px;" class="image-column" (click)="data.vm.openImagePreviewDialog(data.approval.billImages, i, 1)">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row col-md-12 custom-font"><span>Add Quotation :</span></div>
+            <input type='file' (click)="imageInput.value = null" (change)="readURL($event, 'quo');" multiple="false" style="display: none"
+                        accept="image/jpeg,image/png" #imageInput1 />
+            <div style="display: inline-block;">
+                <button type="submit" class="image-column" (click)="imageInput1.click()"
+                style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228)"
+                >+</button>
+            </div>
+            <div style="display: inline-block;" *ngFor="let image of data.approval.quotationImages; let i = index">
+                <img src="{{image.imageURL}}" style="margin-top: -15px;" class="image-column" (click)="data.vm.openImagePreviewDialog(data.approval.quotationImages, i, 1)" >
+            </div>
+        </div>
+    </div>
+    
+    
+
+</mat-dialog-content>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close class="btn"  cdkFocusInitial>Close</button>
+    <button [disabled]="isAmountMoreThanApproved()" mat-button class="btn" (click)="addTransaction()">Add</button>
+</div>

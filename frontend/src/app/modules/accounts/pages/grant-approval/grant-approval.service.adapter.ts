@@ -12,6 +12,8 @@ export class GrantApprovalServiceAdapter {
     initialiseData(){
 
         this.vm.approvalsList = [];
+        this.vm.loadMoreApprovals = true;
+        this.vm.isLoadingApproval = true;
 
         let approval_request_data = {
             parentEmployeeRequestedBy__parentSchool: this.vm.user.activeSchool.dbId,
@@ -36,6 +38,43 @@ export class GrantApprovalServiceAdapter {
         ]).then(value =>{
             this.vm.accountsList = value[1];
             this.vm.employeeList = value[2];
+            let approval_id = [];
+            value[0].forEach(approval =>{
+                approval_id.push(approval.id);
+            })
+            let approval_details_data = {
+                'parentApproval__in': approval_id,
+            }
+            Promise.all([
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+            ]).then(data =>{
+                this.initialiseApprovalData(value[0], data[0], data[1]);
+                this.vm.isLoadingApproval = false;
+                if(value[0].length < this.vm.loadingCount){
+                    this.vm.loadMoreApprovals = false;
+                }
+            },error =>{
+                this.vm.isLoadingApproval = false;
+            })
+        }, error =>{
+            this.vm.isLoadingApproval = false;
+        })
+        
+    }
+
+    loadMoreApprovals(){
+        this.vm.isLoadingApproval = true;
+
+        let approval_request_data = {
+            parentEmployeeRequestedBy__parentSchool: this.vm.user.activeSchool.dbId,
+            'korangle__order': '-id',
+            'korangle__count': this.vm.approvalsList.length.toString() + ',' + (this.vm.approvalsList.length + this.vm.loadingCount).toString(),
+        }
+        console.log(approval_request_data);
+        Promise.all([
+            this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
+        ]).then(value =>{
             console.log(value);
             let approval_id = [];
             value[0].forEach(approval =>{
@@ -48,11 +87,17 @@ export class GrantApprovalServiceAdapter {
                 this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
             ]).then(data =>{
-                console.log(data);
                 this.initialiseApprovalData(value[0], data[0], data[1]);
+                this.vm.isLoadingApproval = false;
+                
+                if(value[0].length < this.vm.loadingCount){
+                    this.vm.loadMoreApprovals = false;
+                }
             })
+        },error =>{
+            this.vm.isLoadingApproval = false;
         })
-        
+
     }
 
     initialiseApprovalData(approvalList, approvalAccounts, approvalImages){
@@ -118,7 +163,6 @@ export class GrantApprovalServiceAdapter {
 
         })
         this.vm.approvalsList.sort((a,b) => { return (b.approvalId - a.approvalId)});
-        console.log(this.vm.approvalsList);
     }
 
     changeApprovalStatus(approval, status){
@@ -245,6 +289,7 @@ export class GrantApprovalServiceAdapter {
                             parentTransaction: value1[0].id,
                         }
                         approval.parentTransaction = value1[0].id;
+                        approval.approvedGenerationDateTime = CommonFunctions.formatDate(new Date(), ''),
                         service.push(this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.approval, tempData))
 
 

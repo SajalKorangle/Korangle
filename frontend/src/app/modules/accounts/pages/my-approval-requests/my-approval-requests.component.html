@@ -10,14 +10,19 @@
                                 <span style="font-size: 14px;">Approval ID: {{approval.approvalId}}</span>
                             </div>
                             <div class="col-md-3">
-                                <span style="font-size: 14px;">{{approval.requestedGenerationDateTime}}</span>
+                                <!-- <span style="font-size: 14px;">{{approval.requestedGenerationDateTime}}</span> -->
                             </div>
                             <div class="col-md-7">
-                                <span *ngIf="approval.parentTransaction == null && approval.requestStatus == 'APPROVED'" style="font-size: 14px;float:right;color: rgba(255, 152, 0, 1);">Use For Payment</span>
+                                <span *ngIf="approval.parentTransaction == null && approval.requestStatus == 'APPROVED'" style="font-size: 14px;float:right;color: rgba(255, 152, 0, 1); cursor: pointer" (click)="openUseForPaymentDialog(approval)"><u>Use For Payment</u></span>
                             </div>
                         </div>
                     </mat-card-title>
                     <mat-card-content>
+                        
+                        <div class="row col-md-12" style="margin-bottom:15px;">
+                            <span style="color: rgba(255, 152, 0, 1);">Requested On - </span><span> {{approval.requestedGenerationDateTime}}</span>
+                            <span *ngIf="approval.approvedGenerationDateTime != null" style="float:right;"><span style="color: rgba(255, 152, 0, 1)"> Approved On - </span>{{approval.approvedGenerationDateTime}}</span>
+                        </div>
                         <div class="row" style="margin-bottom: 15px;">
                             <div class="col-md-6">
                                 <div class="row">
@@ -26,7 +31,7 @@
                                     </div>
                                     <div class="col-md-9" style="padding: 0px;">
                                         <div *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="font-size: 14px;">{{account.amount}}</span>
+                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +43,7 @@
                                     </div>
                                     <div class="col-md-9" style="padding: 0px;">
                                         <div *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="font-size: 14px;">{{account.amount}}</span>
+                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -52,15 +57,15 @@
                             <div class="col-md-6">
                                 <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
 
-                                <div style="display: inline-block;" *ngFor="let image of approval.billImages">
-                                    <img src="{{image.imageURL}}" class="image-column" >
+                                <div style="display: inline-block;" *ngFor="let image of approval.billImages; let i = index">
+                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.billImages, i, 0)">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
 
-                                <div style="display: inline-block;" *ngFor="let image of approval.quotationImages">
-                                    <img src="{{image.imageURL}}" class="image-column" >
+                                <div style="display: inline-block;" *ngFor="let image of approval.quotationImages; let i = index">
+                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.quotationImages, i, 0)" >
                                 </div>
                             </div>
                         </div>
@@ -76,6 +81,14 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div *ngIf="loadMoreApprovals">
+        <div *ngIf="isLoadingApproval">
+            <div style="width: 100%" align="center">
+                <div class="loaderCustom"></div>
+            </div><br>
+        </div><span *ngIf="!isLoadingApproval" style="color: #817ae9;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
     </div>
     
     

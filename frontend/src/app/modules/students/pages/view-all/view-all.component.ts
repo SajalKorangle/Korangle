@@ -697,7 +697,8 @@ export class ViewAllComponent implements OnInit {
 		            template.push(this.getStudentDisplayInfo(student));
 		        }
 		    });
-		    this.excelService.downloadFile(template, 'korangle_students.csv');
+            console.log(template);
+		    // this.excelService.downloadFile(template, 'korangle_students.csv');
 		} else if (this.currentProfileDocumentFilter==='Documents'){
 			this.downloadDocuments();
     	}

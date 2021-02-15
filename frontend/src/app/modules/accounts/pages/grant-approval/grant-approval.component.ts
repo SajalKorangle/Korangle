@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit, Inject, HostListener} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { GrantApprovalServiceAdapter } from './grant-approval.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
@@ -24,10 +24,13 @@ export class GrantApprovalComponent implements OnInit {
     serviceAdapter: GrantApprovalServiceAdapter;
 
     approvalsList: any;
-    loadingCount = 15;
+    loadingCount = 10;
 
     accountsList: any;
     employeeList: any;
+
+    loadMoreApprovals: any;
+    isLoadingApproval: any;
 
     
     constructor( 
@@ -97,6 +100,15 @@ export class GrantApprovalComponent implements OnInit {
         });
     }
 
+    @HostListener('window:scroll', ['$event']) onScrollEvent(event){
+        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) ){
+          
+          console.log('added', this.loadMoreApprovals, this.isLoadingApproval);
+        }
+        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreApprovals == true && this.isLoadingApproval == false){
+            this.serviceAdapter.loadMoreApprovals();
+        }
+    } 
 
 
 }

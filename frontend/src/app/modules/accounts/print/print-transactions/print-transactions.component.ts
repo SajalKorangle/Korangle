@@ -36,7 +36,6 @@ export class PrintTransactionsListComponent implements OnInit, AfterViewChecked 
         if (this.viewChecked === false) {
             this.viewChecked = true;
             this.printService.print();
-            this.transactionsList = null;
             this.cdRef.detectChanges();
         }
     }

@@ -175,7 +175,11 @@ export class AddTransactionComponent implements OnInit {
       transaction.creditAccounts.forEach(account =>{
         totalCreditAmount += account.creditAmount;
       })
-      if(totalCreditAmount > maxAmount){
+      let totalDebitAmount = 0;
+      transaction.debitAccounts.forEach(account =>{
+        totalDebitAmount += account.debitAmount;
+      })
+      if(totalCreditAmount > maxAmount || totalDebitAmount > maxAmount){
         return true;
       }
       return false;

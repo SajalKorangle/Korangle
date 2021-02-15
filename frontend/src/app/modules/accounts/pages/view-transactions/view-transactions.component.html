@@ -15,8 +15,8 @@
         </mat-form-field>
 
         <button class="custom-button" style="background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="resetValues(); serviceAdapter.loadTransactions(); "><i class="material-icons">search</i></button>
-        <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions()"><i class="material-icons">print</i></button>
-        <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" ><i class="material-icons">download</i></button>
+        <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('print')"><i class="material-icons">print</i></button>
+        <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('download')"><i class="material-icons">download</i></button>
     </div>
 
     <div class="row" *ngIf="!isLoading">
@@ -89,8 +89,8 @@
                 <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
                 <th *ngIf="columnFilter.quotation.value" class="text-center"><span>Quotation</span></th>
                 <th *ngIf="columnFilter.bill.value" class="text-center"><span>Bill</span></th>
-                <th *ngIf="columnFilter.update" class="text-center"><span>Update</span></th>
-                <th *ngIf="columnFilter.delete" class="text-center"><span>Delete</span></th>
+                <!-- <th *ngIf="columnFilter.update" class="text-center"><span>Update</span></th>
+                <th *ngIf="columnFilter.delete" class="text-center"><span>Delete</span></th> -->
             </tr>
         </thead>
         <tbody>
@@ -129,8 +129,8 @@
                         No Image
                     </i>
                 </td>
-                <td *ngIf="columnFilter.update" class="text-center">Update</td>
-                <td *ngIf="columnFilter.delete" class="text-center">Delete</td>
+                <!-- <td *ngIf="columnFilter.update" class="text-center">Update</td>
+                <td *ngIf="columnFilter.delete" class="text-center">Delete</td> -->
             </tr>
             
         </tbody>
