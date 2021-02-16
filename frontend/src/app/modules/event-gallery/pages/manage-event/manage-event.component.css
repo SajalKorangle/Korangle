@@ -1,0 +1,125 @@
+.selectedTag{
+ background: #3BB847 !important;  
+}
+
+.tag{
+    background-color:#ABABAB;  
+    height :28px;
+    padding :5px;
+    margin-left :5px;
+}
+
+.btn-inactive{
+    background-color:#ABABAB;
+}
+
+.active{
+    color:orange;
+    cursor: pointer;
+}
+
+.inactive{
+    color:#ABABAB;
+    cursor: default;
+}
+
+.editTag{
+    text-decoration: underline;
+}
+
+.image-row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 5px;
+}
+.image-row > .image-column {
+	padding: 5px 10px;
+}
+.image-row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+.image-column {
+	width: 40%;
+	max-width:252px; 
+	height: 170px; 
+	margin-right: 10px;
+	margin-top: 10px
+}
+
+.image-column-mobile {
+	max-width: 0.525in; 
+	height: 0.525in; 
+	margin-right: 5px;
+	margin-top: 5px
+}
+
+:host ::ng-deep .mat-checkbox-frame{
+	border-color: orange;
+}
+
+.cursor {
+	cursor: pointer;
+}
+.cursor:hover {
+	background-color: #b9b7b7;
+}
+
+.images {
+	opacity: 0.7;
+}
+.active,
+.images:hover {
+    opacity: 1;
+}
+img.hover-shadow {
+    transition: 0.3s;
+}
+.hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+.dropinput {
+    position: absolute;
+    left: 22px;
+    opacity: 0;
+    width: 40%;
+	max-width:252px; 
+	height: 170px; 
+}
+
+
+.mat-card.scrollable-content {
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+
+}
+  .mat-card.scrollable-content > .mat-card-title-group {
+    display: block;
+  }
+
+   .mat-card.scrollable-content > .mat-card-content {
+    overflow-y: auto;
+  }
+   
+   .mat-card ::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+
+
+
+@media only screen and (max-width: 992px) {
+	.image-column {
+		max-width: 110px;
+	max-height: 82px;
+	}
+    
+    .dropinput {
+        max-width: 110px;
+	max-height: 82px;
+    }
+}

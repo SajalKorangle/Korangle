@@ -17,9 +17,9 @@ def upload_event_images_to(instance, filename):
 class Event(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, null=False, default=0,
                                      verbose_name='parentSchool')
-    eventTitle = models.TextField(null=False, default='', verbose_name='eventTitle')
-    eventDescription = models.TextField(null=True, blank=True, verbose_name='eventDescription')
-    heldOn = models.DateTimeField(null=True, verbose_name='heldOn')
+    title = models.TextField(null=False, default='', verbose_name='eventTitle')
+    description = models.TextField(null=True, blank=True, verbose_name='eventDescription')
+    heldOn = models.DateField(null=True, verbose_name='heldOn')
     generationDateTime = models.DateTimeField(auto_now_add=True, verbose_name='generationDateTime')
     notifyEmployees = models.BooleanField(null=False, default=False, verbose_name='notifyEmployees')
 
@@ -27,14 +27,14 @@ class Event(models.Model):
         db_table = 'event'
 
 
-class NotifyClass(models.Model):
+class EventNotifyClass(models.Model):
     parentEvent = models.ForeignKey(Event, on_delete=models.CASCADE, null=False, default=0,
                                     verbose_name='parentEvent')
     parentClass = models.ForeignKey(Class, on_delete=models.CASCADE, null=False, default=0,
                                     verbose_name='parentClass')
 
     class Meta:
-        db_table = 'notify_class'
+        db_table = 'event_notify_class'
 
 
 class EventTag(models.Model):
@@ -43,7 +43,7 @@ class EventTag(models.Model):
     tagName = models.TextField(null=False, default='', verbose_name='tagName')
 
     class Meta:
-        db_table = 'tag'
+        db_table = 'event_tag'
 
 
 class EventImage(models.Model):
@@ -57,11 +57,11 @@ class EventImage(models.Model):
         db_table = 'event_images'
 
 
-class ImageTags(models.Model):
+class EventImageTags(models.Model):
     parentEventImage = models.ForeignKey(EventImage, on_delete=models.CASCADE, null=False, default=0,
                                          verbose_name='parentEventImage')
     parentEventTag = models.ForeignKey(EventTag, on_delete=models.CASCADE, null=False, default=0,
                                        verbose_name='parentEventTag')
 
     class Meta:
-        db_table = 'image_tags'
+        db_table = 'event_image_tags'

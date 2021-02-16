@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
-from event_gallery_app.models import Event, EventImage, EventTag
-from common.common_views_file import CommonView, CommonListView
+from event_gallery_app.models import Event, EventImage, EventTag, EventImageTags, EventNotifyClass
+from common.common_views_3 import CommonView, CommonListView
 from rest_framework.views import APIView
 
 
@@ -34,3 +34,23 @@ class EventTagView(CommonView, APIView):
 
 class EventTagListView(CommonListView, APIView):
     Model = EventTag
+
+
+# EVENT IMAGE_TAGS #
+
+class EventImageTagView(CommonView, APIView):
+    Model = EventImageTags
+
+
+class EventImageTagListView(CommonListView, APIView):
+    Model = EventImageTags
+
+
+# EVENT NOTIFY CLASS #
+
+class EventNotifyClassView(CommonView, APIView):
+    Model = EventNotifyClass
+
+
+class EventNotifyClassListView(CommonListView, APIView):
+    Model = EventNotifyClass

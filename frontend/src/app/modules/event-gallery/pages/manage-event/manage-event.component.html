@@ -1,1 +1,105 @@
-<p>Manage-event works!</p>
+<div class="card-content table-responsive">
+    <div *ngIf="isLoading" class="loader-cont">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </div>
+    
+<ng-container *ngIf="!isLoading">
+    <div class="row">
+        <div class="col-md-4">
+<!--            <mat-form-field style="width: 100%" [floatLabel]="'never'">-->
+<!--                <input matInput-->
+<!--                       [(ngModel)]="searchString"-->
+<!--                       type="text"-->
+<!--                       placeholder="search event title">-->
+<!--            </mat-form-field>-->
+            <form class="example-form">
+            <mat-form-field style="width: 100%"
+                            floatPlaceholder="never">
+                <input type="text"
+                       placeholder="Seach by event title"
+                       aria-label="Event"
+                       matInput
+                       [formControl]="eventFormControl"
+                       [matAutocomplete]="autoCompleteEvent">
+                <mat-autocomplete #autoCompleteEvent="matAutocomplete"
+                                  (optionSelected)="handleEventSelection($event.option.value)"
+                                  [displayWith]="displayEventTitle">
+                    <mat-option *ngFor="let event of filteredEventList | async" [value]="event">
+                        {{event.title}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            </form>
+        </div>
+    </div>
+    
+<ng-container *ngIf="selectedEvent && !isEventLoading">
+    <div *ngIf="isEventLoading" class="loader-cont">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </div>
+    <div class="row">
+        <div class="col-md-4" style="font-weight: 400;">
+            <span style="font-size: 12px;">Title</span><br>
+            <span style="font-size: 16px;display:block;margin-top:6px;">{{selectedEvent.title}}</span>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;font-weight: 400;">
+        <div class="col-md-11">
+            <span style="font-size: 12px;">Text</span><br>
+            <span style="font-size: 16px;display:block;margin-top:6px;white-space: pre-line;line-height: 19px;word-wrap: break-word;">{{selectedEvent.description}}</span>
+        </div>
+    </div>
+    
+    <div class="row" style="margin:20px 5px 30px;">
+            <div class="col-md-12"
+                 style="border-bottom: 1px solid lightgrey;"></div>
+        </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+          <span  style="font-size: 14px;font-weight:400;">Tags</span><br>
+            <button class="btn"  id="generate-tags-btn" (click)="generateNewTag()" style="background-color:#ABABAB;width: 20px;height: 28px;padding:0;">+</button>
+<!--            <div *ngFor="eventTagData"></div>-->
+            <button class="btn btn-{{getButtonColor()}}" (click)="assignSelectedTags()" [disabled]="getButtonColor()=='inactive'" style="float: right;">Assign Tag</button>
+                </div>
+            </div>
+        <div class="row" >
+            <div class="col-md-5 {{checkTagEditable()}}">
+           <mat-icon style="font-size:20px;">edit</mat-icon><a href="javascript:void(0)" (click)="editSelectedTag()" class="editTag {{checkTagEditable()}}">Edit Tag</a>
+           <mat-icon style="font-size:20px;margin-left:5px;">delete_outline</mat-icon><a href="javascript:void(0)" (click)="deleteSelectedTag()" class="editTag {{checkTagEditable()}}">Delete Tag</a>
+        </div>
+        </div>
+    </div>
+    </div>
+    
+     <mat-card style="margin-top: 20px;">
+         <div class="row" *ngIf="eventImageData.length>0">
+             <div class="col-md-12">
+                 <mat-checkbox><span class="editTag" style="color: orange"> Select All Media </span></mat-checkbox>
+                 <mat-icon style="margin-left:20px;">delete_outline</mat-icon><a href="javascript:void(0)" (click)="deleteSelectedMedia()" class="editTag {{checkTagEditable()}}">Delete Media</a>
+                 <span style="float: right">{{selectedImagesCount}} Selected</span>
+             </div>
+         </div>
+         <mat-card-content style="max-height: 400px;overflow: auto">
+         <!--                            (dragenter)="dragEnter($event)"-->
+<!--                           (drop)="onDrop($event)"-->
+<!--                           (dragleave)="onDrop($event)"-->
+               <div class="image-row">
+                   <button type="submit" class="image-column"
+                    style="cursor: pointer;margin-left:8px;">
+                         <input type='file' class="dropinput"  [style.top]="eventImageData.length > 0 ? '65px' : '22px'" title="" (input)="readURL($event);imageInput.value = null"  (click)="imageInput.value = null"   [disabled]="isImageUploading" multiple="false"
+                            accept="image/jpeg,image/png" #imageInput />
+                <span style="font-size:35px;font-weight: 400;">+</span><br>
+                <span style="font-weight: 400;" *ngIf="!isMobile() && !isImageUploading">Upload media or drop it here</span><span *ngIf="isImageUploading">Uploading</span></button>
+                    <ng-container *ngFor="let images of eventImageData; let i = index" style="display: inline-block">
+                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(eventImageData, i, 1)">
+                </ng-container>
+             </div>
+             </mat-card-content>
+     </mat-card>
+</ng-container>
+</ng-container>
+</div>
