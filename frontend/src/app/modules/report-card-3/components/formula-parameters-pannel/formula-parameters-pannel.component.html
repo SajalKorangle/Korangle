@@ -8,7 +8,7 @@
             <mat-label>
                 Formula
             </mat-label>
-            <input matInput type="text"  [(ngModel)]="layer.formula" (ngModelChange)="smartLayerUpdate()">
+            <textarea matInput  [(ngModel)]="layer.formula" (ngModelChange)="smartLayerUpdate()"></textarea>
         </mat-form-field>
         
         <mat-form-field appearence="fill">

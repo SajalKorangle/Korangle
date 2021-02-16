@@ -358,6 +358,8 @@ export const PAGE_RESOLUTIONS: PageResolution[] = [ // standard page resolutions
 export const CUSTOM_PAGE_RESOLUTION_INDEX: number = PAGE_RESOLUTIONS.length-1;
 
 export const permissibleClickError = 4;    // in pixels
+export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 1; // in pixels
+export const ACTIVE_LAYER_HIGHLIGHTER_COLOR = 'cyan';
 
 export const DATA_SOUCE_TYPE = [    // used in all canvas layers
     'N/A',  // no data source, constant eement
@@ -399,11 +401,11 @@ export const VERTICAL_ALIGNMENT_LIST_MAP = {
     'bottom' : 'Bottom',
 };
 
-export const HORIZONTAL_ALIGNMENT_LIST_MAP = {
-    'left' : 'Left',
-    'right' : 'Right',
-    'center' : 'Center',
-};
+export const HORIZONTAL_ALIGNMENT_LIST = [
+    'left',
+    'right',
+    'center',
+];
 
 export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
 export var DEFAULT_MAXIMUM_MARKS = 100;
@@ -426,6 +428,7 @@ export interface Layer{
     dataSourceType: string;    // options: DATA_SOURCE_TYPE, if 'N/A', all data of layer is constant; if 'DATA' use source class variable to get data 
     source?: { [key: string]: any };   // object containing information about the source of data, stores reference of element from PARAMETER_LIST
     ca: DesignReportCardCanvasAdapter;  // canvas adapter,
+    highlightLayer(ctx: CanvasRenderingContext2D): void;
     layerDataUpdate(): void;    // gets data of layer if dataSourceType is 'DATA', 
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;  // draws layer to canavs or schedules redraw after some time if layer is not ready yet
@@ -481,6 +484,10 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     error: boolean = false;
     x: number = 0;
     y: number = 0;
+
+    height: number = null;
+    width: number = null;
+
     alternateText: string = 'N/A';
     displayName: string; 
     LAYER_TYPE: string;
@@ -518,6 +525,16 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
         }
     }
 
+    highlightLayer(ctx: CanvasRenderingContext2D): void{
+        if (this.height && this.width) {
+            // ctx.fillStyle = ACTIVE_LAYER_HIGHLIGHTER_COLOR;
+            ctx.strokeStyle = ACTIVE_LAYER_HIGHLIGHTER_COLOR
+            ctx.lineWidth = ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH;
+            ctx.strokeRect(this.x - permissibleClickError, this.y - permissibleClickError,
+                this.width + 2*permissibleClickError, this.height + 2*permissibleClickError);
+        }
+    }
+
     getDataToSave(): {[object:string]:any} {   // common data to be saved in database
         let savingData: any = {
             id: this.id,
@@ -536,8 +553,6 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
 
     image: HTMLImageElement = null;    // not included in content json data
     uri: string;
-    height: number = null;
-    width: number = null;
     aspectRatio: any = null;    
     maintainAspectRatio = true; 
 
@@ -1364,7 +1379,7 @@ export class CanvasText extends BaseLayer implements Layer{
     
     maxWidth: number = 100;
     minHeight: number = 100;
-    height: number = null;
+    lastHeight: number = 0;
     underline: boolean = false;
 
 
@@ -1374,8 +1389,8 @@ export class CanvasText extends BaseLayer implements Layer{
         
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
-        this.maxWidth = Math.round(5000 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(7500 / ca.pixelTommFactor) / 100;
+        this.maxWidth = Math.round(7500 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(5000 / ca.pixelTommFactor) / 100;
         this.underline = false;
         this.fontSize = 6 / ca.pixelTommFactor;
 
@@ -1384,6 +1399,19 @@ export class CanvasText extends BaseLayer implements Layer{
             this.layerDataUpdate();
         }
         this.LAYER_TYPE = 'TEXT';
+
+        Object.defineProperty(this, 'height', {
+            get: function () {
+                return Math.max(this.lastHeight, this.minHeight);
+            }
+        });
+
+        Object.defineProperty(this, 'width', {
+            get: function () {
+                return this.maxWidth;
+            }
+        });
+
     }
 
     layerDataUpdate(): void {
@@ -1444,7 +1472,7 @@ export class CanvasText extends BaseLayer implements Layer{
         canvasTxt.vAlign = this.textBaseline;
         canvasTxt.fontStyle = this.italics;
         canvasTxt.fontWeight = this.fontWeight;
-        this.height = canvasTxt.drawText(ctx, this.text, this.x, this.y, this.maxWidth, this.minHeight).height;
+        this.lastHeight = canvasTxt.drawText(ctx, this.text, this.x, this.y, this.maxWidth, this.minHeight).height;
         // this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }

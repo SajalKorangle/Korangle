@@ -16,7 +16,7 @@ export class FormulaParametersPannelComponent implements OnInit {
   ngOnInit() {
   }
 
-  smartLayerUpdate(delay:number = 2500): void{
+  smartLayerUpdate(delay:number = 1500): void{
     clearTimeout(this.previousScheduledUpdateId);
     this.previousScheduledUpdateId = setTimeout(() => {
       this.layer.layerDataUpdate();

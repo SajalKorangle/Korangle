@@ -1,25 +1,35 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ElementRef, AfterViewInit, OnChanges } from '@angular/core';
 import { CanvasText } from './../../class/constants_3';
 import { FONT_FAMILY_LIST } from './../../class/font';
-import { VERTICAL_ALIGNMENT_LIST_MAP, HORIZONTAL_ALIGNMENT_LIST_MAP } from './../../class/constants_3'
+import { VERTICAL_ALIGNMENT_LIST_MAP } from './../../class/constants_3'
 
 @Component({
   selector: 'app-text-parameters-pannel',
   templateUrl: './text-parameters-pannel.component.html',
   styleUrls: ['./text-parameters-pannel.component.css']
 })
-export class TextParametersPannelComponent implements OnInit {
+export class TextParametersPannelComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input() layer: CanvasText;
   @Input() canvasRefresh: any;
   
   fontFamilyList = FONT_FAMILY_LIST;
-  horizontalAlignmentKeyMap = HORIZONTAL_ALIGNMENT_LIST_MAP;
   verticalAlignmentKeyMapMap = VERTICAL_ALIGNMENT_LIST_MAP;
 
-  constructor() { }
+  constructor(private _elementRef : ElementRef) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    setTimeout(()=>this._elementRef.nativeElement.querySelector('textarea').focus());
+  }
+
+  ngOnChanges(changes) {
+    if (changes.layer.previousValue && changes.layer.currentValue.id != changes.layer.previousValue.id) {
+      console.log('changes : ', changes);
+      setTimeout(() => this._elementRef.nativeElement.querySelector('textarea').focus());
+    }
   }
 
   getPixelTommFactor(): number{
@@ -50,10 +60,6 @@ export class TextParametersPannelComponent implements OnInit {
 
   getVerticalAlignmentKeys(): Array<string>{
     return Object.keys(VERTICAL_ALIGNMENT_LIST_MAP);
-  }
-
-  getHorizontalAlignmentKeys(): Array<string>{
-    return Object.keys(HORIZONTAL_ALIGNMENT_LIST_MAP);
   }
 
   getWidth() {

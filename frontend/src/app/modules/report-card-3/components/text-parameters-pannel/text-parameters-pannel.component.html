@@ -8,7 +8,7 @@
             <mat-label>
                 Value
             </mat-label>
-            <textarea matInput type="text" [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh(500, layer.updateTextBoxMetrics);"></textarea>
+            <textarea matInput [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh(500, layer.updateTextBoxMetrics);"></textarea>
         </mat-form-field>
 
         <div style="text-align: center;">
@@ -18,6 +18,20 @@
             <!-- <mat-button-toggle value="true" [checked]="isUnderline()" (change)="underlineToggle($event);layer.updateTextBoxMetrics(); canvasRefresh(0);"><span class="material-icons">format_underline</span></mat-button-toggle> -->
         </mat-button-toggle-group>
         </div>
+
+        <div style="text-align: center; margin-top: 10px;">
+            <mat-button-toggle-group [value]="layer.textAlign" (change)="layer.textAlign=$event.value; canvasRefresh();">
+                <mat-button-toggle value="left">
+                <mat-icon>format_align_left</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle value="center">
+                <mat-icon>format_align_center</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle value="right">
+                <mat-icon>format_align_right</mat-icon>
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
 
         <mat-form-field style="margin-top: 10px;">
             <mat-label>
@@ -52,17 +66,6 @@
                     (ngModelChange)="layer.updateTextBoxMetrics() ;canvasRefresh();">
                 <mat-option *ngFor="let align of getVerticalAlignmentKeys()" [value]="align">
                     <span>{{verticalAlignmentKeyMapMap[align]}}</span>                
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-label>Horizontal</mat-label>
-            <mat-select
-                    [(ngModel)]="layer.textAlign"
-                    (ngModelChange)="layer.updateTextBoxMetrics(); canvasRefresh();">
-                <mat-option *ngFor="let align of getHorizontalAlignmentKeys()" [value]="align">
-                    <span>{{horizontalAlignmentKeyMap[align]}}</span>                
                 </mat-option>
             </mat-select>
         </mat-form-field>

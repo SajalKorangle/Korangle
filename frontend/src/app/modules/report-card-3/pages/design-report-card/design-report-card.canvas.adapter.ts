@@ -193,6 +193,8 @@ export class DesignReportCardCanvasAdapter {
                 }
             }
 
+            this.scheduleCanvasReDraw(0);
+
             // if (!this.activeLayer) {
             //     this.selectedLayers = [];
             //     this.selectedLayersIndices = [];
@@ -495,6 +497,9 @@ export class DesignReportCardCanvasAdapter {
             if (!status)
                 return;
         }
+        if (this.activeLayer) {
+            this.activeLayer.highlightLayer(this.virtualContext);
+        }
         clearTimeout(this.pendingReDrawId);
         this.pendingReDrawId = setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
     }
@@ -531,7 +536,6 @@ export class DesignReportCardCanvasAdapter {
         let layerParticularData = layer.getDataToSave();
         let deepCopyLayerData = JSON.parse(JSON.stringify(layerParticularData));
         delete deepCopyLayerData.id;
-        deepCopyLayerData.displayName += ' copy';
         let newLayer = this.getLayerFromLayerData(deepCopyLayerData, layer.constructor);
         let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
         newLayer.scale(mmToPixelScaleFactor);
@@ -592,6 +596,7 @@ export class DesignReportCardCanvasAdapter {
         this.activeLayerIndex = activeLayerIndex;
         this.activeLayer = this.layers[this.activeLayerIndex];
         this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.activeLayer));
+        this.scheduleCanvasReDraw(0);
         // if (event) {    // if event is a mouse event then check for control key pressed and select multiple layers
         //     if (event.shiftKey) {
         //         this.selectedLayers.push(this.activeLayer);
