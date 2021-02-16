@@ -23,6 +23,8 @@ export class SendSmsComponent implements OnInit {
 
     user;
 
+    NUM_OF_MOBILE_NO = 600;
+
     NULL_CONSTANT = null;
 
     showFilters = false;
