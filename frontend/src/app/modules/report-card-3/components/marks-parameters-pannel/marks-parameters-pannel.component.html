@@ -8,7 +8,7 @@
             <mat-select 
                 placeholder="Examination"
                 [(ngModel)]="layer.parentExamination"
-                (ngModelChange)="layer.parentSubject=null; layer.testType=null; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+                (ngModelChange)="layer.parentSubject=null; layer.testType=null; layer.layerDataUpdate(); canvasRefresh();">
                 <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList;" [value]="examination.id">{{examination.name}}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -16,7 +16,7 @@
         <mat-form-field appearence="fill">
             <mat-select placeholder="Subject"
             [(ngModel)]="layer.parentSubject" 
-            (ngModelChange)="layer.testType=null; layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics); ">
+            (ngModelChange)="layer.testType=null; layer.layerDataUpdate(); canvasRefresh(); ">
                 <mat-option *ngFor="let subject of layer.ca.vm.DATA.data.subjectList;" [value]="subject.id">
                     {{subject.name}}
                 </mat-option>
@@ -25,14 +25,14 @@
 
         <mat-form-field appearence="fill">
             <mat-select placeholder="Test Type"
-            [(ngModel)]="layer.testType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+            [(ngModel)]="layer.testType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();">
                 <mat-option *ngFor="let testType of layer.ca.vm.htmlAdapter.testTypeList" [value]="testType">{{testType?testType:'NONE'}}</mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field appearence="fill">
             <mat-select placeholder="M.M. / M.O."
-            [(ngModel)]="layer.marksType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+            [(ngModel)]="layer.marksType" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();">
                 <mat-option *ngFor="let marksType of layer.ca.vm.htmlAdapter.marksTypeList" [value]="marksType">{{marksType}}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -41,14 +41,14 @@
             <mat-label>
                 Decimal Places
             </mat-label>
-            <input matInput type="number" min="0" max="10" [(ngModel)]="layer.decimalPlaces" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+            <input matInput type="number" min="0" max="10" [(ngModel)]="layer.decimalPlaces" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();">
         </mat-form-field>
 
         <mat-form-field appearence="fill">
             <mat-label>
                 Factor
             </mat-label>
-            <input matInput type="number" min="0" [(ngModel)]="layer.factor" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500, layer.updateTextBoxMetrics);">
+            <input matInput type="number" min="0" [(ngModel)]="layer.factor" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();">
         </mat-form-field>
 
         <button class="btn" style="padding: 6px 12px; width: 100%;" (click)="layer.ca.vm.htmlAdapter.openMarksDialog(layer)">More ...</button>

@@ -21,13 +21,12 @@ export class TextParametersPannelComponent implements OnInit, AfterViewInit, OnC
   ngOnInit() {
   }
 
-  ngAfterViewInit() {
-    setTimeout(()=>this._elementRef.nativeElement.querySelector('textarea').focus());
+  ngAfterViewInit() { // focus on textarea to type if element is selected for the first time
+    setTimeout(()=>this._elementRef.nativeElement.querySelector('textarea').focus()); 
   }
 
-  ngOnChanges(changes) {
+  ngOnChanges(changes) { // focus on textarea to type if layer is updated
     if (changes.layer.previousValue && changes.layer.currentValue.id != changes.layer.previousValue.id) {
-      console.log('changes : ', changes);
       setTimeout(() => this._elementRef.nativeElement.querySelector('textarea').focus());
     }
   }

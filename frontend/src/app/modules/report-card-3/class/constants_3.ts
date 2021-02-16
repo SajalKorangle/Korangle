@@ -360,6 +360,7 @@ export const CUSTOM_PAGE_RESOLUTION_INDEX: number = PAGE_RESOLUTIONS.length-1;
 export const permissibleClickError = 4;    // in pixels
 export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 1; // in pixels
 export const ACTIVE_LAYER_HIGHLIGHTER_COLOR = 'cyan';
+export const LINE_PADDING = 20;
 
 export const DATA_SOUCE_TYPE = [    // used in all canvas layers
     'N/A',  // no data source, constant eement
@@ -411,6 +412,7 @@ export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
 export var DEFAULT_MAXIMUM_MARKS = 100;
 export const DEFAULT_PASSING_MARKS = 40;
 
+
 //Layers--------------------------------------
 
 // To be implemented by all Canvas Layers
@@ -436,7 +438,6 @@ export interface Layer{
     scale(scaleFactor: number): void;   // scales all parameters of layer by given scale factor, used while zooming, fullscreen etc.
     getDataToSave(): {[object:string]:any};   // retunn data to be saved to database
 
-    updateTextBoxMetrics?(): void;  // update bounding box imformation of text layer
     dateFormatting?(): void;    // formats data according to selectd format
 
     image?: HTMLImageElement;   // for CanvasImage Layer
@@ -508,7 +509,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     initilizeSelf(attributes:object): void{ // initilizes all class variables according to provided initial parameters data as object
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
         BaseLayer.maxID = Math.max(BaseLayer.maxID, this.id);   // always keeping static maxID maximum of all layers
-        if (this.dataSourceType == DATA_SOUCE_TYPE[1] && this.source && !this.source.getValueFunc) {
+        if (this.dataSourceType == DATA_SOUCE_TYPE[1] && this.source && !this.source.getValueFunc) {    // The dependence on htmlAdapter should be removed, once custom parameter handling is updated use paramter list insted of htmlAdapter
             this.source = this.ca.vm.htmlAdapter.parameterList.find(el => el.key == this.source.key && el.field.fieldStructureKey == this.source.field.fieldStructureKey);
             if (!this.source)
                 this.error = true;
@@ -527,12 +528,18 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
 
     highlightLayer(ctx: CanvasRenderingContext2D): void{
         if (this.height && this.width) {
-            // ctx.fillStyle = ACTIVE_LAYER_HIGHLIGHTER_COLOR;
             ctx.strokeStyle = ACTIVE_LAYER_HIGHLIGHTER_COLOR
             ctx.lineWidth = ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH;
             ctx.strokeRect(this.x - permissibleClickError, this.y - permissibleClickError,
                 this.width + 2*permissibleClickError, this.height + 2*permissibleClickError);
         }
+    }
+
+    isClicked(mouseX: number, mouseY: number): boolean {
+        return (mouseX > this.x - permissibleClickError
+            && mouseX < this.x + this.width + permissibleClickError
+            && mouseY > this.y - permissibleClickError
+            && mouseY < this.y+this.height+permissibleClickError)
     }
 
     getDataToSave(): {[object:string]:any} {   // common data to be saved in database
@@ -551,7 +558,10 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
 export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image Layer
     displayName: string = 'Image'; 
 
-    image: HTMLImageElement = null;    // not included in content json data
+    image: HTMLImageElement = null;  
+
+    // uses height and width of the base layer for image height and width
+
     uri: string;
     aspectRatio: any = null;    
     maintainAspectRatio = true; 
@@ -641,13 +651,6 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         }
         scheduleReDraw();   // draw again after some time
         return false;   // Canvas Drawing failed, scheduled redraw for later
-    }
-
-    isClicked(mouseX: number, mouseY: number): boolean {
-        return (mouseX > this.x - permissibleClickError
-            && mouseX < this.x + this.width + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y+this.height+permissibleClickError)
     }
 
     scale(scaleFactor: number): void{
@@ -1036,6 +1039,19 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'LINE';
         this.layerDataUpdate();
+
+        // functinal height and width; used for drawing highlighter
+        Object.defineProperty(this, 'height', {
+            get: function () {
+                return (this.length * Math.sin((this.orientation * Math.PI) / 180))+this.shapeStyle.lineWidth + LINE_PADDING;
+            }
+        });
+
+        Object.defineProperty(this, 'width', {
+            get: function () {
+                return (this.length * Math.cos((this.orientation * Math.PI) / 180))+this.shapeStyle.lineWidth + LINE_PADDING;
+            }
+        });
         
     }
 
@@ -1053,23 +1069,13 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         super.drawOnCanvas(ctx, scheduleReDraw);
+        const x = this.x + this.shapeStyle.lineWidth / 2 + LINE_PADDING / 2;
+        const y = this.y + this.shapeStyle.lineWidth / 2 + LINE_PADDING / 2;
         ctx.beginPath()
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)), this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + (this.length*Math.cos((this.orientation*Math.PI)/180)), y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
         ctx.stroke();
         return true;    // Drawn successfully on canvas
-    }
-
-    isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
-        // Distance between the clicked point and the two points is used here
-        // if sum of the distance between the clicked points and the two points, with the difference of the length of line is in permissible range, we will return true 
-        // temp1. temp2 is distance between clicked point and the two points
-        
-        let distanceFromXYEnd = Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y)));
-        let distanceFromOppositeEnd = Math.sqrt(((mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))*(mouseX - (this.x + (this.length*Math.cos((this.orientation*Math.PI)/180))))) + ((mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))*(mouseY - (this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180))))));
-        
-        return ((distanceFromXYEnd + distanceFromOppositeEnd - this.length) <= permissibleClickError+this.shapeStyle.lineWidth/2);
-
     }
 
     scale(scaleFactor: number): void {
@@ -1097,8 +1103,8 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
     displayName: string = 'Rectangle';    
     
     ca: DesignReportCardCanvasAdapter;
-    length: any = 30;
-    width: any = 20;
+    length: any = 20;
+    width: any = 30;
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean = true) {
         super(ca);
@@ -1106,8 +1112,8 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
         
         this.x = 20/ca.pixelTommFactor;
         this.y = 20/ca.pixelTommFactor;
-        this.length = 30/ca.pixelTommFactor;
-        this.width = 20 / ca.pixelTommFactor;
+        this.length = 20/ca.pixelTommFactor;
+        this.width = 30 / ca.pixelTommFactor;
 
         if (initilize) {
             this.initilizeSelf(attributes);
@@ -1115,6 +1121,12 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
         }
 
         this.LAYER_TYPE = 'RECTANGLE';
+
+        Object.defineProperty(this, 'height', {
+            get: function () {
+                return this.length;
+            }
+        });
 
     }
 
@@ -1134,28 +1146,9 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         super.drawOnCanvas(ctx, scheduleReDraw);
         ctx.beginPath();
-        ctx.rect(this.x, this.y, this.length, this.width);
+        ctx.rect(this.x, this.y, this.width, this.length);
         ctx.stroke();
         return true;    // Drawn successfully on canvas
-    }
-
-    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        return ((mouseX > this.x - permissibleClickError //top line 
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // bottom line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y + this.width - permissibleClickError
-            && mouseY < this.y + this.width +  permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // left line
-            && mouseX < this.x + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError) || 
-            (mouseX > this.x + this.length - permissibleClickError // right line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError))
     }
 
     scale(scaleFactor: number): void {
@@ -1197,6 +1190,19 @@ export class CanvasCircle extends ShapeBaseLayer implements Layer{
             this.LAYER_TYPE = 'CIRCLE';
             this.layerDataUpdate();
         }
+
+        // functinal height and width; used for drawing highlighter
+        Object.defineProperty(this, 'height', {
+            get: function () {
+                return 2*this.radius;
+            }
+        });
+
+        Object.defineProperty(this, 'width', {
+            get: function () {
+                return 2*this.radius;
+            }
+        });
     }
 
     layerDataUpdate(): void {
@@ -1210,18 +1216,18 @@ export class CanvasCircle extends ShapeBaseLayer implements Layer{
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         super.drawOnCanvas(ctx, scheduleReDraw);
         ctx.beginPath()
-        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+        ctx.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, 2 * Math.PI);
         ctx.stroke();
         return true;    // Drawn successfully on canvas
     }
 
-    isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
-        // return true;
-        return (
-            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) &&
-            Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) >= (this.radius - permissibleClickError)
-        )
-    }
+    // isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
+    //     // return true;
+    //     return (
+    //         Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) &&
+    //         Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) >= (this.radius - permissibleClickError)
+    //     )
+    // }
 
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
@@ -1263,6 +1269,13 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
         this.LAYER_TYPE = 'ROUNDED-RECTANGLE';
         this.layerDataUpdate();
 
+        // functinal height and width; used for drawing highlighter
+        Object.defineProperty(this, 'height', {
+            get: function () {
+                return this.length;
+            }
+        });
+
     }
 
     layerDataUpdate(): void {
@@ -1295,25 +1308,6 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
         ctx.quadraticCurveTo(this.x, this.y, this.x + this.radius, this.y);
         ctx.stroke();
         return true;    // Drawn successfully on canvas
-    }
-
-    isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-        return ((mouseX > this.x - permissibleClickError //top line 
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // bottom line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y + this.width - permissibleClickError
-            && mouseY < this.y + this.width +  permissibleClickError) || 
-            (mouseX > this.x - permissibleClickError // left line
-            && mouseX < this.x + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError) || 
-            (mouseX > this.x + this.length - permissibleClickError // right line
-            && mouseX < this.x + this.length + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.width + permissibleClickError))
     }
 
     scale(scaleFactor: number): void {
@@ -1400,6 +1394,7 @@ export class CanvasText extends BaseLayer implements Layer{
         }
         this.LAYER_TYPE = 'TEXT';
 
+        // functinal height and width; used for drawing highlighter
         Object.defineProperty(this, 'height', {
             get: function () {
                 return Math.max(this.lastHeight, this.minHeight);
@@ -1425,8 +1420,6 @@ export class CanvasText extends BaseLayer implements Layer{
             }
         }
         this.changeLayerName();
-        
-        this.updateTextBoxMetrics();
     }
 
     changeLayerName(): void{
@@ -1440,18 +1433,6 @@ export class CanvasText extends BaseLayer implements Layer{
                 this.displayName += '...';
             }
         }
-    }
-
-    updateTextBoxMetrics = ():void=>{
-        // const ctx = this.ca.virtualContext;
-        // Object.entries(this.fontStyle).forEach(([key, value]) => ctx[key] = value); 
-        // let textMetrix = ctx.measureText(this.text);
-        // this.textBoxMetrx = {
-        //     boundingBoxLeft: textMetrix.actualBoundingBoxLeft,
-        //     boundingBoxRight: textMetrix.actualBoundingBoxRight,
-        //     boundingBoxTop: textMetrix.actualBoundingBoxAscent,
-        //     boundingBoxBottom: textMetrix.actualBoundingBoxDescent,
-        // };
     }
 
     drawUnderline():void{
@@ -1477,37 +1458,12 @@ export class CanvasText extends BaseLayer implements Layer{
         return true;    // Drawn successfully on canvas
     }
 
-    isClicked(mouseX: number, mouseY: number): boolean { 
-        let result = (mouseX > this.x - permissibleClickError
-            && mouseX < this.x + this.maxWidth + permissibleClickError)
-        if (result) {
-            if (this.textBaseline == 'top') {
-                return (mouseY > this.y - permissibleClickError && 
-                    mouseY < this.y + this.height + permissibleClickError)
-            }
-            else if (this.textBaseline == 'middle') {
-                let midY = this.y + this.minHeight/ 2;
-                let halfHeight = this.height / 2;
-                console.log('midY = ', midY);
-                console.log('haldHeight = ', halfHeight);
-                return (mouseY > midY - halfHeight - permissibleClickError && 
-                    mouseY < midY + halfHeight + permissibleClickError)
-            }
-            else {
-                return (mouseY > this.y + this.minHeight - this.height - permissibleClickError && 
-                    mouseY < this.y + this.minHeight + permissibleClickError)
-            }
-        }
-        return false;
-    }
-
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
         this.y *= scaleFactor;
         this.fontSize *= scaleFactor;
         this.minHeight *= scaleFactor;
         this.maxWidth *= scaleFactor;
-        this.updateTextBoxMetrics();
     }
 
     getDataToSave(): { [object: string]: any } {
@@ -1523,8 +1479,8 @@ export class CanvasText extends BaseLayer implements Layer{
             fillStyle: this.fillStyle,
             textBaseline: this.textBaseline,
             textAlign: this.textAlign,
-            maxWidth: this.maxWidth,
-            minHeight: this.minHeight
+            maxWidth: this.maxWidth*this.ca.pixelTommFactor,
+            minHeight: this.minHeight*this.ca.pixelTommFactor
         }
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.text = this.text;
@@ -1547,7 +1503,10 @@ export class CanvasDate extends CanvasText implements Layer{
 
     constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
         super(attributes, ca, false);
-        this.parameterToolPannels.push('date')
+        this.parameterToolPannels.push('date');
+
+        this.maxWidth = Math.round(5000 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'DATE';
@@ -1562,8 +1521,6 @@ export class CanvasDate extends CanvasText implements Layer{
 
         this.dateFormatting();
         this.changeLayerName();
-
-        this.updateTextBoxMetrics();
     }
 
     dateFormatting(): void{
@@ -1646,6 +1603,9 @@ export class AttendanceLayer extends CanvasText implements Layer{
         super(attributes, ca, false);
         this.parameterToolPannels.push('attendance');
 
+        this.maxWidth = Math.round(2000 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
+
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'ATTENDANCE';
         this.layerDataUpdate();
@@ -1654,7 +1614,6 @@ export class AttendanceLayer extends CanvasText implements Layer{
     layerDataUpdate(): void {
         const DATA = this.ca.vm.DATA;
         this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate);   // check PARAMETER_LIST with field = attendance
-        this.updateTextBoxMetrics();
     }
 
     getDataToSave(): { [object: string]: any } {
@@ -1681,6 +1640,9 @@ export class GradeLayer extends CanvasText implements Layer{
         super(attributes, ca, false);
         this.parameterToolPannels.push('grade');
 
+        this.maxWidth = Math.round(3000 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
+
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'GRADE';
         this.layerDataUpdate();
@@ -1695,7 +1657,6 @@ export class GradeLayer extends CanvasText implements Layer{
             this.text = this.alternateText;
             this.error = true;
         }
-        this.updateTextBoxMetrics();
     }
 
     getDataToSave(): { [object: string]: any } {
@@ -1722,6 +1683,8 @@ export class RemarkLayer extends CanvasText implements Layer{
         super(attributes, ca, false);
         this.parameterToolPannels.push('remark');
 
+        this.minHeight = Math.round(2500 / ca.pixelTommFactor) / 100;
+
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'REMARK';
         this.layerDataUpdate();
@@ -1736,7 +1699,6 @@ export class RemarkLayer extends CanvasText implements Layer{
             this.text = this.alternateText;
             this.error = true;
         }
-        this.updateTextBoxMetrics();
     }
 
     getDataToSave(): { [object: string]: any } {
@@ -1834,6 +1796,9 @@ export class MarksLayer extends CanvasText implements Layer{
         super(attributes, ca, false);
         this.parameterToolPannels.push('marks');
 
+        this.maxWidth = Math.round(2500 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
+
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'MARKS';
         this.layerDataUpdate();          
@@ -1869,7 +1834,6 @@ export class MarksLayer extends CanvasText implements Layer{
             this.text = this.alternateText;
             this.error = true;
         }
-        this.updateTextBoxMetrics();
     }
 
     getDataToSave(): { [object: string]: any } {
@@ -1897,7 +1861,7 @@ export function getParser(layers: Layer[]) {
     const PARSER = new FormulaParser();
     // setCustomFunctionsInParser(PARSER);
     layers.forEach((layer: Layer) => {
-        if (layer && (layer.LAYER_TYPE == 'MARKS' || layer.LAYER_TYPE == 'FORMULA')) {
+        if (layer && (layer.LAYER_TYPE == 'MARKS')) {
             PARSER.setVariable(numberToVariable(layer.id), layer.marks);
         }
     });
@@ -1917,15 +1881,20 @@ export class Formula extends CanvasText implements Layer{
         super(attributes, ca, false);
         this.parameterToolPannels.push('formula');
 
+        this.maxWidth = Math.round(4000 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
+
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'FORMULA';
         this.layerDataUpdate();          
     }
 
-    layerDataUpdate(): void {
+    layerDataUpdate(dependents: number[] = []): void {
+        dependents.push(this.id);
         if (this.formula.length > 0) {
             let formulaCopy: string = this.formula;
             let indexOfLayerIdNextDigit: number = formulaCopy.search(/#[0-9]+/);
+            let formulaDependencies = []
             while (indexOfLayerIdNextDigit != -1) { // converting all #layerId to a unique variables
 
                 indexOfLayerIdNextDigit++;   // moving ahead of # symbol
@@ -1938,12 +1907,25 @@ export class Formula extends CanvasText implements Layer{
                     nextDigit = formulaCopy[indexOfLayerIdNextDigit];
                 }
                 layerId = parseInt(layerId);
+                if (dependents.includes(layerId)) {
+                    alert('Cyclic Formula Found: #'+layerId+' and #'+this.id);
+                    this.text = '!ERROR';
+                    return;
+                }
+                let layer = this.ca.layers.find(l => l.id == layerId);
+                if (layer && layer.LAYER_TYPE == 'FORMULA') {
+                    formulaDependencies.push(layer);
+                }
                 formulaCopy = formulaCopy.replace('#' + layerId, numberToVariable(layerId));
-
                 indexOfLayerIdNextDigit = formulaCopy.search(/#[0-9]+/)
             }
 
             const parser = getParser(this.ca.layers);
+            formulaDependencies.forEach(formulaLayer => {
+                formulaLayer.layerDataUpdate([...dependents]);
+                parser.setVariable(numberToVariable(formulaLayer.id), formulaLayer.marks);
+            })
+
             let result = parser.parse(formulaCopy);
             if (result.error) {
                 this.text = result.error;
@@ -1970,7 +1952,6 @@ export class Formula extends CanvasText implements Layer{
         } else {
             this.text = 'Write Formula'
         }
-        this.updateTextBoxMetrics();
     }
 
     getDataToSave(): { [object: string]: any } {
@@ -1997,6 +1978,9 @@ export class Result extends CanvasText implements Layer{
         super(attributes, ca, false);
         this.parameterToolPannels.push('result');
 
+        this.maxWidth = Math.round(5000 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
+
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'RESULT';
         this.layerDataUpdate();          
@@ -2011,7 +1995,6 @@ export class Result extends CanvasText implements Layer{
         });
         this.text = this.rules.remarks[numberOfFailedSubjects];
         this.fillStyle = this.rules.colorRule[numberOfFailedSubjects];
-        this.updateTextBoxMetrics();
     }
 
     getDataToSave(): { [object: string]: any } {

@@ -557,6 +557,8 @@ export class DesignReportCardCanvasAdapter {
     clearCanvas(): void {
         clearTimeout(this.virtualPendingReDrawId);
 
+        this.activeLayer = null;
+        this.activeLayerIndex = null;
         this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.layers = [];
         this.currentMouseDown = false;
