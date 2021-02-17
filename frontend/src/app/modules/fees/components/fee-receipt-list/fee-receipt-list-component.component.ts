@@ -129,7 +129,7 @@ export class FeeReceiptListComponent implements OnInit {
         let session = this.sessionList.find(session => {
             return session.id == parentSession;
         });
-        return session?session.name:null;
+        return session.name;
     }
 
     hasUserPermissionToCancelAndNotPrintPage() {
