@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Layer} from './../../class/constants_3';
+import { CanvasDate } from './../../class/constants_3';
 
 @Component({
   selector: 'app-date-parameters-pannel',
@@ -8,7 +8,7 @@ import { Layer} from './../../class/constants_3';
 })
 export class DateParametersPannelComponent implements OnInit {
 
-  @Input() layer: Layer;
+  @Input() layer: CanvasDate;
   @Input() canvasRefresh: any;
 
   dayFormat: any;
@@ -21,7 +21,6 @@ export class DateParametersPannelComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.layer.dateFormat);
   }
 
   getDayFormat(): any{

@@ -23,6 +23,7 @@ import { LayoutSharingDialogComponent } from './layout-sharing-dialog/layout-sha
 import { InventoryDialogComponent } from './inventory-dialog/inventory-dialog.component';
 import { LayerReplacementDialogComponent } from './layer-replacement-dialog/layer-replacement-dialog.component';
 import { SettingsParametersPannelComponent } from './settings-parameter-pannel/settings-parameters-pannel.component';
+import { SessionParameterPannelComponent } from './session-parameter-pannel/session-parameter-pannel.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { SettingsParametersPannelComponent } from './settings-parameter-pannel/s
     InventoryDialogComponent,
     LayerReplacementDialogComponent,
     SettingsParametersPannelComponent,
+    SessionParameterPannelComponent,
   ],
   imports: [
     ComponentsModule,
@@ -74,6 +76,7 @@ import { SettingsParametersPannelComponent } from './settings-parameter-pannel/s
     InventoryDialogComponent,
     LayerReplacementDialogComponent,
     SettingsParametersPannelComponent,
+    SessionParameterPannelComponent
   ]
 })
 export class ParametersPannelModule { }

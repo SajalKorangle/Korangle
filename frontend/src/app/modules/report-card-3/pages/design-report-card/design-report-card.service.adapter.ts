@@ -84,7 +84,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.DATA.data.subGradeList = data[10];
             this.vm.publicLayoutList = data[11];
             this.vm.DATA.data.classSectionSignatureList = data[13];
-
+            console.log('DATA: ', this.vm.DATA);
             const request_student_data = {
                 id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };

@@ -2065,6 +2065,69 @@ export class Result extends CanvasText implements Layer{
 
 }
 
+export class CurrentSession extends CanvasText implements Layer{
+    displayName: string = 'Current Session';
+
+    dataSourceType: string = 'DATA';
+    source: { [key: string]: any };    // required attribute
+
+    startDate: Date = new Date();
+    endDate: Date= new Date();
+
+    format: {
+        prefix: string,
+        date1: string,
+        seperator: string,
+        date2: string
+    } = {
+            prefix: '',
+            date1: '<yyy>',
+            seperator: '-',
+            date2: '<yy>'
+    };
+    
+
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('currentSession');
+
+        this.maxWidth = Math.round(5000 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'CURRENT_SESSION';
+        this.layerDataUpdate();          
+    }
+
+    layerDataUpdate = (): void=> {
+        let sessionData = this.source.getValueFunc(this.ca.vm.DATA)
+        this.startDate = new Date(sessionData.startDate);
+        this.endDate = new Date(sessionData.endDate);
+        let dateReplacementsForStartDate = getDateReplacements(this.startDate);
+        let dateReplacementsForEndDate = getDateReplacements(this.endDate);
+        let dateValue1 = this.format.date1;
+        let dateValue2 = this.format.date2;
+        Object.entries(dateReplacementsForStartDate).forEach(([dataReplacementKey, dateReplacementvalue]) => {
+            dateValue1 = dateValue1.replace(dataReplacementKey, dateReplacementvalue);
+        });
+        Object.entries(dateReplacementsForEndDate).forEach(([dataReplacementKey, dateReplacementvalue]) => {
+            dateValue2 = dateValue2.replace(dataReplacementKey, dateReplacementvalue);
+        });
+        this.text = this.format.prefix+dateValue1+this.format.seperator+dateValue2
+    }
+
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
+            format: this.format
+        }
+        return savingData;
+    }
+
+}
+
 
 
 
@@ -2431,9 +2494,12 @@ export const PARAMETER_LIST = [
     ParameterStructure.getStructure(
         'currentSession',
         FIELDS.SCHOOL,
-        CanvasText,
+        CurrentSession,
         () => {return 'Current Session'},
-        (dataObject) => {return dataObject.data.sessionList.find(session => session.id  == dataObject.currentSession).name},
+        (dataObject) => {
+            const {startDate, endDate} = dataObject.data.sessionList.find(session => session.id == dataObject.currentSession);
+            return { startDate, endDate };
+        },
     ), 
 
 
