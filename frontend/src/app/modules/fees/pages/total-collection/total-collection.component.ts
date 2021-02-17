@@ -80,7 +80,6 @@ export class TotalCollectionComponent implements OnInit {
         this.serviceAdapter = new TotalCollectionServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        //this.receiptColumnFilter.session = true;
 
         //this.initializeSelection();
         /*delete this.receiptColumnFilter['printButton'];
@@ -108,6 +107,7 @@ export class TotalCollectionComponent implements OnInit {
         delete this.receiptColumnFilter['printButton'];
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.remark = false;
+        this.receiptColumnFilter.session = true;
 
     }
 
