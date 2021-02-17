@@ -19,29 +19,29 @@ describe('Fees 3.0 -> Total Collection', () => {
         // clicking on datepicker icon
 
         const datePicker = await containsFirst('mat-datepicker-toggle','');
-        datePicker.click();
+        await datePicker.click();
         
         // clicking on the particular date
         await page.waitForXPath('//*[@id="mat-datepicker-0"]/mat-calendar-header/div/div/button[1]');
         let [date] = await page.$x('//*[@id="mat-datepicker-0"]/mat-calendar-header/div/div/button[1]');
-        date.click();
+        await date.click();
       
         await page.waitForXPath('//*[@id="mat-datepicker-0"]/div/mat-multi-year-view/table/tbody/tr[2]/td[2]/div');
         [date] = await page.$x('//*[@id="mat-datepicker-0"]/div/mat-multi-year-view/table/tbody/tr[2]/td[2]/div');
-        date.click();
+        await date.click();
        
         await page.waitForXPath('//*[@id="mat-datepicker-0"]/div/mat-year-view/table/tbody/tr[2]/td[1]/div');
         [date] = await page.$x('//*[@id="mat-datepicker-0"]/div/mat-year-view/table/tbody/tr[2]/td[1]/div');
-        date.click();
+        await date.click();
 
         await page.waitForXPath('//*[@id="mat-datepicker-0"]/div/mat-month-view/table/tbody/tr[1]/td[2]/div');
         [date] = await page.$x('//*[@id="mat-datepicker-0"]/div/mat-month-view/table/tbody/tr[1]/td[2]/div');
-        date.click();
+        await date.click();
 
         // clicking on search button
         await page.waitForSelector('button[type="button"]');
         const [search] = await page.$x('//button[@class=\'btn btn-warning\']');
-        search.click();
+        await search.click();
         await page.waitForTimeout(1000);
 
     });
@@ -109,14 +109,14 @@ describe('Fees 3.0 -> Total Collection', () => {
         });
 
         [node] = await page.$x('//a[contains(text(),\'Cancel Receipt\')]');
-        node.click();
+        await node.click();
         await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
 
         //wait for modal to load
         [node] = await page.$x('//mat-dialog-container//following::textarea[1]');
-        node.type('Invalid Receipt');
+        await node.type('Invalid Receipt');
         node = await getNode('button', 'Cancel Receipt');
-        node.click();
+        await node.click();
         await page.waitForTimeout(1000);
         nodes = await containsAll('tr', '');  //count check again 1 should be cancelled from 4 list
         expect(nodes.length).toBe(3);

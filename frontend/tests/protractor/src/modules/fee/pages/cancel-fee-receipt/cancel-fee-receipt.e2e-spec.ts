@@ -115,8 +115,10 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         // Selecting Parent's Number search
         nodes = await containsFirst('mat-select', '');
         await nodes.click();
-        [node] = await page.$x('//mat-option[contains(.,\'Parent\')]')
-        node.click();
+        nodes = await containsFirst('mat-option', 'Parent');
+        await nodes.click();
+        // [node] = await page.$x('//mat-option[contains(.,\'Parent\')]')
+        // node.click();
 
         // Entering the Parent Number and selecting the parent
         
@@ -142,7 +144,7 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
 
          await page.waitForXPath('//mat-dialog-container//following::button[2]');
          [node] = await page.$x('//mat-dialog-container//following::button[2]');  // click show subject filter button
-         node.click();
+         await node.click();
 
         // Checking the cancelled text exists in the mat cards
         nodes = await containsAll('span', 'This fee receipt is cancelled');  //count check
