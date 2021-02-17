@@ -38,7 +38,7 @@ export class CustomMenuComponent implements OnInit, OnDestroy {
   deleteLayer(): void { // order of event propogation is : deleteLayer then menuClickhandler then documentClickhandler
     this.ca.layers.splice(this.layerIndex, 1);
     this.ca.activeLayer = null;
-    this.ca.activeLayerIndex = null;
+    this.ca.activeLayerIndexes = [];
   }
 
   duplicateLayer(): void{

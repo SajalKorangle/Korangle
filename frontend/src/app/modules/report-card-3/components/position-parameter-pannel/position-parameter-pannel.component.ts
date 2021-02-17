@@ -1,13 +1,5 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Layer} from './../../class/constants_3'
-
-export enum KEY_CODE {
-  RIGHT_ARROW = 39,
-  LEFT_ARROW = 37,
-  UP_ARROW = 38,
-  DOWN_ARROW = 40,
-
-}
 
 @Component({
   selector: 'app-position-parameter-pannel',
@@ -38,40 +30,4 @@ export class PositionParameterPannelComponent implements OnInit {
   lockToggle(event): any{
     this.layer.isLocked = event.source.checked? true : false;
   }
-
-  onLeft(event): any{
-    console.log(event);
-  }
-
-  onRight(event): any{
-    console.log(event);
-  }
-
-  onUp(event): any{
-    console.log(event);
-  }
-  onDown(event): any{
-    console.log(event);
-  }
-
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    // console.log(event);
-    if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
-      this.onRight('right');
-    }
-
-    if (event.keyCode === KEY_CODE.LEFT_ARROW) {
-      this.onLeft('left');
-    }
-    if (event.keyCode === KEY_CODE.UP_ARROW) {
-      this.onUp('left');
-    }
-    if (event.keyCode === KEY_CODE.DOWN_ARROW) {
-      this.onDown('left');
-    }
-    event.stopPropagation();
-  }
-  
-
 }

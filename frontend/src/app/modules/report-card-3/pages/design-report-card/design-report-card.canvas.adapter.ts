@@ -23,6 +23,7 @@ import {
     CanvasCircle,
     CanvasRoundedRectangle,
     GradeRuleSet,
+    CanvasGroup
 } from './../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -45,9 +46,8 @@ export class DesignReportCardCanvasAdapter {
 
     layers: Array<Layer> = [];  // layers in thier order from back to front
     activeLayer:Layer = null;
-    activeLayerIndex:number = null;
-    // selectedLayers: Array<Layer> = [];
-    // selectedLayersIndices: Array<number> = [];
+    activeLayerIndexes: Array<number> = [];
+
 
     activePageIndex: number = 0;
 
@@ -75,7 +75,7 @@ export class DesignReportCardCanvasAdapter {
     metaDrawings: boolean = true;   // meta drawings includes things like hilighter, assistance etc.
     
     constructor() {
-        console.log(this)
+        console.log('canvas Adapter: ', this);
         this.documentEventListners.keydown = (event) => {
             if (!this.activeLayer || !(event.target instanceof HTMLBodyElement))
                 return;
@@ -182,13 +182,11 @@ export class DesignReportCardCanvasAdapter {
             clickedX = event.offsetX;
             clickedY = event.offsetY;
             console.log('clicked point = ', clickedX, clickedY);
-            this.activeLayer = null;
-            this.activeLayerIndex = null;
             this.currentMouseDown = false;
 
             for (let i = this.layers.length - 1; i >= 0; i--) {
                 if (this.layers[i].isClicked(clickedX, clickedY, event.shiftKey)) {
-                    this.updateActiveLayer(i, event);
+                    this.updateActiveLayer(i, event.shiftKey);
                     this.lastMouseX = clickedX;
                     this.lastMouseY = clickedY;
                     this.currentMouseDown = true;
@@ -196,12 +194,13 @@ export class DesignReportCardCanvasAdapter {
                 }
             }
 
+            if (!this.currentMouseDown) {
+                this.activeLayer = null;
+                this.activeLayerIndexes = [];
+            }
+
             this.scheduleCanvasReDraw(0);
 
-            // if (!this.activeLayer) {
-            //     this.selectedLayers = [];
-            //     this.selectedLayersIndices = [];
-            // }
         });
 
         this.canvas.addEventListener('contextmenu', (event) => {
@@ -444,7 +443,7 @@ export class DesignReportCardCanvasAdapter {
 
             if (this.layers.length > 0) {
                 this.activeLayer = this.layers[this.layers.length - 1];
-                this.activeLayerIndex = this.layers.length - 1;
+                this.activeLayerIndexes = [this.layers.length - 1];
             }
             this.drawAllLayers();
             // console.log('canvas layers: ', this.layers);
@@ -486,7 +485,7 @@ export class DesignReportCardCanvasAdapter {
 
         this.layers[layerIndex] = newLayer;
         this.activeLayer = newLayer;
-        this.activeLayerIndex = layerIndex;
+        this.activeLayerIndexes = [layerIndex];
         this.scheduleCanvasReDraw();
     }
 
@@ -534,7 +533,7 @@ export class DesignReportCardCanvasAdapter {
         this.layers = this.layers.filter(Boolean);
         this.scheduleCanvasReDraw(0);
         this.activeLayer = layerToMove;
-        this.activeLayerIndex = this.layers.findIndex(l => l.id ==layerToMove.id);
+        this.activeLayerIndexes = [this.layers.findIndex(l => l.id ==layerToMove.id)];
     }
 
     duplicateLayer(layer: Layer): void{
@@ -563,7 +562,7 @@ export class DesignReportCardCanvasAdapter {
         clearTimeout(this.virtualPendingReDrawId);
 
         this.activeLayer = null;
-        this.activeLayerIndex = null;
+        this.activeLayerIndexes = [];
         this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.layers = [];
         this.currentMouseDown = false;
@@ -598,21 +597,35 @@ export class DesignReportCardCanvasAdapter {
         return layoutContent;
     }
 
-    updateActiveLayer(activeLayerIndex:number, event: MouseEvent=null): void{   // used by left layer pannel
+    updateActiveLayer(activeLayerIndex:number, shiftKey:boolean = false): void{   // used by left layer pannel
         
-        this.activeLayerIndex = activeLayerIndex;
-        this.activeLayer = this.layers[this.activeLayerIndex];
-        this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.activeLayer));
+        if (shiftKey && this.activeLayerIndexes.length>0) {
+            let currIndex = this.activeLayerIndexes.find(i => i == activeLayerIndex);
+            if (!currIndex) {
+                this.activeLayerIndexes.push(activeLayerIndex);
+                this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.layers[activeLayerIndex]));
+            }
+            else {
+                this.activeLayerIndexes.splice(currIndex, 1);
+                console.log('slplicing active layer Indexes : ', activeLayerIndex);
+            }
+
+            // updating active layer accoding to activeLayerIndexes
+            if (this.activeLayerIndexes.length == 0) {
+                this.activeLayer = null
+            }
+            else if(this.activeLayerIndexes.length == 1) {
+                this.activeLayer = this.layers[this.activeLayerIndexes[0]];
+            }
+            else {  // create group here
+                this.activeLayer = new CanvasGroup({id:-1, layers: this.activeLayerIndexes.map(i=>this.layers[i])}, this);
+            }
+        } else {
+            this.activeLayerIndexes = [activeLayerIndex];
+            this.activeLayer = this.layers[activeLayerIndex];
+            this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.activeLayer));
+        }
         this.scheduleCanvasReDraw(0);
-        // if (event) {    // if event is a mouse event then check for control key pressed and select multiple layers
-        //     if (event.shiftKey) {
-        //         this.selectedLayers.push(this.activeLayer);
-        //         this.selectedLayersIndices.push(this.activeLayerIndex);
-        //     } else {
-        //         this.selectedLayers = [];
-        //         this.selectedLayersIndices = [];
-        //     }
-        // }
     }
 
     downloadPDF() { // do not scale the canvas and block the user, use generate report card canvas adapter infrastructure to do this in background

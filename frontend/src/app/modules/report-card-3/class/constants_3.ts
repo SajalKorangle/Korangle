@@ -1572,49 +1572,90 @@ export class CanvasDate extends CanvasText implements Layer{
 
 }
 
-// export class CanvasGroup extends BaseLayer implements Layer{
-//     layers: Array<Layer> = [];
-//     height: number = 0;
-//     width: number = 0;
-//     locked: boolean = false;
+export class CanvasGroup extends BaseLayer implements Layer{
+    layers: Array<Layer> = [];
 
-//     constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
-//         super(ca);
-//         this.parameterToolPannels.push('group');
+    parameterToolPannels = ['position']
 
-//         if (initilize) {
-//             this.initilizeSelf(attributes);
-//             this.layerDataUpdate();
-//         }
-//         this.LAYER_TYPE = 'GROUP';
-//     }
+    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+        super(ca);
+        this.parameterToolPannels.push('group');
 
-//     layerDataUpdate(): void {
-//     }
+        if (initilize) {
+            this.initilizeSelf(attributes);
+            this.layerDataUpdate();
+        }
+        this.LAYER_TYPE = 'GROUP';
 
-//     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
-//         return true;
-//     }
+        Object.defineProperty(this, 'x', {
+            get: function () {
+                return Math.min(...this.layers.map(l=>l.x), 999999);
+            },
+            set: function (newX:number) {
+                let dx = newX - this.x;
+                this.updatePosition(dx, 0);
+            }
+        });
 
-//     isClicked(mouseX: number, mouseY: number): boolean {    // reiterate if click is not working
-//         if (this.locked) {
-//             let anyLayerClicked: boolean = false;
-//             this.layers.forEach((layer: Layer) => {
-//                 anyLayerClicked = anyLayerClicked || layer.isClicked(mouseX, mouseY);
-//             });
-//             return anyLayerClicked;
-//         } 
-//         return false;
-//     }
+        Object.defineProperty(this, 'y', {
+            get: function () {
+                return Math.min(...this.layers.map(l=>l.y), 999999);
+            },
+            set: function (newY:number) {
+                let dy = newY - this.y;
+                this.updatePosition(0, dy);
+            }
+        });
 
-//     scale(scaleFactor: number): void {
-//     }
+        Object.defineProperty(this, 'isLocked', {
+            get: function () {
+                return !this.layers.every(layer=>layer.isLocked==false);
+            },
+            set: function (newIsLocked) {
+                this.layers.forEach(l => l.isLocked = newIsLocked);
+            }
+        });
 
-//     getDataToSave():object {
-//         // To be implemented
-//         return {};
-//     }
-// }
+        Object.defineProperty(this, 'height', {
+            get: function () {
+                return Math.max(...this.layers.map(l=>l.height+l.y), 0) - this.y;
+            }
+        });
+
+        Object.defineProperty(this, 'width', {
+            get: function () {
+                return Math.max(...this.layers.map(l=>l.width+l.x), 0) - this.x;
+            }
+        });
+    }
+
+    layerDataUpdate(): void {
+    }
+
+    updatePosition(dx = 0, dy = 0):void {
+        if(this.isLocked){
+            return ;
+        }
+        else {
+            this.layers.forEach(layer => layer.updatePosition(dx, dy));
+        }
+    }
+
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        let result = true;
+        this.layers.forEach(layer => result = result && layer.drawOnCanvas(ctx, scheduleReDraw));
+        return result;
+    }
+
+    scale(scaleFactor: number): void {
+        this.layers.forEach(layer => layer.scale(scaleFactor));
+    }
+
+    getDataToSave():object {
+        // To be implemented
+        return {};
+    }
+}
 
 export class AttendanceLayer extends CanvasText implements Layer{
     displayName: string = 'Attendance';

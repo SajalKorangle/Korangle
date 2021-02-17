@@ -209,7 +209,7 @@
                         [top]="htmlAdapter.customMenuTop"
                         [layer]="canvasAdapter.activeLayer" 
                         [ca]="canvasAdapter" 
-                        [layerIndex]="canvasAdapter.activeLayerIndex"
+                        [layerIndex]="canvasAdapter.activeLayerIndexes[0]"
                         (closeMenu)="htmlAdapter.closeContextMenu()">
                     </app-custom-menu>
             </ng-container>
@@ -261,10 +261,10 @@
                                     (dragstart)="$event.target.style.opacity='0.5'; $event.dataTransfer.setData('layerId', layer.id);" 
                                     (dragend)="$event.target.style.opacity='1'"
                                     (drop)="$event.preventDefault(); canvasAdapter.layerMove(layer.id, $event.dataTransfer.getData('layerId')); htmlAdapter.dropAssistanceHide(layer.id);"
-                                    (mousedown)="canvasAdapter.updateActiveLayer(i, $event);"
+                                    (mousedown)="canvasAdapter.updateActiveLayer(i, $event.shiftKey);"
                                     (contextmenu)="$event.preventDefault(); htmlAdapter.openContextMenu($event);"
                                     style="width: calc(100% - 8px); text-align: center; margin: 4px; padding: 4px; border-radius: 3px; cursor: pointer; white-space: nowrap;" 
-                                    [class]="i==canvasAdapter.activeLayerIndex?'bg-active':'bg-white'"
+                                    [class]="canvasAdapter.activeLayerIndexes.includes(i)?'bg-active':'bg-white'"
                                     [id]="'layer_#'+layer.id"> 
                                 <span *ngIf="layer.error" style="color: red; float: left; font-size: x-large;">•</span>
                                 <span *ngIf="layer.isLocked" class="material-icons" style="float: left; font-size: small; margin-top: 3px;">lock</span>
